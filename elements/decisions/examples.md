@@ -9,7 +9,7 @@ Until a kind of entry has a real example, only its form in the template stands.
 
 ## New decision
 
-### WAY-03 — Who may change an invariant's test, and when?
+### WAY-03/1 — Who may change an invariant's test, and when?
 
 Invariant tests are written and accepted together with the foundation change, and during
 implementation they are read-only. A mechanism outside the model enforces this: a local hook,

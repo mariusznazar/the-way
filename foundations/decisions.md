@@ -3,7 +3,7 @@
 The decisions of the-way, the process for building products. Entries follow
 `elements/decisions/template.md` and are only ever appended.
 
-### WAY-01 — What state does the foundation describe?
+### WAY-01/1 — What state does the foundation describe?
 
 On the main branch, the foundation describes the product as it is. A task starts
 implementation by changing the foundation, and the code follows; when the task closes, the
@@ -37,7 +37,7 @@ only after deployment — a step at the end of a task is the kind of step that g
 *Consequences:* every task that changes what the product does begins with a step that changes
 the foundation. Plans, roadmaps and hypotheses need a home outside the foundation.
 
-### WAY-02 — How do dependents learn that an entry has changed?
+### WAY-02/1 — How do dependents learn that an entry has changed?
 
 Every foundation entry has a permanent number, and everything that depends on it — other
 entries, tests, documents and code comments — refers to that number. A reference that relies
@@ -75,7 +75,7 @@ all references; a single kind of reference — a historical record would be flag
 a fingerprint. Every foundation element needs a defined binding part, so that its fingerprint can
 be computed.
 
-### WAY-03 — Who may change an invariant's test, and when?
+### WAY-03/1 — Who may change an invariant's test, and when?
 
 Invariant tests are written and accepted together with the foundation change, and during
 implementation they are read-only. A mechanism outside the model enforces this: a local hook,
@@ -108,7 +108,7 @@ removes that move instead of forbidding it.
 by the invariant they cite (WAY-02). Even a change of form — a selector, test data, waiting —
 goes through the foundation step and its acceptance.
 
-### WAY-04 — What elements make up a product's foundation?
+### WAY-04/1 — What elements make up a product's foundation?
 
 A product's foundation has five elements, and the list is closed: invariants, decisions, a
 glossary of product terms, a part map, and environment facts. A new pattern enters the
@@ -161,7 +161,7 @@ the description grows into the element's template as the element goes through it
 picture of the architecture — a diagram, a code map for an agent, a description — is generated
 from the part map and the code.
 
-### WAY-05 — How is a decision entry written?
+### WAY-05/1 — How is a decision entry written?
 
 A decision entry opens with one to three binding sentences — in the present tense, describing
 a state that is to be true, concrete enough to check — followed by fixed fields that a script or
