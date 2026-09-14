@@ -160,3 +160,57 @@ today).
 the description grows into the element's template as the element goes through its steps. Every
 picture of the architecture — a diagram, a code map for an agent, a description — is generated
 from the part map and the code.
+
+### WAY-05 — How is a decision entry written?
+
+A decision entry opens with one to three binding sentences — in the present tense, describing
+a state that is to be true, concrete enough to check — followed by fixed fields that a script or
+an agent reads, and by rationale, rejected options and consequences in prose. Every field
+appears in every entry, holding a value, `none` or `TODO`, and a field stays in the template
+only while someone or something reads it. The rules and examples in `elements/decisions/` are
+the written form of this decision: a rule changes only together with a decision, and an example
+is a verbatim copy of a version from the log.
+
+- **Change:** new decision
+- **Scope:** decisions
+- **Based on:** long lists of fields stop people from recording decisions: "Research tools
+  provide interfaces to capture a long list of items which discourage designers to spend time
+  to store all the items" (Capilla et al., 2016,
+  https://pure.rug.nl/ws/files/65923130/1_s2.0_S0164121215002034_main.pdf). A section that only
+  a template demands goes empty: "The most problematic section was Considered Options, which is
+  mandatory in the MADR template … This section was absent or misplaced in most ADRs"
+  (Miccio, Tommasel, Diaz-Pace, 2026, https://arxiv.org/html/2609.07375).
+- **Relations:** related to WAY-01 · related to WAY-02 · related to WAY-04
+- **Outranks:** none
+- **Verification:** level 1 — invariants in working form:
+  - every entry in the log has every field of the template;
+  - binding sentences number one to three and contain no *should*, *will* or all-caps;
+  - every example in `examples.md` matches its version in the log word for word;
+  - a commit that changes `template.md` also appends a decision version to the log.
+  Level 2 for the rule that every field has a reader — an agent compares the change with the
+  decision:
+  - complies: a new field enters the template together with the reader named in its table;
+  - violates: a "notes" or "related artifacts" field that nothing reads.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-15
+
+*Rationale:* norms keep what binds short and checkable and put the explanation next to it; a
+record written like a legal code, in a commanding voice, reads badly and is followed worse.
+Agents generalise from the reasons they are given, so the reasoning stays in the entry, below
+what binds. The present tense is used because a sentence with "will" or "should" describes an
+intent, not a state. Fields are few because a field survives in practice only when someone reads
+it in a specific activity. Every field appears in every entry because a field that is simply
+missing cannot be told apart from one that was forgotten. The template is the process's code:
+under WAY-01 it follows the decisions, never the other way round.
+*Rejected:* prose entries without fields — nothing a script or an agent can read reliably;
+full templates with many fields and relations — too many fields without a reader, and the tools
+built on them did not survive; optional fields left out when empty — an intended gap and a
+forgotten one look the same; a status field written by hand — a second copy of what the
+sequence of versions already says; a single one-sentence statement as the whole entry — the
+binding rule cannot be separated from its reasoning; normative capitals such as MUST — shouting
+reads worse, not stronger; examples written for the template — an example with gaps teaches
+gaps.
+*Consequences:* adding or removing a field is a change of the template and therefore needs a
+decision. Until the format guard exists, the rules of the entry hold only through review.
