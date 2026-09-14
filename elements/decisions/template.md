@@ -157,6 +157,8 @@ used when a different, more specific decision deliberately goes against this one
 - Level 3 — a human assessment, leaving a trace of who and when.
 - Level 2 or 3 only while no invariant can be derived today. When one is derived, the decision
   moves to level 1 by a *field change*.
+- A decision can combine levels: each level covers the part of the binding sentences it can
+  check.
 
 ```markdown
 - **Verification:** level 2 — an agent compares the change with the decision:
