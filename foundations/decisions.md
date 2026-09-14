@@ -107,3 +107,56 @@ removes that move instead of forbidding it.
 *Consequences:* the CI check has to tell invariant tests from other tests; it recognises them
 by the invariant they cite (WAY-02). Even a change of form — a selector, test data, waiting —
 goes through the foundation step and its acceptance.
+
+### WAY-04 — What elements make up a product's foundation?
+
+A product's foundation has five elements, and the list is closed: invariants, decisions, a
+glossary of product terms, a part map, and environment facts. A new pattern enters the
+foundation only as a field or a rule of one of the five, and only when a mechanism keeps it
+without human memory: a test, a lint, a gate, a mandatory relation or configuration.
+
+- **Change:** new decision
+- **Scope:** decisions, invariants, glossary, part map, environment facts
+- **Based on:** documentation that nobody maintains turns into "a culture of 'paper safety' at
+  the expense of real safety" (Haddon-Cave, The Nimrod Review, 2009; summary:
+  https://aerossurance.com/safety-management/nimrod-xv230-haddon-cave/).
+- **Relations:** related to WAY-02
+- **Outranks:** none
+- **Verification:** level 1 — invariant in working form: the foundation holds entries of the
+  five elements only. Level 2 for the rule on new patterns — an agent compares the change with
+  the decision:
+  - complies: criticality enters the foundation as a field of a part in the part map;
+  - violates: a hand-written architecture document appears next to the part map.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-14
+
+*Rationale:* each element holds what no other can. Invariants are what a task must not break.
+Decisions are the only place for reasons and rejected options, and they constrain later changes
+only when they are read as rules rather than as history. The glossary exists because terms
+carry rules: without it, the same word means one thing in the concept, another in the
+requirements and a third in the code. The part map lists the parts that criticality and scope
+refer to; it holds rules — allowed dependencies — because code yields only the current state,
+and its rule for assigning files lets a script check the map against the code and compute what
+a task touches. Environment facts exist because an invariant with a green test can rest on a
+fact about the world that nobody wrote down, as the assumption hidden in the code of Ariane 5
+did. The list was checked for completeness against arc42, ISO/IEC/IEEE 42010 and the
+documentation of several existing products. It is closed, and a new pattern needs a mechanism,
+because research produced at least nine candidates for new kinds of entries and fields, and a
+large foundation that nobody maintains gives only paper safety.
+*Rejected:* as separate elements — tests (a method of checking an invariant), documentation of
+"why" (the rationale of decisions), product identity (the foundation as a whole defines it;
+"what for" and "for whom" are decisions), classes of task risk (a task inherits risk from the
+parts it touches), structural code rules and quality scenarios (forms of an invariant), the
+environment an agent runs, and the step that carries findings out of a task's log (both belong
+to the task cycle); a criticality map as a separate element (criticality is a field of a part);
+external constraints as a field of the map (a constraint is an environment fact, and the
+obligation it creates is an invariant); product principles and non-goals as a separate kind of
+entry (they are decisions like any other); diagrams and an ARCHITECTURE.md written by hand (a
+second copy of the map); environment facts as hypotheses in the backlog (they are true or false
+today).
+*Consequences:* each element is described in `elements/<element>/` of the process repository;
+the description grows into the element's template as the element goes through its steps. Every
+picture of the architecture — a diagram, a code map for an agent, a description — is generated
+from the part map and the code.
