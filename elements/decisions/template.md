@@ -122,7 +122,7 @@ The list is closed. Adding a kind takes a decision.
 | new decision | — (version 1) | — | — |
 | editorial correction | wording, not meaning | differ | not flagged, once a human confirms the meaning is unchanged |
 | rationale change | the reasoning only | identical | not flagged |
-| field change | fields only | identical | flagged only when *Based on* changes |
+| field change | fields only | identical | not flagged |
 | new wording | what the decision says | differ | flagged |
 | narrowing | an exception is added | differ | flagged softly |
 | challenge | nothing yet — the decision is in doubt | identical | still in force; the view shows a warning |
