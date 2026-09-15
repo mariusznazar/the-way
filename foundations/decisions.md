@@ -829,3 +829,119 @@ decision, except for its column on references: how each kind flags references to
 not yet reconciled with WAY-02, under which a changed fingerprint alone raises a flag. A challenge
 ends with the next version: a rationale change when the doubt is settled in the decision's
 favour, or the change that settles it otherwise.
+
+### WAY-21/1 — What is a decision's scope?
+
+A decision's scope names the parts of the product it governs, taken from the part map, and never
+file paths, so that the decisions governing a change are found from the files it touches through
+the part map's rule for assigning files.
+
+- **Change:** new decision
+- **Scope:** decisions, part map, task cycle
+- **Based on:** an agent loses rules as their number grows: "even the best frontier models only
+  achieve 68% accuracy at the max density of 500 instructions" (IFScale,
+  https://arxiv.org/abs/2507.11538), and a tool vendor advises keeping an agent's instructions
+  short for the same reason: "target under 200 lines per CLAUDE.md file. Longer files consume
+  more context and reduce adherence" (Claude Code documentation,
+  https://code.claude.com/docs/en/memory).
+- **Relations:** related to WAY-04 · related to WAY-11 · related to WAY-13 · related to WAY-14
+- **Outranks:** none
+- **Verification:** level 1 — invariants in working form:
+  - every part named in a decision's scope exists in the part map, or, until there is one, in the
+    working list of parts;
+  - no decision's scope names a file path;
+  - the decisions found for a change include every decision whose scope names a part the change
+    touches.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** TODO — awaiting Mariusz's review
+
+*Rationale:* an agent checks a change only against the decisions it reads, and among many rules
+it loses some, so the decisions that govern what a change touches have to be found for it. Parts
+rather than paths, because the part map already assigns files to parts: paths written into each
+decision would be a second copy that drifts as soon as files move. Parts rather than topics,
+because a part can be computed from a change and a topic cannot.
+*Rejected:* file paths in each decision, as rule files for agents do — a second copy of the part
+map; topics as scope — they cannot be computed from a change; no scope — every change checked
+against every decision, and the ones that matter lost among the rest.
+*Consequences:* until this process has its own part map, the scope of its decisions names parts
+from a working list: decisions, invariants, glossary, part map, environment facts, relation
+model, task cycle. Finding the decisions for a change needs the part map's rule for assigning
+files (WAY-04). Which other decisions a change is checked against — those that govern every task,
+and collisions between decisions of different scopes — is set when the task cycle is designed.
+
+### WAY-22/1 — Is a rule a decision or an invariant?
+
+An invariant is a sentence about the product that is true or false on every commit and says
+nothing about why or what was rejected; a decision is a choice between options, with its
+rationale, and it binds later choices, including those that cannot be checked on a commit —
+direction, trade-off principles, non-goals. A rule that records a choice is a decision, and what
+of it a commit can make false is written as an invariant derived from it; a rule with no choice
+behind it is an invariant alone.
+
+- **Change:** new decision
+- **Scope:** decisions, invariants
+- **Based on:** none
+- **Relations:** related to WAY-04 · related to WAY-08 · related to WAY-12 · related to WAY-17
+- **Outranks:** none
+- **Verification:** level 2 — an agent compares the change with the decision:
+  - complies: "the product has no multiplayer" is a decision with its reason, and "no screen
+    offers a second player" is an invariant derived from it; "a saved game is never lost on
+    reload" is an invariant with a test;
+  - violates: a non-goal that a commit can break is left without a derived invariant; an
+    invariant carries a rationale and rejected options.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** TODO — awaiting Mariusz's review
+
+*Rationale:* the two are read differently: an invariant is checked mechanically on every commit,
+while a decision is weighed when a later choice is made. A checkable rule left only in a
+decision's prose escapes the gate, and a choice written only as an invariant loses its reasons.
+When a rule is both, each part goes where it is read: the choice and its reasons stay in the
+decision, and the checkable sentence becomes an invariant that names it.
+*Rejected:* one kind of entry for both — either the gate reads prose or the reasons are lost;
+moving a checkable sentence out of its decision — the rule would be cut off from its reason.
+*Consequences:* the section "Decision or invariant" of the decision template, apart from its
+last rule, which belongs to WAY-12, is the written form of this decision. Until the invariants
+element has its template, an invariant derived from a decision is named in working form in the
+decision's *Verification* (WAY-12).
+
+### WAY-23/1 — How many decision logs does a product have?
+
+A product keeps all its decisions in one log, whatever they are about.
+
+- **Change:** new decision
+- **Scope:** decisions
+- **Based on:** long-lived document series keep different kinds of decisions, approved in
+  different ways, in one series: "Various contributors provide input to the RFC Series. These
+  contributors come from several different communities, each with its own defined process for
+  approving documents that will be published by the RFC Editor" (RFC 8729,
+  https://www.rfc-editor.org/rfc/rfc8729.html), and Python's series holds process documents next
+  to technical ones — "A Process PEP describes a process surrounding Python, or proposes a change
+  to (or an event in) a process" (PEP 1, https://peps.python.org/pep-0001/).
+- **Relations:** related to WAY-14 · related to WAY-18 · related to WAY-21
+- **Outranks:** none
+- **Verification:** level 2 — an agent compares the change with the decision:
+  - complies: a business rule and a technical constraint of one product stand in the same log
+    under one numbering; a product that arrives with a folder of architecture records keeps it as
+    a source and writes each decision recovered from it into its log;
+  - violates: a separate log for business decisions next to the technical one.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** TODO — awaiting Mariusz's review
+
+*Rationale:* a collision between a product decision and a technical one is caught only when both
+are in the set a change is checked against; two logs each look consistent while contradicting
+each other. A topic needs no log of its own: the scope selects which decisions to check (WAY-21),
+and who approves follows from the parts in scope (WAY-14), so the reason other processes split
+their logs — different approvers — needs no second log. The log of this process is separate from
+the logs of the products built with it, because they are separate products.
+*Rejected:* separate logs for business and technical decisions — collisions between them go
+unseen; a field for the topic of an entry — nothing reads it (WAY-05).
+*Consequences:* the rule in the decision template that the log has no topical sections is the
+written form of this decision. Decision records a product already has when the process enters it
+are a source for inherited decisions, not a second log. The decisions of this process bind every
+product without standing in its log; how a product's checks see them is not yet settled.
