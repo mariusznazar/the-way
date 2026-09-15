@@ -926,7 +926,8 @@ A product keeps all its decisions in one log, whatever they are about.
 - **Verification:** level 2 — an agent compares the change with the decision:
   - complies: a business rule and a technical constraint of one product stand in the same log
     under one numbering; a product that arrives with a folder of architecture records keeps it as
-    a source and writes each decision recovered from it into its log;
+    a source and writes a decision recovered from it into its log when a task first touches the
+    parts that decision governs;
   - violates: a separate log for business decisions next to the technical one.
 - **Review when:** none
 - **Origin:** none
@@ -1117,3 +1118,49 @@ repository can open them.
 *Consequences:* *Origin* in this log is `none` or points to a document its readers can open. The
 entries written before this one already follow it. Products built with this process are not
 bound by this decision; their logs may point to their own documents.
+
+### WAY-28/1 — How does the process enter a product that already exists?
+
+When the process enters a product that already exists, the existing state is its starting point
+and needs no justification, and the rules apply to changes from then on. The part map with
+criticality comes first; the invariants of critical parts are then recovered from what the
+product does — an agent lists what a part does, and a human chooses which of it the product must
+keep — and the other invariants come through the return step of tasks. Decisions are recovered
+only when a task touches the parts they govern.
+
+- **Change:** new decision
+- **Scope:** decisions, invariants, part map, task cycle
+- **Based on:** checking an existing product against a description written long after its code
+  is slow and can fail outright: MongoDB reports "10 weeks of effort without successfully
+  trace-checking one spec" (MongoDB engineering blog,
+  https://www.mongodb.com/company/blog/engineering/conformance-checking-at-mongodb-testing-our-code-matches-our-tla-specs).
+- **Relations:** related to WAY-01 · related to WAY-04 · related to WAY-11 · related to WAY-13 ·
+  related to WAY-15 · related to WAY-23
+- **Outranks:** none
+- **Verification:** level 2 — an agent compares the change with the decision:
+  - complies: on entering a product, the part map comes first, and the invariants of a critical
+    payment flow are chosen by a human from the agent's list of what the flow does; a decision is
+    recovered when a task first touches the parts it governs;
+  - violates: an agent turns everything a critical part does today into invariants without a
+    human's choice; an agent recovers from the code decisions for the whole product before any
+    task touches them; the critical parts wait for a task like any other.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** TODO — awaiting Mariusz's review
+
+*Rationale:* matching a whole product to a description written after the fact is slow, and it
+tempts an agent to write reasons that look like decisions, so decisions wait until a task needs
+them. Critical parts cannot wait, because a break there is expensive (WAY-13), so their
+invariants come first. A human chooses among what they do, because only a human knows what the
+product is meant to guard, and what it does today is a state, not yet a rule (WAY-15). Invariants
+and decisions are separate lists: an invariant needs no decision above it, so a recovered
+invariant can bind before anyone knows why it holds.
+*Rejected:* recovering the whole foundation at the start — slow, with reasons invented where none
+are known; everything on demand, the critical parts included — a break there is found only when
+a task happens to touch them.
+*Consequences:* an invariant recovered from behaviour needs a method of checking and a note that
+it was recovered and its cause is unknown; the invariants element has no place for that note yet.
+A decision recovered for a task is written as the section "Inherited decisions" of the decision
+template says, and decision records the product already has are read as sources when their parts
+are touched (WAY-23).
