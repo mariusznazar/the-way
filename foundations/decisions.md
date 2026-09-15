@@ -214,3 +214,37 @@ reads worse, not stronger; examples written for the template — an example with
 gaps.
 *Consequences:* adding or removing a field is a change of the template and therefore needs a
 decision. Until the format guard exists, the rules of the entry hold only through review.
+
+### WAY-06/1 — Where does a foundation change in progress live?
+
+A foundation change in progress lives on the task's branch in the product's repository and
+reaches the main branch in the same merge as the code that follows it.
+
+- **Change:** new decision
+- **Scope:** decisions, invariants, glossary, part map, environment facts, task cycle
+- **Based on:** none
+- **Relations:** derives from WAY-01 · related to WAY-03
+- **Outranks:** none
+- **Verification:** level 1 — invariant in working form: a commit that changes the foundation
+  reaches the main branch only by merging a task branch. Level 2 for the rule that the change
+  travels with its code — an agent compares the change with the decision:
+  - complies: a task branch changes a decision entry and the code that follows it, and both
+    reach the main branch in one merge;
+  - violates: a task's foundation change is merged to the main branch ahead of its code; the
+    code is merged and the foundation change is left for a later task.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-15
+
+*Rationale:* the main branch never describes something the product does not have (WAY-01), and
+an abandoned task leaves no false description behind: its foundation change is dropped with its
+branch.
+*Rejected:* a foundation change kept on the main branch with a "designed, not built" marker —
+the marker has to be removed when the task closes, and an abandoned task leaves a marked entry
+for good.
+*Consequences:* a change with no code behind it — a fix to a rationale, a decision recovered
+from the existing product — also reaches the main branch through a task branch. A file conflict
+catches two tasks that change the same entry in contradictory ways, but contradictory changes to
+different entries merge cleanly; checking the merged foundation for consistency needs a
+mechanism of its own.
