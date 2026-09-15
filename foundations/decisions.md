@@ -724,8 +724,61 @@ once and the generated view shows both ends.
 *Rejected:* a single document edited in place — the history is lost and nothing shows what
 changed when; a log without a view — every reader reconstructs the current state by hand; marks
 written by hand at the other end of a link — they go missing.
-*Consequences:* the opening paragraph and the section "Where entries go" of the decision
-template, with its rule on who writes a relation, are the written form of this decision. The
-view script does not exist yet; until it does, what is in force is read from the log as the
+*Consequences:* the opening paragraph of the decision template, its rule that entries are
+appended in the order they are written and its rule on who writes a relation are the written
+form of this decision. The view script does not exist yet; until it does, what is in force is read from the log as the
 latest version of each number. Which end of a link writes it is set by WAY-17 for links between
 elements and by the template for relations between decisions.
+
+### WAY-19/1 — How are decisions numbered and versioned?
+
+A number stands for the question a decision answers, carries the product's prefix and is given
+in the order entries are written; a new question gets the next free number, and a new rule next
+to an existing decision is a new question, related to its neighbour. On the main branch, every
+change to a decision is a new version of its number, which points to the version before it,
+gives the rationale for the change and restates the binding sentences, fields and consequences
+in full, except that a repeal has no binding sentences. When a new decision answers a question
+that an older one answered in passing, the sentence moves to the new decision, and the older one
+loses it — by a new version on the main branch, by a correction before it.
+
+- **Change:** new decision
+- **Scope:** decisions
+- **Based on:** legislative drafting restates a changed provision whole and forbids a change
+  hidden in a new provision: under the Polish rules of legislative drafting, an amended provision
+  is cited "in its full new wording", and an amendment may not replace an old provision with a
+  new one "without indicating at the same time that this change is being made" (Zasady techniki
+  prawodawczej, §§ 87(1) and 86, own translation,
+  https://www.senat.gov.pl/gfx/senat/userfiles/_public/k10/kancelaria/wydawnictwa/pdf/zasady_techniki.pdf).
+- **Relations:** derives from WAY-02 · related to WAY-07 · related to WAY-18
+- **Outranks:** none
+- **Verification:** level 1 — invariants in working form:
+  - the heading of every decision version has the form `### <prefix>-NN/V — <question>`, and the
+    versions of a number are consecutive;
+  - every version after the first gives a rationale for the change.
+  Level 2 for one number per question and for sentences answered in passing — an agent compares
+  the change with the decision:
+  - complies: once on the main branch, a new rule for who approves a version of a decision is
+    written as WAY-14/2; when a decision on a question arrives, an older decision that answered
+    it in passing loses that sentence;
+  - violates: the same question gets a second number; a version carries only the sentence that
+    changed; the sentence stays in both decisions.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** TODO — awaiting Mariusz's review
+
+*Rationale:* a permanent number lets references survive a change (WAY-02): a reference that
+relies on the wording is flagged by its fingerprint, and the rest follow the decision. A new
+number for every change would force every reference to be rewired, or leave it pointing at a dead
+entry, and the current answer would be reached through a chain of replacements. Each version
+restates the decision whole, so no reader assembles it from pieces. A sentence answered in
+passing moves to the decision that now answers its question, because two entries answering one
+question drift apart, and a change to one of them hides a change to the other. The prefix keeps
+numbers of different products apart in references, and numbers carry no topic, so nothing is
+renumbered when topics shift.
+*Rejected:* a new number for every change, with the old entry marked as replaced — references
+must be rewired or stay with a dead entry; numbering by topic — topics move, and numbers would
+have to move with them.
+*Consequences:* the section "Numbers and versions" of the decision template and its rule on the
+prefix are the written form of this decision. The reasoning behind a decision is spread over its
+versions, so the view has to reach a decision's earlier versions through a history line.
