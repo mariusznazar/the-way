@@ -140,7 +140,8 @@ used when a different, more specific decision deliberately goes against this one
 - *Relations* use a closed list: `derives from` (a higher decision this one serves), `narrows`
   (this decision deliberately goes against the one named, in a narrower area), `related to`
   (anything else).
-- Only the newer entry writes a relation; the view shows the reverse at the older entry.
+- A relation is written in the entry that depends on the other; the view shows it at the other
+  entry.
 - *Outranks* names decisions that give way to this one when both apply and collide. It holds
   only for the pairs listed; nothing is inferred along a chain. Two decisions that outrank each
   other are an error.

@@ -729,8 +729,8 @@ written by hand at the other end of a link — they go missing.
 *Consequences:* the opening paragraph of the decision template, its rule that entries are
 appended in the order they are written and its rule on who writes a relation are the written
 form of this decision. The view script does not exist yet; until it does, what is in force is read from the log as the
-latest version of each number. Which end of a link writes it is set by WAY-17 for links between
-elements and by the template for relations between decisions.
+latest version of each number. The end that writes a link is the entry that depends on the other
+(WAY-17), for relations between decisions as for links between elements.
 
 ### WAY-19/1 — How are decisions numbered and versioned?
 
