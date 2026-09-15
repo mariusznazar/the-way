@@ -429,3 +429,44 @@ will not report it by itself. A step at the end of a task is the kind of step th
 *Consequences:* the task's log needs a home, because the return step reads it. Comparing the
 foundation with the code in the parts a task touched needs the part map's rule for assigning
 files. How often the periodic review runs is set when the task cycle is designed.
+
+### WAY-12/1 — How is a decision checked?
+
+A decision is checked through the invariants derived from it, and tests live only with
+invariants. Where no invariant can be derived today, an agent compares a change with the decision
+using a pair of examples — one that complies and one that violates — and where an agent cannot
+judge, a human assesses it and leaves a trace of who and when. A decision can combine levels,
+each covering the part of its binding sentences it can check.
+
+- **Change:** new decision
+- **Scope:** decisions, invariants
+- **Based on:** language models judge only part of what decisions say: "The models achieved
+  substantial agreement and strong accuracy for explicit, code-inferable decisions. Accuracy falls
+  short for implicit or deployment-oriented decisions that depend on deployment configuration or
+  organizational knowledge" (Su, Bakhtin, Ahmad, Esposito, Lenarduzzi, Taibi, 2026,
+  https://arxiv.org/abs/2602.07609).
+- **Relations:** related to WAY-05 · related to WAY-08
+- **Outranks:** none
+- **Verification:** level 1 — invariants in working form:
+  - every decision entry names its verification level, and a level 1 entry names at least one
+    invariant;
+  - a test that cites a foundation entry cites an invariant, never a decision.
+  Level 2 for the choice of level — an agent compares the change with the decision:
+  - complies: a decision on the product's direction is checked by an agent with a complying and a
+    violating example;
+  - violates: a decision whose rule a lint check could enforce is left at level 2.
+- **Review when:** the design of the task cycle begins · check by: 2026-09-23
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-15
+
+*Rationale:* an invariant is true or false on every commit, so a test can check it; a decision
+about direction, trade-offs or non-goals often cannot be checked on a commit. Agents compare a
+change well with a decision that is explicit and readable from the code, and fall short on
+decisions that depend on deployment or on knowledge of the organisation — those stay with a human.
+A pair of examples shows the agent where the line runs, which the binding sentences alone do not.
+*Rejected:* a rule in code as the only method of checking a decision — decisions that cannot be
+written as a rule would stay unchecked.
+*Consequences:* the section "Verification" of the decision template is the written form of this
+decision. Until the invariants element has its template, a derived invariant is named in working
+form. A decision moves to level 1 once an invariant is derived from it.
