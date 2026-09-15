@@ -155,7 +155,9 @@ external constraints as a field of the map (a constraint is an environment fact,
 obligation it creates is an invariant); product principles and non-goals as a separate kind of
 entry (they are decisions like any other); diagrams and an ARCHITECTURE.md written by hand (a
 second copy of the map); environment facts as hypotheses in the backlog (they are true or false
-today).
+today); assumptions as a kind of entry — anything inconvenient could be called an assumption and
+escape checking, and a mandatory condition for disproving it with a review date narrows that way
+round without closing it.
 *Consequences:* each element is described in `elements/<element>/` of the process repository;
 the description grows into the element's template as the element goes through its steps. Every
 picture of the architecture — a diagram, a code map for an agent, a description — is generated
