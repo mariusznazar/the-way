@@ -557,3 +557,51 @@ format guard checks only that every version records its approval, and every vers
 is approved by Mariusz. Nothing yet settles who approves a decision whose scope spans parts with
 different approvers. This decision covers decisions only; approval of other foundation entries is
 set when their elements are designed.
+
+### WAY-15/1 — What in a foundation is written by hand, and what is derived?
+
+What can be derived from what the product executes — code, configuration, infrastructure as
+code, runtime traces — is derived, never written by hand, and what is derived describes the
+state. Rules are written by hand: what is allowed, what is critical and what the product
+promises, which the code cannot show.
+
+- **Change:** new decision
+- **Scope:** decisions, invariants, glossary, part map, environment facts
+- **Based on:** code shows what exists, not the rules: "Your architecture models and your source
+  code will not show the same things. The difference between them is the model-code gap", and
+  "intensional elements establish general rules that apply to all elements, but standard
+  programming languages cannot directly express these rules" (George Fairbanks,
+  https://www.georgefairbanks.com/software-architecture/model-code-gap/). A view recovered from
+  the code shows accidents as decisions: "Principal architecture decisions may not have been
+  implemented and are therefore out of reach of architecture recovery. Conversely, the system
+  may reflect inadvertent decisions […]" (Link et al., ISEC 2019,
+  https://arxiv.org/abs/1901.07700).
+- **Relations:** related to WAY-04 · related to WAY-08 · related to WAY-11
+- **Outranks:** none
+- **Verification:** level 1 — invariant in working form: every derived file in the repository
+  is identical to what its generator produces on the same commit. Level 2 for what is derived
+  and what is written by hand — an agent compares the change with the decision:
+  - complies: the view of the decisions in force is generated from the log; the existing
+    dependencies between parts are generated from the imports and compared with the allowed
+    dependencies written in the part map;
+  - violates: a hand-written list of the product's endpoints kept next to the code; the allowed
+    dependencies in the part map copied from the current import graph.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-15
+
+*Rationale:* a description written by hand of what the product simply has — a list of screens,
+endpoints or configuration options — is a second copy that nobody reconciles with the code, and
+it goes stale with the next change; a generator is written once and stays true on every commit.
+The line runs between state and rules: code shows what exists, not what is allowed, so a view
+derived from it presents an accidental state as the architecture, and a rule copied from the
+current state turns an accident into law. Rules therefore stay with a human, and deriving the
+state is what lets it be compared with them.
+*Rejected:* "do not write by hand what can be derived from code" as the whole rule — it reads
+as a demand to derive the part map, whose rules code cannot show; derivation from code alone —
+the code shows structure, while behaviour shows in runtime traces and deployment in
+infrastructure files.
+*Consequences:* every derived view has a generator, and a derived file is regenerated, never
+edited by hand. Comparing the derived state with the rules needs the part map's rule for
+assigning files (WAY-04).
