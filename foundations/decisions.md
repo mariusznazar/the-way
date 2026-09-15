@@ -782,3 +782,50 @@ have to move with them.
 *Consequences:* the section "Numbers and versions" of the decision template and its rule on the
 prefix are the written form of this decision. The reasoning behind a decision is spread over its
 versions, so the view has to reach a decision's earlier versions through a history line.
+
+### WAY-20/1 — What kinds of change can a decision undergo?
+
+Every version after the first names its kind of change from a closed list: editorial correction,
+rationale change, field change, new wording, narrowing, challenge, replacement, repeal. A
+rationale change, a field change and a challenge keep the binding sentences of the previous
+version word for word, and a repeal has none.
+
+- **Change:** new decision
+- **Scope:** decisions
+- **Based on:** a relation word left without a definition drifts in use: the IETF "Updates" tag
+  "is currently used for multiple different purposes, which leads to confusion …" (Kuehlewind,
+  Krishnan, https://www.ietf.org/archive/id/draft-kuehlewind-update-tag-04.html). Processes that
+  last give a correction of wording a path of its own: "Errata are meant to fix "bugs" in the
+  specification and should not be used to change what the community meant when it approved the
+  RFC" (IESG,
+  https://datatracker.ietf.org/doc/statement-iesg-iesg-processing-of-rfc-errata-for-the-ietf-stream-20080730).
+- **Relations:** related to WAY-02 · related to WAY-05 · related to WAY-18 · related to WAY-19
+- **Outranks:** none
+- **Verification:** level 1 — invariants in working form:
+  - every version after the first names a kind from the list;
+  - the binding sentences are identical to the previous version for a rationale change, a field
+    change and a challenge, and absent for a repeal.
+  Level 2 for the choice of kind — an agent compares the change with the decision:
+  - complies: a version that answers the question anew is called a replacement; a typo fixed in
+    a binding sentence is called an editorial correction, and a human confirms that the meaning is
+    unchanged;
+  - violates: a version called an editorial correction turns "must" into "may"; a whole new
+    answer is called a new wording.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** TODO — awaiting Mariusz's review
+
+*Rationale:* a version has to say what it does to the decision, because everything that relies
+on the decision needs that first: a fixed typo leaves every reliance valid, a new answer does
+not, and a replacement leaves work built on the old answer to be dealt with. A word for a change
+left without a definition ends up meaning something different to each author, so the list is
+closed and each kind is defined in the template. The list was closed before the first entry, so
+every version in the log uses its kind in one sense.
+*Rejected:* two kinds only, change and replacement — a fixed typo would look like a new answer;
+an open list extended as needed — each new kind would carry its author's meaning.
+*Consequences:* the table "Kinds of change" in the decision template is the written form of this
+decision, except for its column on references: how each kind flags references to the decision is
+not yet reconciled with WAY-02, under which a changed fingerprint alone raises a flag. A challenge
+ends with the next version: a rationale change when the doubt is settled in the decision's
+favour, or the change that settles it otherwise.
