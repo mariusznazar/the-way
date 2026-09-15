@@ -470,3 +470,52 @@ written as a rule would stay unchecked.
 *Consequences:* the section "Verification" of the decision template is the written form of this
 decision. Until the invariants element has its template, a derived invariant is named in working
 form. A decision moves to level 1 once an invariant is derived from it.
+
+### WAY-13/1 — What sets the weight of a task's process?
+
+What a task touches, never its size, sets its process: an agent's analysis at the start of the
+task settles whether it changes the foundation, which chooses its path, and the criticality of
+the parts it touches, as the part map records it, together with whether the change can be
+undone, set how sharply it is checked. Paths differ in their steps, never in the result a task
+has to reach, and a task's size serves only as a signal to split it. A human decides on every
+change that cannot be undone.
+
+- **Change:** new decision
+- **Scope:** task cycle
+- **Based on:** formal approval does not make changes safer: "No evidence was found to support
+  the hypothesis that a more formal, external review process was associated with lower change
+  fail rates" (DORA, https://dora.dev/capabilities/streamlining-change-approval/). Changes that
+  cannot be undone call for a different process: they are "consequential and irreversible or
+  nearly irreversible – one-way doors – and these decisions must be made methodically,
+  carefully, slowly, with great deliberation and consultation" (Jeff Bezos, 2015 letter to
+  shareholders,
+  https://www.sec.gov/Archives/edgar/data/1018724/000119312516530910/d168744dex991.htm).
+- **Relations:** related to WAY-01 · related to WAY-04 · related to WAY-10
+- **Outranks:** none
+- **Verification:** level 1 — invariant in working form: a merge request that changes a
+  foundation entry, run on the path for tasks that do not change the foundation, fails the CI
+  check. Level 2 for the rest — an agent compares the change with the decision:
+  - complies: a one-line change to a stored data format, after which users' saved data no
+    longer loads, goes through the sharpest checks and waits for a human's decision;
+  - violates: a task gets the heavier path because of the number of lines it changes; a change
+    that cannot be undone reaches the main branch without a human's decision.
+- **Review when:** the design of the task cycle begins · check by: 2026-09-23
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-15
+
+*Rationale:* size misleads both ways: a change across many files can be a mechanical rename
+that is easy to undo, while a one-line change to a stored data format can destroy the data of
+every user. How much process a task needs depends on what can go wrong: whether the task changes
+what the product is meant to be, how serious a failure of the parts it touches is, and whether
+the change can be taken back. Paths differ only in their steps, because a light path allowed a
+weaker result becomes a way around the process. Size still matters as a signal: a large task is
+split, so that each part can be checked and undone on its own. A human's attention goes where
+only a human can decide, to a change that cannot be taken back.
+*Rejected:* one cycle for all tasks; choosing the path by the task's size; a human approving
+every diff — formal review does not lower the rate of failed changes, and it spends a human's
+attention where it adds nothing.
+*Consequences:* every task starts with an agent's analysis of whether it changes the
+foundation. Setting how sharply a task is checked needs the criticality of parts from the part
+map (WAY-04) and a way to recognise a change that cannot be undone, which nothing defines yet.
+The paths and their steps are set when the task cycle is designed.
