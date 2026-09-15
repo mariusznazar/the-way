@@ -945,3 +945,175 @@ unseen; a field for the topic of an entry — nothing reads it (WAY-05).
 written form of this decision. Decision records a product already has when the process enters it
 are a source for inherited decisions, not a second log. The decisions of this process bind every
 product without standing in its log; how a product's checks see them is not yet settled.
+
+### WAY-24/1 — How is a decision that rests on a prediction reviewed?
+
+A decision that rests on a prediction names in *Review when* the predicted state of the world or
+the product, observable when it comes, and a check-by date; the field does not lift the decision,
+and the agent working in its scope checks whether the state has come. On the date, a review entry
+records the result: the state has not come, with the next date; it has come and the decision is
+kept; or it has come and a named version changed the decision.
+
+- **Change:** new decision
+- **Scope:** decisions
+- **Based on:** a criterion for revisiting a bet works when it is concrete and timed: "The best
+  quitting criteria combine two things: a state and a date" (Annie Duke,
+  https://behavioralscientist.org/annie-duke-quit-mental-models-to-help-you-cut-your-losses/).
+  An end date written into a rule does not by itself bring the rule to an end: "More often than
+  not, despite the inclusion of a sunset clause, legislation has been renewed for a longer period
+  of time than the original sunset clause or even made permanent" (Westminster Foundation for
+  Democracy, 2022,
+  https://www.wfd.org/sites/default/files/2022-01/2022-01-18%20PLS%20sunset%20clauses%20-%20final.pdf).
+- **Relations:** related to WAY-07 · related to WAY-17 · related to WAY-18 · related to WAY-19 ·
+  related to WAY-20
+- **Outranks:** none
+- **Verification:** level 1 — invariants in working form:
+  - every *Review when* other than `none` names both a state and a date;
+  - a check-by date that has passed without a later review entry gives a warning;
+  - a review whose result is that the state has not come names a date in *Next check*;
+  - a review that names a version of the decision points to a version that exists.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** TODO — awaiting Mariusz's review
+
+*Rationale:* a decision that rests on a prediction is a bet, and a state with a date turns "we
+will see" into something someone checks. The field never ends the decision by itself: an end
+date written into a rule is more often extended than acted on, so here the date only asks for a
+look, and the look is recorded. Each review names what was observed, so a run of "not yet" shows
+as such instead of being renewed in silence. A review is an entry of its own and not a version,
+because a version restates the whole decision (WAY-19), and a look that changed nothing would add
+a full copy of it.
+*Rejected:* a decision that expires on a date — the date is extended rather than acted on; a
+review date without a state — nobody knows what to check; a review written as a new version — a
+full copy of the decision for every look that changed nothing.
+*Consequences:* the section "Review" of the decision template is the written form of this
+decision. Until the view and the format guard exist, pending dates are kept only by the skill and
+by whoever reads the log. Before the main branch, whether a passed date is answered with a review
+entry or with the date corrected in place is not yet settled (WAY-07). How a change in a decision
+this one depends on reaches it is not settled by this field.
+
+### WAY-25/1 — What settles a collision between two decisions?
+
+Precedence between decisions is recorded pair by pair in *Outranks*: a decision names the
+decisions that give way to it when both apply and collide, nothing follows along a chain, and two
+decisions that outrank each other are an error. A collision between two decisions with no
+precedence recorded is never settled by the agent that meets it; a human records the precedence
+in one of them — by a new version on the main branch, by a correction before it.
+
+- **Change:** new decision
+- **Scope:** decisions, task cycle
+- **Based on:** none
+- **Relations:** related to WAY-07 · related to WAY-14 · related to WAY-20
+- **Outranks:** none
+- **Verification:** level 1 — invariant in working form: no two decisions outrank each other.
+  Level 2 for a collision with no precedence — an agent compares the change with the decision:
+  - complies: an agent meets two applicable decisions that pull opposite ways, finds no
+    precedence between them, stops and asks for it;
+  - violates: an agent settles the collision in favour of the newer decision; an agent infers
+    that A outranks C because A outranks B and B outranks C.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** TODO — awaiting Mariusz's review
+
+*Rationale:* a ranked list of principles claims an order between pairs that never meet, and
+every new principle has to be placed against all the others; pairs record only what someone
+actually weighed. Nothing follows along a chain, because A over B and B over C were weighed in
+different situations and say nothing about A and C. An agent that settles an unrecorded
+collision itself makes a trade-off no human made.
+*Rejected:* one ranked list of principles, as in organisations that keep no more than seven
+tenets "in descending order of priority" (AWS,
+https://aws.amazon.com/blogs/enterprise-strategy/tenets-supercharging-decision-making/) — an
+order claimed for pairs nobody weighed; levels of authority over whole groups of decisions — a
+collision inside a level stays unresolved; the newest decision wins — the date of a decision is
+not its weight.
+*Consequences:* the field *Outranks* and the rules on precedence in the decision template — in
+"Relations and precedence" and in the sentence on precedence between principles — are the
+written form of this decision. When a new decision is less important than an existing one, the
+existing one gets the new number in its *Outranks*: by a field change on the main branch, by a
+correction before it. `narrows` stays for a decision that deliberately goes against another in a
+narrower area; *Outranks* is for two decisions that both apply. What the agent does once it has
+stopped is set by the rules for a change that contradicts a decision.
+
+### WAY-26/1 — How are trade-off principles and non-goals written?
+
+Each trade-off principle is a decision of its own, whose binding sentence says which of two good
+things is chosen when they conflict and whose rationale names the problem it solves. Each
+non-goal is a decision of its own that says what the product does not do and why; non-goals
+exist only at product level, and a task's exclusions stay in the task's plan unless they outlive
+the task.
+
+- **Change:** new decision
+- **Scope:** decisions, task cycle
+- **Based on:** a principle guides only when both sides are worth having: principles of this kind
+  weigh "two things that could be entirely good choices" (The Uncertainty Project,
+  https://www.theuncertaintyproject.org/tools/even-over-statements), and "A tenet takes a stand by
+  declaring that a team cares more about one thing than another" (Kindel,
+  https://blog.kindel.com/2020/02/10/tenets/). Exclusions made for one piece of work carry that
+  work's reason: "No-gos — Anything specifically excluded from the concept: functionality or use
+  cases we intentionally aren't covering to fit the appetite or make the problem tractable"
+  (Shape Up, https://basecamp.com/shapeup/1.5-chapter-06).
+- **Relations:** related to WAY-04 · related to WAY-11 · related to WAY-22 · related to WAY-25
+- **Outranks:** none
+- **Verification:** level 2 — an agent compares the change with the decision:
+  - complies: "When speed of release conflicts with completeness of a feature, we choose speed",
+    as an entry of its own, with a rationale naming the problem it solves; "The product has no
+    multiplayer", with its reason, as an entry of its own;
+  - violates: a principle naming one good thing only ("we value quality"); several principles or
+    several non-goals in one entry; an exclusion that ends with its task written into the log as
+    a product non-goal.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** TODO — awaiting Mariusz's review
+
+*Rationale:* a principle rules later choices only when it names what it gives up; a sentence in
+favour of one good thing decides nothing. The rationale names the problem, so that a later reader
+can tell when the principle has stopped serving it. Each principle and each non-goal is an entry
+of its own, so that each one changes on its own, with its own reason, and so that precedence can
+be recorded between principles pair by pair (WAY-25). A task's exclusions end with the task,
+while a product's non-goals hold until they are changed, so only the latter belong in the log.
+*Rejected:* several principles or non-goals in one entry — a change to one flags them all, and no
+precedence can be recorded between them; every task exclusion in the log — most expire with their
+task and bury the product's non-goals.
+*Consequences:* the section "Trade-off principles and non-goals" of the decision template, apart
+from its sentence on precedence between principles, which belongs to WAY-25, is the written form
+of this decision. A non-goal that a commit can break gets an invariant derived from it (WAY-22).
+A task's exclusion that turns out to outlive the task comes back through the return step (WAY-11)
+as a non-goal. A task's plan has no home in the process yet (WAY-01).
+
+### WAY-27/1 — Where may this repository point for its reasoning?
+
+Nothing in this repository points to a source outside it that its readers cannot reach: every
+entry carries its whole reasoning, and a fact seen only in such a source is described in the
+entry instead of being pointed to.
+
+- **Change:** new decision
+- **Scope:** decisions, invariants, glossary, part map, environment facts, relation model, task
+  cycle
+- **Based on:** none
+- **Relations:** related to WAY-09 · related to WAY-17
+- **Outranks:** none
+- **Verification:** level 1 — invariant in working form: no file in the repository contains a link
+  into a private note collection or into a repository its readers cannot open. Level 2 for the
+  reasoning in the entry — an agent compares the change with the decision:
+  - complies: a decision quotes a public study with its address; a pattern observed in a product
+    outside the repository is described in the rationale — what was seen and where it went
+    wrong — without a pointer to it;
+  - violates: *Origin* points to a private note; a rationale rests on "as in our other product"
+    without saying what was seen.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** TODO — awaiting Mariusz's review
+
+*Rationale:* a pointer to a source the reader cannot open is a dead end, and it leaves the reader
+to trust a claim that cannot be checked. The reasoning therefore travels with the entry, and a
+fact seen where readers cannot look is written down as what was seen, so that it can at least be
+judged, and WAY-17 still has a fact to name.
+*Rejected:* *Origin* pointing to the notes where the reasoning was worked out — no reader of the
+repository can open them.
+*Consequences:* *Origin* in this log is `none` or points to a document its readers can open. The
+entries written before this one already follow it. Products built with this process are not
+bound by this decision; their logs may point to their own documents.
