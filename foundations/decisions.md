@@ -329,3 +329,30 @@ tested out of the foundation, or gives them a test that always passes.
 *Consequences:* an invariant test is accepted only after a deliberate break has made it fail, so
 the quality gate needs a way to introduce such breaks. An invariant that no test or measurement
 can settle stays in the foundation, checked by a person.
+
+### WAY-09/1 — What may enter the process repository?
+
+Only foundation elements reach the main branch of this repository, each with its template and
+rules, a skill that writes its entries and a script that checks them.
+
+- **Change:** new decision
+- **Scope:** decisions, invariants, glossary, part map, environment facts, relation model
+- **Based on:** none
+- **Relations:** related to WAY-04 · related to WAY-06
+- **Outranks:** none
+- **Verification:** level 1 — invariant in working form: every file on the main branch belongs to
+  a foundation element that has a template, a skill and a script.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-15
+
+*Rationale:* the repository shows what the process looks like when it works, and an artefact
+brought in on the side turns it into a store of material from the first day. The skill writes an
+entry in the right form when someone runs it; the script catches a form broken by hand, by
+another agent or by a merge. Until an element has all of them, it is a change in progress, and
+under WAY-06 such a change lives on a branch.
+*Rejected:* material merged to the main branch as soon as it is written; an element whose only
+tool is a skill — the form then holds only while someone remembers to run it.
+*Consequences:* element descriptions in `elements/` reach the main branch as templates with their
+skills and scripts, not as descriptions.
