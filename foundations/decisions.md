@@ -519,3 +519,41 @@ attention where it adds nothing.
 foundation. Setting how sharply a task is checked needs the criticality of parts from the part
 map (WAY-04) and a way to recognise a change that cannot be undone, which nothing defines yet.
 The paths and their steps are set when the task cycle is designed.
+
+### WAY-14/1 — Who approves a version of a decision?
+
+Who approves a version of a decision is set by a process rule for the parts in its scope; the
+entry names an approver, in *Approver override*, only when that rule does not apply to it. Every
+version records who approved it and when.
+
+- **Change:** new decision
+- **Scope:** decisions
+- **Based on:** the UK government's decision record framework sets the level at which a decision
+  is made from the reach of its impact — a team's decision is "Local to a single team or working
+  group", with "No impact on other teams or shared platforms" — and its record has no field for
+  an owner (Architectural Decision Record Framework, GOV.UK,
+  https://www.gov.uk/government/publications/architectural-decision-record-framework/architectural-decision-record-framework).
+- **Relations:** related to WAY-05 · related to WAY-07 · related to WAY-10 · related to WAY-13
+- **Outranks:** none
+- **Verification:** level 1 — invariants in working form:
+  - every decision version records who approved it and when;
+  - every version is approved by the approver the process rule gives for the parts in its
+    scope, or by the one its *Approver override* names.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-15
+
+*Rationale:* an approver written into every entry repeats the same name across the log and goes
+stale when people change roles, while a rule for each part changes in one place. An entry names
+someone only as an exception, so an exception stands out instead of drowning among repeated
+names. The record of who approved and when is what a human considering a change reads, and what
+WAY-07 needs when an entry has to be accepted again.
+*Rejected:* an approver named in every entry — the same name repeated, stale once the team
+changes; lists of decision-makers and of those consulted — nothing reads them.
+*Consequences:* the section "Approval" of the decision template is the written form of this
+decision. The rule that names the approver for each part has no home yet; until it has one, the
+format guard checks only that every version records its approval, and every version in this log
+is approved by Mariusz. Nothing yet settles who approves a decision whose scope spans parts with
+different approvers. This decision covers decisions only; approval of other foundation entries is
+set when their elements are designed.
