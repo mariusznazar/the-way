@@ -643,3 +643,45 @@ reports a method it cannot run, such as an inspection by a human, is not yet set
 on the template of the invariants element. Which checks a change calls for is set when the task
 cycle is designed. Under WAY-09 the gate reaches the main branch of this repository only as part
 of a foundation element, and no element holds it today.
+
+### WAY-17/1 — Which links between foundation entries are mandatory?
+
+Every link of the chain fact → decision → invariant → test is written in the entry that depends
+on the other, and none is optional: a decision and an invariant name the environment facts they
+rest on, an invariant derived from a decision names that decision, and an invariant test names
+its invariant.
+
+- **Change:** new decision
+- **Scope:** relation model, decisions, invariants, environment facts
+- **Based on:** an assumption about the world that no entry names escapes review: the inquiry
+  into the failure of Ariane 5 found that "this decision was found directly in the source code.
+  Given the large amount of documentation associated with any industrial application, the
+  assumption, although agreed, was essentially obscured, though not deliberately, from any
+  external review" (Ariane 501 Inquiry Board, ESA,
+  https://www.esa.int/Newsroom/Press_Releases/Ariane_501_-_Presentation_of_Inquiry_Board_report).
+- **Relations:** derives from WAY-02 · related to WAY-04 · related to WAY-12
+- **Outranks:** none
+- **Verification:** level 1 — invariants in working form:
+  - every invariant test names an invariant;
+  - every invariant named in a decision's level 1 verification names that decision.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-16
+
+*Rationale:* the chain is the path a change travels: when a fact about the world changes, the
+decisions and invariants resting on it come up for review, and through them their tests. A link
+missing anywhere breaks the path without a sign, because nothing shows which dependent should
+have been reached. The link is written in the dependent entry, as every reference is (WAY-02):
+whoever writes an entry knows what it rests on, while the entry it rests on cannot know what will
+be built on it. Research findings about agents and models are environment facts of this process
+like any other — the world around the product, true today and liable to change.
+*Rejected:* links written by the entry that others depend on — it cannot know what will be built
+on it; optional links — a link never written cannot be told from one that is not needed;
+research findings kept as evidence outside the environment facts — the decisions of this process
+about agents would have no fact to be flagged by.
+*Consequences:* until the environment facts element has entries, a decision quotes its facts
+with their sources in *Based on*; once it has them, every *Based on* in this log names them
+instead. On the main branch, a fact learned after a decision is added to it by a field change.
+Whether a decision's *Verification* keeps naming its invariants once they have entries of their
+own is not yet settled: it depends on the template of the invariants element.

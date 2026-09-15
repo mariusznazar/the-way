@@ -1,6 +1,7 @@
 # Invariants
 
 An invariant is a rule the product has to keep. Each invariant carries its method of checking
-and the current result of running it (WAY-08), and names the environment facts it rests on.
+and the current result of running it (WAY-08), and names the environment facts it rests on
+(WAY-17).
 
 This description grows into the element's template as the element goes through its steps.
