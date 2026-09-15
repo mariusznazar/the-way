@@ -356,3 +356,42 @@ under WAY-06 such a change lives on a branch.
 tool is a skill — the form then holds only while someone remembers to run it.
 *Consequences:* element descriptions in `elements/` reach the main branch as templates with their
 skills and scripts, not as descriptions.
+
+### WAY-10/1 — Who assesses a change to an invariant test or to the foundation?
+
+A change to an invariant test or to the foundation is assessed by a panel of three agents: two
+assess it independently, each from a different, named perspective and seeing only the diff and
+the foundation, never the author's reasoning, and the third, on a different model where one is
+available, settles between them. The panel decides changes of an invariant test's form — how the
+test reaches the product: selectors, test data, waiting. Every other change the panel prepares
+with the diff, its effects and a recommendation, and a human decides.
+
+- **Change:** new decision
+- **Scope:** decisions, invariants, glossary, part map, environment facts, task cycle
+- **Based on:** a model assessing text is biased towards its own: "an LLM evaluator scores its own
+  outputs higher than others' while human annotators consider them of equal quality"
+  (Panickssery et al., 2024, https://arxiv.org/abs/2404.13076).
+- **Relations:** derives from WAY-03 · related to WAY-07
+- **Outranks:** none
+- **Verification:** level 1 — invariant in working form: a merge request that changes an invariant
+  test or a foundation entry without the panel's record — two assessments and a settlement —
+  fails the CI check. Level 2 for what the panel decides — an agent compares the change with the
+  decision:
+  - complies: the panel accepts a new selector in an invariant test, and the change is merged
+    without a human;
+  - violates: the panel accepts a changed expected value in an invariant test; an assessing agent
+    receives the author's reasoning.
+- **Review when:** the design of the task cycle begins · check by: 2026-09-23
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-15
+
+*Rationale:* the problem is a single executor that checks itself. Agents on the same model with
+the same input share its blind spots, so independence comes from a different perspective, from
+not seeing the author's reasoning, and from a different model for the agent that settles. Only a
+human knows what the product is meant to guard, so every change to what the foundation says goes
+to a human.
+*Rejected:* a panel that settles everything; a single agent without a panel.
+*Consequences:* the CI check from WAY-03 accepts a change to an invariant test only with the
+panel's record, and, beyond a change of form, only with a human decision. Changes waiting for a
+human grow with the number of tasks, and nothing yet limits how many may wait.
