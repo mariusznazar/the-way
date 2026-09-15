@@ -395,3 +395,37 @@ to a human.
 *Consequences:* the CI check from WAY-03 accepts a change to an invariant test only with the
 panel's record, and, beyond a change of form, only with a human decision. Changes waiting for a
 human grow with the number of tasks, and nothing yet limits how many may wait.
+
+### WAY-11/1 — How does a task end?
+
+A task ends with a return step before its branch is merged: an agent lists from the diff and the
+task's log what the foundation does not say — new rules, decisions made along the way, code
+behaviour with no invariant over it — and proposes it as a foundation change for the panel. In
+the same step it compares the foundation with the code in the parts the task touched. A periodic
+review of the whole foundation runs alongside, independent of tasks.
+
+- **Change:** new decision
+- **Scope:** decisions, invariants, glossary, part map, environment facts, task cycle
+- **Based on:** none
+- **Relations:** derives from WAY-01 · related to WAY-06 · related to WAY-10
+- **Outranks:** none
+- **Verification:** level 1 — invariant in working form: a merge request without the record of
+  its return step fails the CI check. Level 2 for what the return step finds — an agent compares
+  the change with the decision:
+  - complies: a rule the implementer wrote into the code for an edge case comes back as a
+    proposed invariant before the merge;
+  - violates: the return step reports nothing to add, while the diff brings in behaviour that no
+    invariant covers.
+- **Review when:** the design of the task cycle begins · check by: 2026-09-23
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-15
+
+*Rationale:* part of the foundation is learned only in implementation and in use. Agreement
+between the foundation and the code has to be checked, because a task that missed the foundation
+will not report it by itself. A step at the end of a task is the kind of step that goes missing
+(WAY-01), so the merge waits for its record.
+*Rejected:* the foundation changed only at the start of a task.
+*Consequences:* the task's log needs a home, because the return step reads it. Comparing the
+foundation with the code in the parts a task touched needs the part map's rule for assigning
+files. How often the periodic review runs is set when the task cycle is designed.
