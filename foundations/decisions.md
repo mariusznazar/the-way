@@ -1164,3 +1164,94 @@ it was recovered and its cause is unknown; the invariants element has no place f
 A decision recovered for a task is written as the section "Inherited decisions" of the decision
 template says, and decision records the product already has are read as sources when their parts
 are touched (WAY-23).
+
+### WAY-29/1 — How is a decision recovered from an existing product written?
+
+A decision recovered from an existing product records in *Origin* what was searched and what was
+found, and its rationale and rejected options are quoted from that source, given by a human who
+knows them, or written as `unknown`. A rationale an agent proposes goes to a human as a question,
+never into the entry.
+
+- **Change:** new decision
+- **Scope:** decisions
+- **Based on:** rationales written by language models match those given by experts only in part:
+  "the Precision of LLM-generated DR with the three prompting strategies ranges from 0.267 to
+  0.278" (Zhou et al., https://arxiv.org/abs/2504.20781). A reconstructed record is easily taken
+  for a real one: "The retroactive ADR has the form of the decision record but not the
+  substance" (Catio, https://www.catio.tech/blog/architecture-decision-record).
+- **Relations:** related to WAY-06 · related to WAY-10 · related to WAY-23 · related to WAY-28
+- **Outranks:** none
+- **Verification:** level 1 — invariants in working form:
+  - every inherited decision has *Origin* in the form `inherited — searched: <…>; found: <…>`;
+  - the *Rationale* of every inherited decision is `unknown`, a quotation with its source, or
+    attributed to the human who gave it.
+  Level 2 for the agent's part — an agent compares the change with the decision:
+  - complies: an agent finds the reason in a merged request and quotes it; an agent finds
+    nothing, writes `unknown` and asks the human, who remembers the reason, and the entry gives
+    it under that person's name;
+  - violates: an agent writes a plausible reason inferred from the code into the entry.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** TODO — awaiting Mariusz's review
+
+*Rationale:* a reason written by an agent looks exactly like one that was recorded, and later
+readers take it for the reason the decision was made. Quoting only from a source keeps the two
+apart; a human who knows the reason is such a source, an agent's guess is not. Recording what was
+searched spares the next agent the same search. While the reason is unknown, a change to the
+decision goes to a human anyway (WAY-10), and the entry says openly that nobody can tell what the
+decision guards.
+*Rejected:* a rationale proposed by an agent written into the entry — it would be read as the
+reason the decision was made; rejected options filled in as `none considered` — nobody knows what
+was considered.
+*Consequences:* the section "Inherited decisions" of the decision template is the written form of
+this decision; its rule that a change to such a decision goes to a human follows from WAY-10.
+`unknown` here is a value, not a `TODO`: nobody is expected to supply it. A reason found later
+enters by a new version on the main branch, by a correction before it.
+
+### WAY-30/1 — What happens when a change contradicts a decision?
+
+A change to a decision that a task needs is written into the task's plan and approved with it by
+the decision's approver. When a contradiction shows only during implementation, the agent stops,
+quotes the decision by its number, and either brings the change into line, drops the change, or
+proposes on the task branch a new wording, a narrowing or a replacement of the decision — by a
+new version on the main branch, by a correction before it — and the code that needs it waits for
+the decision's approver. An exception written in advance into a decision's binding sentences is
+not a contradiction, and no exception lives only in a task's plan.
+
+- **Change:** new decision
+- **Scope:** decisions, task cycle
+- **Based on:** tools that guard principles in agent work refuse a quiet way around them:
+  "Constitution conflicts are automatically CRITICAL and require adjustment of the spec, plan, or
+  tasks—not dilution, reinterpretation, or silent ignoring of the principle" (GitHub Spec Kit,
+  https://github.com/github/spec-kit/blob/main/templates/commands/analyze.md).
+- **Relations:** derives from WAY-01 · related to WAY-03 · related to WAY-06 · related to WAY-07 ·
+  related to WAY-14 · related to WAY-21 · related to WAY-24 · related to WAY-25
+- **Outranks:** none
+- **Verification:** level 2 — an agent compares the change with the decision:
+  - complies: a task branch whose code goes against a decision also carries a proposed narrowing
+    of that decision, and the merge waits for its approver;
+  - violates: a task branch whose code contradicts a decision that stays unchanged; a task's plan
+    that records a "justified violation" of a decision.
+- **Review when:** the design of the task cycle begins · check by: 2026-09-23
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** TODO — awaiting Mariusz's review
+
+*Rationale:* an exception kept only in a task's plan leaves the foundation describing something
+the code no longer does (WAY-01). Stopping makes the contradiction visible at the moment it is
+found. The agent may bring its change into line or drop it on its own, because both leave the
+decision as it is; changing the decision is for its approver, and the code waits for that, as the
+foundation comes before the code (WAY-01). A narrowing keeps the decision for everything outside
+the exception, and a narrowing made for a situation that may pass carries *Review when*, so that
+someone looks at it again (WAY-24). An exception foreseen in the binding sentences is part of the
+decision, so acting on it contradicts nothing.
+*Rejected:* a justified violation recorded in the plan without a change to the decision, as Spec
+Kit's plan template allows — the foundation stops matching the code; a replacement as the only
+way to change the decision — a narrow exception would take the whole decision with it.
+*Consequences:* the rule on exceptions foreseen in advance in the section "Binding sentences" of
+the decision template is part of the written form of this decision. The task cycle needs a step
+in the plan for changes to decisions, and a task's plan has no home in the process yet (WAY-01).
+When the contradiction is a collision between two decisions with no precedence recorded, the
+agent stops and asks for the precedence (WAY-25). Checking an implementation against decisions
+needs the decisions in the scope of the change (WAY-21).
