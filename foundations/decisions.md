@@ -714,7 +714,7 @@ is written at one end only, and the view shows it at the other.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** TODO — awaiting Mariusz's review
+- **Approved by:** Mariusz, 2026-09-16
 
 *Rationale:* the history of a decision and the statement of what holds today serve different
 reads: whoever wants to change a decision needs its versions and reasons, while an agent checking
@@ -767,7 +767,7 @@ loses it — by a new version on the main branch, by a correction before it.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** TODO — awaiting Mariusz's review
+- **Approved by:** Mariusz, 2026-09-16
 
 *Rationale:* a permanent number lets references survive a change (WAY-02): a reference that
 relies on the wording is flagged by its fingerprint, and the rest follow the decision. A new
@@ -816,7 +816,7 @@ version word for word, and a repeal has none.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** TODO — awaiting Mariusz's review
+- **Approved by:** Mariusz, 2026-09-16
 
 *Rationale:* a version has to say what it does to the decision, because everything that relies
 on the decision needs that first: a fixed typo leaves every reliance valid, a new answer does
@@ -857,7 +857,7 @@ the part map's rule for assigning files.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** TODO — awaiting Mariusz's review
+- **Approved by:** Mariusz, 2026-09-16
 
 *Rationale:* an agent checks a change only against the decisions it reads, and among many rules
 it loses some, so the decisions that govern what a change touches have to be found for it. Parts
@@ -896,7 +896,7 @@ behind it is an invariant alone.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** TODO — awaiting Mariusz's review
+- **Approved by:** Mariusz, 2026-09-16
 
 *Rationale:* the two are read differently: an invariant is checked mechanically on every commit,
 while a decision is weighed when a later choice is made. A checkable rule left only in a
@@ -934,7 +934,7 @@ A product keeps all its decisions in one log, whatever they are about.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** TODO — awaiting Mariusz's review
+- **Approved by:** Mariusz, 2026-09-16
 
 *Rationale:* a collision between a product decision and a technical one is caught only when both
 are in the set a change is checked against; two logs each look consistent while contradicting
@@ -978,7 +978,7 @@ kept; or it has come and a named version changed the decision.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** TODO — awaiting Mariusz's review
+- **Approved by:** Mariusz, 2026-09-16
 
 *Rationale:* a decision that rests on a prediction is a bet, and a state with a date turns "we
 will see" into something someone checks. The field never ends the decision by itself: an end
@@ -1018,7 +1018,7 @@ in one of them — by a new version on the main branch, by a correction before i
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** TODO — awaiting Mariusz's review
+- **Approved by:** Mariusz, 2026-09-16
 
 *Rationale:* a ranked list of principles claims an order between pairs that never meet, and
 every new principle has to be placed against all the others; pairs record only what someone
@@ -1070,7 +1070,7 @@ the task.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** TODO — awaiting Mariusz's review
+- **Approved by:** Mariusz, 2026-09-16
 
 *Rationale:* a principle rules later choices only when it names what it gives up; a sentence in
 favour of one good thing decides nothing. The rationale names the problem, so that a later reader
@@ -1110,7 +1110,7 @@ entry instead of being pointed to.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** TODO — awaiting Mariusz's review
+- **Approved by:** Mariusz, 2026-09-16
 
 *Rationale:* a pointer to a source the reader cannot open is a dead end, and it leaves the reader
 to trust a claim that cannot be checked. The reasoning therefore travels with the entry, and a
@@ -1150,7 +1150,7 @@ only when a task touches the parts they govern.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** TODO — awaiting Mariusz's review
+- **Approved by:** Mariusz, 2026-09-16
 
 *Rationale:* matching a whole product to a description written after the fact is slow, and it
 tempts an agent to write reasons that look like decisions, so decisions wait until a task needs
@@ -1196,7 +1196,7 @@ never into the entry.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** TODO — awaiting Mariusz's review
+- **Approved by:** Mariusz, 2026-09-16
 
 *Rationale:* a reason written by an agent looks exactly like one that was recorded, and later
 readers take it for the reason the decision was made. Quoting only from a source keeps the two
@@ -1239,7 +1239,7 @@ not a contradiction, and no exception lives only in a task's plan.
 - **Review when:** the design of the task cycle begins · check by: 2026-09-23
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** TODO — awaiting Mariusz's review
+- **Approved by:** Mariusz, 2026-09-16
 
 *Rationale:* an exception kept only in a task's plan leaves the foundation describing something
 the code no longer does (WAY-01). Stopping makes the contradiction visible at the moment it is
