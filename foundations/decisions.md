@@ -685,3 +685,47 @@ with their sources in *Based on*; once it has them, every *Based on* in this log
 instead. On the main branch, a fact learned after a decision is added to it by a field change.
 Whether a decision's *Verification* keeps naming its invariants once they have entries of their
 own is not yet settled: it depends on the template of the invariants element.
+
+### WAY-18/1 — How are the history of decisions and what is in force kept apart?
+
+The decision log holds every entry in the order it was written, and what is in force today is a
+view that a script generates from the log: the latest version of each number, and in place of a
+repealed decision a single line pointing to the version that repealed it. A link between entries
+is written at one end only, and the view shows it at the other.
+
+- **Change:** new decision
+- **Scope:** decisions
+- **Based on:** Python's decision process keeps the settled record apart from the current
+  description: "a PEP is considered a historical document rather than a living specification",
+  and "Formal documentation of the expected behavior should be maintained elsewhere, such as the
+  Language Reference" (PEP 1, https://peps.python.org/pep-0001/). Polish rules for consolidated
+  legal texts keep the place of a repealed provision with a pointer: its designation and the word
+  "repealed" are entered, with a note giving the title of the repealing act (Zasady techniki
+  prawodawczej, § 106, own translation,
+  https://www.senat.gov.pl/gfx/senat/userfiles/_public/k10/kancelaria/wydawnictwa/pdf/zasady_techniki.pdf).
+- **Relations:** related to WAY-05 · related to WAY-07 · related to WAY-15 · related to WAY-17
+- **Outranks:** none
+- **Verification:** level 1 — invariants in working form:
+  - the view shows only the latest version of every number, and a single line for a repealed
+    number;
+  - every link written in the log is shown by the view at both of its ends.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** TODO — awaiting Mariusz's review
+
+*Rationale:* the history of a decision and the statement of what holds today serve different
+reads: whoever wants to change a decision needs its versions and reasons, while an agent checking
+a change works from what is in force and reaches the options rejected earlier through the
+history. One document edited in place loses the history; one document that only grows buries the
+current state. A mark written by hand at the other end of a link is the kind of step that goes
+missing, because nobody reopens an old entry when a new one refers to it, so each link is written
+once and the generated view shows both ends.
+*Rejected:* a single document edited in place — the history is lost and nothing shows what
+changed when; a log without a view — every reader reconstructs the current state by hand; marks
+written by hand at the other end of a link — they go missing.
+*Consequences:* the opening paragraph and the section "Where entries go" of the decision
+template, with its rule on who writes a relation, are the written form of this decision. The
+view script does not exist yet; until it does, what is in force is read from the log as the
+latest version of each number. Which end of a link writes it is set by WAY-17 for links between
+elements and by the template for relations between decisions.
