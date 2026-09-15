@@ -286,3 +286,46 @@ becomes a version that never bound anything.
 *Consequences:* the format guard compares the log with the main branch, not with the previous
 commit. Until this log reaches the main branch, its entries are corrected in place. A copy in
 `examples.md` follows its version when the version is corrected.
+
+### WAY-08/1 — How is an invariant checked?
+
+Every invariant names its method of checking, and its current result comes from running that
+method, never from a status written by hand. The default method is a test in the broad sense —
+a code test, an end-to-end test or an exploratory test run by an agent on the working product —
+and a test counts only when a deliberately introduced break of the invariant makes it fail, in k
+of n runs for a test that does not give the same result every time. Human inspection is used for
+assessments that neither an automated check nor a repeatable measurement can settle, and it
+leaves a trace of who checked and when.
+
+- **Change:** new decision
+- **Scope:** invariants
+- **Based on:** a test can cover code without checking it: a pseudo-tested method is "covered by
+  the test suite, yet no test case fails when the method body is removed" (Vera-Pérez, Danglot,
+  Monperrus, Baudry, 2019, https://arxiv.org/abs/1807.05030). Automated tools leave cases that
+  only a person can settle: "axe-core will return elements as "incomplete" where axe-core could
+  not be certain, and manual review is needed" (https://github.com/dequelabs/axe-core).
+- **Relations:** related to WAY-03 · related to WAY-04
+- **Outranks:** none
+- **Verification:** level 1 — invariants in working form:
+  - every invariant names a method of checking;
+  - every invariant test fails on a deliberately introduced break of its invariant;
+  - every result of a human inspection names who checked and when.
+  Level 2 for the choice of method — an agent compares the change with the decision:
+  - complies: a person settles whether an image's text alternative describes it, after the
+    accessibility check marked it incomplete;
+  - violates: an invariant that a repeatable measurement can settle is left to human inspection.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-15
+
+*Rationale:* coverage does not mean that a test checks anything: code can be covered while no
+test fails when it is removed, so a test counts only when a break it is meant to catch makes it
+fail. A result written by hand is a second copy of what running the method says, and it goes
+stale with the next commit. Some assessments stay with a person, because even the tools built
+for them hand the uncertain cases over for manual review.
+*Rejected:* "every invariant has test coverage" — it either pushes invariants that cannot be
+tested out of the foundation, or gives them a test that always passes.
+*Consequences:* an invariant test is accepted only after a deliberate break has made it fail, so
+the quality gate needs a way to introduce such breaks. An invariant that no test or measurement
+can settle stays in the foundation, checked by a person.
