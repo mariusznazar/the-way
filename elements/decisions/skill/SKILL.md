@@ -25,10 +25,12 @@ here; if not, stop.
   existing code (then the template's section on inherited decisions applies).
 - Name the one question the binding sentences answer. When they answer two independent
   questions, propose two entries, or keep the question the rest serves.
-- Search the log for that question: found — a new version, with its kind of change from the
-  template's table; not found — a new number.
+- Search the log for that question: found on the main branch — a new version, with its kind of
+  change from the template's table; found only on this branch — a correction in place, shown for
+  acceptance again when it changes the meaning; not found — a new number.
 - Read the decisions with an overlapping *Scope*: a relation, a possible collision, or a
-  sentence that answered this question in passing and now needs a version without it.
+  sentence that answered this question in passing and now needs a version or a correction
+  without it.
 
 ## 3. Draft
 
@@ -52,8 +54,8 @@ Fill every field according to the template, with extra care for these:
    *Approved by*.
 3. Check the entry against the template's list "What the format guard checks", then append it
    at the end of the log.
-4. Entries that follow from this one — a version of a neighbour found in step 2 — go through
-   steps 3 and 4 one at a time.
+4. Entries that follow from this one — a version or a correction of a neighbour found in
+   step 2 — go through steps 3 and 4 one at a time.
 
 ## Review entry
 

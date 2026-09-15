@@ -1,7 +1,7 @@
 # Decision log
 
 The decisions of the-way, the process for building products. Entries follow
-`elements/decisions/template.md` and are only ever appended.
+`elements/decisions/template.md` and, on the main branch, are only ever appended.
 
 ### WAY-01/1 — What state does the foundation describe?
 
@@ -248,3 +248,41 @@ from the existing product — also reaches the main branch through a task branch
 catches two tasks that change the same entry in contradictory ways, but contradictory changes to
 different entries merge cleanly; checking the merged foundation for consistency needs a
 mechanism of its own.
+
+### WAY-07/1 — From when may a decision entry no longer be edited?
+
+An entry in the decision log is corrected in place until it reaches the main branch; until then
+it gets no new version and no new decision about it. A correction that changes the meaning of an
+accepted entry is accepted again. Once an entry is on the main branch, it is never edited, and
+the log there only grows at the end.
+
+- **Change:** new decision
+- **Scope:** decisions
+- **Based on:** none
+- **Relations:** derives from WAY-06 · related to WAY-05
+- **Outranks:** none
+- **Verification:** level 1 — invariants in working form:
+  - a merge to the main branch that changes or removes a line of the log already on the main
+    branch fails the format guard;
+  - a merge to the main branch adds at most one version of each number.
+  Level 2 for acceptance after a change of meaning — an agent compares the change with the
+  decision:
+  - complies: an accepted entry whose binding sentences changed on the task branch is shown to
+    its approver again before the merge;
+  - violates: an entry reaches the main branch with binding sentences its approver never saw.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-15
+
+*Rationale:* an entry binds only once it describes the product on the main branch (WAY-01,
+WAY-06); before that it is part of a change in progress. Versions written on a task branch would
+carry into the log states that never bound anything. On the main branch the log keeps what was in
+force, as it was, so there it only grows. *Approved by* is a trace of what a human accepted; after
+a change of meaning without a new acceptance, it would name someone who did not approve what the
+entry says.
+*Rejected:* an entry fixed from the moment it is written — every correction made during a task
+becomes a version that never bound anything.
+*Consequences:* the format guard compares the log with the main branch, not with the previous
+commit. Until this log reaches the main branch, its entries are corrected in place. A copy in
+`examples.md` follows its version when the version is corrected.
