@@ -1022,7 +1022,8 @@ in one of them — by a new version on the main branch, by a correction before i
 every new principle has to be placed against all the others; pairs record only what someone
 actually weighed. Nothing follows along a chain, because A over B and B over C were weighed in
 different situations and say nothing about A and C. An agent that settles an unrecorded
-collision itself makes a trade-off no human made.
+collision itself makes a trade-off no human made. One person records the precedence, so that one
+person answers for the trade-off when it is questioned.
 *Rejected:* one ranked list of principles, as in organisations that keep no more than seven
 tenets "in descending order of priority" (AWS,
 https://aws.amazon.com/blogs/enterprise-strategy/tenets-supercharging-decision-making/) — an
