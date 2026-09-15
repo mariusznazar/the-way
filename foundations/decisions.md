@@ -605,3 +605,41 @@ infrastructure files.
 *Consequences:* every derived view has a generator, and a derived file is regenerated, never
 edited by hand. Comparing the derived state with the rules needs the part map's rule for
 assigning files (WAY-04).
+
+### WAY-16/1 — How are the checks of invariants run?
+
+The quality gate takes its checks from the methods of checking written in the entries, never
+from a list written by hand, and runs the checks a change calls for with one command, the same
+command for an agent, CI and a human.
+
+- **Change:** new decision
+- **Scope:** invariants, task cycle
+- **Based on:** none
+- **Relations:** related to WAY-08 · related to WAY-13 · related to WAY-15
+- **Outranks:** none
+- **Verification:** level 1 — invariants in working form:
+  - CI runs no checking command other than the gate's command;
+  - every check the gate runs comes from a method of checking written in an entry.
+  Level 2 for the same command for everyone — an agent compares the change with the decision:
+  - complies: the instructions for agents name the gate's command as the way to check a change;
+  - violates: the instructions for agents list test and lint commands of their own.
+- **Review when:** the design of the task cycle begins · check by: 2026-09-23
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-15
+
+*Rationale:* a list of checks written by hand — in the CI configuration, in the instructions for
+an agent, in a person's habits — is a second copy of the list of invariants, and each copy
+drifts on its own: a new invariant is never run, a removed one still is. A gate that reads the
+methods from the entries runs exactly what the foundation says, and one command for everyone
+removes the question of which list someone ran. Under WAY-08 the current result of an invariant
+comes from running its method; the gate is what runs it.
+*Rejected:* a gate written for each product — it drifts from that product's invariants;
+separate commands for an agent, CI and a human — three lists to keep in step; running every
+check on every change — it leaves no room for checking a change as sharply as what it touches
+calls for (WAY-13).
+*Consequences:* every method of checking is written in a form the gate can read. How the gate
+reports a method it cannot run, such as an inspection by a human, is not yet settled: it depends
+on the template of the invariants element. Which checks a change calls for is set when the task
+cycle is designed. Under WAY-09 the gate reaches the main branch of this repository only as part
+of a foundation element, and no element holds it today.
