@@ -1355,3 +1355,59 @@ and precedence between decisions that both apply is recorded in *Outranks* (WAY-
 precedence" of the decision template is the written form of this decision. A new type enters by a
 new version of this decision, once something reads a distinction the three types do not make
 (WAY-05). Types of links between entries of other elements are set by those elements (WAY-17).
+
+### WAY-33/1 — What does the author of a foundation change search for?
+
+When a foundation entry is written, or a version changes what it binds, an agent searches the
+whole foundation for entries it touches that no written link joins to it, and before the version
+is accepted each finding becomes a relation, a change to one of the entries, or a question to a
+human. The search runs again against the current main branch before the task branch is merged,
+and a merge request that changes the foundation without the record of both searches fails the CI
+check.
+
+- **Change:** new decision
+- **Scope:** decisions, invariants, glossary, part map, environment facts, task cycle
+- **Based on:** in a product built before this process, a requirement that players log in and a
+  decision to keep the game's whole state in the browser, with no server, were written in separate
+  documents with no link between them; they contradicted each other, and nothing a change could
+  flag connected them.
+- **Relations:** related to WAY-02 · related to WAY-06 · related to WAY-10 · related to WAY-11 ·
+  related to WAY-21 · related to WAY-25 · related to WAY-31
+- **Outranks:** none
+- **Verification:** level 1 — invariant in working form: a merge request that changes a foundation
+  entry without the record of the search made when it was written and of the search against the
+  current main branch fails the CI check. Level 2 for what the search covers — an agent compares
+  the change with the decision:
+  - complies: a new decision to keep the state in the browser is written, the search finds a
+    requirement for player accounts in another part that nothing links to it, and the
+    contradiction goes to a human before the decision is accepted;
+  - violates: the search reads only the decisions whose scope overlaps; the search against the
+    main branch was made before another task that changed the foundation was merged.
+- **Review when:** the design of the task cycle begins · check by: 2026-09-23
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-16
+
+*Rationale:* fingerprints (WAY-02, WAY-31) flag only links someone wrote, and the contradictions
+that cost most lie between entries written apart — in different parts, at different times — where
+nobody thought to write a link. Only a search at the moment of writing looks for what is not
+linked. It covers the whole foundation, because a search within overlapping scopes would never
+set a decision about storage against a requirement about accounts. It runs for every version that
+changes what an entry binds, because a new wording touches other entries as a new entry does,
+while a change to the rationale or the fields touches nothing new. The search at writing sees the
+foundation as it was when the branch was made, and two tasks that change different entries in
+contradictory ways merge without a file conflict (WAY-06), so the search runs again against the
+main branch before the merge. A search is a step that goes missing, so the merge waits for its
+record, and a finding becomes a link, a change or a question, because a finding left in a report
+is forgotten.
+*Rejected:* the layer of numbers and fingerprints alone — it sees only links someone wrote; a
+search among the decisions with overlapping scope — contradictions between parts go unseen; a
+search at writing only — tasks running in parallel collide unseen once merged; a field in the entry
+recording the search — nothing reads it once the entry is accepted.
+*Consequences:* the search does not guarantee that nothing was missed: it is a layer above the
+fingerprints, not a replacement for them. Where the record of the searches lives and what it holds
+are set when the task cycle is designed, together with the records of the panel (WAY-10) and of
+the return step (WAY-11). A finding that is a collision with no precedence recorded stops the work
+(WAY-25). The skill that writes decisions searches the whole foundation, not only the decisions in
+an overlapping scope. Until the other elements have entries, the foundation searched is the
+decision log.
