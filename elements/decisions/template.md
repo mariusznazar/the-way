@@ -101,6 +101,8 @@ flag references.
   non-goals.
 - **Test:** can you point to a commit on which the sentence is false? Yes — it is an invariant.
   It is about a choice or a direction — it is a decision.
+- **Plan test:** does the rule still bind once the change that brings it is merged? No — it
+  belongs to the plan of that work, not to the log.
 - Tests live only with invariants. A decision is verified through the invariants derived from
   it.
 

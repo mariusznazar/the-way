@@ -1514,3 +1514,37 @@ script and the skill hold entries to different rules.
 correction of the template; for decisions it comes with a decision in the log (WAY-05). The
 opening paragraph of `record-decision` follows this decision, and the skills of the other elements
 follow it once they are written.
+
+### WAY-36/1 — Is a rule a decision or part of a plan?
+
+A rule enters the decision log only when it still binds once the change that brings it has been
+merged; a rule that ends with a piece of work — an order of steps, a first merge, a transition
+between two states — stays in the plan of that work.
+
+- **Change:** new decision
+- **Scope:** decisions, task cycle
+- **Based on:** none
+- **Relations:** related to WAY-01 · related to WAY-07 · related to WAY-22 · related to WAY-26
+- **Outranks:** none
+- **Verification:** level 2 — an agent compares the change with the decision:
+  - complies: "the foundation reaches the main branch whole, once every element is ready" stays in
+    the plan of building the foundation; "when what entries wait for arrives, they are corrected in
+    the same change" enters the log;
+  - violates: a decision on the order in which elements are built; a decision whose binding
+    sentences say what happens until the first merge.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-17
+
+*Rationale:* WAY-01 keeps plans out of the foundation but gives no way to recognise one, and a
+plan written in the present tense reads like a decision. The log binds on the main branch
+(WAY-07), and a rule that ends when its change is merged binds nothing there: from its first day on
+the main branch it is a record of something already done, which would need a repeal at once. The
+test asks the same kind of question as the one between a decision and an invariant — whether the
+sentence can be pointed at a moment where it still binds.
+*Rejected:* plans written into the log and repealed once done — the log fills with the history of
+work instead of what binds.
+*Consequences:* the plan test in the section "Decision or invariant" of the decision template is
+the written form of this decision, and the skill applies it before drafting an entry. A plan of
+work has no home in the process yet (WAY-26).
