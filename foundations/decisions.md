@@ -970,7 +970,9 @@ unseen; a field for the topic of an entry — nothing reads it (WAY-05).
 *Consequences:* the rule in the decision template that the log has no topical sections is the
 written form of this decision. Decision records a product already has when the process enters it
 are a source for inherited decisions, not a second log. The decisions of this process bind every
-product without standing in its log; how a product's checks see them is not yet settled.
+product without standing in its log: a product reads them from the commit of the-way it pins
+(WAY-34), and which of them a task is checked against is set when the task cycle is designed
+(WAY-21).
 
 ### WAY-24/1 — How is a decision that rests on a prediction reviewed?
 
