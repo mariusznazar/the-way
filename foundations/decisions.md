@@ -1549,3 +1549,39 @@ work instead of what binds.
 *Consequences:* the plan test in the section "Decision or invariant" of the decision template is
 the written form of this decision, and the skill applies it before drafting an entry. A plan of
 work has no home in the process yet (WAY-26).
+
+### WAY-37/1 — What happens to entries that wait for something when it arrives?
+
+A change that brings what entries of the foundation wait for — an element's template, the part
+map, a script — also corrects every entry that waits for it, in the same change: by a new version
+on the main branch, by a correction before it. An agent finds those entries by searching the whole
+foundation for what the change brings.
+
+- **Change:** new decision
+- **Scope:** decisions, invariants, glossary, part map, environment facts, relation model, task
+  cycle
+- **Based on:** none
+- **Relations:** related to WAY-01 · related to WAY-07 · related to WAY-19 · related to WAY-33
+- **Outranks:** none
+- **Verification:** level 2 — an agent compares the change with the decision:
+  - complies: the change that brings the template of invariants also turns every invariant named
+    in working form in the log into a reference to an entry, and corrects the consequences that
+    waited for that template;
+  - violates: the part map arrives, and WAY-21 still says that a scope names parts from a working
+    list.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-17
+
+*Rationale:* an entry that says what holds until something exists becomes false the moment it
+arrives, and nothing flags it: no link and no fingerprint (WAY-31) leads from what arrives to the
+entries that wait for it, so the foundation stops describing the product as it is (WAY-01) without
+a sign. Whoever brings the awaited thing knows what it is, while the authors of the waiting
+sentences may be long gone, so the search belongs to the change that brings it. The correction
+travels in the same change, because a correction left for later is a step that goes missing.
+*Rejected:* corrections left to the periodic review (WAY-11) — the foundation says something false
+until the review comes.
+*Consequences:* bringing an element, the part map or a shared script includes reading the whole
+foundation for sentences that wait for it — "until", "not yet", "in working form". A version on the
+main branch that changes only *Consequences* is a rationale change.
