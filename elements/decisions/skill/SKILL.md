@@ -28,9 +28,10 @@ here; if not, stop.
 - Search the log for that question: found on the main branch — a new version, with its kind of
   change from the template's table; found only on this branch — a correction in place, shown for
   acceptance again when it changes the meaning; not found — a new number.
-- Read the decisions with an overlapping *Scope*: a relation, a possible collision, or a
-  sentence that answered this question in passing and now needs a version or a correction
-  without it.
+- Search the whole foundation, not only the decisions with an overlapping *Scope*, for entries
+  this one touches that no written link joins to it. Each finding becomes a relation, a question
+  about a collision in step 4, or a sentence that answered this question in passing and now needs
+  a version or a correction without it.
 
 ## 3. Draft
 
