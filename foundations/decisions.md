@@ -827,8 +827,8 @@ every version in the log uses its kind in one sense.
 *Rejected:* two kinds only, change and replacement — a fixed typo would look like a new answer;
 an open list extended as needed — each new kind would carry its author's meaning.
 *Consequences:* the table "Kinds of change" in the decision template is the written form of this
-decision, except for its column on references: how each kind flags references to the decision is
-not yet reconciled with WAY-02, under which a changed fingerprint alone raises a flag. A challenge
+decision, except for its column on references and the sentence below the table, which belong to
+WAY-31. A challenge
 ends with the next version: a rationale change when the doubt is settled in the decision's
 favour, or the change that settles it otherwise.
 
@@ -990,11 +990,10 @@ a full copy of it.
 *Rejected:* a decision that expires on a date — the date is extended rather than acted on; a
 review date without a state — nobody knows what to check; a review written as a new version — a
 full copy of the decision for every look that changed nothing.
-*Consequences:* the section "Review" of the decision template is the written form of this
-decision. Until the view and the format guard exist, pending dates are kept only by the skill and
+*Consequences:* the section "Review" of the decision template, apart from its last sentence,
+which belongs to WAY-31, is the written form of this decision. Until the view and the format guard exist, pending dates are kept only by the skill and
 by whoever reads the log. Before the main branch, whether a passed date is answered with a review
-entry or with the date corrected in place is not yet settled (WAY-07). How a change in a decision
-this one depends on reaches it is not settled by this field.
+entry or with the date corrected in place is not yet settled (WAY-07).
 
 ### WAY-25/1 — What settles a collision between two decisions?
 
