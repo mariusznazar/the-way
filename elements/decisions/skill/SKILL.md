@@ -55,8 +55,9 @@ Fill every field according to the template, with extra care for these:
    value and the reason for it.
 2. Show the whole entry. Apply corrections; on acceptance, write who accepted and the date in
    *Approved by*.
-3. Check the entry against the template's list "What the format guard checks", then append it
-   at the end of the log.
+3. Append the entry at the end of the log and run the format guard from the product's
+   repository root: `python -B <parent of the resolved directory>/format_guard.py`. Fix what
+   the entry broke and run it again; an error or warning elsewhere in the log goes to the human.
 4. Entries that follow from this one — a version or a correction of a neighbour found in
    step 2, and, when this entry changes a decision's binding sentences, every decision that
    derives from it or narrows it — go through steps 3 and 4 one at a time.
