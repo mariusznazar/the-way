@@ -1588,3 +1588,39 @@ travels in the same change, because a correction left for later is a step that g
 until the review comes.
 *Consequences:* bringing an element, the part map or a shared script includes reading the whole
 foundation for sentences that wait for it — "until", "not yet", "in working form".
+
+### WAY-38/1 — In what are the scripts of the-way written?
+
+Every script of the-way runs on Python 3.10 or later with its standard library alone: it
+installs no packages and calls no program other than git.
+
+- **Change:** new decision
+- **Scope:** decisions, invariants, glossary, part map, environment facts, relation model, task
+  cycle
+- **Based on:** none
+- **Relations:** related to WAY-02 · related to WAY-09 · related to WAY-16 · related to WAY-34
+- **Outranks:** none
+- **Verification:** level 1 — invariants in working form:
+  - every script in the repository is a Python file;
+  - no script imports a module outside the standard library of Python 3.10;
+  - no script starts a program other than git.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-17
+
+*Rationale:* a product runs the scripts of the commit of the-way it pins (WAY-34), so every
+language and every package they need becomes something each product's CI has to provide. One
+language with its standard library alone leaves one interpreter to provide and nothing to
+install, and git is already there wherever a repository is checked. Every script works on plain
+text files (WAY-02), for which the standard library is enough, and it runs the same locally on
+Windows and in CI on Linux.
+*Rejected:* Node.js without packages — as able as Python; a second language adds a second
+interpreter to every product's CI; shell scripts in Bash or PowerShell — neither runs the same
+on Windows and on Linux; a compiled program in Go or Rust — every change needs a build and
+published files; each script in the language its author picks — a product's CI needs every
+interpreter any script chose.
+*Consequences:* a product's CI provides Python 3.10 or later and git. The format guard of
+decisions, the fingerprint script of the relation model (WAY-09), the view of decisions in force
+(WAY-18) and the quality gate (WAY-16) are written in Python. Skills and templates are not
+scripts, and this decision does not bind them.
