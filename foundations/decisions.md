@@ -248,8 +248,8 @@ for good.
 *Consequences:* a change with no code behind it — a fix to a rationale, a decision recovered
 from the existing product — also reaches the main branch through a task branch. A file conflict
 catches two tasks that change the same entry in contradictory ways, but contradictory changes to
-different entries merge cleanly; checking the merged foundation for consistency needs a
-mechanism of its own.
+different entries merge cleanly; the search against the current main branch before the merge
+(WAY-33) is what catches them.
 
 ### WAY-07/1 — From when may a decision entry no longer be edited?
 
