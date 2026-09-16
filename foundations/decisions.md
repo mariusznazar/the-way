@@ -216,7 +216,9 @@ binding rule cannot be separated from its reasoning; normative capitals such as 
 reads worse, not stronger; examples written for the template — an example with gaps teaches
 gaps.
 *Consequences:* adding or removing a field is a change of the template and therefore needs a
-decision. Until the format guard exists, the rules of the entry hold only through review.
+decision. The format guard,
+`elements/decisions/format_guard.py`, checks the rules on its list in the template; the other
+rules of the entry hold through review.
 
 ### WAY-06/1 — Where does a foundation change in progress live?
 
@@ -1021,8 +1023,9 @@ a full copy of it.
 review date without a state — nobody knows what to check; a review written as a new version — a
 full copy of the decision for every look that changed nothing.
 *Consequences:* the section "Review" of the decision template, apart from its last sentence,
-which belongs to WAY-31, is the written form of this decision. Until the view and the format guard exist, pending dates are kept only by the skill and
-by whoever reads the log. Before the main branch, whether a passed date is answered with a review
+which belongs to WAY-31, is the written form of this decision. A passed check-by date without a review is a
+warning of the format guard; until the view exists, dates still to come are kept only by the skill
+and by whoever reads the log. Before the main branch, whether a passed date is answered with a review
 entry or with the date corrected in place is not yet settled (WAY-07).
 
 ### WAY-25/1 — What settles a collision between two decisions?
