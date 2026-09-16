@@ -666,8 +666,8 @@ calls for (WAY-13).
 *Consequences:* every method of checking is written in a form the gate can read. How the gate
 reports a method it cannot run, such as an inspection by a human, is not yet settled: it depends
 on the template of the invariants element. Which checks a change calls for is set when the task
-cycle is designed. Under WAY-09 the gate reaches the main branch of this repository only as part
-of a foundation element, and no element holds it today.
+cycle is designed. Under WAY-09 the gate reaches the main branch of this repository in the
+directory of a part of the process — invariants or the task cycle — settled when it is built.
 
 ### WAY-17/1 — Which links between foundation entries are mandatory?
 
