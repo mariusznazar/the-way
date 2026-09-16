@@ -1258,3 +1258,63 @@ in the plan for changes to decisions, and a task's plan has no home in the proce
 When the contradiction is a collision between two decisions with no precedence recorded, the
 agent stops and asks for the precedence (WAY-25). Checking an implementation against decisions
 needs the decisions in the scope of the change (WAY-21).
+
+### WAY-31/1 — Which relations between decisions are flagged when the named decision changes?
+
+A relation `derives from` or `narrows` relies on the wording of the decision it names and carries
+that decision's content fingerprint (`derives from WAY-01@<fingerprint>`), while `related to` is a
+plain number. A change to a decision's fingerprint reaches the main branch together with every
+decision that relates to it with a fingerprint, each checked against the new wording and carrying
+the new fingerprint.
+
+- **Change:** new decision
+- **Scope:** decisions, relation model
+- **Based on:** requirement tools that keep traceability between items store the state of the
+  parent in each link: "Each link consists of the parent item UID and the fingerprint of the
+  parent item. When the fingerprint of a parent item changes, the link is reported as suspect
+  during validation" (Doorstop documentation,
+  https://github.com/doorstop-dev/doorstop/blob/develop/docs/cli/validation.md).
+- **Relations:** derives from WAY-02 · related to WAY-17 · related to WAY-18 · related to WAY-20 ·
+  related to WAY-24
+- **Outranks:** none
+- **Verification:** level 1 — invariants in working form:
+  - every `derives from` and `narrows` relation carries a fingerprint, and no `related to`
+    relation does;
+  - on the main branch, every fingerprint in a relation equals the current fingerprint of the
+    decision it names.
+  Level 2 for checking against the new wording — an agent compares the change with the decision:
+  - complies: WAY-01 gets a new wording, and the same merge brings field change versions of the
+    decisions deriving from it that still stand, and a new wording of one that no longer does;
+  - violates: a script renews every old fingerprint in the log without anyone reading the
+    decisions that carry them.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-16
+
+*Rationale:* a decision that derives from another, or narrows it, stands on what the other says:
+tests are read-only (WAY-03) because the foundation comes before the code (WAY-01), and a new
+wording of WAY-01 can take that reason away. A plain number points to whatever the other decision
+says today, so nothing shows that the ground has moved. `related to` is a passing mention, and a
+flag raised on it would be raised for nothing, which teaches people to clear flags without reading
+(WAY-02). The fingerprint is the mechanism WAY-02 already sets for references that rely on
+wording, so the log needs no second one. The renewal travels in the same merge, because on the
+main branch a decision resting on a wording no longer in force would bind without anyone having
+checked it, and a renewal written as a version records who checked (WAY-14).
+*Rejected:* flags from the kind of change and the order of the log — a second mechanism next to
+the fingerprint, and a kind misnamed by its author silences the flag; no flags in the log, with
+the author of a change reading the decisions that depend on it — a step that goes missing, and
+nothing catches it; a fingerprint on every relation — flags raised for nothing on passing
+mentions; flags left open on the main branch until a later task — a decision in force on ground
+nobody checked; flags of different strength for different kinds of change — nothing reads the
+strength, since the flag names the kind that raised it.
+*Consequences:* the rule on relations with fingerprints in the section "Relations and precedence"
+of the decision template, the column on references in its table "Kinds of change" and its
+sentence on how a change in another decision reaches this one, in the section "Review", are the
+written form of this decision. On the main branch, a change to a decision's binding sentences
+brings at least a field change version of every decision that derives from it or narrows it. A
+repealed decision has no fingerprint to renew: each decision that derives from it or narrows it
+drops the relation or changes with it. Until the format guard defines how the fingerprint is
+computed, relations in this log carry plain numbers, and fingerprints are added in place once it
+does. Which links between entries of other elements carry a fingerprint is set by those elements
+(WAY-17).

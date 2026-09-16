@@ -25,7 +25,7 @@ a script from the log.
 - **Change:** new decision | <kind> · previous: WAY-NN/V-1
 - **Scope:** <parts from the part map>
 - **Based on:** <facts about the environment> | none
-- **Relations:** derives from WAY-x · narrows WAY-y · related to WAY-z | none
+- **Relations:** derives from WAY-x@<fingerprint> · narrows WAY-y@<fingerprint> · related to WAY-z | none
 - **Outranks:** WAY-x, WAY-y | none
 - **Verification:** level 1 | 2 | 3 — <…>
 - **Review when:** <observable state> · check by: YYYY-MM-DD | none
@@ -64,7 +64,7 @@ A field stays in the template only while someone or something reads it.
 | version (heading) | the view script — the latest version is in force. A reference to a specific version (`WAY-06/1`) is historical and never flagged |
 | question (heading) | the author and the skill: is this a new version of an existing number, or a new number? The view uses it as the title |
 | binding sentences | the agent checking a change against the decision; the content fingerprint |
-| Change | the view script (history line, tombstone); reference flags, by kind |
+| Change | the view script (history line, tombstone); a raised flag, which names the kind of change |
 | Scope | choosing which decisions to check for a task: changed files → parts → decisions |
 | Based on | reviewing the decision when a fact changes |
 | Relations | impact assessment; reference flags |
@@ -123,14 +123,17 @@ The list is closed. Adding a kind takes a decision.
 | Kind | What changes | Binding sentences vs previous version | References to the decision |
 |---|---|---|---|
 | new decision | — (version 1) | — | — |
-| editorial correction | wording, not meaning | differ | not flagged, once a human confirms the meaning is unchanged |
+| editorial correction | wording, not meaning | differ | flagged; whoever clears the flag confirms the meaning is unchanged |
 | rationale change | the reasoning only | identical | not flagged |
 | field change | fields only | identical | not flagged |
 | new wording | what the decision says | differ | flagged |
-| narrowing | an exception is added | differ | flagged softly |
-| challenge | nothing yet — the decision is in doubt | identical | still in force; the view shows a warning |
-| replacement | the whole answer | differ | flagged sharply; *Consequences* says what happens to what was built on the old version |
-| repeal | the question no longer needs an answer | none | the view shows a tombstone — one line in place of the decision; flagged sharply |
+| narrowing | an exception is added | differ | flagged |
+| challenge | nothing yet — the decision is in doubt | identical | not flagged; still in force, and the view shows a warning |
+| replacement | the whole answer | differ | flagged; *Consequences* says what happens to what was built on the old version |
+| repeal | the question no longer needs an answer | none | flagged; the view shows a tombstone — one line in place of the decision |
+
+A reference is flagged when the fingerprint of the binding sentences it carries changes, and the
+flag names the kind of change that raised it.
 
 A *narrowing* version writes the exception into the decision itself. The relation `narrows` is
 used when a different, more specific decision deliberately goes against this one.
@@ -140,6 +143,11 @@ used when a different, more specific decision deliberately goes against this one
 - *Relations* use a closed list: `derives from` (a higher decision this one serves), `narrows`
   (this decision deliberately goes against the one named, in a narrower area), `related to`
   (anything else).
+- `derives from` and `narrows` rely on the wording of the decision they name and carry its content
+  fingerprint: `derives from WAY-01@<fingerprint>`. `related to` is a plain number.
+- A change to a decision's fingerprint reaches the main branch together with every decision that
+  relates to it with a fingerprint, each checked against the new wording and carrying the new
+  fingerprint.
 - A relation is written in the entry that depends on the other; the view shows it at the other
   entry.
 - *Outranks* names decisions that give way to this one when both apply and collide. It holds
@@ -205,8 +213,8 @@ the state has occurred. On the date, a review entry is appended:
 `Next check: none` closes the condition. A review is not a new version of the decision.
 
 *Review when* is only for a state of the world or the product that someone is waiting for.
-A change in another decision this one depends on is caught by reference flags, not by this
-field.
+A change in a decision this one derives from or narrows is caught by the fingerprint of the
+relation, not by this field.
 
 ## Origin
 
@@ -246,6 +254,9 @@ A decision recovered from the existing state of a product:
 - Binding sentences are identical to the previous version for *rationale change*,
   *field change* and *challenge*, and absent for *repeal*.
 - Every number in *Relations*, *Outranks* and `previous:` exists.
+- Every `derives from` and `narrows` relation carries a fingerprint, and no `related to` relation
+  does; on the main branch, every fingerprint in a relation equals the current fingerprint of the
+  decision it names.
 - *Outranks*: no two decisions outrank each other.
 - *Review when*: a passed check-by date without a later review gives a warning;
   `condition not met` requires a date in *Next check*; `changed in WAY-NN/V+1` requires that
