@@ -25,7 +25,7 @@ foundation step.
   cases" (ImpossibleBench — Zhong, Raghunathan, Carlini, 2025,
   https://arxiv.org/abs/2510.20270; quote from the authors' summary,
   https://www.lesswrong.com/posts/qJYMbrabcQqCZ7iqm/impossiblebench-measuring-reward-hacking-in-llm-coding-1).
-- **Relations:** derives from WAY-01 · related to WAY-02
+- **Relations:** derives from WAY-01@97ef277a · related to WAY-02
 - **Outranks:** none
 - **Verification:** level 1 — invariant in working form: a merge request that changes an
   invariant test without an accepted foundation change fails the CI check.

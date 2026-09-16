@@ -91,7 +91,7 @@ foundation step.
   cases" (ImpossibleBench — Zhong, Raghunathan, Carlini, 2025,
   https://arxiv.org/abs/2510.20270; quote from the authors' summary,
   https://www.lesswrong.com/posts/qJYMbrabcQqCZ7iqm/impossiblebench-measuring-reward-hacking-in-llm-coding-1).
-- **Relations:** derives from WAY-01 · related to WAY-02
+- **Relations:** derives from WAY-01@97ef277a · related to WAY-02
 - **Outranks:** none
 - **Verification:** level 1 — invariant in working form: a merge request that changes an
   invariant test without an accepted foundation change fails the CI check.
@@ -226,7 +226,7 @@ reaches the main branch in the same merge as the code that follows it.
 - **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part map, environment facts, task cycle
 - **Based on:** none
-- **Relations:** derives from WAY-01 · related to WAY-03
+- **Relations:** derives from WAY-01@97ef277a · related to WAY-03
 - **Outranks:** none
 - **Verification:** level 1 — invariant in working form: a commit that changes the foundation
   reaches the main branch only by merging a task branch. Level 2 for the rule that the change
@@ -262,7 +262,7 @@ the log there only grows at the end.
 - **Change:** new decision
 - **Scope:** decisions
 - **Based on:** none
-- **Relations:** derives from WAY-06 · related to WAY-05
+- **Relations:** derives from WAY-06@fe7c4068 · related to WAY-05
 - **Outranks:** none
 - **Verification:** level 1 — invariants in working form:
   - a merge to the main branch that changes or removes a line of the log already on the main
@@ -397,7 +397,7 @@ with the diff, its effects and a recommendation, and a human decides.
 - **Based on:** a model assessing text is biased towards its own: "an LLM evaluator scores its own
   outputs higher than others' while human annotators consider them of equal quality"
   (Panickssery et al., 2024, https://arxiv.org/abs/2404.13076).
-- **Relations:** derives from WAY-03 · related to WAY-07
+- **Relations:** derives from WAY-03@4fa941a4 · related to WAY-07
 - **Outranks:** none
 - **Verification:** level 1 — invariant in working form: a merge request that changes an invariant
   test or a foundation entry without the panel's record — two assessments and a settlement —
@@ -433,7 +433,7 @@ review of the whole foundation runs alongside, independent of tasks.
 - **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part map, environment facts, task cycle
 - **Based on:** none
-- **Relations:** derives from WAY-01 · related to WAY-06 · related to WAY-10
+- **Relations:** derives from WAY-01@97ef277a · related to WAY-06 · related to WAY-10
 - **Outranks:** none
 - **Verification:** level 1 — invariant in working form: a merge request without the record of
   its return step fails the CI check. Level 2 for what the return step finds — an agent compares
@@ -686,7 +686,7 @@ its invariant.
   assumption, although agreed, was essentially obscured, though not deliberately, from any
   external review" (Ariane 501 Inquiry Board, ESA,
   https://www.esa.int/Newsroom/Press_Releases/Ariane_501_-_Presentation_of_Inquiry_Board_report).
-- **Relations:** derives from WAY-02 · related to WAY-04 · related to WAY-12
+- **Relations:** derives from WAY-02@566e745d · related to WAY-04 · related to WAY-12
 - **Outranks:** none
 - **Verification:** level 1 — invariants in working form:
   - every invariant test names an invariant;
@@ -776,7 +776,7 @@ loses it — by a new version on the main branch, by a correction before it.
   new one "without indicating at the same time that this change is being made" (Zasady techniki
   prawodawczej, §§ 87(1) and 86, own translation,
   https://www.senat.gov.pl/gfx/senat/userfiles/_public/k10/kancelaria/wydawnictwa/pdf/zasady_techniki.pdf).
-- **Relations:** derives from WAY-02 · related to WAY-07 · related to WAY-18
+- **Relations:** derives from WAY-02@566e745d · related to WAY-07 · related to WAY-18
 - **Outranks:** none
 - **Verification:** level 1 — invariants in working form:
   - the heading of every decision version has the form `### <prefix>-NN/V — <question>`, and the
@@ -1257,8 +1257,8 @@ not a contradiction, and no exception lives only in a task's plan.
   "Constitution conflicts are automatically CRITICAL and require adjustment of the spec, plan, or
   tasks—not dilution, reinterpretation, or silent ignoring of the principle" (GitHub Spec Kit,
   https://github.com/github/spec-kit/blob/main/templates/commands/analyze.md).
-- **Relations:** derives from WAY-01 · related to WAY-03 · related to WAY-06 · related to WAY-07 ·
-  related to WAY-14 · related to WAY-21 · related to WAY-24 · related to WAY-25
+- **Relations:** derives from WAY-01@97ef277a · related to WAY-03 · related to WAY-06 ·
+  related to WAY-07 · related to WAY-14 · related to WAY-21 · related to WAY-24 · related to WAY-25
 - **Outranks:** none
 - **Verification:** level 2 — an agent compares the change with the decision:
   - complies: a task branch whose code goes against a decision also carries a proposed narrowing
@@ -1303,8 +1303,8 @@ the new fingerprint.
   parent item. When the fingerprint of a parent item changes, the link is reported as suspect
   during validation" (Doorstop documentation,
   https://github.com/doorstop-dev/doorstop/blob/develop/docs/cli/validation.md).
-- **Relations:** derives from WAY-02 · related to WAY-17 · related to WAY-18 · related to WAY-20 ·
-  related to WAY-24
+- **Relations:** derives from WAY-02@566e745d · related to WAY-17 · related to WAY-18 ·
+  related to WAY-20 · related to WAY-24
 - **Outranks:** none
 - **Verification:** level 1 — invariants in working form:
   - every `derives from` and `narrows` relation carries a fingerprint, and no `related to`
@@ -1343,10 +1343,8 @@ sentence on how a change in another decision reaches this one, in the section "R
 written form of this decision. On the main branch, a change to a decision's binding sentences
 brings at least a field change version of every decision that derives from it or narrows it. A
 repealed decision has no fingerprint to renew: each decision that derives from it or narrows it
-drops the relation or changes with it. Until the format guard defines how the fingerprint is
-computed, relations in this log carry plain numbers, and fingerprints are added in place once it
-does. Which links between entries of other elements carry a fingerprint is set by those elements
-(WAY-17).
+drops the relation or changes with it. The fingerprint is computed as WAY-39 says. Which links
+between entries of other elements carry a fingerprint is set by those elements (WAY-17).
 
 ### WAY-32/1 — What types of relation can a decision name?
 
@@ -1624,3 +1622,47 @@ interpreter any script chose.
 decisions, the fingerprint script of the relation model (WAY-09), the view of decisions in force
 (WAY-18) and the quality gate (WAY-16) are written in Python. Skills and templates are not
 scripts, and this decision does not bind them.
+
+### WAY-39/1 — How is the content fingerprint of an entry computed?
+
+The content fingerprint of a foundation entry is the first eight characters, in lower-case
+hexadecimal, of the SHA-256 digest of the entry's binding part encoded in UTF-8, taken after
+every run of spaces and line breaks is replaced by a single space and both ends are trimmed.
+Nothing else in the text is changed before it is digested.
+
+- **Change:** new decision
+- **Scope:** relation model, decisions, invariants, glossary, part map, environment facts
+- **Based on:** none
+- **Relations:** derives from WAY-02@566e745d · related to WAY-05 · related to WAY-09 ·
+  related to WAY-31 · related to WAY-38
+- **Outranks:** none
+- **Verification:** level 1 — invariants in working form:
+  - the fingerprint the relation model's script gives for a text equals the first eight
+    characters of the SHA-256 digest of that text with its whitespace reduced as the decision
+    says;
+  - binding sentences wrapped at different line lengths give the same fingerprint;
+  - binding sentences that differ in one character other than whitespace give different
+    fingerprints.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-17
+
+*Rationale:* entries are wrapped by hand at a line length, and wrapping them again says nothing
+new, so a flag raised by it would be raised for nothing (WAY-02). Every other change counts,
+because whether a change of a letter, a comma or a quotation alters the meaning is what the
+human clearing the flag decides; a script that ignored some of them would decide it silently.
+Eight characters keep a relation short enough to read in a list, with a chance of about one in
+four billion that a changed wording keeps its fingerprint. SHA-256 is in Python's standard
+library (WAY-38). One way of computing for every element keeps WAY-02 a single mechanism, while
+each element's template still says which part of its entry binds.
+*Rejected:* a digest of the text exactly as written — rewrapping a paragraph flags every
+reference; ignoring case and punctuation as well — a change of meaning carried by them goes
+unflagged; the full digest of 64 characters — relations become hard to read with nothing gained;
+a way of computing for each element — a reference to an entry would need to know its element to
+be checked.
+*Consequences:* the script that computes fingerprints lives in `relation-model/` (WAY-09), and the
+format guard of decisions uses it. A fixed typo in binding sentences changes the fingerprint and
+is cleared as an editorial correction. A repeal has no binding sentences, so it has no
+fingerprint (WAY-31). Changing this way of computing changes every fingerprint at once, and every
+relation that carries one is renewed in the same change.
