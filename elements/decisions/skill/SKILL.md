@@ -23,6 +23,8 @@ here; if not, stop.
 
 - Find what was decided and where it is said: the conversation, a document the human names, or
   existing code (then the template's section on inherited decisions applies).
+- Apply the template's plan test. When the rule is part of a plan, stop and say so; no entry is
+  written.
 - Name the one question the binding sentences answer. When they answer two independent
   questions, propose two entries, or keep the question the rest serves.
 - Search the log for that question: found on the main branch — a new version, with its kind of
