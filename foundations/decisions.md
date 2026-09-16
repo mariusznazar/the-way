@@ -853,7 +853,9 @@ an open list extended as needed — each new kind would carry its author's meani
 decision, except for its column on references and the sentence below the table, which belong to
 WAY-31. A challenge
 ends with the next version: a rationale change when the doubt is settled in the decision's
-favour, or the change that settles it otherwise.
+favour, or the change that settles it otherwise. A version that changes only *Consequences* is a
+rationale change, since the consequences are part of the reasoning and leave the fingerprint
+unchanged.
 
 ### WAY-21/1 — What is a decision's scope?
 
@@ -1583,5 +1585,4 @@ travels in the same change, because a correction left for later is a step that g
 *Rejected:* corrections left to the periodic review (WAY-11) — the foundation says something false
 until the review comes.
 *Consequences:* bringing an element, the part map or a shared script includes reading the whole
-foundation for sentences that wait for it — "until", "not yet", "in working form". A version on the
-main branch that changes only *Consequences* is a rationale change.
+foundation for sentences that wait for it — "until", "not yet", "in working form".
