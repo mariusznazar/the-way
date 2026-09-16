@@ -1317,3 +1317,41 @@ drops the relation or changes with it. Until the format guard defines how the fi
 computed, relations in this log carry plain numbers, and fingerprints are added in place once it
 does. Which links between entries of other elements carry a fingerprint is set by those elements
 (WAY-17).
+
+### WAY-32/1 — What types of relation can a decision name?
+
+A decision names its relation to another decision with one of three types, and the list is
+closed: `derives from` — a higher decision this one serves; `narrows` — a decision this one
+deliberately goes against in a narrower area; `related to` — any other link.
+
+- **Change:** new decision
+- **Scope:** decisions, relation model
+- **Based on:** a relation word left without a definition drifts in use: the IETF "Updates" tag
+  "is currently used for multiple different purposes, which leads to confusion …" (Kuehlewind,
+  Krishnan, https://www.ietf.org/archive/id/draft-kuehlewind-update-tag-04.html).
+- **Relations:** related to WAY-19 · related to WAY-20 · related to WAY-25 · related to WAY-31
+- **Outranks:** none
+- **Verification:** level 1 — invariant in working form: every relation in a decision entry has
+  one of the three types. Level 2 for the choice of type — an agent compares the change with the
+  decision:
+  - complies: a decision that exists to serve WAY-01 names `derives from WAY-01`; a rule for one
+    part that deliberately departs from a general decision names `narrows`;
+  - violates: `narrows` for a decision that only mentions another; a new answer to an existing
+    question written as a new number with a relation to the old one instead of a new version.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-16
+
+*Rationale:* a relation type that each author reads differently tells a reader nothing, so each
+type is defined once and the list is closed. The three types keep apart what a reader acts on:
+`derives from` and `narrows` rely on the wording of the other decision and carry its fingerprint
+(WAY-31), `narrows` also tells the agent checking a change that the other decision does not apply
+in that area, and every other link is a mention that asks for nothing. Two links that look like
+relations have homes of their own: a new answer to the same question is a new version (WAY-19),
+and precedence between decisions that both apply is recorded in *Outranks* (WAY-25).
+*Rejected:* none considered
+*Consequences:* the rule on the closed list of relations in the section "Relations and
+precedence" of the decision template is the written form of this decision. A new type enters by a
+new version of this decision, once something reads a distinction the three types do not make
+(WAY-05). Types of links between entries of other elements are set by those elements (WAY-17).
