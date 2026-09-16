@@ -95,7 +95,7 @@ foundation step.
 - **Outranks:** none
 - **Verification:** level 1 — invariant in working form: a merge request that changes an
   invariant test without an accepted foundation change fails the CI check.
-- **Review when:** the design of the task cycle begins · check by: 2026-09-23
+- **Review when:** the design of the task cycle begins · check by: 2026-10-02
 - **Origin:** none
 - **Approver override:** none
 - **Approved by:** Mariusz, 2026-09-14
@@ -409,7 +409,7 @@ with the diff, its effects and a recommendation, and a human decides.
     without a human;
   - violates: the panel accepts a changed expected value in an invariant test; an assessing agent
     receives the author's reasoning.
-- **Review when:** the design of the task cycle begins · check by: 2026-09-23
+- **Review when:** the design of the task cycle begins · check by: 2026-10-02
 - **Origin:** none
 - **Approver override:** none
 - **Approved by:** Mariusz, 2026-09-15
@@ -444,7 +444,7 @@ review of the whole foundation runs alongside, independent of tasks.
     proposed invariant before the merge;
   - violates: the return step reports nothing to add, while the diff brings in behaviour that no
     invariant covers.
-- **Review when:** the design of the task cycle begins · check by: 2026-09-23
+- **Review when:** the design of the task cycle begins · check by: 2026-10-02
 - **Origin:** none
 - **Approver override:** none
 - **Approved by:** Mariusz, 2026-09-15
@@ -483,7 +483,7 @@ each covering the part of its binding sentences it can check.
   - complies: a decision on the product's direction is checked by an agent with a complying and a
     violating example;
   - violates: a decision whose rule a lint check could enforce is left at level 2.
-- **Review when:** the design of the task cycle begins · check by: 2026-09-23
+- **Review when:** the design of the task cycle begins · check by: 2026-10-02
 - **Origin:** none
 - **Approver override:** none
 - **Approved by:** Mariusz, 2026-09-15
@@ -527,7 +527,7 @@ change that cannot be undone.
     longer loads, goes through the sharpest checks and waits for a human's decision;
   - violates: a task gets the heavier path because of the number of lines it changes; a change
     that cannot be undone reaches the main branch without a human's decision.
-- **Review when:** the design of the task cycle begins · check by: 2026-09-23
+- **Review when:** the design of the task cycle begins · check by: 2026-10-02
 - **Origin:** none
 - **Approver override:** none
 - **Approved by:** Mariusz, 2026-09-15
@@ -652,7 +652,7 @@ command for an agent, CI and a human.
   Level 2 for the same command for everyone — an agent compares the change with the decision:
   - complies: the instructions for agents name the gate's command as the way to check a change;
   - violates: the instructions for agents list test and lint commands of their own.
-- **Review when:** the design of the task cycle begins · check by: 2026-09-23
+- **Review when:** the design of the task cycle begins · check by: 2026-10-02
 - **Origin:** none
 - **Approver override:** none
 - **Approved by:** Mariusz, 2026-09-15
@@ -1268,7 +1268,7 @@ not a contradiction, and no exception lives only in a task's plan.
     of that decision, and the merge waits for its approver;
   - violates: a task branch whose code contradicts a decision that stays unchanged; a task's plan
     that records a "justified violation" of a decision.
-- **Review when:** the design of the task cycle begins · check by: 2026-09-23
+- **Review when:** the design of the task cycle begins · check by: 2026-10-02
 - **Origin:** none
 - **Approver override:** none
 - **Approved by:** Mariusz, 2026-09-16
@@ -1414,7 +1414,7 @@ check.
     contradiction goes to a human before the decision is accepted;
   - violates: the search reads only the decisions whose scope overlaps; the search against the
     main branch was made before another task that changed the foundation was merged.
-- **Review when:** the design of the task cycle begins · check by: 2026-09-23
+- **Review when:** the design of the task cycle begins · check by: 2026-10-02
 - **Origin:** none
 - **Approver override:** none
 - **Approved by:** Mariusz, 2026-09-16

@@ -29,7 +29,7 @@ foundation step.
 - **Outranks:** none
 - **Verification:** level 1 — invariant in working form: a merge request that changes an
   invariant test without an accepted foundation change fails the CI check.
-- **Review when:** the design of the task cycle begins · check by: 2026-09-23
+- **Review when:** the design of the task cycle begins · check by: 2026-10-02
 - **Origin:** none
 - **Approver override:** none
 - **Approved by:** Mariusz, 2026-09-14
