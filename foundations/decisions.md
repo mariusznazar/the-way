@@ -1479,3 +1479,38 @@ to a skill described in `elements/decisions/README.md` serves only work on the-w
 product pins the commit is set by the first product that does. Which decisions of the-way an agent
 checks a task against is set when the task cycle is designed (WAY-21); they come from the pinned
 commit. The-way itself uses the commit it is on.
+
+### WAY-35/1 — What does an element's skill hold?
+
+An element's skill holds only the way of working: every rule of the element's entries stands in
+the element's template, and the skill reads the rules from there instead of restating them.
+
+- **Change:** new decision
+- **Scope:** decisions, invariants, glossary, part map, environment facts
+- **Based on:** none
+- **Relations:** related to WAY-05 · related to WAY-09 · related to WAY-16
+- **Outranks:** none
+- **Verification:** level 1 — invariant in working form: every element's skill names its
+  element's template as the source of the rules. Level 2 for what the skill holds — an agent
+  compares the change with the decision:
+  - complies: a correction of the skill's output that concerns the form of a field goes into the
+    template, and the skill is left as it is; the skill orders its steps and says what to ask;
+  - violates: the skill says a rationale has at most three sentences while the template does not;
+    the skill restates the list of fields.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-17
+
+*Rationale:* a rule written both in the skill and in the template is two copies that drift apart,
+and then the script that checks the format, which reads the template, and the skill, which writes
+the entries, hold entries to different rules. An entry written by hand or by another agent meets
+only the template, so the template is the one place every writer and every check reaches. The way
+of working — the order of steps, what to ask, when to stop — is not a rule of the entry, so it
+stays with the skill.
+*Rejected:* rules restated in the skill next to the template — two copies that drift, and the
+script and the skill hold entries to different rules.
+*Consequences:* a correction of a skill's output that concerns a rule of the entry is a
+correction of the template; for decisions it comes with a decision in the log (WAY-05). The
+opening paragraph of `record-decision` follows this decision, and the skills of the other elements
+follow it once they are written.
