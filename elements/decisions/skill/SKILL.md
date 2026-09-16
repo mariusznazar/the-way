@@ -55,7 +55,8 @@ Fill every field according to the template, with extra care for these:
 3. Check the entry against the template's list "What the format guard checks", then append it
    at the end of the log.
 4. Entries that follow from this one — a version or a correction of a neighbour found in
-   step 2 — go through steps 3 and 4 one at a time.
+   step 2, and, when this entry changes a decision's binding sentences, every decision that
+   derives from it or narrows it — go through steps 3 and 4 one at a time.
 
 ## Review entry
 
