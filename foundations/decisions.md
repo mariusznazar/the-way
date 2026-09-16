@@ -1434,3 +1434,46 @@ the return step (WAY-11). A finding that is a collision with no precedence recor
 (WAY-25). The skill that writes decisions searches the whole foundation, not only the decisions in
 an overlapping scope. Until the other elements have entries, the foundation searched is the
 decision log.
+
+### WAY-34/1 — Which version of the process does a product use?
+
+A product uses the-way at a commit pinned in its own repository: its templates, skills and
+scripts, and the decisions of the-way that bind its work, all come from that commit. A newer
+version of the process enters a product only through a task in the product that moves the pin.
+
+- **Change:** new decision
+- **Scope:** decisions, invariants, glossary, part map, environment facts, relation model, task
+  cycle
+- **Based on:** none
+- **Relations:** related to WAY-01 · related to WAY-09 · related to WAY-16 · related to WAY-21 ·
+  related to WAY-23
+- **Outranks:** none
+- **Verification:** level 1 — invariants in working form:
+  - every product repository pins a commit of the-way;
+  - a product's CI runs only the gate and scripts of its pinned commit.
+  Level 2 for how a newer process enters — an agent compares the change with the decision:
+  - complies: a task in the product moves the pin, and its merge request carries what the newer
+    version changes for the product;
+  - violates: a product's CI fetches the latest the-way on every run; a skill in a product session
+    comes from a copy of the-way other than the pinned commit.
+- **Review when:** the first product has moved its pin to a newer the-way twice · check by:
+  2026-11-17
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-17
+
+*Rationale:* a product checked with whatever the-way is newest gives a different result on the
+same commit from one day to the next, and a change to the process can stop the CI of every product
+at once, with no change in any of them. A pinned commit makes a change of the process a visible
+change in the product, as a change of the foundation comes before the code (WAY-01): a new decision
+of the-way binds a product only once someone in that product has taken it in. Tools defined once
+are shared by pinning, not by copying, because copies drift apart (WAY-16).
+*Rejected:* every product on the newest the-way — results that change without a change in the
+product, and process decisions binding a product nobody in it has seen; templates and scripts
+copied into each product — the copies drift.
+*Consequences:* products lag behind the process, and moving a pin is work of its own, like
+updating a dependency. A product session uses the skills of its pinned commit, so the global link
+to a skill described in `elements/decisions/README.md` serves only work on the-way itself. How a
+product pins the commit is set by the first product that does. Which decisions of the-way an agent
+checks a task against is set when the task cycle is designed (WAY-21); they come from the pinned
+commit. The-way itself uses the commit it is on.
