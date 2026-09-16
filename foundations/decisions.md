@@ -334,30 +334,53 @@ can settle stays in the foundation, checked by a person.
 
 ### WAY-09/1 — What may enter the process repository?
 
-Only foundation elements reach the main branch of this repository, each with its template and
-rules, a skill that writes its entries and a script that checks them.
+On the main branch, this repository holds `foundations/` with the entries of the-way itself, a
+directory for each part of the process — `elements/<element>/` for each foundation element,
+`relation-model/` and `task-cycle/` — and a `README.md` that describes the repository. A
+directory reaches the main branch only once a tool keeps its form, and what it must hold is set
+by its part: an element brings its template and rules, examples, a skill that writes its entries
+and a script that checks them; the relation model brings the script that computes fingerprints
+and flags references; the entries in `foundations/` are checked by the scripts of their elements.
+The `README.md` is the only file that no tool keeps.
 
 - **Change:** new decision
-- **Scope:** decisions, invariants, glossary, part map, environment facts, relation model
+- **Scope:** decisions, invariants, glossary, part map, environment facts, relation model, task
+  cycle
 - **Based on:** none
-- **Relations:** related to WAY-04 · related to WAY-06
+- **Relations:** related to WAY-02 · related to WAY-04 · related to WAY-06 · related to WAY-21
 - **Outranks:** none
-- **Verification:** level 1 — invariant in working form: every file on the main branch belongs to
-  a foundation element that has a template, a skill and a script.
+- **Verification:** level 1 — invariants in working form:
+  - every file on the main branch lies in `foundations/`, in the directory of a part of the
+    process, or is the `README.md` at the root;
+  - every element directory on the main branch holds a template, examples, a skill and a script
+    that checks its entries;
+  - `relation-model/` on the main branch holds the script that computes fingerprints.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-15
+- **Approved by:** Mariusz, 2026-09-16
 
 *Rationale:* the repository shows what the process looks like when it works, and an artefact
-brought in on the side turns it into a store of material from the first day. The skill writes an
-entry in the right form when someone runs it; the script catches a form broken by hand, by
-another agent or by a merge. Until an element has all of them, it is a change in progress, and
-under WAY-06 such a change lives on a branch.
+brought in on the side turns it into a store of material from the first day. Directories follow
+the parts of the process, so that the files a change touches name the part it belongs to and the
+decisions to check it against (WAY-21). What a directory must hold depends on its part, because
+each tool has a reason only where it has work: a skill writes entries, so it belongs to an
+element; the fingerprint script only reads, so the relation model has no skill. The skill writes
+an entry in the right form when someone runs it; the script catches a form broken by hand, by
+another agent or by a merge. Until a part has its tools, it is a change in progress, and under
+WAY-06 such a change lives on a branch. The `README.md` binds nothing and only tells a reader
+what the repository is.
 *Rejected:* material merged to the main branch as soon as it is written; an element whose only
-tool is a skill — the form then holds only while someone remembers to run it.
+tool is a skill — the form then holds only while someone remembers to run it; one `tools/`
+directory for everything shared — it matches no part of the process and grows into a store; the
+same set of template, skill and script required of every directory — a script that only reads has
+no entries for a skill to write.
 *Consequences:* element descriptions in `elements/` reach the main branch as templates with their
-skills and scripts, not as descriptions.
+skills and scripts, not as descriptions. The script for references and fingerprints (WAY-02,
+WAY-31) lives in `relation-model/`. Which directory holds the quality gate (WAY-16) — invariants
+or the task cycle — is settled when it is built, and what `task-cycle/` must hold is set when the
+task cycle is designed. When this process gets its own part map, its rule for assigning files
+follows these directories.
 
 ### WAY-10/1 — Who assesses a change to an invariant test or to the foundation?
 
