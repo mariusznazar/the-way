@@ -186,7 +186,8 @@ is a verbatim copy of a version from the log.
 - **Outranks:** none
 - **Verification:** level 1 — invariants in working form:
   - every entry in the log has every field of the template;
-  - binding sentences number one to three and contain no *should*, *will* or all-caps;
+  - binding sentences number one to three and contain no *should*, *will* or keyword of RFC 2119
+    in capitals;
   - every example in `examples.md` matches its version in the log word for word;
   - a commit that changes `template.md` also appends a decision version to the log.
   Level 2 for the rule that every field has a reader — an agent compares the change with the
@@ -578,8 +579,9 @@ WAY-07 needs when an entry has to be accepted again.
 changes; lists of decision-makers and of those consulted — nothing reads them.
 *Consequences:* the section "Approval" of the decision template is the written form of this
 decision. The rule that names the approver for each part has no home yet; until it has one, the
-format guard checks only that every version records its approval, and every version in this log
-is approved by Mariusz. Nothing yet settles who approves a decision whose scope spans parts with
+format guard checks only that every version records who approved it and when, as
+`<who>, YYYY-MM-DD` — `TODO` there is an error — and every version in this log is approved by
+Mariusz. Nothing yet settles who approves a decision whose scope spans parts with
 different approvers. This decision covers decisions only; approval of other foundation entries is
 set when their elements are designed.
 

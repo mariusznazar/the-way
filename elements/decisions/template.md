@@ -48,7 +48,7 @@ Every field is present in every version, in one of three states:
 |---|---|---|
 | a value | known | passes |
 | `none` | the author states there is nothing here | passes |
-| `TODO — <what is missing>` | known to be unknown | warning |
+| `TODO — <what is missing>` | known to be unknown | warning; in *Approved by*, error |
 | field missing | forgotten | error |
 
 `none` is a statement, not a blank. Write it only when you know there is nothing; when a
@@ -73,7 +73,7 @@ A field stays in the template only while someone or something reads it.
 | Review when | the view (pending checks); the agent working on a task in scope; the format guard (a passed date without a review) |
 | Origin | whoever wants to change the decision and needs the full reasoning; the next agent, so it does not repeat a search |
 | Approver override | the agent that needs a new version approved: names who approves instead of the rule for the decision's scope |
-| Approved by | a human considering a change; the format guard — a version without it is an error |
+| Approved by | a human considering a change; the format guard — a version without it, or with `TODO` in it, is an error |
 | Rationale / Rationale for change | the agent in a borderline case; a human considering a change |
 | Rejected | the agent, before proposing an option already rejected |
 | Consequences | the closing step of a task: what the decision forces on further work |
@@ -83,7 +83,8 @@ A field stays in the template only while someone or something reads it.
 - One to three sentences: the first paragraph under the heading.
 - Present tense, describing a state that is to be true, concrete enough to check.
 - Normative words — *must*, *must not* — appear only here, in lower case. *Should*, *will*,
-  all-caps and exclamation marks do not appear.
+  exclamation marks and the keywords of RFC 2119 in capitals (MUST, SHALL, SHOULD, MAY,
+  REQUIRED, RECOMMENDED, OPTIONAL) do not appear; other words in capitals, such as `CI`, do.
 - Say what is, rather than what is not, unless the forbidden thing is concrete and visible in
   a change.
 - An exception foreseen in advance is written into the binding sentences ("X is allowed when
@@ -238,7 +239,8 @@ A decision recovered from the existing state of a product:
 
 ## Approval
 
-- Every version carries *Approved by*: who and when.
+- Every version carries *Approved by*: who and when, as `<who>, YYYY-MM-DD`. A version nobody
+  has approved yet cannot hold it, so `TODO` there is an error, not a warning.
 - Who approves changes is set by a process rule for each part of the product, not per entry.
   *Approver override* names someone only when that rule does not apply to this decision;
   otherwise it is `none`.
@@ -250,7 +252,7 @@ A decision recovered from the existing state of a product:
 - Append-only: compared with the main branch, the log only grows at the end.
 - A merge to the main branch adds at most one version of each number.
 - Every field is present; `TODO` gives a warning.
-- Binding sentences: one to three; no *should*, *will* or all-caps.
+- Binding sentences: one to three; no *should*, *will* or keyword of RFC 2119 in capitals.
 - *Change*: `new decision` exactly in version 1; in later versions a kind from the list, with
   `previous:` pointing to the version before.
 - Binding sentences are identical to the previous version for *rationale change*,
@@ -263,7 +265,7 @@ A decision recovered from the existing state of a product:
 - *Review when*: a passed check-by date without a later review gives a warning;
   `condition not met` requires a date in *Next check*; `changed in WAY-NN/V+1` requires that
   version to exist.
-- *Approved by* is present in every version.
+- *Approved by* in every version has the form `<who>, YYYY-MM-DD`; `TODO` there is an error.
 - Every example in `examples.md` matches its version in the log word for word.
 
 ## Examples
