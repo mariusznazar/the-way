@@ -929,7 +929,8 @@ decision, and the checkable sentence becomes an invariant that names it.
 *Rejected:* one kind of entry for both — either the gate reads prose or the reasons are lost;
 moving a checkable sentence out of its decision — the rule would be cut off from its reason.
 *Consequences:* the section "Decision or invariant" of the decision template, apart from its
-last rule, which belongs to WAY-12, is the written form of this decision. Until the invariants
+plan test, which belongs to WAY-36, and its last rule, which belongs to WAY-12, is the written form
+of this decision. Until the invariants
 element has its template, an invariant derived from a decision is named in working form in the
 decision's *Verification* (WAY-12).
 
