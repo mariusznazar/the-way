@@ -5,8 +5,9 @@ The decisions of the-way, the process for building products. Entries follow
 
 ### WAY-01/1 — What state does the foundation describe?
 
-On the main branch, the foundation describes the product as it is. A task starts
-implementation by changing the foundation, and the code follows; when the task closes, the
+On the main branch, the foundation describes the product as it is: its rules, together with
+the listed debt wherever the product does not yet meet them. A task starts implementation by
+changing the foundation, and the code follows; when the task closes, the
 foundation again matches the current state. Roadmaps and plans do not change the foundation.
 
 - **Change:** new decision
@@ -35,15 +36,17 @@ changes first, and the code follows.
 *Rejected:* the foundation as a description of the target product; the foundation updated
 only after deployment — a step at the end of a task is the kind of step that goes missing.
 *Consequences:* every task that changes what the product does begins with a step that changes
-the foundation. Plans, roadmaps and hypotheses need a home outside the foundation.
+the foundation. Plans, roadmaps and hypotheses need a home outside the foundation. Where a rule
+of the foundation is not met on the main branch, what the foundation carries is the rule and a
+listed violation, never a weakened rule (WAY-51).
 
 ### WAY-02/1 — How do dependents learn that an entry has changed?
 
-Every foundation entry has a permanent number, and everything that depends on it — other
-entries, tests, documents and code comments — refers to that number. A reference that relies
+Every foundation entry has a permanent identifier, and everything that depends on it — other
+entries, tests, documents and code comments — refers to that identifier. A reference that relies
 on the entry's current wording carries its content fingerprint (`WAY-17@<fingerprint>`), and
 when the fingerprint changes, a script working on plain text files flags that reference for
-review; plain numbers and version numbers (`WAY-17/2`) are never flagged. The fingerprint covers
+review; a bare identifier and a reference to a version (`WAY-17/2`) are never flagged. The fingerprint covers
 only the part of an entry that binds — for a decision, its binding sentences.
 
 - **Change:** new decision
@@ -62,7 +65,7 @@ only the part of an entry that binds — for a decision, its binding sentences.
 
 *Rationale:* without a mechanism, following a change through everything that depends on it
 rests on a written rule and on memory. A product can hold hundreds of references to its entry
-numbers, and after an entry changes nothing shows which of them went stale. A permanent number
+numbers, and after an entry changes nothing shows which of them went stale. A permanent identifier
 with a content fingerprint lets a script find the stale ones, as Doorstop does. The fingerprint
 covers only what binds, because a fix to a rationale does not change what dependents rely on,
 and flags raised for nothing teach people to clear them without reading. Not every reference
@@ -91,7 +94,7 @@ foundation step.
   cases" (ImpossibleBench — Zhong, Raghunathan, Carlini, 2025,
   https://arxiv.org/abs/2510.20270; quote from the authors' summary,
   https://www.lesswrong.com/posts/qJYMbrabcQqCZ7iqm/impossiblebench-measuring-reward-hacking-in-llm-coding-1).
-- **Relations:** derives from WAY-01@97ef277a · related to WAY-02
+- **Relations:** derives from WAY-01@a291c2c0 · related to WAY-02
 - **Outranks:** none
 - **Verification:** level 1 — invariant in working form: a merge request that changes an
   invariant test without an accepted foundation change fails the CI check.
@@ -125,7 +128,8 @@ without human memory: a test, a lint, a gate, a mandatory relation or configurat
 - **Verification:** level 1 — invariant in working form: the foundation holds entries of the
   five elements only. Level 2 for the rule on new patterns — an agent compares the change with
   the decision:
-  - complies: criticality enters the foundation as a field of a part in the part map;
+  - complies: the failure modes a part can suffer enter the foundation as fields of that part
+    in the part map, and its criticality is computed from them;
   - violates: a hand-written architecture document appears next to the part map.
 - **Review when:** none
 - **Origin:** none
@@ -160,8 +164,9 @@ escape checking, and a mandatory condition for disproving it with a review date 
 round without closing it.
 *Consequences:* each element is described in `elements/<element>/` of the process repository;
 the description grows into the element's template as the element goes through its steps. Every
-picture of the architecture — a diagram, a code map for an agent, a description — is generated
-from the part map and the code.
+picture of the architecture — a diagram, a description — is generated from the part map and the
+code, and is made for a human on request; no such picture is generated into an agent's context
+(WAY-52).
 
 ### WAY-05/1 — How is a decision entry written?
 
@@ -228,7 +233,7 @@ reaches the main branch in the same merge as the code that follows it.
 - **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part map, environment facts, task cycle
 - **Based on:** none
-- **Relations:** derives from WAY-01@97ef277a · related to WAY-03
+- **Relations:** derives from WAY-01@a291c2c0 · related to WAY-03
 - **Outranks:** none
 - **Verification:** level 1 — invariant in working form: a commit that changes the foundation
   reaches the main branch only by merging a task branch. Level 2 for the rule that the change
@@ -435,7 +440,7 @@ review of the whole foundation runs alongside, independent of tasks.
 - **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part map, environment facts, task cycle
 - **Based on:** none
-- **Relations:** derives from WAY-01@97ef277a · related to WAY-06 · related to WAY-10
+- **Relations:** derives from WAY-01@a291c2c0 · related to WAY-06 · related to WAY-10
 - **Outranks:** none
 - **Verification:** level 1 — invariant in working form: a merge request without the record of
   its return step fails the CI check. Level 2 for what the return step finds — an agent compares
@@ -502,11 +507,12 @@ form. A decision moves to level 1 once an invariant is derived from it.
 ### WAY-13/1 — What sets the weight of a task's process?
 
 What a task touches, never its size, sets its process: an agent's analysis at the start of the
-task settles whether it changes the foundation, which chooses its path, and the criticality of
-the parts it touches, as the part map records it, together with whether the change can be
-undone, set how sharply it is checked. Paths differ in their steps, never in the result a task
-has to reach, and a task's size serves only as a signal to split it. A human decides on every
-change that cannot be undone.
+task settles whether it changes the foundation, which chooses its path, while three things set
+how sharply it is checked — the criticality of the parts it touches, as the part map computes
+it, whether it touches the files of a trust boundary, and whether the change can be undone.
+Paths differ in their steps, never in the result a task has to reach; a task's size serves only
+as a signal to split it, and an agent may check a change more sharply than the map computes,
+never less. A human decides on every change that cannot be undone.
 
 - **Change:** new decision
 - **Scope:** task cycle
@@ -518,7 +524,8 @@ change that cannot be undone.
   carefully, slowly, with great deliberation and consultation" (Jeff Bezos, 2015 letter to
   shareholders,
   https://www.sec.gov/Archives/edgar/data/1018724/000119312516530910/d168744dex991.htm).
-- **Relations:** related to WAY-01 · related to WAY-04 · related to WAY-10
+- **Relations:** related to WAY-01 · related to WAY-04 · related to WAY-10 ·
+  related to WAY-46 · related to WAY-48
 - **Outranks:** none
 - **Verification:** level 1 — invariant in working form: a merge request that changes a
   foundation entry, run on the path for tasks that do not change the foundation, fails the CI
@@ -544,9 +551,10 @@ only a human can decide, to a change that cannot be taken back.
 every diff — formal review does not lower the rate of failed changes, and it spends a human's
 attention where it adds nothing.
 *Consequences:* every task starts with an agent's analysis of whether it changes the
-foundation. Setting how sharply a task is checked needs the criticality of parts from the part
-map (WAY-04) and a way to recognise a change that cannot be undone, which nothing defines yet.
-The paths and their steps are set when the task cycle is designed.
+foundation. The criticality it reads is the value the part map computes (WAY-46), and the files
+of a trust boundary come from that same map (WAY-48); what nothing defines yet is a way to
+recognise a change that cannot be undone. The paths and their steps, and the number of degrees
+the criticality scale needs, are set when the task cycle is designed.
 
 ### WAY-14/1 — Who approves a version of a decision?
 
@@ -591,8 +599,8 @@ set when their elements are designed.
 
 What can be derived from what the product executes — code, configuration, infrastructure as
 code, runtime traces — is derived, never written by hand, and what is derived describes the
-state. Rules are written by hand: what is allowed, what is critical and what the product
-promises, which the code cannot show.
+state. Rules are written by hand: what is allowed, how bad a failure would be and what the
+product promises, which the code cannot show.
 
 - **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part map, environment facts
@@ -608,11 +616,13 @@ promises, which the code cannot show.
 - **Relations:** related to WAY-04 · related to WAY-08 · related to WAY-11
 - **Outranks:** none
 - **Verification:** level 1 — invariant in working form: every derived file in the repository
-  is identical to what its generator produces on the same commit. Level 2 for what is derived
-  and what is written by hand — an agent compares the change with the decision:
+  is identical to what its generator produces on the same commit, except the list of known
+  violations of the part map's rules, which is checked as a subset of the list on the main
+  branch (WAY-51). Level 2 for what is derived and what is written by hand — an agent compares
+  the change with the decision:
   - complies: the view of the decisions in force is generated from the log; the existing
-    dependencies between parts are generated from the imports and compared with the allowed
-    dependencies written in the part map;
+    dependencies between parts are read from the dependency graph the product's own tooling
+    produces and compared with the allowed dependencies written in the part map;
   - violates: a hand-written list of the product's endpoints kept next to the code; the allowed
     dependencies in the part map copied from the current import graph.
 - **Review when:** none
@@ -632,8 +642,9 @@ as a demand to derive the part map, whose rules code cannot show; derivation fro
 the code shows structure, while behaviour shows in runtime traces and deployment in
 infrastructure files.
 *Consequences:* every derived view has a generator, and a derived file is regenerated, never
-edited by hand. Comparing the derived state with the rules needs the part map's rule for
-assigning files (WAY-04).
+edited by hand. Comparing the derived state with the rules uses the part map's rule for
+assigning files (WAY-44). One derived file is not regenerated from scratch — the list of known
+violations, which WAY-51 keeps as a debt with a ratchet.
 
 ### WAY-16/1 — How are the checks of invariants run?
 
@@ -688,7 +699,7 @@ its invariant.
   assumption, although agreed, was essentially obscured, though not deliberately, from any
   external review" (Ariane 501 Inquiry Board, ESA,
   https://www.esa.int/Newsroom/Press_Releases/Ariane_501_-_Presentation_of_Inquiry_Board_report).
-- **Relations:** derives from WAY-02@566e745d · related to WAY-04 · related to WAY-12
+- **Relations:** derives from WAY-02@af08ee5d · related to WAY-04 · related to WAY-12
 - **Outranks:** none
 - **Verification:** level 1 — invariants in working form:
   - every invariant test names an invariant;
@@ -778,7 +789,7 @@ loses it — by a new version on the main branch, by a correction before it.
   new one "without indicating at the same time that this change is being made" (Zasady techniki
   prawodawczej, §§ 87(1) and 86, own translation,
   https://www.senat.gov.pl/gfx/senat/userfiles/_public/k10/kancelaria/wydawnictwa/pdf/zasady_techniki.pdf).
-- **Relations:** derives from WAY-02@566e745d · related to WAY-07 · related to WAY-18
+- **Relations:** derives from WAY-02@af08ee5d · related to WAY-07 · related to WAY-18
 - **Outranks:** none
 - **Verification:** level 1 — invariants in working form:
   - the heading of every decision version has the form `### <prefix>-NN/V — <question>`, and the
@@ -898,8 +909,8 @@ map; topics as scope — they cannot be computed from a change; no scope — eve
 against every decision, and the ones that matter lost among the rest.
 *Consequences:* until this process has its own part map, the scope of its decisions names parts
 from a working list: decisions, invariants, glossary, part map, environment facts, relation
-model, task cycle. Finding the decisions for a change needs the part map's rule for assigning
-files (WAY-04). Which other decisions a change is checked against — those that govern every task,
+model, task cycle. Finding the decisions for a change uses the part map's rule for assigning
+files (WAY-44). Which other decisions a change is checked against — those that govern every task,
 and collisions between decisions of different scopes — is set when the task cycle is designed.
 
 ### WAY-22/1 — Is a rule a decision or an invariant?
@@ -1260,7 +1271,7 @@ not a contradiction, and no exception lives only in a task's plan.
   "Constitution conflicts are automatically CRITICAL and require adjustment of the spec, plan, or
   tasks—not dilution, reinterpretation, or silent ignoring of the principle" (GitHub Spec Kit,
   https://github.com/github/spec-kit/blob/main/templates/commands/analyze.md).
-- **Relations:** derives from WAY-01@97ef277a · related to WAY-03 · related to WAY-06 ·
+- **Relations:** derives from WAY-01@a291c2c0 · related to WAY-03 · related to WAY-06 ·
   related to WAY-07 · related to WAY-14 · related to WAY-21 · related to WAY-24 · related to WAY-25
 - **Outranks:** none
 - **Verification:** level 2 — an agent compares the change with the decision:
@@ -1295,9 +1306,9 @@ needs the decisions in the scope of the change (WAY-21).
 
 A relation `derives from` or `narrows` relies on the wording of the decision it names and carries
 that decision's content fingerprint (`derives from WAY-01@<fingerprint>`), while `related to` is a
-plain number. A change to a decision's fingerprint reaches the main branch together with every
-decision that relates to it with a fingerprint, each checked against the new wording and carrying
-the new fingerprint.
+plain identifier. A change to a decision's fingerprint reaches the main branch together with
+every decision that relates to it with a fingerprint, each checked against the new wording and
+carrying the new fingerprint.
 
 - **Change:** new decision
 - **Scope:** decisions, relation model
@@ -1306,7 +1317,7 @@ the new fingerprint.
   parent item. When the fingerprint of a parent item changes, the link is reported as suspect
   during validation" (Doorstop documentation,
   https://github.com/doorstop-dev/doorstop/blob/develop/docs/cli/validation.md).
-- **Relations:** derives from WAY-02@566e745d · related to WAY-17 · related to WAY-18 ·
+- **Relations:** derives from WAY-02@af08ee5d · related to WAY-17 · related to WAY-18 ·
   related to WAY-20 · related to WAY-24
 - **Outranks:** none
 - **Verification:** level 1 — invariants in working form:
@@ -1326,7 +1337,7 @@ the new fingerprint.
 
 *Rationale:* a decision that derives from another, or narrows it, stands on what the other says:
 tests are read-only (WAY-03) because the foundation comes before the code (WAY-01), and a new
-wording of WAY-01 can take that reason away. A plain number points to whatever the other decision
+wording of WAY-01 can take that reason away. A plain identifier points to whatever the other
 says today, so nothing shows that the ground has moved. `related to` is a passing mention, and a
 flag raised on it would be raised for nothing, which teaches people to clear flags without reading
 (WAY-02). The fingerprint is the mechanism WAY-02 already sets for references that rely on
@@ -1592,19 +1603,28 @@ foundation for sentences that wait for it — "until", "not yet", "in working fo
 
 ### WAY-38/1 — In what are the scripts of the-way written?
 
-Every script of the-way runs on Python 3.10 or later with its standard library alone: it
-installs no packages and calls no program other than git.
+Every script of the-way runs on Python 3.12 or later with its standard library alone, and
+installs nothing. It calls git, and the commands a product declares in its own repository — a
+dependency graph, a detector of breaking changes, coverage — reading their output through an
+adapter for the format. Where a product declares no such command, the script reports what it
+could not check, never agreement.
 
 - **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part map, environment facts, relation model, task
   cycle
-- **Based on:** none
+- **Based on:** computing a language's state is work that mature tools do as separate programs —
+  buf, API Extractor, japicmp, cargo-semver-checks, oasdiff — and reimplementing it was given up
+  as "requires re-implementing large swaths of rust's semantics"
+  (https://github.com/obi1kenobi/cargo-semver-checks).
 - **Relations:** related to WAY-02 · related to WAY-09 · related to WAY-16 · related to WAY-34
 - **Outranks:** none
 - **Verification:** level 1 — invariants in working form:
   - every script in the repository is a Python file;
-  - no script imports a module outside the standard library of Python 3.10;
-  - no script starts a program other than git.
+  - no script imports a module outside the standard library of Python 3.12;
+  - no script starts a program other than git or a command the product declares in its
+    repository;
+  - a check whose declared command is missing is reported as unchecked, and that report is not
+    an agreement.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
@@ -1613,18 +1633,28 @@ installs no packages and calls no program other than git.
 *Rationale:* a product runs the scripts of the commit of the-way it pins (WAY-34), so every
 language and every package they need becomes something each product's CI has to provide. One
 language with its standard library alone leaves one interpreter to provide and nothing to
-install, and git is already there wherever a repository is checked. Every script works on plain
-text files (WAY-02), for which the standard library is enough, and it runs the same locally on
-Windows and in CI on Linux.
+install. Two versions up from 3.10 buys the scripts what the standard library added in them, at
+the cost of an interpreter no older than 3.12 wherever this repository is pinned. What the
+scripts cannot do themselves is compute the state of a language they do not parse: a dependency
+graph outside Python, a breaking change in a schema, the reach of a test. Those the product
+already computes with its own tools, so the script runs the command the product declares and
+reads the result, rather than parsing a language it would get wrong. Silence is reported as
+unchecked rather than as agreement, because a check that quietly sees nothing passes.
 *Rejected:* Node.js without packages — as able as Python; a second language adds a second
 interpreter to every product's CI; shell scripts in Bash or PowerShell — neither runs the same
 on Windows and on Linux; a compiled program in Go or Rust — every change needs a build and
 published files; each script in the language its author picks — a product's CI needs every
-interpreter any script chose.
-*Consequences:* a product's CI provides Python 3.10 or later and git. The format guard of
+interpreter any script chose; the product's CI writing those results into a committed file that
+the scripts then read — an agent would get no signal before pushing, and the product would carry
+a CI step existing only for this process; the scripts parsing other languages themselves — the
+tools that tried gave it up.
+*Consequences:* a product's CI provides Python 3.12 or later and git, and declares in its
+repository the commands whose output the scripts read. What those commands cost in time, and how
+much their result depends on the environment they run in, the product pays. The format guard of
 decisions, the fingerprint script of the relation model (WAY-09), the view of decisions in force
 (WAY-18) and the quality gate (WAY-16) are written in Python. Skills and templates are not
-scripts, and this decision does not bind them.
+scripts, and this decision does not bind them. A check runs the same way for an agent locally, in
+CI and for a human (WAY-16), because all three run the same declared command.
 
 ### WAY-39/1 — How is the content fingerprint of an entry computed?
 
@@ -1636,7 +1666,7 @@ Nothing else in the text is changed before it is digested.
 - **Change:** new decision
 - **Scope:** relation model, decisions, invariants, glossary, part map, environment facts
 - **Based on:** none
-- **Relations:** derives from WAY-02@566e745d · related to WAY-05 · related to WAY-09 ·
+- **Relations:** derives from WAY-02@af08ee5d · related to WAY-05 · related to WAY-09 ·
   related to WAY-31 · related to WAY-38
 - **Outranks:** none
 - **Verification:** level 1 — invariants in working form:
@@ -1669,3 +1699,648 @@ format guard of decisions uses it. A fixed typo in binding sentences changes the
 is cleared as an editorial correction. A repeal has no binding sentences, so it has no
 fingerprint (WAY-31). Changing this way of computing changes every fingerprint at once, and every
 relation that carries one is renewed in the same change.
+
+### WAY-40/1 — What kinds of entry does the part map hold?
+
+The part map holds three kinds of entry: a part, a critical flow and a surface the product
+promises to keep. An allowed dependency is a field of the part it starts from, and the known
+violations of the map's rules are a derived file beside the map, so neither is an entry of its
+own. The whole map lives in one Markdown file of fixed shape in `foundations/`.
+
+- **Change:** new decision
+- **Scope:** part map
+- **Based on:** none
+- **Relations:** derives from WAY-04@f7328944 · related to WAY-15 · related to WAY-23
+- **Outranks:** none
+- **Verification:** level 1 — invariants in working form:
+  - every entry of the part map is a part, a critical flow or a surface;
+  - the product has exactly one part map file, and it lies in `foundations/`;
+  - no allowed dependency and no list of known violations appears as an entry of the map.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-17
+
+*Rationale:* each kind answers a question the others cannot: a part says what a piece of the
+product is responsible for and which files belong to it, a flow says what has to keep working
+across parts end to end, and a surface says what someone outside the product relies on. An
+allowed dependency has no identity of its own — the pair of parts names it — and an identifier
+for a relation pays off only where something points at the relation itself rather than at its
+ends, as a flow that names its steps does. The known violations are what the rules do not hold
+today, computed from the map and the code, so they belong with what is derived rather than among
+rules written by hand (WAY-15). One file, because the map is read whole at the start of a task
+and its three kinds refer to one another constantly.
+*Rejected:* an allowed dependency as an entry with its own identifier — it buys a short
+reference to something nothing refers to on its own, and costs a second field to check in every
+reference; criticality as a fourth kind of entry — it is a field of a part and of a flow
+(WAY-04); the known violations kept inside the map file — a rule written by hand and a computed
+state in one file, which WAY-15 keeps apart; one file per part — a rename of a part would become
+a move of files, and the map is short enough to read whole.
+*Consequences:* the element's template gives the shape of each kind and the fields it carries.
+What binds in each kind, and so what its fingerprint covers, needs its own decision. The file of
+known violations is derived and yet cannot be regenerated from scratch, so it needs a rule of its
+own under WAY-15.
+
+### WAY-41/1 — What identifies an entry of the part map?
+
+Every entry of the part map carries a permanent identifier made of words, such as
+`relation-model`, and it stays the same when the entry's title changes or the files assigned to
+it change. Splitting or merging entries gives every result a new identifier, and the identifier
+left behind stays in the map as a withdrawal line naming its successors; an identifier is never
+reused.
+
+- **Change:** new decision
+- **Scope:** part map
+- **Based on:** Packwerk ties a package's identity to its location — "The package name is the
+  path to the folder from the project root" (Packwerk USAGE,
+  https://github.com/Shopify/packwerk/blob/main/USAGE.md). Backstage makes the name the thing
+  others refer to — "This name is both meant for human eyes to recognize the entity, and for
+  machines and other components to reference the entity" — and lets it be reused: "Names may be
+  reused at a later time, after an entity is deleted from the registry" (Backstage, Descriptor
+  Format of Catalog Entities,
+  https://github.com/backstage/backstage/blob/master/docs/features/software-catalog/descriptor-format.md).
+- **Relations:** derives from WAY-40@aeabb301 · related to WAY-02 · related to WAY-19
+- **Outranks:** none
+- **Verification:** level 1 — invariants in working form:
+  - every entry of the map has an identifier made of words, and no two entries share one;
+  - every identifier referred to from the foundation, from a test or from a generated rule file
+    exists in the map, as an entry or as a withdrawal line;
+  - no entry carries an identifier that a withdrawal line holds.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-17
+
+*Rationale:* every reference to a part rests on its identifier — a decision's scope (WAY-21), a
+criticality inherited along a dependency, a rule file generated for an agent — so the identifier
+has to survive the two things that change most often about a part: its title and the files that
+belong to it. Identity taken from the path turns every move of a folder into a change of
+identity, and the paths already live in the part's assignment rule. Words rather than a number,
+because the identifier is read in a scope field and in a dependency list, where a number says
+nothing about what it names. A withdrawn identifier stays visible, so that a reference left in a
+test or a document resolves to something that says where the part went, rather than to nothing
+or, after reuse, to a different part.
+*Rejected:* the path as identity — a folder moved renames the part; a number alone —
+unreadable where it is used; a number beside the name — it buys a cheap rename of a part whose
+responsibility has not changed, and costs a second field and a check of the pair in every
+reference, and it can be added later without rewriting the map if renames become frequent; an
+identifier reused once a part is gone — an old reference then points at a different part with
+no sign.
+*Consequences:* splitting or merging a part is a change that renames everything referring to
+it: the scopes of decisions, generated rule files and tests. The map keeps withdrawal lines for
+good, and grows slowly with them. A script reports a reference to an identifier that does not
+exist or that a withdrawal line holds.
+
+### WAY-42/1 — What part of a part map entry binds?
+
+What binds in an entry of the part map is one sentence: a part's responsibility, a flow's
+description, a surface's promise — and the entry's content fingerprint covers that sentence
+alone. Path patterns, allowed dependencies, failure modes and a flow's list of parts stay
+outside it; a change to a part's path patterns is shown instead as the list of files that
+changed part.
+
+- **Change:** new decision
+- **Scope:** part map, relation model
+- **Based on:** none
+- **Relations:** derives from WAY-02@af08ee5d · related to WAY-39 · related to WAY-40
+- **Outranks:** none
+- **Verification:** level 1 — invariants in working form:
+  - the fingerprint a script gives for an entry of the map equals the fingerprint of its
+    binding sentence alone;
+  - a change to a part's path patterns, dependencies or failure modes leaves its fingerprint
+    unchanged;
+  - a change to a part's responsibility sentence changes its fingerprint.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-17
+
+*Rationale:* a fingerprint exists to flag the references that may have gone stale (WAY-02), so
+it covers what those references rest on. What refers to a part — a decision's scope, a test, a
+rule generated for an agent — rests on what the part is responsible for, not on where its files
+sit today. The other fields change often and mechanically: path patterns move with the files, a
+failure mode is added the day somebody learns of one, a flow's list of parts is recomputed from
+coverage; flags raised by them would be raised for nothing, and flags raised for nothing teach
+whoever clears them to clear them without reading. A change of path patterns still matters, but
+as something else: it changes which files belong where, so the script shows it as the list of
+files that changed part — a thing that can be read and checked.
+*Rejected:* the whole entry as its binding part — every moved file would flag every reference to
+the part; the identifier alone — a rewritten responsibility would then pass unnoticed, which is
+what WAY-02 exists to prevent; a fingerprint per field — every reference would have to say which
+field it relies on.
+*Consequences:* the element's template marks the binding sentence of each kind of entry. The map
+computes its fingerprints with the script the relation model already has (WAY-39). A reference
+that relies on a part's path patterns has no fingerprint to carry; what catches it is the list of
+files that changed part.
+
+### WAY-43/1 — Is an entry of the part map versioned?
+
+An entry of the part map is corrected in place and carries no version, so the map shows the
+product as it is today. What the entry said before a correction stays in git, and is read from
+there.
+
+- **Change:** new decision
+- **Scope:** part map
+- **Based on:** none
+- **Relations:** derives from WAY-01@a291c2c0 · related to WAY-07 · related to WAY-19 ·
+  related to WAY-40
+- **Outranks:** none
+- **Verification:** level 1 — invariant in working form: no entry of the part map carries a
+  version. Level 2 for the rest — an agent compares the change with the decision:
+  - complies: a part whose responsibility narrows has its sentence rewritten in the same change
+    as the code;
+  - violates: a part gains a second version of its responsibility with the earlier one kept
+    above it; the map holds a section of retired entries next to the live ones.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-17
+
+*Rationale:* a decision keeps its earlier versions because they still bind: their reasons and
+rejected options stop a later change from walking back into what was already weighed (WAY-18).
+An entry of the part map carries no reasons — what put a part where it is lives in a decision —
+so its earlier state binds nothing, and the only reader it has is someone asking what the
+product looked like then, which git answers. Versions would also cost the map its one job: an
+entry read at the start of a task has to say what is true now, and a file of versions makes the
+reader choose.
+*Rejected:* versions as in the decision log — the map would carry history that binds nothing,
+and every reader would have to pick the current entry; an archive of past maps beside the
+current one — git is that archive already.
+*Consequences:* a correction to a binding sentence changes the entry's fingerprint (WAY-42), and
+whoever makes the correction clears the references it flags (WAY-02). The map is not
+append-only, so what guards it is the review of the change, not the format guard. A part that
+disappears leaves a withdrawal line, which is the map's only trace of what is gone (WAY-41).
+
+### WAY-44/1 — What assigns a file to a part?
+
+Every file git tracks belongs to exactly one part of the map, by path patterns that git itself
+matches; a file that no pattern matches, and a file that two parts claim, breaks the gate,
+unless the map lists that file as left out on purpose. Tests belong to the part they test,
+generated files to the part of their generator, and the files that serve the whole repository —
+the lockfile, the build and the CI configuration — are a part of their own. For a file that
+collects entries about many parts, the parts a change touches follow from the entries it adds or
+changes, not from the part the file itself belongs to.
+
+- **Change:** new decision
+- **Scope:** part map, task cycle
+- **Based on:** Python's standard library does not match paths the way git does: `fnmatch`
+  states that "the filename separator ('/' on Unix) is *not* special"
+  (https://docs.python.org/3.10/library/fnmatch.html), and `PurePath.full_match`, which handles
+  `**`, arrives only in Python 3.13 (https://docs.python.org/3.13/library/pathlib.html). git
+  matches such patterns itself, through `.gitattributes`, where "a later line overrides an
+  earlier line" (https://git-scm.com/docs/gitattributes), and reports the result with
+  `git check-attr` (https://git-scm.com/docs/git-check-attr). import-linter treats a rule that
+  matches nothing as an error by default (https://import-linter.readthedocs.io/).
+- **Relations:** derives from WAY-40@aeabb301 · related to WAY-04 · related to WAY-15 ·
+  related to WAY-21 · related to WAY-38
+- **Outranks:** none
+- **Verification:** level 1 — invariants in working form:
+  - every file git tracks matches the patterns of exactly one part, or stands on the map's list
+    of files left out on purpose;
+  - no pattern in the map matches no file;
+  - no file on the list of files left out on purpose matches a part's patterns.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-17
+
+*Rationale:* a change is checked against the decisions whose scope names the parts it touches
+(WAY-21), and how sharply it is checked follows from the criticality of those parts, so every
+file a change can carry has to yield one part — not none, and not two with no rule to choose.
+git matches the patterns rather than a script of the-way, because the repository already speaks
+that dialect everywhere, and the standard library cannot reproduce it: `fnmatch` treats the path
+separator as an ordinary character, and the call that handles `**` is newer than the Python the
+scripts may assume, so the same map would resolve differently on Windows and on Linux. Tests go
+with the part they test, because changing a test changes what that part promises, not some part
+called "tests"; generated files go with their generator, because that is where a change to them
+comes from. The files that serve the whole repository have no natural part, and giving them one
+would tie the lockfile to whichever part happened to claim it. A file that no pattern matches is
+an error rather than a quiet no-man's-land, and where leaving a file out is deliberate the map
+says so by name, so that the error keeps its meaning. A file collecting entries about many parts
+would otherwise pull every change of any part into the single part that owns the file.
+*Rejected:* a file in several parts — the decisions to check and the criticality of the task
+would have two answers and no rule to pick; patterns matched by a script of the-way — two
+dialects of pattern in one repository, resolving differently across systems; tests as a part of
+their own — a change to a test would stop counting as a change to what it tests; files left
+unassigned in silence — the map would keep passing while saying less and less about the
+repository; the part of a ledger file taken from its path — every decision recorded would count
+as a change to the decisions part alone.
+*Consequences:* the map writes its patterns in git's dialect, and the script asks git to match
+them (WAY-38). The element's template gives a part its field of patterns and a mark for
+generated files, and gives the map its list of files left out on purpose. Binding the map's
+script to the format of an element's entries, so that a ledger file yields the parts of a change,
+is part of designing that script.
+
+### WAY-45/1 — What is a critical flow, and when does a change lie on it?
+
+A critical flow is an entry of the part map: an identifier, a criticality and the list of parts
+it runs through, while what has to stay true along it is an invariant whose end-to-end test names
+the flow. A change lies on a flow when it touches a part from that list; a change to a file the
+map leaves out, to the build configuration or to the dependencies lies on every flow. The test of
+every critical flow runs on every change.
+
+- **Change:** new decision
+- **Scope:** part map, task cycle
+- **Based on:** a tool that picks tests from a change falls back where it cannot reason: "For
+  commits and scenarios that TIA can't understand, it falls back to running all tests […] if the
+  code commit contains changes to HTML or CSS files, it can't reason about them and falls back to
+  running all tests" (Azure DevOps Test Impact Analysis,
+  https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-impact-analysis).
+- **Relations:** derives from WAY-40@aeabb301 · related to WAY-08 · related to WAY-13 ·
+  related to WAY-16 · related to WAY-44
+- **Outranks:** none
+- **Verification:** level 1 — invariants in working form:
+  - every part named in a flow's list of parts exists in the map;
+  - every critical flow has an invariant whose test names it;
+  - the gate runs the test of every critical flow on every change.
+- **Review when:** a product holds more critical flows than its gate can run on every change ·
+  check by: 2026-12-31
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-17
+
+*Rationale:* a flow needs a place in the map, not only an invariant, because two things have to
+be computed from it: the criticality it passes to the parts it runs through, and the fact that a
+given change lies on it. An invariant alone sits outside the map, where neither computation can
+reach it. The list of parts lives at the flow rather than as a mark at each part, so that there
+is one list to read and one place to correct. Files that belong to no part, the build
+configuration and the dependencies lie on every flow, because a change to them can alter any
+flow and nothing in the map says which — the same fallback a test-selection tool makes where it
+cannot reason. Every flow's test runs on every change, because a product holds a handful of
+critical flows, and choosing among a handful costs more than running them.
+*Rejected:* a critical flow as an invariant alone, outside the map — its criticality would reach
+no part, and nothing could tell that a change lies on it; the flow recorded as a mark at each
+part it runs through — the same list in two places, with no place to read the flow whole;
+picking which flow tests to run from the change — with a handful of flows the choice costs more
+than the run, and it fails exactly where it cannot reason.
+*Consequences:* a flow that spans two versions of the product — save, upgrade, load — keeps the
+recorded earlier states its test replays in a part on its list, so that changing them counts as a
+change on the flow (WAY-44). Checking a flow's list of parts against what its test really touches
+needs a rule of its own. A part on a critical flow inherits that flow's criticality.
+
+### WAY-46/1 — How does the criticality of a part arise?
+
+A part carries the failure modes a human records at it, each with the kind of damage it does,
+its severity, and how it is detected before release — a named invariant, or an explicit "not
+detected". The criticality of a part is computed rather than written by hand: the highest of its
+own failure modes, of the critical flows it lies on, and of the parts that depend on it, unless
+the dependency records that the two are separated and a failure of one does not damage the
+other. A part with no failure modes recorded counts as the highest criticality; raising a part's
+criticality needs no reason, and lowering it needs one, written at the part.
+
+- **Change:** new decision
+- **Scope:** part map, task cycle
+- **Based on:** safety standards make a part inherit the class of what it belongs to unless a
+  documented separation says otherwise — IEC 62304 4.3 d), quoted on the Elsmar Cove forum
+  (https://elsmar.com/elsmarqualityforum/threads/different-62304-safety-classes-for-modules-in-software-system.90429/):
+  "such SOFTWARE ITEMS shall inherit the software safety classification of the original SOFTWARE
+  ITEM (or SOFTWARE SYSTEM) unless the MANUFACTURER documents a rationale for classification into
+  a different software safety class […]. Such a rationale shall explain how the new SOFTWARE
+  ITEMS are segregated so that they may be classified separately" — and treat what nobody
+  classified as the highest class (Johner Institute, "Safety classes according to IEC 62304",
+  https://blog.johner-institute.com/iec-62304-medical-software/safety-class-iec-62304/): "If the
+  manufacturer does not carry out this safety classification, the software and all software
+  components fall into the highest safety class C." Changing an assessment is asymmetric: "Proprietors
+  may raise Protection Levels for a specific use case. An exception is required to lower a published
+  Protection Level" (UC Berkeley, Data and IT Resource Classification Standard,
+  https://security.berkeley.edu/data-classification-standard).
+- **Relations:** derives from WAY-40@aeabb301 · related to WAY-04 · related to WAY-13 ·
+  related to WAY-15 · related to WAY-45
+- **Outranks:** none
+- **Verification:** level 1 — invariants in working form:
+  - every failure mode recorded at a part names its severity and either an invariant that
+    detects it before release or an explicit "not detected";
+  - no criticality of a part is written by hand in the map;
+  - a part with no failure modes recorded is computed as the highest criticality;
+  - a dependency running from a part of higher criticality to one of lower criticality, with no
+    separation recorded, is reported.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-17
+
+*Rationale:* criticality is the number that sets how sharply a task is checked (WAY-13), and it
+arises outside the part: from the damage its own failure does, from the flows it serves, and
+from who leans on it. Written by hand at the part, it would be a copy that goes stale the day a
+new flow crosses the part or a new dependency appears; computed, it follows both. The
+computation takes the highest rather than an average, because the worst failure is the one the
+process exists for, and it stops at a recorded separation, because a part whose failure cannot
+damage the important one is the only part that has earned a lower number. A part nobody has
+assessed counts as the highest, so that silence raises checks instead of removing them. Raising
+is free and lowering costs a written reason, because lowering is the move made for convenience.
+Detection before release sits at the failure mode, and names the invariant that detects it, so
+that the map says which failures the gate would catch and which it would not.
+*Rejected:* criticality written by hand at the part — a second copy of what the flows and
+dependencies already say; three separate axes of criticality — confidentiality, integrity and
+availability — as fields of a part, since WAY-13 reads one measure of sharpness and nothing
+would read the other two; an unassessed part counting as the lowest — a part nobody looked at
+would never raise a check; raising and lowering treated alike — the direction made for
+convenience has to cost something; "failure symptom" and "first step to limit the damage" as
+fields — they are read by an operator during an incident, and this process has no incident path.
+*Consequences:* WAY-13 reads the computed value, not what a human wrote. The kind of damage
+chooses which checks a task runs, not how sharply it is checked. The number of degrees of the
+scale is `TODO`: it follows from the number of distinct sets of steps the task cycle has, and is
+set when the task cycle is designed. A part whose criticality is raised from outside — by a law
+or a contract — has no path into the map: such a fact is an environment fact (WAY-04), and
+nothing joins it to a part's floor.
+
+### WAY-47/1 — How is a critical flow's list of parts checked?
+
+The list of parts of a critical flow is checked against coverage: where a flow's test leaves a
+coverage file, the script reads it, maps the files it names to parts and reports every part the
+flow's list does not hold. A flow whose test leaves no coverage file is reported as "list of
+parts unchecked", never as agreeing with the map. The coverage comes from the run the gate
+already makes, and this check starts no second run of the tests.
+
+- **Change:** new decision
+- **Scope:** part map, task cycle
+- **Based on:** a checking script fails rather than guessing where it cannot read what it needs:
+  "If value could not be extracted then script should fail" (Kubernetes KEP-1209, Metrics
+  Validation and Verification,
+  https://github.com/kubernetes/enhancements/blob/master/keps/sig-instrumentation/1209-metrics-stability/README.md).
+- **Relations:** derives from WAY-45@3991b544 · related to WAY-16 · related to WAY-38 ·
+  related to WAY-44
+- **Outranks:** none
+- **Verification:** level 1 — invariants in working form:
+  - for every flow whose test leaves a coverage file, every part that coverage names stands in
+    the flow's list of parts;
+  - a flow whose test leaves no coverage file is reported as unchecked, and that report is not
+    an agreement;
+  - the check starts no test run of its own.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-17
+
+*Rationale:* a flow's list of parts is written by a human and decides what lies on the flow
+(WAY-45), so a part quietly missing from it sends a change down the light path. Coverage is the
+only thing that says which files the test really ran through. The check is conditional rather
+than required, because a product with no coverage for a flow still gets the rest of the map,
+while a check that demands what a product does not produce gets turned off whole. Silence is
+reported as "unchecked" rather than as agreement, because a check that has stopped seeing
+anything passes — two empty sets compare equal, which is how a route-guarding test in a product
+built with agents needed a second test to guard against a vacuous pass. The coverage comes from
+the run the gate already makes, because an end-to-end run is expensive, and a map that costs a
+second one is a map nobody keeps.
+*Rejected:* a required coverage check — a product without coverage would fail on the map instead
+of using it; coverage used to choose which tests run — a different job, and WAY-45 runs them all;
+silence read as agreement — the emptiest map would be the cleanest; a test run started by the
+map's script — a second end-to-end run for the sake of a check.
+*Consequences:* a product that wants the lists of its flows checked makes its gate leave a
+coverage file for each flow's test, in a format the script reads (WAY-38). "Unchecked" is a state
+of the map that a human reads, not an error that stops the work.
+
+### WAY-48/1 — How is a trust boundary recorded?
+
+A trust boundary is recorded at the part that holds it, as a pattern of the code files which
+accept data the product does not trust; an exchange with the external context records its
+direction and marks what comes in as untrusted. A boundary can run inside the product, wherever
+it reads back something it does not control — a browser's storage, a file on the player's disk.
+A change that touches the files of a boundary is checked for crafted input, whatever the
+criticality of the part.
+
+- **Change:** new decision
+- **Scope:** part map, task cycle
+- **Based on:** Chromium picks the review a change needs from the files it touches rather than
+  from their importance, by pinning owners to a file pattern —
+  `per-file *.mojom=file://ipc/SECURITY_OWNERS` (Chromium, IPC security reviews,
+  https://chromium.googlesource.com/chromium/src/+/main/docs/security/ipc-reviews.md). A trust
+  boundary kept as an object of a diagram has no reader: in pytm, none of the threat rules reads
+  the boundaries the model records (https://github.com/OWASP/pytm).
+- **Relations:** derives from WAY-40@aeabb301 · related to WAY-11 · related to WAY-13 ·
+  related to WAY-44 · related to WAY-46
+- **Outranks:** none
+- **Verification:** level 1 — invariants in working form:
+  - every trust boundary in the map names a pattern of files, and that pattern matches at least
+    one file;
+  - every exchange with the external context records its direction and whether what comes in is
+    trusted;
+  - a change that touches the files of a boundary runs the check for crafted input.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-17
+
+*Rationale:* what makes a change dangerous is not only how much the part matters but where the
+data comes from: a part of the lowest criticality that parses what a stranger sends is the
+oldest way in. The boundary therefore feeds the choice of checks on its own, read from the files
+a change touches — the signal Chromium already routes its security review by. It is a pattern of
+files rather than a line in a picture, because a pattern is matched by the same machinery that
+assigns files to parts (WAY-44), while a boundary kept as an object has no reader at all. The
+boundary runs inside the product as well as at its edge, because the product controls neither
+the browser's storage nor the file on the player's disk, and reading either back is the same act
+of trust.
+*Rejected:* a trust boundary as its own kind of entry in the map — nothing would read it that
+the pattern at the part does not already give; the boundary taken from the criticality of the
+part — the two are independent, and the exposed part is often the unimportant one; the boundary
+drawn as a line in a diagram — read by a human looking at the picture, and by nothing else.
+*Consequences:* a part that accepts untrusted data carries the pattern, and every exchange with
+the external context carries a direction. Places that start accepting data outside the pattern
+are caught by the step that carries findings out of a task (WAY-11). What the check for crafted
+input consists of is set when the task cycle is designed.
+
+### WAY-49/1 — How does a product declare a surface it promises to keep?
+
+A surface the product promises to keep is declared at the element itself, in the code or in the
+schema, with the level of the promise and, once the surface is being withdrawn, the date of the
+withdrawal. The map holds one entry per surface — its identifier, the promise in words, and
+where the declaration sits — and holds no list of withdrawals in progress. A surface that cannot
+be marked at the element is written in the map by hand and checked by a test.
+
+- **Change:** new decision
+- **Scope:** part map
+- **Based on:** what counts as a surface is declared, not discovered: "Software using Semantic
+  Versioning MUST declare a public API" (https://semver.org/). Tools read the promise where it is
+  written at the element — API Extractor reports an exported item with no release tag
+  (https://api-extractor.com/pages/messages/ae-missing-release-tag/) — and turn a withdrawal date
+  written there into a check, where removing the element before the date is a breaking change
+  (oasdiff, https://github.com/oasdiff/oasdiff/blob/main/docs/DEPRECATION.md).
+- **Relations:** derives from WAY-40@aeabb301 · related to WAY-15 · related to WAY-34 ·
+  related to WAY-44
+- **Outranks:** none
+- **Verification:** level 1 — invariants in working form:
+  - every element declared a surface carries a level of promise;
+  - every surface entry in the map names a declaration that exists, or says the surface cannot
+    be marked at the element and names the test that checks it;
+  - no withdrawal date is written in the map.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-17
+
+*Rationale:* a surface is a promise, and no tool reads a promise out of code: a tool computes the
+shape of what somebody declared, and the declaring is the human part. It sits at the element,
+where whoever changes it sees it and where the tools that compute shape and breaking change look
+for it. The map keeps the promise in words and the place of the declaration, because that is
+what a scope, a criticality and a change path are read against, and a header comment cannot
+carry them. The withdrawal date stays at the element as well, because it is checked against the
+element's removal; kept in the map it would be a second copy, and the entry nobody deletes. A
+surface that cannot be marked at the element — the format of a saved file, a command-line
+interface — exists all the same, and a hand-written entry with a test is what keeps it from
+disappearing quietly.
+*Rejected:* the list of surfaces computed from the code — tools compute the shape of declared
+elements, never which of them the product promises to keep; the declaration kept only in the map
+— whoever changes the element does not read the map, and no tool would find it there; a list of
+withdrawals in progress in the map — a second place to update, stale the day the element goes.
+*Consequences:* the product's own tool computes the shape of declared elements, a breaking change
+against the main branch, and a declaration missing its level (WAY-15). A product with a format of
+its own, such as a saved game, sets the shape of the mark and a parser that fails on a record it
+does not recognise. The surfaces this repository promises to the products pinned to a commit
+(WAY-34) — the format of entries, the way a fingerprint is computed, the commands of the scripts
+— are declared when its own map is written.
+
+### WAY-50/1 — By what path may a surface change?
+
+Each level of promise carries one policy for changing a surface at that level, written once in
+the map; every surface follows the policy of its level, and no surface carries a path of its
+own. What a level's policy has to allow follows from whether the consumers at that level update
+together with the product, and data already stored at the user is a consumer that never updates.
+An exchange with the external context records whether its consumer updates together with the
+product.
+
+- **Change:** new decision
+- **Scope:** part map
+- **Based on:** Kubernetes ties the life of a surface to its level rather than to the surface
+  itself — "Rule #4a: API lifetime is determined by the API stability level" — and treats stored
+  data as a consumer that cannot be made to move: "no API versions that have been persisted to
+  storage may be removed […] the API server must remain capable of decoding/converting previously
+  persisted data from storage" (Kubernetes deprecation policy,
+  https://kubernetes.io/docs/reference/using-api/deprecation-policy/).
+- **Relations:** derives from WAY-49@631b41c6 · related to WAY-34 · related to WAY-48
+- **Outranks:** none
+- **Verification:** level 1 — invariants in working form:
+  - every level of promise a declaration uses has a policy in the map;
+  - no surface entry carries a change path of its own;
+  - every exchange with the external context records whether its consumer updates together with
+    the product.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-17
+
+*Rationale:* a path written at each surface is written many times and read once, and the same
+promise means the same path, so the level — which is the promise — is where the path belongs.
+What the path has to allow is not a matter of taste but of who has to move: a consumer that
+ships with the product can be changed in the same commit, while one that does not update needs a
+route it can take at its own pace. Data already written at the user is the strictest such
+consumer, because it never updates and nothing can ask it to, which is why a system that has
+persisted data keeps the ability to read it back after the version that wrote it is gone.
+Recording at the exchange whether the consumer updates keeps that choice out of the hands of
+whoever happens to be making the change.
+*Rejected:* a change path written at each surface — the same sentence copied per surface, drifting
+apart as they are edited; the path chosen by how important the surface is — importance says how
+bad a break would be, not who is able to follow; the trait "updates together with us" recorded
+for every dependency inside the product — parts of one repository always update together, so the
+trait says something only at the edge.
+*Consequences:* a product sets its levels of promise and one policy for each, saying what a
+change at that level may do and what it owes the consumer first — a period, an announcement, a
+conversion. Those details belong to the product, not to this process. The level a product gives
+a format it saves is chosen knowing that the data already stored is a consumer that will never
+update.
+
+### WAY-51/1 — What does the main branch hold where the map's rules are not met?
+
+On the main branch the part map holds its rules together with a listed debt: every place where
+the code does not meet a rule stands on a derived list of known violations. A new violation
+breaks the gate; a position the code no longer contradicts breaks it too and goes in the same
+change; a position is added only by a change of the foundation that a human accepts, never by a
+step of implementation. The state a product is in when this process enters it goes onto that
+list once.
+
+- **Change:** new decision
+- **Scope:** part map, task cycle
+- **Based on:** a list of known violations grows without limit where adding to it is the cheap
+  move: Packwerk answers most situations with "Simply run `bin/packwerk update-todo`" and holds
+  that "New dependency violations are never hard-blocked"
+  (https://github.com/Shopify/packwerk/blob/main/RESOLVING_VIOLATIONS.md), and its authors record
+  what followed — "the rate at which Packwerk was identifying problems to its users vastly
+  outpaced their capacity to actually fix them (or interest in doing so)" and, for domain
+  components, "monstrously large todo files for every component. With every new feature added,
+  these todo files grew larger" (A Packwerk Retrospective,
+  https://railsatscale.com/2024-01-26-a-packwerk-retrospective/).
+- **Relations:** derives from WAY-40@aeabb301 · narrows WAY-15@72eb2240 · related to WAY-01 ·
+  related to WAY-28
+- **Outranks:** none
+- **Verification:** level 1 — invariants in working form:
+  - every violation of a map rule that the code holds stands on the list of known violations, or
+    the gate fails;
+  - the list on a branch is a subset of the list on the main branch;
+  - a position the code no longer contradicts fails the gate;
+  - every position names a source part, a target part, a file and what it reaches for, and no
+    line number.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-17
+
+*Rationale:* this process enters products that already exist (WAY-28), where a rule the code
+breaks in fifty places either stops all work or is quietly dropped. The listed debt keeps the
+rule a rule while making the gap visible and countable. What the list needs is a ratchet, because
+its own failure mode is well recorded: where adding to the list is the easiest move, it grows
+faster than anyone's will to empty it, and an agent takes that move more readily than a person.
+Hence the three mechanisms together — a new violation is an error, a stale position is an error,
+and growing the list is a foundation change a human accepts — since any one of them alone leaves
+the cheap move open. Positions carry no line numbers, because a line number goes stale at the
+next edit while the violation it stands for does not.
+*Rejected:* a main branch holding only what the code already meets — the process could never
+enter an existing product; the rule weakened until the code fits it — the map would then describe
+the accident rather than the intent (WAY-15); positions with line numbers — stale at the next
+edit; a part marked "not checked yet" instead of a list of violations — the gap stops being
+countable, and nothing shows whether it grows.
+*Consequences:* a list growing at one part is a signal to review where that part's boundary runs,
+rather than an order to pay the debt: it is easier to bend a mental model to what the code
+actually does than the other way round. The list is derived and yet cannot be regenerated from
+scratch — regenerating would swallow the new violations — so it is checked as a subset of the
+list on the main branch. What the main branch of a foundation carries (WAY-01) therefore includes
+this debt.
+
+### WAY-52/1 — What is generated from the part map for an agent?
+
+From the part map a product generates for its agents only rules pinned to path patterns: a
+part's responsibility, its allowed dependencies, and the binding sentences of the decisions whose
+scope names that part, written into the rule channels the tools already read. The patterns come
+from the part's rule for assigning files, and a generated rule file is derived like any other. No
+overview of the repository is generated for an agent.
+
+- **Change:** new decision
+- **Scope:** part map, decisions
+- **Based on:** measured on coding agents, "providing context files does not generally improve
+  task success rates, while increasing inference cost by over 20% on average", and "while
+  instructions in the context files are well followed by coding agents, repository overviews,
+  although popular and recommended by model providers, are not helpful" (Gloaguen, Mündler,
+  Müller, Raychev, Vechev, "Evaluating AGENTS.md: Are Repository-Level Context Files Helpful for
+  Coding Agents?", ETH Zurich / LogicStar.ai, https://arxiv.org/abs/2602.11988). The tools carry
+  channels for rules pinned to path patterns: Cursor rules
+  (https://cursor.com/docs/context/rules), Claude Code memory
+  (https://code.claude.com/docs/en/memory) and Kiro steering (https://kiro.dev/docs/steering/).
+- **Relations:** derives from WAY-40@aeabb301 · related to WAY-15 · related to WAY-21 ·
+  related to WAY-44
+- **Outranks:** none
+- **Verification:** level 1 — invariants in working form:
+  - every generated rule file is identical to what the generator produces from the map on the
+    same commit;
+  - every path pattern in a generated rule file comes from a part's rule for assigning files;
+  - no file generated for an agent holds an overview of the repository's directories.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-17
+
+*Rationale:* what a context file does for an agent has been measured, and the two halves of the
+answer point opposite ways: instructions pinned to files are followed, while an overview of the
+repository does not help and is paid for in every call. So the map gives the agent the part of
+itself that is an instruction — what this part is responsible for, what it may depend on, what
+the decisions in its scope bind — and nothing that merely says where things are. The tools' own
+channels carry it, because a rule that arrives with the file the agent opens reaches it at the
+moment it binds. Generated rather than written by hand, because a rule file written by hand is a
+second copy of the map, which is the reason WAY-21 keeps paths out of decisions in the first
+place.
+*Rejected:* a code map or repository overview generated for an agent — measured as not helpful,
+at a fixed cost in context; rule files written by hand — a second copy of the map, drifting from
+it; the whole decision log pinned to every path — an agent loses rules as their number grows.
+*Consequences:* a picture of the architecture for a human is made on request, outside an agent's
+context, and the code map for an agent leaves the views WAY-04 expects. The set of decisions an
+agent reads at the start of a task comes from the step that goes from changed files to parts to
+decisions, not from this channel alone: in Claude Code a rule pinned to paths is added only once
+the agent reads a matching file. Generated rule files sit in the product's repository and are
+checked as derived files (WAY-15).
