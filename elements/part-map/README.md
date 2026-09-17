@@ -13,3 +13,12 @@ change for each level of promise.
 
 Entries are written according to `template.md`; `examples.md` will hold verbatim copies of real
 entries once this repository has a map of its own.
+
+`skill/` holds `update-part-map`, a Claude Code skill that writes the entries of a product's map.
+A product uses the skill from the commit of the-way it pins (WAY-34), linked into the product's
+`.claude/skills/` from the pinned copy. For work on the-way itself, link its directory into the
+user's skills directory; on Windows:
+
+```powershell
+New-Item -ItemType Junction -Path "$HOME\.claude\skills\update-part-map" -Target "<the-way>\elements\part-map\skill"
+```
