@@ -189,12 +189,18 @@ part's patterns is shown instead as the list of files that changed part.
 
 ## Known violations
 
-The derived file beside the map holds what the code does not meet today. A position names the
-source part, the target part, the file and what it reaches for — never a line number. A new
-violation breaks the gate; a position the code no longer contradicts breaks it too and goes in
-the same change; a position is added only by a change of the foundation that a human accepts.
-The file is checked as a subset of the list on the main branch, never regenerated from scratch
-(WAY-51).
+The derived file beside the map, `foundations/known_violations.md`, holds what the code does not
+meet today. A position names the source part, the target part, the file and what it reaches for
+— never a line number. A new violation breaks the gate; a position the code no longer
+contradicts breaks it too and goes in the same change; a position is added only by a change of
+the foundation that a human accepts. The file is checked as a subset of the list on the main
+branch, never regenerated from scratch (WAY-51).
+
+```markdown
+## Known violations
+
+| Source | Target | File | What it reaches for |
+```
 
 ## What is generated from the map
 

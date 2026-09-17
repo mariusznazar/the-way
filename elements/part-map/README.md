@@ -14,6 +14,21 @@ change for each level of promise.
 Entries are written according to `template.md`; `examples.md` will hold verbatim copies of real
 entries once this repository has a map of its own.
 
+`format_guard.py` checks a product's map against the list "What the checker checks" in
+`template.md`, reading from the template the fields of each kind of entry, the titles of the
+lists and the values their columns allow. Files are matched to parts by git itself, through the
+patterns a part records. From the product's repository root, in CI with its main branch:
+
+```
+python <the-way>/elements/part-map/format_guard.py --base origin/main
+```
+
+Without `--base`, the list of known violations is not compared with the one on the main branch.
+What the script cannot see it reports as unchecked, never as agreement (WAY-38): a flow whose
+test leaves no coverage file, the change path of a promise level declared in the code, and new
+or stale violations, which wait for the command a product declares for its dependency graph. Its
+tests: `python -B -m unittest discover -s elements/part-map -p "test_*.py"`.
+
 `skill/` holds `update-part-map`, a Claude Code skill that writes the entries of a product's map.
 A product uses the skill from the commit of the-way it pins (WAY-34), linked into the product's
 `.claude/skills/` from the pinned copy. For work on the-way itself, link its directory into the
