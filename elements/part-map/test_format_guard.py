@@ -386,7 +386,12 @@ class KnownViolations(GuardTestCase):
         self.violations("| saving | foundations | src/saving.py | the log of decisions |")
         code, output = self.guard(part_map())
         self.assertEqual(code, 0, output)
-        self.assertIn("unchecked: new and stale violations", output)
+        self.assertIn("unchecked: the dependencies between parts", output)
+
+    def test_dependencies_are_reported_unchecked_without_a_list_of_violations(self):
+        code, output = self.guard(part_map())
+        self.assertEqual(code, 0, output)
+        self.assertIn("unchecked: the dependencies between parts", output)
 
     def test_a_position_added_against_the_main_branch(self):
         self.violations()

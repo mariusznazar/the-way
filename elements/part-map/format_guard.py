@@ -490,6 +490,8 @@ def check_scopes(entries, sections, report, map_path):
 
 def check_violations(entries, sections, rules, report, map_path, base):
     """The listed debt: a subset of the list on the main branch, with no stale position (WAY-51)."""
+    report.cannot_check("the dependencies between parts, and new or stale violations",
+                        "no command of the product reports the dependency graph")
     root_of_map = os.path.dirname(os.path.dirname(os.path.abspath(map_path)))
     path = os.path.join(root_of_map, rules.violations.replace("/", os.sep))
     if not os.path.exists(path):
@@ -516,9 +518,6 @@ def check_violations(entries, sections, rules, report, map_path, base):
         if any(re.search(r":\d+\b", cell) for cell in cells):
             report.error(None, "%s:%d: the known violation names a line number, which goes stale "
                                "at the next edit" % (rules.violations, line))
-
-    report.cannot_check("new and stale violations",
-                        "no command of the product reports the dependency graph")
 
     if not base:
         return
