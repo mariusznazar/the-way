@@ -46,7 +46,7 @@ that entry changes.
 
 The part answers for what a product states as an invariant and for how that statement is checked.
 
-- **Files:** elements/invariants/**
+- **Files:** none
 - **Depends on:** none
 - **Failure modes:** none
 - **Trust boundary:** none
@@ -55,7 +55,7 @@ The part answers for what a product states as an invariant and for how that stat
 
 The part answers for the words a product's foundation uses, each in one meaning.
 
-- **Files:** elements/glossary/**
+- **Files:** none
 - **Depends on:** none
 - **Failure modes:** none
 - **Trust boundary:** none
@@ -64,7 +64,7 @@ The part answers for the words a product's foundation uses, each in one meaning.
 
 The part answers for what a product takes as true about the world outside it.
 
-- **Files:** elements/environment-facts/**
+- **Files:** none
 - **Depends on:** none
 - **Failure modes:** none
 - **Trust boundary:** none

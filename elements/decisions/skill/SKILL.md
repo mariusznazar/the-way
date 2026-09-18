@@ -31,9 +31,10 @@ here; if not, stop.
   change from the template's table; found only on this branch — a correction in place, shown for
   acceptance again when it changes the meaning; not found — a new number.
 - Search the whole foundation, not only the decisions with an overlapping *Scope*, for entries
-  this one touches that no written link joins to it. Each finding becomes a relation, a question
-  about a collision in step 4, or a sentence that answered this question in passing and now needs
-  a version or a correction without it.
+  this one touches that no written link joins to it. The search reads *Rejected* as well as what
+  binds: an option already weighed and refused stands there, and nowhere else. Each finding
+  becomes a relation, a question about a collision in step 4, or a sentence that answered this
+  question in passing and now needs a version or a correction without it.
 
 ## 3. Draft
 
