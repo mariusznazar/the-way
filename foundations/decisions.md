@@ -11,7 +11,7 @@ changing the foundation, and the code follows; when the task closes, the
 foundation again matches the current state. Roadmaps and plans do not change the foundation.
 
 - **Change:** new decision
-- **Scope:** decisions, invariants, glossary, part map, environment facts, task cycle
+- **Scope:** decisions, invariants, glossary, part-map, environment-facts, task-cycle
 - **Based on:** specifications written separately for each change go unread: in a reported
   case of 238 such specifications over nine months, none was reopened, and the agent could not
   tell which were current (Alfredo Perez,
@@ -50,7 +50,7 @@ review; a bare identifier and a reference to a version (`WAY-17/2`) are never fl
 only the part of an entry that binds — for a decision, its binding sentences.
 
 - **Change:** new decision
-- **Scope:** decisions, invariants, glossary, part map, environment facts, relation model
+- **Scope:** decisions, invariants, glossary, part-map, environment-facts, relation-model
 - **Based on:** none
 - **Relations:** none
 - **Outranks:** none
@@ -87,7 +87,7 @@ accepted foundation change. A task that needs an invariant test changed goes bac
 foundation step.
 
 - **Change:** new decision
-- **Scope:** invariants, task cycle
+- **Scope:** invariants, task-cycle
 - **Based on:** agents that a test stands in the way of change the test instead of the code,
   and Claude models do so especially readily: read-only tests are "a promising middle ground
   especially for Claude models, largely due to their preference of directly modifying test
@@ -119,7 +119,7 @@ foundation only as a field or a rule of one of the five, and only when a mechani
 without human memory: a test, a lint, a gate, a mandatory relation or configuration.
 
 - **Change:** new decision
-- **Scope:** decisions, invariants, glossary, part map, environment facts
+- **Scope:** decisions, invariants, glossary, part-map, environment-facts
 - **Based on:** documentation that nobody maintains turns into "a culture of 'paper safety' at
   the expense of real safety" (Haddon-Cave, The Nimrod Review, 2009; summary:
   https://aerossurance.com/safety-management/nimrod-xv230-haddon-cave/).
@@ -231,7 +231,7 @@ A foundation change in progress lives on the task's branch in the product's repo
 reaches the main branch in the same merge as the code that follows it.
 
 - **Change:** new decision
-- **Scope:** decisions, invariants, glossary, part map, environment facts, task cycle
+- **Scope:** decisions, invariants, glossary, part-map, environment-facts, task-cycle
 - **Based on:** none
 - **Relations:** derives from WAY-01@a291c2c0 · related to WAY-03
 - **Outranks:** none
@@ -352,8 +352,8 @@ and flags references; the entries in `foundations/` are checked by the scripts o
 The `README.md` is the only file that no tool keeps.
 
 - **Change:** new decision
-- **Scope:** decisions, invariants, glossary, part map, environment facts, relation model, task
-  cycle
+- **Scope:** decisions, invariants, glossary, part-map, environment-facts, relation-model,
+  task-cycle
 - **Based on:** none
 - **Relations:** related to WAY-02 · related to WAY-04 · related to WAY-06 · related to WAY-21
 - **Outranks:** none
@@ -400,7 +400,7 @@ test reaches the product: selectors, test data, waiting. Every other change the 
 with the diff, its effects and a recommendation, and a human decides.
 
 - **Change:** new decision
-- **Scope:** decisions, invariants, glossary, part map, environment facts, task cycle
+- **Scope:** decisions, invariants, glossary, part-map, environment-facts, task-cycle
 - **Based on:** a model assessing text is biased towards its own: "an LLM evaluator scores its own
   outputs higher than others' while human annotators consider them of equal quality"
   (Panickssery et al., 2024, https://arxiv.org/abs/2404.13076).
@@ -438,7 +438,7 @@ the same step it compares the foundation with the code in the parts the task tou
 review of the whole foundation runs alongside, independent of tasks.
 
 - **Change:** new decision
-- **Scope:** decisions, invariants, glossary, part map, environment facts, task cycle
+- **Scope:** decisions, invariants, glossary, part-map, environment-facts, task-cycle
 - **Based on:** none
 - **Relations:** derives from WAY-01@a291c2c0 · related to WAY-06 · related to WAY-10
 - **Outranks:** none
@@ -515,7 +515,7 @@ as a signal to split it, and an agent may check a change more sharply than the m
 never less. A human decides on every change that cannot be undone.
 
 - **Change:** new decision
-- **Scope:** task cycle
+- **Scope:** task-cycle
 - **Based on:** formal approval does not make changes safer: "No evidence was found to support
   the hypothesis that a more formal, external review process was associated with lower change
   fail rates" (DORA, https://dora.dev/capabilities/streamlining-change-approval/). Changes that
@@ -603,7 +603,7 @@ state. Rules are written by hand: what is allowed, how bad a failure would be an
 product promises, which the code cannot show.
 
 - **Change:** new decision
-- **Scope:** decisions, invariants, glossary, part map, environment facts
+- **Scope:** decisions, invariants, glossary, part-map, environment-facts
 - **Based on:** code shows what exists, not the rules: "Your architecture models and your source
   code will not show the same things. The difference between them is the model-code gap", and
   "intensional elements establish general rules that apply to all elements, but standard
@@ -653,7 +653,7 @@ from a list written by hand, and runs the checks a change calls for with one com
 command for an agent, CI and a human.
 
 - **Change:** new decision
-- **Scope:** invariants, task cycle
+- **Scope:** invariants, task-cycle
 - **Based on:** none
 - **Relations:** related to WAY-08 · related to WAY-13 · related to WAY-15
 - **Outranks:** none
@@ -692,7 +692,7 @@ rest on, an invariant derived from a decision names that decision, and an invari
 its invariant.
 
 - **Change:** new decision
-- **Scope:** relation model, decisions, invariants, environment facts
+- **Scope:** relation-model, decisions, invariants, environment-facts
 - **Based on:** an assumption about the world that no entry names escapes review: the inquiry
   into the failure of Ariane 5 found that "this decision was found directly in the source code.
   Given the large amount of documentation associated with any industrial application, the
@@ -879,7 +879,7 @@ file paths, so that the decisions governing a change are found from the files it
 the part map's rule for assigning files.
 
 - **Change:** new decision
-- **Scope:** decisions, part map, task cycle
+- **Scope:** decisions, part-map, task-cycle
 - **Based on:** an agent loses rules as their number grows: "even the best frontier models only
   achieve 68% accuracy at the max density of 500 instructions" (IFScale,
   https://arxiv.org/abs/2507.11538), and a tool vendor advises keeping an agent's instructions
@@ -889,8 +889,7 @@ the part map's rule for assigning files.
 - **Relations:** related to WAY-04 · related to WAY-11 · related to WAY-13 · related to WAY-14
 - **Outranks:** none
 - **Verification:** level 1 — invariants in working form:
-  - every part named in a decision's scope exists in the part map, or, until there is one, in the
-    working list of parts;
+  - every part named in a decision's scope exists in the part map;
   - no decision's scope names a file path;
   - the decisions found for a change include every decision whose scope names a part the change
     touches.
@@ -907,9 +906,7 @@ because a part can be computed from a change and a topic cannot.
 *Rejected:* file paths in each decision, as rule files for agents do — a second copy of the part
 map; topics as scope — they cannot be computed from a change; no scope — every change checked
 against every decision, and the ones that matter lost among the rest.
-*Consequences:* until this process has its own part map, the scope of its decisions names parts
-from a working list: decisions, invariants, glossary, part map, environment facts, relation
-model, task cycle. Finding the decisions for a change uses the part map's rule for assigning
+*Consequences:* finding the decisions for a change uses the part map's rule for assigning
 files (WAY-44). Which other decisions a change is checked against — those that govern every task,
 and collisions between decisions of different scopes — is set when the task cycle is designed.
 
@@ -1048,7 +1045,7 @@ precedence recorded is never settled by the agent that meets it; a human records
 in one of them — by a new version on the main branch, by a correction before it.
 
 - **Change:** new decision
-- **Scope:** decisions, task cycle
+- **Scope:** decisions, task-cycle
 - **Based on:** none
 - **Relations:** related to WAY-07 · related to WAY-14 · related to WAY-20
 - **Outranks:** none
@@ -1092,7 +1089,7 @@ exist only at product level, and a task's exclusions stay in the task's plan unl
 the task.
 
 - **Change:** new decision
-- **Scope:** decisions, task cycle
+- **Scope:** decisions, task-cycle
 - **Based on:** a principle guides only when both sides are worth having: principles of this kind
   weigh "two things that could be entirely good choices" (The Uncertainty Project,
   https://www.theuncertaintyproject.org/tools/even-over-statements), and "A tenet takes a stand by
@@ -1137,8 +1134,8 @@ entry carries its whole reasoning, and a fact seen only in such a source is desc
 entry instead of being pointed to.
 
 - **Change:** new decision
-- **Scope:** decisions, invariants, glossary, part map, environment facts, relation model, task
-  cycle
+- **Scope:** decisions, invariants, glossary, part-map, environment-facts, relation-model,
+  task-cycle
 - **Based on:** none
 - **Relations:** related to WAY-09 · related to WAY-17
 - **Outranks:** none
@@ -1175,7 +1172,7 @@ keep — and the other invariants come through the return step of tasks. Decisio
 only when a task touches the parts they govern.
 
 - **Change:** new decision
-- **Scope:** decisions, invariants, part map, task cycle
+- **Scope:** decisions, invariants, part-map, task-cycle
 - **Based on:** checking an existing product against a description written long after its code
   is slow and can fail outright: MongoDB reports "10 weeks of effort without successfully
   trace-checking one spec" (MongoDB engineering blog,
@@ -1266,7 +1263,7 @@ the decision's approver. An exception written in advance into a decision's bindi
 not a contradiction, and no exception lives only in a task's plan.
 
 - **Change:** new decision
-- **Scope:** decisions, task cycle
+- **Scope:** decisions, task-cycle
 - **Based on:** tools that guard principles in agent work refuse a quiet way around them:
   "Constitution conflicts are automatically CRITICAL and require adjustment of the spec, plan, or
   tasks—not dilution, reinterpretation, or silent ignoring of the principle" (GitHub Spec Kit,
@@ -1311,7 +1308,7 @@ every decision that relates to it with a fingerprint, each checked against the n
 carrying the new fingerprint.
 
 - **Change:** new decision
-- **Scope:** decisions, relation model
+- **Scope:** decisions, relation-model
 - **Based on:** requirement tools that keep traceability between items store the state of the
   parent in each link: "Each link consists of the parent item UID and the fingerprint of the
   parent item. When the fingerprint of a parent item changes, the link is reported as suspect
@@ -1367,7 +1364,7 @@ closed: `derives from` — a higher decision this one serves; `narrows` — a de
 deliberately goes against in a narrower area; `related to` — any other link.
 
 - **Change:** new decision
-- **Scope:** decisions, relation model
+- **Scope:** decisions, relation-model
 - **Based on:** a relation word left without a definition drifts in use: the IETF "Updates" tag
   "is currently used for multiple different purposes, which leads to confusion …" (Kuehlewind,
   Krishnan, https://www.ietf.org/archive/id/draft-kuehlewind-update-tag-04.html).
@@ -1408,7 +1405,7 @@ and a merge request that changes the foundation without the record of both searc
 check.
 
 - **Change:** new decision
-- **Scope:** decisions, invariants, glossary, part map, environment facts, task cycle
+- **Scope:** decisions, invariants, glossary, part-map, environment-facts, task-cycle
 - **Based on:** in a product built before this process, a requirement that players log in and a
   decision to keep the game's whole state in the browser, with no server, were written in separate
   documents with no link between them; they contradicted each other, and nothing a change could
@@ -1461,8 +1458,8 @@ scripts, and the decisions of the-way that bind its work, all come from that com
 version of the process enters a product only through a task in the product that moves the pin.
 
 - **Change:** new decision
-- **Scope:** decisions, invariants, glossary, part map, environment facts, relation model, task
-  cycle
+- **Scope:** decisions, invariants, glossary, part-map, environment-facts, relation-model,
+  task-cycle
 - **Based on:** none
 - **Relations:** related to WAY-01 · related to WAY-09 · related to WAY-16 · related to WAY-21 ·
   related to WAY-23
@@ -1503,7 +1500,7 @@ An element's skill holds only the way of working: every rule of the element's en
 the element's template, and the skill reads the rules from there instead of restating them.
 
 - **Change:** new decision
-- **Scope:** decisions, invariants, glossary, part map, environment facts
+- **Scope:** decisions, invariants, glossary, part-map, environment-facts
 - **Based on:** none
 - **Relations:** related to WAY-05 · related to WAY-09 · related to WAY-16
 - **Outranks:** none
@@ -1539,7 +1536,7 @@ merged; a rule that ends with a piece of work — an order of steps, a first mer
 between two states — stays in the plan of that work.
 
 - **Change:** new decision
-- **Scope:** decisions, task cycle
+- **Scope:** decisions, task-cycle
 - **Based on:** none
 - **Relations:** related to WAY-01 · related to WAY-07 · related to WAY-22 · related to WAY-26
 - **Outranks:** none
@@ -1574,8 +1571,8 @@ on the main branch, by a correction before it. An agent finds those entries by s
 foundation for what the change brings.
 
 - **Change:** new decision
-- **Scope:** decisions, invariants, glossary, part map, environment facts, relation model, task
-  cycle
+- **Scope:** decisions, invariants, glossary, part-map, environment-facts, relation-model,
+  task-cycle
 - **Based on:** none
 - **Relations:** related to WAY-01 · related to WAY-07 · related to WAY-19 · related to WAY-33
 - **Outranks:** none
@@ -1610,8 +1607,8 @@ adapter for the format. Where a product declares no such command, the script rep
 could not check, never agreement.
 
 - **Change:** new decision
-- **Scope:** decisions, invariants, glossary, part map, environment facts, relation model, task
-  cycle
+- **Scope:** decisions, invariants, glossary, part-map, environment-facts, relation-model,
+  task-cycle
 - **Based on:** computing a language's state is work that mature tools do as separate programs —
   buf, API Extractor, japicmp, cargo-semver-checks, oasdiff — and reimplementing it was given up
   as "requires re-implementing large swaths of rust's semantics"
@@ -1664,7 +1661,7 @@ every run of spaces and line breaks is replaced by a single space and both ends 
 Nothing else in the text is changed before it is digested.
 
 - **Change:** new decision
-- **Scope:** relation model, decisions, invariants, glossary, part map, environment facts
+- **Scope:** relation-model, decisions, invariants, glossary, part-map, environment-facts
 - **Based on:** none
 - **Relations:** derives from WAY-02@af08ee5d · related to WAY-05 · related to WAY-09 ·
   related to WAY-31 · related to WAY-38
@@ -1708,7 +1705,7 @@ violations of the map's rules are a derived file beside the map, so neither is a
 own. The whole map lives in one Markdown file of fixed shape in `foundations/`.
 
 - **Change:** new decision
-- **Scope:** part map
+- **Scope:** part-map
 - **Based on:** none
 - **Relations:** derives from WAY-04@f7328944 · related to WAY-15 · related to WAY-23
 - **Outranks:** none
@@ -1750,7 +1747,7 @@ left behind stays in the map as a withdrawal line naming its successors; an iden
 reused.
 
 - **Change:** new decision
-- **Scope:** part map
+- **Scope:** part-map
 - **Based on:** Packwerk ties a package's identity to its location — "The package name is the
   path to the folder from the project root" (Packwerk USAGE,
   https://github.com/Shopify/packwerk/blob/main/USAGE.md). Backstage makes the name the thing
@@ -1800,7 +1797,7 @@ outside it; a change to a part's path patterns is shown instead as the list of f
 changed part.
 
 - **Change:** new decision
-- **Scope:** part map, relation model
+- **Scope:** part-map, relation-model
 - **Based on:** none
 - **Relations:** derives from WAY-02@af08ee5d · related to WAY-39 · related to WAY-40
 - **Outranks:** none
@@ -1840,7 +1837,7 @@ product as it is today. What the entry said before a correction stays in git, an
 there.
 
 - **Change:** new decision
-- **Scope:** part map
+- **Scope:** part-map
 - **Based on:** none
 - **Relations:** derives from WAY-01@a291c2c0 · related to WAY-07 · related to WAY-19 ·
   related to WAY-40
@@ -1882,7 +1879,7 @@ collects entries about many parts, the parts a change touches follow from the en
 changes, not from the part the file itself belongs to.
 
 - **Change:** new decision
-- **Scope:** part map, task cycle
+- **Scope:** part-map, task-cycle
 - **Based on:** Python's standard library does not match paths the way git does: `fnmatch`
   states that "the filename separator ('/' on Unix) is *not* special"
   (https://docs.python.org/3.10/library/fnmatch.html), and `PurePath.full_match`, which handles
@@ -1940,7 +1937,7 @@ map leaves out, to the build configuration or to the dependencies lies on every 
 every critical flow runs on every change.
 
 - **Change:** new decision
-- **Scope:** part map, task cycle
+- **Scope:** part-map, task-cycle
 - **Based on:** a tool that picks tests from a change falls back where it cannot reason: "For
   commits and scenarios that TIA can't understand, it falls back to running all tests […] if the
   code commit contains changes to HTML or CSS files, it can't reason about them and falls back to
@@ -1989,7 +1986,7 @@ other. A part with no failure modes recorded counts as the highest criticality; 
 criticality needs no reason, and lowering it needs one, written at the part.
 
 - **Change:** new decision
-- **Scope:** part map, task cycle
+- **Scope:** part-map, task-cycle
 - **Based on:** safety standards make a part inherit the class of what it belongs to unless a
   documented separation says otherwise — IEC 62304 4.3 d), quoted on the Elsmar Cove forum
   (https://elsmar.com/elsmarqualityforum/threads/different-62304-safety-classes-for-modules-in-software-system.90429/):
@@ -2053,7 +2050,7 @@ parts unchecked", never as agreeing with the map. The coverage comes from the ru
 already makes, and this check starts no second run of the tests.
 
 - **Change:** new decision
-- **Scope:** part map, task cycle
+- **Scope:** part-map, task-cycle
 - **Based on:** a checking script fails rather than guessing where it cannot read what it needs:
   "If value could not be extracted then script should fail" (Kubernetes KEP-1209, Metrics
   Validation and Verification,
@@ -2100,7 +2097,7 @@ A change that touches the files of a boundary is checked for crafted input, what
 criticality of the part.
 
 - **Change:** new decision
-- **Scope:** part map, task cycle
+- **Scope:** part-map, task-cycle
 - **Based on:** Chromium picks the review a change needs from the files it touches rather than
   from their importance, by pinning owners to a file pattern —
   `per-file *.mojom=file://ipc/SECURITY_OWNERS` (Chromium, IPC security reviews,
@@ -2148,7 +2145,7 @@ where the declaration sits — and holds no list of withdrawals in progress. A s
 be marked at the element is written in the map by hand and checked by a test.
 
 - **Change:** new decision
-- **Scope:** part map
+- **Scope:** part-map
 - **Based on:** what counts as a surface is declared, not discovered: "Software using Semantic
   Versioning MUST declare a public API" (https://semver.org/). Tools read the promise where it is
   written at the element — API Extractor reports an exported item with no release tag
@@ -2199,7 +2196,7 @@ An exchange with the external context records whether its consumer updates toget
 product.
 
 - **Change:** new decision
-- **Scope:** part map
+- **Scope:** part-map
 - **Based on:** Kubernetes ties the life of a surface to its level rather than to the surface
   itself — "Rule #4a: API lifetime is determined by the API stability level" — and treats stored
   data as a consumer that cannot be made to move: "no API versions that have been persisted to
@@ -2248,7 +2245,7 @@ step of implementation. The state a product is in when this process enters it go
 list once.
 
 - **Change:** new decision
-- **Scope:** part map, task cycle
+- **Scope:** part-map, task-cycle
 - **Based on:** a list of known violations grows without limit where adding to it is the cheap
   move: Packwerk answers most situations with "Simply run `bin/packwerk update-todo`" and holds
   that "New dependency violations are never hard-blocked"
@@ -2303,7 +2300,7 @@ from the part's rule for assigning files, and a generated rule file is derived l
 overview of the repository is generated for an agent.
 
 - **Change:** new decision
-- **Scope:** part map, decisions
+- **Scope:** part-map, decisions
 - **Based on:** measured on coding agents, "providing context files does not generally improve
   task success rates, while increasing inference cost by over 20% on average", and "while
   instructions in the context files are well followed by coding agents, repository overviews,

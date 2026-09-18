@@ -18,7 +18,7 @@ accepted foundation change. A task that needs an invariant test changed goes bac
 foundation step.
 
 - **Change:** new decision
-- **Scope:** invariants, task cycle
+- **Scope:** invariants, task-cycle
 - **Based on:** agents that a test stands in the way of change the test instead of the code,
   and Claude models do so especially readily: read-only tests are "a promising middle ground
   especially for Claude models, largely due to their preference of directly modifying test
