@@ -23,6 +23,8 @@ from dataclasses import dataclass, field
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 TEMPLATE = os.path.join(HERE, "template.md")
+EXAMPLES = os.path.join(HERE, "examples.md")
+OWN_MAP = os.path.join(HERE, "..", "..", "foundations", "part_map.md")
 
 sys.dont_write_bytecode = True
 
@@ -123,6 +125,7 @@ class Entry:
     kind: str = None
     binding: str = None
     fields: dict = field(default_factory=dict)   # name -> [value, line]
+    text: str = ""                                # the entry as it stands in the file
 
 
 @dataclass
@@ -183,6 +186,7 @@ def parse_map(text, rules):
         entry.binding = "\n".join(paragraph) or None
         entry.fields = parse_fields(body[index:], line + 1 + index)
         entry.kind = next((rules.marks[name] for name in entry.fields if name in rules.marks), None)
+        entry.text = "\n".join(lines).rstrip()
         entries.append(entry)
     return entries, sections
 
@@ -216,11 +220,20 @@ def scale(sections):
 
 
 def failure_modes(value):
-    """Yield (mode, parts) for every failure mode listed in a part's field."""
+    """Yield (mode, parts) for every failure mode listed in a part's field, wrapping included."""
+    modes = []
     for line in (value or "").split("\n"):
-        mode = line.strip()
-        if mode.startswith("- "):
-            mode = mode[2:].strip()
+        text = line.strip()
+        if not text:
+            continue
+        if text.startswith("- "):
+            modes.append(text[2:].strip())
+        elif modes:
+            modes[-1] = (modes[-1] + " " + text).strip()
+        else:
+            modes.append(text)
+    for mode in modes:
+        mode = " ".join(mode.split())
         if mode and mode != "none":
             yield mode, [piece.strip() for piece in mode.split(" — ")]
 
@@ -416,6 +429,35 @@ def check_lists(sections, rules, report):
                     report.error(line, "`%s` is not one of %s"
                                  % (cells[index], ", ".join("`%s`" % choice
                                                             for choice in choices)))
+
+
+def check_examples(entries, examples_path, report):
+    """Every example is an entry of the map copied word for word (WAY-05)."""
+    with open(examples_path, encoding="utf-8") as handle:
+        lines = handle.read().split("\n")
+    by_identifier = entries_by_identifier(entries)
+    index = 0
+    while index < len(lines):
+        heading = re.match(r"^## (.+?) — ", lines[index])
+        if not heading:
+            index += 1
+            continue
+        start = index
+        index += 1
+        while index < len(lines) and not lines[index].startswith("## ") \
+                and not re.match(r"^\*.*\*$", lines[index].strip()):
+            index += 1
+        copy = "\n".join(lines[start:index]).rstrip()
+        entry = by_identifier.get(heading.group(1).strip())
+        if entry is None:
+            report.error(None, "examples.md:%d: `%s` is not in the map"
+                         % (start + 1, heading.group(1).strip()))
+        elif entry.text != copy:
+            copy_lines, entry_lines = copy.split("\n"), entry.text.split("\n")
+            offset = next((position for position, (a, b) in enumerate(zip(copy_lines, entry_lines))
+                           if a != b), min(len(copy_lines), len(entry_lines)))
+            report.error(entry.line + offset, "examples.md:%d differs from the map"
+                         % (start + 1 + offset))
 
 
 def check_scopes(entries, sections, report, map_path):
@@ -717,6 +759,8 @@ def run(map_path, base=None, stream=None, template=TEMPLATE):
     check_lists(sections, rules, report)
     check_scopes(entries, sections, report, map_path)
     check_violations(entries, sections, rules, report, map_path, base)
+    if os.path.exists(EXAMPLES) and os.path.exists(OWN_MAP) and os.path.samefile(map_path, OWN_MAP):
+        check_examples(entries, EXAMPLES, report)
     report.print(stream)
     return 1 if report.errors else 0
 

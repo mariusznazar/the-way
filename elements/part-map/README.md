@@ -11,8 +11,8 @@ files where it takes in what it does not trust. Beside the parts stand the criti
 external context, and the surfaces someone outside the product relies on, with one path of
 change for each level of promise.
 
-Entries are written according to `template.md`; `examples.md` will hold verbatim copies of real
-entries once this repository has a map of its own.
+Entries are written according to `template.md`; `examples.md` holds verbatim copies of entries
+from this repository's own map, `foundations/part_map.md`.
 
 `format_guard.py` checks a product's map against the list "What the checker checks" in
 `template.md`, reading from the template the fields of each kind of entry, the titles of the

@@ -178,6 +178,8 @@ part's patterns is shown instead as the list of files that changed part.
 
 - Every file git tracks belongs to exactly one part, through the patterns in its *Files* field,
   matched by git rather than by a script of this process.
+- A part whose tool does not exist yet holds no files (`Files: none`); every file git tracks
+  still belongs to exactly one part.
 - Tests belong to the part they test. Generated files belong to the part of their generator and
   carry `(generated)`.
 - The files that serve the whole repository — the lockfile, the build and the CI configuration —

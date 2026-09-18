@@ -425,6 +425,15 @@ class Criticality(GuardTestCase):
         self.assertFails(part_map(part(failure_modes=("a save is lost — the game is lost — high",))),
                          "names neither a detecting invariant nor `not detected`")
 
+    def test_failure_mode_wrapped_over_two_lines(self):
+        wrapped = part(failure_modes=("a save is lost — the player loses the game — high —\n"
+                                      "    detected by INV-2",))
+        foundations = part("foundations", "The foundation", files="foundations/**",
+                           responsibility="The part answers for what binds.",
+                           failure_modes=("a rule read wrong — work goes the light path — low — "
+                                          "not detected",))
+        self.assertPasses(part_map(wrapped, flow(), surface(), foundations))
+
     def test_failure_mode_without_severity(self):
         self.assertFails(part_map(part(failure_modes=("a save is lost — not detected",))),
                          "is not `<what fails> — <damage> — <severity> — <detection>`")
@@ -476,6 +485,49 @@ class Reported(GuardTestCase):
         return code, output.getvalue()
 
 
+class Examples(GuardTestCase):
+    def examples(self, *blocks):
+        path = os.path.join(self.root, "examples.md")
+        with open(path, "w", encoding="utf-8", newline="\n") as handle:
+            handle.write("# Examples\n\nCopies.\n\n" + "\n\n".join(blocks) + "\n")
+        return path
+
+    def report_on(self, text, examples_path):
+        rules = format_guard.read_rules()
+        entries, _ = format_guard.parse_map(text, rules)
+        report = format_guard.Report(self.path)
+        format_guard.check_examples(entries, examples_path, report)
+        return report
+
+    def test_example_that_differs_from_its_entry(self):
+        text = part_map()
+        changed = part().replace("writing and reading a saved game", "drawing a board")
+        report = self.report_on(text, self.examples("*A part:*", changed))
+        self.assertTrue(any("differs from the map" in message for _, message in report.errors),
+                        report.errors)
+
+    def test_example_of_an_entry_outside_the_map(self):
+        text = part_map()
+        stranger = part("rendering", "Rendering", files="src/render.py",
+                        responsibility="The part answers for drawing.")
+        report = self.report_on(text, self.examples("*A part:*", stranger))
+        self.assertTrue(any("is not in the map" in message for _, message in report.errors),
+                        report.errors)
+
+    def test_caption_of_the_next_example_does_not_count_as_a_difference(self):
+        text = part_map()
+        blocks = text.split("\n\n## ")
+        first, second = "## " + blocks[1].rstrip(), "## " + blocks[2].rstrip()
+        report = self.report_on(text, self.examples("*A part:*", first, "*A flow:*", second))
+        self.assertEqual(report.errors, [])
+
+    def test_example_copied_word_for_word_passes(self):
+        text = part_map()
+        copy = "\n".join(text.split("\n\n## ")[1].split("\n")).rstrip()
+        report = self.report_on(text, self.examples("*A part:*", "## " + copy))
+        self.assertEqual(report.errors, [])
+
+
 class ComputedCriticality(unittest.TestCase):
     def rules(self):
         return format_guard.read_rules()
@@ -523,6 +575,13 @@ class ComputedCriticality(unittest.TestCase):
                                             "not detected",)),
                         flow(criticality="high", parts="saving"))
         self.assertEqual(self.compute(text)["saving"], "high")
+
+
+class OwnMap(unittest.TestCase):
+    def test_the_way_map_passes(self):
+        output = io.StringIO()
+        code = format_guard.run(format_guard.OWN_MAP, stream=output)
+        self.assertEqual(code, 0, output.getvalue())
 
 
 if __name__ == "__main__":

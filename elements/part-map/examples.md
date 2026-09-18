@@ -1,0 +1,52 @@
+# Part map entry examples
+
+Verbatim copies of entries from this repository's own part map (`foundations/part_map.md`), one
+for each kind of entry described in `template.md`. An entry of a map carries no version and is
+corrected in place, so a copy follows the entry it comes from, and the guard checks that every
+example matches its entry word for word.
+
+Until a kind of entry has a real example, only its form in the template stands: this repository
+runs no gate of its own yet, so it has no critical flow to copy from.
+
+*A part, with every field filled:*
+
+## part-map — The part map
+
+The part answers for the part map: the form of an entry, the tools that write and check one, and
+the map of the-way itself.
+
+- **Files:** elements/part-map/**
+  foundations/part_map.md
+- **Depends on:** relation-model
+- **Failure modes:**
+  - the guard assigns a file to the wrong part, or to none — a change is checked against the
+    wrong decisions and at the wrong sharpness — high — not detected
+- **Trust boundary:** elements/part-map/format_guard.py
+
+*A part whose tool does not exist yet, so it holds no files:*
+
+## task-cycle — The task cycle
+
+The part answers for the steps a task runs through and for how sharply a change is checked along
+them.
+
+- **Files:** none
+- **Depends on:** none
+- **Failure modes:** none
+- **Trust boundary:** none
+
+*A surface declared at the element itself:*
+
+## content-fingerprint — The content fingerprint
+
+The same wording gives the same fingerprint.
+
+- **Declared at:** relation-model/fingerprint.py · fingerprint
+
+*A surface that cannot be marked at the element, and leans on a test instead:*
+
+## entry-format — The form of an entry
+
+The form of an entry changes for a product only when that product moves the commit it pins.
+
+- **Declared at:** not markable — test: elements/decisions/test_format_guard.py
