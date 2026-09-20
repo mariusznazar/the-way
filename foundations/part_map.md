@@ -108,7 +108,7 @@ Someone changes the binding sentences of a foundation entry, and every reference
 the old wording is reported before the change reaches the main branch.
 
 - **Criticality:** high
-- **Parts:** relation-model · decisions
+- **Parts:** relation-model · decisions · gate
 - **Invariant:** no reference carrying a content fingerprint names a fingerprint other than the
   current one of the entry it names — test: gate/test_wording_reaches_dependants.py
 - **Coverage:** none

@@ -344,7 +344,8 @@ can settle stays in the foundation, checked by a person.
 
 On the main branch, this repository holds `foundations/` with the entries of the-way itself, a
 directory for each part of the process — `elements/<element>/` for each foundation element,
-`relation-model/` and `task-cycle/` — and a `README.md` that describes the repository. A
+`relation-model/`, `gate/` and `task-cycle/` — and a `README.md` that describes the
+repository. A
 directory reaches the main branch only once a tool keeps its form, and what it must hold is set
 by its part: an element brings its template and rules, examples, a skill that writes its entries
 and a script that checks them; the relation model brings the script that computes fingerprints
@@ -366,7 +367,7 @@ The `README.md` is the only file that no tool keeps.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-16
+- **Approved by:** Mariusz, 2026-09-20
 
 *Rationale:* the repository shows what the process looks like when it works, and an artefact
 brought in on the side turns it into a store of material from the first day. Directories follow
@@ -385,9 +386,9 @@ same set of template, skill and script required of every directory — a script 
 no entries for a skill to write.
 *Consequences:* element descriptions in `elements/` reach the main branch as templates with their
 skills and scripts, not as descriptions. The script for references and fingerprints (WAY-02,
-WAY-31) lives in `relation-model/`. Which directory holds the quality gate (WAY-16) — invariants
-or the task cycle — is settled when it is built, and what `task-cycle/` must hold is set when the
-task cycle is designed. When this process gets its own part map, its rule for assigning files
+WAY-31) lives in `relation-model/`. The quality gate is a part of the process of its own, with a
+directory of its own (WAY-55), and what `task-cycle/` must hold is set when the task cycle is
+designed. When this process gets its own part map, its rule for assigning files
 follows these directories.
 
 ### WAY-10/1 — Who assesses a change to an invariant test or to the foundation?
@@ -681,8 +682,8 @@ calls for (WAY-13).
 *Consequences:* every method of checking is written in a form the gate can read. How the gate
 reports a method it cannot run, such as an inspection by a human, is not yet settled: it depends
 on the template of the invariants element. Which checks a change calls for is set when the task
-cycle is designed. Under WAY-09 the gate reaches the main branch of this repository in the
-directory of a part of the process — invariants or the task cycle — settled when it is built.
+cycle is designed. Under WAY-55 the gate is a part of the process of its own and reaches
+the main branch in `gate/`.
 
 ### WAY-17/1 — Which links between foundation entries are mandatory?
 
@@ -2472,3 +2473,68 @@ file is compared, and whichever is read second would win by accident.
 edited by hand. Comparing the derived state with the rules uses the part map's rule for
 assigning files (WAY-44). How a derived file is compared with what its generator produces, and
 which derived files cannot be produced from scratch, is set by WAY-53.
+
+### WAY-55/1 — Which part of the process holds the quality gate?
+
+In this repository, the quality gate is a part of the process of its own, and its directory is
+`gate/`: the code that runs the checks a change calls for, and the test of every critical flow,
+are files there. No other part's directory holds that code or such a test, and a file under
+`gate/` that only calls a body kept in another part's directory leaves the gate in that part.
+Which checks a change calls for, when the gate runs and what follows from its result belong to
+the task cycle, not to this part.
+
+- **Change:** new decision
+- **Scope:** gate, decisions, invariants, glossary, part-map, environment-facts, relation-model,
+  repository, task-cycle
+- **Based on:** none
+- **Relations:** narrows WAY-44@220f5b85 · related to WAY-09 · related to WAY-16 ·
+  related to WAY-21 · related to WAY-45 · related to WAY-47
+- **Outranks:** none
+- **Verification:** level 1 — invariant in working form: every critical flow in this repository's
+  part map names a test whose path lies under `gate/`. Level 2 for the rest — an agent compares
+  the change with the decision:
+  - complies: the code that runs the checks is added under `gate/`, and what the gate does with a
+    failing check is settled in the task cycle;
+  - violates: the one command CI invokes to run every check (WAY-16) is added inside an element's
+    directory, or under `gate/` as a call to a body kept in one; `gate/` holds the rule that picks
+    which checks a change calls for, or the rule that says what a failing check stops.
+- **Review when:** the gate runs as a program CI invokes, and the rule that picks its checks has a
+  home · check by: 2026-10-02
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-20
+
+*Rationale:* the gate runs the checks written in the entries of every element (WAY-16), so a home
+inside `elements/invariants/` would put the checks of the decision log and of the part map inside
+the element of invariants. The task cycle answers for the steps a task runs through and for how
+sharply a change is checked along them — that is when the gate runs and on what, not the code that
+runs it; keeping the two apart lets the steps change without moving the gate's code. WAY-44
+already gives the rule for files that serve the whole repository rather than any one part: they
+are a part of their own. A test of a critical flow has no single part to belong to, because a flow
+crosses parts by definition (WAY-45) and the gate is what runs it; that is why this decision goes
+against WAY-44's rule for tests in this narrow place, and nowhere else. A part of its own is also
+what gives the gate its own failure modes and its own criticality.
+*Rejected:* the gate in `elements/invariants/` — a program serving every element tied to one of
+them; the gate in `task-cycle/` — the code that runs the checks would move whenever the steps of a
+task changed; the gate among the files that serve the whole repository, beside `.gitattributes` —
+that part answers for files that configure the repository and has no tests of its own, while the
+gate has failure modes, tests and dependencies on other parts; a critical flow's test kept with
+the single part it tests, as WAY-44 has every other test — a flow runs through several parts and
+none of them owns its test, and the cost WAY-44 named is paid by the flow carrying the gate on its
+list of parts rather than left unsaid.
+*Consequences:* WAY-09 gains `gate/` in its list of the directories a part of the process may
+have, and the sentences in WAY-09 and WAY-16 that left the gate's home to be settled between the
+invariants element and the task cycle go, both corrected in place, since neither entry has reached
+the main branch (WAY-07). A critical flow's test living in `gate/` puts `gate` on that flow's list
+of parts, so `gate` inherits the flow's criticality (WAY-46), a change to the test lies on the
+flow (WAY-45) and is checked against the decisions of every part on the list (WAY-21), and the
+coverage of that test agrees with the list (WAY-47); `wording-reaches-dependants` gains `gate` on
+its list with this change. The map's script gains a check that a flow's test path lies under
+`gate/`, made only against this repository's own map, the way its check of `examples.md` already
+is; until it does, the level 1 invariant has nothing that runs it. A file under `gate/` may use
+the code of a part the map lets the gate depend on — the existing flow test reads the decision
+element's test fixtures, and that is such a dependency, not the gate living in an element. When
+the gate's code is built, the gate's dependencies in the map grow to the parts whose checks it
+runs. The invariants element gets a format guard of its own, which is not the gate: the guard
+keeps the shape of an entry, the gate runs what the entry says to check. Whether a product built
+with this process keeps its own gate and flow tests in `gate/` is left to that product.
