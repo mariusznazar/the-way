@@ -48,6 +48,9 @@ Fill every field according to the template, with extra care for these:
   names only such sentences; level 2 or 3 covers the rest of the decision.
 - `none` and `none considered` are the human's statements. Where the source is silent, the
   field becomes a question in step 4.
+- A kind of change, a type of relation or any other value the template's closed lists do
+  not hold is a question in step 4, and the list grows by a new version of the decision
+  that closed it. Do not reach for the nearest value and a reason why it will do (WAY-54).
 - *Approved by* reads `on acceptance` in the draft.
 
 ## 4. Ask, show, append

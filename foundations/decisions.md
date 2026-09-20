@@ -2341,3 +2341,134 @@ agent reads at the start of a task comes from the step that goes from changed fi
 decisions, not from this channel alone: in Claude Code a rule pinned to paths is added only once
 the agent reads a matching file. Generated rule files sit in the product's repository and are
 checked as derived files (WAY-15).
+
+### WAY-53/1 — How is a derived file compared with what its generator produces?
+
+A derived file is identical to what its generator produces on the same commit, except for
+values the file itself declares as varying between runs. A derived file that cannot be produced
+from scratch is named in the template of the element it belongs to, and is compared as a subset
+of its own version on the main branch.
+
+- **Change:** new decision
+- **Scope:** decisions, part-map, invariants, gate
+- **Based on:** none
+- **Relations:** derives from WAY-15@72eb2240 · related to WAY-08 · related to WAY-51
+- **Outranks:** none
+- **Verification:** level 1 — invariants in working form:
+  - every derived file is identical to what its generator produces on the same commit, except
+    for the values that file declares as varying between runs;
+  - every value skipped in that comparison is declared in the file that carries it;
+  - every derived file compared as a subset of the main branch is named in the template of its
+    element.
+- **Review when:** none
+- **Origin:** the-brain: Notes/Projects/(P) Proces pracy nad produktem/budowa_niezmiennikow.md
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-20
+
+*Rationale:* the rule that a derived file equals its generator's output catches a file edited by
+hand, and that is why it holds. A record of a run, however, carries the moment it happened, so a
+second run never reproduces it, and the rule would fail on the gate's own output at every pass.
+Skipping declared values keeps the rule over everything the generator decides and lifts it only
+where the file says the value varies — a narrower opening than taking whole files out. The
+second sentence drops a count the earlier wording carried by accident: the exception was written
+for one file, and a product that keeps a second such list had nowhere to put it.
+*Rejected:* keeping records of results outside the repository — whether an invariant was green
+on a given commit can then be read only from whatever ran it, never from the repository; lifting
+whole files out of the comparison — it lifts the rule from their content too, where it still
+holds and still catches a hand edit.
+*Consequences:* the format guard of an element compares derived files with their generators'
+output and reads the skipped values from the file itself. The record of an invariant's result
+carries the moment of the run and is compared for everything else. The list of violated
+invariants joins the list of known violations of the part map's rules as a file that is not
+produced from scratch. WAY-15 gets a version whose verification no longer spells this out.
+
+### WAY-54/1 — Where does the value of a field in a template come from?
+
+The value of a field is read off the product wherever a tool can read it, and a template asks
+for the fact a value follows from rather than for the name of a value. A field whose value
+neither can be read off nor follows from a fact is marked in the template as resting on a
+judgment.
+
+- **Change:** new decision
+- **Scope:** decisions, part-map, invariants, glossary, environment-facts
+- **Based on:** none
+- **Relations:** related to WAY-05 · related to WAY-15 · related to WAY-44 · related to WAY-46 ·
+  related to WAY-49
+- **Outranks:** none
+- **Verification:** level 2 — an agent compares the change with the decision:
+  - complies: the criticality of a part is computed from its failure modes and the flows it lies
+    on, and no criticality is written at a part; a method of checking names the command the gate
+    runs, and what kind of check it is follows from that command;
+  - violates: a template asks the author to name the kind of a method, where the command the
+    gate runs already tells the kinds apart; a field that rests on a judgment stands beside
+    fields that are read off, with nothing saying which is which.
+- **Review when:** none
+- **Origin:** the-brain: Notes/Projects/(P) Proces pracy nad produktem/budowa_niezmiennikow.md
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-20
+
+*Rationale:* an author asked to name a value picks from the names in front of them and writes a
+reason why the nearest one will do; the reason reads well, and the record then says something
+that was never true. The failure leaves no trace, because a wrongly named value looks exactly
+like a rightly named one. A value read off the product cannot be talked into place, and a
+question about a fact — which command the gate runs, which files a pattern matches — has an
+answer the author can check instead of argue. Where the value is a judgment after all, saying so
+keeps a reader from taking it for a reading. This product already decides this way four times
+over, and each time the variant in which a person names the value stands in *Rejected* with its
+reason.
+*Rejected:* leaving the choice to the author with a definition beside each value — a definition
+tells apart values a reader already distinguishes, and says nothing about a case none of them
+covers; a value meaning "none of these fits" in every closed list — the list of relation types
+already carries one, and it is chosen 166 times out of 191, so it records what came cheapest
+rather than what was true.
+*Consequences:* a template that asks for the name of a value where a tool can read that value,
+or where a question about a fact settles it, is a defect of the template, corrected together
+with a decision. A field that rests on a judgment says so where it stands. The skill of the
+decisions element gains the sentence the map's skill already holds: a value the template's
+closed list does not hold is a question to the human in the same change, and the list grows by a
+new version of the decision that closed it. This decision moves to level 1 once a check can tell
+apart a field that could have been read off from one that could not.
+
+### WAY-15/2 — What in a foundation is written by hand, and what is derived?
+
+What can be derived from what the product executes — code, configuration, infrastructure as
+code, runtime traces — is derived, never written by hand, and what is derived describes the
+state. Rules are written by hand: what is allowed, how bad a failure would be and what the
+product promises, which the code cannot show.
+
+- **Change:** field change · previous: WAY-15/1
+- **Scope:** decisions, invariants, glossary, part-map, environment-facts
+- **Based on:** code shows what exists, not the rules: "Your architecture models and your source
+  code will not show the same things. The difference between them is the model-code gap", and
+  "intensional elements establish general rules that apply to all elements, but standard
+  programming languages cannot directly express these rules" (George Fairbanks,
+  https://www.georgefairbanks.com/software-architecture/model-code-gap/). A view recovered from
+  the code shows accidents as decisions: "Principal architecture decisions may not have been
+  implemented and are therefore out of reach of architecture recovery. Conversely, the system
+  may reflect inadvertent decisions [...]" (Link et al., ISEC 2019,
+  https://arxiv.org/abs/1901.07700).
+- **Relations:** related to WAY-04 · related to WAY-08 · related to WAY-11 · related to WAY-53
+- **Outranks:** none
+- **Verification:** level 1 — invariant in working form: every derived file in the repository
+  agrees with what its generator produces, in the way WAY-53 sets out. Level 2 for what is
+  derived and what is written by hand — an agent compares the change with the decision:
+  - complies: the view of the decisions in force is generated from the log; the existing
+    dependencies between parts are read from the dependency graph the product's own tooling
+    produces and compared with the allowed dependencies written in the part map;
+  - violates: a hand-written list of the product's endpoints kept next to the code; the allowed
+    dependencies in the part map copied from the current import graph.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-20
+
+*Rationale for change:* the verification of this decision spelled out how a derived file is
+compared with its generator's output, and named a single file that cannot be produced from
+scratch. Both now belong to WAY-53, which answers that question on its own, and a rule said in
+two places drifts apart.
+*Rejected:* leaving the comparison rule here as well — two entries would then say how a derived
+file is compared, and whichever is read second would win by accident.
+*Consequences:* every derived view has a generator, and a derived file is regenerated, never
+edited by hand. Comparing the derived state with the rules uses the part map's rule for
+assigning files (WAY-44). How a derived file is compared with what its generator produces, and
+which derived files cannot be produced from scratch, is set by WAY-53.
