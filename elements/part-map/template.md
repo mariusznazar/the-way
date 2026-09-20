@@ -133,26 +133,27 @@ exception to "every tracked file has a part" (WAY-44).
 
 A field stays in this template only while someone or something reads it (WAY-05).
 
-| Field | Who reads it, when |
-|---|---|
-| identifier | a decision's *Scope*, an invariant, a flow's list of parts, a generated rule file |
-| responsibility / description / promise | the agent working in the part; the content fingerprint |
-| Files | the script that assigns a change to parts, computes coverage of the repository and generates rule files |
-| Depends on | the script comparing the map with the dependency graph; the generator of rule files |
-| Depends on — separated | the script computing criticality, which stops inheriting there |
-| Failure modes | the computation of criticality; the choice of which checks a task runs |
-| Failure modes — detected by | whoever asks which failures the gate would catch |
-| Trust boundary | the choice of how sharply a change is checked (WAY-13) |
-| Criticality (flow) | the criticality of every part the flow runs through |
-| Parts (flow) | the test that a change lies on this flow; the coverage check |
-| Invariant (flow) | the gate, which runs that test on every change |
-| Coverage (flow) | the check of the flow's list of parts |
-| Declared at | whoever changes the element; the tool computing shape and breaking change |
-| criticality scale | the checker, which rejects a degree not on the list |
-| external context | the checks at a trust boundary; the change path of a surface |
-| change paths | whoever changes a surface at that level |
-| files left out on purpose | the checker, as the only exception to file assignment |
-| withdrawn identifiers | a reference to an identifier that no longer names a part |
+| Field | Who reads it, when | Where its value comes from |
+|---|---|---|
+| identifier | a decision's *Scope*, an invariant, a flow's list of parts, a generated rule file | prose |
+| responsibility / description / promise | the agent working in the part; the content fingerprint | prose |
+| Files | the script that assigns a change to parts, computes coverage of the repository and generates rule files | judgment |
+| Depends on | the script comparing the map with the dependency graph; the generator of rule files | judgment |
+| Depends on — separated | the script computing criticality, which stops inheriting there | judgment |
+| Failure modes | the computation of criticality; the choice of which checks a task runs | judgment |
+| Failure modes — detected by | whoever asks which failures the gate would catch | read off |
+| Trust boundary | the choice of how sharply a change is checked (WAY-13) | judgment |
+| Criticality (flow) | the criticality of every part the flow runs through | judgment |
+| Parts (flow) | the test that a change lies on this flow; the coverage check | judgment |
+| Invariant (flow) | the gate, which runs that test on every change | judgment |
+| Coverage (flow) | the check of the flow's list of parts | read off |
+| Declared at | whoever changes the element; the tool computing shape and breaking change | read off |
+| criticality scale | the checker, which rejects a degree not on the list | judgment |
+| external context | the checks at a trust boundary; the change path of a surface | judgment |
+| change paths | whoever changes a surface at that level | judgment |
+| files left out on purpose | the checker, as the only exception to file assignment | judgment |
+| withdrawn identifiers | a reference to an identifier that no longer names a part | read off |
+A field marked *judgment* holds someone's call: no tool reads its value off the product, and no question about a fact settles it. A reader takes such a value as a call, not as a reading (WAY-54). A field marked *prose* carries text rather than a value.
 
 ## What binds
 

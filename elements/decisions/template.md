@@ -58,25 +58,26 @@ source is silent, write `TODO`.
 
 A field stays in the template only while someone or something reads it.
 
-| Field | Who reads it, when |
-|---|---|
-| number (heading) | references from entries, tests and code; the view script |
-| version (heading) | the view script — the latest version is in force. A reference to a specific version (`WAY-06/1`) is historical and never flagged |
-| question (heading) | the author and the skill: is this a new version of an existing number, or a new number? The view uses it as the title |
-| binding sentences | the agent checking a change against the decision; the content fingerprint |
-| Change | the view script (history line, tombstone); a raised flag, which names the kind of change |
-| Scope | choosing which decisions to check for a task: changed files → parts → decisions |
-| Based on | reviewing the decision when a fact changes |
-| Relations | impact assessment; reference flags |
-| Outranks | the agent resolving a collision between two decisions |
-| Verification | level 1: the quality gate; level 2: the reviewing agent; level 3: a human |
-| Review when | the view (pending checks); the agent working on a task in scope; the format guard (a passed date without a review) |
-| Origin | whoever wants to change the decision and needs the full reasoning; the next agent, so it does not repeat a search |
-| Approver override | the agent that needs a new version approved: names who approves instead of the rule for the decision's scope |
-| Approved by | a human considering a change; the format guard — a version without it, or with `TODO` in it, is an error |
-| Rationale / Rationale for change | the agent in a borderline case; a human considering a change |
-| Rejected | the agent, before proposing an option already rejected |
-| Consequences | the closing step of a task: what the decision forces on further work |
+| Field | Who reads it, when | Where its value comes from |
+|---|---|---|
+| number (heading) | references from entries, tests and code; the view script | judgment |
+| version (heading) | the view script — the latest version is in force. A reference to a specific version (`WAY-06/1`) is historical and never flagged | read off |
+| question (heading) | the author and the skill: is this a new version of an existing number, or a new number? The view uses it as the title | prose |
+| binding sentences | the agent checking a change against the decision; the content fingerprint | prose |
+| Change | the view script (history line, tombstone); a raised flag, which names the kind of change | judgment |
+| Scope | choosing which decisions to check for a task: changed files → parts → decisions | judgment |
+| Based on | reviewing the decision when a fact changes | read off |
+| Relations | impact assessment; reference flags | judgment |
+| Outranks | the agent resolving a collision between two decisions | judgment |
+| Verification | level 1: the quality gate; level 2: the reviewing agent; level 3: a human | judgment |
+| Review when | the view (pending checks); the agent working on a task in scope; the format guard (a passed date without a review) | judgment |
+| Origin | whoever wants to change the decision and needs the full reasoning; the next agent, so it does not repeat a search | read off |
+| Approver override | the agent that needs a new version approved: names who approves instead of the rule for the decision's scope | read off |
+| Approved by | a human considering a change; the format guard — a version without it, or with `TODO` in it, is an error | read off |
+| Rationale / Rationale for change | the agent in a borderline case; a human considering a change | prose |
+| Rejected | the agent, before proposing an option already rejected | prose |
+| Consequences | the closing step of a task: what the decision forces on further work | prose |
+A field marked *judgment* holds someone's call: no tool reads its value off the product, and no question about a fact settles it. A reader takes such a value as a call, not as a reading (WAY-54). A field marked *prose* carries text rather than a value.
 
 ## Binding sentences
 
