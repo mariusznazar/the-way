@@ -79,6 +79,40 @@ them.
 - **Failure modes:** none
 - **Trust boundary:** none
 
+## gate — The quality gate
+
+The part answers for running the checks a change calls for, and for the tests of critical flows.
+
+- **Files:** gate/**
+- **Depends on:** decisions · relation-model
+- **Failure modes:**
+  - the gate reports a check as passed although it never ran — a change that breaks an invariant
+    reaches the main branch, and every product pinned to that commit inherits the gap — high —
+    not detected
+- **Trust boundary:** none
+
+## repository — The files that serve the whole repository
+
+The part answers for the files that configure the repository itself rather than any one element.
+
+- **Files:** .gitattributes
+- **Depends on:** none
+- **Failure modes:**
+  - a file is stored with the line endings of whoever wrote it — a later rewrite turns the whole
+    file over and buries what actually changed in it — low — not detected
+- **Trust boundary:** none
+
+## wording-reaches-dependants — A change of wording reaches what leans on it
+
+Someone changes the binding sentences of a foundation entry, and every reference that leans on
+the old wording is reported before the change reaches the main branch.
+
+- **Criticality:** high
+- **Parts:** relation-model · decisions
+- **Invariant:** no reference carrying a content fingerprint names a fingerprint other than the
+  current one of the entry it names — test: gate/test_wording_reaches_dependants.py
+- **Coverage:** none
+
 ## entry-format — The form of an entry
 
 The form of an entry changes for a product only when that product moves the commit it pins.
