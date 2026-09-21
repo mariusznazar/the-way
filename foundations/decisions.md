@@ -1191,7 +1191,7 @@ only when a task touches the parts they govern.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-16
+- **Approved by:** Mariusz, 2026-09-22
 
 *Rationale:* matching a whole product to a description written after the fact is slow, and it
 tempts an agent to write reasons that look like decisions, so decisions wait until a task needs
@@ -1203,8 +1203,9 @@ invariant can bind before anyone knows why it holds.
 *Rejected:* recovering the whole foundation at the start — slow, with reasons invented where none
 are known; everything on demand, the critical parts included — a break there is found only when
 a task happens to touch them.
-*Consequences:* an invariant recovered from behaviour needs a method of checking and a note that
-it was recovered and its cause is unknown; the invariants element has no place for that note yet.
+*Consequences:* an invariant recovered from behaviour needs a method of checking and the note
+WAY-58 sets, recording what was searched and what was found for or against keeping it; the
+invariants element has no template to carry that note yet (WAY-37).
 A decision recovered for a task is written as the section "Inherited decisions" of the decision
 template says, and decision records the product already has are read as sources when their parts
 are touched (WAY-23).
@@ -2708,3 +2709,107 @@ WAY-08. A human inspection carries no version under this decision; an explorator
 agent is a test (WAY-08) and cites one like any other. What happens to a citation when an
 invariant entry is split, merged or withdrawn follows from how invariant entries are identified,
 which needs a decision of its own.
+
+### WAY-58/1 — What does an invariant entry record when it was recovered from what a product does?
+
+An invariant entry that a human chose from what the product already did before the task writing it
+began, as WAY-28 describes, and that names no decision entry of the product's log it derives from,
+carries a field reading `recovered — searched: <…>; found: <…>`; every other invariant entry holds
+`none` there, and the field lies outside the entry's content fingerprint. *found* names the place of
+each source the search found that gives a reason for keeping the behaviour or calls for a different
+one, or reads `nothing`; a place that only cites another is followed to the place it cites, marked
+when that source is superseded, and *found* never states a reason itself, nor one an agent infers.
+When an entry's wording enters the foundation, the gate reports whether its method passes on the
+commit the task branch left the main branch from and fails there on a deliberate break, and the
+human deciding the change sets the field with that report in front of them.
+
+- **Change:** new decision
+- **Scope:** invariants, gate
+- **Based on:** none
+- **Relations:** derives from WAY-28@036a9301 · derives from WAY-22@52c514ca ·
+  derives from WAY-17@ab01c0e5 · related to WAY-04 · related to WAY-05 · related to WAY-07 ·
+  related to WAY-08 · related to WAY-10 · related to WAY-11 · related to WAY-16 ·
+  related to WAY-19 · related to WAY-23 · related to WAY-29 · related to WAY-37 ·
+  related to WAY-38 · related to WAY-47 · related to WAY-54 · related to WAY-55 ·
+  related to WAY-56 · related to WAY-57
+- **Outranks:** none
+- **Verification:** level 1 — invariants in working form:
+  - every invariant entry carries the field, holding `none` or a value of the form
+    `recovered — searched: <…>; found: <…>`;
+  - every invariant entry that names a decision entry it derives from holds `none` in the field;
+  - a change to the field alone leaves the entry's content fingerprint unchanged;
+  - for every invariant entry whose wording a change adds or alters, the gate's report on that
+    change states whether the entry's method passed and broke on the commit the branch left from,
+    or that this could not be checked.
+  Level 3 for the value of the field — the human deciding the change sets it with the gate's
+  report in front of them, and the record of that decision names who and when. Level 2 for what
+  counts as already done and what *found* holds — an agent compares the change with the decision:
+  - complies: entering a game, an agent lists what its save module does, a human chooses "a save of
+    another version is rejected whole", the gate reports that the check passes and breaks on the
+    commit the branch left from, and the entry reads `recovered — searched: the save module and its
+    history, the game's own documents; found: the comment above the save format's version constant
+    at commit <sha>, decision D23 of the game's concept document`; an invariant written at a task's
+    foundation step for a feature being built holds `none`;
+  - violates: *found* reads "old saves are dropped because the rules may have changed"; *found*
+    lists a comment explaining how the loader parses a save; an invariant about a field the task
+    itself adds is marked recovered because its check found nothing to fail on the older commit.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-22
+
+*Rationale:* WAY-28 lets an invariant recovered from an existing product bind before anyone knows
+why it holds, and asks for a note that it was recovered. Without the note it reads like a rule
+someone wrote, and whoever later weighs a change to it has no sign that the reason for it was never
+settled in the log. Whether an entry was recovered cannot be read off the product (WAY-54): a check
+run on the older commit also passes where the thing it checks does not exist yet — two empty sets
+compare equal (WAY-47) — and it passes for a new rule the product happened to meet before anyone
+wrote it down. A deliberate break on the older commit (WAY-08) removes the first case and not the
+second, so the gate's run is evidence for the human, who already decides every change to the
+foundation (WAY-10), not the verdict; the field is marked in the template as resting on a judgment.
+The gate runs the method, never the element's format guard, which keeps only the shape of the entry
+(WAY-55). The same line places both cases of the return step (WAY-11): behaviour the product had
+before the task can be recovered, while a rule the implementer writes into the task's own code was
+not there before the task and holds `none`. Recording the search spares the next agent the same
+search, as WAY-29 does for an inherited decision. *found* points to places rather than quoting
+them, because an invariant says nothing about why (WAY-22), and it lists a place calling for a
+different behaviour too, since that is what a human weighing the invariant most needs to see. The
+field is present in every entry, with `none` as a statement, because a missing value cannot be told
+from a forgotten one (WAY-05). It lies outside the fingerprint so that writing the decision behind a
+recovered invariant later does not, by the field alone, raise the entry's version and fail every
+test that cites it (WAY-57).
+*Rejected:* the mark only where no cause is known — at entry into a product the cause usually sits
+somewhere that is not a decision entry, such as a comment in the code, a concept document or a line
+of requirements, and, tried on a game this process would enter, the rule gave two answers for every
+such case; the mark on every entry that names no decision — WAY-22 lets an invariant stand with no
+choice behind it, so one written for a feature being built would be marked recovered; the mark set
+by the gate from the check's result on the older commit, with or without a deliberate break — tried
+on the same game, a rule written for a feature in progress passed there because the feature did not
+yet exist, and one sentence got either mark depending on how its test was phrased; a link to a
+decision kept outside the log, such as a numbered decision in a product's concept document, counted
+as naming a decision — nothing checks it, and the invariant would read as chosen; the reason quoted
+in *found* — it would put a why into an invariant; a field of origin with a value "derived from a
+decision" — it repeats the link WAY-17 already requires; a reference to a requirement of an outside
+catalogue as a field of the invariant entry — such a requirement is a fact about the world, the
+reason WAY-04 turns down external constraints as a field of the map, and an invariant names the
+facts it rests on under WAY-17.
+*Consequences:* the template of the invariants element names the field, gives its form and marks it
+as resting on a judgment; the element's format guard checks the first three invariants above, and
+the gate the fourth; until both exist nothing runs them. Where the method cannot run on the older
+commit — a human inspection, a test that does not build there, a repository with no main branch, as
+this one until the foundation reaches it — the gate reports it as unchecked, never as passing
+(WAY-38), and the human sets the field without that evidence. An entry whose wording changes, by a
+raised version (WAY-57) or by a split, enters again, and its field is set again. A place in *found*
+that records a choice is recovered as a decision when a later task touches the part (WAY-28) — the
+change that enters the invariant does not itself count as touching it; a reason given by the human
+who chooses the invariant is recorded as an inherited decision given by that person (WAY-29). Once
+the invariant names such a decision, its field turns to `none` without raising its version; whether
+the new link itself raises the version is left to the decision on what in an invariant entry binds,
+of whose open question (WAY-56) this entry answers in passing only that the field lies outside the
+fingerprint. An invariant a human takes from a product's own requirements, which the product does
+not meet yet, holds `none` and enters as an invariant the product violates, whose place is set by a
+decision still to come; its source is not recorded by this decision. The field's readers are the
+human weighing a change to the invariant and the agent recovering a part's decisions. WAY-28's
+consequence on the note is corrected in place to name this decision, while the element still has no
+template to carry the note (WAY-37). How a requirement of an outside catalogue reaches an invariant
+is set when the environment facts element is designed.
