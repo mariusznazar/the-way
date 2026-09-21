@@ -2362,7 +2362,7 @@ of its own version on the main branch.
   - every derived file compared as a subset of the main branch is named in the template of its
     element.
 - **Review when:** none
-- **Origin:** the-brain: Notes/Projects/(P) Proces pracy nad produktem/budowa_niezmiennikow.md
+- **Origin:** none
 - **Approver override:** none
 - **Approved by:** Mariusz, 2026-09-20
 
@@ -2404,7 +2404,7 @@ judgment.
     gate runs already tells the kinds apart; a field that rests on a judgment stands beside
     fields that are read off, with nothing saying which is which.
 - **Review when:** none
-- **Origin:** the-brain: Notes/Projects/(P) Proces pracy nad produktem/budowa_niezmiennikow.md
+- **Origin:** none
 - **Approver override:** none
 - **Approved by:** Mariusz, 2026-09-20
 
@@ -2538,3 +2538,53 @@ the gate's code is built, the gate's dependencies in the map grow to the parts w
 runs. The invariants element gets a format guard of its own, which is not the gate: the guard
 keeps the shape of an entry, the gate runs what the entry says to check. Whether a product built
 with this process keeps its own gate and flow tests in `gate/` is left to that product.
+
+### WAY-56/1 — How much does one invariant entry hold?
+
+An invariant entry states one invariant, as WAY-22 defines it, in one sentence. The method of
+checking and the links that WAY-08 and WAY-17 require stand beside that sentence, not inside it.
+
+- **Change:** new decision
+- **Scope:** invariants
+- **Based on:** none
+- **Relations:** derives from WAY-22@52c514ca · related to WAY-02 · related to WAY-08 ·
+  related to WAY-12 · related to WAY-17 · related to WAY-26 · related to WAY-37
+- **Outranks:** none
+- **Verification:** level 1 — invariant in working form: every invariant entry states its
+  invariant in one sentence. Level 2 for one invariant per sentence — an agent compares the
+  change with the decision:
+  - complies: "every entry in the log has every field of the template" is one entry, though a
+    commit can break it for a single entry or a single field; "every result of a human inspection
+    names who checked and when" is one entry;
+  - violates: "binding sentences number one to three and contain no *should*, *will* or keyword
+    of RFC 2119 in capitals" kept as one entry, though how many sentences there are and which
+    words they use are two separate rules; the sentence on fields split into one entry per field.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-21
+
+*Rationale:* WAY-22 says what an invariant is: a sentence a commit makes true or false. An entry
+that states one such sentence has a fingerprint of its own (WAY-02), so a fix to it flags only
+what relies on it — a reason WAY-26 gives each principle and each non-goal an entry of its own —
+and a deliberate break aimed at it tells whether its method catches it (WAY-08). Where one
+invariant ends and the next begins is a judgment: three rules tried against the invariants
+written in working form in this log — one property with labelled conditions, a split wherever a
+commit can break one part while the rest holds, one check applied across many items — each gave
+two answers or a wrong one on real sentences. So the count of sentences is checked by a script,
+and what one sentence may join is judged against a pair of examples, as WAY-12 does for any rule
+a script cannot settle.
+*Rejected:* one entry for a property, with its conditions as labelled points — no rule told one
+property with several conditions from several properties, a fix to one point would flag every
+test citing the entry, and a test would need a way to cite a single point; a sentence split
+wherever a commit can break one part of it while the rest holds — a sentence about every entry of
+the log would fall apart into one entry per entry.
+*Consequences:* the template of the invariants element gives an entry its one sentence, and the
+element's format guard counts sentences as the decisions guard does, which catches length only:
+two rules joined in one sentence pass it and are left to review. Two questions stay open, each
+for a decision of its own: what in an invariant entry binds, so that its fingerprint can be
+computed (WAY-02), as WAY-42 answers it for the part map; and what an invariant entry names in the
+part map, so that a change reaches the invariants it can break, reasoned against the rule for
+files that collect entries about many parts (WAY-44). The invariants written in working form in
+this log are rewritten under WAY-37 once the template exists, and may need a second pass when the
+second of those questions is settled.
