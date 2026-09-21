@@ -2588,3 +2588,123 @@ part map, so that a change reaches the invariants it can break, reasoned against
 files that collect entries about many parts (WAY-44). The invariants written in working form in
 this log are rewritten under WAY-37 once the template exists, and may need a second pass when the
 second of those questions is settled.
+
+### WAY-57/1 — Is an invariant entry versioned?
+
+An invariant entry carries a version number, starting at 1, and holds only its current wording;
+neither the version nor a declaration of a correction lies inside its content fingerprint, and
+earlier wordings are read from git. When the entry's content fingerprint differs from its
+fingerprint on the main branch, its version is one higher than there, unless the entry declares a
+correction naming both fingerprints and the human who decides the change under WAY-10 confirms,
+with both wordings in front of them, that the meaning is unchanged; when the fingerprint does not
+differ, the entry keeps the version it has there. An invariant test cites its invariant by
+identifier and version, in the form the template gives, and fails the gate when that version is
+not the current one, while elsewhere a reference to an invariant's version is historical and never
+flagged, as WAY-02 has it.
+
+- **Change:** new decision
+- **Scope:** invariants, relation-model, gate, task-cycle, part-map
+- **Based on:** none
+- **Relations:** derives from WAY-03@4fa941a4 · derives from WAY-10@cece9468 ·
+  narrows WAY-02@af08ee5d · related to WAY-07 · related to WAY-08 · related to WAY-14 ·
+  related to WAY-17 · related to WAY-19 · related to WAY-20 · related to WAY-22 ·
+  related to WAY-31 · related to WAY-39 · related to WAY-43 · related to WAY-45 ·
+  related to WAY-54 · related to WAY-56
+- **Outranks:** none
+- **Verification:** level 1 — invariants in working form, all kept by the invariants element's
+  format guard, which the gate runs once it exists (WAY-55); the first five use the relation
+  model's fingerprint function, and the last two only compare a cited version with the entry's
+  current one:
+  - every invariant entry carries a version number;
+  - an invariant entry with no fingerprint on the main branch carries version 1 and no
+    declaration of a correction;
+  - an entry whose fingerprint differs from its fingerprint on the main branch carries either a
+    version one higher than there and no declaration of a correction, or the same version and a
+    declaration naming its fingerprint there and its current one;
+  - an entry whose fingerprint equals its fingerprint on the main branch carries the version it
+    has there, and no declaration of a correction whose second fingerprint differs from it;
+  - no invariant entry holds, beside its current wording, a wording it held on the main branch;
+  - every invariant test cites its invariant with a version, in the citation form the template
+    gives;
+  - an invariant test that cites a version other than the current one fails the gate.
+  Level 2 for what counts as a correction — a change after which some test citing the entry would
+  need a different expected value is a raise, never a correction, because WAY-10 treats a changed
+  expected value as more than a test's form; an agent compares the change with the decision:
+  - complies: a typo in an invariant's sentence is fixed under a declaration naming both
+    fingerprints, the human deciding the change confirms it seeing both wordings, and no test's
+    citation changes; "at most three" rewritten as "at most four" raises the version, and the test
+    citing the old version fails until the foundation step checks the test against the new wording;
+  - violates: "must" becomes "may" under a confirmed correction; a wrong dash in a heading's code
+    literal is fixed under a declaration, though a test asserting that literal would need a
+    different expected value; every citation moved to a new version by a script, with no one
+    checking the tests against the new wording.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-22
+
+*Rationale:* an invariant test is read-only during implementation (WAY-03), and a change to it goes
+to the panel and, beyond a change of form, to a human (WAY-10). Cited with a content fingerprint,
+as WAY-02 has every reference that relies on wording, the test would be flagged by every change
+other than whitespace (WAY-39), and a fixed typo would bring a change to a read-only test, with a
+panel and a human for it. Cited by a bare identifier, it would never be flagged, and would go on
+checking a meaning the entry no longer states. A version sits between the two: it moves when the
+meaning moves. It is a second mechanism next to the fingerprint, which WAY-31 turns down for
+references between decisions; there a flagged reference is cleared by whoever reads it, while here
+the reference is a read-only test that nobody may touch without a human, so the question of
+meaning is asked once, at the entry, of the human who already decides the change. That keeps the
+ground WAY-31 stands on — a kind of change named by its author never silences anything by itself:
+the declaration covers only the entry it stands in, names the wording it corrects and the wording
+that replaces it, and counts only once a human has confirmed it. The default is a raise, because a
+forgotten raise drifts silently while a needless one fails loudly. After the merge a declaration
+names the fingerprint the entry now has on the main branch, so it states something true about the
+entry's history and needs no step to remove it; the next change to the entry replaces it or
+removes it, since a declaration whose second fingerprint no longer matches is an error. The version
+is written in the entry rather than computed on demand, because a test cites a value that has to
+stand where the test's reader can see it; the guard computes what it must be and compares. Unlike
+a decision (WAY-19), an invariant carries no reasons and no rejected options (WAY-22), so its
+earlier wordings bind nothing — the ground on which WAY-43 keeps no versions in the part map;
+unlike a part of the map, an invariant has read-only tests pinned to what it means, and they need a
+marker that changes with the meaning alone.
+*Rejected:* no version, as in the part map (WAY-43) — a test would carry a fingerprint and be
+flagged by every fixed typo, or a bare identifier and never be flagged; earlier versions kept in
+the entry, as in the decision log — an invariant carries no reasons, so its history binds nothing,
+and every reader would have to pick the current wording; a version written by hand with nothing
+comparing it — a forgotten raise leaves tests checking an old meaning with no sign; a correction
+declared once for a whole change, by its author alone — a kind named by its author silencing the
+flag, which WAY-31 rejects, and a correction in one entry would cover a change of meaning in
+another; a declaration naming only the fingerprint it corrects — after the merge it names a
+fingerprint the main branch no longer has, and either fails the gate until a second change removes
+it, or, repointed, silences the next change of meaning; the declaration kept in the commit message
+of the change — it would rest on a record of the change that this process has no home for yet
+(WAY-10, WAY-33); a test allowed to cite an earlier version, as a reference to a decision version
+may — a test never deliberately checks what the product no longer promises.
+*Consequences:* the template of the invariants element gives an entry its version, the form of a
+citation with a version and the form of a declaration of a correction. This decision answers part
+of WAY-56's first open question in passing — the version and the declaration lie outside an
+invariant entry's fingerprint; what else in the entry binds stays open for that decision. A
+correction keeps every test's citation, and does not stop a test's form from changing in the same
+change, as WAY-10 allows; a change to the way fingerprints are computed (WAY-39) removes every
+declaration of a correction in the same change. Who counts as the human deciding the change for an
+invariant entry, and where the confirmation is recorded, is not settled here: it follows the rule
+WAY-14 leaves to each element and the records WAY-10 and WAY-33 already owe the task cycle; until
+then the guard reports a declaration as "correction declared, confirmation not checked", never as
+agreeing. Until the invariants element has its format guard, nothing runs the invariants above,
+and until decisions say what in an invariant entry binds (WAY-56) and how such an entry is
+identified, as WAY-41 identifies a part, neither the fingerprint they compare nor the entry on the
+main branch they compare it with is defined. Once the guard exists, the map gives `invariants` a
+dependency on `relation-model`, and none runs the other way. The guard compares an entry with its
+state at the point where the task branch left the main branch, not with the main branch's tip, so
+an entry the branch never touched is never asked to change. Where there is no main branch — as in
+this repository until the foundation reaches it — the guard compares nothing and says so, and
+every entry stays at version 1, as entries of the decision log are corrected in place before the
+main branch (WAY-07); afterwards a merge raises an entry's version by at most one. A version
+citation is not a reference that leans on wording (WAY-02), so the promise of the critical flow
+`wording-reaches-dependants` does not cover it; a stale one is caught by the last two invariants
+above. The test of that flow, `gate/test_wording_reaches_dependants.py`, names its flow but no
+invariant with a version, and is brought into line by the change that brings the invariants
+element (WAY-37). After a raise, a citing test's changed citation is accepted like a new test under
+WAY-08. A human inspection carries no version under this decision; an exploratory test run by an
+agent is a test (WAY-08) and cites one like any other. What happens to a citation when an
+invariant entry is split, merged or withdrawn follows from how invariant entries are identified,
+which needs a decision of its own.
