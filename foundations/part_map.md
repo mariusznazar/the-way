@@ -47,7 +47,7 @@ that entry changes.
 The part answers for what a product states as an invariant and for how that statement is checked.
 
 - **Files:** elements/invariants/**
-- **Depends on:** none
+- **Depends on:** decisions · part-map · relation-model
 - **Failure modes:** none
 - **Trust boundary:** none
 
@@ -141,6 +141,13 @@ codes.
 The command that runs the guard of a part map keeps its name, its arguments and its exit codes.
 
 - **Declared at:** elements/part-map/format_guard.py · main
+
+## invariants-guard-command — The command of the invariants guard
+
+The command that runs the guard of a product's invariants keeps its name, its arguments and its
+exit codes.
+
+- **Declared at:** elements/invariants/format_guard.py · main
 
 ## Criticality scale
 

@@ -2690,10 +2690,10 @@ declaration of a correction in the same change. Who counts as the human deciding
 invariant entry, and where the confirmation is recorded, is not settled here: it follows the rule
 WAY-14 leaves to each element and the records WAY-10 and WAY-33 already owe the task cycle; until
 then the guard reports a declaration as "correction declared, confirmation not checked", never as
-agreeing. Until the invariants element has its format guard, nothing runs the invariants above;
-the entry on the main branch they compare with is the one holding the same identifier there
-(WAY-64). Once the guard exists, the map gives `invariants` a
-dependency on `relation-model`, and none runs the other way. The guard compares an entry with its
+agreeing. The invariants element's format guard runs the invariants above; the entry on the main
+branch they compare with is the one holding the same identifier there (WAY-64). The map gives
+`invariants` a dependency on `decisions`, `part-map` and `relation-model`, and none runs the other
+way. The guard compares an entry with its
 state at the point where the task branch left the main branch, not with the main branch's tip, so
 an entry the branch never touched is never asked to change. Where there is no main branch — as in
 this repository until the foundation reaches it — the guard compares nothing and says so, and
@@ -2791,7 +2791,7 @@ reason WAY-04 turns down external constraints as a field of the map, and an inva
 facts it rests on under WAY-17.
 *Consequences:* the template of the invariants element names the field, gives its form and marks it
 as resting on a judgment; the element's format guard checks the first two invariants above, and
-the gate the third; until both exist nothing runs them. Where the method cannot run on the older
+the gate the third, which nothing runs until the gate exists. Where the method cannot run on the older
 commit — a human inspection, a test that does not build there, a repository with no main branch, as
 this one until the foundation reaches it — the gate reports it as unchecked, never as passing
 (WAY-38), and the human sets the field without that evidence. An entry whose wording changes, by a
@@ -2877,8 +2877,7 @@ part of the question, the half of another that waited for it, and WAY-58's level
 field and the fingerprint, the reason it gave for it and its consequence leaving open whether a
 decision named later raises the version — it does not. Both are corrected in place and accepted
 again (WAY-07). WAY-56's consequence that left this question open is corrected in place, with its
-fingerprint unchanged. Until the invariants element has its format guard, nothing runs the
-invariants above.
+fingerprint unchanged. The invariants element's format guard runs the invariants above.
 
 ### WAY-60/1 — Where may a condition that decides an invariant stand?
 
@@ -3031,10 +3030,11 @@ does not change between runs; a method may read what another method's run left o
 places it, as WAY-47 does, and the gate then runs the first before the second. A run's own output is what
 the gate reads; the record of the result it keeps in the repository is the one WAY-53 compares. The result
 an entry has is the verdict of the run on the commit being checked; the run WAY-58 asks for on the commit
-the branch left from is evidence for a human, not a result. The format guards of decisions and of the part
-map, once they record a verdict for each invariant they check, cite those invariants and are invariant
-tests under WAY-65, read-only during implementation (WAY-03) and changing through the panel (WAY-10). Recording a verdict for each invariant, and taking in place of a commit the value
-that it does not exist, changes the commands of those two guards, which the map declares as surfaces;
+the branch left from is evidence for a human, not a result. The format guards of decisions, of the part
+map and of invariants, once they record a verdict for each invariant they check, cite those invariants and
+are invariant tests under WAY-65, read-only during implementation (WAY-03) and changing through the panel
+(WAY-10). Recording a verdict for each invariant, and taking in place of a commit the value
+that it does not exist, changes the commands of those three guards, which the map declares as surfaces;
 the change travels on the change path of their promise level (WAY-49, WAY-50). Until the guards record
 such verdicts, and until the invariants in working form are rewritten as entries (WAY-37), the gate has
 no verdict to read for any of them. Under WAY-37 every invariant in working form that states what a check

@@ -189,7 +189,8 @@ part's patterns is shown instead as the list of files that changed part.
 - The files that serve the whole repository — the lockfile, the build and the CI configuration —
   are a part of their own, and a change to them lies on every critical flow.
 - For a file that collects entries about many parts, the parts a change touches come from the
-  *Scope* of the entries it adds or changes, not from the file's own part.
+  field in which the entries it adds or changes name parts — a decision's *Scope*, an invariant's
+  *Part*, where `every` names all — not from the file's own part (WAY-44, WAY-62).
 - A file no pattern matches, and a file two parts claim, breaks the gate unless it stands on the
   list of files left out on purpose (WAY-44).
 

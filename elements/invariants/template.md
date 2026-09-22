@@ -188,6 +188,7 @@ A quarantined invariant stands on the last list in the file; *Until* is a date a
   pass only when each of them does (WAY-65).
 - Each file such a check reads and names there stands on a line `data: <path>` — a recorded output
   it compares against, for one (WAY-65).
+- A check stands in a file of code; a Markdown file holds no citing check.
 - The file holding a citing check, and each file it names on a `data:` line, are invariant tests,
   read-only during implementation (WAY-03), when they are so on the commit the task branch left the
   main branch from or on the commit being checked. A path a human assesses against is no invariant
@@ -297,6 +298,8 @@ A field marked *judgment* holds someone's call: no tool reads its value off the 
 ## What the format guard checks
 
 - The product has exactly one file of invariant entries, `foundations/invariants.md` (WAY-64).
+- The file holds its entries, then its withdrawn identifiers, then its quarantined invariants, each
+  in the form above, and no other heading (WAY-64, WAY-68).
 - Every identifier has the form above, and none is held by another entry or withdrawn identifier
   of this file or of the part map (WAY-64).
 - Every identifier the file held on the commit the task branch left the main branch from stands in
@@ -305,6 +308,7 @@ A field marked *judgment* holds someone's call: no tool reads its value off the 
   or `none` (WAY-64).
 - Every entry carries every field of the form above, and no field holds `none` or `TODO` where the
   form does not give it that word (WAY-71).
+- No entry carries a field the form above does not hold, nor text outside its sentence and fields.
 - Every entry states its invariant in one sentence (WAY-56).
 - Every entry carries a method (WAY-08).
 - Every entry carries a version; an entry with no fingerprint on the main branch carries version 1
@@ -335,6 +339,7 @@ A field marked *judgment* holds someone's call: no tool reads its value off the 
   branch from; every position names an entry at its current version and no other (WAY-67).
 - Every quarantine position names an entry at its current version and an end date, and none names
   an invariant a critical flow names (WAY-68).
+- Every example in `examples.md` matches its entry in the file word for word (WAY-05).
 - The guard reports how many entries it could not check and why, never agreement (WAY-38).
 
 ## Examples

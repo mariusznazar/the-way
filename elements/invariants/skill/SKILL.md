@@ -18,7 +18,8 @@ resolved directory, `examples.md` where it exists, and the product's `foundation
 `foundations/part_map.md` and `foundations/decisions.md` — an entry names parts of the one and
 decisions of the other. Entries take the language of the file; when it has no entries, ask for
 it. When the repository has no `foundations/invariants.md`, ask whether the product starts its
-invariants here; if not, stop. When it has no part map, the map comes first: stop until
+invariants here; if not, stop; if so, the same change claims the new file for the `invariants`
+part of the map through `update-part-map`. When it has no part map, the map comes first: stop until
 `update-part-map` has written it.
 
 ## 2. Decide what the entry is
@@ -68,9 +69,10 @@ Fill every field according to the template, with extra care for these:
    otherwise a correction stands only on the human's word. Write nothing before the human accepts
    it.
 3. Write the entry in its place in the file and run the format guard from the product's
-   repository root, `python -B <parent of the resolved directory>/format_guard.py`, where it
-   exists; fix what the entry broke and run it again, and give an error or warning elsewhere in
-   the file to the human.
+   repository root, `python -B <parent of the resolved directory>/format_guard.py --base <the
+   commit the task branch left the main branch from>`, leaving out `--base` where there is no
+   main branch; fix what the entry broke and run it again, and give an error or an unchecked line
+   elsewhere in the file to the human.
 4. What follows from this entry goes one at a time: a decision that named it in working form, or
    whose verification changes, through `record-decision`; a flow or a failure mode that names it,
    or names an identifier this change retires, through `update-part-map`.
