@@ -346,11 +346,12 @@ On the main branch, this repository holds `foundations/` with the entries of the
 directory for each part of the process other than `repository` — `elements/<element>/` for each
 foundation element, `relation-model/`, `gate/` and `task-cycle/` — the files that serve the whole
 repository, which its part map gives to the `repository` part (WAY-44), and a `README.md` that
-describes the repository. A directory reaches the main branch only once a tool keeps its form, and
-what it must hold is set by its part: an element brings its template and rules, examples, a skill
-that writes its entries and a script that checks them; the relation model brings the script that
-computes fingerprints and flags references; the entries in `foundations/` are checked by the
-scripts of their elements.
+describes the repository. A directory reaches the main branch only once it holds what its part
+requires: an element its template and rules, examples, a skill that writes its entries and a
+script that checks them; the relation model the script that computes fingerprints; the gate the
+test of every critical flow in the part map; `task-cycle/` what the design of the task cycle
+sets, and until then it does not reach the main branch. The entries in `foundations/` are checked
+by the scripts of their elements.
 
 - **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, relation-model, gate,
@@ -378,11 +379,11 @@ decisions to check it against (WAY-21). What a directory must hold depends on it
 each tool has a reason only where it has work: a skill writes entries, so it belongs to an
 element; the fingerprint script only reads, so the relation model has no skill. The skill writes
 an entry in the right form when someone runs it; the script catches a form broken by hand, by
-another agent or by a merge. Until a part has its tools, it is a change in progress, and under
-WAY-06 such a change lives on a branch. The files that serve the whole repository belong to no
-one part of the process, and WAY-44 gives them a part of their own; they stay where the tool that
-reads them looks for them, and the map, not this list, names which they are. The `README.md` binds
-nothing and only tells a reader what the repository is.
+another agent or by a merge. Until a directory holds what its part requires, it is a change in
+progress, and under WAY-06 such a change lives on a branch. The files that serve the whole
+repository belong to no one part of the process, and WAY-44 gives them a part of their own; they
+stay where the tool that reads them looks for them, and the map, not this list, names which they
+are. The `README.md` binds nothing and only tells a reader what the repository is.
 *Rejected:* material merged to the main branch as soon as it is written; an element whose only
 tool is a skill — the form then holds only while someone remembers to run it; one `tools/`
 directory for everything shared — it matches no part of the process and grows into a store; the

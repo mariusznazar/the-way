@@ -95,11 +95,14 @@ The part answers for running the checks a change calls for, and for the tests of
 
 The part answers for the files that configure the repository itself rather than any one element.
 
-- **Files:** .gitattributes
+- **Files:** /.gitattributes
+  /.gitignore
 - **Depends on:** none
 - **Failure modes:**
   - a file is stored with the line endings of whoever wrote it — a later rewrite turns the whole
     file over and buries what actually changed in it — low — not detected
+  - an ignore pattern hides a file that should be tracked — it never reaches a commit and no part
+    answers for it — low — not detected
 - **Trust boundary:** none
 
 ## wording-reaches-dependants — A change of wording reaches what leans on it
