@@ -38,8 +38,8 @@ written by hand (WAY-08).
 <one sentence: the invariant>
 
 - **Method:** `<program> <arguments>` | <path of a file a human assesses the product against>
-- **Rests on:** <environment facts> | none
-- **Derives from:** <decision> | none
+- **Rests on:** <environment fact>@<fingerprint> · … | TODO — <the fact, with its source> | none
+- **Derives from:** <decision>@<fingerprint> · … | none
 - **Part:** <parts from the part map> | every
 - **Correction:** none | <fingerprint on the main branch> → <current fingerprint>
 - **Recovered:** none | recovered — searched: <…>; found: <…>
@@ -76,9 +76,9 @@ reads `none`:
   `TODO — decision pending: the method of a population met only in use`, and it is reported as
   unchecked (WAY-61).
 
-TODO — decision pending: which links beside the sentence carry a content fingerprint. *Rests on*
-and *Derives from* are written today as bare identifiers; whether they carry the fingerprint of
-the entry they name, as `derives from` does between decisions (WAY-31), waits for that decision.
+*Derives from* and *Rests on* carry the content fingerprint of each entry they name, and *Part*
+carries none. A change to that fingerprint reaches the main branch with every invariant carrying
+it, each checked against the new wording and carrying the new fingerprint (WAY-66).
 
 ## The sentence
 
@@ -182,8 +182,8 @@ A field stays in this template only while someone or something reads it (WAY-05)
 | identifier / version (heading) | a citing test; the part map, in a flow and a failure mode's detection; the guard, which computes what the version must be | read off |
 | sentence | the agent checking a change against the invariant; the content fingerprint; the gate, through the method | prose |
 | Method | the gate, which runs a command or hands a path to a human | judgment |
-| Rests on | whoever reviews the invariant when a fact changes | judgment |
-| Derives from | whoever changes the decision; the check that a decision is verified through its invariants (WAY-12) | judgment |
+| Rests on | whoever reviews the invariant when a fact changes; the format guard, which compares each fingerprint with the current one (WAY-66) | judgment for the fact named; read off for its fingerprint |
+| Derives from | whoever changes the decision; the check that a decision is verified through its invariants (WAY-12); the format guard, which compares each fingerprint with the current one (WAY-66) | judgment for the decision named; read off for its fingerprint |
 | Part | the gate, which runs the invariants a change reaches; the agent analysing a task | judgment |
 | Correction | the guard, which lets the version stand; the human who confirms it | read off |
 | Recovered | the human weighing a change to the invariant; the agent recovering a part's decisions | judgment |
@@ -214,6 +214,8 @@ A field marked *judgment* holds someone's call: no tool reads its value off the 
 - Every entry names `every` or at least one part of the part map, never both (WAY-62).
 - Every method is a command that begins with a program's name, or the path alone of a file that
   exists; every value a command takes from the gate stands on the list above (WAY-61).
+- Every name in *Rests on* or *Derives from*, other than `none` or `TODO`, carries the current
+  fingerprint of the entry it names (WAY-66).
 - Every invariant test cites its invariant with a version, and none cites a version other than the
   current one (WAY-57).
 - Every `invariant:` line in a check names an entry, and every `data:` line names a file that

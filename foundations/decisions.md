@@ -2857,22 +2857,20 @@ line (WAY-42): its entry binds by one sentence, and the fields that change for o
 outside. This decision does not say what the sentence has to name, and that gap has a cost wherever
 a condition that decides whether a commit makes the invariant true stands outside the sentence,
 since a change to it raises no version, and whether it flags anything turns on whether the
-invariant's link to that entry carries a fingerprint, which WAY-31 leaves to the invariants
-element. Three kinds of such place can be named: a comparison with "the main branch", which gives
+invariant's link to that entry carries a fingerprint (WAY-66). Three kinds of such place can be named: a comparison with "the main branch", which gives
 different answers against its tip and against the commit a branch left it from; a threshold whose
 statistic or population sits in the method; and a list or a definition held elsewhere — in another
 entry, in a template, in a section of the map — and reached through a word of the sentence, as the
 directories of the process are held in WAY-09, whose list WAY-55 corrected in place. WAY-60 settles
-where each may stand; how a change to the place holding the third reaches the invariant is left to
-the decision on which links carry a fingerprint.
+where each may stand; how a change to the place holding the third reaches the
+invariant is set by WAY-61 and WAY-62.
 *Rejected:* the whole entry as the binding part — a new method, a link written later or a corrected
 field would raise the version and fail every citing test for nothing; the method of checking inside
 the binding part — a new test for the same meaning would fail every test citing the entry; a
 fingerprint per field — every reference would have to say which field it relies on.
 *Consequences:* the template of the invariants element marks the sentence as the binding part. Where
 a condition that decides an invariant may stand is set by WAY-60; which links between entries
-carry a fingerprint, the question WAY-31 leaves to the invariants element, is left to a decision of
-its own. The rewrite of the invariants in working form that WAY-56 sets may need another pass once
+carry a fingerprint is set by WAY-66. The rewrite of the invariants in working form that WAY-56 sets may need another pass once
 both are applied. The sentences of WAY-57 and WAY-58 that placed the version, the
 declaration of a correction and the recovered field outside the fingerprint answered this question
 in passing and lose those clauses (WAY-19); with them go WAY-57's consequence saying it answered
@@ -2965,8 +2963,9 @@ request changes without naming a fixed commit — among them WAY-03, WAY-07, WAY
 WAY-33, WAY-45, WAY-48, WAY-51, WAY-53 and WAY-58, and the part map's template and guard — chooses
 one by a correction or a new version (WAY-07) before those invariants are written; the choice is
 never made in the invariant. A requirement taken from a product's own documents enters as WAY-58
-says. How a change to the place holding a condition reaches the invariants resting on it follows
-from which links beside the sentence carry a fingerprint, left to a decision of its own (WAY-31). A
+says. Which links beside an invariant's sentence carry a fingerprint is set
+by WAY-66; how a change to the place holding a condition reaches the invariant is set by WAY-61 and
+WAY-62. A
 condition that turns on the date a check runs, or on who may open or change something, is not a
 place in this sense and is not settled here. WAY-59's Rationale and Consequences are corrected in
 place to name this decision.
@@ -3304,3 +3303,54 @@ frees the file.
 file's language. Several checks citing one invariant in one run pass only when each of them does.
 A path a human assesses against is no invariant test: a change to it reaches its invariant
 (WAY-62), and the human verdict lapses (WAY-63).
+
+### WAY-66/1 — Which links beside an invariant's sentence carry a content fingerprint?
+
+An invariant entry's *Derives from* and *Rests on* carry the content fingerprint of each entry they
+name, and its *Part* carries none. A change to that fingerprint reaches the main branch with every
+invariant carrying it, each checked against the new wording and carrying the new fingerprint.
+
+- **Change:** new decision
+- **Scope:** invariants, decisions, relation-model, environment-facts
+- **Based on:** none
+- **Relations:** derives from WAY-02@af08ee5d · derives from WAY-17@ab01c0e5 · related to WAY-12 ·
+  related to WAY-21 · related to WAY-31 · related to WAY-39 · related to WAY-57 ·
+  related to WAY-59 · related to WAY-60 · related to WAY-61 · related to WAY-62
+- **Outranks:** none
+- **Verification:** level 1 — invariants in working form, kept by the invariants element's format
+  guard:
+  - every name in an invariant entry's *Derives from* or *Rests on*, other than `none` or `TODO`,
+    carries a fingerprint;
+  - every such fingerprint equals the current fingerprint of the entry it names.
+  Level 2 for checking against the new wording — an agent compares the change with the decision:
+  - complies: WAY-05 gets a new wording; the same change carries its new fingerprint into every
+    invariant naming it in *Derives from*, and rewords with a raised version any invariant whose
+    sentence no longer holds;
+  - violates: a script renews every stale fingerprint in `foundations/invariants.md` with no one
+    reading the invariants that carry them.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-22
+
+*Rationale:* an invariant derived from a decision, or resting on a fact, stands on what that entry
+says (WAY-17), and a decision is verified through its invariants (WAY-12), so a link left on ground
+that has moved verifies nothing and nothing shows it. The fingerprint is the mechanism WAY-02 already
+sets for a reference that relies on wording, applied here as WAY-31 already applies it between
+decisions, and one mechanism serves every element (WAY-39). *Part* names where a change can break the
+sentence, not what it means, as a decision's *Scope* names parts bare too (WAY-21); fingerprinting it
+would flag every invariant in a reworded part for nothing. How a place holding a condition without a
+fingerprint is read, and how a change to it reaches the invariant, are not this question: a method
+already reads what its sentence is about (WAY-61), and a change already reaches an invariant through
+*Part* or through a file its method names (WAY-62).
+*Rejected:* plain identifiers — a reworded decision would leave its invariants unflagged, what WAY-02
+already forbids; a fingerprint on *Part* — a part names where a change can break the sentence, not
+what it means, and a reworded responsibility would flag every invariant in the part, as a decision's
+*Scope* names parts bare too (WAY-21); a renewed link raising the invariant's version — every citing
+test would fail the gate with the sentence unchanged.
+*Consequences:* the template of the invariants element gives both links with `@<fingerprint>`, and
+its format guard checks the level 1 invariants above through the relation model's script (WAY-39).
+What a fact's fingerprint covers is set by the environment facts element; until it has entries, an
+invariant writes a fact it rests on as `TODO — <the fact, with its source>`, as a decision quotes one
+in *Based on* (WAY-17). WAY-59's and WAY-60's passages that left this question open are corrected in
+place.
