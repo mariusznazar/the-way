@@ -62,9 +62,10 @@ Fill every field according to the template, with extra care for these:
 3. Append the entry at the end of the log and run the format guard from the product's
    repository root: `python -B <parent of the resolved directory>/format_guard.py`. Fix what
    the entry broke and run it again; an error or warning elsewhere in the log goes to the human.
-4. Entries that follow from this one — a version or a correction of a neighbour found in
-   step 2, and, when this entry changes a decision's binding sentences, every decision that
-   derives from it or narrows it — go through steps 3 and 4 one at a time.
+4. What follows from this entry goes through steps 3 and 4 one at a time: a version or a
+   correction of a neighbour found in step 2; and, when this entry changes a decision's binding
+   sentences, every decision that derives from it or narrows it, and every invariant whose
+   *Derives from* names it, the invariants through `record-invariant` (WAY-66).
 
 ## Review entry
 

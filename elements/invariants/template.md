@@ -135,6 +135,9 @@ A quarantined invariant stands on the last list in the file; *Until* is a date a
 - A sentence may be about a check the product itself holds, as it may be about anything else the
   product holds: whether a check is part of the product is settled by the part map, and the method
   of such a sentence is a test fed input made up for it (WAY-61).
+- A sentence about what a check reports may also mean that the data it reads meets a rule; where
+  it does, the data takes a sentence of its own, and the two stand as two entries, one about the
+  check and one about the data (WAY-56, WAY-61).
 
 ## Links
 
@@ -213,7 +216,9 @@ followed to the place it cites, and is marked where that source is superseded. *
 a reason itself, nor one an agent infers. The field rests on a judgment: the human deciding the
 change sets it with the gate's report in front of them — whether the entry's method passes on the
 commit the branch left the main branch from and fails there on a deliberate break, or that this
-could not be checked (WAY-58).
+could not be checked (WAY-58). An entry whose wording changes — by a raised version, by a
+correction, or by a split or a merge — enters again, and its field is set again (WAY-57, WAY-58,
+WAY-64).
 
 ## Result, report and debt
 
@@ -284,7 +289,7 @@ A field stays in this template only while someone or something reads it (WAY-05)
 | Part | the gate, which runs the invariants a change reaches; the agent analysing a task | judgment |
 | Correction | the guard, which lets the version stand; the human who confirms it | judgment for the declaration; read off for both fingerprints |
 | Recovered | the human weighing a change to the invariant; the agent recovering a part's decisions | judgment |
-| withdrawn identifiers | a test, a flow or a failure mode naming an identifier that no longer names an entry | read off |
+| withdrawn identifiers | whoever follows an identifier that no longer names an entry, from a citing test or a decision on the main branch (WAY-07, WAY-64); the format guard, which keeps a withdrawn identifier from coming back and checks its successors (WAY-64) | read off |
 | quarantined invariants | the gate, which reports the entry `unchecked` or `error`; the format guard | judgment for the date; read off for the version |
 | violated invariants | the gate, which leaves a listed `fail` at zero and fails on a listed `pass`; the format guard, which compares the list with the commit the branch left the main branch from | judgment for the position; read off for the version |
 A field marked *judgment* holds someone's call: no tool reads its value off the product, and no question about a fact settles it. A reader takes such a value as a call, not as a reading (WAY-54). A field marked *prose* carries text rather than a value.
