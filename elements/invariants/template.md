@@ -128,10 +128,24 @@ commit the branch left from in front of them.
 
 ## Result, report and debt
 
-- TODO — decision pending: what the gate reports. The states of a result and which of them block.
+- An entry's result on the commit being checked is `pass`, `fail`, `unchecked` for a reason on the
+  list below, or `error` where there is no verdict for any other reason (WAY-63).
+- The gate reports a result for at least every entry a change reaches and every entry a critical
+  flow names. Its command exits non-zero when some result it reports is `error` or `fail`, or a run
+  records a failure for no entry, and zero otherwise (WAY-63).
+- Reasons for `unchecked` — a closed list, which grows by a new version of WAY-63:
+  - the method reads `TODO`;
+  - the method is a path, and no human verdict is in force;
+  - the method's command or file is not declared or produced by the product (WAY-38, WAY-47);
+  - the method takes a commit the gate filled in as not existing.
+- A human verdict names who, when and the commit assessed, and is in force until a change since that
+  commit reaches the entry (WAY-63).
+- A declared command that cannot start, or a record holding a value off a closed list, is `error`.
+  Runs on a deliberate break, and the run WAY-58 asks for, give evidence, not results (WAY-63).
 - TODO — decision pending: debt, quarantine and the rules on who writes what. How an invariant
-  the product violates is listed, how a flaky test is handled, and who may write an invariant's
-  sentence and its test.
+  the product violates is listed and which `fail` that excuses, whether a change may turn a checked
+  entry `unchecked` — a dropped declared command included — how a flaky test is handled, and who may
+  write an invariant's sentence and its test.
 
 ## Fields and their readers
 

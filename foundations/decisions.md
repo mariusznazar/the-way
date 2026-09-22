@@ -688,8 +688,7 @@ separate commands for an agent, CI and a human — three lists to keep in step; 
 check on every change — it leaves no room for checking a change as sharply as what it touches
 calls for (WAY-13).
 *Consequences:* every method of checking is written in a form the gate can read. How the gate
-reports a method it cannot run, such as an inspection by a human, is not yet settled: it is left
-to the decision on what the gate reports (WAY-61). Which checks a change calls for is set when the task
+reports a method it cannot run, such as an inspection by a human, is set by WAY-63. Which checks a change calls for is set when the task
 cycle is designed. Under WAY-55 the gate is a part of the process of its own and reaches
 the main branch in `gate/`.
 
@@ -3045,7 +3044,7 @@ a check that quietly sees nothing passes (WAY-38). A comparison the sentence tie
 answer by the hour rather than by the commit, which WAY-60 rules out, so the gate fills the commit in
 from a closed list. Anything else in the command that varied between runs would make the verdict depend
 on who ran it; what the runner's own environment supplies — its interpreter, its network access — is
-left to the decision on what the gate reports.
+settled neither here nor by WAY-63.
 *Rejected:* a kind of method named beside it, as `script`, `declared` or `human` — nothing the gate needs
 that the form does not tell, and a second value that can disagree with it (WAY-54); a form of its own for
 an exploratory test run by an agent, as a path to its steps — it looks like the path a human assesses
@@ -3081,7 +3080,7 @@ such verdicts, and until the invariants in working form are rewritten as entries
 no verdict to read for any of them. Under WAY-37 every invariant in working form that states what a check
 reports on some input is rewritten as a sentence about that check, and, where the log means the data to
 hold, it gains a sentence of its own about the data. A failure a run records for no entry is reported by
-the gate as such, never dropped; how it counts is left to the decision on what the gate reports. The
+the gate as such, never dropped; how it counts is set by WAY-63. The
 invariant of the critical flow `wording-reaches-dependants` was a sentence about the real log with a test
 on made-up logs as its method; the same change rewrites it in the map, in place (WAY-43), as a sentence
 about what the decision guard reports, and the log's own freshness stays WAY-31's invariant, checked by
@@ -3096,13 +3095,13 @@ unchecked, never as passing (WAY-38), until a new version of this decision gives
 product's method runs the-way's own guard, the path of the pinned the-way in the command, and the
 interpreter that runs it, follow from how the product pins the-way (WAY-34), which this decision does
 not settle. How the result of a human assessment is recorded, and which states a result may take and
-which of them block, is left to the decision on what the gate reports; how a check cites its invariant,
+which of them make the gate's command fail, is set by WAY-63; how a check cites its invariant,
 to the decision on how an entry is linked to its test. When a method counts stays with WAY-08 — the
 deliberate break, and k of n runs for a method that does not give the same verdict every time; k and n
 stand in the method's command, so the verdict one run records for the entry already covers n runs of the
 check. Who writes the break stays with the decision on debt, quarantine and who writes what. WAY-16's
 consequence that left the reporting of a method the gate cannot run to the invariants element is
-corrected in place to point to the decision on what the gate reports.
+corrected in place to point to WAY-63.
 
 ### WAY-62/1 — What does an invariant entry name in the part map?
 
@@ -3154,3 +3153,55 @@ map and the entries (WAY-44), and which checks it calls for beyond that stays wi
 (WAY-16, WAY-55). In the file holding invariant entries, a change of an entry touches the
 parts it names (WAY-44), and `every` all. WAY-56's consequence that left this question open is
 corrected in place.
+
+### WAY-63/1 — What results does the gate report for invariants, and which make its command fail?
+
+An invariant's result on the commit being checked is `pass`, `fail`, `unchecked` for a reason on the
+template's closed list, or `error` where there is no verdict for any other reason. The gate reports a
+result for at least every invariant the change reaches and every invariant a critical flow names, and
+its command exits non-zero when some result it reports is `error` or `fail`, or a run records a
+failure for no entry, and zero otherwise.
+
+- **Change:** new decision
+- **Scope:** invariants, gate, part-map, task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-61@c6bdfd7c · derives from WAY-62@d9c21624 ·
+  derives from WAY-08@a0bbac21 · related to WAY-16 · related to WAY-38 · related to WAY-45 ·
+  related to WAY-47 · related to WAY-53 · related to WAY-55 · related to WAY-57 · related to WAY-58 ·
+  related to WAY-60
+- **Outranks:** none
+- **Verification:** level 1 — invariants in working form:
+  - every result the gate reports for an invariant on the commit being checked is `pass`, `fail`,
+    `unchecked` or `error`, and every `unchecked` names a reason on the template's list;
+  - the gate reports a result for every invariant the change reaches and every invariant a critical
+    flow names;
+  - the gate's command exits non-zero when some result it reports is `error` or `fail`, or a run
+    records a failure for no entry, and zero otherwise.
+  Level 2 for the reasons — an agent compares the change with the decision:
+  - complies: a flow's list of parts with no coverage file is `unchecked` (WAY-47); so is a check
+    needing a commit the gate filled in as not existing;
+  - violates: a guard whose call to git fails reports `unchecked`; a human's `pass` stays in force
+    after a change since the assessed commit reaches the entry; a critical flow's test is left out and
+    the command exits zero.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-22
+
+*Rationale:* a check can always call itself unchecked, so `unchecked` holds only for listed reasons,
+and every other missing verdict is `error`. `unchecked` leaves the command at zero, because WAY-60
+and WAY-61 let an invariant enter before its method can run, and WAY-47 makes "unchecked" a state a
+human reads, not one that stops work.
+*Rejected:* `unchecked` making the command fail — every invariant entering without a method would
+fail every change; an open list of reasons — whatever a check says of itself would pass; a third exit
+code — nothing reads it; a human's verdict valid for the entry's version — it outlives every change to
+the product (WAY-08).
+*Consequences:* the template lists the reasons for `unchecked`, and the list grows by a new version of
+this decision: the method reads `TODO`; the method is a path and no human verdict is in force; the
+method's command or file is not declared or produced (WAY-38, WAY-47); the method takes a commit the
+gate filled in as not existing. A human verdict names who, when and the commit assessed, and is in
+force until a change since that commit reaches the entry (WAY-62). A declared command that cannot
+start, or a record off a closed list, is `error`. Runs on a deliberate break, and the run WAY-58 asks
+for, give evidence, not results. Whether a change may turn a checked invariant `unchecked`, whether a
+dropped declared command does too, and which `fail` a listed violation excuses, is left to the
+decision on debt.
