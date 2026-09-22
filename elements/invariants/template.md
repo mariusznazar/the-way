@@ -150,8 +150,11 @@ it, each checked against the new wording and carrying the new fingerprint (WAY-6
   read-only during implementation (WAY-03), when they are so on the commit the task branch left the
   main branch from or on the commit being checked. A path a human assesses against is no invariant
   test (WAY-65).
-- A test counts only when a deliberate break of the invariant makes it fail (WAY-08). The
-  expected value is written out, never computed by the function under test.
+- A test counts only when a deliberate break of the invariant makes it fail (WAY-08).
+- A test takes the input it asserts on and the value it expects written out, wherever the code its
+  invariant is about would otherwise compute either; only the side it compares against comes from
+  the run (WAY-70). Which files a test names, so that a fixture or a builder of its input cannot be
+  changed underneath it, is not settled.
 - An invariant's sentence and a check that cites it come from separate acts by different agents,
   and the break the check is accepted on is written from the sentence by an agent other than the
   check's author, with that check and the files it reads out of its input (WAY-69). This binds the

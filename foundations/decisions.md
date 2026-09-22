@@ -3504,3 +3504,48 @@ pass for a reason the sentence does not name, and WAY-58's report is where that 
 is accepted only once the break makes the check fail (WAY-08). A check joins a file that other
 checks already stand in, so this binds the act of writing a check, not the history of its file
 (WAY-65).
+
+### WAY-70/1 — What may an invariant test compute for itself?
+
+An invariant test takes the input it asserts on and the value it expects written out, wherever the
+code its invariant is about would otherwise compute either; only the side it compares against
+comes from the run.
+
+- **Change:** new decision
+- **Scope:** invariants, gate, decisions, part-map, relation-model
+- **Based on:** none
+- **Relations:** derives from WAY-08@a0bbac21 · related to WAY-03 · related to WAY-10 ·
+  related to WAY-57 · related to WAY-61 · related to WAY-65 · related to WAY-69
+- **Outranks:** none
+- **Verification:** level 2 — an agent compares the change with the decision:
+  - complies: the flow test in `gate/` carries the wording and the fingerprint it expects as
+    literals, so a change to the length of a fingerprint makes it fail;
+  - violates: a test builds the reference it asserts on by calling the code its invariant is
+    about, and expects the message that same call returns; a test reads the value it expects, at
+    run time, from the file its invariant is about.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-22
+
+*Rationale:* where both sides of a comparison come from the same code, a change to that code moves
+them together and the test stays green — it never had teeth, rather than losing them, and nothing
+in its record says so. Measured here: raising the length of a fingerprint from 8 to 10 in
+`relation-model/fingerprint.py` left all eight tests of the decision guard's `Relations` class
+green, `test_stale_fingerprint` among them, and failed only two: the flow test in `gate/`, which
+carries its fingerprint as a literal, and the test that runs the guard on the real log, where
+every reference still carries the fingerprint computed at the old length. Writing the input out as
+well is what the measurement asks for: four of the five calls to `fingerprint()` in that file
+build the input, not the expected value.
+*Rejected:* writing out the expected value alone, as the draft template has it — the same
+measurement shows it misses four cases out of five; naming, on a `data:` line, each file a verdict
+leans on — no cutoff was found: the map guard's own test leans on every file git tracks, so through
+WAY-65 and WAY-03 the whole repository would be read-only during implementation, which is the
+variant WAY-65 rejects.
+*Consequences:* the tests of both guards are rewritten under this rule when they become invariant
+tests; the decision guard's `Relations` class is where it bites. The draft template's sentence on
+the expected value is corrected in place to this wording and gains its citation (WAY-37, WAY-54).
+Which files an invariant test names, so that a fixture or a builder of its input cannot be changed
+underneath it, stays open — `gate/test_wording_reaches_dependants.py` imports its fixture and
+names it nowhere, and it guards it today with an assertion that the fixture still matches a
+literal.
