@@ -20,7 +20,8 @@ not trust.
 ## Identifiers
 
 - Every entry carries a permanent identifier of one or more words in lower case joined by
-  hyphens (`relation-model`), unique across the three kinds.
+  hyphens (`relation-model`), unique across the three kinds and the product's invariant entries
+  (WAY-64).
 - It does not change when the entry's title, its files or its fields change.
 - Splitting or merging gives every result a new identifier; the one left behind goes to the list
   of withdrawn identifiers, names its successors and is never reused (WAY-41).
@@ -52,8 +53,8 @@ A part has no criticality field: its criticality is computed (WAY-46).
 
 - **Criticality:** <a degree from the criticality scale>
 - **Parts:** <identifier> · <identifier> · …
-- **Invariant:** <invariant that has to stay true along the flow> — test: <path of the
-  end-to-end test that names this flow>
+- **Invariant:** <identifier of the invariant that has to stay true along the flow> — test: <path
+  of the end-to-end test that names this flow>
 - **Coverage:** <path of the coverage file that test leaves> | none
 ```
 
@@ -215,8 +216,10 @@ patterns come from the part's *Files*. No overview of the repository is generate
 ## What the checker checks
 
 - Every entry is a part, a critical flow or a surface, and every identifier is unique.
-- Every identifier referred to from the foundation, a test or a generated rule file exists in
-  the map, as an entry or as a withdrawn identifier; no entry uses a withdrawn one.
+- Every part map identifier referred to from the foundation, a test or a generated rule file
+  exists in the map, as an entry or as a withdrawn identifier; no entry uses a withdrawn one.
+- Once the product has invariant entries, every invariant a flow or a failure mode names is an
+  entry of `foundations/invariants.md` (WAY-64).
 - Every file git tracks matches exactly one part's patterns, or stands on the list of files left
   out on purpose; no pattern matches nothing.
 - Every part named by a flow, and every part named in a decision's scope, exists.

@@ -15,9 +15,19 @@ written by hand (WAY-08).
 
 ## Where entries go
 
-- TODO — decision pending: how an invariant entry is identified. Where the entries of a product
-  live (one file or several), what identifies an entry, and what happens to a citing test when an
-  entry is split, merged or withdrawn — the counterpart of WAY-41 for the map.
+- A product's invariant entries stand in one file, `foundations/invariants.md`, which ends with
+  its list of withdrawn identifiers (WAY-64).
+- Every entry carries an identifier of one or more words in lower case joined by hyphens, never
+  `none`, held by no other entry or withdrawn identifier of this file or of the part map (WAY-64).
+- The identifier names what the sentence constrains, never what it demands, so that a raised
+  version leaves it true; where another entry constrains the same thing, it adds the aspect this
+  one guards, as `entry-version-number` and `entry-version-correction` (WAY-64).
+- An identifier the file held on the commit the task branch left the main branch from stays, as
+  an entry or as a withdrawn identifier naming its successors or `none`; one that never reached
+  the main branch may go (WAY-64).
+- Splitting or merging entries held there gives every result a new identifier. Any other change,
+  a change of meaning included, keeps the identifier and moves the version (WAY-57); an entry that
+  takes in a clause of another keeps its identifier, and the other is split (WAY-64).
 - An entry holds only its current wording; earlier wordings are read from git (WAY-57).
 
 ## Entry
@@ -33,6 +43,15 @@ written by hand (WAY-08).
 - **Part:** <parts from the part map> | every
 - **Correction:** none | <fingerprint on the main branch> → <current fingerprint>
 - **Recovered:** none | recovered — searched: <…>; found: <…>
+```
+
+The file ends with its withdrawn identifiers; *Successors* lists identifiers joined by ` · `, or
+reads `none`:
+
+```markdown
+## Withdrawn identifiers
+
+| Identifier | Successors |
 ```
 
 ## Method
@@ -153,7 +172,7 @@ A field stays in this template only while someone or something reads it (WAY-05)
 
 | Field | Who reads it, when | Where its value comes from |
 |---|---|---|
-| identifier / version (heading) | a citing test; the guard, which computes what the version must be | read off |
+| identifier / version (heading) | a citing test; the part map, in a flow and a failure mode's detection; the guard, which computes what the version must be | read off |
 | sentence | the agent checking a change against the invariant; the content fingerprint; the gate, through the method | prose |
 | Method | the gate, which runs a command or hands a path to a human | judgment |
 | Rests on | whoever reviews the invariant when a fact changes | judgment |
@@ -161,10 +180,18 @@ A field stays in this template only while someone or something reads it (WAY-05)
 | Part | the gate, which runs the invariants a change reaches; the agent analysing a task | judgment |
 | Correction | the guard, which lets the version stand; the human who confirms it | read off |
 | Recovered | the human weighing a change to the invariant; the agent recovering a part's decisions | judgment |
+| withdrawn identifiers | a test, a flow or a failure mode naming an identifier that no longer names an entry | read off |
 A field marked *judgment* holds someone's call: no tool reads its value off the product, and no question about a fact settles it. A reader takes such a value as a call, not as a reading (WAY-54). A field marked *prose* carries text rather than a value.
 
 ## What the format guard checks
 
+- The product has exactly one file of invariant entries, `foundations/invariants.md` (WAY-64).
+- Every identifier has the form above, and none is held by another entry or withdrawn identifier
+  of this file or of the part map (WAY-64).
+- Every identifier the file held on the commit the task branch left the main branch from stands in
+  it, and one withdrawn there is withdrawn still (WAY-64).
+- Every successor a withdrawn identifier names is an entry or a withdrawn identifier of this file,
+  or `none` (WAY-64).
 - Every entry states its invariant in one sentence (WAY-56).
 - Every entry carries a version; an entry with no fingerprint on the main branch carries version 1
   and no correction; an entry whose fingerprint differs from there carries a version one higher or

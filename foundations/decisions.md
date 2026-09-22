@@ -1769,13 +1769,13 @@ reused.
 - **Outranks:** none
 - **Verification:** level 1 — invariants in working form:
   - every entry of the map has an identifier made of words, and no two entries share one;
-  - every identifier referred to from the foundation, from a test or from a generated rule file
-    exists in the map, as an entry or as a withdrawal line;
+  - every part map identifier referred to from the foundation, from a test or from a generated
+    rule file exists in the map, as an entry or as a withdrawal line;
   - no entry carries an identifier that a withdrawal line holds.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-17
+- **Approved by:** Mariusz, 2026-09-22
 
 *Rationale:* every reference to a part rests on its identifier — a decision's scope (WAY-21), a
 criticality inherited along a dependency, a rule file generated for an agent — so the identifier
@@ -2691,9 +2691,9 @@ declaration of a correction in the same change. Who counts as the human deciding
 invariant entry, and where the confirmation is recorded, is not settled here: it follows the rule
 WAY-14 leaves to each element and the records WAY-10 and WAY-33 already owe the task cycle; until
 then the guard reports a declaration as "correction declared, confirmation not checked", never as
-agreeing. Until the invariants element has its format guard, nothing runs the invariants above,
-and until a decision says how an invariant entry is identified, as WAY-41 identifies a part, the
-entry on the main branch they compare with is not defined. Once the guard exists, the map gives `invariants` a
+agreeing. Until the invariants element has its format guard, nothing runs the invariants above;
+the entry on the main branch they compare with is the one holding the same identifier there
+(WAY-64). Once the guard exists, the map gives `invariants` a
 dependency on `relation-model`, and none runs the other way. The guard compares an entry with its
 state at the point where the task branch left the main branch, not with the main branch's tip, so
 an entry the branch never touched is never asked to change. Where there is no main branch — as in
@@ -2706,9 +2706,9 @@ above. The test of that flow, `gate/test_wording_reaches_dependants.py`, names i
 invariant with a version, and is brought into line by the change that brings the invariants
 element (WAY-37). After a raise, a citing test's changed citation is accepted like a new test under
 WAY-08. A human inspection carries no version under this decision; an exploratory test run by an
-agent is a test (WAY-08) and cites one like any other. What happens to a citation when an
-invariant entry is split, merged or withdrawn follows from how invariant entries are identified,
-which needs a decision of its own.
+agent is a test (WAY-08) and cites one like any other. A split, a merge or a withdrawal leaves a
+test citing the old identifier with no current version to match, so it fails the gate as above
+(WAY-64).
 
 ### WAY-58/1 — What does an invariant entry record when it was recovered from what a product does?
 
@@ -2796,7 +2796,7 @@ the gate the third; until both exist nothing runs them. Where the method cannot 
 commit — a human inspection, a test that does not build there, a repository with no main branch, as
 this one until the foundation reaches it — the gate reports it as unchecked, never as passing
 (WAY-38), and the human sets the field without that evidence. An entry whose wording changes, by a
-raised version (WAY-57) or by a split, enters again, and its field is set again. A place in *found*
+raised version (WAY-57) or by a split or a merge (WAY-64), enters again, and its field is set again. A place in *found*
 that records a choice is recovered as a decision when a later task touches the part (WAY-28) — the
 change that enters the invariant does not itself count as touching it; a reason given by the human
 who chooses the invariant is recorded as an inherited decision given by that person (WAY-29). Once
@@ -3205,3 +3205,56 @@ start, or a record off a closed list, is `error`. Runs on a deliberate break, an
 for, give evidence, not results. Whether a change may turn a checked invariant `unchecked`, whether a
 dropped declared command does too, and which `fail` a listed violation excuses, is left to the
 decision on debt.
+
+### WAY-64/1 — Where do invariant entries stand, and what identifies one?
+
+Invariant entries stand in one file, `foundations/invariants.md`, each under an identifier made of
+words that no other entry or withdrawal line of that file or the part map holds. An identifier the
+file held on the commit the branch left the main branch from stays, as an entry or as a withdrawal
+line naming its successors or `none`. Splitting or merging entries held there gives every result a
+new identifier, and any other change keeps it.
+
+- **Change:** new decision
+- **Scope:** invariants, part-map
+- **Based on:** none
+- **Relations:** derives from WAY-02@af08ee5d · derives from WAY-56@3213162c ·
+  derives from WAY-57@29edb491 · related to WAY-07 · related to WAY-35 · related to WAY-39 ·
+  related to WAY-41 · related to WAY-45 · related to WAY-46 · related to WAY-62
+- **Outranks:** none
+- **Verification:** level 1 — invariants in working form, kept by the invariants element's format
+  guard, and the last by the map's:
+  - the product has exactly one file of invariant entries, `foundations/invariants.md`;
+  - every invariant identifier has the template's form;
+  - no invariant identifier is held by another entry or withdrawal line of that file or the map;
+  - every identifier that file held on the commit the branch left the main branch from stands in
+    it, and a withdrawal line there is one still;
+  - every successor a withdrawal line names is an entry or a withdrawal line of that file, or
+    `none`;
+  - every invariant identifier the part map names is an entry of that file.
+  Level 2 for what counts as a split — an agent compares the change with the decision:
+  - complies: an entry drops a clause and keeps its identifier at a raised version
+    (WAY-57); an entry that takes in a clause of another keeps its identifier, and the other is
+    split;
+  - violates: an entry drops a clause that reappears as a new entry and keeps its identifier; a
+    changed meaning is withdrawn naming `none` and restated under a new identifier.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-22
+
+*Rationale:* words, as in the map (WAY-41): a citation says what it guards, and a mistyped word
+seldom names another entry, as a number does. Unique across invariants and the map, so
+a reference resolves without naming its element (WAY-39). One file: an entry naming several
+parts or `every` (WAY-62) has no part's file. A version carries a change of meaning (WAY-57), so
+the identifier changes only where one sentence becomes several or several one, and the withdrawal
+line shows a citing test, or a decision that is never edited (WAY-07), where the meaning went. Only
+identifiers that reached the main branch stay; a name dropped before was never cited there.
+*Rejected:* a number with a prefix; one result of a split keeping the identifier — its citing test
+is rechecked against that half, and nothing sends its reader to the other; a file per part;
+identifiers unique only within the file; every identifier ever written kept.
+*Consequences:* the template gives the file, the identifier's form and withdrawal list as the
+map's, and the naming rule: what the sentence constrains, with an aspect where another entry
+constrains the same, never what it demands (WAY-35). The entry on the main branch WAY-57 compares
+with is the one holding the identifier there. The guard reads the map's identifiers, and the map's
+guard the invariants file. A flow and a failure mode name an invariant by its identifier, and a
+flow keeps its test.
