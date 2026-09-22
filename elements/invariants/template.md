@@ -152,6 +152,10 @@ it, each checked against the new wording and carrying the new fingerprint (WAY-6
   test (WAY-65).
 - A test counts only when a deliberate break of the invariant makes it fail (WAY-08). The
   expected value is written out, never computed by the function under test.
+- An invariant's sentence and a check that cites it come from separate acts by different agents,
+  and the break the check is accepted on is written from the sentence by an agent other than the
+  check's author, with that check and the files it reads out of its input (WAY-69). This binds the
+  act of writing a check, not the history of the file it joins.
 
 ## Recovered
 
@@ -185,8 +189,6 @@ commit the branch left from in front of them.
   commit reaches the entry (WAY-63).
 - A declared command that cannot start, or a record holding a value off a closed list, is `error`.
   Runs on a deliberate break, and the run WAY-58 asks for, give evidence, not results (WAY-63).
-- TODO — decision pending: who writes what. Who may write an invariant's sentence, its test and its
-  deliberate break.
 
 ## Quarantine
 

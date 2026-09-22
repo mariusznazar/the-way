@@ -3101,7 +3101,7 @@ which of them make the gate's command fail, is set by WAY-63; how a check cites 
 by WAY-65. When a method counts stays with WAY-08 — the
 deliberate break, and k of n runs for a method that does not give the same verdict every time; k and n
 stand in the method's command, so the verdict one run records for the entry already covers n runs of the
-check. Who writes the break stays with the decision on who writes what. WAY-16's
+check. Who writes the break is set by WAY-69. WAY-16's
 consequence that left the reporting of a method the gate cannot run to the invariants element is
 corrected in place to point to WAY-63.
 
@@ -3459,3 +3459,48 @@ entry; the date of the run — the result would follow the hour;
 deletion once the date passes, as GitLab has it — a clock repaying by weakening the check (WAY-67).
 *Consequences:* `foundations/invariants.md` ends with a list of quarantined invariants beside its
 withdrawn identifiers. A violated invariant may be quarantined, and its position on that list stays.
+
+### WAY-69/1 — Who writes an invariant's sentence, its check and its deliberate break?
+
+An invariant's sentence and a check that cites it come from separate acts by different agents, and
+the deliberate break the check is accepted on is written from the sentence by an agent other than
+the check's author, with that check and the files it reads out of its input.
+
+- **Change:** new decision
+- **Scope:** invariants, decisions, part-map, gate, task-cycle
+- **Based on:** what a model sees of a check, it games: reward hacking "was more than 43× more
+  common on RE-Bench tasks than HCAST tasks, perhaps because on RE-Bench tasks the model was able
+  to see the entire scoring function" (METR, 2025,
+  https://metr.org/blog/2025-06-05-recent-reward-hacking/). With the check in the loop the agent
+  builds for it: "With the oracle in the loop, the score reaches near-perfect, but from a demo
+  holding the tested behavior directly, the library left dead or absent" (Building to the Test,
+  2026, https://arxiv.org/abs/2606.28430).
+- **Relations:** derives from WAY-08@a0bbac21 · related to WAY-03 · related to WAY-05 ·
+  related to WAY-10 · related to WAY-11 · related to WAY-16 · related to WAY-58 ·
+  related to WAY-61 · related to WAY-65
+- **Outranks:** none
+- **Verification:** level 3 — the human deciding the foundation change assesses how the work was
+  handed out, and the record of that decision names who and when.
+- **Review when:** the design of the task cycle begins · check by: 2026-10-02
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-22
+
+*Rationale:* a break chosen by the author of a check is aimed at what the check does, not at what
+the sentence says, so the teeth WAY-08 asks for show only that the check catches itself. The same
+holds for the check: written by whoever wrote the sentence, it inherits the reading that sentence
+was written with, and a sentence two readings wide stays wide. Keeping the acts apart costs the
+order of the work and nothing else, and is the move WAY-03 and WAY-10 already make: take the
+oracle out of the hands of whoever is measured by it, rather than forbid its use.
+*Rejected:* hiding checks from the executor — it costs honest work, and WAY-16 keeps one command
+for an agent, CI and a human; one agent writing all three under a written rule not to aim a break
+at its own check — a gate written in prose is not a gate (WAY-03); a field naming the writers —
+nothing reads it (WAY-05), and the gate already reports the break WAY-58 asks for.
+*Consequences:* the task cycle hands out the sentence, the check and the break as separate
+instructions, and gives the record of a change its home; until then nothing in a change shows
+which agent wrote what, and the human deciding the change is the only reader, so the decision
+moves to level 1 by a field change once that record exists. A break written without the check may
+pass for a reason the sentence does not name, and WAY-58's report is where that shows: the entry
+is accepted only once the break makes the check fail (WAY-08). A check joins a file that other
+checks already stand in, so this binds the act of writing a check, not the history of its file
+(WAY-65).
