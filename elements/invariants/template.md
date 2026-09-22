@@ -130,9 +130,16 @@ the entry they name, as `derives from` does between decisions (WAY-31), waits fo
 
 - An invariant test cites its invariant by identifier and version, and a test that cites a version
   other than the current one fails the gate (WAY-57).
-- TODO — decision pending: how an entry is linked to its test. The form of the citation (in the
-  test file, or `not markable` with a reason where there is no file to mark), which paths are
-  protected, and comparison with the base branch.
+- A check cites each invariant it gives a verdict for, at the check, as a line
+  `invariant: <identifier>/<version>` in the comment form of its file's language; a run records no
+  verdict for an invariant its check does not cite. Several checks citing one invariant in one run
+  pass only when each of them does (WAY-65).
+- A file it reads that cannot carry the line itself, such as a recorded output it compares against,
+  is named by the check's file on a line `data: <path>` (WAY-65).
+- The file holding a citing check, and each file it names on a `data:` line, are invariant tests,
+  read-only during implementation (WAY-03), when they are so on the commit the task branch left the
+  main branch from or on the commit being checked. A path a human assesses against is no invariant
+  test (WAY-65).
 - A test counts only when a deliberate break of the invariant makes it fail (WAY-08). The
   expected value is written out, never computed by the function under test.
 
@@ -209,6 +216,8 @@ A field marked *judgment* holds someone's call: no tool reads its value off the 
   exists; every value a command takes from the gate stands on the list above (WAY-61).
 - Every invariant test cites its invariant with a version, and none cites a version other than the
   current one (WAY-57).
+- Every `invariant:` line in a check names an entry, and every `data:` line names a file that
+  exists (WAY-65).
 - The guard reports how many entries it could not check and why, never agreement (WAY-38).
 
 ## Examples

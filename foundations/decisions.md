@@ -3070,10 +3070,9 @@ does not change between runs; a method may read what another method's run left o
 places it, as WAY-47 does, and the gate then runs the first before the second. A run's own output is what
 the gate reads; the record of the result it keeps in the repository is the one WAY-53 compares. The result
 an entry has is the verdict of the run on the commit being checked; the run WAY-58 asks for on the commit
-the branch left from is evidence for a human, not a result. A check that records verdicts for invariants
-it cites is an invariant test: the format guards of decisions and of the part map, once they record a
-verdict for each invariant they check, are read-only during implementation (WAY-03) and change through
-the panel (WAY-10). Recording a verdict for each invariant, and taking in place of a commit the value
+the branch left from is evidence for a human, not a result. The format guards of decisions and of the part
+map, once they record a verdict for each invariant they check, cite those invariants and are invariant
+tests under WAY-65, read-only during implementation (WAY-03) and changing through the panel (WAY-10). Recording a verdict for each invariant, and taking in place of a commit the value
 that it does not exist, changes the commands of those two guards, which the map declares as surfaces;
 the change travels on the change path of their promise level (WAY-49, WAY-50). Until the guards record
 such verdicts, and until the invariants in working form are rewritten as entries (WAY-37), the gate has
@@ -3096,7 +3095,7 @@ product's method runs the-way's own guard, the path of the pinned the-way in the
 interpreter that runs it, follow from how the product pins the-way (WAY-34), which this decision does
 not settle. How the result of a human assessment is recorded, and which states a result may take and
 which of them make the gate's command fail, is set by WAY-63; how a check cites its invariant,
-to the decision on how an entry is linked to its test. When a method counts stays with WAY-08 — the
+by WAY-65. When a method counts stays with WAY-08 — the
 deliberate break, and k of n runs for a method that does not give the same verdict every time; k and n
 stand in the method's command, so the verdict one run records for the entry already covers n runs of the
 check. Who writes the break stays with the decision on debt, quarantine and who writes what. WAY-16's
@@ -3258,3 +3257,50 @@ constrains the same, never what it demands (WAY-35). The entry on the main branc
 with is the one holding the identifier there. The guard reads the map's identifiers, and the map's
 guard the invariants file. A flow and a failure mode name an invariant by its identifier, and a
 flow keeps its test.
+
+### WAY-65/1 — How does a check cite its invariant, and which files are invariant tests?
+
+A check cites each invariant it gives a verdict for as `invariant: <identifier>/<version>`, and a
+run records no verdict for an invariant its check does not cite. The file holding such a check,
+and each file it reads and names there as `data: <path>`, are invariant tests on the commit the
+branch left the main branch from or on the commit being checked.
+
+- **Change:** new decision
+- **Scope:** invariants, gate, decisions, part-map, relation-model, task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-03@4fa941a4 · derives from WAY-17@ab01c0e5 ·
+  derives from WAY-57@29edb491 · derives from WAY-61@c6bdfd7c · related to WAY-12 ·
+  related to WAY-60 · related to WAY-62 · related to WAY-63
+- **Outranks:** none
+- **Verification:** level 1 — invariants in working form, the first two kept by the invariants
+  element's format guard, the third by the gate:
+  - every `invariant:` line in a check names an entry of `foundations/invariants.md`;
+  - every `data:` line in an invariant test names a file that exists;
+  - the invariant tests of a change include the file of every check that cites an invariant on
+    the commit the branch left the main branch from or on the commit being checked, and every
+    file such a check names as `data:`.
+  Level 2 for where a citation stands — an agent compares the change with the decision:
+  - complies: the decision guard cites `log-entry-has-every-field/1` at the rule checking
+    fields; a test comparing a load with a recorded save names the save on a `data:` line;
+  - violates: a test file cites at its top every invariant its tests serve, though the checks
+    giving the verdicts are its methods.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-22
+
+*Rationale:* WAY-61 already makes a check that records verdicts for invariants it cites an
+invariant test; this decision gives that citation its written form and settles which files carry
+it. One run checks many invariants (WAY-61), so a citation stands at the check that gives the
+verdict, and a check is the smallest unit whose outcome a run records on its own — a test for a
+test runner, a rule's report for a guard. A file cited on either commit counts, so a change that
+drops a citation or deletes the file is still a change to a test. A recorded save a test compares
+a load against is named on `data:` by the test that reads it, the dependent end (WAY-17).
+*Rejected:* the paths a method names as the invariant tests — a method names the data its
+sentence is about, not a file that checks anything; one citation per file — one broken check
+fails all it serves (WAY-61); only files citing on the commit being checked — dropping a citation
+frees the file.
+*Consequences:* the template gives the `invariant:` and `data:` lines, in the comment form of the
+file's language. Several checks citing one invariant in one run pass only when each of them does.
+A path a human assesses against is no invariant test: a change to it reaches its invariant
+(WAY-62), and the human verdict lapses (WAY-63).
