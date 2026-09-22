@@ -112,8 +112,9 @@ the old wording is reported before the change reaches the main branch.
 
 - **Criticality:** high
 - **Parts:** relation-model · decisions · gate
-- **Invariant:** no reference carrying a content fingerprint names a fingerprint other than the
-  current one of the entry it names — test: gate/test_wording_reaches_dependants.py
+- **Invariant:** the decision guard reports every reference carrying a content fingerprint that
+  names a fingerprint other than the current one of the entry it names — test:
+  gate/test_wording_reaches_dependants.py
 - **Coverage:** none
 
 ## entry-format — The form of an entry

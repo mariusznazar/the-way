@@ -688,8 +688,8 @@ separate commands for an agent, CI and a human — three lists to keep in step; 
 check on every change — it leaves no room for checking a change as sharply as what it touches
 calls for (WAY-13).
 *Consequences:* every method of checking is written in a form the gate can read. How the gate
-reports a method it cannot run, such as an inspection by a human, is not yet settled: it depends
-on the template of the invariants element. Which checks a change calls for is set when the task
+reports a method it cannot run, such as an inspection by a human, is not yet settled: it is left
+to the decision on what the gate reports (WAY-61). Which checks a change calls for is set when the task
 cycle is designed. Under WAY-55 the gate is a part of the process of its own and reaches
 the main branch in `gate/`.
 
@@ -2973,3 +2973,135 @@ from which links beside the sentence carry a fingerprint, left to a decision of 
 condition that turns on the date a check runs, or on who may open or change something, is not a
 place in this sense and is not settled here. WAY-59's Rationale and Consequences are corrected in
 place to name this decision.
+
+### WAY-61/1 — How is an invariant's method of checking written, and how is its result read?
+
+An invariant entry's method of checking is either a command the gate runs, which counts as a command
+the product declares (WAY-38), begins with the name of the program it runs and is never a path alone,
+or the path alone of a file a human assesses the product against; a command is the same on every run
+and names no commit, branch or revision itself, and the commits its sentence names are values the gate
+fills in from the template's closed list. A method checks what its sentence is about, as it stands on
+the commit being checked, so a check fed input made up for it is the method of a sentence about that
+check, never of one about the data the check reads. One run of a command may check many invariants,
+and the result of an entry whose method is a command is the verdict that run records, in a format from
+the template's closed list, for the entry's identifier and its current version; a verdict recorded for
+another version is not its result, and a run that records no verdict for the entry never gives it a
+pass.
+
+- **Change:** new decision
+- **Scope:** invariants, gate, decisions, part-map
+- **Based on:** none
+- **Relations:** derives from WAY-08@a0bbac21 · derives from WAY-16@dd3e3cc1 ·
+  derives from WAY-54@39382a33 · derives from WAY-57@29edb491 · derives from WAY-38@be0cb9cb ·
+  derives from WAY-60@ec1b95a7 · related to WAY-03 · related to WAY-05 · related to WAY-07 ·
+  related to WAY-10 · related to WAY-12 · related to WAY-17 · related to WAY-22 · related to WAY-24 ·
+  related to WAY-31 · related to WAY-34 · related to WAY-37 · related to WAY-43 · related to WAY-45 ·
+  related to WAY-47 · related to WAY-48 · related to WAY-49 · related to WAY-50 · related to WAY-53 ·
+  related to WAY-55 · related to WAY-56 · related to WAY-58 · related to WAY-59
+- **Outranks:** none
+- **Verification:** level 1 — invariants in working form:
+  - every invariant entry's method is a command that begins with the name of the program it runs, or
+    the path alone of a file that exists;
+  - every value a method's command takes from the gate stands on the template's list;
+  - for every invariant whose command a run of the gate carried out, the gate's report shows the
+    verdict that run recorded for the entry's identifier and its current version, and no pass for an
+    entry the run recorded no verdict for.
+  Level 2 for what a method checks — an agent compares the change with the decision:
+  - complies: "every entry in the log has every field of the template" names the decision guard
+    run on `foundations/decisions.md`, and one run of the guard records a verdict for each
+    invariant it checks; "a save of another version is rejected whole" names a test that hands the
+    loader a save written in another version, since the sentence is about the loader; an exploratory
+    test names the command that starts an agent on the working product with its steps; whether an
+    image's text alternative describes it, after the accessibility check marked it incomplete
+    (WAY-08), names the path of the checklist a person assesses the page against;
+  - violates: a sentence about the real log names, as its method, the guard's test that feeds the
+    guard logs made up for it; a test that runs the guard on the real log and asserts only its exit
+    code is cited for one of the invariants the guard checks; an entry carries "runs as: script"
+    beside its command; the gate gives every invariant a guard checks the guard's exit code; a
+    command names the main branch where the sentence names the commit the branch left it from.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-22
+
+*Rationale:* WAY-08 asks every invariant to name its method and to take its result from running it,
+and WAY-16 has the gate read the methods from the entries, so a method is something the gate can run
+or hand to a person, never prose. Two forms cover that, and they differ in form: a command, which
+begins with the program it runs, and a path alone. An exploratory test run by an agent on the working
+product is a test (WAY-08) and needs no form of its own, since a command can start the agent with its
+steps; a path is then left to the one check only a person can make. The form is the route, and no kind
+is named beside it, because a kind says nothing the method does not already say and can disagree with
+it (WAY-54). A method checks what its sentence is about: a sentence about the log is checked by reading
+the log, while a test that feeds a guard made-up logs shows that the guard catches a break — what
+WAY-08 asks before a method counts — and is the method of a sentence about the guard. In this
+repository the guards are part of the product, so both kinds of sentence exist here, and each needs its
+own method. One run checks many invariants, as one pass of a format guard checks every rule on its
+template's list and one run of a test suite checks every test, so an exit code tells at most that
+something failed, and not even that where a check was skipped; a run once per entry would repeat an
+expensive run for each invariant it serves, which WAY-47 refuses for coverage. So the run records a
+verdict for each entry, and a result is a record of a run, never a status written by hand (WAY-08,
+WAY-53). A verdict counts only for the entry's current version, so that a raised version fails every
+check still written for the old meaning, as WAY-57 has it for a test. Silence is never a pass, because
+a check that quietly sees nothing passes (WAY-38). A comparison the sentence ties to a fixed commit
+(WAY-60) needs that commit in the command; a command that resolved a branch or a revision itself would
+answer by the hour rather than by the commit, which WAY-60 rules out, so the gate fills the commit in
+from a closed list. Anything else in the command that varied between runs would make the verdict depend
+on who ran it; what the runner's own environment supplies — its interpreter, its network access — is
+left to the decision on what the gate reports.
+*Rejected:* a kind of method named beside it, as `script`, `declared` or `human` — nothing the gate needs
+that the form does not tell, and a second value that can disagree with it (WAY-54); a form of its own for
+an exploratory test run by an agent, as a path to its steps — it looks like the path a human assesses
+against, and telling them apart would take a kind named by the author; the exit code of a run as the
+verdict of every invariant it checks — one broken rule fails them all, and a rule the run skipped passes
+with the rest; one run per entry, with a selector for the entry — a check shared by many invariants runs
+as many times, and a product's own test runner cannot always run a single test; a verdict for whichever
+version a check cites — a check still written for an earlier meaning would pass the raised entry; the
+tests of a check, run on input made up for them, as the method of a sentence about the data that check
+reads — they show the check catches a break, not that the data holds; a method in prose — the gate
+cannot run it (WAY-16).
+*Consequences:* the template of the invariants element gives the two forms of a method; the closed list
+of values the gate fills into a command, which starts with the commit the task branch left the main
+branch from (WAY-57), which is the last commit of the main branch the branch contains (WAY-60), and the
+commit a merge is made onto (WAY-60), and grows by a new version of this decision; and the closed list of
+formats a run's record may take, which starts with the-way's own record of a run and grows the same way,
+together with the adapter that reads a product's format (WAY-38). The format is read off the record, so
+the template's `reads:` goes with `runs as:`. Where a commit on the list does not exist, as the main
+branch in this repository, the gate fills in that it does not exist and the check records its verdict,
+as WAY-57 already says for its own checks; the gate never turns that into a pass. A command that leaves
+its record in a file names that file's path in the command itself, at a place in the working tree that
+does not change between runs; a method may read what another method's run left only where a decision
+places it, as WAY-47 does, and the gate then runs the first before the second. A run's own output is what
+the gate reads; the record of the result it keeps in the repository is the one WAY-53 compares. The result
+an entry has is the verdict of the run on the commit being checked; the run WAY-58 asks for on the commit
+the branch left from is evidence for a human, not a result. A check that records verdicts for invariants
+it cites is an invariant test: the format guards of decisions and of the part map, once they record a
+verdict for each invariant they check, are read-only during implementation (WAY-03) and change through
+the panel (WAY-10). Recording a verdict for each invariant, and taking in place of a commit the value
+that it does not exist, changes the commands of those two guards, which the map declares as surfaces;
+the change travels on the change path of their promise level (WAY-49, WAY-50). Until the guards record
+such verdicts, and until the invariants in working form are rewritten as entries (WAY-37), the gate has
+no verdict to read for any of them. Under WAY-37 every invariant in working form that states what a check
+reports on some input is rewritten as a sentence about that check, and, where the log means the data to
+hold, it gains a sentence of its own about the data. A failure a run records for no entry is reported by
+the gate as such, never dropped; how it counts is left to the decision on what the gate reports. The
+invariant of the critical flow `wording-reaches-dependants` was a sentence about the real log with a test
+on made-up logs as its method; the same change rewrites it in the map, in place (WAY-43), as a sentence
+about what the decision guard reports, and the log's own freshness stays WAY-31's invariant, checked by
+the guard run on the log. The adapter through which the gate reads a product's record of a run accepts
+what the map's external context marks as untrusted, so its files become the trust boundary of the gate
+part (WAY-48) once they exist. A quantity measured while the product runs is checked by a command that
+takes its measurements on the commit being checked, where the population the sentence names is those
+measurements; a population the product meets only in use, such as the loads real players make, fits
+neither form, and such an invariant still enters, as WAY-60 has it, with its method written as
+`TODO — decision pending: the method of a population met only in use`, and the gate reports it as
+unchecked, never as passing (WAY-38), until a new version of this decision gives that method. Where a
+product's method runs the-way's own guard, the path of the pinned the-way in the command, and the
+interpreter that runs it, follow from how the product pins the-way (WAY-34), which this decision does
+not settle. How the result of a human assessment is recorded, and which states a result may take and
+which of them block, is left to the decision on what the gate reports; how a check cites its invariant,
+to the decision on how an entry is linked to its test. When a method counts stays with WAY-08 — the
+deliberate break, and k of n runs for a method that does not give the same verdict every time; k and n
+stand in the method's command, so the verdict one run records for the entry already covers n runs of the
+check. Who writes the break stays with the decision on debt, quarantine and who writes what. WAY-16's
+consequence that left the reporting of a method the gate cannot run to the invariants element is
+corrected in place to point to the decision on what the gate reports.
