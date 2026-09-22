@@ -16,7 +16,7 @@ written by hand (WAY-08).
 ## Where entries go
 
 - A product's invariant entries stand in one file, `foundations/invariants.md`, which ends with
-  its list of withdrawn identifiers (WAY-64).
+  its list of withdrawn identifiers (WAY-64) and its list of quarantined invariants (WAY-68).
 - One derived file lies beside it: the list of violated invariants (WAY-67).
 - Every entry carries an identifier of one or more words in lower case joined by hyphens, never
   `none`, held by no other entry or withdrawn identifier of this file or of the part map (WAY-64).
@@ -53,6 +53,15 @@ reads `none`:
 ## Withdrawn identifiers
 
 | Identifier | Successors |
+```
+
+A quarantined invariant stands on the list that closes the file; *Until* is a date as
+`YYYY-MM-DD`, resting on a judgment of the human who accepts the quarantine (WAY-68):
+
+```markdown
+## Quarantined invariants
+
+| Identifier | Version | Until |
 ```
 
 ## Method
@@ -156,7 +165,9 @@ commit the branch left from in front of them.
 ## Result, report and debt
 
 - An entry's result on the commit being checked is `pass`, `fail`, `unchecked` for a reason on the
-  list below, or `error` where there is no verdict for any other reason (WAY-63).
+  list below, or `error` where there is no verdict for any other reason, or where a quarantine has
+  lapsed (WAY-63, WAY-68). A `fail` recorded for an entry on a commit stays its result there until
+  a foundation change answers it, whatever a later run records (WAY-68).
 - The gate reports a result for at least every entry a change reaches and every entry a critical
   flow names. Its command exits non-zero when some result it reports is `error`, a listed
   entry's result is `pass`, or an unlisted entry's result is `fail`, or a run records a failure for
@@ -167,14 +178,25 @@ commit the branch left from in front of them.
   - the method's command or file is not declared or produced by the product, except a command
     declared on the commit the branch left the main branch from, whose drop makes the result `error`
     (WAY-38, WAY-47, WAY-67);
-  - the method takes a commit the gate filled in as not existing.
+  - the method takes a commit the gate filled in as not existing;
+  - the entry stands on the list of quarantined invariants at its current version, and the
+    committer date of the commit being checked is no later than its *Until* (WAY-68).
 - A human verdict names who, when and the commit assessed, and is in force until a change since that
   commit reaches the entry (WAY-63).
 - A declared command that cannot start, or a record holding a value off a closed list, is `error`.
   Runs on a deliberate break, and the run WAY-58 asks for, give evidence, not results (WAY-63).
-- TODO — decision pending: quarantine. How a flaky test is handled.
 - TODO — decision pending: who writes what. Who may write an invariant's sentence, its test and its
   deliberate break.
+
+## Quarantine
+
+- An invariant test that records both `pass` and `fail` for one commit is answered by a foundation
+  change; a quarantine is the last answer, and never covers an invariant a critical flow names
+  (WAY-68).
+- A quarantine position names the entry's identifier, its current version and an end date, and
+  stands on the list that closes the file (WAY-68).
+- A rerun set anywhere but the method's command is no change of a test's form, so a human decides
+  it (WAY-10).
 
 ## Violated invariants
 
@@ -206,6 +228,7 @@ A field stays in this template only while someone or something reads it (WAY-05)
 | Correction | the guard, which lets the version stand; the human who confirms it | read off |
 | Recovered | the human weighing a change to the invariant; the agent recovering a part's decisions | judgment |
 | withdrawn identifiers | a test, a flow or a failure mode naming an identifier that no longer names an entry | read off |
+| quarantined invariants | the gate, which reports the entry `unchecked` or `error`; the format guard | judgment for the date; read off for the version |
 A field marked *judgment* holds someone's call: no tool reads its value off the product, and no question about a fact settles it. A reader takes such a value as a call, not as a reading (WAY-54). A field marked *prose* carries text rather than a value.
 
 ## What the format guard checks
@@ -240,6 +263,9 @@ A field marked *judgment* holds someone's call: no tool reads its value off the 
   exists (WAY-65).
 - The list of violated invariants is a subset of the list on the commit the branch left the main
   branch from; every position names an entry at its current version and no other (WAY-67).
+- Every quarantine position names an entry at its current version and an end date, and none names
+  an invariant a critical flow names; an end date earlier than the day the guard runs gives a
+  warning, never a result (WAY-68).
 - The guard reports how many entries it could not check and why, never agreement (WAY-38).
 
 ## Examples

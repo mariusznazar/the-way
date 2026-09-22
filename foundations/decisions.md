@@ -405,8 +405,9 @@ A change to an invariant test or to the foundation is assessed by a panel of thr
 assess it independently, each from a different, named perspective and seeing only the diff and
 the foundation, never the author's reasoning, and the third, on a different model where one is
 available, settles between them. The panel decides changes of an invariant test's form — how the
-test reaches the product: selectors, test data, waiting. Every other change the panel prepares
-with the diff, its effects and a recommendation, and a human decides.
+test reaches the product: selectors, test data, waiting, never a rerun set outside the method's
+command. Every other change the panel prepares with the diff, its effects and a recommendation, and
+a human decides.
 
 - **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, task-cycle
@@ -426,7 +427,7 @@ with the diff, its effects and a recommendation, and a human decides.
 - **Review when:** the design of the task cycle begins · check by: 2026-10-02
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-15
+- **Approved by:** Mariusz, 2026-09-22
 
 *Rationale:* the problem is a single executor that checks itself. Agents on the same model with
 the same input share its blind spots, so independence comes from a different perspective, from
@@ -2611,7 +2612,7 @@ flagged, as WAY-02 has it.
 - **Change:** new decision
 - **Scope:** invariants, relation-model, gate, task-cycle, part-map
 - **Based on:** none
-- **Relations:** derives from WAY-03@4fa941a4 · derives from WAY-10@cece9468 ·
+- **Relations:** derives from WAY-03@4fa941a4 · derives from WAY-10@a5941d52 ·
   narrows WAY-02@af08ee5d · related to WAY-07 · related to WAY-08 · related to WAY-14 ·
   related to WAY-17 · related to WAY-19 · related to WAY-20 · related to WAY-22 ·
   related to WAY-31 · related to WAY-39 · related to WAY-43 · related to WAY-45 ·
@@ -2969,7 +2970,8 @@ says. Which links beside an invariant's sentence carry a fingerprint is set
 by WAY-66; how a change to the place holding a condition reaches the invariant is set by WAY-61 and
 WAY-62. A
 condition that turns on the date a check runs, or on who may open or change something, is not a
-place in this sense and is not settled here. WAY-59's Rationale and Consequences are corrected in
+place in this sense and is not settled here; WAY-68 ties the end of a quarantine to the committer
+date of the commit being checked. WAY-59's Rationale and Consequences are corrected in
 place to name this decision.
 
 ### WAY-61/1 — How is an invariant's method of checking written, and how is its result read?
@@ -3201,11 +3203,14 @@ change to the product (WAY-08).
 of this decision: the method reads `TODO`; the method is a path and no human verdict is in force;
 the method's command or file is not declared or produced, except a command declared on the commit
 the branch left the main branch from, whose drop makes the result `error` (WAY-38, WAY-47, WAY-67);
-the method takes a commit the gate filled in as not existing. A human verdict names who, when and
-the commit assessed, and is in force until a change since that commit reaches the entry (WAY-62). A
-declared command that cannot start, or a record off a closed list, is `error`. Runs on a deliberate
-break, and the run WAY-58 asks for, give evidence, not results. Which `fail` a listed violation
-excuses, and when a checked invariant may turn `unchecked`, is set by WAY-67.
+the method takes a commit the gate filled in as not existing; the entry stands on the list of
+quarantined invariants at its current version, and the committer date of the commit being checked
+is no later than the quarantine's end date, a later one making the result `error` (WAY-68). A human
+verdict names who, when and the commit assessed, and is in force until a change since that commit
+reaches the entry (WAY-62). A declared command that cannot start, or a record off a closed list, is
+`error`. Runs on a deliberate break, and the run WAY-58 asks for, give evidence, not results. Which
+`fail` a listed violation excuses, and when a checked invariant may turn `unchecked`, is set by
+WAY-67 and WAY-68.
 
 ### WAY-64/1 — Where do invariant entries stand, and what identifies one?
 
@@ -3400,3 +3405,57 @@ merges (WAY-01, WAY-51). Invariants a product fails at entry go onto the list wi
 change. An invariant that enters without a method is `unchecked` from its first commit, not debt
 (WAY-60, WAY-63). WAY-63's closed list and exit rule, WAY-53's comparison commit, and the pointers in
 WAY-58 and WAY-61 that left this to a decision on debt are corrected in place.
+
+### WAY-68/1 — What happens to an invariant test that gives different verdicts on one commit?
+
+An invariant test that records both `pass` and `fail` for one commit is answered by a foundation
+change, quarantine last and never for an invariant a critical flow names. A quarantine stands in
+`foundations/invariants.md`, names the entry's current version and an end date, and its
+result is `unchecked` until the checked commit's committer date passes that date, then `error`.
+Until it is answered, a recorded `fail` stays the entry's result on that commit, whatever a later
+run records.
+
+- **Change:** new decision
+- **Scope:** invariants, gate, task-cycle
+- **Based on:** a quarantine works with a clock: "Fix immediately … Quarantine: If investigation or
+  fix will take longer than the required response time" (GitLab, Quarantine process,
+  https://handbook.gitlab.com/handbook/engineering/testing/quarantine-process/). A rerun hides what
+  it absorbs: it "encourages developers to ignore flakiness in their own tests" (Micco, Google
+  Testing Blog, 2016, https://testing.googleblog.com/2016/05/flaky-tests-at-google-and-how-we.html).
+- **Relations:** derives from WAY-08@a0bbac21 · derives from WAY-61@c6bdfd7c ·
+  derives from WAY-63@d05ff1f0 · related to WAY-03 · related to WAY-10 · related to WAY-24 ·
+  related to WAY-45 · related to WAY-60 · related to WAY-64 · related to WAY-67
+- **Outranks:** none
+- **Verification:** level 1 — invariants in working form, the first two kept by the element's
+  format guard, the third by the gate:
+  - every quarantine position names an entry of `foundations/invariants.md` at its current version
+    and an end date;
+  - no quarantine position names an invariant a critical flow names;
+  - the gate reports a quarantined entry `unchecked` while the checked commit's committer date is
+    no later than its end date, and `error` after.
+  Level 2 — an agent compares the change with the decision:
+  - complies: a save-load test fails and then passes on one commit, and the panel accepts a wait
+    for the load-finished signal instead of a fixed interval;
+  - violates: a failing test is called flaky with no `pass` recorded on that commit; a fixed-wait
+    failure is quarantined instead of fixed as a change of form; a green rerun is taken as the
+    commit's result while the `fail` it follows stands unanswered.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-22
+
+*Rationale:* a test that flips stops every task it reaches, and the implementer may not touch
+it (WAY-03), so "it is just flaky" becomes the way around the gate unless the claim needs evidence:
+a pass and a fail on one commit. A later green run
+does not undo the one recorded, or rerunning until green becomes the answer. `unchecked`, and
+`error` once the date passes, are set as WAY-63's other reasons are, not the hand-written verdict
+WAY-08 forbids. A critical flow's test runs on every change (WAY-45), and a quarantine
+would silence it. Moving the end date is a foundation change a human decides (WAY-10), not the
+silent extension WAY-24 rejects.
+*Rejected:* a position on the list of violated invariants — that list settles whether the product
+meets an invariant, not whether a check is trusted (WAY-67); a quarantine field in every entry —
+every entry pays for a rare case; a count of passes in a row to enter — k of n (WAY-08) decides
+entry; the date of the run — the result would follow the hour;
+deletion once the date passes, as GitLab has it — a clock repaying by weakening the check (WAY-67).
+*Consequences:* `foundations/invariants.md` ends with a list of quarantined invariants beside its
+withdrawn identifiers. A violated invariant may be quarantined, and its position on that list stays.
