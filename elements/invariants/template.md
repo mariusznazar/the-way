@@ -27,8 +27,7 @@ written by hand (WAY-08).
 
 <one sentence: the invariant>
 
-- **Method:** <handle — a command or a path, never prose> · reads: <how the result is read> ·
-  runs as: script | declared | human
+- **Method:** `<program> <arguments>` | <path of a file a human assesses the product against>
 - **Rests on:** <environment facts> | none
 - **Derives from:** <decision> | none
 - **Part:** TODO — decision pending: what an invariant entry names in the part map
@@ -36,9 +35,27 @@ written by hand (WAY-08).
 - **Recovered:** none | recovered — searched: <…>; found: <…>
 ```
 
-TODO — decision pending: how an invariant is checked. The *Method* line above follows the settled
-proposal (handle, reading, way of running) and waits for its decision; so does an optional kind of
-evidence, and the place of k and n for a test that does not give the same result every time.
+## Method
+
+- A method is a command the gate runs, which begins with the name of the program it runs and is
+  never a path alone, or the path alone of a file a human assesses the product against. The form is
+  the route; no kind of method is written beside it (WAY-61).
+- A command is the same on every run and names no commit, branch or revision itself. A commit the
+  sentence names is a value the gate fills in, from this list: `{fork-point}` — the commit the task
+  branch left the main branch from, which is the last commit of the main branch the branch contains;
+  `{merge-onto}` — the commit a merge is made onto. Where the commit does not exist, the gate fills
+  in that it does not exist (WAY-61).
+- A method checks what its sentence is about, as it stands on the commit being checked: a check fed
+  input made up for it is the method of a sentence about that check, not about the data it reads
+  (WAY-61).
+- k and n, for a method that does not give the same verdict every time, stand in the command
+  (WAY-08, WAY-61).
+- One run may check many invariants. An entry's result is the verdict the run records for its
+  identifier and current version, in a format from this list: the-way's own record of a run —
+  TODO: its form. A run that records no verdict for the entry never gives it a pass (WAY-61).
+- A quantity met only in use has no form yet: its method reads
+  `TODO — decision pending: the method of a population met only in use`, and it is reported as
+  unchecked (WAY-61).
 
 TODO — decision pending: which links beside the sentence carry a content fingerprint. *Rests on*
 and *Derives from* are written today as bare identifiers; whether they carry the fingerprint of
@@ -113,7 +130,7 @@ A field stays in this template only while someone or something reads it (WAY-05)
 |---|---|---|
 | identifier / version (heading) | a citing test; the guard, which computes what the version must be | read off |
 | sentence | the agent checking a change against the invariant; the content fingerprint; the gate, through the method | prose |
-| Method | the gate, which runs it | judgment |
+| Method | the gate, which runs a command or hands a path to a human | judgment |
 | Rests on | whoever reviews the invariant when a fact changes | judgment |
 | Derives from | whoever changes the decision; the check that a decision is verified through its invariants (WAY-12) | judgment |
 | Part | TODO — decision pending | — |
@@ -135,6 +152,8 @@ A field marked *judgment* holds someone's call: no tool reads its value off the 
 - No sentence, outside quoted text, names the main branch after "than", "subset of", "differs
   from", "equals", "compared with" or "against" without naming a commit of it (WAY-60).
 - No sentence gives a bound with a wave.
+- Every method is a command that begins with a program's name, or the path alone of a file that
+  exists; every value a command takes from the gate stands on the list above (WAY-61).
 - Every invariant test cites its invariant with a version, and none cites a version other than the
   current one (WAY-57).
 - The guard reports how many entries it could not check and why, never agreement (WAY-38).
