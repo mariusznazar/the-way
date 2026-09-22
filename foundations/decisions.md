@@ -2849,34 +2849,34 @@ against the new wording (WAY-57). The fingerprint moves on any change other than
 (WAY-39), so it is the signal that asks whether the invariant now demands something else, and it
 has to ask only where that can have happened. What an invariant demands is its sentence (WAY-22,
 WAY-56). The rest of the entry says something else: a method says how the sentence is checked, and
-a new test for the same meaning is accepted under WAY-08, with the panel, without touching the
-tests that cite the entry; a link names what the invariant rests on or comes from, and is often
-written later, as a decision found behind a recovered invariant is (WAY-58); a version and a
-declaration of a correction are worked out from the fingerprint and cannot sit inside what they are
-worked out from; the recovered field records how the entry was found. A raise caused by any of them
-would fail every citing test for a change that asks nothing of the tests, and a flag raised for
-nothing is cleared without reading. The part map draws the same line (WAY-42): its entry binds by
-one sentence, and the fields that change for other reasons stay outside. This decision does not say
-what the sentence has to name, and that gap has a cost wherever a condition that decides whether a
-commit makes the invariant true stands outside the sentence, since a change to it raises no
-version, and whether it flags anything turns on whether the invariant's link to that entry carries
-a fingerprint, which WAY-31 leaves to the invariants element. Three kinds of such place can be
-named: a comparison with "the main branch", which gives different answers against its tip and
-against the commit a branch left it from; a threshold whose statistic or population sits in the
-method; and a list or a definition held elsewhere — in another entry, in a template, in a section
-of the map — and reached through a word of the sentence, as the directories of the process are held
-in WAY-09, whose list WAY-55 corrected in place. Each is left to the decision on what the sentence
-names.
+a new test for the same meaning is accepted under WAY-08, with the panel and the human WAY-10
+names, without touching the tests that cite the entry; a link names what the invariant rests on or
+comes from, and is often written later, as a decision found behind a recovered invariant is
+(WAY-58); a version and a declaration of a correction are worked out from the fingerprint and
+cannot sit inside what they are worked out from; the recovered field records how the entry was
+found. A raise caused by any of them would fail every citing test for a change that asks nothing of
+the tests, and a flag raised for nothing is cleared without reading. The part map draws the same
+line (WAY-42): its entry binds by one sentence, and the fields that change for other reasons stay
+outside. This decision does not say what the sentence has to name, and that gap has a cost wherever
+a condition that decides whether a commit makes the invariant true stands outside the sentence,
+since a change to it raises no version, and whether it flags anything turns on whether the
+invariant's link to that entry carries a fingerprint, which WAY-31 leaves to the invariants
+element. Three kinds of such place can be named: a comparison with "the main branch", which gives
+different answers against its tip and against the commit a branch left it from; a threshold whose
+statistic or population sits in the method; and a list or a definition held elsewhere — in another
+entry, in a template, in a section of the map — and reached through a word of the sentence, as the
+directories of the process are held in WAY-09, whose list WAY-55 corrected in place. WAY-60 settles
+where each may stand; how a change to the place holding the third reaches the invariant is left to
+the decision on which links carry a fingerprint.
 *Rejected:* the whole entry as the binding part — a new method, a link written later or a corrected
 field would raise the version and fail every citing test for nothing; the method of checking inside
 the binding part — a new test for the same meaning would fail every test citing the entry; a
 fingerprint per field — every reference would have to say which field it relies on.
-*Consequences:* the template of the invariants element marks the sentence as the binding part. What
-an invariant's sentence has to name, and how a condition held elsewhere reaches it, is left to a
-decision of its own, together with the three cases above; the third of them is bound up with the
-question WAY-31 leaves to the invariants element, of which links between entries carry a
-fingerprint. The rewrite of the invariants in working form that WAY-56 sets may need another pass
-once that decision is settled. The sentences of WAY-57 and WAY-58 that placed the version, the
+*Consequences:* the template of the invariants element marks the sentence as the binding part. Where
+a condition that decides an invariant may stand is set by WAY-60; which links between entries
+carry a fingerprint, the question WAY-31 leaves to the invariants element, is left to a decision of
+its own. The rewrite of the invariants in working form that WAY-56 sets may need another pass once
+both are applied. The sentences of WAY-57 and WAY-58 that placed the version, the
 declaration of a correction and the recovered field outside the fingerprint answered this question
 in passing and lose those clauses (WAY-19); with them go WAY-57's consequence saying it answered
 part of the question, the half of another that waited for it, and WAY-58's level 1 invariant on the
@@ -2885,3 +2885,91 @@ decision named later raises the version — it does not. Both are corrected in p
 again (WAY-07). WAY-56's consequence that left this question open is corrected in place, with its
 fingerprint unchanged. Until the invariants element has its format guard, nothing runs the
 invariants above.
+
+### WAY-60/1 — Where may a condition that decides an invariant stand?
+
+A condition that decides whether a commit makes an invariant true stands in its sentence, or outside
+it only where changing it takes a change of the foundation that a human decides (WAY-10), or where a
+decision of the product's log, or of the-way at the commit the product pins, places it; where it has
+no such place, it stands in the sentence. Two conditions always stand in the sentence: a sentence
+whose truth turns on what a branch or a merge changes names a commit of the main branch fixed by the
+commit being checked rather than by the time of the check — such as the last commit of the main
+branch that the branch contains, or the commit a merge is made onto — and a sentence that bounds or
+equates a quantity measured while the product runs names its bound or tolerance, the statistic and
+the population it is computed over.
+
+- **Change:** new decision
+- **Scope:** invariants, decisions, part-map
+- **Based on:** none
+- **Relations:** derives from WAY-59@6ceadf4e · derives from WAY-22@52c514ca ·
+  derives from WAY-56@3213162c · related to WAY-05 · related to WAY-07 · related to WAY-10 ·
+  related to WAY-12 · related to WAY-23 · related to WAY-31 · related to WAY-34 ·
+  related to WAY-38 · related to WAY-51 · related to WAY-53 · related to WAY-57 ·
+  related to WAY-58
+- **Outranks:** none
+- **Verification:** level 1 — invariant in working form: no invariant sentence, outside quoted
+  text, names the main branch after "than", "subset of", "differs from", "equals", "compared with"
+  or "against" without naming a commit of it. Level 2 for the rest — an agent compares the change
+  with the decision:
+  - complies: "every entry in the log has every field of the template", the template being the
+    written form WAY-05 ties to a decision; "every value skipped in that comparison is declared in
+    the file that carries it", since WAY-53 places that declaration in the file; "the product has
+    exactly one part map file, and it lies in `foundations/`", which bounds a count, not a measured
+    quantity; "a merge to the main branch adds at most one version of each number", judged against
+    the commit the merge is made onto;
+  - violates: "every request is answered within the limit set in `config.py`" — a limit a change to
+    the code can raise, with nothing deciding it; "the branch adds no dependency the main branch does
+    not have", which names no fixed commit; the game's requirement "A player returning after any
+    absence sees their world's current state within ~2 seconds of perceived wait, with continuous
+    visible feedback if it takes longer." entered as it stands — the bound carries a tilde, and
+    nothing says which statistic of which measured wait it bounds.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-22
+
+*Rationale:* an invariant's version exists so that the tests citing it learn that its meaning has
+moved (WAY-57), and the fingerprint that drives the version covers the sentence alone (WAY-59), so a
+condition the sentence does not state moves without either of them. Whether that is safe turns on
+who can move it. A condition in the foundation moves only by a change a human decides (WAY-10). A
+condition in a place an ordinary step of implementation changes moves with nobody deciding anything
+about the invariant, and a limit kept there can be loosened by the very change the invariant exists
+to stop — unless a decision placed it there, as WAY-38 does for what a product's declared commands
+report and WAY-53 for the values a derived file declares; the-way's decisions bind a product without
+standing in its log (WAY-23), so either log may place it. The rule names the test, not the places
+that pass it: the places are many and new ones arrive with every element, while the test stays the
+same. The sentence itself is always a lawful place, so a condition whose home does not exist yet
+stands there, and the invariant enters like any other whose method cannot run yet — reported as
+unchecked, never as agreement (WAY-38) — rather than waiting where nothing counts it. Two conditions
+stand in the sentence because a change to either moves the meaning as surely as a change to the
+sentence, while a change held elsewhere raises no version. The main branch as it stands when the
+check runs would make the sentence true or false by the hour rather than by the commit, which WAY-22
+rules out; the last commit of the main branch a branch contains, and the parent a merge is made
+onto, are fixed by the commit being checked. A quantity measured while the product runs means
+nothing without the statistic and the population behind its bound; a count of entries or files is
+exact and needs neither.
+*Rejected:* every condition stated in the sentence — tried on the invariants written in working form
+in this log, it gave two answers wherever a measure met a definition or a method, and the sentences
+grew too long to read; a closed list of the places a condition may stand — each try left out places
+the log already uses, such as a decision's binding sentences, a section of the map or a script a
+decision names; every place outside the foundation forbidden — WAY-38 and WAY-53 place conditions in
+the product on purpose; an invariant whose condition has no home yet kept in working form until one
+exists — nothing counts it while it waits, the gap WAY-51 rejects for a part left "not checked yet",
+and an invariant with no decision behind it (WAY-22, WAY-58) has no decision to wait in; the main
+branch as it stands when the check runs — its answer changes with the time of the check; the bound,
+the statistic and the population asked of every number — a count such as "at most one" has no
+population.
+*Consequences:* the template of the invariants element states these rules for the one sentence
+(WAY-56), and its format guard checks the level 1 invariant above once it exists. The invariants
+written in working form in this log are rewritten under WAY-37 by these rules. WAY-57 already chose
+the commit where the task branch left the main branch, and its invariants carry that choice into
+their sentences. Every other decision whose invariants turn on what a branch, a merge or a merge
+request changes without naming a fixed commit — among them WAY-03, WAY-07, WAY-10, WAY-13, WAY-21,
+WAY-33, WAY-45, WAY-48, WAY-51, WAY-53 and WAY-58, and the part map's template and guard — chooses
+one by a correction or a new version (WAY-07) before those invariants are written; the choice is
+never made in the invariant. A requirement taken from a product's own documents enters as WAY-58
+says. How a change to the place holding a condition reaches the invariants resting on it follows
+from which links beside the sentence carry a fingerprint, left to a decision of its own (WAY-31). A
+condition that turns on the date a check runs, or on who may open or change something, is not a
+place in this sense and is not settled here. WAY-59's Rationale and Consequences are corrected in
+place to name this decision.
