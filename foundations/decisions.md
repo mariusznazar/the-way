@@ -343,31 +343,33 @@ can settle stays in the foundation, checked by a person.
 ### WAY-09/1 — What may enter the process repository?
 
 On the main branch, this repository holds `foundations/` with the entries of the-way itself, a
-directory for each part of the process — `elements/<element>/` for each foundation element,
-`relation-model/`, `gate/` and `task-cycle/` — and a `README.md` that describes the
-repository. A
-directory reaches the main branch only once a tool keeps its form, and what it must hold is set
-by its part: an element brings its template and rules, examples, a skill that writes its entries
-and a script that checks them; the relation model brings the script that computes fingerprints
-and flags references; the entries in `foundations/` are checked by the scripts of their elements.
-The `README.md` is the only file that no tool keeps.
+directory for each part of the process other than `repository` — `elements/<element>/` for each
+foundation element, `relation-model/`, `gate/` and `task-cycle/` — the files that serve the whole
+repository, which its part map gives to the `repository` part (WAY-44), and a `README.md` that
+describes the repository. A directory reaches the main branch only once a tool keeps its form, and
+what it must hold is set by its part: an element brings its template and rules, examples, a skill
+that writes its entries and a script that checks them; the relation model brings the script that
+computes fingerprints and flags references; the entries in `foundations/` are checked by the
+scripts of their elements.
 
 - **Change:** new decision
-- **Scope:** decisions, invariants, glossary, part-map, environment-facts, relation-model,
-  task-cycle
+- **Scope:** decisions, invariants, glossary, part-map, environment-facts, relation-model, gate,
+  repository, task-cycle
 - **Based on:** none
-- **Relations:** related to WAY-02 · related to WAY-04 · related to WAY-06 · related to WAY-21
+- **Relations:** related to WAY-02 · related to WAY-04 · related to WAY-06 · related to WAY-21 ·
+  related to WAY-44 · related to WAY-55
 - **Outranks:** none
 - **Verification:** level 1 — invariants in working form:
   - every file on the main branch lies in `foundations/`, in the directory of a part of the
-    process, or is the `README.md` at the root;
+    process, is a file the part map gives to the `repository` part, or is the `README.md` at the
+    root;
   - every element directory on the main branch holds a template, examples, a skill and a script
     that checks its entries;
   - `relation-model/` on the main branch holds the script that computes fingerprints.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-20
+- **Approved by:** Mariusz, 2026-09-22
 
 *Rationale:* the repository shows what the process looks like when it works, and an artefact
 brought in on the side turns it into a store of material from the first day. Directories follow
@@ -377,19 +379,24 @@ each tool has a reason only where it has work: a skill writes entries, so it bel
 element; the fingerprint script only reads, so the relation model has no skill. The skill writes
 an entry in the right form when someone runs it; the script catches a form broken by hand, by
 another agent or by a merge. Until a part has its tools, it is a change in progress, and under
-WAY-06 such a change lives on a branch. The `README.md` binds nothing and only tells a reader
-what the repository is.
+WAY-06 such a change lives on a branch. The files that serve the whole repository belong to no
+one part of the process, and WAY-44 gives them a part of their own; they stay where the tool that
+reads them looks for them, and the map, not this list, names which they are. The `README.md` binds
+nothing and only tells a reader what the repository is.
 *Rejected:* material merged to the main branch as soon as it is written; an element whose only
 tool is a skill — the form then holds only while someone remembers to run it; one `tools/`
 directory for everything shared — it matches no part of the process and grows into a store; the
 same set of template, skill and script required of every directory — a script that only reads has
-no entries for a skill to write.
+no entries for a skill to write; the files that serve the whole repository on the map's list of
+files left out on purpose, beside the `README.md` — they would lose their part and the failure
+mode recorded at it, although a wrong line in `.gitattributes` turns whole files over.
 *Consequences:* element descriptions in `elements/` reach the main branch as templates with their
 skills and scripts, not as descriptions. The script for references and fingerprints (WAY-02,
 WAY-31) lives in `relation-model/`. The quality gate is a part of the process of its own, with a
 directory of its own (WAY-55), and what `task-cycle/` must hold is set when the task cycle is
-designed. When this process gets its own part map, its rule for assigning files
-follows these directories.
+designed. The map's rule for assigning files follows these directories, and a file that serves the
+whole repository added later — the CI configuration, once the gate runs in CI — enters by a change
+to the `repository` part of the map, not by a new version of this decision.
 
 ### WAY-10/1 — Who assesses a change to an invariant test or to the foundation?
 

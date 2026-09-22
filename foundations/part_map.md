@@ -162,7 +162,7 @@ The command that runs the guard of a part map keeps its name, its arguments and 
 
 | File | Why |
 |---|---|
-| README.md | the only file of this repository that no tool keeps (WAY-09) |
+| README.md | it binds nothing and only tells a reader what the repository is, so no part answers for it (WAY-09) |
 
 ## Withdrawn identifiers
 
