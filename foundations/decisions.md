@@ -2582,19 +2582,17 @@ wherever a commit can break one part of it while the rest holds — a sentence a
 the log would fall apart into one entry per entry.
 *Consequences:* the template of the invariants element gives an entry its one sentence, and the
 element's format guard counts sentences as the decisions guard does, which catches length only:
-two rules joined in one sentence pass it and are left to review. Two questions stay open, each
-for a decision of its own: what in an invariant entry binds, so that its fingerprint can be
-computed (WAY-02), as WAY-42 answers it for the part map; and what an invariant entry names in the
-part map, so that a change reaches the invariants it can break, reasoned against the rule for
-files that collect entries about many parts (WAY-44). The invariants written in working form in
-this log are rewritten under WAY-37 once the template exists, and may need a second pass when the
-second of those questions is settled.
+two rules joined in one sentence pass it and are left to review. What in an invariant entry
+binds is set by WAY-59. What an invariant entry names in the part map, so that a change reaches the
+invariants it can break, stays open for a decision of its own, reasoned against the rule for files
+that collect entries about many parts (WAY-44). The invariants written in working form in this log
+are rewritten under WAY-37 once the template exists, and may need a second pass when that question
+is settled.
 
 ### WAY-57/1 — Is an invariant entry versioned?
 
-An invariant entry carries a version number, starting at 1, and holds only its current wording;
-neither the version nor a declaration of a correction lies inside its content fingerprint, and
-earlier wordings are read from git. When the entry's content fingerprint differs from its
+An invariant entry carries a version number, starting at 1, and holds only its current wording,
+and earlier wordings are read from git. When the entry's content fingerprint differs from its
 fingerprint on the main branch, its version is one higher than there, unless the entry declares a
 correction naming both fingerprints and the human who decides the change under WAY-10 confirms,
 with both wordings in front of them, that the meaning is unchanged; when the fingerprint does not
@@ -2681,19 +2679,16 @@ of the change — it would rest on a record of the change that this process has 
 (WAY-10, WAY-33); a test allowed to cite an earlier version, as a reference to a decision version
 may — a test never deliberately checks what the product no longer promises.
 *Consequences:* the template of the invariants element gives an entry its version, the form of a
-citation with a version and the form of a declaration of a correction. This decision answers part
-of WAY-56's first open question in passing — the version and the declaration lie outside an
-invariant entry's fingerprint; what else in the entry binds stays open for that decision. A
-correction keeps every test's citation, and does not stop a test's form from changing in the same
+citation with a version and the form of a declaration of a correction. What in an invariant entry
+binds, and so what the fingerprint covers, is set by WAY-59. A correction keeps every test's citation, and does not stop a test's form from changing in the same
 change, as WAY-10 allows; a change to the way fingerprints are computed (WAY-39) removes every
 declaration of a correction in the same change. Who counts as the human deciding the change for an
 invariant entry, and where the confirmation is recorded, is not settled here: it follows the rule
 WAY-14 leaves to each element and the records WAY-10 and WAY-33 already owe the task cycle; until
 then the guard reports a declaration as "correction declared, confirmation not checked", never as
 agreeing. Until the invariants element has its format guard, nothing runs the invariants above,
-and until decisions say what in an invariant entry binds (WAY-56) and how such an entry is
-identified, as WAY-41 identifies a part, neither the fingerprint they compare nor the entry on the
-main branch they compare it with is defined. Once the guard exists, the map gives `invariants` a
+and until a decision says how an invariant entry is identified, as WAY-41 identifies a part, the
+entry on the main branch they compare with is not defined. Once the guard exists, the map gives `invariants` a
 dependency on `relation-model`, and none runs the other way. The guard compares an entry with its
 state at the point where the task branch left the main branch, not with the main branch's tip, so
 an entry the branch never touched is never asked to change. Where there is no main branch — as in
@@ -2715,7 +2710,7 @@ which needs a decision of its own.
 An invariant entry that a human chose from what the product already did before the task writing it
 began, as WAY-28 describes, and that names no decision entry of the product's log it derives from,
 carries a field reading `recovered — searched: <…>; found: <…>`; every other invariant entry holds
-`none` there, and the field lies outside the entry's content fingerprint. *found* names the place of
+`none` there. *found* names the place of
 each source the search found that gives a reason for keeping the behaviour or calls for a different
 one, or reads `nothing`; a place that only cites another is followed to the place it cites, marked
 when that source is superseded, and *found* never states a reason itself, nor one an agent infers.
@@ -2737,7 +2732,6 @@ human deciding the change sets the field with that report in front of them.
   - every invariant entry carries the field, holding `none` or a value of the form
     `recovered — searched: <…>; found: <…>`;
   - every invariant entry that names a decision entry it derives from holds `none` in the field;
-  - a change to the field alone leaves the entry's content fingerprint unchanged;
   - for every invariant entry whose wording a change adds or alters, the gate's report on that
     change states whether the entry's method passed and broke on the commit the branch left from,
     or that this could not be checked.
@@ -2775,9 +2769,7 @@ search, as WAY-29 does for an inherited decision. *found* points to places rathe
 them, because an invariant says nothing about why (WAY-22), and it lists a place calling for a
 different behaviour too, since that is what a human weighing the invariant most needs to see. The
 field is present in every entry, with `none` as a statement, because a missing value cannot be told
-from a forgotten one (WAY-05). It lies outside the fingerprint so that writing the decision behind a
-recovered invariant later does not, by the field alone, raise the entry's version and fail every
-test that cites it (WAY-57).
+from a forgotten one (WAY-05).
 *Rejected:* the mark only where no cause is known — at entry into a product the cause usually sits
 somewhere that is not a decision entry, such as a comment in the code, a concept document or a line
 of requirements, and, tried on a game this process would enter, the rule gave two answers for every
@@ -2794,8 +2786,8 @@ catalogue as a field of the invariant entry — such a requirement is a fact abo
 reason WAY-04 turns down external constraints as a field of the map, and an invariant names the
 facts it rests on under WAY-17.
 *Consequences:* the template of the invariants element names the field, gives its form and marks it
-as resting on a judgment; the element's format guard checks the first three invariants above, and
-the gate the fourth; until both exist nothing runs them. Where the method cannot run on the older
+as resting on a judgment; the element's format guard checks the first two invariants above, and
+the gate the third; until both exist nothing runs them. Where the method cannot run on the older
 commit — a human inspection, a test that does not build there, a repository with no main branch, as
 this one until the foundation reaches it — the gate reports it as unchecked, never as passing
 (WAY-38), and the human sets the field without that evidence. An entry whose wording changes, by a
@@ -2803,13 +2795,85 @@ raised version (WAY-57) or by a split, enters again, and its field is set again.
 that records a choice is recovered as a decision when a later task touches the part (WAY-28) — the
 change that enters the invariant does not itself count as touching it; a reason given by the human
 who chooses the invariant is recorded as an inherited decision given by that person (WAY-29). Once
-the invariant names such a decision, its field turns to `none` without raising its version; whether
-the new link itself raises the version is left to the decision on what in an invariant entry binds,
-of whose open question (WAY-56) this entry answers in passing only that the field lies outside the
-fingerprint. An invariant a human takes from a product's own requirements, which the product does
+the invariant names such a decision, its field turns to `none`, and neither the field nor the new
+link raises its version (WAY-59). An invariant a human takes from a product's own requirements, which the product does
 not meet yet, holds `none` and enters as an invariant the product violates, whose place is set by a
 decision still to come; its source is not recorded by this decision. The field's readers are the
 human weighing a change to the invariant and the agent recovering a part's decisions. WAY-28's
 consequence on the note is corrected in place to name this decision, while the element still has no
 template to carry the note (WAY-37). How a requirement of an outside catalogue reaches an invariant
 is set when the environment facts element is designed.
+
+### WAY-59/1 — What part of an invariant entry binds?
+
+What binds in an invariant entry — its wording, as WAY-57 and WAY-58 use the word — is its one
+sentence, and the entry's content fingerprint covers that sentence alone. Everything else the
+entry carries stays outside the fingerprint — such as its method of checking, the links it names
+beside the sentence, its version, a declaration of a correction and the recovered field.
+
+- **Change:** new decision
+- **Scope:** invariants, relation-model
+- **Based on:** none
+- **Relations:** derives from WAY-02@af08ee5d · derives from WAY-56@3213162c · related to WAY-07 ·
+  related to WAY-08 · related to WAY-09 · related to WAY-10 · related to WAY-17 ·
+  related to WAY-19 · related to WAY-22 · related to WAY-31 · related to WAY-37 ·
+  related to WAY-39 · related to WAY-42 · related to WAY-55 · related to WAY-57 ·
+  related to WAY-58
+- **Outranks:** none
+- **Verification:** level 1 — invariants in working form, kept by the invariants element's format
+  guard:
+  - the fingerprint the guard gives for an invariant entry equals the fingerprint of its sentence
+    alone;
+  - a change to an invariant entry's method of checking, to the links it names beside the
+    sentence, to its version, to a declaration of a correction or to its recovered field leaves
+    its fingerprint unchanged;
+  - a change to an invariant entry's sentence other than in whitespace changes its fingerprint.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-22
+
+*Rationale:* a fingerprint exists to flag what relies on an entry's wording (WAY-02), and for an
+invariant the first thing that relies on it is its version: when the fingerprint differs from the
+one on the main branch, the version rises unless the human deciding the change confirms a
+correction, and every test citing the entry fails the gate until the foundation step checks it
+against the new wording (WAY-57). The fingerprint moves on any change other than whitespace
+(WAY-39), so it is the signal that asks whether the invariant now demands something else, and it
+has to ask only where that can have happened. What an invariant demands is its sentence (WAY-22,
+WAY-56). The rest of the entry says something else: a method says how the sentence is checked, and
+a new test for the same meaning is accepted under WAY-08, with the panel, without touching the
+tests that cite the entry; a link names what the invariant rests on or comes from, and is often
+written later, as a decision found behind a recovered invariant is (WAY-58); a version and a
+declaration of a correction are worked out from the fingerprint and cannot sit inside what they are
+worked out from; the recovered field records how the entry was found. A raise caused by any of them
+would fail every citing test for a change that asks nothing of the tests, and a flag raised for
+nothing is cleared without reading. The part map draws the same line (WAY-42): its entry binds by
+one sentence, and the fields that change for other reasons stay outside. This decision does not say
+what the sentence has to name, and that gap has a cost wherever a condition that decides whether a
+commit makes the invariant true stands outside the sentence, since a change to it raises no
+version, and whether it flags anything turns on whether the invariant's link to that entry carries
+a fingerprint, which WAY-31 leaves to the invariants element. Three kinds of such place can be
+named: a comparison with "the main branch", which gives different answers against its tip and
+against the commit a branch left it from; a threshold whose statistic or population sits in the
+method; and a list or a definition held elsewhere — in another entry, in a template, in a section
+of the map — and reached through a word of the sentence, as the directories of the process are held
+in WAY-09, whose list WAY-55 corrected in place. Each is left to the decision on what the sentence
+names.
+*Rejected:* the whole entry as the binding part — a new method, a link written later or a corrected
+field would raise the version and fail every citing test for nothing; the method of checking inside
+the binding part — a new test for the same meaning would fail every test citing the entry; a
+fingerprint per field — every reference would have to say which field it relies on.
+*Consequences:* the template of the invariants element marks the sentence as the binding part. What
+an invariant's sentence has to name, and how a condition held elsewhere reaches it, is left to a
+decision of its own, together with the three cases above; the third of them is bound up with the
+question WAY-31 leaves to the invariants element, of which links between entries carry a
+fingerprint. The rewrite of the invariants in working form that WAY-56 sets may need another pass
+once that decision is settled. The sentences of WAY-57 and WAY-58 that placed the version, the
+declaration of a correction and the recovered field outside the fingerprint answered this question
+in passing and lose those clauses (WAY-19); with them go WAY-57's consequence saying it answered
+part of the question, the half of another that waited for it, and WAY-58's level 1 invariant on the
+field and the fingerprint, the reason it gave for it and its consequence leaving open whether a
+decision named later raises the version — it does not. Both are corrected in place and accepted
+again (WAY-07). WAY-56's consequence that left this question open is corrected in place, with its
+fingerprint unchanged. Until the invariants element has its format guard, nothing runs the
+invariants above.
