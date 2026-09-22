@@ -30,7 +30,7 @@ written by hand (WAY-08).
 - **Method:** `<program> <arguments>` | <path of a file a human assesses the product against>
 - **Rests on:** <environment facts> | none
 - **Derives from:** <decision> | none
-- **Part:** TODO — decision pending: what an invariant entry names in the part map
+- **Part:** <parts from the part map> | every
 - **Correction:** none | <fingerprint on the main branch> → <current fingerprint>
 - **Recovered:** none | recovered — searched: <…>; found: <…>
 ```
@@ -83,6 +83,17 @@ the entry they name, as `derives from` does between decisions (WAY-31), waits fo
   names a mechanism is settled by the part map, not by wording: a sentence about the quality gate is
   a property of the product where the gate's files belong to a part of the map.
 
+## Part
+
+- *Part* names the parts of the part map in which a change can make the sentence false, or `every`
+  where a change to any part can; never both. A part missing from the list stops the invariant from
+  running where it can break, and nothing shows it, so a writer in doubt names more (WAY-62).
+- A change, against the commit its branch left the main branch from, reaches an entry that names
+  `every` or a part the change touches, or whose method names a file the change alters (WAY-62).
+- The entry names no failure mode, critical flow or surface (WAY-62).
+- In the file holding invariant entries, a change of an entry touches the parts that entry names,
+  and `every` touches all (WAY-44, WAY-62).
+
 ## Version and correction
 
 - An entry carries a version, starting at 1. When its fingerprint differs from its fingerprint on
@@ -133,7 +144,7 @@ A field stays in this template only while someone or something reads it (WAY-05)
 | Method | the gate, which runs a command or hands a path to a human | judgment |
 | Rests on | whoever reviews the invariant when a fact changes | judgment |
 | Derives from | whoever changes the decision; the check that a decision is verified through its invariants (WAY-12) | judgment |
-| Part | TODO — decision pending | — |
+| Part | the gate, which runs the invariants a change reaches; the agent analysing a task | judgment |
 | Correction | the guard, which lets the version stand; the human who confirms it | read off |
 | Recovered | the human weighing a change to the invariant; the agent recovering a part's decisions | judgment |
 A field marked *judgment* holds someone's call: no tool reads its value off the product, and no question about a fact settles it. A reader takes such a value as a call, not as a reading (WAY-54). A field marked *prose* carries text rather than a value.
@@ -152,6 +163,7 @@ A field marked *judgment* holds someone's call: no tool reads its value off the 
 - No sentence, outside quoted text, names the main branch after "than", "subset of", "differs
   from", "equals", "compared with" or "against" without naming a commit of it (WAY-60).
 - No sentence gives a bound with a wave.
+- Every entry names `every` or at least one part of the part map, never both (WAY-62).
 - Every method is a command that begins with a program's name, or the path alone of a file that
   exists; every value a command takes from the gate stands on the list above (WAY-61).
 - Every invariant test cites its invariant with a version, and none cites a version other than the

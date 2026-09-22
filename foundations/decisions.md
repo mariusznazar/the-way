@@ -2592,10 +2592,8 @@ the log would fall apart into one entry per entry.
 element's format guard counts sentences as the decisions guard does, which catches length only:
 two rules joined in one sentence pass it and are left to review. What in an invariant entry
 binds is set by WAY-59. What an invariant entry names in the part map, so that a change reaches the
-invariants it can break, stays open for a decision of its own, reasoned against the rule for files
-that collect entries about many parts (WAY-44). The invariants written in working form in this log
-are rewritten under WAY-37 once the template exists, and may need a second pass when that question
-is settled.
+invariants it can break, is set by WAY-62. The invariants written in working form in this log are
+rewritten under WAY-37 once the template exists.
 
 ### WAY-57/1 — Is an invariant entry versioned?
 
@@ -3105,3 +3103,54 @@ stand in the method's command, so the verdict one run records for the entry alre
 check. Who writes the break stays with the decision on debt, quarantine and who writes what. WAY-16's
 consequence that left the reporting of a method the gate cannot run to the invariants element is
 corrected in place to point to the decision on what the gate reports.
+
+### WAY-62/1 — What does an invariant entry name in the part map?
+
+An invariant entry names the parts of the part map where a change can make its sentence false,
+or `every` where a change to any part can. A change, against the commit its branch left the main
+branch from, reaches an invariant that names `every` or a part the change touches, or whose method
+names a file the change alters, whatever parts a file collecting entries gives that change
+(WAY-44). The entry names no failure mode, critical flow or surface.
+
+- **Change:** new decision
+- **Scope:** invariants, part-map, gate, task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-16@dd3e3cc1 · derives from WAY-44@220f5b85 ·
+  derives from WAY-61@c6bdfd7c · related to WAY-13 · related to WAY-18 · related to WAY-21 ·
+  related to WAY-45 · related to WAY-46 · related to WAY-47 · related to WAY-54 ·
+  related to WAY-55 · related to WAY-56 · related to WAY-60
+- **Outranks:** none
+- **Verification:** level 1 — invariants in working form:
+  - every part an invariant entry names is an entry of the part map;
+  - every invariant entry names `every` or at least one part, never both;
+  - the invariants a change reaches include every entry naming `every` or a part the change
+    touches, and every entry whose method names a file the change alters.
+  Level 2 for which parts — an agent compares the change with the decision:
+  - complies: "every entry in the log has every field of the template" names `decisions`, and a
+    new decision scoped to `gate` reaches it because the guard's method names the log; "every
+    file git tracks matches the patterns of exactly one part" names `every`;
+  - violates: that sentence on tracked files names `part-map`, so a file added under `gate/`
+    never reaches it; an entry names the flow it guards.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-22
+
+*Rationale:* the gate runs the checks a change calls for (WAY-16), so invariants need what scope
+gives decisions (WAY-21): parts, not paths, which would copy the map. Parts alone miss what WAY-44
+does on purpose: a new decision scoped to `gate` touches `gate`, not `decisions`, and would never
+reach the invariants on the log's form. The files a method names are read off the entry (WAY-54);
+a change to them reaches it. A part missing from the list fails silently,
+an extra one costs a run, so doubt names more (WAY-13). Failure modes and flows already name their
+invariant (WAY-45, WAY-46), and a link is written at one end only (WAY-18).
+*Rejected:* parts computed from what the method reads — a test's command names its test file, not
+the product it reaches, and coverage exists only where a product produces it (WAY-47); every
+invariant run on every change — WAY-16 turns that down; the invariant naming its failure mode, flow
+or surface — one link written at both ends; the part holding the check — the sentence on tracked
+files would never run when a file is added elsewhere.
+*Consequences:* the template of the invariants element gives the field, marked as a judgment, and
+its format guard checks the first two invariants above; what a change reaches is computed from the
+map and the entries (WAY-44), and which checks it calls for beyond that stays with the task cycle
+(WAY-16, WAY-55). In the file holding invariant entries, a change of an entry touches the
+parts it names (WAY-44), and `every` all. WAY-56's consequence that left this question open is
+corrected in place.
