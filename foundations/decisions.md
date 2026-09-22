@@ -2886,93 +2886,55 @@ invariants above.
 
 ### WAY-60/1 — Where may a condition that decides an invariant stand?
 
-A condition that decides whether a commit makes an invariant true stands in its sentence, or outside
-it only where changing it takes a change of the foundation that a human decides (WAY-10), or where a
-decision of the product's log, or of the-way at the commit the product pins, places it; where it has
-no such place, it stands in the sentence. Two conditions always stand in the sentence: a sentence
-whose truth turns on what a branch or a merge changes names a commit of the main branch fixed by the
-commit being checked rather than by the time of the check — such as the last commit of the main
-branch that the branch contains, or the commit a merge is made onto — and a sentence that bounds or
-equates a quantity measured while the product runs names its bound or tolerance, the statistic and
-the population it is computed over.
+A condition deciding an invariant stands in its sentence, or where changing it takes a foundation
+change a human decides, or where a decision in the product's log or the pinned the-way places it.
+An invariant's sentence names no branch, and measures any change it speaks of against a commit on
+the gate's list (WAY-61). A sentence bounding or equating a quantity measured while the product runs
+names its bound or tolerance, statistic and population.
 
 - **Change:** new decision
-- **Scope:** invariants, decisions, part-map
+- **Scope:** invariants, decisions, part-map, gate
 - **Based on:** none
 - **Relations:** derives from WAY-59@6ceadf4e · derives from WAY-22@52c514ca ·
-  derives from WAY-56@3213162c · related to WAY-05 · related to WAY-07 · related to WAY-10 ·
-  related to WAY-12 · related to WAY-23 · related to WAY-31 · related to WAY-34 ·
-  related to WAY-38 · related to WAY-51 · related to WAY-53 · related to WAY-57 ·
-  related to WAY-58
+  derives from WAY-56@3213162c · related to WAY-05 · related to WAY-06 · related to WAY-07 ·
+  related to WAY-10 · related to WAY-12 · related to WAY-23 · related to WAY-31 ·
+  related to WAY-34 · related to WAY-38 · related to WAY-51 · related to WAY-53 ·
+  related to WAY-57 · related to WAY-58 · related to WAY-61
 - **Outranks:** none
-- **Verification:** level 1 — invariant in working form: no invariant sentence, outside quoted
-  text, names the main branch after "than", "subset of", "differs from", "equals", "compared with"
-  or "against" without naming a commit of it. Level 2 for the rest — an agent compares the change
-  with the decision:
-  - complies: "every entry in the log has every field of the template", the template being the
-    written form WAY-05 ties to a decision; "every value skipped in that comparison is declared in
-    the file that carries it", since WAY-53 places that declaration in the file; "the product has
-    exactly one part map file, and it lies in `foundations/`", which bounds a count, not a measured
-    quantity; "a merge to the main branch adds at most one version of each number", judged against
-    the commit the merge is made onto;
-  - violates: "every request is answered within the limit set in `config.py`" — a limit a change to
-    the code can raise, with nothing deciding it; "the branch adds no dependency the main branch does
-    not have", which names no fixed commit; the game's requirement "A player returning after any
-    absence sees their world's current state within ~2 seconds of perceived wait, with continuous
-    visible feedback if it takes longer." entered as it stands — the bound carries a tilde, and
-    nothing says which statistic of which measured wait it bounds.
+- **Verification:** level 1 — invariants in working form:
+  - no invariant sentence, outside quoted text, contains the words "main branch" or "task branch";
+  - every value from the gate's list that an invariant's sentence names outside quoted text is
+    taken by its command, unless its method is not a command.
+  Level 2 for the rest — an agent compares the change with the decision:
+  - complies: "every entry in the log has every field of the template"; "the list of violated
+    invariants is a subset of its version on `{fork-point}`", the commit WAY-53 chose;
+  - violates: "every request is answered within the limit set in `config.py`"; "every fingerprint
+    on `main` equals the current fingerprint of the decision it names"; "a commit that changes
+    `template.md` also appends a decision version to the log"; a bound written "~2 seconds".
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
 - **Approved by:** Mariusz, 2026-09-22
 
-*Rationale:* an invariant's version exists so that the tests citing it learn that its meaning has
-moved (WAY-57), and the fingerprint that drives the version covers the sentence alone (WAY-59), so a
-condition the sentence does not state moves without either of them. Whether that is safe turns on
-who can move it. A condition in the foundation moves only by a change a human decides (WAY-10). A
-condition in a place an ordinary step of implementation changes moves with nobody deciding anything
-about the invariant, and a limit kept there can be loosened by the very change the invariant exists
-to stop — unless a decision placed it there, as WAY-38 does for what a product's declared commands
-report and WAY-53 for the values a derived file declares; the-way's decisions bind a product without
-standing in its log (WAY-23), so either log may place it. The rule names the test, not the places
-that pass it: the places are many and new ones arrive with every element, while the test stays the
-same. The sentence itself is always a lawful place, so a condition whose home does not exist yet
-stands there, and the invariant enters like any other whose method cannot run yet — reported as
-unchecked, never as agreement (WAY-38) — rather than waiting where nothing counts it. Two conditions
-stand in the sentence because a change to either moves the meaning as surely as a change to the
-sentence, while a change held elsewhere raises no version. The main branch as it stands when the
-check runs would make the sentence true or false by the hour rather than by the commit, which WAY-22
-rules out; the last commit of the main branch a branch contains, and the parent a merge is made
-onto, are fixed by the commit being checked. A quantity measured while the product runs means
-nothing without the statistic and the population behind its bound; a count of entries or files is
-exact and needs neither.
-*Rejected:* every condition stated in the sentence — tried on the invariants written in working form
-in this log, it gave two answers wherever a measure met a definition or a method, and the sentences
-grew too long to read; a closed list of the places a condition may stand — each try left out places
-the log already uses, such as a decision's binding sentences, a section of the map or a script a
-decision names; every place outside the foundation forbidden — WAY-38 and WAY-53 place conditions in
-the product on purpose; an invariant whose condition has no home yet kept in working form until one
-exists — nothing counts it while it waits, the gap WAY-51 rejects for a part left "not checked yet",
-and an invariant with no decision behind it (WAY-22, WAY-58) has no decision to wait in; the main
-branch as it stands when the check runs — its answer changes with the time of the check; the bound,
-the statistic and the population asked of every number — a count such as "at most one" has no
-population.
-*Consequences:* the template of the invariants element states these rules for the one sentence
-(WAY-56), and its format guard checks the level 1 invariant above once it exists. The invariants
-written in working form in this log are rewritten under WAY-37 by these rules. WAY-57 already chose
-the commit where the task branch left the main branch, and its invariants carry that choice into
-their sentences. Every other decision whose invariants turn on what a branch, a merge or a merge
-request changes without naming a fixed commit — among them WAY-03, WAY-07, WAY-10, WAY-13, WAY-21,
-WAY-33, WAY-45, WAY-48, WAY-51, WAY-53 and WAY-58, and the part map's template and guard — chooses
-one by a correction or a new version (WAY-07) before those invariants are written; the choice is
-never made in the invariant. A requirement taken from a product's own documents enters as WAY-58
-says. Which links beside an invariant's sentence carry a fingerprint is set
-by WAY-66; how a change to the place holding a condition reaches the invariant is set by WAY-61 and
-WAY-62. A
-condition that turns on the date a check runs, or on who may open or change something, is not a
-place in this sense and is not settled here; WAY-68 ties the end of a quarantine to the committer
-date of the commit being checked. WAY-59's Rationale and Consequences are corrected in
-place to name this decision.
+*Rationale:* the fingerprint that moves an invariant's version covers the sentence alone (WAY-57,
+WAY-59), so a condition outside it moves unseen. That is safe only where moving it takes someone
+deciding: a human changing the foundation (WAY-10), or a decision placing it, as WAY-38 and WAY-53
+do. A condition an ordinary step of implementation can change could be loosened by the change the
+invariant exists to stop. With no such home yet, a condition stands in the sentence, and the
+invariant enters unchecked (WAY-38). A branch names a different commit by the hour, so a sentence
+naming one is true or false by the hour, which WAY-22 rules out; what the main branch alone holds
+is stated where `{merge-onto}` exists. A measured bound means nothing without its statistic and
+population; a count needs neither.
+*Rejected:* every condition in the sentence — on this log's invariants it gave two answers wherever
+a measure met a definition or a method; a closed list of places — each try left out places the log
+uses; every place outside the foundation forbidden — WAY-38 and WAY-53 place conditions in the
+product; an invariant kept aside until its condition has a home — nothing counts it, the gap WAY-51
+rejects; a commit's parent as the base of a change — a task spreads one change over several
+commits.
+*Consequences:* the invariants template states these rules, and its guard checks the level 1
+invariants. A sentence measuring a change takes `{fork-point}` unless the decision it derives from
+chooses `{merge-onto}` by its own correction or version (WAY-07); WAY-57 chose `{fork-point}`, and
+so does an invariant deriving from no decision (WAY-58).
 
 ### WAY-61/1 — How is an invariant's method of checking written, and how is its result read?
 
@@ -2993,7 +2955,7 @@ pass.
 - **Based on:** none
 - **Relations:** derives from WAY-08@a0bbac21 · derives from WAY-16@dd3e3cc1 ·
   derives from WAY-54@39382a33 · derives from WAY-57@29edb491 · derives from WAY-38@be0cb9cb ·
-  derives from WAY-60@ec1b95a7 · related to WAY-03 · related to WAY-05 · related to WAY-07 ·
+  derives from WAY-60@c85d1ac0 · related to WAY-03 · related to WAY-05 · related to WAY-07 ·
   related to WAY-10 · related to WAY-12 · related to WAY-17 · related to WAY-22 · related to WAY-24 ·
   related to WAY-31 · related to WAY-34 · related to WAY-37 · related to WAY-43 · related to WAY-45 ·
   related to WAY-47 · related to WAY-48 · related to WAY-49 · related to WAY-50 · related to WAY-53 ·
@@ -3018,7 +2980,7 @@ pass.
     guard logs made up for it; a test that runs the guard on the real log and asserts only its exit
     code is cited for one of the invariants the guard checks; an entry carries "runs as: script"
     beside its command; the gate gives every invariant a guard checks the guard's exit code; a
-    command names the main branch where the sentence names the commit the branch left it from.
+    command names the main branch where the sentence names `{fork-point}`.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
@@ -3061,8 +3023,8 @@ reads — they show the check catches a break, not that the data holds; a method
 cannot run it (WAY-16).
 *Consequences:* the template of the invariants element gives the two forms of a method; the closed list
 of values the gate fills into a command, which starts with the commit the task branch left the main
-branch from (WAY-57), which is the last commit of the main branch the branch contains (WAY-60), and the
-commit a merge is made onto (WAY-60), and grows by a new version of this decision; and the closed list of
+branch from (WAY-57), which is the last commit of the main branch the branch contains, and the
+commit of the main branch that a merge into it is made onto, and grows by a new version of this decision; and the closed list of
 formats a run's record may take, which starts with the-way's own record of a run and grows the same way,
 together with the adapter that reads a product's format (WAY-38). The format is read off the record, so
 the template's `reads:` goes with `runs as:`. Where a commit on the list does not exist, as the main

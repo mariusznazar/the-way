@@ -75,8 +75,9 @@ A quarantined invariant stands on the last list in the file; *Until* is a date a
 - A command is the same on every run and names no commit, branch or revision itself. A commit the
   sentence names is a value the gate fills in, from this closed list, which grows by a new version
   of WAY-61: `{fork-point}` — the commit the task branch left the main branch from, which is the
-  last commit of the main branch the branch contains; `{merge-onto}` — the commit a merge is made
-  onto. Where the commit does not exist, the gate fills in that it does not exist (WAY-61).
+  last commit of the main branch the branch contains; `{merge-onto}` — the commit of the main branch
+  that a merge into it is made onto. Where the commit does not exist, the gate fills in that it does
+  not exist (WAY-61).
 - A method checks what its sentence is about, as it stands on the commit being checked: a check fed
   input made up for it is the method of a sentence about that check, not about the data it reads
   (WAY-61).
@@ -113,10 +114,16 @@ A quarantined invariant stands on the last list in the file; *Until* is a date a
 - A condition held in a document the product neither writes nor pins, such as an outside standard,
   has no such place: it stands in the sentence, and the fact it rests on is named in *Rests on*
   (WAY-60).
-- A sentence whose truth turns on what a branch or a merge changes names a commit of the main
-  branch fixed by the commit being checked — such as the last commit of the main branch that the
-  branch contains, or the commit a merge is made onto — never the main branch as it stands when the
-  check runs (WAY-60).
+- A sentence names no branch — neither as a point to compare with nor as the place where it holds —
+  since a branch names a different commit by the hour. A sentence measuring what a commit, a merge
+  or a merge request changes names the commit it is measured against by its value on the gate's
+  list above: `{fork-point}`, unless the decision the entry derives from chooses `{merge-onto}`. A
+  sentence that is to hold on the main branch alone holds where `{merge-onto}` exists (WAY-60,
+  WAY-61).
+- A sentence about a check the product itself holds names a value of that list in quotation marks,
+  as what the check is given, and its command, a test fed input made up for it, need not take it
+  (WAY-60, WAY-61). Quoted text, in this template, is text between quotation marks; a value in
+  backticks is not quoted.
 - A sentence that bounds or equates a quantity measured while the product runs names its bound or
   tolerance, the statistic and the population it is computed over (WAY-60). A bound written with a
   tilde — `~2 seconds` — names no bound, so the sentence states one as a number or has none
@@ -299,13 +306,14 @@ A field marked *judgment* holds someone's call: no tool reads its value off the 
   else in the entry leaves it unchanged (WAY-59).
 - Every entry carries *Recovered*, as `none` or in its form; an entry that names a decision entry
   of the product's own log it derives from holds `none` (WAY-58).
-- No sentence, outside quoted text, names the main branch after "than", "subset of", "differs
-  from", "equals", "compared with" or "against" without naming a commit of it (WAY-60).
+- No sentence, outside quoted text, contains the words "main branch" or "task branch" (WAY-60).
+- Every value from the gate's list that a sentence names outside quoted text is taken by its
+  command, unless its method is not a command (WAY-60).
 - No sentence bounds or equates a measured quantity with a tilde in place of a number (WAY-60).
 - Every entry names `every` or at least one part of the part map, never both (WAY-62).
 - Every method is a command that begins with a program's name, the path alone of a file that
-  exists, or `TODO`; every value a command takes from the gate stands on the list above (WAY-61,
-  WAY-63).
+  exists, or `TODO`; every value a command takes from the gate, and every value in braces a sentence
+  names outside quoted text, stands on the list above (WAY-61, WAY-63).
 - Every name in *Rests on* or *Derives from*, other than `none` or `TODO`, carries the current
   fingerprint of the entry it names (WAY-66).
 - Every invariant test cites its invariant with a version, and none cites a version other than the
