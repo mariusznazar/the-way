@@ -16,6 +16,8 @@ not trust.
 - An allowed dependency is a field of the part it starts from, never an entry of its own.
 - An entry is corrected in place and carries no version; its history stays in git (WAY-43).
 - One derived file lies beside the map: the list of known violations (WAY-51).
+- Every field the form of an entry's kind gives appears in that entry, and holds `none` only where
+  the form gives it that word; no field of the map holds `TODO` (WAY-71).
 
 ## Identifiers
 
@@ -34,10 +36,10 @@ not trust.
 <one sentence: what this part is responsible for>
 
 - **Files:** <git path patterns, one per line; `(generated)` after a pattern whose files this
-  part's code writes>
+  part's code writes> | none
 - **Depends on:** <identifier> · <identifier> (separated — <why a failure of that part does not
   damage this one>) | none
-- **Failure modes:**
+- **Failure modes:** none | one line for each:
   - <what fails> — <kind of damage> — <severity> — detected by <invariant> | not detected
 - **Trust boundary:** <git path patterns of the files that take in untrusted data> | none
 ```
@@ -216,6 +218,8 @@ patterns come from the part's *Files*. No overview of the repository is generate
 ## What the checker checks
 
 - Every entry is a part, a critical flow or a surface, and every identifier is unique.
+- Every entry carries every field of its kind's form; no field holds `TODO`, nor `none` where its
+  form does not give it that word (WAY-71).
 - Every part map identifier referred to from the foundation, a test or a generated rule file
   exists in the map, as an entry or as a withdrawn identifier; no entry uses a withdrawn one.
 - Once the product has invariant entries, every invariant a flow or a failure mode names is an

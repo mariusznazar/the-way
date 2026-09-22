@@ -171,12 +171,10 @@ code, and is made for a human on request; no such picture is generated into an a
 ### WAY-05/1 — How is a decision entry written?
 
 A decision entry opens with one to three binding sentences — in the present tense, describing
-a state that is to be true, concrete enough to check — followed by fixed fields that a script or
-an agent reads, and by rationale, rejected options and consequences in prose. Every field
-appears in every entry, holding a value, `none` or `TODO`, and a field stays in the template
-only while someone or something reads it. The rules and examples in `elements/decisions/` are
-the written form of this decision: a rule changes only together with a decision, and an example
-is a verbatim copy of a version from the log.
+a state that is to be true, concrete enough to check — followed by fields a script or an agent
+reads, then rationale, rejected options and consequences in prose. A field stays in the template
+only while someone or something reads it. A rule in `elements/decisions/` changes only with a
+decision, and an example there copies a version from the log word for word.
 
 - **Change:** new decision
 - **Scope:** decisions
@@ -190,7 +188,6 @@ is a verbatim copy of a version from the log.
 - **Relations:** related to WAY-01 · related to WAY-02 · related to WAY-04
 - **Outranks:** none
 - **Verification:** level 1 — invariants in working form:
-  - every entry in the log has every field of the template;
   - binding sentences number one to three and contain no *should*, *will* or keyword of RFC 2119
     in capitals;
   - every example in `examples.md` matches its version in the log word for word;
@@ -202,20 +199,18 @@ is a verbatim copy of a version from the log.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-15
+- **Approved by:** Mariusz, 2026-09-22
 
 *Rationale:* norms keep what binds short and checkable and put the explanation next to it; a
 record written like a legal code, in a commanding voice, reads badly and is followed worse.
 Agents generalise from the reasons they are given, so the reasoning stays in the entry, below
 what binds. The present tense is used because a sentence with "will" or "should" describes an
 intent, not a state. Fields are few because a field survives in practice only when someone reads
-it in a specific activity. Every field appears in every entry because a field that is simply
-missing cannot be told apart from one that was forgotten. The template is the process's code:
+it in a specific activity. The template is the process's code:
 under WAY-01 it follows the decisions, never the other way round.
 *Rejected:* prose entries without fields — nothing a script or an agent can read reliably;
 full templates with many fields and relations — too many fields without a reader, and the tools
-built on them did not survive; optional fields left out when empty — an intended gap and a
-forgotten one look the same; a status field written by hand — a second copy of what the
+built on them did not survive; a status field written by hand — a second copy of what the
 sequence of versions already says; a single one-sentence statement as the whole entry — the
 binding rule cannot be separated from its reasoning; normative capitals such as MUST — shouting
 reads worse, not stronger; examples written for the template — an example with gaps teaches
@@ -223,7 +218,8 @@ gaps.
 *Consequences:* adding or removing a field is a change of the template and therefore needs a
 decision. The format guard,
 `elements/decisions/format_guard.py`, checks the rules on its list in the template; the other
-rules of the entry hold through review.
+rules of the entry hold through review. Whether every field appears in every entry, and which
+words it may hold, is set by WAY-71.
 
 ### WAY-06/1 — Where does a foundation change in progress live?
 
@@ -2777,7 +2773,7 @@ search, as WAY-29 does for an inherited decision. *found* points to places rathe
 them, because an invariant says nothing about why (WAY-22), and it lists a place calling for a
 different behaviour too, since that is what a human weighing the invariant most needs to see. The
 field is present in every entry, with `none` as a statement, because a missing value cannot be told
-from a forgotten one (WAY-05).
+from a forgotten one (WAY-71).
 *Rejected:* the mark only where no cause is known — at entry into a product the cause usually sits
 somewhere that is not a decision entry, such as a comment in the code, a concept document or a line
 of requirements, and, tried on a game this process would enter, the rule gave two answers for every
@@ -3511,3 +3507,51 @@ Which files an invariant test names, so that a fixture or a builder of its input
 underneath it, stays open — `gate/test_wording_reaches_dependants.py` imports its fixture and
 names it nowhere, and it guards it today with an assertion that the fixture still matches a
 literal.
+
+### WAY-71/1 — Does every field of a foundation entry appear in every entry, and what may it hold?
+
+Every field an element's template gives an entry of its kind appears in every such entry, holding a
+value, or `none` or `TODO` where that template gives the word to the field. `none` states that
+nothing is there, and `TODO` that something is known to be missing. The element's format guard
+reports a missing field, or a word its template does not give the field, as an error.
+
+- **Change:** new decision
+- **Scope:** decisions, part-map, invariants, glossary, environment-facts
+- **Based on:** none
+- **Relations:** related to WAY-05 · related to WAY-09 · related to WAY-17 · related to WAY-38 ·
+  related to WAY-46 · related to WAY-54 · related to WAY-57 · related to WAY-58 · related to WAY-62 ·
+  related to WAY-63 · related to WAY-66
+- **Outranks:** none
+- **Verification:** level 1 — invariants in working form:
+  - every entry of the decision log carries every field the decision template gives an entry of
+    its kind, and no field holds `none` or `TODO` where that template does not give it the word;
+  - the same for every entry of the part map and its template;
+  - the same for every entry of the invariants file and its template.
+  Level 2 for what `none` states — an agent compares the change with the decision:
+  - complies: an invariant whose author searched the log and found no decision it derives from
+    reads `Derives from: none`; a decision whose source is silent on what it rests on reads
+    `Based on: TODO — <what is missing>`;
+  - violates: an invariant reads `Derives from: none` though nobody searched the log; a decision
+    reads `Based on: none` where its source says nothing of what it rests on.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-22
+
+*Rationale:* a field that is simply missing cannot be told from one that was forgotten, in the
+entries of every element, not only in the log: an invariant entry without *Recovered* reads the
+same whether it was chosen or recovered and the mark forgotten (WAY-58). The words `none` and
+`TODO` carry that difference only where a reader acts on them: the map's guard reads `TODO` in
+*Depends on* as no dependency, and `TODO` in an invariant's *Part* gives the gate no part to run it
+in (WAY-62), so a field takes a word only where its template says what the word means there.
+*Rejected:* a decision for the invariants element alone — the map already applies the rule, and
+every element to come would need another copy; a wider scope for WAY-05 — its question is how a
+decision entry is written, and the fields of other elements take other words; `none` and `TODO`
+allowed in every field of every element — `TODO` in *Depends on* reads as no dependency, and *Part*
+has no reading for either; optional fields left out when empty — an intended gap and a forgotten
+one look the same.
+*Consequences:* each element's template says which of the two words each field takes — the decision
+template in its table of states, the others in the form of each field. The part map's form gives
+`none` to *Files* and *Failure modes*, where the map's rules already read it: a part whose tool does
+not exist yet holds no files, and one with no failure modes recorded counts as the highest
+(WAY-46). Each element's format guard checks the level 1 invariants above for its own entries.

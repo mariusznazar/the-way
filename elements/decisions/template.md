@@ -42,12 +42,12 @@ In version 2 and later, *Rationale* becomes *Rationale for change*.
 
 ### Every field, every entry
 
-Every field is present in every version, in one of three states:
+Every field is present in every version, in one of three states (WAY-71):
 
 | State | Meaning | Format guard |
 |---|---|---|
 | a value | known | passes |
-| `none` | the author states there is nothing here | passes |
+| `none` | the author states there is nothing here | passes; in *Change* and *Approved by*, error |
 | `TODO — <what is missing>` | known to be unknown | warning; in *Approved by*, error |
 | field missing | forgotten | error |
 

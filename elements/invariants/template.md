@@ -47,6 +47,10 @@ written by hand (WAY-08).
 - **Recovered:** none | recovered — searched: <…>; found: <…>
 ```
 
+Every field of the form above appears in every entry. A field holds `none` or `TODO` only where the
+form above gives it that word: `none` states that nothing is there, `TODO` that something is known
+to be missing (WAY-71).
+
 After the last entry the file carries its withdrawn identifiers, and then the list of quarantined
 invariants that closes it (WAY-68); *Successors* lists identifiers joined by ` · `, or reads
 `none`:
@@ -294,6 +298,8 @@ A field marked *judgment* holds someone's call: no tool reads its value off the 
   it, and one withdrawn there is withdrawn still (WAY-64).
 - Every successor a withdrawn identifier names is an entry or a withdrawn identifier of this file,
   or `none` (WAY-64).
+- Every entry carries every field of the form above, and no field holds `none` or `TODO` where the
+  form does not give it that word (WAY-71).
 - Every entry states its invariant in one sentence (WAY-56).
 - Every entry carries a method (WAY-08).
 - Every entry carries a version; an entry with no fingerprint on the main branch carries version 1
