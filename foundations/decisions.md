@@ -2353,10 +2353,10 @@ checked as derived files (WAY-15).
 
 ### WAY-53/1 — How is a derived file compared with what its generator produces?
 
-A derived file is identical to what its generator produces on the same commit, except for
-values the file itself declares as varying between runs. A derived file that cannot be produced
-from scratch is named in the template of the element it belongs to, and is compared as a subset
-of its own version on the main branch.
+A derived file is identical to what its generator produces on the same commit, except for values the
+file itself declares as varying between runs. A derived file that cannot be produced from scratch is
+named in the template of the element it belongs to, and is compared as a subset of its own version
+on the commit the branch left the main branch from.
 
 - **Change:** new decision
 - **Scope:** decisions, part-map, invariants, gate
@@ -2378,18 +2378,20 @@ of its own version on the main branch.
 hand, and that is why it holds. A record of a run, however, carries the moment it happened, so a
 second run never reproduces it, and the rule would fail on the gate's own output at every pass.
 Skipping declared values keeps the rule over everything the generator decides and lifts it only
-where the file says the value varies — a narrower opening than taking whole files out. The
-second sentence drops a count the earlier wording carried by accident: the exception was written
-for one file, and a product that keeps a second such list had nowhere to put it.
-*Rejected:* keeping records of results outside the repository — whether an invariant was green
-on a given commit can then be read only from whatever ran it, never from the repository; lifting
-whole files out of the comparison — it lifts the rule from their content too, where it still
-holds and still catches a hand edit.
-*Consequences:* the format guard of an element compares derived files with their generators'
-output and reads the skipped values from the file itself. The record of an invariant's result
-carries the moment of the run and is compared for everything else. The list of violated
-invariants joins the list of known violations of the part map's rules as a file that is not
-produced from scratch. WAY-15 gets a version whose verification no longer spells this out.
+where the file says the value varies — a narrower opening than taking whole files out. The second
+sentence drops a count the earlier wording carried by accident: the exception was written for one
+file, and a product that keeps a second such list had nowhere to put it.
+*Rejected:* keeping records of results outside the repository — whether an invariant was green on a
+given commit can then be read only from whatever ran it, never from the repository; lifting whole
+files out of the comparison — it lifts the rule from their content too, where it still holds and
+still catches a hand edit.
+*Consequences:* the format guard of an element compares derived files with their generators' output
+and reads the skipped values from the file itself. The record of an invariant's result carries the
+moment of the run and is compared for everything else. The list of violated invariants joins the
+list of known violations of the part map's rules as a file that is not produced from scratch. WAY-15
+gets a version whose verification no longer spells this out. Where that commit does not exist, the
+comparison finds nothing to compare against, and the guard says so, as it already does for an
+invariant's version (WAY-57).
 
 ### WAY-54/1 — Where does the value of a field in a template come from?
 
@@ -2802,8 +2804,8 @@ change that enters the invariant does not itself count as touching it; a reason 
 who chooses the invariant is recorded as an inherited decision given by that person (WAY-29). Once
 the invariant names such a decision, its field turns to `none`, and neither the field nor the new
 link raises its version (WAY-59). An invariant a human takes from a product's own requirements, which the product does
-not meet yet, holds `none` and enters as an invariant the product violates, whose place is set by a
-decision still to come; its source is not recorded by this decision. The field's readers are the
+not meet yet, holds `none` and enters as an invariant the product violates, whose place is set by
+WAY-67; its source is not recorded by this decision. The field's readers are the
 human weighing a change to the invariant and the agent recovering a part's decisions. WAY-28's
 consequence on the note is corrected in place to name this decision, while the element still has no
 template to carry the note (WAY-37). How a requirement of an outside catalogue reaches an invariant
@@ -3097,7 +3099,7 @@ which of them make the gate's command fail, is set by WAY-63; how a check cites 
 by WAY-65. When a method counts stays with WAY-08 — the
 deliberate break, and k of n runs for a method that does not give the same verdict every time; k and n
 stand in the method's command, so the verdict one run records for the entry already covers n runs of the
-check. Who writes the break stays with the decision on debt, quarantine and who writes what. WAY-16's
+check. Who writes the break stays with the decision on who writes what. WAY-16's
 consequence that left the reporting of a method the gate cannot run to the invariants element is
 corrected in place to point to WAY-63.
 
@@ -3155,10 +3157,10 @@ corrected in place.
 ### WAY-63/1 — What results does the gate report for invariants, and which make its command fail?
 
 An invariant's result on the commit being checked is `pass`, `fail`, `unchecked` for a reason on the
-template's closed list, or `error` where there is no verdict for any other reason. The gate reports a
-result for at least every invariant the change reaches and every invariant a critical flow names, and
-its command exits non-zero when some result it reports is `error` or `fail`, or a run records a
-failure for no entry, and zero otherwise.
+template's closed list, or `error` otherwise. The gate reports a result for at least every invariant
+the change reaches and every invariant a critical flow names, and its command exits non-zero when
+some result it reports is `error`, a listed invariant's result is `pass`, an unlisted invariant's
+result is `fail`, or a run records a failure for no entry, and zero otherwise.
 
 - **Change:** new decision
 - **Scope:** invariants, gate, part-map, task-cycle
@@ -3173,8 +3175,9 @@ failure for no entry, and zero otherwise.
     `unchecked` or `error`, and every `unchecked` names a reason on the template's list;
   - the gate reports a result for every invariant the change reaches and every invariant a critical
     flow names;
-  - the gate's command exits non-zero when some result it reports is `error` or `fail`, or a run
-    records a failure for no entry, and zero otherwise.
+  - the gate's command exits non-zero when some result it reports is `error`, a listed invariant's
+    result is `pass`, or an unlisted invariant's result is `fail`, or a run records a failure for no
+    entry, and zero otherwise.
   Level 2 for the reasons — an agent compares the change with the decision:
   - complies: a flow's list of parts with no coverage file is `unchecked` (WAY-47); so is a check
     needing a commit the gate filled in as not existing;
@@ -3191,18 +3194,18 @@ and every other missing verdict is `error`. `unchecked` leaves the command at ze
 and WAY-61 let an invariant enter before its method can run, and WAY-47 makes "unchecked" a state a
 human reads, not one that stops work.
 *Rejected:* `unchecked` making the command fail — every invariant entering without a method would
-fail every change; an open list of reasons — whatever a check says of itself would pass; a third exit
-code — nothing reads it; a human's verdict valid for the entry's version — it outlives every change to
-the product (WAY-08).
-*Consequences:* the template lists the reasons for `unchecked`, and the list grows by a new version of
-this decision: the method reads `TODO`; the method is a path and no human verdict is in force; the
-method's command or file is not declared or produced (WAY-38, WAY-47); the method takes a commit the
-gate filled in as not existing. A human verdict names who, when and the commit assessed, and is in
-force until a change since that commit reaches the entry (WAY-62). A declared command that cannot
-start, or a record off a closed list, is `error`. Runs on a deliberate break, and the run WAY-58 asks
-for, give evidence, not results. Whether a change may turn a checked invariant `unchecked`, whether a
-dropped declared command does too, and which `fail` a listed violation excuses, is left to the
-decision on debt.
+fail every change; an open list of reasons — whatever a check says of itself would pass; a third
+exit code — nothing reads it; a human's verdict valid for the entry's version — it outlives every
+change to the product (WAY-08).
+*Consequences:* the template lists the reasons for `unchecked`, and the list grows by a new version
+of this decision: the method reads `TODO`; the method is a path and no human verdict is in force;
+the method's command or file is not declared or produced, except a command declared on the commit
+the branch left the main branch from, whose drop makes the result `error` (WAY-38, WAY-47, WAY-67);
+the method takes a commit the gate filled in as not existing. A human verdict names who, when and
+the commit assessed, and is in force until a change since that commit reaches the entry (WAY-62). A
+declared command that cannot start, or a record off a closed list, is `error`. Runs on a deliberate
+break, and the run WAY-58 asks for, give evidence, not results. Which `fail` a listed violation
+excuses, and when a checked invariant may turn `unchecked`, is set by WAY-67.
 
 ### WAY-64/1 — Where do invariant entries stand, and what identifies one?
 
@@ -3354,3 +3357,46 @@ What a fact's fingerprint covers is set by the environment facts element; until 
 invariant writes a fact it rests on as `TODO — <the fact, with its source>`, as a decision quotes one
 in *Based on* (WAY-17). WAY-59's and WAY-60's passages that left this question open are corrected in
 place.
+
+### WAY-67/1 — What does the main branch hold where an invariant is not met?
+
+An invariant the product does not meet stands, by identifier and current version, on the derived
+list `foundations/violated_invariants.md`. A listed `fail` leaves the gate's command at zero, and a
+listed `pass` makes it fail until the same change drops the position. A position is added only by a
+change of the foundation that a human accepts, never by a step of implementation.
+
+- **Change:** new decision
+- **Scope:** invariants, gate, task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-53@aaeafada · derives from WAY-63@d05ff1f0 · related to WAY-08 ·
+  related to WAY-10 · related to WAY-15 · related to WAY-28 · related to WAY-51 · related to WAY-57 ·
+  related to WAY-58 · related to WAY-60 · related to WAY-61
+- **Outranks:** none
+- **Verification:** level 1 — invariants in working form:
+  - the list on a branch is a subset of the list on the commit the branch left the main branch from;
+  - every position names an entry of `foundations/invariants.md`, at its current version and no
+    other.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-22
+
+*Rationale:* a product the process enters already breaks some of what it should hold (WAY-28), and a
+rule written to fit the code hides the intent (WAY-15); so the invariant stays whole, and its breach
+is a counted debt, like the map's (WAY-51). Like the map's, the list grows wherever growing it is
+cheap, so it takes the same ratchet. A position carries the entry's current version, so a new meaning
+is not excused by a debt accepted for the old one. Whether a change may turn a checked invariant
+`unchecked`, and when a dropped command is `error` instead, is a question about which result an entry
+has, corrected into WAY-63 directly, not answered here.
+*Rejected:* one list shared with the map's — its positions name parts and files, not entries (WAY-51,
+WAY-53); an invariant left out until it holds — the gap WAY-60 rejects for a part left "not checked
+yet" (WAY-51); a position without a version; a debt paid on a clock — WAY-51 sets no clock for the
+map's debt, and a clock repays debt by weakening the rule; a mechanical addition-check keyed to a
+changed fingerprint of the entry — a second gate for what WAY-10 already decides for any change to
+this list.
+*Consequences:* the template names the list as not produced from scratch (WAY-53) and gives its form.
+A change to this list is a foundation change, so WAY-10's panel and a human decide it before it
+merges (WAY-01, WAY-51). Invariants a product fails at entry go onto the list with the entering
+change. An invariant that enters without a method is `unchecked` from its first commit, not debt
+(WAY-60, WAY-63). WAY-63's closed list and exit rule, WAY-53's comparison commit, and the pointers in
+WAY-58 and WAY-61 that left this to a decision on debt are corrected in place.

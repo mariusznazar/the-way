@@ -17,6 +17,7 @@ written by hand (WAY-08).
 
 - A product's invariant entries stand in one file, `foundations/invariants.md`, which ends with
   its list of withdrawn identifiers (WAY-64).
+- One derived file lies beside it: the list of violated invariants (WAY-67).
 - Every entry carries an identifier of one or more words in lower case joined by hyphens, never
   `none`, held by no other entry or withdrawn identifier of this file or of the part map (WAY-64).
 - The identifier names what the sentence constrains, never what it demands, so that a raised
@@ -157,21 +158,38 @@ commit the branch left from in front of them.
 - An entry's result on the commit being checked is `pass`, `fail`, `unchecked` for a reason on the
   list below, or `error` where there is no verdict for any other reason (WAY-63).
 - The gate reports a result for at least every entry a change reaches and every entry a critical
-  flow names. Its command exits non-zero when some result it reports is `error` or `fail`, or a run
-  records a failure for no entry, and zero otherwise (WAY-63).
+  flow names. Its command exits non-zero when some result it reports is `error`, a listed
+  entry's result is `pass`, or an unlisted entry's result is `fail`, or a run records a failure for
+  no entry, and zero otherwise (WAY-63, WAY-67).
 - Reasons for `unchecked` — a closed list, which grows by a new version of WAY-63:
   - the method reads `TODO`;
   - the method is a path, and no human verdict is in force;
-  - the method's command or file is not declared or produced by the product (WAY-38, WAY-47);
+  - the method's command or file is not declared or produced by the product, except a command
+    declared on the commit the branch left the main branch from, whose drop makes the result `error`
+    (WAY-38, WAY-47, WAY-67);
   - the method takes a commit the gate filled in as not existing.
 - A human verdict names who, when and the commit assessed, and is in force until a change since that
   commit reaches the entry (WAY-63).
 - A declared command that cannot start, or a record holding a value off a closed list, is `error`.
   Runs on a deliberate break, and the run WAY-58 asks for, give evidence, not results (WAY-63).
-- TODO — decision pending: debt, quarantine and the rules on who writes what. How an invariant
-  the product violates is listed and which `fail` that excuses, whether a change may turn a checked
-  entry `unchecked` — a dropped declared command included — how a flaky test is handled, and who may
-  write an invariant's sentence and its test.
+- TODO — decision pending: quarantine. How a flaky test is handled.
+- TODO — decision pending: who writes what. Who may write an invariant's sentence, its test and its
+  deliberate break.
+
+## Violated invariants
+
+The derived file beside the invariants, `foundations/violated_invariants.md`, holds every invariant
+the product does not meet today, by identifier and current version. A listed `fail` leaves the
+gate's command at zero, and a listed `pass` makes it fail until the same change drops the position.
+A position is added only by a change of the foundation that a human accepts, never by a step of
+implementation. The file is checked as a subset of the list on the commit the branch left the main
+branch from, never regenerated from scratch (WAY-53, WAY-67).
+
+```markdown
+## Violated invariants
+
+| Identifier | Version |
+```
 
 ## Fields and their readers
 
@@ -220,6 +238,8 @@ A field marked *judgment* holds someone's call: no tool reads its value off the 
   current one (WAY-57).
 - Every `invariant:` line in a check names an entry, and every `data:` line names a file that
   exists (WAY-65).
+- The list of violated invariants is a subset of the list on the commit the branch left the main
+  branch from; every position names an entry at its current version and no other (WAY-67).
 - The guard reports how many entries it could not check and why, never agreement (WAY-38).
 
 ## Examples
