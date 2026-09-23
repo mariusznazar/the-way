@@ -2754,7 +2754,7 @@ human deciding the change sets the field with that report in front of them.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-22
+- **Approved by:** Mariusz, 2026-09-23
 
 *Rationale:* WAY-28 lets an invariant recovered from an existing product bind before anyone knows
 why it holds, and asks for a note that it was recovered. Without the note it reads like a rule
@@ -2805,8 +2805,9 @@ not meet yet, holds `none` and enters as an invariant the product violates, whos
 WAY-67; its source is not recorded by this decision. The field's readers are the
 human weighing a change to the invariant and the agent recovering a part's decisions. WAY-28's
 consequence on the note is corrected in place to name this decision, while the element still has no
-template to carry the note (WAY-37). How a requirement of an outside catalogue reaches an invariant
-is set when the environment facts element is designed.
+template to carry the note (WAY-37). An invariant holding a condition taken from a requirement of an
+outside catalogue names it in *Rests on* (WAY-73); how such a requirement is written as a fact is set
+when the environment facts element is designed.
 
 ### WAY-59/1 — What part of an invariant entry binds?
 
@@ -3596,3 +3597,47 @@ element's skill reads the rule from there and asks for no language (WAY-35). How
 shows the people who use it stands in an entry — quoted in its own language or described in
 English — and how a source in another language is cited are not settled here; the first product
 whose users read another language settles them.
+
+### WAY-73/1 — Which environment facts does an invariant's *Rests on* name?
+
+An invariant's *Rests on* names every environment fact holding a condition that decides whether a
+commit makes its sentence true, and no other fact. A fact holds such a condition when, read
+otherwise, it would give some commit another verdict under the same sentence, or change a value
+the sentence copies from it. A fact that is only a reason for a decision the invariant derives
+from stands in that decision's *Based on* alone.
+
+- **Change:** new decision
+- **Scope:** invariants, decisions, environment-facts
+- **Based on:** none
+- **Relations:** derives from WAY-17@ab01c0e5 · derives from WAY-60@c85d1ac0 · related to WAY-04 ·
+  related to WAY-12 · related to WAY-22 · related to WAY-38 · related to WAY-58 · related to
+  WAY-61 · related to WAY-62 · related to WAY-66 · related to WAY-71
+- **Outranks:** none
+- **Verification:** level 2 — an agent compares the change with the decision:
+  - complies: the invariant "no script imports a module outside the standard library of Python
+    3.12" rests on the list of that library's modules, and not on the finding about
+    cargo-semver-checks that WAY-38 quotes in *Based on*;
+  - violates: the invariant "every invariant test names an invariant" rests on the Ariane 501
+    finding that WAY-17 quotes; an invariant bounding a page's load time by a threshold an
+    outside standard sets reads `Rests on: none`, whether its sentence names the standard or
+    copies the number.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-23
+
+*Rationale:* WAY-17 makes the link mandatory, and "rest on" reads two ways: on invariants written
+from this log, it gave both answers. *Rests on* is read by whoever reviews an invariant when a
+fact changes. A fact that is only a reason moves no verdict: its change sends the decision to
+review, and a new wording reaches every invariant naming it through the fingerprint in *Derives
+from* (WAY-66). A fact holding a condition moves the verdict, or a value the sentence copies, with
+nothing in the foundation changed: a fact of the world changes with no commit of the product, so
+no change reaches the invariant through its parts (WAY-62), and *Rests on* is its only path there.
+Whether a fact about what runs the method — a tool, an interpreter, a model — ever belongs here is
+left to WAY-61, which leaves the runner's own environment unsettled.
+*Rejected:* every fact in the *Based on* of each decision the invariant derives from — a change of
+it flags invariants whose verdict does not move, and it still misses a condition no decision
+quotes, as the list of the standard library above; the choice left to each author — the two
+answers above.
+*Consequences:* the invariants template states the rule and its test beside the links. An
+invariant with no such fact reads `Rests on: none`, whatever its decisions quote.

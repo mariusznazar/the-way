@@ -119,7 +119,7 @@ A quarantined invariant stands on the last list in the file; *Until* is a date a
   it; where it has no such place, it stands in the sentence (WAY-60).
 - A condition held in a document the product neither writes nor pins, such as an outside standard,
   has no such place: it stands in the sentence, and the fact it rests on is named in *Rests on*
-  (WAY-60).
+  (WAY-60, WAY-73).
 - A sentence names no branch — neither as a point to compare with nor as the place where it holds —
   since a branch names a different commit by the hour. A sentence measuring what a commit, a merge
   or a merge request changes names the commit it is measured against by its value on the gate's
@@ -146,6 +146,10 @@ A quarantined invariant stands on the last list in the file; *Until* is a date a
 - *Derives from* names every decision entry this invariant is derived from, and *Rests on* every
   environment fact it rests on; neither link is optional, and a link the author knows is missing
   reads `TODO` rather than `none` (WAY-17).
+- *Rests on* names every environment fact holding a condition that decides whether a commit makes
+  the sentence true, and no other: read otherwise, such a fact would give some commit another
+  verdict under the same sentence, or change a value the sentence copies from it. A fact that is
+  only a reason for a decision the entry derives from stays in that decision's *Based on* (WAY-73).
 - Both carry the content fingerprint of each entry they name, and *Part* carries none. A change to
   that fingerprint reaches the main branch with every invariant carrying it, each checked against
   the new wording and carrying the new fingerprint (WAY-66).
