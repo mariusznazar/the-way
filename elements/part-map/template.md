@@ -18,6 +18,8 @@ not trust.
 - One derived file lies beside the map: the list of known violations (WAY-51).
 - Every field the form of an entry's kind gives appears in that entry, and holds `none` only where
   the form gives it that word; no field of the map holds `TODO` (WAY-71).
+- An entry is written in English, whatever language the product shows the people who use it and
+  whatever language its team speaks (WAY-72).
 
 ## Identifiers
 

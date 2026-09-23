@@ -15,9 +15,8 @@ This skill lives in `elements/part-map/skill/` of the-way repository. Installed 
 base directory is a link, so resolve it first: `realpath <base>` in Bash,
 `(Get-Item <base>).Target` in PowerShell. Read in full `template.md` from the parent of the
 resolved directory, `examples.md` where it exists, and the product's whole
-`foundations/part_map.md` — its three kinds of entry refer to one another. Entries take the
-language of the map; when the map has no entries, ask for it. When the repository has no
-`foundations/part_map.md`, ask whether the product starts its map here; if not, stop.
+`foundations/part_map.md` — its three kinds of entry refer to one another. When the repository
+has no `foundations/part_map.md`, ask whether the product starts its map here; if not, stop.
 
 ## 2. Decide what the entry is
 

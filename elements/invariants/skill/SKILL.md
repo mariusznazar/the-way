@@ -16,11 +16,10 @@ base directory is a link, so resolve it first: `realpath <base>` in Bash,
 `(Get-Item <base>).Target` in PowerShell. Read in full `template.md` from the parent of the
 resolved directory, `examples.md` where it exists, and the product's `foundations/invariants.md`,
 `foundations/part_map.md` and `foundations/decisions.md` — an entry names parts of the one and
-decisions of the other. Entries take the language of the file; when it has no entries, ask for
-it. When the repository has no `foundations/invariants.md`, ask whether the product starts its
-invariants here; if not, stop; if so, the same change claims the new file for the `invariants`
-part of the map through `update-part-map`. When it has no part map, the map comes first: stop until
-`update-part-map` has written it.
+decisions of the other. When the repository has no `foundations/invariants.md`, ask whether the
+product starts its invariants here; if not, stop; if so, the same change claims the new file for
+the `invariants` part of the map through `update-part-map`. When it has no part map, the map comes
+first: stop until `update-part-map` has written it.
 
 ## 2. Decide what the entry is
 

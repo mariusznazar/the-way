@@ -15,9 +15,8 @@ This skill lives in `elements/decisions/skill/` of the-way repository. Installed
 base directory is a link, so resolve it first: `realpath <base>` in Bash,
 `(Get-Item <base>).Target` in PowerShell. Read in full `template.md` and `examples.md` from the
 parent of the resolved directory, and the product's `foundations/decisions.md`. Entries take the
-prefix and the language of the log; when the log has no entries, ask for both. When the
-repository has no `foundations/decisions.md`, ask whether the product starts its decision log
-here; if not, stop.
+prefix of the log; when the log has no entries, ask for it. When the repository has no
+`foundations/decisions.md`, ask whether the product starts its decision log here; if not, stop.
 
 ## 2. Decide what the entry is
 

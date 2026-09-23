@@ -3555,3 +3555,44 @@ template in its table of states, the others in the form of each field. The part 
 `none` to *Files* and *Failure modes*, where the map's rules already read it: a part whose tool does
 not exist yet holds no files, and one with no failure modes recorded counts as the highest
 (WAY-46). Each element's format guard checks the level 1 invariants above for its own entries.
+
+### WAY-72/1 — In what language is a product's foundation written?
+
+A product's foundation is written in English, whatever language the product shows the people who
+use it and whatever language its team speaks.
+
+- **Change:** new decision
+- **Scope:** decisions, part-map, invariants, glossary, environment-facts
+- **Based on:** none
+- **Relations:** related to WAY-04 · related to WAY-05 · related to WAY-35 · related to WAY-38 ·
+  related to WAY-60 · related to WAY-71
+- **Outranks:** none
+- **Verification:** level 1 — invariant in working form: every element's template states that its
+  entries are written in English. Level 2 for the rest — an agent compares the change with the
+  decision:
+  - complies: the foundation of a game whose players read Polish, built by a team that speaks
+    Polish, is written in English;
+  - violates: a product starts its decision log in Polish because its users and its team speak it.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-23
+
+*Rationale:* the fields, the words `none` and `TODO` and the kinds of change are English in every
+template, and the format guards check words in English: the decision guard forbids *should*, *will*
+and the keywords of RFC 2119 and ends a sentence only before a capital from A to Z, and the
+invariants guard forbids "main branch" and "task branch" outside quoted text. An entry in another
+language passes those checks without a word, so they look kept while checking nothing, and keeping
+them for another language takes a list of words and a sentence counter for each language a product
+speaks. One language also lets the entries of this repository serve as examples for every product.
+*Rejected:* entries in the language of the product, with the words of each check listed per
+language in the templates — every check grows a list for each language used, and a language with
+none is checked by nothing; the language of the file, asked for when the file has no entries — the
+checks of words go silent on every other language; a guard reporting an entry in another language
+as unchecked — it would have to recognise the language first, which the standard library cannot do
+(WAY-38).
+*Consequences:* each element's template states that its entries are written in English, and the
+element's skill reads the rule from there and asks for no language (WAY-35). How text the product
+shows the people who use it stands in an entry — quoted in its own language or described in
+English — and how a source in another language is cited are not settled here; the first product
+whose users read another language settles them.

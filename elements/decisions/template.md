@@ -14,6 +14,8 @@ a script from the log.
   version. Before the main branch, an entry is corrected in place, and a correction that changes
   its meaning is accepted again.
 - Numbers carry the product's prefix. The forms below use `WAY`, the prefix of this repository.
+- An entry is written in English, whatever language the product shows the people who use it and
+  whatever language its team speaks (WAY-72).
 
 ## Decision version
 

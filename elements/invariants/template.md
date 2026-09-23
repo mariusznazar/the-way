@@ -31,6 +31,8 @@ written by hand (WAY-08).
   keeps it (WAY-64); a change of meaning then moves the version (WAY-57). An entry that takes in a
   clause of another keeps its identifier, and the other is split (WAY-64).
 - An entry holds only its current wording; earlier wordings are read from git (WAY-57).
+- An entry is written in English, whatever language the product shows the people who use it and
+  whatever language its team speaks (WAY-72).
 
 ## Entry
 
