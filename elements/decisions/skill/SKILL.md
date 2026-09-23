@@ -55,7 +55,8 @@ Fill every field according to the template, with extra care for these:
 ## 4. Ask, show, append
 
 1. Ask in one round about everything the source leaves open, each question with a proposed
-   value and the reason for it.
+   value and the reason for it. A question about a fact proposes where to look for it, never
+   the fact from memory, and the draft takes it only as read there.
 2. Show the whole entry. Apply corrections; on acceptance, write who accepted and the date in
    *Approved by*.
 3. Append the entry at the end of the log and run the format guard from the product's

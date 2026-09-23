@@ -69,7 +69,8 @@ Fill every field according to the template, with extra care for these:
 ## 4. Ask, show, write
 
 1. Ask in one round about everything the source leaves open, each question with a proposed value
-   and the reason for it.
+   and the reason for it. A question about a fact proposes where to look for it, never the fact
+   from memory, and the draft takes it only as read there.
 2. Show the whole entry. For a changed entry, show the wording on `{fork-point}` beside the new
    one, with the checks that cite it: a test needing a different expected value makes it a raise;
    otherwise a correction stands only on the human's word. Write nothing before the human accepts
