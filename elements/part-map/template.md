@@ -202,8 +202,8 @@ The derived file beside the map, `foundations/known_violations.md`, holds what t
 meet today. A position names the source part, the target part, the file and what it reaches for
 — never a line number. A new violation breaks the gate; a position the code no longer
 contradicts breaks it too and goes in the same change; a position is added only by a change of
-the foundation that a human accepts. The file is checked as a subset of the list on the main
-branch, never regenerated from scratch (WAY-51).
+the foundation that a human accepts. The file is checked as a subset of the list on the commit
+the task branch left the main branch from, never regenerated from scratch (WAY-51).
 
 ```markdown
 ## Known violations
@@ -242,8 +242,8 @@ patterns come from the part's *Files*. No overview of the repository is generate
   no withdrawal date is written in the map; every level used by a declaration has a change path.
 - Every exchange with the external context records its direction, its trust and whether its
   consumer updates with the product.
-- The list of known violations is a subset of the list on the main branch, and holds no position
-  the code no longer contradicts.
+- The list of known violations is a subset of the list on the commit the task branch left the main
+  branch from, and holds no position the code no longer contradicts.
 
 ## Examples
 

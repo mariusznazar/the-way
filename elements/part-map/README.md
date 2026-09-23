@@ -15,15 +15,16 @@ Entries are written according to `template.md`; `examples.md` holds verbatim cop
 from this repository's own map, `foundations/part_map.md`.
 
 `format_guard.py` checks a product's map against the list "What the checker checks" in
-`template.md`, reading from the template the fields of each kind of entry, the titles of the
-lists and the values their columns allow. Files are matched to parts by git itself, through the
-patterns a part records. From the product's repository root, in CI with its main branch:
+`template.md`, reading from the template the fields of each kind of entry, the titles of the lists
+and the values their columns allow. Files are matched to parts by git itself, through the patterns a
+part records. From the product's repository root, with the commit the task branch left the main
+branch from:
 
 ```
-python <the-way>/elements/part-map/format_guard.py --base origin/main
+python <the-way>/elements/part-map/format_guard.py --base <commit>
 ```
 
-Without `--base`, the list of known violations is not compared with the one on the main branch.
+Without `--base`, the list of known violations is not compared with the one on that commit.
 What the script cannot see it reports as unchecked, never as agreement (WAY-38): a flow whose
 test leaves no coverage file, the change path of a promise level declared in the code, and new
 or stale violations, which wait for the command a product declares for its dependency graph. Its

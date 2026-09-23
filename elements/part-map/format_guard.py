@@ -8,9 +8,10 @@ Usage, from the root of the product's repository:
 
     python <the-way>/elements/part-map/format_guard.py [MAP] [--base REF]
 
-MAP defaults to foundations/part_map.md. --base names the main branch the list of known
-violations is compared with; without it, that check is skipped. Exit code: 0 without errors,
-1 with errors, 2 when the map or the template cannot be read.
+MAP defaults to foundations/part_map.md. --base names the commit the task branch left the main
+branch from, which the list of known violations is compared with; without it, that check is
+skipped. Exit code: 0 without errors, 1 with errors, 2 when the map or the template cannot be
+read.
 """
 
 import argparse
@@ -489,7 +490,7 @@ def check_scopes(entries, sections, report, map_path):
 
 
 def check_violations(entries, sections, rules, report, map_path, base):
-    """The listed debt: a subset of the list on the main branch, with no stale position (WAY-51)."""
+    """The listed debt: a subset of the list on the base commit, with no stale position (WAY-51)."""
     report.cannot_check("the dependencies between parts, and new or stale violations",
                         "no command of the product reports the dependency graph")
     root_of_map = os.path.dirname(os.path.dirname(os.path.abspath(map_path)))
@@ -767,7 +768,8 @@ def run(map_path, base=None, stream=None, template=TEMPLATE):
 def main(argv=None):
     parser = argparse.ArgumentParser(description="Check a part map against its template.")
     parser.add_argument("map", nargs="?", default=os.path.join("foundations", "part_map.md"))
-    parser.add_argument("--base", help="the main branch to compare the map with, e.g. origin/main")
+    parser.add_argument("--base", help="the commit the task branch left the main branch from, "
+                                         "to compare the map with")
     arguments = parser.parse_args(argv)
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")

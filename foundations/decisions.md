@@ -54,14 +54,12 @@ only the part of an entry that binds — for a decision, its binding sentences.
 - **Based on:** none
 - **Relations:** none
 - **Outranks:** none
-- **Verification:** level 1 — invariants in working form:
-  - a reference whose fingerprint differs from its entry's current fingerprint is flagged;
-  - a change to a decision's rationale alone leaves its fingerprint unchanged;
-  - every referenced number exists.
+- **Verification:** level 1 — invariants: decision-guard-stale-reference ·
+  decision-fingerprint-input · log-reference-target · relation-fingerprint-value.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-14
+- **Approved by:** Mariusz, 2026-09-23
 
 *Rationale:* without a mechanism, following a change through everything that depends on it
 rests on a written rule and on memory. A product can hold hundreds of references to its entry
@@ -96,8 +94,7 @@ foundation step.
   https://www.lesswrong.com/posts/qJYMbrabcQqCZ7iqm/impossiblebench-measuring-reward-hacking-in-llm-coding-1).
 - **Relations:** derives from WAY-01@a291c2c0 · related to WAY-02
 - **Outranks:** none
-- **Verification:** level 1 — invariant in working form: a merge request that changes an
-  invariant test without an accepted foundation change fails the CI check.
+- **Verification:** level 1 — invariants: invariant-test-change-acceptance.
 - **Review when:** the design of the task cycle begins · check by: 2026-10-02
 - **Origin:** none
 - **Approver override:** none
@@ -125,9 +122,8 @@ without human memory: a test, a lint, a gate, a mandatory relation or configurat
   https://aerossurance.com/safety-management/nimrod-xv230-haddon-cave/).
 - **Relations:** related to WAY-02
 - **Outranks:** none
-- **Verification:** level 1 — invariant in working form: the foundation holds entries of the
-  five elements only. Level 2 for the rule on new patterns — an agent compares the change with
-  the decision:
+- **Verification:** level 1 — invariants: foundation-file-kinds. Level 2 for the rule on new
+  patterns — an agent compares the change with the decision:
   - complies: the failure modes a part can suffer enter the foundation as fields of that part
     in the part map, and its criticality is computed from them;
   - violates: a hand-written architecture document appears next to the part map.
@@ -187,13 +183,9 @@ decision, and an example there copies a version from the log word for word.
   (Miccio, Tommasel, Diaz-Pace, 2026, https://arxiv.org/html/2609.07375).
 - **Relations:** related to WAY-01 · related to WAY-02 · related to WAY-04
 - **Outranks:** none
-- **Verification:** level 1 — invariants in working form:
-  - binding sentences number one to three and contain no *should*, *will* or keyword of RFC 2119
-    in capitals;
-  - every example in `examples.md` matches its version in the log word for word;
-  - a commit that changes `template.md` also appends a decision version to the log.
-  Level 2 for the rule that every field has a reader — an agent compares the change with the
-  decision:
+- **Verification:** level 1 — invariants: binding-sentence-count · binding-sentence-words ·
+  decision-example-copy · decision-template-change. Level 2 for the rule that every field has a
+  reader — an agent compares the change with the decision:
   - complies: a new field enters the template together with the reader named in its table;
   - violates: a "notes" or "related artifacts" field that nothing reads.
 - **Review when:** none
@@ -231,9 +223,8 @@ reaches the main branch in the same merge as the code that follows it.
 - **Based on:** none
 - **Relations:** derives from WAY-01@a291c2c0 · related to WAY-03
 - **Outranks:** none
-- **Verification:** level 1 — invariant in working form: a commit that changes the foundation
-  reaches the main branch only by merging a task branch. Level 2 for the rule that the change
-  travels with its code — an agent compares the change with the decision:
+- **Verification:** level 1 — invariants: foundation-change-merge-route. Level 2 for the rule
+  that the change travels with its code — an agent compares the change with the decision:
   - complies: a task branch changes a decision entry and the code that follows it, and both
     reach the main branch in one merge;
   - violates: a task's foundation change is merged to the main branch ahead of its code; the
@@ -241,7 +232,7 @@ reaches the main branch in the same merge as the code that follows it.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-15
+- **Approved by:** Mariusz, 2026-09-23
 
 *Rationale:* the main branch never describes something the product does not have (WAY-01), and
 an abandoned task leaves no false description behind: its foundation change is dropped with its
@@ -253,7 +244,9 @@ for good.
 from the existing product — also reaches the main branch through a task branch. A file conflict
 catches two tasks that change the same entry in contradictory ways, but contradictory changes to
 different entries merge cleanly; the search against the current main branch before the merge
-(WAY-33) is what catches them.
+(WAY-33) is what catches them. A merge into the main branch keeps a merge commit: a squash or a
+rebase puts the task's commits on the main branch's first-parent history as ordinary commits,
+and the level 1 invariant reads them as commits that reached it without a merge.
 
 ### WAY-07/1 — From when may a decision entry no longer be edited?
 
@@ -267,12 +260,8 @@ the log there only grows at the end.
 - **Based on:** none
 - **Relations:** derives from WAY-06@fe7c4068 · related to WAY-05
 - **Outranks:** none
-- **Verification:** level 1 — invariants in working form:
-  - a merge to the main branch that changes or removes a line of the log already on the main
-    branch fails the format guard;
-  - a merge to the main branch adds at most one version of each number.
-  Level 2 for acceptance after a change of meaning — an agent compares the change with the
-  decision:
+- **Verification:** level 1 — invariants: log-existing-lines · log-versions-added-per-number. Level
+  2 for acceptance after a change of meaning — an agent compares the change with the decision:
   - complies: an accepted entry whose binding sentences changed on the task branch is shown to
     its approver again before the merge;
   - violates: an entry reaches the main branch with binding sentences its approver never saw.
@@ -289,9 +278,9 @@ a change of meaning without a new acceptance, it would name someone who did not 
 entry says.
 *Rejected:* an entry fixed from the moment it is written — every correction made during a task
 becomes a version that never bound anything.
-*Consequences:* the format guard compares the log with the main branch, not with the previous
-commit. Until this log reaches the main branch, its entries are corrected in place. A copy in
-`examples.md` follows its version when the version is corrected.
+*Consequences:* the format guard compares the log with the commit the task branch left the main
+branch from, not with the previous commit. Until this log reaches the main branch, its entries are
+corrected in place. A copy in `examples.md` follows its version when the version is corrected.
 
 ### WAY-08/1 — How is an invariant checked?
 
@@ -312,11 +301,9 @@ leaves a trace of who checked and when.
   not be certain, and manual review is needed" (https://github.com/dequelabs/axe-core).
 - **Relations:** related to WAY-03 · related to WAY-04
 - **Outranks:** none
-- **Verification:** level 1 — invariants in working form:
-  - every invariant names a method of checking;
-  - every invariant test fails on a deliberately introduced break of its invariant;
-  - every result of a human inspection names who checked and when.
-  Level 2 for the choice of method — an agent compares the change with the decision:
+- **Verification:** level 1 — invariants: invariant-method-form · invariant-test-break ·
+  human-verdict-trace. Level 2 for the choice of method — an agent compares the change with the
+  decision:
   - complies: a person settles whether an image's text alternative describes it, after the
     accessibility check marked it incomplete;
   - violates: an invariant that a repeatable measurement can settle is left to human inspection.
@@ -356,13 +343,8 @@ by the scripts of their elements.
 - **Relations:** related to WAY-02 · related to WAY-04 · related to WAY-06 · related to WAY-21 ·
   related to WAY-44 · related to WAY-55
 - **Outranks:** none
-- **Verification:** level 1 — invariants in working form:
-  - every file on the main branch lies in `foundations/`, in the directory of a part of the
-    process, is a file the part map gives to the `repository` part, or is the `README.md` at the
-    root;
-  - every element directory on the main branch holds a template, examples, a skill and a script
-    that checks its entries;
-  - `relation-model/` on the main branch holds the script that computes fingerprints.
+- **Verification:** level 1 — invariants: repository-file-location · element-directory-contents ·
+  relation-model-directory-contents.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
@@ -412,10 +394,9 @@ a human decides.
   (Panickssery et al., 2024, https://arxiv.org/abs/2404.13076).
 - **Relations:** derives from WAY-03@4fa941a4 · related to WAY-07
 - **Outranks:** none
-- **Verification:** level 1 — invariant in working form: a merge request that changes an invariant
-  test or a foundation entry without the panel's record — two assessments and a settlement —
-  fails the CI check. Level 2 for what the panel decides — an agent compares the change with the
-  decision:
+- **Verification:** level 1 — invariants: invariant-test-change-acceptance ·
+  foundation-change-panel-record. Level 2 for what the panel decides — an agent compares the change
+  with the decision:
   - complies: the panel accepts a new selector in an invariant test, and the change is merged
     without a human;
   - violates: the panel accepts a changed expected value in an invariant test; an assessing agent
@@ -448,9 +429,8 @@ review of the whole foundation runs alongside, independent of tasks.
 - **Based on:** none
 - **Relations:** derives from WAY-01@a291c2c0 · related to WAY-06 · related to WAY-10
 - **Outranks:** none
-- **Verification:** level 1 — invariant in working form: a merge request without the record of
-  its return step fails the CI check. Level 2 for what the return step finds — an agent compares
-  the change with the decision:
+- **Verification:** level 1 — invariants: return-step-record. Level 2 for what the return step finds
+  — an agent compares the change with the decision:
   - complies: a rule the implementer wrote into the code for an edge case comes back as a
     proposed invariant before the merge;
   - violates: the return step reports nothing to add, while the diff brings in behaviour that no
@@ -486,10 +466,8 @@ each covering the part of its binding sentences it can check.
   https://arxiv.org/abs/2602.07609).
 - **Relations:** related to WAY-05 · related to WAY-08
 - **Outranks:** none
-- **Verification:** level 1 — invariants in working form:
-  - every decision entry names its verification level, and a level 1 entry names at least one
-    invariant;
-  - a test that cites a foundation entry cites an invariant, never a decision.
+- **Verification:** level 1 — invariants: decision-verification-level ·
+  level-one-decision-invariants · invariant-citation-target · verification-invariant-derivation.
   Level 2 for the choice of level — an agent compares the change with the decision:
   - complies: a decision on the product's direction is checked by an agent with a complying and a
     violating example;
@@ -497,7 +475,7 @@ each covering the part of its binding sentences it can check.
 - **Review when:** the design of the task cycle begins · check by: 2026-10-02
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-15
+- **Approved by:** Mariusz, 2026-09-23
 
 *Rationale:* an invariant is true or false on every commit, so a test can check it; a decision
 about direction, trade-offs or non-goals often cannot be checked on a commit. Agents compare a
@@ -507,8 +485,8 @@ A pair of examples shows the agent where the line runs, which the binding senten
 *Rejected:* a rule in code as the only method of checking a decision — decisions that cannot be
 written as a rule would stay unchecked.
 *Consequences:* the section "Verification" of the decision template is the written form of this
-decision. Until the invariants element has its template, a derived invariant is named in working
-form. A decision moves to level 1 once an invariant is derived from it.
+decision. A derived invariant is named in *Verification* by the identifier of its entry in the
+product's invariants file. A decision moves to level 1 once an invariant is derived from it.
 
 ### WAY-13/1 — What sets the weight of a task's process?
 
@@ -533,9 +511,8 @@ never less. A human decides on every change that cannot be undone.
 - **Relations:** related to WAY-01 · related to WAY-04 · related to WAY-10 ·
   related to WAY-46 · related to WAY-48
 - **Outranks:** none
-- **Verification:** level 1 — invariant in working form: a merge request that changes a
-  foundation entry, run on the path for tasks that do not change the foundation, fails the CI
-  check. Level 2 for the rest — an agent compares the change with the decision:
+- **Verification:** level 1 — invariants: foundation-change-path. Level 2 for the rest — an agent
+  compares the change with the decision:
   - complies: a one-line change to a stored data format, after which users' saved data no
     longer loads, goes through the sharpest checks and waits for a human's decision;
   - violates: a task gets the heavier path because of the number of lines it changes; a change
@@ -577,10 +554,7 @@ version records who approved it and when.
   https://www.gov.uk/government/publications/architectural-decision-record-framework/architectural-decision-record-framework).
 - **Relations:** related to WAY-05 · related to WAY-07 · related to WAY-10 · related to WAY-13
 - **Outranks:** none
-- **Verification:** level 1 — invariants in working form:
-  - every decision version records who approved it and when;
-  - every version is approved by the approver the process rule gives for the parts in its
-    scope, or by the one its *Approver override* names.
+- **Verification:** level 1 — invariants: decision-approval-record · decision-approver.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
@@ -663,10 +637,8 @@ command for an agent, CI and a human.
 - **Based on:** none
 - **Relations:** related to WAY-08 · related to WAY-13 · related to WAY-15
 - **Outranks:** none
-- **Verification:** level 1 — invariants in working form:
-  - CI runs no checking command other than the gate's command;
-  - every check the gate runs comes from a method of checking written in an entry.
-  Level 2 for the same command for everyone — an agent compares the change with the decision:
+- **Verification:** level 1 — invariants: ci-checking-commands · gate-check-source. Level 2 for the
+  same command for everyone — an agent compares the change with the decision:
   - complies: the instructions for agents name the gate's command as the way to check a change;
   - violates: the instructions for agents list test and lint commands of their own.
 - **Review when:** the design of the task cycle begins · check by: 2026-10-02
@@ -706,13 +678,12 @@ its invariant.
   https://www.esa.int/Newsroom/Press_Releases/Ariane_501_-_Presentation_of_Inquiry_Board_report).
 - **Relations:** derives from WAY-02@af08ee5d · related to WAY-04 · related to WAY-12
 - **Outranks:** none
-- **Verification:** level 1 — invariants in working form:
-  - every invariant test names an invariant;
-  - every invariant named in a decision's level 1 verification names that decision.
+- **Verification:** level 1 — invariants: level-one-decision-invariants · invariant-citation-target
+  · verification-invariant-derivation.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-16
+- **Approved by:** Mariusz, 2026-09-23
 
 *Rationale:* the chain is the path a change travels: when a fact about the world changes, the
 decisions and invariants resting on it come up for review, and through them their tests. A link
@@ -728,8 +699,8 @@ about agents would have no fact to be flagged by.
 *Consequences:* until the environment facts element has entries, a decision quotes its facts
 with their sources in *Based on*; once it has them, every *Based on* in this log names them
 instead. On the main branch, a fact learned after a decision is added to it by a field change.
-Whether a decision's *Verification* keeps naming its invariants once they have entries of their
-own is not yet settled: it depends on the template of the invariants element.
+A decision's *Verification* names its level 1 invariants by the identifiers of their entries
+(WAY-12), and each of those entries names the decision in *Derives from*.
 
 ### WAY-18/1 — How are the history of decisions and what is in force kept apart?
 
@@ -750,10 +721,7 @@ is written at one end only, and the view shows it at the other.
   https://www.senat.gov.pl/gfx/senat/userfiles/_public/k10/kancelaria/wydawnictwa/pdf/zasady_techniki.pdf).
 - **Relations:** related to WAY-05 · related to WAY-07 · related to WAY-15 · related to WAY-17
 - **Outranks:** none
-- **Verification:** level 1 — invariants in working form:
-  - the view shows only the latest version of every number, and a single line for a repealed
-    number;
-  - every link written in the log is shown by the view at both of its ends.
+- **Verification:** level 1 — invariants: view-versions · view-links.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
@@ -796,12 +764,9 @@ loses it — by a new version on the main branch, by a correction before it.
   https://www.senat.gov.pl/gfx/senat/userfiles/_public/k10/kancelaria/wydawnictwa/pdf/zasady_techniki.pdf).
 - **Relations:** derives from WAY-02@af08ee5d · related to WAY-07 · related to WAY-18
 - **Outranks:** none
-- **Verification:** level 1 — invariants in working form:
-  - the heading of every decision version has the form `### <prefix>-NN/V — <question>`, and the
-    versions of a number are consecutive;
-  - every version after the first gives a rationale for the change.
-  Level 2 for one number per question and for sentences answered in passing — an agent compares
-  the change with the decision:
+- **Verification:** level 1 — invariants: decision-heading-form · decision-version-sequence ·
+  decision-change-rationale. Level 2 for one number per question and for sentences answered in
+  passing — an agent compares the change with the decision:
   - complies: once on the main branch, a new rule for who approves a version of a decision is
     written as WAY-14/2; when a decision on a question arrives, an older decision that answered
     it in passing loses that sentence;
@@ -846,11 +811,9 @@ version word for word, and a repeal has none.
   https://datatracker.ietf.org/doc/statement-iesg-iesg-processing-of-rfc-errata-for-the-ietf-stream-20080730).
 - **Relations:** related to WAY-02 · related to WAY-05 · related to WAY-18 · related to WAY-19
 - **Outranks:** none
-- **Verification:** level 1 — invariants in working form:
-  - every version after the first names a kind from the list;
-  - the binding sentences are identical to the previous version for a rationale change, a field
-    change and a challenge, and absent for a repeal.
-  Level 2 for the choice of kind — an agent compares the change with the decision:
+- **Verification:** level 1 — invariants: binding-sentence-count · decision-change-kind ·
+  decision-binding-across-versions · repeal-binding-sentences. Level 2 for the choice of kind — an
+  agent compares the change with the decision:
   - complies: a version that answers the question anew is called a replacement; a typo fixed in
     a binding sentence is called an editorial correction, and a human confirms that the meaning is
     unchanged;
@@ -893,11 +856,7 @@ the part map's rule for assigning files.
   https://code.claude.com/docs/en/memory).
 - **Relations:** related to WAY-04 · related to WAY-11 · related to WAY-13 · related to WAY-14
 - **Outranks:** none
-- **Verification:** level 1 — invariants in working form:
-  - every part named in a decision's scope exists in the part map;
-  - no decision's scope names a file path;
-  - the decisions found for a change include every decision whose scope names a part the change
-    touches.
+- **Verification:** level 1 — invariants: decision-scope-names · decisions-found-for-change.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
@@ -949,8 +908,7 @@ decision, and the checkable sentence becomes an invariant that names it.
 moving a checkable sentence out of its decision — the rule would be cut off from its reason.
 *Consequences:* the section "Decision or invariant" of the decision template, apart from its
 plan test, which belongs to WAY-36, and its last rule, which belongs to WAY-12, is the written form
-of this decision. Until the invariants
-element has its template, an invariant derived from a decision is named in working form in the
+of this decision. An invariant derived from a decision is named by its identifier in the
 decision's *Verification* (WAY-12).
 
 ### WAY-23/1 — How many decision logs does a product have?
@@ -1015,11 +973,8 @@ kept; or it has come and a named version changed the decision.
 - **Relations:** related to WAY-07 · related to WAY-17 · related to WAY-18 · related to WAY-19 ·
   related to WAY-20
 - **Outranks:** none
-- **Verification:** level 1 — invariants in working form:
-  - every *Review when* other than `none` names both a state and a date;
-  - a check-by date that has passed without a later review entry gives a warning;
-  - a review whose result is that the state has not come names a date in *Next check*;
-  - a review that names a version of the decision points to a version that exists.
+- **Verification:** level 1 — invariants: review-when-form · decision-guard-overdue-review ·
+  review-next-check · review-named-version.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
@@ -1054,8 +1009,8 @@ in one of them — by a new version on the main branch, by a correction before i
 - **Based on:** none
 - **Relations:** related to WAY-07 · related to WAY-14 · related to WAY-20
 - **Outranks:** none
-- **Verification:** level 1 — invariant in working form: no two decisions outrank each other.
-  Level 2 for a collision with no precedence — an agent compares the change with the decision:
+- **Verification:** level 1 — invariants: outranks-pairs. Level 2 for a collision with no precedence
+  — an agent compares the change with the decision:
   - complies: an agent meets two applicable decisions that pull opposite ways, finds no
     precedence between them, stops and asks for it;
   - violates: an agent settles the collision in favour of the newer decision; an agent infers
@@ -1144,9 +1099,8 @@ entry instead of being pointed to.
 - **Based on:** none
 - **Relations:** related to WAY-09 · related to WAY-17
 - **Outranks:** none
-- **Verification:** level 1 — invariant in working form: no file in the repository contains a link
-  into a private note collection or into a repository its readers cannot open. Level 2 for the
-  reasoning in the entry — an agent compares the change with the decision:
+- **Verification:** level 1 — invariants: outbound-link-reach. Level 2 for the reasoning in the
+  entry — an agent compares the change with the decision:
   - complies: a decision quotes a public study with its address; a pattern observed in a product
     outside the repository is described in the rationale — what was seen and where it went
     wrong — without a pointer to it;
@@ -1208,8 +1162,8 @@ invariant can bind before anyone knows why it holds.
 are known; everything on demand, the critical parts included — a break there is found only when
 a task happens to touch them.
 *Consequences:* an invariant recovered from behaviour needs a method of checking and the note
-WAY-58 sets, recording what was searched and what was found for or against keeping it; the
-invariants element has no template to carry that note yet (WAY-37).
+WAY-58 sets, recording what was searched and what was found for or against keeping it, which
+the invariants template carries as the field *Recovered*.
 A decision recovered for a task is written as the section "Inherited decisions" of the decision
 template says, and decision records the product already has are read as sources when their parts
 are touched (WAY-23).
@@ -1230,11 +1184,8 @@ never into the entry.
   substance" (Catio, https://www.catio.tech/blog/architecture-decision-record).
 - **Relations:** related to WAY-06 · related to WAY-10 · related to WAY-23 · related to WAY-28
 - **Outranks:** none
-- **Verification:** level 1 — invariants in working form:
-  - every inherited decision has *Origin* in the form `inherited — searched: <…>; found: <…>`;
-  - the *Rationale* of every inherited decision is `unknown`, a quotation with its source, or
-    attributed to the human who gave it.
-  Level 2 for the agent's part — an agent compares the change with the decision:
+- **Verification:** level 1 — invariants: inherited-origin-form · inherited-rationale-source. Level
+  2 for the agent's part — an agent compares the change with the decision:
   - complies: an agent finds the reason in a merged request and quotes it; an agent finds
     nothing, writes `unknown` and asks the human, who remembers the reason, and the entry gives
     it under that person's name;
@@ -1323,12 +1274,9 @@ carrying the new fingerprint.
 - **Relations:** derives from WAY-02@af08ee5d · related to WAY-17 · related to WAY-18 ·
   related to WAY-20 · related to WAY-24
 - **Outranks:** none
-- **Verification:** level 1 — invariants in working form:
-  - every `derives from` and `narrows` relation carries a fingerprint, and no `related to`
-    relation does;
-  - on the main branch, every fingerprint in a relation equals the current fingerprint of the
-    decision it names.
-  Level 2 for checking against the new wording — an agent compares the change with the decision:
+- **Verification:** level 1 — invariants: decision-guard-stale-reference ·
+  relation-fingerprint-presence · relation-fingerprint-value. Level 2 for checking against the new
+  wording — an agent compares the change with the decision:
   - complies: WAY-01 gets a new wording, and the same merge brings field change versions of the
     decisions deriving from it that still stand, and a new wording of one that no longer does;
   - violates: a script renews every old fingerprint in the log without anyone reading the
@@ -1376,9 +1324,8 @@ deliberately goes against in a narrower area; `related to` — any other link.
   Krishnan, https://www.ietf.org/archive/id/draft-kuehlewind-update-tag-04.html).
 - **Relations:** related to WAY-19 · related to WAY-20 · related to WAY-25 · related to WAY-31
 - **Outranks:** none
-- **Verification:** level 1 — invariant in working form: every relation in a decision entry has
-  one of the three types. Level 2 for the choice of type — an agent compares the change with the
-  decision:
+- **Verification:** level 1 — invariants: relation-type. Level 2 for the choice of type — an agent
+  compares the change with the decision:
   - complies: a decision that exists to serve WAY-01 names `derives from WAY-01`; a rule for one
     part that deliberately departs from a general decision names `narrows`;
   - violates: `narrows` for a decision that only mentions another; a new answer to an existing
@@ -1419,10 +1366,8 @@ check.
 - **Relations:** related to WAY-02 · related to WAY-06 · related to WAY-10 · related to WAY-11 ·
   related to WAY-21 · related to WAY-25 · related to WAY-31
 - **Outranks:** none
-- **Verification:** level 1 — invariant in working form: a merge request that changes a foundation
-  entry without the record of the search made when it was written and of the search against the
-  current main branch fails the CI check. Level 2 for what the search covers — an agent compares
-  the change with the decision:
+- **Verification:** level 1 — invariants: foundation-search-record. Level 2 for what the search
+  covers — an agent compares the change with the decision:
   - complies: a new decision to keep the state in the browser is written, the search finds a
     requirement for player accounts in another part that nothing links to it, and the
     contradiction goes to a human before the decision is accepted;
@@ -1431,7 +1376,7 @@ check.
 - **Review when:** the design of the task cycle begins · check by: 2026-10-02
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-16
+- **Approved by:** Mariusz, 2026-09-23
 
 *Rationale:* fingerprints (WAY-02, WAY-31) flag only links someone wrote, and the contradictions
 that cost most lie between entries written apart — in different parts, at different times — where
@@ -1454,8 +1399,7 @@ fingerprints, not a replacement for them. Where the record of the searches lives
 are set when the task cycle is designed, together with the records of the panel (WAY-10) and of
 the return step (WAY-11). A finding that is a collision with no precedence recorded stops the work
 (WAY-25). The skill that writes decisions searches the whole foundation, not only the decisions in
-an overlapping scope. Until the other elements have entries, the foundation searched is the
-decision log.
+an overlapping scope, and the foundation searched holds the entries of every element it has.
 
 ### WAY-34/1 — Which version of the process does a product use?
 
@@ -1470,19 +1414,19 @@ version of the process enters a product only through a task in the product that 
 - **Relations:** related to WAY-01 · related to WAY-09 · related to WAY-16 · related to WAY-21 ·
   related to WAY-23
 - **Outranks:** none
-- **Verification:** level 1 — invariants in working form:
-  - every product repository pins a commit of the-way;
-  - a product's CI runs only the gate and scripts of its pinned commit.
-  Level 2 for how a newer process enters — an agent compares the change with the decision:
-  - complies: a task in the product moves the pin, and its merge request carries what the newer
-    version changes for the product;
+- **Verification:** level 2 — an agent compares the change with the decision; the invariants of
+  this decision belong to each product's foundation, since no commit of the-way decides them:
+  - complies: a product's foundation holds the invariants "this repository pins a commit of
+    the-way" and "the product's CI runs only the gate and the scripts of its pinned commit"; a
+    task in the product moves the pin, and its merge request carries what the newer version
+    changes for the product;
   - violates: a product's CI fetches the latest the-way on every run; a skill in a product session
     comes from a copy of the-way other than the pinned commit.
 - **Review when:** the first product has moved its pin to a newer the-way twice · check by:
   2026-11-17
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-17
+- **Approved by:** Mariusz, 2026-09-23
 
 *Rationale:* a product checked with whatever the-way is newest gives a different result on the
 same commit from one day to the next, and a change to the process can stop the CI of every product
@@ -1498,7 +1442,9 @@ updating a dependency. A product session uses the skills of its pinned commit, s
 to a skill described in `elements/decisions/README.md` serves only work on the-way itself. How a
 product pins the commit is set by the first product that does. Which decisions of the-way an agent
 checks a task against is set when the task cycle is designed (WAY-21); they come from the pinned
-commit. The-way itself uses the commit it is on.
+commit. The-way itself uses the commit it is on. How a product's invariant that pins the commit
+names this decision in *Derives from*, when this decision stands in the log of the-way rather than
+in the product's own, is set by the first product that writes one.
 
 ### WAY-35/1 — What does an element's skill hold?
 
@@ -1510,9 +1456,8 @@ the element's template, and the skill reads the rules from there instead of rest
 - **Based on:** none
 - **Relations:** related to WAY-05 · related to WAY-09 · related to WAY-16
 - **Outranks:** none
-- **Verification:** level 1 — invariant in working form: every element's skill names its
-  element's template as the source of the rules. Level 2 for what the skill holds — an agent
-  compares the change with the decision:
+- **Verification:** level 1 — invariants: skill-rule-source. Level 2 for what the skill holds — an
+  agent compares the change with the decision:
   - complies: a correction of the skill's output that concerns the form of a field goes into the
     template, and the skill is left as it is; the skill orders its steps and says what to ask;
   - violates: the skill says a rationale has at most three sentences while the template does not;
@@ -1621,17 +1566,12 @@ could not check, never agreement.
   (https://github.com/obi1kenobi/cargo-semver-checks).
 - **Relations:** related to WAY-02 · related to WAY-09 · related to WAY-16 · related to WAY-34
 - **Outranks:** none
-- **Verification:** level 1 — invariants in working form:
-  - every script in the repository is a Python file;
-  - no script imports a module outside the standard library of Python 3.12;
-  - no script starts a program other than git or a command the product declares in its
-    repository;
-  - a check whose declared command is missing is reported as unchecked, and that report is not
-    an agreement.
+- **Verification:** level 1 — invariants: script-language · script-imports · script-subprocesses ·
+  map-guard-missing-command.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-17
+- **Approved by:** Mariusz, 2026-09-23
 
 *Rationale:* a product runs the scripts of the commit of the-way it pins (WAY-34), so every
 language and every package they need becomes something each product's CI has to provide. One
@@ -1672,17 +1612,11 @@ Nothing else in the text is changed before it is digested.
 - **Relations:** derives from WAY-02@af08ee5d · related to WAY-05 · related to WAY-09 ·
   related to WAY-31 · related to WAY-38
 - **Outranks:** none
-- **Verification:** level 1 — invariants in working form:
-  - the fingerprint the relation model's script gives for a text equals the first eight
-    characters of the SHA-256 digest of that text with its whitespace reduced as the decision
-    says;
-  - binding sentences wrapped at different line lengths give the same fingerprint;
-  - binding sentences that differ in one character other than whitespace give different
-    fingerprints.
+- **Verification:** level 1 — invariants: fingerprint-definition.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-17
+- **Approved by:** Mariusz, 2026-09-23
 
 *Rationale:* entries are wrapped by hand at a line length, and wrapping them again says nothing
 new, so a flag raised by it would be raised for nothing (WAY-02). Every other change counts,
@@ -1715,14 +1649,11 @@ own. The whole map lives in one Markdown file of fixed shape in `foundations/`.
 - **Based on:** none
 - **Relations:** derives from WAY-04@f7328944 · related to WAY-15 · related to WAY-23
 - **Outranks:** none
-- **Verification:** level 1 — invariants in working form:
-  - every entry of the part map is a part, a critical flow or a surface;
-  - the product has exactly one part map file, and it lies in `foundations/`;
-  - no allowed dependency and no list of known violations appears as an entry of the map.
+- **Verification:** level 1 — invariants: map-entry-kinds · map-section-kinds · part-map-file.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-17
+- **Approved by:** Mariusz, 2026-09-23
 
 *Rationale:* each kind answers a question the others cannot: a part says what a piece of the
 product is responsible for and which files belong to it, a flow says what has to keep working
@@ -1764,11 +1695,8 @@ reused.
   https://github.com/backstage/backstage/blob/master/docs/features/software-catalog/descriptor-format.md).
 - **Relations:** derives from WAY-40@aeabb301 · related to WAY-02 · related to WAY-19
 - **Outranks:** none
-- **Verification:** level 1 — invariants in working form:
-  - every entry of the map has an identifier made of words, and no two entries share one;
-  - every part map identifier referred to from the foundation, from a test or from a generated
-    rule file exists in the map, as an entry or as a withdrawal line;
-  - no entry carries an identifier that a withdrawal line holds.
+- **Verification:** level 1 — invariants: decision-scope-names · map-identifier-form ·
+  identifier-holders · map-reference-target.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
@@ -1807,16 +1735,11 @@ changed part.
 - **Based on:** none
 - **Relations:** derives from WAY-02@af08ee5d · related to WAY-39 · related to WAY-40
 - **Outranks:** none
-- **Verification:** level 1 — invariants in working form:
-  - the fingerprint a script gives for an entry of the map equals the fingerprint of its
-    binding sentence alone;
-  - a change to a part's path patterns, dependencies or failure modes leaves its fingerprint
-    unchanged;
-  - a change to a part's responsibility sentence changes its fingerprint.
+- **Verification:** level 1 — invariants: map-fingerprint-input.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-17
+- **Approved by:** Mariusz, 2026-09-23
 
 *Rationale:* a fingerprint exists to flag the references that may have gone stale (WAY-02), so
 it covers what those references rest on. What refers to a part — a decision's scope, a test, a
@@ -1848,8 +1771,8 @@ there.
 - **Relations:** derives from WAY-01@a291c2c0 · related to WAY-07 · related to WAY-19 ·
   related to WAY-40
 - **Outranks:** none
-- **Verification:** level 1 — invariant in working form: no entry of the part map carries a
-  version. Level 2 for the rest — an agent compares the change with the decision:
+- **Verification:** level 1 — invariants: map-entry-version. Level 2 for the rest — an agent
+  compares the change with the decision:
   - complies: a part whose responsibility narrows has its sentence rewritten in the same change
     as the code;
   - violates: a part gains a second version of its responsibility with the earlier one kept
@@ -1897,11 +1820,8 @@ changes, not from the part the file itself belongs to.
 - **Relations:** derives from WAY-40@aeabb301 · related to WAY-04 · related to WAY-15 ·
   related to WAY-21 · related to WAY-38
 - **Outranks:** none
-- **Verification:** level 1 — invariants in working form:
-  - every file git tracks matches the patterns of exactly one part, or stands on the map's list
-    of files left out on purpose;
-  - no pattern in the map matches no file;
-  - no file on the list of files left out on purpose matches a part's patterns.
+- **Verification:** level 1 — invariants: file-part-assignment · path-pattern-reach ·
+  left-out-file-assignment.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
@@ -1952,15 +1872,13 @@ every critical flow runs on every change.
 - **Relations:** derives from WAY-40@aeabb301 · related to WAY-08 · related to WAY-13 ·
   related to WAY-16 · related to WAY-44
 - **Outranks:** none
-- **Verification:** level 1 — invariants in working form:
-  - every part named in a flow's list of parts exists in the map;
-  - every critical flow has an invariant whose test names it;
-  - the gate runs the test of every critical flow on every change.
+- **Verification:** level 1 — invariants: flow-part-names · flow-invariant-link · gate-reported-set
+  · flow-test-run.
 - **Review when:** a product holds more critical flows than its gate can run on every change ·
   check by: 2026-12-31
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-17
+- **Approved by:** Mariusz, 2026-09-23
 
 *Rationale:* a flow needs a place in the map, not only an invariant, because two things have to
 be computed from it: the criticality it passes to the parts it runs through, and the fact that a
@@ -2010,13 +1928,8 @@ criticality needs no reason, and lowering it needs one, written at the part.
 - **Relations:** derives from WAY-40@aeabb301 · related to WAY-04 · related to WAY-13 ·
   related to WAY-15 · related to WAY-45
 - **Outranks:** none
-- **Verification:** level 1 — invariants in working form:
-  - every failure mode recorded at a part names its severity and either an invariant that
-    detects it before release or an explicit "not detected";
-  - no criticality of a part is written by hand in the map;
-  - a part with no failure modes recorded is computed as the highest criticality;
-  - a dependency running from a part of higher criticality to one of lower criticality, with no
-    separation recorded, is reported.
+- **Verification:** level 1 — invariants: failure-mode-severity · failure-mode-detection ·
+  part-criticality-field · map-guard-unrecorded-criticality · map-guard-dependency-report.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
@@ -2064,12 +1977,8 @@ already makes, and this check starts no second run of the tests.
 - **Relations:** derives from WAY-45@3991b544 · related to WAY-16 · related to WAY-38 ·
   related to WAY-44
 - **Outranks:** none
-- **Verification:** level 1 — invariants in working form:
-  - for every flow whose test leaves a coverage file, every part that coverage names stands in
-    the flow's list of parts;
-  - a flow whose test leaves no coverage file is reported as unchecked, and that report is not
-    an agreement;
-  - the check starts no test run of its own.
+- **Verification:** level 1 — invariants: flow-coverage-parts · map-guard-missing-coverage ·
+  map-guard-test-runs.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
@@ -2113,12 +2022,8 @@ criticality of the part.
 - **Relations:** derives from WAY-40@aeabb301 · related to WAY-11 · related to WAY-13 ·
   related to WAY-44 · related to WAY-46
 - **Outranks:** none
-- **Verification:** level 1 — invariants in working form:
-  - every trust boundary in the map names a pattern of files, and that pattern matches at least
-    one file;
-  - every exchange with the external context records its direction and whether what comes in is
-    trusted;
-  - a change that touches the files of a boundary runs the check for crafted input.
+- **Verification:** level 1 — invariants: trust-boundary-pattern · external-exchange-row ·
+  gate-boundary-change.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
@@ -2161,11 +2066,8 @@ be marked at the element is written in the map by hand and checked by a test.
 - **Relations:** derives from WAY-40@aeabb301 · related to WAY-15 · related to WAY-34 ·
   related to WAY-44
 - **Outranks:** none
-- **Verification:** level 1 — invariants in working form:
-  - every element declared a surface carries a level of promise;
-  - every surface entry in the map names a declaration that exists, or says the surface cannot
-    be marked at the element and names the test that checks it;
-  - no withdrawal date is written in the map.
+- **Verification:** level 1 — invariants: surface-promise-level · surface-declaration ·
+  map-withdrawal-date.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
@@ -2211,11 +2113,8 @@ product.
   https://kubernetes.io/docs/reference/using-api/deprecation-policy/).
 - **Relations:** derives from WAY-49@631b41c6 · related to WAY-34 · related to WAY-48
 - **Outranks:** none
-- **Verification:** level 1 — invariants in working form:
-  - every level of promise a declaration uses has a policy in the map;
-  - no surface entry carries a change path of its own;
-  - every exchange with the external context records whether its consumer updates together with
-    the product.
+- **Verification:** level 1 — invariants: external-exchange-row · promise-level-policy ·
+  surface-change-path.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
@@ -2264,13 +2163,8 @@ list once.
 - **Relations:** derives from WAY-40@aeabb301 · narrows WAY-15@72eb2240 · related to WAY-01 ·
   related to WAY-28
 - **Outranks:** none
-- **Verification:** level 1 — invariants in working form:
-  - every violation of a map rule that the code holds stands on the list of known violations, or
-    the gate fails;
-  - the list on a branch is a subset of the list on the main branch;
-  - a position the code no longer contradicts fails the gate;
-  - every position names a source part, a target part, a file and what it reaches for, and no
-    line number.
+- **Verification:** level 1 — invariants: known-violation-coverage · known-violations-growth ·
+  known-violation-currency · known-violation-fields · known-violation-line-number.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
@@ -2319,11 +2213,8 @@ overview of the repository is generated for an agent.
 - **Relations:** derives from WAY-40@aeabb301 · related to WAY-15 · related to WAY-21 ·
   related to WAY-44
 - **Outranks:** none
-- **Verification:** level 1 — invariants in working form:
-  - every generated rule file is identical to what the generator produces from the map on the
-    same commit;
-  - every path pattern in a generated rule file comes from a part's rule for assigning files;
-  - no file generated for an agent holds an overview of the repository's directories.
+- **Verification:** level 1 — invariants: derived-file-content · generated-pattern-source ·
+  generated-overview.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
@@ -2360,12 +2251,7 @@ on the commit the branch left the main branch from.
 - **Based on:** none
 - **Relations:** derives from WAY-15@72eb2240 · related to WAY-08 · related to WAY-51
 - **Outranks:** none
-- **Verification:** level 1 — invariants in working form:
-  - every derived file is identical to what its generator produces on the same commit, except
-    for the values that file declares as varying between runs;
-  - every value skipped in that comparison is declared in the file that carries it;
-  - every derived file compared as a subset of the main branch is named in the template of its
-    element.
+- **Verification:** level 1 — invariants: derived-file-content · derived-subset-naming.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
@@ -2457,9 +2343,8 @@ product promises, which the code cannot show.
   https://arxiv.org/abs/1901.07700).
 - **Relations:** related to WAY-04 · related to WAY-08 · related to WAY-11 · related to WAY-53
 - **Outranks:** none
-- **Verification:** level 1 — invariant in working form: every derived file in the repository
-  agrees with what its generator produces, in the way WAY-53 sets out. Level 2 for what is
-  derived and what is written by hand — an agent compares the change with the decision:
+- **Verification:** level 1 — invariants: derived-file-content. Level 2 for what is derived and what
+  is written by hand — an agent compares the change with the decision:
   - complies: the view of the decisions in force is generated from the log; the existing
     dependencies between parts are read from the dependency graph the product's own tooling
     produces and compared with the allowed dependencies written in the part map;
@@ -2497,9 +2382,8 @@ the task cycle, not to this part.
 - **Relations:** narrows WAY-44@220f5b85 · related to WAY-09 · related to WAY-16 ·
   related to WAY-21 · related to WAY-45 · related to WAY-47
 - **Outranks:** none
-- **Verification:** level 1 — invariant in working form: every critical flow in this repository's
-  part map names a test whose path lies under `gate/`. Level 2 for the rest — an agent compares
-  the change with the decision:
+- **Verification:** level 1 — invariants: flow-test-location. Level 2 for the rest — an agent
+  compares the change with the decision:
   - complies: the code that runs the checks is added under `gate/`, and what the gate does with a
     failing check is settled in the task cycle;
   - violates: the one command CI invokes to run every check (WAY-16) is added inside an element's
@@ -2557,9 +2441,8 @@ checking and the links that WAY-08 and WAY-17 require stand beside that sentence
 - **Relations:** derives from WAY-22@52c514ca · related to WAY-02 · related to WAY-08 ·
   related to WAY-12 · related to WAY-17 · related to WAY-26 · related to WAY-37
 - **Outranks:** none
-- **Verification:** level 1 — invariant in working form: every invariant entry states its
-  invariant in one sentence. Level 2 for one invariant per sentence — an agent compares the
-  change with the decision:
+- **Verification:** level 1 — invariants: invariant-sentence-count. Level 2 for one invariant per
+  sentence — an agent compares the change with the decision:
   - complies: "every entry in the log has every field of the template" is one entry, though a
     commit can break it for a single entry or a single field; "every result of a human inspection
     names who checked and when" is one entry;
@@ -2590,8 +2473,7 @@ the log would fall apart into one entry per entry.
 element's format guard counts sentences as the decisions guard does, which catches length only:
 two rules joined in one sentence pass it and are left to review. What in an invariant entry
 binds is set by WAY-59. What an invariant entry names in the part map, so that a change reaches the
-invariants it can break, is set by WAY-62. The invariants written in working form in this log are
-rewritten under WAY-37 once the template exists.
+invariants it can break, is set by WAY-62.
 
 ### WAY-57/1 — Is an invariant entry versioned?
 
@@ -2614,25 +2496,12 @@ flagged, as WAY-02 has it.
   related to WAY-31 · related to WAY-39 · related to WAY-43 · related to WAY-45 ·
   related to WAY-54 · related to WAY-56
 - **Outranks:** none
-- **Verification:** level 1 — invariants in working form, all kept by the invariants element's
-  format guard, which the gate runs once it exists (WAY-55); the first five use the relation
-  model's fingerprint function, and the last two only compare a cited version with the entry's
-  current one:
-  - every invariant entry carries a version number;
-  - an invariant entry with no fingerprint on the main branch carries version 1 and no
-    declaration of a correction;
-  - an entry whose fingerprint differs from its fingerprint on the main branch carries either a
-    version one higher than there and no declaration of a correction, or the same version and a
-    declaration naming its fingerprint there and its current one;
-  - an entry whose fingerprint equals its fingerprint on the main branch carries the version it
-    has there, and no declaration of a correction whose second fingerprint differs from it;
-  - no invariant entry holds, beside its current wording, a wording it held on the main branch;
-  - every invariant test cites its invariant with a version, in the citation form the template
-    gives;
-  - an invariant test that cites a version other than the current one fails the gate.
-  Level 2 for what counts as a correction — a change after which some test citing the entry would
-  need a different expected value is a raise, never a correction, because WAY-10 treats a changed
-  expected value as more than a test's form; an agent compares the change with the decision:
+- **Verification:** level 1 — invariants: invariant-version-number · invariant-version-new ·
+  invariant-version-changed · invariant-version-unchanged · invariant-earlier-wording ·
+  invariant-citation-version. Level 2 for what counts as a correction — a change after which some
+  test citing the entry would need a different expected value is a raise, never a correction,
+  because WAY-10 treats a changed expected value as more than a test's form; an agent compares the
+  change with the decision:
   - complies: a typo in an invariant's sentence is fixed under a declaration naming both
     fingerprints, the human deciding the change confirms it seeing both wordings, and no test's
     citation changes; "at most three" rewritten as "at most four" raises the version, and the test
@@ -2732,16 +2601,11 @@ human deciding the change sets the field with that report in front of them.
   related to WAY-38 · related to WAY-47 · related to WAY-54 · related to WAY-55 ·
   related to WAY-56 · related to WAY-57
 - **Outranks:** none
-- **Verification:** level 1 — invariants in working form:
-  - every invariant entry carries the field, holding `none` or a value of the form
-    `recovered — searched: <…>; found: <…>`;
-  - every invariant entry that names a decision entry it derives from holds `none` in the field;
-  - for every invariant entry whose wording a change adds or alters, the gate's report on that
-    change states whether the entry's method passed and broke on the commit the branch left from,
-    or that this could not be checked.
-  Level 3 for the value of the field — the human deciding the change sets it with the gate's
-  report in front of them, and the record of that decision names who and when. Level 2 for what
-  counts as already done and what *found* holds — an agent compares the change with the decision:
+- **Verification:** level 1 — invariants: invariant-recovered-form · invariant-recovered-derived ·
+  gate-fork-point-evidence. Level 3 for the value of the field — the human deciding the change sets
+  it with the gate's report in front of them, and the record of that decision names who and when.
+  Level 2 for what counts as already done and what *found* holds — an agent compares the change with
+  the decision:
   - complies: entering a game, an agent lists what its save module does, a human chooses "a save of
     another version is rejected whole", the gate reports that the check passes and breaks on the
     commit the branch left from, and the entry reads `recovered — searched: the save module and its
@@ -2825,18 +2689,11 @@ beside the sentence, its version, a declaration of a correction and the recovere
   related to WAY-39 · related to WAY-42 · related to WAY-55 · related to WAY-57 ·
   related to WAY-58
 - **Outranks:** none
-- **Verification:** level 1 — invariants in working form, kept by the invariants element's format
-  guard:
-  - the fingerprint the guard gives for an invariant entry equals the fingerprint of its sentence
-    alone;
-  - a change to an invariant entry's method of checking, to the links it names beside the
-    sentence, to its version, to a declaration of a correction or to its recovered field leaves
-    its fingerprint unchanged;
-  - a change to an invariant entry's sentence other than in whitespace changes its fingerprint.
+- **Verification:** level 1 — invariants: invariant-fingerprint-input.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-22
+- **Approved by:** Mariusz, 2026-09-23
 
 *Rationale:* a fingerprint exists to flag what relies on an entry's wording (WAY-02), and for an
 invariant the first thing that relies on it is its version: when the fingerprint differs from the
@@ -2869,9 +2726,8 @@ field would raise the version and fail every citing test for nothing; the method
 the binding part — a new test for the same meaning would fail every test citing the entry; a
 fingerprint per field — every reference would have to say which field it relies on.
 *Consequences:* the template of the invariants element marks the sentence as the binding part. Where
-a condition that decides an invariant may stand is set by WAY-60; which links between entries
-carry a fingerprint is set by WAY-66. The rewrite of the invariants in working form that WAY-56 sets may need another pass once
-both are applied. The sentences of WAY-57 and WAY-58 that placed the version, the
+a condition that decides an invariant may stand is set by WAY-60; which links between entries carry
+a fingerprint is set by WAY-66. The sentences of WAY-57 and WAY-58 that placed the version, the
 declaration of a correction and the recovered field outside the fingerprint answered this question
 in passing and lose those clauses (WAY-19); with them go WAY-57's consequence saying it answered
 part of the question, the half of another that waited for it, and WAY-58's level 1 invariant on the
@@ -2897,11 +2753,8 @@ names its bound or tolerance, statistic and population.
   related to WAY-34 · related to WAY-38 · related to WAY-51 · related to WAY-53 ·
   related to WAY-57 · related to WAY-58 · related to WAY-61
 - **Outranks:** none
-- **Verification:** level 1 — invariants in working form:
-  - no invariant sentence, outside quoted text, contains the words "main branch" or "task branch";
-  - every value from the gate's list that an invariant's sentence names outside quoted text is
-    taken by its command, unless its method is not a command.
-  Level 2 for the rest — an agent compares the change with the decision:
+- **Verification:** level 1 — invariants: sentence-branch-names · sentence-gate-values. Level 2 for
+  the rest — an agent compares the change with the decision:
   - complies: "every entry in the log has every field of the template"; "the list of violated
     invariants is a subset of its version on `{fork-point}`", the commit WAY-53 chose;
   - violates: "every request is answered within the limit set in `config.py`"; "every fingerprint
@@ -2957,14 +2810,9 @@ pass.
   related to WAY-47 · related to WAY-48 · related to WAY-49 · related to WAY-50 · related to WAY-53 ·
   related to WAY-55 · related to WAY-56 · related to WAY-58 · related to WAY-59
 - **Outranks:** none
-- **Verification:** level 1 — invariants in working form:
-  - every invariant entry's method is a command that begins with the name of the program it runs, or
-    the path alone of a file that exists;
-  - every value a method's command takes from the gate stands on the template's list;
-  - for every invariant whose command a run of the gate carried out, the gate's report shows the
-    verdict that run recorded for the entry's identifier and its current version, and no pass for an
-    entry the run recorded no verdict for.
-  Level 2 for what a method checks — an agent compares the change with the decision:
+- **Verification:** level 1 — invariants: invariant-method-form · method-gate-values ·
+  gate-verdict-per-entry · gate-pass-without-verdict. Level 2 for what a method checks — an agent
+  compares the change with the decision:
   - complies: "every entry in the log has every field of the template" names the decision guard
     run on `foundations/decisions.md`, and one run of the guard records a verdict for each
     invariant it checks; "a save of another version is rejected whole" names a test that hands the
@@ -3017,52 +2865,49 @@ version a check cites — a check still written for an earlier meaning would pas
 tests of a check, run on input made up for them, as the method of a sentence about the data that check
 reads — they show the check catches a break, not that the data holds; a method in prose — the gate
 cannot run it (WAY-16).
-*Consequences:* the template of the invariants element gives the two forms of a method; the closed list
-of values the gate fills into a command, which starts with the commit the task branch left the main
-branch from (WAY-57), which is the last commit of the main branch the branch contains, and the
-commit of the main branch that a merge into it is made onto, and grows by a new version of this decision; and the closed list of
-formats a run's record may take, which starts with the-way's own record of a run and grows the same way,
-together with the adapter that reads a product's format (WAY-38). The format is read off the record, so
-the template's `reads:` goes with `runs as:`. Where a commit on the list does not exist, as the main
-branch in this repository, the gate fills in that it does not exist and the check records its verdict,
-as WAY-57 already says for its own checks; the gate never turns that into a pass. A command that leaves
-its record in a file names that file's path in the command itself, at a place in the working tree that
-does not change between runs; a method may read what another method's run left only where a decision
-places it, as WAY-47 does, and the gate then runs the first before the second. A run's own output is what
-the gate reads; the record of the result it keeps in the repository is the one WAY-53 compares. The result
-an entry has is the verdict of the run on the commit being checked; the run WAY-58 asks for on the commit
-the branch left from is evidence for a human, not a result. The format guards of decisions, of the part
-map and of invariants, once they record a verdict for each invariant they check, cite those invariants and
-are invariant tests under WAY-65, read-only during implementation (WAY-03) and changing through the panel
-(WAY-10). Recording a verdict for each invariant, and taking in place of a commit the value
-that it does not exist, changes the commands of those three guards, which the map declares as surfaces;
-the change travels on the change path of their promise level (WAY-49, WAY-50). Until the guards record
-such verdicts, and until the invariants in working form are rewritten as entries (WAY-37), the gate has
-no verdict to read for any of them. Under WAY-37 every invariant in working form that states what a check
-reports on some input is rewritten as a sentence about that check, and, where the log means the data to
-hold, it gains a sentence of its own about the data. A failure a run records for no entry is reported by
-the gate as such, never dropped; how it counts is set by WAY-63. The
-invariant of the critical flow `wording-reaches-dependants` was a sentence about the real log with a test
-on made-up logs as its method; the same change rewrites it in the map, in place (WAY-43), as a sentence
-about what the decision guard reports, and the log's own freshness stays WAY-31's invariant, checked by
-the guard run on the log. The adapter through which the gate reads a product's record of a run accepts
-what the map's external context marks as untrusted, so its files become the trust boundary of the gate
-part (WAY-48) once they exist. A quantity measured while the product runs is checked by a command that
-takes its measurements on the commit being checked, where the population the sentence names is those
-measurements; a population the product meets only in use, such as the loads real players make, fits
-neither form, and such an invariant still enters, as WAY-60 has it, with its method written as
-`TODO — decision pending: the method of a population met only in use`, and the gate reports it as
-unchecked, never as passing (WAY-38), until a new version of this decision gives that method. Where a
-product's method runs the-way's own guard, the path of the pinned the-way in the command, and the
-interpreter that runs it, follow from how the product pins the-way (WAY-34), which this decision does
-not settle. How the result of a human assessment is recorded, and which states a result may take and
-which of them make the gate's command fail, is set by WAY-63; how a check cites its invariant,
-by WAY-65. When a method counts stays with WAY-08 — the
-deliberate break, and k of n runs for a method that does not give the same verdict every time; k and n
-stand in the method's command, so the verdict one run records for the entry already covers n runs of the
-check. Who writes the break is set by WAY-69. WAY-16's
-consequence that left the reporting of a method the gate cannot run to the invariants element is
-corrected in place to point to WAY-63.
+*Consequences:* the template of the invariants element gives the two forms of a method; the closed
+list of values the gate fills into a command, which starts with the commit the task branch left the
+main branch from (WAY-57), which is the last commit of the main branch the branch contains, and the
+commit of the main branch that a merge into it is made onto, and grows by a new version of this
+decision; and the closed list of formats a run's record may take, which starts with the-way's own
+record of a run and grows the same way, together with the adapter that reads a product's format
+(WAY-38). The format is read off the record, so the template's `reads:` goes with `runs as:`. Where
+a commit on the list does not exist, as the main branch in this repository, the gate fills in that
+it does not exist and the check records its verdict, as WAY-57 already says for its own checks; the
+gate never turns that into a pass. A command that leaves its record in a file names that file's path
+in the command itself, at a place in the working tree that does not change between runs; a method
+may read what another method's run left only where a decision places it, as WAY-47 does, and the
+gate then runs the first before the second. A run's own output is what the gate reads; the record of
+the result it keeps in the repository is the one WAY-53 compares. The result an entry has is the
+verdict of the run on the commit being checked; the run WAY-58 asks for on the commit the branch
+left from is evidence for a human, not a result. The format guards of decisions, of the part map and
+of invariants, once they record a verdict for each invariant they check, cite those invariants and
+are invariant tests under WAY-65, read-only during implementation (WAY-03) and changing through the
+panel (WAY-10). Recording a verdict for each invariant, and taking in place of a commit the value
+that it does not exist, changes the commands of those three guards, which the map declares as
+surfaces; the change travels on the change path of their promise level (WAY-49, WAY-50). Until the
+guards record such verdicts, the gate has no verdict to read for any of them. A failure a run
+records for no entry is reported by the gate as such, never dropped; how it counts is set by WAY-63.
+The invariant of the critical flow `wording-reaches-dependants` was a sentence about the real log
+with a test on made-up logs as its method; the same change rewrites it in the map, in place
+(WAY-43), as a sentence about what the decision guard reports, and the log's own freshness stays
+WAY-31's invariant, checked by the guard run on the log. The adapter through which the gate reads a
+product's record of a run accepts what the map's external context marks as untrusted, so its files
+become the trust boundary of the gate part (WAY-48) once they exist. A quantity measured while the
+product runs is checked by a command that takes its measurements on the commit being checked, where
+the population the sentence names is those measurements; a population the product meets only in use,
+such as the loads real players make, fits neither form, and such an invariant still enters, as
+WAY-60 has it, with its method written as `TODO — decision pending: the method of a population met
+only in use`, and the gate reports it as unchecked, never as passing (WAY-38), until a new version
+of this decision gives that method. Where a product's method runs the-way's own guard, the path of
+the pinned the-way in the command, and the interpreter that runs it, follow from how the product
+pins the-way (WAY-34), which this decision does not settle. How the result of a human assessment is
+recorded, and which states a result may take and which of them make the gate's command fail, is set
+by WAY-63; how a check cites its invariant, by WAY-65. When a method counts stays with WAY-08 — the
+deliberate break, and k of n runs for a method that does not give the same verdict every time; k and
+n stand in the method's command, so the verdict one run records for the entry already covers n runs
+of the check. Who writes the break is set by WAY-69. WAY-16's consequence that left the reporting of
+a method the gate cannot run to the invariants element is corrected in place to point to WAY-63.
 
 ### WAY-62/1 — What does an invariant entry name in the part map?
 
@@ -3080,11 +2925,7 @@ names a file the change alters, whatever parts a file collecting entries gives t
   related to WAY-45 · related to WAY-46 · related to WAY-47 · related to WAY-54 ·
   related to WAY-55 · related to WAY-56 · related to WAY-60
 - **Outranks:** none
-- **Verification:** level 1 — invariants in working form:
-  - every part an invariant entry names is an entry of the part map;
-  - every invariant entry names `every` or at least one part, never both;
-  - the invariants a change reaches include every entry naming `every` or a part the change
-    touches, and every entry whose method names a file the change alters.
+- **Verification:** level 1 — invariants: invariant-part-names · invariant-part-form · change-reach.
   Level 2 for which parts — an agent compares the change with the decision:
   - complies: "every entry in the log has every field of the template" names `decisions`, and a
     new decision scoped to `gate` reaches it because the guard's method names the log; "every
@@ -3131,15 +2972,9 @@ result is `fail`, or a run records a failure for no entry, and zero otherwise.
   related to WAY-47 · related to WAY-53 · related to WAY-55 · related to WAY-57 · related to WAY-58 ·
   related to WAY-60
 - **Outranks:** none
-- **Verification:** level 1 — invariants in working form:
-  - every result the gate reports for an invariant on the commit being checked is `pass`, `fail`,
-    `unchecked` or `error`, and every `unchecked` names a reason on the template's list;
-  - the gate reports a result for every invariant the change reaches and every invariant a critical
-    flow names;
-  - the gate's command exits non-zero when some result it reports is `error`, a listed invariant's
-    result is `pass`, or an unlisted invariant's result is `fail`, or a run records a failure for no
-    entry, and zero otherwise.
-  Level 2 for the reasons — an agent compares the change with the decision:
+- **Verification:** level 1 — invariants: invariant-method-form · human-verdict-trace ·
+  gate-result-values · gate-unchecked-reason · gate-reported-set · gate-exit-code. Level 2 for the
+  reasons — an agent compares the change with the decision:
   - complies: a flow's list of parts with no coverage file is `unchecked` (WAY-47); so is a check
     needing a commit the gate filled in as not existing;
   - violates: a guard whose call to git fails reports `unchecked`; a human's `pass` stays in force
@@ -3186,17 +3021,10 @@ new identifier, and any other change keeps it.
   derives from WAY-57@29edb491 · related to WAY-07 · related to WAY-35 · related to WAY-39 ·
   related to WAY-41 · related to WAY-45 · related to WAY-46 · related to WAY-62
 - **Outranks:** none
-- **Verification:** level 1 — invariants in working form, kept by the invariants element's format
-  guard, and the last by the map's:
-  - the product has exactly one file of invariant entries, `foundations/invariants.md`;
-  - every invariant identifier has the template's form;
-  - no invariant identifier is held by another entry or withdrawal line of that file or the map;
-  - every identifier that file held on the commit the branch left the main branch from stands in
-    it, and a withdrawal line there is one still;
-  - every successor a withdrawal line names is an entry or a withdrawal line of that file, or
-    `none`;
-  - every invariant identifier the part map names is an entry of that file.
-  Level 2 for what counts as a split — an agent compares the change with the decision:
+- **Verification:** level 1 — invariants: identifier-holders · map-invariant-names ·
+  invariant-identifier-form · invariants-file · invariant-identifier-persistence ·
+  invariant-withdrawal-persistence · withdrawal-successors. Level 2 for what counts as a split — an
+  agent compares the change with the decision:
   - complies: an entry drops a clause and keeps its identifier at a raised version
     (WAY-57); an entry that takes in a clause of another keeps its identifier, and the other is
     split;
@@ -3238,15 +3066,10 @@ branch left the main branch from or on the commit being checked.
   derives from WAY-57@29edb491 · derives from WAY-61@c6bdfd7c · related to WAY-12 ·
   related to WAY-60 · related to WAY-62 · related to WAY-63
 - **Outranks:** none
-- **Verification:** level 1 — invariants in working form, the first two kept by the invariants
-  element's format guard, the third by the gate:
-  - every `invariant:` line in a check names an entry of `foundations/invariants.md`;
-  - every `data:` line in an invariant test names a file that exists;
-  - the invariant tests of a change include the file of every check that cites an invariant on
-    the commit the branch left the main branch from or on the commit being checked, and every
-    file such a check names as `data:`.
-  Level 2 for where a citation stands — an agent compares the change with the decision:
-  - complies: the decision guard cites `log-entry-has-every-field/1` at the rule checking
+- **Verification:** level 1 — invariants: invariant-citation-version · invariant-citation-target ·
+  data-line-target · invariant-tests-of-change. Level 2 for where a citation stands — an agent
+  compares the change with the decision:
+  - complies: the decision guard cites `log-entry-field-presence/1` at the rule checking
     fields; a test comparing a load with a recorded save names the save on a `data:` line;
   - violates: a test file cites at its top every invariant its tests serve, though the checks
     giving the verdicts are its methods.
@@ -3284,12 +3107,8 @@ invariant carrying it, each checked against the new wording and carrying the new
   related to WAY-21 · related to WAY-31 · related to WAY-39 · related to WAY-57 ·
   related to WAY-59 · related to WAY-60 · related to WAY-61 · related to WAY-62
 - **Outranks:** none
-- **Verification:** level 1 — invariants in working form, kept by the invariants element's format
-  guard:
-  - every name in an invariant entry's *Derives from* or *Rests on*, other than `none` or `TODO`,
-    carries a fingerprint;
-  - every such fingerprint equals the current fingerprint of the entry it names.
-  Level 2 for checking against the new wording — an agent compares the change with the decision:
+- **Verification:** level 1 — invariants: link-fingerprint-presence · link-fingerprint-value. Level
+  2 for checking against the new wording — an agent compares the change with the decision:
   - complies: WAY-05 gets a new wording; the same change carries its new fingerprint into every
     invariant naming it in *Derives from*, and rewords with a raised version any invariant whose
     sentence no longer holds;
@@ -3336,10 +3155,8 @@ change of the foundation that a human accepts, never by a step of implementation
   related to WAY-10 · related to WAY-15 · related to WAY-28 · related to WAY-51 · related to WAY-57 ·
   related to WAY-58 · related to WAY-60 · related to WAY-61
 - **Outranks:** none
-- **Verification:** level 1 — invariants in working form:
-  - the list on a branch is a subset of the list on the commit the branch left the main branch from;
-  - every position names an entry of `foundations/invariants.md`, at its current version and no
-    other.
+- **Verification:** level 1 — invariants: gate-exit-code · violated-list-growth ·
+  violated-position-version.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
@@ -3385,14 +3202,8 @@ run records.
   derives from WAY-63@d05ff1f0 · related to WAY-03 · related to WAY-10 · related to WAY-24 ·
   related to WAY-45 · related to WAY-60 · related to WAY-64 · related to WAY-67
 - **Outranks:** none
-- **Verification:** level 1 — invariants in working form, the first two kept by the element's
-  format guard, the third by the gate:
-  - every quarantine position names an entry of `foundations/invariants.md` at its current version
-    and an end date;
-  - no quarantine position names an invariant a critical flow names;
-  - the gate reports a quarantined entry `unchecked` while the checked commit's committer date is
-    no later than its end date, and `error` after.
-  Level 2 — an agent compares the change with the decision:
+- **Verification:** level 1 — invariants: quarantine-position-form · quarantine-flow-invariants ·
+  gate-quarantine-result. Level 2 — an agent compares the change with the decision:
   - complies: a save-load test fails and then passes on one commit, and the panel accepts a wait
     for the load-finished signal instead of a fixed interval;
   - violates: a failing test is called flaky with no `pass` recorded on that commit; a fixed-wait
@@ -3523,12 +3334,10 @@ reports a missing field, or a word its template does not give the field, as an e
   related to WAY-46 · related to WAY-54 · related to WAY-57 · related to WAY-58 · related to WAY-62 ·
   related to WAY-63 · related to WAY-66
 - **Outranks:** none
-- **Verification:** level 1 — invariants in working form:
-  - every entry of the decision log carries every field the decision template gives an entry of
-    its kind, and no field holds `none` or `TODO` where that template does not give it the word;
-  - the same for every entry of the part map and its template;
-  - the same for every entry of the invariants file and its template.
-  Level 2 for what `none` states — an agent compares the change with the decision:
+- **Verification:** level 1 — invariants: log-entry-field-presence · log-entry-field-words ·
+  map-entry-field-presence · map-entry-field-words · invariant-entry-field-presence ·
+  invariant-entry-field-words. Level 2 for what `none` states — an agent compares the change with
+  the decision:
   - complies: an invariant whose author searched the log and found no decision it derives from
     reads `Derives from: none`; a decision whose source is silent on what it rests on reads
     `Based on: TODO — <what is missing>`;
@@ -3568,9 +3377,8 @@ use it and whatever language its team speaks.
 - **Relations:** related to WAY-04 · related to WAY-05 · related to WAY-35 · related to WAY-38 ·
   related to WAY-60 · related to WAY-71
 - **Outranks:** none
-- **Verification:** level 1 — invariant in working form: every element's template states that its
-  entries are written in English. Level 2 for the rest — an agent compares the change with the
-  decision:
+- **Verification:** level 1 — invariants: template-language. Level 2 for the rest — an agent
+  compares the change with the decision:
   - complies: the foundation of a game whose players read Polish, built by a team that speaks
     Polish, is written in English;
   - violates: a product starts its decision log in Polish because its users and its team speak it.

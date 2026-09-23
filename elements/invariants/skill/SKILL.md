@@ -1,6 +1,6 @@
 ---
 name: record-invariant
-description: Use when a product's invariants file, foundations/invariants.md, has to gain or change an entry — a rule the product must keep, from conversation, a task's return step, a critical part's behaviour or a decision's working form; a changed, split, merged or withdrawn invariant; or a position on the list of violated or quarantined invariants.
+description: Use when a product's invariants file, foundations/invariants.md, has to gain or change an entry — a rule the product must keep, from conversation, a task's return step, a critical part's behaviour or an invariant a decision's verification calls for; a changed, split, merged or withdrawn invariant; or a position on the list of violated or quarantined invariants.
 ---
 
 # Record an invariant
@@ -39,10 +39,10 @@ first: stop until `update-part-map` has written it.
   thing, which takes its own identifier; not found — a new identifier.
 - Search the whole foundation, not only the decisions this one derives from, for entries it
   touches that no written link joins to it, reading *Rejected* as well as what binds (WAY-33): a
-  decision naming this rule in working form, a flow of the part map carrying its sentence, a
-  failure mode it detects, or a named link whose entry has changed wording, to recheck and carry
-  its new fingerprint (WAY-66). Each finding becomes a link, a change to an entry or a question in
-  step 4.
+  decision whose level 1 verification calls for this rule, a flow of the part map carrying its
+  sentence, a failure mode it detects, or a named link whose entry has changed wording, to
+  recheck and carry its new fingerprint (WAY-66). Each finding becomes a link, a change to an
+  entry or a question in step 4.
 
 ## 3. Draft
 
@@ -80,8 +80,8 @@ Fill every field according to the template, with extra care for these:
    commit the task branch left the main branch from>`, leaving out `--base` where there is no
    main branch; fix what the entry broke and run it again, and give an error or an unchecked line
    elsewhere in the file to the human.
-4. What follows from this entry goes one at a time: a decision that named it in working form, or
-   whose verification changes, through `record-decision`; a flow or a failure mode that names it,
+4. What follows from this entry goes one at a time: a decision whose level 1 verification gains,
+   loses or renames this entry, through `record-decision`; a flow or a failure mode that names it,
    or names an identifier this change retires, through `update-part-map`.
 5. Where the method is a command, hand the human two instructions for two other agents: for the
    check — the entry, its method, and the checks citing an identifier this change retires or a

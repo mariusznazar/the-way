@@ -335,8 +335,9 @@ A field marked *judgment* holds someone's call: no tool reads its value off the 
 - Every method is a command that begins with a program's name, the path alone of a file that
   exists, or `TODO`; every value a command takes from the gate, and every value in braces a sentence
   names outside quoted text, stands on the list above (WAY-61, WAY-63).
-- Every name in *Rests on* or *Derives from*, other than `none` or `TODO`, carries the current
-  fingerprint of the entry it names (WAY-66).
+- Every name in *Rests on* or *Derives from*, other than `none` or `TODO`, carries a fingerprint,
+  and, checking a merge onto the main branch, the current fingerprint of the entry it names
+  (WAY-66).
 - Every invariant test cites its invariant with a version, and none cites a version other than the
   current one (WAY-57).
 - Every `invariant:` line in a check names an entry, and every `data:` line names a file that

@@ -44,9 +44,12 @@ that entry changes.
 
 ## invariants — Invariants
 
-The part answers for what a product states as an invariant and for how that statement is checked.
+The part answers for what a product states as an invariant and for how that statement is checked,
+and for the invariants of the-way itself.
 
 - **Files:** elements/invariants/**
+  foundations/invariants.md
+  foundations/violated_invariants.md
 - **Depends on:** decisions · part-map · relation-model
 - **Failure modes:** none
 - **Trust boundary:** none
@@ -112,9 +115,7 @@ the old wording is reported before the change reaches the main branch.
 
 - **Criticality:** high
 - **Parts:** relation-model · decisions · gate
-- **Invariant:** the decision guard reports every reference carrying a content fingerprint that
-  names a fingerprint other than the current one of the entry it names — test:
-  gate/test_wording_reaches_dependants.py
+- **Invariant:** decision-guard-stale-reference — test: gate/test_wording_reaches_dependants.py
 - **Coverage:** none
 
 ## entry-format — The form of an entry

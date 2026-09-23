@@ -42,9 +42,10 @@ Fill every field according to the template, with extra care for these:
 - *Based on*: take each fact about the world from a source the human gives, never from memory.
   What is not yet known, or the decider's own motive, is not such a fact: it belongs in
   *Rationale*, or in *Review when* when the decision waits for it.
-- *Verification*: before choosing level 2 or 3, try to state an invariant in working form — a
-  sentence about the product that is false on a commit which breaks this decision. Level 1
-  names only such sentences; level 2 or 3 covers the rest of the decision.
+- *Verification*: before choosing level 2 or 3, try to state an invariant — a sentence about
+  the product that is false on a commit which breaks this decision. Level 1 names the
+  identifiers of such invariants' entries, each written through `record-invariant` in step 4;
+  level 2 or 3 covers the rest of the decision.
 - `none` and `none considered` are the human's statements. Where the source is silent, the
   field becomes a question in step 4.
 - A kind of change, a type of relation or any other value the template's closed lists do
@@ -63,9 +64,11 @@ Fill every field according to the template, with extra care for these:
    repository root: `python -B <parent of the resolved directory>/format_guard.py`. Fix what
    the entry broke and run it again; an error or warning elsewhere in the log goes to the human.
 4. What follows from this entry goes through steps 3 and 4 one at a time: a version or a
-   correction of a neighbour found in step 2; and, when this entry changes a decision's binding
-   sentences, every decision that derives from it or narrows it, and every invariant whose
-   *Derives from* names it, the invariants through `record-invariant` (WAY-66).
+   correction of a neighbour found in step 2; every invariant this entry's level 1 verification
+   names that the invariants file does not hold yet, through `record-invariant` (WAY-17); and,
+   when this entry changes a decision's binding sentences, every decision that derives from it
+   or narrows it, and every invariant whose *Derives from* names it, the invariants through
+   `record-invariant` (WAY-66).
 
 ## Review entry
 

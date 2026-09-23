@@ -9,13 +9,13 @@ entries.
 
 `format_guard.py` checks a product's log against the list "What the format guard checks" in
 `template.md`, reading the fields and kinds from the template. From the product's repository
-root, in CI with its main branch:
+root, with the commit the task branch left the main branch from:
 
 ```
-python <the-way>/elements/decisions/format_guard.py --base origin/main
+python <the-way>/elements/decisions/format_guard.py --base <commit>
 ```
 
-Without `--base`, the checks against the main branch are skipped. Its tests:
+Without `--base`, the checks against that commit are skipped. Its tests:
 `python -B -m unittest discover -s elements/decisions -p "test_*.py"`.
 
 `skill/` holds `record-decision`, a Claude Code skill that turns a decision into an entry of a

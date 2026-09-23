@@ -27,8 +27,7 @@ foundation step.
   https://www.lesswrong.com/posts/qJYMbrabcQqCZ7iqm/impossiblebench-measuring-reward-hacking-in-llm-coding-1).
 - **Relations:** derives from WAY-01@a291c2c0 · related to WAY-02
 - **Outranks:** none
-- **Verification:** level 1 — invariant in working form: a merge request that changes an
-  invariant test without an accepted foundation change fails the CI check.
+- **Verification:** level 1 — invariants: invariant-test-change-acceptance.
 - **Review when:** the design of the task cycle begins · check by: 2026-10-02
 - **Origin:** none
 - **Approver override:** none

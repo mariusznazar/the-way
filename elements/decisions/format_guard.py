@@ -8,9 +8,9 @@ Usage, from the root of the product's repository:
 
     python <the-way>/elements/decisions/format_guard.py [LOG] [--base REF] [--today YYYY-MM-DD]
 
-LOG defaults to foundations/decisions.md. --base names the main branch to compare the log with;
-without it, the two checks that need the main branch are skipped. Exit code: 0 without errors,
-1 with errors, 2 when the log or the template cannot be read.
+LOG defaults to foundations/decisions.md. --base names the commit the task branch left the main
+branch from, to compare the log with; without it, the two checks that need it are skipped. Exit
+code: 0 without errors, 1 with errors, 2 when the log or the template cannot be read.
 """
 
 import argparse
@@ -568,7 +568,8 @@ def run(log_path, base=None, today=None, template=TEMPLATE, examples=EXAMPLES, s
 def main(argv=None):
     parser = argparse.ArgumentParser(description="Check a decision log against its template.")
     parser.add_argument("log", nargs="?", default=os.path.join("foundations", "decisions.md"))
-    parser.add_argument("--base", help="the main branch to compare the log with, e.g. origin/main")
+    parser.add_argument("--base", help="the commit the task branch left the main branch from, "
+                                         "to compare the log with")
     parser.add_argument("--today", type=datetime.date.fromisoformat,
                         help="the date passed check-by dates are measured against")
     arguments = parser.parse_args(argv)

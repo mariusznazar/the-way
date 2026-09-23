@@ -168,8 +168,9 @@ used when a different, more specific decision deliberately goes against this one
 
 ## Verification
 
-- Level 1 — invariants derived from the decision. Until invariants have their own template,
-  name each one in working form.
+- Level 1 — invariants derived from the decision, each named by the identifier of its entry in
+  the product's invariants file; every entry named names the decision in *Derives from* (WAY-12,
+  WAY-17).
 - Level 2 — an agent compares a change with the decision, using a pair of examples:
   `complies:` and `violates:`.
 - Level 3 — a human assessment, leaving a trace of who and when.
@@ -177,6 +178,15 @@ used when a different, more specific decision deliberately goes against this one
   moves to level 1 by a *field change*.
 - A decision can combine levels: each level covers the part of the binding sentences it can
   check.
+
+```markdown
+- **Verification:** level 1 — invariants: <identifier> · <identifier>. Level 2 for <…> — an
+  agent compares the change with the decision:
+  - complies: <…>
+  - violates: <…>
+```
+
+A decision checked at level 2 alone:
 
 ```markdown
 - **Verification:** level 2 — an agent compares the change with the decision:
@@ -252,8 +262,9 @@ A decision recovered from the existing state of a product:
 
 - Headings: `### WAY-NN/V — <question>` or `### WAY-NN · review YYYY-MM-DD`; versions of a
   number are consecutive.
-- Append-only: compared with the main branch, the log only grows at the end.
-- A merge to the main branch adds at most one version of each number.
+- Append-only: compared with the commit the task branch left the main branch from, the log only
+  grows at the end.
+- Compared with that commit, the log gains at most one version of each number.
 - Every field is present; `TODO` gives a warning.
 - Binding sentences: one to three; no *should*, *will* or keyword of RFC 2119 in capitals.
 - *Change*: `new decision` exactly in version 1; in later versions a kind from the list, with
@@ -262,8 +273,8 @@ A decision recovered from the existing state of a product:
   *field change* and *challenge*, and absent for *repeal*.
 - Every number in *Relations*, *Outranks* and `previous:` exists.
 - Every `derives from` and `narrows` relation carries a fingerprint, and no `related to` relation
-  does; on the main branch, every fingerprint in a relation equals the current fingerprint of the
-  decision it names.
+  does; checking a merge onto the main branch, every fingerprint a relation carries in the
+  latest version of a decision equals the current fingerprint of the decision it names.
 - *Outranks*: no two decisions outrank each other.
 - *Review when*: a passed check-by date without a later review gives a warning;
   `condition not met` requires a date in *Next check*; `changed in WAY-NN/V+1` requires that
