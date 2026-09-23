@@ -53,6 +53,13 @@ Fill every field according to the template, with extra care for these:
 - *Method*: take its form from the template, tell the human which form it is and why, and do not
   write the check to have something to name.
 - *Part*: for each part named, say which change there could make the sentence false.
+- *Rests on*: put through the test in the template's section "Links" every fact quoted in the
+  *Based on* of the decisions it derives from, and every fact that neither the product nor the-way
+  at the commit it pins writes, such as a standard, a library or a law, found behind what the
+  sentence names, a value it copies, or a meaning the product's rules hand elsewhere, as the part
+  map hands the matching of a pattern to git (WAY-73). Write a fact and its source only as the
+  human or the product's files give them, never from memory; a fact without its source is a
+  question in step 4.
 - *Recovered*: for an entry the human chose from what the product already does, search the
   decision log, the product's documents and the history of the code, and draft the field; the
   human deciding the change sets it with the gate's report in front of them (WAY-58).
