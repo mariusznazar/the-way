@@ -49,8 +49,8 @@ Every field is present in every version, in one of three states (WAY-71):
 | State | Meaning | Format guard |
 |---|---|---|
 | a value | known | passes |
-| `none` | the author states there is nothing here | passes; in *Change* and *Approved by*, error |
-| `TODO — <what is missing>` | known to be unknown | warning; in *Approved by*, error |
+| `none` | the author states there is nothing here | passes; in *Change*, *Rationale for change* and *Approved by*, error |
+| `TODO — <what is missing>` | known to be unknown | warning; in *Approved by*, and anywhere once given the commit a merge onto the main branch is made onto, error |
 | field missing | forgotten | error |
 
 `none` is a statement, not a blank. Write it only when you know there is nothing; when a
@@ -268,7 +268,8 @@ A decision recovered from the existing state of a product:
 - Compared with that commit, the log gains at most one version of each number, and a change to
   this template comes with a version added to the log (WAY-05, WAY-07).
 - Every field is present; `none` stands only where the table of states gives it, and in a review
-  only in *Next check*; `TODO` gives a warning (WAY-71).
+  only in *Next check*; `TODO` gives a warning, and an error when the guard is given the commit a
+  merge onto the main branch is made onto (WAY-71).
 - Binding sentences: one to three; no *should*, *will* or keyword of RFC 2119 in capitals.
 - *Change*: `new decision` exactly in version 1; in later versions a kind from the list, with
   `previous:` pointing to the version before.
@@ -282,14 +283,14 @@ A decision recovered from the existing state of a product:
 - *Outranks*: no two decisions outrank each other.
 - *Verification* opens with one of the levels of its form (WAY-12).
 - *Review when*: a passed check-by date without a later review gives a warning;
-  `condition not met` requires a date in *Next check*.
+  `condition not met` requires a date, or `TODO`, in *Next check*.
 - *Origin* of an inherited decision has the form `inherited — searched: <…>; found: <…>` (WAY-29).
 - *Approved by* in every version has the form `<who>, YYYY-MM-DD`; `TODO` there is an error; in
   the-way's own log it names Mariusz or the approver *Approver override* names (WAY-14).
 - Every example in `examples.md` matches its version in the log word for word.
 - Given the path of a record, the guard writes the-way's own record of the run there, with a
-  verdict for each invariant its checks cite; a `TODO` in a field whose invariant asks for a
-  value fails that invariant in the record while the report warns (WAY-61, WAY-74).
+  verdict for each invariant its checks cite (WAY-61, WAY-74); given `none` as either commit, it
+  records the checks that need that commit as `unchecked` (WAY-61, WAY-63).
 
 ## Examples
 

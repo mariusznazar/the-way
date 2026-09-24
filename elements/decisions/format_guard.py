@@ -13,14 +13,18 @@ Usage, from the root of the product's repository:
 
 LOG defaults to foundations/decisions.md. --base names the commit the task branch left the main
 branch from, to compare the log with; without it, the checks that need it are skipped.
---merge-onto names the commit of the main branch a merge is made onto; without it, the check of
-the fingerprints relations carry against the current wording is skipped. --record names a JSON
-Lines file, created or overwritten, which receives the-way's own record of the run (WAY-74): a
-verdict for each invariant cited by a check the run's options select — the checks against the
-base with --base, the check of fingerprints after the merge with --merge-onto, the checks of the
-log alone with neither — a line for each error of those checks that belongs to no cited
-invariant, and every failure of the run itself. The report for a person holds every check. Exit code: 0 without errors, 1 with errors, 2 when the log or the template cannot
-be read or the record cannot be written.
+--merge-onto names the commit of the main branch a merge is made onto; without it, the checks of a
+merge are skipped: the fingerprints relations carry against the current wording, and `TODO` in
+any field of the log, which the main branch does not hold (WAY-71). `none`, given to either
+option, is the value the gate fills in where that commit does not exist (WAY-61): the checks that
+need the commit are then recorded as `unchecked`, and give no error. --record names a
+JSON Lines file, created or overwritten, which receives the-way's own record of the run (WAY-74):
+a verdict for each invariant cited by a check the run's options select — the checks against the
+base with --base, the checks of a merge with --merge-onto, the checks of the log alone with
+neither — a line for each error of those checks that belongs to no cited invariant, and every
+failure of the run itself. The report for a person holds every check. Exit code: 0 without
+errors, 1 with errors, 2 when the log or the template cannot be read or the record cannot be
+written.
 """
 
 import argparse
@@ -49,7 +53,13 @@ OWN_APPROVER = "Mariusz"
 # recorded only by a run given neither option. A run records the checks its options select, and
 # its own failures always (WAY-61, WAY-74).
 SELECTED_BY = {"check_against_base": "--base", "check_template_change": "--base",
-               "check_fingerprints": "--merge-onto", "merged_log": "--merge-onto"}
+               "check_fingerprints": "--merge-onto", "merged_log": "--merge-onto",
+               "check_merge_todo": "--merge-onto"}
+# The value the gate fills in for a commit that does not exist (WAY-61), and the reason a check
+# that needs that commit records for being unchecked, word for word as the invariants template
+# lists it (WAY-63).
+NO_COMMIT = "none"
+NO_COMMIT_REASON = "the method takes a commit the gate filled in as not existing"
 
 sys.dont_write_bytecode = True
 sys.path.insert(0, os.path.join(HERE, "..", "..", "relation-model"))
@@ -270,10 +280,12 @@ class Report:
 
     A check that runs names the invariants it cites with ran(); an error or a failure it finds
     names the check and the invariants the finding makes false. A check with no finding for an
-    invariant it cites records `pass`; an error that names no invariant is a failure recorded for
-    no entry, and one that names no check is a failure no rule gave. The record holds the checks
-    of the options the run was given, or of the log alone when it was given none; the report for a
-    person holds every check.
+    invariant it cites records `pass`; a check that cannot run for a reason on the invariants
+    template's list names it with unchecked() and records `unchecked` beside that reason and a
+    description of the case; an error
+    that names no invariant is a failure recorded for no entry, and one that names no check is a
+    failure no rule gave. The record holds the checks of the options the run was given, or of the
+    log alone when it was given none; the report for a person holds every check.
     """
 
     def __init__(self, path, options=()):
@@ -283,11 +295,16 @@ class Report:
         self.warnings = []
         self.notes = []
         self.verdicts = {}  # (check, invariant) -> descriptions of its failures
+        self.skipped = {}  # (check, invariant) -> (the reason it is unchecked, its description)
         self.unowned = []  # (check or None, description) of errors that belong to no invariant
 
     def ran(self, check, *invariants):
         for invariant in invariants:
             self.verdicts.setdefault((check, invariant), [])
+
+    def unchecked(self, check, reason, description, *invariants):
+        for invariant in invariants:
+            self.skipped[(check, invariant)] = (reason, description)
 
     def fail(self, line, message, check, invariants):
         """Records a failure of each invariant, without a line in the report for a person."""
@@ -328,6 +345,11 @@ class Report:
             for description in failures:
                 lines.append({"check": name, "verdict": "fail", "invariant": invariant,
                               "description": description})
+        for (check, invariant), (reason, description) in self.skipped.items():
+            if self.recorded(check):
+                lines.append({"check": "%s::%s" % (PROGRAM, check), "verdict": "unchecked",
+                              "invariant": invariant, "reason": reason,
+                              "description": description})
         for check, description in self.unowned:
             if not self.recorded(check):
                 continue
@@ -361,7 +383,17 @@ def count_sentences(text):
     return ends if re.search(r"[.!?]$", flat) else ends + 1
 
 
+def bare(value):
+    """A value without the backticks that mark it as a literal word, as the invariants guard
+    reads it."""
+    value = value.strip()
+    if len(value) > 1 and value.startswith("`") and value.endswith("`") and value.count("`") == 2:
+        return value[1:-1]
+    return value
+
+
 def is_todo(value):
+    value = bare(value)
     return value == "TODO" or value.startswith("TODO ")
 
 
@@ -394,6 +426,11 @@ def field_value(entry, name):
     return value, line
 
 
+def takes_todo(rules, name):
+    """Whether the table of states gives `TODO` to the field of a decision version (WAY-71)."""
+    return name not in rules.word_errors["TODO"]
+
+
 def change_kind(entry, rules, prefix):
     """The kind of change a version names, or None where it names none from the list."""
     value = field_value(entry, "Change")[0]
@@ -421,7 +458,7 @@ def check_log(entries, text, rules, prefix, report, today, approver=None):
     check_approval(entries, prefix, report)
     if approver:
         check_approver(entries, approver, prefix, report)
-    check_review_when(entries, prefix, report)
+    check_review_when(entries, rules, prefix, report)
     check_inherited(entries, rules, prefix, report)
     check_references(text, entries, prefix, report, numbers, versions)
     check_reviews(entries, rules, prefix, report, numbers, versions)
@@ -530,6 +567,8 @@ def check_change_rationale(entries, rules, report):
             value, line = field_value(entry, name)
             if not value:
                 report.fail(entry.line, "field *%s* is missing" % name, check, (rationale,))
+            elif is_todo(value) and takes_todo(rules, name):
+                continue  # check_fields warns
             elif is_todo(value) or value == "none":
                 report.fail(line, "*%s* is `%s`" % (name, "none" if value == "none" else "TODO"),
                             check, (rationale,))
@@ -542,6 +581,8 @@ def check_changes(entries, rules, prefix, report):
     for entry in versions_of(entries):
         label = label_of(entry, prefix)
         value, line = field_value(entry, "Change")
+        if is_todo(value) and takes_todo(rules, "Change"):
+            continue  # check_fields warns
         if not value or is_todo(value):
             if entry.version > 1:
                 report.fail(line, "*Change* is `TODO`" if value else "field *Change* is missing",
@@ -653,7 +694,8 @@ def check_verification(entries, rules, prefix, report):
         if not value:
             report.fail(entry.line, "field *Verification* is missing", check, (level,))
         elif is_todo(value):
-            report.fail(line, "*Verification* is `TODO`", check, (level,))
+            if not takes_todo(rules, "Verification"):
+                report.fail(line, "*Verification* is `TODO`", check, (level,))
         else:
             match = re.match(r"^level (\d+)\b", value)
             if not match or match.group(1) not in rules.verification_levels:
@@ -704,7 +746,7 @@ def check_approver(entries, approver, prefix, report):
                          check, (named,))
 
 
-def check_review_when(entries, prefix, report):
+def check_review_when(entries, rules, prefix, report):
     # invariant: review-when-form/1
     check, form = "check_review_when", "review-when-form/1"
     report.ran(check, form)
@@ -713,7 +755,8 @@ def check_review_when(entries, prefix, report):
         if value in ("none", ""):
             continue
         if is_todo(value):
-            report.fail(line, "*Review when* is `TODO`", check, (form,))
+            if not takes_todo(rules, "Review when"):
+                report.fail(line, "*Review when* is `TODO`", check, (form,))
             continue
         match = re.match(r"^.+ · check by: (%s)$" % DATE, value)
         if not match or not valid_date(match.group(1)):
@@ -795,7 +838,9 @@ def check_reviews(entries, rules, prefix, report, numbers, versions):
                              % label, check)
             elif form.startswith("condition not met"):
                 not_met = True
-                if not re.match(r"^%s$" % DATE, next_check[0]):
+                if is_todo(next_check[0]):
+                    pass  # check_fields warns
+                elif not re.match(r"^%s$" % DATE, next_check[0]):
                     report.error(next_check[1], "%s: `condition not met` needs a date in "
                                                 "*Next check*" % label, check, (dated,))
             elif "changed in" in form:
@@ -857,11 +902,35 @@ def merged_log(log_path, entries, merge_onto, prefix, top, report):
     return latest
 
 
-def check_fingerprints(latest, rules, prefix, report):
+def check_merge_todo(entries, prefix, report, no_commit=None):
+    """Reports every field of every entry of the log that holds `TODO`, which the main branch does
+    not hold (WAY-71). Given `no_commit`, which says why there is no commit to merge onto, records
+    it unchecked instead."""
+    # invariant: log-entry-merge-todo/1
+    check, merge_todo = "check_merge_todo", "log-entry-merge-todo/1"
+    if no_commit:
+        report.unchecked(check, NO_COMMIT_REASON, no_commit, merge_todo)
+        return
+    report.ran(check, merge_todo)
+    for entry in entries:
+        if entry.kind not in ("version", "review"):
+            continue
+        for name, (value, line) in entry.fields.items():
+            if is_todo(value):
+                report.error(line, "%s: *%s* is `TODO`, which a merge onto the main branch does "
+                                   "not take" % (label_of(entry, prefix), name),
+                             check, (merge_todo,))
+
+
+def check_fingerprints(latest, rules, prefix, report, no_commit=None):
     """Compares every fingerprint a relation carries, in the latest version of each number of the
-    log after the merge, with the current fingerprint of the decision it names there."""
+    log after the merge, with the current fingerprint of the decision it names there. Given
+    `no_commit`, which says why there is no commit to merge onto, records it unchecked instead."""
     # invariant: relation-fingerprint-value/1
     check, current_value = "check_fingerprints", "relation-fingerprint-value/1"
+    if no_commit:
+        report.unchecked(check, NO_COMMIT_REASON, no_commit, current_value)
+        return
     report.ran(check, current_value)
     current = {number: fingerprint(entry.binding) for number, (entry, _) in latest.items()
                if entry.binding is not None}
@@ -959,12 +1028,16 @@ def find_commit(log_path, option, commit, report):
     return top.strip()
 
 
-def check_against_base(log_path, text, base, prefix, report, top):
-    """Compares the log with its state on the base, and returns the versions it gains there."""
+def check_against_base(log_path, text, base, prefix, report, top, no_commit=None):
+    """Compares the log with its state on the base, and returns the versions it gains there. Given
+    `no_commit`, which says why there is no base, records it unchecked instead."""
     # invariant: log-existing-lines/1
     # invariant: log-versions-added-per-number/1
     check = "check_against_base"
     existing, added_per_number = "log-existing-lines/1", "log-versions-added-per-number/1"
+    if no_commit:
+        report.unchecked(check, NO_COMMIT_REASON, no_commit, existing, added_per_number)
+        return None
     relative = os.path.relpath(os.path.abspath(log_path), top).replace(os.sep, "/")
     base_text, failure = file_at(base, relative, top)
     if failure:
@@ -995,9 +1068,13 @@ def check_against_base(log_path, text, base, prefix, report, top):
     return added
 
 
-def check_template_change(top, base, added, report):
+def check_template_change(top, base, added, report, no_commit=None):
+    """Given `no_commit`, which says why there is no base, records the check unchecked."""
     # invariant: decision-template-change/1
     check, change = "check_template_change", "decision-template-change/1"
+    if no_commit:
+        report.unchecked(check, NO_COMMIT_REASON, no_commit, change)
+        return
     base_template, failure = file_at(base, TEMPLATE_PATH, top)
     if failure:
         report.error(None, failure)
@@ -1082,7 +1159,12 @@ def run(log_path, base=None, today=None, template=TEMPLATE, examples=EXAMPLES, s
     if approver is None:
         report.notes.append("who approves a version is checked only in the-way's own log")
 
-    if base:
+    if base == NO_COMMIT:
+        no_base = "--base none: there is no commit the branch left the main branch from"
+        check_against_base(log_path, text, None, prefix, report, None, no_commit=no_base)
+        check_template_change(None, None, None, report, no_commit=no_base)
+        report.notes.append(no_base + "; the checks against it are unchecked")
+    elif base:
         top = find_commit(log_path, "--base", base, report)
         if top is not None:
             added = check_against_base(log_path, text, base, prefix, report, top)
@@ -1091,15 +1173,23 @@ def run(log_path, base=None, today=None, template=TEMPLATE, examples=EXAMPLES, s
     else:
         report.notes.append("no --base given: the checks against the main branch are skipped")
 
-    if merge_onto:
+    if merge_onto == NO_COMMIT:
+        no_onto = "--merge-onto none: there is no commit to merge onto"
+        check_merge_todo(entries, prefix, report, no_commit=no_onto)
+        check_fingerprints(None, rules, prefix, report, no_commit=no_onto)
+        report.notes.append(no_onto + "; `TODO` in the log and the fingerprints relations carry "
+                                      "are unchecked")
+    elif merge_onto:
         top = find_commit(log_path, "--merge-onto", merge_onto, report)
         if top is not None:
+            check_merge_todo(entries, prefix, report)
             latest = merged_log(log_path, entries, merge_onto, prefix, top, report)
             if latest is not None:
                 check_fingerprints(latest, rules, prefix, report)
     else:
-        report.notes.append("no --merge-onto given: the fingerprints relations carry are not "
-                            "compared with the current wording")
+        report.notes.append("no --merge-onto given: `TODO` in the log is not checked against a "
+                            "merge, and the fingerprints relations carry are not compared with "
+                            "the current wording")
 
     if os.path.exists(examples) and own:
         check_examples(entries, examples, report)
@@ -1114,10 +1204,14 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description="Check a decision log against its template.")
     parser.add_argument("log", nargs="?", default=os.path.join("foundations", "decisions.md"))
     parser.add_argument("--base", help="the commit the task branch left the main branch from, "
-                                         "to compare the log with")
+                                         "to compare the log with; `none` where it does not "
+                                         "exist, which records those checks as unchecked")
     parser.add_argument("--merge-onto", help="the commit of the main branch a merge is made onto; "
                                              "only with it are the fingerprints relations carry "
-                                             "compared with the current wording")
+                                             "compared with the current wording, and `TODO` in "
+                                             "the log reported as an error; `none` where the main "
+                                             "branch does not exist, which records those checks "
+                                             "as unchecked")
     parser.add_argument("--today", type=datetime.date.fromisoformat,
                         help="the date passed check-by dates are measured against")
     parser.add_argument("--record", help="the JSON Lines file, created or overwritten, that "

@@ -14,7 +14,7 @@ Every entry of the decision log carries every field the decision template gives 
 
 - **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-71@8b16c32e
+- **Derives from:** WAY-71@1f735149
 - **Part:** decisions
 - **Correction:** none
 - **Recovered:** none

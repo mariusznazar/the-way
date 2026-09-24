@@ -3,6 +3,7 @@
 Run from anywhere: python -B -m unittest discover -s <the-way>/elements/decisions -p "test_*.py"
 """
 
+import contextlib
 import datetime
 import inspect
 import io
@@ -196,13 +197,22 @@ class Fields(GuardTestCase):
         self.assertRecords(line("check_change_rationale", "fail", "decision-change-rationale/1",
                                 "line 26: field *Rationale for change* is missing"))
 
-    def test_todo_rationale_for_change_gives_no_rationale(self):
+    def test_todo_rationale_for_change_passes_with_a_warning(self):
         code, output = self.guard(log(version(1), version(1, ver=2).replace(
             "*Rationale for change:* players lose trust.", "*Rationale for change:* TODO — ask Anna")))
         self.assertEqual(code, 0, output)
-        self.assertIn("warning: *Rationale for change* is `TODO`", output)
+        self.assertIn("decisions.md:43: warning: *Rationale for change* is `TODO`", output)
+        self.assertRecords(line("check_change_rationale", "pass", "decision-change-rationale/1"))
+        self.assertEqual([item for item in self.lines if item["verdict"] != "pass"], [])
+
+    def test_none_rationale_for_change_is_an_error(self):
+        self.assertFails(log(version(1), version(1, ver=2).replace(
+            "*Rationale for change:* players lose trust.", "*Rationale for change:* none")),
+            "decisions.md:43: error: *Rationale for change* is `none`")
+        self.assertRecords(line("check_fields", "fail", "log-entry-field-words/1",
+                                "line 43: *Rationale for change* is `none`"))
         self.assertRecords(line("check_change_rationale", "fail", "decision-change-rationale/1",
-                                "line 43: *Rationale for change* is `TODO`"))
+                                "line 43: *Rationale for change* is `none`"))
 
 
 class FieldWords(GuardTestCase):
@@ -269,12 +279,17 @@ class Changes(GuardTestCase):
         self.assertRecords(line("check_changes", "fail", "decision-change-kind/1",
                                 "line 30: ABC-01/2: `tweak` is not a kind of change"))
 
-    def test_todo_kind_names_no_kind(self):
+    def test_todo_kind_passes_with_a_warning(self):
         code, output = self.guard(log(version(1), version(1, ver=2, change="TODO — which kind")))
         self.assertEqual(code, 0, output)
-        self.assertIn("warning: *Change* is `TODO`", output)
+        self.assertIn("decisions.md:30: warning: *Change* is `TODO`", output)
+        self.assertRecords(line("check_changes", "pass", "decision-change-kind/1"))
+        self.assertEqual([item for item in self.lines if item["verdict"] != "pass"], [])
+
+    def test_a_missing_change_names_no_kind(self):
+        self.guard(log(version(1), version(1, ver=2, omit=("Change",))))
         self.assertRecords(line("check_changes", "fail", "decision-change-kind/1",
-                                "line 30: *Change* is `TODO`"))
+                                "line 26: field *Change* is missing"))
 
     def test_previous_points_to_the_version_before(self):
         self.assertFails(log(version(1), version(2),
@@ -326,11 +341,12 @@ class Verification(GuardTestCase):
         self.assertFails(log(version(1, verification="level 4 — a committee")),
                          "names no level of verification")
 
-    def test_todo_names_no_level(self):
+    def test_todo_passes_with_a_warning(self):
         code, output = self.guard(log(version(1, verification="TODO — choose a level")))
         self.assertEqual(code, 0, output)
-        self.assertRecords(line("check_verification", "fail", "decision-verification-level/1",
-                                "line 14: *Verification* is `TODO`"))
+        self.assertIn("decisions.md:14: warning: *Verification* is `TODO`", output)
+        self.assertRecords(line("check_verification", "pass", "decision-verification-level/1"))
+        self.assertEqual([item for item in self.lines if item["verdict"] != "pass"], [])
 
 
 class Approver(GuardTestCase):
@@ -472,11 +488,28 @@ class Reviews(GuardTestCase):
         self.assertFails(log(version(1), review(1, "2026-09-01", "looked at it", "none")),
                          "has none of the forms")
 
+    def test_todo_next_check_of_a_condition_not_met_passes_with_a_warning(self):
+        code, output = self.guard(log(version(1, review_when=self.DUE),
+                                      review(1, "2026-09-01", "condition not met — saves stay local",
+                                             "TODO — ask Anna when to look again")))
+        self.assertEqual(code, 0, output)
+        self.assertIn("decisions.md:29: warning: *Next check* is `TODO`", output)
+        self.assertTrue(output.endswith("0 error(s), 1 warning(s)\n"), output)
+        self.assertRecords(line("check_reviews", "pass", "review-next-check/1"))
+        self.assertEqual([item for item in self.lines if item["verdict"] != "pass"], [])
+
     def test_malformed_review_when(self):
         self.assertFails(log(version(1, review_when="next year")), "*Review when* is not")
         self.assertRecords(line("check_review_when", "fail", "review-when-form/1",
                                 "line 17: ABC-01/1: *Review when* is not `<observable state> · "
                                 "check by: YYYY-MM-DD`"))
+
+    def test_todo_review_when_passes_with_a_warning(self):
+        code, output = self.guard(log(version(1, review_when="TODO — which state to watch")))
+        self.assertEqual(code, 0, output)
+        self.assertIn("decisions.md:17: warning: *Review when* is `TODO`", output)
+        self.assertRecords(line("check_review_when", "pass", "review-when-form/1"))
+        self.assertEqual([item for item in self.lines if item["verdict"] != "pass"], [])
 
 
 class Examples(GuardTestCase):
@@ -646,8 +679,7 @@ class AgainstBase(InGit):
         code, output = self.guard(log(version(1)), base="origin/main")
         self.assertEqual(code, 1, output)
         self.assertIn("does not exist", output)
-        self.assertRecords(line(None, "fail", None, "--base origin/main does not exist"))
-        self.assertNotIn("log-existing-lines/1", [item["invariant"] for item in self.lines])
+        self.assertEqual(self.lines, [line(None, "fail", None, "--base origin/main does not exist")])
 
     def test_the_last_line_of_the_base_lengthened(self):
         self.commit(log(version(1)))
@@ -704,11 +736,13 @@ class RecordPerCommand(InGit):
 
     def test_the_command_with_merge_onto(self):
         self.guard(log(version(1), version(2)), merge_onto="main")
-        self.assertEqual(self.identifiers(), ["relation-fingerprint-value/1"])
+        self.assertEqual(self.identifiers(), ["log-entry-merge-todo/1",
+                                              "relation-fingerprint-value/1"])
 
     def test_both_options(self):
         self.guard(log(version(1), version(2)), base="main", merge_onto="main")
-        self.assertEqual(self.identifiers(), ["decision-template-change/1", "log-existing-lines/1",
+        self.assertEqual(self.identifiers(), ["decision-template-change/1",
+                                              "log-entry-merge-todo/1", "log-existing-lines/1",
                                               "log-versions-added-per-number/1",
                                               "relation-fingerprint-value/1"])
 
@@ -754,10 +788,12 @@ class GitFailures(InGit):
                                                                "Filename too long")])
 
     def test_a_failed_call_is_no_absent_log_on_the_commit_merged_onto(self):
+        """The check of `TODO` reads the branch's log alone, so it keeps its verdict."""
         with self.failing_show():
             code, output = self.guard(log(version(1)), merge_onto="main")
         self.assertEqual(code, 1, output)
-        self.assertEqual(self.lines, [line(None, "fail", None, "git cannot read decisions.md at main: "
+        self.assertEqual(self.lines, [line("check_merge_todo", "pass", "log-entry-merge-todo/1"),
+                                      line(None, "fail", None, "git cannot read decisions.md at main: "
                                                                "fatal: cannot create the file: "
                                                                "Filename too long")])
 
@@ -834,7 +870,8 @@ class FingerprintValue(InGit):
         self.assertEqual(code, 1, output)
         self.assertIn("--merge-onto origin/main does not exist", output)
         self.assertRecords(line(None, "fail", None, "--merge-onto origin/main does not exist"))
-        self.assertNotIn("relation-fingerprint-value/1", [item["invariant"] for item in self.lines])
+        self.assertEqual(self.lines, [line(None, "fail", None,
+                                           "--merge-onto origin/main does not exist")])
 
 
 class MergedLog(InGit):
@@ -893,6 +930,213 @@ class MergedLog(InGit):
         self.assertRecords(line("check_fingerprints", "fail", "relation-fingerprint-value/1",
                                 "line 33: ABC-02/1: `derives from ABC-01@798975ff` — the current "
                                 "fingerprint of ABC-01 is 69b731d5"))
+
+
+class MergeTodo(InGit):
+    """Given a commit to merge onto, `TODO` in any field of the log is an error (WAY-71). The
+    commit merged onto holds no log, so no copy of an entry there differs from the branch's."""
+
+    MESSAGE = "is `TODO`, which a merge onto the main branch does not take"
+    REVIEW_DONE = "condition met, decision kept — saves stay local"
+
+    def setUp(self):
+        super().setUp()
+        with open(os.path.join(self.directory.name, "other.txt"), "w") as handle:
+            handle.write("x")
+        self.git("add", "other.txt")
+        self.git("commit", "-q", "-m", "start")
+
+    def cases(self):
+        """(what the case holds, the log, the line of the field, the entry, the field)."""
+        return [
+            ("change", log(version(1), version(1, ver=2, change="TODO — which kind")),
+             30, "ABC-01/2", "Change"),
+            ("rationale for change", log(version(1), version(1, ver=2).replace(
+                "*Rationale for change:* players lose trust.",
+                "*Rationale for change:* TODO — ask Anna")),
+             43, "ABC-01/2", "Rationale for change"),
+            ("verification", log(version(1, verification="TODO — choose a level")),
+             14, "ABC-01/1", "Verification"),
+            ("review when", log(version(1, review_when="TODO — which state to watch")),
+             17, "ABC-01/1", "Review when"),
+            ("another field of a version", log(version(1, origin="TODO — find it")),
+             18, "ABC-01/1", "Origin"),
+            ("approved by", log(version(1, approved="TODO")), 20, "ABC-01/1", "Approved by"),
+            ("a prose field", log(version(1).replace("*Rejected:* none considered",
+                                                     "*Rejected:* TODO — ask Ben")),
+             23, "ABC-01/1", "Rejected"),
+            ("the result of a review", log(version(1), review(1, "2026-09-01", "TODO — ask Anna",
+                                                              "none")),
+             28, "ABC-01 · review 2026-09-01", "Result"),
+            ("who checked a review", log(version(1), review(1, "2026-09-01", self.REVIEW_DONE,
+                                                            "none", checked_by="TODO — who")),
+             30, "ABC-01 · review 2026-09-01", "Checked by"),
+        ]
+
+    def test_todo_in_each_kind_of_field_fails_given_a_commit_to_merge_onto(self):
+        for what, text, number, label, name in self.cases():
+            with self.subTest(what):
+                code, output = self.guard(text, merge_onto="main")
+                description = "line %d: %s: *%s* %s" % (number, label, name, self.MESSAGE)
+                self.assertEqual(code, 1, output)
+                self.assertIn("decisions.md:%d: error: %s: *%s* %s" % (number, label, name,
+                                                                      self.MESSAGE), output)
+                self.assertRecords(line("check_merge_todo", "fail", "log-entry-merge-todo/1",
+                                        description))
+                self.assertNotIn(line("check_merge_todo", "pass", "log-entry-merge-todo/1"),
+                                 self.lines)
+
+    def test_todo_in_each_kind_of_field_is_not_recorded_without_merge_onto(self):
+        for what, text, _, _, _ in self.cases():
+            with self.subTest(what):
+                self.guard(text)
+                self.assertNotIn("log-entry-merge-todo/1",
+                                 [item["invariant"] for item in self.lines])
+
+    def test_a_log_without_todo_passes(self):
+        self.assertPasses(log(version(1), version(2)), merge_onto="main")
+        self.assertRecords(line("check_merge_todo", "pass", "log-entry-merge-todo/1"))
+
+    def test_the_check_cites_its_invariant(self):
+        self.assertIn("# invariant: log-entry-merge-todo/1\n",
+                      inspect.getsource(format_guard.check_merge_todo))
+
+
+class TodoInBackticks(InGit):
+    """`TODO` wrapped in backticks, as a literal word, is `TODO` like the bare form."""
+
+    TEXT = log(version(1, review_when="`TODO`", origin="`TODO — find it`"))
+
+    def setUp(self):
+        super().setUp()
+        with open(os.path.join(self.directory.name, "other.txt"), "w") as handle:
+            handle.write("x")
+        self.git("add", "other.txt")
+        self.git("commit", "-q", "-m", "start")
+
+    def test_a_warning_on_a_branch_and_a_failure_given_a_commit_to_merge_onto(self):
+        code, output = self.guard(self.TEXT)
+        self.assertEqual(code, 0, output)
+        self.assertIn("decisions.md:17: warning: *Review when* is `TODO`", output)
+        self.assertIn("decisions.md:18: warning: *Origin* is `TODO`", output)
+        self.assertEqual([item for item in self.lines if item["verdict"] != "pass"], [])
+        code, output = self.guard(self.TEXT, merge_onto="main")
+        self.assertEqual(code, 1, output)
+        self.assertEqual([item for item in self.lines if item["verdict"] != "pass"], [
+            line("check_merge_todo", "fail", "log-entry-merge-todo/1",
+                 "line 17: ABC-01/1: *Review when* is `TODO`, which a merge onto the main branch "
+                 "does not take"),
+            line("check_merge_todo", "fail", "log-entry-merge-todo/1",
+                 "line 18: ABC-01/1: *Origin* is `TODO`, which a merge onto the main branch does "
+                 "not take"),
+        ])
+
+
+class TableOfStates(unittest.TestCase):
+    def test_the_fields_where_each_word_is_an_error(self):
+        """Pins what the guard reads off the template's table of states: a word in italics added
+        to the prose of a cell would otherwise become a field silently."""
+        self.assertEqual(format_guard.read_rules().word_errors,
+                         {"none": ["Change", "Rationale for change", "Approved by"],
+                          "TODO": ["Approved by"]})
+
+
+class MergeOntoNone(GuardTestCase):
+    """`none` is what the gate fills in where the main branch does not exist (WAY-61): the checks
+    that need that commit are unchecked, and nothing fails. The log stands outside any git
+    repository, so the run does not ask git for the commit."""
+
+    REASON = "the method takes a commit the gate filled in as not existing"
+    DESCRIPTION = "--merge-onto none: there is no commit to merge onto"
+    NOTE = ("note: --merge-onto none: there is no commit to merge onto; `TODO` in the log and the "
+            "fingerprints relations carry are unchecked\n")
+    UNCHECKED = [
+        {"check": GUARD + "::check_merge_todo", "verdict": "unchecked",
+         "invariant": "log-entry-merge-todo/1", "reason": REASON, "description": DESCRIPTION},
+        {"check": GUARD + "::check_fingerprints", "verdict": "unchecked",
+         "invariant": "relation-fingerprint-value/1", "reason": REASON,
+         "description": DESCRIPTION},
+    ]
+
+    def test_a_clean_log_exits_zero_and_records_both_checks_unchecked(self):
+        code, output = self.guard(log(version(1), version(2)), merge_onto="none")
+        self.assertEqual(code, 0, output)
+        self.assertIn(self.NOTE, output)
+        self.assertTrue(output.endswith("0 error(s), 0 warning(s)\n"), output)
+        self.assertEqual(self.lines, self.UNCHECKED)
+
+    def test_todo_stays_a_warning(self):
+        code, output = self.guard(log(version(1, origin="TODO — find it")), merge_onto="none")
+        self.assertEqual(code, 0, output)
+        self.assertIn("decisions.md:18: warning: *Origin* is `TODO`", output)
+        self.assertEqual(self.lines, self.UNCHECKED)
+
+    def test_a_stale_fingerprint_is_not_compared(self):
+        code, output = self.guard(log(version(1), version(2, relations="derives from ABC-01@00000000")),
+                                  merge_onto="none")
+        self.assertEqual(code, 0, output)
+        self.assertEqual(self.lines, self.UNCHECKED)
+
+    def test_the_command_line_takes_none(self):
+        with open(self.path, "w", encoding="utf-8", newline="\n") as handle:
+            handle.write(log(version(1)))
+        output = io.StringIO()
+        with contextlib.redirect_stdout(output):
+            code = format_guard.main([self.path, "--merge-onto", "none", "--today", "2026-09-17",
+                                      "--record", self.record_path])
+        with open(self.record_path, encoding="utf-8") as handle:
+            lines = [json.loads(item) for item in handle.read().split("\n") if item]
+        self.assertEqual(code, 0, output.getvalue())
+        self.assertEqual(lines, self.UNCHECKED)
+
+
+class BaseNone(GuardTestCase):
+    """`none` in place of the commit the branch left the main branch from (WAY-61): the checks
+    against it are unchecked, and nothing fails. The log stands outside any git repository."""
+
+    REASON = "the method takes a commit the gate filled in as not existing"
+    DESCRIPTION = "--base none: there is no commit the branch left the main branch from"
+    NOTE = ("note: --base none: there is no commit the branch left the main branch from; the "
+            "checks against it are unchecked\n")
+    UNCHECKED = [
+        {"check": GUARD + "::check_against_base", "verdict": "unchecked",
+         "invariant": "log-existing-lines/1", "reason": REASON, "description": DESCRIPTION},
+        {"check": GUARD + "::check_against_base", "verdict": "unchecked",
+         "invariant": "log-versions-added-per-number/1", "reason": REASON,
+         "description": DESCRIPTION},
+        {"check": GUARD + "::check_template_change", "verdict": "unchecked",
+         "invariant": "decision-template-change/1", "reason": REASON, "description": DESCRIPTION},
+    ]
+
+    def test_a_clean_log_exits_zero_and_records_every_base_check_unchecked(self):
+        code, output = self.guard(log(version(1), version(2)), base="none")
+        self.assertEqual(code, 0, output)
+        self.assertIn(self.NOTE, output)
+        self.assertTrue(output.endswith("0 error(s), 0 warning(s)\n"), output)
+        self.assertEqual(self.lines, self.UNCHECKED)
+
+    def test_two_versions_of_one_number_are_not_counted(self):
+        code, output = self.guard(log(version(1), version(1, ver=2), version(1, ver=3,
+                                  change="field change · previous: ABC-01/2")), base="none")
+        self.assertEqual(code, 0, output)
+        self.assertEqual(self.lines, self.UNCHECKED)
+
+    def test_both_options_none(self):
+        code, output = self.guard(log(version(1)), base="none", merge_onto="none")
+        self.assertEqual(code, 0, output)
+        self.assertEqual(self.lines, self.UNCHECKED + MergeOntoNone.UNCHECKED)
+
+    def test_the_command_line_takes_none(self):
+        with open(self.path, "w", encoding="utf-8", newline="\n") as handle:
+            handle.write(log(version(1)))
+        output = io.StringIO()
+        with contextlib.redirect_stdout(output):
+            code = format_guard.main([self.path, "--base", "none", "--today", "2026-09-17",
+                                      "--record", self.record_path])
+        with open(self.record_path, encoding="utf-8") as handle:
+            lines = [json.loads(item) for item in handle.read().split("\n") if item]
+        self.assertEqual(code, 0, output.getvalue())
+        self.assertEqual(lines, self.UNCHECKED)
 
 
 class OwnLog(unittest.TestCase):

@@ -225,11 +225,11 @@ Where {merge-onto} exists, every change against {fork-point} carries the record 
 
 ## decision-verification-level/1
 
-Every decision version in the decision log names its level of verification.
+Every decision version in the decision log names its level of verification, or holds `TODO` in *Verification*.
 
 - **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-12@55e89140
+- **Derives from:** WAY-12@55e89140 · WAY-71@1f735149
 - **Part:** decisions
 - **Correction:** none
 - **Recovered:** none
@@ -379,22 +379,22 @@ The versions of each number in the decision log are consecutive.
 
 ## decision-change-rationale/1
 
-Every decision version after the first gives a rationale for the change.
+Every decision version after the first gives a rationale for the change, or holds `TODO` in *Rationale for change*.
 
 - **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-19@4dc13deb
+- **Derives from:** WAY-19@4dc13deb · WAY-71@1f735149
 - **Part:** decisions
 - **Correction:** none
 - **Recovered:** none
 
 ## decision-change-kind/1
 
-Every decision version after the first names its kind of change from the list in the decision template.
+Every decision version after the first names its kind of change from the list in the decision template, or holds `TODO` in *Change*.
 
 - **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-20@6aa77560
+- **Derives from:** WAY-20@6aa77560 · WAY-71@1f735149
 - **Part:** decisions
 - **Correction:** none
 - **Recovered:** none
@@ -445,11 +445,11 @@ The decisions found for a change against {fork-point} include every decision who
 
 ## review-when-form/1
 
-Every *Review when* in the decision log other than `none` names both a state and a date.
+Every *Review when* in the decision log other than `none` or `TODO` names both a state and a date.
 
 - **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-24@058a356a
+- **Derives from:** WAY-24@058a356a · WAY-71@1f735149
 - **Part:** decisions
 - **Correction:** none
 - **Recovered:** none
@@ -467,11 +467,11 @@ The decision guard, given a date, warns of every check-by date earlier than it t
 
 ## review-next-check/1
 
-Every review entry in the decision log whose result is that the state has not come names a date in *Next check*.
+Every review entry in the decision log whose result is that the state has not come names a date, or holds `TODO`, in *Next check*.
 
 - **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-24@058a356a
+- **Derives from:** WAY-24@058a356a · WAY-71@1f735149
 - **Part:** decisions
 - **Correction:** none
 - **Recovered:** none
@@ -1494,7 +1494,7 @@ Every entry of the decision log carries every field the decision template gives 
 
 - **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-71@8b16c32e
+- **Derives from:** WAY-71@1f735149
 - **Part:** decisions
 - **Correction:** none
 - **Recovered:** none
@@ -1505,7 +1505,18 @@ No field of an entry of the decision log holds `none` or `TODO` where the decisi
 
 - **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-71@8b16c32e
+- **Derives from:** WAY-71@1f735149
+- **Part:** decisions
+- **Correction:** none
+- **Recovered:** none
+
+## log-entry-merge-todo/1
+
+Where {merge-onto} exists, no field of an entry of the decision log holds `TODO`.
+
+- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --merge-onto {merge-onto} --record .runs/decisions-merge-onto.jsonl`
+- **Rests on:** none
+- **Derives from:** WAY-71@1f735149
 - **Part:** decisions
 - **Correction:** none
 - **Recovered:** none
@@ -1516,7 +1527,7 @@ Every entry of the part map carries every field the part map template gives an e
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md`
 - **Rests on:** none
-- **Derives from:** WAY-71@8b16c32e
+- **Derives from:** WAY-71@1f735149
 - **Part:** part-map
 - **Correction:** none
 - **Recovered:** none
@@ -1527,7 +1538,7 @@ No field of an entry of the part map holds `none` or `TODO` where the part map t
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md`
 - **Rests on:** none
-- **Derives from:** WAY-71@8b16c32e
+- **Derives from:** WAY-71@1f735149
 - **Part:** part-map
 - **Correction:** none
 - **Recovered:** none
@@ -1538,7 +1549,7 @@ Every entry of `foundations/invariants.md` carries every field the invariants te
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md`
 - **Rests on:** none
-- **Derives from:** WAY-71@8b16c32e
+- **Derives from:** WAY-71@1f735149
 - **Part:** invariants
 - **Correction:** none
 - **Recovered:** none
@@ -1549,7 +1560,18 @@ No field of an entry of `foundations/invariants.md` holds `none` or `TODO` where
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md`
 - **Rests on:** none
-- **Derives from:** WAY-71@8b16c32e
+- **Derives from:** WAY-71@1f735149
+- **Part:** invariants
+- **Correction:** none
+- **Recovered:** none
+
+## invariant-entry-merge-todo/1
+
+Where {merge-onto} exists, no field of an entry of `foundations/invariants.md` other than *Method* and *Rests on* holds `TODO`.
+
+- **Method:** `TODO`
+- **Rests on:** none
+- **Derives from:** WAY-71@1f735149
 - **Part:** invariants
 - **Correction:** none
 - **Recovered:** none
@@ -1571,7 +1593,7 @@ Every line of the-way's own record of a run is one JSON object holding `check`, 
 
 - **Method:** `TODO`
 - **Rests on:** TODO — JSON as RFC 7159 specifies it (https://datatracker.ietf.org/doc/html/rfc7159.html), and a line of JSON Lines as ending in `\n` (https://jsonlines.org/)
-- **Derives from:** WAY-74@e4c88e66
+- **Derives from:** WAY-74@6e9c9b8c
 - **Part:** decisions · part-map · invariants · gate
 - **Correction:** none
 - **Recovered:** none
@@ -1582,7 +1604,7 @@ Every path ending in `.jsonl` that a command in `foundations/invariants.md` name
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md`
 - **Rests on:** TODO — a gitignore file specifies intentionally untracked files that Git should ignore (https://git-scm.com/docs/gitignore)
-- **Derives from:** WAY-74@e4c88e66
+- **Derives from:** WAY-74@6e9c9b8c
 - **Part:** invariants · repository
 - **Correction:** none
 - **Recovered:** none
@@ -1593,7 +1615,7 @@ The gate reads, from the-way's own record of a run, only the lines the run it st
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-74@e4c88e66
+- **Derives from:** WAY-74@6e9c9b8c
 - **Part:** gate
 - **Correction:** none
 - **Recovered:** none

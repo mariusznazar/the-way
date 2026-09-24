@@ -51,7 +51,8 @@ written by hand (WAY-08).
 
 Every field of the form above appears in every entry. A field holds `none` or `TODO` only where the
 form above gives it that word: `none` states that nothing is there, `TODO` that something is known
-to be missing (WAY-71).
+to be missing. The main branch holds `TODO` only in *Method*, and in *Rests on* until the
+environment facts element has entries (WAY-71).
 
 After the last entry the file carries its withdrawn identifiers, and then the list of quarantined
 invariants that closes it (WAY-68); *Successors* lists identifiers joined by ` · `, or reads
@@ -82,8 +83,8 @@ A quarantined invariant stands on the last list in the file; *Until* is a date a
   sentence names is a value the gate fills in, from this closed list, which grows by a new version
   of WAY-61: `{fork-point}` — the commit the task branch left the main branch from, which is the
   last commit of the main branch the branch contains; `{merge-onto}` — the commit of the main branch
-  that a merge into it is made onto. Where the commit does not exist, the gate fills in that it does
-  not exist (WAY-61).
+  that a merge into it is made onto. Where the commit does not exist, the gate fills in `none` in its
+  place (WAY-61).
 - A method checks what its sentence is about, as it stands on the commit being checked: a check fed
   input made up for it is the method of a sentence about that check, not about the data it reads
   (WAY-61).
@@ -98,8 +99,8 @@ A quarantined invariant stands on the last list in the file; *Until* is a date a
   identifier and current version, in a format from this closed list, which grows by a new version of
   WAY-61: the-way's own record of a run — a JSON Lines file at the one `.jsonl` path the command
   names, one line per invariant a check gives a verdict for and per failure recorded for no entry,
-  each holding `check`, `verdict` (`pass`, `fail`, or `unchecked` beside a `reason` naming what the
-  product does not declare or produce), `invariant` (`<identifier>/<version>` or `null`) and at most
+  each holding `check`, `verdict` (`pass`, `fail`, or `unchecked` beside a `reason` from the list of
+  reasons for `unchecked` below), `invariant` (`<identifier>/<version>` or `null`) and at most
   `description` (WAY-74). A run that records no verdict for the entry never gives it a pass
   (WAY-61).
 - The path of the-way's own record is one git ignores, and the gate clears it before the run and
@@ -161,7 +162,8 @@ A quarantined invariant stands on the last list in the file; *Until* is a date a
   that fingerprint reaches the main branch with every invariant carrying it, each checked against
   the new wording and carrying the new fingerprint (WAY-66).
 - Until the environment facts element has entries, a fact is written as
-  `TODO — <the fact, with its source>` (WAY-66).
+  `TODO — <the fact, with its source>` (WAY-66); such a fact reaches the main branch in that form until
+  then (WAY-71).
 
 ## Part
 

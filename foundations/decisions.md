@@ -2871,9 +2871,8 @@ main branch from (WAY-57), which is the last commit of the main branch the branc
 commit of the main branch that a merge into it is made onto, and grows by a new version of this
 decision; and the closed list of formats a run's record may take, which starts with the-way's own
 record of a run and grows the same way, together with the adapter that reads a product's format
-(WAY-38). The format is read off the record, so the template's `reads:` goes with `runs as:`. Where
-a commit on the list does not exist, as the main branch in this repository, the gate fills in that
-it does not exist and the check records its verdict, as WAY-57 already says for its own checks; the
+(WAY-38). Where a commit on the list does not exist, as the main branch in this repository, the gate fills in `none`
+in its place and the check records its verdict, as WAY-57 already says for its own checks; the
 gate never turns that into a pass. A command that leaves its record in a file names that file's path
 in the command itself, at a place in the working tree that does not change between runs; a method
 may read what another method's run left only where a decision places it, as WAY-47 does, and the
@@ -2883,8 +2882,8 @@ verdict of the run on the commit being checked; the run WAY-58 asks for on the c
 left from is evidence for a human, not a result. The format guards of decisions, of the part map and
 of invariants, once they record a verdict for each invariant they check, cite those invariants and
 are invariant tests under WAY-65, read-only during implementation (WAY-03) and changing through the
-panel (WAY-10). Recording a verdict for each invariant, and taking in place of a commit the value
-that it does not exist, changes the commands of those three guards, which the map declares as
+panel (WAY-10). Recording a verdict for each invariant, and taking `none` in place of a commit
+that does not exist, changes the commands of those three guards, which the map declares as
 surfaces; the change travels on the change path of their promise level (WAY-49, WAY-50). Until the
 guards record such verdicts, the gate has no verdict to read for any of them. A failure a run
 records for no entry is reported by the gate as such, never dropped; how it counts is set by WAY-63.
@@ -3323,48 +3322,52 @@ literal.
 ### WAY-71/1 — Does every field of a foundation entry appear in every entry, and what may it hold?
 
 Every field an element's template gives an entry of its kind appears in every such entry, holding a
-value, or `none` or `TODO` where that template gives the word to the field. `none` states that
-nothing is there, and `TODO` that something is known to be missing. The element's format guard
-reports a missing field, or a word its template does not give the field, as an error.
+value, or `none` or `TODO` where the template gives it the word. `none` states that nothing is
+there, `TODO` that something is known to be missing; the main branch holds `TODO` only in an
+invariant's *Method*, and in *Rests on* until the environment facts element has entries. Its
+guard reports a missing field, or a word not given it, as an error.
 
 - **Change:** new decision
 - **Scope:** decisions, part-map, invariants, glossary, environment-facts
 - **Based on:** none
-- **Relations:** related to WAY-05 · related to WAY-09 · related to WAY-17 · related to WAY-38 ·
-  related to WAY-46 · related to WAY-54 · related to WAY-57 · related to WAY-58 · related to WAY-62 ·
-  related to WAY-63 · related to WAY-66
+- **Relations:** related to WAY-01 · related to WAY-05 · related to WAY-09 · related to WAY-17 ·
+  related to WAY-38 · related to WAY-46 · related to WAY-54 · related to WAY-57 · related to WAY-58 ·
+  related to WAY-60 · related to WAY-62 · related to WAY-63 · related to WAY-66
 - **Outranks:** none
 - **Verification:** level 1 — invariants: log-entry-field-presence · log-entry-field-words ·
-  map-entry-field-presence · map-entry-field-words · invariant-entry-field-presence ·
-  invariant-entry-field-words. Level 2 for what `none` states — an agent compares the change with
-  the decision:
+  log-entry-merge-todo · map-entry-field-presence · map-entry-field-words ·
+  invariant-entry-field-presence · invariant-entry-field-words · invariant-entry-merge-todo. Level 2
+  for what `none` states — an agent compares the change with the decision:
   - complies: an invariant whose author searched the log and found no decision it derives from
     reads `Derives from: none`; a decision whose source is silent on what it rests on reads
-    `Based on: TODO — <what is missing>`;
+    `Based on: TODO — <what is missing>` until a human answers;
   - violates: an invariant reads `Derives from: none` though nobody searched the log; a decision
     reads `Based on: none` where its source says nothing of what it rests on.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-22
+- **Approved by:** Mariusz, 2026-09-24
 
-*Rationale:* a field that is simply missing cannot be told from one that was forgotten, in the
-entries of every element, not only in the log: an invariant entry without *Recovered* reads the
-same whether it was chosen or recovered and the mark forgotten (WAY-58). The words `none` and
-`TODO` carry that difference only where a reader acts on them: the map's guard reads `TODO` in
-*Depends on* as no dependency, and `TODO` in an invariant's *Part* gives the gate no part to run it
-in (WAY-62), so a field takes a word only where its template says what the word means there.
-*Rejected:* a decision for the invariants element alone — the map already applies the rule, and
-every element to come would need another copy; a wider scope for WAY-05 — its question is how a
-decision entry is written, and the fields of other elements take other words; `none` and `TODO`
-allowed in every field of every element — `TODO` in *Depends on* reads as no dependency, and *Part*
-has no reading for either; optional fields left out when empty — an intended gap and a forgotten
-one look the same.
+*Rationale:* a field left out on purpose cannot be told from one forgotten (WAY-58). `none` and
+`TODO` carry that difference only where a reader acts on them — the map's guard reads `TODO` in
+*Depends on* as no dependency, and `TODO` in *Part* gives the gate no part to run the invariant in
+(WAY-62) — so a field takes a word only where its template says what it means there. `TODO` marks
+work in progress, and the main branch describes the product as it is (WAY-01), so a `TODO` there is
+a gap nothing counts, except in *Method*, which the gate reports unchecked (WAY-63), and in *Rests
+on*, where the fact stands with its source until it has an entry to name (WAY-66); keeping such an
+invariant out is the gap WAY-60 rejects.
+*Rejected:* a decision for the invariants element alone — every element to come would need a copy; a
+wider scope for WAY-05 — its question is how a decision entry is written; `none` and `TODO` in every
+field of every element — the readings above; optional fields left out when empty — an intended gap
+and a forgotten one look the same.
 *Consequences:* each element's template says which of the two words each field takes — the decision
 template in its table of states, the others in the form of each field. The part map's form gives
-`none` to *Files* and *Failure modes*, where the map's rules already read it: a part whose tool does
-not exist yet holds no files, and one with no failure modes recorded counts as the highest
-(WAY-46). Each element's format guard checks the level 1 invariants above for its own entries.
+`none` to *Files* and *Failure modes*, where the map's rules read it (WAY-46), and `TODO` to no
+field. The decision guard warns on a `TODO` its template gives, and reports it as an error where
+`{merge-onto}` exists (WAY-60), which leaves the merge creating the main branch unchecked. Each
+element's guard checks the level 1 invariants above for its own entries;
+`invariant-entry-merge-todo` waits on its guard, and drops *Rests on* once the environment facts
+element has entries.
 
 ### WAY-72/1 — In what language is a product's foundation written?
 
@@ -3455,8 +3458,8 @@ invariant with no such fact reads `Rests on: none`, whatever its decisions quote
 The-way's own record of a run is a JSON Lines file at the one `.jsonl` path the command names,
 which git ignores and the gate clears before the run. It holds a line per invariant a check gives
 a verdict for, and per failure recorded for no entry. A line holds `check`, `verdict` as `pass`,
-`fail` or `unchecked` beside a `reason` naming what the product does not declare or produce,
-`invariant` as `<identifier>/<version>` or `null`, and may hold `description`.
+`fail` or `unchecked` beside a `reason` from the invariants template's list of reasons for
+`unchecked`, `invariant` as `<identifier>/<version>` or `null`, and may hold `description`.
 
 - **Change:** new decision
 - **Scope:** invariants, gate, decisions, part-map, repository
