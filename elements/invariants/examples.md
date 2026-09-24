@@ -12,7 +12,7 @@ word for word.
 
 Every entry of the decision log carries every field the decision template gives an entry of its kind.
 
-- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md`
+- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-71@8b16c32e
 - **Part:** decisions

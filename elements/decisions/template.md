@@ -260,27 +260,36 @@ A decision recovered from the existing state of a product:
 
 ## What the format guard checks
 
-- Headings: `### WAY-NN/V — <question>` or `### WAY-NN · review YYYY-MM-DD`; versions of a
-  number are consecutive.
+- Headings: `### WAY-NN/V — <question>` or `### WAY-NN · review YYYY-MM-DD`, and every decision
+  version stands under a heading of its own of the first form; versions of a number are
+  consecutive (WAY-19).
 - Append-only: compared with the commit the task branch left the main branch from, the log only
   grows at the end.
-- Compared with that commit, the log gains at most one version of each number.
-- Every field is present; `TODO` gives a warning.
+- Compared with that commit, the log gains at most one version of each number, and a change to
+  this template comes with a version added to the log (WAY-05, WAY-07).
+- Every field is present; `none` stands only where the table of states gives it, and in a review
+  only in *Next check*; `TODO` gives a warning (WAY-71).
 - Binding sentences: one to three; no *should*, *will* or keyword of RFC 2119 in capitals.
 - *Change*: `new decision` exactly in version 1; in later versions a kind from the list, with
   `previous:` pointing to the version before.
 - Binding sentences are identical to the previous version for *rationale change*,
   *field change* and *challenge*, and absent for *repeal*.
-- Every number in *Relations*, *Outranks* and `previous:` exists.
+- Every number the log names exists, and so does every version that *Relations*, *Outranks*,
+  `previous:` or a review names (WAY-02, WAY-24).
 - Every `derives from` and `narrows` relation carries a fingerprint, and no `related to` relation
   does; checking a merge onto the main branch, every fingerprint a relation carries in the
   latest version of a decision equals the current fingerprint of the decision it names.
 - *Outranks*: no two decisions outrank each other.
+- *Verification* opens with one of the levels of its form (WAY-12).
 - *Review when*: a passed check-by date without a later review gives a warning;
-  `condition not met` requires a date in *Next check*; `changed in WAY-NN/V+1` requires that
-  version to exist.
-- *Approved by* in every version has the form `<who>, YYYY-MM-DD`; `TODO` there is an error.
+  `condition not met` requires a date in *Next check*.
+- *Origin* of an inherited decision has the form `inherited — searched: <…>; found: <…>` (WAY-29).
+- *Approved by* in every version has the form `<who>, YYYY-MM-DD`; `TODO` there is an error; in
+  the-way's own log it names Mariusz or the approver *Approver override* names (WAY-14).
 - Every example in `examples.md` matches its version in the log word for word.
+- Given the path of a record, the guard writes the-way's own record of the run there, with a
+  verdict for each invariant its checks cite; a `TODO` in a field whose invariant asks for a
+  value fails that invariant in the record while the report warns (WAY-61, WAY-74).
 
 ## Examples
 

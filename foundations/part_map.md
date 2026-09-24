@@ -137,6 +137,12 @@ codes.
 
 - **Declared at:** elements/decisions/format_guard.py · main
 
+## run-record-keys — The form of the-way's record of a run
+
+A line of the-way's record of a run keeps its keys and the values each of them takes.
+
+- **Declared at:** not markable — test: elements/decisions/test_format_guard.py
+
 ## part-map-guard-command — The command of the map guard
 
 The command that runs the guard of a part map keeps its name, its arguments and its exit codes.

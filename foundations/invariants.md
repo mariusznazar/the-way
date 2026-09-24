@@ -5,7 +5,7 @@ of an entry stand in `elements/invariants/template.md`.
 
 ## decision-guard-stale-reference/1
 
-The decision guard reports every `derives from` or `narrows` relation, in the latest version of a decision in the log it checks, whose fingerprint differs from the current fingerprint of the decision it names.
+The decision guard, given "{merge-onto}", reports every `derives from` or `narrows` relation, in the latest version of a decision in the log a merge onto that commit leaves, whose fingerprint differs from the current fingerprint there of the decision it names.
 
 - **Method:** `python -B -m unittest discover -s gate -p "test_*.py"`
 - **Rests on:** none
@@ -29,7 +29,7 @@ The fingerprint the decision guard gives a decision version is the fingerprint o
 
 Every decision number the decision log refers to is the number of a decision in the log.
 
-- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md`
+- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-02@af08ee5d
 - **Part:** decisions
@@ -62,7 +62,7 @@ Every file in `foundations/` holds the entries of one of the five foundation ele
 
 Every decision version in the decision log, other than a repeal, opens with one to three binding sentences.
 
-- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md`
+- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-05@f0c14f2c · WAY-20@6aa77560
 - **Part:** decisions
@@ -73,7 +73,7 @@ Every decision version in the decision log, other than a repeal, opens with one 
 
 No binding sentence in the decision log contains, outside code, a word the decision template forbids there.
 
-- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md`
+- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-05@f0c14f2c
 - **Part:** decisions
@@ -84,7 +84,7 @@ No binding sentence in the decision log contains, outside code, a word the decis
 
 Every example in `elements/decisions/examples.md` matches, word for word, the version of the decision log it copies.
 
-- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md`
+- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-05@f0c14f2c
 - **Part:** decisions
@@ -95,7 +95,7 @@ Every example in `elements/decisions/examples.md` matches, word for word, the ve
 
 A change that, against {fork-point}, alters `elements/decisions/template.md` also adds a version to the decision log.
 
-- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --base {fork-point}`
+- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --base {fork-point} --record .runs/decisions-base.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-05@f0c14f2c
 - **Part:** decisions
@@ -117,7 +117,7 @@ Where {merge-onto} exists, every commit of the first-parent history of {merge-on
 
 The decision log begins with every line it held on {fork-point}, unchanged and in the same order.
 
-- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --base {fork-point}`
+- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --base {fork-point} --record .runs/decisions-base.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-07@cce4679b
 - **Part:** decisions
@@ -128,7 +128,7 @@ The decision log begins with every line it held on {fork-point}, unchanged and i
 
 Against {fork-point}, the decision log gains at most one version of each number.
 
-- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --base {fork-point}`
+- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --base {fork-point} --record .runs/decisions-base.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-07@cce4679b
 - **Part:** decisions
@@ -227,7 +227,7 @@ Where {merge-onto} exists, every change against {fork-point} carries the record 
 
 Every decision version in the decision log names its level of verification.
 
-- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md`
+- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-12@55e89140
 - **Part:** decisions
@@ -271,7 +271,7 @@ No change that, against {fork-point}, alters a foundation entry runs on the path
 
 Every decision version in the decision log records in *Approved by* who approved it and on what date.
 
-- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md`
+- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-14@eb86d14b
 - **Part:** decisions
@@ -282,7 +282,7 @@ Every decision version in the decision log records in *Approved by* who approved
 
 Every decision version in the decision log names in *Approved by* Mariusz, or the approver its *Approver override* names.
 
-- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md`
+- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-14@eb86d14b
 - **Part:** decisions
@@ -359,7 +359,7 @@ The view of the decisions in force shows every link the decision log writes at b
 
 The heading of every decision version in the decision log has the form `### <prefix>-NN/V — <question>`.
 
-- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md`
+- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-19@4dc13deb
 - **Part:** decisions
@@ -370,7 +370,7 @@ The heading of every decision version in the decision log has the form `### <pre
 
 The versions of each number in the decision log are consecutive.
 
-- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md`
+- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-19@4dc13deb
 - **Part:** decisions
@@ -381,7 +381,7 @@ The versions of each number in the decision log are consecutive.
 
 Every decision version after the first gives a rationale for the change.
 
-- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md`
+- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-19@4dc13deb
 - **Part:** decisions
@@ -392,7 +392,7 @@ Every decision version after the first gives a rationale for the change.
 
 Every decision version after the first names its kind of change from the list in the decision template.
 
-- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md`
+- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-20@6aa77560
 - **Part:** decisions
@@ -403,7 +403,7 @@ Every decision version after the first names its kind of change from the list in
 
 Every rationale change, field change and challenge in the decision log keeps the binding sentences of the version before it word for word.
 
-- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md`
+- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-20@6aa77560
 - **Part:** decisions
@@ -414,7 +414,7 @@ Every rationale change, field change and challenge in the decision log keeps the
 
 No repeal in the decision log has binding sentences.
 
-- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md`
+- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-20@6aa77560
 - **Part:** decisions
@@ -447,7 +447,7 @@ The decisions found for a change against {fork-point} include every decision who
 
 Every *Review when* in the decision log other than `none` names both a state and a date.
 
-- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md`
+- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-24@058a356a
 - **Part:** decisions
@@ -469,7 +469,7 @@ The decision guard, given a date, warns of every check-by date earlier than it t
 
 Every review entry in the decision log whose result is that the state has not come names a date in *Next check*.
 
-- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md`
+- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-24@058a356a
 - **Part:** decisions
@@ -480,7 +480,7 @@ Every review entry in the decision log whose result is that the state has not co
 
 Every version of a decision that a review entry names exists in the decision log.
 
-- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md`
+- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-24@058a356a
 - **Part:** decisions
@@ -491,7 +491,7 @@ Every version of a decision that a review entry names exists in the decision log
 
 No two decisions in the decision log outrank each other.
 
-- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md`
+- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-25@eb0ce2c4
 - **Part:** decisions
@@ -513,7 +513,7 @@ No file git tracks contains a link into a private note collection, or into a rep
 
 Every inherited decision in the decision log has *Origin* in the form `inherited — searched: <…>; found: <…>`.
 
-- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md`
+- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-29@306edf37
 - **Part:** decisions
@@ -524,7 +524,7 @@ Every inherited decision in the decision log has *Origin* in the form `inherited
 
 The *Rationale* of every inherited decision in the decision log is `unknown`, a quotation with its source, or attributed to the human who gave it.
 
-- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md`
+- **Method:** `TODO`
 - **Rests on:** none
 - **Derives from:** WAY-29@306edf37
 - **Part:** decisions
@@ -535,7 +535,7 @@ The *Rationale* of every inherited decision in the decision log is `unknown`, a 
 
 A relation in the decision log carries a fingerprint when, and only when, its type is `derives from` or `narrows`.
 
-- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md`
+- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-31@509d69d9
 - **Part:** decisions
@@ -544,9 +544,9 @@ A relation in the decision log carries a fingerprint when, and only when, its ty
 
 ## relation-fingerprint-value/1
 
-Where {merge-onto} exists, every fingerprint a relation carries in the latest version of a decision in the decision log equals the current fingerprint of the decision it names.
+Where {merge-onto} exists, every fingerprint a relation carries in the latest version of a decision, in the decision log a merge onto {merge-onto} leaves, equals the current fingerprint there of the decision it names.
 
-- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --merge-onto {merge-onto}`
+- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --merge-onto {merge-onto} --record .runs/decisions-merge-onto.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-02@af08ee5d · WAY-31@509d69d9
 - **Part:** decisions · relation-model
@@ -557,7 +557,7 @@ Where {merge-onto} exists, every fingerprint a relation carries in the latest ve
 
 Every relation in the decision log has one of the three types the decision template lists.
 
-- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md`
+- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-32@b3ee3f37
 - **Part:** decisions
@@ -1492,7 +1492,7 @@ The gate reports a quarantined entry `unchecked` while the checked commit's comm
 
 Every entry of the decision log carries every field the decision template gives an entry of its kind.
 
-- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md`
+- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-71@8b16c32e
 - **Part:** decisions
@@ -1503,7 +1503,7 @@ Every entry of the decision log carries every field the decision template gives 
 
 No field of an entry of the decision log holds `none` or `TODO` where the decision template does not give it that word.
 
-- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md`
+- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-71@8b16c32e
 - **Part:** decisions

@@ -4,33 +4,42 @@ Run from anywhere: python -B -m unittest discover -s <the-way>/elements/decision
 """
 
 import datetime
+import inspect
 import io
+import json
 import os
 import subprocess
 import sys
 import tempfile
 import unittest
+import unittest.mock
 
 sys.dont_write_bytecode = True
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import format_guard  # noqa: E402
-from fingerprint import fingerprint  # noqa: E402
 
 TODAY = datetime.date(2026, 9, 17)
 BINDING = "The product keeps every saved game after a reload."
+# The fingerprint of BINDING, and of CHANGED, written out (WAY-70).
+CURRENT = "798975ff"
+CHANGED = "The product keeps every saved game after any reload."
+CHANGED_FINGERPRINT = "69b731d5"
+GUARD = "elements/decisions/format_guard.py"
 
 
 def version(number, ver=1, binding=BINDING, change=None, relations="none", outranks="none",
-            review_when="none", approved="Anna, 2026-09-01", rationale=None, omit=()):
+            review_when="none", approved="Anna, 2026-09-01", rationale=None, omit=(),
+            verification=None, origin="none", override="none"):
     change = change or ("new decision" if ver == 1 else
                         "field change · previous: ABC-%02d/%d" % (number, ver - 1))
     rationale = rationale or ("Rationale" if ver == 1 else "Rationale for change")
+    verification = verification or ("level 2 — an agent compares the change with the decision:\n"
+                                    "  - complies: a reload keeps the game;\n"
+                                    "  - violates: a reload loses the game.")
     fields = [("Change", change), ("Scope", "saving"), ("Based on", "none"),
               ("Relations", relations), ("Outranks", outranks),
-              ("Verification", "level 2 — an agent compares the change with the decision:\n"
-                               "  - complies: a reload keeps the game;\n"
-                               "  - violates: a reload loses the game."),
-              ("Review when", review_when), ("Origin", "none"), ("Approver override", "none"),
+              ("Verification", verification),
+              ("Review when", review_when), ("Origin", origin), ("Approver override", override),
               ("Approved by", approved)]
     lines = ["### ABC-%02d/%d — Is a saved game kept?" % (number, ver), ""]
     if binding is not None:
@@ -43,40 +52,58 @@ def version(number, ver=1, binding=BINDING, change=None, relations="none", outra
     return "\n".join(lines)
 
 
-def review(number, date, result, next_check):
+def review(number, date, result, next_check, checked_by="Anna"):
     return "\n".join(["### ABC-%02d · review %s" % (number, date), "",
                       "- **Result:** %s" % result, "- **Next check:** %s" % next_check,
-                      "- **Checked by:** Anna"])
+                      "- **Checked by:** %s" % checked_by])
 
 
 def log(*entries):
     return "# Decision log\n\nIntro.\n\n" + "\n\n".join(entries) + "\n"
 
 
+def line(function, verdict, invariant, description=None):
+    """A line of the record, written out as the test expects it."""
+    written = {"check": "%s::%s" % (GUARD, function) if function else GUARD,
+               "verdict": verdict, "invariant": invariant}
+    if description is not None:
+        written["description"] = description
+    return written
+
+
 class GuardTestCase(unittest.TestCase):
     def setUp(self):
         self.directory = tempfile.TemporaryDirectory()
         self.path = os.path.join(self.directory.name, "decisions.md")
+        self.record_path = os.path.join(self.directory.name, ".runs", "decisions.jsonl")
+        self.lines = []
 
     def tearDown(self):
         self.directory.cleanup()
 
-    def guard(self, text, base=None):
+    def guard(self, text, base=None, merge_onto=None, approver=None):
         with open(self.path, "w", encoding="utf-8", newline="\n") as handle:
             handle.write(text)
         output = io.StringIO()
-        code = format_guard.run(self.path, base=base, today=TODAY, stream=output)
+        code = format_guard.run(self.path, base=base, today=TODAY, stream=output,
+                                merge_onto=merge_onto, record=self.record_path, approver=approver)
+        with open(self.record_path, encoding="utf-8") as handle:
+            self.lines = [json.loads(item) for item in handle.read().split("\n") if item]
         return code, output.getvalue()
 
-    def assertPasses(self, text):
-        code, output = self.guard(text)
+    def assertPasses(self, text, **options):
+        code, output = self.guard(text, **options)
         self.assertEqual(code, 0, output)
         self.assertIn("0 error(s), 0 warning(s)", output)
+        self.assertEqual([item for item in self.lines if item["verdict"] != "pass"], [])
 
-    def assertFails(self, text, fragment):
-        code, output = self.guard(text)
+    def assertFails(self, text, fragment, **options):
+        code, output = self.guard(text, **options)
         self.assertEqual(code, 1, output)
         self.assertIn(fragment, output)
+
+    def assertRecords(self, expected):
+        self.assertIn(expected, self.lines)
 
 
 class Headings(GuardTestCase):
@@ -85,15 +112,62 @@ class Headings(GuardTestCase):
 
     def test_malformed_heading(self):
         self.assertFails(log(version(1).replace("ABC-01/1 —", "ABC-01 —")), "heading is neither")
+        self.assertRecords(line("check_headings", "fail", "decision-heading-form/1",
+                                "line 5: heading is neither `### ABC-NN/V — <question>` nor "
+                                "`### ABC-NN · review YYYY-MM-DD`"))
 
     def test_versions_not_consecutive(self):
         self.assertFails(log(version(1), version(1, ver=3, change="field change · previous: ABC-01/2")),
                          "version 3 where version 2 is next")
+        self.assertRecords(line("check_headings", "fail", "decision-version-sequence/1",
+                                "line 26: ABC-01: version 3 where version 2 is next"))
+
+
+class HeadingsOffTheForm(GuardTestCase):
+    SHAPE = "`### ABC-NN/V — <question>`"
+
+    def test_a_heading_one_level_up(self):
+        self.assertFails(log(version(1), version(2).replace("### ABC-02/1", "## ABC-02/1")),
+                         "the heading of a decision version is")
+        self.assertRecords(line("check_headings", "fail", "decision-heading-form/1",
+                                "line 26: the heading of a decision version is `## ABC-02/1 — Is a "
+                                "saved game kept?`, not `### ABC-NN/V — <question>`"))
+        self.assertNotIn(line("check_headings", "pass", "decision-heading-form/1"), self.lines)
+
+    def test_a_heading_one_level_down(self):
+        self.assertFails(log(version(1), version(2).replace("### ABC-02/1", "#### ABC-02/1")),
+                         "the heading of a decision version is `#### ABC-02/1")
+
+    def test_the_only_version_under_another_level(self):
+        self.assertFails(log(version(1).replace("### ABC-01/1", "## ABC-01/1")),
+                         "the heading of a decision version is `## ABC-01/1")
+
+    def test_a_version_with_no_heading(self):
+        self.assertFails(log(version(1), version(2).split("\n", 1)[1]),
+                         "a decision version stands here with no heading of its own")
+        self.assertRecords(line("check_headings", "fail", "decision-heading-form/1",
+                                "line 29: a decision version stands here with no heading of its "
+                                "own; its heading has the form `### ABC-NN/V — <question>`"))
+
+    def test_a_version_under_a_heading_that_names_no_version(self):
+        self.assertFails(log(version(1), version(2).replace("### ABC-02/1 — Is a saved game kept?",
+                                                            "## Saving")),
+                         "a decision version stands under `## Saving`")
+        self.assertRecords(line("check_headings", "fail", "decision-heading-form/1",
+                                "line 30: a decision version stands under `## Saving`, not under a "
+                                "heading of the form `### ABC-NN/V — <question>`"))
+
+    def test_a_version_under_a_review_heading(self):
+        self.assertFails(log(version(1), version(2).replace("### ABC-02/1 — Is a saved game kept?",
+                                                            "### ABC-01 · review 2026-09-01")),
+                         "a decision version stands under `### ABC-01 · review 2026-09-01`")
 
 
 class Fields(GuardTestCase):
     def test_missing_field(self):
         self.assertFails(log(version(1, omit=("Origin",))), "field *Origin* is missing")
+        self.assertRecords(line("check_fields", "fail", "log-entry-field-presence/1",
+                                "line 5: field *Origin* is missing"))
 
     def test_missing_prose_field(self):
         self.assertFails(log(version(1, omit=("Rejected",))), "field *Rejected* is missing")
@@ -102,25 +176,72 @@ class Fields(GuardTestCase):
         code, output = self.guard(log(version(1).replace("**Origin:** none", "**Origin:** TODO — find it")))
         self.assertEqual(code, 0, output)
         self.assertIn("warning: *Origin* is `TODO`", output)
+        self.assertRecords(line("check_fields", "pass", "log-entry-field-words/1"))
 
     def test_todo_in_approved_by_is_an_error(self):
         self.assertFails(log(version(1, approved="TODO")), "*Approved by* is `TODO`")
+        self.assertRecords(line("check_fields", "fail", "log-entry-field-words/1",
+                                "line 20: *Approved by* is `TODO`"))
+        self.assertRecords(line("check_approval", "fail", "decision-approval-record/1",
+                                "line 20: *Approved by* is `TODO`"))
 
     def test_approved_by_without_date(self):
         self.assertFails(log(version(1, approved="Anna")), "*Approved by* is not")
+        self.assertRecords(line("check_approval", "fail", "decision-approval-record/1",
+                                "line 20: ABC-01/1: *Approved by* is not `<who>, YYYY-MM-DD`"))
 
     def test_rationale_for_change_in_later_versions(self):
         self.assertFails(log(version(1), version(1, ver=2, rationale="Rationale")),
                          "field *Rationale for change* is missing")
+        self.assertRecords(line("check_change_rationale", "fail", "decision-change-rationale/1",
+                                "line 26: field *Rationale for change* is missing"))
+
+    def test_todo_rationale_for_change_gives_no_rationale(self):
+        code, output = self.guard(log(version(1), version(1, ver=2).replace(
+            "*Rationale for change:* players lose trust.", "*Rationale for change:* TODO — ask Anna")))
+        self.assertEqual(code, 0, output)
+        self.assertIn("warning: *Rationale for change* is `TODO`", output)
+        self.assertRecords(line("check_change_rationale", "fail", "decision-change-rationale/1",
+                                "line 43: *Rationale for change* is `TODO`"))
+
+
+class FieldWords(GuardTestCase):
+    def test_none_where_the_template_gives_it_passes(self):
+        self.assertPasses(log(version(1).replace("**Scope:** saving", "**Scope:** none")))
+
+    def test_none_in_change(self):
+        self.assertFails(log(version(1, change="none")), "*Change* is `none`")
+        self.assertRecords(line("check_fields", "fail", "log-entry-field-words/1",
+                                "line 9: *Change* is `none`"))
+
+    def test_none_in_approved_by(self):
+        self.assertFails(log(version(1, approved="none")), "*Approved by* is `none`")
+        self.assertRecords(line("check_fields", "fail", "log-entry-field-words/1",
+                                "line 20: *Approved by* is `none`"))
+
+    def test_none_in_a_review_field_the_template_gives_no_none(self):
+        self.assertFails(log(version(1), review(1, "2026-09-01", "condition met, decision kept — "
+                                                "saves stay local", "none", checked_by="none")),
+                         "*Checked by* is `none`")
+        self.assertRecords(line("check_fields", "fail", "log-entry-field-words/1",
+                                "line 30: *Checked by* is `none`"))
+
+    def test_none_in_next_check_passes(self):
+        self.assertPasses(log(version(1), review(1, "2026-09-01", "condition met, decision kept — "
+                                                 "saves stay local", "none")))
 
 
 class BindingSentences(GuardTestCase):
     def test_four_sentences(self):
         self.assertFails(log(version(1, binding="A is B. C is D. E is F. G is H.")),
                          "4 binding sentences")
+        self.assertRecords(line("check_bindings", "fail", "binding-sentence-count/1",
+                                "line 7: ABC-01/1: 4 binding sentences, at most 3"))
 
     def test_should(self):
         self.assertFails(log(version(1, binding="The product should keep a game.")), "*should*")
+        self.assertRecords(line("check_bindings", "fail", "binding-sentence-words/1",
+                                "line 7: ABC-01/1: binding sentences use *should*"))
 
     def test_will(self):
         self.assertFails(log(version(1, binding="The product will keep a game.")), "*will*")
@@ -139,10 +260,21 @@ class Changes(GuardTestCase):
     def test_first_version_is_a_new_decision(self):
         self.assertFails(log(version(1, change="field change · previous: ABC-01/0")),
                          "is not `new decision`")
+        self.assertRecords(line("check_changes", "fail", None,
+                                "line 9: ABC-01/1: *Change* of version 1 is not `new decision`"))
 
     def test_unknown_kind(self):
         self.assertFails(log(version(1), version(1, ver=2, change="tweak · previous: ABC-01/1")),
                          "`tweak` is not a kind of change")
+        self.assertRecords(line("check_changes", "fail", "decision-change-kind/1",
+                                "line 30: ABC-01/2: `tweak` is not a kind of change"))
+
+    def test_todo_kind_names_no_kind(self):
+        code, output = self.guard(log(version(1), version(1, ver=2, change="TODO — which kind")))
+        self.assertEqual(code, 0, output)
+        self.assertIn("warning: *Change* is `TODO`", output)
+        self.assertRecords(line("check_changes", "fail", "decision-change-kind/1",
+                                "line 30: *Change* is `TODO`"))
 
     def test_previous_points_to_the_version_before(self):
         self.assertFails(log(version(1), version(2),
@@ -152,6 +284,10 @@ class Changes(GuardTestCase):
     def test_field_change_keeps_binding_sentences(self):
         self.assertFails(log(version(1), version(1, ver=2, binding="Another rule holds.")),
                          "a field change keeps the binding sentences")
+        self.assertRecords(line("check_binding_across_versions", "fail",
+                                "decision-binding-across-versions/1",
+                                "line 28: ABC-01/2: a field change keeps the binding sentences of "
+                                "ABC-01/1"))
 
     def test_rewrapped_binding_sentences_are_identical(self):
         self.assertPasses(log(version(1), version(1, ver=2, binding=BINDING.replace(" after ", "\nafter "))))
@@ -164,43 +300,118 @@ class Changes(GuardTestCase):
     def test_repeal_has_no_binding_sentences(self):
         self.assertFails(log(version(1), version(1, ver=2, change="repeal · previous: ABC-01/1")),
                          "a repeal has no binding sentences")
+        self.assertRecords(line("check_bindings", "fail", "repeal-binding-sentences/1",
+                                "line 28: ABC-01/2: a repeal has no binding sentences"))
         self.assertPasses(log(version(1), version(1, ver=2, binding=None,
                                                   change="repeal · previous: ABC-01/1")))
 
     def test_binding_sentences_missing(self):
         self.assertFails(log(version(1, binding=None)), "binding sentences are missing")
+        self.assertRecords(line("check_bindings", "fail", "binding-sentence-count/1",
+                                "line 5: ABC-01/1: binding sentences are missing"))
+
+
+class Verification(GuardTestCase):
+    def test_each_level_passes(self):
+        self.assertPasses(log(version(1, verification="level 1 — invariants: saved-game-kept"),
+                              version(2, verification="level 3 — Anna assesses the change")))
+
+    def test_no_level(self):
+        self.assertFails(log(version(1, verification="none")), "names no level of verification")
+        self.assertRecords(line("check_verification", "fail", "decision-verification-level/1",
+                                "line 14: ABC-01/1: *Verification* names no level of verification, "
+                                "as `level 1 | 2 | 3`"))
+
+    def test_a_level_the_template_does_not_list(self):
+        self.assertFails(log(version(1, verification="level 4 — a committee")),
+                         "names no level of verification")
+
+    def test_todo_names_no_level(self):
+        code, output = self.guard(log(version(1, verification="TODO — choose a level")))
+        self.assertEqual(code, 0, output)
+        self.assertRecords(line("check_verification", "fail", "decision-verification-level/1",
+                                "line 14: *Verification* is `TODO`"))
+
+
+class Approver(GuardTestCase):
+    def test_the_approver_passes(self):
+        self.assertPasses(log(version(1)), approver="Anna")
+
+    def test_another_approver(self):
+        self.assertFails(log(version(1)), "*Approved by* names Anna, who is neither Mariusz",
+                         approver="Mariusz")
+        self.assertRecords(line("check_approver", "fail", "decision-approver/1",
+                                "line 20: ABC-01/1: *Approved by* names Anna, who is neither "
+                                "Mariusz nor the approver *Approver override* names"))
+
+    def test_the_override_names_the_approver(self):
+        self.assertPasses(log(version(1, override="Anna")), approver="Mariusz")
+
+    def test_the_approver_where_an_override_names_another(self):
+        self.assertPasses(log(version(1, override="Ben")), approver="Anna")
+
+    def test_not_checked_outside_the_way_s_own_log(self):
+        code, output = self.guard(log(version(1)))
+        self.assertIn("note: who approves a version is checked only in the-way's own log", output)
+        self.assertNotIn("decision-approver/1", [item["invariant"] for item in self.lines])
+
+
+class Inherited(GuardTestCase):
+    def test_inherited_origin_in_its_form_passes(self):
+        self.assertPasses(log(version(1, origin="inherited — searched: the merge requests of "
+                                                "saving; found: nothing")))
+
+    def test_inherited_origin_out_of_form(self):
+        self.assertFails(log(version(1, origin="inherited from the old loader")),
+                         "*Origin* of an inherited decision is not")
+        self.assertRecords(line("check_inherited", "fail", "inherited-origin-form/1",
+                                "line 18: ABC-01/1: *Origin* of an inherited decision is not "
+                                "`inherited — searched: <…>; found: <…>`"))
+
+    def test_inherited_origin_without_what_was_found(self):
+        self.assertFails(log(version(1, origin="inherited — searched: the merge requests")),
+                         "*Origin* of an inherited decision is not")
 
 
 class Relations(GuardTestCase):
     def test_numbers_exist(self):
         self.assertFails(log(version(1, relations="related to ABC-07")), "names ABC-07")
+        self.assertRecords(line("check_references", "fail", "log-reference-target/1",
+                                "line 12: *Relations* names ABC-07, which does not exist"))
         self.assertFails(log(version(1, outranks="ABC-07")), "names ABC-07")
+
+    def test_numbers_in_prose_exist(self):
+        self.assertFails(log(version(1).replace("saving needs a test.",
+                                                "saving needs a test, as ABC-09 says.")),
+                         "*Consequences* names ABC-09, which does not exist")
+        self.assertFails(log(version(1, binding="The product keeps the games ABC-09 names.")),
+                         "the text names ABC-09, which does not exist")
+        self.assertRecords(line("check_references", "fail", "log-reference-target/1",
+                                "line 7: the text names ABC-09, which does not exist"))
+
+    def test_a_version_named_in_prose_need_not_exist(self):
+        self.assertPasses(log(version(1).replace("saving needs a test.",
+                                                 "a later rule would be ABC-01/2.")))
 
     def test_unknown_relation_type(self):
         self.assertFails(log(version(1), version(2, relations="supersedes ABC-01")),
                          "is not of a known type")
+        self.assertRecords(line("check_relations", "fail", "relation-type/1",
+                                "line 33: ABC-02/1: relation `supersedes ABC-01` is not of a known "
+                                "type"))
 
     def test_derives_from_needs_a_fingerprint(self):
         self.assertFails(log(version(1), version(2, relations="derives from ABC-01")),
                          "carries no fingerprint")
+        self.assertRecords(line("check_relations", "fail", "relation-fingerprint-presence/1",
+                                "line 33: ABC-02/1: `derives from ABC-01` carries no fingerprint"))
 
     def test_related_to_has_none(self):
-        self.assertFails(log(version(1), version(2, relations="related to ABC-01@%s" % fingerprint(BINDING))),
+        self.assertFails(log(version(1), version(2, relations="related to ABC-01@" + CURRENT)),
                          "carries a fingerprint")
 
     def test_current_fingerprint_passes(self):
-        self.assertPasses(log(version(1), version(2, relations="narrows ABC-01@%s" % fingerprint(BINDING))))
-
-    def test_stale_fingerprint(self):
-        self.assertFails(log(version(1), version(2, relations="derives from ABC-01@00000000")),
-                         "the current fingerprint of ABC-01 is %s" % fingerprint(BINDING))
-
-    def test_old_version_keeps_its_old_fingerprint(self):
-        changed = "The product keeps every saved game after any reload."
-        self.assertPasses(log(
-            version(1), version(2, relations="derives from ABC-01@%s" % fingerprint(BINDING)),
-            version(1, ver=2, binding=changed, change="new wording · previous: ABC-01/1"),
-            version(2, ver=2, relations="derives from ABC-01@%s" % fingerprint(changed))))
+        self.assertPasses(log(version(1), version(2, relations="narrows ABC-01@" + CURRENT)))
 
     def test_mutual_outranks(self):
         self.assertFails(log(version(1, outranks="ABC-02"), version(2, outranks="ABC-01")),
@@ -229,11 +440,33 @@ class Reviews(GuardTestCase):
         self.assertFails(log(version(1, review_when=self.DUE),
                              review(1, "2026-09-01", "condition not met — local", "none")),
                          "needs a date in *Next check*")
+        self.assertRecords(line("check_reviews", "fail", "review-next-check/1",
+                                "line 29: ABC-01 · review 2026-09-01: `condition not met` needs a "
+                                "date in *Next check*"))
 
     def test_changed_in_needs_the_version(self):
         self.assertFails(log(version(1, review_when=self.DUE),
                              review(1, "2026-09-01", "condition met — changed in ABC-01/2", "none")),
                          "names a version that does not exist")
+        self.assertRecords(line("check_reviews", "fail", "review-named-version/1",
+                                "line 28: ABC-01 · review 2026-09-01: *Result* names a version that "
+                                "does not exist"))
+
+    def test_every_version_a_review_names_exists(self):
+        self.assertFails(log(version(1, review_when=self.DUE),
+                             review(1, "2026-09-01", "condition not met — ABC-01/3 is still a draft",
+                                    "2026-10-01")),
+                         "names ABC-01/3, a version that does not exist")
+        self.assertRecords(line("check_reviews", "fail", "review-named-version/1",
+                                "line 28: ABC-01 · review 2026-09-01: names ABC-01/3, a version "
+                                "that does not exist"))
+
+    def test_review_of_a_number_that_does_not_exist(self):
+        self.assertFails(log(version(1), review(4, "2026-09-01", "condition not met — local",
+                                                "2026-10-01")),
+                         "ABC-04 does not exist")
+        self.assertRecords(line("check_reviews", "fail", "log-reference-target/1",
+                                "line 26: ABC-04 · review 2026-09-01: ABC-04 does not exist"))
 
     def test_unknown_result(self):
         self.assertFails(log(version(1), review(1, "2026-09-01", "looked at it", "none")),
@@ -241,6 +474,9 @@ class Reviews(GuardTestCase):
 
     def test_malformed_review_when(self):
         self.assertFails(log(version(1, review_when="next year")), "*Review when* is not")
+        self.assertRecords(line("check_review_when", "fail", "review-when-form/1",
+                                "line 17: ABC-01/1: *Review when* is not `<observable state> · "
+                                "check by: YYYY-MM-DD`"))
 
 
 class Examples(GuardTestCase):
@@ -254,9 +490,107 @@ class Examples(GuardTestCase):
         report = format_guard.Report(self.path)
         format_guard.check_examples(entries, examples, report)
         self.assertTrue(any("differs from the log" in m for _, m in report.errors), report.errors)
+        self.assertEqual(report.record(), [line("check_examples", "fail", "decision-example-copy/1",
+                                                "line 20: examples.md:20 differs from the log")])
 
 
-class AgainstBase(GuardTestCase):
+class Record(GuardTestCase):
+    def test_a_plain_run_records_a_verdict_for_each_check_that_ran(self):
+        self.guard(log(version(1), version(2)))
+        self.assertEqual(self.lines, [
+            line("check_headings", "pass", "decision-heading-form/1"),
+            line("check_headings", "pass", "decision-version-sequence/1"),
+            line("check_fields", "pass", "log-entry-field-presence/1"),
+            line("check_fields", "pass", "log-entry-field-words/1"),
+            line("check_change_rationale", "pass", "decision-change-rationale/1"),
+            line("check_changes", "pass", "decision-change-kind/1"),
+            line("check_bindings", "pass", "binding-sentence-count/1"),
+            line("check_bindings", "pass", "binding-sentence-words/1"),
+            line("check_bindings", "pass", "repeal-binding-sentences/1"),
+            line("check_binding_across_versions", "pass", "decision-binding-across-versions/1"),
+            line("check_relations", "pass", "relation-type/1"),
+            line("check_relations", "pass", "relation-fingerprint-presence/1"),
+            line("check_verification", "pass", "decision-verification-level/1"),
+            line("check_approval", "pass", "decision-approval-record/1"),
+            line("check_review_when", "pass", "review-when-form/1"),
+            line("check_inherited", "pass", "inherited-origin-form/1"),
+            line("check_references", "pass", "log-reference-target/1"),
+            line("check_reviews", "pass", "review-next-check/1"),
+            line("check_reviews", "pass", "review-named-version/1"),
+            line("check_reviews", "pass", "log-reference-target/1"),
+            line("check_outranks", "pass", "outranks-pairs/1"),
+        ])
+
+    def test_a_line_holds_only_the_keys_of_the_form(self):
+        self.guard(log(version(1, outranks="ABC-02"), version(2, outranks="ABC-01"),
+                       version(3, change="field change · previous: ABC-03/0")))
+        for item in self.lines:
+            self.assertTrue(set(item) <= {"check", "verdict", "invariant", "description"}, item)
+            self.assertIn(item["verdict"], ("pass", "fail"), item)
+            self.assertEqual("description" in item, item["verdict"] == "fail", item)
+
+    def test_a_finding_records_fail_and_no_pass(self):
+        self.guard(log(version(1, outranks="ABC-02"), version(2, outranks="ABC-01")))
+        self.assertRecords(line("check_outranks", "fail", "outranks-pairs/1",
+                                "line 13: ABC-01 and ABC-02 outrank each other"))
+        self.assertNotIn(line("check_outranks", "pass", "outranks-pairs/1"), self.lines)
+
+    def test_an_error_of_no_cited_invariant_records_null(self):
+        self.guard(log(version(1).replace("- **Scope:**", "*Rationale for change:* x\n- **Scope:**")))
+        self.assertRecords(line("check_fields", "fail", None,
+                                "line 10: ABC-01/1: version 1 uses *Rationale for change*"))
+
+    def test_a_failure_no_rule_gave_names_the_program(self):
+        output = io.StringIO()
+        code = format_guard.run(os.path.join(self.directory.name, "missing.md"), today=TODAY,
+                                stream=output, record=self.record_path)
+        self.assertEqual(code, 2, output.getvalue())
+        with open(self.record_path, encoding="utf-8") as handle:
+            lines = [json.loads(item) for item in handle.read().split("\n") if item]
+        self.assertEqual(len(lines), 1, lines)
+        self.assertEqual({key: lines[0][key] for key in ("check", "verdict", "invariant")},
+                         {"check": GUARD, "verdict": "fail", "invariant": None})
+        self.assertTrue(lines[0]["description"].startswith("cannot read the log: "), lines)
+
+    def test_a_skipped_check_records_no_line(self):
+        self.guard(log(version(1), version(2, relations="derives from ABC-01@00000000")))
+        recorded = [item["invariant"] for item in self.lines]
+        for skipped in ("relation-fingerprint-value/1", "log-existing-lines/1",
+                        "log-versions-added-per-number/1", "decision-template-change/1",
+                        "decision-approver/1", "decision-example-copy/1"):
+            self.assertNotIn(skipped, recorded)
+
+    def test_the_record_is_overwritten(self):
+        os.makedirs(os.path.dirname(self.record_path))
+        with open(self.record_path, "w", encoding="utf-8") as handle:
+            handle.write('{"check": "old", "verdict": "pass", "invariant": "outranks-pairs/1"}\n')
+        self.guard(log(version(1)))
+        self.assertNotIn({"check": "old", "verdict": "pass", "invariant": "outranks-pairs/1"},
+                         self.lines)
+
+    def test_the_report_for_a_person_stays(self):
+        code, output = self.guard(log(version(1, outranks="ABC-02"), version(2, outranks="ABC-01")))
+        self.assertEqual(code, 1)
+        self.assertIn("decisions.md:13: error: ABC-01 and ABC-02 outrank each other\n", output)
+        self.assertTrue(output.endswith("1 error(s), 0 warning(s)\n"), output)
+
+    def test_each_verdict_stands_at_a_check_citing_its_invariant(self):
+        self.guard(log(version(1, outranks="ABC-02", review_when="next year", approved="Anna"),
+                       version(2, outranks="ABC-01", relations="supersedes ABC-07",
+                               verification="none", origin="inherited"),
+                       version(2, ver=3, binding="Must not. A. B. C!"),
+                       review(5, "2026-09-01", "condition not met — ABC-01/4", "none")),
+                   approver="Mariusz")
+        self.assertTrue(any(item["verdict"] == "fail" for item in self.lines))
+        for item in self.lines:
+            if item["invariant"] is None:
+                continue
+            function = item["check"].split("::")[1]
+            self.assertIn("# invariant: %s\n" % item["invariant"],
+                          inspect.getsource(getattr(format_guard, function)), item)
+
+
+class InGit(GuardTestCase):
     def setUp(self):
         super().setUp()
         self.git("init", "-q", "-b", "main")
@@ -267,21 +601,36 @@ class AgainstBase(GuardTestCase):
         subprocess.run(["git"] + list(arguments), cwd=self.directory.name, check=True,
                        capture_output=True)
 
-    def commit(self, text):
-        self.guard(text)
-        self.git("add", "decisions.md")
+    def write(self, relative, text):
+        path = os.path.join(self.directory.name, *relative.split("/"))
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        with open(path, "w", encoding="utf-8", newline="\n") as handle:
+            handle.write(text)
+
+    def commit(self, text, *others):
+        with open(self.path, "w", encoding="utf-8", newline="\n") as handle:
+            handle.write(text)
+        self.git("add", "decisions.md", *others)
         self.git("commit", "-q", "-m", "log")
 
+
+class AgainstBase(InGit):
     def test_appending_passes(self):
         self.commit(log(version(1)))
         code, output = self.guard(log(version(1), version(2)), base="main")
         self.assertEqual(code, 0, output)
+        self.assertRecords(line("check_against_base", "pass", "log-existing-lines/1"))
+        self.assertRecords(line("check_against_base", "pass", "log-versions-added-per-number/1"))
+        self.assertRecords(line("check_template_change", "pass", "decision-template-change/1"))
 
     def test_editing_an_entry_on_the_main_branch(self):
         self.commit(log(version(1)))
         code, output = self.guard(log(version(1, approved="Anna, 2026-09-02")), base="main")
         self.assertEqual(code, 1, output)
         self.assertIn("only grows at the end", output)
+        self.assertRecords(line("check_against_base", "fail", "log-existing-lines/1",
+                                "line 20: the log differs from main here; on the main branch it "
+                                "only grows at the end"))
 
     def test_two_versions_in_one_merge(self):
         self.commit(log(version(1)))
@@ -289,12 +638,30 @@ class AgainstBase(GuardTestCase):
                                   change="field change · previous: ABC-01/2")), base="main")
         self.assertEqual(code, 1, output)
         self.assertIn("2 versions added against main", output)
+        self.assertRecords(line("check_against_base", "fail", "log-versions-added-per-number/1",
+                                "line 47: ABC-01: 2 versions added against main, at most one"))
 
     def test_missing_base(self):
         self.commit(log(version(1)))
         code, output = self.guard(log(version(1)), base="origin/main")
         self.assertEqual(code, 1, output)
         self.assertIn("does not exist", output)
+        self.assertRecords(line(None, "fail", None, "--base origin/main does not exist"))
+        self.assertNotIn("log-existing-lines/1", [item["invariant"] for item in self.lines])
+
+    def test_the_last_line_of_the_base_lengthened(self):
+        self.commit(log(version(1)))
+        self.assertFails(log(version(1)).rstrip() + " Saves are kept.\n", "only grows at the end",
+                         base="main")
+        self.assertRecords(line("check_against_base", "fail", "log-existing-lines/1",
+                                "line 24: the log differs from main here; on the main branch it "
+                                "only grows at the end"))
+
+    def test_a_base_with_an_empty_log(self):
+        self.commit("")
+        code, output = self.guard(log(version(1)), base="main")
+        self.assertEqual(code, 0, output)
+        self.assertRecords(line("check_against_base", "pass", "log-existing-lines/1"))
 
     def test_base_without_the_log(self):
         with open(os.path.join(self.directory.name, "other.txt"), "w") as handle:
@@ -304,13 +671,248 @@ class AgainstBase(GuardTestCase):
         code, output = self.guard(log(version(1)), base="main")
         self.assertEqual(code, 0, output)
         self.assertIn("compared with an empty one", output)
+        self.assertRecords(line("check_against_base", "pass", "log-existing-lines/1"))
+
+
+class RecordPerCommand(InGit):
+    """A run records the checks its options select; the report for a person keeps them all."""
+
+    LOG_ALONE = [
+        "binding-sentence-count/1", "binding-sentence-words/1", "decision-approval-record/1",
+        "decision-binding-across-versions/1", "decision-change-kind/1",
+        "decision-change-rationale/1", "decision-heading-form/1", "decision-verification-level/1",
+        "decision-version-sequence/1", "inherited-origin-form/1", "log-entry-field-presence/1",
+        "log-entry-field-words/1", "log-reference-target/1", "outranks-pairs/1",
+        "relation-fingerprint-presence/1", "relation-type/1", "repeal-binding-sentences/1",
+        "review-named-version/1", "review-next-check/1", "review-when-form/1"]
+
+    def setUp(self):
+        super().setUp()
+        self.commit(log(version(1)))
+
+    def identifiers(self):
+        return sorted({item["invariant"] for item in self.lines})
+
+    def test_the_plain_command(self):
+        self.guard(log(version(1), version(2)))
+        self.assertEqual(self.identifiers(), self.LOG_ALONE)
+
+    def test_the_command_with_base(self):
+        self.guard(log(version(1), version(2)), base="main")
+        self.assertEqual(self.identifiers(), ["decision-template-change/1", "log-existing-lines/1",
+                                              "log-versions-added-per-number/1"])
+
+    def test_the_command_with_merge_onto(self):
+        self.guard(log(version(1), version(2)), merge_onto="main")
+        self.assertEqual(self.identifiers(), ["relation-fingerprint-value/1"])
+
+    def test_both_options(self):
+        self.guard(log(version(1), version(2)), base="main", merge_onto="main")
+        self.assertEqual(self.identifiers(), ["decision-template-change/1", "log-existing-lines/1",
+                                              "log-versions-added-per-number/1",
+                                              "relation-fingerprint-value/1"])
+
+    def test_a_failure_of_the_log_alone_stays_out_of_the_base_record(self):
+        code, output = self.guard(log(version(1), version(2, verification="TODO — choose a level",
+                                                         change="field change · previous: ABC-02/0")),
+                                  base="main")
+        self.assertEqual(code, 1, output)
+        self.assertIn("*Change* of version 1 is not `new decision`", output)
+        self.assertEqual(self.lines, [
+            line("check_against_base", "pass", "log-existing-lines/1"),
+            line("check_against_base", "pass", "log-versions-added-per-number/1"),
+            line("check_template_change", "pass", "decision-template-change/1"),
+        ])
+
+
+class GitFailures(InGit):
+    """Only a path the commit does not hold reads as an empty file; any other failure of git is
+    a failure of the run, and the checks that need the file record nothing."""
+
+    MESSAGE = "fatal: cannot create the file: Filename too long"
+
+    def setUp(self):
+        super().setUp()
+        self.commit(log(version(1)))
+
+    def failing_show(self):
+        real = format_guard.git
+
+        def git(arguments, cwd):
+            if arguments[0] == "show":
+                return 128, "", self.MESSAGE
+            return real(arguments, cwd)
+        return unittest.mock.patch.object(format_guard, "git", git)
+
+    def test_a_failed_call_is_no_absent_log_against_the_base(self):
+        with self.failing_show():
+            code, output = self.guard(log(version(1)), base="main")
+        self.assertEqual(code, 1, output)
+        self.assertNotIn("compared with an empty one", output)
+        self.assertEqual(self.lines, [line(None, "fail", None, "git cannot read decisions.md at main: "
+                                                               "fatal: cannot create the file: "
+                                                               "Filename too long")])
+
+    def test_a_failed_call_is_no_absent_log_on_the_commit_merged_onto(self):
+        with self.failing_show():
+            code, output = self.guard(log(version(1)), merge_onto="main")
+        self.assertEqual(code, 1, output)
+        self.assertEqual(self.lines, [line(None, "fail", None, "git cannot read decisions.md at main: "
+                                                               "fatal: cannot create the file: "
+                                                               "Filename too long")])
+
+    def test_an_absent_path_compares_with_an_empty_log(self):
+        code, output = self.guard(log(version(1)), base="main")
+        self.assertEqual(code, 0, output)
+        self.assertEqual(self.lines, [
+            line("check_against_base", "pass", "log-existing-lines/1"),
+            line("check_against_base", "pass", "log-versions-added-per-number/1"),
+            line("check_template_change", "pass", "decision-template-change/1"),
+        ])
+
+
+class TemplateChange(InGit):
+    TEMPLATE = "elements/decisions/template.md"
+
+    def setUp(self):
+        super().setUp()
+        self.write(self.TEMPLATE, "# Decision entry template\n\nA field has a reader.\n")
+        self.commit(log(version(1)), self.TEMPLATE)
+
+    def test_a_template_left_alone_passes(self):
+        self.assertPasses(log(version(1)), base="main")
+
+    def test_a_changed_template_without_a_version(self):
+        self.write(self.TEMPLATE, "# Decision entry template\n\nA field has two readers.\n")
+        self.assertFails(log(version(1)), "elements/decisions/template.md differs from main, and "
+                                          "the log gains no version against it", base="main")
+        self.assertRecords(line("check_template_change", "fail", "decision-template-change/1",
+                                "elements/decisions/template.md differs from main, and the log "
+                                "gains no version against it"))
+
+    def test_a_removed_template_without_a_version(self):
+        os.remove(os.path.join(self.directory.name, *self.TEMPLATE.split("/")))
+        self.assertFails(log(version(1)), "differs from main", base="main")
+
+    def test_a_changed_template_with_a_version(self):
+        self.write(self.TEMPLATE, "# Decision entry template\n\nA field has two readers.\n")
+        self.assertPasses(log(version(1), version(1, ver=2)), base="main")
+
+
+class FingerprintValue(InGit):
+    def setUp(self):
+        super().setUp()
+        self.commit(log(version(1)))
+
+    def test_current_fingerprint_passes(self):
+        self.assertPasses(log(version(1), version(2, relations="derives from ABC-01@" + CURRENT)),
+                          merge_onto="main")
+        self.assertRecords(line("check_fingerprints", "pass", "relation-fingerprint-value/1"))
+
+    def test_stale_fingerprint(self):
+        self.assertFails(log(version(1), version(2, relations="derives from ABC-01@00000000")),
+                         "the current fingerprint of ABC-01 is " + CURRENT, merge_onto="main")
+        self.assertRecords(line("check_fingerprints", "fail", "relation-fingerprint-value/1",
+                                "line 33: ABC-02/1: `derives from ABC-01@00000000` — the current "
+                                "fingerprint of ABC-01 is " + CURRENT))
+
+    def test_stale_fingerprint_without_merge_onto_is_not_checked(self):
+        code, output = self.guard(log(version(1), version(2, relations="derives from ABC-01@00000000")))
+        self.assertEqual(code, 0, output)
+        self.assertIn("note: no --merge-onto given", output)
+        self.assertNotIn("relation-fingerprint-value/1", [item["invariant"] for item in self.lines])
+
+    def test_old_version_keeps_its_old_fingerprint(self):
+        self.assertPasses(log(
+            version(1), version(2, relations="derives from ABC-01@" + CURRENT),
+            version(1, ver=2, binding=CHANGED, change="new wording · previous: ABC-01/1"),
+            version(2, ver=2, relations="derives from ABC-01@" + CHANGED_FINGERPRINT)),
+            merge_onto="main")
+
+    def test_merge_onto_that_does_not_exist(self):
+        code, output = self.guard(log(version(1)), merge_onto="origin/main")
+        self.assertEqual(code, 1, output)
+        self.assertIn("--merge-onto origin/main does not exist", output)
+        self.assertRecords(line(None, "fail", None, "--merge-onto origin/main does not exist"))
+        self.assertNotIn("relation-fingerprint-value/1", [item["invariant"] for item in self.lines])
+
+
+class MergedLog(InGit):
+    """The current fingerprint is the one in the log after the merge onto the given commit."""
+
+    REWORDED = version(1, ver=2, binding=CHANGED, change="new wording · previous: ABC-01/1")
+
+    def test_a_decision_reworded_only_on_the_commit_merged_onto(self):
+        self.commit(log(version(1), self.REWORDED))
+        text = log(version(1), version(2, relations="derives from ABC-01@" + CURRENT))
+        self.assertPasses(text)
+        self.assertFails(text, "the current fingerprint of ABC-01 is " + CHANGED_FINGERPRINT,
+                         merge_onto="main")
+        self.assertRecords(line("check_fingerprints", "fail", "relation-fingerprint-value/1",
+                                "line 33: ABC-02/1: `derives from ABC-01@798975ff` — the current "
+                                "fingerprint of ABC-01 is 69b731d5"))
+
+    def test_a_relation_renewed_for_the_wording_on_the_commit_merged_onto(self):
+        self.commit(log(version(1), self.REWORDED))
+        self.assertPasses(log(version(1), version(2, relations="derives from ABC-01@"
+                                                   + CHANGED_FINGERPRINT)), merge_onto="main")
+        self.assertRecords(line("check_fingerprints", "pass", "relation-fingerprint-value/1"))
+
+    def test_a_decision_only_the_commit_merged_onto_holds_leans_on_a_reworded_one(self):
+        self.commit(log(version(1), version(2, relations="derives from ABC-01@" + CURRENT)))
+        self.assertFails(log(version(1), self.REWORDED), "ABC-02/1 (on main)", merge_onto="main")
+        self.assertRecords(line("check_fingerprints", "fail", "relation-fingerprint-value/1",
+                                "ABC-02/1 (on main): `derives from ABC-01@798975ff` — the current "
+                                "fingerprint of ABC-01 is 69b731d5"))
+
+    def test_a_version_both_sides_hold_with_different_text(self):
+        self.commit(log(version(1), version(2)))
+        self.assertFails(log(version(1), version(2, approved="Anna, 2026-09-02")),
+                         "ABC-02/1 differs from its copy on main", merge_onto="main")
+        self.assertRecords(line("merged_log", "fail", None,
+                                "line 26: ABC-02/1 differs from its copy on main; the log after the "
+                                "merge holds this copy"))
+        self.assertRecords(line("check_fingerprints", "pass", "relation-fingerprint-value/1"))
+
+    def test_a_relation_edited_in_place_to_a_wrong_fingerprint(self):
+        self.commit(log(version(1), version(2, relations="derives from ABC-01@798975ff")))
+        self.assertFails(log(version(1), version(2, relations="derives from ABC-01@00000000")),
+                         "the current fingerprint of ABC-01 is 798975ff", merge_onto="main")
+        self.assertRecords(line("check_fingerprints", "fail", "relation-fingerprint-value/1",
+                                "line 33: ABC-02/1: `derives from ABC-01@00000000` — the current "
+                                "fingerprint of ABC-01 is 798975ff"))
+        self.assertRecords(line("merged_log", "fail", None,
+                                "line 26: ABC-02/1 differs from its copy on main; the log after the "
+                                "merge holds this copy"))
+
+    def test_a_decision_reworded_in_place_on_the_branch(self):
+        self.commit(log(version(1), version(2, relations="derives from ABC-01@798975ff")))
+        self.assertFails(log(version(1, binding=CHANGED),
+                             version(2, relations="derives from ABC-01@798975ff")),
+                         "the current fingerprint of ABC-01 is 69b731d5", merge_onto="main")
+        self.assertRecords(line("check_fingerprints", "fail", "relation-fingerprint-value/1",
+                                "line 33: ABC-02/1: `derives from ABC-01@798975ff` — the current "
+                                "fingerprint of ABC-01 is 69b731d5"))
 
 
 class OwnLog(unittest.TestCase):
     def test_the_way_log_passes(self):
         output = io.StringIO()
-        code = format_guard.run(format_guard.OWN_LOG, stream=output)
+        with tempfile.TemporaryDirectory() as directory:
+            record = os.path.join(directory, "decisions.jsonl")
+            code = format_guard.run(format_guard.OWN_LOG, stream=output, record=record)
+            with open(record, encoding="utf-8") as handle:
+                lines = [json.loads(item) for item in handle.read().split("\n") if item]
         self.assertEqual(code, 0, output.getvalue())
+        self.assertEqual(sorted({item["invariant"] for item in lines}), [
+            "binding-sentence-count/1", "binding-sentence-words/1", "decision-approval-record/1",
+            "decision-approver/1", "decision-binding-across-versions/1",
+            "decision-change-kind/1", "decision-change-rationale/1", "decision-example-copy/1",
+            "decision-heading-form/1", "decision-verification-level/1",
+            "decision-version-sequence/1", "inherited-origin-form/1", "log-entry-field-presence/1",
+            "log-entry-field-words/1", "log-reference-target/1", "outranks-pairs/1",
+            "relation-fingerprint-presence/1", "relation-type/1", "repeal-binding-sentences/1",
+            "review-named-version/1", "review-next-check/1", "review-when-form/1"])
 
 
 if __name__ == "__main__":

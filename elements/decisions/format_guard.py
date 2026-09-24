@@ -1,20 +1,31 @@
 """Format guard of a product's decision log.
 
 Runs the checks listed in "What the format guard checks" in template.md, which lies next to this
-script. Field names, kinds of change, relation types, forms of a review result and forbidden
-words are read from the template, so the rules of the entry live in one place (WAY-05, WAY-35).
+script. Field names, kinds of change, relation types, forms of a review result, levels of
+verification, the words `none` and `TODO` each field takes and forbidden words are read from the
+template, so the rules of the entry live in one place (WAY-05, WAY-35, WAY-71). Each check cites
+the invariants it gives a verdict for, as `invariant: <identifier>/<version>` (WAY-65).
 
 Usage, from the root of the product's repository:
 
-    python <the-way>/elements/decisions/format_guard.py [LOG] [--base REF] [--today YYYY-MM-DD]
+    python <the-way>/elements/decisions/format_guard.py [LOG] [--base REF] [--merge-onto REF]
+        [--today YYYY-MM-DD] [--record PATH]
 
 LOG defaults to foundations/decisions.md. --base names the commit the task branch left the main
-branch from, to compare the log with; without it, the two checks that need it are skipped. Exit
-code: 0 without errors, 1 with errors, 2 when the log or the template cannot be read.
+branch from, to compare the log with; without it, the checks that need it are skipped.
+--merge-onto names the commit of the main branch a merge is made onto; without it, the check of
+the fingerprints relations carry against the current wording is skipped. --record names a JSON
+Lines file, created or overwritten, which receives the-way's own record of the run (WAY-74): a
+verdict for each invariant cited by a check the run's options select — the checks against the
+base with --base, the check of fingerprints after the merge with --merge-onto, the checks of the
+log alone with neither — a line for each error of those checks that belongs to no cited
+invariant, and every failure of the run itself. The report for a person holds every check. Exit code: 0 without errors, 1 with errors, 2 when the log or the template cannot
+be read or the record cannot be written.
 """
 
 import argparse
 import datetime
+import json
 import os
 import re
 import subprocess
@@ -25,6 +36,20 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 TEMPLATE = os.path.join(HERE, "template.md")
 EXAMPLES = os.path.join(HERE, "examples.md")
 OWN_LOG = os.path.join(HERE, "..", "..", "foundations", "decisions.md")
+
+# The name a record gives this program, and each of its checks as PROGRAM::<function>.
+PROGRAM = "elements/decisions/format_guard.py"
+# The template a change may alter only together with a new version in the log, as the
+# invariant decision-template-change names it, relative to the root of the repository.
+TEMPLATE_PATH = "elements/decisions/template.md"
+# Who approves a version of the-way's own log where *Approver override* names nobody, as the
+# invariant decision-approver names it (WAY-14).
+OWN_APPROVER = "Mariusz"
+# The checks each option selects for the record; every other check reads the log alone and is
+# recorded only by a run given neither option. A run records the checks its options select, and
+# its own failures always (WAY-61, WAY-74).
+SELECTED_BY = {"check_against_base": "--base", "check_template_change": "--base",
+               "check_fingerprints": "--merge-onto", "merged_log": "--merge-onto"}
 
 sys.dont_write_bytecode = True
 sys.path.insert(0, os.path.join(HERE, "..", "..", "relation-model"))
@@ -53,6 +78,11 @@ class Rules:
     keywords: list
     max_sentences: int
     result_forms: list
+    verification_levels: list
+    word_errors: dict  # "none" or "TODO" -> fields of a version where the word is an error
+    review_none: list  # fields of a review that take `none`
+    inherited_marker: str  # the word *Origin* of an inherited decision opens with
+    inherited_origin: str  # pattern of *Origin* of an inherited decision
 
 
 def _section(text, title):
@@ -84,6 +114,7 @@ def read_rules(path=TEMPLATE):
     result_forms = []
     for form in re.findall(r"^- `([^`]+)`", review_section, re.M):
         result_forms.append(re.split(r"<|\b[A-Z]+-NN", form)[0].strip())
+    review_none = sorted(set(re.findall(r"\*([^*]+)\* is [^;\n]*`none`", review_section)))
 
     kinds = {}
     for line in _section(text, "Kinds of change").splitlines():
@@ -92,6 +123,16 @@ def read_rules(path=TEMPLATE):
                 and not set(cells[0]) <= set("-"):
             kinds[cells[0]] = cells[2]
 
+    word_errors = {}
+    for line in version_section.splitlines():
+        cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
+        word = re.match(r"^`(none|TODO)\b", cells[0]) if line.startswith("|") else None
+        if word and len(cells) == 3:
+            errors = re.search(r"in (.*), error", cells[2])
+            word_errors[word.group(1)] = re.findall(r"\*([^*]+)\*", errors.group(1)) if errors else []
+    if set(word_errors) != {"none", "TODO"}:
+        raise TemplateError("cannot read where `none` and `TODO` are errors")
+
     relations_line = re.search(r"^- \*\*Relations:\*\* (.*)$", version_form, re.M).group(1)
     relation_types = {}
     for item in relations_line.split(" | ")[0].split(" · "):
@@ -99,6 +140,18 @@ def read_rules(path=TEMPLATE):
         if not match:
             raise TemplateError("cannot read relation type from %r" % item)
         relation_types[match.group(1)] = bool(match.group(2))
+
+    levels = re.search(r"^- \*\*Verification:\*\* level ([\d |]+?) —", version_form, re.M)
+    if not levels:
+        raise TemplateError("cannot read the levels of verification")
+    verification_levels = [level.strip() for level in levels.group(1).split("|")]
+
+    origin_line = re.search(r"^- \*\*Origin:\*\* (.*)$", version_form, re.M).group(1)
+    inherited = next((form.strip() for form in origin_line.split(" | ")
+                      if form.strip().startswith("inherited")), None)
+    if inherited is None:
+        raise TemplateError("cannot read the form of *Origin* of an inherited decision")
+    inherited_origin = "^%s$" % "(\\S.*?)".join(re.escape(part) for part in inherited.split("<…>"))
 
     checks = _section(text, "What the format guard checks")
     binding_check = re.search(r"^- Binding sentences: (.*)$", checks, re.M)
@@ -118,7 +171,8 @@ def read_rules(path=TEMPLATE):
         raise TemplateError("the entry forms are incomplete")
     return Rules(version_fields, prose_fields, renamed, review_fields, kinds, relation_types,
                  forbidden_words, [k.strip() for k in keywords.group(1).split(",")],
-                 NUMBER_WORDS[count.group(1)], result_forms)
+                 NUMBER_WORDS[count.group(1)], result_forms, verification_levels, word_errors,
+                 review_none, inherited.split()[0], inherited_origin)
 
 
 # --- parsing the log ------------------------------------------------------------------------
@@ -138,7 +192,8 @@ class Entry:
 
 
 def detect_prefix(text):
-    match = re.search(r"^### ([A-Z][A-Z0-9]*)-\d", text, re.M)
+    match = re.search(r"^### ([A-Z][A-Z0-9]*)-\d", text, re.M) or \
+        re.search(r"^#+\s*([A-Z][A-Z0-9]*)-\d{2,}/\d", text, re.M)
     return match.group(1) if match else None
 
 
@@ -203,18 +258,48 @@ def parse_log(text, prefix):
     return [parse_entry(line, lines, prefix) for line, lines in split_entries(text)]
 
 
-# --- checks ---------------------------------------------------------------------------------
+# --- the report and the record of a run -----------------------------------------------------
+
+
+def describe(line, message):
+    return "line %d: %s" % (line, message) if line else message
 
 
 class Report:
-    def __init__(self, path):
+    """What a person reads, and the record of the run the gate reads (WAY-74).
+
+    A check that runs names the invariants it cites with ran(); an error or a failure it finds
+    names the check and the invariants the finding makes false. A check with no finding for an
+    invariant it cites records `pass`; an error that names no invariant is a failure recorded for
+    no entry, and one that names no check is a failure no rule gave. The record holds the checks
+    of the options the run was given, or of the log alone when it was given none; the report for a
+    person holds every check.
+    """
+
+    def __init__(self, path, options=()):
         self.path = path
+        self.options = set(options)
         self.errors = []
         self.warnings = []
         self.notes = []
+        self.verdicts = {}  # (check, invariant) -> descriptions of its failures
+        self.unowned = []  # (check or None, description) of errors that belong to no invariant
 
-    def error(self, line, message):
+    def ran(self, check, *invariants):
+        for invariant in invariants:
+            self.verdicts.setdefault((check, invariant), [])
+
+    def fail(self, line, message, check, invariants):
+        """Records a failure of each invariant, without a line in the report for a person."""
+        for invariant in invariants:
+            self.verdicts.setdefault((check, invariant), []).append(describe(line, message))
+
+    def error(self, line, message, check=None, invariants=()):
         self.errors.append((line, message))
+        if invariants:
+            self.fail(line, message, check, invariants)
+        else:
+            self.unowned.append((check, describe(line, message)))
 
     def warning(self, line, message):
         self.warnings.append((line, message))
@@ -226,6 +311,44 @@ class Report:
         for note in self.notes:
             stream.write("note: %s\n" % note)
         stream.write("%d error(s), %d warning(s)\n" % (len(self.errors), len(self.warnings)))
+
+    def recorded(self, check):
+        if check is None:
+            return True
+        return SELECTED_BY.get(check) in self.options if self.options else check not in SELECTED_BY
+
+    def record(self):
+        lines = []
+        for (check, invariant), failures in self.verdicts.items():
+            if not self.recorded(check):
+                continue
+            name = "%s::%s" % (PROGRAM, check)
+            if not failures:
+                lines.append({"check": name, "verdict": "pass", "invariant": invariant})
+            for description in failures:
+                lines.append({"check": name, "verdict": "fail", "invariant": invariant,
+                              "description": description})
+        for check, description in self.unowned:
+            if not self.recorded(check):
+                continue
+            lines.append({"check": "%s::%s" % (PROGRAM, check) if check else PROGRAM,
+                          "verdict": "fail", "invariant": None, "description": description})
+        return lines
+
+
+def start_record(path):
+    directory = os.path.dirname(os.path.abspath(path))
+    os.makedirs(directory, exist_ok=True)
+    open(path, "w", encoding="utf-8").close()
+
+
+def write_record(path, report):
+    with open(path, "w", encoding="utf-8", newline="\n") as handle:
+        for line in report.record():
+            handle.write(json.dumps(line, ensure_ascii=False) + "\n")
+
+
+# --- checks ---------------------------------------------------------------------------------
 
 
 def without_code(text):
@@ -250,191 +373,521 @@ def valid_date(value):
         return False
 
 
-def check_log(entries, rules, prefix, report, today):
+def label_of(entry, prefix):
+    if entry.kind == "review":
+        return "%s-%02d · review %s" % (prefix, entry.number, entry.date)
+    return "%s-%02d/%d" % (prefix, entry.number, entry.version)
+
+
+def versions_of(entries):
+    return [entry for entry in entries if entry.kind == "version"]
+
+
+def fields_of_version(entry, rules):
+    prose = [rules.renamed_after_first.get(name, name) if entry.version > 1 else name
+             for name in rules.prose_fields]
+    return rules.version_fields + prose
+
+
+def field_value(entry, name):
+    value, line = entry.fields.get(name, ("", entry.line))
+    return value, line
+
+
+def change_kind(entry, rules, prefix):
+    """The kind of change a version names, or None where it names none from the list."""
+    value = field_value(entry, "Change")[0]
+    if not value or is_todo(value):
+        return None
+    if entry.version == 1:
+        return "new decision"
+    match = re.match(r"^(.+?) · previous: (%s-\d{2,}/\d+)$" % re.escape(prefix), value)
+    if match and match.group(1) in rules.kinds and match.group(1) != "new decision":
+        return match.group(1)
+    return None
+
+
+def check_log(entries, text, rules, prefix, report, today, approver=None):
+    """Runs every check of the log itself and returns the latest version of each number."""
+    numbers, versions = check_headings(entries, text, rules, prefix, report)
+    latest = {number: items[-1] for number, items in numbers.items()}
+    check_fields(entries, rules, prefix, report)
+    check_change_rationale(entries, rules, report)
+    check_changes(entries, rules, prefix, report)
+    check_bindings(entries, rules, prefix, report)
+    check_binding_across_versions(entries, rules, prefix, report, versions)
+    check_relations(entries, rules, prefix, report)
+    check_verification(entries, rules, prefix, report)
+    check_approval(entries, prefix, report)
+    if approver:
+        check_approver(entries, approver, prefix, report)
+    check_review_when(entries, prefix, report)
+    check_inherited(entries, rules, prefix, report)
+    check_references(text, entries, prefix, report, numbers, versions)
+    check_reviews(entries, rules, prefix, report, numbers, versions)
+    check_outranks(latest, prefix, report)
+    check_review_dates(entries, latest, prefix, report, today)
+    return latest
+
+
+def version_blocks(text, rules):
+    """Yield (line of the heading or None, heading, lines opening a decision version's first
+    field) for each stretch of the log between two headings of any level.
+
+    A decision version is known by its fields, not by its heading: a stretch holding the first
+    field of the version form is a decision version, whatever heading stands above it."""
+    opening = re.compile(r"^- \*\*%s:\*\*" % re.escape(rules.version_fields[0]))
+    heading_line, heading, openings = None, None, []
+    for number, line in enumerate(text.split("\n"), start=1):
+        if line.startswith("#"):
+            yield heading_line, heading, openings
+            heading_line, heading, openings = number, line, []
+        elif opening.match(line):
+            openings.append(number)
+    yield heading_line, heading, openings
+
+
+def check_headings(entries, text, rules, prefix, report):
+    # invariant: decision-heading-form/1
+    # invariant: decision-version-sequence/1
+    check, form, sequence = "check_headings", "decision-heading-form/1", "decision-version-sequence/1"
+    report.ran(check, form, sequence)
+    shape = "`### %s-NN/V — <question>`" % prefix
+    version_heading = re.compile(r"^### %s-(\d{2,})/(\d+) — (\S.*)$" % re.escape(prefix))
+    unknown = {entry.line for entry in entries if entry.kind == "unknown"}
+    for line, heading, openings in version_blocks(text, rules):
+        if heading is not None and version_heading.match(heading):
+            for extra in openings[1:]:
+                report.error(extra, "a decision version stands here with no heading of its own; "
+                                    "its heading has the form %s" % shape, check, (form,))
+        elif line in unknown:
+            continue  # reported below with the heading of the entry
+        elif heading is not None and re.match(r"^#+\s*%s-\d{2,}/\d+\b" % re.escape(prefix), heading):
+            report.error(line, "the heading of a decision version is `%s`, not %s"
+                         % (heading, shape), check, (form,))
+        elif openings:
+            report.error(openings[0], "a decision version stands under %s, not under a heading of "
+                                      "the form %s" % ("`%s`" % heading if heading else
+                                                       "no heading", shape), check, (form,))
     numbers = {}
     versions = {}
     for entry in entries:
         if entry.kind == "unknown":
             report.error(entry.line, "heading is neither `### %s-NN/V — <question>` nor "
-                                     "`### %s-NN · review YYYY-MM-DD`" % (prefix, prefix))
+                                     "`### %s-NN · review YYYY-MM-DD`" % (prefix, prefix),
+                         check, (form,))
         elif entry.kind == "version":
             expected = len(numbers.get(entry.number, [])) + 1
             if entry.version != expected:
                 report.error(entry.line, "%s-%02d: version %d where version %d is next"
-                             % (prefix, entry.number, entry.version, expected))
+                             % (prefix, entry.number, entry.version, expected), check, (sequence,))
             numbers.setdefault(entry.number, []).append(entry)
             versions[(entry.number, entry.version)] = entry
+    return numbers, versions
 
-    latest = {number: items[-1] for number, items in numbers.items()}
-    ref = re.compile(r"\b%s-(\d{2,})(?:/(\d+))?\b" % re.escape(prefix))
 
-    def check_reference(entry, line, text, what):
-        for match in ref.finditer(text):
-            number, version = int(match.group(1)), match.group(2)
-            if number not in numbers:
-                report.error(line, "%s names %s, which does not exist" % (what, match.group(0)))
-            elif version and (number, int(version)) not in versions:
-                report.error(line, "%s names %s, which does not exist" % (what, match.group(0)))
-
+def check_fields(entries, rules, prefix, report):
+    # invariant: log-entry-field-presence/1
+    # invariant: log-entry-field-words/1
+    check, presence, words = "check_fields", "log-entry-field-presence/1", "log-entry-field-words/1"
+    report.ran(check, presence, words)
     for entry in entries:
         if entry.kind == "version":
-            check_version(entry, rules, prefix, report, versions, check_reference)
+            names = fields_of_version(entry, rules)
+            takes_none = [name for name in names if name not in rules.word_errors["none"]]
+            takes_todo = [name for name in names if name not in rules.word_errors["TODO"]]
         elif entry.kind == "review":
-            check_review(entry, rules, prefix, report, numbers, versions)
-
-    check_fingerprints(latest, rules, prefix, report)
-    check_outranks(latest, prefix, report)
-    check_review_dates(entries, latest, prefix, report, today)
-
-
-def check_fields(entry, names, report, allow_todo_warning=True):
-    for name in names:
-        if name not in entry.fields or not entry.fields[name][0]:
-            report.error(entry.line, "field *%s* is missing" % name)
-        elif is_todo(entry.fields[name][0]):
-            if name == "Approved by":
-                report.error(entry.fields[name][1], "*Approved by* is `TODO`")
-            else:
-                report.warning(entry.fields[name][1], "*%s* is `TODO`" % name)
-
-
-def check_version(entry, rules, prefix, report, versions, check_reference):
-    label = "%s-%02d/%d" % (prefix, entry.number, entry.version)
-    prose = [rules.renamed_after_first.get(name, name) if entry.version > 1 else name
-             for name in rules.prose_fields]
-    check_fields(entry, rules.version_fields + prose, report)
-    for name, renamed in rules.renamed_after_first.items():
-        wrong = renamed if entry.version == 1 else name
-        if wrong in entry.fields:
-            report.error(entry.fields[wrong][1], "%s: version %d uses *%s*"
-                         % (label, entry.version, wrong))
-
-    change = entry.fields.get("Change", ["", entry.line])
-    kind = None
-    if change[0] and not is_todo(change[0]):
-        if entry.version == 1:
-            if change[0] != "new decision":
-                report.error(change[1], "%s: *Change* of version 1 is not `new decision`" % label)
-            kind = "new decision"
+            names, takes_none, takes_todo = rules.review_fields, rules.review_none, rules.review_fields
         else:
-            match = re.match(r"^(.+?) · previous: (%s-\d{2,}/\d+)$" % re.escape(prefix), change[0])
-            if not match:
-                report.error(change[1], "%s: *Change* is not `<kind> · previous: %s-NN/V`"
-                             % (label, prefix))
-            else:
-                kind = match.group(1)
-                if kind not in rules.kinds or kind == "new decision":
-                    report.error(change[1], "%s: `%s` is not a kind of change" % (label, kind))
-                    kind = None
-                expected = "%s-%02d/%d" % (prefix, entry.number, entry.version - 1)
-                if match.group(2) != expected:
-                    report.error(change[1], "%s: `previous:` names %s instead of %s"
-                                 % (label, match.group(2), expected))
-                check_reference(entry, change[1], match.group(2), "`previous:`")
+            continue
+        for name in names:
+            value, line = field_value(entry, name)
+            if not value:
+                report.error(entry.line, "field *%s* is missing" % name, check, (presence,))
+            elif is_todo(value):
+                if name in takes_todo:
+                    report.warning(line, "*%s* is `TODO`" % name)
+                else:
+                    report.error(line, "*%s* is `TODO`" % name, check, (words,))
+            elif value == "none" and name not in takes_none:
+                report.error(line, "*%s* is `none`" % name, check, (words,))
+        if entry.kind == "version":
+            for name, renamed in rules.renamed_after_first.items():
+                wrong = renamed if entry.version == 1 else name
+                if wrong in entry.fields:
+                    report.error(entry.fields[wrong][1], "%s: version %d uses *%s*"
+                                 % (label_of(entry, prefix), entry.version, wrong), check)
 
-    rule = rules.kinds.get(kind)
-    if rule == "none":
-        if entry.binding is not None:
-            report.error(entry.line + 2, "%s: a %s has no binding sentences" % (label, kind))
-    elif entry.binding is None:
-        report.error(entry.line, "%s: binding sentences are missing" % label)
-    else:
-        check_binding(entry, label, rules, report)
+
+def check_change_rationale(entries, rules, report):
+    # invariant: decision-change-rationale/1
+    check, rationale = "check_change_rationale", "decision-change-rationale/1"
+    report.ran(check, rationale)
+    for entry in versions_of(entries):
+        if entry.version == 1:
+            continue
+        for name in rules.renamed_after_first.values():
+            value, line = field_value(entry, name)
+            if not value:
+                report.fail(entry.line, "field *%s* is missing" % name, check, (rationale,))
+            elif is_todo(value) or value == "none":
+                report.fail(line, "*%s* is `%s`" % (name, "none" if value == "none" else "TODO"),
+                            check, (rationale,))
+
+
+def check_changes(entries, rules, prefix, report):
+    # invariant: decision-change-kind/1
+    check, kind_named = "check_changes", "decision-change-kind/1"
+    report.ran(check, kind_named)
+    for entry in versions_of(entries):
+        label = label_of(entry, prefix)
+        value, line = field_value(entry, "Change")
+        if not value or is_todo(value):
+            if entry.version > 1:
+                report.fail(line, "*Change* is `TODO`" if value else "field *Change* is missing",
+                            check, (kind_named,))
+            continue
+        if entry.version == 1:
+            if value != "new decision":
+                report.error(line, "%s: *Change* of version 1 is not `new decision`" % label, check)
+            continue
+        match = re.match(r"^(.+?) · previous: (%s-\d{2,}/\d+)$" % re.escape(prefix), value)
+        if not match:
+            report.error(line, "%s: *Change* is not `<kind> · previous: %s-NN/V`" % (label, prefix),
+                         check, (kind_named,))
+            continue
+        kind = match.group(1)
+        if kind not in rules.kinds or kind == "new decision":
+            report.error(line, "%s: `%s` is not a kind of change" % (label, kind), check, (kind_named,))
+        expected = "%s-%02d/%d" % (prefix, entry.number, entry.version - 1)
+        if match.group(2) != expected:
+            report.error(line, "%s: `previous:` names %s instead of %s"
+                         % (label, match.group(2), expected), check)
+
+
+def check_bindings(entries, rules, prefix, report):
+    # invariant: binding-sentence-count/1
+    # invariant: binding-sentence-words/1
+    # invariant: repeal-binding-sentences/1
+    check = "check_bindings"
+    count, words, repeal = ("binding-sentence-count/1", "binding-sentence-words/1",
+                            "repeal-binding-sentences/1")
+    report.ran(check, count, words, repeal)
+    for entry in versions_of(entries):
+        label = label_of(entry, prefix)
+        kind = change_kind(entry, rules, prefix)
+        line = entry.line + 2
+        if rules.kinds.get(kind) == "none":
+            if entry.binding is not None:
+                report.error(line, "%s: a %s has no binding sentences" % (label, kind),
+                             check, (repeal,))
+            continue
+        if entry.binding is None:
+            report.error(entry.line, "%s: binding sentences are missing" % label, check, (count,))
+            continue
+        sentences = count_sentences(entry.binding)
+        if not 1 <= sentences <= rules.max_sentences:
+            report.error(line, "%s: %d binding sentences, at most %d"
+                         % (label, sentences, rules.max_sentences), check, (count,))
+        plain = re.sub(r"`[^`]*`", "", entry.binding)
+        for word in rules.forbidden_words:
+            if re.search(r"\b%s\b" % re.escape(word), plain, re.I):
+                report.error(line, "%s: binding sentences use *%s*" % (label, word), check, (words,))
+        for keyword in rules.keywords:
+            if re.search(r"\b%s\b" % re.escape(keyword), plain):
+                report.error(line, "%s: binding sentences use %s" % (label, keyword), check, (words,))
+
+
+def check_binding_across_versions(entries, rules, prefix, report, versions):
+    # invariant: decision-binding-across-versions/1
+    check, kept = "check_binding_across_versions", "decision-binding-across-versions/1"
+    report.ran(check, kept)
+    for entry in versions_of(entries):
+        kind = change_kind(entry, rules, prefix)
         previous = versions.get((entry.number, entry.version - 1))
-        if rule == "identical" and previous is not None and (
-                previous.binding is None or fingerprint(previous.binding) != fingerprint(entry.binding)):
-            report.error(entry.line + 2, "%s: a %s keeps the binding sentences of %s-%02d/%d"
-                         % (label, kind, prefix, entry.number, entry.version - 1))
+        if rules.kinds.get(kind) != "identical" or previous is None:
+            continue
+        label = label_of(entry, prefix)
+        if entry.binding is None:
+            report.fail(entry.line, "%s: binding sentences are missing" % label, check, (kept,))
+        elif previous.binding is None or fingerprint(previous.binding) != fingerprint(entry.binding):
+            report.error(entry.line + 2, "%s: a %s keeps the binding sentences of %s"
+                         % (label, kind, label_of(previous, prefix)), check, (kept,))
 
-    for name in ("Relations", "Outranks"):
-        if name in entry.fields:
-            check_reference(entry, entry.fields[name][1], entry.fields[name][0], "*%s*" % name)
-    relations = entry.fields.get("Relations")
-    if relations and relations[0] not in ("none", "") and not is_todo(relations[0]):
-        for item in relations[0].split(" · "):
-            match = re.match(r"^(.+?) (%s-\d{2,})(@[0-9a-f]+)?$" % re.escape(prefix), item.strip())
-            if not match or match.group(1) not in rules.relation_types:
-                report.error(relations[1], "%s: relation `%s` is not of a known type"
-                             % (label, item.strip()))
-            elif rules.relation_types[match.group(1)] and not match.group(3):
-                report.error(relations[1], "%s: `%s` carries no fingerprint" % (label, item.strip()))
-            elif not rules.relation_types[match.group(1)] and match.group(3):
-                report.error(relations[1], "%s: `%s` carries a fingerprint" % (label, item.strip()))
 
-    approved = entry.fields.get("Approved by")
-    if approved and approved[0] and not is_todo(approved[0]):
-        match = re.match(r"^.+, (%s)$" % DATE, approved[0])
+def check_relations(entries, rules, prefix, report):
+    # invariant: relation-type/1
+    # invariant: relation-fingerprint-presence/1
+    check, typed, presence = "check_relations", "relation-type/1", "relation-fingerprint-presence/1"
+    report.ran(check, typed, presence)
+    types = sorted(rules.relation_types, key=len, reverse=True)
+    for entry in versions_of(entries):
+        label = label_of(entry, prefix)
+        value, line = field_value(entry, "Relations")
+        if value in ("none", "") or is_todo(value):
+            continue
+        for item in [item.strip() for item in value.split(" · ")]:
+            kind = next((kind for kind in types if item.startswith(kind + " ")), None)
+            if kind is None:
+                report.error(line, "%s: relation `%s` is not of a known type" % (label, item),
+                             check, (typed,))
+                continue
+            match = re.fullmatch(r"(%s-\d{2,})(?:@(\S*))?" % re.escape(prefix), item[len(kind) + 1:])
+            if not match:
+                report.error(line, "%s: relation `%s` names no decision as `%s-NN`"
+                             % (label, item, prefix), check)
+            elif rules.relation_types[kind] and not re.fullmatch(r"[0-9a-f]+", match.group(2) or ""):
+                report.error(line, "%s: `%s` carries no fingerprint" % (label, item),
+                             check, (presence,))
+            elif not rules.relation_types[kind] and match.group(2) is not None:
+                report.error(line, "%s: `%s` carries a fingerprint" % (label, item),
+                             check, (presence,))
+
+
+def check_verification(entries, rules, prefix, report):
+    # invariant: decision-verification-level/1
+    check, level = "check_verification", "decision-verification-level/1"
+    report.ran(check, level)
+    for entry in versions_of(entries):
+        value, line = field_value(entry, "Verification")
+        if not value:
+            report.fail(entry.line, "field *Verification* is missing", check, (level,))
+        elif is_todo(value):
+            report.fail(line, "*Verification* is `TODO`", check, (level,))
+        else:
+            match = re.match(r"^level (\d+)\b", value)
+            if not match or match.group(1) not in rules.verification_levels:
+                report.error(line, "%s: *Verification* names no level of verification, as "
+                                   "`level %s`" % (label_of(entry, prefix),
+                                                   " | ".join(rules.verification_levels)),
+                             check, (level,))
+
+
+def check_approval(entries, prefix, report):
+    # invariant: decision-approval-record/1
+    check, record = "check_approval", "decision-approval-record/1"
+    report.ran(check, record)
+    for entry in versions_of(entries):
+        value, line = field_value(entry, "Approved by")
+        if not value:
+            report.fail(entry.line, "field *Approved by* is missing", check, (record,))
+        elif is_todo(value):
+            report.fail(line, "*Approved by* is `TODO`", check, (record,))
+        else:
+            match = re.match(r"^.+, (%s)$" % DATE, value)
+            if not match or not valid_date(match.group(1)):
+                report.error(line, "%s: *Approved by* is not `<who>, YYYY-MM-DD`"
+                             % label_of(entry, prefix), check, (record,))
+
+
+def check_approver(entries, approver, prefix, report):
+    # invariant: decision-approver/1
+    check, named = "check_approver", "decision-approver/1"
+    report.ran(check, named)
+    for entry in versions_of(entries):
+        value, line = field_value(entry, "Approved by")
+        if not value:
+            report.fail(entry.line, "field *Approved by* is missing", check, (named,))
+            continue
+        if is_todo(value):
+            report.fail(line, "*Approved by* is `TODO`", check, (named,))
+            continue
+        match = re.match(r"^(.+), %s$" % DATE, value)
+        who = match.group(1) if match else value
+        allowed = [approver]
+        override = field_value(entry, "Approver override")[0]
+        if override and override != "none" and not is_todo(override):
+            allowed.append(override)
+        if who not in allowed:
+            report.error(line, "%s: *Approved by* names %s, who is neither %s nor the approver "
+                               "*Approver override* names" % (label_of(entry, prefix), who, approver),
+                         check, (named,))
+
+
+def check_review_when(entries, prefix, report):
+    # invariant: review-when-form/1
+    check, form = "check_review_when", "review-when-form/1"
+    report.ran(check, form)
+    for entry in versions_of(entries):
+        value, line = field_value(entry, "Review when")
+        if value in ("none", ""):
+            continue
+        if is_todo(value):
+            report.fail(line, "*Review when* is `TODO`", check, (form,))
+            continue
+        match = re.match(r"^.+ · check by: (%s)$" % DATE, value)
         if not match or not valid_date(match.group(1)):
-            report.error(approved[1], "%s: *Approved by* is not `<who>, YYYY-MM-DD`" % label)
-
-    review_when = entry.fields.get("Review when")
-    if review_when and review_when[0] not in ("none", "") and not is_todo(review_when[0]):
-        match = re.match(r"^.+ · check by: (%s)$" % DATE, review_when[0])
-        if not match or not valid_date(match.group(1)):
-            report.error(review_when[1], "%s: *Review when* is not "
-                                         "`<observable state> · check by: YYYY-MM-DD`" % label)
+            report.error(line, "%s: *Review when* is not `<observable state> · check by: "
+                               "YYYY-MM-DD`" % label_of(entry, prefix), check, (form,))
 
 
-def check_binding(entry, label, rules, report):
-    line = entry.line + 2
-    sentences = count_sentences(entry.binding)
-    if not 1 <= sentences <= rules.max_sentences:
-        report.error(line, "%s: %d binding sentences, at most %d"
-                     % (label, sentences, rules.max_sentences))
-    plain = re.sub(r"`[^`]*`", "", entry.binding)
-    for word in rules.forbidden_words:
-        if re.search(r"\b%s\b" % re.escape(word), plain, re.I):
-            report.error(line, "%s: binding sentences use *%s*" % (label, word))
-    for keyword in rules.keywords:
-        if re.search(r"\b%s\b" % re.escape(keyword), plain):
-            report.error(line, "%s: binding sentences use %s" % (label, keyword))
+def check_inherited(entries, rules, prefix, report):
+    # invariant: inherited-origin-form/1
+    check, form = "check_inherited", "inherited-origin-form/1"
+    report.ran(check, form)
+    for entry in versions_of(entries):
+        value, line = field_value(entry, "Origin")
+        if re.match(r"^%s\b" % re.escape(rules.inherited_marker), value) and \
+                not re.match(rules.inherited_origin, value):
+            report.error(line, "%s: *Origin* of an inherited decision is not "
+                               "`inherited — searched: <…>; found: <…>`" % label_of(entry, prefix),
+                         check, (form,))
 
 
-def check_review(entry, rules, prefix, report, numbers, versions):
-    label = "%s-%02d · review %s" % (prefix, entry.number, entry.date)
-    check_fields(entry, rules.review_fields, report)
-    if entry.number not in numbers:
-        report.error(entry.line, "%s: %s-%02d does not exist" % (label, prefix, entry.number))
-    result = entry.fields.get("Result", ["", entry.line])
-    next_check = entry.fields.get("Next check", ["", entry.line])
-    if result[0] and not is_todo(result[0]):
-        form = next((form for form in sorted(rules.result_forms, key=len, reverse=True)
-                     if result[0].startswith(form)), None)
-        if form is None:
-            report.error(result[1], "%s: *Result* has none of the forms in the template" % label)
-        elif form.startswith("condition not met") and not re.match(r"^%s$" % DATE, next_check[0]):
-            report.error(next_check[1], "%s: `condition not met` needs a date in *Next check*"
-                         % label)
-        elif "changed in" in form:
-            match = re.match(r"^%s-(\d{2,})/(\d+)$" % re.escape(prefix),
-                             result[0][len(form):].strip())
-            if not match or (int(match.group(1)), int(match.group(2))) not in versions:
-                report.error(result[1], "%s: *Result* names a version that does not exist" % label)
-    if next_check[0] and not is_todo(next_check[0]) and next_check[0] != "none" and not (
-            re.match(r"^%s$" % DATE, next_check[0]) and valid_date(next_check[0])):
-        report.error(next_check[1], "%s: *Next check* is neither a date nor `none`" % label)
+def check_references(text, entries, prefix, report, numbers, versions):
+    # invariant: log-reference-target/1
+    check, target = "check_references", "log-reference-target/1"
+    report.ran(check, target)
+    opens = {}
+    for entry in entries:
+        for name, (_, line) in entry.fields.items():
+            opens[line] = name
+    ref = re.compile(r"\b%s-(\d{2,})(?:/(\d+))?\b" % re.escape(prefix))
+    current, start = None, None
+    for number, line in enumerate(text.split("\n"), start=1):
+        if line.startswith("#"):
+            current = None
+            if line.startswith("### "):
+                # the number a heading opens is its own, or is checked with its review
+                line = ref.sub("", line, count=1)
+        elif number in opens:
+            current, start = opens[number], number
+        elif not line.strip():
+            current = None
+        if current is None:
+            what, where = "the text", number
+        else:
+            what = "`previous:`" if current == "Change" else "*%s*" % current
+            where = start
+        for match in ref.finditer(line):
+            if int(match.group(1)) not in numbers:
+                report.error(where, "%s names %s, which does not exist" % (what, match.group(0)),
+                             check, (target,))
+            elif match.group(2) and current in ("Relations", "Outranks", "Change") and \
+                    (int(match.group(1)), int(match.group(2))) not in versions:
+                report.error(where, "%s names %s, which does not exist" % (what, match.group(0)),
+                             check)
+
+
+def check_reviews(entries, rules, prefix, report, numbers, versions):
+    # invariant: review-next-check/1
+    # invariant: review-named-version/1
+    # invariant: log-reference-target/1
+    check = "check_reviews"
+    dated, named, target = "review-next-check/1", "review-named-version/1", "log-reference-target/1"
+    report.ran(check, dated, named, target)
+    ref = re.compile(r"\b%s-(\d{2,})/(\d+)\b" % re.escape(prefix))
+    for entry in entries:
+        if entry.kind != "review":
+            continue
+        label = label_of(entry, prefix)
+        if entry.number not in numbers:
+            report.error(entry.line, "%s: %s-%02d does not exist" % (label, prefix, entry.number),
+                         check, (target,))
+        result = entry.fields.get("Result", ["", entry.line])
+        next_check = entry.fields.get("Next check", ["", entry.line])
+        not_met, checked_line = False, None
+        if result[0] and not is_todo(result[0]):
+            form = next((form for form in sorted(rules.result_forms, key=len, reverse=True)
+                         if result[0].startswith(form)), None)
+            if form is None:
+                report.error(result[1], "%s: *Result* has none of the forms in the template"
+                             % label, check)
+            elif form.startswith("condition not met"):
+                not_met = True
+                if not re.match(r"^%s$" % DATE, next_check[0]):
+                    report.error(next_check[1], "%s: `condition not met` needs a date in "
+                                                "*Next check*" % label, check, (dated,))
+            elif "changed in" in form:
+                match = re.match(r"^%s-(\d{2,})/(\d+)$" % re.escape(prefix),
+                                 result[0][len(form):].strip())
+                if not match:
+                    report.error(result[1], "%s: *Result* names a version that does not exist"
+                                 % label, check)
+                else:
+                    checked_line = result[1]
+                    if (int(match.group(1)), int(match.group(2))) not in versions:
+                        report.error(result[1], "%s: *Result* names a version that does not "
+                                                "exist" % label, check, (named,))
+        if next_check[0] and not is_todo(next_check[0]) and next_check[0] != "none" and not (
+                re.match(r"^%s$" % DATE, next_check[0]) and valid_date(next_check[0])):
+            report.error(next_check[1], "%s: *Next check* is neither a date nor `none`" % label,
+                         check, (dated,) if not_met else ())
+        for number, line in enumerate(entry.text.split("\n")[1:], start=entry.line + 1):
+            if number == checked_line:
+                continue
+            for match in ref.finditer(line):
+                if (int(match.group(1)), int(match.group(2))) not in versions:
+                    report.error(number, "%s: names %s, a version that does not exist"
+                                 % (label, match.group(0)), check, (named,))
+
+
+def merged_log(log_path, entries, merge_onto, prefix, top, report):
+    """The latest version of each number in the log as it stands after the merge onto the given
+    commit, as {number: (entry, None or the commit whose log alone holds it)}, or None once the
+    report says why git could not read the log on that commit.
+
+    The log is append-only, so the merge holds every version either side holds. On the main
+    branch an entry is never edited (WAY-07), so where both sides hold a version with different
+    text, the branch changed it and the merge carries the branch's copy, which is the one kept
+    here. The difference itself is reported as a failure for no entry: it is either an edit of an
+    entry the main branch holds, or two versions written under one heading on both sides, and the
+    merged log holds one of them only."""
+    relative = os.path.relpath(os.path.abspath(log_path), top).replace(os.sep, "/")
+    onto_text, failure = file_at(merge_onto, relative, top)
+    if failure:
+        report.error(None, failure)
+        return None
+    if onto_text is None:
+        report.notes.append("%s has no %s; the log after the merge is this log alone"
+                            % (merge_onto, relative))
+        onto_text = ""
+    merged = {(entry.number, entry.version): (entry, None) for entry in versions_of(entries)}
+    for entry in versions_of(parse_log(onto_text, prefix)):
+        key = (entry.number, entry.version)
+        if key not in merged:
+            merged[key] = (entry, merge_onto)
+        elif merged[key][0].text != entry.text:
+            report.error(merged[key][0].line, "%s differs from its copy on %s; the log after the "
+                                              "merge holds this copy"
+                         % (label_of(entry, prefix), merge_onto), "merged_log")
+    latest = {}
+    for (number, _), item in sorted(merged.items()):
+        latest[number] = item
+    return latest
 
 
 def check_fingerprints(latest, rules, prefix, report):
-    current = {number: fingerprint(entry.binding) for number, entry in latest.items()
+    """Compares every fingerprint a relation carries, in the latest version of each number of the
+    log after the merge, with the current fingerprint of the decision it names there."""
+    # invariant: relation-fingerprint-value/1
+    check, current_value = "check_fingerprints", "relation-fingerprint-value/1"
+    report.ran(check, current_value)
+    current = {number: fingerprint(entry.binding) for number, (entry, _) in latest.items()
                if entry.binding is not None}
     pattern = re.compile(r"^(.+?) %s-(\d{2,})@([0-9a-f]+)$" % re.escape(prefix))
-    for entry in latest.values():
+    for entry, onto in latest.values():
         relations = entry.fields.get("Relations")
         if not relations:
             continue
+        where = " (on %s)" % onto if onto else ""
         for item in relations[0].split(" · "):
             match = pattern.match(item.strip())
             if not match or not rules.relation_types.get(match.group(1)):
                 continue
             number = int(match.group(2))
             if number in latest and current.get(number) != match.group(3):
-                report.error(relations[1], "%s-%02d/%d: `%s` — the current fingerprint of %s-%02d "
-                             "is %s" % (prefix, entry.number, entry.version, item.strip(), prefix,
-                                        number, current.get(number, "none (no binding sentences)")))
+                report.error(None if onto else relations[1],
+                             "%s%s: `%s` — the current fingerprint of %s-%02d is %s"
+                             % (label_of(entry, prefix), where, item.strip(), prefix, number,
+                                current.get(number, "none (no binding sentences)")),
+                             check, (current_value,))
 
 
 def check_outranks(latest, prefix, report):
+    # invariant: outranks-pairs/1
+    check, pairs = "check_outranks", "outranks-pairs/1"
+    report.ran(check, pairs)
     outranks = {}
     for number, entry in latest.items():
         value = entry.fields.get("Outranks", ["none"])[0]
@@ -443,7 +896,8 @@ def check_outranks(latest, prefix, report):
         for other in sorted(others):
             if other > number and number in outranks.get(other, set()):
                 report.error(latest[number].fields["Outranks"][1],
-                             "%s-%02d and %s-%02d outrank each other" % (prefix, number, prefix, other))
+                             "%s-%02d and %s-%02d outrank each other" % (prefix, number, prefix, other),
+                             check, (pairs,))
 
 
 def check_review_dates(entries, latest, prefix, report, today):
@@ -469,33 +923,65 @@ def check_review_dates(entries, latest, prefix, report, today):
 
 
 def git(arguments, cwd):
+    """Exit code, output and error output of a call to git."""
     result = subprocess.run(["git"] + arguments, cwd=cwd, capture_output=True)
-    return result.returncode, result.stdout.decode("utf-8", "replace").replace("\r\n", "\n")
+    return (result.returncode, result.stdout.decode("utf-8", "replace").replace("\r\n", "\n"),
+            result.stderr.decode("utf-8", "replace").strip())
 
 
-def check_against_base(log_path, text, base, prefix, report):
+def file_at(commit, path, top):
+    """(text, None) for the file at the path, relative to the root of the repository, on the
+    commit; (None, None) where the commit holds no such path; (None, git's message) where git
+    fails for any other reason, so that no check reads a failure as an absent file."""
+    code, text, message = git(["show", "%s:%s" % (commit, path)], top)
+    if code == 0:
+        return text, None
+    listed, listing, listing_message = git(["ls-tree", "--full-tree", "-z", "--name-only", commit,
+                                            "--", path], top)
+    if listed == 0 and not listing:
+        return None, None
+    return None, "git cannot read %s at %s: %s" % (
+        path, commit, message or listing_message or "git show exited with %d" % code)
+
+
+def find_commit(log_path, option, commit, report):
+    """The root of the log's repository, or None once the report says why the commit is not
+    there. A failure here is no rule's: it belongs to the run."""
     directory = os.path.dirname(os.path.abspath(log_path))
-    code, top = git(["rev-parse", "--show-toplevel"], directory)
+    code, top, _ = git(["rev-parse", "--show-toplevel"], directory)
     if code != 0:
-        report.error(None, "--base %s given, but the log is not in a git repository" % base)
-        return
-    code, _ = git(["rev-parse", "--verify", "--quiet", base + "^{commit}"], directory)
+        report.error(None, "%s %s given, but the log is not in a git repository" % (option, commit))
+        return None
+    code, _, _ = git(["rev-parse", "--verify", "--quiet", commit + "^{commit}"], directory)
     if code != 0:
-        report.error(None, "--base %s does not exist" % base)
-        return
-    relative = os.path.relpath(os.path.abspath(log_path), top.strip()).replace(os.sep, "/")
-    code, base_text = git(["show", "%s:%s" % (base, relative)], directory)
-    if code != 0:
+        report.error(None, "%s %s does not exist" % (option, commit))
+        return None
+    return top.strip()
+
+
+def check_against_base(log_path, text, base, prefix, report, top):
+    """Compares the log with its state on the base, and returns the versions it gains there."""
+    # invariant: log-existing-lines/1
+    # invariant: log-versions-added-per-number/1
+    check = "check_against_base"
+    existing, added_per_number = "log-existing-lines/1", "log-versions-added-per-number/1"
+    relative = os.path.relpath(os.path.abspath(log_path), top).replace(os.sep, "/")
+    base_text, failure = file_at(base, relative, top)
+    if failure:
+        report.error(None, failure)
+        return None
+    if base_text is None:
         report.notes.append("%s has no %s; the log is compared with an empty one" % (base, relative))
         base_text = ""
+    report.ran(check, existing, added_per_number)
 
     trimmed = base_text.rstrip("\n")
-    if not text.startswith(trimmed):
-        base_lines, lines = trimmed.split("\n"), text.split("\n")
+    base_lines, lines = (trimmed.split("\n") if trimmed else []), text.split("\n")
+    if lines[:len(base_lines)] != base_lines:
         line = next((i + 1 for i, (a, b) in enumerate(zip(base_lines, lines)) if a != b),
-                    min(len(base_lines), len(lines)) + 1)
+                    len(lines) + 1)
         report.error(line, "the log differs from %s here; on the main branch it only grows at the "
-                           "end" % base)
+                           "end" % base, check, (existing,))
 
     base_versions = {(e.number, e.version) for e in parse_log(base_text, prefix) if e.kind == "version"}
     added = {}
@@ -505,10 +991,32 @@ def check_against_base(log_path, text, base, prefix, report):
     for number, items in sorted(added.items()):
         if len(items) > 1:
             report.error(items[1].line, "%s-%02d: %d versions added against %s, at most one"
-                         % (prefix, number, len(items), base))
+                         % (prefix, number, len(items), base), check, (added_per_number,))
+    return added
+
+
+def check_template_change(top, base, added, report):
+    # invariant: decision-template-change/1
+    check, change = "check_template_change", "decision-template-change/1"
+    base_template, failure = file_at(base, TEMPLATE_PATH, top)
+    if failure:
+        report.error(None, failure)
+        return
+    report.ran(check, change)
+    path = os.path.join(top, *TEMPLATE_PATH.split("/"))
+    current = None
+    if os.path.isfile(path):
+        with open(path, encoding="utf-8") as handle:
+            current = handle.read()
+    if base_template != current and not added:
+        report.error(None, "%s differs from %s, and the log gains no version against it"
+                     % (TEMPLATE_PATH, base), check, (change,))
 
 
 def check_examples(entries, examples_path, report):
+    # invariant: decision-example-copy/1
+    check, copy_matches = "check_examples", "decision-example-copy/1"
+    report.ran(check, copy_matches)
     with open(examples_path, encoding="utf-8") as handle:
         examples = handle.read()
     by_heading = {entry.heading: entry for entry in entries}
@@ -517,51 +1025,88 @@ def check_examples(entries, examples_path, report):
         copy = "\n".join(lines).rstrip()
         entry = by_heading.get(heading)
         if entry is None:
-            report.error(None, "examples.md:%d: `%s` is not in the log" % (line, heading))
+            report.error(None, "examples.md:%d: `%s` is not in the log" % (line, heading),
+                         check, (copy_matches,))
         elif entry.text != copy:
             copy_lines, log_lines = copy.split("\n"), entry.text.split("\n")
             offset = next((i for i, (a, b) in enumerate(zip(copy_lines, log_lines)) if a != b),
                           min(len(copy_lines), len(log_lines)))
             report.error(entry.line + offset, "examples.md:%d differs from the log"
-                         % (line + offset))
+                         % (line + offset), check, (copy_matches,))
 
 
 # --- entry point ----------------------------------------------------------------------------
 
 
-def run(log_path, base=None, today=None, template=TEMPLATE, examples=EXAMPLES, stream=None):
+def run(log_path, base=None, today=None, template=TEMPLATE, examples=EXAMPLES, stream=None,
+        merge_onto=None, record=None, approver=None):
     stream = stream or sys.stdout
+    if record is not None:
+        try:
+            start_record(record)
+        except OSError as problem:
+            stream.write("cannot write the record: %s\n" % problem)
+            return 2
+    report = Report(log_path, [option for option, value in (("--base", base),
+                                                             ("--merge-onto", merge_onto)) if value])
+
+    def stop(message):
+        stream.write(message + "\n")
+        report.error(None, message)
+        if record is not None:
+            write_record(record, report)
+        return 2
+
     try:
         rules = read_rules(template)
     except (OSError, TemplateError, AttributeError) as problem:
-        stream.write("cannot read the rules from %s: %s\n" % (template, problem))
-        return 2
+        return stop("cannot read the rules from %s: %s" % (template, problem))
     try:
         with open(log_path, encoding="utf-8") as handle:
             text = handle.read()
     except OSError as problem:
-        stream.write("cannot read the log: %s\n" % problem)
-        return 2
+        return stop("cannot read the log: %s" % problem)
 
-    report = Report(log_path)
     prefix = detect_prefix(text)
     if prefix is None:
         report.notes.append("the log has no entries")
         report.print(stream)
+        if record is not None:
+            write_record(record, report)
         return 0
     entries = parse_log(text, prefix)
-    check_log(entries, rules, prefix, report, today or datetime.date.today())
+    own = os.path.exists(OWN_LOG) and os.path.samefile(log_path, OWN_LOG)
+    if approver is None and own:
+        approver = OWN_APPROVER
+    check_log(entries, text, rules, prefix, report, today or datetime.date.today(), approver)
+    if approver is None:
+        report.notes.append("who approves a version is checked only in the-way's own log")
 
     if base:
-        check_against_base(log_path, text, base, prefix, report)
+        top = find_commit(log_path, "--base", base, report)
+        if top is not None:
+            added = check_against_base(log_path, text, base, prefix, report, top)
+            if added is not None:
+                check_template_change(top, base, added, report)
     else:
         report.notes.append("no --base given: the checks against the main branch are skipped")
 
-    if os.path.exists(examples) and os.path.exists(OWN_LOG) and \
-            os.path.samefile(log_path, OWN_LOG):
+    if merge_onto:
+        top = find_commit(log_path, "--merge-onto", merge_onto, report)
+        if top is not None:
+            latest = merged_log(log_path, entries, merge_onto, prefix, top, report)
+            if latest is not None:
+                check_fingerprints(latest, rules, prefix, report)
+    else:
+        report.notes.append("no --merge-onto given: the fingerprints relations carry are not "
+                            "compared with the current wording")
+
+    if os.path.exists(examples) and own:
         check_examples(entries, examples, report)
 
     report.print(stream)
+    if record is not None:
+        write_record(record, report)
     return 1 if report.errors else 0
 
 
@@ -570,12 +1115,18 @@ def main(argv=None):
     parser.add_argument("log", nargs="?", default=os.path.join("foundations", "decisions.md"))
     parser.add_argument("--base", help="the commit the task branch left the main branch from, "
                                          "to compare the log with")
+    parser.add_argument("--merge-onto", help="the commit of the main branch a merge is made onto; "
+                                             "only with it are the fingerprints relations carry "
+                                             "compared with the current wording")
     parser.add_argument("--today", type=datetime.date.fromisoformat,
                         help="the date passed check-by dates are measured against")
+    parser.add_argument("--record", help="the JSON Lines file, created or overwritten, that "
+                                         "receives a verdict for each invariant a check cites")
     arguments = parser.parse_args(argv)
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")
-    return run(arguments.log, arguments.base, arguments.today)
+    return run(arguments.log, arguments.base, arguments.today, merge_onto=arguments.merge_onto,
+               record=arguments.record)
 
 
 if __name__ == "__main__":
