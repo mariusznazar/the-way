@@ -1565,6 +1565,39 @@ Every element's template states that its entries are written in English.
 - **Correction:** none
 - **Recovered:** none
 
+## run-record-form/1
+
+Every line of the-way's own record of a run is one JSON object holding `check`, `verdict` as `pass` or `fail` or as `unchecked` beside a `reason`, and `invariant` as `<identifier>/<version>` or `null`, and beside them at most `description`.
+
+- **Method:** `TODO`
+- **Rests on:** TODO — JSON as RFC 7159 specifies it (https://datatracker.ietf.org/doc/html/rfc7159.html), and a line of JSON Lines as ending in `\n` (https://jsonlines.org/)
+- **Derives from:** WAY-74@e4c88e66
+- **Part:** decisions · part-map · invariants · gate
+- **Correction:** none
+- **Recovered:** none
+
+## run-record-path/1
+
+Every path ending in `.jsonl` that a command in `foundations/invariants.md` names is one git ignores, and no such command names two.
+
+- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md`
+- **Rests on:** TODO — a gitignore file specifies intentionally untracked files that Git should ignore (https://git-scm.com/docs/gitignore)
+- **Derives from:** WAY-74@e4c88e66
+- **Part:** invariants · repository
+- **Correction:** none
+- **Recovered:** none
+
+## run-record-lines/1
+
+The gate reads, from the-way's own record of a run, only the lines the run it started for that command wrote.
+
+- **Method:** `TODO`
+- **Rests on:** none
+- **Derives from:** WAY-74@e4c88e66
+- **Part:** gate
+- **Correction:** none
+- **Recovered:** none
+
 ## Withdrawn identifiers
 
 | Identifier | Successors |

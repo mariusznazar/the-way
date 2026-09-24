@@ -96,8 +96,15 @@ A quarantined invariant stands on the last list in the file; *Until* is a date a
   WAY-38, WAY-47, WAY-67).
 - One run may check many invariants. An entry's result is the verdict the run records for its
   identifier and current version, in a format from this closed list, which grows by a new version of
-  WAY-61: the-way's own record of a run — TODO: its form. A run that records no verdict for the
-  entry never gives it a pass (WAY-61).
+  WAY-61: the-way's own record of a run — a JSON Lines file at the one `.jsonl` path the command
+  names, one line per invariant a check gives a verdict for and per failure recorded for no entry,
+  each holding `check`, `verdict` (`pass`, `fail`, or `unchecked` beside a `reason` naming what the
+  product does not declare or produce), `invariant` (`<identifier>/<version>` or `null`) and at most
+  `description` (WAY-74). A run that records no verdict for the entry never gives it a pass
+  (WAY-61).
+- The path of the-way's own record is one git ignores, and the gate clears it before the run and
+  runs no command naming a path git does not ignore (WAY-74). A failure no rule of a check gave names
+  the program that ran as its `check`.
 - A population the product meets only in use — the loads real players make, for one — has no form
   yet: the method of a sentence about it reads
   `TODO — decision pending: the method of a population met only in use`, and the gate reports the
@@ -250,7 +257,9 @@ WAY-64).
 - Where a human verdict is recorded, and how the gate reads it, is
   `TODO — decision pending: where a human verdict stands and how the gate reads it`. Until that is
   settled, an entry whose method is a path is reported `unchecked` for want of a verdict in force.
-- A declared command that cannot start, or a record holding a value off a closed list, is `error`.
+- A declared command that cannot start, or a record holding a value off a closed list, is `error`;
+  a record holding a line off the form above gives `error` to every entry whose method wrote it
+  (WAY-63, WAY-74).
   Runs on a deliberate break, and the run WAY-58 asks for, give evidence, not results (WAY-63).
 
 ## Quarantine

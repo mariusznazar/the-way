@@ -2258,7 +2258,7 @@ on the commit the branch left the main branch from.
 - **Approved by:** Mariusz, 2026-09-20
 
 *Rationale:* the rule that a derived file equals its generator's output catches a file edited by
-hand, and that is why it holds. A record of a run, however, carries the moment it happened, so a
+hand, and that is why it holds. A record of results, however, carries the moment of the run, so a
 second run never reproduces it, and the rule would fail on the gate's own output at every pass.
 Skipping declared values keeps the rule over everything the generator decides and lifts it only
 where the file says the value varies — a narrower opening than taking whole files out. The second
@@ -2877,8 +2877,8 @@ it does not exist and the check records its verdict, as WAY-57 already says for 
 gate never turns that into a pass. A command that leaves its record in a file names that file's path
 in the command itself, at a place in the working tree that does not change between runs; a method
 may read what another method's run left only where a decision places it, as WAY-47 does, and the
-gate then runs the first before the second. A run's own output is what the gate reads; the record of
-the result it keeps in the repository is the one WAY-53 compares. The result an entry has is the
+gate then runs the first before the second. What a run leaves — its output, or the file its command
+names — is what the gate reads; the record of the result it keeps in the repository is the one WAY-53 compares. The result an entry has is the
 verdict of the run on the commit being checked; the run WAY-58 asks for on the commit the branch
 left from is evidence for a human, not a result. The format guards of decisions, of the part map and
 of invariants, once they record a verdict for each invariant they check, cite those invariants and
@@ -3449,3 +3449,53 @@ quotes, as the list of the standard library above; the choice left to each autho
 answers above.
 *Consequences:* the invariants template states the rule and its test beside the links. An
 invariant with no such fact reads `Rests on: none`, whatever its decisions quote.
+
+### WAY-74/1 — What form does the-way's own record of a run take?
+
+The-way's own record of a run is a JSON Lines file at the one `.jsonl` path the command names,
+which git ignores and the gate clears before the run. It holds a line per invariant a check gives
+a verdict for, and per failure recorded for no entry. A line holds `check`, `verdict` as `pass`,
+`fail` or `unchecked` beside a `reason` naming what the product does not declare or produce,
+`invariant` as `<identifier>/<version>` or `null`, and may hold `description`.
+
+- **Change:** new decision
+- **Scope:** invariants, gate, decisions, part-map, repository
+- **Based on:** JSON Lines is "a convenient format for storing structured data that may be
+  processed one record at a time" (https://jsonlines.org/); Python 3.12's `json` module reads it
+  (https://docs.python.org/3.12/library/json.html).
+- **Relations:** derives from WAY-61@c6bdfd7c · derives from WAY-63@d05ff1f0 ·
+  derives from WAY-65@58d1f2c3 · related to WAY-38 · related to WAY-47 · related to WAY-48 ·
+  related to WAY-49 · related to WAY-53
+- **Outranks:** none
+- **Verification:** level 1 — invariants: run-record-form · run-record-path · run-record-lines.
+  Level 2 for the report beside the record — an agent compares the change with the decision:
+  - complies: the decision guard, given a record's path, writes its verdicts there and still
+    prints its report for a person;
+  - violates: a guard writes its verdicts only into its report.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-24
+
+*Rationale:* one line per verdict survives a run that stops halfway: the lines before the stop
+stay readable, and an invariant without one gets no pass (WAY-61). JSON escapes whatever a
+description holds, and the standard library reads it (WAY-38). A file left by an earlier run would
+give verdicts for a run that did not happen, and a tracked one would change with every run. Each
+key has a reader: the gate the invariant, verdict and reason (WAY-63), a person the check and
+description of a failure; several checks citing one invariant each give a line (WAY-65). A check
+that cannot read what the product does not produce says so, since the gate cannot tell silence
+from a crash (WAY-47).
+*Rejected:* plain text lines — a description with spaces needs a syntax of its own; JUnit XML — its
+unit is a test case, not an invariant; a product's format, read through an adapter (WAY-61); the
+run's output as the record — a person loses the guard's report, and a test runner mixes in its own;
+`pass` and `fail` alone — a check that cannot read a coverage file could only stay silent, which
+the gate reads as `error`; the commit, the moment and the tool versions in every line — the gate
+knows them, and nothing would read them.
+*Consequences:* the invariants template's closed list of formats names this form as the written
+form of this decision. The gate runs no command naming a path git does not ignore, and a record
+holding a line off this form gives `error` to every entry whose method wrote it (WAY-63). A `fail`
+recorded for an entry whose method is another command, or at another version, counts as a failure
+for no entry (WAY-61). A commit filled in as not existing is no failure for no entry (WAY-63). The
+record of results the gate keeps (WAY-53) is another file, set with the gate. The form is a
+surface of the-way (WAY-49), and the gate's reader of it a trust boundary (WAY-48). WAY-61's
+sentence on what the gate reads and WAY-53's rationale are corrected in place (WAY-07).
