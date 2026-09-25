@@ -7,7 +7,7 @@ of an entry stand in `elements/invariants/template.md`.
 
 The decision guard, given "{merge-onto}", reports every `derives from` or `narrows` relation, in the latest version of a decision in the log a merge onto that commit leaves, whose fingerprint differs from the current fingerprint there of the decision it names.
 
-- **Method:** `python -B -m unittest discover -s gate -p "test_*.py"`
+- **Method:** `python -B gate/run_tests.py gate --record .runs/gate-tests.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-02@af08ee5d · WAY-31@509d69d9
 - **Part:** decisions · relation-model
@@ -18,7 +18,7 @@ The decision guard, given "{merge-onto}", reports every `derives from` or `narro
 
 The fingerprint the decision guard gives a decision version is the fingerprint of its binding sentences alone.
 
-- **Method:** `python -B -m unittest discover -s elements/decisions -p "test_*.py"`
+- **Method:** `python -B gate/run_tests.py elements/decisions --record .runs/decisions-tests.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-02@af08ee5d
 - **Part:** decisions · relation-model
@@ -458,7 +458,7 @@ Every *Review when* in the decision log other than `none` or `TODO` names both a
 
 The decision guard, given a date, warns of every check-by date earlier than it that no later review entry answers.
 
-- **Method:** `python -B -m unittest discover -s elements/decisions -p "test_*.py"`
+- **Method:** `python -B gate/run_tests.py elements/decisions --record .runs/decisions-tests.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-24@058a356a
 - **Part:** decisions
@@ -623,7 +623,7 @@ No script git tracks starts a program other than git or a command the product de
 
 The map guard reports a check whose declared command the product lacks as unchecked, never as agreement.
 
-- **Method:** `python -B -m unittest discover -s elements/part-map -p "test_*.py"`
+- **Method:** `python -B gate/run_tests.py elements/part-map --record .runs/part-map-tests.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-38@be0cb9cb
 - **Part:** part-map
@@ -634,7 +634,7 @@ The map guard reports a check whose declared command the product lacks as unchec
 
 The relation model's script gives a text the first eight characters, in lower-case hexadecimal, of the SHA-256 digest of that text encoded in UTF-8, after every run of spaces and line breaks is replaced by a single space and both ends are trimmed.
 
-- **Method:** `python -B -m unittest discover -s relation-model -p "test_*.py"`
+- **Method:** `python -B gate/run_tests.py relation-model --record .runs/relation-model-tests.jsonl`
 - **Rests on:** TODO — SHA-256 as the Secure Hash Standard, FIPS 180-4, specifies it (https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf), and UTF-8 as RFC 3629 defines it (https://www.rfc-editor.org/rfc/rfc3629.html)
 - **Derives from:** WAY-39@a3b77692
 - **Part:** relation-model
@@ -832,7 +832,7 @@ No part of the part map carries a criticality written by hand.
 
 The map guard computes the highest criticality of the map's scale for a part with no failure modes recorded.
 
-- **Method:** `python -B -m unittest discover -s elements/part-map -p "test_*.py"`
+- **Method:** `python -B gate/run_tests.py elements/part-map --record .runs/part-map-tests.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-46@b0cef8dd
 - **Part:** part-map
@@ -843,7 +843,7 @@ The map guard computes the highest criticality of the map's scale for a part wit
 
 The map guard reports every dependency running from a part of higher criticality to one of lower criticality with no separation recorded.
 
-- **Method:** `python -B -m unittest discover -s elements/part-map -p "test_*.py"`
+- **Method:** `python -B gate/run_tests.py elements/part-map --record .runs/part-map-tests.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-46@b0cef8dd
 - **Part:** part-map
@@ -865,7 +865,7 @@ For every critical flow whose test leaves a coverage file, every part that cover
 
 The map guard reports a critical flow whose test leaves no coverage file as "list of parts unchecked", never as agreeing with the map.
 
-- **Method:** `python -B -m unittest discover -s elements/part-map -p "test_*.py"`
+- **Method:** `python -B gate/run_tests.py elements/part-map --record .runs/part-map-tests.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-47@f4daadb2
 - **Part:** part-map
@@ -876,7 +876,7 @@ The map guard reports a critical flow whose test leaves no coverage file as "lis
 
 The map guard starts no test run of its own.
 
-- **Method:** `python -B -m unittest discover -s elements/part-map -p "test_*.py"`
+- **Method:** `python -B gate/run_tests.py elements/part-map --record .runs/part-map-tests.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-47@f4daadb2
 - **Part:** part-map
@@ -1195,7 +1195,7 @@ For every entry whose sentence a change adds or alters against "{fork-point}", t
 
 The fingerprint the invariants guard gives an invariant entry is the fingerprint of its sentence alone.
 
-- **Method:** `python -B -m unittest discover -s elements/invariants -p "test_*.py"`
+- **Method:** `python -B gate/run_tests.py elements/invariants --record .runs/invariants-tests.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-59@6ceadf4e
 - **Part:** invariants · relation-model

@@ -156,6 +156,14 @@ exit codes.
 
 - **Declared at:** elements/invariants/format_guard.py · main
 
+## test-runner-command — The command of the test runner
+
+The command that runs the tests of a directory and records a verdict for each invariant they cite
+keeps its name, its arguments, its exit codes and the verdict it records for each outcome of a
+test.
+
+- **Declared at:** gate/run_tests.py · main
+
 ## Criticality scale
 
 1. low — a failure is seen by the next person who reads the file, and costs a correction

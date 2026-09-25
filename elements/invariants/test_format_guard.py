@@ -1,6 +1,7 @@
 """Tests of the invariants guard: every check fires on a file broken on purpose.
 
-Run from anywhere: python -B -m unittest discover -s <the-way>/elements/invariants -p "test_*.py"
+Run from the root of the-way:
+    python -B gate/run_tests.py elements/invariants --record .runs/invariants-tests.jsonl
 
 Inputs, expected fingerprints and expected record lines are written out, never computed by the
 code under test (WAY-70).
@@ -584,8 +585,50 @@ class CorrectionAndRecovered(GuardTestCase):
                          "*Correction* is neither `none` nor")
 
     def test_correction_naming_another_current_fingerprint(self):
+        # invariant: invariant-fingerprint-input/1
         self.assertFails(invariants(entry(correction="%s → %s" % (REWORDED_FINGERPRINT,
                                                                   REWORDED_FINGERPRINT)), later()),
+                         "*Correction* names %s as the current fingerprint, but it is %s"
+                         % (REWORDED_FINGERPRINT, SENTENCE_FINGERPRINT))
+
+    def test_a_sentence_over_several_lines_is_fingerprinted_whole(self):
+        """SENTENCE wrapped over two lines, over three, and one word to a line: its fingerprint
+        is still SENTENCE_FINGERPRINT."""
+        # invariant: invariant-fingerprint-input/1
+        for wrapped in ("A game saved and loaded back holds the same state as\nbefore it was "
+                        "saved.",
+                        "A game saved and loaded\nback holds the same state\nas before it was "
+                        "saved.",
+                        SENTENCE.replace(" ", "\n")):
+            with self.subTest(lines=wrapped.count("\n") + 1):
+                self.assertFails(invariants(entry(sentence=wrapped,
+                                                  correction="%s → %s" % (REWORDED_FINGERPRINT,
+                                                                          REWORDED_FINGERPRINT)),
+                                            later()),
+                                 "*Correction* names %s as the current fingerprint, but it is %s"
+                                 % (REWORDED_FINGERPRINT, SENTENCE_FINGERPRINT))
+
+    def test_a_correction_naming_the_fingerprint_of_the_whole_wrapped_sentence_passes(self):
+        """SENTENCE wrapped over several lines, with the correction naming its fingerprint as the
+        current one: no error."""
+        # invariant: invariant-fingerprint-input/1
+        for wrapped in ("A game saved and loaded back holds the same state as\nbefore it was "
+                        "saved.",
+                        "A game saved and loaded\nback holds the same state\nas before it was "
+                        "saved.",
+                        SENTENCE.replace(" ", "\n")):
+            with self.subTest(lines=wrapped.count("\n") + 1):
+                self.assertPasses(invariants(entry(sentence=wrapped,
+                                                   correction="%s → %s" % (REWORDED_FINGERPRINT,
+                                                                           SENTENCE_FINGERPRINT)),
+                                             later()))
+
+    def test_fields_right_under_the_sentence_stay_out_of_its_fingerprint(self):
+        # invariant: invariant-fingerprint-input/1
+        text = entry(correction="%s → %s" % (REWORDED_FINGERPRINT, REWORDED_FINGERPRINT)) \
+            .replace(SENTENCE + "\n\n", SENTENCE + "\n")
+        self.assertIn(SENTENCE + "\n- **Method:**", text)
+        self.assertFails(invariants(text, later()),
                          "*Correction* names %s as the current fingerprint, but it is %s"
                          % (REWORDED_FINGERPRINT, SENTENCE_FINGERPRINT))
 
@@ -759,6 +802,12 @@ class Citations(GuardTestCase):
         self.assertEqual(self.verdicts("invariant-citation-version/1"), ["fail"])
         self.assertEqual(self.verdicts("invariant-citation-target/1"), ["pass"])
 
+    def test_citation_of_a_version_with_a_leading_zero(self):
+        self.cite("# invariant: save-round-trip/01")
+        self.assertFails(invariants(), "`invariant: save-round-trip/01` does not cite "
+                                       "`<identifier>/<version>`")
+        self.assertEqual(self.verdicts("invariant-citation-version/1"), ["fail"])
+
     def test_citation_of_another_version(self):
         self.cite("// invariant: save-round-trip/2")
         self.assertFails(invariants(), "cites `save-round-trip/2`, whose current version is 1")
@@ -865,6 +914,7 @@ class AgainstTheBranchPoint(GuardTestCase):
         self.assertRecorded("invariant-withdrawal-persistence/1", "fail")
 
     def test_changed_sentence_at_the_same_version(self):
+        # invariant: invariant-fingerprint-input/1
         self.commit(invariants())
         self.assertFails(invariants(entry(sentence=REWORDED), later()),
                          "the sentence changed since HEAD (%s → %s); the version is 2"

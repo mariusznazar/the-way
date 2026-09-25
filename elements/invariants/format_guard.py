@@ -969,7 +969,8 @@ def check_citations(entries, withdrawn, top, tracked, report):
                     report.error(None, "%s: `data: %s` names no file" % (where, value),
                                  check, (data,))
                 continue
-            cited = re.fullmatch(r"(\S+)/(\d+)", value)
+            # a version is a number written without a leading zero
+            cited = re.fullmatch(r"(\S+)/([1-9][0-9]*)", value)
             identifier = cited.group(1) if cited else value.split("/")[0]
             if identifier in successors:
                 report.error(None, "%s: cites `%s`, which is withdrawn (successors: %s)"

@@ -1,6 +1,7 @@
 """Tests of the format guard: every check fires on a log broken on purpose.
 
-Run from anywhere: python -B -m unittest discover -s <the-way>/elements/decisions -p "test_*.py"
+Run from the root of the-way:
+    python -B gate/run_tests.py elements/decisions --record .runs/decisions-tests.jsonl
 """
 
 import contextlib
@@ -82,11 +83,11 @@ class GuardTestCase(unittest.TestCase):
     def tearDown(self):
         self.directory.cleanup()
 
-    def guard(self, text, base=None, merge_onto=None, approver=None):
+    def guard(self, text, base=None, merge_onto=None, approver=None, today=TODAY):
         with open(self.path, "w", encoding="utf-8", newline="\n") as handle:
             handle.write(text)
         output = io.StringIO()
-        code = format_guard.run(self.path, base=base, today=TODAY, stream=output,
+        code = format_guard.run(self.path, base=base, today=today, stream=output,
                                 merge_onto=merge_onto, record=self.record_path, approver=approver)
         with open(self.record_path, encoding="utf-8") as handle:
             self.lines = [json.loads(item) for item in handle.read().split("\n") if item]
@@ -438,6 +439,7 @@ class Reviews(GuardTestCase):
     DUE = "saves move to a server · check by: 2026-09-01"
 
     def test_passed_date_without_review_warns(self):
+        # invariant: decision-guard-overdue-review/1
         code, output = self.guard(log(version(1, review_when=self.DUE)))
         self.assertEqual(code, 0, output)
         self.assertIn("check-by date 2026-09-01 has passed without a review", output)
@@ -448,9 +450,60 @@ class Reviews(GuardTestCase):
                                      "2026-10-01")))
 
     def test_review_that_passed_again_warns(self):
+        # invariant: decision-guard-overdue-review/1
         code, output = self.guard(log(version(1, review_when=self.DUE),
-                                      review(1, "2026-09-01", "condition not met — local", "2026-09-10")))
-        self.assertIn("check-by date 2026-09-10 has passed", output)
+                                      review(1, "2026-09-01", "condition not met — local",
+                                             "2026-09-14")))
+        self.assertIn("check-by date 2026-09-14 has passed", output)
+
+    # The dates below have a day above 12, so that no swap of day and month reads them as a date.
+
+    def test_a_date_one_day_before_the_given_date_warns(self):
+        # invariant: decision-guard-overdue-review/1
+        code, output = self.guard(log(version(1, review_when="saves move to a server · check by: "
+                                                             "2026-09-16")))
+        self.assertEqual(code, 0, output)
+        self.assertIn("ABC-01: check-by date 2026-09-16 has passed without a review", output)
+
+    def test_the_date_compared_is_the_one_given_not_the_day_of_the_run(self):
+        # invariant: decision-guard-overdue-review/1
+        code, output = self.guard(log(version(1, review_when="saves move to a server · check by: "
+                                                             "2099-01-15")),
+                                  today=datetime.date(2099, 6, 1))
+        self.assertEqual(code, 0, output)
+        self.assertIn("ABC-01: check-by date 2099-01-15 has passed without a review", output)
+
+    def test_a_review_before_the_version_does_not_answer_its_date(self):
+        # invariant: decision-guard-overdue-review/1
+        code, output = self.guard(log(
+            version(1), review(1, "2026-09-01", "condition not met — local", "2026-12-01"),
+            version(1, ver=2, review_when="saves move to a server · check by: 2026-09-15")))
+        self.assertIn("ABC-01: check-by date 2026-09-15 has passed without a review", output)
+
+    def test_a_review_of_another_decision_does_not_answer_its_date(self):
+        # invariant: decision-guard-overdue-review/1
+        code, output = self.guard(log(
+            version(1, review_when="saves move to a server · check by: 2026-09-15"),
+            version(2, review_when="saves move to a server · check by: 2026-09-01"),
+            review(2, "2026-09-01", "condition not met — local", "2026-12-01")))
+        self.assertIn("ABC-01: check-by date 2026-09-15 has passed without a review", output)
+
+    def test_a_passed_date_after_a_decision_with_none_warns(self):
+        """ABC-01 has no check-by date; ABC-02, after it, has one that has passed."""
+        # invariant: decision-guard-overdue-review/1
+        code, output = self.guard(log(
+            version(1), version(2, review_when="saves move to a server · check by: 2026-09-15")))
+        self.assertEqual(code, 0, output)
+        self.assertIn("ABC-02: check-by date 2026-09-15 has passed without a review", output)
+
+    def test_every_passed_date_warns(self):
+        # invariant: decision-guard-overdue-review/1
+        code, output = self.guard(log(
+            version(1, review_when="saves move to a server · check by: 2026-09-15"),
+            version(2, review_when="saves move to a server · check by: 2026-09-14")))
+        self.assertEqual(code, 0, output)
+        self.assertIn("ABC-01: check-by date 2026-09-15 has passed without a review", output)
+        self.assertIn("ABC-02: check-by date 2026-09-14 has passed without a review", output)
 
     def test_not_met_needs_a_date(self):
         self.assertFails(log(version(1, review_when=self.DUE),
@@ -846,11 +899,26 @@ class FingerprintValue(InGit):
         self.assertRecords(line("check_fingerprints", "pass", "relation-fingerprint-value/1"))
 
     def test_stale_fingerprint(self):
+        # invariant: decision-fingerprint-input/1
         self.assertFails(log(version(1), version(2, relations="derives from ABC-01@00000000")),
                          "the current fingerprint of ABC-01 is " + CURRENT, merge_onto="main")
         self.assertRecords(line("check_fingerprints", "fail", "relation-fingerprint-value/1",
                                 "line 33: ABC-02/1: `derives from ABC-01@00000000` — the current "
                                 "fingerprint of ABC-01 is " + CURRENT))
+
+    def test_a_binding_paragraph_over_several_lines_is_fingerprinted_whole(self):
+        """BINDING wrapped over two lines, over three, and one word to a line: its fingerprint is
+        still CURRENT."""
+        # invariant: decision-fingerprint-input/1
+        for wrapped in ("The product keeps every saved game\nafter a reload.",
+                        "The product keeps\nevery saved game\nafter a reload.",
+                        "The\nproduct\nkeeps\nevery\nsaved\ngame\nafter\na\nreload."):
+            with self.subTest(lines=wrapped.count("\n") + 1):
+                self.commit(log(version(1, binding=wrapped)))
+                self.assertFails(log(version(1, binding=wrapped),
+                                     version(2, relations="derives from ABC-01@00000000")),
+                                 "the current fingerprint of ABC-01 is " + CURRENT,
+                                 merge_onto="main")
 
     def test_stale_fingerprint_without_merge_onto_is_not_checked(self):
         code, output = self.guard(log(version(1), version(2, relations="derives from ABC-01@00000000")))

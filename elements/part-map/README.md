@@ -39,8 +39,9 @@ template cannot be read or the record cannot be written.
 What the script cannot see it reports as unchecked, never as agreement (WAY-38): a flow whose
 test leaves no coverage file, the promise levels declared in the code, and new or stale
 violations, which wait for the command a product declares for its dependency graph. A call to git
-that fails, the map standing outside a git repository included, is an error of the run. Its tests:
-`python -B -m unittest discover -s elements/part-map -p "test_*.py"`.
+that fails, the map standing outside a git repository included, is an error of the run. Its tests,
+from the root of the-way: `python -B gate/run_tests.py elements/part-map --record
+.runs/part-map-tests.jsonl`.
 
 `skill/` holds `update-part-map`, a Claude Code skill that writes the entries of a product's map.
 A product uses the skill from the commit of the-way it pins (WAY-34), linked into the product's

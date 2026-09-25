@@ -23,7 +23,7 @@ Every entry of the decision log carries every field the decision template gives 
 
 The decision guard, given a date, warns of every check-by date earlier than it that no later review entry answers.
 
-- **Method:** `python -B -m unittest discover -s elements/decisions -p "test_*.py"`
+- **Method:** `python -B gate/run_tests.py elements/decisions --record .runs/decisions-tests.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-24@058a356a
 - **Part:** decisions
@@ -45,7 +45,7 @@ Every file git tracks matches the path patterns of exactly one part of the part 
 
 The relation model's script gives a text the first eight characters, in lower-case hexadecimal, of the SHA-256 digest of that text encoded in UTF-8, after every run of spaces and line breaks is replaced by a single space and both ends are trimmed.
 
-- **Method:** `python -B -m unittest discover -s relation-model -p "test_*.py"`
+- **Method:** `python -B gate/run_tests.py relation-model --record .runs/relation-model-tests.jsonl`
 - **Rests on:** TODO — SHA-256 as the Secure Hash Standard, FIPS 180-4, specifies it (https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf), and UTF-8 as RFC 3629 defines it (https://www.rfc-editor.org/rfc/rfc3629.html)
 - **Derives from:** WAY-39@a3b77692
 - **Part:** relation-model

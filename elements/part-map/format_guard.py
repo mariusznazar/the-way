@@ -934,6 +934,8 @@ def check_flows(entries, report, top, claims):
         if not os.path.isfile(full):
             report.error(line, "%s: coverage file `%s` does not exist" % (entry.identifier, value),
                          check)
+            report.cannot_check("the list of parts of `%s`" % entry.identifier,
+                                "its coverage file `%s` does not exist" % value)
             report.unchecked(check, NOT_PRODUCED_REASON,
                              "coverage file `%s` of `%s` does not exist"
                              % (value, entry.identifier), coverage_parts)

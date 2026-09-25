@@ -15,8 +15,8 @@ root, with the commit the task branch left the main branch from:
 python <the-way>/elements/decisions/format_guard.py --base <commit>
 ```
 
-Without `--base`, the checks against that commit are skipped. Its tests:
-`python -B -m unittest discover -s elements/decisions -p "test_*.py"`.
+Without `--base`, the checks against that commit are skipped. Its tests, from the root of the-way:
+`python -B gate/run_tests.py elements/decisions --record .runs/decisions-tests.jsonl`.
 
 `skill/` holds `record-decision`, a Claude Code skill that turns a decision into an entry of a
 product's log. A product uses the skill from the commit of the-way it pins (WAY-34), linked into

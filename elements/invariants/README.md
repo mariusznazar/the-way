@@ -40,7 +40,8 @@ What the script cannot see it reports as unchecked in the report for a person, n
 its verdict on the sentence as written, `pass` where the correction names both fingerprints
 (WAY-57); and whether a quarantine names the invariant of a flow that names it in prose. A call to
 git that fails, the file standing outside a git repository included, is an error of the run. Its
-tests: `python -B -m unittest discover -s elements/invariants -p "test_*.py"`.
+tests, from the root of the-way:
+`python -B gate/run_tests.py elements/invariants --record .runs/invariants-tests.jsonl`.
 
 `skill/` holds `record-invariant`, a Claude Code skill that writes the entries of a product's
 invariants file. A product uses the skill from the commit of the-way it pins (WAY-34), linked into

@@ -2,7 +2,8 @@
 
 Inputs and expected values are written out, never computed by the guard (WAY-70).
 
-Run from anywhere: python -B -m unittest discover -s <the-way>/elements/part-map -p "test_*.py"
+Run from the root of the-way:
+    python -B gate/run_tests.py elements/part-map --record .runs/part-map-tests.jsonl
 """
 
 import contextlib
@@ -107,6 +108,20 @@ def line(function, verdict, invariant, description=None, reason=None):
     if description is not None:
         written["description"] = description
     return written
+
+
+# The whole report for a person of a clean map whose product declares no command the guard asks
+# for: what it could not check, and no line of agreement (WAY-38).
+REPORT_WITHOUT_COMMANDS = "\n".join([
+    "unchecked: the list of parts of `save-and-load` — its test leaves no coverage file",
+    "unchecked: the change path of every promise level in use — the levels sit at the "
+    "declarations, and no command of the product reports them",
+    "unchecked: the dependencies between parts, and new or stale violations — no command of the "
+    "product reports the dependency graph",
+    "note: there is no invariants.md beside the map: the invariants the map names are not checked",
+    "note: there is no decisions.md beside the map: the scopes of decisions are not checked",
+    "note: no --base given: the list of known violations is not compared with the main branch",
+    "0 error(s), 0 warning(s), 3 unchecked", ""])
 
 
 FILES = {"src/saving.py": "class SaveFile:\n    pass\n\n\ndef save():\n    pass\n",
@@ -556,6 +571,7 @@ class Flows(GuardTestCase):
                           "`load-and-save`"])
 
     def test_flow_without_coverage_is_reported_unchecked(self):
+        # invariant: map-guard-missing-coverage/1
         code, output = self.guard(self.map_with(flow()))
         self.assertEqual(code, 0, output)
         self.assertIn("unchecked: the list of parts of `save-and-load`", output)
@@ -579,6 +595,7 @@ class Flows(GuardTestCase):
         self.assertRecords(line("check_flows", "pass", "flow-coverage-parts/1"))
 
     def test_coverage_file_that_does_not_exist(self):
+        # invariant: map-guard-missing-coverage/1
         code, output = self.guard(self.map_with(flow(coverage="coverage/missing.info")))
         self.assertEqual(code, 1, output)
         self.assertRecords(line("check_flows", "fail", None,
@@ -587,6 +604,34 @@ class Flows(GuardTestCase):
         self.assertRecords(line("check_flows", "unchecked", "flow-coverage-parts/1",
                                 "coverage file `coverage/missing.info` of `save-and-load` does "
                                 "not exist", NOT_PRODUCED))
+        self.assertIn("unchecked: the list of parts of `save-and-load` — its coverage file "
+                      "`coverage/missing.info` does not exist\n", output)
+
+    def test_every_flow_that_leaves_no_coverage_file_is_reported_unchecked(self):
+        """Two flows leave no coverage file and two name one that does not exist; each is
+        reported as its list of parts unchecked, and the record gives the invariant no pass."""
+        # invariant: map-guard-missing-coverage/1
+        self.write("tests/test_more.py", "# load-after-restart\n# save-on-exit\n"
+                                         "# load-on-start\n")
+        more = "INV-2 — test: tests/test_more.py"
+        code, output = self.guard(part_map(
+            part(), flow(), flow("load-after-restart", "Load after restart", invariant=more),
+            flow("save-on-exit", "Save on exit", invariant=more,
+                 coverage="coverage/missing.info"),
+            flow("load-on-start", "Load on start", invariant=more, coverage="coverage/gone.info"),
+            surface(), self.rendering(), self.foundations()))
+        self.assertEqual(code, 1, output)
+        for unchecked in ("the list of parts of `save-and-load` — its test leaves no coverage "
+                          "file",
+                          "the list of parts of `load-after-restart` — its test leaves no "
+                          "coverage file",
+                          "the list of parts of `save-on-exit` — its coverage file "
+                          "`coverage/missing.info` does not exist",
+                          "the list of parts of `load-on-start` — its coverage file "
+                          "`coverage/gone.info` does not exist"):
+            self.assertIn("unchecked: " + unchecked + "\n", output)
+        self.assertEqual([item["verdict"] for item in self.lines
+                          if item["invariant"] == "flow-coverage-parts/1"], ["unchecked"])
 
     def test_a_flow_test_outside_gate_in_the_way_s_own_map(self):
         self.guard(self.map_with(flow()), own=True)
@@ -704,9 +749,10 @@ class Surfaces(GuardTestCase):
                           "belongs to a promise level, never to one surface"])
 
     def test_promise_levels_are_reported_unchecked(self):
+        # invariant: map-guard-missing-command/1
         code, output = self.guard(part_map())
         self.assertEqual(code, 0, output)
-        self.assertIn("unchecked: the change path of every promise level in use", output)
+        self.assertEqual(output, REPORT_WITHOUT_COMMANDS)
         why = "the levels sit at the declarations, and no command of the product reports them"
         self.assertRecords(line("check_promise_levels", "unchecked", "surface-promise-level/1",
                                 why, NOT_PRODUCED))
@@ -818,10 +864,11 @@ class KnownViolations(GuardTestCase):
                           "number, which goes stale at the next edit"])
 
     def test_new_and_stale_violations_are_reported_unchecked(self):
+        # invariant: map-guard-missing-command/1
         self.violations("| saving | foundations | src/saving.py | the log of decisions |")
         code, output = self.guard(part_map())
         self.assertEqual(code, 0, output)
-        self.assertIn("unchecked: the dependencies between parts", output)
+        self.assertEqual(output, REPORT_WITHOUT_COMMANDS)
         why = "no command of the product reports the dependency graph"
         self.assertRecords(line("check_dependencies", "unchecked", "known-violation-coverage/1",
                                 why, NOT_PRODUCED))
@@ -1063,6 +1110,7 @@ class Reported(GuardTestCase):
     files = dict(FILES, **{"src/storage.py": "def write():\n    pass\n"})
 
     def test_dependency_from_higher_to_lower_is_reported(self):
+        # invariant: map-guard-dependency-report/1
         storage = part("storage", "Storage", files="src/storage.py",
                        responsibility="The part answers for the disk.",
                        failure_modes=("a write fails — a step is repeated — low — not detected",))
@@ -1093,6 +1141,76 @@ class Reported(GuardTestCase):
         for invariant in ("file-part-assignment/1", "path-pattern-reach/1", "part-map-file/1",
                           "flow-invariant-link/1", "surface-declaration/1"):
             self.assertNotIn(invariant, recorded)
+
+
+class Dependencies(GuardTestCase):
+    """Every dependency from a higher criticality to a lower one, with no separation recorded,
+    is reported."""
+
+    files = dict(FILES, **{"src/storage.py": "def write():\n    pass\n",
+                           "src/cache.py": "def keep():\n    pass\n"})
+
+    def lower(self, identifier, title, depends="none"):
+        """A part of low criticality of its own, in src/<identifier>.py."""
+        return part(identifier, title, files="src/%s.py" % identifier, depends=depends,
+                    responsibility="The part answers for %s." % title.lower(),
+                    failure_modes=("it fails — a step is repeated — low — not detected",))
+
+    def test_a_dependency_is_reported_beside_a_separated_one(self):
+        # invariant: map-guard-dependency-report/1
+        code, output = self.guard(part_map(
+            part(depends="storage · cache (separated — a lost cache is rebuilt)"), flow(),
+            surface(), self.lower("storage", "Storage"), self.lower("cache", "Cache"),
+            foundations_part()))
+        self.assertEqual(code, 0, output)
+        self.assertIn("saving depends on storage with no separation recorded, so storage is "
+                      "computed as `high`, above its own failure modes", output)
+
+    def test_a_separation_the_lower_part_records_elsewhere_does_not_count(self):
+        # invariant: map-guard-dependency-report/1
+        code, output = self.guard(part_map(
+            part(depends="storage"), flow(), surface(),
+            self.lower("storage", "Storage", depends="cache (separated — a lost cache is rebuilt)"),
+            self.lower("cache", "Cache"), foundations_part()))
+        self.assertEqual(code, 0, output)
+        self.assertIn("saving depends on storage with no separation recorded, so storage is "
+                      "computed as `high`, above its own failure modes", output)
+
+    def test_a_part_raised_by_a_flow_it_lies_on_reports_its_dependency(self):
+        """saving's own failure mode is low; the high flow it lies on raises it to high."""
+        # invariant: map-guard-dependency-report/1
+        code, output = self.guard(part_map(
+            part(depends="storage", failure_modes=("a save is slow — a step is repeated — low — "
+                                                   "not detected",)),
+            flow(criticality="high", parts="saving"), surface(),
+            self.lower("storage", "Storage"), self.lower("cache", "Cache"), foundations_part()))
+        self.assertEqual(code, 0, output)
+        self.assertIn("saving depends on storage with no separation recorded, so storage is "
+                      "computed as `high`, above its own failure modes", output)
+
+    def test_a_dependency_down_a_chain_is_reported(self):
+        """cache, then storage depending on it, then saving (high) depending on storage, listed
+        in that order: high reaches storage, and through it cache."""
+        # invariant: map-guard-dependency-report/1
+        code, output = self.guard(part_map(
+            self.lower("cache", "Cache"), self.lower("storage", "Storage", depends="cache"),
+            part(depends="storage"), flow(), surface(), foundations_part()))
+        self.assertEqual(code, 0, output)
+        self.assertIn("saving depends on storage with no separation recorded, so storage is "
+                      "computed as `high`, above its own failure modes", output)
+        self.assertIn("storage depends on cache with no separation recorded, so cache is "
+                      "computed as `high`, above its own failure modes", output)
+
+    def test_every_dependency_of_a_part_is_reported(self):
+        # invariant: map-guard-dependency-report/1
+        code, output = self.guard(part_map(
+            part(depends="storage · cache"), flow(), surface(), self.lower("storage", "Storage"),
+            self.lower("cache", "Cache"), foundations_part()))
+        self.assertEqual(code, 0, output)
+        self.assertIn("saving depends on storage with no separation recorded, so storage is "
+                      "computed as `high`, above its own failure modes", output)
+        self.assertIn("saving depends on cache with no separation recorded, so cache is "
+                      "computed as `high`, above its own failure modes", output)
 
 
 class Record(GuardTestCase):
@@ -1351,8 +1469,20 @@ class ComputedCriticality(unittest.TestCase):
         self.assertEqual(self.compute(text)["storage"], "low")
 
     def test_a_part_without_failure_modes_is_the_highest_degree(self):
+        # invariant: map-guard-unrecorded-criticality/1
         text = part_map(part(failure_modes=()))
         self.assertEqual(self.compute(text)["saving"], "high")
+
+    def test_a_part_recording_none_takes_the_highest_degree_of_the_map_s_own_scale(self):
+        # invariant: map-guard-unrecorded-criticality/1
+        scale = "\n".join(["## Criticality scale", "", "1. low — the player retries a step",
+                           "2. high — the player loses the game",
+                           "3. fatal — the player loses every game"])
+        text = part_map(part(failure_modes=()).replace("- **Failure modes:** \n",
+                                                       "- **Failure modes:** none"),
+                        scale=scale)
+        self.assertIn("- **Failure modes:** none\n", text)
+        self.assertEqual(self.compute(text)["saving"], "fatal")
 
     def test_a_part_takes_the_degree_of_a_flow_it_lies_on(self):
         text = part_map(part(failure_modes=("a save is lost — a step is repeated — low — "
@@ -1362,31 +1492,109 @@ class ComputedCriticality(unittest.TestCase):
 
 
 class TestRuns(GuardTestCase):
-    """The map guard reads what a test run left and starts none itself (WAY-47): every program it
-    starts, over a run of every check, is git."""
+    """The map guard reads what a test run left and starts none itself (WAY-47).
+
+    The outcome is watched: each flow's test file writes a marker when it is imported and when a
+    test in it runs, so a run of it by any route — a child process of any kind, a test runner in
+    the process, an import of the file and a call of its tests — leaves the marker behind. The
+    guard runs on maps whose flow leaves a coverage file, leaves none, or names one that does not
+    exist, with the flow's test outside `gate/` and under it. Beside that, every program the
+    guard starts through `subprocess.Popen` or the `os` functions that start one must be git, and
+    no `unittest` runner or loader may be called inside the process."""
 
     files = dict(FILES, **{"coverage/save-and-load.info": "SF:src/saving.py\nend_of_record\n",
                            "foundations/known_violations.md": "## Known violations\n"})
 
-    def test_the_guard_starts_no_program_but_git(self):
-        # invariant: map-guard-test-runs/1
-        text = part_map(part(), flow(coverage="coverage/save-and-load.info"), surface(),
-                        foundations_part("foundations/**\n  coverage/**"))
-        self.guard(text)
-        self.commit()
-        started = []
-        real = subprocess.run
+    def setUp(self):
+        super().setUp()
+        self.marker = os.path.join(self.root, "flow-test-ran.txt")
+        test = "\n".join([
+            "# save-and-load",
+            "import unittest",
+            "",
+            "MARKER = %r" % self.marker,
+            "with open(MARKER, 'a') as handle:",
+            "    handle.write('imported ' + __name__ + '\\n')",
+            "",
+            "",
+            "def test_save():",
+            "    with open(MARKER, 'a') as handle:",
+            "        handle.write('ran\\n')",
+            "",
+            "",
+            "class SaveTest(unittest.TestCase):",
+            "    def test_save(self):",
+            "        test_save()", ""])
+        self.write("tests/test_saving.py", test)
+        self.write("gate/test_save_and_load.py", test)
 
-        def spy(arguments, *rest, **options):
-            started.append(list(arguments))
+    def maps(self):
+        parts = foundations_part("foundations/**\n  coverage/**\n  gate/**")
+        under_gate = "INV-2 — test: gate/test_save_and_load.py"
+        return [part_map(part(), flow(coverage="coverage/save-and-load.info"), surface(), parts),
+                part_map(part(), flow(), surface(), parts),
+                part_map(part(), flow(coverage="coverage/missing.info"), surface(), parts),
+                part_map(part(), flow(invariant=under_gate), surface(), parts),
+                part_map(part(), flow(invariant=under_gate, coverage="coverage/missing.info"),
+                         surface(), parts)]
+
+    def watchers(self, started):
+        """Patches that note every start of a program or of a test run in `started`."""
+        real = subprocess.Popen
+
+        def popen(arguments, *rest, **options):
+            started.append(list(arguments) if not isinstance(arguments, str) else [arguments])
             return real(arguments, *rest, **options)
 
-        with unittest.mock.patch.object(format_guard.subprocess, "run", spy):
-            code = format_guard.run(self.path, base="main",
-                                    stream=io.StringIO(), record=self.record_path)
-            format_guard.run(self.path, stream=io.StringIO(), own=True,
-                             examples=os.path.join(self.root, "no-examples.md"))
-        self.assertEqual(code, 0)
+        def noted(name, result=None):
+            def call(*arguments, **options):
+                started.append([name] + [str(item) for item in arguments])
+                return result
+            return call
+
+        def in_process(name, real_method):
+            def call(*arguments, **options):
+                started.append([name])
+                return real_method(*arguments, **options)
+            return call
+
+        patches = [unittest.mock.patch.object(subprocess, "Popen", popen),
+                   unittest.mock.patch.object(os, "system", noted("os.system", 0))]
+        for name in dir(os):
+            if name.startswith(("spawn", "exec", "posix_spawn", "startfile", "fork")) and \
+                    callable(getattr(os, name)):
+                patches.append(unittest.mock.patch.object(os, name, noted("os." + name)))
+        for owner, name in ((unittest.TestSuite, "run"), (unittest.TestCase, "run"),
+                            (unittest.TestLoader, "discover"),
+                            (unittest.TestLoader, "loadTestsFromName"),
+                            (unittest.TestLoader, "loadTestsFromNames"),
+                            (unittest.TestLoader, "loadTestsFromModule"),
+                            (unittest.TestLoader, "loadTestsFromTestCase"),
+                            (unittest.TextTestRunner, "run")):
+            patches.append(unittest.mock.patch.object(
+                owner, name, in_process("unittest.%s.%s" % (owner.__name__, name),
+                                        getattr(owner, name))))
+        return patches
+
+    def test_the_guard_starts_no_program_but_git(self):
+        # invariant: map-guard-test-runs/1
+        maps = self.maps()
+        self.guard(maps[0])
+        self.commit()
+        started = []
+        codes = []
+        with contextlib.ExitStack() as stack:
+            for patch in self.watchers(started):
+                stack.enter_context(patch)
+            codes.append(format_guard.run(self.path, base="main", stream=io.StringIO(),
+                                          record=self.record_path))
+            for text in maps:
+                with open(self.path, "w", encoding="utf-8", newline="\n") as handle:
+                    handle.write(text)
+                codes.append(format_guard.run(self.path, stream=io.StringIO(), own=True,
+                                              examples=os.path.join(self.root, "no-examples.md")))
+        self.assertEqual(codes[0], 0)
+        self.assertFalse(os.path.exists(self.marker), "the flow's test ran during a guard run")
         self.assertTrue(started)
         self.assertEqual({arguments[0] for arguments in started}, {"git"}, started)
         self.assertEqual([arguments for arguments in started
