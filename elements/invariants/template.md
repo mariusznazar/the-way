@@ -314,17 +314,24 @@ A field marked *judgment* holds someone's call: no tool reads its value off the 
 
 ## What the format guard checks
 
-- The product has exactly one file of invariant entries, `foundations/invariants.md` (WAY-64).
+- The product has exactly one file of invariant entries: the file checked stands in
+  `foundations/invariants.md` from the root of its repository, letter case included, as git lists
+  it, and no other Markdown file git tracks holds an entry — a section `## <identifier>/<version>`
+  carrying a *Method* field, outside a fenced block — save `examples.md` beside this template,
+  which holds copies (WAY-64).
 - The file holds its entries, then its withdrawn identifiers, then its quarantined invariants, each
-  in the form above, and no other heading (WAY-64, WAY-68).
-- Every identifier has the form above, and none is held by another entry or withdrawn identifier
-  of this file or of the part map (WAY-64).
+  in the form above, and no other heading; the heading of an entry carries its version as a number
+  (WAY-57, WAY-64, WAY-68).
+- Every identifier of an entry has the form above, and no identifier is held twice among the
+  entries and withdrawn identifiers of this file and of the part map taken together (WAY-64).
 - Every identifier the file held on the commit the task branch left the main branch from stands in
   it, and one withdrawn there is withdrawn still (WAY-64).
 - Every successor a withdrawn identifier names is an entry or a withdrawn identifier of this file,
   or `none` (WAY-64).
 - Every entry carries every field of the form above, and no field holds `none` or `TODO` where the
-  form does not give it that word (WAY-71).
+  form does not give it that word; a `TODO` the form gives, in a field the main branch does not
+  hold it in, is a warning, and, checking a merge onto the main branch, a `TODO` in any field other
+  than *Method* and *Rests on* is an error (WAY-71).
 - No entry carries a field the form above does not hold, nor text outside its sentence and fields.
 - Every entry states its invariant in one sentence (WAY-56).
 - Every entry carries a method (WAY-08).
@@ -346,19 +353,33 @@ A field marked *judgment* holds someone's call: no tool reads its value off the 
 - Every method is a command that begins with a program's name, the path alone of a file that
   exists, or `TODO`; every value a command takes from the gate, and every value in braces a sentence
   names outside quoted text, stands on the list above (WAY-61, WAY-63).
-- Every name in *Rests on* or *Derives from*, other than `none` or `TODO`, carries a fingerprint,
-  and, checking a merge onto the main branch, the current fingerprint of the entry it names
-  (WAY-66).
-- Every invariant test cites its invariant with a version, and none cites a version other than the
-  current one (WAY-57).
-- Every `invariant:` line in a check names an entry, and every `data:` line names a file that
-  exists (WAY-65).
+- Every path ending in `.jsonl` that a command names is one git ignores, as git itself answers, and
+  no command names two (WAY-74).
+- Every name in *Rests on* or *Derives from*, other than `none` or `TODO`, carries a fingerprint
+  of the length the relation model gives (WAY-39); every decision named is in force in the
+  decision log; *Rests on* names a fact only as `TODO — <the fact, with its source>` while the
+  environment facts element has no entries (WAY-66).
+  Checking a merge onto the main branch, every fingerprint equals the current fingerprint of the
+  entry it names in the decision log that merge leaves, for the entries of the file and for those
+  only the commit merged onto holds (WAY-66).
+- Every decision in force whose *Verification* includes level 1 has an entry deriving from it, and
+  every identifier the level 1 verification of the latest version of a decision names, as
+  `level 1 — invariants: <identifier> · <identifier>.`, is an entry whose *Derives from* names that
+  decision (WAY-12, WAY-17).
+- Every `invariant:` line in a check names an entry, never a withdrawn identifier, and cites its
+  current version; every `data:` line in a file holding such a check names a file that exists
+  (WAY-57, WAY-65).
 - The list of violated invariants is a subset of the list on the commit the branch left the main
   branch from; every position names an entry at its current version and no other (WAY-67).
 - Every quarantine position names an entry at its current version and an end date, and none names
   an invariant a critical flow names (WAY-68).
 - Every example in `examples.md` matches its entry in the file word for word (WAY-05).
-- The guard reports how many entries it could not check and why, never agreement (WAY-38).
+- The guard reports what it could not check and why, never agreement (WAY-38).
+- Given the path of a record, the guard writes the-way's own record of the run there, with a
+  verdict for each invariant its checks cite (WAY-61, WAY-74); given `none` as either commit, it
+  records the checks that need that commit as `unchecked`; a call to git that fails, the file
+  standing outside a git repository included, is a failure of the run, never an unchecked check
+  (WAY-61, WAY-63).
 
 ## Examples
 

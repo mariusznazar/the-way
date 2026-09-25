@@ -34,7 +34,7 @@ The decision guard, given a date, warns of every check-by date earlier than it t
 
 Every file git tracks matches the path patterns of exactly one part of the part map, or stands on the map's list of files left out on purpose.
 
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md`
+- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** TODO — git matches a path pattern as it matches a pattern of a `.gitattributes` file (https://git-scm.com/docs/gitattributes), and reports the match through `git check-attr` (https://git-scm.com/docs/git-check-attr)
 - **Derives from:** WAY-44@220f5b85
 - **Part:** every

@@ -1,20 +1,31 @@
 """Format guard of a product's part map.
 
 Runs the checks listed in "What the checker checks" in template.md, which lies next to this
-script. The fields of each kind of entry and the titles of the five lists are read from the
-template, so the rules of an entry live in one place (WAY-35).
+script. The fields of each kind of entry, the words `none` and `TODO` each field takes and the
+titles of the lists are read from the template, so the rules of an entry live in one place
+(WAY-35, WAY-71). Each check cites the invariants it gives a verdict for, as
+`invariant: <identifier>/<version>` (WAY-65).
 
 Usage, from the root of the product's repository:
 
-    python <the-way>/elements/part-map/format_guard.py [MAP] [--base REF]
+    python <the-way>/elements/part-map/format_guard.py [MAP] [--base REF] [--record PATH]
 
 MAP defaults to foundations/part_map.md. --base names the commit the task branch left the main
 branch from, which the list of known violations is compared with; without it, that check is
-skipped. Exit code: 0 without errors, 1 with errors, 2 when the map or the template cannot be
-read.
+skipped. `none` in place of that commit is the value the gate fills in where it does not exist
+(WAY-61): the check is then recorded as `unchecked`, and gives no error; a commit that is not
+`none` and does not exist stays an error. A `TODO` in any field of an entry is an error on every
+run, since the template gives it to no field (WAY-71). --record names a JSON Lines file, created
+or overwritten, which receives the-way's own record of the run (WAY-74): a verdict for each
+invariant cited by a check the run's options select — the check against the base with --base, the
+checks of the map alone without it — a line for each error of those checks that belongs to no
+cited invariant, and every failure of the run itself. The report for a person holds every check.
+Exit code: 0 without errors, 1 with errors, 2 when the map or the template cannot be read or the
+record cannot be written.
 """
 
 import argparse
+import json
 import os
 import re
 import subprocess
@@ -27,15 +38,76 @@ TEMPLATE = os.path.join(HERE, "template.md")
 EXAMPLES = os.path.join(HERE, "examples.md")
 OWN_MAP = os.path.join(HERE, "..", "..", "foundations", "part_map.md")
 
+# The name a record gives this program, and each of its checks as PROGRAM::<function>.
+PROGRAM = "elements/part-map/format_guard.py"
+# The checks each option selects for the record; every other check reads the map alone and is
+# recorded only by a run given neither option. A run records the checks its options select, and
+# its own failures always (WAY-61, WAY-74).
+SELECTED_BY = {"check_violations_growth": "--base"}
+# The value the gate fills in for a commit that does not exist (WAY-61), and the reasons a check
+# records for being unchecked, word for word as the invariants template lists them (WAY-63).
+NO_COMMIT = "none"
+NO_COMMIT_REASON = "the method takes a commit the gate filled in as not existing"
+NOT_PRODUCED_REASON = "the method's command or file is not declared or produced by the product"
+# Where a product's part map stands, relative to the root of its repository (WAY-40).
+MAP_PATH = "foundations/part_map.md"
+# The directory every critical flow's test of the-way's own map lies under (WAY-55).
+GATE_DIRECTORY = "gate/"
+
 sys.dont_write_bytecode = True
 
 IDENTIFIER = r"[a-z0-9]+(?:-[a-z0-9]+)*"
 LIST_SECTIONS = ["Criticality scale", "External context", "Change paths",
                  "Files left out on purpose", "Withdrawn identifiers", "Known violations"]
+# The lists of the map itself; the list of known violations stands in its own file (WAY-51).
+MAP_LISTS = [title for title in LIST_SECTIONS if title != "Known violations"]
+DATE = re.compile(r"\b\d{4}-\d{2}-\d{2}\b")
 
 
 class TemplateError(Exception):
     pass
+
+
+# --- words and values -----------------------------------------------------------------------
+
+
+def bare(value):
+    """A value without the backticks that mark it as a literal word."""
+    value = (value or "").strip()
+    if len(value) > 1 and value.startswith("`") and value.endswith("`") and value.count("`") == 2:
+        return value[1:-1]
+    return value
+
+
+def is_todo(value):
+    value = bare(value)
+    return value == "TODO" or value.startswith("TODO ")
+
+
+def is_none(value):
+    return bare(value) == "none"
+
+
+# `TODO` as a word of its own anywhere in a value — whole, as an item, or inside a part such as
+# `detected by TODO` or `searched: TODO; found: …` — but not inside a path or a longer word, such
+# as `docs/TODO.md`. The invariants guard reads it from here.
+TODO_WORD = re.compile(r"(?:^|[\s;,:(`])TODO(?=$|[\s;,:)`])")
+
+
+def holds_todo(value):
+    """Whether a value holds `TODO` as a word of its own anywhere in it (WAY-71)."""
+    return bool(TODO_WORD.search(value or ""))
+
+
+def read_file(path, report, what):
+    """The text of a file, or None once the report holds why it cannot be read: a failure of the
+    run, recorded by every run whatever its options. The invariants guard calls it too."""
+    try:
+        with open(path, encoding="utf-8") as handle:
+            return handle.read()
+    except (OSError, UnicodeDecodeError) as problem:
+        report.error(None, "cannot read %s: %s" % (what, problem))
+        return None
 
 
 # --- rules read from the template -----------------------------------------------------------
@@ -48,6 +120,7 @@ class Rules:
     lists: dict          # section title -> column names, empty for a numbered list
     values: dict         # section title -> the values a column allows, None where it is free
     violations: str      # the path of the derived list of known violations
+    words: dict = field(default_factory=dict)   # kind -> field -> the words `none`, `TODO` it takes
 
 
 def _section(text, title):
@@ -77,17 +150,36 @@ def _code_block(text, title):
     return match.group(1)
 
 
+def _field_words(form):
+    """field name -> the words `none` and `TODO` the form gives it as an alternative of its own,
+    read from the text of the field, its wrapped lines included, split at ` | `."""
+    texts, current = {}, None
+    for line in form.split("\n"):
+        match = re.match(r"^- \*\*(.+?):\*\*(?: (.*))?$", line)
+        if match:
+            current = match.group(1)
+            texts[current] = match.group(2) or ""
+        elif current is not None and line.startswith(" "):
+            texts[current] += " " + line.strip()
+        else:
+            current = None
+    return {name: [word for word in ("none", "TODO")
+                   if word in [bare(choice) for choice in text.split(" | ")]]
+            for name, text in texts.items()}
+
+
 def read_rules(path=TEMPLATE):
     with open(path, encoding="utf-8") as handle:
         text = handle.read()
 
-    kinds = {}
+    kinds, words = {}, {}
     for title in ("Part", "Critical flow", "Surface"):
         form = _code_block(text, title)
         fields = re.findall(r"^- \*\*(.+?):\*\*", form, re.M)
         if not fields:
             raise TemplateError('no fields in the form of "%s"' % title)
         kinds[title.lower()] = fields
+        words[title.lower()] = _field_words(form)
 
     marks = {}
     for kind, fields in kinds.items():
@@ -112,7 +204,7 @@ def read_rules(path=TEMPLATE):
     violations = re.search(r"`([^`]+known_violations[^`]*)`", _section(text, "Known violations"))
     if not violations:
         raise TemplateError("the section on known violations names no file")
-    return Rules(kinds, marks, lists, values, violations.group(1))
+    return Rules(kinds, marks, lists, values, violations.group(1), words)
 
 
 # --- parsing the map ------------------------------------------------------------------------
@@ -197,27 +289,295 @@ def rows(sections, title):
     return section.rows if section else []
 
 
+def listed_rows(sections, title):
+    """The rows of a list, without the row of column names and without a row holding `TODO`,
+    which check_lists reports."""
+    return [(cells, line) for cells, line in rows(sections, title)
+            if cells and not any(is_todo(cell) for cell in cells)]
+
+
 def identifiers(value):
-    """The identifiers a field lists, from `first · second (separated — why)` or `none`."""
-    if not value or value.strip() in ("none", "TODO"):
+    """The identifiers a field lists, from `first · second (separated — why)`; `none` lists none,
+    and an item holding `TODO` is no identifier, which check_fields reports."""
+    if not value or is_none(value):
         return []
     found = []
     for item in value.replace("\n", " ").split(" · "):
+        if holds_todo(item):
+            continue
         match = re.match(r"^(%s)\b" % IDENTIFIER, item.strip())
         if match:
             found.append(match.group(1))
     return found
 
 
-# --- checks ---------------------------------------------------------------------------------
+def flow_invariant(value):
+    """(invariant, test path) a flow's *Invariant* names, each None where it names none."""
+    flat = " ".join((value or "").split())
+    test = re.search(r"(?:^|\s)test:\s*(\S.*)$", flat)
+    name = flat[:test.start()] if test else flat
+    name = re.sub(r"\s*—\s*$", "", name).strip()
+    path = test.group(1).strip() if test else None
+    return (name if name and not holds_todo(name) else None,
+            path if path and not holds_todo(path) else None)
+
+
+# --- the report and the record of a run -----------------------------------------------------
+
+
+def describe(line, message):
+    return "line %d: %s" % (line, message) if line else message
+
+
+class Report:
+    """What a person reads, and the record of the run the gate reads (WAY-74).
+
+    A check that runs names the invariants it cites with ran(); an error or a failure it finds
+    names the check and the invariants the finding makes false. A check with no finding for an
+    invariant it cites records `pass`; a check that cannot decide an invariant for a reason on the
+    invariants template's list names it with unchecked() and records `unchecked` beside that
+    reason and a description of the case, unless it found a failure of that invariant as well. An
+    error that names no invariant is a failure recorded for no entry, and one that names no check
+    is a failure of the run itself. The record holds the checks of the options the run was given,
+    or of the map alone when it was given none; the report for a person holds every check.
+
+    error(line, message), warning(line, message), cannot_check(what, why) and notes keep the form
+    the invariants guard, which imports this class, calls them in.
+    """
+
+    def __init__(self, path, options=(), program=PROGRAM, selected_by=None):
+        self.path = path
+        self.options = set(options)
+        self.program = program
+        self.selected_by = SELECTED_BY if selected_by is None else selected_by
+        self.errors = []
+        self.warnings = []
+        self.not_checked = []   # (what, why), printed for a person as `unchecked:`
+        self.notes = []
+        self.order = []         # (check, invariant) in the order a check first named it
+        self.verdicts = {}      # (check, invariant) -> descriptions of its failures
+        self.skipped = {}       # (check, invariant) -> (the reason it is unchecked, description)
+        self.unowned = []       # (check or None, description) of errors that belong to no invariant
+
+    def _name(self, check, invariant):
+        if (check, invariant) not in self.verdicts and (check, invariant) not in self.skipped:
+            self.order.append((check, invariant))
+
+    def ran(self, check, *invariants):
+        for invariant in invariants:
+            self._name(check, invariant)
+            self.verdicts.setdefault((check, invariant), [])
+
+    def unchecked(self, check, reason, description, *invariants):
+        for invariant in invariants:
+            self._name(check, invariant)
+            self.skipped.setdefault((check, invariant), (reason, description))
+
+    def fail(self, line, message, check, invariants):
+        """Records a failure of each invariant, without a line in the report for a person."""
+        for invariant in invariants:
+            self._name(check, invariant)
+            self.verdicts.setdefault((check, invariant), []).append(describe(line, message))
+
+    def error(self, line, message, check=None, invariants=()):
+        self.errors.append((line, message))
+        if invariants:
+            self.fail(line, message, check, invariants)
+        else:
+            self.unowned.append((check, describe(line, message)))
+
+    def warning(self, line, message):
+        self.warnings.append((line, message))
+
+    def cannot_check(self, what, why):
+        self.not_checked.append((what, why))
+
+    def print(self, stream):
+        for level, items in (("error", self.errors), ("warning", self.warnings)):
+            for line, message in sorted(items, key=lambda item: item[0] or 0):
+                stream.write("%s:%s: %s: %s\n" % (self.path, line or 0, level, message))
+        for what, why in self.not_checked:
+            stream.write("unchecked: %s — %s\n" % (what, why))
+        for note in self.notes:
+            stream.write("note: %s\n" % note)
+        stream.write("%d error(s), %d warning(s), %d unchecked\n"
+                     % (len(self.errors), len(self.warnings), len(self.not_checked)))
+
+    def recorded(self, check):
+        if check is None:
+            return True
+        if self.options:
+            return self.selected_by.get(check) in self.options
+        return check not in self.selected_by
+
+    def record(self):
+        lines = []
+        for check, invariant in self.order:
+            if not self.recorded(check):
+                continue
+            name = "%s::%s" % (self.program, check)
+            failures = self.verdicts.get((check, invariant), [])
+            for description in failures:
+                lines.append({"check": name, "verdict": "fail", "invariant": invariant,
+                              "description": description})
+            if failures:
+                continue
+            if (check, invariant) in self.skipped:
+                reason, description = self.skipped[(check, invariant)]
+                lines.append({"check": name, "verdict": "unchecked", "invariant": invariant,
+                              "reason": reason, "description": description})
+            else:
+                lines.append({"check": name, "verdict": "pass", "invariant": invariant})
+        for check, description in self.unowned:
+            if self.recorded(check):
+                lines.append({"check": "%s::%s" % (self.program, check) if check else self.program,
+                              "verdict": "fail", "invariant": None, "description": description})
+        return lines
+
+
+def start_record(path):
+    directory = os.path.dirname(os.path.abspath(path))
+    os.makedirs(directory, exist_ok=True)
+    open(path, "w", encoding="utf-8").close()
+
+
+def write_record(path, report):
+    with open(path, "w", encoding="utf-8", newline="\n") as handle:
+        for line in report.record():
+            handle.write(json.dumps(line, ensure_ascii=False) + "\n")
+
+
+# --- checks of the map's shape --------------------------------------------------------------
+
+
+def check_sections(text, report):
+    """Every `## ` section of the map is an entry or one of the lists the template names for the
+    map (WAY-40)."""
+    # invariant: map-section-kinds/1
+    check, kinds = "check_sections", "map-section-kinds/1"
+    report.ran(check, kinds)
+    for line, lines in split_sections(text):
+        if re.match(r"^## (.+?) — (.+)$", lines[0]):
+            continue
+        title = lines[0][3:].strip()
+        if title not in MAP_LISTS:
+            report.error(line, "section `## %s` is neither an entry nor one of the lists the "
+                               "template names for the map (%s)"
+                         % (title, ", ".join(MAP_LISTS)), check, (kinds,))
+
+
+def check_kinds(entries, rules, report):
+    # invariant: map-entry-kinds/1
+    # invariant: part-criticality-field/1
+    check, kinds, criticality = "check_kinds", "map-entry-kinds/1", "part-criticality-field/1"
+    report.ran(check, kinds, criticality)
+    for entry in entries:
+        carried = {rules.marks[name] for name in entry.fields if name in rules.marks}
+        present = [kind for kind in rules.kinds if kind in carried]
+        written = [name for name in entry.fields if "criticality" in name.lower()]
+        if entry.kind is None:
+            report.error(entry.line, "`%s` is neither a part, a critical flow nor a surface: "
+                                     "no field of the template names its kind" % entry.identifier,
+                         check, (kinds,))
+        elif len(present) > 1:
+            report.error(entry.line, "`%s` carries the fields of a %s: an entry is of one kind, "
+                                     "and a part's criticality is computed, never written"
+                         % (entry.identifier, " and of a ".join(present)), check,
+                         (kinds, criticality) if "part" in present and written else (kinds,))
+        elif entry.kind == "part" and written:
+            report.error(entry.fields[written[0]][1], "%s: a part carries *%s*; its criticality is "
+                                                      "computed, never written"
+                         % (entry.identifier, written[0]), check, (criticality,))
+
+
+def check_identifiers(entries, sections, report):
+    # invariant: map-identifier-form/1
+    # invariant: map-entry-version/1
+    check, form, version = "check_identifiers", "map-identifier-form/1", "map-entry-version/1"
+    report.ran(check, form, version)
+    withdrawn = {cells[0]: line for cells, line in listed_rows(sections, "Withdrawn identifiers")}
+    seen = {}
+    for entry in entries:
+        if not re.match(r"^%s$" % IDENTIFIER, entry.identifier):
+            report.error(entry.line, "`%s` is not an identifier of words in lower case joined by "
+                                     "hyphens" % entry.identifier, check, (form,))
+        if re.search(r"/\d+$", entry.identifier):
+            report.error(entry.line, "`%s` carries a version; an entry of the map is corrected in "
+                                     "place" % entry.identifier, check, (version,))
+        for name, (_, line) in entry.fields.items():
+            if name.lower() == "version":
+                report.error(line, "%s: *%s* is written; an entry of the map carries no version"
+                             % (entry.identifier, name), check, (version,))
+        if entry.identifier in seen:
+            report.error(entry.line, "identifier `%s` is used twice, here and at line %d"
+                         % (entry.identifier, seen[entry.identifier].line), check)
+        else:
+            seen[entry.identifier] = entry
+        if entry.identifier in withdrawn:
+            report.error(entry.line, "`%s` is withdrawn: a withdrawn identifier is never reused"
+                         % entry.identifier, check)
+
+
+def check_fields(entries, rules, report):
+    """Every field of an entry's kind is present, and holds `none` or `TODO` only where the form
+    of its kind gives it that word; a `TODO` the form gives is a warning (WAY-71)."""
+    # invariant: map-entry-field-presence/1
+    # invariant: map-entry-field-words/1
+    check, presence, words = "check_fields", "map-entry-field-presence/1", "map-entry-field-words/1"
+    report.ran(check, presence, words)
+    for entry in entries:
+        if entry.binding is None:
+            report.error(entry.line, "%s: the binding sentence is missing" % entry.identifier,
+                         check)
+        if entry.kind is None:
+            continue
+        for name in rules.kinds[entry.kind]:
+            if name not in entry.fields or not entry.fields[name][0]:
+                report.error(entry.line, "%s: field *%s* is missing" % (entry.identifier, name),
+                             check, (presence,))
+        given = rules.words.get(entry.kind, {})
+        for name, (value, line) in entry.fields.items():
+            if is_none(value) and "none" not in given.get(name, []):
+                report.error(line, "%s: *%s* is `none`, which its form does not give it"
+                             % (entry.identifier, name), check, (words,))
+            elif holds_todo(value):
+                if "TODO" in given.get(name, []):
+                    report.warning(line, "%s: *%s* holds `TODO`" % (entry.identifier, name))
+                else:
+                    report.error(line, "%s: *%s* holds `TODO`, which its form does not give it"
+                                 % (entry.identifier, name), check, (words,))
+
+
+def check_references(entries, sections, report):
+    # invariant: flow-part-names/1
+    check, flow_parts = "check_references", "flow-part-names/1"
+    report.ran(check, flow_parts)
+    withdrawn = {cells[0] for cells, _ in listed_rows(sections, "Withdrawn identifiers")}
+    parts = {entry.identifier for entry in entries if entry.kind == "part"}
+    for entry in entries:
+        for name in ("Depends on", "Parts"):
+            if name not in entry.fields:
+                continue
+            invariants = (flow_parts,) if name == "Parts" and entry.kind == "critical flow" else ()
+            value, line = entry.fields[name]
+            for identifier in identifiers(value):
+                if identifier in parts:
+                    continue
+                if identifier in withdrawn:
+                    report.error(line, "%s: *%s* names `%s`, which is withdrawn"
+                                 % (entry.identifier, name, identifier), check, invariants)
+                else:
+                    report.error(line, "%s: *%s* names `%s`, which is not in the map as a part"
+                                 % (entry.identifier, name, identifier), check, invariants)
+
+
+# --- criticality ----------------------------------------------------------------------------
 
 
 def scale(sections):
     """The degrees of the criticality scale, lowest first."""
-    degrees = []
-    for cells, _ in rows(sections, "Criticality scale"):
-        degrees.append(cells[0].split(" — ")[0].strip())
-    return degrees
+    return [cells[0].split(" — ")[0].strip() for cells, _ in listed_rows(sections,
+                                                                         "Criticality scale")]
 
 
 def failure_modes(value):
@@ -235,19 +595,25 @@ def failure_modes(value):
             modes.append(text)
     for mode in modes:
         mode = " ".join(mode.split())
-        if mode and mode != "none":
+        if mode and not is_none(mode):
             yield mode, [piece.strip() for piece in mode.split(" — ")]
 
 
 def is_detection(piece):
-    return piece == "not detected" or piece.startswith("detected by ")
+    """Whether a piece reads `not detected` or names a detecting invariant; `detected by TODO`
+    names none."""
+    return piece == "not detected" or (piece.startswith("detected by ") and
+                                       bool(piece[len("detected by "):].strip()) and
+                                       not holds_todo(piece))
 
 
 def dependencies(value):
     """Yield (identifier, separated) for every dependency a part records."""
-    if not value or value.strip() == "none":
+    if not value or is_none(value):
         return
     for item in value.replace("\n", " ").split(" · "):
+        if holds_todo(item):
+            continue
         match = re.match(r"^(%s)\b(.*)$" % IDENTIFIER, item.strip())
         if match:
             yield match.group(1), "separated" in match.group(2)
@@ -292,6 +658,11 @@ def criticality(entries, sections):
 
 
 def check_criticality(entries, sections, rules, report):
+    # invariant: failure-mode-severity/1
+    # invariant: failure-mode-detection/1
+    check, severity, detection = ("check_criticality", "failure-mode-severity/1",
+                                  "failure-mode-detection/1")
+    report.ran(check, severity, detection)
     degrees = scale(sections)
     computed = criticality(entries, sections)
     for entry in entries:
@@ -299,20 +670,24 @@ def check_criticality(entries, sections, rules, report):
             value, line = entry.fields.get("Criticality", ["", entry.line])
             if value and value not in degrees:
                 report.error(line, "%s: `%s` is not on the criticality scale"
-                             % (entry.identifier, value))
+                             % (entry.identifier, value), check)
         if entry.kind != "part":
             continue
         value, line = entry.fields.get("Failure modes", ["", entry.line])
         for mode, pieces in failure_modes(value):
-            if len(pieces) < 3 or (len(pieces) == 3 and is_detection(pieces[-1])):
+            no_severity = len(pieces) < 3 or (len(pieces) == 3 and is_detection(pieces[-1]))
+            if no_severity:
                 report.error(line, "%s: `%s` is not `<what fails> — <damage> — <severity> — "
-                                   "<detection>`" % (entry.identifier, mode))
-            elif not is_detection(pieces[-1]):
+                                   "<detection>`" % (entry.identifier, mode), check,
+                             (severity,) if is_detection(pieces[-1]) else (severity, detection))
+                continue
+            if not is_detection(pieces[-1]):
                 report.error(line, "%s: `%s` names neither a detecting invariant nor "
-                                   "`not detected`" % (entry.identifier, mode))
-            elif pieces[2] not in degrees:
+                                   "`not detected`" % (entry.identifier, mode), check, (detection,))
+            if pieces[2] not in degrees:
+                # a word off the scale, `TODO` included, names no severity of this map
                 report.error(line, "%s: `%s` is not on the criticality scale"
-                             % (entry.identifier, pieces[2]))
+                             % (entry.identifier, pieces[2]), check, (severity,))
 
     by_identifier = entries_by_identifier(entries)
     for entry in entries:
@@ -335,6 +710,47 @@ def entries_by_identifier(entries):
     return {entry.identifier: entry for entry in entries}
 
 
+def named_invariants(entries):
+    """Yield (invariant, line, entry) for every invariant the map names: a flow's *Invariant* and
+    the detecting invariant of a failure mode."""
+    for entry in entries:
+        if entry.kind == "critical flow":
+            value, line = entry.fields.get("Invariant", ["", entry.line])
+            name = flow_invariant(value)[0]
+            if name:
+                yield name, line, entry
+        elif entry.kind == "part":
+            value, line = entry.fields.get("Failure modes", ["", entry.line])
+            for _, pieces in failure_modes(value):
+                if pieces[-1].startswith("detected by "):
+                    name = pieces[-1][len("detected by "):].strip()
+                    if name and not holds_todo(name):
+                        yield name, line, entry
+
+
+def check_invariant_names(entries, map_path, report):
+    """Every invariant the map names is an entry of the invariants file beside it (WAY-64)."""
+    # invariant: map-invariant-names/1
+    check, names = "check_invariant_names", "map-invariant-names/1"
+    path = os.path.join(os.path.dirname(os.path.abspath(map_path)), "invariants.md")
+    if not os.path.isfile(path):
+        report.notes.append("there is no invariants.md beside the map: the invariants the map "
+                            "names are not checked")
+        return
+    text = read_file(path, report, "the invariants file beside the map")
+    if text is None:
+        return
+    held = set(re.findall(r"^## (%s)/\d+[ \t]*$" % IDENTIFIER, text, re.M))
+    report.ran(check, names)
+    for name, line, entry in named_invariants(entries):
+        if name not in held:
+            report.error(line, "%s: invariant `%s` is not an entry of foundations/invariants.md"
+                         % (entry.identifier, name), check, (names,))
+
+
+# --- checks against the repository ----------------------------------------------------------
+
+
 def patterns(entry, name="Files"):
     """Yield the path patterns a field lists, one per line, without the mark of a generated file."""
     for line in (entry.fields.get(name, [""])[0] or "").split("\n"):
@@ -342,16 +758,31 @@ def patterns(entry, name="Files"):
         if pattern.startswith("- "):
             pattern = pattern[2:].strip()
         pattern = re.sub(r"\s*\(generated\)\s*$", "", pattern).strip()
-        if pattern and pattern != "none":
+        if pattern and not is_none(pattern) and not is_todo(pattern):
             yield pattern
 
 
-def matched_by_git(root, wanted, report):
-    """Ask git which files each pattern matches: {attribute: [paths]}, or None when git cannot."""
-    code, listing = git(["ls-files", "-z"], root)
+def repository_root(map_path, report):
+    """The root of the map's repository, or None once the report holds the failure of the run."""
+    code, top = git(["rev-parse", "--show-toplevel"], os.path.dirname(os.path.abspath(map_path)))
     if code != 0:
+        report.error(None, "the map does not lie in a git repository, so no check that asks git "
+                           "which files it tracks can run")
         return None
-    tracked = [path for path in listing.split("\0") if path]
+    return top.strip()
+
+
+def tracked_files(top, report):
+    code, listing = git(["ls-files", "-z"], top)
+    if code != 0:
+        report.error(None, "git cannot list the files it tracks in %s" % top)
+        return None
+    return [path for path in listing.split("\0") if path]
+
+
+def matched_by_git(root, wanted, paths):
+    """Ask git which of the paths each pattern matches: {attribute: [paths]}, or None when git
+    cannot."""
     handle, attributes_file = tempfile.mkstemp(prefix="part-map-", suffix=".attributes", text=True)
     try:
         with os.fdopen(handle, "w", encoding="utf-8", newline="\n") as attributes:
@@ -359,7 +790,7 @@ def matched_by_git(root, wanted, report):
                 attributes.write("%s %s\n" % (pattern, attribute))
         code, answer = git(["-c", "core.attributesFile=%s" % attributes_file.replace(os.sep, "/"),
                             "check-attr", "--all", "-z", "--stdin"], root,
-                           stdin=chr(0).join(tracked) + chr(0))
+                           stdin=chr(0).join(paths) + chr(0))
     finally:
         os.unlink(attributes_file)
     if code != 0:
@@ -371,71 +802,291 @@ def matched_by_git(root, wanted, report):
         path, attribute, value = pieces[index], pieces[index + 1], pieces[index + 2]
         if attribute in found and value == "set":
             found[attribute].append(path)
-    return found, tracked
+    return found
+
+
+def check_map_file(map_path, top, tracked, report):
+    """The repository holds one part map, at foundations/part_map.md (WAY-40). Another map is
+    known by its name: a tracked file named part_map.md anywhere else."""
+    # invariant: part-map-file/1
+    check, one_file = "check_map_file", "part-map-file/1"
+    report.ran(check, one_file)
+    expected = os.path.join(top, *MAP_PATH.split("/"))
+    given = os.path.relpath(os.path.abspath(map_path), top).replace(os.sep, "/")
+    if not os.path.isfile(expected) or not os.path.samefile(map_path, expected):
+        report.error(None, "the part map stands in %s, not in %s" % (MAP_PATH, given),
+                     check, (one_file,))
+    for path in tracked:
+        if path.split("/")[-1] == os.path.basename(MAP_PATH) and path not in (MAP_PATH, given):
+            report.error(None, "`%s` is a second part map; the repository holds one, %s"
+                         % (path, MAP_PATH), check, (one_file,))
+
+
+def check_files(entries, sections, report, top, tracked):
+    """Returns {tracked path: [parts whose patterns claim it]}, or None where git cannot match."""
+    # invariant: file-part-assignment/1
+    # invariant: path-pattern-reach/1
+    # invariant: left-out-file-assignment/1
+    # invariant: trust-boundary-pattern/1
+    check = "check_files"
+    assignment, reach, left_out_claim, boundary = (
+        "file-part-assignment/1", "path-pattern-reach/1", "left-out-file-assignment/1",
+        "trust-boundary-pattern/1")
+    wanted, owner = {}, {}
+    for entry in entries:
+        if entry.kind != "part":
+            continue
+        for name in ("Files", "Trust boundary"):
+            for pattern in patterns(entry, name):
+                attribute = "partmap%d" % len(wanted)
+                wanted[attribute] = pattern
+                owner[attribute] = (entry, name, pattern)
+
+    left_out = {cells[0]: line
+                for cells, line in listed_rows(sections, "Files left out on purpose")}
+    known = set(tracked)
+    paths = tracked + [path for path in left_out if path not in known]
+    found = matched_by_git(top, wanted, paths)
+    if found is None:
+        report.error(None, "git cannot match the path patterns of the map to files")
+        return None
+    report.ran(check, assignment, reach, left_out_claim, boundary)
+
+    claims, left_out_claims = {}, {}
+    for attribute, matched in found.items():
+        entry, name, pattern = owner[attribute]
+        if not [path for path in matched if path in known]:
+            line = entry.fields.get(name, ["", entry.line])[1]
+            if name == "Files":
+                report.error(line, "pattern `%s` of `%s` matches no file git tracks"
+                             % (pattern, entry.identifier), check, (reach,))
+            else:
+                report.error(line, "trust boundary `%s` of `%s` matches no file git tracks"
+                             % (pattern, entry.identifier), check, (reach, boundary))
+        if name != "Files":
+            continue
+        for path in matched:
+            (claims if path in known else left_out_claims).setdefault(path, []).append(entry)
+
+    for path, line in left_out.items():
+        for entry in claims.get(path, []) + left_out_claims.get(path, []):
+            report.error(line, "`%s` is left out on purpose and claimed by `%s`"
+                         % (path, entry.identifier), check, (left_out_claim,))
+    for path in tracked:
+        owners = claims.get(path, [])
+        if path in left_out:
+            continue
+        if not owners:
+            report.error(None, "no part claims `%s`: give it to a part or put it on the list of "
+                               "files left out on purpose" % path, check, (assignment,))
+        elif len(owners) > 1:
+            report.error(owners[1].line, "`%s` is claimed by `%s` and `%s`"
+                         % (path, owners[0].identifier, owners[1].identifier), check,
+                         (assignment,))
+    return claims
+
+
+def check_flows(entries, report, top, claims):
+    # invariant: flow-invariant-link/1
+    # invariant: flow-coverage-parts/1
+    check, link, coverage_parts = "check_flows", "flow-invariant-link/1", "flow-coverage-parts/1"
+    if top is None:
+        return
+    report.ran(check, link)
+    if claims is not None:
+        report.ran(check, coverage_parts)
+    for entry in entries:
+        if entry.kind != "critical flow":
+            continue
+        value, line = entry.fields.get("Invariant", ["", entry.line])
+        invariant, relative = flow_invariant(value)
+        if invariant is None:
+            report.error(line, "%s: *Invariant* names no invariant" % entry.identifier,
+                         check, (link,))
+        if relative is None:
+            report.error(line, "%s: *Invariant* names no test of the flow" % entry.identifier,
+                         check, (link,))
+        else:
+            full = os.path.join(top, relative.replace("/", os.sep))
+            if not os.path.isfile(full):
+                report.error(line, "%s: test `%s` of `%s` does not exist"
+                             % (entry.identifier, relative, entry.identifier), check, (link,))
+            else:
+                with open(full, encoding="utf-8", errors="replace") as handle:
+                    if entry.identifier not in handle.read():
+                        report.error(line, "%s: test `%s` does not name `%s`"
+                                     % (entry.identifier, relative, entry.identifier),
+                                     check, (link,))
+
+        if claims is None:
+            continue
+        listed = set(identifiers(entry.fields.get("Parts", [""])[0]))
+        value, line = entry.fields.get("Coverage", ["", entry.line])
+        value = bare(value)
+        if not value or value == "none":
+            report.cannot_check("the list of parts of `%s`" % entry.identifier,
+                                "its test leaves no coverage file")
+            report.unchecked(check, NOT_PRODUCED_REASON,
+                             "the test of `%s` leaves no coverage file" % entry.identifier,
+                             coverage_parts)
+            continue
+        full = os.path.join(top, value.replace("/", os.sep))
+        if not os.path.isfile(full):
+            report.error(line, "%s: coverage file `%s` does not exist" % (entry.identifier, value),
+                         check)
+            report.unchecked(check, NOT_PRODUCED_REASON,
+                             "coverage file `%s` of `%s` does not exist"
+                             % (value, entry.identifier), coverage_parts)
+            continue
+        with open(full, encoding="utf-8", errors="replace") as handle:
+            covered = [row[3:].strip() for row in handle if row.startswith("SF:")]
+        for path in covered:
+            if os.path.isabs(path):
+                path = os.path.relpath(path, top)
+            path = path.replace(os.sep, "/")
+            for owner in claims.get(path, []):
+                if owner.identifier not in listed:
+                    report.error(line, "%s: coverage of `%s` runs through `%s`, which is not in "
+                                       "its list of parts"
+                                 % (entry.identifier, entry.identifier, owner.identifier),
+                                 check, (coverage_parts,))
+                    listed.add(owner.identifier)
+
+
+def check_flow_tests(entries, report):
+    """Every critical flow of the-way's own map names a test under gate/ (WAY-55)."""
+    # invariant: flow-test-location/1
+    check, location = "check_flow_tests", "flow-test-location/1"
+    report.ran(check, location)
+    for entry in entries:
+        if entry.kind != "critical flow":
+            continue
+        value, line = entry.fields.get("Invariant", ["", entry.line])
+        relative = flow_invariant(value)[1]
+        if relative is None or not relative.startswith(GATE_DIRECTORY):
+            report.error(line, "%s: the test of the flow lies under `%s`, not at `%s`"
+                         % (entry.identifier, GATE_DIRECTORY, relative or "no path"),
+                         check, (location,))
 
 
 def promise_levels(sections):
-    return [cells[0] for cells, _ in rows(sections, "Change paths") if cells]
+    return [cells[0] for cells, _ in listed_rows(sections, "Change paths")]
 
 
-def check_surfaces(entries, sections, report, root):
+def check_surfaces(entries, sections, rules, text, report, top):
+    # invariant: surface-declaration/1
+    # invariant: map-withdrawal-date/1
+    # invariant: surface-change-path/1
+    check = "check_surfaces"
+    declaration, withdrawal, change_path = ("surface-declaration/1", "map-withdrawal-date/1",
+                                            "surface-change-path/1")
+    report.ran(check, withdrawal, change_path)
+    if top is not None:
+        report.ran(check, declaration)
     levels = promise_levels(sections)
-    for entry in entries:
-        if entry.kind != "surface":
-            continue
+    surfaces = [entry for entry in entries if entry.kind == "surface"]
+    dated = {}   # line -> what the date stands in
+    for number, line in enumerate(text.split("\n"), start=1):
+        if DATE.search(line) and re.search(r"withdraw", line, re.I):
+            dated.setdefault(number, "a line that speaks of withdrawal")
+    for cells, line in listed_rows(sections, "Withdrawn identifiers"):
+        if any(DATE.search(cell) for cell in cells):
+            dated.setdefault(line, "the list of withdrawn identifiers")
+
+    columns = rules.lists.get("Change paths", [])
+    for entry in surfaces:
         value, line = entry.fields.get("Declared at", ["", entry.line])
+        if DATE.search(value):
+            dated[line] = "`%s`" % entry.identifier
         pieces = [piece.strip() for piece in value.split(" · ")]
         for level in levels:
             if any(re.search(r"\b%s\b" % re.escape(level), piece) for piece in pieces):
                 report.error(line, "%s: the promise level `%s` belongs at the declaration, not "
-                                   "in the map" % (entry.identifier, level))
-        if re.search(r"\b\d{4}-\d{2}-\d{2}\b", value):
-            report.error(line, "%s: a withdrawal date belongs at the declaration, not in the map"
-                         % entry.identifier)
-
-        test = re.search(r"test:\s*(\S.*)$", value)
+                                   "in the map" % (entry.identifier, level), check)
+        for name, (_, at) in entry.fields.items():
+            if name != "Declared at" and ("change" in name.lower() or name in columns):
+                report.error(at, "%s: *%s* gives the surface a change path of its own; a change "
+                                 "path belongs to a promise level" % (entry.identifier, name),
+                             check, (change_path,))
+        if top is None:
+            continue
+        test = re.search(r"test:\s*(\S.*)$", " ".join(value.split()))
         if value.startswith("not markable"):
             if not test:
                 report.error(line, "%s: a surface that cannot be marked names the test that "
-                                   "guards it" % entry.identifier)
-            elif root and not os.path.exists(os.path.join(root, test.group(1).strip()
-                                                          .replace("/", os.sep))):
+                                   "guards it" % entry.identifier, check, (declaration,))
+            elif not os.path.isfile(os.path.join(top, test.group(1).strip().replace("/", os.sep))):
                 report.error(line, "%s: test `%s` of `%s` does not exist"
-                             % (entry.identifier, test.group(1).strip(), entry.identifier))
-        elif root and pieces and pieces[0]:
-            declared = pieces[0]
-            if not os.path.exists(os.path.join(root, declared.replace("/", os.sep))):
-                report.error(line, "%s: declaration `%s` of `%s` does not exist"
-                             % (entry.identifier, declared, entry.identifier))
+                             % (entry.identifier, test.group(1).strip(), entry.identifier),
+                             check, (declaration,))
+            continue
+        declared = pieces[0] if pieces else ""
+        full = os.path.join(top, declared.replace("/", os.sep))
+        if not declared or not os.path.isfile(full):
+            report.error(line, "%s: declaration `%s` of `%s` does not exist"
+                         % (entry.identifier, declared, entry.identifier), check, (declaration,))
+        elif len(pieces) > 1 and pieces[1]:
+            with open(full, encoding="utf-8", errors="replace") as handle:
+                if pieces[1] not in handle.read():
+                    report.error(line, "%s: `%s` does not stand in `%s`"
+                                 % (entry.identifier, pieces[1], declared), check, (declaration,))
+    for cells, line in listed_rows(sections, "Change paths"):
+        if cells[0] in {entry.identifier for entry in surfaces}:
+            report.error(line, "the change path `%s` names a surface; a change path belongs to a "
+                               "promise level, never to one surface" % cells[0],
+                         check, (change_path,))
+    for line, where in sorted(dated.items()):
+        report.error(line, "a withdrawal date belongs at the declaration, not in the map "
+                           "(written in %s)" % where, check, (withdrawal,))
+
+
+def check_promise_levels(entries, report):
+    """The levels of promise sit at the declarations, and no command of the product reports them,
+    so what the map says of them cannot be read against the code (WAY-49, WAY-50)."""
+    # invariant: surface-promise-level/1
+    # invariant: promise-level-policy/1
+    check = "check_promise_levels"
+    why = "the levels sit at the declarations, and no command of the product reports them"
     if any(entry.kind == "surface" for entry in entries):
-        report.cannot_check("the change path of every promise level in use",
-                            "the levels sit at the declarations, and no command of the product "
-                            "reports them")
+        report.cannot_check("the change path of every promise level in use", why)
+    report.unchecked(check, NOT_PRODUCED_REASON, why, "surface-promise-level/1",
+                     "promise-level-policy/1")
 
 
 def check_lists(sections, rules, report):
+    # invariant: external-exchange-row/1
+    check, exchange = "check_lists", "external-exchange-row/1"
+    report.ran(check, exchange)
     for title, columns in rules.lists.items():
-        if not columns:
-            continue
-        allowed = rules.values.get(title, [])
+        invariants = (exchange,) if title == "External context" else ()
         for cells, line in rows(sections, title):
             if cells == columns:
                 continue
+            todo = [cell for cell in cells if is_todo(cell)]
+            if todo:
+                report.error(line, "the list `%s` holds `TODO`" % title, check, invariants)
+            if not columns:
+                continue
+            allowed = rules.values.get(title, [])
             for index, column in enumerate(columns):
                 if index >= len(cells) or not cells[index]:
-                    report.error(line, "the row records no *%s*" % column)
+                    report.error(line, "the row records no *%s*" % column, check, invariants)
                     continue
                 choices = allowed[index] if index < len(allowed) else None
-                if choices and cells[index] not in choices:
+                if choices and cells[index] not in choices and not is_todo(cells[index]):
                     report.error(line, "`%s` is not one of %s"
                                  % (cells[index], ", ".join("`%s`" % choice
-                                                            for choice in choices)))
+                                                            for choice in choices)),
+                                 check, invariants)
 
 
 def check_examples(entries, examples_path, report):
     """Every example is an entry of the map copied word for word (WAY-05)."""
-    with open(examples_path, encoding="utf-8") as handle:
-        lines = handle.read().split("\n")
+    check = "check_examples"
+    text = read_file(examples_path, report, "the examples")
+    if text is None:
+        return
+    lines = text.split("\n")
     by_identifier = entries_by_identifier(entries)
     index = 0
     while index < len(lines):
@@ -452,53 +1103,96 @@ def check_examples(entries, examples_path, report):
         entry = by_identifier.get(heading.group(1).strip())
         if entry is None:
             report.error(None, "examples.md:%d: `%s` is not in the map"
-                         % (start + 1, heading.group(1).strip()))
+                         % (start + 1, heading.group(1).strip()), check)
         elif entry.text != copy:
             copy_lines, entry_lines = copy.split("\n"), entry.text.split("\n")
             offset = next((position for position, (a, b) in enumerate(zip(copy_lines, entry_lines))
                            if a != b), min(len(copy_lines), len(entry_lines)))
             report.error(entry.line + offset, "examples.md:%d differs from the map"
-                         % (start + 1 + offset))
+                         % (start + 1 + offset), check)
+
+
+def latest_scopes(text):
+    """{number: (label, scope, line)} for the latest version of each decision in a log, its
+    *Scope* read whole, wrapped lines included."""
+    latest, current = {}, None
+    lines = text.split("\n")
+    for index, line in enumerate(lines):
+        if line.startswith("#"):
+            heading = re.match(r"^### ([A-Z][A-Z0-9]*-(\d{2,}))/(\d+) — ", line)
+            current = None
+            if heading:
+                number, version = heading.group(2), int(heading.group(3))
+                if number not in latest or latest[number][0] < version:
+                    current = number
+                    latest[number] = (version, "%s/%d" % (heading.group(1), version), None, None)
+            continue
+        scope = re.match(r"^- \*\*Scope:\*\*(?: (.*))?$", line)
+        if not scope or current is None:
+            continue
+        value = scope.group(1) or ""
+        following = index + 1
+        while following < len(lines) and lines[following].startswith(" ") \
+                and lines[following].strip():
+            value += " " + lines[following].strip()
+            following += 1
+        version, label, _, _ = latest[current]
+        latest[current] = (version, label, value, index + 1)
+    return {number: (label, scope, line) for number, (_, label, scope, line) in latest.items()
+            if scope is not None}
 
 
 def check_scopes(entries, sections, report, map_path):
-    """Every part a decision's scope names exists in the map (WAY-21)."""
+    """Every name in the scope of the latest version of a decision is a part of the map (WAY-21)."""
+    # invariant: decision-scope-names/1
+    check, names = "check_scopes", "decision-scope-names/1"
     log = os.path.join(os.path.dirname(os.path.abspath(map_path)), "decisions.md")
-    if not os.path.exists(log):
+    if not os.path.isfile(log):
+        report.notes.append("there is no decisions.md beside the map: the scopes of decisions are "
+                            "not checked")
         return
-    with open(log, encoding="utf-8") as handle:
-        lines = handle.read().split("\n")
+    text = read_file(log, report, "the decision log beside the map")
+    if text is None:
+        return
+    scopes = latest_scopes(text)
+    report.ran(check, names)
     known = {entry.identifier for entry in entries if entry.kind == "part"}
-    withdrawn = {cells[0] for cells, _ in rows(sections, "Withdrawn identifiers") if cells}
-    label = None
-    for number, line in enumerate(lines, start=1):
-        heading = re.match(r"^### (\S+) — ", line)
-        if heading:
-            label = heading.group(1)
-        scope = re.match(r"^- \*\*Scope:\*\* (.*)$", line)
-        if not scope or label is None:
-            continue
-        for named in (piece.strip() for piece in scope.group(1).split(",")):
-            if not named or named in known:
+    withdrawn = {cells[0] for cells, _ in listed_rows(sections, "Withdrawn identifiers")}
+    for number in sorted(scopes, key=int):
+        label, scope, line = scopes[number]
+        for named in (bare(piece) for piece in scope.split(",")):
+            if not named or named in known or is_todo(named) or named == "none":
                 continue
             if named in withdrawn:
                 report.error(None, "decisions.md:%d: the scope of %s names `%s`, which is "
-                                   "withdrawn" % (number, label, named))
+                                   "withdrawn" % (line, label, named), check, (names,))
             else:
                 report.error(None, "decisions.md:%d: the scope of %s names `%s`, which is not in "
-                                   "the map" % (number, label, named))
+                                   "the map as a part" % (line, label, named), check, (names,))
 
 
-def check_violations(entries, sections, rules, report, map_path, base):
-    """The listed debt: a subset of the list on the base commit, with no stale position (WAY-51)."""
-    report.cannot_check("the dependencies between parts, and new or stale violations",
-                        "no command of the product reports the dependency graph")
+# --- known violations -----------------------------------------------------------------------
+
+
+def violations_path(map_path, rules):
     root_of_map = os.path.dirname(os.path.dirname(os.path.abspath(map_path)))
-    path = os.path.join(root_of_map, rules.violations.replace("/", os.sep))
+    return os.path.join(root_of_map, rules.violations.replace("/", os.sep))
+
+
+def check_violations(entries, rules, report, map_path):
+    """Checks the positions of the list of known violations and returns them (WAY-51)."""
+    # invariant: known-violation-fields/1
+    # invariant: known-violation-line-number/1
+    check, fields, line_number = ("check_violations", "known-violation-fields/1",
+                                  "known-violation-line-number/1")
+    path = violations_path(map_path, rules)
     if not os.path.exists(path):
-        return
-    with open(path, encoding="utf-8") as handle:
-        text = handle.read()
+        report.ran(check, fields, line_number)
+        return []
+    text = read_file(path, report, "the list of known violations")
+    if text is None:
+        return []
+    report.ran(check, fields, line_number)
     _, violation_sections = parse_map(text, rules)
     columns = rules.lists.get("Known violations", [])
     parts = {entry.identifier for entry in entries if entry.kind == "part"}
@@ -509,259 +1203,179 @@ def check_violations(entries, sections, rules, report, map_path, base):
             continue
         positions.append(tuple(cells))
         for index, column in enumerate(columns):
-            if index >= len(cells) or not cells[index]:
+            if index >= len(cells) or not cells[index] or is_todo(cells[index]):
                 report.error(None, "%s:%d: the known violation records no *%s*"
-                             % (rules.violations, line, column))
+                             % (rules.violations, line, column), check, (fields,))
         for index in (0, 1):
-            if index < len(cells) and cells[index] and cells[index] not in parts:
+            if index < len(cells) and cells[index] and not is_todo(cells[index]) \
+                    and cells[index] not in parts:
                 report.error(None, "%s:%d: the known violation names `%s`, which is not in the "
-                                   "map as a part" % (rules.violations, line, cells[index]))
-        if any(re.search(r":\d+\b", cell) for cell in cells):
+                                   "map as a part" % (rules.violations, line, cells[index]),
+                             check, (fields,))
+        if any(re.search(r":\d+\b|\bline \d+\b", cell) for cell in cells):
             report.error(None, "%s:%d: the known violation names a line number, which goes stale "
-                               "at the next edit" % (rules.violations, line))
+                               "at the next edit" % (rules.violations, line),
+                         check, (line_number,))
+    return positions
 
-    if not base:
+
+def check_dependencies(report):
+    """What the code holds against the map's dependencies comes from the product's dependency
+    graph, which no command of the product reports yet (WAY-51, WAY-38)."""
+    # invariant: known-violation-coverage/1
+    # invariant: known-violation-currency/1
+    check = "check_dependencies"
+    why = "no command of the product reports the dependency graph"
+    report.cannot_check("the dependencies between parts, and new or stale violations", why)
+    report.unchecked(check, NOT_PRODUCED_REASON, why, "known-violation-coverage/1",
+                     "known-violation-currency/1")
+
+
+def check_violations_growth(map_path, rules, positions, base, top, report, no_commit=None):
+    """The list of known violations is a subset of its version on the base (WAY-51). Given
+    `no_commit`, which says why there is no base, records it unchecked instead."""
+    # invariant: known-violations-growth/1
+    check, growth = "check_violations_growth", "known-violations-growth/1"
+    if no_commit:
+        report.unchecked(check, NO_COMMIT_REASON, no_commit, growth)
         return
-    directory = os.path.dirname(path)
-    code, top = git(["rev-parse", "--show-toplevel"], directory)
-    if code != 0:
+    relative = os.path.relpath(violations_path(map_path, rules), top).replace(os.sep, "/")
+    base_text, failure = file_at(base, relative, top)
+    if failure:
+        report.error(None, failure)
         return
-    relative = os.path.relpath(path, top.strip()).replace(os.sep, "/")
-    code, base_text = git(["show", "%s:%s" % (base, relative)], directory)
-    if code != 0:
-        report.notes.append("%s has no %s; every position counts as added" % (base, relative))
+    if base_text is None:
+        if positions:
+            report.notes.append("%s has no %s; every position counts as added" % (base, relative))
         base_text = ""
+    report.ran(check, growth)
     _, base_sections = parse_map(base_text, rules)
     on_base = {tuple(cells) for cells, _ in rows(base_sections, "Known violations")}
     for position in positions:
         if position not in on_base:
             report.error(None, "%s: `%s` is not on the list of %s: a position is added only by a "
                                "change of the foundation a human accepts"
-                         % (rules.violations, " · ".join(position), base))
+                         % (rules.violations, " · ".join(position), base), check, (growth,))
 
 
-def check_flows(entries, sections, report, root, claims):
-    if root is None and any(entry.kind == "critical flow" for entry in entries):
-        report.cannot_check("the tests of the critical flows",
-                            "the map does not lie in a git repository")
-    for entry in entries:
-        if entry.kind != "critical flow":
-            continue
-        value, line = entry.fields.get("Invariant", ["", entry.line])
-        match = re.search(r"test:\s*(\S.*)$", value)
-        if root is not None and not match:
-            report.error(line, "%s: *Invariant* names no test of the flow" % entry.identifier)
-        elif root is not None:
-            relative = match.group(1).strip()
-            full = os.path.join(root, relative.replace("/", os.sep))
-            if not os.path.exists(full):
-                report.error(line, "%s: test `%s` of `%s` does not exist"
-                             % (entry.identifier, relative, entry.identifier))
-            else:
-                with open(full, encoding="utf-8", errors="replace") as handle:
-                    if entry.identifier not in handle.read():
-                        report.error(line, "%s: test `%s` does not name `%s`"
-                                     % (entry.identifier, relative, entry.identifier))
-
-        listed = set(identifiers(entry.fields.get("Parts", [""])[0]))
-        value, line = entry.fields.get("Coverage", ["", entry.line])
-        if not value or value == "none":
-            report.cannot_check("the list of parts of `%s`" % entry.identifier,
-                                "its test leaves no coverage file")
-            continue
-        full = os.path.join(root, value.replace("/", os.sep))
-        if not os.path.exists(full):
-            report.error(line, "%s: coverage file `%s` does not exist" % (entry.identifier, value))
-            continue
-        if claims is None:
-            report.cannot_check("the list of parts of `%s`" % entry.identifier,
-                                "git could not map the covered files to parts")
-            continue
-        with open(full, encoding="utf-8", errors="replace") as handle:
-            covered = [row[3:].strip() for row in handle if row.startswith("SF:")]
-        for path in covered:
-            if os.path.isabs(path):
-                path = os.path.relpath(path, root)
-            path = path.replace(os.sep, "/")
-            for owner in claims.get(path, []):
-                if owner.identifier not in listed:
-                    report.error(line, "%s: coverage of `%s` runs through `%s`, which is not in "
-                                       "its list of parts"
-                                 % (entry.identifier, entry.identifier, owner.identifier))
-                    listed.add(owner.identifier)
+# --- git ------------------------------------------------------------------------------------
 
 
-def check_files(entries, sections, report, map_path):
-    directory = os.path.dirname(os.path.abspath(map_path))
-    code, top = git(["rev-parse", "--show-toplevel"], directory)
-    if code != 0:
-        report.cannot_check("the assignment of files to parts",
-                            "the map does not lie in a git repository")
+def git(arguments, cwd, stdin=None):
+    """Exit code and output of a call to git; the invariants guard calls it in this form."""
+    return call_git(arguments, cwd, stdin)[:2]
+
+
+def call_git(arguments, cwd, stdin=None):
+    """Exit code, output and error output of a call to git."""
+    try:
+        result = subprocess.run(["git"] + arguments, cwd=cwd, capture_output=True,
+                                input=stdin.encode("utf-8") if stdin is not None else None)
+    except OSError as problem:
+        return 127, "", str(problem)
+    return (result.returncode, result.stdout.decode("utf-8", "replace").replace("\r\n", "\n"),
+            result.stderr.decode("utf-8", "replace").strip())
+
+
+def file_at(commit, path, top):
+    """(text, None) for the file at the path, relative to the root of the repository, on the
+    commit; (None, None) where the commit holds no such path; (None, git's message) where git
+    fails for any other reason, so that no check reads a failure as an absent file."""
+    code, text, message = call_git(["show", "%s:%s" % (commit, path)], top)
+    if code == 0:
+        return text, None
+    listed, listing, listing_message = call_git(["ls-tree", "--full-tree", "-z", "--name-only",
+                                                 commit, "--", path], top)
+    if listed == 0 and not listing:
         return None, None
-    root = top.strip()
-
-    wanted, owner = {}, {}
-    for entry in entries:
-        if entry.kind != "part":
-            continue
-        for name in ("Files", "Trust boundary"):
-            for pattern in patterns(entry, name):
-                attribute = "partmap%d" % len(wanted)
-                wanted[attribute] = pattern
-                owner[attribute] = (entry, name, pattern)
-
-    answer = matched_by_git(root, wanted, report)
-    if answer is None:
-        report.cannot_check("the assignment of files to parts", "git could not match the patterns")
-        return root, None
-    found, tracked = answer
-
-    claims = {}
-    for attribute, paths in found.items():
-        entry, name, pattern = owner[attribute]
-        if not paths:
-            line = entry.fields.get(name, ["", entry.line])[1]
-            what = "pattern" if name == "Files" else "trust boundary"
-            report.error(line, "%s `%s` of `%s` matches no file git tracks"
-                         % (what, pattern, entry.identifier))
-        if name != "Files":
-            continue
-        for path in paths:
-            claims.setdefault(path, []).append(entry)
-
-    left_out = {cells[0]: line for cells, line in rows(sections, "Files left out on purpose")
-                if cells}
-    for path in tracked:
-        owners = claims.get(path, [])
-        if path in left_out:
-            for entry in owners:
-                report.error(left_out[path], "`%s` is left out on purpose and claimed by `%s`"
-                             % (path, entry.identifier))
-            continue
-        if not owners:
-            report.error(None, "no part claims `%s`: give it to a part or put it on the list of "
-                               "files left out on purpose" % path)
-        elif len(owners) > 1:
-            report.error(owners[1].line, "`%s` is claimed by `%s` and `%s`"
-                         % (path, owners[0].identifier, owners[1].identifier))
-    return root, claims
+    return None, "git cannot read %s at %s: %s" % (
+        path, commit, message or listing_message or "git show exited with %d" % code)
 
 
-def check_entries(entries, sections, rules, report):
-    withdrawn = {cells[0]: line for cells, line in rows(sections, "Withdrawn identifiers") if cells}
-    seen = {}
-    for entry in entries:
-        carried = {rules.marks[name] for name in entry.fields if name in rules.marks}
-        present = [kind for kind in rules.kinds if kind in carried]
-        if entry.kind is None:
-            report.error(entry.line, "`%s` is neither a part, a critical flow nor a surface: "
-                                     "no field of the template names its kind" % entry.identifier)
-        elif len(present) > 1:
-            report.error(entry.line, "`%s` carries the fields of a %s: an entry is of one kind, "
-                                     "and a part's criticality is computed, never written"
-                         % (entry.identifier, " and of a ".join(present)))
-        if not re.match(r"^%s$" % IDENTIFIER, entry.identifier):
-            report.error(entry.line, "`%s` is not an identifier of words in lower case joined by "
-                                     "hyphens" % entry.identifier)
-        if entry.identifier in seen:
-            report.error(entry.line, "identifier `%s` is used twice, here and at line %d"
-                         % (entry.identifier, seen[entry.identifier].line))
-        else:
-            seen[entry.identifier] = entry
-        if entry.identifier in withdrawn:
-            report.error(entry.line, "`%s` is withdrawn: a withdrawn identifier is never reused"
-                         % entry.identifier)
-        if entry.binding is None:
-            report.error(entry.line, "%s: the binding sentence is missing" % entry.identifier)
-        for name in rules.kinds.get(entry.kind, []):
-            if name not in entry.fields or not entry.fields[name][0]:
-                report.error(entry.line, "%s: field *%s* is missing" % (entry.identifier, name))
-
-    parts = {entry.identifier for entry in entries if entry.kind == "part"}
-    for entry in entries:
-        for name in ("Depends on", "Parts"):
-            if name not in entry.fields:
-                continue
-            value, line = entry.fields[name]
-            for identifier in identifiers(value):
-                if identifier in parts:
-                    continue
-                if identifier in withdrawn:
-                    report.error(line, "%s: *%s* names `%s`, which is withdrawn"
-                                 % (entry.identifier, name, identifier))
-                else:
-                    report.error(line, "%s: *%s* names `%s`, which is not in the map as a part"
-                                 % (entry.identifier, name, identifier))
-
-
-# --- the report -----------------------------------------------------------------------------
-
-
-class Report:
-    def __init__(self, path):
-        self.path = path
-        self.errors = []
-        self.warnings = []
-        self.unchecked = []
-        self.notes = []
-
-    def error(self, line, message):
-        self.errors.append((line, message))
-
-    def warning(self, line, message):
-        self.warnings.append((line, message))
-
-    def cannot_check(self, what, why):
-        self.unchecked.append((what, why))
-
-    def print(self, stream):
-        for level, items in (("error", self.errors), ("warning", self.warnings)):
-            for line, message in sorted(items, key=lambda item: item[0] or 0):
-                stream.write("%s:%s: %s: %s\n" % (self.path, line or 0, level, message))
-        for what, why in self.unchecked:
-            stream.write("unchecked: %s — %s\n" % (what, why))
-        for note in self.notes:
-            stream.write("note: %s\n" % note)
-        stream.write("%d error(s), %d warning(s), %d unchecked\n"
-                     % (len(self.errors), len(self.warnings), len(self.unchecked)))
+def find_commit(top, option, commit, report):
+    """Whether the commit exists; where it does not, the report says so. A failure here is no
+    rule's: it belongs to the run."""
+    code, _, _ = call_git(["rev-parse", "--verify", "--quiet", commit + "^{commit}"], top)
+    if code != 0:
+        report.error(None, "%s %s does not exist" % (option, commit))
+        return False
+    return True
 
 
 # --- entry point ----------------------------------------------------------------------------
 
 
-def git(arguments, cwd, stdin=None):
-    result = subprocess.run(["git"] + arguments, cwd=cwd, capture_output=True,
-                            input=stdin.encode("utf-8") if stdin is not None else None)
-    return result.returncode, result.stdout.decode("utf-8", "replace").replace("\r\n", "\n")
-
-
-def run(map_path, base=None, stream=None, template=TEMPLATE):
+def run(map_path, base=None, stream=None, template=TEMPLATE, record=None,
+        own=None, examples=EXAMPLES):
     stream = stream or sys.stdout
+    if record is not None:
+        try:
+            start_record(record)
+        except OSError as problem:
+            stream.write("cannot write the record: %s\n" % problem)
+            return 2
+    report = Report(map_path, ["--base"] if base else [])
+
+    def stop(message):
+        stream.write(message + "\n")
+        report.error(None, message)
+        if record is not None:
+            write_record(record, report)
+        return 2
+
     try:
         rules = read_rules(template)
-    except (OSError, TemplateError, AttributeError) as problem:
-        stream.write("cannot read the rules from %s: %s\n" % (template, problem))
-        return 2
+    except (OSError, UnicodeDecodeError, TemplateError, AttributeError, IndexError) as problem:
+        return stop("cannot read the rules from %s: %s" % (template, problem))
     try:
         with open(map_path, encoding="utf-8") as handle:
             text = handle.read()
-    except OSError as problem:
-        stream.write("cannot read the map: %s\n" % problem)
-        return 2
+    except (OSError, UnicodeDecodeError) as problem:
+        return stop("cannot read the map: %s" % problem)
+    if own is None:
+        own = os.path.exists(OWN_MAP) and os.path.samefile(map_path, OWN_MAP)
 
-    report = Report(map_path)
     entries, sections = parse_map(text, rules)
-    check_entries(entries, sections, rules, report)
+    top = repository_root(map_path, report)
+    tracked = tracked_files(top, report) if top is not None else None
+    check_sections(text, report)
+    check_kinds(entries, rules, report)
+    check_identifiers(entries, sections, report)
+    check_fields(entries, rules, report)
+    check_references(entries, sections, report)
     check_criticality(entries, sections, rules, report)
-    root, claims = check_files(entries, sections, report, map_path)
-    check_flows(entries, sections, report, root, claims)
-    check_surfaces(entries, sections, report, root)
+    check_invariant_names(entries, map_path, report)
+    claims = None
+    if tracked is not None:
+        check_map_file(map_path, top, tracked, report)
+        claims = check_files(entries, sections, report, top, tracked)
+    check_flows(entries, report, top if tracked is not None else None, claims)
+    if own:
+        check_flow_tests(entries, report)
+    check_surfaces(entries, sections, rules, text, report, top)
+    check_promise_levels(entries, report)
     check_lists(sections, rules, report)
     check_scopes(entries, sections, report, map_path)
-    check_violations(entries, sections, rules, report, map_path, base)
-    if os.path.exists(EXAMPLES) and os.path.exists(OWN_MAP) and os.path.samefile(map_path, OWN_MAP):
-        check_examples(entries, EXAMPLES, report)
+    positions = check_violations(entries, rules, report, map_path)
+    check_dependencies(report)
+
+    if base == NO_COMMIT:
+        no_base = "--base none: there is no commit the branch left the main branch from"
+        check_violations_growth(map_path, rules, positions, None, None, report, no_commit=no_base)
+        report.notes.append(no_base + "; the list of known violations is not compared with it, "
+                                      "and that check is unchecked")
+    elif base:
+        if top is not None and find_commit(top, "--base", base, report):
+            check_violations_growth(map_path, rules, positions, base, top, report)
+    else:
+        report.notes.append("no --base given: the list of known violations is not compared with "
+                            "the main branch")
+
+    if own and os.path.exists(examples):
+        check_examples(entries, examples, report)
     report.print(stream)
+    if record is not None:
+        write_record(record, report)
     return 1 if report.errors else 0
 
 
@@ -769,11 +1383,15 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description="Check a part map against its template.")
     parser.add_argument("map", nargs="?", default=os.path.join("foundations", "part_map.md"))
     parser.add_argument("--base", help="the commit the task branch left the main branch from, "
-                                         "to compare the map with")
+                                         "to compare the list of known violations with; `none` "
+                                         "where it does not exist, which records that check as "
+                                         "unchecked")
+    parser.add_argument("--record", help="the JSON Lines file, created or overwritten, that "
+                                         "receives a verdict for each invariant a check cites")
     arguments = parser.parse_args(argv)
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")
-    return run(arguments.map, arguments.base)
+    return run(arguments.map, arguments.base, record=arguments.record)
 
 
 if __name__ == "__main__":

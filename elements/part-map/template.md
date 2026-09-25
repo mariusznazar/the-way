@@ -220,30 +220,49 @@ patterns come from the part's *Files*. No overview of the repository is generate
 
 ## What the checker checks
 
-- Every entry is a part, a critical flow or a surface, and every identifier is unique.
-- Every entry carries every field of its kind's form; no field holds `TODO`, nor `none` where its
-  form does not give it that word (WAY-71).
-- Every part map identifier referred to from the foundation, a test or a generated rule file
-  exists in the map, as an entry or as a withdrawn identifier; no entry uses a withdrawn one.
-- Once the product has invariant entries, every invariant a flow or a failure mode names is an
-  entry of `foundations/invariants.md` (WAY-64).
+- Every section of the map is an entry — a part, a critical flow or a surface — or one of the five
+  lists above; the list of known violations stands in its own file (WAY-40, WAY-51).
+- The map stands in `foundations/part_map.md`, and no other file git tracks is named
+  `part_map.md` (WAY-40).
+- Every identifier is made of words in lower case joined by hyphens, is unique, and is no
+  withdrawn one; no identifier ends in a version and no entry carries a *Version* field (WAY-41,
+  WAY-43).
+- Every entry carries every field of its kind's form; `none` stands only where that form gives it
+  the word, and `TODO` in no field of an entry and in no cell of a list, on every run, since the
+  form gives `TODO` to no field (WAY-71).
+- Every part a flow lists or a part depends on, and every name in the scope of the latest version
+  of a decision, is a part of the map; a withdrawn one is reported as withdrawn (WAY-21, WAY-45).
+- Where `foundations/invariants.md` stands beside the map, every invariant a flow or a failure
+  mode names is an entry of it (WAY-64).
 - Every file git tracks matches exactly one part's patterns, or stands on the list of files left
-  out on purpose; no pattern matches nothing.
-- Every part named by a flow, and every part named in a decision's scope, exists.
-- Every flow has an invariant with a test that names it, and the gate runs every such test.
+  out on purpose; no file on that list, tracked or not, matches a part's patterns; every pattern
+  of *Files* and of *Trust boundary* matches at least one file git tracks (WAY-44, WAY-48).
+- Every flow names an invariant, and a test that exists and names the flow; in this repository's
+  own map, that test lies under `gate/` (WAY-45, WAY-55).
 - Where a flow leaves a coverage file, every part that coverage names stands in its list;
-  where it leaves none, the list is reported unchecked.
-- Every degree used stands on the criticality scale; no criticality is written at a part.
-- Every failure mode names a severity and either a detecting invariant or "not detected".
+  where it leaves none, the list is reported unchecked (WAY-47).
+- Every degree used stands on the criticality scale; no part carries a criticality field (WAY-46).
+- Every failure mode names a severity, a degree of the criticality scale, and either a detecting
+  invariant or "not detected" (WAY-46).
 - Every dependency running from a higher criticality to a lower one, with no separation
   recorded, is reported.
-- Every trust boundary pattern matches at least one file.
-- Every surface names a declaration that exists, or a test that guards it; no promise level and
-  no withdrawal date is written in the map; every level used by a declaration has a change path.
+- Every surface names a declaration — a file that exists and holds the symbol named — or reads
+  `not markable` and names a test that exists; no promise level is written in the map, and no
+  withdrawal date anywhere in it; no surface carries a change path of its own, and no row of the
+  change paths names a surface (WAY-49, WAY-50). Whether every declaration carries a level, and
+  every level used has a change path, is reported unchecked until the product reports its levels.
 - Every exchange with the external context records its direction, its trust and whether its
   consumer updates with the product.
-- The list of known violations is a subset of the list on the commit the task branch left the main
-  branch from, and holds no position the code no longer contradicts.
+- Every position on the list of known violations names a source part and a target part of the
+  map, a file and what it reaches for, and no line number; given the commit the task branch left
+  the main branch from, the list is a subset of the list there. Whether the code holds every
+  position and no other violation is reported unchecked until the product reports its dependency
+  graph (WAY-51).
+- Every example in `examples.md` matches its entry in this repository's own map word for word.
+- Given the path of a record, the checker writes the-way's own record of the run there, with a
+  verdict for each invariant its checks cite (WAY-61, WAY-74); given `none` as the commit the task
+  branch left the main branch from, it records the check that needs that commit as `unchecked`; a
+  call to git that fails is a failure of the run, never an unchecked check (WAY-61, WAY-63).
 
 ## Examples
 

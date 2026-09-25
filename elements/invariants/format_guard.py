@@ -1,18 +1,33 @@
 """Format guard of a product's invariants file.
 
 Runs the checks listed in "What the format guard checks" in template.md, which lies next to this
-script. The fields of an entry and the words each may hold, the titles and columns of the lists,
-the values the gate fills in and the words a sentence may not use are read from the template, so
-the rules of an entry live in one place (WAY-05, WAY-35). The decision log and the part map are
-read with the parsers of their own guards.
+script. The fields of an entry and the words each may hold, the fields the main branch holds `TODO`
+in, the titles and columns of the lists, the values the gate fills in and the words a sentence may
+not use are read from the template, so the rules of an entry live in one place (WAY-05, WAY-35,
+WAY-71). The decision log and the part map are read with the parsers of their own guards, and the
+record of a run is written with the part map guard's report. Each check cites the invariants it
+gives a verdict for, as `invariant: <identifier>/<version>` (WAY-65).
 
 Usage, from the root of the product's repository:
 
-    python <the-way>/elements/invariants/format_guard.py [FILE] [--base REF]
+    python <the-way>/elements/invariants/format_guard.py [FILE] [--base REF] [--merge-onto REF]
+        [--record PATH]
 
 FILE defaults to foundations/invariants.md. --base names the commit the task branch left the main
-branch from; without it, the checks against that commit are reported as unchecked. Exit code: 0
-without errors, 1 with errors, 2 when the file or the template cannot be read.
+branch from; only with it are the identifiers, versions, corrections and the list of violated
+invariants compared with that commit. --merge-onto names the commit of the main branch a merge is
+made onto; only with it is a `TODO` in a field the main branch does not hold it in reported as an
+error, and every fingerprint in *Derives from* and *Rests on* compared with the current wording in
+the decision log that merge leaves (WAY-66, WAY-71). `none`, given to either option, is the value
+the gate fills in where that commit does not exist (WAY-61): the checks that need the commit are
+then recorded as `unchecked`, a note says so, and they give no error; a commit that is not `none`
+and does not exist stays an error. --record names a JSON Lines file, created or overwritten, which
+receives the-way's own record of the run (WAY-74): a verdict for each invariant cited by a check
+the run's options select — the checks against the base with --base, the checks of a merge with
+--merge-onto, the checks of the file alone with neither — a line for each error of those checks
+that belongs to no cited invariant, and every failure of the run itself. The report for a person
+holds every check. Exit code: 0 without errors, 1 with errors, 2 when the file or the template
+cannot be read or the record cannot be written.
 """
 
 import argparse
@@ -39,8 +54,31 @@ def _load(name, path):
 
 decision_guard = _load("decision_format_guard", os.path.join(HERE, "..", "decisions", "format_guard.py"))
 map_guard = _load("part_map_format_guard", os.path.join(HERE, "..", "part-map", "format_guard.py"))
+fingerprint_module = _load("relation_model_fingerprint",
+                           os.path.join(HERE, "..", "..", "relation-model", "fingerprint.py"))
 fingerprint = decision_guard.fingerprint
 count_sentences = decision_guard.count_sentences
+# A fingerprint as the relation model gives it: its length in lower-case hex digits (WAY-39).
+FINGERPRINT = r"[0-9a-f]{%d}" % fingerprint_module.LENGTH
+# `TODO` as a word of its own anywhere in a value — whole, as an item, or inside a part such as
+# `searched: TODO; found: …` — but not inside a path or a longer word, such as `docs/TODO.md`.
+TODO_WORD = map_guard.TODO_WORD
+# A value in braces in a command or a sentence, but not a shell variable such as `${HOME}`.
+BRACED = r"(?<!\$)\{[^{}%s]*\}"
+
+# The name a record gives this program, and each of its checks as PROGRAM::<function>.
+PROGRAM = "elements/invariants/format_guard.py"
+# The checks each option selects for the record; every other check reads the file alone and is
+# recorded only by a run given neither option. A run records the checks its options select, and
+# its own failures always (WAY-61, WAY-74).
+SELECTED_BY = {"check_against_base": "--base", "check_merge_todo": "--merge-onto",
+               "check_fingerprints": "--merge-onto"}
+# The value the gate fills in for a commit that does not exist (WAY-61), and the reason a check
+# that needs that commit records for being unchecked, word for word as the template lists it.
+NO_COMMIT = map_guard.NO_COMMIT
+NO_COMMIT_REASON = map_guard.NO_COMMIT_REASON
+# Where a product's invariants stand, relative to the root of its repository (WAY-64).
+FILE_PATH = "foundations/invariants.md"
 
 IDENTIFIER = map_guard.IDENTIFIER
 DATE = r"\d{4}-\d{2}-\d{2}"
@@ -70,6 +108,7 @@ class Rules:
     violated_columns: list
     gate_values: list            # values the gate fills in, e.g. {fork-point}
     forbidden_words: list        # words no sentence holds outside quoted text
+    main_todo: list = field(default_factory=list)   # fields the main branch holds `TODO` in
 
 
 def _section(text, title):
@@ -115,6 +154,11 @@ def is_todo(value):
     return value == "TODO" or value.startswith("TODO ")
 
 
+def holds_todo(value):
+    """Whether a value holds `TODO` as a word of its own anywhere in it (WAY-71)."""
+    return bool(TODO_WORD.search(value or ""))
+
+
 def read_rules(path=TEMPLATE):
     with open(path, encoding="utf-8") as handle:
         text = handle.read()
@@ -131,6 +175,12 @@ def read_rules(path=TEMPLATE):
     if not fields:
         raise TemplateError("the entry form has no fields")
     lists = [_table_form(block) for block in blocks[1:]]
+    main = re.search(r"The main branch holds `TODO` only in (.*?)\(WAY-71\)",
+                     " ".join(entry_section.split()))
+    if not main:
+        raise TemplateError("the section \"Entry\" does not say which fields the main branch holds "
+                            "`TODO` in")
+    main_todo = re.findall(r"\*([^*]+)\*", main.group(1))
 
     violated_section = _section(text, "Violated invariants")
     violated_file = re.search(r"`foundations/([^`]+\.md)`", violated_section)
@@ -148,7 +198,7 @@ def read_rules(path=TEMPLATE):
     if not words:
         raise TemplateError("the list of checks names no words a sentence may not hold")
     return Rules(fields, lists, violated_file.group(1), violated_title, violated_columns,
-                 gate_values, re.findall(r'"([^"]+)"', words.group(1)))
+                 gate_values, re.findall(r'"([^"]+)"', words.group(1)), main_todo)
 
 
 # --- parsing the file -----------------------------------------------------------------------
@@ -171,6 +221,14 @@ class Table:
     title: str
     columns: list
     rows: list = field(default_factory=list)     # (cells, line)
+
+
+@dataclass
+class Unknown:
+    """A heading that is neither an entry's `## <identifier>/<version>` nor a list's title."""
+    line: int
+    heading: str
+    body: list
 
 
 def parse_table(title, line, lines):
@@ -206,12 +264,12 @@ def parse_file(text, rules):
     items, list_titles = [], [title for title, _ in rules.lists]
     for line, lines in map_guard.split_sections(text):
         heading = lines[0][3:].strip()
-        match = re.match(r"^(\S+)/(\d+)$", heading)
+        match = re.match(r"^(.+?)/(\d+)$", heading)
         if heading in list_titles:
             items.append(parse_table(heading, line, lines[1:]))
             continue
         if not match:
-            items.append(("unknown", line, heading))
+            items.append(Unknown(line, heading, lines[1:]))
             continue
         entry = Entry(line, match.group(1), int(match.group(2)), text="\n".join(lines).rstrip())
         body = lines[1:]
@@ -237,134 +295,8 @@ def listed(value):
     return [item.strip() for item in flat(value).split(" · ") if item.strip()]
 
 
-# --- the report -----------------------------------------------------------------------------
-
-
-Report = map_guard.Report
-
-
-# --- checks ---------------------------------------------------------------------------------
-
-
-@dataclass
-class Foundation:
-    """What the checks read beside the invariants file."""
-    root: str = None
-    parts: set = field(default_factory=set)
-    map_identifiers: set = field(default_factory=set)
-    flow_invariants: set = field(default_factory=set)
-    prefix: str = None
-    decisions: dict = field(default_factory=dict)    # number -> fingerprint of its latest binding
-
-
-def read_foundation(path, report):
-    foundation = Foundation()
-    directory = os.path.dirname(os.path.abspath(path))
-    code, top = map_guard.git(["rev-parse", "--show-toplevel"], directory)
-    foundation.root = top.strip() if code == 0 else None
-
-    map_path = os.path.join(directory, "part_map.md")
-    try:
-        map_rules = map_guard.read_rules()
-        with open(map_path, encoding="utf-8") as handle:
-            entries, sections = map_guard.parse_map(handle.read(), map_rules)
-    except (OSError, map_guard.TemplateError, AttributeError) as problem:
-        report.error(None, "cannot read the part map beside the file: %s" % problem)
-        entries, sections = [], {}
-    for entry in entries:
-        foundation.map_identifiers.add(entry.identifier)
-        if entry.kind == "part":
-            foundation.parts.add(entry.identifier)
-        if entry.kind == "critical flow" and "Invariant" in entry.fields:
-            named = flat(entry.fields["Invariant"][0]).split(" — test:")[0].strip()
-            if re.fullmatch(IDENTIFIER, named):
-                foundation.flow_invariants.add(named)
-            else:
-                report.cannot_check("whether a quarantine names the invariant of `%s`"
-                                    % entry.identifier,
-                                    "the flow names its invariant in prose, not by identifier")
-    for cells, _ in map_guard.rows(sections, "Withdrawn identifiers"):
-        if cells:
-            foundation.map_identifiers.add(cells[0])
-
-    log_path = os.path.join(directory, "decisions.md")
-    if os.path.exists(log_path):
-        with open(log_path, encoding="utf-8") as handle:
-            log = handle.read()
-        foundation.prefix = decision_guard.detect_prefix(log)
-        if foundation.prefix:
-            latest = {entry.number: entry for entry in decision_guard.parse_log(log, foundation.prefix)
-                      if entry.kind == "version"}
-            foundation.decisions = {number: fingerprint(entry.binding)
-                                    for number, entry in latest.items() if entry.binding is not None}
-    return foundation
-
-
-def check_layout(items, rules, report):
-    """Entries first, then the lists in the template's order, the last closing the file."""
-    titles = [title for title, _ in rules.lists]
-    seen = []
-    for item in items:
-        if isinstance(item, tuple):
-            report.error(item[1], "heading `## %s` is neither `## <identifier>/<version>` nor a "
-                                  "list of the template" % item[2])
-        elif isinstance(item, Table):
-            if item.title in seen:
-                report.error(item.line, "the list `%s` stands twice" % item.title)
-            seen.append(item.title)
-            expected = dict(rules.lists)[item.title]
-            if item.columns != expected:
-                report.error(item.line, "the list `%s` has columns %s, not %s"
-                             % (item.title, " | ".join(item.columns), " | ".join(expected)))
-        elif seen:
-            report.error(item.line, "entry `%s` stands after the list `%s`"
-                         % (item.identifier, seen[-1]))
-    for title in titles:
-        if title not in seen:
-            report.error(None, "the file has no list `%s`" % title)
-    if [title for title in seen if title in titles] != [title for title in titles if title in seen]:
-        report.error(None, "the lists closing the file are not in the order %s"
-                     % ", ".join("`%s`" % title for title in titles))
-
-
-def check_identifiers(entries, withdrawn, foundation, report):
-    seen = {}
-    for identifier, line in [(entry.identifier, entry.line) for entry in entries] + \
-            [(cells[0], line) for cells, line in withdrawn]:
-        if identifier == "none" or not re.fullmatch(IDENTIFIER, identifier):
-            report.error(line, "`%s` is not an identifier of words in lower case joined by "
-                               "hyphens" % identifier)
-        elif identifier in seen:
-            report.error(line, "identifier `%s` is used twice (line %d)" % (identifier, seen[identifier]))
-        elif identifier in foundation.map_identifiers:
-            report.error(line, "identifier `%s` is held by the part map" % identifier)
-        seen.setdefault(identifier, line)
-    names = set(seen)
-    for cells, line in withdrawn:
-        successors = cells[1] if len(cells) > 1 else ""
-        if successors == "none":
-            continue
-        for successor in listed(successors) or [""]:
-            if successor not in names:
-                report.error(line, "withdrawn `%s` names successor `%s`, which is neither an entry "
-                                   "nor a withdrawn identifier of this file" % (cells[0], successor))
-
-
-def check_fields(entry, rules, report):
-    label = "%s/%d" % (entry.identifier, entry.version)
-    names = [rule.name for rule in rules.fields]
-    for name, (value, line) in entry.fields.items():
-        if name not in names:
-            report.error(line, "%s: field *%s* is not in the template" % (label, name))
-    for rule in rules.fields:
-        if rule.name not in entry.fields or not entry.fields[rule.name][0].strip():
-            report.error(entry.line, "%s: field *%s* is missing" % (label, rule.name))
-            continue
-        value, line = entry.fields[rule.name]
-        if bare(value) == "none" and not rule.none:
-            report.error(line, "%s: *%s* may not hold `none`" % (label, rule.name))
-        if is_todo(value) and not rule.todo:
-            report.error(line, "%s: *%s* may not hold `TODO`" % (label, rule.name))
+def label_of(entry):
+    return "%s/%d" % (entry.identifier, entry.version)
 
 
 def value_of(entry, name):
@@ -379,87 +311,413 @@ def command_of(entry):
     return bare(value)
 
 
-def check_sentence(entry, rules, report):
-    label = "%s/%d" % (entry.identifier, entry.version)
-    if entry.sentence is None:
-        report.error(entry.line, "%s: the sentence is missing" % label)
-        return
-    line = entry.line + 2
-    sentences = count_sentences(entry.sentence)
-    if sentences != 1:
-        report.error(line, "%s: %d sentences, an entry states one" % (label, sentences))
-    for offset in entry.strays:
-        report.error(offset, "%s: text outside the sentence and the fields; an entry states one "
-                             "sentence" % label)
-    unquoted = re.sub(QUOTED, " ", flat(entry.sentence))
-    for words in rules.forbidden_words:
-        if re.search(r"\b%s(?:es)?\b" % re.escape(words), unquoted, re.I):
-            report.error(line, '%s: the sentence names "%s" outside quoted text' % (label, words))
-    if re.search(r"~\s*\w", unquoted):
-        report.error(line, "%s: the sentence states a bound with a tilde, not a number" % label)
-    command = command_of(entry)
-    for value in re.findall(r"\{[^{}\s]*\}", unquoted):
-        if value not in rules.gate_values:
-            report.error(line, "%s: `%s` is not a value the gate fills in (%s)"
-                         % (label, value, ", ".join(rules.gate_values)))
-        elif command is not None and value not in command:
-            report.error(line, "%s: the sentence names `%s`, which its command does not take"
-                         % (label, value))
+def derived_numbers(entry, prefix):
+    """The numbers of the decisions an entry's *Derives from* names, with or without a
+    fingerprint."""
+    if prefix is None:
+        return set()
+    derives = value_of(entry, "Derives from")[0]
+    return {int(number) for number in
+            re.findall(r"\b%s-(\d{2,})\b" % re.escape(prefix), " ".join(
+                item for item in listed(derives) if not is_todo(item)))}
 
 
-def check_method(entry, rules, foundation, report):
-    label = "%s/%d" % (entry.identifier, entry.version)
-    raw, line = value_of(entry, "Method")
-    value = flat(raw)
-    if not value or is_todo(value):
-        return
-    command = command_of(entry)
-    if command is not None:
-        tokens = command.split()
-        if not tokens or re.search(r"[/\\]", tokens[0]):
-            report.error(line, "%s: a command begins with the name of the program it runs, not a "
-                               "path" % label)
-        for taken in re.findall(r"\{[^{}]*\}", command):
-            if taken not in rules.gate_values:
-                report.error(line, "%s: the command takes `%s`, which is not a value the gate fills "
-                                   "in (%s)" % (label, taken, ", ".join(rules.gate_values)))
-        return
-    if "`" in value or " " in value:
-        report.error(line, "%s: *Method* is neither a command in backticks, the path of a file, "
-                           "nor `TODO`" % label)
-    elif foundation.root is None:
-        report.cannot_check("the path in the method of `%s`" % entry.identifier,
-                            "the file is not in a git repository")
-    elif not os.path.isfile(os.path.join(foundation.root, value)):
-        report.error(line, "%s: *Method* names `%s`, which is not a file" % (label, value))
+# --- the report and the record of a run -----------------------------------------------------
 
 
-def check_links(entry, foundation, report):
-    label = "%s/%d" % (entry.identifier, entry.version)
-    rests, line = value_of(entry, "Rests on")
-    if rests.strip() and bare(rests) != "none" and not is_todo(rests):
-        report.error(line, "%s: *Rests on* names a fact, but the environment facts element has "
-                           "no entries; the fact is written as `TODO — <the fact, with its "
-                           "source>`" % label)
+class Report(map_guard.Report):
+    """The part map guard's report, naming this program and its checks in the record."""
 
-    derives, line = value_of(entry, "Derives from")
-    if not derives.strip() or bare(derives) == "none" or is_todo(derives):
+    def __init__(self, path, options=()):
+        super().__init__(path, options, program=PROGRAM, selected_by=SELECTED_BY)
+
+
+start_record = map_guard.start_record
+write_record = map_guard.write_record
+
+
+# --- what the checks read beside the invariants file ----------------------------------------
+
+
+@dataclass
+class Foundation:
+    """What the checks read beside the invariants file."""
+    root: str = None
+    map_read: bool = False
+    parts: set = field(default_factory=set)
+    map_identifiers: set = field(default_factory=set)
+    map_twice: list = field(default_factory=list)    # (identifier, line of its second holder)
+    flow_invariants: set = field(default_factory=set)
+    prose_flows: list = field(default_factory=list)  # flows naming their invariant in prose
+    log_read: bool = False
+    prefix: str = None
+    latest: dict = field(default_factory=dict)       # number -> latest version of the decision
+    decisions: dict = field(default_factory=dict)    # number -> fingerprint of its latest binding
+
+
+def read_foundation(path, report, root):
+    foundation = Foundation(root=root)
+    directory = os.path.dirname(os.path.abspath(path))
+
+    map_path = os.path.join(directory, "part_map.md")
+    try:
+        map_rules = map_guard.read_rules()
+        with open(map_path, encoding="utf-8") as handle:
+            entries, sections = map_guard.parse_map(handle.read(), map_rules)
+        foundation.map_read = True
+    except (OSError, UnicodeDecodeError, map_guard.TemplateError, AttributeError,
+            IndexError) as problem:
+        # a failure of the run, not of a check: every record holds it, whatever the options
+        report.error(None, "cannot read the part map beside the file: %s" % problem)
+        entries, sections, map_rules = [], {}, None
+    holders = {}
+    for entry in entries:
+        if entry.identifier in holders:
+            foundation.map_twice.append((entry.identifier, entry.line))
+        holders.setdefault(entry.identifier, entry.line)
+        if entry.kind == "part":
+            foundation.parts.add(entry.identifier)
+        if entry.kind == "critical flow" and "Invariant" in entry.fields:
+            named = flat(entry.fields["Invariant"][0]).split(" — test:")[0].strip()
+            if re.fullmatch(IDENTIFIER, named):
+                foundation.flow_invariants.add(named)
+            else:
+                foundation.prose_flows.append(entry.identifier)
+                report.cannot_check("whether a quarantine names the invariant of `%s`"
+                                    % entry.identifier,
+                                    "the flow names its invariant in prose, not by identifier")
+    columns = map_rules.lists.get("Withdrawn identifiers") if map_rules else None
+    for cells, line in map_guard.rows(sections, "Withdrawn identifiers"):
+        if not cells or cells == columns:
+            continue
+        if cells[0] in holders:
+            foundation.map_twice.append((cells[0], line))
+        holders.setdefault(cells[0], line)
+    foundation.map_identifiers = set(holders)
+
+    log_path = os.path.join(directory, "decisions.md")
+    if not os.path.exists(log_path):
+        foundation.log_read = True
+        report.notes.append("there is no decisions.md beside the file: no decision is in force")
+        return foundation
+    log = map_guard.read_file(log_path, report, "the decision log beside the file")
+    if log is None:
+        return foundation
+    foundation.log_read = True
+    foundation.prefix = decision_guard.detect_prefix(log)
+    if foundation.prefix:
+        foundation.latest = latest_versions(decision_guard.parse_log(log, foundation.prefix))
+        foundation.decisions = in_force(foundation.latest)
+    return foundation
+
+
+def latest_versions(log_entries):
+    latest = {}
+    for entry in log_entries:
+        if entry.kind == "version" and (entry.number not in latest or
+                                        latest[entry.number].version < entry.version):
+            latest[entry.number] = entry
+    return latest
+
+
+def in_force(latest):
+    """number -> the fingerprint of the binding sentences of each decision in force."""
+    return {number: fingerprint(entry.binding) for number, entry in latest.items()
+            if entry.binding is not None}
+
+
+# --- checks of the file's shape -------------------------------------------------------------
+
+
+def check_layout(items, rules, report):
+    """Entries first, then the lists in the template's order, the last closing the file; a heading
+    of an entry carries its version (WAY-57, WAY-64, WAY-68)."""
+    # invariant: invariant-version-number/1
+    check, version = "check_layout", "invariant-version-number/1"
+    report.ran(check, version)
+    titles = [title for title, _ in rules.lists]
+    fields = re.compile(r"^- \*\*(%s):\*\*" % "|".join(re.escape(rule.name) for rule in rules.fields))
+    seen = []
+    for item in items:
+        if isinstance(item, Unknown):
+            if any(fields.match(line) for line in item.body):
+                report.error(item.line, "heading `## %s` of an entry carries no version number; "
+                                        "it reads `## <identifier>/<version>`" % item.heading,
+                             check, (version,))
+            else:
+                report.error(item.line, "heading `## %s` is neither `## <identifier>/<version>` "
+                                        "nor a list of the template" % item.heading, check)
+        elif isinstance(item, Table):
+            if item.title in seen:
+                report.error(item.line, "the list `%s` stands twice" % item.title, check)
+            seen.append(item.title)
+            expected = dict(rules.lists)[item.title]
+            if item.columns != expected:
+                report.error(item.line, "the list `%s` has columns %s, not %s"
+                             % (item.title, " | ".join(item.columns), " | ".join(expected)), check)
+        elif seen:
+            report.error(item.line, "entry `%s` stands after the list `%s`"
+                         % (item.identifier, seen[-1]), check)
+    for title in titles:
+        if title not in seen:
+            report.error(None, "the file has no list `%s`" % title, check)
+    if [title for title in seen if title in titles] != [title for title in titles if title in seen]:
+        report.error(None, "the lists closing the file are not in the order %s"
+                     % ", ".join("`%s`" % title for title in titles), check)
+
+
+def check_file(path, top, tracked, report):
+    """The repository holds one file of invariant entries, at foundations/invariants.md (WAY-64).
+    The path is compared, letter case included, as git lists it. Another such file is known by its
+    content: a tracked Markdown file holding a section `## <identifier>/<version>` with a *Method*
+    field. The examples file beside the template this guard reads holds copies of entries, as the
+    template sets it, and is no file of entries."""
+    # invariant: invariants-file/1
+    check, one_file = "check_file", "invariants-file/1"
+    if top is None or tracked is None:
+        if os.path.basename(path) != "invariants.md" or \
+                os.path.basename(os.path.dirname(os.path.abspath(path))) != "foundations":
+            report.error(None, "a product's invariants stand in %s" % FILE_PATH, check, (one_file,))
         return
-    if foundation.prefix is None:
-        report.error(line, "%s: *Derives from* names decisions, but there is no decision log "
-                           "beside the file" % label)
-        return
-    for item in listed(derives):
-        match = re.fullmatch(r"%s-(\d{2,})@([0-9a-f]+)" % re.escape(foundation.prefix), item)
-        if not match:
-            report.error(line, "%s: `%s` is not `%s-NN@<fingerprint>`" % (label, item, foundation.prefix))
-        elif int(match.group(1)) not in foundation.decisions:
-            report.error(line, "%s: `%s` names a decision that does not exist or binds nothing "
-                               "any more" % (label, item))
-        elif foundation.decisions[int(match.group(1))] != match.group(2):
-            report.error(line, "%s: `%s` — the current fingerprint of %s-%s is %s"
-                         % (label, item, foundation.prefix, match.group(1),
-                            foundation.decisions[int(match.group(1))]))
+    report.ran(check, one_file)
+    given = os.path.relpath(os.path.abspath(path), top).replace(os.sep, "/")
+    listed_as = [name for name in tracked if name.lower() == given.lower()]
+    if listed_as:
+        given = listed_as[0]
+    if given != FILE_PATH:
+        report.error(None, "a product's invariants stand in %s, not in %s" % (FILE_PATH, given),
+                     check, (one_file,))
+    for name in tracked:
+        if name == given or not name.endswith(".md"):
+            continue
+        full = os.path.join(top, *name.split("/"))
+        if os.path.exists(EXAMPLES) and os.path.isfile(full) and os.path.samefile(full, EXAMPLES):
+            continue
+        try:
+            with open(full, encoding="utf-8") as handle:
+                text = handle.read()
+        except (OSError, UnicodeDecodeError):
+            continue
+        if holds_entries(text):
+            report.error(None, "`%s` is a second file of invariant entries; the repository holds "
+                               "one, %s" % (name, FILE_PATH), check, (one_file,))
+
+
+def holds_entries(text):
+    """Whether a Markdown text holds an entry of invariants: a section `## <identifier>/<version>`,
+    outside a fenced block, carrying a *Method* field."""
+    heading, fenced = None, False
+    for line in text.split("\n"):
+        if line.startswith("```"):
+            fenced = not fenced
+        elif fenced:
+            continue
+        elif line.startswith("#"):
+            heading = re.match(r"^## .+/\d+\s*$", line)
+        elif heading and line.startswith("- **Method:**"):
+            return True
+    return False
+
+
+def check_identifiers(entries, withdrawn, foundation, report):
+    # invariant: identifier-holders/1
+    # invariant: invariant-identifier-form/1
+    # invariant: withdrawal-successors/1
+    check = "check_identifiers"
+    holders, form, successors_named = ("identifier-holders/1", "invariant-identifier-form/1",
+                                       "withdrawal-successors/1")
+    report.ran(check, form, successors_named)
+    if foundation.map_read:
+        report.ran(check, holders)
+    for identifier, line in foundation.map_twice:
+        report.error(None, "part_map.md:%d: identifier `%s` is held twice in the part map"
+                     % (line, identifier), check, (holders,))
+    seen = {}
+    for identifier, line, is_entry in [(entry.identifier, entry.line, True) for entry in entries] + \
+            [(cells[0], line, False) for cells, line in withdrawn]:
+        if identifier == "none" or not re.fullmatch(IDENTIFIER, identifier):
+            report.error(line, "`%s` is not an identifier of words in lower case joined by "
+                               "hyphens" % identifier, check, (form,) if is_entry else ())
+        elif identifier in seen:
+            report.error(line, "identifier `%s` is used twice (line %d)" % (identifier, seen[identifier]),
+                         check, (holders,))
+        elif identifier in foundation.map_identifiers:
+            report.error(line, "identifier `%s` is held by the part map" % identifier,
+                         check, (holders,))
+        seen.setdefault(identifier, line)
+    names = set(seen)
+    for cells, line in withdrawn:
+        successors = cells[1] if len(cells) > 1 else ""
+        if successors == "none":
+            continue
+        for successor in listed(successors) or [""]:
+            if successor not in names:
+                report.error(line, "withdrawn `%s` names successor `%s`, which is neither an entry "
+                                   "nor a withdrawn identifier of this file" % (cells[0], successor),
+                             check, (successors_named,))
+
+
+def check_fields(entries, rules, report):
+    """Every field of the form is present, and holds `none` or `TODO` only where the form gives it
+    that word; a `TODO` the form gives, in a field the main branch does not hold it in, is a
+    warning (WAY-71)."""
+    # invariant: invariant-entry-field-presence/1
+    # invariant: invariant-entry-field-words/1
+    check = "check_fields"
+    presence, words = "invariant-entry-field-presence/1", "invariant-entry-field-words/1"
+    report.ran(check, presence, words)
+    names = [rule.name for rule in rules.fields]
+    for entry in entries:
+        label = label_of(entry)
+        for name, (value, line) in entry.fields.items():
+            if name not in names:
+                report.error(line, "%s: field *%s* is not in the template" % (label, name), check)
+        for rule in rules.fields:
+            if rule.name not in entry.fields or not entry.fields[rule.name][0].strip():
+                report.error(entry.line, "%s: field *%s* is missing" % (label, rule.name),
+                             check, (presence,))
+                continue
+            value, line = entry.fields[rule.name]
+            if bare(value) == "none" and not rule.none:
+                report.error(line, "%s: *%s* may not hold `none`" % (label, rule.name),
+                             check, (words,))
+            if holds_todo(value):
+                if not rule.todo:
+                    report.error(line, "%s: *%s* may not hold `TODO`" % (label, rule.name),
+                                 check, (words,))
+                elif rule.name not in rules.main_todo:
+                    report.warning(line, "%s: *%s* holds `TODO`, which a merge onto the main "
+                                         "branch does not take" % (label, rule.name))
+
+
+def check_sentence(entries, rules, report):
+    # invariant: invariant-sentence-count/1
+    # invariant: sentence-branch-names/1
+    # invariant: sentence-gate-values/1
+    check = "check_sentence"
+    count, branch_names, gate_values = ("invariant-sentence-count/1", "sentence-branch-names/1",
+                                        "sentence-gate-values/1")
+    report.ran(check, count, branch_names, gate_values)
+    for entry in entries:
+        label = label_of(entry)
+        if entry.sentence is None:
+            report.error(entry.line, "%s: the sentence is missing" % label, check, (count,))
+            continue
+        line = entry.line + 2
+        sentences = count_sentences(entry.sentence)
+        if sentences != 1:
+            report.error(line, "%s: %d sentences, an entry states one" % (label, sentences),
+                         check, (count,))
+        for offset in entry.strays:
+            report.error(offset, "%s: text outside the sentence and the fields; an entry states one "
+                                 "sentence" % label, check, (count,))
+        unquoted = re.sub(QUOTED, " ", flat(entry.sentence))
+        for words in rules.forbidden_words:
+            if re.search(r"\b%s(?:es)?\b" % re.escape(words), unquoted, re.I):
+                report.error(line, '%s: the sentence names "%s" outside quoted text'
+                             % (label, words), check, (branch_names,))
+        if re.search(r"~\s*\w", unquoted):
+            report.error(line, "%s: the sentence states a bound with a tilde, not a number" % label,
+                         check)
+        command = command_of(entry)
+        for value in re.findall(BRACED % r"\s", unquoted):
+            if value not in rules.gate_values:
+                report.error(line, "%s: `%s` is not a value the gate fills in (%s)"
+                             % (label, value, ", ".join(rules.gate_values)), check)
+            elif command is not None and value not in command:
+                report.error(line, "%s: the sentence names `%s`, which its command does not take"
+                             % (label, value), check, (gate_values,))
+
+
+# The name of a program: a word, not a path, a flag or an assignment of a variable.
+PROGRAM_NAME = re.compile(r"[A-Za-z0-9_][\w.+-]*")
+
+
+def check_method(entries, rules, top, report):
+    # invariant: invariant-method-form/1
+    # invariant: method-gate-values/1
+    check, form, gate_values = "check_method", "invariant-method-form/1", "method-gate-values/1"
+    report.ran(check, gate_values)
+    decided = True
+    for entry in entries:
+        label = label_of(entry)
+        raw, line = value_of(entry, "Method")
+        value = flat(raw)
+        if not value:
+            report.fail(line, "%s: *Method* is empty" % label, check, (form,))
+            continue
+        if is_todo(value):
+            continue
+        command = command_of(entry)
+        if command is not None:
+            tokens = command.split()
+            if not tokens or not PROGRAM_NAME.fullmatch(tokens[0]):
+                report.error(line, "%s: a command begins with the name of the program it runs, not "
+                                   "`%s`" % (label, tokens[0] if tokens else ""), check, (form,))
+            for taken in re.findall(BRACED % "", command):
+                if taken not in rules.gate_values:
+                    report.error(line, "%s: the command takes `%s`, which is not a value the gate "
+                                       "fills in (%s)" % (label, taken, ", ".join(rules.gate_values)),
+                                 check, (gate_values,))
+            continue
+        if "`" in value or " " in value:
+            report.error(line, "%s: *Method* is neither a command in backticks, the path of a file, "
+                               "nor `TODO`" % label, check, (form,))
+        elif top is None:
+            decided = False
+        elif not os.path.isfile(os.path.join(top, value)):
+            report.error(line, "%s: *Method* names `%s`, which is not a file" % (label, value),
+                         check, (form,))
+    if decided:
+        report.ran(check, form)
+
+
+def check_links(entries, foundation, report):
+    """Every name in *Rests on* and *Derives from*, other than `none` or `TODO`, carries a
+    fingerprint, and every decision named is one in force (WAY-66). Whether the fingerprint is the
+    current one is checked against a merge, in check_fingerprints."""
+    # invariant: link-fingerprint-presence/1
+    check, presence = "check_links", "link-fingerprint-presence/1"
+    report.ran(check, presence)
+    for entry in entries:
+        label = label_of(entry)
+        rests, line = value_of(entry, "Rests on")
+        items = [item for item in listed(rests) if item != "none" and not is_todo(item)] \
+            if bare(rests) != "none" else []
+        if items:
+            report.error(line, "%s: *Rests on* names a fact, but the environment facts element has "
+                               "no entries; the fact is written as `TODO — <the fact, with its "
+                               "source>`" % label, check)
+        for item in items:
+            if not re.search(r"@%s$" % FINGERPRINT, item):
+                report.fail(line, "%s: `%s` in *Rests on* carries no fingerprint" % (label, item),
+                            check, (presence,))
+
+        derives, line = value_of(entry, "Derives from")
+        items = [item for item in listed(derives) if item != "none" and not is_todo(item)] \
+            if bare(derives) != "none" else []
+        if not items:
+            continue
+        if foundation.prefix is None:
+            report.error(line, "%s: *Derives from* names decisions, but there is no decision log "
+                               "beside the file" % label, check)
+        for item in items:
+            if not re.search(r"@%s$" % FINGERPRINT, item):
+                report.error(line, "%s: `%s` carries no fingerprint of %d hex digits; it reads "
+                                   "`%s-NN@<fingerprint>`"
+                             % (label, item, fingerprint_module.LENGTH,
+                                foundation.prefix or "<prefix>"), check, (presence,))
+                continue
+            if foundation.prefix is None:
+                continue
+            match = re.fullmatch(r"%s-(\d{2,})@(%s)" % (re.escape(foundation.prefix), FINGERPRINT),
+                                 item)
+            if not match:
+                report.error(line, "%s: `%s` is not `%s-NN@<fingerprint>`"
+                             % (label, item, foundation.prefix), check)
+            elif int(match.group(1)) not in foundation.decisions:
+                report.error(line, "%s: `%s` names a decision that does not exist or binds nothing "
+                                   "any more" % (label, item), check)
 
 
 def derives_from_a_decision(entry):
@@ -467,59 +725,149 @@ def derives_from_a_decision(entry):
     return bool(derives.strip()) and bare(derives) != "none" and not is_todo(derives)
 
 
-def check_part(entry, foundation, report):
-    label = "%s/%d" % (entry.identifier, entry.version)
-    value, line = value_of(entry, "Part")
-    if not value.strip() or is_todo(value) or bare(value) == "none":
-        return
-    parts = listed(value)
-    if "every" in parts and len(parts) > 1:
-        report.error(line, "%s: *Part* names `every` and parts at once" % label)
-    for part in parts:
-        if part != "every" and part not in foundation.parts:
-            report.error(line, "%s: *Part* names `%s`, which is not a part of the part map"
-                         % (label, part))
+def check_part(entries, foundation, report):
+    # invariant: invariant-part-names/1
+    # invariant: invariant-part-form/1
+    check, names, form = "check_part", "invariant-part-names/1", "invariant-part-form/1"
+    report.ran(check, form)
+    if foundation.map_read:
+        report.ran(check, names)
+    for entry in entries:
+        label = label_of(entry)
+        value, line = value_of(entry, "Part")
+        parts = [part for part in listed(value) if part != "none" and not is_todo(part)] \
+            if not is_todo(value) and bare(value) != "none" else []
+        if not parts:
+            report.fail(line, "%s: *Part* names neither `every` nor a part" % label, check, (form,))
+            continue
+        if "every" in parts and len(parts) > 1:
+            report.error(line, "%s: *Part* names `every` and parts at once" % label, check, (form,))
+        if not foundation.map_read:
+            continue
+        for part in parts:
+            if part != "every" and part not in foundation.parts:
+                report.error(line, "%s: *Part* names `%s`, which is not a part of the part map"
+                             % (label, part), check, (names,))
 
 
-def check_correction_and_recovered(entry, report):
-    label = "%s/%d" % (entry.identifier, entry.version)
-    correction, line = value_of(entry, "Correction")
-    declared = re.fullmatch(r"([0-9a-f]+) → ([0-9a-f]+)", flat(correction))
-    if correction.strip() and bare(correction) != "none" and not declared:
-        report.error(line, "%s: *Correction* is neither `none` nor `<fingerprint> → <fingerprint>`"
-                     % label)
-    elif declared and entry.sentence is not None and \
-            declared.group(2) != fingerprint(entry.sentence):
-        report.error(line, "%s: *Correction* names %s as the current fingerprint, but it is %s"
-                     % (label, declared.group(2), fingerprint(entry.sentence)))
-    recovered, line = value_of(entry, "Recovered")
-    if not recovered.strip() or bare(recovered) == "none":
+def check_corrections(entries, report):
+    check = "check_corrections"
+    for entry in entries:
+        label = label_of(entry)
+        correction, line = value_of(entry, "Correction")
+        declared = re.fullmatch(r"([0-9a-f]+) → ([0-9a-f]+)", flat(correction))
+        if correction.strip() and bare(correction) != "none" and not declared:
+            report.error(line, "%s: *Correction* is neither `none` nor `<fingerprint> → "
+                               "<fingerprint>`" % label, check)
+        elif declared and entry.sentence is not None and \
+                declared.group(2) != fingerprint(entry.sentence):
+            report.error(line, "%s: *Correction* names %s as the current fingerprint, but it is %s"
+                         % (label, declared.group(2), fingerprint(entry.sentence)), check)
+
+
+def check_recovered(entries, report):
+    # invariant: invariant-recovered-form/1
+    # invariant: invariant-recovered-derived/1
+    check, form, derived = ("check_recovered", "invariant-recovered-form/1",
+                            "invariant-recovered-derived/1")
+    report.ran(check, form, derived)
+    for entry in entries:
+        label = label_of(entry)
+        recovered, line = value_of(entry, "Recovered")
+        if not recovered.strip():
+            report.fail(line, "%s: *Recovered* is empty" % label, check, (form,))
+            continue
+        if bare(recovered) == "none":
+            continue
+        if not re.fullmatch(r"recovered — searched: .+; found: .+", flat(recovered)):
+            report.error(line, "%s: *Recovered* is neither `none` nor `recovered — searched: …; "
+                               "found: …`" % label, check, (form,))
+        if derives_from_a_decision(entry):
+            report.error(line, "%s: *Recovered* is not `none`, while *Derives from* names a decision"
+                         % label, check, (derived,))
+
+
+LEVEL_ONE = re.compile(r"(?:^|\.\s+)level 1\b", re.I)
+LEVEL_ONE_NAMES = re.compile(r"(?:^|\.\s+)level 1 — invariants: (.*?)(?:\.(?=\s|$)|$)", re.I)
+
+
+def check_verifications(entries, foundation, report):
+    """Every decision in force verified at level 1 has an entry deriving from it, and every
+    identifier the level 1 verification of a decision's latest version names is an entry deriving
+    from that decision (WAY-12, WAY-17). The names are read from the form the decision template
+    gives: `level 1 — invariants: <identifier> · <identifier>.`"""
+    # invariant: level-one-decision-invariants/1
+    # invariant: verification-invariant-derivation/1
+    check = "check_verifications"
+    derived, named = "level-one-decision-invariants/1", "verification-invariant-derivation/1"
+    if not foundation.log_read:
         return
-    if not re.fullmatch(r"recovered — searched: .+; found: .+", flat(recovered)):
-        report.error(line, "%s: *Recovered* is neither `none` nor `recovered — searched: …; "
-                           "found: …`" % label)
-    elif derives_from_a_decision(entry):
-        report.error(line, "%s: *Recovered* is not `none`, while *Derives from* names a decision"
-                     % label)
+    report.ran(check, derived)
+    by_identifier = {entry.identifier: entry for entry in entries}
+    deriving = {}
+    for entry in entries:
+        for number in derived_numbers(entry, foundation.prefix):
+            deriving.setdefault(number, []).append(entry.identifier)
+    readable = True
+    for number, version in sorted(foundation.latest.items()):
+        value, line = version.fields.get("Verification", ("", version.line))
+        value = flat(value)
+        if not LEVEL_ONE.search(value):
+            continue
+        decision = "%s-%02d" % (foundation.prefix, number)
+        where = "decisions.md:%d" % line
+        if version.binding is not None and number not in deriving:
+            report.error(None, "%s: %s is in force and verified at level 1, but no entry of the file "
+                               "derives from it" % (where, decision), check, (derived,))
+        names = LEVEL_ONE_NAMES.search(value)
+        if not names:
+            readable = False
+            report.error(None, "%s: the level 1 verification of %s/%d names no invariants as "
+                               "`level 1 — invariants: <identifier> · <identifier>.`"
+                         % (where, decision, version.version), check)
+            continue
+        for name in [bare(item) for item in names.group(1).split(" · ") if item.strip()]:
+            if name not in by_identifier:
+                report.error(None, "%s: the level 1 verification of %s/%d names `%s`, which is not "
+                                   "an entry of the file" % (where, decision, version.version, name),
+                             check, (named,))
+            elif number not in derived_numbers(by_identifier[name], foundation.prefix):
+                report.error(by_identifier[name].line, "%s: the level 1 verification of %s/%d names "
+                                                       "it, but its *Derives from* does not name %s"
+                             % (label_of(by_identifier[name]), decision, version.version, decision),
+                             check, (named,))
+    if readable:
+        report.ran(check, named)
 
 
 def check_quarantine(table, entries, foundation, report):
-    for cells, line in table.rows if table else []:
+    # invariant: quarantine-position-form/1
+    # invariant: quarantine-flow-invariants/1
+    check, form, flows = ("check_quarantine", "quarantine-position-form/1",
+                          "quarantine-flow-invariants/1")
+    positions = table.rows if table else []
+    report.ran(check, form)
+    if foundation.map_read and not (foundation.prose_flows and positions):
+        report.ran(check, flows)
+    for cells, line in positions:
         if len(cells) < 3:
-            report.error(line, "a quarantine position needs an identifier, a version and a date")
+            report.error(line, "a quarantine position needs an identifier, a version and a date",
+                         check, (form,))
             continue
         identifier, version, until = cells[:3]
         entry = entries.get(identifier)
         if entry is None:
-            report.error(line, "quarantine names `%s`, which is not an entry" % identifier)
+            report.error(line, "quarantine names `%s`, which is not an entry" % identifier,
+                         check, (form,))
         elif version != str(entry.version):
             report.error(line, "quarantine names `%s` at version %s; its current version is %d"
-                         % (identifier, version, entry.version))
+                         % (identifier, version, entry.version), check, (form,))
         if not re.fullmatch(DATE, until) or not decision_guard.valid_date(until):
             report.error(line, "quarantine of `%s` ends on `%s`, which is not a date YYYY-MM-DD"
-                         % (identifier, until))
+                         % (identifier, until), check, (form,))
         if identifier in foundation.flow_invariants:
-            report.error(line, "quarantine names `%s`, which a critical flow names" % identifier)
+            report.error(line, "quarantine names `%s`, which a critical flow names" % identifier,
+                         check, (flows,))
 
 
 def violated_tables(text, rules):
@@ -533,130 +881,78 @@ def violated_positions(text, rules):
 
 
 def check_violated(path, entries, rules, report):
+    # invariant: violated-position-version/1
+    check, position_version = "check_violated", "violated-position-version/1"
     violated_path = os.path.join(os.path.dirname(os.path.abspath(path)), rules.violated_file)
     if not os.path.exists(violated_path):
         report.notes.append("there is no %s; the list of violated invariants is read as empty"
                             % rules.violated_file)
+        report.ran(check, position_version)
         return []
-    with open(violated_path, encoding="utf-8") as handle:
-        tables = violated_tables(handle.read(), rules)
+    text = map_guard.read_file(violated_path, report, "the list of violated invariants")
+    if text is None:
+        return []
+    report.ran(check, position_version)
+    tables = violated_tables(text, rules)
     for table in tables:
         if table.columns != rules.violated_columns:
             report.error(None, "%s:%d: the list has columns %s, not %s"
                          % (rules.violated_file, table.line, " | ".join(table.columns),
-                            " | ".join(rules.violated_columns)))
+                            " | ".join(rules.violated_columns)), check)
     positions = [row for table in tables for row in table.rows]
     for cells, line in positions:
         identifier, version = (cells + ["", ""])[:2]
         entry = entries.get(identifier)
         where = "%s:%d" % (rules.violated_file, line)
         if entry is None:
-            report.error(None, "%s: `%s` is not an entry" % (where, identifier))
+            report.error(None, "%s: `%s` is not an entry" % (where, identifier),
+                         check, (position_version,))
         elif version != str(entry.version):
             report.error(None, "%s: `%s` at version %s; its current version is %d"
-                         % (where, identifier, version, entry.version))
+                         % (where, identifier, version, entry.version), check, (position_version,))
     return [(cells[0], cells[1]) for cells, _ in positions if len(cells) > 1]
 
 
-# --- the commit the branch left the main branch from ---------------------------------------
+# --- checks against the repository ----------------------------------------------------------
 
 
-def check_against_base(path, entries, withdrawn, violated, rules, base, report):
-    directory = os.path.dirname(os.path.abspath(path))
-    code, top = map_guard.git(["rev-parse", "--show-toplevel"], directory)
+def repository_root(path, report):
+    """The root of the file's repository, or None once the report holds the failure."""
+    code, top, _ = map_guard.call_git(["rev-parse", "--show-toplevel"],
+                                      os.path.dirname(os.path.abspath(path)))
     if code != 0:
-        report.error(None, "--base %s given, but the file is not in a git repository" % base)
-        return
-    code, _ = map_guard.git(["rev-parse", "--verify", "--quiet", base + "^{commit}"], directory)
+        report.error(None, "the file does not lie in a git repository, so no check that asks git "
+                           "which files it tracks or ignores can run")
+        return None
+    return top.strip()
+
+
+def tracked_files(top, report):
+    code, listing, message = map_guard.call_git(["ls-files", "-z"], top)
     if code != 0:
-        report.error(None, "--base %s does not exist" % base)
-        return
-    relative = os.path.relpath(os.path.abspath(path), top.strip()).replace(os.sep, "/")
-    code, base_text = map_guard.git(["show", "%s:%s" % (base, relative)], directory)
-    if code != 0:
-        report.notes.append("%s has no %s; every entry is new" % (base, relative))
-        base_text = ""
-    base_items = parse_file(base_text, rules)
-    base_entries = {item.identifier: item for item in base_items if isinstance(item, Entry)}
-    base_withdrawn = {cells[0] for item in base_items if isinstance(item, Table)
-                      and item.title == rules.lists[0][0] for cells, _ in item.rows if cells}
-    withdrawn_now = {cells[0] for cells, _ in withdrawn if cells}
-
-    for identifier in sorted(set(base_entries) | base_withdrawn):
-        if identifier not in entries and identifier not in withdrawn_now:
-            report.error(None, "`%s` stands in the file on %s and is gone; it stays as an entry or "
-                               "a withdrawn identifier" % (identifier, base))
-    for identifier in sorted(base_withdrawn & set(entries)):
-        report.error(entries[identifier].line, "`%s` is withdrawn on %s and stands as an entry "
-                                               "again" % (identifier, base))
-
-    for identifier, entry in entries.items():
-        label = "%s/%d" % (identifier, entry.version)
-        correction = flat(value_of(entry, "Correction")[0])
-        if entry.sentence is None:
-            continue
-        now = fingerprint(entry.sentence)
-        before = base_entries.get(identifier)
-        if before is None or before.sentence is None:
-            if entry.version != 1:
-                report.error(entry.line, "%s: a new entry carries version 1" % label)
-            if bare(correction) != "none":
-                report.error(entry.line, "%s: a new entry declares no correction" % label)
-            continue
-        then = fingerprint(before.sentence)
-        declared = re.fullmatch(r"([0-9a-f]+) → ([0-9a-f]+)", correction)
-        if now == then:
-            if entry.version != before.version:
-                report.error(entry.line, "%s: the sentence is unchanged since %s, where the version "
-                                         "is %d" % (label, base, before.version))
-            if declared and declared.group(2) != now:
-                report.error(entry.line, "%s: the correction names %s, but the fingerprint is %s"
-                             % (label, declared.group(2), now))
-        elif entry.version == before.version + 1:
-            if declared:
-                report.error(entry.line, "%s: a raised version declares no correction" % label)
-        elif entry.version == before.version and declared and \
-                (declared.group(1), declared.group(2)) == (then, now):
-            report.cannot_check("the correction of `%s`" % identifier,
-                                "correction declared, confirmation not checked")
-        else:
-            report.error(entry.line, "%s: the sentence changed since %s (%s → %s); the version is "
-                                     "%d, or a correction names `%s → %s`"
-                         % (label, base, then, now, before.version + 1, then, now))
-        if now != then and flat(before.sentence) in flat(entry.text.replace(entry.sentence, "", 1)):
-            report.error(entry.line, "%s: the entry still holds its wording from %s" % (label, base))
-
-    code, base_violated = map_guard.git(["show", "%s:%s" % (
-        base, os.path.join(os.path.dirname(relative), rules.violated_file).replace(os.sep, "/"))],
-        directory)
-    allowed = {(cells[0], cells[1]) for cells, _ in violated_positions(base_violated, rules)
-               if len(cells) > 1} if code == 0 else set()
-    for position in violated:
-        if position not in allowed:
-            report.error(None, "%s: `%s` at version %s is not on the list on %s; a position is "
-                               "added only by a foundation change a human accepts"
-                         % (rules.violated_file, position[0], position[1], base))
-
-
-# --- citations in checks --------------------------------------------------------------------
+        report.error(None, "git cannot list the files it tracks in %s: %s" % (top, message))
+        return None
+    return [name for name in listing.split("\0") if name]
 
 
 CITATION = re.compile(r"^\s*(?:#|//|--|;|%|\*|/\*|<!--|REM\b)\s*(invariant|data):\s*(\S+)\s*"
                       r"(?:\*/|-->)?\s*$")
 
 
-def check_citations(entries, withdrawn, foundation, report):
-    if foundation.root is None:
-        report.cannot_check("the `invariant:` and `data:` lines of checks",
-                            "the file is not in a git repository")
-        return
-    code, listing = map_guard.git(["ls-files", "-z"], foundation.root)
+def check_citations(entries, withdrawn, top, tracked, report):
+    # invariant: invariant-citation-version/1
+    # invariant: invariant-citation-target/1
+    # invariant: data-line-target/1
+    check = "check_citations"
+    version, target, data = ("invariant-citation-version/1", "invariant-citation-target/1",
+                             "data-line-target/1")
+    report.ran(check, version, target, data)
     successors = {cells[0]: (cells[1] if len(cells) > 1 else "none") for cells, _ in withdrawn}
-    for name in [name for name in listing.split("\0") if name]:
+    for name in tracked:
         if name.endswith(".md"):
             continue
         try:
-            with open(os.path.join(foundation.root, name), encoding="utf-8") as handle:
+            with open(os.path.join(top, name), encoding="utf-8") as handle:
                 lines = handle.read().split("\n")
         except (OSError, UnicodeDecodeError):
             continue
@@ -669,63 +965,346 @@ def check_citations(entries, withdrawn, foundation, report):
         for number, kind, value in found:
             where = "%s:%d" % (name, number)
             if kind == "data":
-                if not os.path.isfile(os.path.join(foundation.root, value)):
-                    report.error(None, "%s: `data: %s` names no file" % (where, value))
+                if not os.path.isfile(os.path.join(top, value)):
+                    report.error(None, "%s: `data: %s` names no file" % (where, value),
+                                 check, (data,))
                 continue
             cited = re.fullmatch(r"(\S+)/(\d+)", value)
-            if not cited:
-                report.error(None, "%s: `invariant: %s` does not cite `<identifier>/<version>`"
-                             % (where, value))
-            elif cited.group(1) in successors:
+            identifier = cited.group(1) if cited else value.split("/")[0]
+            if identifier in successors:
                 report.error(None, "%s: cites `%s`, which is withdrawn (successors: %s)"
-                             % (where, cited.group(1), successors[cited.group(1)]))
-            elif cited.group(1) not in entries:
-                report.error(None, "%s: cites `%s`, which is not an entry" % (where, cited.group(1)))
-            elif int(cited.group(2)) != entries[cited.group(1)].version:
+                             % (where, identifier, successors[identifier]), check, (target,))
+            elif identifier not in entries:
+                report.error(None, "%s: cites `%s`, which is not an entry" % (where, identifier),
+                             check, (target,))
+            elif not cited:
+                report.error(None, "%s: `invariant: %s` does not cite `<identifier>/<version>`"
+                             % (where, value), check, (version,))
+            elif int(cited.group(2)) != entries[identifier].version:
                 report.error(None, "%s: cites `%s`, whose current version is %d"
-                             % (where, value, entries[cited.group(1)].version))
+                             % (where, value, entries[identifier].version), check, (version,))
+
+
+def record_paths(command):
+    """The distinct paths ending in `.jsonl` a command names, in the order it names them."""
+    paths = []
+    for token in command.split():
+        token = token.strip("\"'").split("=")[-1]
+        if token.endswith(".jsonl") and token not in paths:
+            paths.append(token)
+    return paths
+
+
+def check_record_paths(entries, top, report):
+    """Every `.jsonl` path a command names is one git ignores, as git itself answers, and no
+    command names two (WAY-74)."""
+    # invariant: run-record-path/1
+    check, record_path = "check_record_paths", "run-record-path/1"
+    named = {}   # path -> (entry, line) of the first command naming it
+    for entry in entries:
+        command = command_of(entry)
+        if command is None:
+            continue
+        line = value_of(entry, "Method")[1]
+        paths = record_paths(command)
+        if len(paths) > 1:
+            report.error(line, "%s: the command names %d records of a run (%s); it names one"
+                         % (label_of(entry), len(paths), ", ".join("`%s`" % p for p in paths)),
+                         check, (record_path,))
+        for path in paths:
+            named.setdefault(path, (entry, line))
+    inside = []
+    for path, (entry, line) in named.items():
+        normal = os.path.normpath(path).replace(os.sep, "/")
+        if os.path.isabs(path) or normal == ".." or normal.startswith("../"):
+            report.error(line, "%s: `%s` lies outside the repository, where git ignores nothing"
+                         % (label_of(entry), path), check, (record_path,))
+        else:
+            inside.append(path)
+    ignored = set()
+    if inside:
+        code, answer, message = map_guard.call_git(["check-ignore", "-z", "--stdin"], top,
+                                                   stdin="\0".join(inside) + "\0")
+        if code not in (0, 1):
+            report.error(None, "git cannot tell which paths it ignores: %s"
+                         % (message or "git check-ignore exited with %d" % code), check)
+            return
+        ignored = {path for path in answer.split("\0") if path}
+    report.ran(check, record_path)
+    for path in inside:
+        if path not in ignored:
+            entry, line = named[path]
+            report.error(line, "%s: git does not ignore `%s`, the record of a run the command names"
+                         % (label_of(entry), path), check, (record_path,))
+
+
+# --- the commit the branch left the main branch from ---------------------------------------
+
+
+BASE_INVARIANTS = ("invariant-version-new/1", "invariant-version-changed/1",
+                   "invariant-version-unchanged/1", "invariant-earlier-wording/1",
+                   "invariant-identifier-persistence/1", "invariant-withdrawal-persistence/1",
+                   "violated-list-growth/1")
+
+
+def check_against_base(path, entries, withdrawn, violated, rules, base, top, report,
+                       no_commit=None):
+    """Compares the file and the list of violated invariants with their state on the base. Given
+    `no_commit`, which says why there is no base, records the checks unchecked instead."""
+    # invariant: invariant-version-new/1
+    # invariant: invariant-version-changed/1
+    # invariant: invariant-version-unchanged/1
+    # invariant: invariant-earlier-wording/1
+    # invariant: invariant-identifier-persistence/1
+    # invariant: invariant-withdrawal-persistence/1
+    # invariant: violated-list-growth/1
+    check = "check_against_base"
+    new, changed, unchanged, wording, persistence, withdrawal, growth = BASE_INVARIANTS
+    if no_commit:
+        report.unchecked(check, NO_COMMIT_REASON, no_commit, *BASE_INVARIANTS)
+        return
+    relative = os.path.relpath(os.path.abspath(path), top).replace(os.sep, "/")
+    violated_relative = "/".join(filter(None, [os.path.dirname(relative), rules.violated_file]))
+    base_text, failure = map_guard.file_at(base, relative, top)
+    if failure:
+        report.error(None, failure)
+        return
+    base_violated, failure = map_guard.file_at(base, violated_relative, top)
+    if failure:
+        report.error(None, failure)
+        return
+    if base_text is None:
+        report.notes.append("%s has no %s; every entry is new" % (base, relative))
+        base_text = ""
+    report.ran(check, *BASE_INVARIANTS)
+
+    base_items = parse_file(base_text, rules)
+    base_entries = {item.identifier: item for item in base_items if isinstance(item, Entry)}
+    base_withdrawn = {cells[0] for item in base_items if isinstance(item, Table)
+                      and item.title == rules.lists[0][0] for cells, _ in item.rows if cells}
+    withdrawn_now = {cells[0] for cells, _ in withdrawn if cells}
+
+    for identifier in sorted(set(base_entries) | base_withdrawn):
+        if identifier not in entries and identifier not in withdrawn_now:
+            report.error(None, "`%s` stands in the file on %s and is gone; it stays as an entry or "
+                               "a withdrawn identifier" % (identifier, base), check,
+                         (persistence, withdrawal) if identifier in base_withdrawn
+                         else (persistence,))
+    for identifier in sorted(base_withdrawn & set(entries)):
+        report.error(entries[identifier].line, "`%s` is withdrawn on %s and stands as an entry "
+                                               "again" % (identifier, base), check, (withdrawal,))
+
+    for identifier, entry in entries.items():
+        label = label_of(entry)
+        correction = flat(value_of(entry, "Correction")[0])
+        if entry.sentence is None:
+            continue
+        now = fingerprint(entry.sentence)
+        before = base_entries.get(identifier)
+        if before is None or before.sentence is None:
+            if entry.version != 1:
+                report.error(entry.line, "%s: a new entry carries version 1" % label, check, (new,))
+            if bare(correction) != "none":
+                report.error(entry.line, "%s: a new entry declares no correction" % label,
+                             check, (new,))
+            continue
+        then = fingerprint(before.sentence)
+        declared = re.fullmatch(r"([0-9a-f]+) → ([0-9a-f]+)", correction)
+        if now == then:
+            if entry.version != before.version:
+                report.error(entry.line, "%s: the sentence is unchanged since %s, where the version "
+                                         "is %d" % (label, base, before.version), check, (unchanged,))
+            if declared and declared.group(2) != now:
+                report.error(entry.line, "%s: the correction names %s, but the fingerprint is %s"
+                             % (label, declared.group(2), now), check, (unchanged,))
+        elif entry.version == before.version + 1:
+            if declared:
+                report.error(entry.line, "%s: a raised version declares no correction" % label,
+                             check, (changed,))
+        elif entry.version == before.version and declared and \
+                (declared.group(1), declared.group(2)) == (then, now):
+            report.cannot_check("the correction of `%s`" % identifier,
+                                "correction declared, confirmation not checked")
+        else:
+            report.error(entry.line, "%s: the sentence changed since %s (%s → %s); the version is "
+                                     "%d, or a correction names `%s → %s`"
+                         % (label, base, then, now, before.version + 1, then, now),
+                         check, (changed,))
+        if now != then and flat(before.sentence) in flat(entry.text.replace(entry.sentence, "", 1)):
+            report.error(entry.line, "%s: the entry still holds its wording from %s" % (label, base),
+                         check, (wording,))
+
+    allowed = {(cells[0], cells[1]) for cells, _ in violated_positions(base_violated or "", rules)
+               if len(cells) > 1}
+    for position in violated:
+        if position not in allowed:
+            report.error(None, "%s: `%s` at version %s is not on the list on %s; a position is "
+                               "added only by a foundation change a human accepts"
+                         % (rules.violated_file, position[0], position[1], base), check, (growth,))
+
+
+# --- the commit a merge onto the main branch is made onto ----------------------------------
+
+
+def check_merge_todo(entries, rules, report, no_commit=None):
+    """Reports every field of every entry that holds `TODO` where the main branch does not hold it
+    (WAY-71). Given `no_commit`, which says why there is no commit to merge onto, records it
+    unchecked instead."""
+    # invariant: invariant-entry-merge-todo/1
+    check, merge_todo = "check_merge_todo", "invariant-entry-merge-todo/1"
+    if no_commit:
+        report.unchecked(check, NO_COMMIT_REASON, no_commit, merge_todo)
+        return
+    report.ran(check, merge_todo)
+    for entry in entries:
+        for name, (value, line) in entry.fields.items():
+            if name not in rules.main_todo and holds_todo(value):
+                report.error(line, "%s: *%s* holds `TODO`, which a merge onto the main branch does "
+                                   "not take" % (label_of(entry), name), check, (merge_todo,))
+
+
+def merged_decisions(path, foundation, merge_onto, top, report):
+    """(prefix, number -> fingerprint of the binding sentences of each decision in force) in the
+    decision log a merge onto the given commit leaves, or None once the report says why git could
+    not read it.
+
+    The log is append-only, so the merge holds every version either side holds; where both hold
+    one, the merge carries the branch's copy (WAY-07), as the decision guard reads it."""
+    log = os.path.join(os.path.dirname(os.path.abspath(path)), "decisions.md")
+    relative = os.path.relpath(log, top).replace(os.sep, "/")
+    onto_text, failure = map_guard.file_at(merge_onto, relative, top)
+    if failure:
+        report.error(None, failure)
+        return None
+    if onto_text is None:
+        report.notes.append("%s has no %s; the decision log after the merge is this log alone"
+                            % (merge_onto, relative))
+        onto_text = ""
+    prefix = foundation.prefix or decision_guard.detect_prefix(onto_text)
+    texts = [onto_text]
+    if foundation.prefix and os.path.exists(log):
+        log_text = map_guard.read_file(log, report, "the decision log beside the file")
+        if log_text is None:
+            return None
+        texts.insert(0, log_text)
+    merged = {}
+    for text in texts if prefix else []:
+        for entry in decision_guard.parse_log(text, prefix):
+            if entry.kind == "version":
+                merged.setdefault((entry.number, entry.version), entry)
+    return prefix, in_force(latest_versions(merged.values()))
+
+
+def entries_on(path, commit, rules, top, report):
+    """The entries of the file on the commit, or None once the report says why git could not read
+    it."""
+    relative = os.path.relpath(os.path.abspath(path), top).replace(os.sep, "/")
+    text, failure = map_guard.file_at(commit, relative, top)
+    if failure:
+        report.error(None, failure)
+        return None
+    return [item for item in parse_file(text or "", rules) if isinstance(item, Entry)]
+
+
+def check_fingerprints(entries, merged, report, no_commit=None):
+    """Compares every fingerprint in *Derives from* and *Rests on*, of the entries the file holds
+    after the merge, with the current fingerprint of the entry it names in the decision log that
+    merge leaves (WAY-66). The entries are the branch's, and those only the commit merged onto
+    holds, as (entry, None or that commit). Given `no_commit`, which says why there is no commit
+    to merge onto, records it unchecked instead."""
+    # invariant: link-fingerprint-value/1
+    check, value = "check_fingerprints", "link-fingerprint-value/1"
+    if no_commit:
+        report.unchecked(check, NO_COMMIT_REASON, no_commit, value)
+        return
+    report.ran(check, value)
+    prefix, current = merged
+    for entry, onto in entries:
+        where = "%s%s" % (label_of(entry), " (on %s)" % onto if onto else "")
+        for name in ("Derives from", "Rests on"):
+            raw, line = value_of(entry, name)
+            line = None if onto else line
+            for item in listed(raw) if bare(raw) != "none" else []:
+                if is_todo(item) or not re.search(r"@[0-9a-f]+$", item):
+                    continue
+                match = re.fullmatch(r"%s-(\d{2,})@([0-9a-f]+)" % re.escape(prefix), item) \
+                    if prefix and name == "Derives from" else None
+                if match is None:
+                    report.error(line, "%s: `%s` in *%s* names no entry whose fingerprint the merge "
+                                       "holds" % (where, item, name), check, (value,))
+                elif int(match.group(1)) not in current:
+                    report.error(line, "%s: `%s` names a decision that binds nothing after the "
+                                       "merge" % (where, item), check, (value,))
+                elif current[int(match.group(1))] != match.group(2):
+                    report.error(line, "%s: `%s` — the current fingerprint of %s-%s after the merge "
+                                       "is %s" % (where, item, prefix, match.group(1),
+                                                  current[int(match.group(1))]),
+                                 check, (value,))
 
 
 # --- the examples ---------------------------------------------------------------------------
 
 
 def check_examples(items, examples_path, report):
-    with open(examples_path, encoding="utf-8") as handle:
-        examples = handle.read()
+    check = "check_examples"
+    examples = map_guard.read_file(examples_path, report, "the examples")
+    if examples is None:
+        return
     by_heading = {item.text.split("\n")[0]: item for item in items if isinstance(item, Entry)}
     for line, lines in map_guard.split_sections(examples):
         copy = "\n".join(lines).rstrip()
         entry = by_heading.get(lines[0])
         if entry is None:
-            report.error(None, "examples.md:%d: `%s` is not in the file" % (line, lines[0]))
+            report.error(None, "examples.md:%d: `%s` is not in the file" % (line, lines[0]), check)
         elif entry.text != copy:
-            report.error(entry.line, "examples.md:%d differs from the file" % line)
+            report.error(entry.line, "examples.md:%d differs from the file" % line, check)
 
 
 # --- entry point ----------------------------------------------------------------------------
 
 
-def run(path, base=None, stream=None, template=TEMPLATE):
+def find_commit(path, top, option, commit, report):
+    """Whether the commit exists in the file's repository; where it does not, the report says so.
+    A failure here is no rule's: it belongs to the run."""
+    if top is None:
+        report.error(None, "%s %s given, but the file is not in a git repository" % (option, commit))
+        return False
+    return map_guard.find_commit(top, option, commit, report)
+
+
+def run(path, base=None, stream=None, template=TEMPLATE, merge_onto=None, record=None,
+        examples=EXAMPLES):
     stream = stream or sys.stdout
+    if record is not None:
+        try:
+            start_record(record)
+        except OSError as problem:
+            stream.write("cannot write the record: %s\n" % problem)
+            return 2
+    report = Report(path, [option for option, value in (("--base", base),
+                                                         ("--merge-onto", merge_onto)) if value])
+
+    def stop(message):
+        stream.write(message + "\n")
+        report.error(None, message)
+        if record is not None:
+            write_record(record, report)
+        return 2
+
     try:
         rules = read_rules(template)
-    except (OSError, TemplateError, AttributeError) as problem:
-        stream.write("cannot read the rules from %s: %s\n" % (template, problem))
-        return 2
+    except (OSError, UnicodeDecodeError, TemplateError, AttributeError) as problem:
+        return stop("cannot read the rules from %s: %s" % (template, problem))
     try:
         with open(path, encoding="utf-8") as handle:
             text = handle.read()
-    except OSError as problem:
-        stream.write("cannot read the invariants file: %s\n" % problem)
-        return 2
+    except (OSError, UnicodeDecodeError) as problem:
+        return stop("cannot read the invariants file: %s" % problem)
 
-    report = Report(path)
-    if os.path.basename(path) != "invariants.md" or \
-            os.path.basename(os.path.dirname(os.path.abspath(path))) != "foundations":
-        report.error(None, "a product's invariants stand in foundations/invariants.md")
-    foundation = read_foundation(path, report)
+    top = repository_root(path, report)
+    tracked = tracked_files(top, report) if top is not None else None
+    foundation = read_foundation(path, report, top)
     items = parse_file(text, rules)
-    check_layout(items, rules, report)
     entry_list = [item for item in items if isinstance(item, Entry)]
     entries = {}
     for entry in entry_list:
@@ -734,39 +1313,89 @@ def run(path, base=None, stream=None, template=TEMPLATE):
     withdrawn_table = tables.get(rules.lists[0][0])
     withdrawn = withdrawn_table.rows if withdrawn_table else []
 
+    check_layout(items, rules, report)
+    check_file(path, top, tracked, report)
     check_identifiers(entry_list, withdrawn, foundation, report)
-    for entry in entry_list:
-        check_fields(entry, rules, report)
-        check_sentence(entry, rules, report)
-        check_method(entry, rules, foundation, report)
-        check_links(entry, foundation, report)
-        check_part(entry, foundation, report)
-        check_correction_and_recovered(entry, report)
+    check_fields(entry_list, rules, report)
+    check_sentence(entry_list, rules, report)
+    check_method(entry_list, rules, top, report)
+    check_links(entry_list, foundation, report)
+    check_part(entry_list, foundation, report)
+    check_corrections(entry_list, report)
+    check_recovered(entry_list, report)
+    check_verifications(entry_list, foundation, report)
     check_quarantine(tables.get(rules.lists[-1][0]), entries, foundation, report)
     violated = check_violated(path, entries, rules, report)
-    check_citations(entries, withdrawn, foundation, report)
+    if tracked is not None:
+        check_citations(entries, withdrawn, top, tracked, report)
+        check_record_paths(entry_list, top, report)
 
-    if base:
-        check_against_base(path, entries, withdrawn, violated, rules, base, report)
+    if base == NO_COMMIT:
+        no_base = "--base none: there is no commit the branch left the main branch from"
+        check_against_base(path, entries, withdrawn, violated, rules, None, None, report,
+                           no_commit=no_base)
+        report.notes.append(no_base + "; identifiers, versions, corrections and the list of "
+                                      "violated invariants are not compared with it, and those "
+                                      "checks are unchecked")
+    elif base:
+        if find_commit(path, top, "--base", base, report):
+            check_against_base(path, entries, withdrawn, violated, rules, base, top, report)
     else:
-        report.cannot_check("identifiers, versions and corrections against the commit the branch "
-                            "left the main branch from", "no --base given")
-        report.cannot_check("the list of violated invariants against that commit", "no --base given")
+        report.notes.append("no --base given: identifiers, versions, corrections and the list of "
+                            "violated invariants are not compared with the main branch")
 
-    if os.path.exists(EXAMPLES) and os.path.exists(OWN_FILE) and os.path.samefile(path, OWN_FILE):
-        check_examples(items, EXAMPLES, report)
+    if merge_onto == NO_COMMIT:
+        no_onto = "--merge-onto none: there is no commit to merge onto"
+        check_merge_todo(entry_list, rules, report, no_commit=no_onto)
+        check_fingerprints(None, None, report, no_commit=no_onto)
+        report.notes.append(no_onto + "; `TODO` in the entries and the fingerprints their links "
+                                      "carry are not checked against a merge, and those checks "
+                                      "are unchecked")
+    elif merge_onto:
+        if find_commit(path, top, "--merge-onto", merge_onto, report):
+            check_merge_todo(entry_list, rules, report)
+            merged = merged_decisions(path, foundation, merge_onto, top, report)
+            onto_entries = entries_on(path, merge_onto, rules, top, report)
+            if merged is not None and onto_entries is not None:
+                withdrawn_now = {cells[0] for cells, _ in withdrawn if cells}
+                after = [(entry, None) for entry in entry_list] + \
+                    [(entry, merge_onto) for entry in onto_entries
+                     if entry.identifier not in entries and entry.identifier not in withdrawn_now]
+                check_fingerprints(after, merged, report)
+    else:
+        report.notes.append("no --merge-onto given: `TODO` in the entries is not checked against a "
+                            "merge, and the fingerprints their links carry are not compared with "
+                            "the current wording")
+
+    if os.path.exists(examples) and os.path.exists(OWN_FILE) and os.path.samefile(path, OWN_FILE):
+        check_examples(items, examples, report)
     report.print(stream)
+    if record is not None:
+        write_record(record, report)
     return 1 if report.errors else 0
 
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description="Check a product's invariants against the template.")
     parser.add_argument("file", nargs="?", default=os.path.join("foundations", "invariants.md"))
-    parser.add_argument("--base", help="the commit the task branch left the main branch from")
+    parser.add_argument("--base", help="the commit the task branch left the main branch from, to "
+                                       "compare identifiers, versions, corrections and the list of "
+                                       "violated invariants with; `none` where it does not exist, "
+                                       "which records those checks as unchecked")
+    parser.add_argument("--merge-onto", help="the commit of the main branch a merge is made onto; "
+                                             "only with it is `TODO` reported in a field the main "
+                                             "branch does not hold it in, and every fingerprint in "
+                                             "*Derives from* and *Rests on* compared with the "
+                                             "decision log the merge leaves; `none` where the main "
+                                             "branch does not exist, which records those checks as "
+                                             "unchecked")
+    parser.add_argument("--record", help="the JSON Lines file, created or overwritten, that "
+                                         "receives a verdict for each invariant a check cites")
     arguments = parser.parse_args(argv)
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")
-    return run(arguments.file, arguments.base)
+    return run(arguments.file, arguments.base, merge_onto=arguments.merge_onto,
+               record=arguments.record)
 
 
 if __name__ == "__main__":

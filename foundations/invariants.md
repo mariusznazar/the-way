@@ -137,9 +137,9 @@ Against {fork-point}, the decision log gains at most one version of each number.
 
 ## invariant-method-form/1
 
-Every entry of `foundations/invariants.md` names as its method a command that begins with the name of the program it runs, the path alone of a file that exists, or `TODO`.
+Every entry of `foundations/invariants.md` names as its method a command that begins with the name of the program it runs, the path alone of a file that exists, or `TODO`, alone or followed by ` — ` and what is missing.
 
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md`
+- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-08@a0bbac21 · WAY-61@c6bdfd7c · WAY-63@d05ff1f0
 - **Part:** every
@@ -238,7 +238,7 @@ Every decision version in the decision log names its level of verification, or h
 
 Every decision in force whose verification includes level 1 has at least one entry of `foundations/invariants.md` deriving from it.
 
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md`
+- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-12@55e89140 · WAY-17@ab01c0e5
 - **Part:** every
@@ -249,7 +249,7 @@ Every decision in force whose verification includes level 1 has at least one ent
 
 Every identifier the level 1 verification of the latest version of a decision in the decision log names is an entry of `foundations/invariants.md` whose *Derives from* names that decision.
 
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md`
+- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-12@55e89140 · WAY-17@ab01c0e5
 - **Part:** every
@@ -425,7 +425,7 @@ No repeal in the decision log has binding sentences.
 
 Every name in the scope of the latest version of a decision in the decision log is the identifier of a part in the part map.
 
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md`
+- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-21@586e4a38 · WAY-41@40134aeb
 - **Part:** every
@@ -645,7 +645,7 @@ The relation model's script gives a text the first eight characters, in lower-ca
 
 Every entry of the part map is a part, a critical flow or a surface.
 
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md`
+- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-40@aeabb301
 - **Part:** part-map
@@ -656,7 +656,7 @@ Every entry of the part map is a part, a critical flow or a surface.
 
 The part map holds no section other than its entries and the lists its template names.
 
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md`
+- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-40@aeabb301
 - **Part:** part-map
@@ -667,7 +667,7 @@ The part map holds no section other than its entries and the lists its template 
 
 The repository holds exactly one part map, `foundations/part_map.md`.
 
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md`
+- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-40@aeabb301
 - **Part:** every
@@ -678,7 +678,7 @@ The repository holds exactly one part map, `foundations/part_map.md`.
 
 Every identifier of an entry in the part map is made of words.
 
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md`
+- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-41@40134aeb
 - **Part:** part-map
@@ -689,7 +689,7 @@ Every identifier of an entry in the part map is made of words.
 
 No identifier is held by two entries or withdrawal lines of the part map and `foundations/invariants.md` taken together.
 
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md`
+- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-41@40134aeb · WAY-64@c9ec0c5c
 - **Part:** part-map · invariants
@@ -722,7 +722,7 @@ The fingerprint a script of the-way gives an entry of the part map is the finger
 
 No entry of the part map carries a version.
 
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md`
+- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-43@2914f0cf
 - **Part:** part-map
@@ -733,7 +733,7 @@ No entry of the part map carries a version.
 
 Every file git tracks matches the path patterns of exactly one part of the part map, or stands on the map's list of files left out on purpose.
 
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md`
+- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** TODO — git matches a path pattern as it matches a pattern of a `.gitattributes` file (https://git-scm.com/docs/gitattributes), and reports the match through `git check-attr` (https://git-scm.com/docs/git-check-attr)
 - **Derives from:** WAY-44@220f5b85
 - **Part:** every
@@ -744,7 +744,7 @@ Every file git tracks matches the path patterns of exactly one part of the part 
 
 Every path pattern in the part map matches at least one file git tracks.
 
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md`
+- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** TODO — git matches a path pattern as it matches a pattern of a `.gitattributes` file (https://git-scm.com/docs/gitattributes), and reports the match through `git check-attr` (https://git-scm.com/docs/git-check-attr)
 - **Derives from:** WAY-44@220f5b85
 - **Part:** every
@@ -755,7 +755,7 @@ Every path pattern in the part map matches at least one file git tracks.
 
 No file on the part map's list of files left out on purpose matches the path patterns of a part.
 
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md`
+- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** TODO — git matches a path pattern as it matches a pattern of a `.gitattributes` file (https://git-scm.com/docs/gitattributes), and reports the match through `git check-attr` (https://git-scm.com/docs/git-check-attr)
 - **Derives from:** WAY-44@220f5b85
 - **Part:** part-map
@@ -766,7 +766,7 @@ No file on the part map's list of files left out on purpose matches the path pat
 
 Every part a critical flow of the part map lists is a part of the map.
 
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md`
+- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-45@3991b544
 - **Part:** part-map
@@ -777,7 +777,7 @@ Every part a critical flow of the part map lists is a part of the map.
 
 Every critical flow in the part map names an invariant and a test that names the flow.
 
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md`
+- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-45@3991b544
 - **Part:** part-map · gate
@@ -788,7 +788,7 @@ Every critical flow in the part map names an invariant and a test that names the
 
 Every invariant identifier the part map names is an entry of `foundations/invariants.md`.
 
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md`
+- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-64@c9ec0c5c
 - **Part:** every
@@ -799,7 +799,7 @@ Every invariant identifier the part map names is an entry of `foundations/invari
 
 Every failure mode recorded in the part map names its severity.
 
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md`
+- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-46@b0cef8dd
 - **Part:** part-map
@@ -810,7 +810,7 @@ Every failure mode recorded in the part map names its severity.
 
 Every failure mode recorded in the part map names an invariant that detects it before release, or reads "not detected".
 
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md`
+- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-46@b0cef8dd
 - **Part:** part-map
@@ -821,7 +821,7 @@ Every failure mode recorded in the part map names an invariant that detects it b
 
 No part of the part map carries a criticality written by hand.
 
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md`
+- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-46@b0cef8dd
 - **Part:** part-map
@@ -854,7 +854,7 @@ The map guard reports every dependency running from a part of higher criticality
 
 For every critical flow whose test leaves a coverage file, every part that coverage names stands in the flow's list of parts.
 
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md`
+- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** TODO — git matches a path pattern as it matches a pattern of a `.gitattributes` file (https://git-scm.com/docs/gitattributes), and reports the match through `git check-attr` (https://git-scm.com/docs/git-check-attr)
 - **Derives from:** WAY-47@f4daadb2
 - **Part:** every
@@ -887,7 +887,7 @@ The map guard starts no test run of its own.
 
 Every trust boundary in the part map names a pattern of files that matches at least one file git tracks.
 
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md`
+- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** TODO — git matches a path pattern as it matches a pattern of a `.gitattributes` file (https://git-scm.com/docs/gitattributes), and reports the match through `git check-attr` (https://git-scm.com/docs/git-check-attr)
 - **Derives from:** WAY-48@7f42c295
 - **Part:** every
@@ -898,7 +898,7 @@ Every trust boundary in the part map names a pattern of files that matches at le
 
 Every exchange with the external context in the part map records its direction, whether what comes in is trusted, and whether its consumer updates together with the product.
 
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md`
+- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-48@7f42c295 · WAY-50@56465170
 - **Part:** part-map
@@ -920,7 +920,7 @@ The gate runs the check for crafted input on every change that, against "{fork-p
 
 Every symbol or schema element declared a surface carries a level of promise.
 
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md`
+- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-49@631b41c6
 - **Part:** every
@@ -931,7 +931,7 @@ Every symbol or schema element declared a surface carries a level of promise.
 
 Every surface in the part map names a declaration that exists, or says that it cannot be marked at the element and names the test that checks it.
 
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md`
+- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-49@631b41c6
 - **Part:** every
@@ -942,7 +942,7 @@ Every surface in the part map names a declaration that exists, or says that it c
 
 No withdrawal date is written in the part map.
 
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md`
+- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-49@631b41c6
 - **Part:** part-map
@@ -953,7 +953,7 @@ No withdrawal date is written in the part map.
 
 Every level of promise a declaration uses has a policy in the part map.
 
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md`
+- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-50@56465170
 - **Part:** every
@@ -964,7 +964,7 @@ Every level of promise a declaration uses has a policy in the part map.
 
 No surface in the part map carries a change path of its own.
 
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md`
+- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-50@56465170
 - **Part:** part-map
@@ -975,7 +975,7 @@ No surface in the part map carries a change path of its own.
 
 Every violation of a part map rule that the code holds stands on the list of known violations.
 
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md`
+- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-51@83d3d193
 - **Part:** every
@@ -986,7 +986,7 @@ Every violation of a part map rule that the code holds stands on the list of kno
 
 The list of known violations is a subset of its version on {fork-point}.
 
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --base {fork-point}`
+- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --base {fork-point} --record .runs/part-map-base.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-51@83d3d193
 - **Part:** part-map
@@ -997,7 +997,7 @@ The list of known violations is a subset of its version on {fork-point}.
 
 Every position on the list of known violations names a violation the code holds.
 
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md`
+- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-51@83d3d193
 - **Part:** every
@@ -1008,7 +1008,7 @@ Every position on the list of known violations names a violation the code holds.
 
 Every position on the list of known violations names a source part, a target part, a file and what it reaches for.
 
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md`
+- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-51@83d3d193
 - **Part:** part-map
@@ -1019,7 +1019,7 @@ Every position on the list of known violations names a source part, a target par
 
 No position on the list of known violations names a line number.
 
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md`
+- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-51@83d3d193
 - **Part:** part-map
@@ -1052,7 +1052,7 @@ No file generated for an agent holds an overview of the repository's directories
 
 Every critical flow in the part map names a test whose path lies under `gate/`.
 
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md`
+- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-55@97b25b1c
 - **Part:** part-map · gate
@@ -1063,7 +1063,7 @@ Every critical flow in the part map names a test whose path lies under `gate/`.
 
 Every entry of `foundations/invariants.md` states its invariant in one sentence.
 
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md`
+- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-56@3213162c
 - **Part:** invariants
@@ -1074,7 +1074,7 @@ Every entry of `foundations/invariants.md` states its invariant in one sentence.
 
 The identifier in the heading of every entry of `foundations/invariants.md` has the form the invariants template gives.
 
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md`
+- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-64@c9ec0c5c
 - **Part:** invariants
@@ -1085,7 +1085,7 @@ The identifier in the heading of every entry of `foundations/invariants.md` has 
 
 The heading of every entry of `foundations/invariants.md` carries a version number.
 
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md`
+- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-57@29edb491
 - **Part:** invariants
@@ -1096,7 +1096,7 @@ The heading of every entry of `foundations/invariants.md` carries a version numb
 
 Every entry of `foundations/invariants.md` with no fingerprint on {fork-point} carries version 1 and declares no correction.
 
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --base {fork-point}`
+- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --base {fork-point} --record .runs/invariants-base.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-57@29edb491
 - **Part:** invariants
@@ -1107,7 +1107,7 @@ Every entry of `foundations/invariants.md` with no fingerprint on {fork-point} c
 
 Every entry of `foundations/invariants.md` whose fingerprint differs from its fingerprint on {fork-point} carries either a version one higher than there and no correction, or the version it has there and a correction naming both fingerprints.
 
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --base {fork-point}`
+- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --base {fork-point} --record .runs/invariants-base.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-57@29edb491
 - **Part:** invariants
@@ -1118,7 +1118,7 @@ Every entry of `foundations/invariants.md` whose fingerprint differs from its fi
 
 Every entry of `foundations/invariants.md` whose fingerprint equals its fingerprint on {fork-point} carries the version it has there, and declares no correction whose second fingerprint differs from it.
 
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --base {fork-point}`
+- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --base {fork-point} --record .runs/invariants-base.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-57@29edb491
 - **Part:** invariants
@@ -1129,7 +1129,7 @@ Every entry of `foundations/invariants.md` whose fingerprint equals its fingerpr
 
 No entry of `foundations/invariants.md` holds, beside its current sentence, a sentence it held on {fork-point}.
 
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --base {fork-point}`
+- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --base {fork-point} --record .runs/invariants-base.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-57@29edb491
 - **Part:** invariants
@@ -1140,10 +1140,21 @@ No entry of `foundations/invariants.md` holds, beside its current sentence, a se
 
 Every `invariant:` line in a check that names an entry of `foundations/invariants.md` cites its current version.
 
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md`
+- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-57@29edb491 · WAY-65@58d1f2c3
 - **Part:** every
+- **Correction:** none
+- **Recovered:** none
+
+## invariant-correction-confirmation/1
+
+Every correction an entry of `foundations/invariants.md` declares is confirmed by the human deciding the change, with both wordings in front of them.
+
+- **Method:** `TODO`
+- **Rests on:** none
+- **Derives from:** WAY-57@29edb491
+- **Part:** invariants
 - **Correction:** none
 - **Recovered:** none
 
@@ -1151,7 +1162,7 @@ Every `invariant:` line in a check that names an entry of `foundations/invariant
 
 Every entry of `foundations/invariants.md` holds in *Recovered* either `none` or a value of the form `recovered — searched: <…>; found: <…>`.
 
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md`
+- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-58@793400ae
 - **Part:** invariants
@@ -1162,7 +1173,7 @@ Every entry of `foundations/invariants.md` holds in *Recovered* either `none` or
 
 Every entry of `foundations/invariants.md` that names a decision it derives from holds `none` in *Recovered*.
 
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md`
+- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-58@793400ae
 - **Part:** invariants
@@ -1195,7 +1206,7 @@ The fingerprint the invariants guard gives an invariant entry is the fingerprint
 
 No sentence in `foundations/invariants.md`, outside quoted text, contains the words "main branch" or "task branch".
 
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md`
+- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-60@c85d1ac0
 - **Part:** invariants
@@ -1206,7 +1217,7 @@ No sentence in `foundations/invariants.md`, outside quoted text, contains the wo
 
 Every value from the gate's list that a sentence of `foundations/invariants.md` names outside quoted text is taken by its command, unless its method is not a command.
 
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md`
+- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-60@c85d1ac0
 - **Part:** invariants
@@ -1217,7 +1228,7 @@ Every value from the gate's list that a sentence of `foundations/invariants.md` 
 
 Every value a command in `foundations/invariants.md` takes from the gate stands on the list in the invariants template.
 
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md`
+- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-61@c6bdfd7c
 - **Part:** invariants
@@ -1248,9 +1259,9 @@ The gate reports no pass for an invariant that no run recorded a verdict for.
 
 ## invariant-part-names/1
 
-Every part an entry of `foundations/invariants.md` names is an entry of the part map.
+Every part an entry of `foundations/invariants.md` names is a part of the part map.
 
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md`
+- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-62@d9c21624
 - **Part:** invariants · part-map
@@ -1261,7 +1272,7 @@ Every part an entry of `foundations/invariants.md` names is an entry of the part
 
 Every entry of `foundations/invariants.md` names `every` or at least one part, never both.
 
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md`
+- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-62@d9c21624
 - **Part:** invariants
@@ -1338,7 +1349,7 @@ The gate's command exits non-zero when some result it reports is `error`, an inv
 
 The repository holds exactly one file of invariant entries, `foundations/invariants.md`.
 
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md`
+- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-64@c9ec0c5c
 - **Part:** every
@@ -1349,7 +1360,7 @@ The repository holds exactly one file of invariant entries, `foundations/invaria
 
 Every identifier `foundations/invariants.md` held on {fork-point} stands in it as an entry or as a withdrawal line.
 
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --base {fork-point}`
+- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --base {fork-point} --record .runs/invariants-base.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-64@c9ec0c5c
 - **Part:** invariants
@@ -1360,7 +1371,7 @@ Every identifier `foundations/invariants.md` held on {fork-point} stands in it a
 
 Every identifier that stood as a withdrawal line of `foundations/invariants.md` on {fork-point} is still a withdrawal line of that file.
 
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --base {fork-point}`
+- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --base {fork-point} --record .runs/invariants-base.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-64@c9ec0c5c
 - **Part:** invariants
@@ -1371,7 +1382,7 @@ Every identifier that stood as a withdrawal line of `foundations/invariants.md` 
 
 Every successor a withdrawal line of `foundations/invariants.md` names is an entry or a withdrawal line of that file, or `none`.
 
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md`
+- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-64@c9ec0c5c
 - **Part:** invariants
@@ -1382,7 +1393,7 @@ Every successor a withdrawal line of `foundations/invariants.md` names is an ent
 
 Every `invariant:` line in a check names an entry of `foundations/invariants.md`.
 
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md`
+- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-12@55e89140 · WAY-17@ab01c0e5 · WAY-65@58d1f2c3
 - **Part:** every
@@ -1393,7 +1404,7 @@ Every `invariant:` line in a check names an entry of `foundations/invariants.md`
 
 Every `data:` line in an invariant test names a file that exists.
 
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md`
+- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-65@58d1f2c3
 - **Part:** every
@@ -1415,7 +1426,7 @@ The invariant tests of a change include the file of every check that cites an in
 
 Every name in the *Derives from* or *Rests on* of an entry of `foundations/invariants.md`, other than `none` or `TODO`, carries a fingerprint.
 
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md`
+- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-66@d5ae207f
 - **Part:** invariants
@@ -1426,7 +1437,7 @@ Every name in the *Derives from* or *Rests on* of an entry of `foundations/invar
 
 Where {merge-onto} exists, every fingerprint in the *Derives from* or *Rests on* of an entry of `foundations/invariants.md` equals the current fingerprint of the entry it names.
 
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --merge-onto {merge-onto}`
+- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --merge-onto {merge-onto} --record .runs/invariants-merge-onto.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-66@d5ae207f
 - **Part:** every
@@ -1437,7 +1448,7 @@ Where {merge-onto} exists, every fingerprint in the *Derives from* or *Rests on*
 
 The list of violated invariants is a subset of its version on {fork-point}.
 
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --base {fork-point}`
+- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --base {fork-point} --record .runs/invariants-base.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-67@7a06f2c0
 - **Part:** invariants
@@ -1448,7 +1459,7 @@ The list of violated invariants is a subset of its version on {fork-point}.
 
 Every position on the list of violated invariants names an entry of `foundations/invariants.md` at its current version and no other.
 
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md`
+- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-67@7a06f2c0
 - **Part:** invariants
@@ -1459,7 +1470,7 @@ Every position on the list of violated invariants names an entry of `foundations
 
 Every quarantine position in `foundations/invariants.md` names an entry at its current version and an end date.
 
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md`
+- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-68@55b95268
 - **Part:** invariants
@@ -1470,7 +1481,7 @@ Every quarantine position in `foundations/invariants.md` names an entry at its c
 
 No quarantine position in `foundations/invariants.md` names an invariant a critical flow names.
 
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md`
+- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-68@55b95268
 - **Part:** invariants · part-map
@@ -1525,7 +1536,7 @@ Where {merge-onto} exists, no field of an entry of the decision log holds `TODO`
 
 Every entry of the part map carries every field the part map template gives an entry of its kind.
 
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md`
+- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-71@1f735149
 - **Part:** part-map
@@ -1536,7 +1547,7 @@ Every entry of the part map carries every field the part map template gives an e
 
 No field of an entry of the part map holds `none` or `TODO` where the part map template does not give it that word.
 
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md`
+- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-71@1f735149
 - **Part:** part-map
@@ -1547,7 +1558,7 @@ No field of an entry of the part map holds `none` or `TODO` where the part map t
 
 Every entry of `foundations/invariants.md` carries every field the invariants template gives an entry.
 
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md`
+- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-71@1f735149
 - **Part:** invariants
@@ -1558,7 +1569,7 @@ Every entry of `foundations/invariants.md` carries every field the invariants te
 
 No field of an entry of `foundations/invariants.md` holds `none` or `TODO` where the invariants template does not give it that word.
 
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md`
+- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-71@1f735149
 - **Part:** invariants
@@ -1569,7 +1580,7 @@ No field of an entry of `foundations/invariants.md` holds `none` or `TODO` where
 
 Where {merge-onto} exists, no field of an entry of `foundations/invariants.md` other than *Method* and *Rests on* holds `TODO`.
 
-- **Method:** `TODO`
+- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --merge-onto {merge-onto} --record .runs/invariants-merge-onto.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-71@1f735149
 - **Part:** invariants
@@ -1602,7 +1613,7 @@ Every line of the-way's own record of a run is one JSON object holding `check`, 
 
 Every path ending in `.jsonl` that a command in `foundations/invariants.md` names is one git ignores, and no such command names two.
 
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md`
+- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** TODO — a gitignore file specifies intentionally untracked files that Git should ignore (https://git-scm.com/docs/gitignore)
 - **Derives from:** WAY-74@6e9c9b8c
 - **Part:** invariants · repository

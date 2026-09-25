@@ -2498,10 +2498,10 @@ flagged, as WAY-02 has it.
 - **Outranks:** none
 - **Verification:** level 1 — invariants: invariant-version-number · invariant-version-new ·
   invariant-version-changed · invariant-version-unchanged · invariant-earlier-wording ·
-  invariant-citation-version. Level 2 for what counts as a correction — a change after which some
-  test citing the entry would need a different expected value is a raise, never a correction,
-  because WAY-10 treats a changed expected value as more than a test's form; an agent compares the
-  change with the decision:
+  invariant-citation-version · invariant-correction-confirmation. Level 2 for what counts as a
+  correction — a change after which some test citing the entry would need a different expected
+  value is a raise, never a correction, because WAY-10 treats a changed expected value as more than
+  a test's form; an agent compares the change with the decision:
   - complies: a typo in an invariant's sentence is fixed under a declaration naming both
     fingerprints, the human deciding the change confirms it seeing both wordings, and no test's
     citation changes; "at most three" rewritten as "at most four" raises the version, and the test
@@ -2884,8 +2884,7 @@ of invariants, once they record a verdict for each invariant they check, cite th
 are invariant tests under WAY-65, read-only during implementation (WAY-03) and changing through the
 panel (WAY-10). Recording a verdict for each invariant, and taking `none` in place of a commit
 that does not exist, changes the commands of those three guards, which the map declares as
-surfaces; the change travels on the change path of their promise level (WAY-49, WAY-50). Until the
-guards record such verdicts, the gate has no verdict to read for any of them. A failure a run
+surfaces; the change travels on the change path of their promise level (WAY-49, WAY-50). A failure a run
 records for no entry is reported by the gate as such, never dropped; how it counts is set by WAY-63.
 The invariant of the critical flow `wording-reaches-dependants` was a sentence about the real log
 with a test on made-up logs as its method; the same change rewrites it in the map, in place
@@ -3311,8 +3310,7 @@ measurement shows it misses four cases out of five; naming, on a `data:` line, e
 leans on — no cutoff was found: the map guard's own test leans on every file git tracks, so through
 WAY-65 and WAY-03 the whole repository would be read-only during implementation, which is the
 variant WAY-65 rejects.
-*Consequences:* the tests of both guards are rewritten under this rule when they become invariant
-tests; the decision guard's `Relations` class is where it bites. The draft template's sentence on
+*Consequences:* the tests of both guards are written under this rule; the decision guard's `Relations` class is where it bites. The draft template's sentence on
 the expected value is corrected in place to this wording and gains its citation (WAY-37, WAY-54).
 Which files an invariant test names, so that a fixture or a builder of its input cannot be changed
 underneath it, stays open — `gate/test_wording_reaches_dependants.py` imports its fixture and
@@ -3366,8 +3364,7 @@ template in its table of states, the others in the form of each field. The part 
 field. The decision guard warns on a `TODO` its template gives, and reports it as an error where
 `{merge-onto}` exists (WAY-60), which leaves the merge creating the main branch unchecked. Each
 element's guard checks the level 1 invariants above for its own entries;
-`invariant-entry-merge-todo` waits on its guard, and drops *Rests on* once the environment facts
-element has entries.
+`invariant-entry-merge-todo` drops *Rests on* once the environment facts element has entries.
 
 ### WAY-72/1 — In what language is a product's foundation written?
 

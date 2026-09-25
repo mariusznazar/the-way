@@ -2,10 +2,12 @@
 
 Run from anywhere: python -B -m unittest discover -s <the-way>/elements/invariants -p "test_*.py"
 
-Inputs and expected fingerprints are written out, never computed by the code under test (WAY-70).
+Inputs, expected fingerprints and expected record lines are written out, never computed by the
+code under test (WAY-70).
 """
 
 import io
+import json
 import os
 import subprocess
 import sys
@@ -16,16 +18,32 @@ sys.dont_write_bytecode = True
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import format_guard  # noqa: E402
 
+GUARD = "elements/invariants/format_guard.py"
+NO_COMMIT = "the method takes a commit the gate filled in as not existing"
+
 DECISION = "A saved game is written to the player's own storage only."
 DECISION_FINGERPRINT = "4dd7fb86"
+DECISION_REWORDED = "A saved game is written to the player's own storage, and nowhere else."
+DECISION_REWORDED_FINGERPRINT = "4b7b9b75"
 SENTENCE = "A game saved and loaded back holds the same state as before it was saved."
 SENTENCE_FINGERPRINT = "885f5dbb"
 REWORDED = "A game saved and loaded back holds the same state as when it was saved."
 REWORDED_FINGERPRINT = "f2ad38fc"
 OTHER = "A saved game loads in any later version of the product."
 
-LOG = "\n".join(["# Decision log", "", "### WAY-01/1 — Where does a saved game go?", "", DECISION,
-                 "", "- **Change:** new decision", ""])
+
+def decision(version=1, binding=DECISION, verification=None, change=None):
+    lines = ["### WAY-01/%d — Where does a saved game go?" % version, ""]
+    if binding is not None:
+        lines += [binding, ""]
+    lines.append("- **Change:** %s" % (change or ("new decision" if version == 1 else
+                                                 "reword · previous: WAY-01/%d" % (version - 1))))
+    if verification is not None:
+        lines.append("- **Verification:** %s" % verification)
+    return "\n".join(lines) + "\n"
+
+
+LOG = "# Decision log\n\n" + decision()
 
 MAP = "\n".join([
     "# Part map", "",
@@ -46,16 +64,19 @@ MAP = "\n".join([
 def entry(identifier="save-round-trip", version=1, sentence=SENTENCE,
           method="`python -m unittest tests/test_saving.py`", rests="none",
           derives="WAY-01@" + DECISION_FINGERPRINT, part="saving · loading", correction="none",
-          recovered="none", omit=()):
-    lines = ["## %s/%d" % (identifier, version), "", sentence, ""]
+          recovered="none", omit=(), heading=None):
+    lines = [heading or "## %s/%d" % (identifier, version), "", sentence, ""]
     fields = [("Method", method), ("Rests on", rests), ("Derives from", derives), ("Part", part),
               ("Correction", correction), ("Recovered", recovered)]
     lines += ["- **%s:** %s" % (name, value) for name, value in fields if name not in omit]
     return "\n".join(lines)
 
 
-def later():
-    return entry("loads-in-later-versions", sentence=OTHER, derives="none", part="loading")
+def later(**changes):
+    values = dict(identifier="loads-in-later-versions", sentence=OTHER, derives="none",
+                  part="loading", recovered="recovered — searched: the decision log; found: nothing")
+    values.update(changes)
+    return entry(**values)
 
 
 WITHDRAWN = "\n".join(["## Withdrawn identifiers", "", "| Identifier | Successors |", "|---|---|",
@@ -82,14 +103,35 @@ FILES = {"src/saving.py": "def save():\n    pass\n",
          "docs/review_checklist.md": "# What a reviewer looks at\n",
          "README.md": "# Product\n\n# invariant: nothing-here/1\n"}
 
+# The invariants each run records, as the method lines of the-way's own entries name the runs.
+PLAIN = sorted([
+    "invariant-version-number/1", "invariants-file/1", "invariant-identifier-form/1",
+    "withdrawal-successors/1", "identifier-holders/1", "invariant-entry-field-presence/1",
+    "invariant-entry-field-words/1", "invariant-sentence-count/1", "sentence-branch-names/1",
+    "sentence-gate-values/1", "method-gate-values/1", "invariant-method-form/1",
+    "link-fingerprint-presence/1", "invariant-part-form/1", "invariant-part-names/1",
+    "invariant-recovered-form/1", "invariant-recovered-derived/1",
+    "level-one-decision-invariants/1", "verification-invariant-derivation/1",
+    "quarantine-position-form/1", "quarantine-flow-invariants/1", "violated-position-version/1",
+    "invariant-citation-version/1", "invariant-citation-target/1", "data-line-target/1",
+    "run-record-path/1"])
+BASE = sorted([
+    "invariant-version-new/1", "invariant-version-changed/1", "invariant-version-unchanged/1",
+    "invariant-earlier-wording/1", "invariant-identifier-persistence/1",
+    "invariant-withdrawal-persistence/1", "violated-list-growth/1"])
+MERGE = sorted(["invariant-entry-merge-todo/1", "link-fingerprint-value/1"])
+
 
 class GuardTestCase(unittest.TestCase):
     files = FILES
 
     def setUp(self):
         self.directory = tempfile.TemporaryDirectory()
+        self.outside = tempfile.TemporaryDirectory()
         self.root = self.directory.name
         self.path = os.path.join(self.root, "foundations", "invariants.md")
+        self.record_path = os.path.join(self.outside.name, ".runs", "invariants.jsonl")
+        self.lines = []
         files = dict(self.files)
         files["foundations/part_map.md"] = MAP
         files["foundations/decisions.md"] = LOG
@@ -101,6 +143,7 @@ class GuardTestCase(unittest.TestCase):
 
     def tearDown(self):
         self.directory.cleanup()
+        self.outside.cleanup()
 
     def write(self, name, content):
         full = os.path.join(self.root, name.replace("/", os.sep))
@@ -118,13 +161,16 @@ class GuardTestCase(unittest.TestCase):
         self.git("add", "-A")
         self.git("commit", "-q", "-m", "base")
 
-    def guard(self, text, base=None, violated_text=None):
+    def guard(self, text, base=None, violated_text=None, merge_onto=None, path=None):
         self.write("foundations/invariants.md", text)
         if violated_text is not None:
             self.write("foundations/violated_invariants.md", violated_text)
         self.git("add", "-A")
         output = io.StringIO()
-        code = format_guard.run(self.path, base=base, stream=output)
+        code = format_guard.run(path or self.path, base=base, stream=output,
+                                merge_onto=merge_onto, record=self.record_path)
+        with open(self.record_path, encoding="utf-8") as handle:
+            self.lines = [json.loads(item) for item in handle.read().split("\n") if item]
         return code, output.getvalue()
 
     def assertPasses(self, text, **options):
@@ -137,24 +183,41 @@ class GuardTestCase(unittest.TestCase):
         code, output = self.guard(text, **options)
         self.assertEqual(code, 1, output)
         self.assertIn(fragment, output)
+        return output
+
+    def verdicts(self, invariant):
+        return [line["verdict"] for line in self.lines if line["invariant"] == invariant]
+
+    def assertRecorded(self, invariant, verdict):
+        self.assertIn(verdict, self.verdicts(invariant), self.lines)
 
 
 class ValidFile(GuardTestCase):
     def test_valid_file_passes(self):
         self.assertPasses(invariants())
 
-    def test_without_base_the_checks_against_the_branch_point_are_unchecked(self):
+    def test_without_options_a_note_says_what_is_not_compared(self):
         output = self.assertPasses(invariants())
-        self.assertIn("unchecked: identifiers, versions and corrections against the commit", output)
-        self.assertIn("unchecked: the list of violated invariants against that commit", output)
+        self.assertIn("note: no --base given: identifiers, versions, corrections and the list of "
+                      "violated invariants are not compared with the main branch", output)
+        self.assertIn("note: no --merge-onto given: `TODO` in the entries is not checked against a "
+                      "merge", output)
 
     def test_method_as_the_path_of_a_file_a_human_assesses_against(self):
         self.assertPasses(invariants(entry(method="docs/review_checklist.md"), later()))
 
-    def test_todo_where_the_form_gives_it(self):
+    def test_todo_the_main_branch_holds(self):
         self.assertPasses(invariants(entry(method="`TODO`", rests="TODO — the store keeps 5 MB, "
-                                           "per its documentation", derives="`TODO — a decision on "
-                                           "saves, expected with the first task`"), later()))
+                                           "per its documentation"), later()))
+
+    def test_todo_the_form_gives_in_derives_from_is_a_warning(self):
+        code, output = self.guard(invariants(entry(derives="`TODO — a decision on saves, expected "
+                                                           "with the first task`"), later()))
+        self.assertEqual(code, 0, output)
+        self.assertIn("save-round-trip/1: *Derives from* holds `TODO`, which a merge onto the main "
+                      "branch does not take", output)
+        self.assertIn("0 error(s), 1 warning(s)", output)
+        self.assertEqual(self.verdicts("invariant-entry-field-words/1"), ["pass"])
 
     def test_every_as_the_part(self):
         self.assertPasses(invariants(entry(part="every"), later()))
@@ -164,17 +227,88 @@ class ValidFile(GuardTestCase):
                                            "decision log, git history; found: nothing"), later()))
 
 
+class Rules(unittest.TestCase):
+    def test_the_fields_the_main_branch_holds_todo_in_are_read_from_the_template(self):
+        self.assertEqual(format_guard.read_rules().main_todo, ["Method", "Rests on"])
+
+
+class EntriesInAText(unittest.TestCase):
+    def test_a_section_with_a_version_and_a_method_is_an_entry(self):
+        self.assertTrue(format_guard.holds_entries(
+            "# Notes\n\n## loads-fast/1\n\nA saved game loads.\n\n- **Method:** `TODO`\n"))
+
+    def test_a_section_without_a_method_is_no_entry(self):
+        self.assertFalse(format_guard.holds_entries("# Notes\n\n## release/2\n\nShipped.\n"))
+
+    def test_a_method_under_a_heading_without_a_version_is_no_entry(self):
+        self.assertFalse(format_guard.holds_entries(
+            "# Notes\n\n## How to check\n\n- **Method:** `TODO`\n"))
+
+
 class Layout(GuardTestCase):
     def test_file_elsewhere_than_foundations_invariants(self):
         self.write("foundations/other.md", invariants())
+        self.git("add", "-A")
         output = io.StringIO()
         code = format_guard.run(os.path.join(self.root, "foundations", "other.md"), stream=output)
         self.assertEqual(code, 1, output.getvalue())
-        self.assertIn("stand in foundations/invariants.md", output.getvalue())
+        self.assertIn("a product's invariants stand in foundations/invariants.md, not in "
+                      "foundations/other.md", output.getvalue())
+
+    def test_file_in_a_foundations_directory_below_the_root(self):
+        for name, content in (("product/foundations/part_map.md", MAP),
+                              ("product/foundations/decisions.md", LOG)):
+            self.write(name, content)
+        self.write("product/foundations/invariants.md", invariants())
+        self.git("add", "-A")
+        self.write("foundations/invariants.md", invariants())
+        output = io.StringIO()
+        code = format_guard.run(os.path.join(self.root, "product", "foundations", "invariants.md"),
+                                stream=output)
+        self.assertEqual(code, 1, output.getvalue())
+        self.assertIn("a product's invariants stand in foundations/invariants.md, not in "
+                      "product/foundations/invariants.md", output.getvalue())
+
+    def test_second_file_of_invariant_entries(self):
+        self.write("docs/invariants.md", invariants())
+        self.assertFails(invariants(), "`docs/invariants.md` is a second file of invariant entries")
+        self.assertRecorded("invariants-file/1", "fail")
+
+    def test_second_file_of_invariant_entries_under_another_name(self):
+        self.write("foundations/invariants_extra.md", "# Extra\n\n" + later(
+            identifier="loads-fast", sentence="A saved game loads in one second.") + "\n")
+        self.assertFails(invariants(), "`foundations/invariants_extra.md` is a second file of "
+                                       "invariant entries")
+        self.assertEqual(self.verdicts("invariants-file/1"), ["fail"])
+
+    def test_entry_shown_in_a_fenced_block_is_no_file_of_entries(self):
+        self.write("docs/guide.md", "# Guide\n\n```markdown\n" + entry() + "\n```\n")
+        self.assertPasses(invariants())
+        self.assertEqual(self.verdicts("invariants-file/1"), ["pass"])
+
+    def test_file_named_in_another_letter_case(self):
+        self.write("foundations/Invariants.md", invariants())
+        self.git("add", "-A")
+        output = io.StringIO()
+        code = format_guard.run(os.path.join(self.root, "foundations", "Invariants.md"),
+                                stream=output, record=self.record_path)
+        self.assertEqual(code, 1, output.getvalue())
+        self.assertIn("a product's invariants stand in foundations/invariants.md, not in "
+                      "foundations/Invariants.md", output.getvalue())
 
     def test_heading_that_is_neither_an_entry_nor_a_list(self):
         self.assertFails(invariants(entry(), later(), "## Notes\n\nSome notes."),
                          "heading `## Notes` is neither")
+        self.assertEqual(self.verdicts("invariant-version-number/1"), ["pass"])
+
+    def test_heading_of_an_entry_without_a_version(self):
+        self.assertFails(invariants(entry(heading="## save-round-trip"), later()),
+                         "heading `## save-round-trip` of an entry carries no version number")
+        self.assertEqual(self.verdicts("invariant-version-number/1"), ["fail"])
+
+    def test_heading_of_an_entry_with_a_version_that_is_no_number(self):
+        self.assertFails(invariants(entry(heading="## save-round-trip/v2"), later()),
+                         "heading `## save-round-trip/v2` of an entry carries no version number")
 
     def test_missing_list(self):
         self.assertFails(invariants(quarantine=None), "the file has no list `Quarantined invariants`")
@@ -196,13 +330,26 @@ class Identifiers(GuardTestCase):
     def test_identifier_with_capitals(self):
         self.assertFails(invariants(entry("Save-Round-Trip"), later()),
                          "`Save-Round-Trip` is not an identifier")
+        self.assertRecorded("invariant-identifier-form/1", "fail")
+
+    def test_identifier_with_a_space(self):
+        self.assertFails(invariants(entry(heading="## save round-trip/1"), later()),
+                         "`save round-trip` is not an identifier")
+        self.assertEqual(self.verdicts("invariant-identifier-form/1"), ["fail"])
+        self.assertEqual(self.verdicts("invariant-version-number/1"), ["pass"])
 
     def test_none_as_an_identifier(self):
         self.assertFails(invariants(entry("none"), later()), "`none` is not an identifier")
 
+    def test_withdrawn_identifier_of_another_form_is_no_entry_identifier(self):
+        self.assertFails(invariants(withdrawn=WITHDRAWN + "\n| Old_Name | none |"),
+                         "`Old_Name` is not an identifier")
+        self.assertEqual(self.verdicts("invariant-identifier-form/1"), ["pass"])
+
     def test_identifier_used_twice(self):
         self.assertFails(invariants(entry(), later(), entry(sentence=OTHER)),
                          "identifier `save-round-trip` is used twice")
+        self.assertRecorded("identifier-holders/1", "fail")
 
     def test_identifier_of_a_withdrawn_one(self):
         self.assertFails(invariants(entry("save-format"), later()),
@@ -210,15 +357,24 @@ class Identifiers(GuardTestCase):
 
     def test_identifier_held_by_a_part_of_the_map(self):
         self.assertFails(invariants(entry("saving"), later()), "`saving` is held by the part map")
+        self.assertRecorded("identifier-holders/1", "fail")
 
     def test_identifier_withdrawn_in_the_map(self):
         self.assertFails(invariants(entry("game-state"), later()),
                          "`game-state` is held by the part map")
 
+    def test_identifier_held_twice_in_the_map(self):
+        self.write("foundations/part_map.md", MAP.replace("## loading — Loading a game",
+                                                          "## saving — Loading a game"))
+        self.assertFails(invariants(), "part_map.md:12: identifier `saving` is held twice in the "
+                                       "part map")
+        self.assertRecorded("identifier-holders/1", "fail")
+
     def test_withdrawn_identifier_names_an_unknown_successor(self):
         self.assertFails(invariants(withdrawn=WITHDRAWN.replace("| save-round-trip |",
                                                                 "| save-trip |")),
                          "names successor `save-trip`")
+        self.assertRecorded("withdrawal-successors/1", "fail")
 
     def test_withdrawn_identifier_with_no_successor(self):
         self.assertPasses(invariants(withdrawn=WITHDRAWN.replace("| save-round-trip |", "| none |")))
@@ -228,6 +384,7 @@ class Fields(GuardTestCase):
     def test_missing_field(self):
         self.assertFails(invariants(entry(omit=("Recovered",)), later()),
                          "field *Recovered* is missing")
+        self.assertRecorded("invariant-entry-field-presence/1", "fail")
 
     def test_field_not_in_the_template(self):
         self.assertFails(invariants(entry() + "\n- **Owner:** the saving team", later()),
@@ -235,24 +392,42 @@ class Fields(GuardTestCase):
 
     def test_none_where_the_form_does_not_give_it(self):
         self.assertFails(invariants(entry(method="none"), later()), "*Method* may not hold `none`")
+        self.assertRecorded("invariant-entry-field-words/1", "fail")
 
     def test_todo_where_the_form_does_not_give_it(self):
         self.assertFails(invariants(entry(part="TODO"), later()), "*Part* may not hold `TODO`")
+        self.assertRecorded("invariant-entry-field-words/1", "fail")
 
+    def test_todo_inside_a_part_of_a_value(self):
+        self.assertFails(invariants(entry(derives="none", recovered="recovered — searched: TODO; "
+                                          "found: nothing"), later()),
+                         "*Recovered* may not hold `TODO`")
+        self.assertEqual(self.verdicts("invariant-entry-field-words/1"), ["fail"])
+
+    def test_todo_inside_a_path_is_no_todo(self):
+        self.assertPasses(invariants(entry(derives="none", recovered="recovered — searched: "
+                                           "docs/TODO.md; found: nothing"), later()))
+
+    def test_todo_as_one_item_of_a_list(self):
+        self.assertFails(invariants(entry(part="saving · TODO"), later()),
+                         "*Part* may not hold `TODO`")
 
 
 class Sentence(GuardTestCase):
     def test_missing_sentence(self):
         broken = entry().replace(SENTENCE + "\n\n", "")
         self.assertFails(invariants(broken, later()), "the sentence is missing")
+        self.assertRecorded("invariant-sentence-count/1", "fail")
 
     def test_two_sentences(self):
         self.assertFails(invariants(entry(sentence=SENTENCE + " " + OTHER), later()),
                          "2 sentences, an entry states one")
+        self.assertRecorded("invariant-sentence-count/1", "fail")
 
     def test_main_branch_outside_quoted_text(self):
         self.assertFails(invariants(entry(sentence="On the main branch, a saved game loads."),
                                     later()), 'the sentence names "main branch"')
+        self.assertRecorded("sentence-branch-names/1", "fail")
 
     def test_main_branches_outside_quoted_text(self):
         self.assertFails(invariants(entry(sentence="No saved game differs between main branches."),
@@ -261,6 +436,7 @@ class Sentence(GuardTestCase):
     def test_second_paragraph_after_the_sentence(self):
         broken = entry().replace(SENTENCE + "\n", SENTENCE + "\n\n" + OTHER + "\n")
         self.assertFails(invariants(broken, later()), "text outside the sentence and the fields")
+        self.assertRecorded("invariant-sentence-count/1", "fail")
 
     def test_prose_after_the_fields(self):
         self.assertFails(invariants(entry() + "\n\nThis holds since the first release.", later()),
@@ -285,6 +461,7 @@ class Sentence(GuardTestCase):
     def test_value_its_command_does_not_take(self):
         self.assertFails(invariants(entry(sentence="No saved game changes since {fork-point}."),
                                     later()), "names `{fork-point}`, which its command does not take")
+        self.assertRecorded("sentence-gate-values/1", "fail")
 
     def test_value_its_command_takes(self):
         self.assertPasses(invariants(entry(sentence="No saved game changes since {fork-point}.",
@@ -295,14 +472,44 @@ class Method(GuardTestCase):
     def test_command_that_is_a_path_alone(self):
         self.assertFails(invariants(entry(method="`tests/test_saving.py`"), later()),
                          "a command begins with the name of the program it runs")
+        self.assertRecorded("invariant-method-form/1", "fail")
 
     def test_command_taking_a_value_the_gate_does_not_fill_in(self):
         self.assertFails(invariants(entry(method="`python tests/compare.py {base}`"), later()),
                          "the command takes `{base}`")
+        self.assertRecorded("method-gate-values/1", "fail")
 
     def test_path_of_no_file(self):
         self.assertFails(invariants(entry(method="docs/missing.md"), later()),
                          "*Method* names `docs/missing.md`, which is not a file")
+        self.assertRecorded("invariant-method-form/1", "fail")
+
+    def test_command_beginning_with_a_flag(self):
+        self.assertFails(invariants(entry(method="`--verbose python tests/test_saving.py`"),
+                                    later()),
+                         "a command begins with the name of the program it runs, not `--verbose`")
+        self.assertEqual(self.verdicts("invariant-method-form/1"), ["fail"])
+
+    def test_command_beginning_with_a_variable(self):
+        self.assertFails(invariants(entry(method="`PYTHONPATH=src python tests/test_saving.py`"),
+                                    later()),
+                         "a command begins with the name of the program it runs, not "
+                         "`PYTHONPATH=src`")
+        self.assertEqual(self.verdicts("invariant-method-form/1"), ["fail"])
+
+    def test_empty_method(self):
+        self.assertFails(invariants(entry(method=""), later()), "field *Method* is missing")
+        self.assertEqual(self.verdicts("invariant-method-form/1"), ["fail"])
+
+    def test_shell_variable_in_a_command(self):
+        self.assertPasses(invariants(entry(method='`sh -c "python tests/test_saving.py ${HOME}"`'),
+                                     later()))
+        self.assertEqual(self.verdicts("method-gate-values/1"), ["pass"])
+
+    def test_shell_variable_in_a_sentence(self):
+        self.assertPasses(invariants(entry(sentence="A game saved under ${HOME} loads back whole."),
+                                     later()))
+        self.assertEqual(self.verdicts("sentence-gate-values/1"), ["pass"])
 
     def test_method_in_prose(self):
         self.assertFails(invariants(entry(method="a reviewer reads the save code"), later()),
@@ -310,37 +517,61 @@ class Method(GuardTestCase):
 
 
 class Links(GuardTestCase):
-    def test_stale_fingerprint_of_a_decision(self):
-        self.assertFails(invariants(entry(derives="WAY-01@00000000"), later()),
-                         "`WAY-01@00000000` — the current fingerprint of WAY-01 is 4dd7fb86")
+    def test_stale_fingerprint_without_a_commit_to_merge_onto(self):
+        self.assertPasses(invariants(entry(derives="WAY-01@00000000"), later()))
+        self.assertEqual(self.verdicts("link-fingerprint-value/1"), [])
 
     def test_decision_that_does_not_exist(self):
         self.assertFails(invariants(entry(derives="WAY-07@" + DECISION_FINGERPRINT), later()),
                          "names a decision that does not exist or binds nothing any more")
 
     def test_decision_repealed_since(self):
-        self.write("foundations/decisions.md", LOG + "\n".join([
-            "", "### WAY-01/2 — Where does a saved game go?", "",
-            "- **Change:** repeal · previous: WAY-01/1", ""]))
+        self.write("foundations/decisions.md", LOG + "\n" + decision(
+            2, binding=None, change="repeal · previous: WAY-01/1"))
         self.assertFails(invariants(), "`WAY-01@4dd7fb86` names a decision that does not exist or "
                                        "binds nothing any more")
 
     def test_decision_without_a_fingerprint(self):
-        self.assertFails(invariants(entry(derives="WAY-01"), later()), "`WAY-01` is not `WAY-NN@")
+        self.assertFails(invariants(entry(derives="WAY-01"), later()),
+                         "`WAY-01` carries no fingerprint of 8 hex digits; it reads "
+                         "`WAY-NN@<fingerprint>`")
+        self.assertRecorded("link-fingerprint-presence/1", "fail")
+
+    def test_fingerprint_shorter_than_the_relation_model_gives(self):
+        self.assertFails(invariants(entry(derives="WAY-01@1a2b3c"), later()),
+                         "`WAY-01@1a2b3c` carries no fingerprint of 8 hex digits")
+        self.assertEqual(self.verdicts("link-fingerprint-presence/1"), ["fail"])
+
+    def test_fingerprint_longer_than_the_relation_model_gives(self):
+        self.assertFails(invariants(entry(derives="WAY-01@4dd7fb860"), later()),
+                         "`WAY-01@4dd7fb860` carries no fingerprint of 8 hex digits")
+        self.assertEqual(self.verdicts("link-fingerprint-presence/1"), ["fail"])
 
     def test_named_fact_while_facts_have_no_entries(self):
         self.assertFails(invariants(entry(rests="storage-quota@1234abcd"), later()),
                          "the environment facts element has no entries")
+        self.assertEqual(self.verdicts("link-fingerprint-presence/1"), ["pass"])
+
+    def test_named_fact_without_a_fingerprint(self):
+        self.assertFails(invariants(entry(rests="storage-quota"), later()),
+                         "the environment facts element has no entries")
+        self.assertEqual(self.verdicts("link-fingerprint-presence/1"), ["fail"])
 
 
 class Part(GuardTestCase):
     def test_every_and_parts_at_once(self):
         self.assertFails(invariants(entry(part="every · saving"), later()),
                          "names `every` and parts at once")
+        self.assertRecorded("invariant-part-form/1", "fail")
+
+    def test_none_as_the_part(self):
+        self.assertFails(invariants(entry(part="none"), later()), "*Part* may not hold `none`")
+        self.assertEqual(self.verdicts("invariant-part-form/1"), ["fail"])
 
     def test_part_not_in_the_map(self):
         self.assertFails(invariants(entry(part="saving · cloud"), later()),
                          "names `cloud`, which is not a part of the part map")
+        self.assertRecorded("invariant-part-names/1", "fail")
 
     def test_flow_is_not_a_part(self):
         self.assertFails(invariants(entry(part="save-and-load"), later()),
@@ -361,11 +592,93 @@ class CorrectionAndRecovered(GuardTestCase):
     def test_recovered_of_another_form(self):
         self.assertFails(invariants(entry(derives="none", recovered="recovered from the code"),
                                     later()), "*Recovered* is neither `none` nor")
+        self.assertRecorded("invariant-recovered-form/1", "fail")
+        self.assertEqual(self.verdicts("invariant-recovered-derived/1"), ["pass"])
+
+    def test_empty_recovered(self):
+        self.assertFails(invariants(entry(recovered=""), later()), "field *Recovered* is missing")
+        self.assertEqual(self.verdicts("invariant-recovered-form/1"), ["fail"])
 
     def test_recovered_while_it_derives_from_a_decision(self):
         self.assertFails(invariants(entry(recovered="recovered — searched: the log; found: "
                                                     "nothing"), later()),
                          "*Recovered* is not `none`, while *Derives from* names a decision")
+        self.assertRecorded("invariant-recovered-derived/1", "fail")
+
+    def test_recovered_of_another_form_while_it_derives_from_a_decision(self):
+        output = self.assertFails(invariants(entry(recovered="recovered from the code"), later()),
+                                  "*Recovered* is neither `none` nor")
+        self.assertIn("*Recovered* is not `none`, while *Derives from* names a decision", output)
+        self.assertEqual(self.verdicts("invariant-recovered-derived/1"), ["fail"])
+
+
+class Verifications(GuardTestCase):
+    def log(self, *versions):
+        self.write("foundations/decisions.md", "# Decision log\n\n" + "\n".join(versions))
+
+    def test_level_one_decision_with_an_entry_named_that_derives_from_it(self):
+        self.log(decision(verification="level 1 — invariants: save-round-trip. Level 2 for the "
+                                       "rest — an agent compares the change with the decision."))
+        self.assertPasses(invariants())
+        self.assertEqual(self.verdicts("level-one-decision-invariants/1"), ["pass"])
+        self.assertEqual(self.verdicts("verification-invariant-derivation/1"), ["pass"])
+
+    def test_level_one_decision_no_entry_derives_from(self):
+        self.log(decision(verification="level 1 — invariants: loads-in-later-versions."))
+        self.assertFails(invariants(entry(derives="none", recovered="recovered — searched: the "
+                                          "log; found: nothing"), later()),
+                         "decisions.md:8: WAY-01 is in force and verified at level 1, but no entry "
+                         "of the file derives from it")
+        self.assertEqual(self.verdicts("level-one-decision-invariants/1"), ["fail"])
+
+    def test_level_two_decision_no_entry_derives_from(self):
+        self.log(decision(verification="level 2 — an agent compares the change with the decision."))
+        self.assertPasses(invariants(entry(derives="none", recovered="recovered — searched: the "
+                                           "log; found: nothing"), later()))
+
+    def test_repealed_decision_no_entry_derives_from(self):
+        self.log(decision(verification="level 1 — invariants: save-round-trip."),
+                 decision(2, binding=None, change="repeal · previous: WAY-01/1",
+                          verification="level 2 — an agent compares the change with the decision."))
+        self.assertPasses(invariants(entry(derives="none", recovered="recovered — searched: the "
+                                           "log; found: nothing"), later()))
+        self.assertEqual(self.verdicts("level-one-decision-invariants/1"), ["pass"])
+
+    def test_repealed_decision_verified_at_level_one_needs_no_entry_deriving_from_it(self):
+        self.log(decision(verification="level 1 — invariants: save-round-trip."),
+                 decision(2, binding=None, change="repeal · previous: WAY-01/1",
+                          verification="level 1 — invariants: save-round-trip."))
+        self.assertFails(invariants(entry(derives="none", recovered="recovered — searched: the "
+                                          "log; found: nothing"), later()),
+                         "its *Derives from* does not name WAY-01")
+        self.assertEqual(self.verdicts("level-one-decision-invariants/1"), ["pass"])
+
+    def test_verification_names_no_entry(self):
+        self.log(decision(verification="level 1 — invariants: save-round-trip · save-trip."))
+        self.assertFails(invariants(), "decisions.md:8: the level 1 verification of WAY-01/1 names "
+                                       "`save-trip`, which is not an entry of the file")
+        self.assertEqual(self.verdicts("verification-invariant-derivation/1"), ["fail"])
+
+    def test_verification_names_an_entry_that_does_not_derive_from_it(self):
+        self.log(decision(verification="level 1 — invariants: save-round-trip · "
+                                       "loads-in-later-versions."))
+        self.assertFails(invariants(), "loads-in-later-versions/1: the level 1 verification of "
+                                       "WAY-01/1 names it, but its *Derives from* does not name "
+                                       "WAY-01")
+        self.assertEqual(self.verdicts("verification-invariant-derivation/1"), ["fail"])
+
+    def test_only_the_latest_version_is_read(self):
+        self.log(decision(verification="level 1 — invariants: save-trip."),
+                 decision(2, binding=DECISION_REWORDED,
+                          verification="level 1 — invariants: save-round-trip."))
+        self.assertPasses(invariants(entry(derives="WAY-01@" + DECISION_REWORDED_FINGERPRINT),
+                                     later()))
+
+    def test_level_one_verification_off_its_form(self):
+        self.log(decision(verification="level 1 — the gate checks it."))
+        self.assertFails(invariants(), "decisions.md:8: the level 1 verification of WAY-01/1 names "
+                                       "no invariants as")
+        self.assertEqual(self.verdicts("verification-invariant-derivation/1"), [])
 
 
 class Lists(GuardTestCase):
@@ -378,6 +691,7 @@ class Lists(GuardTestCase):
     def test_quarantine_of_no_entry(self):
         self.assertFails(invariants(quarantine=self.quarantine("save-trip | 1 | 2026-12-31")),
                          "quarantine names `save-trip`, which is not an entry")
+        self.assertRecorded("quarantine-position-form/1", "fail")
 
     def test_quarantine_at_another_version(self):
         self.assertFails(invariants(quarantine=self.quarantine("save-round-trip | 2 | 2026-12-31")),
@@ -386,11 +700,13 @@ class Lists(GuardTestCase):
     def test_quarantine_without_a_date(self):
         self.assertFails(invariants(quarantine=self.quarantine("save-round-trip | 1 | soon")),
                          "which is not a date YYYY-MM-DD")
+        self.assertRecorded("quarantine-position-form/1", "fail")
 
     def test_quarantine_of_an_invariant_a_critical_flow_names(self):
         self.assertFails(invariants(quarantine=self.quarantine("loads-in-later-versions | 1 | "
                                                                "2026-12-31")),
                          "which a critical flow names")
+        self.assertRecorded("quarantine-flow-invariants/1", "fail")
 
     def test_flow_naming_its_invariant_in_prose(self):
         self.write("foundations/part_map.md", MAP.replace(
@@ -398,6 +714,13 @@ class Lists(GuardTestCase):
         output = self.assertPasses(invariants())
         self.assertIn("unchecked: whether a quarantine names the invariant of `save-and-load` — the "
                       "flow names its invariant in prose, not by identifier", output)
+        self.assertEqual(self.verdicts("quarantine-flow-invariants/1"), ["pass"])
+
+    def test_flow_naming_its_invariant_in_prose_beside_a_quarantine(self):
+        self.write("foundations/part_map.md", MAP.replace(
+            "loads-in-later-versions — test:", "every saved game loads in a later version — test:"))
+        self.assertPasses(invariants(quarantine=self.quarantine("save-round-trip | 1 | 2026-12-31")))
+        self.assertEqual(self.verdicts("quarantine-flow-invariants/1"), [])
 
     def test_violated_list_with_other_columns(self):
         self.assertFails(invariants(), "the list has columns Id | Ver, not Identifier | Version",
@@ -409,10 +732,12 @@ class Lists(GuardTestCase):
     def test_violated_position_of_no_entry(self):
         self.assertFails(invariants(), "`save-trip` is not an entry",
                          violated_text=violated(("save-trip", "1")))
+        self.assertRecorded("violated-position-version/1", "fail")
 
     def test_violated_position_at_another_version(self):
         self.assertFails(invariants(), "`save-round-trip` at version 2; its current version is 1",
                          violated_text=violated(("save-round-trip", "2")))
+        self.assertRecorded("violated-position-version/1", "fail")
 
 
 class Citations(GuardTestCase):
@@ -431,45 +756,103 @@ class Citations(GuardTestCase):
     def test_citation_without_a_version(self):
         self.cite("# invariant: save-round-trip")
         self.assertFails(invariants(), "does not cite `<identifier>/<version>`")
+        self.assertEqual(self.verdicts("invariant-citation-version/1"), ["fail"])
+        self.assertEqual(self.verdicts("invariant-citation-target/1"), ["pass"])
 
     def test_citation_of_another_version(self):
         self.cite("// invariant: save-round-trip/2")
         self.assertFails(invariants(), "cites `save-round-trip/2`, whose current version is 1")
+        self.assertEqual(self.verdicts("invariant-citation-version/1"), ["fail"])
 
     def test_citation_of_no_entry(self):
         self.cite("# invariant: save-trip/1")
         self.assertFails(invariants(), "cites `save-trip`, which is not an entry")
+        self.assertEqual(self.verdicts("invariant-citation-target/1"), ["fail"])
 
     def test_citation_of_a_withdrawn_identifier(self):
         self.cite("# invariant: save-format/1")
         self.assertFails(invariants(), "cites `save-format`, which is withdrawn (successors: "
                                        "save-round-trip)")
+        self.assertEqual(self.verdicts("invariant-citation-target/1"), ["fail"])
 
     def test_data_line_naming_no_file(self):
         self.cite("# invariant: save-round-trip/1", "# data: tests/missing.json")
         self.assertFails(invariants(), "`data: tests/missing.json` names no file")
+        self.assertEqual(self.verdicts("data-line-target/1"), ["fail"])
+
+
+class RecordPaths(GuardTestCase):
+    def command(self, arguments):
+        return "`python -B tools/check.py %s`" % arguments
+
+    def test_record_in_a_folder_git_ignores(self):
+        self.write(".gitignore", ".runs/\n")
+        self.assertPasses(invariants(entry(method=self.command("--record .runs/saving.jsonl")),
+                                     later(method=self.command("--record .runs/saving.jsonl"))))
+        self.assertEqual(self.verdicts("run-record-path/1"), ["pass"])
+
+    def test_record_git_does_not_ignore(self):
+        self.write(".gitignore", "build/\n")
+        self.assertFails(invariants(entry(method=self.command("--record .runs/saving.jsonl")),
+                                    later()),
+                         "save-round-trip/1: git does not ignore `.runs/saving.jsonl`")
+        self.assertEqual(self.verdicts("run-record-path/1"), ["fail"])
+
+    def test_record_git_tracks(self):
+        self.write(".gitignore", "*.jsonl\n")
+        self.write("records/saving.jsonl", "{}\n")
+        self.git("add", "-f", "records/saving.jsonl")
+        self.assertFails(invariants(entry(method=self.command("--record records/saving.jsonl")),
+                                    later()),
+                         "git does not ignore `records/saving.jsonl`")
+
+    def test_record_outside_the_repository(self):
+        self.assertFails(invariants(entry(method=self.command("--record ../saving.jsonl")),
+                                    later()),
+                         "`../saving.jsonl` lies outside the repository")
+        self.assertEqual(self.verdicts("run-record-path/1"), ["fail"])
+
+    def test_command_naming_two_records(self):
+        self.write(".gitignore", ".runs/\n")
+        self.assertFails(invariants(entry(method=self.command("--record .runs/a.jsonl --out "
+                                                              ".runs/b.jsonl")), later()),
+                         "save-round-trip/1: the command names 2 records of a run "
+                         "(`.runs/a.jsonl`, `.runs/b.jsonl`); it names one")
+        self.assertEqual(self.verdicts("run-record-path/1"), ["fail"])
 
 
 class AgainstTheBranchPoint(GuardTestCase):
     def test_unchanged_file_passes(self):
         self.commit(invariants())
         output = self.assertPasses(invariants(), base="HEAD")
-        self.assertNotIn("unchecked: identifiers", output)
+        self.assertNotIn("no --base given", output)
 
     def test_base_that_does_not_exist(self):
         self.commit(invariants())
         self.assertFails(invariants(), "--base nowhere does not exist", base="nowhere")
+        self.assertEqual(self.lines, [{"check": GUARD, "verdict": "fail", "invariant": None,
+                                       "description": "--base nowhere does not exist"}])
 
     def test_new_entry_above_version_1(self):
         self.commit(invariants(entry(), withdrawn=WITHDRAWN))
-        self.assertFails(invariants(entry(), entry("loads-in-later-versions", 2, sentence=OTHER,
-                                                   derives="none", part="loading")),
+        self.assertFails(invariants(entry(), later(version=2)),
                          "loads-in-later-versions/2: a new entry carries version 1", base="HEAD")
+        self.assertRecorded("invariant-version-new/1", "fail")
 
     def test_identifier_dropped(self):
         self.commit(invariants())
         self.assertFails(invariants(entry()), "`loads-in-later-versions` stands in the file on HEAD "
                                               "and is gone", base="HEAD")
+        self.assertEqual(self.verdicts("invariant-identifier-persistence/1"), ["fail"])
+        self.assertEqual(self.verdicts("invariant-withdrawal-persistence/1"), ["pass"])
+
+    def test_withdrawn_identifier_dropped(self):
+        self.commit(invariants())
+        self.assertFails(invariants(withdrawn=WITHDRAWN.replace("| save-format | save-round-trip |",
+                                                                "| save-slot | none |")),
+                         "`save-format` stands in the file on HEAD and is gone", base="HEAD")
+        self.assertEqual(self.verdicts("invariant-withdrawal-persistence/1"), ["fail"])
+        self.assertEqual(self.verdicts("invariant-identifier-persistence/1"), ["fail"])
 
     def test_identifier_withdrawn_there_is_an_entry_again(self):
         self.commit(invariants())
@@ -479,12 +862,14 @@ class AgainstTheBranchPoint(GuardTestCase):
                                                       "| save-slot | none |"))
         self.assertFails(text, "`save-format` is withdrawn on HEAD and stands as an entry again",
                          base="HEAD")
+        self.assertRecorded("invariant-withdrawal-persistence/1", "fail")
 
     def test_changed_sentence_at_the_same_version(self):
         self.commit(invariants())
         self.assertFails(invariants(entry(sentence=REWORDED), later()),
                          "the sentence changed since HEAD (%s → %s); the version is 2"
                          % (SENTENCE_FINGERPRINT, REWORDED_FINGERPRINT), base="HEAD")
+        self.assertRecorded("invariant-version-changed/1", "fail")
 
     def test_changed_sentence_at_a_raised_version(self):
         self.commit(invariants())
@@ -504,6 +889,8 @@ class AgainstTheBranchPoint(GuardTestCase):
                                               later()), base="HEAD")
         self.assertIn("unchecked: the correction of `save-round-trip` — correction declared, "
                       "confirmation not checked", output)
+        # the record gives the sentence as written its verdict; the confirmation has no entry yet
+        self.assertEqual(self.verdicts("invariant-version-changed/1"), ["pass"])
 
     def test_raised_version_declaring_a_correction(self):
         self.commit(invariants())
@@ -511,11 +898,13 @@ class AgainstTheBranchPoint(GuardTestCase):
         correction = "%s → %s" % (SENTENCE_FINGERPRINT, REWORDED_FINGERPRINT)
         self.assertFails(invariants(entry(version=2, sentence=REWORDED, correction=correction),
                                     later()), "a raised version declares no correction", base="HEAD")
+        self.assertRecorded("invariant-version-changed/1", "fail")
 
     def test_unchanged_sentence_at_a_raised_version(self):
         self.commit(invariants())
         self.assertFails(invariants(entry(version=2), later()),
                          "the sentence is unchanged since HEAD, where the version is 1", base="HEAD")
+        self.assertRecorded("invariant-version-unchanged/1", "fail")
 
     def test_change_outside_the_sentence_keeps_the_version(self):
         self.commit(invariants())
@@ -526,18 +915,251 @@ class AgainstTheBranchPoint(GuardTestCase):
         kept = entry(version=2, sentence=REWORDED) + "\n\nEarlier: " + SENTENCE
         self.assertFails(invariants(kept, later()), "still holds its wording from HEAD",
                          base="HEAD")
+        self.assertRecorded("invariant-earlier-wording/1", "fail")
 
     def test_violated_list_grows(self):
         self.commit(invariants(), violated_text=violated())
         self.assertFails(invariants(), "`save-round-trip` at version 1 is not on the list on HEAD",
                          base="HEAD", violated_text=violated(("save-round-trip", "1")))
+        self.assertEqual(self.verdicts("violated-list-growth/1"), ["fail"])
 
     def test_violated_list_shrinks(self):
         self.commit(invariants(), violated_text=violated(("save-round-trip", "1")))
         self.assertPasses(invariants(), base="HEAD", violated_text=violated())
+        self.assertEqual(self.verdicts("violated-list-growth/1"), ["pass"])
+
+
+class BaseNone(GuardTestCase):
+    def test_none_records_the_checks_against_the_base_unchecked(self):
+        code, output = self.guard(invariants(), base="none")
+        self.assertEqual(code, 0, output)
+        self.assertIn("note: --base none: there is no commit the branch left the main branch from",
+                      output)
+        self.assertEqual(sorted(line["invariant"] for line in self.lines), BASE)
+        for line in self.lines:
+            self.assertEqual((line["verdict"], line["reason"]), ("unchecked", NO_COMMIT))
+
+    def test_none_gives_no_error_where_the_file_would_fail_against_a_base(self):
+        self.commit(invariants())
+        code, output = self.guard(invariants(entry()), base="none")
+        self.assertEqual(code, 0, output)
+        self.assertNotIn("is gone", output)
+
+    def test_none_records_no_failure_for_no_entry(self):
+        self.guard(invariants(), base="none")
+        self.assertEqual([line for line in self.lines if line["invariant"] is None], [])
+
+
+class MergeOntoNone(GuardTestCase):
+    def test_none_records_the_checks_of_a_merge_unchecked(self):
+        code, output = self.guard(invariants(entry(derives="`TODO — a decision on saves`"),
+                                             later()), merge_onto="none")
+        self.assertEqual(code, 0, output)
+        self.assertIn("note: --merge-onto none: there is no commit to merge onto", output)
+        self.assertEqual(sorted(line["invariant"] for line in self.lines), MERGE)
+        for line in self.lines:
+            self.assertEqual((line["verdict"], line["reason"]), ("unchecked", NO_COMMIT))
+
+    def test_a_commit_that_does_not_exist_stays_an_error(self):
+        self.commit(invariants())
+        self.assertFails(invariants(), "--merge-onto nowhere does not exist", merge_onto="nowhere")
+        self.assertEqual(self.lines, [{"check": GUARD, "verdict": "fail", "invariant": None,
+                                       "description": "--merge-onto nowhere does not exist"}])
+
+
+class MergeTodo(GuardTestCase):
+    def test_todo_in_derives_from_fails_a_merge(self):
+        self.commit(invariants())
+        self.assertFails(invariants(entry(derives="`TODO — a decision on saves`"), later()),
+                         "save-round-trip/1: *Derives from* holds `TODO`, which a merge onto the "
+                         "main branch does not take", merge_onto="HEAD")
+        self.assertEqual(self.verdicts("invariant-entry-merge-todo/1"), ["fail"])
+
+    def test_todo_in_a_field_the_form_does_not_give_it_fails_a_merge(self):
+        self.commit(invariants())
+        self.assertFails(invariants(entry(part="TODO"), later()),
+                         "save-round-trip/1: *Part* holds `TODO`, which a merge onto the main "
+                         "branch does not take", merge_onto="HEAD")
+        self.assertEqual(self.verdicts("invariant-entry-merge-todo/1"), ["fail"])
+
+    def test_todo_inside_a_part_of_a_value_fails_a_merge(self):
+        self.commit(invariants())
+        self.assertFails(invariants(entry(derives="none", recovered="recovered — searched: TODO; "
+                                          "found: nothing"), later()),
+                         "save-round-trip/1: *Recovered* holds `TODO`, which a merge onto the main "
+                         "branch does not take", merge_onto="HEAD")
+        self.assertEqual(self.verdicts("invariant-entry-merge-todo/1"), ["fail"])
+
+    def test_todo_in_method_and_rests_on_passes_a_merge(self):
+        self.commit(invariants())
+        self.assertPasses(invariants(entry(method="`TODO`", rests="TODO — the store keeps 5 MB, "
+                                           "per its documentation"), later()), merge_onto="HEAD")
+        self.assertEqual(self.verdicts("invariant-entry-merge-todo/1"), ["pass"])
+
+    def test_no_todo_passes_a_merge(self):
+        self.commit(invariants())
+        self.assertPasses(invariants(), merge_onto="HEAD")
+        self.assertEqual(sorted(line["invariant"] for line in self.lines), MERGE)
+        self.assertEqual({line["verdict"] for line in self.lines}, {"pass"})
+
+
+class Fingerprints(GuardTestCase):
+    def test_stale_fingerprint_fails_a_merge(self):
+        self.commit(invariants())
+        self.assertFails(invariants(entry(derives="WAY-01@00000000"), later()),
+                         "save-round-trip/1: `WAY-01@00000000` — the current fingerprint of WAY-01 "
+                         "after the merge is 4dd7fb86", merge_onto="HEAD")
+        self.assertEqual(self.verdicts("link-fingerprint-value/1"), ["fail"])
+
+    def test_decision_reworded_on_the_commit_merged_onto(self):
+        self.write("foundations/decisions.md", LOG + "\n" + decision(2, binding=DECISION_REWORDED))
+        self.commit(invariants())
+        self.write("foundations/decisions.md", LOG)
+        self.assertFails(invariants(), "save-round-trip/1: `WAY-01@4dd7fb86` — the current "
+                                       "fingerprint of WAY-01 after the merge is 4b7b9b75",
+                         merge_onto="HEAD")
+        self.assertEqual(self.verdicts("link-fingerprint-value/1"), ["fail"])
+
+    def test_decision_reworded_on_the_branch(self):
+        self.commit(invariants())
+        self.write("foundations/decisions.md", LOG + "\n" + decision(2, binding=DECISION_REWORDED))
+        self.assertPasses(invariants(entry(derives="WAY-01@4b7b9b75"), later()),
+                          merge_onto="HEAD")
+
+    def test_entry_the_commit_merged_onto_alone_holds(self):
+        self.commit(invariants(entry(), later(), entry("loads-fast", sentence="A saved game loads "
+                                                       "in one second.", part="loading",
+                                                       derives="WAY-01@00000000")))
+        self.assertFails(invariants(), "loads-fast/1 (on HEAD): `WAY-01@00000000` — the current "
+                                       "fingerprint of WAY-01 after the merge is 4dd7fb86",
+                         merge_onto="HEAD")
+
+    def test_named_fact_fails_a_merge(self):
+        self.commit(invariants())
+        self.assertFails(invariants(entry(rests="storage-quota@1234abcd"), later()),
+                         "`storage-quota@1234abcd` in *Rests on* names no entry whose fingerprint "
+                         "the merge holds", merge_onto="HEAD")
+        self.assertEqual(self.verdicts("link-fingerprint-value/1"), ["fail"])
+
+
+class Record(GuardTestCase):
+    def test_plain_run_records_the_checks_of_the_file_alone(self):
+        self.assertPasses(invariants())
+        self.assertEqual(sorted(line["invariant"] for line in self.lines), PLAIN)
+        self.assertEqual({line["verdict"] for line in self.lines}, {"pass"})
+
+    def test_a_line_names_the_program_and_its_check(self):
+        self.assertPasses(invariants())
+        self.assertIn({"check": GUARD + "::check_sentence", "verdict": "pass",
+                       "invariant": "invariant-sentence-count/1"}, self.lines)
+
+    def test_run_against_the_base_records_its_checks_alone(self):
+        self.commit(invariants())
+        self.assertPasses(invariants(), base="HEAD")
+        self.assertEqual(sorted(line["invariant"] for line in self.lines), BASE)
+
+    def test_run_against_the_base_leaves_out_failures_of_the_file_alone(self):
+        self.commit(invariants())
+        self.assertFails(invariants(entry(part="saving · cloud"), later()),
+                         "names `cloud`", base="HEAD")
+        self.assertEqual([line for line in self.lines if line["verdict"] == "fail"], [])
+
+    def test_failure_for_no_entry(self):
+        self.assertFails(invariants(entry(), later(), "## Notes\n\nSome notes."),
+                         "heading `## Notes` is neither")
+        self.assertIn({"check": GUARD + "::check_layout", "verdict": "fail", "invariant": None,
+                       "description": "line 25: heading `## Notes` is neither "
+                                      "`## <identifier>/<version>` nor a list of the template"},
+                      self.lines)
+
+    def test_record_when_the_template_cannot_be_read(self):
+        self.write("broken_template.md", "# Template\n\n## Entry\n\nNothing here.\n")
+        output = io.StringIO()
+        code = format_guard.run(self.path, stream=output, record=self.record_path,
+                                template=os.path.join(self.root, "broken_template.md"))
+        self.assertEqual(code, 2)
+        with open(self.record_path, encoding="utf-8") as handle:
+            lines = [json.loads(item) for item in handle.read().split("\n") if item]
+        self.assertEqual([(line["check"], line["verdict"], line["invariant"]) for line in lines],
+                         [(GUARD, "fail", None)])
+
+    def test_file_outside_a_git_repository_is_a_failure_of_the_run(self):
+        with tempfile.TemporaryDirectory() as loose:
+            for name, content in (("foundations/part_map.md", MAP),
+                                  ("foundations/decisions.md", LOG),
+                                  ("foundations/invariants.md", invariants())):
+                os.makedirs(os.path.join(loose, "foundations"), exist_ok=True)
+                with open(os.path.join(loose, *name.split("/")), "w", encoding="utf-8",
+                          newline="\n") as handle:
+                    handle.write(content)
+            output = io.StringIO()
+            code = format_guard.run(os.path.join(loose, "foundations", "invariants.md"),
+                                    stream=output, record=self.record_path)
+        self.assertEqual(code, 1, output.getvalue())
+        self.assertIn("the file does not lie in a git repository", output.getvalue())
+        with open(self.record_path, encoding="utf-8") as handle:
+            lines = [json.loads(item) for item in handle.read().split("\n") if item]
+        recorded = {line["invariant"] for line in lines}
+        for invariant in ("invariants-file/1", "invariant-citation-target/1", "run-record-path/1"):
+            self.assertNotIn(invariant, recorded)
+        self.assertIn({"check": GUARD, "verdict": "fail", "invariant": None,
+                       "description": "the file does not lie in a git repository, so no check "
+                                      "that asks git which files it tracks or ignores can run"},
+                      lines)
+
+    def test_outside_a_git_repository_the_failure_stands_in_every_record(self):
+        """A failed call to git is a failure of the run, not of a check an option selects, so the
+        records of --base none and --merge-onto none hold it too (WAY-63)."""
+        failure = {"check": GUARD, "verdict": "fail", "invariant": None,
+                   "description": "the file does not lie in a git repository, so no check that "
+                                  "asks git which files it tracks or ignores can run"}
+        for option in ("base", "merge_onto"):
+            with self.subTest(option), tempfile.TemporaryDirectory() as loose:
+                os.makedirs(os.path.join(loose, "foundations"))
+                for name, content in (("part_map.md", MAP), ("decisions.md", LOG),
+                                      ("invariants.md", invariants())):
+                    with open(os.path.join(loose, "foundations", name), "w", encoding="utf-8",
+                              newline="\n") as handle:
+                        handle.write(content)
+                output = io.StringIO()
+                code = format_guard.run(os.path.join(loose, "foundations", "invariants.md"),
+                                        stream=output, record=self.record_path,
+                                        **{option: "none"})
+                with open(self.record_path, encoding="utf-8") as handle:
+                    lines = [json.loads(item) for item in handle.read().split("\n") if item]
+                self.assertEqual(code, 1, output.getvalue())
+                self.assertIn(failure, lines)
+                self.assertEqual([line for line in lines
+                                  if line != failure and line["verdict"] != "unchecked"], [])
 
 
 class Unreadable(GuardTestCase):
+    def test_invariants_file_that_is_not_utf_8(self):
+        with open(self.path, "wb") as handle:
+            handle.write(b"# Invariants\n\ncaf\xe9\n")
+        output = io.StringIO()
+        code = format_guard.run(self.path, stream=output, record=self.record_path,
+                                base="none")
+        self.assertEqual(code, 2, output.getvalue())
+        with open(self.record_path, encoding="utf-8") as handle:
+            lines = [json.loads(item) for item in handle.read().split("\n") if item]
+        self.assertEqual(len(lines), 1, lines)
+        self.assertEqual({key: lines[0][key] for key in ("check", "verdict", "invariant")},
+                         {"check": GUARD, "verdict": "fail", "invariant": None})
+        self.assertTrue(lines[0]["description"].startswith("cannot read the invariants file: "
+                                                           "'utf-8' codec can't decode"), lines)
+
+    def test_decision_log_beside_it_that_is_not_utf_8(self):
+        with open(os.path.join(self.root, "foundations", "decisions.md"), "wb") as handle:
+            handle.write(b"# Decision log\n\ncaf\xe9\n")
+        code, output = self.guard(invariants(), merge_onto="none")
+        self.assertEqual(code, 1, output)
+        failures = [line for line in self.lines if line["invariant"] is None]
+        self.assertEqual([line["check"] for line in failures], [GUARD], self.lines)
+        self.assertTrue(failures[0]["description"].startswith(
+            "cannot read the decision log beside the file: 'utf-8' codec can't decode"),
+            failures)
+
     def test_missing_file(self):
         output = io.StringIO()
         self.assertEqual(format_guard.run(self.path, stream=output), 2)
