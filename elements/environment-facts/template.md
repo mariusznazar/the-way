@@ -128,6 +128,12 @@ joined by ` · `, or reads `none` (WAY-75):
   - an observation naming the command, the tool and its version, the platform and the date it ran.
 - A further page of the same edition names its address and place. Several addresses stand in one
   entry only as pages of one edition, or as a page and its archived copy (WAY-80, WAY-76).
+- The passage is the page's text as a reader sees it, with markup dropped and whitespace collapsed,
+  taken from one run of text — a paragraph, a list item or a table cell; a rule spread over several
+  runs is quoted as several passages of the same place, joined by ` · ` (WAY-80).
+- A citation that names no edition names the edition its dependant stands on, where the dependant's
+  sentence names one, and otherwise the edition in force on the date the citation was read — for a
+  decision's *Based on*, the date of the version citing it (WAY-80, WAY-77).
 - A fact resting on a whole section of rules — a pattern syntax, an algorithm — quotes the sentence
   of the source that sets those rules, and names the section by its place alone, where the edition
   has an address of its own. Where the source publishes worked examples of those rules, they are the
