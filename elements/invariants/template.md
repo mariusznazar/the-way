@@ -19,8 +19,8 @@ written by hand (WAY-08).
   its list of withdrawn identifiers (WAY-64) and its list of quarantined invariants (WAY-68).
 - One derived file lies beside it: the list of violated invariants (WAY-67).
 - Every entry carries an identifier of one or more words in lower case joined by hyphens, held by
-  no other entry or withdrawn identifier of this file or of the part map (WAY-64); `none` is no
-  identifier, since *Successors* uses that word.
+  no other entry or withdrawn identifier of this file, of the environment facts or of the part map
+  (WAY-64); `none` is no identifier, since *Successors* uses that word.
 - The identifier names what the sentence constrains, never what it demands, so that a raised
   version leaves it true; where another entry constrains the same thing, it adds the aspect this
   one guards, as `entry-version-number` and `entry-version-correction` (WAY-64).
@@ -100,7 +100,8 @@ A quarantined invariant stands on the last list in the file; *Until* is a date a
   WAY-61: the-way's own record of a run — a JSON Lines file at the one `.jsonl` path the command
   names, one line per verdict a check gives an invariant or an environment fact and per failure
   recorded for no entry, each holding `check`, `verdict` (`pass`, `fail`, or `unchecked` beside a
-  `reason` from the list of reasons for `unchecked` below), `invariant` (`<identifier>/<version>` or
+  `reason` from the list of reasons for `unchecked` in the template of its entry's element),
+  `invariant` (`<identifier>/<version>` or
   `null`) — or in its place `fact` (`<identifier>/<version>`) for a fact's verdict — and at most
   `description` (WAY-74). A run that records no verdict for the entry never gives it a pass
   (WAY-61).
@@ -159,6 +160,10 @@ A quarantined invariant stands on the last list in the file; *Until* is a date a
   the sentence true, and no other: read otherwise, such a fact would give some commit another
   verdict under the same sentence, or change a value the sentence copies from it. A fact that is
   only a reason for a decision the entry derives from stays in that decision's *Based on* (WAY-73).
+- An invariant that depends on a version the product declares names that version in its sentence
+  and names the fact in *Rests on*: a change of the fact's scope reaches it through the fingerprint
+  (WAY-73, WAY-66), and whoever writes it sees that the version it names lies within the fact's
+  *Holds for*. No script compares the two, since *Holds for* is prose (WAY-77).
 - Both carry the content fingerprint of each entry they name, and *Part* carries none. A change to
   that fingerprint reaches the main branch with every invariant carrying it, each checked against
   the new wording and carrying the new fingerprint (WAY-66).
@@ -321,13 +326,14 @@ A field marked *judgment* holds someone's call: no tool reads its value off the 
 - The product has exactly one file of invariant entries: the file checked stands in
   `foundations/invariants.md` from the root of its repository, letter case included, as git lists
   it, and no other Markdown file git tracks holds an entry — a section `## <identifier>/<version>`
-  carrying a *Method* field, outside a fenced block — save `examples.md` beside this template,
+  carrying a *Method* field and no *Holds for* field, outside a fenced block — save `examples.md` beside this template,
   which holds copies (WAY-64).
 - The file holds its entries, then its withdrawn identifiers, then its quarantined invariants, each
   in the form above, and no other heading; the heading of an entry carries its version as a number
   (WAY-57, WAY-64, WAY-68).
 - Every identifier of an entry has the form above, and no identifier is held twice among the
-  entries and withdrawn identifiers of this file and of the part map taken together (WAY-64).
+  entries and withdrawn identifiers of this file, of the environment facts and of the part map
+  taken together (WAY-64).
 - Every identifier the file held on the commit the task branch left the main branch from stands in
   it, and one withdrawn there is withdrawn still (WAY-64).
 - Every successor a withdrawn identifier names is an entry or a withdrawn identifier of this file,
@@ -362,10 +368,11 @@ A field marked *judgment* holds someone's call: no tool reads its value off the 
 - Every name in *Rests on* or *Derives from*, other than `none` or `TODO`, carries a fingerprint
   of the length the relation model gives (WAY-39); every decision named is in force in the
   decision log; *Rests on* names a fact only as `TODO — <the fact, with its source>` while the
-  environment facts element has no entries (WAY-66).
+  environment facts element has no entries, and once it has, every fact *Rests on* names is an entry
+  of `foundations/environment_facts.md`, never a withdrawn identifier (WAY-66).
   Checking a merge onto the main branch, every fingerprint equals the current fingerprint of the
-  entry it names in the decision log that merge leaves, for the entries of the file and for those
-  only the commit merged onto holds (WAY-66).
+  entry it names in the decision log or the environment facts that merge leaves, for the entries of
+  the file and for those only the commit merged onto holds (WAY-66).
 - Every decision in force whose *Verification* includes level 1 has an entry deriving from it, and
   every identifier the level 1 verification of the latest version of a decision names, as
   `level 1 — invariants: <identifier> · <identifier>.`, is an entry whose *Derives from* names that

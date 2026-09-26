@@ -24,8 +24,8 @@ not trust.
 ## Identifiers
 
 - Every entry carries a permanent identifier of one or more words in lower case joined by
-  hyphens (`relation-model`), unique across the three kinds and the product's invariant entries
-  (WAY-64).
+  hyphens (`relation-model`), unique across the three kinds, the product's invariant entries and
+  its environment fact entries (WAY-64).
 - It does not change when the entry's title, its files or its fields change.
 - Splitting or merging gives every result a new identifier; the one left behind goes to the list
   of withdrawn identifiers, names its successors and is never reused (WAY-41).
