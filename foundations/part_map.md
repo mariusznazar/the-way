@@ -92,6 +92,12 @@ The part answers for running the checks a change calls for, and for the tests of
   - the gate reports a check as passed although it never ran — a change that breaks an invariant
     reaches the main branch, and every product pinned to that commit inherits the gap — high —
     not detected
+  - the test runner records a pass, and no fail, for an invariant although a test citing it never
+    ran to its end, or failed — a change that breaks an invariant reaches the main branch, and
+    every product pinned to that commit inherits the gap — high — detected by test-runner-pass-line
+  - a change to the test runner's own path for recording a failed test records that failure as a
+    pass, its own tests included — a change that breaks an invariant reaches the main branch, and
+    every product pinned to that commit inherits the gap — high — not detected
 - **Trust boundary:** none
 
 ## repository — The files that serve the whole repository

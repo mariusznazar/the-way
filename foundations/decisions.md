@@ -3065,8 +3065,8 @@ branch left the main branch from or on the commit being checked.
   related to WAY-60 · related to WAY-62 · related to WAY-63
 - **Outranks:** none
 - **Verification:** level 1 — invariants: invariant-citation-version · invariant-citation-target ·
-  data-line-target · invariant-tests-of-change. Level 2 for where a citation stands — an agent
-  compares the change with the decision:
+  data-line-target · invariant-tests-of-change · test-runner-pass-line. Level 2 for where a
+  citation stands — an agent compares the change with the decision:
   - complies: the decision guard cites `log-entry-field-presence/1` at the rule checking
     fields; a test comparing a load with a recorded save names the save on a `data:` line;
   - violates: a test file cites at its top every invariant its tests serve, though the checks

@@ -38,23 +38,36 @@ gives a verdict for, and a line with `invariant` null for each failure no citing
 - a failure of a class or module fixture, a module that cannot be imported, a citation off the
   form, a directory holding no test, and a run interrupted before its end each give a null line;
   the tests a failed set-up or import kept from running give `fail` for what they cite;
-- a citing test method that a `test_*.py` file below DIRECTORY defines but the suite never runs —
-  its folder is one discovery does not enter, having no `__init__.py`, or its module's `load_tests`
-  leaves it out — gives `fail` for what it cites;
+- the body of a citing test method — the function its citation stands in, as its source defines
+  it — is watched through `sys.monitoring` while its test runs: a test `unittest` counts as passed
+  whose body never executed (a coroutine or generator never driven, a method replaced or never
+  called, a `run()` that only reports success), never returned, or had something raised out of it
+  (an assertion caught around it, a retry) gives `fail` for what it cites; a test run a second
+  time whose later run fails, or raises out of its body, gives `fail` again;
+- a citing test method that a `test_*.py` file below DIRECTORY, in whatever folder, a hidden one
+  included, defines but the suite never runs — its folder is one discovery does not enter, having
+  no `__init__.py`, its module's `load_tests` leaves it out, or its class stands under an `if`, a
+  `try`, a `with` or a function that never defines it — gives `fail` for what it cites; in such a
+  file that Python cannot parse, every citation gives `fail`;
 - a citation comment a `test_*.py` file below DIRECTORY holds outside the body of any test method
   — at the top of the file, at class level, in a helper or `setUp` — cites for no check, and gives
-  a null line naming its file and line.
+  a null line naming its file and line; a function defined outside a class, at module level or by
+  a factory, that a class assigns as a test method is that test's body, and a citation in it is
+  that test's.
 
 A line's `check` names a test as `<file>::<Class>.<method>`, where the file's path is DIRECTORY, as
 the command gives it, joined with the file's path below it; a fixture as `<file>::<Class>.<fixture>`
 or `<file>::<fixture>`; a module that cannot be imported as its file; and a failure of the run
-itself as this program.
+itself as this program. A character the record cannot hold in UTF-8, as a lone surrogate, is
+written as its `\\u` escape, and an exception whose text cannot be read is described as
+`<exception str() failed>`.
 
 Exit code: 0 when the run holds no failure; 1 when some line of the record is `fail` or `unittest`
 counts the run as failed; 2 when the directory is not one, --record is given twice or names a path
-not ending in `.jsonl`, the record cannot be written, or the run is interrupted (KeyboardInterrupt)
-before its end. A process killed outright — by `os._exit` or a signal — leaves the exit code to
-whatever ended it, and its record holds the lines written until then.
+not ending in `.jsonl`, the record cannot be written, no `sys.monitoring` tool id is free to watch
+the bodies, or the run is interrupted (KeyboardInterrupt) before its end. A process killed
+outright — by `os._exit` or a signal — leaves the exit code to whatever ended it, and its record
+holds the lines written until then.
 """
 
 import argparse
@@ -126,20 +139,23 @@ def source_key(path):
 
 
 def method_citations(test, cache):
-    """The citations inside the body of a test's method, read from its source, and where that
-    source stands, as (file, first line) — None where it cannot be read."""
+    """The citations inside the body of a test's method — the function `unittest` resolves on
+    its class, wherever that function is defined — read from its source; where that source
+    stands, as (file, first line), and its last line; and the function. None where it cannot be
+    read."""
     function = getattr(type(test), getattr(test, "_testMethodName", ""), None)
     if function is None:
-        return [], None
+        return [], None, None, None
     function = inspect.unwrap(function)
     try:
         path = inspect.getsourcefile(function)
         lines, first = inspect.getsourcelines(function)
     except (OSError, TypeError):
-        return [], None
+        return [], None, None, function
     if path is None:
-        return [], None
-    return cited_between(path, first, first + len(lines) - 1, cache), (source_key(path), first)
+        return [], None, None, function
+    last = first + len(lines) - 1
+    return cited_between(path, first, last, cache), (source_key(path), first), last, function
 
 
 def module_tests(path, cache):
@@ -152,28 +168,38 @@ def module_tests(path, cache):
         return None
     found = []
 
-    def visit(body, prefix):
+    def visit(body, prefix, in_class):
+        """Classes at any depth — in a class, or under an `if`, a `try`, a `with`, a loop or a
+        function — and the test methods standing in a class's body."""
         for node in body:
             if isinstance(node, ast.ClassDef):
-                visit(node.body, prefix + node.name + ".")
-            elif isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and prefix and \
-                    node.name.startswith("test"):
-                first = min([node.lineno] + [item.lineno for item in node.decorator_list])
-                found.append((prefix + node.name,
-                              cited_between(path, first, node.end_lineno, cache), first,
-                              node.end_lineno))
+                visit(node.body, prefix + node.name + ".", True)
+            elif isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                if in_class and node.name.startswith("test"):
+                    first = min([node.lineno] + [item.lineno for item in node.decorator_list])
+                    found.append((prefix + node.name,
+                                  cited_between(path, first, node.end_lineno, cache), first,
+                                  node.end_lineno))
+                else:
+                    visit(node.body, prefix + node.name + ".<locals>.", False)
+            else:
+                for field in ("body", "orelse", "finalbody"):
+                    inner = getattr(node, field, None)
+                    if isinstance(inner, list):
+                        visit(inner, prefix, in_class)
+                for part in getattr(node, "handlers", []) + getattr(node, "cases", []):
+                    visit(part.body, prefix, in_class)
 
-    visit(tree.body, "")
+    visit(tree.body, "", False)
     return found
 
 
 def test_files(start):
-    """Every file below `start` whose name matches the pattern, in whatever folder, as discovery
-    would reach it with every folder a package."""
+    """Every file below `start` whose name matches the pattern, in whatever folder, a hidden one
+    included, as discovery would reach it with every folder a package."""
     found = []
     for folder, folders, names in os.walk(start):
-        folders[:] = sorted(item for item in folders
-                            if not item.startswith(".") and item != "__pycache__")
+        folders[:] = sorted(folders)
         found += [os.path.join(folder, name) for name in sorted(names)
                   if fnmatch.fnmatch(name, PATTERN)]
     return found
@@ -190,7 +216,10 @@ class Record:
         self.failed = False
         if path is not None:
             os.makedirs(os.path.dirname(os.path.abspath(path)), exist_ok=True)
-            self.handle = open(path, "w", encoding="utf-8", newline="\n")
+            # A character UTF-8 cannot hold, as a lone surrogate in a message, is written as its
+            # `\u` escape, which JSON reads back, rather than stopping the run.
+            self.handle = open(path, "w", encoding="utf-8", errors="backslashreplace",
+                               newline="\n")
 
     def write(self, check, verdict, invariant, description=None):
         if verdict != "pass":
@@ -212,10 +241,87 @@ def exception_text(error, last=False):
     """`<exception>: <first line of its message>`; with `last`, the last line of the message, for
     a message that carries a traceback, as unittest's message of a failed import does."""
     kind, value = error[0], error[1]
-    text = [line.strip() for line in str(value).strip().splitlines() if line.strip()]
+    try:
+        message = str(value)
+    except Exception:
+        message = "<exception str() failed>"
+    text = [line.strip() for line in message.strip().splitlines() if line.strip()]
     if not text:
         return kind.__name__
     return text[-1] if last else "%s: %s" % (kind.__name__, text[0])
+
+
+# --- watching the bodies --------------------------------------------------------------------
+
+
+MONITORING = sys.monitoring
+# The tool ids the runner may take, the unassigned ones first; never DEBUGGER_ID or COVERAGE_ID,
+# so that a debugger or coverage.py runs beside it.
+TOOLS = (3, 4, MONITORING.PROFILER_ID, MONITORING.OPTIMIZER_ID)
+EVENTS = MONITORING.events
+
+
+class Monitor:
+    """Watches, through `sys.monitoring` (the standard library, WAY-38), the body of each citing
+    test method while its own test runs: how often it started, returned, and had something raised
+    out of it. A code object is known by its file, its first line and its name, as its source
+    defines it; every other code object is let go at its first event."""
+
+    def __init__(self, bodies):
+        self.bodies = bodies        # (file, first line, name) of every watched body
+        self.known = {}             # id of a code object -> (it, its key when watched)
+        self.current = None         # (key, check) of the test running now
+        self.tool = None
+
+    def key(self, code):
+        # By the object's identity: code objects compiled from two files compare equal when
+        # their bytecode, name and first line do. The object is kept, so its id stays its own.
+        entry = self.known.get(id(code))
+        if entry is None or entry[0] is not code:
+            found = (source_key(code.co_filename), code.co_firstlineno, code.co_name)
+            entry = (code, found if found in self.bodies else None)
+            self.known[id(code)] = entry
+        return entry[1]
+
+    def counted(self, code, field):
+        key = self.key(code)
+        if key is None:
+            return False
+        if self.current is not None and self.current[0] == key:
+            check = self.current[1]
+            setattr(check, field, getattr(check, field) + 1)
+        return True
+
+    def started(self, code, offset):
+        return None if self.counted(code, "started") else MONITORING.DISABLE
+
+    def returned(self, code, offset, value):
+        return None if self.counted(code, "returned") else MONITORING.DISABLE
+
+    def unwound(self, code, offset, exception):
+        self.counted(code, "unwound")
+
+    def start(self):
+        """Takes a free tool id, or says none is free."""
+        free = [tool for tool in TOOLS if MONITORING.get_tool(tool) is None]
+        if not free:
+            raise RuntimeError("no sys.monitoring tool id is free to watch the test bodies "
+                               "(%s are taken)" % ", ".join(str(tool) for tool in TOOLS))
+        self.tool = free[0]
+        MONITORING.use_tool_id(self.tool, "the-way test runner")
+        MONITORING.register_callback(self.tool, EVENTS.PY_START, self.started)
+        MONITORING.register_callback(self.tool, EVENTS.PY_RETURN, self.returned)
+        MONITORING.register_callback(self.tool, EVENTS.PY_UNWIND, self.unwound)
+        MONITORING.set_events(self.tool, EVENTS.PY_START | EVENTS.PY_RETURN | EVENTS.PY_UNWIND)
+
+    def stop(self):
+        if self.tool is None:
+            return
+        MONITORING.set_events(self.tool, 0)
+        for event in (EVENTS.PY_START, EVENTS.PY_RETURN, EVENTS.PY_UNWIND):
+            MONITORING.register_callback(self.tool, event, None)
+        MONITORING.free_tool_id(self.tool)
+        self.tool = None
 
 
 # --- the plan of a run ----------------------------------------------------------------------
@@ -238,10 +344,23 @@ class Check:
         self.outcomes = []          # (kind, description, whether unittest counts it failed)
         self.succeeded = False
         self.done = False
+        self.body = None            # (file, first line, name) of its method's body, watched
+        self.started = self.returned = self.unwound = 0
+        self.late = None            # a failure of a run of it after its lines were written
 
     def first(self, kind):
         return next((description for found, description, _ in self.outcomes if found == kind),
                     None)
+
+    def observed(self):
+        """What the watch of its body saw go wrong, or None."""
+        if self.unwound:
+            return "raised out of its body"
+        if not self.started:
+            return "its body never executed"
+        if self.returned < self.started:
+            return "its body never returned"
+        return None
 
 
 class Plan:
@@ -259,6 +378,9 @@ class Plan:
         self.held = {}              # invariant -> the names of tests that passed it
         self.voided = set()         # invariants a citing test gave no verdict for
         self.sources = set()        # (file, first line) of every test method the suite runs
+        self.spans = set()          # (file, first line, last line) of the same, from the run
+        self.bodies = set()         # (file, first line, name) of every citing method's body
+        self.running = None         # the key of the test running now
         self.cache = {}
 
     def file_of(self, module):
@@ -293,11 +415,32 @@ class Plan:
             module = kind.__module__
             name = "%s::%s.%s" % (self.file_of(module), kind.__qualname__,
                                   getattr(test, "_testMethodName", "?"))
-            citations, source = method_citations(test, self.cache)
+            citations, source, last, function = method_citations(test, self.cache)
+            check = Check(name, citations, "%s.%s" % (module, kind.__qualname__), module)
             if source is not None:
                 self.sources.add(source)
-            self.add(test.id(), Check(name, citations,
-                                      "%s.%s" % (module, kind.__qualname__), module))
+                self.spans.add(source + (last,))
+                if citations:
+                    check.body = self.body_of(source, function)
+            self.add(test.id(), check)
+
+    def body_of(self, source, function):
+        """The key of the code object of the test method whose source starts at `source`: its
+        file, its first line and its name, as the file defines it — a `def` in a class, or a
+        function defined elsewhere, at module level or by a factory, that the class assigns,
+        whose code starts at that line of that file."""
+        path, first = source
+        body = None
+        for method, _, start, _ in module_tests(path, self.cache) or []:
+            if start == first:
+                body = (path, first, method.rpartition(".")[2])
+        code = getattr(function, "__code__", None)
+        if body is None and code is not None and \
+                (source_key(code.co_filename), code.co_firstlineno) == source:
+            body = (path, first, code.co_name)
+        if body is not None:
+            self.bodies.add(body)
+        return body
 
     def collect_placeholder(self, test):
         """A test the loader made for a module it could not import, or that raised a skip on
@@ -310,9 +453,10 @@ class Plan:
         if tests is None:
             cited = list(dict.fromkeys(value for _, value in comment_citations(path)))
             tests = [(None, cited, None, None)] if cited else []
+            self.sources.add((source_key(path), None))
         keys = []
         for method, citations, first, _ in tests:
-            key = "%s::%s" % (test.id(), method)
+            key = "%s::%s:%s" % (test.id(), method, first)
             self.add(key, Check("%s::%s" % (name, method) if method else name, citations))
             if first is not None:
                 self.sources.add((source_key(path), first))
@@ -321,21 +465,29 @@ class Plan:
 
     def left_out(self):
         """Every citing test method a `test_*.py` file below the directory defines that the suite
-        does not run — a file in a folder discovery does not enter, or a method its module's
-        `load_tests` leaves out: it never runs, so it gives `fail` for what it cites."""
+        does not run — a file in a folder discovery does not enter, a method its module's
+        `load_tests` leaves out, or a class never defined: it never runs, so it gives `fail` for
+        what it cites. In such a file that cannot be parsed, every citation gives `fail`."""
         imported = {source_key(module.__file__) for module in list(sys.modules.values())
                     if getattr(module, "__file__", None)}
         for path in test_files(self.start):
             tests = module_tests(path, self.cache)
             if tests is None:
-                continue
-            why = ("not run: its module's suite leaves it out" if source_key(path) in imported
-                   else "not run: discovery does not reach its file")
+                if (source_key(path), None) in self.sources:
+                    continue
+                cited = list(dict.fromkeys(value for _, value in comment_citations(path)))
+                tests = [(None, cited, None, None)] if cited else []
+                why = "not run: its file cannot be parsed"
+            else:
+                why = ("not run: its module's suite leaves it out"
+                       if source_key(path) in imported
+                       else "not run: discovery does not reach its file")
             for method, citations, first, _ in tests:
                 if not citations or (source_key(path), first) in self.sources:
                     continue
-                key = "%s::%s" % (source_key(path), method)
-                self.add(key, Check("%s::%s" % (self.named(path), method), citations))
+                key = "%s::%s:%s" % (source_key(path), method, first)
+                self.add(key, Check("%s::%s" % (self.named(path), method) if method
+                                    else self.named(path), citations))
                 self.outcome(key, FAILED, why, False)
                 self.finish(key)
 
@@ -350,6 +502,8 @@ class Plan:
             if path not in self.cache:
                 self.cache[path] = comment_citations(path)
             inside = [(first, last) for _, _, first, last in tests]
+            inside += [(first, last) for where, first, last in self.spans
+                       if where == source_key(path)]
             for number, value in self.cache[path]:
                 if not any(first <= number <= last for first, last in inside):
                     self.record.write(self.named(path), "fail", None,
@@ -361,8 +515,36 @@ class Plan:
 
     def outcome(self, key, kind, description, counted):
         check = self.checks.get(key)
-        if check is not None and not check.done:
+        if check is None:
+            return
+        if not check.done:
             check.outcomes.append((kind, description, counted))
+        elif kind == FAILED and key == self.running and check.late is None:
+            check.late = description
+
+    def begin(self, key, monitor):
+        """A test starts: its body is watched until it stops."""
+        self.running = key
+        check = self.checks.get(key)
+        monitor.current = (check.body, check) if check and check.body else None
+        if check is not None:
+            check.window = check.unwound
+
+    def end(self, key, monitor):
+        """A test stops. A test run again after its lines were written, whose later run failed or
+        raised out of its body, gives `fail` again for what it cites."""
+        monitor.current = None
+        self.running = None
+        check = self.checks.get(key)
+        if check is None or not check.done:
+            return
+        if check.late is None and check.unwound > getattr(check, "window", check.unwound):
+            check.late = "raised out of its body"
+        if check.late is not None:
+            for invariant in check.citations:
+                if CITED.fullmatch(invariant):
+                    self.record.write(check.name, "fail", invariant, check.late)
+            check.late = None
 
     def finish(self, key, final=False):
         """Writes what a test's outcome gives what it cites. A test that has no outcome yet —
@@ -376,6 +558,10 @@ class Plan:
             if not final:
                 return
             skipped = "the test gave no outcome"
+        if not (failed or skipped) and check.body is not None:
+            failed = check.observed()
+            if failed:
+                check.outcomes.append((FAILED, failed, False))
         check.done = True
         valid = [value for value in check.citations if CITED.fullmatch(value)]
         for value in check.citations:
@@ -470,9 +656,13 @@ def owner(test):
     return getattr(test, "test_case", test)
 
 
-def recording_result(plan):
+def recording_result(plan, monitor):
     class RecordingResult(unittest.TextTestResult):
         """unittest's report for a person, with the outcome of every test passed to the plan."""
+
+        def startTest(self, test):
+            super().startTest(test)
+            plan.begin(test.id(), monitor)
 
         def addSuccess(self, test):
             super().addSuccess(test)
@@ -526,6 +716,7 @@ def recording_result(plan):
 
         def stopTest(self, test):
             super().stopTest(test)
+            plan.end(test.id(), monitor)
             plan.finish(test.id())
 
     return RecordingResult
@@ -553,7 +744,15 @@ def run(directory, record_path=None, stream=None):
         plan.collect(suite)
         plan.stray_citations()
         plan.left_out()
-        runner = unittest.TextTestRunner(stream=stream, resultclass=recording_result(plan))
+        monitor = Monitor(plan.bodies)
+        try:
+            monitor.start()
+        except RuntimeError as problem:
+            stream.write("%s\n" % problem)
+            record.write(PROGRAM, "fail", None, str(problem))
+            return 2
+        runner = unittest.TextTestRunner(stream=stream,
+                                         resultclass=recording_result(plan, monitor))
         try:
             result = runner.run(suite)
         except KeyboardInterrupt:
@@ -561,6 +760,8 @@ def run(directory, record_path=None, stream=None):
             stream.write("\n%s\n" % message)
             record.write(PROGRAM, "fail", None, message)
             return 2
+        finally:
+            monitor.stop()
         if not plan.checks and not plan.placeholders:
             record.write(PROGRAM, "fail", None, "no test found in %s" % directory)
             return 1

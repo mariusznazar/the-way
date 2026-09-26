@@ -1631,6 +1631,17 @@ The gate reads, from the-way's own record of a run, only the lines the run it st
 - **Correction:** none
 - **Recovered:** none
 
+## test-runner-pass-line/1
+
+The test runner's record of a run holds a `pass` line for an invariant's identifier and version, and no `fail` line naming them, only when the body of every test method citing them in a `test_*.py` file under the directory the runner was given, as the run starts, executed in that run while its own test ran, and returned, with nothing raised out of that body, its set-up, its tear-down or any of its subtests.
+
+- **Method:** `python -B gate/run_tests.py gate --record .runs/gate-tests.jsonl`
+- **Rests on:** none
+- **Derives from:** WAY-61@c6bdfd7c · WAY-65@58d1f2c3
+- **Part:** gate
+- **Correction:** none
+- **Recovered:** none
+
 ## Withdrawn identifiers
 
 | Identifier | Successors |
