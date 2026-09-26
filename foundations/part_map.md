@@ -69,6 +69,7 @@ The part answers for what a product takes as true about the world outside it.
 
 - **Files:** elements/environment-facts/**
   foundations/environment_facts.md
+  probes/**
 - **Depends on:** decisions · part-map · invariants · relation-model
 - **Failure modes:** none
 - **Trust boundary:** none

@@ -3830,7 +3830,7 @@ read off the machine (WAY-91), and the deliberate break shows the
 method's fidelity, which holds only where the break gives high confidence of detection. A command
 records its verdicts under the key `fact` (WAY-74). WAY-73's rationale is corrected in place to name
 this decision. Where the probes of a product's facts stand in the part map is set when its first fact is
-written; this repository's stand in `elements/environment-facts/probes/`.
+written; this repository's stand in `probes/`, outside every directory whose tests run as a suite.
 
 ### WAY-82/1 — When does an environment fact's method run, and what fails its watch?
 
