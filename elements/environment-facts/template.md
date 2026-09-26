@@ -95,8 +95,9 @@ joined by ` · `, or reads `none`:
 - A claim that differs in a new scope changes the sentence or *Holds for*, and so the version; a
   claim true in a past scope is not refuted by it.
 - A newer release of a tool *Holds for* names fails nothing: the fact about the named release stays
-  true. Moving the product to the newer release is a decision's to make, and the release is a
-  condition in its *Review when* (WAY-24).
+  true. Moving the product to another release is a decision's to make, and what calls for it — the
+  named release leaving bugfix support, as its publisher's schedule gives it — is a condition in
+  that decision's *Review when* (WAY-24).
 - A scope the product declares — the version of Python it runs, in a file a tool reads — is a
   sentence about the product, so an invariant holds it, never a fact. An invariant that depends on
   that version names it in its sentence and names the fact in *Rests on*: a change of the fact's
