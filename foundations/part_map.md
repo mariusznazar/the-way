@@ -56,7 +56,8 @@ and for the invariants of the-way itself.
 
 ## glossary — The glossary
 
-The part answers for the words a product's foundation uses, each in one meaning.
+The part answers for the words a foundation's rules use, each in one meaning: the form of an entry,
+the tools that write and check one, and the glossary of the-way itself.
 
 - **Files:** elements/glossary/**
 - **Depends on:** none

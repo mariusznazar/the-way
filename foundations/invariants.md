@@ -218,7 +218,7 @@ Where {merge-onto} exists, every change against {fork-point} carries the record 
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-11@87e90b9e
+- **Derives from:** WAY-11@a7e08204
 - **Part:** every
 - **Correction:** none
 - **Recovered:** none
@@ -1947,6 +1947,193 @@ Where {merge-onto} exists, no field of an entry of `foundations/environment_fact
 - **Rests on:** none
 - **Derives from:** WAY-71@cab47c5b
 - **Part:** environment-facts
+- **Correction:** none
+- **Recovered:** none
+
+## glossary-file/1
+
+Every glossary entry the repository holds, other than a copy in `elements/glossary/examples.md`, stands in `foundations/glossary.md`.
+
+- **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
+- **Rests on:** none
+- **Derives from:** WAY-93@4dc6ce12
+- **Part:** every
+- **Correction:** none
+- **Recovered:** none
+
+## glossary-file-sections/1
+
+`foundations/glossary.md` holds a title, the paragraph under it and its entries, and no other heading.
+
+- **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
+- **Rests on:** none
+- **Derives from:** WAY-93@4dc6ce12
+- **Part:** glossary
+- **Correction:** none
+- **Recovered:** none
+
+## glossary-term-holder/1
+
+No term is held by two entries of `foundations/glossary.md`.
+
+- **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
+- **Rests on:** none
+- **Derives from:** WAY-93@4dc6ce12
+- **Part:** glossary
+- **Correction:** none
+- **Recovered:** none
+
+## glossary-term-collision/1
+
+The glossary guard warns on every change that, against "{fork-point}", adds or renames a term of `foundations/glossary.md` or an identifier of the part map, the invariants or the environment facts so that the two read alike, its hyphens read as spaces, unless the identifier is of a part whose files include `elements/<identifier>/` and the term, in any of its forms, names that element.
+
+- **Method:** `python -B gate/run_tests.py elements/glossary --record .runs/glossary-tests.jsonl`
+- **Rests on:** none
+- **Derives from:** WAY-93@4dc6ce12
+- **Part:** glossary
+- **Correction:** none
+- **Recovered:** none
+
+## glossary-entry-field-presence/1
+
+Every entry of `foundations/glossary.md` carries every field the glossary template gives an entry.
+
+- **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
+- **Rests on:** none
+- **Derives from:** WAY-94@0ac1fa64 · WAY-71@cab47c5b
+- **Part:** glossary
+- **Correction:** none
+- **Recovered:** none
+
+## glossary-entry-field-words/1
+
+No field of an entry of `foundations/glossary.md` holds `none` or `TODO` where the glossary template does not give it that word.
+
+- **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
+- **Rests on:** none
+- **Derives from:** WAY-94@0ac1fa64 · WAY-71@cab47c5b
+- **Part:** glossary
+- **Correction:** none
+- **Recovered:** none
+
+## glossary-term-use/1
+
+Where {merge-onto} exists, every term of `foundations/glossary.md` has a use outside the glossary in a file of `foundations/` or in an element's template.
+
+- **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --merge-onto {merge-onto} --record .runs/glossary-merge-onto.jsonl`
+- **Rests on:** none
+- **Derives from:** WAY-95@c491a66e
+- **Part:** glossary · decisions · invariants · part-map · environment-facts
+- **Correction:** none
+- **Recovered:** none
+
+## glossary-definition-count/1
+
+Every entry of `foundations/glossary.md` gives its definition in one sentence, counted as the decision guard counts binding sentences.
+
+- **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
+- **Rests on:** none
+- **Derives from:** WAY-96@38f5315a
+- **Part:** glossary
+- **Correction:** none
+- **Recovered:** none
+
+## glossary-definition-words/1
+
+No definition in `foundations/glossary.md` contains, outside code, *must* or a word the decision template forbids in binding sentences.
+
+- **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
+- **Rests on:** none
+- **Derives from:** WAY-96@38f5315a
+- **Part:** glossary
+- **Correction:** none
+- **Recovered:** none
+
+## glossary-entry-version/1
+
+No entry of `foundations/glossary.md` carries a version.
+
+- **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
+- **Rests on:** none
+- **Derives from:** WAY-97@343b8b3b
+- **Part:** glossary
+- **Correction:** none
+- **Recovered:** none
+
+## glossary-definition-uses/1
+
+For every entry of `foundations/glossary.md` whose definition differs from its definition on "{fork-point}", the glossary guard's report lists the uses of its term.
+
+- **Method:** `python -B gate/run_tests.py elements/glossary --record .runs/glossary-tests.jsonl`
+- **Rests on:** none
+- **Derives from:** WAY-97@343b8b3b
+- **Part:** glossary
+- **Correction:** none
+- **Recovered:** none
+
+## glossary-avoid-growth/1
+
+No word of an *Avoid* in `foundations/glossary.md` stands, outside the text the glossary template leaves out, more times in a file of `foundations/` or in an element's template than on {fork-point}.
+
+- **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --base {fork-point} --record .runs/glossary-base.jsonl`
+- **Rests on:** none
+- **Derives from:** WAY-98@8961ef4f
+- **Part:** every
+- **Correction:** none
+- **Recovered:** none
+
+## glossary-avoid-single/1
+
+No word stands in the *Avoid* of two entries of `foundations/glossary.md`.
+
+- **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
+- **Rests on:** none
+- **Derives from:** WAY-98@8961ef4f
+- **Part:** glossary
+- **Correction:** none
+- **Recovered:** none
+
+## glossary-avoid-term/1
+
+No word of an *Avoid* in `foundations/glossary.md` is a term there.
+
+- **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
+- **Rests on:** none
+- **Derives from:** WAY-98@8961ef4f
+- **Part:** glossary
+- **Correction:** none
+- **Recovered:** none
+
+## glossary-not-target/1
+
+Every term, identifier and closed-list value the *Not* of an entry of `foundations/glossary.md` names exists.
+
+- **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
+- **Rests on:** none
+- **Derives from:** WAY-99@64acf85f
+- **Part:** glossary · part-map · invariants · environment-facts
+- **Correction:** none
+- **Recovered:** none
+
+## glossary-not-quoted-word/1
+
+Every word the *Not* of an entry of `foundations/glossary.md` names in quotation marks holds neither the term nor its forms, and stands outside quotation marks and outside the glossary in a file of `foundations/` or in an element's template.
+
+- **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
+- **Rests on:** none
+- **Derives from:** WAY-99@64acf85f
+- **Part:** glossary · decisions · invariants · part-map · environment-facts
+- **Correction:** none
+- **Recovered:** none
+
+## glossary-entry-merge-todo/1
+
+Where {merge-onto} exists, no field of an entry of `foundations/glossary.md` holds `TODO`.
+
+- **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --merge-onto {merge-onto} --record .runs/glossary-merge-onto.jsonl`
+- **Rests on:** none
+- **Derives from:** WAY-99@64acf85f · WAY-71@cab47c5b
+- **Part:** glossary
 - **Correction:** none
 - **Recovered:** none
 

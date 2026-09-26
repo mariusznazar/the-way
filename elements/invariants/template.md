@@ -150,6 +150,9 @@ A quarantined invariant stands on the last list in the file; *Until* is a date a
 - A sentence about what a check reports may also mean that the data it reads meets a rule; where
   it does, the data takes a sentence of its own, and the two stand as two entries, one about the
   check and one about the data (WAY-56, WAY-61).
+- A sentence that speaks of what a glossary term defines uses the term, never a paraphrase of its
+  definition; a term whose definition holds a word kept out of the sentence above enters it only
+  where the human deciding the change accepts it (WAY-100).
 
 ## Links
 

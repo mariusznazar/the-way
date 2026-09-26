@@ -89,6 +89,8 @@ joined by ` · `, or reads `none` (WAY-75):
   that it does not matter, as `git -c core.ignorecase=false check-attr` (WAY-73, WAY-81).
 - A finding of a study states what the study measured, on which models; the version of the paper
   stands in *Source*, and *Holds for* names it beside the models (WAY-85).
+- A sentence that speaks of what a glossary term defines uses the term, never a paraphrase of its
+  definition (WAY-100).
 
 ## Holds for
 
