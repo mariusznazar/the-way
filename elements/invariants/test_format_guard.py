@@ -847,6 +847,14 @@ class RecordPaths(GuardTestCase):
                          "save-round-trip/1: git does not ignore `.runs/saving.jsonl`")
         self.assertEqual(self.verdicts("run-record-path/1"), ["fail"])
 
+    def test_record_letter_case_counts_where_git_ignores_it(self):
+        self.git("config", "core.ignorecase", "true")
+        self.write(".gitignore", ".runs/\n")
+        self.assertFails(invariants(entry(method=self.command("--record .Runs/saving.jsonl")),
+                                    later()),
+                         "save-round-trip/1: git does not ignore `.Runs/saving.jsonl`")
+        self.assertEqual(self.verdicts("run-record-path/1"), ["fail"])
+
     def test_record_git_tracks(self):
         self.write(".gitignore", "*.jsonl\n")
         self.write("records/saving.jsonl", "{}\n")

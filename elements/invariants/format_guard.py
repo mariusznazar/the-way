@@ -998,7 +998,9 @@ def record_paths(command):
 
 def check_record_paths(entries, top, report):
     """Every `.jsonl` path a command names is one git ignores, as git itself answers, and no
-    command names two (WAY-74)."""
+    command names two (WAY-74). Letter case always counts: git ignores it where core.ignorecase
+    is set, which git init sets on Windows and macOS, and a path would then be ignored there
+    and not on Linux."""
     # invariant: run-record-path/1
     check, record_path = "check_record_paths", "run-record-path/1"
     named = {}   # path -> (entry, line) of the first command naming it
@@ -1024,7 +1026,8 @@ def check_record_paths(entries, top, report):
             inside.append(path)
     ignored = set()
     if inside:
-        code, answer, message = map_guard.call_git(["check-ignore", "-z", "--stdin"], top,
+        code, answer, message = map_guard.call_git(["-c", "core.ignorecase=false", "check-ignore",
+                                                    "-z", "--stdin"], top,
                                                    stdin="\0".join(inside) + "\0")
         if code not in (0, 1):
             report.error(None, "git cannot tell which paths it ignores: %s"
