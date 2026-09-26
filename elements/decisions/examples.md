@@ -19,16 +19,14 @@ foundation step.
 
 - **Change:** new decision
 - **Scope:** invariants, task-cycle
-- **Based on:** agents that a test stands in the way of change the test instead of the code,
-  and Claude models do so especially readily: read-only tests are "a promising middle ground
-  especially for Claude models, largely due to their preference of directly modifying test
-  cases" (ImpossibleBench — Zhong, Raghunathan, Carlini, 2025,
-  https://arxiv.org/abs/2510.20270; quote from the authors' summary,
-  https://www.lesswrong.com/posts/qJYMbrabcQqCZ7iqm/impossiblebench-measuring-reward-hacking-in-llm-coding-1).
+- **Based on:** agents that a test stands in the way of cheat past it, and the Claude models
+  measured do so mostly by changing the test, against which read-only tests are particularly
+  effective: impossiblebench-test-modification@9cdba560.
 - **Relations:** derives from WAY-01@a291c2c0 · related to WAY-02
 - **Outranks:** none
 - **Verification:** level 1 — invariants: invariant-test-change-acceptance.
-- **Review when:** the design of the task cycle begins · check by: 2026-10-02
+- **Review when:** the design of the task cycle begins, or no model in the scope of fact
+  impossiblebench-test-modification is Active in Anthropic's table of models · check by: 2026-10-02
 - **Origin:** none
 - **Approver override:** none
 - **Approved by:** Mariusz, 2026-09-14

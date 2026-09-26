@@ -86,16 +86,14 @@ foundation step.
 
 - **Change:** new decision
 - **Scope:** invariants, task-cycle
-- **Based on:** agents that a test stands in the way of change the test instead of the code,
-  and Claude models do so especially readily: read-only tests are "a promising middle ground
-  especially for Claude models, largely due to their preference of directly modifying test
-  cases" (ImpossibleBench — Zhong, Raghunathan, Carlini, 2025,
-  https://arxiv.org/abs/2510.20270; quote from the authors' summary,
-  https://www.lesswrong.com/posts/qJYMbrabcQqCZ7iqm/impossiblebench-measuring-reward-hacking-in-llm-coding-1).
+- **Based on:** agents that a test stands in the way of cheat past it, and the Claude models
+  measured do so mostly by changing the test, against which read-only tests are particularly
+  effective: impossiblebench-test-modification@9cdba560.
 - **Relations:** derives from WAY-01@a291c2c0 · related to WAY-02
 - **Outranks:** none
 - **Verification:** level 1 — invariants: invariant-test-change-acceptance.
-- **Review when:** the design of the task cycle begins · check by: 2026-10-02
+- **Review when:** the design of the task cycle begins, or no model in the scope of fact
+  impossiblebench-test-modification is Active in Anthropic's table of models · check by: 2026-10-02
 - **Origin:** none
 - **Approver override:** none
 - **Approved by:** Mariusz, 2026-09-14
@@ -389,9 +387,7 @@ a human decides.
 
 - **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, task-cycle
-- **Based on:** a model assessing text is biased towards its own: "an LLM evaluator scores its own
-  outputs higher than others' while human annotators consider them of equal quality"
-  (Panickssery et al., 2024, https://arxiv.org/abs/2404.13076).
+- **Based on:** a model assessing text favours its own: llm-self-preference@6d9f4b97.
 - **Relations:** derives from WAY-03@4fa941a4 · related to WAY-07
 - **Outranks:** none
 - **Verification:** level 1 — invariants: invariant-test-change-acceptance ·
@@ -409,8 +405,7 @@ a human decides.
 *Rationale:* the problem is a single executor that checks itself. Agents on the same model with
 the same input share its blind spots, so independence comes from a different perspective, from
 not seeing the author's reasoning, and from a different model for the agent that settles. Only a
-human knows what the product is meant to guard, so every change to what the foundation says goes
-to a human.
+human knows what the product is meant to guard, so every change to what the foundation says goes to a human. The finding it cites measured models of other publishers only, and this decision takes it across publishers (WAY-85).
 *Rejected:* a panel that settles everything; a single agent without a panel.
 *Consequences:* the CI check from WAY-03 accepts a change to an invariant test only with the
 panel's record, and, beyond a change of form, only with a human decision. Changes waiting for a
@@ -466,11 +461,8 @@ each covering the part of its binding sentences it can check.
 
 - **Change:** new decision
 - **Scope:** decisions, invariants
-- **Based on:** language models judge only part of what decisions say: "The models achieved
-  substantial agreement and strong accuracy for explicit, code-inferable decisions. Accuracy falls
-  short for implicit or deployment-oriented decisions that depend on deployment configuration or
-  organizational knowledge" (Su, Bakhtin, Ahmad, Esposito, Lenarduzzi, Taibi, 2026,
-  https://arxiv.org/abs/2602.07609).
+- **Based on:** language models judge only part of what decisions say:
+  llm-decision-violation-detection@92f498f3.
 - **Relations:** related to WAY-05 · related to WAY-08
 - **Outranks:** none
 - **Verification:** level 1 — invariants: decision-verification-level ·
@@ -487,7 +479,7 @@ each covering the part of its binding sentences it can check.
 *Rationale:* an invariant is true or false on every commit, so a test can check it; a decision
 about direction, trade-offs or non-goals often cannot be checked on a commit. Agents compare a
 change well with a decision that is explicit and readable from the code, and fall short on
-decisions that depend on deployment or on knowledge of the organisation — those stay with a human.
+decisions that depend on deployment or on knowledge of the organisation — those stay with a human. The finding it cites measured models of other publishers only, and this decision takes it across publishers (WAY-85).
 A pair of examples shows the agent where the line runs, which the binding sentences alone do not.
 *Rejected:* a rule in code as the only method of checking a decision — decisions that cannot be
 written as a rule would stay unchecked.
@@ -677,12 +669,13 @@ its invariant.
 
 - **Change:** new decision
 - **Scope:** relation-model, decisions, invariants, environment-facts
-- **Based on:** an assumption about the world that no entry names escapes review: the inquiry
-  into the failure of Ariane 5 found that "this decision was found directly in the source code.
-  Given the large amount of documentation associated with any industrial application, the
-  assumption, although agreed, was essentially obscured, though not deliberately, from any
-  external review" (Ariane 501 Inquiry Board, ESA,
-  https://www.esa.int/Newsroom/Press_Releases/Ariane_501_-_Presentation_of_Inquiry_Board_report).
+- **Based on:** an assumption about the world that no entry names escapes review: the inquiry into
+  the failure of Ariane 5 found that "No reference to justification of this decision was found
+  directly in the source code. Given the large amount of documentation associated with any
+  industrial application, the assumption, although agreed, was essentially obscured, though not
+  deliberately, from any external review" (Ariane 501 Inquiry Board report, ESA, 1996,
+  http://www.esa.int/htdocs/tidc/Press/Press96/ariane5rep.html, archived:
+  http://web.archive.org/web/20010217160711/http://www.esa.int:80/htdocs/tidc/Press/Press96/ariane5rep.html).
 - **Relations:** derives from WAY-02@af08ee5d · related to WAY-04 · related to WAY-12
 - **Outranks:** none
 - **Verification:** level 1 — invariants: level-one-decision-invariants · invariant-citation-target
@@ -855,16 +848,15 @@ the part map's rule for assigning files.
 
 - **Change:** new decision
 - **Scope:** decisions, part-map, task-cycle
-- **Based on:** an agent loses rules as their number grows: "even the best frontier models only
-  achieve 68% accuracy at the max density of 500 instructions" (IFScale,
-  https://arxiv.org/abs/2507.11538), and a tool vendor advises keeping an agent's instructions
-  short for the same reason: "target under 200 lines per CLAUDE.md file. Longer files consume
-  more context and reduce adherence" (Claude Code documentation,
-  https://code.claude.com/docs/en/memory).
+- **Based on:** an agent loses rules as their number grows: instruction-density-accuracy@f62b9a6d;
+  and a tool vendor advises keeping an agent's instructions short for the same reason: "target under
+  200 lines per CLAUDE.md file. Longer files consume more context and reduce adherence" (Claude Code
+  documentation, https://code.claude.com/docs/en/memory).
 - **Relations:** related to WAY-04 · related to WAY-11 · related to WAY-13 · related to WAY-14
 - **Outranks:** none
 - **Verification:** level 1 — invariants: decision-scope-names · decisions-found-for-change.
-- **Review when:** none
+- **Review when:** no model in the scope of fact instruction-density-accuracy is Active in
+  Anthropic's table of models · check by: 2026-10-02
 - **Origin:** none
 - **Approver override:** none
 - **Approved by:** Mariusz, 2026-09-16
@@ -1185,10 +1177,11 @@ never into the entry.
 - **Change:** new decision
 - **Scope:** decisions
 - **Based on:** rationales written by language models match those given by experts only in part:
-  "the Precision of LLM-generated DR with the three prompting strategies ranges from 0.267 to
-  0.278" (Zhou et al., https://arxiv.org/abs/2504.20781). A reconstructed record is easily taken
-  for a real one: "The retroactive ADR has the form of the decision record but not the
-  substance" (Catio, https://www.catio.tech/blog/architecture-decision-record).
+  "The average Precision, Recall, and F1-score of the DR generated by the five LLMs with the CoT
+  method are 0.237, 0.684, and 0.351, respectively" (Zhou et al.,
+  https://arxiv.org/html/2504.20781v3). A reconstructed record is easily taken for a real one: "The
+  retroactive ADR has the form of the decision record but not the substance" (Catio,
+  https://www.catio.tech/blog/architecture-decision-record).
 - **Relations:** related to WAY-06 · related to WAY-10 · related to WAY-23 · related to WAY-28
 - **Outranks:** none
 - **Verification:** level 1 — invariants: inherited-origin-form · inherited-rationale-source. Level
@@ -1819,8 +1812,8 @@ changes, not from the part the file itself belongs to.
 - **Based on:** Python's standard library does not match paths the way git does: `fnmatch`
   states that "the filename separator ('/' on Unix) is *not* special"
   (https://docs.python.org/3.10/library/fnmatch.html), and `PurePath.full_match`, which handles
-  `**`, arrives only in Python 3.13 (https://docs.python.org/3.13/library/pathlib.html). git
-  matches such patterns itself, through `.gitattributes`, where "a later line overrides an
+  `**`, arrives only in Python 3.13 (https://docs.python.org/3.13/library/pathlib.html). git matches such patterns itself, through `.gitattributes`, by the rules of
+  gitignore patterns (git-path-patterns@1519f3f7), where "a later line overrides an
   earlier line" (https://git-scm.com/docs/gitattributes), and reports the result with
   `git check-attr` (https://git-scm.com/docs/git-check-attr). import-linter treats a rule that
   matches nothing as an error by default (https://import-linter.readthedocs.io/).
@@ -2208,21 +2201,18 @@ overview of the repository is generated for an agent.
 
 - **Change:** new decision
 - **Scope:** part-map, decisions
-- **Based on:** measured on coding agents, "providing context files does not generally improve
-  task success rates, while increasing inference cost by over 20% on average", and "while
-  instructions in the context files are well followed by coding agents, repository overviews,
-  although popular and recommended by model providers, are not helpful" (Gloaguen, Mündler,
-  Müller, Raychev, Vechev, "Evaluating AGENTS.md: Are Repository-Level Context Files Helpful for
-  Coding Agents?", ETH Zurich / LogicStar.ai, https://arxiv.org/abs/2602.11988). The tools carry
-  channels for rules pinned to path patterns: Cursor rules
-  (https://cursor.com/docs/context/rules), Claude Code memory
-  (https://code.claude.com/docs/en/memory) and Kiro steering (https://kiro.dev/docs/steering/).
+- **Based on:** measured on coding agents: context-file-effect@5e46b997. The tools carry channels
+  for rules pinned to path patterns: Claude Code (claude-code-path-rules@ac99f128), Cursor rules —
+  "Auto-attached when a matching file is in context" (https://cursor.com/docs/rules) — and Kiro
+  steering — "Files are automatically included only when working with files that match the specified
+  pattern" (https://kiro.dev/docs/steering/).
 - **Relations:** derives from WAY-40@aeabb301 · related to WAY-15 · related to WAY-21 ·
   related to WAY-44
 - **Outranks:** none
 - **Verification:** level 1 — invariants: derived-file-content · generated-pattern-source ·
   generated-overview.
-- **Review when:** none
+- **Review when:** no model in the scope of fact context-file-effect is Active in Anthropic's table
+  of models · check by: 2026-10-02
 - **Origin:** none
 - **Approver override:** none
 - **Approved by:** Mariusz, 2026-09-17
@@ -2971,7 +2961,7 @@ a result it reports is `error`, a listed invariant's is `pass`, an unlisted inva
 is `fail`, or a run records a failure for no entry, and zero otherwise.
 
 - **Change:** new decision
-- **Scope:** invariants, gate, part-map, task-cycle
+- **Scope:** invariants, gate, part-map, task-cycle, environment-facts
 - **Based on:** none
 - **Relations:** derives from WAY-61@c6bdfd7c · derives from WAY-62@d9c21624 ·
   derives from WAY-08@a0bbac21 · related to WAY-16 · related to WAY-38 · related to WAY-45 ·
@@ -3246,20 +3236,16 @@ the check's author, with that check and the files it reads out of its input.
 
 - **Change:** new decision
 - **Scope:** invariants, decisions, part-map, gate, task-cycle
-- **Based on:** what a model sees of a check, it games: reward hacking "was more than 43× more
-  common on RE-Bench tasks than HCAST tasks, perhaps because on RE-Bench tasks the model was able
-  to see the entire scoring function" (METR, 2025,
-  https://metr.org/blog/2025-06-05-recent-reward-hacking/). With the check in the loop the agent
-  builds for it: "With the oracle in the loop, the score reaches near-perfect, but from a demo
-  holding the tested behavior directly, the library left dead or absent" (Building to the Test,
-  2026, https://arxiv.org/abs/2606.28430).
+- **Based on:** what a model sees of a check, it may game: visible-scoring-reward-hacking@39a85ced.
+  With the check in the loop the agent builds for it: oracle-in-loop-building@d13c8e26.
 - **Relations:** derives from WAY-08@a0bbac21 · related to WAY-03 · related to WAY-05 ·
   related to WAY-10 · related to WAY-11 · related to WAY-16 · related to WAY-58 ·
   related to WAY-61 · related to WAY-65
 - **Outranks:** none
 - **Verification:** level 3 — the human deciding the foundation change assesses how the work was
   handed out, and the record of that decision names who and when.
-- **Review when:** the design of the task cycle begins · check by: 2026-10-02
+- **Review when:** the design of the task cycle begins, or no model in the scope of fact
+  oracle-in-loop-building is Active in Anthropic's table of models · check by: 2026-10-02
 - **Origin:** none
 - **Approver override:** none
 - **Approved by:** Mariusz, 2026-09-22
@@ -3269,7 +3255,7 @@ the sentence says, so the teeth WAY-08 asks for show only that the check catches
 holds for the check: written by whoever wrote the sentence, it inherits the reading that sentence
 was written with, and a sentence two readings wide stays wide. Keeping the acts apart costs the
 order of the work and nothing else, and is the move WAY-03 and WAY-10 already make: take the
-oracle out of the hands of whoever is measured by it, rather than forbid its use.
+oracle out of the hands of whoever is measured by it, rather than forbid its use. The finding on visible scoring measured a model of another publisher only, and this decision takes it across publishers (WAY-85).
 *Rejected:* hiding checks from the executor — it costs honest work, and WAY-16 keeps one command
 for an agent, CI and a human; one agent writing all three under a written rule not to aim a break
 at its own check — a gate written in prose is not a gate (WAY-03); a field naming the writers —
@@ -3476,9 +3462,11 @@ as `<identifier>/<version>` or `invariant` as `null`, and at most `description`.
 
 - **Change:** new decision
 - **Scope:** invariants, gate, decisions, part-map, repository, environment-facts
-- **Based on:** JSON Lines is "a convenient format for storing structured data that may be
-  processed one record at a time" (https://jsonlines.org/); Python 3.14's `json` module reads it
-  (https://docs.python.org/3.14/library/json.html).
+- **Based on:** JSON Lines holds one JSON value on each line (json-lines@f16c5b84) and is "a
+  convenient format for storing structured data that may be processed one record at a time"
+  (https://jsonlines.org/); Python 3.14's `json.loads` reads each such line: "but instead of a
+  file-like object, deserialize s (a str, bytes or bytearray instance containing a JSON document) to
+  a Python object" (https://docs.python.org/3.14/library/json.html).
 - **Relations:** derives from WAY-61@c6bdfd7c · derives from WAY-63@f16348c8 ·
   derives from WAY-65@58d1f2c3 · related to WAY-38 · related to WAY-47 · related to WAY-48 ·
   related to WAY-49 · related to WAY-53
@@ -3932,10 +3920,8 @@ decision rests on the fact.
 
 - **Change:** new decision
 - **Scope:** environment-facts, decisions
-- **Based on:** a host can hide the state it keeps from an anonymous reader: "GitHub uses a `404 Not
-  Found` response instead of a `403 Forbidden` response to avoid confirming the existence of private
-  repositories" (GitHub REST API documentation,
-  https://docs.github.com/en/rest/using-the-rest-api/troubleshooting-the-rest-api).
+- **Based on:** a host can hide the state it keeps from an anonymous reader:
+  github-private-repository-response@e0f7ced2.
 - **Relations:** related to WAY-17 · related to WAY-22 · related to WAY-27 · related to WAY-76 ·
   related to WAY-81 · related to WAY-83
 - **Outranks:** none
@@ -3981,24 +3967,28 @@ A finding of a study stands as an environment fact recording what the study meas
 version of the paper its source names, with *Holds for* naming the measured models by the dated
 identifiers the study gives, or by its own names where it gives none. That the agents of this
 process behave the same is a prediction, written in *Review when* of each decision citing the fact
-as a state a script can check, never in the fact.
+as a state a script can check, never in the fact. A decision citing a finding none of whose
+measured models the publisher of this process's models lists says in its rationale that it takes
+the finding across publishers, and carries no such state.
 
 - **Change:** new decision
 - **Scope:** environment-facts, decisions
-- **Based on:** a study names the models it measured: "GPT-5, o3, o4-mini, GPT-4.1, Claude Opus
-  4.1, Claude Sonnet 4, Claude Sonnet 3.7, and Qwen3-Coder" (ImpossibleBench v1, § 3.1,
-  https://arxiv.org/abs/2510.20270v1). A model's publisher keeps a state for each model, among them
-  "Retired: The model is no longer available for use" (Anthropic, Model deprecations,
-  https://platform.claude.com/docs/en/about-claude/model-deprecations).
+- **Based on:** a study names the models it measured: "GPT-5, o3, o4-mini, GPT-4.1, Claude Opus 4.1,
+  Claude Sonnet 4, Claude Sonnet 3.7, and Qwen3-Coder" (ImpossibleBench v1, § 3.1,
+  https://arxiv.org/abs/2510.20270v1). A model's publisher keeps a state for each model:
+  anthropic-model-states@640ad66c.
 - **Relations:** related to WAY-03 · related to WAY-17 · related to WAY-24 · related to WAY-77 ·
   related to WAY-80 · related to WAY-90
 - **Outranks:** none
 - **Verification:** level 2 — an agent compares the change with the decision:
-  - complies: the finding behind WAY-03 is a fact holding for arXiv:2510.20270v1 and the eight
-    models it names, and WAY-03's *Review when* reads "no model in the scope of fact
-    `impossiblebench-test-modification` is Active, or a study of an Active model is found";
-  - violates: the fact says "Claude models change tests" with no version and no models; the fact
-    carries a field saying the finding still applies to the agents of this process.
+  - complies: the finding behind WAY-03 is a fact holding for arXiv:2510.20270v1 and the three
+    Claude models it is about, and WAY-03's *Review when* reads "no model in the scope of fact
+    `impossiblebench-test-modification` is Active in Anthropic's table of models"; WAY-10, citing a
+    finding on models of other publishers only, says in its rationale that it takes the finding
+    across them;
+  - violates: the fact says "Claude models change tests" with no version and no models; the fact carries a field saying the finding still applies to the agents of this process; a
+    decision citing a finding on models of other publishers only carries a state met the day it
+    is written.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
@@ -4013,11 +4003,13 @@ check the transfer when the fact names the measured models and a publisher's tab
 states.
 *Rejected:* the transfer as a field of the fact — a second mechanism for predictions beside WAY-24,
 and a fact that is no longer true or false today.
-*Consequences:* the same condition is repeated in every decision citing one finding, about eight
-in this log. Where a study gives no dated identifiers, the script checking *Review when* resolves
+*Consequences:* the same condition is repeated in every decision citing one finding: four decisions
+in this log carry one, and three take a finding across publishers. Where a study gives no dated identifiers, the script checking *Review when* resolves
 the names it gives through the publisher's table of models; that script does not exist yet. A
 decision that already waits for another state, as WAY-03 waits for the design of the task cycle,
-needs *Review when* to hold more than one state, which takes a change of the decision template.
+joins both into one state with "or", under the earlier check-by date, which the template's form
+already holds. The states are read from the table that fact `anthropic-model-states` records; a
+change to that fact flags this decision, not the decisions whose conditions read the table.
 WAY-03 is rewritten on this pattern when the citations of *Based on* become fact entries, and its
 condition is met the day it is written.
 
@@ -4170,7 +4162,7 @@ review nothing here needs; a move at the end of security support, about 2030.
 and the-way's own commands run on this interpreter. A move changes the declaration and the version
 of the fact on the standard library, and sends the invariants naming the version to review; it may
 cross several versions at once, and the modules removed on the way add up — for the standard
-library that is one probe and one list of imports. `.python-version` joins the files of the
+library that is one run of the fact's method and one list of imports. `.python-version` joins the files of the
 `repository` part.
 
 ### WAY-90/1 — Which citations of a decision's *Based on* become environment fact entries, and how are they named?

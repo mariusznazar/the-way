@@ -26,7 +26,7 @@ a script from the log.
 
 - **Change:** new decision | <kind> · previous: WAY-NN/V-1
 - **Scope:** <parts from the part map>
-- **Based on:** <facts about the environment> | none
+- **Based on:** <facts named as <identifier>@<fingerprint>, other citations quoted with their sources> | none
 - **Relations:** derives from WAY-x@<fingerprint> · narrows WAY-y@<fingerprint> · related to WAY-z | none
 - **Outranks:** WAY-x, WAY-y | none
 - **Verification:** level 1 | 2 | 3 — <…>
