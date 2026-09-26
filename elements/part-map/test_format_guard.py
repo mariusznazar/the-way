@@ -495,6 +495,15 @@ class Files(GuardTestCase):
         self.assertEqual(self.failures("path-pattern-reach/1"),
                          ["line 35: pattern `src/*.bin` of `rendering` matches no file git tracks"])
 
+    def test_pattern_letter_case_counts_where_git_ignores_it(self):
+        self.git("config", "core.ignorecase", "true")
+        self.assertFails(part_map(part(), flow(), surface(), self.rendering("src/Render.py"),
+                                  foundations_part()),
+                         "pattern `src/Render.py` of `rendering` matches no file git tracks")
+        self.assertEqual(self.failures("file-part-assignment/1"),
+                         ["no part claims `src/render.py`: give it to a part or put it on the "
+                          "list of files left out on purpose"])
+
     def test_trust_boundary_pattern_that_matches_nothing(self):
         self.assertFails(part_map(part(boundary="src/parser.py"), self.rendering(),
                                   foundations_part()),

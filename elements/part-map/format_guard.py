@@ -782,14 +782,15 @@ def tracked_files(top, report):
 
 def matched_by_git(root, wanted, paths):
     """Ask git which of the paths each pattern matches: {attribute: [paths]}, or None when git
-    cannot."""
+    cannot. Letter case always counts: git ignores it where core.ignorecase is set, which git
+    init sets on Windows and macOS, and a map would then assign files differently there."""
     handle, attributes_file = tempfile.mkstemp(prefix="part-map-", suffix=".attributes", text=True)
     try:
         with os.fdopen(handle, "w", encoding="utf-8", newline="\n") as attributes:
             for attribute, pattern in wanted.items():
                 attributes.write("%s %s\n" % (pattern, attribute))
         code, answer = git(["-c", "core.attributesFile=%s" % attributes_file.replace(os.sep, "/"),
-                            "check-attr", "--all", "-z", "--stdin"], root,
+                            "-c", "core.ignorecase=false", "check-attr", "--all", "-z", "--stdin"], root,
                            stdin=chr(0).join(paths) + chr(0))
     finally:
         os.unlink(attributes_file)
