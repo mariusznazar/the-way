@@ -50,7 +50,7 @@ and for the invariants of the-way itself.
 - **Files:** elements/invariants/**
   foundations/invariants.md
   foundations/violated_invariants.md
-- **Depends on:** decisions · part-map · relation-model
+- **Depends on:** decisions · part-map · relation-model · environment-facts
 - **Failure modes:** none
 - **Trust boundary:** none
 
@@ -68,7 +68,7 @@ The part answers for the words a product's foundation uses, each in one meaning.
 The part answers for what a product takes as true about the world outside it.
 
 - **Files:** elements/environment-facts/**
-- **Depends on:** none
+- **Depends on:** decisions · part-map · invariants · relation-model
 - **Failure modes:** none
 - **Trust boundary:** none
 
@@ -163,11 +163,18 @@ exit codes.
 
 - **Declared at:** elements/invariants/format_guard.py · main
 
+## environment-facts-guard-command — The command of the environment facts guard
+
+The command that runs the guard of a product's environment facts keeps its name, its arguments and
+its exit codes.
+
+- **Declared at:** elements/environment-facts/format_guard.py · main
+
 ## test-runner-command — The command of the test runner
 
-The command that runs the tests of a directory and records a verdict for each invariant they cite
-keeps its name, its arguments, its exit codes and the verdict it records for each outcome of a
-test.
+The command that runs the tests of a directory and records a verdict for each invariant and each
+environment fact they cite keeps its name, its arguments, its exit codes and the verdict it records
+for each outcome of a test.
 
 - **Declared at:** gate/run_tests.py · main
 

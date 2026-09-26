@@ -1576,14 +1576,14 @@ No field of an entry of `foundations/invariants.md` holds `none` or `TODO` where
 - **Correction:** none
 - **Recovered:** none
 
-## invariant-entry-merge-todo/1
+## invariant-entry-merge-todo/2
 
-Where {merge-onto} exists, no field of an entry of `foundations/invariants.md` other than *Method* and *Rests on* holds `TODO`.
+Where {merge-onto} exists, no field of an entry of `foundations/invariants.md` other than *Method* and *Rests on* holds `TODO`, and *Rests on* holds it only while the environment facts that merge leaves hold no entry.
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --merge-onto {merge-onto} --record .runs/invariants-merge-onto.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-71@cab47c5b
-- **Part:** invariants
+- **Part:** invariants · environment-facts
 - **Correction:** none
 - **Recovered:** none
 

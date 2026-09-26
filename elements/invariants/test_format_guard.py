@@ -91,6 +91,24 @@ def invariants(*entries, withdrawn=WITHDRAWN, quarantine=QUARANTINE):
     return "# Invariants\n\n" + "\n\n".join(sections + [s for s in (withdrawn, quarantine) if s]) + "\n"
 
 
+FACT_FINGERPRINT = "b28784ec"
+FACTS = "\n".join([
+    "# Environment facts", "",
+    "## storage-quota/1", "", "The browser keeps at least 5 MB of local storage for each origin.",
+    "", "- **Holds for:** Firefox 130",
+    '- **Source:** https://developer.mozilla.org/docs/storage/130 § Web Storage — "at least 5 MB '
+    'per origin"; read 2026-09-26',
+    "- **Set by:** none", "- **Method:** `TODO`", "- **Correction:** none", "",
+    "## Withdrawn identifiers", "", "| Identifier | Why | Successors |", "|---|---|---|",
+    "| storage-limit | split into two facts | storage-quota |", ""])
+VERDICT_HEADER = "| Entry | Version | Verdict | By | On | Commit | Until |\n|---|---|---|---|---|---|---|\n"
+
+
+def human_verdicts(*rows):
+    return "# Human verdicts\n\n" + VERDICT_HEADER + "".join("| %s |\n" % " | ".join(row)
+                                                             for row in rows)
+
+
 def violated(*rows):
     return "\n".join(["## Violated invariants", "", "| Identifier | Version |", "|---|---|"] +
                      ["| %s | %s |" % row for row in rows]) + "\n"
@@ -115,12 +133,12 @@ PLAIN = sorted([
     "level-one-decision-invariants/1", "verification-invariant-derivation/1",
     "quarantine-position-form/1", "quarantine-flow-invariants/1", "violated-position-version/1",
     "invariant-citation-version/1", "invariant-citation-target/1", "data-line-target/1",
-    "run-record-path/1"])
+    "run-record-path/1", "human-verdict-invariant-row/1"])
 BASE = sorted([
     "invariant-version-new/1", "invariant-version-changed/1", "invariant-version-unchanged/1",
     "invariant-earlier-wording/1", "invariant-identifier-persistence/1",
     "invariant-withdrawal-persistence/1", "violated-list-growth/1"])
-MERGE = sorted(["invariant-entry-merge-todo/1", "link-fingerprint-value/1"])
+MERGE = sorted(["invariant-entry-merge-todo/2", "link-fingerprint-value/1"])
 
 
 class GuardTestCase(unittest.TestCase):
@@ -244,6 +262,21 @@ class EntriesInAText(unittest.TestCase):
     def test_a_method_under_a_heading_without_a_version_is_no_entry(self):
         self.assertFalse(format_guard.holds_entries(
             "# Notes\n\n## How to check\n\n- **Method:** `TODO`\n"))
+
+    def test_an_environment_fact_entry_is_no_invariant_entry(self):
+        self.assertFalse(format_guard.holds_entries(FACTS))
+
+    def test_an_entry_before_a_block_left_open_is_an_entry(self):
+        self.assertTrue(format_guard.holds_entries(
+            "# Notes\n\n## loads-fast/1\n\nA saved game loads.\n\n- **Method:** `TODO`\n\n```\n"))
+
+    def test_an_entry_in_a_tilde_fence_is_no_entry(self):
+        self.assertFalse(format_guard.holds_entries(
+            "# Notes\n\n~~~\n## loads-fast/1\n\nA saved game loads.\n\n- **Method:** `TODO`\n~~~\n"))
+
+    def test_an_invariant_entry_after_a_fact_entry_is_an_entry(self):
+        self.assertTrue(format_guard.holds_entries(
+            FACTS + "\n## loads-fast/1\n\nA saved game loads.\n\n- **Method:** `TODO`\n"))
 
 
 class Layout(GuardTestCase):
@@ -1031,14 +1064,14 @@ class MergeTodo(GuardTestCase):
         self.assertFails(invariants(entry(derives="`TODO — a decision on saves`"), later()),
                          "save-round-trip/1: *Derives from* holds `TODO`, which a merge onto the "
                          "main branch does not take", merge_onto="HEAD")
-        self.assertEqual(self.verdicts("invariant-entry-merge-todo/1"), ["fail"])
+        self.assertEqual(self.verdicts("invariant-entry-merge-todo/2"), ["fail"])
 
     def test_todo_in_a_field_the_form_does_not_give_it_fails_a_merge(self):
         self.commit(invariants())
         self.assertFails(invariants(entry(part="TODO"), later()),
                          "save-round-trip/1: *Part* holds `TODO`, which a merge onto the main "
                          "branch does not take", merge_onto="HEAD")
-        self.assertEqual(self.verdicts("invariant-entry-merge-todo/1"), ["fail"])
+        self.assertEqual(self.verdicts("invariant-entry-merge-todo/2"), ["fail"])
 
     def test_todo_inside_a_part_of_a_value_fails_a_merge(self):
         self.commit(invariants())
@@ -1046,13 +1079,13 @@ class MergeTodo(GuardTestCase):
                                           "found: nothing"), later()),
                          "save-round-trip/1: *Recovered* holds `TODO`, which a merge onto the main "
                          "branch does not take", merge_onto="HEAD")
-        self.assertEqual(self.verdicts("invariant-entry-merge-todo/1"), ["fail"])
+        self.assertEqual(self.verdicts("invariant-entry-merge-todo/2"), ["fail"])
 
     def test_todo_in_method_and_rests_on_passes_a_merge(self):
         self.commit(invariants())
         self.assertPasses(invariants(entry(method="`TODO`", rests="TODO — the store keeps 5 MB, "
                                            "per its documentation"), later()), merge_onto="HEAD")
-        self.assertEqual(self.verdicts("invariant-entry-merge-todo/1"), ["pass"])
+        self.assertEqual(self.verdicts("invariant-entry-merge-todo/2"), ["pass"])
 
     def test_no_todo_passes_a_merge(self):
         self.commit(invariants())
@@ -1095,8 +1128,8 @@ class Fingerprints(GuardTestCase):
     def test_named_fact_fails_a_merge(self):
         self.commit(invariants())
         self.assertFails(invariants(entry(rests="storage-quota@1234abcd"), later()),
-                         "`storage-quota@1234abcd` in *Rests on* names no entry whose fingerprint "
-                         "the merge holds", merge_onto="HEAD")
+                         "`storage-quota@1234abcd` in *Rests on* names no environment fact the "
+                         "merge holds", merge_onto="HEAD")
         self.assertEqual(self.verdicts("link-fingerprint-value/1"), ["fail"])
 
 
@@ -1230,6 +1263,184 @@ class Unreadable(GuardTestCase):
                                 template=os.path.join(self.root, "broken_template.md"))
         self.assertEqual(code, 2)
         self.assertIn("cannot read the rules", output.getvalue())
+
+
+class FactsBeside(GuardTestCase):
+    """The file of environment facts beside the invariants, once it has entries (WAY-66, WAY-75)."""
+
+    def setUp(self):
+        super().setUp()
+        self.write("foundations/environment_facts.md", FACTS)
+
+    def test_facts_file_is_no_second_file_of_invariants(self):
+        # invariant: invariants-file/1
+        self.assertPasses(invariants())
+        self.assertEqual(self.verdicts("invariants-file/1"), ["pass"])
+
+    def test_rests_on_a_fact_entry(self):
+        # invariant: link-fingerprint-presence/1
+        self.assertPasses(invariants(entry(rests="storage-quota@" + FACT_FINGERPRINT), later()))
+        self.assertEqual(self.verdicts("link-fingerprint-presence/1"), ["pass"])
+
+    def test_rests_on_a_fact_without_a_fingerprint(self):
+        # invariant: link-fingerprint-presence/1
+        self.assertFails(invariants(entry(rests="storage-quota"), later()),
+                         "`storage-quota` in *Rests on* carries no fingerprint of 8 hex digits; it "
+                         "reads `<fact>@<fingerprint>`")
+        self.assertEqual(self.verdicts("link-fingerprint-presence/1"), ["fail"])
+
+    def test_rests_on_a_withdrawn_fact(self):
+        self.assertFails(invariants(entry(rests="storage-limit@1234abcd"), later()),
+                         "*Rests on* names `storage-limit`, a withdrawn environment fact")
+
+    def test_rests_on_no_fact(self):
+        self.assertFails(invariants(entry(rests="storage-cap@1234abcd"), later()),
+                         "*Rests on* names `storage-cap`, which is not an entry of the environment "
+                         "facts")
+
+    def test_identifier_held_by_a_fact(self):
+        # invariant: identifier-holders/1
+        self.assertFails(invariants(entry(), later(identifier="storage-quota")),
+                         "identifier `storage-quota` is held by the environment facts (line 3)")
+        self.assertEqual(self.verdicts("identifier-holders/1"), ["fail"])
+
+    def test_identifier_withdrawn_from_the_facts(self):
+        # invariant: identifier-holders/1
+        self.assertFails(invariants(entry(), later(identifier="storage-limit")),
+                         "identifier `storage-limit` is held by the environment facts")
+        self.assertEqual(self.verdicts("identifier-holders/1"), ["fail"])
+
+    def test_stale_fingerprint_of_a_fact_fails_a_merge(self):
+        # invariant: link-fingerprint-value/1
+        self.commit(invariants())
+        self.assertFails(invariants(entry(rests="storage-quota@1234abcd"), later()),
+                         "`storage-quota@1234abcd` — the current fingerprint of `storage-quota` "
+                         "after the merge is " + FACT_FINGERPRINT, merge_onto="HEAD")
+        self.assertEqual(self.verdicts("link-fingerprint-value/1"), ["fail"])
+
+    def test_current_fingerprint_of_a_fact_passes_a_merge(self):
+        # invariant: link-fingerprint-value/1
+        self.commit(invariants())
+        self.assertPasses(invariants(entry(rests="storage-quota@" + FACT_FINGERPRINT), later()),
+                          merge_onto="HEAD")
+        self.assertEqual(self.verdicts("link-fingerprint-value/1"), ["pass"])
+
+    def test_identifier_held_twice_in_the_facts(self):
+        # invariant: identifier-holders/1
+        self.write("foundations/environment_facts.md", FACTS.replace(
+            "| storage-limit | split", "| storage-quota | shown false | none |\n| storage-limit | split"))
+        self.assertFails(invariants(), "identifier `storage-quota` is held twice in the environment "
+                                       "facts")
+        self.assertEqual(self.verdicts("identifier-holders/1"), ["fail"])
+
+    def test_fact_held_by_the_part_map(self):
+        # invariant: identifier-holders/1
+        self.write("foundations/environment_facts.md", FACTS.replace("storage-limit", "saving"))
+        self.assertFails(invariants(), "environment_facts.md:17: identifier `saving` is held by the "
+                                       "part map")
+        self.assertEqual(self.verdicts("identifier-holders/1"), ["fail"])
+
+    def test_todo_in_rests_on_warns_once_facts_have_entries(self):
+        # invariant: invariant-entry-field-words/1
+        code, output = self.guard(invariants(entry(rests="TODO — the store keeps 5 MB"), later()))
+        self.assertEqual(code, 0, output)
+        self.assertIn("save-round-trip/1: *Rests on* holds `TODO`, which a merge onto the main "
+                      "branch does not take", output)
+        self.assertEqual(self.verdicts("invariant-entry-field-words/1"), ["pass"])
+
+    def test_fact_the_main_branch_raised_and_the_branch_left_alone(self):
+        # invariant: link-fingerprint-value/1
+        self.commit(invariants(entry(rests="storage-quota@" + FACT_FINGERPRINT), later()))
+        self.git("checkout", "-q", "-b", "task")
+        self.git("checkout", "-q", "main")
+        self.write("foundations/environment_facts.md", FACTS.replace(
+            "## storage-quota/1", "## storage-quota/2").replace("Firefox 130", "Firefox 131"))
+        self.git("add", "-A")
+        self.git("commit", "-q", "-m", "raise")
+        self.git("checkout", "-q", "task")
+        self.assertFails(invariants(entry(rests="storage-quota@" + FACT_FINGERPRINT), later()),
+                         "`storage-quota@%s` — the current fingerprint of `storage-quota` after the "
+                         "merge is" % FACT_FINGERPRINT, merge_onto="main")
+        self.assertEqual(self.verdicts("link-fingerprint-value/1"), ["fail"])
+
+    def test_successors_none_in_backticks(self):
+        # invariant: withdrawal-successors/1
+        self.assertPasses(invariants(entry(), later(), withdrawn=WITHDRAWN.replace(
+            "| save-format | save-round-trip |", "| save-format | `none` |")))
+        self.assertEqual(self.verdicts("withdrawal-successors/1"), ["pass"])
+
+    def test_todo_in_rests_on_fails_a_merge_once_facts_have_entries(self):
+        # invariant: invariant-entry-merge-todo/2
+        self.commit(invariants())
+        self.assertFails(invariants(entry(rests="TODO — the store keeps 5 MB"), later()),
+                         "*Rests on* holds `TODO`, which a merge onto the main branch does not take "
+                         "once the environment facts element has entries", merge_onto="HEAD")
+        self.assertEqual(self.verdicts("invariant-entry-merge-todo/2"), ["fail"])
+
+
+class HumanVerdicts(GuardTestCase):
+    def row(self, **changes):
+        values = dict(entry="save-round-trip", version="1", verdict="pass", by="Mariusz",
+                      on="2026-09-26", commit="b06eacd", until="none")
+        values.update(changes)
+        return tuple(values[name] for name in ("entry", "version", "verdict", "by", "on", "commit",
+                                               "until"))
+
+    def check(self, row, fragment=None, method="docs/review_checklist.md"):
+        # every test calling this cites human-verdict-invariant-row, whose verdict it asserts
+        self.write("foundations/human_verdicts.md", human_verdicts(row))
+        text = invariants(entry(method=method), later())
+        if fragment is None:
+            self.assertPasses(text)
+            self.assertEqual(self.verdicts("human-verdict-invariant-row/1"), ["pass"])
+        else:
+            self.assertFails(text, fragment)
+            self.assertEqual(self.verdicts("human-verdict-invariant-row/1"), ["fail"])
+
+    def test_no_file(self):
+        # invariant: human-verdict-invariant-row/1
+        output = self.assertPasses(invariants())
+        self.assertIn("note: there is no human_verdicts.md", output)
+        self.assertEqual(self.verdicts("human-verdict-invariant-row/1"), ["pass"])
+
+    def test_row_in_its_form(self):
+        # invariant: human-verdict-invariant-row/1
+        self.check(self.row())
+
+    def test_row_for_an_invariant_whose_method_is_a_command(self):
+        # invariant: human-verdict-invariant-row/1
+        self.check(self.row(), "human_verdicts.md:5: the method of `save-round-trip` is not a path",
+                   method="`python -m unittest tests/test_saving.py`")
+
+    def test_row_for_an_invariant_whose_method_is_prose(self):
+        # invariant: human-verdict-invariant-row/1
+        self.write("foundations/human_verdicts.md", human_verdicts(self.row()))
+        self.assertFails(invariants(entry(method="ask the reviewer"), later()),
+                         "the method of `save-round-trip` is not a path")
+        self.assertEqual(self.verdicts("human-verdict-invariant-row/1"), ["fail"])
+
+    def test_verdict_neither_pass_nor_fail(self):
+        # invariant: human-verdict-invariant-row/1
+        self.check(self.row(verdict="holds"), "*Verdict* is neither `pass` nor `fail`")
+
+    def test_until_a_date(self):
+        # invariant: human-verdict-invariant-row/1
+        self.check(self.row(until="2026-12-31"), "an invariant's verdict reads `none` in *Until*")
+
+    def test_row_naming_a_fact_is_the_facts_guards(self):
+        # invariant: human-verdict-invariant-row/1
+        self.write("foundations/environment_facts.md", FACTS)
+        self.check(self.row(entry="storage-quota", until="2026-12-31"))
+
+    def test_row_naming_neither(self):
+        self.write("foundations/human_verdicts.md", human_verdicts(self.row(entry="storage-cap")))
+        self.assertFails(invariants(), "`storage-cap` is neither an invariant nor an environment "
+                                       "fact")
+
+    def test_list_with_other_columns(self):
+        self.write("foundations/human_verdicts.md", "| Entry | Verdict |\n|---|---|\n"
+                                                    "| save-round-trip | pass |\n")
+        self.assertFails(invariants(), "the list has columns Entry | Verdict")
 
 
 if __name__ == "__main__":

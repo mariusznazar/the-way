@@ -2105,5 +2105,87 @@ class InARepository(RunnerTestCase):
                                       "`<identifier>/<version>`")])
 
 
+def fact_line(check, verdict, fact, description=None):
+    """A line of the record holding a fact's verdict, written out as the test expects it."""
+    written = {"check": check, "verdict": verdict, "fact": fact}
+    if description is not None:
+        written["description"] = description
+    return written
+
+
+class Facts(RunnerTestCase):
+    """A test citing an environment fact gives it a verdict under the key `fact` (WAY-74, WAY-81)."""
+
+    def test_a_passing_test_records_pass_for_a_fact_it_cites(self):
+        code, lines, _ = self.run_tests(test_sample=module(
+            "class Probes(unittest.TestCase):",
+            "    def test_quota(self):",
+            "        # fact: storage-quota/1",
+            "        # invariant: saves-fit-quota/1",
+            "        self.assertTrue(True)"))
+        self.assertEqual(code, 0)
+        self.assertEqual(lines, [fact_line(SAMPLE + "::Probes.test_quota", "pass", "storage-quota/1"),
+                                 line(SAMPLE + "::Probes.test_quota", "pass", "saves-fit-quota/1")])
+
+    def test_a_failing_test_records_fail_for_a_fact_it_cites(self):
+        code, lines, _ = self.run_tests(test_sample=module(
+            "class Probes(unittest.TestCase):",
+            "    def test_quota(self):",
+            "        # fact: storage-quota/1",
+            "        self.fail('the quota moved')"))
+        self.assertEqual(code, 1)
+        self.assertEqual(lines, [fact_line(SAMPLE + "::Probes.test_quota", "fail", "storage-quota/1",
+                                           "failed: AssertionError: the quota moved")])
+
+    def test_a_fact_and_an_invariant_of_one_name_are_two_citations(self):
+        code, lines, _ = self.run_tests(test_sample=module(
+            "class Probes(unittest.TestCase):",
+            "    def test_a_rule(self):",
+            "        # invariant: storage-quota/1",
+            "        pass",
+            "",
+            "    def test_b_probe(self):",
+            "        # fact: storage-quota/1",
+            "        self.fail('the quota moved')"))
+        self.assertEqual(code, 1)
+        self.assertEqual(lines, [line(SAMPLE + "::Probes.test_a_rule", "pass", "storage-quota/1"),
+                                 fact_line(SAMPLE + "::Probes.test_b_probe", "fail",
+                                           "storage-quota/1",
+                                           "failed: AssertionError: the quota moved")])
+
+    def test_a_skipped_test_gives_a_fact_no_verdict(self):
+        code, lines, _ = self.run_tests(test_sample=module(
+            "class Probes(unittest.TestCase):",
+            "    @unittest.skip('offline')",
+            "    def test_quota(self):",
+            "        # fact: storage-quota/1",
+            "        pass"))
+        self.assertEqual(code, 1)
+        self.assertEqual(lines, [line(SAMPLE + "::Probes.test_quota", "fail", None,
+                                      "no verdict for fact storage-quota/1: skipped: offline")])
+
+    def test_a_fact_citation_off_the_form_records_null(self):
+        code, lines, _ = self.run_tests(test_sample=module(
+            "class Probes(unittest.TestCase):",
+            "    def test_quota(self):",
+            "        # fact: storage-quota/01",
+            "        pass"))
+        self.assertEqual(code, 1)
+        self.assertEqual(lines, [line(SAMPLE + "::Probes.test_quota", "fail", None,
+                                      "cites fact `storage-quota/01`, which is not "
+                                      "`<identifier>/<version>`")])
+
+    def test_a_fact_citation_outside_a_test_is_named(self):
+        code, lines, _ = self.run_tests(test_sample=module(
+            "# fact: storage-quota/1",
+            "class Probes(unittest.TestCase):",
+            "    def test_quota(self):",
+            "        pass"))
+        self.assertEqual(code, 1)
+        self.assertEqual(lines, [line(SAMPLE, "fail", None,
+                                      "%s:5: `fact: storage-quota/1` stands outside any test, and a "
+                                      "check cites at the check (WAY-65)" % SAMPLE)])
+
+
 if __name__ == "__main__":
     unittest.main()

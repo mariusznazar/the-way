@@ -57,6 +57,17 @@ map_guard = _load("part_map_format_guard", os.path.join(HERE, "..", "part-map", 
 fingerprint_module = _load("relation_model_fingerprint",
                            os.path.join(HERE, "..", "..", "relation-model", "fingerprint.py"))
 fingerprint = decision_guard.fingerprint
+FACTS_GUARD = os.path.join(HERE, "..", "environment-facts", "format_guard.py")
+_facts_guard = []
+
+
+def facts_guard():
+    """The environment facts guard, loaded on first use, since it loads this guard itself."""
+    if not _facts_guard:
+        _facts_guard.append(_load("environment_facts_format_guard", FACTS_GUARD))
+    return _facts_guard[0]
+
+
 count_sentences = decision_guard.count_sentences
 # A fingerprint as the relation model gives it: its length in lower-case hex digits (WAY-39).
 FINGERPRINT = r"[0-9a-f]{%d}" % fingerprint_module.LENGTH
@@ -109,6 +120,8 @@ class Rules:
     gate_values: list            # values the gate fills in, e.g. {fork-point}
     forbidden_words: list        # words no sentence holds outside quoted text
     main_todo: list = field(default_factory=list)   # fields the main branch holds `TODO` in
+    verdicts_file: str = "human_verdicts.md"        # name of the file of human verdicts
+    verdicts_columns: list = field(default_factory=list)
 
 
 def _section(text, title):
@@ -197,8 +210,16 @@ def read_rules(path=TEMPLATE):
     words = re.search(r"^- No sentence, outside quoted text, contains the words (.*)$", checks, re.M)
     if not words:
         raise TemplateError("the list of checks names no words a sentence may not hold")
+    result = _section(text, "Result, report and debt")
+    verdicts_file = re.search(r"`foundations/(human_[^`]+\.md)`", result)
+    verdicts_header = re.search(r"^\s*\|(.+)\|\s*$", "\n".join(_blocks(result)), re.M)
+    if not verdicts_file or not verdicts_header:
+        raise TemplateError("the section on the result names no file of human verdicts or no "
+                            "form of its row")
     return Rules(fields, lists, violated_file.group(1), violated_title, violated_columns,
-                 gate_values, re.findall(r'"([^"]+)"', words.group(1)), main_todo)
+                 gate_values, re.findall(r'"([^"]+)"', words.group(1)), main_todo,
+                 verdicts_file.group(1),
+                 [cell.strip() for cell in verdicts_header.group(1).split("|")])
 
 
 # --- parsing the file -----------------------------------------------------------------------
@@ -353,6 +374,13 @@ class Foundation:
     prefix: str = None
     latest: dict = field(default_factory=dict)       # number -> latest version of the decision
     decisions: dict = field(default_factory=dict)    # number -> fingerprint of its latest binding
+    facts_read: bool = False
+    facts: object = None                             # the facts guard's Facts, or None
+    fact_holders: dict = field(default_factory=dict)  # identifier -> its line in the facts file
+
+    @property
+    def facts_have_entries(self):
+        return bool(self.facts is not None and self.facts.entries)
 
 
 def read_foundation(path, report, root):
@@ -394,6 +422,28 @@ def read_foundation(path, report, root):
             foundation.map_twice.append((cells[0], line))
         holders.setdefault(cells[0], line)
     foundation.map_identifiers = set(holders)
+
+    facts_path = os.path.join(directory, "environment_facts.md")
+    if not os.path.exists(facts_path):
+        foundation.facts_read = True
+        report.notes.append("there is no environment_facts.md beside the file: the environment "
+                            "facts element has no entries")
+    else:
+        try:
+            module = facts_guard()
+            with open(facts_path, encoding="utf-8") as handle:
+                foundation.facts = module.facts_of(handle.read(), module.read_rules())
+            foundation.facts_read = True
+            foundation.fact_holders = {identifier: entry.line for identifier, entry
+                                       in foundation.facts.entries.items()}
+            for identifier, line in foundation.facts.withdrawn.items():
+                foundation.fact_holders.setdefault(identifier, line)
+        except Exception as problem:
+            # the facts guard raises a TemplateError of its own module, not this one's
+            if not isinstance(problem, (OSError, UnicodeDecodeError, AttributeError)) and \
+                    type(problem).__name__ != "TemplateError":
+                raise
+            report.error(None, "cannot read the environment facts beside the file: %s" % problem)
 
     log_path = os.path.join(directory, "decisions.md")
     if not os.path.exists(log_path):
@@ -470,7 +520,7 @@ def check_file(path, top, tracked, report):
     """The repository holds one file of invariant entries, at foundations/invariants.md (WAY-64).
     The path is compared, letter case included, as git lists it. Another such file is known by its
     content: a tracked Markdown file holding a section `## <identifier>/<version>` with a *Method*
-    field. The examples file beside the template this guard reads holds copies of entries, as the
+    field and no *Holds for* field. The examples file beside the template this guard reads holds copies of entries, as the
     template sets it, and is no file of entries."""
     # invariant: invariants-file/1
     check, one_file = "check_file", "invariants-file/1"
@@ -505,18 +555,25 @@ def check_file(path, top, tracked, report):
 
 def holds_entries(text):
     """Whether a Markdown text holds an entry of invariants: a section `## <identifier>/<version>`,
-    outside a fenced block, carrying a *Method* field."""
-    heading, fenced = None, False
+    outside a fenced block, carrying a *Method* field and no *Holds for* field, which an
+    environment fact entry carries."""
+    heading, fenced, method, holds = None, False, False, False
     for line in text.split("\n"):
-        if line.startswith("```"):
+        if line.startswith(("```", "~~~")):
             fenced = not fenced
         elif fenced:
             continue
         elif line.startswith("#"):
+            if heading and method and not holds:
+                return True
             heading = re.match(r"^## .+/\d+\s*$", line)
+            method = holds = False
         elif heading and line.startswith("- **Method:**"):
-            return True
-    return False
+            method = True
+        elif heading and line.startswith("- **Holds for:**"):
+            holds = True
+    # the last section, a block left open after it included
+    return bool(heading and method and not holds)
 
 
 def check_identifiers(entries, withdrawn, foundation, report):
@@ -527,11 +584,24 @@ def check_identifiers(entries, withdrawn, foundation, report):
     holders, form, successors_named = ("identifier-holders/1", "invariant-identifier-form/1",
                                        "withdrawal-successors/1")
     report.ran(check, form, successors_named)
-    if foundation.map_read:
+    if foundation.map_read and foundation.facts_read:
         report.ran(check, holders)
     for identifier, line in foundation.map_twice:
         report.error(None, "part_map.md:%d: identifier `%s` is held twice in the part map"
                      % (line, identifier), check, (holders,))
+    # the sentence of identifier-holders covers every pair of the three files, so the facts are
+    # compared with each other and with the part map here as well as with this file
+    fact_seen = {}
+    for identifier, line in (foundation.facts.holders if foundation.facts is not None else []):
+        if identifier in fact_seen:
+            report.error(None, "environment_facts.md:%d: identifier `%s` is held twice in the "
+                               "environment facts (line %d)" % (line, identifier,
+                                                                fact_seen[identifier]),
+                         check, (holders,))
+        elif identifier in foundation.map_identifiers:
+            report.error(None, "environment_facts.md:%d: identifier `%s` is held by the part map"
+                         % (line, identifier), check, (holders,))
+        fact_seen.setdefault(identifier, line)
     seen = {}
     for identifier, line, is_entry in [(entry.identifier, entry.line, True) for entry in entries] + \
             [(cells[0], line, False) for cells, line in withdrawn]:
@@ -544,11 +614,14 @@ def check_identifiers(entries, withdrawn, foundation, report):
         elif identifier in foundation.map_identifiers:
             report.error(line, "identifier `%s` is held by the part map" % identifier,
                          check, (holders,))
+        elif identifier in foundation.fact_holders:
+            report.error(line, "identifier `%s` is held by the environment facts (line %d)"
+                         % (identifier, foundation.fact_holders[identifier]), check, (holders,))
         seen.setdefault(identifier, line)
     names = set(seen)
     for cells, line in withdrawn:
         successors = cells[1] if len(cells) > 1 else ""
-        if successors == "none":
+        if bare(successors) == "none":
             continue
         for successor in listed(successors) or [""]:
             if successor not in names:
@@ -557,10 +630,10 @@ def check_identifiers(entries, withdrawn, foundation, report):
                              check, (successors_named,))
 
 
-def check_fields(entries, rules, report):
+def check_fields(entries, rules, report, facts_have_entries=False):
     """Every field of the form is present, and holds `none` or `TODO` only where the form gives it
     that word; a `TODO` the form gives, in a field the main branch does not hold it in, is a
-    warning (WAY-71)."""
+    warning — *Rests on* included once the environment facts element has entries (WAY-71)."""
     # invariant: invariant-entry-field-presence/1
     # invariant: invariant-entry-field-words/1
     check = "check_fields"
@@ -585,7 +658,8 @@ def check_fields(entries, rules, report):
                 if not rule.todo:
                     report.error(line, "%s: *%s* may not hold `TODO`" % (label, rule.name),
                                  check, (words,))
-                elif rule.name not in rules.main_todo:
+                elif rule.name not in rules.main_todo or \
+                        (rule.name == "Rests on" and facts_have_entries):
                     report.warning(line, "%s: *%s* holds `TODO`, which a merge onto the main "
                                          "branch does not take" % (label, rule.name))
 
@@ -684,14 +758,32 @@ def check_links(entries, foundation, report):
         rests, line = value_of(entry, "Rests on")
         items = [item for item in listed(rests) if item != "none" and not is_todo(item)] \
             if bare(rests) != "none" else []
-        if items:
+        if items and foundation.facts_read and not foundation.facts_have_entries:
             report.error(line, "%s: *Rests on* names a fact, but the environment facts element has "
                                "no entries; the fact is written as `TODO — <the fact, with its "
                                "source>`" % label, check)
+            for item in items:
+                if not re.search(r"@%s$" % FINGERPRINT, item):
+                    report.fail(line, "%s: `%s` in *Rests on* carries no fingerprint"
+                                % (label, item), check, (presence,))
+            items = []
         for item in items:
+            match = re.fullmatch(r"(%s)@%s" % (IDENTIFIER, FINGERPRINT), item)
             if not re.search(r"@%s$" % FINGERPRINT, item):
-                report.fail(line, "%s: `%s` in *Rests on* carries no fingerprint" % (label, item),
-                            check, (presence,))
+                report.error(line, "%s: `%s` in *Rests on* carries no fingerprint of %d hex digits; "
+                                   "it reads `<fact>@<fingerprint>`"
+                             % (label, item, fingerprint_module.LENGTH), check, (presence,))
+            elif not match:
+                report.error(line, "%s: `%s` in *Rests on* is not `<fact>@<fingerprint>`"
+                             % (label, item), check)
+            elif foundation.facts is None:
+                continue
+            elif match.group(1) in foundation.facts.withdrawn:
+                report.error(line, "%s: *Rests on* names `%s`, a withdrawn environment fact"
+                             % (label, match.group(1)), check)
+            elif match.group(1) not in foundation.facts.entries:
+                report.error(line, "%s: *Rests on* names `%s`, which is not an entry of the "
+                                   "environment facts" % (label, match.group(1)), check)
 
         derives, line = value_of(entry, "Derives from")
         items = [item for item in listed(derives) if item != "none" and not is_todo(item)] \
@@ -911,6 +1003,50 @@ def check_violated(path, entries, rules, report):
             report.error(None, "%s: `%s` at version %s; its current version is %d"
                          % (where, identifier, version, entry.version), check, (position_version,))
     return [(cells[0], cells[1]) for cells, _ in positions if len(cells) > 1]
+
+
+def check_human_verdicts(path, entries, foundation, rules, report):
+    """Every row of the file of human verdicts names an entry of the invariants or of the
+    environment facts; a row naming an invariant names an entry whose method is a path, gives
+    `pass` or `fail`, and reads `none` in *Until* (WAY-83). The rows naming a fact are the
+    environment facts guard's to check further."""
+    # invariant: human-verdict-invariant-row/1
+    check, invariant_row = "check_human_verdicts", "human-verdict-invariant-row/1"
+    verdicts_path = os.path.join(os.path.dirname(os.path.abspath(path)), rules.verdicts_file)
+    if not os.path.exists(verdicts_path):
+        report.notes.append("there is no %s; no human verdict is given" % rules.verdicts_file)
+        report.ran(check, invariant_row)
+        return
+    text = map_guard.read_file(verdicts_path, report, "the human verdicts")
+    if text is None:
+        return
+    report.ran(check, invariant_row)
+    rows, headers = facts_guard().verdict_rows(text, rules.verdicts_columns)
+    for number, cells in headers:
+        report.error(None, "%s:%d: the list has columns %s, not %s"
+                     % (rules.verdicts_file, number, " | ".join(cells),
+                        " | ".join(rules.verdicts_columns)), check)
+    facts = foundation.facts.entries if foundation.facts is not None else {}
+    for cells, number in rows:
+        where = "%s:%d" % (rules.verdicts_file, number)
+        values = dict(zip(rules.verdicts_columns, cells + [""] * len(rules.verdicts_columns)))
+        name = values.get("Entry", "")
+        entry = entries.get(name)
+        if entry is None:
+            if name not in facts and foundation.facts_read:
+                report.error(None, "%s: `%s` is neither an invariant nor an environment fact"
+                             % (where, name), check)
+            continue
+        method = flat(value_of(entry, "Method")[0])
+        if is_todo(method) or command_of(entry) is not None or "`" in method or " " in method:
+            report.error(None, "%s: the method of `%s` is not a path" % (where, name),
+                         check, (invariant_row,))
+        if values.get("Verdict") not in ("pass", "fail"):
+            report.error(None, "%s: *Verdict* is neither `pass` nor `fail`" % where,
+                         check, (invariant_row,))
+        if values.get("Until") != "none":
+            report.error(None, "%s: an invariant's verdict reads `none` in *Until*" % where,
+                         check, (invariant_row,))
 
 
 # --- checks against the repository ----------------------------------------------------------
@@ -1150,21 +1286,28 @@ def check_against_base(path, entries, withdrawn, violated, rules, base, top, rep
 # --- the commit a merge onto the main branch is made onto ----------------------------------
 
 
-def check_merge_todo(entries, rules, report, no_commit=None):
+def check_merge_todo(entries, rules, report, no_commit=None, facts_have_entries=False):
     """Reports every field of every entry that holds `TODO` where the main branch does not hold it
-    (WAY-71). Given `no_commit`, which says why there is no commit to merge onto, records it
-    unchecked instead."""
-    # invariant: invariant-entry-merge-todo/1
-    check, merge_todo = "check_merge_todo", "invariant-entry-merge-todo/1"
+    (WAY-71); *Rests on* holds it there only until the environment facts element has entries.
+    Given `no_commit`, which says why there is no commit to merge onto, records it unchecked
+    instead."""
+    # invariant: invariant-entry-merge-todo/2
+    check, merge_todo = "check_merge_todo", "invariant-entry-merge-todo/2"
     if no_commit:
         report.unchecked(check, NO_COMMIT_REASON, no_commit, merge_todo)
         return
     report.ran(check, merge_todo)
     for entry in entries:
         for name, (value, line) in entry.fields.items():
-            if name not in rules.main_todo and holds_todo(value):
+            if not holds_todo(value):
+                continue
+            if name not in rules.main_todo:
                 report.error(line, "%s: *%s* holds `TODO`, which a merge onto the main branch does "
                                    "not take" % (label_of(entry), name), check, (merge_todo,))
+            elif name == "Rests on" and facts_have_entries:
+                report.error(line, "%s: *Rests on* holds `TODO`, which a merge onto the main branch "
+                                   "does not take once the environment facts element has entries"
+                             % label_of(entry), check, (merge_todo,))
 
 
 def merged_decisions(path, foundation, merge_onto, top, report):
@@ -1210,12 +1353,43 @@ def entries_on(path, commit, rules, top, report):
     return [item for item in parse_file(text or "", rules) if isinstance(item, Entry)]
 
 
-def check_fingerprints(entries, merged, report, no_commit=None):
+def merged_facts(path, foundation, merge_onto, top, report):
+    """identifier -> current fingerprint of every environment fact a merge onto the commit leaves,
+    each the branch's copy where the branch changed it since the merge base and the main branch's
+    otherwise, as the facts guard merges them; None once the report says why git could not read
+    them."""
+    module = facts_guard()
+    facts_path = os.path.join(os.path.dirname(os.path.abspath(path)), "environment_facts.md")
+    relative = os.path.relpath(facts_path, top).replace(os.sep, "/")
+    base = module.merge_base(top, merge_onto)
+    texts = []
+    for commit in (merge_onto, base):
+        text, failure = map_guard.file_at(commit, relative, top) if commit else (None, None)
+        if failure:
+            report.error(None, failure)
+            return None
+        texts.append(text)
+    try:
+        rules = module.read_rules()
+        onto, before = (module.facts_of(text, rules) for text in texts)
+    except Exception as problem:
+        if not isinstance(problem, (OSError, UnicodeDecodeError, AttributeError)) and \
+                type(problem).__name__ != "TemplateError":
+            raise
+        report.error(None, "cannot read the environment facts on %s: %s" % (merge_onto, problem))
+        return None
+    own = foundation.facts or module.Facts()
+    return {identifier: module.content_fingerprint(entry) for identifier, entry
+            in module.merged_facts(own, onto, before).items()}
+
+
+def check_fingerprints(entries, merged, report, no_commit=None, facts=None):
     """Compares every fingerprint in *Derives from* and *Rests on*, of the entries the file holds
-    after the merge, with the current fingerprint of the entry it names in the decision log that
-    merge leaves (WAY-66). The entries are the branch's, and those only the commit merged onto
-    holds, as (entry, None or that commit). Given `no_commit`, which says why there is no commit
-    to merge onto, records it unchecked instead."""
+    after the merge, with the current fingerprint of the entry it names in the decision log or the
+    environment facts that merge leaves (WAY-66). The entries are the branch's, and those only the
+    commit merged onto holds, as (entry, None or that commit); `facts` maps each fact the merge
+    leaves to its fingerprint. Given `no_commit`, which says why there is no commit to merge onto,
+    records it unchecked instead."""
     # invariant: link-fingerprint-value/1
     check, value = "check_fingerprints", "link-fingerprint-value/1"
     if no_commit:
@@ -1223,6 +1397,7 @@ def check_fingerprints(entries, merged, report, no_commit=None):
         return
     report.ran(check, value)
     prefix, current = merged
+    facts = facts or {}
     for entry, onto in entries:
         where = "%s%s" % (label_of(entry), " (on %s)" % onto if onto else "")
         for name in ("Derives from", "Rests on"):
@@ -1231,8 +1406,19 @@ def check_fingerprints(entries, merged, report, no_commit=None):
             for item in listed(raw) if bare(raw) != "none" else []:
                 if is_todo(item) or not re.search(r"@[0-9a-f]+$", item):
                     continue
+                if name == "Rests on":
+                    fact = re.fullmatch(r"(%s)@([0-9a-f]+)" % IDENTIFIER, item)
+                    if fact is None or fact.group(1) not in facts:
+                        report.error(line, "%s: `%s` in *Rests on* names no environment fact the "
+                                           "merge holds" % (where, item), check, (value,))
+                    elif facts[fact.group(1)] != fact.group(2):
+                        report.error(line, "%s: `%s` — the current fingerprint of `%s` after the "
+                                           "merge is %s" % (where, item, fact.group(1),
+                                                            facts[fact.group(1)]),
+                                     check, (value,))
+                    continue
                 match = re.fullmatch(r"%s-(\d{2,})@([0-9a-f]+)" % re.escape(prefix), item) \
-                    if prefix and name == "Derives from" else None
+                    if prefix else None
                 if match is None:
                     report.error(line, "%s: `%s` in *%s* names no entry whose fingerprint the merge "
                                        "holds" % (where, item, name), check, (value,))
@@ -1320,7 +1506,7 @@ def run(path, base=None, stream=None, template=TEMPLATE, merge_onto=None, record
     check_layout(items, rules, report)
     check_file(path, top, tracked, report)
     check_identifiers(entry_list, withdrawn, foundation, report)
-    check_fields(entry_list, rules, report)
+    check_fields(entry_list, rules, report, foundation.facts_have_entries)
     check_sentence(entry_list, rules, report)
     check_method(entry_list, rules, top, report)
     check_links(entry_list, foundation, report)
@@ -1330,6 +1516,7 @@ def run(path, base=None, stream=None, template=TEMPLATE, merge_onto=None, record
     check_verifications(entry_list, foundation, report)
     check_quarantine(tables.get(rules.lists[-1][0]), entries, foundation, report)
     violated = check_violated(path, entries, rules, report)
+    check_human_verdicts(path, entries, foundation, rules, report)
     if tracked is not None:
         check_citations(entries, withdrawn, top, tracked, report)
         check_record_paths(entry_list, top, report)
@@ -1357,15 +1544,16 @@ def run(path, base=None, stream=None, template=TEMPLATE, merge_onto=None, record
                                       "are unchecked")
     elif merge_onto:
         if find_commit(path, top, "--merge-onto", merge_onto, report):
-            check_merge_todo(entry_list, rules, report)
+            facts = merged_facts(path, foundation, merge_onto, top, report)
+            check_merge_todo(entry_list, rules, report, facts_have_entries=bool(facts))
             merged = merged_decisions(path, foundation, merge_onto, top, report)
             onto_entries = entries_on(path, merge_onto, rules, top, report)
-            if merged is not None and onto_entries is not None:
+            if merged is not None and onto_entries is not None and facts is not None:
                 withdrawn_now = {cells[0] for cells, _ in withdrawn if cells}
                 after = [(entry, None) for entry in entry_list] + \
                     [(entry, merge_onto) for entry in onto_entries
                      if entry.identifier not in entries and entry.identifier not in withdrawn_now]
-                check_fingerprints(after, merged, report)
+                check_fingerprints(after, merged, report, facts=facts)
     else:
         report.notes.append("no --merge-onto given: `TODO` in the entries is not checked against a "
                             "merge, and the fingerprints their links carry are not compared with "

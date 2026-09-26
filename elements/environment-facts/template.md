@@ -126,8 +126,10 @@ joined by ` · `, or reads `none` (WAY-75):
     one made for the entry, since that writes to someone else's service — and the place, the passage
     and the date read;
   - an observation naming the command, the tool and its version, the platform and the date it ran.
-- A further page of the same edition names its address and place. Several addresses stand in one
-  entry only as pages of one edition, or as a page and its archived copy (WAY-80, WAY-76).
+- A further page of the same edition names its address and place. Another place of the same page
+  follows that page's last passage as `§ <place> — "<passage, word for word>"`, joined by ` · `,
+  and shares the page's address and date read. Several addresses stand in one entry only as pages
+  of one edition, or as a page and its archived copy (WAY-80, WAY-76).
 - The passage is the page's text as a reader sees it, with markup dropped and whitespace collapsed,
   taken from one run of text — a paragraph, a list item or a table cell; a rule spread over several
   runs is quoted as several passages of the same place, joined by ` · ` (WAY-80).

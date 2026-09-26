@@ -9,8 +9,9 @@ This description grows into the element's template as the element goes through i
 `format_guard.py` checks a product's invariants file against the list "What the format guard
 checks" in `template.md`, reading from the template the fields of an entry and the words each may
 hold, the fields the main branch holds `TODO` in, the lists that close the file, the values the
-gate fills in and the words a sentence may not use. It reads the decision log and the part map
-beside the file with their own guards' parsers, scans the files git tracks for the `invariant:` and
+gate fills in and the words a sentence may not use. It reads the decision log, the part map and
+the environment facts beside the file with their own guards' parsers, checks the rows naming an
+invariant in `human_verdicts.md` beside it, scans the files git tracks for the `invariant:` and
 `data:` lines of checks, and asks git which paths it ignores. From the product's repository root:
 
 ```
@@ -22,8 +23,9 @@ python <the-way>/elements/invariants/format_guard.py foundations/invariants.md -
 `--base` names the commit the task branch left the main branch from; only with it are the
 identifiers, versions, corrections and the list of violated invariants compared with that commit.
 `--merge-onto` names the commit of the main branch a merge is made onto; only with it is a `TODO` in
-a field other than *Method* and *Rests on* an error, and every fingerprint in *Derives from* and
-*Rests on* compared with the current wording in the decision log that merge leaves (WAY-66,
+a field other than *Method* and *Rests on* an error — in *Rests on* too, once the environment facts
+that merge leaves have entries — and every fingerprint in *Derives from* and *Rests on* compared
+with the current wording in the decision log and the environment facts that merge leaves (WAY-66,
 WAY-71). `none` in place of either commit is what the gate fills in where that commit does not
 exist: the checks that need it are recorded as `unchecked`, a note says so, and the run gives no
 error; a commit that is not `none` and does not exist stays an error. `--record` names a JSON Lines

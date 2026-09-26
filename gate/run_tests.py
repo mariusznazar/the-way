@@ -1,5 +1,5 @@
 """The test runner of the-way: runs the `unittest` tests of one directory and records a verdict for
-each invariant a test cites (WAY-61, WAY-65, WAY-74).
+each invariant and each environment fact a test cites (WAY-61, WAY-65, WAY-74, WAY-81).
 
 Usage, from the root of the repository:
 
@@ -11,10 +11,13 @@ ending in `.jsonl`, created or overwritten, which receives the-way's own record 
 (WAY-74); without it, the run writes no record anywhere.
 
 A test cites an invariant by a comment line `invariant: <identifier>/<version>` standing alone on
-its line inside the body of the test method (WAY-65); a comment at the top of the file or of the
-class is no citation of any test. A comment line reading `invariant:` with anything else after it,
+its line inside the body of the test method (WAY-65), and an environment fact by a line
+`fact: <identifier>/<version>` (WAY-81); a comment at the top of the file or of the class is no
+citation of any test. A comment line reading `invariant:` or `fact:` with anything else after it,
 or a version written with a leading zero, is a citation off the form; `Invariant:`, `invariants:`
-and text inside a string are no citation. The tests import from the working directory first, as
+and text inside a string are no citation. Everything below said of an invariant holds for a fact
+alike, and a fact's verdict stands under the key `fact` where an invariant's stands under
+`invariant` (WAY-74). The tests import from the working directory first, as
 under `python -m unittest`.
 
 A verdict is what a test gave (WAY-61, WAY-63). The record holds a line per test and invariant it
@@ -89,9 +92,10 @@ PROGRAM = "gate/run_tests.py"
 PATTERN = "test_*.py"
 # A version is a number written without a leading zero, as the invariants guard reads it.
 CITED = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*/[1-9][0-9]*")
-# A comment line reading `invariant:` cites what follows it, all of it: a value of more than one
-# word, or of none, is a citation off the form, never silence.
-CITATION = re.compile(r"#\s*invariant:\s*(.*?)\s*")
+# A comment line reading `invariant:` or `fact:` cites what follows it, all of it: a value of
+# more than one word, or of none, is a citation off the form, never silence. A citation is kept as
+# (kind, value), and the kind is the key its verdict stands under in the record (WAY-74, WAY-81).
+CITATION = re.compile(r"#\s*(invariant|fact):\s*(.*?)\s*")
 FIXTURE = re.compile(r"^(setUpClass|tearDownClass|setUpModule|tearDownModule) \((.+)\)$")
 # The module unittest's loader defines its placeholders in: a test for a module it could not
 # import, and a test for a module that raised a skip on import.
@@ -111,7 +115,7 @@ def comment_citations(path):
         return []
     except (SyntaxError, tokenize.TokenError, UnicodeDecodeError):
         with open(path, encoding="utf-8", errors="replace") as handle:
-            return [(number, match.group(1)) for number, match in
+            return [(number, match.groups()) for number, match in
                     ((number, CITATION.fullmatch(text.strip()))
                      for number, text in enumerate(handle, start=1)) if match]
     found = []
@@ -120,7 +124,7 @@ def comment_citations(path):
             continue
         match = CITATION.fullmatch(token.string)
         if match:
-            found.append((token.start[0], match.group(1)))
+            found.append((token.start[0], match.groups()))
     return found
 
 
@@ -132,6 +136,19 @@ def cited_between(path, first, last, cache):
         if first <= number <= last and value not in values:
             values.append(value)
     return values
+
+
+def label(citation):
+    """How a message names a citation: an invariant by its value, a fact as `fact <value>`."""
+    kind, value = citation
+    return value if kind == "invariant" else "%s %s" % (kind, value)
+
+
+def named(citation):
+    """A citation quoted in a message: an invariant as `<value>`, a fact as fact `<value>`, since
+    a line with no entry holds `invariant` null whichever kind it was (WAY-74)."""
+    kind, value = citation
+    return "`%s`" % value if kind == "invariant" else "%s `%s`" % (kind, value)
 
 
 def source_key(path):
@@ -221,12 +238,15 @@ class Record:
             self.handle = open(path, "w", encoding="utf-8", errors="backslashreplace",
                                newline="\n")
 
-    def write(self, check, verdict, invariant, description=None):
+    def write(self, check, verdict, citation, description=None):
+        """A line for a verdict on a citation (kind, value), or with `invariant` null for a
+        failure no citation owns."""
         if verdict != "pass":
             self.failed = True
         if self.handle is None:
             return
-        line = {"check": check, "verdict": verdict, "invariant": invariant}
+        kind, value = citation or ("invariant", None)
+        line = {"check": check, "verdict": verdict, kind: value}
         if description is not None:
             line["description"] = description
         self.handle.write(json.dumps(line, ensure_ascii=False) + "\n")
@@ -402,9 +422,9 @@ class Plan:
 
     def add(self, key, check):
         self.checks[key] = check
-        for invariant in check.citations:
-            if CITED.fullmatch(invariant):
-                self.pending.setdefault(invariant, []).append(key)
+        for citation in check.citations:
+            if CITED.fullmatch(citation[1]):
+                self.pending.setdefault(citation, []).append(key)
 
     def collect(self, suite):
         for test in iterate(suite):
@@ -507,9 +527,9 @@ class Plan:
             for number, value in self.cache[path]:
                 if not any(first <= number <= last for first, last in inside):
                     self.record.write(self.named(path), "fail", None,
-                                      "%s:%d: `invariant: %s` stands outside any test, and a "
+                                      "%s:%d: `%s: %s` stands outside any test, and a "
                                       "check cites at the check (WAY-65)"
-                                      % (self.named(path), number, value))
+                                      % ((self.named(path), number) + tuple(value)))
 
     # --- outcomes
 
@@ -541,9 +561,9 @@ class Plan:
         if check.late is None and check.unwound > getattr(check, "window", check.unwound):
             check.late = "raised out of its body"
         if check.late is not None:
-            for invariant in check.citations:
-                if CITED.fullmatch(invariant):
-                    self.record.write(check.name, "fail", invariant, check.late)
+            for citation in check.citations:
+                if CITED.fullmatch(citation[1]):
+                    self.record.write(check.name, "fail", citation, check.late)
             check.late = None
 
     def finish(self, key, final=False):
@@ -563,11 +583,12 @@ class Plan:
             if failed:
                 check.outcomes.append((FAILED, failed, False))
         check.done = True
-        valid = [value for value in check.citations if CITED.fullmatch(value)]
-        for value in check.citations:
-            if value not in valid:
+        valid = [citation for citation in check.citations if CITED.fullmatch(citation[1])]
+        for citation in check.citations:
+            if citation not in valid:
                 self.record.write(check.name, "fail", None,
-                                  "cites `%s`, which is not `<identifier>/<version>`" % value)
+                                  "cites %s, which is not `<identifier>/<version>`"
+                                  % named(citation))
         if not valid:
             counted = [description for _, description, count in check.outcomes if count]
             if counted:
@@ -578,23 +599,23 @@ class Plan:
         elif skipped:
             verdict = None
             self.record.write(check.name, "fail", None, "no verdict for %s: %s"
-                              % (", ".join(valid), skipped))
+                              % (", ".join(label(citation) for citation in valid), skipped))
         else:
             verdict = "pass"
             if stale:
                 self.record.write(check.name, "fail", None, stale)
-        for invariant in valid:
+        for citation in valid:
             if verdict == "fail":
-                self.record.write(check.name, "fail", invariant, failed)
+                self.record.write(check.name, "fail", citation, failed)
             elif verdict is None:
-                self.voided.add(invariant)
-                self.held.pop(invariant, None)
-            elif invariant not in self.voided:
-                self.held.setdefault(invariant, []).append(check.name)
-            self.pending[invariant].remove(key)
-            if not self.pending[invariant]:
-                for name in self.held.pop(invariant, []):
-                    self.record.write(name, "pass", invariant)
+                self.voided.add(citation)
+                self.held.pop(citation, None)
+            elif citation not in self.voided:
+                self.held.setdefault(citation, []).append(check.name)
+            self.pending[citation].remove(key)
+            if not self.pending[citation]:
+                for name in self.held.pop(citation, []):
+                    self.record.write(name, "pass", citation)
 
     def keep_from_running(self, keys, kind, description):
         for key in keys:
@@ -776,11 +797,12 @@ def main(argv=None):
     # repository, as under `python -m unittest`, never from the folder of this script.
     sys.path[0] = os.getcwd()
     parser = argparse.ArgumentParser(description="Run the unittest tests of a directory and record "
-                                                 "a verdict for each invariant a test cites.")
+                                                 "a verdict for each invariant and fact a "
+                                                 "test cites.")
     parser.add_argument("directory", help="the directory whose test_*.py files hold the tests")
     parser.add_argument("--record", action=OneRecord,
                         help="the JSON Lines file, ending in .jsonl, created or overwritten, that "
-                             "receives a verdict for each invariant a test cites")
+                             "receives a verdict for each invariant and fact a test cites")
     arguments = parser.parse_args(argv)
     return run(arguments.directory, arguments.record)
 
