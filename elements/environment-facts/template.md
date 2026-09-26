@@ -72,6 +72,10 @@ joined by ` · `, or reads `none`:
 - A fact about what runs a method — how a tool behaves under the runner's configuration, which
   interpreter runs a script — is no fact an invariant rests on; the method's command is written so
   that it does not matter, as `git -c core.ignorecase=false check-attr` (WAY-73, WAY-61).
+- A fact may be about something outside that depends on the product — a product that pins it and
+  reads one of its surfaces. It is written when a decision about that surface would need review
+  were it no longer true, and that decision names it in *Based on*; until then the part map's
+  partners stand as the map holds them.
 - A finding of a study states what the study measured, on which models, in which version of the
   paper. That the agents of this process behave the same is a prediction: it stands in *Review when*
   of each decision citing the fact, as a state a script can check (WAY-24).
@@ -93,7 +97,11 @@ joined by ` · `, or reads `none`:
 - A newer release of a tool *Holds for* names fails nothing: the fact about the named release stays
   true. Moving the product to the newer release is a decision's to make, and the release is a
   condition in its *Review when* (WAY-24).
-- `TODO — decision pending: how the scope of a fact is compared with the scope the product declares`
+- A scope the product declares — the version of Python it runs, in a file a tool reads — is a
+  sentence about the product, so an invariant holds it, never a fact. An invariant that depends on
+  that version names it in its sentence and names the fact in *Rests on*: a change of the fact's
+  scope reaches it through the fingerprint (WAY-66), and whoever writes it sees that the version it
+  names lies within the fact's scope. No script compares the two, since *Holds for* is prose.
 
 ## Source
 
@@ -142,8 +150,10 @@ fact.
 - A command cites each fact it gives a verdict for, as a line `fact: <identifier>/<version>` in the
   comment form of its file's language; a command citing a version other than the current one fails
   the gate (as WAY-65, WAY-57).
-- `TODO — decision pending: how the-way's own record of a run carries a verdict for a fact` (WAY-74
-  gives a line the key `invariant` only).
+- A command records a fact's verdict in the-way's own record of a run, on a line holding `fact` as
+  `<identifier>/<version>` where a line for an invariant holds `invariant`; a line holds one of the
+  two, or neither for a failure recorded for no entry. The key adds to WAY-74, which needs a new
+  version; lines already written stay valid.
 
 ## When a method runs
 
@@ -152,8 +162,13 @@ fact.
   the gate of a change that does not touch the fact, since the world changes with no commit and the
   gate's verdict would then depend on the date (WAY-60, WAY-61). A human verdict on a re-read names
   the date until which it is in force, and after that date the fact is unchecked.
-  `TODO — decision pending: where a human verdict stands and how the gate reads it` (the same
-  question the invariants element holds).
+- A human verdict stands in `foundations/human_verdicts.md`, one file for invariants and facts, as a
+  row naming the entry, its version, the verdict, who gave it, when, the commit assessed, and
+  *Until* — a date for a fact; `none` for an invariant, whose verdict lapses when a change since
+  that commit reaches it (WAY-63). The gate reads the row for the entry's current version; a row
+  for an earlier version is in force for nothing.
+
+      | Entry | Version | Verdict | By | On | Commit | Until |
 - When a change alters a file the command names — the file that pins a tool, or declares the
   product's version of Python — the gate runs the method on that change, since there a change of the
   repository does change the fact.
@@ -162,8 +177,10 @@ fact.
 
 - A fact's result is `pass`, `fail`, `unchecked` for its method reading `TODO`, for a command the
   product does not declare or produce, or for no human verdict in force, or `error` where there is no verdict for any other reason (as WAY-63).
-- A `fail` opens a review of the fact; it does not block a change that does not touch the fact.
-  `TODO — decision pending: what a failed run by the clock opens, and where`
+- A `fail` opens a review of the fact; it does not block a change that does not touch the fact. The
+  clock's command records each fact's verdict in the-way's own record of a run and exits non-zero
+  when some fact results `fail` or `error`; whether a failure then becomes a task, a branch or a
+  message is set by the task cycle, not by this element.
 - An edition that is superseded, withdrawn, or updated by a published change fails the watch, and so
   opens a review; it does not make the sentence false. An announced revision fails nothing: until
   the new edition is out, the fact holds, and whoever wants to look ahead writes the condition in
@@ -211,11 +228,12 @@ A field stays in this template only while someone or something reads it (WAY-05)
 | identifier (heading) | an invariant's *Rests on*, a decision's *Based on*, a `fact:` line; the format guard | judgment |
 | version (heading) | a command citing the fact; the guard, which computes what the version must be | read off |
 | sentence | whoever reviews what rests on the fact; the content fingerprint | prose |
-| Holds for | the content fingerprint; whoever compares it with the scope the product declares; a script checking a decision's *Review when* against the models a study measured | read off the source |
+| Holds for | the content fingerprint; whoever writes an invariant naming a version within it; a script checking a decision's *Review when* against the models a study measured | read off the source |
 | Source | the watch, which checks that the passage still stands; the human reviewing the fact | read off |
 | Set by | the human reviewing a failed run, who learns whom to ask | judgment |
 | Method | the clock's command; the gate, on a change to a file the command names; a human, for a path | judgment |
 | Correction | the guard, which lets the version stand; the human who confirms it | judgment for the declaration; read off for both fingerprints |
+| human verdicts | the gate, which counts a re-read fact as passed until *Until*; the clock, which reports it unchecked after | judgment for the verdict and *Until*; read off for the rest |
 | withdrawn identifiers | whoever follows a citation to a fact shown false; the guard, which keeps it from coming back and checks its successors | judgment for *Why*; read off for the rest |
 
 A field marked *judgment* holds someone's call: no tool reads its value off the product, and no
@@ -249,6 +267,8 @@ A field marked *prose* carries text rather than a value.
 - Every method is a command that begins with a program's name, the path alone of a file that exists,
   or `TODO`.
 - Every `fact:` line names an entry at its current version, never a withdrawn identifier.
+- Every row of `foundations/human_verdicts.md` naming a fact names an entry whose method is a path,
+  gives `pass` or `fail`, and carries a date in *Until*.
 - Every entry is named by an invariant's *Rests on* or a decision's *Based on*; one that is not is a
   warning, and, checking a merge onto the main branch, an error.
 - Every example in `examples.md` matches its entry in the file word for word (WAY-05).
