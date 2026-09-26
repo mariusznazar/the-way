@@ -29,6 +29,7 @@ fetched with `urllib`, with no cookie and no header but a user agent that names 
 product or version, the same on every machine: GitHub's API refuses a request that sends none.
 """
 
+import html
 import html.parser
 import importlib.util
 import json
@@ -316,6 +317,64 @@ def rfc_state(identifier):
     return data_address, lists
 
 
+# A versioned address of a paper at arXiv, its abstract or its HTML: the paper, new-style as
+# `2510.20270` or old-style as `cond-mat/0309395`, and the version.
+_ARXIV_ADDRESS = re.compile(r"https://arxiv\.org/(?:abs|html)/"
+                            r"(\d{4}\.\d{4,5}|[a-z-]+(?:\.[A-Z]{2})?/\d{7})v([1-9]\d*)")
+# What arXiv's abstract page shows: the list of versions, one per line, and the mark on a
+# version that withdraws the paper, and the notice over the abstract of a withdrawn one.
+_SUBMISSION_HISTORY = re.compile(r'<div class="[^"]*\bsubmission-history\b[^"]*">(.*?)</div>',
+                                 re.S)
+_VERSION = re.compile(r"\[v([1-9]\d*)\]")
+_WITHDRAWN_MARK = "(withdrawn)"
+_WITHDRAWN_NOTICE = re.compile(r'<span class="error"[^>]*>\s*(This paper has been withdrawn[^<]*)')
+
+
+def arxiv_edition(identifier):
+    """(paper, version) of the edition at arXiv the fact's *Source* cites: every page it cites
+    must be a versioned address of one paper, in one version."""
+    editions = set()
+    for page in cited_pages(identifier):
+        found = _ARXIV_ADDRESS.fullmatch(page.address)
+        if found is None:
+            raise NoVerdict("%s is no versioned address of a paper at arXiv" % page.address)
+        editions.add((found.group(1), int(found.group(2))))
+    if len(editions) != 1:
+        raise NoVerdict("the *Source* of `%s` cites more than one edition at arXiv: %s"
+                        % (identifier, ", ".join("%sv%d" % edition for edition in
+                                                  sorted(editions))))
+    return editions.pop()
+
+
+def arxiv_state(identifier):
+    """What arXiv's own abstract page for the paper the fact cites shows, read at the address
+    with no version, which shows the paper's last version: (that address, the version cited,
+    the versions its submission history lists, what marks the paper withdrawn)."""
+    paper, cited = arxiv_edition(identifier)
+    address = "https://arxiv.org/abs/%s" % paper
+    kind, body = read_page(address)
+    charset = re.search(r"charset=([\w-]+)", kind or "")
+    page = body.decode(charset.group(1) if charset else "utf-8", errors="replace")
+    history = _SUBMISSION_HISTORY.search(page)
+    if history is None:
+        raise NoVerdict("%s shows no submission history this check can read" % address)
+    versions, withdrawn = [], []
+    for line in re.split(r"<br\s*/?>", history.group(1)):
+        text = collapse(html.unescape(re.sub(r"<[^>]+>", " ", line)))
+        found = _VERSION.search(text)
+        if found is None:
+            continue
+        versions.append(int(found.group(1)))
+        if _WITHDRAWN_MARK in text:
+            withdrawn.append("v%s is marked %s" % (found.group(1), _WITHDRAWN_MARK))
+    if not versions:
+        raise NoVerdict("the submission history at %s lists no version" % address)
+    notice = _WITHDRAWN_NOTICE.search(page)
+    if notice:
+        withdrawn.append("the page reads \"%s\"" % collapse(html.unescape(notice.group(1))))
+    return address, cited, versions, withdrawn
+
+
 # --- git ------------------------------------------------------------------------------------
 
 
@@ -433,6 +492,25 @@ class FactCheck(unittest.TestCase):
                    if value]
         if changed:
             self.fail("%s publishes a change to the edition: %s" % (address, "; ".join(changed)))
+
+    def watch_arxiv(self, identifier):
+        """The watch of a paper at arXiv: its abstract page lists no version newer than the one
+        the fact's *Source* cites, and does not mark the paper withdrawn (WAY-82)."""
+        address, cited, versions, withdrawn = arxiv_state(identifier)
+        found = []
+        if cited not in versions:
+            found.append("a submission history listing %s and no v%d, the version *Source* cites"
+                         % (", ".join("v%d" % version for version in versions), cited))
+        changed = []
+        newer = sorted(version for version in versions if version > cited)
+        if newer:
+            changed.append("it publishes %s, newer than v%d, which *Source* cites"
+                           % (", ".join("v%d" % version for version in newer), cited))
+        changed += withdrawn
+        if changed:
+            found.append("a change to the edition: %s" % "; ".join(changed))
+        if found:
+            self.fail("%s shows %s" % (address, " — and ".join(found)))
 
     def probe_visibility(self, identifier):
         """An anonymous GET of the address the fact's observed command asks: 200 passes, 404
