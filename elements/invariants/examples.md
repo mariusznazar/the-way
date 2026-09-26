@@ -14,7 +14,7 @@ Every entry of the decision log carries every field the decision template gives 
 
 - **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-71@1f735149
+- **Derives from:** WAY-71@cab47c5b
 - **Part:** decisions
 - **Correction:** none
 - **Recovered:** none
@@ -35,7 +35,7 @@ The decision guard, given a date, warns of every check-by date earlier than it t
 Every file git tracks matches the path patterns of exactly one part of the part map, or stands on the map's list of files left out on purpose.
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
-- **Rests on:** TODO — git matches a path pattern as it matches a pattern of a `.gitattributes` file (https://git-scm.com/docs/gitattributes), and reports the match through `git check-attr` (https://git-scm.com/docs/git-check-attr)
+- **Rests on:** TODO — git matches a path pattern of an attributes file by the rules of `.gitignore` patterns, except that a negative pattern is forbidden and a pattern that matches a directory does not match the paths inside it (https://git-scm.com/docs/gitattributes)
 - **Derives from:** WAY-44@220f5b85
 - **Part:** every
 - **Correction:** none
@@ -58,7 +58,7 @@ Where {merge-onto} exists, every change against {fork-point} carries the record 
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-11@52847c55
+- **Derives from:** WAY-11@87e90b9e
 - **Part:** every
 - **Correction:** none
 - **Recovered:** none

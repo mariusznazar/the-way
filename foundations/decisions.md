@@ -419,15 +419,16 @@ human grow with the number of tasks, and nothing yet limits how many may wait.
 ### WAY-11/1 — How does a task end?
 
 A task ends with a return step before its branch is merged: an agent lists from the diff and the
-task's log what the foundation does not say — new rules, decisions made along the way, code
-behaviour with no invariant over it — and proposes it as a foundation change for the panel. In
-the same step it compares the foundation with the code in the parts the task touched. A periodic
-review of the whole foundation runs alongside, independent of tasks.
+task's log what the foundation does not say — new rules and decisions, code behaviour with no
+invariant over it, environment facts the change rests on — proposes it to the panel as a foundation
+change, and compares the foundation with the code in the parts the task touched. A periodic review
+of the foundation runs apart from tasks.
 
 - **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-01@a291c2c0 · related to WAY-06 · related to WAY-10
+- **Relations:** derives from WAY-01@a291c2c0 · related to WAY-06 · related to WAY-10 ·
+  related to WAY-17
 - **Outranks:** none
 - **Verification:** level 1 — invariants: return-step-record. Level 2 for what the return step finds
   — an agent compares the change with the decision:
@@ -438,16 +439,22 @@ review of the whole foundation runs alongside, independent of tasks.
 - **Review when:** the design of the task cycle begins · check by: 2026-10-02
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-15
+- **Approved by:** Mariusz, 2026-09-26
 
 *Rationale:* part of the foundation is learned only in implementation and in use. Agreement
 between the foundation and the code has to be checked, because a task that missed the foundation
 will not report it by itself. A step at the end of a task is the kind of step that goes missing
-(WAY-01), so the merge waits for its record.
-*Rejected:* the foundation changed only at the start of a task.
+(WAY-01), so the merge waits for its record. Environment facts are on the list because otherwise
+they reach the foundation only when an invariant pulls them in, while the assumption that failed
+Ariane 5 sat in code with no invariant over it (WAY-17).
+*Rejected:* the foundation changed only at the start of a task; mechanical signals in the diff
+that point to a fact — a new dependency, a new import, a browser interface, an address, a value
+arriving from outside — built into the return step now, ahead of the design of the task cycle.
 *Consequences:* the task's log needs a home, because the return step reads it. Comparing the
 foundation with the code in the parts a task touched needs the part map's rule for assigning
-files. How often the periodic review runs is set when the task cycle is designed.
+files. How often the periodic review runs is set when the task cycle is designed. Until then the
+return step finds facts by the agent's judgment, and an agent seldom notices one on its own; the
+mechanical signals above are an input to that design.
 
 ### WAY-12/1 — How is a decision checked?
 
@@ -697,8 +704,8 @@ on it; optional links — a link never written cannot be told from one that is n
 research findings kept as evidence outside the environment facts — the decisions of this process
 about agents would have no fact to be flagged by.
 *Consequences:* until the environment facts element has entries, a decision quotes its facts
-with their sources in *Based on*; once it has them, every *Based on* in this log names them
-instead. On the main branch, a fact learned after a decision is added to it by a field change.
+with their sources in *Based on*; once it has them, which citations become fact entries, and how
+*Based on* names one, is set by WAY-90. On the main branch, a fact learned after a decision is added to it by a field change.
 A decision's *Verification* names its level 1 invariants by the identifiers of their entries
 (WAY-12), and each of those entries names the decision in *Derives from*.
 
@@ -1551,8 +1558,8 @@ foundation for sentences that wait for it — "until", "not yet", "in working fo
 
 ### WAY-38/1 — In what are the scripts of the-way written?
 
-Every script of the-way runs on Python 3.12 or later with its standard library alone, and
-installs nothing. It calls git, and the commands a product declares in its own repository — a
+Every script of the-way runs on the version of Python the repository declares, with its standard
+library alone, and installs nothing. It calls git, and the commands a product declares in its own repository — a
 dependency graph, a detector of breaking changes, coverage — reading their output through an
 adapter for the format. Where a product declares no such command, the script reports what it
 could not check, never agreement.
@@ -1564,20 +1571,20 @@ could not check, never agreement.
   buf, API Extractor, japicmp, cargo-semver-checks, oasdiff — and reimplementing it was given up
   as "requires re-implementing large swaths of rust's semantics"
   (https://github.com/obi1kenobi/cargo-semver-checks).
-- **Relations:** related to WAY-02 · related to WAY-09 · related to WAY-16 · related to WAY-34
+- **Relations:** related to WAY-02 · related to WAY-09 · related to WAY-16 · related to WAY-34 ·
+  related to WAY-89
 - **Outranks:** none
 - **Verification:** level 1 — invariants: script-language · script-imports · script-subprocesses ·
   map-guard-missing-command.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-23
+- **Approved by:** Mariusz, 2026-09-26
 
 *Rationale:* a product runs the scripts of the commit of the-way it pins (WAY-34), so every
 language and every package they need becomes something each product's CI has to provide. One
 language with its standard library alone leaves one interpreter to provide and nothing to
-install. Two versions up from 3.10 buys the scripts what the standard library added in them, at
-the cost of an interpreter no older than 3.12 wherever this repository is pinned. What the
+install. Which version that is, and when it moves, is set by WAY-89. What the
 scripts cannot do themselves is compute the state of a language they do not parse: a dependency
 graph outside Python, a breaking change in a schema, the reach of a test. Those the product
 already computes with its own tools, so the script runs the command the product declares and
@@ -1591,7 +1598,7 @@ interpreter any script chose; the product's CI writing those results into a comm
 the scripts then read — an agent would get no signal before pushing, and the product would carry
 a CI step existing only for this process; the scripts parsing other languages themselves — the
 tools that tried gave it up.
-*Consequences:* a product's CI provides Python 3.12 or later and git, and declares in its
+*Consequences:* a product's CI provides the Python WAY-89 declares and git, and declares in its
 repository the commands whose output the scripts read. What those commands cost in time, and how
 much their result depends on the environment they run in, the product pays. The format guard of
 decisions, the fingerprint script of the relation model (WAY-09), the view of decisions in force
@@ -1831,9 +1838,9 @@ changes, not from the part the file itself belongs to.
 (WAY-21), and how sharply it is checked follows from the criticality of those parts, so every
 file a change can carry has to yield one part — not none, and not two with no rule to choose.
 git matches the patterns rather than a script of the-way, because the repository already speaks
-that dialect everywhere, and the standard library cannot reproduce it: `fnmatch` treats the path
-separator as an ordinary character, and the call that handles `**` is newer than the Python the
-scripts may assume, so the same map would resolve differently on Windows and on Linux. Tests go
+that dialect everywhere, and the standard library does not speak it: `fnmatch` treats the path
+separator as an ordinary character, and a matcher of the scripts' own would be a second dialect
+beside git's, so the same map could resolve one way in a script and another in git. Tests go
 with the part they test, because changing a test changes what that part promises, not some part
 called "tests"; generated files go with their generator, because that is where a change to them
 comes from. The files that serve the whole repository have no natural part, and giving them one
@@ -1957,8 +1964,8 @@ fields — they are read by an operator during an incident, and this process has
 chooses which checks a task runs, not how sharply it is checked. The number of degrees of the
 scale is `TODO`: it follows from the number of distinct sets of steps the task cycle has, and is
 set when the task cycle is designed. A part whose criticality is raised from outside — by a law
-or a contract — has no path into the map: such a fact is an environment fact (WAY-04), and
-nothing joins it to a part's floor.
+or a contract — gets it through a failure mode whose detection names an invariant resting on the
+fact of the obligation (WAY-87).
 
 ### WAY-47/1 — How is a critical flow's list of parts checked?
 
@@ -2671,7 +2678,7 @@ human weighing a change to the invariant and the agent recovering a part's decis
 consequence on the note is corrected in place to name this decision, while the element still has no
 template to carry the note (WAY-37). An invariant holding a condition taken from a requirement of an
 outside catalogue names it in *Rests on* (WAY-73); how such a requirement is written as a fact is set
-when the environment facts element is designed.
+by WAY-86.
 
 ### WAY-59/1 — What part of an invariant entry binds?
 
@@ -2803,7 +2810,7 @@ pass.
 - **Scope:** invariants, gate, decisions, part-map
 - **Based on:** none
 - **Relations:** derives from WAY-08@a0bbac21 · derives from WAY-16@dd3e3cc1 ·
-  derives from WAY-54@39382a33 · derives from WAY-57@29edb491 · derives from WAY-38@be0cb9cb ·
+  derives from WAY-54@39382a33 · derives from WAY-57@29edb491 · derives from WAY-38@6e10c3fd ·
   derives from WAY-60@c85d1ac0 · related to WAY-03 · related to WAY-05 · related to WAY-07 ·
   related to WAY-10 · related to WAY-12 · related to WAY-17 · related to WAY-22 · related to WAY-24 ·
   related to WAY-31 · related to WAY-34 · related to WAY-37 · related to WAY-43 · related to WAY-45 ·
@@ -2852,8 +2859,9 @@ a check that quietly sees nothing passes (WAY-38). A comparison the sentence tie
 (WAY-60) needs that commit in the command; a command that resolved a branch or a revision itself would
 answer by the hour rather than by the commit, which WAY-60 rules out, so the gate fills the commit in
 from a closed list. Anything else in the command that varied between runs would make the verdict depend
-on who ran it; what the runner's own environment supplies — its interpreter, its network access — is
-settled neither here nor by WAY-63.
+on who ran it; what the runner's own environment supplies — its network access, and for a product
+its interpreter — is settled neither here nor by WAY-63, while the-way's own interpreter is set by
+WAY-89.
 *Rejected:* a kind of method named beside it, as `script`, `declared` or `human` — nothing the gate needs
 that the form does not tell, and a second value that can disagree with it (WAY-54); a form of its own for
 an exploratory test run by an agent, as a path to its steps — it looks like the path a human assesses
@@ -2959,8 +2967,8 @@ corrected in place.
 An invariant's result on the commit being checked is `pass`, `fail`, `unchecked` for a reason on the
 template's closed list, or `error` otherwise. The gate reports a result for at least every invariant
 the change reaches and every invariant a critical flow names, and its command exits non-zero when
-some result it reports is `error`, a listed invariant's result is `pass`, an unlisted invariant's
-result is `fail`, or a run records a failure for no entry, and zero otherwise.
+a result it reports is `error`, a listed invariant's is `pass`, an unlisted invariant's or a fact's
+is `fail`, or a run records a failure for no entry, and zero otherwise.
 
 - **Change:** new decision
 - **Scope:** invariants, gate, part-map, task-cycle
@@ -2981,7 +2989,7 @@ result is `fail`, or a run records a failure for no entry, and zero otherwise.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-22
+- **Approved by:** Mariusz, 2026-09-26
 
 *Rationale:* a check can always call itself unchecked, so `unchecked` holds only for listed reasons,
 and every other missing verdict is `error`. `unchecked` leaves the command at zero, because WAY-60
@@ -2997,9 +3005,9 @@ the method's command or file is not declared or produced, except a command decla
 the branch left the main branch from, whose drop makes the result `error` (WAY-38, WAY-47, WAY-67);
 the method takes a commit the gate filled in as not existing; the entry stands on the list of
 quarantined invariants at its current version, and the committer date of the commit being checked
-is no later than the quarantine's end date, a later one making the result `error` (WAY-68). A human
-verdict names who, when and the commit assessed, and is in force until a change since that commit
-reaches the entry (WAY-62). A declared command that cannot start, or a record off a closed list, is
+is no later than the quarantine's end date, a later one making the result `error` (WAY-68). Where a
+human verdict stands, what it names and how long it is in force is set by WAY-83. The facts whose
+results the gate reports are those WAY-82 has it run. A declared command that cannot start, or a record off a closed list, is
 `error`. Runs on a deliberate break, and the run WAY-58 asks for, give evidence, not results. Which
 `fail` a listed violation excuses, and when a checked invariant may turn `unchecked`, is set by
 WAY-67 and WAY-68.
@@ -3007,7 +3015,8 @@ WAY-67 and WAY-68.
 ### WAY-64/1 — Where do invariant entries stand, and what identifies one?
 
 Invariant entries stand in one file, `foundations/invariants.md`, each under an identifier made of
-words that no other entry or withdrawal line of that file or the part map holds. An identifier the
+words that no other entry or withdrawal line of that file, of the part map or of
+`foundations/environment_facts.md` holds. An identifier the
 file held on the commit the branch left the main branch from stays, as an entry or as a withdrawal
 line naming its successors or `none`. Splitting or merging entries held there gives every result a
 new identifier, and any other change keeps it.
@@ -3031,7 +3040,7 @@ new identifier, and any other change keeps it.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-22
+- **Approved by:** Mariusz, 2026-09-26
 
 *Rationale:* words, as in the map (WAY-41): a citation says what it guards, and a mistyped word
 seldom names another entry, as a number does. Unique across invariants and the map, so
@@ -3046,8 +3055,8 @@ identifiers unique only within the file; every identifier ever written kept.
 *Consequences:* the template gives the file, the identifier's form and withdrawal list as the
 map's, and the naming rule: what the sentence constrains, with an aspect where another entry
 constrains the same, never what it demands (WAY-35). The entry on the main branch WAY-57 compares
-with is the one holding the identifier there. The guard reads the map's identifiers, and the map's
-guard the invariants file. A flow and a failure mode name an invariant by its identifier, and a
+with is the one holding the identifier there. The guard reads the identifiers of the map and of the
+facts file, and the map's guard the invariants file; the facts file joins the space by WAY-75. A flow and a failure mode name an invariant by its identifier, and a
 flow keeps its test.
 
 ### WAY-65/1 — How does a check cite its invariant, and which files are invariant tests?
@@ -3134,7 +3143,7 @@ what it means, and a reworded responsibility would flag every invariant in the p
 test would fail the gate with the sentence unchanged.
 *Consequences:* the template of the invariants element gives both links with `@<fingerprint>`, and
 its format guard checks the level 1 invariants above through the relation model's script (WAY-39).
-What a fact's fingerprint covers is set by the environment facts element; until it has entries, an
+What a fact's fingerprint covers is set by WAY-78; until the element has entries, an
 invariant writes a fact it rests on as `TODO — <the fact, with its source>`, as a decision quotes one
 in *Based on* (WAY-17). WAY-59's and WAY-60's passages that left this question open are corrected in
 place.
@@ -3149,7 +3158,7 @@ change of the foundation that a human accepts, never by a step of implementation
 - **Change:** new decision
 - **Scope:** invariants, gate, task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-53@aaeafada · derives from WAY-63@d05ff1f0 · related to WAY-08 ·
+- **Relations:** derives from WAY-53@aaeafada · derives from WAY-63@f16348c8 · related to WAY-08 ·
   related to WAY-10 · related to WAY-15 · related to WAY-28 · related to WAY-51 · related to WAY-57 ·
   related to WAY-58 · related to WAY-60 · related to WAY-61
 - **Outranks:** none
@@ -3197,7 +3206,7 @@ run records.
   it absorbs: it "encourages developers to ignore flakiness in their own tests" (Micco, Google
   Testing Blog, 2016, https://testing.googleblog.com/2016/05/flaky-tests-at-google-and-how-we.html).
 - **Relations:** derives from WAY-08@a0bbac21 · derives from WAY-61@c6bdfd7c ·
-  derives from WAY-63@d05ff1f0 · related to WAY-03 · related to WAY-10 · related to WAY-24 ·
+  derives from WAY-63@f16348c8 · related to WAY-03 · related to WAY-10 · related to WAY-24 ·
   related to WAY-45 · related to WAY-60 · related to WAY-64 · related to WAY-67
 - **Outranks:** none
 - **Verification:** level 1 — invariants: quarantine-position-form · quarantine-flow-invariants ·
@@ -3320,10 +3329,10 @@ literal.
 ### WAY-71/1 — Does every field of a foundation entry appear in every entry, and what may it hold?
 
 Every field an element's template gives an entry of its kind appears in every such entry, holding a
-value, or `none` or `TODO` where the template gives it the word. `none` states that nothing is
-there, `TODO` that something is known to be missing; the main branch holds `TODO` only in an
-invariant's *Method*, and in *Rests on* until the environment facts element has entries. Its
-guard reports a missing field, or a word not given it, as an error.
+value, or `none` or `TODO` where the template gives it that word: `none` says nothing is there,
+`TODO` that something is missing. The main branch holds `TODO` only in an invariant's or a fact's
+*Method*, and in an invariant's *Rests on* until the facts element has entries. A guard reports a
+missing field, or a word not given it, as an error.
 
 - **Change:** new decision
 - **Scope:** decisions, part-map, invariants, glossary, environment-facts
@@ -3334,7 +3343,8 @@ guard reports a missing field, or a word not given it, as an error.
 - **Outranks:** none
 - **Verification:** level 1 — invariants: log-entry-field-presence · log-entry-field-words ·
   log-entry-merge-todo · map-entry-field-presence · map-entry-field-words ·
-  invariant-entry-field-presence · invariant-entry-field-words · invariant-entry-merge-todo. Level 2
+  invariant-entry-field-presence · invariant-entry-field-words · invariant-entry-merge-todo ·
+  fact-entry-field-presence · fact-entry-field-words · fact-entry-merge-todo. Level 2
   for what `none` states — an agent compares the change with the decision:
   - complies: an invariant whose author searched the log and found no decision it derives from
     reads `Derives from: none`; a decision whose source is silent on what it rests on reads
@@ -3344,7 +3354,7 @@ guard reports a missing field, or a word not given it, as an error.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-24
+- **Approved by:** Mariusz, 2026-09-26
 
 *Rationale:* a field left out on purpose cannot be told from one forgotten (WAY-58). `none` and
 `TODO` carry that difference only where a reader acts on them — the map's guard reads `TODO` in
@@ -3353,16 +3363,18 @@ guard reports a missing field, or a word not given it, as an error.
 work in progress, and the main branch describes the product as it is (WAY-01), so a `TODO` there is
 a gap nothing counts, except in *Method*, which the gate reports unchecked (WAY-63), and in *Rests
 on*, where the fact stands with its source until it has an entry to name (WAY-66); keeping such an
-invariant out is the gap WAY-60 rejects.
+invariant out is the gap WAY-60 rejects. A fact's *Method* takes `TODO` on the same ground, and its
+source never (WAY-80).
 *Rejected:* a decision for the invariants element alone — every element to come would need a copy; a
 wider scope for WAY-05 — its question is how a decision entry is written; `none` and `TODO` in every
 field of every element — the readings above; optional fields left out when empty — an intended gap
-and a forgotten one look the same.
+and a forgotten one look the same; for facts, a field of state and a ratcheted list of unchecked
+facts — three mechanisms where one serves.
 *Consequences:* each element's template says which of the two words each field takes — the decision
-template in its table of states, the others in the form of each field. The part map's form gives
-`none` to *Files* and *Failure modes*, where the map's rules read it (WAY-46), and `TODO` to no
-field. The decision guard warns on a `TODO` its template gives, and reports it as an error where
-`{merge-onto}` exists (WAY-60), which leaves the merge creating the main branch unchecked. Each
+template in its table of states, the others in the form of each field. A guard warns on a `TODO`
+its template gives, and reports it as an error where `{merge-onto}` exists (WAY-60), which leaves
+the merge creating the main branch unchecked. A ratchet for facts comes back once unchecked facts
+get in the way. Each
 element's guard checks the level 1 invariants above for its own entries;
 `invariant-entry-merge-todo` drops *Rests on* once the environment facts element has entries.
 
@@ -3423,7 +3435,7 @@ from stands in that decision's *Based on* alone.
 - **Outranks:** none
 - **Verification:** level 2 — an agent compares the change with the decision:
   - complies: the invariant "no script imports a module outside the standard library of Python
-    3.12" rests on the list of that library's modules, and not on the finding about
+    3.14" rests on the list of that library's modules, and not on the finding about
     cargo-semver-checks that WAY-38 quotes in *Based on*;
   - violates: the invariant "every invariant test names an invariant" rests on the Ariane 501
     finding that WAY-17 quotes; an invariant bounding a page's load time by a threshold an
@@ -3441,8 +3453,11 @@ review, and a new wording reaches every invariant naming it through the fingerpr
 from* (WAY-66). A fact holding a condition moves the verdict, or a value the sentence copies, with
 nothing in the foundation changed: a fact of the world changes with no commit of the product, so
 no change reaches the invariant through its parts (WAY-62), and *Rests on* is its only path there.
-Whether a fact about what runs the method — a tool, an interpreter, a model — ever belongs here is
-left to WAY-61, which leaves the runner's own environment unsettled.
+A fact about what runs the method — a tool, an interpreter, a model — holds no such condition: it
+changes how faithfully the method reads the verdict, not the verdict. A fact's method is written so
+that it does not matter where a command can do so (WAY-81), and the-way's own commands run on the
+interpreter WAY-89 declares; whether an invariant's command must set the runner's configuration as
+a fact's does is not settled.
 *Rejected:* every fact in the *Based on* of each decision the invariant derives from — a change of
 it flags invariants whose verdict does not move, and it still misses a condition no decision
 quotes, as the list of the standard library above; the choice left to each author — the two
@@ -3453,17 +3468,17 @@ invariant with no such fact reads `Rests on: none`, whatever its decisions quote
 ### WAY-74/1 — What form does the-way's own record of a run take?
 
 The-way's own record of a run is a JSON Lines file at the one `.jsonl` path the command names,
-which git ignores and the gate clears before the run. It holds a line per invariant a check gives
-a verdict for, and per failure recorded for no entry. A line holds `check`, `verdict` as `pass`,
-`fail` or `unchecked` beside a `reason` from the invariants template's list of reasons for
-`unchecked`, `invariant` as `<identifier>/<version>` or `null`, and may hold `description`.
+which git ignores and the gate clears before the run. It holds a line per verdict a check gives an
+invariant or a fact, and per failure recorded for no entry. A line holds `check`, `verdict` as
+`pass`, `fail` or `unchecked` beside a `reason` its element's template lists, `invariant` or `fact`
+as `<identifier>/<version>` or `invariant` as `null`, and at most `description`.
 
 - **Change:** new decision
-- **Scope:** invariants, gate, decisions, part-map, repository
+- **Scope:** invariants, gate, decisions, part-map, repository, environment-facts
 - **Based on:** JSON Lines is "a convenient format for storing structured data that may be
-  processed one record at a time" (https://jsonlines.org/); Python 3.12's `json` module reads it
-  (https://docs.python.org/3.12/library/json.html).
-- **Relations:** derives from WAY-61@c6bdfd7c · derives from WAY-63@d05ff1f0 ·
+  processed one record at a time" (https://jsonlines.org/); Python 3.14's `json` module reads it
+  (https://docs.python.org/3.14/library/json.html).
+- **Relations:** derives from WAY-61@c6bdfd7c · derives from WAY-63@f16348c8 ·
   derives from WAY-65@58d1f2c3 · related to WAY-38 · related to WAY-47 · related to WAY-48 ·
   related to WAY-49 · related to WAY-53
 - **Outranks:** none
@@ -3475,7 +3490,7 @@ a verdict for, and per failure recorded for no entry. A line holds `check`, `ver
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-24
+- **Approved by:** Mariusz, 2026-09-26
 
 *Rationale:* one line per verdict survives a run that stops halfway: the lines before the stop
 stay readable, and an invariant without one gets no pass (WAY-61). JSON escapes whatever a
@@ -3490,12 +3505,709 @@ unit is a test case, not an invariant; a product's format, read through an adapt
 run's output as the record — a person loses the guard's report, and a test runner mixes in its own;
 `pass` and `fail` alone — a check that cannot read a coverage file could only stay silent, which
 the gate reads as `error`; the commit, the moment and the tool versions in every line — the gate
-knows them, and nothing would read them.
+knows them, and nothing would read them; one key `entry` for both — a rename across every guard,
+test and record written; a fact's verdict under `invariant` — the key would lie about what it
+names.
 *Consequences:* the invariants template's closed list of formats names this form as the written
 form of this decision. The gate runs no command naming a path git does not ignore, and a record
-holding a line off this form gives `error` to every entry whose method wrote it (WAY-63). A `fail`
-recorded for an entry whose method is another command, or at another version, counts as a failure
-for no entry (WAY-61). A commit filled in as not existing is no failure for no entry (WAY-63). The
+holding a line off this form gives `error` to every entry whose method wrote it (WAY-63). The
 record of results the gate keeps (WAY-53) is another file, set with the gate. The form is a
-surface of the-way (WAY-49), and the gate's reader of it a trust boundary (WAY-48). WAY-61's
+surface of the-way (WAY-49), and the gate's reader of it a trust boundary (WAY-48); adding `fact`
+travels on the path of that surface's promise level (WAY-50), and the runner reads the key once the
+facts guard exists. WAY-61's
 sentence on what the gate reads and WAY-53's rationale are corrected in place (WAY-07).
+
+### WAY-75/1 — Where do environment fact entries stand, and what identifies one?
+
+Environment fact entries stand in one file, `foundations/environment_facts.md`, each under an
+identifier of words that no other entry or withdrawn identifier of that file, of
+`foundations/invariants.md` or of the part map holds. An identifier the file held on the commit the
+branch left the main branch from stays, as an entry or as a withdrawn identifier giving why and
+naming its successors or `none`. Splitting or merging entries gives every result a new identifier,
+and any other change keeps it.
+
+- **Change:** new decision
+- **Scope:** environment-facts, invariants, part-map
+- **Based on:** a store of facts keeps a value it has shown wrong so that nobody enters it again:
+  the deprecated rank "allows other users to know not to re-add the value to the item" (Wikidata,
+  Help:Ranking, https://www.wikidata.org/wiki/Help:Ranking).
+- **Relations:** derives from WAY-02@af08ee5d · related to WAY-04 · related to WAY-17 ·
+  related to WAY-41 · related to WAY-64 · related to WAY-73
+- **Outranks:** none
+- **Verification:** level 1 — invariants: environment-facts-file · fact-identifier-form ·
+  identifier-holders · fact-identifier-persistence · fact-withdrawal-persistence ·
+  fact-withdrawal-successors. Level 2 for what counts as a split — an agent compares the change with
+  the decision:
+  - complies: a fact's scope widened from one release to two keeps its identifier at a raised
+    version; a fact joining JSON and JSON Lines is split into two entries with new identifiers, and
+    the old one is withdrawn naming both;
+  - violates: of that split, one half keeps the old identifier; a reworded fact takes a new
+    identifier and the old one is withdrawn naming it.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-26
+
+*Rationale:* an invariant's *Rests on* and a decision's *Based on* reach a fact by its identifier
+(WAY-17, WAY-90), so the identifier outlives a new edition, a new scope and a reworded sentence.
+Words, as for parts and invariants (WAY-41, WAY-64), because a reference then says what it leans
+on. One space of identifiers across the three files lets a reference resolve without naming its
+element, the reason WAY-64 gives for invariants and the map. A fact shown false stays as a
+withdrawn identifier with why, so that nobody writes it again and an older decision citing it still
+finds where it went.
+*Rejected:* a fact shown false deleted from the file — an older citation leads nowhere, and the
+fact can come back.
+*Consequences:* the template gives the file, the identifier's form, the naming rule — what the fact
+is about, never its value or the edition it cites, as `json-text` rather than `json-rfc-8259` — and
+the list of withdrawn identifiers with *Why* and *Successors*. Each of the three guards reads the
+identifiers of the other two files (WAY-64). `foundations/environment_facts.md` joins the files of
+the `environment-facts` part when its first entry is written.
+
+### WAY-76/1 — How much does one environment fact entry hold?
+
+An environment fact entry states in one sentence one fact that one edition of one source says, with
+one reason to change, and its sentence says nothing that a commit of the product can make true or
+false. Pages of one document published together in one edition count as one source, and two facts
+from one edition about different things stand as two entries.
+
+- **Change:** new decision
+- **Scope:** environment-facts, invariants
+- **Based on:** none
+- **Relations:** derives from WAY-22@52c514ca · related to WAY-04 · related to WAY-56 ·
+  related to WAY-73 · related to WAY-75
+- **Outranks:** none
+- **Verification:** level 1 — invariants: fact-sentence-count. Level 2 for what one sentence may
+  hold — an agent compares the change with the decision:
+  - complies: how git matches a path pattern of an attributes file, with the two exceptions its
+    page gives, is one fact, and what `git check-attr` prints about a path is left out of it; the
+    rules by which git ignores a path, from the page of the same edition, stand as a second entry;
+  - violates: the digest SHA-256 gives and the octets UTF-8 uses stand in one entry; "the
+    repository declares Python 3.14" is written as a fact.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-26
+
+*Rationale:* a fact is reviewed when its source changes, so what changes together has to stand
+together and what changes apart has to stand apart. Two publishers, two rhythms of change and two
+methods in one entry mean that a new edition of one flags every entry resting on the other; the
+facts behind this repository's own invariants glued such pairs in single lines — SHA-256 with
+UTF-8, JSON with JSON Lines. An edition of one document is one source, because it changes as a
+whole. The count sets how much an entry may hold, not a reason to join: two facts from one page
+about different things change for different readers. A sentence a commit can make false is an
+invariant (WAY-22), and written as a fact it would never be checked on the commit that breaks it.
+*Rejected:* the pattern rule of git and what `git check-attr` reports kept in one entry — the
+second is about the tool that runs a method, and moves no verdict of the sentence (WAY-73); both
+halves as two facts in *Rests on* — the second holds no condition of the sentence (WAY-73).
+*Consequences:* the facts guard counts sentences, as the invariants guard does, and two facts in
+one sentence are left to review. What `git check-attr` reports waits for the question whether a
+method may rest on a fact, beside *Rests on*, which this decision does not settle.
+
+### WAY-77/1 — What does an environment fact's *Holds for* name?
+
+An environment fact names in *Holds for* what its sentence is true of — a tool and its version, a
+platform, an edition, or the models a study measured — and never a word whose meaning moves with
+the date, such as "latest"; where the source publishes no editions, *Holds for* says so. A scope
+the product declares for itself stands in the sentence of an invariant, never in a fact.
+
+- **Change:** new decision
+- **Scope:** environment-facts, invariants
+- **Based on:** none
+- **Relations:** related to WAY-60 · related to WAY-66 · related to WAY-73 · related to WAY-76 ·
+  related to WAY-78 · related to WAY-85 · related to WAY-89
+- **Outranks:** none
+- **Verification:** level 1 — invariants: fact-scope-word. Level 2 for what a scope names — an agent
+  compares the change with the decision:
+  - complies: the modules of the standard library are a fact holding for CPython 3.14, while "the
+    repository declares Python 3.14 in `.python-version`" is an invariant; the fact about JSON
+    Lines reads "JSON Lines, which jsonlines.org publishes without versions";
+  - violates: a fact's method reads the product's `.python-version` to choose which interpreter to
+    probe; *Holds for* reads "jsonlines.org as read on 2026-09-26".
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-26
+
+*Rationale:* a fact is true in the scope it names, and a claim true in a past scope is not refuted
+when the scope moves on; what refutes it is a different claim for the same scope. "Latest" names
+one release today and another tomorrow, so a verdict read against it would change with the date,
+not with the world. The product's own scope is something a commit changes, so it belongs to an
+invariant, and the two meet through links that already exist: an invariant depending on that scope
+names it in its sentence and the fact in *Rests on* (WAY-73), and a change of the fact's scope
+reaches it through the fingerprint (WAY-66). A source with no editions has no scope beyond its
+subject, and a date read in *Holds for* would move the fingerprint at every re-reading.
+*Rejected:* a fact whose method reads the product's declared version — its verdict would depend on
+a commit of the product, which puts a sentence about the product into a fact; a script comparing
+the product's scope with the fact's — *Holds for* is prose, and the writer of the invariant sees
+both; the date read standing in *Holds for* for a source without editions — every re-reading
+would raise the version and flag every entry resting on the fact for nothing.
+*Consequences:* whether the version an invariant names lies within the fact's scope is seen by its
+author, not by a script. A newer release of a named tool fails nothing: the fact about the named
+release stays true, and what calls for moving the product to another release is a condition in
+the *Review when* of the decision that chose it, as WAY-89 has it for Python. How a study's models
+are named is set by WAY-85.
+
+### WAY-78/1 — What part of an environment fact entry binds?
+
+What binds in an environment fact entry is its sentence together with its *Holds for*, and the
+entry's content fingerprint covers the sentence followed by the value of *Holds for*, computed as
+WAY-39 says. The source, its passage and the date read, *Set by*, the method and a declaration of a
+correction stay outside it, and no digest of the source's text is kept.
+
+- **Change:** new decision
+- **Scope:** environment-facts, relation-model, invariants
+- **Based on:** none
+- **Relations:** derives from WAY-02@af08ee5d · related to WAY-39 · related to WAY-42 ·
+  related to WAY-59 · related to WAY-66 · related to WAY-77
+- **Outranks:** none
+- **Verification:** level 1 — invariants: fact-fingerprint-input.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-26
+
+*Rationale:* the fingerprint exists to flag what relies on an entry (WAY-02), and what relies on a
+fact relies on what it claims and on where the claim holds: read with another scope, the same
+sentence gives a script another verdict — `import cgi` passes under 3.12 and fails under 3.13. The
+source and its date change at every re-reading and every rebuilt page, and a flag raised by them
+would be raised for nothing; a source that really changes fails the watch, which leads to a review
+of the fact, and only a human in that review changes the sentence or the scope (WAY-82). The passage
+quoted word for word is the one anchor the watch compares against at the address, so no digest is
+kept beside it.
+*Rejected:* the text of the source inside the fingerprint — a rebuilt page flags every dependent,
+against WAY-82's rule that a change in a source is not a change of what is true; the sentence alone
+— a widened scope passes with no signal; a digest of the passage read, kept beside it as a lock file
+keeps one — the passage quoted word for word is already the anchor.
+*Consequences:* the facts guard computes the fingerprint with the relation model's script. The
+sentence names an edition of its source only where the product stands on that edition. A change
+to the text of the source next to the quoted passage passes with no signal; that cost is accepted.
+Every change of scope sends everything resting on the fact to review, since its fingerprint moves
+(WAY-66, WAY-90). WAY-66's consequence that left this question to the element is corrected in place
+to name this decision.
+
+### WAY-79/1 — Is an environment fact entry versioned?
+
+An environment fact entry carries a version number, starting at 1, and holds only its current
+wording. When its fingerprint differs from its fingerprint on the main branch, its version is one
+higher than there, unless the entry declares a correction naming both fingerprints and the human
+deciding the change confirms, seeing both wordings, that the meaning is unchanged. A check citing a
+fact at a version other than the current one fails the gate.
+
+- **Change:** new decision
+- **Scope:** environment-facts, relation-model, gate
+- **Based on:** none
+- **Relations:** related to WAY-10 · related to WAY-14 · related to WAY-43 · related to WAY-57 ·
+  related to WAY-61 · related to WAY-75 · related to WAY-78
+- **Outranks:** none
+- **Verification:** level 1 — invariants: fact-version-new · fact-version-changed ·
+  fact-version-unchanged · fact-citation-version. Level 2 for what counts as a correction — a
+  change after which some check citing the fact would need a different expected value is a raise;
+  an agent compares the change with the decision:
+  - complies: a typo in a fact's sentence is fixed under a declaration naming both fingerprints,
+    and the human confirms it; a scope widened from CPython 3.14 to CPython 3.14 and 3.15 raises the
+    version, and the probe citing the old version fails until it is checked against the new scope;
+  - violates: "strongly recommended" becomes "required" under a confirmed correction; every
+    citation moved to the new version by a script, with no one checking the probe.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-26
+
+*Rationale:* a version pins the result of a method to the wording it checked: a probe cites the
+fact by identifier and version, and fails once the meaning has moved under it, as an invariant test
+does (WAY-57). Without a version, a probe's result would have to be keyed by the fingerprint — a
+new mechanism in the guards and the runner, and harder for a person to read than a number. The
+fact's history binds nothing, so only the current wording stays in the file, and earlier ones are
+read from git.
+*Rejected:* no version, corrected in place as the part map is (WAY-43) — a result of a method would
+need the fingerprint as its key, a second mechanism beside WAY-57's.
+*Consequences:* the template gives an entry its version and the form of a declaration of a
+correction; the facts guard computes what the version must be. The guard compares an entry with
+its state where the task branch left the main branch; where there is no main branch it compares
+nothing, says so, and every entry stays at version 1. Who counts as the human deciding the change
+for a fact follows the rule WAY-14 leaves to each element, and where the confirmation is recorded
+is not settled here, as WAY-57 leaves it for invariants; until then the guard reports a declared
+correction as unconfirmed, never as agreeing.
+
+### WAY-80/1 — What is an environment fact's source?
+
+Every environment fact entry names its source: an edition with its publisher's own address, or a
+page without editions with its closest archived copy, giving the place, the passage word for word
+and the date read; or an observation naming the command, the tool and its version, the platform
+and the date it ran. The sentence says no more than its source, and a model's memory, an agent's
+paraphrase or a text quoting the source is no source.
+
+- **Change:** new decision
+- **Scope:** environment-facts
+- **Based on:** a store of sourced statements cites the edition, not the work: "When sourcing
+  statements, you should only ever use the edition item of a book" (Wikidata, Help:Sources,
+  https://www.wikidata.org/wiki/Help:Sources). A paraphrase drifts from its source: the fact behind
+  this repository's invariant `run-record-form` said a line of JSON Lines ends in `\n`, where the
+  source says a terminator after the last value is "strongly recommended but not required"
+  (https://jsonlines.org/).
+- **Relations:** related to WAY-17 · related to WAY-27 · related to WAY-29 · related to WAY-54 ·
+  related to WAY-76 · related to WAY-78
+- **Outranks:** none
+- **Verification:** level 1 — invariants: fact-source-form. Level 2 for what the sentence may say and
+  what counts as a source — an agent compares the change with the decision:
+  - complies: the fact about JSON Lines quotes "strongly recommended but not required" and its
+    sentence says the terminator after the last value may be left out;
+  - violates: the sentence says every line ends in `\n`; the source is the model's recollection of
+    a page, or a blog post quoting the RFC.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-26
+
+*Rationale:* an edition with its own address does not change under the citation, a passage word
+for word lets a re-reading compare two texts instead of a memory, and the date says when that was
+true. Of the facts this repository's
+invariants wait for, four were written wrongly — three by a paraphrase the passage would have
+shown, one on a superseded edition the watch would have caught. An observation is a source when
+anyone can run it again. A model's recollection is the commonest source of false facts in an
+agent's work, and a text quoting the source carries the same drift.
+*Rejected:* a source named by its work alone — a new edition changes what the citation says; a
+summary in place of the passage — the drift this decision exists to stop; a fact resting on a whole
+section of rules narrowed to the rules the product uses — a pattern outside them would rest on a
+rule with no fact; such a section quoted rule by rule — a standing `TODO` in the source.
+*Consequences:* a fact without a source is not written, and finding the source is a task. The
+template gives the forms of a source: a fact resting on a whole section of rules quotes the
+sentence that sets them and names the section by its place, where the edition has an address of
+its own, so a summary of the section in the sentence is checked only by reading it in review;
+examples a source publishes are a probe's test data, not its source; a further page of the same
+edition names its address and place; the archived copy is the closest existing one, since making a
+new one writes to someone else's service. The guard checks only the form. The skill that writes
+facts checks mechanically, before a human sees one, that the address opens, the passage stands
+there and a named package exists.
+
+### WAY-81/1 — How is an environment fact's method written?
+
+A fact's method is a command beginning with the program it runs, the path alone of a
+file a human re-reads the source against, or `TODO`; a command probes the behaviour the sentence
+states, watches the state its source publishes, or both. A command sets what it can of the
+runner's configuration that could change its verdict, and cites each fact it gives a verdict for as
+`fact: <identifier>/<version>`, and a run records no verdict for an uncited fact.
+
+- **Change:** new decision
+- **Scope:** environment-facts, gate, invariants
+- **Based on:** git sets a setting of its own that changes how it matches paths: "git-clone[1] or
+  git-init[1] will probe and set core.ignoreCase true if appropriate" (git-config,
+  https://git-scm.com/docs/git-config); observed: `git check-attr` with and without
+  `-c core.ignorecase=false`, on a pattern with a capital letter in a fresh repository, on git
+  2.55.0, Windows — the path was assigned differently; run 2026-09-26.
+- **Relations:** derives from WAY-61@c6bdfd7c · related to WAY-08 · related to WAY-38 ·
+  related to WAY-63 · related to WAY-65 · related to WAY-73 · related to WAY-74
+- **Outranks:** none
+- **Verification:** level 1 — invariants: fact-method-form · fact-citation-target ·
+  fact-verdict-citation. Level 2 for what a command asks and what it sets — an agent compares the
+  change with the decision:
+  - complies: the fact on path patterns runs `git -c core.ignorecase=false check-attr` on patterns
+    the page's rules decide; the fact on SHA-256 probes the digests NIST publishes for it; the fact
+    on JSON watches `obsoleted_by` of its RFC and that its passage still stands;
+  - violates: a probe asks `git --version` and compares the number; a probe relies on the git
+    configuration of the machine it runs on.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-26
+
+*Rationale:* the forms are those WAY-61 gives an invariant, so the gate and a person read both
+alike. A probe asks about the behaviour, because a version number says
+nothing about what the named release does. A watch reads what the source publishes as data —
+`obsoleted_by` of an RFC, a model's state, a support schedule — and whether the passage still
+stands. A person re-reads what no command can read. The environment that runs a method changes how faithfully it reads the world, not what
+is true: git matches differently when the machine ignores case. So the command makes that
+environment irrelevant, and a fact about what runs a method is no fact an invariant rests on.
+*Rejected:* a kind of method named beside it — the form already says it (WAY-54, WAY-61); a probe
+asking for a version number — it trusts the label over the behaviour; the runner's configuration
+recorded as a fact in *Rests on* — it changes the method's fidelity, not the sentence's truth.
+*Consequences:* a command whose program is not yet declared or produced is written out in full all
+the same and is unchecked for that reason, and a fact with no verdict for any other reason results
+`error`, as WAY-63 has it. Where the environment cannot be made irrelevant — a model that runs a
+method — it is configuration read off the product (WAY-54), and the deliberate break shows the
+method's fidelity, which holds only where the break gives high confidence of detection. A command
+records its verdicts under the key `fact` (WAY-74). WAY-73's rationale is corrected in place to name
+this decision. Where the probes of this repository's own facts live in the part map is set when its
+first fact is written.
+
+### WAY-82/1 — When does an environment fact's method run, and what fails its watch?
+
+A fact's method runs on every change that enters or rewords its entry or alters a file its command
+names, and by a clock: one command, run on the main branch, that runs the method of every fact,
+records each verdict and exits non-zero on a `fail` or an `error`. Elsewhere a fact's `fail` stops
+no change; a watch fails on a published change to its edition or when its passage no longer stands,
+and an announced revision fails nothing.
+
+- **Change:** new decision
+- **Scope:** environment-facts, gate, task-cycle
+- **Based on:** a test of an external service runs to the service's rhythm, not the code's: "these
+  tests need to be based on the rhythm of changes to the external service", and its failure starts
+  work rather than stopping it: "A failure in a contract test shouldn't necessarily break the build
+  in the same way that a normal test failure would. It should, however, trigger a task to get things
+  consistent again" (Martin Fowler, ContractTest, 2011, https://martinfowler.com/bliki/ContractTest.html).
+- **Relations:** derives from WAY-60@c85d1ac0 · related to WAY-24 · related to WAY-61 ·
+  related to WAY-62 · related to WAY-63 · related to WAY-74 · related to WAY-81 · related to WAY-83
+- **Outranks:** none
+- **Verification:** level 1 — invariants: gate-fact-run · fact-clock-exit · gate-exit-code. Level 2
+  for what fails a watch — an agent compares the change with the decision:
+  - complies: RFC 8259 gaining `obsoleted_by` fails the watch of the fact citing it; NIST's notice
+    that it will revise FIPS 180-4 fails nothing; the passage quoted from jsonlines.org vanishing
+    from the page fails its watch;
+  - violates: a change touching no fact fails the gate on a fact's `fail`; the clock's command
+    exits zero while a fact results `fail`.
+- **Review when:** the design of the task cycle begins · check by: 2026-10-02
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-26
+
+*Rationale:* the world changes with no commit, so a fact's verdict inside the gate of an unrelated
+change would depend on the date, which WAY-60 and WAY-61 rule out for a verdict. The clock gives
+the world a rhythm of its own. On a change that enters a fact, rewords it or alters the file that
+pins its tool, the repository does change the fact, so the gate runs it there, and its `fail` fails
+the gate as WAY-63 has it. A human re-reading carries its own date (WAY-83), so no entry needs a
+rhythm of its own. A superseded, withdrawn or amended edition, or a vanished passage, leads to a
+review of the fact but does not make its sentence false; only the human in that review changes the
+sentence or its scope. An announced revision is a prediction: whoever wants to look ahead writes it
+in *Review when* of the decision citing the fact (WAY-24).
+*Rejected:* facts checked in every change's gate — the verdict follows the date; one review date
+for every fact — the pace of change differs between sources; an announced revision failing the
+watch once, with the review accepting it — a review with no possible outcome, beside the version; an
+announced revision as a standing flag; what a failure opens settled now.
+*Consequences:* for now the clock only reports: its command records the verdicts and exits
+non-zero. This repository has no scheduler, so the clock runs by hand, and while nobody runs it no
+change of the world is seen; a change is learned of on the day its edition is published. What a
+failure becomes — a task, a branch, a message — is set when the task cycle is designed.
+
+### WAY-83/1 — Where does a human verdict stand, and how long is it in force?
+
+A human verdict on an invariant or an environment fact is a row of `foundations/human_verdicts.md`
+naming the entry, its version, the verdict, who, when, the commit assessed and *Until*, and counts
+only for the entry's current version. An invariant's verdict, with `none` in *Until*, lapses when a
+change since that commit reaches the entry; a fact's lapses after the date in *Until*, which the
+gate compares with the checked commit's committer date and the clock with the day it runs.
+
+- **Change:** new decision
+- **Scope:** invariants, environment-facts, gate
+- **Based on:** none
+- **Relations:** derives from WAY-63@f16348c8 · related to WAY-08 · related to WAY-10 ·
+  related to WAY-14 · related to WAY-57 · related to WAY-61 · related to WAY-68 · related to WAY-79 ·
+  related to WAY-81
+- **Outranks:** none
+- **Verification:** level 1 — invariants: human-verdict-invariant-row · human-verdict-fact-row ·
+  gate-human-verdict.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-26
+
+*Rationale:* a method that is a path gives no result until a person assesses the product or
+re-reads the source (WAY-61, WAY-81), and WAY-63 says what a verdict names; it lacks a place the gate
+can read. A row in the repository is visible, corrected like any other line, and read by the guards
+that know the entries. One file serves both elements, because the two verdicts differ only in when
+they lapse: an invariant's when the product changes under it, a fact's when the world may have
+changed, which only a date can stand for. A row counts only for the current version, so a new
+meaning is never excused by an old verdict. The gate compares the date with the commit it checks,
+as a quarantine does (WAY-68), so that its verdict follows the commit; the clock runs against the
+world, so it compares with the day. The first case waits already: who can open this repository can
+be read only with the credentials of whoever sets it.
+*Rejected:* the verdict in a commit message — invisible to a reader of the foundation, never
+corrected, and its author is often an agent; waiting for a second case — the rule on verdicts with
+a date would stay dead.
+*Consequences:* both templates name the file and give its row as
+`| Entry | Version | Verdict | By | On | Commit | Until |`; the invariants template's place that waits
+for this decision is corrected to it, and WAY-63's consequence on how long a verdict is in force
+moves here. The file is written by hand and is no element's entries, so the invariant
+`foundation-file-kinds` names files an element's template names. The guards check a row's form and
+that the entry exists; the gate reads the row. The part that holds the file, so that a change to it
+reaches both row invariants, is set with the first verdict written.
+
+### WAY-84/1 — How is a setting that people of the product change outside its repository written?
+
+The current state of a setting that people of the product change outside its repository — who can
+open it, a host's access rule — is an environment fact whose *Set by* names who sets it, and whose
+method reads that state where it lives, or is re-read by that person where reading it takes their
+credentials. A choice of such a setting is a decision only where the product declares it, and that
+decision rests on the fact.
+
+- **Change:** new decision
+- **Scope:** environment-facts, decisions
+- **Based on:** a host can hide the state it keeps from an anonymous reader: "GitHub uses a `404 Not
+  Found` response instead of a `403 Forbidden` response to avoid confirming the existence of private
+  repositories" (GitHub REST API documentation,
+  https://docs.github.com/en/rest/using-the-rest-api/troubleshooting-the-rest-api).
+- **Relations:** related to WAY-17 · related to WAY-22 · related to WAY-27 · related to WAY-81 ·
+  related to WAY-83
+- **Outranks:** none
+- **Verification:** level 2 — an agent compares the change with the decision:
+  - complies: who can open this repository is a fact set by the repository owner and re-read by
+    the owner, with a verdict dated until the end of the quarter, and no decision on its
+    visibility is written, since nothing in the repository declares one;
+  - violates: the same fact reads `Set by: none`; a probe decides the repository is private from
+    an anonymous 404; a decision "the repository is private" is written where the product
+    declares no visibility.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-26
+
+*Rationale:* such a setting changes with a click and no commit, so no change of the product reaches
+what rests on it, and only a method run against the world sees it move — the path a fact has.
+Written without who sets it, it reads like a law of nature; *Set by* tells the person reviewing a
+failed run whom to ask. Where the state can be read only with the setter's credentials, a secret on
+the clock's machine would be a new failure of its own, so the setter re-reads it and the verdict
+carries its date (WAY-83); an anonymous 404 cannot tell a private repository from a missing one. A
+decision exists where someone chose and the product says so; elsewhere nothing was chosen, and a
+decision would be one no commit could check.
+*Rejected:* a bare fact without who sets it — it reads like a law of nature; a decision and a fact
+for every such setting — a decision where nobody chose anything; a command holding a token on the
+clock's machine — a secret, and a new reason to be unchecked; a verdict put together from an
+anonymous 404 and the repository's own `origin` — its fidelity depends on who runs it.
+*Consequences:* the template gives the field *Set by*, `none` for what nobody in the product sets.
+A change between two re-readings goes unseen, which costs little while nothing this repository
+links to is private. A fact about a setting set outside the product, such as the visibility of the
+repositories this one links to, reads `Set by: none` and is probed anonymously; its list grows with
+every link, and the invariant copies the list from the fact.
+
+### WAY-85/1 — How is a finding of a study written as an environment fact?
+
+A finding of a study stands as an environment fact recording what the study measured, in the
+version of the paper its source names, with *Holds for* naming the measured models by the dated
+identifiers the study gives, or by its own names where it gives none. That the agents of this
+process behave the same is a prediction, written in *Review when* of each decision citing the fact
+as a state a script can check, never in the fact.
+
+- **Change:** new decision
+- **Scope:** environment-facts, decisions
+- **Based on:** a study names the models it measured: "GPT-5, o3, o4-mini, GPT-4.1, Claude Opus
+  4.1, Claude Sonnet 4, Claude Sonnet 3.7, and Qwen3-Coder" (ImpossibleBench v1, § 3.1,
+  https://arxiv.org/abs/2510.20270v1). A model's publisher keeps a state for each model, among them
+  "Retired: The model is no longer available for use" (Anthropic, Model deprecations,
+  https://platform.claude.com/docs/en/about-claude/model-deprecations).
+- **Relations:** related to WAY-03 · related to WAY-17 · related to WAY-24 · related to WAY-77 ·
+  related to WAY-80 · related to WAY-90
+- **Outranks:** none
+- **Verification:** level 2 — an agent compares the change with the decision:
+  - complies: the finding behind WAY-03 is a fact holding for arXiv:2510.20270v1 and the eight
+    models it names, and WAY-03's *Review when* reads "no model in the scope of fact
+    `impossiblebench-test-modification` is Active, or a study of an Active model is found";
+  - violates: the fact says "Claude models change tests" with no version and no models; the fact
+    carries a field saying the finding still applies to the agents of this process.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-26
+
+*Rationale:* a finding has two layers. What a paper in a given version measured on given models is
+true for good and checked by re-reading the paper. That the agents of this process behave the same
+is a bet that ages as the measured models leave service, and a bet already has its mechanism in the
+log: *Review when* with a state and a date (WAY-24). Kept in the fact, it would be a second
+mechanism for predictions, and the fact would stop being true or false today (WAY-04). A script can
+check the transfer when the fact names the measured models and a publisher's table gives their
+states.
+*Rejected:* the transfer as a field of the fact — a second mechanism for predictions beside WAY-24,
+and a fact that is no longer true or false today.
+*Consequences:* the same condition is repeated in every decision citing one finding, about eight
+in this log. Where a study gives no dated identifiers, the script checking *Review when* resolves
+the names it gives through the publisher's table of models; that script does not exist yet. A
+decision that already waits for another state, as WAY-03 waits for the design of the task cycle,
+needs *Review when* to hold more than one state, which takes a change of the decision template.
+WAY-03 is rewritten on this pattern when the citations of *Based on* become fact entries, and its
+condition is met the day it is written.
+
+### WAY-86/1 — How does a catalogue of requirements or a binding rule reach a product?
+
+A voluntary catalogue of requirements binds a product only through a decision adopting it that
+names the catalogue, its edition, the level or list taken and the area of the product. A binding
+rule — a law, a contract, a licence — needs no adoption: whether it applies is a fact, read as
+applying until a human settles otherwise. An agent that notices a likeness to a requirement nothing
+has adopted or applied asks a human.
+
+- **Change:** new decision
+- **Scope:** environment-facts, decisions, invariants
+- **Based on:** a binding standard starts from inclusion: "the best practice approach is to start
+  with the assumption that everything is in scope until verified otherwise" (PCI Security Standards
+  Council, Information Supplement: Guidance for PCI DSS Scoping and Network Segmentation, v1.1, May
+  2017,
+  https://listings.pcisecuritystandards.org/documents/Guidance-PCI-DSS-Scoping-and-Segmentation_v1_1.pdf).
+- **Relations:** related to WAY-04 · related to WAY-17 · related to WAY-58 · related to WAY-73 ·
+  related to WAY-76 · related to WAY-88
+- **Outranks:** none
+- **Verification:** level 2 — an agent compares the change with the decision:
+  - complies: a product adopts WCAG in a decision naming the edition, level AA and the screens it
+    covers, and an invariant taking a criterion's condition names that requirement as a fact in
+    *Rests on*; the licence of a product's icons stands as a fact that it applies;
+  - violates: an agent writes an invariant from an ASVS requirement because the code looks like
+    it, with no adopting decision; a licence is left out because nobody adopted it.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-26
+
+*Rationale:* a voluntary catalogue binds only because someone chose it, so the choice is a
+decision with its scope, and without one an agent would bind the product to whatever it recognised.
+A law or a licence binds whether anyone chose it, so the only open question is whether it applies,
+and reading it as applying until settled makes silence raise checks rather than remove them. A
+descriptive source — an RFC, a list of modules — needs nothing beyond the fact. A likeness goes to
+a human as "do we adopt this?" or "does this bind us?", because only a human knows what the product
+means to take on.
+*Rejected:* a field naming the kind of source, and a script checking that every requirement of an
+adopted catalogue has a fact and an invariant, now — neither has a reader until a product adopts a
+catalogue or takes on a binding obligation (WAY-05); a fact that nothing names is caught by WAY-88
+already.
+*Consequences:* a requirement of an adopted catalogue is a fact whose source is the edition, the
+requirement's identifier and its text word for word, and an invariant taking a condition from it
+names it in *Rests on* (WAY-73); WAY-58's consequence that left this to the element is corrected in
+place to name this decision. The field and the script are built on the first product that adopts a
+catalogue or a binding obligation; the first in reach is the CC BY licence of the icons of the game
+`loop`.
+
+### WAY-87/1 — How does an obligation from outside raise the criticality of a part?
+
+An obligation from a law or a contract that raises the criticality of a part enters the part map as
+a failure mode of that part, whose detection names an invariant resting on the environment fact of
+that obligation.
+
+- **Change:** new decision
+- **Scope:** part-map, environment-facts, invariants
+- **Based on:** none
+- **Relations:** derives from WAY-46@b0cef8dd · related to WAY-04 · related to WAY-13 ·
+  related to WAY-73 · related to WAY-86
+- **Outranks:** none
+- **Verification:** level 2 — an agent compares the change with the decision:
+  - complies: a part storing players' personal data records the failure mode "personal data is
+    kept past the period the law allows", detected by an invariant that rests on the fact that the
+    law applies;
+  - violates: a part carries a field "minimum criticality: high" citing the law; the obligation is
+    noted in a part's responsibility with no failure mode.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-26
+
+*Rationale:* WAY-46 left an obligation from outside with no path into the map. The path exists
+without a new field: a failure mode raises a part's criticality, raising needs no reason (WAY-46),
+and the chain fact → invariant → failure mode carries the obligation to the part, so that a change
+of the law reaches the invariant through its fingerprint (WAY-66). A floor field would change
+WAY-46 and the map's script, and none of the three products in reach holds data under such an
+obligation.
+*Rejected:* a floor of criticality as a field of the fact, read by the map's script beside failure
+modes, flows and dependants — a change of WAY-46 and of the script with no reader today.
+*Consequences:* criticality raised this way does not fall by itself when the obligation lapses —
+the safe direction. A floor field comes back for consideration with the first product that holds
+data under a legal obligation on its parts. Two ways a scoping standard differs from WAY-46 — what
+can reach a system, not only what it depends on, and a separation confirmed by a test — are not
+settled here. WAY-46's consequence on a part whose criticality is raised from outside is corrected
+in place to name this decision.
+
+### WAY-88/1 — May an environment fact stand that nothing rests on?
+
+Every environment fact on the main branch is named by an invariant's *Rests on* or by a decision's
+*Based on*; on a task branch, a fact that nothing names is a warning.
+
+- **Change:** new decision
+- **Scope:** environment-facts, invariants, decisions
+- **Based on:** none
+- **Relations:** related to WAY-05 · related to WAY-17 · related to WAY-73 · related to WAY-90
+- **Outranks:** none
+- **Verification:** level 1 — invariants: fact-dependants.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-26
+
+*Rationale:* a link is written at the dependent's end (WAY-17), so a fact that nothing names is
+invisible from anywhere else, and its method goes on running for no reader. A task may write a fact
+before the invariant or decision that needs it, so the branch only warns, and the merge demands the
+link.
+*Rejected:* no check — facts outlive their readers and are checked for nobody; an error on the task
+branch as well — a fact written first, in the same task as what rests on it, would break the branch
+midway.
+*Consequences:* the facts guard builds the reverse index from the invariants file and the decision
+log. A true fact whose last dependant goes is withdrawn in the same change, with why, or the merge
+fails.
+
+### WAY-89/1 — Which version of Python do the scripts of the-way run on, and when does it move?
+
+The scripts of the-way run on Python 3.14, which the repository declares in `.python-version`, and
+the declared version moves when the version in use leaves bugfix support, never because a newer
+version comes out.
+
+- **Change:** new decision
+- **Scope:** decisions, invariants, glossary, part-map, environment-facts, relation-model, gate,
+  repository, task-cycle
+- **Based on:** Python 3.14 has a date for its last regular bugfix release: "3.14.14: Tuesday,
+  2027-10-05 (Final regular bugfix release with binary installers)" (PEP 745,
+  https://peps.python.org/pep-0745/); observed: the table of versions of the Python Developer's
+  Guide (https://devguide.python.org/versions/) gives 3.14 the status "bugfix" and the end of life
+  2030-10; read 2026-09-26.
+- **Relations:** related to WAY-34 · related to WAY-38 · related to WAY-77 · related to WAY-81
+- **Outranks:** none
+- **Verification:** level 1 — invariants: python-version-declared · script-imports.
+- **Review when:** the status of Python 3.14 in the table of versions of the Python Developer's
+  Guide no longer reads "bugfix" · check by: 2027-10-05
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-26
+
+*Rationale:* one version, declared, rather than a floor, because a floor gives a script's verdict
+per interpreter: `import cgi` passes under 3.12 and fails under 3.13, a version "3.12 or later"
+promised. The version moves when the one in use leaves bugfix support, not when a newer one is
+released, which changes nothing here. Past the end of bugfix support no binary installers are
+released, which hurts a new machine or CI, so the move comes before the end of security support.
+Versions out of support are no target, as the-way does not aim at legacy systems.
+*Rejected:* the newest release, unnamed — the verdict would depend on the date; "3.12 or later"
+with an invariant for every version it admits — a fact and a verdict for each version; 3.12 alone
+— a version already past its bugfix support; a move whenever a newer release comes out — a yearly
+review nothing here needs; a move at the end of security support, about 2030.
+*Consequences:* a product's CI provides Python 3.14 to run the scripts of the-way it pins (WAY-34),
+and the-way's own commands run on this interpreter. A move changes the declaration and the version
+of the fact on the standard library, and sends the invariants naming the version to review; it may
+cross several versions at once, and the modules removed on the way add up — for the standard
+library that is one probe and one list of imports. `.python-version` joins the files of the
+`repository` part.
+
+### WAY-90/1 — Which citations of a decision's *Based on* become environment fact entries, and how are they named?
+
+Once the environment facts element has entries, a decision's *Based on* names a fact entry for
+every citation that, stopping being true today, would send the decision to review — a finding about
+agents or models, the behaviour of a tool the process uses — and quotes every other citation with
+its source. A fact named there carries its content fingerprint, as `<identifier>@<fingerprint>`,
+renewed as WAY-31 renews a relation's.
+
+- **Change:** new decision
+- **Scope:** decisions, environment-facts, relation-model
+- **Based on:** none
+- **Relations:** derives from WAY-17@ab01c0e5 · related to WAY-02 · related to WAY-31 ·
+  related to WAY-66 · related to WAY-85 · related to WAY-88
+- **Outranks:** none
+- **Verification:** level 1 — invariants: based-on-fact-fingerprint · based-on-fact-fingerprint-value.
+  Level 2 for which citations become entries — an agent compares the change with the decision:
+  - complies: the finding of ImpossibleBench behind WAY-03 becomes a fact entry named in its *Based
+    on*; the Ariane 501 finding behind WAY-17 stays quoted with its source;
+  - violates: a precedent of how Packwerk handles its todo files becomes a fact entry with a probe;
+    a finding about models stays quoted after the element has entries.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-26
+
+*Rationale:* WAY-17 has decisions name the facts they rest on, and read literally it would turn
+every citation into an entry — dozens, most with a method nobody needs to run. The test that keeps
+what matters is the reader's: a citation whose change would send the decision to review is a fact
+the decision rests on, and it needs an entry to be flagged by; a precedent, a past event or a
+finding about people with no date on which it lapses sends nothing to review. The fingerprint is how
+a change of the fact reaches the decision, as it reaches an invariant (WAY-66); a bare identifier
+would leave the decision on ground that has moved with nothing to show it. A product outside that
+pins this one and reads a surface of it is such a fact only when a decision about that surface
+passes the same test.
+*Rejected:* every citation as an entry, as WAY-17's consequence first read — dozens of entries with
+methods nobody needs to run; a fact named in *Based on* by its identifier alone — a changed fact
+would flag no decision; the partners of the part map's external context kept as facts linked from
+the map — a new link with a fingerprint and changes to a template, a guard and two decisions, with
+no known consumer.
+*Consequences:* WAY-17's consequence is corrected in place to name this decision. The borderline
+cases met when this log's citations are rewritten are settled by a human. About eight decisions
+cite findings about models and two to four the behaviour of tools. Partners stay in the map's
+external context, written by hand, so a consumer nobody recorded goes unseen. The first fact entry
+also ends the `TODO` in every invariant's *Rests on* at the merge (WAY-71), so the change that writes
+it writes the facts all of them wait for.

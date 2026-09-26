@@ -106,6 +106,7 @@ The part answers for the files that configure the repository itself rather than 
 
 - **Files:** /.gitattributes
   /.gitignore
+  /.python-version
 - **Depends on:** none
 - **Failure modes:**
   - a file is stored with the line endings of whoever wrote it — a later rewrite turns the whole

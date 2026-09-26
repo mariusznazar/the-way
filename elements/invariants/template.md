@@ -98,9 +98,10 @@ A quarantined invariant stands on the last list in the file; *Until* is a date a
 - One run may check many invariants. An entry's result is the verdict the run records for its
   identifier and current version, in a format from this closed list, which grows by a new version of
   WAY-61: the-way's own record of a run — a JSON Lines file at the one `.jsonl` path the command
-  names, one line per invariant a check gives a verdict for and per failure recorded for no entry,
-  each holding `check`, `verdict` (`pass`, `fail`, or `unchecked` beside a `reason` from the list of
-  reasons for `unchecked` below), `invariant` (`<identifier>/<version>` or `null`) and at most
+  names, one line per verdict a check gives an invariant or an environment fact and per failure
+  recorded for no entry, each holding `check`, `verdict` (`pass`, `fail`, or `unchecked` beside a
+  `reason` from the list of reasons for `unchecked` below), `invariant` (`<identifier>/<version>` or
+  `null`) — or in its place `fact` (`<identifier>/<version>`) for a fact's verdict — and at most
   `description` (WAY-74). A run that records no verdict for the entry never gives it a pass
   (WAY-61).
 - The path of the-way's own record is one git ignores, and the gate clears it before the run and
@@ -254,11 +255,14 @@ WAY-64).
   - the method takes a commit the gate filled in as not existing;
   - the entry stands on the list of quarantined invariants at its current version, and the
     committer date of the commit being checked is no later than its *Until* (WAY-68).
-- A human verdict names who, when and the commit assessed, and is in force until a change since that
-  commit reaches the entry (WAY-63).
-- Where a human verdict is recorded, and how the gate reads it, is
-  `TODO — decision pending: where a human verdict stands and how the gate reads it`. Until that is
-  settled, an entry whose method is a path is reported `unchecked` for want of a verdict in force.
+- A human verdict is a row of `foundations/human_verdicts.md`, written by hand, which serves
+  invariants and environment facts alike, and counts only for the entry's current version; an
+  invariant's row reads `none` in *Until* and is in force until a change since the assessed commit
+  reaches the entry (WAY-83, WAY-63):
+
+  ```markdown
+  | Entry | Version | Verdict | By | On | Commit | Until |
+  ```
 - A declared command that cannot start, or a record holding a value off a closed list, is `error`;
   a record holding a line off the form above gives `error` to every entry whose method wrote it
   (WAY-63, WAY-74).
@@ -373,6 +377,8 @@ A field marked *judgment* holds someone's call: no tool reads its value off the 
   branch from; every position names an entry at its current version and no other (WAY-67).
 - Every quarantine position names an entry at its current version and an end date, and none names
   an invariant a critical flow names (WAY-68).
+- Every row of `foundations/human_verdicts.md` naming an invariant names an entry whose method is a
+  path, gives `pass` or `fail`, and reads `none` in *Until* (WAY-83).
 - Every example in `examples.md` matches its entry in the file word for word (WAY-05).
 - The guard reports what it could not check and why, never agreement (WAY-38).
 - Given the path of a record, the guard writes the-way's own record of the run there, with a
