@@ -107,8 +107,9 @@ joined by ` · `, or reads `none` (WAY-75):
   (WAY-78).
 - A claim that differs in a new scope changes the sentence or *Holds for*, and so the version; the
   new claim does not refute the claim true in the past scope (WAY-77, WAY-79).
-- A newer release of a tool *Holds for* names fails nothing: the fact about the named release stays
-  true. Moving the product to another release is a decision's to make, and what calls for it is a
+- A newer release of a tool *Holds for* names coming out fails nothing: the fact about the named
+  release stays true, and a probe run on the newer release fails only where the behaviour differs
+  (WAY-91). Moving the product to another release is a decision's to make, and what calls for it is a
   condition in that decision's *Review when* — for Python, the named release leaving bugfix support
   (WAY-77, WAY-89).
 - A scope the product declares — the version of Python it runs, in a file a tool reads — is a
@@ -158,9 +159,10 @@ anonymously (WAY-84).
 
 - The source of a setting only its setter can read is
   `TODO — decision pending: which form of Source a setting read only with its setter's credentials takes, since WAY-80 gives none`.
-- A fact about the repositories the product links to lists them, and the invariant copies the list
-  from it (WAY-84); whether that list belongs in a fact is
-  `TODO — decision pending: whether a list each new link of the product grows is a fact, against WAY-76`.
+- A fact about the visibility of a repository the product links to names that one repository,
+  since each has its own owner and changes on its own (WAY-76); where an invariant rests on the
+  visibility of the repositories linked, each new link adds such a fact, named in its *Rests on*
+  (WAY-84, WAY-73).
 
 ## Method
 
@@ -172,8 +174,7 @@ anonymously (WAY-84).
   declared or produced command, a different reason (WAY-81).
 - A command may probe, watch, or both (WAY-81):
   - a probe asks the tool how it behaves here and now — on test data the source itself publishes
-    where there is any, as NIST's example digests — and about the behaviour, never about a version
-    number;
+    where there is any, as NIST's example digests — and about the behaviour, never about a version number in its place;
   - a watch reads the state the source publishes as data — `obsoleted_by` of an RFC, a withdrawal,
     a model's deprecation state, a support schedule — and whether the passage still stands.
   A human re-reads what no command can read: law, a licence, an access rule readable only with the
@@ -182,12 +183,14 @@ anonymously (WAY-84).
   change its verdict (`-c core.ignorecase=false`), so that it gives the same verdict on every
   machine. Where it cannot — a model that runs the method — that configuration is read off the
   product, and the deliberate break shows the method's fidelity, which holds only where the break
-  gives high confidence of detection (WAY-81). Whether a fact's command, like an invariant's test,
+  gives high confidence of detection (WAY-81). The release of a tool a probe runs is read off the
+  machine instead, as the next point says (WAY-91). Whether a fact's command, like an invariant's test,
   counts only when a deliberate break makes it fail is
   `TODO — decision pending: whether WAY-08's deliberate break binds a fact's method`.
-- Which release of a tool a probe runs, where the product pins none or pins it in a file a fact may
-  not read (WAY-77), is
-  `TODO — decision pending: whether a method may rest on a fact about the tool that runs it (WAY-73, WAY-76)`.
+- Where *Holds for* names a release of the tool a probe runs, the probe reads the release it runs
+  on and records it in the `description` of its line: a `fail` on any release is a `fail`, and a
+  `pass` counts only on a release *Holds for* names, a build of it included, as Git for Windows
+  builds git. The method rests on no fact about that release (WAY-91, WAY-73).
 - A check cites each fact it gives a verdict for, at the check, as a line
   `fact: <identifier>/<version>` in the comment form of its file's language, and a run records no
   verdict for a fact no check cites (WAY-81); a check citing a version other than the current one
@@ -201,9 +204,7 @@ anonymously (WAY-84).
 
 ## When a method runs
 
-- When a change enters an entry or changes any of its fields, or alters a file its command names —
-  the file that pins a tool — the gate runs its method on that change (WAY-82). Whether such a file
-  changes the fact is the question pending under *Method*.
+- When a change enters an entry or changes any of its fields, or alters a file its command names, the gate runs its method on that change (WAY-82).
 - By the clock: one command runs the method of every fact at once, on the main branch — never inside
   the gate of a change that neither enters nor changes the entry nor alters a file its command
   names, since the world changes with no commit and the gate's verdict would then depend on the date
@@ -224,10 +225,11 @@ anonymously (WAY-84).
 
 - A fact's result is `pass`, `fail`, `unchecked` for a reason on the list below, or `error` where
   there is no verdict for any other reason (WAY-81, WAY-63).
-- Reasons for `unchecked` — a closed list (WAY-81, WAY-83, WAY-63):
+- Reasons for `unchecked` — a closed list (WAY-81, WAY-83, WAY-63, WAY-91):
   - the method reads `TODO`;
   - the method's command is not declared or produced by the product;
-  - the method is a path, and no human verdict is in force.
+    - the method is a path, and no human verdict is in force;
+  - a probe ran on a release of its tool outside *Holds for*.
 - In the gate of a change that runs a fact's method, its `fail` or `error` makes the gate's command
   fail (WAY-63). Elsewhere a `fail` stops no change. The clock's command records each fact's verdict
   in the-way's own record of a run and exits non-zero when some fact results `fail` or `error`; what

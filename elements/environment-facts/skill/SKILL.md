@@ -27,7 +27,8 @@ one reaching a pending line going to the human first.
 
 - Find what asks for the fact: a `TODO` in an invariant's *Rests on*, a citation in a decision's
   *Based on*, a fact a task's return step listed (WAY-11, a warning until its dependant is written,
-  WAY-88), the conversation, or a failed run of a method.
+  WAY-88), the conversation, a failed run of a method, or a fact left `unchecked` because its probe ran
+  on a release outside *Holds for* (WAY-91).
 - Put it through "Which facts are written": a citation failing its test stays quoted; one resting
   only on being a reason, not a condition, leaves an invariant's *Rests on* through
   `record-invariant`. Through "The sentence": what a commit can make true or false is an
@@ -98,8 +99,7 @@ Fill every field according to the template, with extra care for these:
   what stands now, with the decisions naming the fact; they decide whether it moves to the new
   edition, stays on the old, or is withdrawn as shown false.
 - A failed probe: show its output beside the passage; whether the world changed, the probe is
-  wrong, or the machine runs a release outside *Holds for* — the template's pending question — is
-  theirs to settle, and a wrong probe goes back to its author. A human re-read giving `fail` is
+  wrong, or the machine runs a release outside *Holds for* is theirs to settle, and a wrong probe goes back to its author. A human re-read giving `fail` is
   handled the same way as a failed watch; a verdict past *Until* is renewed by a fresh re-read.
 - A withdrawal follows the template's "Withdrawn identifiers"; each dependant goes through
   `record-invariant` or `record-decision` in the same change.

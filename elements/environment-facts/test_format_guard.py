@@ -470,7 +470,7 @@ class Source(GuardTestCase):
 
     def test_observation(self):
         # invariant: fact-source-form/1
-        self.passes("observed: `curl https://api.github.com/repos/owner/game` on curl 8.21.0, "
+        self.passes("observed: `curl https://example.org/` on curl 8.21.0, "
                     "Windows; run 2026-09-26")
 
     def test_passage_in_curly_quotes_holding_straight_ones(self):
@@ -500,7 +500,7 @@ class Source(GuardTestCase):
 
     def test_observation_without_a_platform(self):
         # invariant: fact-source-form/1
-        self.fails("observed: `curl https://api.github.com/repos/owner/game` on curl 8.21.0; "
+        self.fails("observed: `curl https://example.org/` on curl 8.21.0; "
                    "run 2026-09-26")
 
     def test_date_that_does_not_exist(self):

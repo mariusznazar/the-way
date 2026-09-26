@@ -259,7 +259,8 @@ WAY-64).
     (WAY-38, WAY-47, WAY-67);
   - the method takes a commit the gate filled in as not existing;
   - the entry stands on the list of quarantined invariants at its current version, and the
-    committer date of the commit being checked is no later than its *Until* (WAY-68).
+    committer date of the commit being checked is no later than its *Until* (WAY-68);
+  - for an environment fact, a probe ran on a release of its tool outside *Holds for* (WAY-91).
 - A human verdict is a row of `foundations/human_verdicts.md`, written by hand, which serves
   invariants and environment facts alike, and counts only for the entry's current version; an
   invariant's row reads `none` in *Until* and is in force until a change since the assessed commit

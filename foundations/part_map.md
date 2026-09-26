@@ -68,6 +68,7 @@ The part answers for the words a product's foundation uses, each in one meaning.
 The part answers for what a product takes as true about the world outside it.
 
 - **Files:** elements/environment-facts/**
+  foundations/environment_facts.md
 - **Depends on:** decisions · part-map · invariants · relation-model
 - **Failure modes:** none
 - **Trust boundary:** none

@@ -437,7 +437,7 @@ Every name in the scope of the latest version of a decision in the decision log 
 The decisions found for a change against {fork-point} include every decision whose scope names a part the change touches.
 
 - **Method:** `TODO`
-- **Rests on:** TODO — git matches a path pattern of an attributes file by the rules of `.gitignore` patterns, except that a negative pattern is forbidden and a pattern that matches a directory does not match the paths inside it (https://git-scm.com/docs/gitattributes)
+- **Rests on:** git-path-patterns@1519f3f7
 - **Derives from:** WAY-21@586e4a38
 - **Part:** every
 - **Correction:** none
@@ -500,10 +500,10 @@ No two decisions in the decision log outrank each other.
 
 ## outbound-link-reach/1
 
-No file git tracks contains a link into a private note collection, or into a repository that someone who can open this repository cannot open.
+No file git tracks contains a link into a private note collection, or into a repository that a reader not signed in to its host cannot open.
 
 - **Method:** `TODO`
-- **Rests on:** TODO — who can open this repository, and which of the hosts and repositories its files link to they can open, as each host's access settings give it
+- **Rests on:** dequelabs-axe-core-visibility@d0762f1e · github-spec-kit-visibility@483cec57 · doorstop-dev-doorstop-visibility@fff695c4 · obi1kenobi-cargo-semver-checks-visibility@347970d8 · shopify-packwerk-visibility@1860c0d7 · backstage-backstage-visibility@1f71d395 · kubernetes-enhancements-visibility@28969041 · owasp-pytm-visibility@28909543 · oasdiff-oasdiff-visibility@ea766246 · chromium-src-visibility@9af96eac
 - **Derives from:** WAY-27@c4976d74
 - **Part:** every
 - **Correction:** none
@@ -602,7 +602,7 @@ Every script git tracks is a Python file.
 No script git tracks imports a module other than one of the standard library of Python 3.14 or a Python file git tracks.
 
 - **Method:** `TODO`
-- **Rests on:** TODO — the modules of the standard library of Python 3.14, as `sys.stdlib_module_names` names them in a Python 3.14 interpreter (https://docs.python.org/3.14/library/sys.html)
+- **Rests on:** python-stdlib-modules@258d2586
 - **Derives from:** WAY-38@6e10c3fd · WAY-89@fbb25ae3
 - **Part:** every
 - **Correction:** none
@@ -635,7 +635,7 @@ The map guard reports a check whose declared command the product lacks as unchec
 The relation model's script gives a text the first eight characters, in lower-case hexadecimal, of the SHA-256 digest of that text encoded in UTF-8, after every run of spaces and line breaks is replaced by a single space and both ends are trimmed.
 
 - **Method:** `python -B gate/run_tests.py relation-model --record .runs/relation-model-tests.jsonl`
-- **Rests on:** TODO — SHA-256 as the Secure Hash Standard, FIPS 180-4, specifies it (https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf), and UTF-8 as RFC 3629 defines it (https://www.rfc-editor.org/rfc/rfc3629.html)
+- **Rests on:** sha-256@e3a30c6f · utf-8@6afd686d
 - **Derives from:** WAY-39@a3b77692
 - **Part:** relation-model
 - **Correction:** none
@@ -734,7 +734,7 @@ No entry of the part map carries a version.
 Every file git tracks matches the path patterns of exactly one part of the part map, or stands on the map's list of files left out on purpose.
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
-- **Rests on:** TODO — git matches a path pattern of an attributes file by the rules of `.gitignore` patterns, except that a negative pattern is forbidden and a pattern that matches a directory does not match the paths inside it (https://git-scm.com/docs/gitattributes)
+- **Rests on:** git-path-patterns@1519f3f7
 - **Derives from:** WAY-44@220f5b85
 - **Part:** every
 - **Correction:** none
@@ -745,7 +745,7 @@ Every file git tracks matches the path patterns of exactly one part of the part 
 Every path pattern in the part map matches at least one file git tracks.
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
-- **Rests on:** TODO — git matches a path pattern of an attributes file by the rules of `.gitignore` patterns, except that a negative pattern is forbidden and a pattern that matches a directory does not match the paths inside it (https://git-scm.com/docs/gitattributes)
+- **Rests on:** git-path-patterns@1519f3f7
 - **Derives from:** WAY-44@220f5b85
 - **Part:** every
 - **Correction:** none
@@ -756,7 +756,7 @@ Every path pattern in the part map matches at least one file git tracks.
 No file on the part map's list of files left out on purpose matches the path patterns of a part.
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
-- **Rests on:** TODO — git matches a path pattern of an attributes file by the rules of `.gitignore` patterns, except that a negative pattern is forbidden and a pattern that matches a directory does not match the paths inside it (https://git-scm.com/docs/gitattributes)
+- **Rests on:** git-path-patterns@1519f3f7
 - **Derives from:** WAY-44@220f5b85
 - **Part:** part-map
 - **Correction:** none
@@ -855,7 +855,7 @@ The map guard reports every dependency running from a part of higher criticality
 For every critical flow whose test leaves a coverage file, every part that coverage names stands in the flow's list of parts.
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
-- **Rests on:** TODO — git matches a path pattern of an attributes file by the rules of `.gitignore` patterns, except that a negative pattern is forbidden and a pattern that matches a directory does not match the paths inside it (https://git-scm.com/docs/gitattributes)
+- **Rests on:** git-path-patterns@1519f3f7
 - **Derives from:** WAY-47@f4daadb2
 - **Part:** every
 - **Correction:** none
@@ -888,7 +888,7 @@ The map guard starts no test run of its own.
 Every trust boundary in the part map names a pattern of files that matches at least one file git tracks.
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
-- **Rests on:** TODO — git matches a path pattern of an attributes file by the rules of `.gitignore` patterns, except that a negative pattern is forbidden and a pattern that matches a directory does not match the paths inside it (https://git-scm.com/docs/gitattributes)
+- **Rests on:** git-path-patterns@1519f3f7
 - **Derives from:** WAY-48@7f42c295
 - **Part:** every
 - **Correction:** none
@@ -910,7 +910,7 @@ Every exchange with the external context in the part map records its direction, 
 The gate runs the check for crafted input on every change that, against "{fork-point}", touches the files of a trust boundary.
 
 - **Method:** `TODO`
-- **Rests on:** TODO — git matches a path pattern of an attributes file by the rules of `.gitignore` patterns, except that a negative pattern is forbidden and a pattern that matches a directory does not match the paths inside it (https://git-scm.com/docs/gitattributes)
+- **Rests on:** git-path-patterns@1519f3f7
 - **Derives from:** WAY-48@7f42c295
 - **Part:** gate
 - **Correction:** none
@@ -1284,7 +1284,7 @@ Every entry of `foundations/invariants.md` names `every` or at least one part, n
 The invariants the gate finds a change against "{fork-point}" reaching include every entry naming `every` or a part the change touches, and every entry whose method names a file the change alters.
 
 - **Method:** `TODO`
-- **Rests on:** TODO — git matches a path pattern of an attributes file by the rules of `.gitignore` patterns, except that a negative pattern is forbidden and a pattern that matches a directory does not match the paths inside it (https://git-scm.com/docs/gitattributes)
+- **Rests on:** git-path-patterns@1519f3f7
 - **Derives from:** WAY-62@d9c21624
 - **Part:** gate
 - **Correction:** none
@@ -1603,7 +1603,7 @@ Every element's template states that its entries are written in English.
 Every line of the-way's own record of a run is one JSON object holding `check`, `verdict` as `pass` or `fail` or as `unchecked` beside a `reason`, and `invariant` or `fact` as `<identifier>/<version>` or `invariant` as `null`, and beside them at most `description`.
 
 - **Method:** `TODO`
-- **Rests on:** TODO — a JSON text as RFC 8259 specifies it (https://www.rfc-editor.org/rfc/rfc8259.html), and a JSON Lines file as one JSON value on each line, each line ending in '\n', a terminator after the last value being "strongly recommended but not required" (https://jsonlines.org/)
+- **Rests on:** json-text@8141eb36 · json-lines@f16c5b84
 - **Derives from:** WAY-74@6b4968d0
 - **Part:** decisions · part-map · invariants · gate · environment-facts
 - **Correction:** none
@@ -1614,7 +1614,7 @@ Every line of the-way's own record of a run is one JSON object holding `check`, 
 Every path ending in `.jsonl` that a command in `foundations/invariants.md` names is one git ignores, and no such command names two.
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
-- **Rests on:** TODO — a gitignore file specifies intentionally untracked files that Git should ignore (https://git-scm.com/docs/gitignore)
+- **Rests on:** gitignore-paths@3218da8f
 - **Derives from:** WAY-74@6b4968d0
 - **Part:** invariants · repository
 - **Correction:** none

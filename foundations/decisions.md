@@ -3005,7 +3005,8 @@ the method's command or file is not declared or produced, except a command decla
 the branch left the main branch from, whose drop makes the result `error` (WAY-38, WAY-47, WAY-67);
 the method takes a commit the gate filled in as not existing; the entry stands on the list of
 quarantined invariants at its current version, and the committer date of the commit being checked
-is no later than the quarantine's end date, a later one making the result `error` (WAY-68). Where a
+is no later than the quarantine's end date, a later one making the result `error` (WAY-68); for a fact, a probe ran on a release of its tool
+outside *Holds for* (WAY-91). Where a
 human verdict stands, what it names and how long it is in force is set by WAY-83. The facts whose
 results the gate reports are those WAY-82 has it run. A declared command that cannot start, or a record off a closed list, is
 `error`. Runs on a deliberate break, and the run WAY-58 asks for, give evidence, not results. Which
@@ -3574,7 +3575,7 @@ from one edition about different things stand as two entries.
 - **Scope:** environment-facts, invariants
 - **Based on:** none
 - **Relations:** derives from WAY-22@52c514ca · related to WAY-04 · related to WAY-56 ·
-  related to WAY-73 · related to WAY-75
+  related to WAY-73 · related to WAY-75 · related to WAY-91
 - **Outranks:** none
 - **Verification:** level 1 — invariants: fact-sentence-count. Level 2 for what one sentence may
   hold — an agent compares the change with the decision:
@@ -3600,8 +3601,8 @@ invariant (WAY-22), and written as a fact it would never be checked on the commi
 second is about the tool that runs a method, and moves no verdict of the sentence (WAY-73); both
 halves as two facts in *Rests on* — the second holds no condition of the sentence (WAY-73).
 *Consequences:* the facts guard counts sentences, as the invariants guard does, and two facts in
-one sentence are left to review. What `git check-attr` reports waits for the question whether a
-method may rest on a fact, beside *Rests on*, which this decision does not settle.
+one sentence are left to review. What `git check-attr` reports is no fact: a probe reads the release of the tool it runs on
+instead (WAY-91).
 
 ### WAY-77/1 — What does an environment fact's *Holds for* name?
 
@@ -3614,7 +3615,7 @@ the product declares for itself stands in the sentence of an invariant, never in
 - **Scope:** environment-facts, invariants
 - **Based on:** none
 - **Relations:** related to WAY-60 · related to WAY-66 · related to WAY-73 · related to WAY-76 ·
-  related to WAY-78 · related to WAY-85 · related to WAY-89
+  related to WAY-78 · related to WAY-85 · related to WAY-89 · related to WAY-91
 - **Outranks:** none
 - **Verification:** level 1 — invariants: fact-scope-word. Level 2 for what a scope names — an agent
   compares the change with the decision:
@@ -3642,7 +3643,7 @@ the product's scope with the fact's — *Holds for* is prose, and the writer of 
 both; the date read standing in *Holds for* for a source without editions — every re-reading
 would raise the version and flag every entry resting on the fact for nothing.
 *Consequences:* whether the version an invariant names lies within the fact's scope is seen by its
-author, not by a script. A newer release of a named tool fails nothing: the fact about the named
+author, not by a script. A newer release of a named tool coming out fails nothing: the fact about the named
 release stays true, and what calls for moving the product to another release is a condition in
 the *Review when* of the decision that chose it, as WAY-89 has it for Python. How a study's models
 are named is set by WAY-85.
@@ -3796,7 +3797,8 @@ runner's configuration that could change its verdict, and cites each fact it giv
   `-c core.ignorecase=false`, on a pattern with a capital letter in a fresh repository, on git
   2.55.0, Windows — the path was assigned differently; run 2026-09-26.
 - **Relations:** derives from WAY-61@c6bdfd7c · related to WAY-08 · related to WAY-38 ·
-  related to WAY-63 · related to WAY-65 · related to WAY-73 · related to WAY-74
+  related to WAY-63 · related to WAY-65 · related to WAY-73 · related to WAY-74 ·
+  related to WAY-91
 - **Outranks:** none
 - **Verification:** level 1 — invariants: fact-method-form · fact-citation-target ·
   fact-verdict-citation. Level 2 for what a command asks and what it sets — an agent compares the
@@ -3804,7 +3806,7 @@ runner's configuration that could change its verdict, and cites each fact it giv
   - complies: the fact on path patterns runs `git -c core.ignorecase=false check-attr` on patterns
     the page's rules decide; the fact on SHA-256 probes the digests NIST publishes for it; the fact
     on JSON watches `obsoleted_by` of its RFC and that its passage still stands;
-  - violates: a probe asks `git --version` and compares the number; a probe relies on the git
+  - violates: a probe asks `git --version` and compares the number in place of the behaviour; a probe relies on the git
     configuration of the machine it runs on.
 - **Review when:** none
 - **Origin:** none
@@ -3818,17 +3820,17 @@ nothing about what the named release does. A watch reads what the source publish
 stands. A person re-reads what no command can read. The environment that runs a method changes how faithfully it reads the world, not what
 is true: git matches differently when the machine ignores case. So the command makes that
 environment irrelevant, and a fact about what runs a method is no fact an invariant rests on.
-*Rejected:* a kind of method named beside it — the form already says it (WAY-54, WAY-61); a probe
-asking for a version number — it trusts the label over the behaviour; the runner's configuration
+*Rejected:* a kind of method named beside it — the form already says it (WAY-54, WAY-61); a probe asking for a version number in place of the behaviour — it trusts the label; the runner's configuration
 recorded as a fact in *Rests on* — it changes the method's fidelity, not the sentence's truth.
 *Consequences:* a command whose program is not yet declared or produced is written out in full all
 the same and is unchecked for that reason, and a fact with no verdict for any other reason results
 `error`, as WAY-63 has it. Where the environment cannot be made irrelevant — a model that runs a
-method — it is configuration read off the product (WAY-54), and the deliberate break shows the
+method — it is configuration read off the product (WAY-54), while the release of a tool a probe runs is
+read off the machine (WAY-91), and the deliberate break shows the
 method's fidelity, which holds only where the break gives high confidence of detection. A command
 records its verdicts under the key `fact` (WAY-74). WAY-73's rationale is corrected in place to name
-this decision. Where the probes of this repository's own facts live in the part map is set when its
-first fact is written.
+this decision. Where the probes of a product's facts stand in the part map is set when its first fact is
+written; this repository's stand in `elements/environment-facts/probes/`.
 
 ### WAY-82/1 — When does an environment fact's method run, and what fails its watch?
 
@@ -3862,8 +3864,7 @@ and an announced revision fails nothing.
 
 *Rationale:* the world changes with no commit, so a fact's verdict inside the gate of an unrelated
 change would depend on the date, which WAY-60 and WAY-61 rule out for a verdict. The clock gives
-the world a rhythm of its own. On a change that enters a fact, rewords it or alters the file that
-pins its tool, the repository does change the fact, so the gate runs it there, and its `fail` fails
+the world a rhythm of its own. On a change that enters a fact, rewords it or alters a file its command names, the repository does change the fact, so the gate runs it there, and its `fail` fails
 the gate as WAY-63 has it. A human re-reading carries its own date (WAY-83), so no entry needs a
 rhythm of its own. A superseded, withdrawn or amended edition, or a vanished passage, leads to a
 review of the fact but does not make its sentence false; only the human in that review changes the
@@ -3935,15 +3936,18 @@ decision rests on the fact.
   Found` response instead of a `403 Forbidden` response to avoid confirming the existence of private
   repositories" (GitHub REST API documentation,
   https://docs.github.com/en/rest/using-the-rest-api/troubleshooting-the-rest-api).
-- **Relations:** related to WAY-17 · related to WAY-22 · related to WAY-27 · related to WAY-81 ·
-  related to WAY-83
+- **Relations:** related to WAY-17 · related to WAY-22 · related to WAY-27 · related to WAY-76 ·
+  related to WAY-81 · related to WAY-83
 - **Outranks:** none
 - **Verification:** level 2 — an agent compares the change with the decision:
-  - complies: who can open this repository is a fact set by the repository owner and re-read by
-    the owner, with a verdict dated until the end of the quarter, and no decision on its
-    visibility is written, since nothing in the repository declares one;
-  - violates: the same fact reads `Set by: none`; a probe decides the repository is private from
-    an anonymous 404; a decision "the repository is private" is written where the product
+  - complies: each repository this one links to has a fact of its own on whether a reader not
+    signed in can open it, reading `Set by: none`; where a condition rests on who can open this
+    repository, that is a fact set and re-read by the repository owner, with a verdict dated until
+    the end of the quarter, and no decision on its visibility is written, since nothing in the
+    repository declares one;
+  - violates: the fact on who can open this repository reads `Set by: none`; a probe decides the
+    repository is private from an anonymous 404; one fact lists every repository this one links
+    to; a decision "the repository is private" is written where the product
     declares no visibility.
 - **Review when:** none
 - **Origin:** none
@@ -3963,10 +3967,13 @@ for every such setting — a decision where nobody chose anything; a command hol
 clock's machine — a secret, and a new reason to be unchecked; a verdict put together from an
 anonymous 404 and the repository's own `origin` — its fidelity depends on who runs it.
 *Consequences:* the template gives the field *Set by*, `none` for what nobody in the product sets.
-A change between two re-readings goes unseen, which costs little while nothing this repository
-links to is private. A fact about a setting set outside the product, such as the visibility of the
-repositories this one links to, reads `Set by: none` and is probed anonymously; its list grows with
-every link, and the invariant copies the list from the fact.
+Where the setter re-reads a setting, a change between two re-readings goes unseen. A fact about a
+setting set outside the product, such as the visibility of a repository this one links to, reads
+`Set by: none`, is read anonymously and names one repository, since each has its own owner and
+changes on its own (WAY-76); where an invariant rests on such settings, each new link adds a fact
+named in its *Rests on*. This repository's `outbound-link-reach` admits only links into
+repositories a reader not signed in can open, so no condition of it rests on who can open this
+repository.
 
 ### WAY-85/1 — How is a finding of a study written as an environment fact?
 
@@ -4211,3 +4218,49 @@ cite findings about models and two to four the behaviour of tools. Partners stay
 external context, written by hand, so a consumer nobody recorded goes unseen. The first fact entry
 also ends the `TODO` in every invariant's *Rests on* at the merge (WAY-71), so the change that writes
 it writes the facts all of them wait for.
+
+### WAY-91/1 — On which release of its tool does a probe's verdict count?
+
+Where a fact's *Holds for* names a release of the tool its probe runs, the probe reads the release
+it runs on and records it in the `description` of its line. A `fail` on any release is a `fail`; a
+`pass` counts only on a release *Holds for* names, a build of it included, and on another the fact
+is `unchecked`.
+
+- **Change:** new decision
+- **Scope:** environment-facts, gate
+- **Based on:** none
+- **Relations:** related to WAY-63 · related to WAY-73 · related to WAY-74 · related to WAY-76 ·
+  related to WAY-77 · related to WAY-81 · related to WAY-82 · related to WAY-89
+- **Outranks:** none
+- **Verification:** level 2 — an agent compares the change with the decision:
+  - complies: the probe of the fact about git 2.55.0, run on git 2.56.0, writes `git 2.56.0` in the
+    description of its line, fails the fact where the behaviour differs and leaves it `unchecked`
+    where it agrees; on Git for Windows 2.55.0.windows.3, a build of git 2.55.0, its pass counts;
+    the probe of the fact on SHA-256, whose *Holds for* names an edition of a standard and no
+    release of a tool, reads no release;
+  - violates: the probe passes the fact on git 2.56.0; it skips on another release without asking
+    about the behaviour; it writes the release under a key of its own beside `description`.
+- **Review when:** none
+- **Origin:** none
+- **Approver override:** none
+- **Approved by:** Mariusz, 2026-09-26
+
+*Rationale:* a fact names a release, while the machine holds whichever release it was last updated
+to, and the product runs on that one. A failure there says the tool the product depends on behaves
+otherwise than the fact, which is worth a review whether the world moved or the machine left the
+fact's scope. A pass there says nothing about the release the fact names. The release read is no
+fact an invariant rests on (WAY-73): it decides whether a verdict counts, not what is true. It goes
+in `description`, where the human reviewing a `fail` or an `unchecked` reads it; WAY-74 keeps tool
+versions out of the keys of a line, which nothing would read.
+*Rejected:* leaving the question until the first probe is written — it would come back to a human
+in another session, without the reasons; a fact about the tool's release beside the method — it
+changes the method's fidelity, not the sentence's truth (WAY-73, WAY-81); a pass counted on any
+release — the fact about one release would pass on another it says nothing about.
+*Consequences:* WAY-63 is corrected in place so that its closed list of reasons for `unchecked`
+gains, for a fact, "a probe ran on a release of its tool outside *Holds for*", and the facts
+template's pending question on a method resting on the tool that runs it is closed: a method rests
+on no fact about that release. The clock's report names each fact left `unchecked` for this reason,
+and the skill writing facts takes such a fact as a case to move to the release the machine runs.
+Moving it changes *Holds for*, so the fact's version rises and every invariant naming it gets a new
+fingerprint in *Rests on*: for git, eight invariants after each update of git that the fact is
+moved to.

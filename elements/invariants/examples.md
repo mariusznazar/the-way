@@ -35,7 +35,7 @@ The decision guard, given a date, warns of every check-by date earlier than it t
 Every file git tracks matches the path patterns of exactly one part of the part map, or stands on the map's list of files left out on purpose.
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
-- **Rests on:** TODO — git matches a path pattern of an attributes file by the rules of `.gitignore` patterns, except that a negative pattern is forbidden and a pattern that matches a directory does not match the paths inside it (https://git-scm.com/docs/gitattributes)
+- **Rests on:** git-path-patterns@1519f3f7
 - **Derives from:** WAY-44@220f5b85
 - **Part:** every
 - **Correction:** none
@@ -46,7 +46,7 @@ Every file git tracks matches the path patterns of exactly one part of the part 
 The relation model's script gives a text the first eight characters, in lower-case hexadecimal, of the SHA-256 digest of that text encoded in UTF-8, after every run of spaces and line breaks is replaced by a single space and both ends are trimmed.
 
 - **Method:** `python -B gate/run_tests.py relation-model --record .runs/relation-model-tests.jsonl`
-- **Rests on:** TODO — SHA-256 as the Secure Hash Standard, FIPS 180-4, specifies it (https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf), and UTF-8 as RFC 3629 defines it (https://www.rfc-editor.org/rfc/rfc3629.html)
+- **Rests on:** sha-256@e3a30c6f · utf-8@6afd686d
 - **Derives from:** WAY-39@a3b77692
 - **Part:** relation-model
 - **Correction:** none
