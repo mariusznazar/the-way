@@ -52,12 +52,16 @@ in (WAY-61).
 ## Which words take an entry
 
 - A word takes an entry when it stands in the binding part of an entry of the foundation or in the
-  rules of an element's template, and the foundation, wherever its uses are counted, uses it in more than
-  one meaning or in a meaning other than the one a reader who knows the product's field already gives
-  it. A word used as such a reader uses it takes none (WAY-95).
+  rules of an element's template, and at least one of its uses carries a meaning a reader who knows
+  the product's field would not give it. A word whose every meaning is one such a reader gives takes
+  none, however many meanings it has — "run", for a command and for text running across lines
+  (WAY-95).
 - Two uses carry two meanings when a definition true of one is false of the other. A noun naming one
-  occurrence of what its verb does — a run, to run — carries the verb's meaning; any other noun and
-  verb of one word are weighed by the same test (WAY-95, WAY-99).
+  occurrence of what its verb does, or what does it — a run, to run; a probe, to probe — carries the
+  verb's meaning; any other noun and verb of one word are weighed by the same test (WAY-95, WAY-99).
+- A word naming what a kind of foundation entry records names the entry or entries that record it
+  too, and carries one meaning: its definition says what the thing is, and that the foundation holds
+  an entry for it stays in the decision that sets it (WAY-95).
 - A word the foundation uses both in its everyday meaning and in place of a term, or of the term the
   change writes, either becomes the term, its everyday uses rewritten, or keeps its everyday meaning
   alone, its other uses rewritten to the term — wherever the foundation may still be edited. It never
@@ -118,7 +122,8 @@ in it; `TODO` stands only in *Not*, in place of what carries a meaning (WAY-71, 
 ## Avoid
 
 - *Avoid* lists the other words for what the term names, each with what a reader takes it for. A
-  word stands there only where every use of it in the foundation carries the term's meaning; a word
+  word stands there only where every use of it in the files of `foundations/` and the elements'
+  templates carries the term's meaning; a word
   that also has another correct meaning there goes to the *Not* of the entry for that meaning
   instead. The list of uses settles which, never the author's sense of the word (WAY-94, WAY-98).
 - A word of *Avoid* is an error where a change makes it stand more times in a file of `foundations/`
@@ -138,16 +143,20 @@ in it; `TODO` stands only in *Not*, in place of what carries a meaning (WAY-71, 
 
 ## Not
 
-- *Not* names each meaning the word carried or carries in the foundation besides its definition,
-  with what carries it now: the term of another entry of this glossary; the identifier in backticks
+- *Not* names each meaning the word carried or carries in the files of `foundations/` and the
+  elements' templates, besides its definition and a meaning a reader who knows the product's field
+  gives it, with what carries it now: the term of another entry of this glossary; the identifier in backticks
   of an entry of the part map, the invariants or the environment facts; in backticks, a value of a
   template's closed list as that template writes it; or, between quotation marks, a word the
   foundation uses, as the section on uses bounds a use, outside quotation marks and outside this
   glossary. No carrier holds the term or any of its forms, the hyphens of both read as spaces
   (WAY-99).
-- Two meanings of one word are removed by renaming one of them wherever the foundation may still be
-  edited, never by a note beside the word; *Not* shows the reader which word the other meaning took
-  (WAY-99, WAY-04).
+- Where a word carries two meanings and one of them is a meaning a reader who knows the product's
+  field would not give it, one of the two is renamed wherever the text may still be edited, never
+  marked by a note beside the word; *Not* shows the reader which word the other meaning took. Two
+  meanings such a reader gives the word both need no renaming (WAY-99, WAY-04).
+- The uses of a meaning such a reader would not give the word are rewritten, when it moves, to one
+  word, the one *Not* names; a paraphrase is no renaming (WAY-99).
 - Where a human has not yet chosen the word for the other meaning, *Not* reads `TODO` in place of what
   carries it. A task branch may hold it; the main branch never does (WAY-99, WAY-71).
 
@@ -163,6 +172,11 @@ in it; `TODO` stands only in *Not*, in place of what carries a meaning (WAY-71, 
   last word. A form these endings miss, a short form ("the map" for "part map"), or a verb split by
   its object ("read the value off") is not found, and a field for such forms comes with the first
   term whose review needs it (WAY-97, WAY-94).
+- A term's last word standing for the whole term — "fact" for "environment fact", "the map" for
+  "part map" — is a use of the term that the list of uses does not show and the review of uses looks
+  for; it stands in no *Avoid*. Where the files also use that word in another meaning, the choice for
+  a word used both in its everyday meaning and in place of a term applies: its other uses are
+  rewritten, or its uses for the term are written as the whole term (WAY-94, WAY-95).
 - A change to a definition goes, in the same change, through a review of the term's uses: an agent
   puts the new definition in place of the word in every use the guard lists and in every other form
   of it the agent finds, and reports each use whose meaning then moves to the human deciding the

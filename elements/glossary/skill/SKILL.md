@@ -42,7 +42,7 @@ if not, stop; if so, the same change claims the new file for a part of the map t
 - Put the word through the template's section "Which words take an entry". A word that takes none:
   show the human why, with the uses, and stop once they agree.
 - Search for the same meaning under another word, in the glossary — the-way's too, in a product — and
-  in the whole foundation: a sentence whose use fits the meaning under another word, or a parallel
+  in the files of `foundations/` and the elements' templates: a sentence whose use fits the meaning under another word, or a parallel
   sentence in another file saying the same with a different word. Found under this word — a change
   to that entry; found under a term, or as a word with no entry — one concept with two words, and the
   human chooses which is the term; not found — a new entry. Keep each other word with its uses for
@@ -58,8 +58,8 @@ if not, stop; if so, the same change claims the new file for a part of the map t
 
 Fill the entry according to the template, with extra care for these:
 
-- The definition: take it from what the uses share, and where a sentence of the foundation already
-  says what the word is, from that sentence; where two such sentences, or a sentence and the uses,
+- The definition: take it from what the uses share, and where a sentence of the foundation or of a
+  template already says what the word is, from that sentence; where two such sentences, or a sentence and the uses,
   disagree, that is a question in step 4. Read the entry of every term the definition uses as genus
   or difference, and use it in that meaning. Put each clause through the template's test for a rule;
   a clause that holds a rule stays in the entry that sets it, and a rule no entry sets yet is a
@@ -90,7 +90,7 @@ Fill the entry according to the template, with extra care for these:
    the entry broke and rerun, and give an error elsewhere in the file to the human.
 5. A word put into *Avoid*: search the elements' skills, the README files and the code for it
    (WAY-98, WAY-37), and give each hit to the human as a change to that file.
-6. What follows goes one at a time, wherever the foundation may still be edited: a sentence that said
+6. What follows goes one at a time, wherever the text may still be edited: a sentence that said
    what the word is, or spelt out its definition, rewritten to use the term (WAY-95, WAY-100); every
    use of a meaning that moved to another word, rewritten to that word; a use a changed definition
    moved, rewritten or accepted by the human in step 4.3. Each goes through the skill of the element

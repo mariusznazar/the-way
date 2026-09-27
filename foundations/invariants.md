@@ -2000,7 +2000,7 @@ Every entry of `foundations/glossary.md` carries every field the glossary templa
 
 - **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-94@0ac1fa64 · WAY-71@cab47c5b
+- **Derives from:** WAY-94@8cd9461a · WAY-71@cab47c5b
 - **Part:** glossary
 - **Correction:** none
 - **Recovered:** none
@@ -2011,7 +2011,7 @@ No field of an entry of `foundations/glossary.md` holds `none` or `TODO` where t
 
 - **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-94@0ac1fa64 · WAY-71@cab47c5b
+- **Derives from:** WAY-94@8cd9461a · WAY-71@cab47c5b
 - **Part:** glossary
 - **Correction:** none
 - **Recovered:** none
@@ -2022,7 +2022,7 @@ Where {merge-onto} exists, every term of `foundations/glossary.md` has a use out
 
 - **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --merge-onto {merge-onto} --record .runs/glossary-merge-onto.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-95@c4b4d6fe
+- **Derives from:** WAY-95@731d2f13
 - **Part:** glossary · decisions · invariants · part-map · environment-facts
 - **Correction:** none
 - **Recovered:** none
@@ -2077,7 +2077,7 @@ No word of an *Avoid* in `foundations/glossary.md` stands, outside the text the 
 
 - **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --base {fork-point} --record .runs/glossary-base.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-98@5caaa22f
+- **Derives from:** WAY-98@52368529
 - **Part:** every
 - **Correction:** none
 - **Recovered:** none
@@ -2088,7 +2088,7 @@ No word stands in the *Avoid* of two entries of `foundations/glossary.md`.
 
 - **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-98@5caaa22f
+- **Derives from:** WAY-98@52368529
 - **Part:** glossary
 - **Correction:** none
 - **Recovered:** none
@@ -2099,7 +2099,7 @@ No word of an *Avoid* in `foundations/glossary.md` is a term there.
 
 - **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-98@5caaa22f
+- **Derives from:** WAY-98@52368529
 - **Part:** glossary
 - **Correction:** none
 - **Recovered:** none
@@ -2110,7 +2110,7 @@ No word of an *Avoid* in `foundations/glossary.md` is a word the *Not* of an ent
 
 - **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-98@5caaa22f
+- **Derives from:** WAY-98@52368529
 - **Part:** glossary
 - **Correction:** none
 - **Recovered:** none
@@ -2121,7 +2121,7 @@ Every term, identifier and closed-list value the *Not* of an entry of `foundatio
 
 - **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-99@64acf85f
+- **Derives from:** WAY-99@bba94a7a
 - **Part:** glossary · part-map · invariants · environment-facts
 - **Correction:** none
 - **Recovered:** none
@@ -2132,7 +2132,7 @@ Nothing the *Not* of an entry of `foundations/glossary.md` names holds the term 
 
 - **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-99@64acf85f
+- **Derives from:** WAY-99@bba94a7a
 - **Part:** glossary · decisions · invariants · part-map · environment-facts
 - **Correction:** none
 - **Recovered:** none
@@ -2143,7 +2143,7 @@ Where {merge-onto} exists, no field of an entry of `foundations/glossary.md` hol
 
 - **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --merge-onto {merge-onto} --record .runs/glossary-merge-onto.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-99@64acf85f · WAY-71@cab47c5b
+- **Derives from:** WAY-99@bba94a7a · WAY-71@cab47c5b
 - **Part:** glossary
 - **Correction:** none
 - **Recovered:** none

@@ -4354,9 +4354,11 @@ a paragraph saying what it holds, and holds no other heading than its entries.
 ### WAY-94/1 — What does a glossary entry hold, and what part of it binds?
 
 A glossary entry holds one definition of its term and two fields: *Avoid*, each other word for what
-the term names with what it is confused with, and *Not*, each other meaning the word carries in the
-foundation with what carries it. The definition is what binds, and a sentence depends on a term by
-using its word, carrying no fingerprint.
+the term names with what it is confused with — the term's last word standing for the whole term is
+no other word — and *Not*, each meaning the word carries or carried in the files of `foundations/`
+and the elements' templates, besides its definition and a meaning a reader who knows the product's
+field gives it, with what carries it. The definition is what binds, and a sentence depends on a term
+by using its word, carrying no fingerprint.
 
 - **Change:** new decision
 - **Scope:** glossary, relation-model
@@ -4383,7 +4385,10 @@ flag hundreds of sentences for nothing: "entry" alone stands in 43 of 92 decisio
 people to clear unread. So a use leans on the definition by the word, and what a changed definition
 reaches is computed and reviewed instead (WAY-97). The lists beside the definition change mechanically
 and are read by the guard, not by dependants, so they stand outside what binds, as a part's path
-patterns do (WAY-42).
+patterns do (WAY-42). The term's last word standing for it — "fact" for "environment fact" — is the
+term shortened, not a second word, and banning it would ban hundreds of the term's own uses; a
+reader's meaning stays out of *Not*, since the reader brings it along and, once its uses are
+rewritten, the text no longer carries it.
 *Rejected:* a field of neighbouring words not to confuse with the term — the definitions carry the
 difference (WAY-96); a field of forms the endings miss — it gives a second word for one thing a legal
 place and empties *Avoid*; worked examples run as tests, an area of meaning, broader and narrower
@@ -4398,9 +4403,9 @@ its state where the branch left the main branch to start the review of uses.
 ### WAY-95/1 — Which words take a glossary entry?
 
 A word takes a glossary entry when it stands in the binding part of an entry of the foundation or in
-the rules of an element's template, and the foundation, wherever its uses are counted, uses it in
-more than one meaning or in a meaning other than the one a reader who knows the product's field
-already gives it; an agent finds the candidates and a human chooses. A word's definition stands in
+the rules of an element's template, and at least one of its uses in the files of `foundations/` and
+the elements' templates carries a meaning a reader who knows the product's field would not give it;
+an agent finds the candidates and a human chooses. A word's definition stands in
 the glossary alone, and a closed list of values a guard reads stays in its template with what each
 value means.
 
@@ -4417,10 +4422,13 @@ value means.
 - **Outranks:** none
 - **Verification:** level 1 — invariants: glossary-term-use. Level 2 for which words take an entry and
   where a definition stands — two uses carry two meanings when a definition true of one is false of
-  the other, and a noun naming one occurrence of what its verb does carries the verb's meaning; an
-  agent compares the change with the decision:
+  the other, a noun naming one occurrence of what its verb does, or what does it, carries the verb's
+  meaning, and a word naming what a kind of entry records names the entry or entries that record it
+  too; an agent compares the change with the decision:
   - complies: "clock", used for a command and for a deadline, takes an entry with one meaning;
-    "digest", used only as SHA-256 uses it, takes none; the kinds of change of a decision stay defined
+    "digest", used only as SHA-256 uses it, takes none; "run", used for running a command and for
+    text running across lines, takes none; "critical flow" names the flow and its entry of the part
+    map with one meaning; the kinds of change of a decision stay defined
     in the decision template; a word used both plainly and in place of a term either becomes the term
     or has its other uses rewritten;
   - violates: every noun of the decision log takes an entry; a decision defines a term in its binding
@@ -4433,7 +4441,7 @@ value means.
 
 *Rationale:* a glossary that takes every relevant word grows without bound and is kept by one person's
 memory, which WAY-04 rules out; a word used as a reader who knows the field uses it needs no entry,
-and a word no rule uses binds nothing. Which words bind is a choice, and a human makes the choices of
+however many such meanings it has, and a word no rule uses binds nothing. Which words bind is a choice, and a human makes the choices of
 the foundation (WAY-10). Two copies of a definition drift apart, so a word's definition stands once;
 the meaning of each value of a closed list is the rule its guard applies, so it stays beside the
 guard. A word used both plainly and in place of a term can stand in no *Avoid* without banning its
@@ -4549,9 +4557,9 @@ and irregular forms. The check that every term has a use counts only uses outsid
 
 ### WAY-98/1 — Where is a word of a glossary entry's *Avoid* an error?
 
-A word stands in a glossary entry's *Avoid* only where every use of it in the foundation carries the
-term's meaning, and it is an error where a change makes it stand more times in a file of `foundations/`
-or an element's template than on the commit the task branch left the main branch from. What a use
+A word stands in a glossary entry's *Avoid* only where every use of it in the files of `foundations/`
+and the elements' templates carries the term's meaning, and it is an error where a change makes it
+stand more times in such a file than on the commit the task branch left the main branch from. What a use
 of a term leaves out (WAY-97), text in quotation marks, an identifier of the part map, the invariants
 or the environment facts standing in a field's value, the glossary's entries and text a new decision
 version restates word for word are not counted.
@@ -4598,10 +4606,11 @@ skills, the README files and the code for it, as for entries that wait for it (W
 
 ### WAY-99/1 — How does one word keep one meaning in the foundation?
 
-Two meanings of one word are removed by renaming one of them wherever the foundation may still be
-edited, and the glossary entry of the word names in *Not* each meaning it no longer carries, with the
-term, identifier, closed-list value or quoted word — holding neither the term nor its forms — that
-carries it now. A meaning whose word a human has not yet chosen reads `TODO` in *Not*, which a task
+Where a word carries two meanings in the files of `foundations/` and the elements' templates and one
+of them is a meaning a reader who knows the product's field would not give it, one of the two is
+renamed wherever those files may still be edited, and the glossary entry of the word names in *Not*
+each such meaning it no longer carries, with the term, identifier, closed-list value or quoted word —
+holding neither the term nor its forms — that carries it now. A meaning whose word a human has not yet chosen reads `TODO` in *Not*, which a task
 branch may hold and the main branch never does.
 
 - **Change:** new decision
@@ -4613,10 +4622,11 @@ branch may hold and the main branch never does.
 - **Verification:** level 1 — invariants: glossary-not-target · glossary-not-quoted-word ·
   glossary-entry-merge-todo. Level 2 for how a second meaning goes — an agent compares the change with
   the decision:
-  - complies: a game's glossary finds "save" used for the stored file and for the act of storing it,
-    the act takes the word "store", and *Not* of "save" names "store";
-  - violates: "save (file)" and "save (act)" stand side by side in the foundation; *Not* of "save"
-    names "saved state", a phrase holding the word itself.
+  - complies: a game's glossary finds "shard" used for the currency the player collects and for a
+    piece of a split level, the piece takes the word "fragment", and *Not* of "shard" names
+    "fragment";
+  - violates: "shard (currency)" and "shard (piece)" stand side by side in the foundation; *Not* of
+    "shard" names "level shard", a phrase holding the word itself.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
@@ -4626,7 +4636,8 @@ branch may hold and the main branch never does.
 gives two verdicts under one sentence; a note in brackets or an area of meaning serves a person
 choosing from an index, never the sentence. Renaming leaves each word one meaning wherever it can
 still change; a version on the main branch is never edited (WAY-07), and WAY-97 keeps a second meaning
-from entering there. *Not* shows a reader who meets the word where the other meaning went, and a
+from entering there. Two meanings a reader of the field already tells apart need no renaming, since
+neither is the product's own. *Not* shows a reader who meets the word where the other meaning went, and a
 carrier holding the word itself would keep the homonym under a new label. The word is a choice, and
 the human makes it (WAY-10); until then the branch records the homonym and the merge does not pass
 it.
