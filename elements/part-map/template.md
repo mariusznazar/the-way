@@ -165,8 +165,8 @@ A field marked *judgment* holds someone's call: no tool reads its value off the 
 The binding part of an entry is one sentence: a part's responsibility, a flow's description, a
 surface's promise. Its content fingerprint covers that sentence alone (WAY-42, WAY-39). Path
 patterns, dependencies, failure modes and a flow's list of parts stay outside it; a change to a
-part's patterns is shown instead as the list of files that changed part. A sentence that speaks of
-what a glossary term defines uses the term, never a paraphrase of its definition (WAY-100).
+part's patterns is shown instead as the list of files that changed part. Any sentence of an entry
+that speaks of what a glossary term defines uses the term, never a paraphrase of its definition (WAY-100).
 
 ## Criticality: what is written and what is computed
 

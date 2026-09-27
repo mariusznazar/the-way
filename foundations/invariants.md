@@ -2022,7 +2022,7 @@ Where {merge-onto} exists, every term of `foundations/glossary.md` has a use out
 
 - **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --merge-onto {merge-onto} --record .runs/glossary-merge-onto.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-95@c491a66e
+- **Derives from:** WAY-95@c4b4d6fe
 - **Part:** glossary · decisions · invariants · part-map · environment-facts
 - **Correction:** none
 - **Recovered:** none
@@ -2077,7 +2077,7 @@ No word of an *Avoid* in `foundations/glossary.md` stands, outside the text the 
 
 - **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --base {fork-point} --record .runs/glossary-base.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-98@8961ef4f
+- **Derives from:** WAY-98@22381f48
 - **Part:** every
 - **Correction:** none
 - **Recovered:** none
@@ -2088,7 +2088,7 @@ No word stands in the *Avoid* of two entries of `foundations/glossary.md`.
 
 - **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-98@8961ef4f
+- **Derives from:** WAY-98@22381f48
 - **Part:** glossary
 - **Correction:** none
 - **Recovered:** none
@@ -2099,7 +2099,7 @@ No word of an *Avoid* in `foundations/glossary.md` is a term there.
 
 - **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-98@8961ef4f
+- **Derives from:** WAY-98@22381f48
 - **Part:** glossary
 - **Correction:** none
 - **Recovered:** none
@@ -2117,7 +2117,7 @@ Every term, identifier and closed-list value the *Not* of an entry of `foundatio
 
 ## glossary-not-quoted-word/1
 
-Every word the *Not* of an entry of `foundations/glossary.md` names in quotation marks holds neither the term nor its forms, and stands outside quotation marks and outside the glossary in a file of `foundations/` or in an element's template.
+Nothing the *Not* of an entry of `foundations/glossary.md` names holds the term or its forms, and every word it names in quotation marks stands outside quotation marks and outside the glossary in a file of `foundations/` or in an element's template.
 
 - **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
 - **Rests on:** none

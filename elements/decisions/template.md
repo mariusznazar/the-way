@@ -92,8 +92,8 @@ A field marked *judgment* holds someone's call: no tool reads its value off the 
   a change.
 - An exception foreseen in advance is written into the binding sentences ("X is allowed when
   Y"); acting on it is then not a contradiction.
-- A sentence that speaks of what a glossary term defines uses the term, never a paraphrase of its
-  definition (WAY-100).
+- Any sentence of an entry, its rationale included, that speaks of what a glossary term defines
+  uses the term, never a paraphrase of its definition (WAY-100).
 
 The content fingerprint covers only the binding sentences, so a fix to the rationale does not
 flag references.
