@@ -4443,9 +4443,10 @@ is used when it is used in one place only — the log holds the decisions of eve
 nothing is used in one place; a script counting places — it cannot tell a definition from another
 sentence; an entry for a word's plain meaning only to hold its *Not*; a meaning new to the product —
 the reader's meaning already catches a coined word.
-*Consequences:* on the main branch every term has a use, counted as WAY-97 counts uses, over every
-version the files hold, so a term a frozen version uses keeps its entry unless it is renamed
-(WAY-93); on a task branch an entry with no use is a warning, since a word may enter before its uses.
+*Consequences:* on the main branch every term has a use outside the glossary, counted as WAY-97
+counts uses, over every version the files hold, so a term a frozen version uses keeps its entry
+unless it is renamed (WAY-93); on a task branch an entry with no use is a warning, since a word may
+enter before its uses.
 The skill of each element reads the glossary entries of the words it uses before writing an entry.
 
 ### WAY-96/1 — How is a glossary definition written?
@@ -4539,9 +4540,11 @@ guard — a guard sees only that a record exists; after the main branch, the old
 the new one as its successor — an old entry would then be read in the new meaning.
 *Consequences:* the guard lists the uses of every term whose definition differs from its definition
 where the branch left the main branch; it finds uses bounded as words, with the endings of the
-template, outside the glossary, backticks, a token holding a hyphen the term does not hold, a longer
-term, a field's name and the values of *Scope*, *Part* and *Change*, and the review finds short and
-irregular forms. A missed shift of meaning leaves no trace in a script.
+template, in the definitions of the glossary's other entries, which use a neighbouring term (WAY-96),
+and outside the glossary, but not in backticks, a token holding a hyphen the term does not hold, a
+longer term, a field's name or the values of *Scope*, *Part* and *Change*, and the review finds short
+and irregular forms. The check that every term has a use counts only uses outside the glossary
+(WAY-95). A missed shift of meaning leaves no trace in a script.
 
 ### WAY-98/1 — Where is a word of a glossary entry's *Avoid* an error?
 

@@ -72,8 +72,8 @@ in (WAY-61).
   correction before the main branch, a new version after it (WAY-95, WAY-100).
 - An agent finds the candidate words, and the human deciding the change decides which become entries
   and accepts each entry (WAY-95, WAY-10, WAY-14).
-- On the main branch every term has a use; on a task branch an entry with no use is a warning, since a
-  word may enter before its uses (WAY-95).
+- On the main branch every term has a use outside the glossary; on a task branch an entry with no
+  such use is a warning, since a word may enter before its uses (WAY-95).
 - When the process enters a product that already exists, no glossary is written in bulk: a word
   takes an entry together with the entries written when the process enters it that stand on it, and
   later with the return step of a task. Candidates an agent finds in the product's documents or in
@@ -151,9 +151,9 @@ in it; `TODO` stands only in *Not*, in place of what carries a meaning (WAY-71, 
 
 ## Uses and a changed definition
 
-- The uses of a term are the places, outside the glossary, in the files of `foundations/` and in the
-  elements' templates — every version the files hold included — where its word stands, bounded as a
-  word. Left out are text in backticks or a fenced block, a token holding a hyphen the term does not
+- The uses of a term are the places in the files of `foundations/` and in the elements' templates —
+  every version the files hold included, and of the glossary only the definitions of other entries —
+  where its word stands, bounded as a word. Left out are text in backticks or a fenced block, a token holding a hyphen the term does not
   hold, a token holding `/`, the span of a longer term of this glossary that contains it, a field's
   name, and the values of *Scope*, *Part* and *Change* (WAY-97).
 - Its forms are found by the endings `-s`, `-es`, `-ies` in place of a final `y`, `-'s`, `-d`, `-ed`
@@ -213,7 +213,8 @@ A field marked *prose* carries text rather than a value.
 - A change that, against `{fork-point}`, adds or renames a term or an identifier of the part map, the
   invariants or the environment facts so that the two read alike is a warning, save a term naming
   the element that a part whose files include `elements/<identifier>/` answers for (WAY-93).
-- A term with no use is a warning, and, checking a merge onto the main branch, an error (WAY-95).
+- A term with no use outside the glossary is a warning, and, checking a merge onto the main branch,
+  an error (WAY-95).
 - No entry carries a version (WAY-97).
 - Every example in `examples.md` matches its entry in the file word for word (WAY-05).
 - The guard's report lists, for every entry whose definition differs from its definition on
