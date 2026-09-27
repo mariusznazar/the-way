@@ -32,7 +32,7 @@ the map of the-way itself.
 
 ## relation-model — The relation model
 
-The part answers for the content fingerprint of an entry and for the references it flags when
+The part answers for the fingerprint of an entry and for the references it flags when
 that entry changes.
 
 - **Files:** relation-model/**
@@ -85,7 +85,7 @@ them.
 - **Failure modes:** none
 - **Trust boundary:** none
 
-## gate — The quality gate
+## gate — The gate
 
 The part answers for running the checks a change calls for, and for the tests of critical flows.
 
@@ -118,10 +118,10 @@ The part answers for the files that configure the repository itself rather than 
     answers for it — low — not detected
 - **Trust boundary:** none
 
-## wording-reaches-dependants — A change of wording reaches what leans on it
+## wording-reaches-dependants — A change of a binding part reaches what leans on it
 
 Someone changes the binding sentences of a foundation entry, and every reference that leans on
-the old wording is reported before the change reaches the main branch.
+the old binding part is reported before the change reaches the main branch.
 
 - **Criticality:** high
 - **Parts:** relation-model · decisions · gate
@@ -134,7 +134,7 @@ The form of an entry changes for a product only when that product moves the comm
 
 - **Declared at:** not markable — test: elements/decisions/test_format_guard.py
 
-## content-fingerprint — The content fingerprint
+## content-fingerprint — The fingerprint
 
 The same wording gives the same fingerprint.
 
@@ -190,7 +190,7 @@ for each outcome of a test.
 
 ## Criticality scale
 
-1. low — a failure is seen by the next person who reads the file, and costs a correction
+1. low — a failure is seen by the next person who reads the file, and costs a fix
 2. high — a wrong entry or a wrong check reaches the main branch, and the products pinned to that
    commit inherit it
 

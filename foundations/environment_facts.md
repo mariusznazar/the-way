@@ -25,7 +25,7 @@ Within one level of precedence of its gitignore sources, the last pattern that m
 
 ## sha-256/1
 
-The Secure Hash Standard specifies SHA-256, whose final result is a 256-bit message digest, in its section 6.2.
+The Secure Hash Standard specifies SHA-256, whose final output is a 256-bit message digest, in its section 6.2.
 
 - **Holds for:** FIPS 180-4 (August 2015)
 - **Source:** https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf § 6.2 — "The final result of SHA-256 is a 256-bit message digest."; read 2026-09-26

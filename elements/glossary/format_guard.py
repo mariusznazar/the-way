@@ -671,7 +671,7 @@ def check_terms(entries, report):
     for entry in entries:
         if entry.versioned:
             report.error(entry.line, "`## %s` carries a version; a glossary entry has none and is "
-                                     "changed in place" % entry.text.split("\n")[0][3:].strip(),
+                                     "edited in place" % entry.text.split("\n")[0][3:].strip(),
                          check, (version,))
         if not entry.term:
             report.error(entry.line, "the heading names no term", check)

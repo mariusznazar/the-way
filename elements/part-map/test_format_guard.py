@@ -285,7 +285,7 @@ class Versions(GuardTestCase):
         self.guard(part_map(part(identifier="saving/2"), flow(parts="none"), surface(),
                             foundations_part()))
         self.assertEqual(self.failures("map-entry-version/1"),
-                         ["line 5: `saving/2` carries a version; an entry of the map is corrected "
+                         ["line 5: `saving/2` carries a version; an entry of the map is edited "
                           "in place"])
 
     def test_a_version_field(self):
@@ -900,7 +900,7 @@ class KnownViolations(GuardTestCase):
         self.assertEqual(self.lines, [
             line("check_violations_growth", "fail", "known-violations-growth/1",
                  "foundations/known_violations.md: `saving · foundations · src/saving.py · the log "
-                 "of decisions` is not on the list of main: a position is added only by a change "
+                 "of decisions` is not on the list of main: a row is added only by a change "
                  "of the foundation a human accepts")])
 
     def test_a_base_without_the_list_and_no_position_needs_no_note(self):
@@ -910,7 +910,7 @@ class KnownViolations(GuardTestCase):
         code, output = self.guard(part_map(part(files=("src/saving.py", "tests/**", "other.txt")),
                                            flow(), surface(), foundations_part()), base="main")
         self.assertEqual(code, 0, output)
-        self.assertNotIn("every position counts as added", output)
+        self.assertNotIn("every row counts as added", output)
         self.assertEqual(self.lines, [line("check_violations_growth", "pass",
                                            "known-violations-growth/1")])
 
@@ -922,7 +922,7 @@ class KnownViolations(GuardTestCase):
         code, output = self.guard(part_map(part(files=("src/saving.py", "tests/**", "other.txt")),
                                            flow(), surface(), foundations_part()), base="main")
         self.assertEqual(code, 1, output)
-        self.assertIn("note: main has no foundations/known_violations.md; every position counts "
+        self.assertIn("note: main has no foundations/known_violations.md; every row counts "
                       "as added\n", output)
 
     def test_a_position_kept_from_the_main_branch_passes(self):

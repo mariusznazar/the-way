@@ -442,7 +442,7 @@ class Reviews(GuardTestCase):
         # invariant: decision-guard-overdue-review/1
         code, output = self.guard(log(version(1, review_when=self.DUE)))
         self.assertEqual(code, 0, output)
-        self.assertIn("check-by date 2026-09-01 has passed without a review", output)
+        self.assertIn("check-by date 2026-09-01 has passed without a review record", output)
 
     def test_review_moves_the_date(self):
         self.assertPasses(log(version(1, review_when=self.DUE),
@@ -463,7 +463,7 @@ class Reviews(GuardTestCase):
         code, output = self.guard(log(version(1, review_when="saves move to a server · check by: "
                                                              "2026-09-16")))
         self.assertEqual(code, 0, output)
-        self.assertIn("ABC-01: check-by date 2026-09-16 has passed without a review", output)
+        self.assertIn("ABC-01: check-by date 2026-09-16 has passed without a review record", output)
 
     def test_the_date_compared_is_the_one_given_not_the_day_of_the_run(self):
         # invariant: decision-guard-overdue-review/1
@@ -471,14 +471,14 @@ class Reviews(GuardTestCase):
                                                              "2099-01-15")),
                                   today=datetime.date(2099, 6, 1))
         self.assertEqual(code, 0, output)
-        self.assertIn("ABC-01: check-by date 2099-01-15 has passed without a review", output)
+        self.assertIn("ABC-01: check-by date 2099-01-15 has passed without a review record", output)
 
     def test_a_review_before_the_version_does_not_answer_its_date(self):
         # invariant: decision-guard-overdue-review/1
         code, output = self.guard(log(
             version(1), review(1, "2026-09-01", "condition not met — local", "2026-12-01"),
             version(1, ver=2, review_when="saves move to a server · check by: 2026-09-15")))
-        self.assertIn("ABC-01: check-by date 2026-09-15 has passed without a review", output)
+        self.assertIn("ABC-01: check-by date 2026-09-15 has passed without a review record", output)
 
     def test_a_review_of_another_decision_does_not_answer_its_date(self):
         # invariant: decision-guard-overdue-review/1
@@ -486,7 +486,7 @@ class Reviews(GuardTestCase):
             version(1, review_when="saves move to a server · check by: 2026-09-15"),
             version(2, review_when="saves move to a server · check by: 2026-09-01"),
             review(2, "2026-09-01", "condition not met — local", "2026-12-01")))
-        self.assertIn("ABC-01: check-by date 2026-09-15 has passed without a review", output)
+        self.assertIn("ABC-01: check-by date 2026-09-15 has passed without a review record", output)
 
     def test_a_passed_date_after_a_decision_with_none_warns(self):
         """ABC-01 has no check-by date; ABC-02, after it, has one that has passed."""
@@ -494,7 +494,7 @@ class Reviews(GuardTestCase):
         code, output = self.guard(log(
             version(1), version(2, review_when="saves move to a server · check by: 2026-09-15")))
         self.assertEqual(code, 0, output)
-        self.assertIn("ABC-02: check-by date 2026-09-15 has passed without a review", output)
+        self.assertIn("ABC-02: check-by date 2026-09-15 has passed without a review record", output)
 
     def test_every_passed_date_warns(self):
         # invariant: decision-guard-overdue-review/1
@@ -502,8 +502,8 @@ class Reviews(GuardTestCase):
             version(1, review_when="saves move to a server · check by: 2026-09-15"),
             version(2, review_when="saves move to a server · check by: 2026-09-14")))
         self.assertEqual(code, 0, output)
-        self.assertIn("ABC-01: check-by date 2026-09-15 has passed without a review", output)
-        self.assertIn("ABC-02: check-by date 2026-09-14 has passed without a review", output)
+        self.assertIn("ABC-01: check-by date 2026-09-15 has passed without a review record", output)
+        self.assertIn("ABC-02: check-by date 2026-09-14 has passed without a review record", output)
 
     def test_not_met_needs_a_date(self):
         self.assertFails(log(version(1, review_when=self.DUE),

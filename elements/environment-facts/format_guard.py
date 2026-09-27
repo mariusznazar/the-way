@@ -1279,7 +1279,7 @@ def run(path, base=None, stream=None, template=TEMPLATE, merge_onto=None, record
         check_dependants(entry_list, foundation.invariants, foundation.latest, report, False)
         report.notes.append("no --merge-onto given: `TODO` in the entries is not checked against a "
                             "merge, the fingerprints decisions carry for facts are not compared "
-                            "with the current wording, and a fact nothing names is only a warning")
+                            "with the current binding part, and a fact nothing names is only a warning")
 
     if os.path.exists(examples) and os.path.exists(OWN_FILE) and os.path.samefile(path, OWN_FILE):
         check_examples(items, examples, report)

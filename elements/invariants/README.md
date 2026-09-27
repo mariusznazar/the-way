@@ -25,7 +25,7 @@ identifiers, versions, corrections and the list of violated invariants compared 
 `--merge-onto` names the commit of the main branch a merge is made onto; only with it is a `TODO` in
 a field other than *Method* and *Rests on* an error — in *Rests on* too, once the environment facts
 that merge leaves have entries — and every fingerprint in *Derives from* and *Rests on* compared
-with the current wording in the decision log and the environment facts that merge leaves (WAY-66,
+with the current binding part in the decision log and the environment facts that merge leaves (WAY-66,
 WAY-71). `none` in place of either commit is what the gate fills in where that commit does not
 exist: the checks that need it are recorded as `unchecked`, a note says so, and the run gives no
 error; a commit that is not `none` and does not exist stays an error. `--record` names a JSON Lines

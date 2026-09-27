@@ -17,8 +17,8 @@ FILE defaults to foundations/invariants.md. --base names the commit the task bra
 branch from; only with it are the identifiers, versions, corrections and the list of violated
 invariants compared with that commit. --merge-onto names the commit of the main branch a merge is
 made onto; only with it is a `TODO` in a field the main branch does not hold it in reported as an
-error, and every fingerprint in *Derives from* and *Rests on* compared with the current wording in
-the decision log that merge leaves (WAY-66, WAY-71). `none`, given to either option, is the value
+error, and every fingerprint in *Derives from* and *Rests on* compared with the current binding
+part in the decision log that merge leaves (WAY-66, WAY-71). `none`, given to either option, is the value
 the gate fills in where that commit does not exist (WAY-61): the checks that need the commit are
 then recorded as `unchecked`, a note says so, and they give no error; a commit that is not `none`
 and does not exist stays an error. --record names a JSON Lines file, created or overwritten, which
@@ -69,7 +69,7 @@ def facts_guard():
 
 
 count_sentences = decision_guard.count_sentences
-# A fingerprint as the relation model gives it: its length in lower-case hex digits (WAY-39).
+# A fingerprint as the script of `relation-model` gives it: its length in lower-case hex digits (WAY-39).
 FINGERPRINT = r"[0-9a-f]{%d}" % fingerprint_module.LENGTH
 # `TODO` as a word of its own anywhere in a value — whole, as an item, or inside a part such as
 # `searched: TODO; found: …` — but not inside a path or a longer word, such as `docs/TODO.md`.
@@ -943,7 +943,7 @@ def check_quarantine(table, entries, foundation, report):
         report.ran(check, flows)
     for cells, line in positions:
         if len(cells) < 3:
-            report.error(line, "a quarantine position needs an identifier, a version and a date",
+            report.error(line, "a quarantine row needs an identifier, a version and a date",
                          check, (form,))
             continue
         identifier, version, until = cells[:3]
@@ -1278,7 +1278,7 @@ def check_against_base(path, entries, withdrawn, violated, rules, base, top, rep
                if len(cells) > 1}
     for position in violated:
         if position not in allowed:
-            report.error(None, "%s: `%s` at version %s is not on the list on %s; a position is "
+            report.error(None, "%s: `%s` at version %s is not on the list on %s; a row is "
                                "added only by a foundation change a human accepts"
                          % (rules.violated_file, position[0], position[1], base), check, (growth,))
 
@@ -1557,7 +1557,7 @@ def run(path, base=None, stream=None, template=TEMPLATE, merge_onto=None, record
     else:
         report.notes.append("no --merge-onto given: `TODO` in the entries is not checked against a "
                             "merge, and the fingerprints their links carry are not compared with "
-                            "the current wording")
+                            "the current binding part")
 
     if os.path.exists(examples) and os.path.exists(OWN_FILE) and os.path.samefile(path, OWN_FILE):
         check_examples(items, examples, report)

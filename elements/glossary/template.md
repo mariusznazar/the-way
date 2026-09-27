@@ -39,7 +39,7 @@ in (WAY-61).
   (WAY-93).
 - Nothing cites a term by an identifier or a fingerprint: an entry of any element depends on a term
   by using its word, and the list of those uses is computed, never written in the entry (WAY-94).
-- An entry holds only its current definition, carries no version and is changed in place; earlier
+- An entry holds only its current definition, carries no version and is edited in place; earlier
   definitions are read from git (WAY-97).
 - The file keeps no list of withdrawn terms. A term renamed becomes a new entry. Its old word goes to
   the new entry's *Avoid* where no other meaning keeps it; where one does, the *Not* of that meaning's
@@ -62,6 +62,10 @@ in (WAY-61).
 - A word naming what a kind of foundation entry records names the entry or entries that record it
   too, and carries one meaning: its definition says what the thing is, and that the foundation holds
   an entry for it stays in the decision that sets it (WAY-95).
+- A word naming what a rule computes — the parts a change touches, the invariants it reaches, a
+  part's criticality — keeps the meaning a reader of the field gives it, and how it is computed stays
+  the rule of the decision that sets it, even where that rule reads like a definition (WAY-95,
+  WAY-96).
 - A word the foundation uses both in its everyday meaning and in place of a term, or of the term the
   change writes, either becomes the term, its everyday uses rewritten, or keeps its everyday meaning
   alone, its other uses rewritten to the term — wherever the foundation may still be edited. It never
@@ -72,8 +76,8 @@ in (WAY-61).
   (WAY-61) — stays in its template together with what each value means, and its values take no
   entry (WAY-95).
 - Where a binding sentence says what a term is, the entry takes that, and the sentence keeps what is
-  required of the thing, using the term. The change that writes the entry rewrites the sentence: a
-  correction before the main branch, a new version after it (WAY-95, WAY-100).
+  required of the thing, using the term. The change that writes the entry rewrites the sentence: an
+  edit before the main branch, a new version after it (WAY-95, WAY-100).
 - An agent finds the candidate words, and the human deciding the change decides which become entries
   and accepts each entry (WAY-95, WAY-10, WAY-14).
 - On the main branch every term has a use outside the glossary; on a task branch an entry with no
@@ -153,8 +157,9 @@ in it; `TODO` stands only in *Not*, in place of what carries a meaning (WAY-71, 
   (WAY-99).
 - Where a word carries two meanings and one of them is a meaning a reader who knows the product's
   field would not give it, one of the two is renamed wherever the text may still be edited, never
-  marked by a note beside the word; *Not* shows the reader which word the other meaning took. Two
-  meanings such a reader gives the word both need no renaming (WAY-99, WAY-04).
+  marked by a note beside the word; *Not* shows the reader which word the other meaning took, where
+  that meaning is not one a reader of the field gives it. Two meanings such a reader gives the word
+  both need no renaming (WAY-99, WAY-04).
 - The uses of a meaning such a reader would not give the word are rewritten, when it moves, to one
   word, the one *Not* names; a paraphrase is no renaming (WAY-99).
 - Where a human has not yet chosen the word for the other meaning, *Not* reads `TODO` in place of what

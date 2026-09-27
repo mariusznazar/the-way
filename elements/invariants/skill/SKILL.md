@@ -1,12 +1,12 @@
 ---
 name: record-invariant
-description: Use when a product's invariants file, foundations/invariants.md, has to gain or change an entry — a rule the product must keep, from conversation, a task's return step, a critical part's behaviour or an invariant a decision's verification calls for; a changed, split, merged or withdrawn invariant; or a position on the list of violated or quarantined invariants.
+description: Use when a product's invariants file, foundations/invariants.md, has to gain or change an entry — a rule the product must keep, from conversation, a task's return step, the behaviour of the critical flows and the parts they run through or an invariant a decision's verification calls for; a changed, split, merged or withdrawn invariant; or a row on the list of violated or quarantined invariants.
 ---
 
 # Record an invariant
 
 Turns a rule the product has to keep into an entry of its invariants file. Every rule of an entry
-lives in `template.md`; this skill holds only the way of working. A correction that concerns a
+lives in `template.md`; this skill holds only the way of working. A fix that concerns a
 rule of the entry goes to the template, not here (WAY-35).
 
 ## 1. Read the rules and the foundation
@@ -38,13 +38,13 @@ directories above the resolved one (WAY-34, WAY-92, WAY-95).
 - When the rule holds more than one sentence can state, propose one entry per sentence; the
   template says what one sentence may join.
 - Search the file, including its withdrawn identifiers, for an entry this rule would change:
-  found — a change, split, merge or withdrawal, unless it guards a different aspect of the same
+  found — a change, split, merge or withdrawal, unless it protects a different aspect of the same
   thing, which takes its own identifier; not found — a new identifier.
 - Search the whole foundation, not only the decisions this one derives from, for entries it
-  touches that no written link joins to it, reading *Rejected* as well as what binds (WAY-33): a
+  touches that no written link joins to it, reading *Rejected* as well as the binding part (WAY-33): a
   decision whose level 1 verification calls for this rule, a flow of the part map carrying its
-  sentence, a failure mode it detects, or a named link whose entry has changed wording, to
-  recheck and carry its new fingerprint (WAY-66). Each finding becomes a link, a change to an
+  sentence, a failure mode it detects, or a named link whose entry's binding part has changed,
+  to recheck and carry its new fingerprint (WAY-66). Each finding becomes a link, a change to an
   entry or a question in step 4.
   The search also asks whether the entry uses a glossary term in another meaning than its entry
   gives, or spells out a term's definition instead of using the term (WAY-33): a paraphrase is
@@ -98,7 +98,7 @@ Fill every field according to the template, with extra care for these:
 
 ## Violated and quarantined invariants
 
-For a position on the list of violated invariants, ask first whether the product is to be fixed
+For a row on the list of violated invariants, ask first whether the product is to be fixed
 instead; an entry with no runnable method is `unchecked`, not debt (WAY-67). Before a quarantine,
-ask for the `pass` and `fail` recorded on one commit, whether a change of the test's form answers
-it instead, and the end date.
+ask for the `pass` and `fail` recorded on one commit, whether a change of the invariant test's
+mechanics answers it instead, and the end date.

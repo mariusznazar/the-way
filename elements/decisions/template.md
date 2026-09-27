@@ -7,12 +7,13 @@ a script from the log.
 
 ## Where entries go
 
-- Every entry is appended at the end of `foundations/decisions.md`, in the order it is written.
+- Every decision version and review record is appended at the end of `foundations/decisions.md`,
+  in the order it is written.
   The log has no topical sections.
-- An entry is either a **decision version** or a **review**.
-- An entry on the main branch is never edited; a correction to it, however small, is a new
-  version. Before the main branch, an entry is corrected in place, and a correction that changes
-  its meaning is accepted again.
+- The log holds **decision versions** and **review records**.
+- An entry on the main branch is never edited; a fix to it, however small, is a new version.
+  Before the main branch, an entry is edited in place, and an edit that changes its meaning is
+  accepted again.
 - Numbers carry the product's prefix. The forms below use `WAY`, the prefix of this repository.
 - An entry is written in English, whatever language the product shows the people who use it and
   whatever language its team speaks (WAY-72).
@@ -42,7 +43,7 @@ a script from the log.
 
 In version 2 and later, *Rationale* becomes *Rationale for change*.
 
-### Every field, every entry
+### Every field, every version
 
 Every field is present in every version, in one of three states (WAY-71):
 
@@ -65,20 +66,20 @@ A field stays in the template only while someone or something reads it.
 | number (heading) | references from entries, tests and code; the view script | judgment |
 | version (heading) | the view script — the latest version is in force. A reference to a specific version (`WAY-06/1`) is historical and never flagged | read off |
 | question (heading) | the author and the skill: is this a new version of an existing number, or a new number? The view uses it as the title | prose |
-| binding sentences | the agent checking a change against the decision; the content fingerprint | prose |
+| binding sentences | the agent checking a change against the decision; the fingerprint | prose |
 | Change | the view script (history line, tombstone); a raised flag, which names the kind of change | judgment |
 | Scope | choosing which decisions to check for a task: changed files → parts → decisions | judgment |
-| Based on | reviewing the decision when a fact changes | read off |
+| Based on | reviewing the decision when a fact changes | transcribed |
 | Relations | impact assessment; reference flags | judgment |
 | Outranks | the agent resolving a collision between two decisions | judgment |
-| Verification | level 1: the quality gate; level 2: the reviewing agent; level 3: a human | judgment |
-| Review when | the view (pending checks); the agent working on a task in scope; the format guard (a passed date without a review) | judgment |
-| Origin | whoever wants to change the decision and needs the full reasoning; the next agent, so it does not repeat a search | read off |
-| Approver override | the agent that needs a new version approved: names who approves instead of the rule for the decision's scope | read off |
-| Approved by | a human considering a change; the format guard — a version without it, or with `TODO` in it, is an error | read off |
+| Verification | level 1: the gate; level 2: the reviewing agent; level 3: a human | judgment |
+| Review when | the view (pending checks); the agent working on a task in scope; the format guard (a passed date without a review record) | judgment |
+| Origin | whoever wants to change the decision and needs the full reasoning; the next agent, so it does not repeat a search | transcribed |
+| Approver override | the agent that needs a new version approved: names who approves instead of the rule for the decision's scope | transcribed |
+| Approved by | a human considering a change; the format guard — a version without it, or with `TODO` in it, is an error | transcribed |
 | Rationale / Rationale for change | the agent in a borderline case; a human considering a change | prose |
 | Rejected | the agent, before proposing an option already rejected | prose |
-| Consequences | the closing step of a task: what the decision forces on further work | prose |
+| Consequences | an agent starting later work in the decision's scope: what the decision forces on further work | prose |
 A field marked *judgment* holds someone's call: no tool reads its value off the product, and no question about a fact settles it. A reader takes such a value as a call, not as a reading (WAY-54). A field marked *prose* carries text rather than a value.
 
 ## Binding sentences
@@ -95,7 +96,7 @@ A field marked *judgment* holds someone's call: no tool reads its value off the 
 - Any sentence of an entry, its rationale included, that speaks of what a glossary term defines
   uses the term, never a paraphrase of its definition (WAY-100).
 
-The content fingerprint covers only the binding sentences, so a fix to the rationale does not
+The fingerprint covers only the binding sentences, so a fix to the rationale does not
 flag references.
 
 ## Decision or invariant
@@ -151,10 +152,10 @@ used when a different, more specific decision deliberately goes against this one
 - *Relations* use a closed list: `derives from` (a higher decision this one serves), `narrows`
   (this decision deliberately goes against the one named, in a narrower area), `related to`
   (anything else).
-- `derives from` and `narrows` rely on the wording of the decision they name and carry its content
+- `derives from` and `narrows` rely on the binding part of the decision they name and carry its
   fingerprint: `derives from WAY-01@<fingerprint>`. `related to` is a plain number.
 - A change to a decision's fingerprint reaches the main branch together with every decision that
-  relates to it with a fingerprint, each checked against the new wording and carrying the new
+  relates to it with a fingerprint, each checked against the new binding part and carrying the new
   fingerprint.
 - A relation is written in the entry that depends on the other; the view shows it at the other
   entry.
@@ -178,8 +179,8 @@ used when a different, more specific decision deliberately goes against this one
 - Level 3 — a human assessment, leaving a trace of who and when.
 - Level 2 or 3 only while no invariant can be derived today. When one is derived, the decision
   moves to level 1 by a *field change*.
-- A decision can combine levels: each level covers the part of the binding sentences it can
-  check.
+- A decision can combine levels: each level covers what it can check of the binding
+  sentences.
 
 ```markdown
 - **Verification:** level 1 — invariants: <identifier> · <identifier>. Level 2 for <…> — an
@@ -204,14 +205,14 @@ A decision checked at level 2 alone:
 - Precedence between principles is recorded with *Outranks*, pair by pair. There is no single
   ranked list.
 - A non-goal is an ordinary decision, one per non-goal: "The product does not do X", with the
-  reason. Non-goals live only at product level; a task's exclusions live in its specification.
+  reason. Non-goals live only at product level; a task's exclusions live in its plan.
   A non-goal that can be checked on a commit gets a derived invariant.
 
 ## Review
 
 A decision that rests on a prediction carries *Review when*: an observable state and a check-by
 date. The field does not lift the decision; it tells the agent working in scope to check whether
-the state has occurred. On the date, a review entry is appended:
+the state has occurred. On the date, a review record is appended:
 
 ```markdown
 ### WAY-NN · review YYYY-MM-DD
@@ -228,7 +229,7 @@ the state has occurred. On the date, a review entry is appended:
 - `condition met — changed in WAY-NN/V+1`; *Next check* is `none`, and the new version sets its
   own *Review when*.
 
-`Next check: none` closes the condition. A review is not a new version of the decision.
+`Next check: none` closes the condition. A review record is not a new version of the decision.
 
 *Review when* is only for a state of the world or the product that someone is waiting for.
 A change in a decision this one derives from or narrows is caught by the fingerprint of the
@@ -270,7 +271,7 @@ A decision recovered from the existing state of a product:
 - Compared with that commit, the log gains at most one version of each number, and a change to
   this template comes with a version added to the log (WAY-05, WAY-07).
 - Every field is present; `none` stands only where the table of states gives it, and in a review
-  only in *Next check*; `TODO` gives a warning, and an error when the guard is given the commit a
+  record only in *Next check*; `TODO` gives a warning, and an error when the guard is given the commit a
   merge onto the main branch is made onto (WAY-71).
 - Binding sentences: one to three; no *should*, *will* or keyword of RFC 2119 in capitals.
 - *Change*: `new decision` exactly in version 1; in later versions a kind from the list, with
@@ -278,13 +279,13 @@ A decision recovered from the existing state of a product:
 - Binding sentences are identical to the previous version for *rationale change*,
   *field change* and *challenge*, and absent for *repeal*.
 - Every number the log names exists, and so does every version that *Relations*, *Outranks*,
-  `previous:` or a review names (WAY-02, WAY-24).
+  `previous:` or a review record names (WAY-02, WAY-24).
 - Every `derives from` and `narrows` relation carries a fingerprint, and no `related to` relation
   does; checking a merge onto the main branch, every fingerprint a relation carries in the
   latest version of a decision equals the current fingerprint of the decision it names.
 - *Outranks*: no two decisions outrank each other.
 - *Verification* opens with one of the levels of its form (WAY-12).
-- *Review when*: a passed check-by date without a later review gives a warning;
+- *Review when*: a passed check-by date without a later review record gives a warning;
   `condition not met` requires a date, or `TODO`, in *Next check*.
 - *Origin* of an inherited decision has the form `inherited — searched: <…>; found: <…>` (WAY-29).
 - *Approved by* in every version has the form `<who>, YYYY-MM-DD`; `TODO` there is an error; in

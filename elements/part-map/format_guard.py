@@ -1,6 +1,6 @@
 """Format guard of a product's part map.
 
-Runs the checks listed in "What the checker checks" in template.md, which lies next to this
+Runs the checks listed in "What the format guard checks" in template.md, which lies next to this
 script. The fields of each kind of entry, the words `none` and `TODO` each field takes and the
 titles of the lists are read from the template, so the rules of an entry live in one place
 (WAY-35, WAY-71). Each check cites the invariants it gives a verdict for, as
@@ -502,7 +502,7 @@ def check_identifiers(entries, sections, report):
             report.error(entry.line, "`%s` is not an identifier of words in lower case joined by "
                                      "hyphens" % entry.identifier, check, (form,))
         if re.search(r"/\d+$", entry.identifier):
-            report.error(entry.line, "`%s` carries a version; an entry of the map is corrected in "
+            report.error(entry.line, "`%s` carries a version; an entry of the map is edited in "
                                      "place" % entry.identifier, check, (version,))
         for name, (_, line) in entry.fields.items():
             if name.lower() == "version":
@@ -1017,7 +1017,7 @@ def check_surfaces(entries, sections, rules, text, report, top):
         if value.startswith("not markable"):
             if not test:
                 report.error(line, "%s: a surface that cannot be marked names the test that "
-                                   "guards it" % entry.identifier, check, (declaration,))
+                                   "protects it" % entry.identifier, check, (declaration,))
             elif not os.path.isfile(os.path.join(top, test.group(1).strip().replace("/", os.sep))):
                 report.error(line, "%s: test `%s` of `%s` does not exist"
                              % (entry.identifier, test.group(1).strip(), entry.identifier),
@@ -1183,7 +1183,7 @@ def violations_path(map_path, rules):
 
 
 def check_violations(entries, rules, report, map_path):
-    """Checks the positions of the list of known violations and returns them (WAY-51)."""
+    """Checks the rows of the list of known violations and returns them (WAY-51)."""
     # invariant: known-violation-fields/1
     # invariant: known-violation-line-number/1
     check, fields, line_number = ("check_violations", "known-violation-fields/1",
@@ -1249,14 +1249,14 @@ def check_violations_growth(map_path, rules, positions, base, top, report, no_co
         return
     if base_text is None:
         if positions:
-            report.notes.append("%s has no %s; every position counts as added" % (base, relative))
+            report.notes.append("%s has no %s; every row counts as added" % (base, relative))
         base_text = ""
     report.ran(check, growth)
     _, base_sections = parse_map(base_text, rules)
     on_base = {tuple(cells) for cells, _ in rows(base_sections, "Known violations")}
     for position in positions:
         if position not in on_base:
-            report.error(None, "%s: `%s` is not on the list of %s: a position is added only by a "
+            report.error(None, "%s: `%s` is not on the list of %s: a row is added only by a "
                                "change of the foundation a human accepts"
                          % (rules.violations, " · ".join(position), base), check, (growth,))
 

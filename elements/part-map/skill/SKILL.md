@@ -6,7 +6,7 @@ description: Use when a product's part map, foundations/part_map.md, has to gain
 # Update the part map
 
 Turns a change in what a product is made of into entries of its part map. Every rule of an entry
-lives in `template.md`; this skill holds only the way of working. A correction that concerns a
+lives in `template.md`; this skill holds only the way of working. A fix that concerns a
 rule of the entry goes to the template, not here (WAY-35).
 
 ## 1. Read the rules and the map
@@ -26,13 +26,14 @@ directories above the resolved one (WAY-34, WAY-92, WAY-95).
 - Find what changed in the product and where it is said: the conversation, a document the human
   names, or the code itself.
 - Name the kind: a part, a critical flow, a surface. A dependency and a known violation are not
-  entries of their own — one is a field of the part it starts from, the other a position of the
+  entries of their own — one is a field of the part it starts from, the other a row of the
   derived list beside the map.
-- Search the map for an entry that already answers for this piece of the product: found — a
-  correction in place; not found — a new identifier.
-- A part that splits or merges: every result takes a new identifier, the one left behind becomes
-  a withdrawal line naming its successors, and every reference to it is rewritten in the same
-  change — the scope of a decision, a test that names it, a generated rule file.
+- Search the map for an entry that already answers for this piece of the product: found — an
+  edit in place; not found — a new identifier.
+- A part that splits or merges: each entry that comes out of it takes a new identifier, the one
+  left behind becomes a withdrawn identifier naming its successors, and every reference to it is
+  rewritten in the same change — the scope of a decision, a test that names it, a generated rule
+  file.
 - Search the whole foundation, not only the decisions whose scope names this part, for entries
   this one touches that no written link joins to it: a decision resting on a boundary this change
   moves, an invariant naming a flow, a sentence that waits for the map (WAY-33, WAY-37). An entry
@@ -54,7 +55,7 @@ Fill every field according to the template, with extra care for these:
   the repository, never from memory. Propose a pattern together with the files it claims and the
   files it takes from another part.
 - Dependencies are what the part may depend on, not what the code reaches for today. Where the
-  two differ, the entry keeps the rule and the difference becomes a position of the list of known
+  two differ, the entry keeps the rule and the difference becomes a row of the list of known
   violations, which the human accepts in step 4.
 - Failure modes come from the human: ask what fails, what damage it does, how severe it is and
   what detects it before release. A criticality dictated by hand is a question about failure
@@ -68,18 +69,18 @@ Fill every field according to the template, with extra care for these:
 1. Ask in one round about everything the source leaves open, each question with a proposed value
    and the reason for it.
 2. Show the whole entry, with the files its patterns claim and the files they take from another
-   part. Apply corrections, and write nothing into the map before the human accepts it.
-3. Write the entry in its place in the map and run the checker from the product's repository
+   part. Apply fixes, and write nothing into the map before the human accepts it.
+3. Write the entry in its place in the map and run the format guard from the product's repository
    root: `python -B <parent of the resolved directory>/format_guard.py`. Fix what the entry broke
    and run it again; an error or warning elsewhere in the map goes to the human.
 4. What follows from this entry goes through steps 3 and 4 one at a time: the references a
-   changed binding sentence flags (WAY-02), the renames a withdrawal line leaves behind, and the
+   changed binding sentence flags (WAY-02), the renames a withdrawn identifier leaves behind, and the
    entries of the foundation found in step 2. A decision that has to change goes through
    `record-decision`.
 
 ## The first map of a product
 
-A product with no map gets its parts written one at a time, by the steps above, until the checker
+A product with no map gets its parts written one at a time, by the steps above, until the format guard
 reports every file git tracks assigned to a part or left out on purpose. What the code holds
 against the map at that moment goes onto the list of known violations once, and only then
 (WAY-28, WAY-51).

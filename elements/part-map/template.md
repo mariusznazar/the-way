@@ -14,7 +14,7 @@ not trust.
   lists that are not entries: the criticality scale, the external context, the change paths, the
   files left out on purpose and the withdrawn identifiers.
 - An allowed dependency is a field of the part it starts from, never an entry of its own.
-- An entry is corrected in place and carries no version; its history stays in git (WAY-43).
+- An entry is edited in place and carries no version; its history stays in git (WAY-43).
 - One derived file lies beside the map: the list of known violations (WAY-51).
 - Every field the form of an entry's kind gives appears in that entry, and holds `none` only where
   the form gives it that word; no field of the map holds `TODO` (WAY-71).
@@ -27,8 +27,8 @@ not trust.
   hyphens (`relation-model`), unique across the three kinds, the product's invariant entries and
   its environment fact entries (WAY-64).
 - It does not change when the entry's title, its files or its fields change.
-- Splitting or merging gives every result a new identifier; the one left behind goes to the list
-  of withdrawn identifiers, names its successors and is never reused (WAY-41).
+- Splitting or merging gives each entry that comes out of it a new identifier; the one left behind
+  goes to the list of withdrawn identifiers, names its successors and is never reused (WAY-41).
 
 ## Part
 
@@ -62,7 +62,7 @@ A part has no criticality field: its criticality is computed (WAY-46).
 - **Coverage:** <path of the coverage file that test leaves> | none
 ```
 
-`Coverage: none` makes the checker report the flow's list of parts as unchecked, never as
+`Coverage: none` makes the format guard report the flow's list of parts as unchecked, never as
 agreeing with the map (WAY-47).
 
 ## Surface
@@ -72,8 +72,8 @@ agreeing with the map (WAY-47).
 
 <one sentence: what the product promises to keep>
 
-- **Declared at:** <file and symbol, or schema element, carrying the declaration and its promise
-  level> | not markable — test: <path of the test that guards it>
+- **Declared at:** <file and symbol, or schema definition, carrying the declaration and its promise
+  level> | not markable — test: <path of the test that protects it>
 ```
 
 The promise level lives at the declaration, and so does the withdrawal date while a surface is
@@ -141,7 +141,7 @@ A field stays in this template only while someone or something reads it (WAY-05)
 | Field | Who reads it, when | Where its value comes from |
 |---|---|---|
 | identifier | a decision's *Scope*, an invariant, a flow's list of parts, a generated rule file | prose |
-| responsibility / description / promise | the agent working in the part; the content fingerprint | prose |
+| responsibility / description / promise | the agent working in the part; the fingerprint | prose |
 | Files | the script that assigns a change to parts, computes coverage of the repository and generates rule files | judgment |
 | Depends on | the script comparing the map with the dependency graph; the generator of rule files | judgment |
 | Depends on — separated | the script computing criticality, which stops inheriting there | judgment |
@@ -152,18 +152,18 @@ A field stays in this template only while someone or something reads it (WAY-05)
 | Parts (flow) | the test that a change lies on this flow; the coverage check | judgment |
 | Invariant (flow) | the gate, which runs that test on every change | judgment |
 | Coverage (flow) | the check of the flow's list of parts | read off |
-| Declared at | whoever changes the element; the tool computing shape and breaking change | read off |
-| criticality scale | the checker, which rejects a degree not on the list | judgment |
+| Declared at | whoever changes the item; the tool computing shape and breaking change | read off |
+| criticality scale | the format guard, which rejects a degree not on the list | judgment |
 | external context | the checks at a trust boundary; the change path of a surface | judgment |
 | change paths | whoever changes a surface at that level | judgment |
-| files left out on purpose | the checker, as the only exception to file assignment | judgment |
+| files left out on purpose | the format guard, as the only exception to file assignment | judgment |
 | withdrawn identifiers | a reference to an identifier that no longer names a part | read off |
 A field marked *judgment* holds someone's call: no tool reads its value off the product, and no question about a fact settles it. A reader takes such a value as a call, not as a reading (WAY-54). A field marked *prose* carries text rather than a value.
 
-## What binds
+## The binding part
 
 The binding part of an entry is one sentence: a part's responsibility, a flow's description, a
-surface's promise. Its content fingerprint covers that sentence alone (WAY-42, WAY-39). Path
+surface's promise. Its fingerprint covers that sentence alone (WAY-42, WAY-39). Path
 patterns, dependencies, failure modes and a flow's list of parts stay outside it; a change to a
 part's patterns is shown instead as the list of files that changed part. Any sentence of an entry
 that speaks of what a glossary term defines uses the term, never a paraphrase of its definition (WAY-100).
@@ -200,9 +200,9 @@ that speaks of what a glossary term defines uses the term, never a paraphrase of
 ## Known violations
 
 The derived file beside the map, `foundations/known_violations.md`, holds what the code does not
-meet today. A position names the source part, the target part, the file and what it reaches for
-— never a line number. A new violation breaks the gate; a position the code no longer
-contradicts breaks it too and goes in the same change; a position is added only by a change of
+meet today. A row names the source part, the target part, the file and what it reaches for
+— never a line number. A new violation breaks the gate; a row the code no longer
+contradicts breaks it too and goes in the same change; a row is added only by a change of
 the foundation that a human accepts. The file is checked as a subset of the list on the commit
 the task branch left the main branch from, never regenerated from scratch (WAY-51).
 
@@ -219,7 +219,7 @@ allowed dependencies, and the binding sentences of the decisions whose scope nam
 patterns come from the part's *Files*. No overview of the repository is generated for an agent
 (WAY-52).
 
-## What the checker checks
+## What the format guard checks
 
 - Every section of the map is an entry — a part, a critical flow or a surface — or one of the five
   lists above; the list of known violations stands in its own file (WAY-40, WAY-51).
@@ -254,13 +254,13 @@ patterns come from the part's *Files*. No overview of the repository is generate
   every level used has a change path, is reported unchecked until the product reports its levels.
 - Every exchange with the external context records its direction, its trust and whether its
   consumer updates with the product.
-- Every position on the list of known violations names a source part and a target part of the
+- Every row on the list of known violations names a source part and a target part of the
   map, a file and what it reaches for, and no line number; given the commit the task branch left
   the main branch from, the list is a subset of the list there. Whether the code holds every
-  position and no other violation is reported unchecked until the product reports its dependency
+  row and no other violation is reported unchecked until the product reports its dependency
   graph (WAY-51).
 - Every example in `examples.md` matches its entry in this repository's own map word for word.
-- Given the path of a record, the checker writes the-way's own record of the run there, with a
+- Given the path of a record, the format guard writes the-way's own record of the run there, with a
   verdict for each invariant its checks cite (WAY-61, WAY-74); given `none` as the commit the task
   branch left the main branch from, it records the check that needs that commit as `unchecked`; a
   call to git that fails is a failure of the run, never an unchecked check (WAY-61, WAY-63).

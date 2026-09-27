@@ -25,18 +25,18 @@ directories above the resolved one (WAY-34, WAY-92, WAY-95).
 
 - Find what was decided and where it is said: the conversation, a document the human names, or
   existing code (then the template's section on inherited decisions applies).
-- Apply the template's plan test. When the rule is part of a plan, stop and say so; no entry is
+- Apply the template's plan test. When the rule belongs to a plan, stop and say so; no entry is
   written.
 - Name the one question the binding sentences answer. When they answer two independent
   questions, propose two entries, or keep the question the rest serves.
 - Search the log for that question: found on the main branch — a new version, with its kind of
-  change from the template's table; found only on this branch — a correction in place, shown for
+  change from the template's table; found only on this branch — an edit in place, shown for
   acceptance again when it changes the meaning; not found — a new number.
 - Search the whole foundation, not only the decisions with an overlapping *Scope*, for entries
-  this one touches that no written link joins to it. The search reads *Rejected* as well as what
-  binds: an option already weighed and refused stands there, and nowhere else. Each finding
+  this one touches that no written link joins to it. The search reads *Rejected* as well as the
+  binding part: an option already weighed and refused stands there, and nowhere else. Each finding
   becomes a relation, a question about a collision in step 4, or a sentence that answered this
-  question in passing and now needs a version or a correction without it.
+  question in passing and now needs a version or an edit without it.
   The search also asks whether the entry uses a glossary term in another meaning than its entry
   gives, or spells out a term's definition instead of using the term (WAY-33): a paraphrase is
   rewritten to the term, and another meaning, or a word the glossary does not yet settle, goes
@@ -65,20 +65,20 @@ Fill every field according to the template, with extra care for these:
 1. Ask in one round about everything the source leaves open, each question with a proposed
    value and the reason for it. A question about a fact proposes where to look for it, never
    the fact from memory, and the draft takes it only as read there.
-2. Show the whole entry. Apply corrections; on acceptance, write who accepted and the date in
+2. Show the whole entry. Apply fixes; on acceptance, write who accepted and the date in
    *Approved by*.
 3. Append the entry at the end of the log and run the format guard from the product's
    repository root: `python -B <parent of the resolved directory>/format_guard.py`. Fix what
    the entry broke and run it again; an error or warning elsewhere in the log goes to the human.
-4. What follows from this entry goes through steps 3 and 4 one at a time: a version or a
-   correction of a neighbour found in step 2; every invariant this entry's level 1 verification
+4. What follows from this entry goes through steps 3 and 4 one at a time: a version or an
+   edit of a neighbour found in step 2; every invariant this entry's level 1 verification
    names that the invariants file does not hold yet, through `record-invariant` (WAY-17); and,
    when this entry changes a decision's binding sentences, every decision that derives from it
    or narrows it, and every invariant whose *Derives from* names it, the invariants through
    `record-invariant` (WAY-66).
 
-## Review entry
+## Review record
 
 When a *Review when* date has come, ask the human what has been observed and write a review
-entry in one of the template's three forms. When the condition is met and the decision
-changes, the new version goes through steps 2–4 first, and the review names it.
+record in one of the template's three forms. When the condition is met and the decision
+changes, the new version goes through steps 2–4 first, and the review record names it.

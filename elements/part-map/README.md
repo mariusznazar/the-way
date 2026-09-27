@@ -14,7 +14,7 @@ change for each level of promise.
 Entries are written according to `template.md`; `examples.md` holds verbatim copies of entries
 from this repository's own map, `foundations/part_map.md`.
 
-`format_guard.py` checks a product's map against the list "What the checker checks" in
+`format_guard.py` checks a product's map against the list "What the format guard checks" in
 `template.md`, reading from the template the fields of each kind of entry, the titles of the lists
 and the values their columns allow. Files are matched to parts by git itself, through the patterns a
 part records. From the product's repository root:

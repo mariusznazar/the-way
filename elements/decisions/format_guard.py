@@ -1,7 +1,7 @@
 """Format guard of a product's decision log.
 
 Runs the checks listed in "What the format guard checks" in template.md, which lies next to this
-script. Field names, kinds of change, relation types, forms of a review result, levels of
+script. Field names, kinds of change, relation types, forms of a review record's *Result*, levels of
 verification, the words `none` and `TODO` each field takes and forbidden words are read from the
 template, so the rules of the entry live in one place (WAY-05, WAY-35, WAY-71). Each check cites
 the invariants it gives a verdict for, as `invariant: <identifier>/<version>` (WAY-65).
@@ -14,7 +14,7 @@ Usage, from the root of the product's repository:
 LOG defaults to foundations/decisions.md. --base names the commit the task branch left the main
 branch from, to compare the log with; without it, the checks that need it are skipped.
 --merge-onto names the commit of the main branch a merge is made onto; without it, the checks of a
-merge are skipped: the fingerprints relations carry against the current wording, and `TODO` in
+merge are skipped: the fingerprints relations carry against the current binding part, and `TODO` in
 any field of the log, which the main branch does not hold (WAY-71). `none`, given to either
 option, is the value the gate fills in where that commit does not exist (WAY-61): the checks that
 need the commit are then recorded as `unchecked`, and give no error. --record names a
@@ -984,8 +984,8 @@ def check_review_dates(entries, latest, prefix, report, today):
                 due = entry.fields.get("Next check", ["none"])[0]
         if re.match(r"^%s$" % DATE, due) and valid_date(due) and \
                 datetime.date.fromisoformat(due) < today:
-            report.warning(version.line, "%s-%02d: check-by date %s has passed without a review"
-                           % (prefix, number, due))
+            report.warning(version.line, "%s-%02d: check-by date %s has passed without a review "
+                                         "record" % (prefix, number, due))
 
 
 # --- the main branch and the examples ------------------------------------------------------
@@ -1189,7 +1189,7 @@ def run(log_path, base=None, today=None, template=TEMPLATE, examples=EXAMPLES, s
     else:
         report.notes.append("no --merge-onto given: `TODO` in the log is not checked against a "
                             "merge, and the fingerprints relations carry are not compared with "
-                            "the current wording")
+                            "the current binding part")
 
     if os.path.exists(examples) and own:
         check_examples(entries, examples, report)
@@ -1208,7 +1208,7 @@ def main(argv=None):
                                          "exist, which records those checks as unchecked")
     parser.add_argument("--merge-onto", help="the commit of the main branch a merge is made onto; "
                                              "only with it are the fingerprints relations carry "
-                                             "compared with the current wording, and `TODO` in "
+                                             "compared with the current binding part, and `TODO` in "
                                              "the log reported as an error; `none` where the main "
                                              "branch does not exist, which records those checks "
                                              "as unchecked")

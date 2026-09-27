@@ -10,22 +10,22 @@ word for word.
 
 ## log-entry-field-presence/1
 
-Every entry of the decision log carries every field the decision template gives an entry of its kind.
+Every decision version and review record of the decision log carries every field the decision template gives one of its kind.
 
 - **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-71@cab47c5b
+- **Derives from:** WAY-71@92c0cbfb
 - **Part:** decisions
 - **Correction:** none
 - **Recovered:** none
 
 ## decision-guard-overdue-review/1
 
-The decision guard, given a date, warns of every check-by date earlier than it that no later review entry answers.
+The decision guard, given a date, warns of every check-by date earlier than it that no later review record answers.
 
 - **Method:** `python -B gate/run_tests.py elements/decisions --record .runs/decisions-tests.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-24@058a356a
+- **Derives from:** WAY-24@3aa83071
 - **Part:** decisions
 - **Correction:** none
 - **Recovered:** none
@@ -43,10 +43,10 @@ Every file git tracks matches the path patterns of exactly one part of the part 
 
 ## fingerprint-definition/1
 
-The relation model's script gives a text the first eight characters, in lower-case hexadecimal, of the SHA-256 digest of that text encoded in UTF-8, after every run of spaces and line breaks is replaced by a single space and both ends are trimmed.
+The script of `relation-model` gives a text the first eight characters, in lower-case hexadecimal, of the SHA-256 digest of that text encoded in UTF-8, after every run of spaces and line breaks is replaced by a single space and both ends are trimmed.
 
 - **Method:** `python -B gate/run_tests.py relation-model --record .runs/relation-model-tests.jsonl`
-- **Rests on:** sha-256@e3a30c6f · utf-8@6afd686d
+- **Rests on:** sha-256@6ba272ed · utf-8@6afd686d
 - **Derives from:** WAY-39@a3b77692
 - **Part:** relation-model
 - **Correction:** none

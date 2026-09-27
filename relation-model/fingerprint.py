@@ -1,4 +1,4 @@
-"""Content fingerprint of a foundation entry's binding part (WAY-02, WAY-39).
+"""Fingerprint of a foundation entry's binding part (WAY-02, WAY-39).
 
 Usage as a module:  from fingerprint import fingerprint
 Usage from a shell: python fingerprint.py < binding_part.txt

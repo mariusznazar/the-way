@@ -7,7 +7,7 @@ description: Use when a product's environment facts file, foundations/environmen
 
 Turns a fact about the world around the product into an entry of its environment facts file.
 Every rule of an entry lives in `template.md`; this skill holds only the way of working. A
-correction that concerns a rule of the entry goes to the template, not here (WAY-35).
+fix that concerns a rule of the entry goes to the template, not here (WAY-35).
 
 ## 1. Read the rules and the foundation
 

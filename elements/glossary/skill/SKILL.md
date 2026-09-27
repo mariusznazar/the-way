@@ -6,7 +6,7 @@ description: Use when a product's glossary, foundations/glossary.md, has to gain
 # Record a glossary term
 
 Turns a word the product's rules stand on into an entry of its glossary. Every rule of an entry
-lives in `template.md`; this skill holds only the way of working. A correction that concerns a rule
+lives in `template.md`; this skill holds only the way of working. A fix that concerns a rule
 of the entry goes to the template, not here (WAY-35).
 
 ## 1. Read the rules and the foundation
@@ -63,7 +63,7 @@ Fill the entry according to the template, with extra care for these:
   disagree, that is a question in step 4. Read the entry of every term the definition uses as genus
   or difference, and use it in that meaning. Put each clause through the template's test for a rule;
   a clause that holds a rule stays in the entry that sets it, and a rule no entry sets yet is a
-  question in step 4, never part of the definition.
+  question in step 4, never in the definition.
 - *Avoid* and *Not*: sort each other word found in step 2 and each other meaning by its uses, and
   keep the uses beside it to show in step 4. The word for a meaning not yet carried is the human's
   choice: propose one in step 4.

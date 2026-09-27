@@ -20,10 +20,11 @@ WAY-90). Its current result comes from running its method, never from a status w
   other entry or withdrawn identifier of this file, of the invariants or of the part map; `none` is
   no identifier, since *Successors* uses that word (WAY-75, WAY-64).
 - The identifier names what the fact is about, never its value or the edition it cites, so that a
-  new edition or a new scope leaves it true: `json-text`, not `json-rfc-8259` (WAY-75).
+  new edition or a new range leaves it true: `json-text`, not `json-rfc-8259` (WAY-75).
 - An identifier the file held on the commit the task branch left the main branch from stays, as an
   entry or as a withdrawn identifier giving why and naming its successors or `none`. Splitting or
-  merging entries gives every result a new identifier, and any other change keeps it (WAY-75).
+  merging entries gives each entry that comes out of it a new identifier, and any other change keeps
+  it (WAY-75).
 - An entry holds only its current wording; earlier wordings are read from git (WAY-79).
 - An entry is written in English, whatever language the product shows the people who use it and
   whatever language its team speaks (WAY-72).
@@ -103,18 +104,18 @@ joined by ` · `, or reads `none` (WAY-75):
   shows only its current release — *Holds for* names what the sentence is about and says the source
   gives no version: `JSON Lines, which jsonlines.org publishes without versions`. The date read
   stays in *Source*, so that a re-read flags nothing (WAY-77, WAY-78).
-- The sentence and *Holds for* bind together: the entry's content fingerprint covers the sentence
+- The sentence and *Holds for* are the binding part: the entry's fingerprint covers the sentence
   and the value of *Holds for* joined by a line break, computed as WAY-39 says. The source, its
   passage and its date stay outside it, so a re-read source that says the same flags nothing
   (WAY-78).
-- A claim that differs in a new scope changes the sentence or *Holds for*, and so the version; the
-  new claim does not refute the claim true in the past scope (WAY-77, WAY-79).
+- A claim that differs in a new range changes the sentence or *Holds for*, and so the version; the
+  new claim does not refute the claim true in the past range (WAY-77, WAY-79).
 - A newer release of a tool *Holds for* names coming out fails nothing: the fact about the named
   release stays true, and a probe run on the newer release fails only where the behaviour differs
   (WAY-91). Moving the product to another release is a decision's to make, and what calls for it is a
   condition in that decision's *Review when* — for Python, the named release leaving bugfix support
   (WAY-77, WAY-89).
-- A scope the product declares — the version of Python it runs, in a file a tool reads — is a
+- A range the product declares — the version of Python it runs, in a file a tool reads — is a
   sentence about the product, so an invariant states it, never a fact (WAY-77).
 
 ## Source
@@ -249,8 +250,8 @@ anonymously (WAY-84).
 
 - An entry carries a version, starting at 1. When its fingerprint differs from its fingerprint on the
   main branch, its version is one higher, unless *Correction* names both fingerprints and the human
-  deciding the change confirms, with both wordings in front of them, that the meaning is unchanged
-  (WAY-79).
+  deciding the change confirms, with the old and the new binding part in front of them, that the
+  meaning is unchanged (WAY-79).
 - A change after which some check citing the fact would need a different expected value is a raise,
   never a correction (WAY-79).
 - The guard compares an entry with its state where the task branch left the main branch; where there
@@ -290,9 +291,9 @@ A field stays in this template only while someone or something reads it (WAY-05)
 |---|---|---|
 | identifier (heading) | an invariant's *Rests on*, a decision's *Based on*, a `fact:` line; the format guard | judgment |
 | version (heading) | a check citing the fact; the guard, which computes what the version must be | read off |
-| sentence | whoever reviews what rests on the fact; the content fingerprint | prose |
-| Holds for | the content fingerprint; whoever writes an invariant naming a version within it; a script checking a decision's *Review when* against the models a study measured | read off the source |
-| Source | the watch, which checks that the passage still stands; the human reviewing the fact | read off |
+| sentence | whoever reviews what rests on the fact; the fingerprint | prose |
+| Holds for | the fingerprint; whoever writes an invariant naming a version within it; a script checking a decision's *Review when* against the models a study measured | transcribed from the source |
+| Source | the watch, which checks that the passage still stands; the human reviewing the fact | transcribed |
 | Set by | the human deciding the change that follows a failed run, who learns whom to ask | judgment |
 | Method | the clock's command; the gate, on a change that enters or changes the fact or alters a file its command names; a human, for a path | judgment |
 | Correction | the guard, which lets the version stand; the human who confirms it | judgment for the declaration; read off for both fingerprints |

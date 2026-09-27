@@ -2,7 +2,7 @@
 
 Verbatim copies of entries from this repository's own part map (`foundations/part_map.md`), one
 for each kind of entry described in `template.md`. An entry of a map carries no version and is
-corrected in place, so a copy follows the entry it comes from, and the guard checks that every
+edited in place, so a copy follows the entry it comes from, and the guard checks that every
 example matches its entry word for word.
 
 Until a kind of entry has a real example, only its form in the template stands: this repository
@@ -35,15 +35,15 @@ them.
 - **Failure modes:** none
 - **Trust boundary:** none
 
-*A surface declared at the element itself:*
+*A surface declared at the item itself:*
 
-## content-fingerprint — The content fingerprint
+## content-fingerprint — The fingerprint
 
 The same wording gives the same fingerprint.
 
 - **Declared at:** relation-model/fingerprint.py · fingerprint
 
-*A surface that cannot be marked at the element, and leans on a test instead:*
+*A surface that cannot be marked at the item, and leans on a test instead:*
 
 ## entry-format — The form of an entry
 
