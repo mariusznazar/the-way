@@ -347,7 +347,7 @@ guards of their elements.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-22
+- **Approved by:** Mariusz, 2026-09-27
 
 *Rationale:* the repository shows what the process looks like when it works, and an artefact
 brought in on the side turns it into a store of material from the first day. Directories follow
@@ -369,8 +369,9 @@ no entries for a skill to write; the files that serve the whole repository on th
 files left out on purpose, beside the `README.md` — they would lose their part and the failure
 mode recorded at it, although a wrong line in `.gitattributes` turns whole files over.
 *Consequences:* element descriptions in `elements/` reach the main branch as templates with their
-skills and scripts, not as descriptions. The script for references and fingerprints (WAY-02,
-WAY-31) lives in `relation-model/`. The gate is a part of the process of its own, with a
+skills and scripts, not as descriptions. The script that computes fingerprints lives in
+`relation-model/`, and a reference whose fingerprint is no longer current is flagged by the format
+guard that checks the entry carrying it (WAY-31, WAY-66, WAY-90). The gate is a part of the process of its own, with a
 directory of its own (WAY-55), and what `task-cycle/` must hold is set when the task cycle is
 designed. The map's rule for assigning files follows these directories, and a file that serves the
 whole repository added later — the CI configuration, once the gate runs in CI — enters by a change

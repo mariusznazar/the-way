@@ -32,8 +32,7 @@ the map of the-way itself.
 
 ## relation-model — The relation model
 
-The part answers for the fingerprint of an entry and for the references it flags when
-that entry changes.
+The part answers for how the fingerprint of an entry is computed from its binding part.
 
 - **Files:** relation-model/**
 - **Depends on:** none
