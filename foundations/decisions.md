@@ -1155,7 +1155,7 @@ tasks. Decisions are recovered only when a task touches the parts they govern.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-22
+- **Approved by:** Mariusz, 2026-09-27
 
 *Rationale:* matching a whole product to a description written afterwards is slow, and it
 tempts an agent to write reasons that look like decisions, so decisions wait until a task needs
@@ -2310,7 +2310,7 @@ transcribed is marked in the template as resting on a judgment.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-20
+- **Approved by:** Mariusz, 2026-09-27
 
 *Rationale:* an author asked to name a value picks from the names in front of them and writes a
 reason why the nearest one will do; the reason reads well, and the record then says something
@@ -3091,7 +3091,7 @@ commit being checked.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-22
+- **Approved by:** Mariusz, 2026-09-27
 
 *Rationale:* WAY-61 already makes the file holding a check that records verdicts for invariants it
 cites an invariant test; this decision gives that citation its written form and settles which files

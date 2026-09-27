@@ -75,7 +75,7 @@ A field stays in the template only while someone or something reads it.
 | Verification | level 1: the gate; level 2: the reviewing agent; level 3: a human | judgment |
 | Review when | the view (pending checks); the agent working on a task in scope; the format guard (a passed date without a review record) | judgment |
 | Origin | whoever wants to change the decision and needs the full reasoning; the next agent, so it does not repeat a search | transcribed |
-| Approver override | the agent that needs a new version approved: names who approves instead of the rule for the decision's scope | transcribed |
+| Approver override | the agent that needs a new version approved: names who approves instead of the rule for the decision's scope | judgment |
 | Approved by | a human considering a change; the format guard — a version without it, or with `TODO` in it, is an error | transcribed |
 | Rationale / Rationale for change | the agent in a borderline case; a human considering a change | prose |
 | Rejected | the agent, before proposing an option already rejected | prose |
