@@ -31,7 +31,7 @@ in (WAY-61).
   verb bare. The term identifies the entry, and no other entry of the file holds it (WAY-93).
 - Terms are a space of their own, apart from the identifiers of the part map, the invariants and the
   environment facts, which share one space (WAY-64, WAY-75). A term and such an identifier read alike
-  when they match with the identifier's hyphens read as spaces. A change that makes them read alike,
+  when they match with the hyphens of both read as spaces. A change that makes them read alike,
   by adding or renaming either, is a warning for the panel: where both name the same thing the entry
   stays, and where they do not, one side is renamed (WAY-93).
 - A part of the map whose files include the directory `elements/<identifier>/` answers for the
@@ -125,10 +125,11 @@ in it; `TODO` stands only in *Not*, in place of what carries a meaning (WAY-71, 
   or in an element's template, each read whole, than it stood there on `{fork-point}`. The word is
   counted in any letter case, with the endings the section on uses gives. Rewrapped lines therefore
   raise nothing (WAY-98).
-- The count leaves out text between quotation marks, text in backticks, a token that is an
-  identifier of the part map, the invariants or the environment facts, a token holding a hyphen the
-  word does not hold, the glossary's own entries, and text that a new version of a decision restates
-  word for word from the version before it (WAY-98).
+- The count leaves out what a use of a term leaves out (the section on uses), text between quotation
+  marks, an identifier of the part map, the invariants or the environment facts standing in a field's
+  value, the glossary's own entries, and text that a new version of a decision restates word for word
+  from the version before it, compared sentence by sentence, each item of a list read as a paragraph
+  of its own (WAY-98).
 - The change that puts a word into *Avoid* also searches the elements' skills and README files and
   the code for it, as it searches for the entries that wait for it (WAY-98, WAY-37).
 - A word kept out of one kind of sentence only — "main branch" in an invariant's sentence (WAY-60) —
@@ -141,8 +142,9 @@ in it; `TODO` stands only in *Not*, in place of what carries a meaning (WAY-71, 
   with what carries it now: the term of another entry of this glossary; the identifier in backticks
   of an entry of the part map, the invariants or the environment facts; in backticks, a value of a
   template's closed list as that template writes it; or, between quotation marks, a word the
-  foundation uses outside quotation marks and outside this glossary. No carrier holds the term or
-  any of its forms (WAY-99).
+  foundation uses, as the section on uses bounds a use, outside quotation marks and outside this
+  glossary. No carrier holds the term or any of its forms, the hyphens of both read as spaces
+  (WAY-99).
 - Two meanings of one word are removed by renaming one of them wherever the foundation may still be
   edited, never by a note beside the word; *Not* shows the reader which word the other meaning took
   (WAY-99, WAY-04).
@@ -197,17 +199,19 @@ A field marked *prose* carries text rather than a value.
 - The file holds a title, the paragraph under it and its entries in the form above, and no other
   heading (WAY-93).
 - No term heads two entries (WAY-93); no word stands in the *Avoid* of two entries, and no word of an
-  *Avoid* is a term (WAY-98).
+  *Avoid* is a term, or a word a *Not* names (WAY-98).
 - Every entry carries both fields, `none` or `TODO` only where the form gives it, and no field the
   form does not hold, nor text outside its definition and fields (WAY-71, WAY-94). A `TODO` in *Not*
   is a warning, and, checking a merge onto the main branch, an error (WAY-99, WAY-71).
 - Every definition is one sentence, counted as the decision guard counts binding sentences: text in
-  backticks is left out, and a sentence ends at `.`, `!` or `?` followed by a space and a capital, a
-  quotation mark or an opening bracket, or at the end of the text. Outside backticks it holds neither
-  *must* nor a word the decision template keeps out of binding sentences (WAY-96).
+  backticks counts as one word beginning with a capital, and a sentence ends at `.`, `!` or `?`
+  followed by white space and a capital letter, `"`, `'` or `(`, or at the end of the text. Outside
+  backticks it holds neither *must* nor a word the decision template keeps out of binding sentences
+  (WAY-96).
 - Everything *Not* names in backticks, and every term it names, exists; nothing it names holds the
-  term or its forms; every word it names between quotation marks stands outside quotation marks and
-  outside the glossary in a file of `foundations/` or in an element's template (WAY-99).
+  term or its forms; every word it names between quotation marks is used, as the section on uses
+  bounds a use, outside quotation marks and outside the glossary in a file of `foundations/` or in an
+  element's template (WAY-99).
 - No word of *Avoid* stands more times in a file of `foundations/` or in an element's template than
   on `{fork-point}`, outside the text the section on *Avoid* leaves out (WAY-98).
 - A change that, against `{fork-point}`, adds or renames a term or an identifier of the part map, the
@@ -225,6 +229,8 @@ A field marked *prose* carries text rather than a value.
   records the checks that need that commit as `unchecked`; a call to git that fails, the file
   standing outside a git repository included, is a failure of the run, never an unchecked check
   (WAY-61, WAY-63).
+- Given a word in place of the options, the guard lists its uses as the section on uses bounds them
+  and checks nothing: the list that settles whether a word may stand in *Avoid* (WAY-98).
 
 ## Examples
 

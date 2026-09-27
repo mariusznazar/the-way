@@ -4541,8 +4541,9 @@ the new one as its successor — an old entry would then be read in the new mean
 *Consequences:* the guard lists the uses of every term whose definition differs from its definition
 where the branch left the main branch; it finds uses bounded as words, with the endings of the
 template, in the definitions of the glossary's other entries, which use a neighbouring term (WAY-96),
-and outside the glossary, but not in backticks, a token holding a hyphen the term does not hold, a
-longer term, a field's name or the values of *Scope*, *Part* and *Change*, and the review finds short
+and outside the glossary, but not in backticks or a fenced block, a token holding a hyphen the term
+does not hold, a token holding `/`, a longer term, a field's name or the values of *Scope*, *Part* and
+*Change*, and the review finds short
 and irregular forms. The check that every term has a use counts only uses outside the glossary
 (WAY-95). A missed shift of meaning leaves no trace in a script.
 
@@ -4550,9 +4551,9 @@ and irregular forms. The check that every term has a use counts only uses outsid
 
 A word stands in a glossary entry's *Avoid* only where every use of it in the foundation carries the
 term's meaning, and it is an error where a change makes it stand more times in a file of `foundations/`
-or an element's template than on the commit the task branch left the main branch from. Text in
-quotation marks or backticks, an identifier of the part map, the invariants or the environment facts,
-a token holding a hyphen the word does not hold, the glossary's entries and text a new decision
+or an element's template than on the commit the task branch left the main branch from. What a use
+of a term leaves out (WAY-97), text in quotation marks, an identifier of the part map, the invariants
+or the environment facts standing in a field's value, the glossary's entries and text a new decision
 version restates word for word are not counted.
 
 - **Change:** new decision
@@ -4562,7 +4563,7 @@ version restates word for word are not counted.
   related to WAY-94 · related to WAY-99
 - **Outranks:** none
 - **Verification:** level 1 — invariants: glossary-avoid-growth · glossary-avoid-single ·
-  glossary-avoid-term. Level 2 for what may stand in *Avoid* — an agent compares the change with the
+  glossary-avoid-term · glossary-avoid-carrier. Level 2 for what may stand in *Avoid* — an agent compares the change with the
   decision:
   - complies: "withdrawal line", which every use in the foundation spends on the withdrawn identifier,
     stands in its *Avoid*; a paragraph holding it is rewrapped and the guard stays quiet;
@@ -4587,7 +4588,11 @@ lines — every rewrap errs; a word banned only from one kind of sentence moved 
 branch" is right everywhere outside an invariant's sentence.
 *Consequences:* the check catches synonyms, never a second meaning of the term's own word, which only
 the search of WAY-33 finds. A change swapping one old occurrence for a new one passes, and a phrase put
-in backticks escapes the check; both costs are accepted. The counts per file stand in for a ratcheted
+in backticks escapes the check; both costs are accepted. The count leaves out what the list of uses
+leaves out, so that a word the list admitted to *Avoid* is not then raised by text the list never
+showed; a synonym written into a field's name, into the form of an entry in a template, or beside an
+identifier in a field of prose such as *Failure modes* escapes it, and that cost is accepted too. The
+counts per file stand in for a ratcheted
 list of old occurrences, so no such list is kept. The change that adds a word to *Avoid* searches the
 skills, the README files and the code for it, as for entries that wait for it (WAY-37).
 

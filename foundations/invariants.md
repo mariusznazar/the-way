@@ -2077,7 +2077,7 @@ No word of an *Avoid* in `foundations/glossary.md` stands, outside the text the 
 
 - **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --base {fork-point} --record .runs/glossary-base.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-98@22381f48
+- **Derives from:** WAY-98@5caaa22f
 - **Part:** every
 - **Correction:** none
 - **Recovered:** none
@@ -2088,7 +2088,7 @@ No word stands in the *Avoid* of two entries of `foundations/glossary.md`.
 
 - **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-98@22381f48
+- **Derives from:** WAY-98@5caaa22f
 - **Part:** glossary
 - **Correction:** none
 - **Recovered:** none
@@ -2099,7 +2099,18 @@ No word of an *Avoid* in `foundations/glossary.md` is a term there.
 
 - **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-98@22381f48
+- **Derives from:** WAY-98@5caaa22f
+- **Part:** glossary
+- **Correction:** none
+- **Recovered:** none
+
+## glossary-avoid-carrier/1
+
+No word of an *Avoid* in `foundations/glossary.md` is a word the *Not* of an entry there names.
+
+- **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
+- **Rests on:** none
+- **Derives from:** WAY-98@5caaa22f
 - **Part:** glossary
 - **Correction:** none
 - **Recovered:** none
@@ -2117,7 +2128,7 @@ Every term, identifier and closed-list value the *Not* of an entry of `foundatio
 
 ## glossary-not-quoted-word/1
 
-Nothing the *Not* of an entry of `foundations/glossary.md` names holds the term or its forms, and every word it names in quotation marks stands outside quotation marks and outside the glossary in a file of `foundations/` or in an element's template.
+Nothing the *Not* of an entry of `foundations/glossary.md` names holds the term or its forms, and every word it names in quotation marks is used, as the glossary template bounds a use, outside quotation marks and outside the glossary in a file of `foundations/` or in an element's template.
 
 - **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
 - **Rests on:** none

@@ -60,7 +60,7 @@ The part answers for the words a foundation's rules use, each in one meaning: th
 the tools that write and check one, and the glossary of the-way itself.
 
 - **Files:** elements/glossary/**
-- **Depends on:** none
+- **Depends on:** decisions · part-map · invariants · environment-facts
 - **Failure modes:** none
 - **Trust boundary:** none
 
@@ -172,6 +172,13 @@ The command that runs the guard of a product's environment facts keeps its name,
 its exit codes.
 
 - **Declared at:** elements/environment-facts/format_guard.py · main
+
+## glossary-guard-command — The command of the glossary guard
+
+The command that runs the guard of a product's glossary keeps its name, its arguments and its exit
+codes.
+
+- **Declared at:** elements/glossary/format_guard.py · main
 
 ## test-runner-command — The command of the test runner
 
