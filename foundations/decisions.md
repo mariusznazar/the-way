@@ -901,7 +901,7 @@ behind it is an invariant alone.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-16
+- **Approved by:** Mariusz, 2026-09-27
 
 *Rationale:* the two are read differently: an invariant is checked mechanically on every commit,
 while a decision is weighed when a later choice is made. A checkable rule left only in a
@@ -1890,7 +1890,7 @@ test of every critical flow runs on every change.
   check by: 2026-12-31
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-23
+- **Approved by:** Mariusz, 2026-09-27
 
 *Rationale:* a flow needs a place in the map, not only an invariant, because two things have to
 be computed from it: the criticality it passes to the parts it runs through, and whether a
