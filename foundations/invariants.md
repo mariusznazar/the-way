@@ -229,7 +229,7 @@ Every decision version in the decision log names its level of verification, or h
 
 - **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-12@23fdae1e · WAY-71@92c0cbfb
+- **Derives from:** WAY-12@23fdae1e · WAY-71@c32828c9
 - **Part:** decisions
 - **Correction:** none
 - **Recovered:** none
@@ -383,7 +383,7 @@ Every decision version after the first gives a rationale for the change, or hold
 
 - **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-19@506b8862 · WAY-71@92c0cbfb
+- **Derives from:** WAY-19@506b8862 · WAY-71@c32828c9
 - **Part:** decisions
 - **Correction:** none
 - **Recovered:** none
@@ -394,7 +394,7 @@ Every decision version after the first names its kind of change from the list in
 
 - **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-20@6aa77560 · WAY-71@92c0cbfb
+- **Derives from:** WAY-20@6aa77560 · WAY-71@c32828c9
 - **Part:** decisions
 - **Correction:** none
 - **Recovered:** none
@@ -449,7 +449,7 @@ Every *Review when* in the decision log other than `none` or `TODO` names both a
 
 - **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-24@3aa83071 · WAY-71@92c0cbfb
+- **Derives from:** WAY-24@3aa83071 · WAY-71@c32828c9
 - **Part:** decisions
 - **Correction:** none
 - **Recovered:** none
@@ -471,7 +471,7 @@ Every review record in the decision log that records that the state has not come
 
 - **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-24@3aa83071 · WAY-71@92c0cbfb
+- **Derives from:** WAY-24@3aa83071 · WAY-71@c32828c9
 - **Part:** decisions
 - **Correction:** none
 - **Recovered:** none
@@ -918,7 +918,7 @@ The gate runs the check for crafted input on every change that, against "{fork-p
 
 ## surface-promise-level/1
 
-Every symbol or schema definition declared a surface carries a level of promise.
+Every item declared a surface carries a level of promise.
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
@@ -1149,7 +1149,7 @@ Every `invariant:` line in a check that names an entry of `foundations/invariant
 
 ## invariant-correction-confirmation/1
 
-Every correction an entry of `foundations/invariants.md` declares is confirmed by the human deciding the change, with both wordings in front of them.
+Every correction an entry of `foundations/invariants.md` declares is confirmed by the human deciding the change, with the old and the new binding part in front of them.
 
 - **Method:** `TODO`
 - **Rests on:** none
@@ -1505,7 +1505,7 @@ Every decision version and review record of the decision log carries every field
 
 - **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-71@92c0cbfb
+- **Derives from:** WAY-71@c32828c9
 - **Part:** decisions
 - **Correction:** none
 - **Recovered:** none
@@ -1516,7 +1516,7 @@ No field of a decision version or review record of the decision log holds `none`
 
 - **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-71@92c0cbfb
+- **Derives from:** WAY-71@c32828c9
 - **Part:** decisions
 - **Correction:** none
 - **Recovered:** none
@@ -1527,7 +1527,7 @@ Where {merge-onto} exists, no field of a decision version or review record of th
 
 - **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --merge-onto {merge-onto} --record .runs/decisions-merge-onto.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-71@92c0cbfb
+- **Derives from:** WAY-71@c32828c9
 - **Part:** decisions
 - **Correction:** none
 - **Recovered:** none
@@ -1538,7 +1538,7 @@ Every entry of the part map carries every field the part map template gives an e
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-71@92c0cbfb
+- **Derives from:** WAY-71@c32828c9
 - **Part:** part-map
 - **Correction:** none
 - **Recovered:** none
@@ -1549,7 +1549,7 @@ No field of an entry of the part map holds `none` or `TODO` where the part map t
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-71@92c0cbfb
+- **Derives from:** WAY-71@c32828c9
 - **Part:** part-map
 - **Correction:** none
 - **Recovered:** none
@@ -1560,7 +1560,7 @@ Every entry of `foundations/invariants.md` carries every field the invariants te
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-71@92c0cbfb
+- **Derives from:** WAY-71@c32828c9
 - **Part:** invariants
 - **Correction:** none
 - **Recovered:** none
@@ -1571,7 +1571,7 @@ No field of an entry of `foundations/invariants.md` holds `none` or `TODO` where
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-71@92c0cbfb
+- **Derives from:** WAY-71@c32828c9
 - **Part:** invariants
 - **Correction:** none
 - **Recovered:** none
@@ -1582,7 +1582,7 @@ Where {merge-onto} exists, no field of an entry of `foundations/invariants.md` o
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --merge-onto {merge-onto} --record .runs/invariants-merge-onto.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-71@92c0cbfb
+- **Derives from:** WAY-71@c32828c9
 - **Part:** invariants · environment-facts
 - **Correction:** none
 - **Recovered:** none
@@ -1923,7 +1923,7 @@ Every entry of `foundations/environment_facts.md` carries every field the enviro
 
 - **Method:** `python -B elements/environment-facts/format_guard.py foundations/environment_facts.md --record .runs/environment-facts.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-71@92c0cbfb
+- **Derives from:** WAY-71@c32828c9
 - **Part:** environment-facts
 - **Correction:** none
 - **Recovered:** none
@@ -1934,7 +1934,7 @@ No field of an entry of `foundations/environment_facts.md` holds `none` or `TODO
 
 - **Method:** `python -B elements/environment-facts/format_guard.py foundations/environment_facts.md --record .runs/environment-facts.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-71@92c0cbfb
+- **Derives from:** WAY-71@c32828c9
 - **Part:** environment-facts
 - **Correction:** none
 - **Recovered:** none
@@ -1945,7 +1945,7 @@ Where {merge-onto} exists, no field of an entry of `foundations/environment_fact
 
 - **Method:** `python -B elements/environment-facts/format_guard.py foundations/environment_facts.md --merge-onto {merge-onto} --record .runs/environment-facts-merge-onto.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-71@92c0cbfb
+- **Derives from:** WAY-71@c32828c9
 - **Part:** environment-facts
 - **Correction:** none
 - **Recovered:** none
@@ -2000,7 +2000,7 @@ Every entry of `foundations/glossary.md` carries every field the glossary templa
 
 - **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-94@bbf52723 · WAY-71@92c0cbfb
+- **Derives from:** WAY-94@bbf52723 · WAY-71@c32828c9
 - **Part:** glossary
 - **Correction:** none
 - **Recovered:** none
@@ -2011,7 +2011,7 @@ No field of an entry of `foundations/glossary.md` holds `none` or `TODO` where t
 
 - **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-94@bbf52723 · WAY-71@92c0cbfb
+- **Derives from:** WAY-94@bbf52723 · WAY-71@c32828c9
 - **Part:** glossary
 - **Correction:** none
 - **Recovered:** none
@@ -2143,7 +2143,7 @@ Where {merge-onto} exists, no field of an entry of `foundations/glossary.md` hol
 
 - **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --merge-onto {merge-onto} --record .runs/glossary-merge-onto.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-99@bba94a7a · WAY-71@92c0cbfb
+- **Derives from:** WAY-99@bba94a7a · WAY-71@c32828c9
 - **Part:** glossary
 - **Correction:** none
 - **Recovered:** none

@@ -186,7 +186,7 @@ anonymously (WAY-84).
   machine. Where it cannot — a model that runs the method — that configuration is read off the
   product, and the deliberate break shows the method's fidelity, which holds only where the break
   gives high confidence of detection (WAY-81). The release of a tool a probe runs is read off the
-  machine instead, as the next point says (WAY-91). Whether a fact's command, like an invariant test,
+  machine instead, as the next point says (WAY-91). Whether a fact's command, like a check citing an invariant,
   counts only when a deliberate break makes it fail is
   `TODO — decision pending: whether WAY-08's deliberate break binds a fact's method`.
 - Where *Holds for* names a release of the tool a probe runs, the probe reads the release it runs

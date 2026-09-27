@@ -5,8 +5,7 @@ for each kind of entry described in `template.md`. An entry of a map carries no 
 edited in place, so a copy follows the entry it comes from, and the guard checks that every
 example matches its entry word for word.
 
-Until a kind of entry has a real example, only its form in the template stands: this repository
-runs no gate of its own yet, so it has no critical flow to copy from.
+Until a kind of entry has a real example, only its form in the template stands.
 
 *A part, with every field filled:*
 
@@ -34,6 +33,18 @@ them.
 - **Depends on:** none
 - **Failure modes:** none
 - **Trust boundary:** none
+
+*A critical flow:*
+
+## wording-reaches-dependants — A change of a binding part reaches what leans on it
+
+Someone changes the binding sentences of a foundation entry, and every reference that leans on
+the old binding part is reported before the change reaches the main branch.
+
+- **Criticality:** high
+- **Parts:** relation-model · decisions · gate
+- **Invariant:** decision-guard-stale-reference — test: gate/test_wording_reaches_dependants.py
+- **Coverage:** none
 
 *A surface declared at the item itself:*
 

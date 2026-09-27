@@ -6,7 +6,7 @@ A product takes these words from the-way at the commit it pins (WAY-92, WAY-95).
 
 ## binding part
 
-A binding part is the text of an entry whose wording the references relying on the entry depend on.
+A binding part is the text of an entry that whatever relies on the entry, rather than only mentioning it, depends on.
 
 - **Avoid:** none
 - **Not:** none
@@ -139,7 +139,7 @@ A probe is a check of an environment fact that tries out the behaviour the fact 
 
 ## read off
 
-A value is read off when it is taken as it stands in the product or on the machine, as a tool would take it.
+A value is read off when it is what a tool gives from the product or the machine as they stand, whoever writes it down.
 
 - **Avoid:** none
 - **Not:** none

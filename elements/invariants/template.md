@@ -122,8 +122,8 @@ A quarantined invariant stands on the last list in the file; *Until* is a date a
   WAY-39). The method, the links, the version, a declaration of a correction and the *Recovered*
   field stay outside it.
 - A condition that decides whether a commit makes the sentence true stands in the sentence, or
-  outside it only where changing it takes a change of the foundation that a human decides — an
-  entry of the foundation, or an element's template, each written as the record of a decision — or
+  outside it only where changing it takes a change that a human decides — of an
+  entry of the foundation or of an element's template, each written as the record of a decision — or
   where a decision of the product's own log, or of the-way at the commit the product pins, places
   it; where it has no such place, it stands in the sentence (WAY-60).
 - A condition held in a document the product neither writes nor pins, such as an outside standard,

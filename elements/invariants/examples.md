@@ -14,7 +14,7 @@ Every decision version and review record of the decision log carries every field
 
 - **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-71@92c0cbfb
+- **Derives from:** WAY-71@c32828c9
 - **Part:** decisions
 - **Correction:** none
 - **Recovered:** none

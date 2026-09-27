@@ -72,7 +72,7 @@ agreeing with the map (WAY-47).
 
 <one sentence: what the product promises to keep>
 
-- **Declared at:** <file and symbol, or schema definition, carrying the declaration and its promise
+- **Declared at:** <file and item, in the code or the schema, carrying the declaration and its promise
   level> | not markable — test: <path of the test that protects it>
 ```
 
@@ -246,7 +246,7 @@ patterns come from the part's *Files*. No overview of the repository is generate
   invariant or "not detected" (WAY-46).
 - Every dependency running from a higher criticality to a lower one, with no separation
   recorded, is reported.
-- Every surface names a declaration — a file that exists and holds the symbol named — or reads
+- Every surface names a declaration — a file that exists and holds the item named — or reads
   `not markable` and names a test that exists; no promise level is written in the map, and no
   withdrawal date anywhere in it; no surface carries a change path of its own, and no row of the
   change paths names a surface (WAY-49, WAY-50). Whether every declaration carries a level, and

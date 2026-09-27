@@ -1505,7 +1505,7 @@ between two states — stays in the plan of that work.
 - **Outranks:** none
 - **Verification:** level 2 — an agent compares the change with the decision:
   - complies: "the foundation reaches the main branch whole, once every element is ready" stays in
-    the plan of building the foundation; "when what entries wait for arrives, they are corrected in
+    the plan of building the foundation; "when what entries wait for arrives, they are fixed in
     the same change" enters the log;
   - violates: a decision on the order in which elements are built; a decision whose binding
     sentences say what happens until the first merge.
@@ -1529,7 +1529,7 @@ work has no home in the process yet (WAY-26).
 ### WAY-37/1 — What happens to entries that wait for something when it arrives?
 
 A change that brings what entries of the foundation wait for — an element's template, the part
-map, a script — also corrects every entry that waits for it, in the same change: by a new version
+map, a script — also fixes every entry that waits for it, in the same change: by a new version
 on the main branch, by an edit before it. An agent finds those entries by searching the whole
 foundation for what the change brings.
 
@@ -1541,7 +1541,7 @@ foundation for what the change brings.
 - **Outranks:** none
 - **Verification:** level 2 — an agent compares the change with the decision:
   - complies: the change that brings the template of invariants also turns every invariant named
-    in working form in the log into a reference to an entry, and corrects the consequences that
+    in working form in the log into a reference to an entry, and fixes the consequences that
     waited for that template;
   - violates: the part map arrives, and WAY-21 still says that a scope names parts from a working
     list.
@@ -1896,7 +1896,7 @@ test of every critical flow runs on every change.
 be computed from it: the criticality it passes to the parts it runs through, and whether a
 given change lies on it. An invariant alone sits outside the map, where neither computation can
 reach it. The list of parts lives at the flow rather than as a mark at each part, so that there
-is one list to read and one place to correct. Files that belong to no part, the build
+is one list to read and one place to fix. Files that belong to no part, the build
 configuration and the dependencies lie on every flow, because a change to them can alter any
 flow and nothing in the map says which — the same fallback a test-selection tool makes where it
 cannot reason. Every flow's test runs on every change, because a product holds a handful of
@@ -2326,7 +2326,7 @@ covers; a value meaning "none of these fits" in every closed list — the list o
 already carries one, and it is chosen 166 times out of 191, so it records what came cheapest
 rather than what was true.
 *Consequences:* a template that asks for the name of a value where a tool can read that value,
-or where a question about the product settles it, is a defect of the template, corrected together
+or where a question about the product settles it, is a defect of the template, fixed together
 with a decision. A field that rests on a judgment says so where it stands. The skill of the
 decisions element gains the sentence the map's skill already holds: a value the template's
 closed list does not hold is a question to the human in the same change, and the list grows by a
@@ -2453,8 +2453,8 @@ checking and the links that WAY-08 and WAY-17 require stand beside that sentence
 - **Verification:** level 1 — invariants: invariant-sentence-count. Level 2 for one invariant per
   sentence — an agent compares the change with the decision:
   - complies: "every version and review record in the log has every field of the template" is one
-    entry, though a commit can break it for a single version or a single field; "every result of a
-    human inspection names who checked and when" is one entry;
+    entry, though a commit can break it for a single version or a single field; "every human verdict names
+    who checked and when" is one entry;
   - violates: "binding sentences number one to three and contain no *should*, *will* or keyword
     of RFC 2119 in capitals" kept as one entry, though how many sentences there are and which
     words they use are two separate rules; the sentence on fields split into one entry per field.
@@ -2730,7 +2730,7 @@ entry, in a template, in a section of the map — and reached through a word of 
 directories of the process are held in WAY-09, whose list WAY-55 edited in place. WAY-60 settles
 where each may stand; how a change to the place holding the third reaches the
 invariant is set by WAY-61 and WAY-62.
-*Rejected:* the whole entry as the binding part — a new method, a link written later or a corrected
+*Rejected:* the whole entry as the binding part — a new method, a link written later or a fixed
 field would raise the version and fail every citing test for nothing; the method of checking inside
 the binding part — a new test for the same meaning would fail every test citing the entry; a
 fingerprint per field — every reference would have to say which field it relies on.
@@ -3330,9 +3330,9 @@ literal.
 
 ### WAY-71/1 — Does every field of a foundation entry appear in every entry, and what may it hold?
 
-Every field an element's template gives an entry of its kind appears in every version of such an
-entry, in every review record, or in the entry where it has none, holding a value, or `none` or
-`TODO` where the template gives it that word: `none` says nothing is there, `TODO` that something
+Every field an element's template gives an entry of its kind appears in every entry of its kind —
+in every version of a decision and every review record, the fields their forms give — holding a
+value, or `none` or `TODO` where the template gives it that word: `none` says nothing is there, `TODO` that something
 is missing. The main branch holds `TODO` only in an invariant's or a fact's *Method*, and in an
 invariant's *Rests on* until the facts element has entries. A guard reports a missing field, or a
 word not given it, as an error.
@@ -3911,7 +3911,7 @@ with the day it runs.
 
 *Rationale:* a method that is a path gives no result until a person assesses the product or
 re-reads the source (WAY-61, WAY-81), and WAY-63 says what a verdict names; it lacks a place the gate
-can read. A row in the repository is visible, corrected like any other line, and read by the guards
+can read. A row in the repository is visible, fixed like any other line, and read by the guards
 that know the entries. One file serves both elements, because the two verdicts differ only in when
 they lapse: an invariant's when the product changes under it, a fact's when the world may have
 changed, which only a date can stand for. A row counts only for the current version, so a new
@@ -3920,11 +3920,11 @@ as a quarantine does (WAY-68), so that its verdict follows the commit; the clock
 world, so it compares with the day. The first case waits already: who can open this repository can
 be read only with the credentials of whoever sets it.
 *Rejected:* the verdict in a commit message — invisible to a reader of the foundation, never
-corrected, and its author is often an agent; waiting for a second case — the rule on verdicts with
+fixed, and its author is often an agent; waiting for a second case — the rule on verdicts with
 a date would stay dead.
 *Consequences:* both templates name the file and give its row as
 `| Entry | Version | Verdict | By | On | Commit | Until |`; the invariants template's place that waits
-for this decision is corrected to it, and WAY-63's consequence on how long a verdict is in force
+for this decision is rewritten to follow it, and WAY-63's consequence on how long a verdict is in force
 moves here. The file is written by hand and is no element's entries, so the invariant
 `foundation-file-kinds` names files an element's template names. The guards check a row's form and
 that the entry exists; the gate reads the row. The part that holds the file, so that a change to it
@@ -4585,8 +4585,8 @@ version restates word for word are not counted.
 - **Verification:** level 1 — invariants: glossary-avoid-growth · glossary-avoid-single ·
   glossary-avoid-term · glossary-avoid-carrier. Level 2 for what may stand in *Avoid* — an agent compares the change with the
   decision:
-  - complies: "checker", which every use in the foundation spends on the format guard, stands in the
-    *Avoid* of that term's entry; a paragraph holding it is rewrapped and the guard stays quiet;
+  - complies: "checker", which every use in the files of `foundations/` and the elements' templates
+    spends on the format guard, stands in the *Avoid* of that term's entry; a paragraph holding it is rewrapped and the guard stays quiet;
   - violates: "run" stands in an *Avoid* though the foundation also runs commands; "main branch", kept
     out of an invariant's sentence only, is put into an *Avoid*.
 - **Review when:** none
@@ -4611,10 +4611,11 @@ the search of WAY-33 finds. A change swapping one old occurrence for a new one p
 in backticks escapes the check; both costs are accepted. The count leaves out what the list of uses
 leaves out, so that a word the list admitted to *Avoid* is not then raised by text the list never
 showed; a synonym written into a field's name, into the form of an entry in a template, or beside an
-identifier in a field of prose such as *Failure modes* escapes it, and that cost is accepted too. The
-counts per file stand in for a ratcheted
-list of old occurrences, so no such list is kept. The change that adds a word to *Avoid* searches the
-skills, the README files and the code for it, as for entries that wait for it (WAY-37).
+identifier in a field of prose such as *Failure modes* escapes it, and that cost is accepted too. A
+word of *Avoid* written into the definition of another glossary entry escapes it as well, since the
+glossary's entries are not counted; that cost is accepted too. The counts per file stand in for a
+ratcheted list of old occurrences, so no such list is kept. The change that adds a word to *Avoid*
+searches the skills, the README files and the code for it, as for entries that wait for it (WAY-37).
 
 ### WAY-99/1 — How does one word keep one meaning in the foundation?
 

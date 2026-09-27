@@ -106,7 +106,7 @@ The part answers for the gate and the clock, and for the tests of critical flows
 
 ## repository — The files that serve the whole repository
 
-The part answers for the files that configure the repository itself rather than any one element.
+The part answers for the files that configure the repository itself rather than any one part.
 
 - **Files:** /.gitattributes
   /.gitignore
