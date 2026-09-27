@@ -47,7 +47,7 @@ The script of `relation-model` gives a text the first eight characters, in lower
 
 - **Method:** `python -B gate/run_tests.py relation-model --record .runs/relation-model-tests.jsonl`
 - **Rests on:** sha-256@6ba272ed · utf-8@6afd686d
-- **Derives from:** WAY-39@a3b77692
+- **Derives from:** WAY-39@9f8ff3ac
 - **Part:** relation-model
 - **Correction:** none
 - **Recovered:** none
@@ -58,7 +58,7 @@ Where {merge-onto} exists, every change against {fork-point} carries the record 
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-11@a7e08204
+- **Derives from:** WAY-11@2dde69a7
 - **Part:** every
 - **Correction:** none
 - **Recovered:** none

@@ -1,6 +1,6 @@
 # Invariants
 
-An invariant is a rule the product has to keep. Each invariant carries its method of checking
+This element holds a product's invariants. Each invariant carries its method of checking
 and the current result of running it (WAY-08), and names the environment facts it rests on
 (WAY-17).
 

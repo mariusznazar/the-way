@@ -158,7 +158,7 @@ A field stays in this template only while someone or something reads it (WAY-05)
 | change paths | whoever changes a surface at that level | judgment |
 | files left out on purpose | the format guard, as the only exception to file assignment | judgment |
 | withdrawn identifiers | a reference to an identifier that no longer names a part | read off |
-A field marked *judgment* holds someone's call: no tool reads its value off the product, and no question about a fact settles it. A reader takes such a value as a call, not as a reading (WAY-54). A field marked *prose* carries text rather than a value.
+A field marked *judgment* holds someone's call: no tool reads its value off the product, and no question with a factual answer settles it. A reader takes such a value as a call, not as a reading (WAY-54). A field marked *prose* carries text rather than a value.
 
 ## The binding part
 
@@ -199,11 +199,10 @@ that speaks of what a glossary term defines uses the term, never a paraphrase of
 
 ## Known violations
 
-The derived file beside the map, `foundations/known_violations.md`, holds what the code does not
-meet today. A row names the source part, the target part, the file and what it reaches for
-— never a line number. A new violation breaks the gate; a row the code no longer
-contradicts breaks it too and goes in the same change; a row is added only by a change of
-the foundation that a human accepts. The file is checked as a subset of the list on the commit
+The derived file beside the map, `foundations/known_violations.md`, holds the map's debt. A
+row names the source part, the target part, the file and what it reaches for — never a line
+number. A new violation breaks the gate; a row the code no longer contradicts breaks it too and
+goes in the same change; a row is added only by a change of the foundation that a human accepts. The file is checked as a subset of the list on the commit
 the task branch left the main branch from, never regenerated from scratch (WAY-51).
 
 ```markdown

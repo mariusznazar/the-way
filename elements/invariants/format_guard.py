@@ -1379,7 +1379,7 @@ def merged_facts(path, foundation, merge_onto, top, report):
         report.error(None, "cannot read the environment facts on %s: %s" % (merge_onto, problem))
         return None
     own = foundation.facts or module.Facts()
-    return {identifier: module.content_fingerprint(entry) for identifier, entry
+    return {identifier: module.entry_fingerprint(entry) for identifier, entry
             in module.merged_facts(own, onto, before).items()}
 
 

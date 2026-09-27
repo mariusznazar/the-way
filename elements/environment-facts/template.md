@@ -4,13 +4,12 @@
 > decision carries `TODO — decision pending: <question>`. The template reaches the main branch only
 > together with the element's examples, skill and guard (WAY-06, WAY-09).
 
-This file defines how an environment fact entry is written. An environment fact is something true
-about the world around the product — a platform, a format, a licence, a law, the behaviour of a tool,
-a finding of a study — with a method of checking it. It says nothing about the product itself: that
-is an invariant (WAY-04, WAY-22, WAY-76). An invariant names the facts holding a condition of its
-sentence in *Rests on* (WAY-73), and a decision names the facts it rests on in *Based on* (WAY-17,
-WAY-90). Its current result comes from running its method, never from a status written by hand
-(WAY-08, WAY-81).
+This file defines how an environment fact entry is written. Facts are about such things as a
+platform, a format, a licence, a law, the behaviour of a tool or a finding of a study. A fact names
+its method of checking (WAY-81), and nothing its sentence says is an invariant (WAY-76). An
+invariant names the facts holding a condition of its sentence in *Rests on* (WAY-73), and a decision
+names the facts it rests on in *Based on* (WAY-17, WAY-90). Its current result comes from running
+its method, never from a status written by hand (WAY-08, WAY-81).
 
 ## Where entries go
 
@@ -79,8 +78,8 @@ joined by ` · `, or reads `none` (WAY-75):
   to change. Pages of one document published together in one edition count as one source. That is
   the most an entry holds, not a reason to join: two facts from one edition whose sentences are
   about different things stand as two entries (WAY-76).
-- The sentence states what is true of the world today, in the present tense, and says nothing a
-  commit of the product can make true or false: such a sentence is an invariant (WAY-22, WAY-76).
+- The sentence states what is true of the world today, in the present tense, and nothing it says is
+  an invariant (WAY-76).
 - The sentence says no more than its source says: where the source recommends, the sentence does
   not require (WAY-80).
 - The sentence names an edition of its source only where the product stands on that edition
@@ -176,10 +175,10 @@ anonymously (WAY-84).
   the same, with the program named as it will run; the fact is then unchecked for want of a
   declared or produced command, a different reason (WAY-81).
 - A command may probe, watch, or both (WAY-81):
-  - a probe asks the tool how it behaves here and now — on test data the source itself publishes
-    where there is any, as NIST's example digests — and about the behaviour, never about a version number in its place;
-  - a watch reads the state the source publishes as data — `obsoleted_by` of an RFC, a withdrawal,
-    a model's deprecation state, a support schedule — and whether the passage still stands.
+  - a probe runs on test data the source itself publishes where there is any, as NIST's example
+    digests, and asks about the behaviour, never about a version number in its place;
+  - a watch reads such data as `obsoleted_by` of an RFC, a withdrawal, a model's deprecation state
+    or a support schedule, and checks that the passage still stands.
   A human re-reads what no command can read: law, a licence, an access rule readable only with the
   credentials of whoever sets it (WAY-81, WAY-84).
 - A command sets for itself whatever in the runner's configuration a command can set and could
@@ -187,7 +186,7 @@ anonymously (WAY-84).
   machine. Where it cannot — a model that runs the method — that configuration is read off the
   product, and the deliberate break shows the method's fidelity, which holds only where the break
   gives high confidence of detection (WAY-81). The release of a tool a probe runs is read off the
-  machine instead, as the next point says (WAY-91). Whether a fact's command, like an invariant's test,
+  machine instead, as the next point says (WAY-91). Whether a fact's command, like an invariant test,
   counts only when a deliberate break makes it fail is
   `TODO — decision pending: whether WAY-08's deliberate break binds a fact's method`.
 - Where *Holds for* names a release of the tool a probe runs, the probe reads the release it runs
@@ -208,11 +207,10 @@ anonymously (WAY-84).
 ## When a method runs
 
 - When a change enters an entry or changes any of its fields, or alters a file its command names, the gate runs its method on that change (WAY-82).
-- By the clock: one command runs the method of every fact at once, on the main branch — never inside
-  the gate of a change that neither enters nor changes the entry nor alters a file its command
-  names, since the world changes with no commit and the gate's verdict would then depend on the date
-  (WAY-82, WAY-60). The clock's command does not exist yet, and with no scheduler it runs by hand
-  (WAY-82).
+- By the clock, for every fact at once, on the main branch — never inside the gate of a change that
+  neither enters nor changes the entry nor alters a file its command names, since the world changes
+  with no commit and the gate's verdict would then depend on the date (WAY-82, WAY-60). The clock
+  does not exist yet, and with no scheduler it runs by hand (WAY-82).
 - A human verdict stands in `foundations/human_verdicts.md`, one file for invariants and facts, as a
   row naming the entry, its version, the verdict — `pass` or `fail` — who gave it, when, the commit
   assessed, and *Until* — a date for a fact. It counts only for the entry's current version, and a
@@ -234,7 +232,7 @@ anonymously (WAY-84).
     - the method is a path, and no human verdict is in force;
   - a probe ran on a release of its tool outside *Holds for*.
 - In the gate of a change that runs a fact's method, its `fail` or `error` makes the gate's command
-  fail (WAY-63). Elsewhere a `fail` stops no change. The clock's command records each fact's verdict
+  fail (WAY-63). Elsewhere a `fail` stops no change. The clock records each fact's verdict
   in the-way's own record of a run and exits non-zero when some fact results `fail` or `error`; what
   a failure then becomes — a task, a branch, a message — is set when the task cycle is designed
   (WAY-82).
@@ -295,13 +293,13 @@ A field stays in this template only while someone or something reads it (WAY-05)
 | Holds for | the fingerprint; whoever writes an invariant naming a version within it; a script checking a decision's *Review when* against the models a study measured | transcribed from the source |
 | Source | the watch, which checks that the passage still stands; the human reviewing the fact | transcribed |
 | Set by | the human deciding the change that follows a failed run, who learns whom to ask | judgment |
-| Method | the clock's command; the gate, on a change that enters or changes the fact or alters a file its command names; a human, for a path | judgment |
+| Method | the clock; the gate, on a change that enters or changes the fact or alters a file its command names; a human, for a path | judgment |
 | Correction | the guard, which lets the version stand; the human who confirms it | judgment for the declaration; read off for both fingerprints |
 | human verdicts | the gate, which takes a re-read fact's result from the row in force until *Until*; the clock, which reports it unchecked after; the format guard, which checks the row | judgment for the verdict and *Until*; read off for the rest |
 | withdrawn identifiers | whoever follows a citation to a fact shown false; the guard, which keeps it from coming back and checks its successors | judgment for *Why*; read off for the rest |
 
 A field marked *judgment* holds someone's call: no tool reads its value off the product, and no
-question about a fact settles it. A reader takes such a value as a call, not as a reading (WAY-54).
+question with a factual answer settles it. A reader takes such a value as a call, not as a reading (WAY-54).
 A field marked *prose* carries text rather than a value.
 
 ## What the format guard checks

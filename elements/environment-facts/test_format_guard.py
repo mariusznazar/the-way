@@ -565,22 +565,22 @@ class Fingerprint(unittest.TestCase):
 
     def test_fingerprint_of_the_sentence_and_holds_for(self):
         # invariant: fact-fingerprint-input/1
-        self.assertEqual(format_guard.content_fingerprint(self.entry(fact())), QUOTA_FINGERPRINT)
+        self.assertEqual(format_guard.entry_fingerprint(self.entry(fact())), QUOTA_FINGERPRINT)
 
     def test_holds_for_moves_the_fingerprint(self):
         # invariant: fact-fingerprint-input/1
-        self.assertEqual(format_guard.content_fingerprint(self.entry(fact(holds="Firefox 131"))),
+        self.assertEqual(format_guard.entry_fingerprint(self.entry(fact(holds="Firefox 131"))),
                          QUOTA_WIDER_FINGERPRINT)
 
     def test_the_rest_of_the_entry_leaves_it(self):
         # invariant: fact-fingerprint-input/1
         entry = self.entry(fact(source=LINES_SOURCE, set_by="the owner", method="`TODO`",
                                 correction="0635a942 → 11ba3f2d"))
-        self.assertEqual(format_guard.content_fingerprint(entry), QUOTA_FINGERPRINT)
+        self.assertEqual(format_guard.entry_fingerprint(entry), QUOTA_FINGERPRINT)
 
     def test_the_sentence_alone_is_not_it(self):
         # invariant: fact-fingerprint-input/1
-        self.assertNotEqual(format_guard.content_fingerprint(self.entry(fact())),
+        self.assertNotEqual(format_guard.entry_fingerprint(self.entry(fact())),
                             QUOTA_SENTENCE_ALONE_FINGERPRINT)
 
 

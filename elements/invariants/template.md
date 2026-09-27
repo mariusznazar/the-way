@@ -8,10 +8,9 @@
 > what the cited decisions already say, and the template does not reach the main branch (WAY-06,
 > WAY-09).
 
-This file defines how an invariant entry is written. An invariant is a sentence about the product
-that a commit makes true or false, with a method of checking it; it says nothing about why, or about
-what was rejected (WAY-22). Its current result comes from running that method, never from a status
-written by hand (WAY-08).
+This file defines how an invariant entry is written. An invariant names its method of checking and
+says nothing about why, or about what was rejected (WAY-08, WAY-22). Its current result comes from
+running that method, never from a status written by hand (WAY-08).
 
 ## Where entries go
 
@@ -160,8 +159,8 @@ A quarantined invariant stands on the last list in the file; *Until* is a date a
   environment fact it rests on; neither link is optional, and a link the author knows is missing
   reads `TODO` rather than `none` (WAY-17).
 - *Rests on* names every environment fact holding a condition that decides whether a commit makes
-  the sentence true, and no other: read otherwise, such a fact would give some commit another
-  verdict under the same sentence, or change a value the sentence copies from it. A fact that is
+  the sentence true, and no other: read otherwise, such a fact would change whether some commit
+  makes the sentence true, or change a value the sentence copies from it. A fact that is
   only a reason for a decision the entry derives from stays in that decision's *Based on* (WAY-73).
 - An invariant that depends on a version the product declares names that version in its sentence
   and names the fact in *Rests on*: a change of the fact's range reaches it through the fingerprint
@@ -180,7 +179,7 @@ A quarantined invariant stands on the last list in the file; *Until* is a date a
   where a change to any part can; never both. A part missing from the list stops the invariant from
   running where it can break, and nothing shows it, so a writer in doubt names more (WAY-62).
 - *Part* has no third value. A sentence no commit of this product can make false is not an
-  invariant of this product (WAY-22): it belongs to the foundation of the product whose commits
+  invariant of this product: it belongs to the foundation of the product whose commits
   decide it.
 - A change, against the commit its branch left the main branch from, reaches an entry that names
   `every` or a part the change touches, or whose method names a file the change alters (WAY-62).
@@ -213,10 +212,9 @@ A quarantined invariant stands on the last list in the file; *Until* is a date a
 - Each file such a check reads and names there stands on a line `data: <path>` — a recorded output
   it compares against, for one (WAY-65).
 - A check stands in a file of code; a Markdown file holds no citing check.
-- The file holding a citing check, and each file it names on a `data:` line, are invariant tests,
-  read-only during implementation (WAY-03), when they are so on the commit the task branch left the
-  main branch from or on the commit being checked. A path a human assesses against is no invariant
-  test (WAY-65).
+- An invariant test is read-only during implementation (WAY-03), and a file is one for the task
+  when it is one on the commit the task branch left the main branch from or on the commit being
+  checked. A path a human assesses against is no invariant test (WAY-65).
 - A test counts only when a deliberate break of the invariant makes it fail (WAY-08).
 - A test takes the input it asserts on and the value it expects written out, wherever the code its
   invariant is about would otherwise compute either; only the side it compares against comes from
@@ -264,7 +262,7 @@ WAY-64).
   - the entry stands on the list of quarantined invariants at its current version, and the
     committer date of the commit being checked is no later than its *Until* (WAY-68);
   - for an environment fact, a probe ran on a release of its tool outside *Holds for* (WAY-91).
-- A human verdict is a row of `foundations/human_verdicts.md`, written by hand, which serves
+- A human verdict stands in a row of `foundations/human_verdicts.md`, written by hand, which serves
   invariants and environment facts alike, and counts only for the entry's current version; an
   invariant's row reads `none` in *Until* and is in force until a change since the assessed commit
   reaches the entry (WAY-83, WAY-63):
@@ -322,7 +320,7 @@ A field stays in this template only while someone or something reads it (WAY-05)
 | withdrawn identifiers | whoever follows an identifier that no longer names an entry, from a citing test or a decision on the main branch (WAY-07, WAY-64); the format guard, which keeps a withdrawn identifier from coming back and checks its successors (WAY-64) | read off |
 | quarantined invariants | the gate, which reports the entry `unchecked` or `error`; the format guard | judgment for the date; read off for the version |
 | violated invariants | the gate, which leaves a listed `fail` at zero and fails on a listed `pass`; the format guard, which compares the list with the commit the branch left the main branch from | judgment for the row; read off for the version |
-A field marked *judgment* holds someone's call: no tool reads its value off the product, and no question about a fact settles it. A reader takes such a value as a call, not as a reading (WAY-54). A field marked *prose* carries text rather than a value.
+A field marked *judgment* holds someone's call: no tool reads its value off the product, and no question with a factual answer settles it. A reader takes such a value as a call, not as a reading (WAY-54). A field marked *prose* carries text rather than a value.
 
 ## What the format guard checks
 

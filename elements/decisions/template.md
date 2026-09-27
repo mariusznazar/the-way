@@ -80,7 +80,7 @@ A field stays in the template only while someone or something reads it.
 | Rationale / Rationale for change | the agent in a borderline case; a human considering a change | prose |
 | Rejected | the agent, before proposing an option already rejected | prose |
 | Consequences | an agent starting later work in the decision's scope: what the decision forces on further work | prose |
-A field marked *judgment* holds someone's call: no tool reads its value off the product, and no question about a fact settles it. A reader takes such a value as a call, not as a reading (WAY-54). A field marked *prose* carries text rather than a value.
+A field marked *judgment* holds someone's call: no tool reads its value off the product, and no question with a factual answer settles it. A reader takes such a value as a call, not as a reading (WAY-54). A field marked *prose* carries text rather than a value.
 
 ## Binding sentences
 
@@ -101,8 +101,8 @@ flag references.
 
 ## Decision or invariant
 
-- An **invariant** is a sentence about the product that is true or false on every commit, with
-  a method of checking it. It says nothing about why, or about what was rejected.
+- An **invariant** names its method of checking and says nothing about why, or about what was
+  rejected.
 - A **decision** is a choice between options, with a rationale. It binds future choices,
   including ones that cannot be checked on a commit: direction, trade-off principles,
   non-goals.

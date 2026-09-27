@@ -42,7 +42,7 @@ Where {merge-onto} exists, no change alters, against {fork-point}, an invariant 
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-03@4fa941a4 · WAY-10@f4bdb2c0
+- **Derives from:** WAY-03@4fa941a4 · WAY-10@b16df2fb
 - **Part:** every
 - **Correction:** none
 - **Recovered:** none
@@ -174,18 +174,18 @@ Where {merge-onto} exists, every file git tracks lies in `foundations/` or in th
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-09@e2e5b0b3
+- **Derives from:** WAY-09@8ac4ff8e
 - **Part:** every
 - **Correction:** none
 - **Recovered:** none
 
 ## element-directory-contents/1
 
-Where {merge-onto} exists, every element directory holds a template, examples, a skill and a script that checks its entries.
+Where {merge-onto} exists, every element directory holds a template, examples, a skill and a format guard.
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-09@e2e5b0b3
+- **Derives from:** WAY-09@8ac4ff8e
 - **Part:** decisions · part-map · invariants · glossary · environment-facts
 - **Correction:** none
 - **Recovered:** none
@@ -196,7 +196,7 @@ Where {merge-onto} exists, `relation-model/` holds the script that computes fing
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-09@e2e5b0b3
+- **Derives from:** WAY-09@8ac4ff8e
 - **Part:** relation-model
 - **Correction:** none
 - **Recovered:** none
@@ -207,7 +207,7 @@ Where {merge-onto} exists, no change alters, against {fork-point}, an invariant 
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-10@f4bdb2c0
+- **Derives from:** WAY-10@b16df2fb
 - **Part:** every
 - **Correction:** none
 - **Recovered:** none
@@ -218,7 +218,7 @@ Where {merge-onto} exists, every change against {fork-point} carries the record 
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-11@a7e08204
+- **Derives from:** WAY-11@2dde69a7
 - **Part:** every
 - **Correction:** none
 - **Recovered:** none
@@ -636,7 +636,7 @@ The script of `relation-model` gives a text the first eight characters, in lower
 
 - **Method:** `python -B gate/run_tests.py relation-model --record .runs/relation-model-tests.jsonl`
 - **Rests on:** sha-256@6ba272ed · utf-8@6afd686d
-- **Derives from:** WAY-39@a3b77692
+- **Derives from:** WAY-39@9f8ff3ac
 - **Part:** relation-model
 - **Correction:** none
 - **Recovered:** none
@@ -647,7 +647,7 @@ Every entry of the part map is a part, a critical flow or a surface.
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-40@aeabb301
+- **Derives from:** WAY-40@c3f0b830
 - **Part:** part-map
 - **Correction:** none
 - **Recovered:** none
@@ -658,7 +658,7 @@ The part map holds no section other than its entries and the lists its template 
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-40@aeabb301
+- **Derives from:** WAY-40@c3f0b830
 - **Part:** part-map
 - **Correction:** none
 - **Recovered:** none
@@ -669,7 +669,7 @@ The repository holds exactly one part map, `foundations/part_map.md`.
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-40@aeabb301
+- **Derives from:** WAY-40@c3f0b830
 - **Part:** every
 - **Correction:** none
 - **Recovered:** none
@@ -768,7 +768,7 @@ Every part a critical flow of the part map lists is a part of the map.
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-45@3991b544
+- **Derives from:** WAY-45@3798c435
 - **Part:** part-map
 - **Correction:** none
 - **Recovered:** none
@@ -779,7 +779,7 @@ Every critical flow in the part map names an invariant and a test that names the
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-45@3991b544
+- **Derives from:** WAY-45@3798c435
 - **Part:** part-map · gate
 - **Correction:** none
 - **Recovered:** none
@@ -922,7 +922,7 @@ Every symbol or schema definition declared a surface carries a level of promise.
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-49@732257ef
+- **Derives from:** WAY-49@1e1a52ad
 - **Part:** every
 - **Correction:** none
 - **Recovered:** none
@@ -933,7 +933,7 @@ Every surface in the part map names a declaration that exists, or says that it c
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-49@732257ef
+- **Derives from:** WAY-49@1e1a52ad
 - **Part:** every
 - **Correction:** none
 - **Recovered:** none
@@ -944,7 +944,7 @@ No withdrawal date is written in the part map.
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-49@732257ef
+- **Derives from:** WAY-49@1e1a52ad
 - **Part:** part-map
 - **Correction:** none
 - **Recovered:** none
@@ -1054,7 +1054,7 @@ Every critical flow in the part map names a test whose path lies under `gate/`.
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-55@d9c24332
+- **Derives from:** WAY-55@d30c3b6c
 - **Part:** part-map · gate
 - **Correction:** none
 - **Recovered:** none
@@ -1065,7 +1065,7 @@ Every entry of `foundations/invariants.md` states its invariant in one sentence.
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-56@3213162c
+- **Derives from:** WAY-56@06700ffd
 - **Part:** invariants
 - **Correction:** none
 - **Recovered:** none
@@ -1142,7 +1142,7 @@ Every `invariant:` line in a check that names an entry of `foundations/invariant
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-57@4313046c · WAY-65@2f2926f0
+- **Derives from:** WAY-57@4313046c · WAY-65@fbf6bef4
 - **Part:** every
 - **Correction:** none
 - **Recovered:** none
@@ -1197,7 +1197,7 @@ The fingerprint the invariants guard gives an invariant entry is the fingerprint
 
 - **Method:** `python -B gate/run_tests.py elements/invariants --record .runs/invariants-tests.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-59@cc339346
+- **Derives from:** WAY-59@9ea9277e
 - **Part:** invariants · relation-model
 - **Correction:** none
 - **Recovered:** none
@@ -1318,7 +1318,7 @@ The gate reports a result for every invariant a change against "{fork-point}" re
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-45@3991b544 · WAY-63@f16348c8
+- **Derives from:** WAY-45@3798c435 · WAY-63@f16348c8
 - **Part:** gate
 - **Correction:** none
 - **Recovered:** none
@@ -1329,7 +1329,7 @@ The gate runs, on every change, the test that every critical flow of the part ma
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-45@3991b544
+- **Derives from:** WAY-45@3798c435
 - **Part:** gate · part-map
 - **Correction:** none
 - **Recovered:** none
@@ -1340,7 +1340,7 @@ The gate's command exits non-zero when some result it reports is `error`, an inv
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-63@f16348c8 · WAY-67@7b216d2a · WAY-82@2ebe205b
+- **Derives from:** WAY-63@f16348c8 · WAY-67@7b216d2a · WAY-82@790a7972
 - **Part:** gate
 - **Correction:** none
 - **Recovered:** none
@@ -1395,7 +1395,7 @@ Every `invariant:` line in a check names an entry of `foundations/invariants.md`
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-12@23fdae1e · WAY-17@b1e26133 · WAY-65@2f2926f0
+- **Derives from:** WAY-12@23fdae1e · WAY-17@b1e26133 · WAY-65@fbf6bef4
 - **Part:** every
 - **Correction:** none
 - **Recovered:** none
@@ -1406,18 +1406,18 @@ Every `data:` line in an invariant test names a file that exists.
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-65@2f2926f0
+- **Derives from:** WAY-65@fbf6bef4
 - **Part:** every
 - **Correction:** none
 - **Recovered:** none
 
 ## invariant-tests-of-change/1
 
-The invariant tests of a change include the file of every check that cites an invariant on "{fork-point}" or on the commit being checked, and every file such a check names on a `data:` line.
+The invariant tests of a change include every file that is an invariant test on "{fork-point}" or on the commit being checked.
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-65@2f2926f0
+- **Derives from:** WAY-65@fbf6bef4
 - **Part:** gate
 - **Correction:** none
 - **Recovered:** none
@@ -1637,7 +1637,7 @@ The test runner's record of a run holds a `pass` line for an invariant's identif
 
 - **Method:** `python -B gate/run_tests.py gate --record .runs/gate-tests.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-61@c6bdfd7c · WAY-65@2f2926f0
+- **Derives from:** WAY-61@c6bdfd7c · WAY-65@fbf6bef4
 - **Part:** gate
 - **Correction:** none
 - **Recovered:** none
@@ -1714,7 +1714,7 @@ Every entry of `foundations/environment_facts.md` states its fact in one sentenc
 
 - **Method:** `python -B elements/environment-facts/format_guard.py foundations/environment_facts.md --record .runs/environment-facts.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-76@c5e903ff
+- **Derives from:** WAY-76@42d7b6fb
 - **Part:** environment-facts
 - **Correction:** none
 - **Recovered:** none
@@ -1857,18 +1857,18 @@ The gate runs the method of every environment fact whose entry a change enters o
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-82@2ebe205b
+- **Derives from:** WAY-82@790a7972
 - **Part:** gate
 - **Correction:** none
 - **Recovered:** none
 
 ## fact-clock-exit/1
 
-The command that runs the method of every environment fact exits non-zero when some fact's result is `fail` or `error`, and zero otherwise.
+The clock exits non-zero when some fact's result is `fail` or `error`, and zero otherwise.
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-82@2ebe205b
+- **Derives from:** WAY-82@790a7972
 - **Part:** gate · environment-facts
 - **Correction:** none
 - **Recovered:** none
@@ -1879,7 +1879,7 @@ Every row of `foundations/human_verdicts.md` naming an invariant names an entry 
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-83@c3c840c6
+- **Derives from:** WAY-83@827c14d1
 - **Part:** invariants
 - **Correction:** none
 - **Recovered:** none
@@ -1890,7 +1890,7 @@ Every row of `foundations/human_verdicts.md` naming an environment fact names an
 
 - **Method:** `python -B elements/environment-facts/format_guard.py foundations/environment_facts.md --record .runs/environment-facts.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-83@c3c840c6
+- **Derives from:** WAY-83@827c14d1
 - **Part:** environment-facts
 - **Correction:** none
 - **Recovered:** none
@@ -1901,7 +1901,7 @@ The gate counts a human verdict for an entry only from the row naming its curren
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-83@c3c840c6
+- **Derives from:** WAY-83@827c14d1
 - **Part:** gate
 - **Correction:** none
 - **Recovered:** none

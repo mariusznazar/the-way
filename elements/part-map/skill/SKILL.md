@@ -1,6 +1,6 @@
 ---
 name: update-part-map
-description: Use when a product's part map, foundations/part_map.md, has to gain or change an entry — a part whose responsibility or files change, a part split or merged, a new critical flow or a new surface the product promises to keep, failure modes or a trust boundary recorded at a part, a file no part claims, or the first map written for a product.
+description: Use when a product's part map, foundations/part_map.md, has to gain or change an entry — a part whose responsibility or files change, a part split or merged, a new critical flow or a new surface, failure modes or a trust boundary recorded at a part, a file no part claims, or the first map written for a product.
 ---
 
 # Update the part map
@@ -28,7 +28,7 @@ directories above the resolved one (WAY-34, WAY-92, WAY-95).
 - Name the kind: a part, a critical flow, a surface. A dependency and a known violation are not
   entries of their own — one is a field of the part it starts from, the other a row of the
   derived list beside the map.
-- Search the map for an entry that already answers for this piece of the product: found — an
+- Search the map for an entry that already records the same part, flow or surface: found — an
   edit in place; not found — a new identifier.
 - A part that splits or merges: each entry that comes out of it takes a new identifier, the one
   left behind becomes a withdrawn identifier naming its successors, and every reference to it is

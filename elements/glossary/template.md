@@ -59,8 +59,8 @@ in (WAY-61).
 - Two uses carry two meanings when a definition true of one is false of the other. A noun naming one
   occurrence of what its verb does, or what does it — a run, to run; a probe, to probe — carries the
   verb's meaning; any other noun and verb of one word are weighed by the same test (WAY-95, WAY-99).
-- A word naming what a kind of foundation entry records names the entry or entries that record it
-  too, and carries one meaning: its definition says what the thing is, and that the foundation holds
+- A word naming what a kind of foundation entry records names the entry that records it too, and
+  carries one meaning: its definition says what the thing is, and that the foundation holds
   an entry for it stays in the decision that sets it (WAY-95).
 - A word naming what a rule computes — the parts a change touches, the invariants it reaches, a
   part's criticality — keeps the meaning a reader of the field gives it, and how it is computed stays
@@ -71,8 +71,8 @@ in (WAY-61).
   alone, its other uses rewritten to the term — wherever the foundation may still be edited. It never
   stands in *Avoid*, and never takes an entry for its everyday meaning alone (WAY-95, WAY-99).
 - The definition of a word stands in the glossary, not in a decision or a template. A closed list of
-  values that a guard reads — the kinds of change of a decision (WAY-20), the verdicts and results of
-  a check (WAY-63, WAY-74), the words `none` and `TODO` (WAY-71), the values the gate fills in
+  values that a guard reads — the kinds of change of a decision (WAY-20), the values of a verdict and
+  of a result (WAY-63, WAY-74), the words `none` and `TODO` (WAY-71), the values the gate fills in
   (WAY-61) — stays in its template together with what each value means, and its values take no
   entry (WAY-95).
 - Where a binding sentence says what a term is, the entry takes that, and the sentence keeps what is
@@ -114,8 +114,8 @@ in it; `TODO` stands only in *Not*, in place of what carries a meaning (WAY-71, 
   an adjective as "<subject> is <term> when <condition>" (WAY-96).
 - The genus is never a term of this glossary used in another meaning than its entry gives it. Where
   two terms name neighbouring things, the definition of one uses the other as its genus or in its
-  difference — "A result is a verdict, or `error` where …" — so that the uses of either find the
-  relation (WAY-96).
+  difference — "A result is the value reported for an entry on one commit: the verdict that counts
+  for it there, or …" — so that the uses of either find the relation (WAY-96).
 - The definition says what the word means, never a rule about the thing it names: the rule stays in
   the decision or the invariant that sets it. A definition carries a rule when it holds something
   the decision or invariant setting it could change while the word went on naming the same thing
@@ -151,10 +151,9 @@ in it; `TODO` stands only in *Not*, in place of what carries a meaning (WAY-71, 
   elements' templates, besides its definition and a meaning a reader who knows the product's field
   gives it, with what carries it now: the term of another entry of this glossary; the identifier in backticks
   of an entry of the part map, the invariants or the environment facts; in backticks, a value of a
-  template's closed list as that template writes it; or, between quotation marks, a word the
-  foundation uses, as the section on uses bounds a use, outside quotation marks and outside this
-  glossary. No carrier holds the term or any of its forms, the hyphens of both read as spaces
-  (WAY-99).
+  template's closed list as that template writes it; or, between quotation marks, a word used,
+  as the section on uses bounds a use, outside quotation marks and outside this glossary. No
+  carrier holds the term or any of its forms, the hyphens of both read as spaces (WAY-99).
 - Where a word carries two meanings and one of them is a meaning a reader who knows the product's
   field would not give it, one of the two is renamed wherever the text may still be edited, never
   marked by a note beside the word; *Not* shows the reader which word the other meaning took, where
@@ -205,7 +204,7 @@ A field stays in this template only while someone or something reads it (WAY-05)
 | Not | the agent and the panel judging a change; the guard, which checks that what it names exists | judgment for the meaning and the word chosen; read off for whether it exists |
 
 A field marked *judgment* holds someone's call: no tool reads its value off the product, and no
-question about a fact settles it. A reader takes such a value as a call, not as a reading (WAY-54).
+question with a factual answer settles it. A reader takes such a value as a call, not as a reading (WAY-54).
 A field marked *prose* carries text rather than a value.
 
 ## What the format guard checks
@@ -241,7 +240,7 @@ A field marked *prose* carries text rather than a value.
 - No entry carries a version (WAY-97).
 - Every example in `examples.md` matches its entry in the file word for word (WAY-05).
 - The guard's report lists, for every entry whose definition differs from its definition on
-  `{fork-point}`, the term's uses: the input of the review of uses, never a verdict on it (WAY-97).
+  `{fork-point}`, the term's uses: the input of the review of uses, never an answer to it (WAY-97).
 - The guard reports what it could not check and why, never agreement (WAY-38).
 - Given the path of a record, the guard writes the-way's own record of the run there, with a
   verdict for each invariant its checks cite (WAY-61, WAY-74); given `none` as either commit, it

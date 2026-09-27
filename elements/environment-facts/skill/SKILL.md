@@ -34,10 +34,9 @@ directories above the resolved one (WAY-34, WAY-92, WAY-95).
   on a release outside *Holds for* (WAY-91).
 - Put it through "Which facts are written": a citation failing its test stays quoted; one resting
   only on being a reason, not a condition, leaves an invariant's *Rests on* through
-  `record-invariant`. Through "The sentence": what a commit can make true or false is an
-  invariant, what runs a method is no fact, and a study's measurement is the fact — its transfer
-  to this process's agents goes to *Review when* of each decision citing it, via `record-decision`
-  (WAY-85).
+  `record-invariant`. Through "The sentence": an invariant is no fact, what runs a method is no
+  fact, and a study's measurement is the fact — its transfer to this process's agents goes to
+  *Review when* of each decision citing it, via `record-decision` (WAY-85).
 - A requirement of a catalogue nothing has adopted goes to the human as "do we adopt this?" before
   any entry. A binding rule is read as applying, with "does this bind us?" asked in step 4
   (WAY-86); while the template holds whether "the rule applies" is a fact as pending, such a case

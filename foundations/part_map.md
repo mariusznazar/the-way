@@ -60,13 +60,14 @@ The part answers for the words a foundation's rules use, each in one meaning: th
 the tools that write and check one, and the glossary of the-way itself.
 
 - **Files:** elements/glossary/**
+  foundations/glossary.md
 - **Depends on:** decisions · part-map · invariants · environment-facts
 - **Failure modes:** none
 - **Trust boundary:** none
 
 ## environment-facts — Environment facts
 
-The part answers for what a product takes as true about the world outside it.
+The part answers for a product's environment facts.
 
 - **Files:** elements/environment-facts/**
   foundations/environment_facts.md
@@ -87,7 +88,7 @@ them.
 
 ## gate — The gate
 
-The part answers for running the checks a change calls for, and for the tests of critical flows.
+The part answers for the gate and the clock, and for the tests of critical flows.
 
 - **Files:** gate/**
 - **Depends on:** decisions · relation-model

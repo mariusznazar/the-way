@@ -10,7 +10,7 @@ Until a kind has a real example, only its form in the template stands.
 
 ## New decision
 
-### WAY-03/1 — Who may change an invariant's test, and when?
+### WAY-03/1 — Who may change an invariant test, and when?
 
 Invariant tests are written and accepted together with the foundation change, and during
 implementation they are read-only. A mechanism outside the model enforces this: a local hook,
@@ -23,7 +23,7 @@ foundation step.
 - **Based on:** agents that a test stands in the way of cheat past it, and the Claude models
   measured do so mostly by changing the test, against which read-only tests are particularly
   effective: impossiblebench-test-modification@9cdba560.
-- **Relations:** derives from WAY-01@a291c2c0 · related to WAY-02
+- **Relations:** derives from WAY-01@4deacf15 · related to WAY-02
 - **Outranks:** none
 - **Verification:** level 1 — invariants: invariant-test-change-acceptance.
 - **Review when:** the design of the task cycle begins, or no model in the range of fact

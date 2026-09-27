@@ -225,7 +225,7 @@ def value_of(entry, name):
     return entry.fields.get(name, ["", entry.line])
 
 
-def content_fingerprint(entry):
+def entry_fingerprint(entry):
     """The fingerprint of an entry: its sentence and the value of *Holds for* joined by a line
     break, as WAY-39 computes it (WAY-78); None for an entry with no sentence."""
     if entry.sentence is None:
@@ -283,8 +283,8 @@ def merged_facts(branch, onto, base):
             continue
         mine, theirs = branch.entries.get(identifier), onto.entries.get(identifier)
         before = base.entries.get(identifier)
-        then = content_fingerprint(before) if before is not None else None
-        changed_here = mine is not None and content_fingerprint(mine) != then
+        then = entry_fingerprint(before) if before is not None else None
+        changed_here = mine is not None and entry_fingerprint(mine) != then
         if identifier in branch.withdrawn or (identifier in onto.withdrawn and not changed_here):
             continue
         if changed_here or theirs is None:
@@ -741,7 +741,7 @@ def check_corrections(entries, report):
         label = label_of(entry)
         correction, line = value_of(entry, "Correction")
         declared = re.fullmatch(r"([0-9a-f]+) → ([0-9a-f]+)", flat(correction))
-        now = content_fingerprint(entry)
+        now = entry_fingerprint(entry)
         if correction.strip() and bare(correction) != "none" and not declared:
             report.error(line, "%s: *Correction* is neither `none` nor `<fingerprint> → "
                                "<fingerprint>`" % label, check)
@@ -981,11 +981,11 @@ def check_against_base(path, facts, rules, base, top, report, no_commit=None):
     for identifier, entry in facts.entries.items():
         label = label_of(entry)
         correction = flat(value_of(entry, "Correction")[0])
-        now = content_fingerprint(entry)
+        now = entry_fingerprint(entry)
         if now is None:
             continue
         before = before_facts.entries.get(identifier)
-        then = content_fingerprint(before) if before is not None else None
+        then = entry_fingerprint(before) if before is not None else None
         if then is None:
             if entry.version != 1:
                 report.error(entry.line, "%s: a new entry carries version 1" % label, check, (new,))
@@ -1075,7 +1075,7 @@ def merged_foundation(path, facts, foundation, rules, merge_onto, top, report):
         report.notes.append("HEAD and %s have no merge base; every fact the branch holds is read "
                             "as the branch's copy" % merge_onto)
     merged = Merged()
-    merged.facts = {identifier: content_fingerprint(entry) for identifier, entry
+    merged.facts = {identifier: entry_fingerprint(entry) for identifier, entry
                     in merged_facts(facts, onto_facts, base_facts).items()}
     merged.withdrawn = dict(onto_facts.successors)
     merged.withdrawn.update(facts.successors)
