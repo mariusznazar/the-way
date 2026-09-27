@@ -17,6 +17,9 @@ base directory is a link, so resolve it first: `realpath <base>` in Bash,
 parent of the resolved directory, and the product's `foundations/decisions.md`. Entries take the
 prefix of the log; when the log has no entries, ask for it. When the repository has no
 `foundations/decisions.md`, ask whether the product starts its decision log here; if not, stop.
+Before drafting, read in full the product's `foundations/glossary.md` where it exists and, in a
+product other than the-way, the-way's `foundations/glossary.md` in the pinned copy, three
+directories above the resolved one (WAY-34, WAY-92, WAY-95).
 
 ## 2. Decide what the entry is
 
@@ -34,6 +37,10 @@ prefix of the log; when the log has no entries, ask for it. When the repository 
   binds: an option already weighed and refused stands there, and nowhere else. Each finding
   becomes a relation, a question about a collision in step 4, or a sentence that answered this
   question in passing and now needs a version or a correction without it.
+  The search also asks whether the entry uses a glossary term in another meaning than its entry
+  gives, or spells out a term's definition instead of using the term (WAY-33): a paraphrase is
+  rewritten to the term, and another meaning, or a word the glossary does not yet settle, goes
+  through `record-glossary-term`.
 
 ## 3. Draft
 

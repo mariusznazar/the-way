@@ -17,6 +17,9 @@ base directory is a link, so resolve it first: `realpath <base>` in Bash,
 resolved directory, `examples.md` where it exists, and the product's whole
 `foundations/part_map.md` — its three kinds of entry refer to one another. When the repository
 has no `foundations/part_map.md`, ask whether the product starts its map here; if not, stop.
+Before drafting, read in full the product's `foundations/glossary.md` where it exists and, in a
+product other than the-way, the-way's `foundations/glossary.md` in the pinned copy, three
+directories above the resolved one (WAY-34, WAY-92, WAY-95).
 
 ## 2. Decide what the entry is
 
@@ -35,6 +38,10 @@ has no `foundations/part_map.md`, ask whether the product starts its map here; i
   moves, an invariant naming a flow, a sentence that waits for the map (WAY-33, WAY-37). An entry
   of the map carries no relation, so each finding becomes a change to an entry or a question in
   step 4.
+  The search also asks whether the entry uses a glossary term in another meaning than its entry
+  gives, or spells out a term's definition instead of using the term (WAY-33): a paraphrase is
+  rewritten to the term, and another meaning, or a word the glossary does not yet settle, goes
+  through `record-glossary-term`.
 
 ## 3. Draft
 

@@ -11,5 +11,14 @@ identifier or a fingerprint: a sentence depends on a term by using its word (WAY
 definition goes through a review of the term's uses (WAY-97).
 
 This description grows into the element's template as the element goes through its steps.
-`template.md` holds the rules of an entry; the skill that writes entries and the guard that checks
-them come in the element's next steps.
+`template.md` holds the rules of an entry; the guard that checks entries comes in the element's next
+step.
+
+`skill/` holds `record-glossary-term`, a Claude Code skill that writes the entries of a product's
+glossary. A product uses the skill from the commit of the-way it pins (WAY-34), linked into the
+product's `.claude/skills/` from the pinned copy. For work on the-way itself, link its directory into
+the user's skills directory; on Windows:
+
+```powershell
+New-Item -ItemType Junction -Path "$HOME\.claude\skills\record-glossary-term" -Target "<the-way>\elements\glossary\skill"
+```

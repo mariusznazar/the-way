@@ -20,6 +20,9 @@ decisions of the other. When the repository has no `foundations/invariants.md`, 
 product starts its invariants here; if not, stop; if so, the same change claims the new file for
 the `invariants` part of the map through `update-part-map`. When it has no part map, the map comes
 first: stop until `update-part-map` has written it.
+Before drafting, read in full the product's `foundations/glossary.md` where it exists and, in a
+product other than the-way, the-way's `foundations/glossary.md` in the pinned copy, three
+directories above the resolved one (WAY-34, WAY-92, WAY-95).
 
 ## 2. Decide what the entry is
 
@@ -43,6 +46,10 @@ first: stop until `update-part-map` has written it.
   sentence, a failure mode it detects, or a named link whose entry has changed wording, to
   recheck and carry its new fingerprint (WAY-66). Each finding becomes a link, a change to an
   entry or a question in step 4.
+  The search also asks whether the entry uses a glossary term in another meaning than its entry
+  gives, or spells out a term's definition instead of using the term (WAY-33): a paraphrase is
+  rewritten to the term, and another meaning, or a word the glossary does not yet settle, goes
+  through `record-glossary-term`.
 
 ## 3. Draft
 

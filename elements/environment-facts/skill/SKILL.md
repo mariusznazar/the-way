@@ -22,6 +22,9 @@ product starts its facts here; if not, stop; if so, the change claims the new fi
 the map through `update-part-map` and settles there where the checks of its facts stand
 (WAY-81), and writes every fact an invariant or a decision's *Based on* still waits for (WAY-90) —
 one reaching a pending line going to the human first.
+Before drafting, read in full the product's `foundations/glossary.md` where it exists and, in a
+product other than the-way, the-way's `foundations/glossary.md` in the pinned copy, three
+directories above the resolved one (WAY-34, WAY-92, WAY-95).
 
 ## 2. Decide what the entry is
 
@@ -46,6 +49,10 @@ one reaching a pending line going to the human first.
 - Search the whole foundation for entries this fact touches with no written link (WAY-33) — an
   obligation raising a part's criticality included, through `update-part-map` (WAY-87). Each
   finding becomes a link, a change, or a question in step 4.
+  The search also asks whether the entry uses a glossary term in another meaning than its entry
+  gives, or spells out a term's definition instead of using the term (WAY-33): a paraphrase is
+  rewritten to the term, and another meaning, or a word the glossary does not yet settle, goes
+  through `record-glossary-term`.
 - A case needing a pending line to fill a field stops the entry, for the human and
   `record-decision`, before it is written; one about the check alone — the method, or the
   deliberate break — travels as an open question in step 4.6 instead.
