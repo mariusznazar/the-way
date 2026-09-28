@@ -576,7 +576,7 @@ class Examples(GuardTestCase):
         report = format_guard.Report(self.path)
         format_guard.check_examples(entries, examples, report)
         self.assertTrue(any("differs from the log" in m for _, m in report.errors), report.errors)
-        self.assertEqual(report.record(), [line("check_examples", "fail", "decision-example-copy/1",
+        self.assertEqual(report.record(), [line("check_examples", "fail", "decision-example-numbers/1",
                                                 "line 20: examples.md:20 differs from the log")])
 
 
@@ -643,7 +643,7 @@ class Record(GuardTestCase):
         recorded = [item["invariant"] for item in self.lines]
         for skipped in ("relation-fingerprint-value/1", "log-existing-lines/1",
                         "log-versions-added-per-number/1", "decision-template-change/1",
-                        "decision-approver/1", "decision-example-copy/1"):
+                        "decision-approver/1", "decision-example-numbers/1"):
             self.assertNotIn(skipped, recorded)
 
     def test_the_record_is_overwritten(self):
@@ -1219,7 +1219,7 @@ class OwnLog(unittest.TestCase):
         self.assertEqual(sorted({item["invariant"] for item in lines}), [
             "binding-sentence-count/1", "binding-sentence-words/1", "decision-approval-record/1",
             "decision-approver/1", "decision-binding-across-versions/1",
-            "decision-change-kind/1", "decision-change-rationale/1", "decision-example-copy/1",
+            "decision-change-kind/1", "decision-change-rationale/1", "decision-example-numbers/1",
             "decision-heading-form/1", "decision-verification-level/1",
             "decision-version-sequence/1", "inherited-origin-form/1", "log-entry-field-presence/1",
             "log-entry-field-words/1", "log-reference-target/1", "outranks-pairs/1",

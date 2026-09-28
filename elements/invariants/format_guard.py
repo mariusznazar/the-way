@@ -1291,8 +1291,8 @@ def check_merge_todo(entries, rules, report, no_commit=None, facts_have_entries=
     (WAY-71); *Rests on* holds it there only until the environment facts element has entries.
     Given `no_commit`, which says why there is no commit to merge onto, records it unchecked
     instead."""
-    # invariant: invariant-entry-merge-todo/2
-    check, merge_todo = "check_merge_todo", "invariant-entry-merge-todo/2"
+    # invariant: invariant-entry-merge-todo/1
+    check, merge_todo = "check_merge_todo", "invariant-entry-merge-todo/1"
     if no_commit:
         report.unchecked(check, NO_COMMIT_REASON, no_commit, merge_todo)
         return

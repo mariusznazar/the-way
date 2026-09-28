@@ -9,7 +9,7 @@ The decision guard, given "{merge-onto}", reports every `derives from` or `narro
 
 - **Method:** `python -B gate/run_tests.py gate --record .runs/gate-tests.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-02@59bd26f9 · WAY-31@f17a44b2
+- **Derives from:** WAY-02@59bd26f9 · WAY-31@4b29c953
 - **Part:** decisions · relation-model
 - **Correction:** none
 - **Recovered:** none
@@ -42,7 +42,7 @@ Where {merge-onto} exists, no change alters, against {fork-point}, an invariant 
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-03@4fa941a4 · WAY-10@b16df2fb
+- **Derives from:** WAY-03@4fa941a4 · WAY-10@08118926
 - **Part:** every
 - **Correction:** none
 - **Recovered:** none
@@ -64,7 +64,7 @@ Every decision version in the decision log, other than a repeal, opens with one 
 
 - **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-05@beee55d9 · WAY-20@6aa77560
+- **Derives from:** WAY-05@2f8233e2 · WAY-20@deffabbb
 - **Part:** decisions
 - **Correction:** none
 - **Recovered:** none
@@ -75,18 +75,18 @@ No binding sentence in the decision log contains, outside code, a word the decis
 
 - **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-05@beee55d9
+- **Derives from:** WAY-05@2f8233e2
 - **Part:** decisions
 - **Correction:** none
 - **Recovered:** none
 
-## decision-example-copy/1
+## decision-example-numbers/1
 
-Every example in `elements/decisions/examples.md` matches, word for word, the version of the decision log it copies.
+Every decision number `elements/decisions/examples.md` names is the number of a decision in the decision log.
 
 - **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-05@beee55d9
+- **Derives from:** WAY-05@2f8233e2
 - **Part:** decisions
 - **Correction:** none
 - **Recovered:** none
@@ -97,7 +97,7 @@ A change that, against {fork-point}, alters `elements/decisions/template.md` als
 
 - **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --base {fork-point} --record .runs/decisions-base.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-05@beee55d9
+- **Derives from:** WAY-05@2f8233e2
 - **Part:** decisions
 - **Correction:** none
 - **Recovered:** none
@@ -141,7 +141,7 @@ Every entry of `foundations/invariants.md` names as its method a command that be
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-08@9d45e0a9 · WAY-61@c6bdfd7c · WAY-63@f16348c8
+- **Derives from:** WAY-08@9d45e0a9 · WAY-61@4804d070 · WAY-63@f16348c8
 - **Part:** every
 - **Correction:** none
 - **Recovered:** none
@@ -174,18 +174,18 @@ Where {merge-onto} exists, every file git tracks lies in `foundations/` or in th
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-09@8ac4ff8e
+- **Derives from:** WAY-09@57df8e6f
 - **Part:** every
 - **Correction:** none
 - **Recovered:** none
 
 ## element-directory-contents/1
 
-Where {merge-onto} exists, every element directory holds a template, examples, a skill and a format guard.
+Where {merge-onto} exists, every element directory holds a template, examples or a pointer to entries of the-way that serve as its examples, a skill and a format guard.
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-09@8ac4ff8e
+- **Derives from:** WAY-09@57df8e6f
 - **Part:** decisions · part-map · invariants · glossary · environment-facts
 - **Correction:** none
 - **Recovered:** none
@@ -196,7 +196,7 @@ Where {merge-onto} exists, `relation-model/` holds the script that computes fing
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-09@8ac4ff8e
+- **Derives from:** WAY-09@57df8e6f
 - **Part:** relation-model
 - **Correction:** none
 - **Recovered:** none
@@ -207,7 +207,7 @@ Where {merge-onto} exists, no change alters, against {fork-point}, an invariant 
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-10@b16df2fb
+- **Derives from:** WAY-10@08118926
 - **Part:** every
 - **Correction:** none
 - **Recovered:** none
@@ -273,18 +273,18 @@ Every decision version in the decision log records in *Approved by* who approved
 
 - **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-14@eb86d14b
+- **Derives from:** WAY-14@e8ef4843
 - **Part:** decisions
 - **Correction:** none
 - **Recovered:** none
 
 ## decision-approver/1
 
-Every decision version in the decision log names in *Approved by* Mariusz, or the approver its *Approver override* names.
+Every decision version in the decision log names Mariusz in *Approved by*.
 
 - **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-14@eb86d14b
+- **Derives from:** WAY-14@e8ef4843
 - **Part:** decisions
 - **Correction:** none
 - **Recovered:** none
@@ -361,7 +361,7 @@ The heading of every decision version in the decision log has the form `### <pre
 
 - **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-19@506b8862
+- **Derives from:** WAY-19@ab65670f
 - **Part:** decisions
 - **Correction:** none
 - **Recovered:** none
@@ -372,7 +372,7 @@ The versions of each number in the decision log are consecutive.
 
 - **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-19@506b8862
+- **Derives from:** WAY-19@ab65670f
 - **Part:** decisions
 - **Correction:** none
 - **Recovered:** none
@@ -383,29 +383,29 @@ Every decision version after the first gives a rationale for the change, or hold
 
 - **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-19@506b8862 · WAY-71@c32828c9
+- **Derives from:** WAY-19@ab65670f · WAY-71@c32828c9
 - **Part:** decisions
 - **Correction:** none
 - **Recovered:** none
 
 ## decision-change-kind/1
 
-Every decision version after the first names its kind of change from the list in the decision template, or holds `TODO` in *Change*.
+The first version of every number in the decision log names `new decision` in *Change*, and every later version names there a kind of change from the list in the decision template or holds `TODO`.
 
 - **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-20@6aa77560 · WAY-71@c32828c9
+- **Derives from:** WAY-20@deffabbb · WAY-71@c32828c9
 - **Part:** decisions
 - **Correction:** none
 - **Recovered:** none
 
 ## decision-binding-across-versions/1
 
-Every rationale change, field change and challenge in the decision log keeps the binding sentences of the version before it word for word.
+Every decision version in the decision log whose kind of change is unchanged sentences or challenge keeps the binding sentences of the version before it word for word.
 
 - **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-20@6aa77560
+- **Derives from:** WAY-20@deffabbb
 - **Part:** decisions
 - **Correction:** none
 - **Recovered:** none
@@ -416,7 +416,7 @@ No repeal in the decision log has binding sentences.
 
 - **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-20@6aa77560
+- **Derives from:** WAY-20@deffabbb
 - **Part:** decisions
 - **Correction:** none
 - **Recovered:** none
@@ -427,7 +427,7 @@ Every name in the scope of the latest version of a decision in the decision log 
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-21@586e4a38 · WAY-41@4dfa64af
+- **Derives from:** WAY-21@586e4a38 · WAY-41@f42aae15
 - **Part:** every
 - **Correction:** none
 - **Recovered:** none
@@ -537,7 +537,7 @@ A relation in the decision log carries a fingerprint when, and only when, its ty
 
 - **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-31@f17a44b2
+- **Derives from:** WAY-31@4b29c953
 - **Part:** decisions
 - **Correction:** none
 - **Recovered:** none
@@ -548,18 +548,18 @@ Where {merge-onto} exists, every fingerprint a relation carries in the latest ve
 
 - **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --merge-onto {merge-onto} --record .runs/decisions-merge-onto.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-02@59bd26f9 · WAY-31@f17a44b2
+- **Derives from:** WAY-02@59bd26f9 · WAY-31@4b29c953
 - **Part:** decisions · relation-model
 - **Correction:** none
 - **Recovered:** none
 
 ## relation-type/1
 
-Every relation in the decision log has one of the three types the decision template lists.
+Every relation in the decision log has the type `derives from` or `narrows`.
 
 - **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-32@b3ee3f37
+- **Derives from:** WAY-32@1131acb7
 - **Part:** decisions
 - **Correction:** none
 - **Recovered:** none
@@ -577,11 +577,11 @@ Where {merge-onto} exists, no change alters, against {fork-point}, a foundation 
 
 ## skill-rule-source/1
 
-Every element's skill names its element's template as the source of the rules.
+Every element's skill names its element's template and `elements/common/` as the source of the rules of its entries, and `elements/common/` as the source of the way of working the skills share.
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-35@81666508
+- **Derives from:** WAY-35@11333629
 - **Part:** decisions · part-map · invariants · glossary · environment-facts
 - **Correction:** none
 - **Recovered:** none
@@ -680,7 +680,7 @@ Every identifier of an entry in the part map is made of words.
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-41@4dfa64af
+- **Derives from:** WAY-41@f42aae15
 - **Part:** part-map
 - **Correction:** none
 - **Recovered:** none
@@ -691,7 +691,7 @@ No identifier is held by two entries or withdrawn identifiers of the part map, `
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-41@4dfa64af · WAY-64@a3000343 · WAY-75@a0bd7b11
+- **Derives from:** WAY-41@f42aae15 · WAY-64@60c91542 · WAY-75@a0bd7b11
 - **Part:** part-map · invariants · environment-facts
 - **Correction:** none
 - **Recovered:** none
@@ -702,7 +702,7 @@ Every part map identifier referred to from the foundation, a test or a generated
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-41@4dfa64af
+- **Derives from:** WAY-41@f42aae15
 - **Part:** every
 - **Correction:** none
 - **Recovered:** none
@@ -775,7 +775,7 @@ Every part a critical flow of the part map lists is a part of the map.
 
 ## flow-invariant-link/1
 
-Every critical flow in the part map names an invariant and a test that names the flow.
+Every critical flow in the part map names an invariant and is named by a line `flow: <identifier>` in a test.
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
@@ -790,7 +790,7 @@ Every invariant identifier the part map names is an entry of `foundations/invari
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-64@a3000343
+- **Derives from:** WAY-64@60c91542
 - **Part:** every
 - **Correction:** none
 - **Recovered:** none
@@ -801,7 +801,7 @@ Every failure mode recorded in the part map names its severity.
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-46@b0cef8dd
+- **Derives from:** WAY-46@90337b22
 - **Part:** part-map
 - **Correction:** none
 - **Recovered:** none
@@ -812,7 +812,7 @@ Every failure mode recorded in the part map names an invariant that detects it b
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-46@b0cef8dd
+- **Derives from:** WAY-46@90337b22
 - **Part:** part-map
 - **Correction:** none
 - **Recovered:** none
@@ -823,7 +823,7 @@ No part of the part map carries a criticality written by hand.
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-46@b0cef8dd
+- **Derives from:** WAY-46@90337b22
 - **Part:** part-map
 - **Correction:** none
 - **Recovered:** none
@@ -834,7 +834,7 @@ The map guard computes the highest criticality of the map's scale for a part wit
 
 - **Method:** `python -B gate/run_tests.py elements/part-map --record .runs/part-map-tests.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-46@b0cef8dd
+- **Derives from:** WAY-46@90337b22
 - **Part:** part-map
 - **Correction:** none
 - **Recovered:** none
@@ -845,7 +845,7 @@ The map guard reports every dependency running from a part of higher criticality
 
 - **Method:** `python -B gate/run_tests.py elements/part-map --record .runs/part-map-tests.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-46@b0cef8dd
+- **Derives from:** WAY-46@90337b22
 - **Part:** part-map
 - **Correction:** none
 - **Recovered:** none
@@ -1050,7 +1050,7 @@ No file generated for an agent holds an overview of the repository's directories
 
 ## flow-test-location/1
 
-Every critical flow in the part map names a test whose path lies under `gate/`.
+Every test holding a line `flow: <identifier>` that names a critical flow of the part map lies under `gate/`.
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
@@ -1072,11 +1072,11 @@ Every entry of `foundations/invariants.md` states its invariant in one sentence.
 
 ## invariant-identifier-form/1
 
-The identifier in the heading of every entry of `foundations/invariants.md` has the form the invariants template gives.
+The identifier in the heading of every entry of `foundations/invariants.md` has the form `elements/common/` gives.
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-64@a3000343
+- **Derives from:** WAY-64@60c91542 · WAY-35@11333629
 - **Part:** invariants
 - **Correction:** none
 - **Recovered:** none
@@ -1160,22 +1160,22 @@ Every correction an entry of `foundations/invariants.md` declares is confirmed b
 
 ## invariant-recovered-form/1
 
-Every entry of `foundations/invariants.md` holds in *Recovered* either `none` or a value of the form `recovered — searched: <…>; found: <…>`.
+Every row of the list of recovered invariants in `foundations/invariants.md` names an identifier, the current version of the entry it identifies, `searched: <…>` and `found: <…>`.
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-58@24ad45a9
+- **Derives from:** WAY-58@9cad9f54
 - **Part:** invariants
 - **Correction:** none
 - **Recovered:** none
 
 ## invariant-recovered-derived/1
 
-Every entry of `foundations/invariants.md` that names a decision it derives from holds `none` in *Recovered*.
+No entry of `foundations/invariants.md` that stands on the list of recovered invariants names a decision in *Derives from*.
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-58@24ad45a9
+- **Derives from:** WAY-58@9cad9f54
 - **Part:** invariants
 - **Correction:** none
 - **Recovered:** none
@@ -1186,7 +1186,7 @@ For every entry whose sentence a change adds or alters against "{fork-point}", t
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-58@24ad45a9
+- **Derives from:** WAY-58@9cad9f54
 - **Part:** gate
 - **Correction:** none
 - **Recovered:** none
@@ -1197,7 +1197,7 @@ The fingerprint the invariants guard gives an invariant entry is the fingerprint
 
 - **Method:** `python -B gate/run_tests.py elements/invariants --record .runs/invariants-tests.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-59@9ea9277e
+- **Derives from:** WAY-59@2d716c3f
 - **Part:** invariants · relation-model
 - **Correction:** none
 - **Recovered:** none
@@ -1230,7 +1230,7 @@ Every value a command in `foundations/invariants.md` takes from the gate stands 
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-61@c6bdfd7c
+- **Derives from:** WAY-61@4804d070
 - **Part:** invariants
 - **Correction:** none
 - **Recovered:** none
@@ -1241,7 +1241,7 @@ For every invariant whose command a run of the gate carried out, the gate's repo
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-61@c6bdfd7c
+- **Derives from:** WAY-61@4804d070
 - **Part:** gate
 - **Correction:** none
 - **Recovered:** none
@@ -1252,7 +1252,7 @@ The gate reports no pass for an invariant that no run recorded a verdict for.
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-61@c6bdfd7c
+- **Derives from:** WAY-61@4804d070
 - **Part:** gate
 - **Correction:** none
 - **Recovered:** none
@@ -1325,7 +1325,7 @@ The gate reports a result for every invariant a change against "{fork-point}" re
 
 ## flow-test-run/1
 
-The gate runs, on every change, the test that every critical flow of the part map names.
+The gate runs, on every change, every test holding a line `flow: <identifier>` that names a critical flow of the part map.
 
 - **Method:** `TODO`
 - **Rests on:** none
@@ -1351,7 +1351,7 @@ The repository holds exactly one file of invariant entries, `foundations/invaria
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-64@a3000343
+- **Derives from:** WAY-64@60c91542
 - **Part:** every
 - **Correction:** none
 - **Recovered:** none
@@ -1362,7 +1362,7 @@ Every identifier `foundations/invariants.md` held on {fork-point} stands in it a
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --base {fork-point} --record .runs/invariants-base.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-64@a3000343
+- **Derives from:** WAY-64@60c91542
 - **Part:** invariants
 - **Correction:** none
 - **Recovered:** none
@@ -1373,18 +1373,18 @@ Every identifier that stood as a withdrawn identifier of `foundations/invariants
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --base {fork-point} --record .runs/invariants-base.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-64@a3000343
+- **Derives from:** WAY-64@60c91542
 - **Part:** invariants
 - **Correction:** none
 - **Recovered:** none
 
 ## withdrawal-successors/1
 
-Every successor a withdrawn identifier of `foundations/invariants.md` names is an entry or a withdrawn identifier of that file, or `none`.
+Every withdrawn identifier of `foundations/invariants.md` gives why it was withdrawn and names as successors only entries or withdrawn identifiers of that file, or `none`.
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-64@a3000343
+- **Derives from:** WAY-64@60c91542
 - **Part:** invariants
 - **Correction:** none
 - **Recovered:** none
@@ -1576,7 +1576,7 @@ No field of an entry of `foundations/invariants.md` holds `none` or `TODO` where
 - **Correction:** none
 - **Recovered:** none
 
-## invariant-entry-merge-todo/2
+## invariant-entry-merge-todo/1
 
 Where {merge-onto} exists, no field of an entry of `foundations/invariants.md` other than *Method* and *Rests on* holds `TODO`, and *Rests on* holds it only while the environment facts that merge leaves hold no entry.
 
@@ -1589,11 +1589,11 @@ Where {merge-onto} exists, no field of an entry of `foundations/invariants.md` o
 
 ## template-language/1
 
-Every element's template states that its entries are written in English.
+`elements/common/` states that the entries of every element are written in English, and every element's template refers there for that rule.
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-72@ac27f7ee
+- **Derives from:** WAY-72@ac27f7ee · WAY-35@11333629
 - **Part:** decisions · part-map · invariants · glossary · environment-facts
 - **Correction:** none
 - **Recovered:** none
@@ -1604,7 +1604,7 @@ Every line of the-way's own record of a run is one JSON object holding `check`, 
 
 - **Method:** `TODO`
 - **Rests on:** json-text@8141eb36 · json-lines@f16c5b84
-- **Derives from:** WAY-74@6b4968d0
+- **Derives from:** WAY-74@1e1c88d7
 - **Part:** decisions · part-map · invariants · gate · environment-facts
 - **Correction:** none
 - **Recovered:** none
@@ -1615,7 +1615,7 @@ Every path ending in `.jsonl` that a command in `foundations/invariants.md` name
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** gitignore-paths@3218da8f
-- **Derives from:** WAY-74@6b4968d0
+- **Derives from:** WAY-74@1e1c88d7
 - **Part:** invariants · repository
 - **Correction:** none
 - **Recovered:** none
@@ -1626,7 +1626,7 @@ The gate reads, from the-way's own record of a run, only the lines the run it st
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-74@6b4968d0
+- **Derives from:** WAY-74@1e1c88d7
 - **Part:** gate
 - **Correction:** none
 - **Recovered:** none
@@ -1637,7 +1637,7 @@ The test runner's record of a run holds a `pass` line for an invariant's identif
 
 - **Method:** `python -B gate/run_tests.py gate --record .runs/gate-tests.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-61@c6bdfd7c · WAY-65@fbf6bef4
+- **Derives from:** WAY-61@4804d070 · WAY-65@fbf6bef4
 - **Part:** gate
 - **Correction:** none
 - **Recovered:** none
@@ -1666,11 +1666,11 @@ Every environment fact entry the repository holds stands in `foundations/environ
 
 ## fact-identifier-form/1
 
-The identifier in the heading of every entry of `foundations/environment_facts.md` has the form the environment facts template gives.
+The identifier in the heading of every entry of `foundations/environment_facts.md` has the form `elements/common/` gives.
 
 - **Method:** `python -B elements/environment-facts/format_guard.py foundations/environment_facts.md --record .runs/environment-facts.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-75@a0bd7b11
+- **Derives from:** WAY-75@a0bd7b11 · WAY-35@11333629
 - **Part:** environment-facts
 - **Correction:** none
 - **Recovered:** none
@@ -1736,40 +1736,40 @@ The fingerprint the environment facts guard gives an entry is the fingerprint of
 
 - **Method:** `python -B gate/run_tests.py elements/environment-facts --record .runs/environment-facts-tests.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-78@8fbbd2af
+- **Derives from:** WAY-78@dbdb6666
 - **Part:** environment-facts · relation-model
 - **Correction:** none
 - **Recovered:** none
 
 ## fact-version-new/1
 
-Every entry of `foundations/environment_facts.md` with no fingerprint on {fork-point} carries version 1 and declares no correction.
+Every entry of `foundations/environment_facts.md` with no fingerprint on {fork-point} carries version 1.
 
 - **Method:** `python -B elements/environment-facts/format_guard.py foundations/environment_facts.md --base {fork-point} --record .runs/environment-facts-base.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-79@7829e7a4
+- **Derives from:** WAY-79@feff3cbc
 - **Part:** environment-facts
 - **Correction:** none
 - **Recovered:** none
 
 ## fact-version-changed/1
 
-Every entry of `foundations/environment_facts.md` whose fingerprint differs from its fingerprint on {fork-point} carries either a version one higher than there and no correction, or the version it has there and a correction naming both fingerprints.
+Every entry of `foundations/environment_facts.md` whose fingerprint differs from its fingerprint on {fork-point} carries a version one higher than there.
 
 - **Method:** `python -B elements/environment-facts/format_guard.py foundations/environment_facts.md --base {fork-point} --record .runs/environment-facts-base.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-79@7829e7a4
+- **Derives from:** WAY-79@feff3cbc
 - **Part:** environment-facts
 - **Correction:** none
 - **Recovered:** none
 
 ## fact-version-unchanged/1
 
-Every entry of `foundations/environment_facts.md` whose fingerprint equals its fingerprint on {fork-point} carries the version it has there, and declares no correction whose second fingerprint differs from it.
+Every entry of `foundations/environment_facts.md` whose fingerprint equals its fingerprint on {fork-point} carries the version it has there.
 
 - **Method:** `python -B elements/environment-facts/format_guard.py foundations/environment_facts.md --base {fork-point} --record .runs/environment-facts-base.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-79@7829e7a4
+- **Derives from:** WAY-79@feff3cbc
 - **Part:** environment-facts
 - **Correction:** none
 - **Recovered:** none
@@ -1780,7 +1780,7 @@ Every `fact:` line in a check that names an entry of `foundations/environment_fa
 
 - **Method:** `python -B elements/environment-facts/format_guard.py foundations/environment_facts.md --record .runs/environment-facts.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-79@7829e7a4
+- **Derives from:** WAY-79@feff3cbc
 - **Part:** every
 - **Correction:** none
 - **Recovered:** none
@@ -1835,7 +1835,7 @@ Every environment fact the *Based on* of the latest version of a decision names 
 
 - **Method:** `python -B elements/environment-facts/format_guard.py foundations/environment_facts.md --record .runs/environment-facts.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-90@cadf2dcb
+- **Derives from:** WAY-90@e6fa3272
 - **Part:** decisions · environment-facts
 - **Correction:** none
 - **Recovered:** none
@@ -1846,7 +1846,7 @@ Where {merge-onto} exists, every fingerprint the *Based on* of the latest versio
 
 - **Method:** `python -B elements/environment-facts/format_guard.py foundations/environment_facts.md --merge-onto {merge-onto} --record .runs/environment-facts-merge-onto.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-90@cadf2dcb
+- **Derives from:** WAY-90@e6fa3272
 - **Part:** decisions · environment-facts
 - **Correction:** none
 - **Recovered:** none
@@ -1952,11 +1952,11 @@ Where {merge-onto} exists, no field of an entry of `foundations/environment_fact
 
 ## glossary-file/1
 
-Every glossary entry the repository holds, other than a copy in `elements/glossary/examples.md`, stands in `foundations/glossary.md`.
+Every glossary entry the repository holds stands in `foundations/glossary.md`.
 
 - **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-93@4dc6ce12
+- **Derives from:** WAY-93@73fcf554
 - **Part:** every
 - **Correction:** none
 - **Recovered:** none
@@ -1967,7 +1967,7 @@ Every glossary entry the repository holds, other than a copy in `elements/glossa
 
 - **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-93@4dc6ce12
+- **Derives from:** WAY-93@73fcf554
 - **Part:** glossary
 - **Correction:** none
 - **Recovered:** none
@@ -1978,18 +1978,18 @@ No term is held by two entries of `foundations/glossary.md`.
 
 - **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-93@4dc6ce12
+- **Derives from:** WAY-93@73fcf554
 - **Part:** glossary
 - **Correction:** none
 - **Recovered:** none
 
 ## glossary-term-collision/1
 
-The glossary guard warns on every change that, against "{fork-point}", adds or renames a term of `foundations/glossary.md` or an identifier of the part map, the invariants or the environment facts so that the two read alike, its hyphens read as spaces, unless the identifier is of a part whose files include `elements/<identifier>/` and the term, in any of its forms, names that element.
+The glossary guard warns on every change that, against "{fork-point}", adds or renames a term of `foundations/glossary.md` or an identifier of the part map, the invariants or the environment facts so that the two read alike, its hyphens read as spaces, save that in the-way it does not warn where the identifier is of a part whose files include `elements/<identifier>/` and the term, in any of its forms, names that element.
 
 - **Method:** `python -B gate/run_tests.py elements/glossary --record .runs/glossary-tests.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-93@4dc6ce12
+- **Derives from:** WAY-93@73fcf554
 - **Part:** glossary
 - **Correction:** none
 - **Recovered:** none
@@ -2018,11 +2018,11 @@ No field of an entry of `foundations/glossary.md` holds `none` or `TODO` where t
 
 ## glossary-term-use/1
 
-Where {merge-onto} exists, every term of `foundations/glossary.md` has a use outside the glossary in a file of `foundations/` or in an element's template.
+Where {merge-onto} exists, every term of `foundations/glossary.md` has a use outside the glossary in a file of `foundations/` or `elements/common/` or in an element's template.
 
 - **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --merge-onto {merge-onto} --record .runs/glossary-merge-onto.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-95@731d2f13
+- **Derives from:** WAY-95@e081349a
 - **Part:** glossary · decisions · invariants · part-map · environment-facts
 - **Correction:** none
 - **Recovered:** none
@@ -2073,11 +2073,11 @@ For every entry of `foundations/glossary.md` whose definition differs from its d
 
 ## glossary-avoid-growth/1
 
-No word of an *Avoid* in `foundations/glossary.md` stands, outside the text the glossary template leaves out, more times in a file of `foundations/` or in an element's template than on {fork-point}.
+No word of an *Avoid* in `foundations/glossary.md` stands, outside the text WAY-98 does not count, more times in a file of `foundations/` or `elements/common/` or in an element's template than on {fork-point}.
 
 - **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --base {fork-point} --record .runs/glossary-base.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-98@52368529
+- **Derives from:** WAY-98@94371030
 - **Part:** every
 - **Correction:** none
 - **Recovered:** none
@@ -2088,7 +2088,7 @@ No word stands in the *Avoid* of two entries of `foundations/glossary.md`.
 
 - **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-98@52368529
+- **Derives from:** WAY-98@94371030
 - **Part:** glossary
 - **Correction:** none
 - **Recovered:** none
@@ -2099,7 +2099,7 @@ No word of an *Avoid* in `foundations/glossary.md` is a term there.
 
 - **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-98@52368529
+- **Derives from:** WAY-98@94371030
 - **Part:** glossary
 - **Correction:** none
 - **Recovered:** none
@@ -2110,7 +2110,7 @@ No word of an *Avoid* in `foundations/glossary.md` is a word the *Not* of an ent
 
 - **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-98@52368529
+- **Derives from:** WAY-98@94371030
 - **Part:** glossary
 - **Correction:** none
 - **Recovered:** none
@@ -2121,18 +2121,18 @@ Every term, identifier and closed-list value the *Not* of an entry of `foundatio
 
 - **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-99@bba94a7a
+- **Derives from:** WAY-99@7d44dfd7
 - **Part:** glossary · part-map · invariants · environment-facts
 - **Correction:** none
 - **Recovered:** none
 
 ## glossary-not-quoted-word/1
 
-Nothing the *Not* of an entry of `foundations/glossary.md` names holds the term or its forms, and every word it names in quotation marks is used, as the glossary template bounds a use, outside quotation marks and outside the glossary in a file of `foundations/` or in an element's template.
+Nothing the *Not* of an entry of `foundations/glossary.md` names holds the term or its forms, and every word it names in quotation marks is used, as WAY-98 counts a use, outside quotation marks and outside the glossary in a file of `foundations/` or `elements/common/` or in an element's template.
 
 - **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-99@bba94a7a
+- **Derives from:** WAY-99@7d44dfd7 · WAY-98@94371030
 - **Part:** glossary · decisions · invariants · part-map · environment-facts
 - **Correction:** none
 - **Recovered:** none
@@ -2143,7 +2143,7 @@ Where {merge-onto} exists, no field of an entry of `foundations/glossary.md` hol
 
 - **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --merge-onto {merge-onto} --record .runs/glossary-merge-onto.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-99@bba94a7a · WAY-71@c32828c9
+- **Derives from:** WAY-99@7d44dfd7 · WAY-71@c32828c9
 - **Part:** glossary
 - **Correction:** none
 - **Recovered:** none

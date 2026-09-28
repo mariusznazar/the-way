@@ -187,7 +187,7 @@ copying it.
 - **Relations:** related to WAY-01 · related to WAY-02 · related to WAY-04
 - **Outranks:** none
 - **Verification:** level 1 — invariants: binding-sentence-count · binding-sentence-words ·
-  decision-example-copy · decision-template-change. Level 2 for the rule that every field has a
+  decision-example-numbers · decision-template-change. Level 2 for the rule that every field has a
   reader — an agent compares the change with the decision:
   - complies: a new field enters the template together with the reader named in its table;
   - violates: a "notes" or "related artifacts" field that nothing reads.
@@ -1469,8 +1469,9 @@ there instead of restating them.
 - **Based on:** none
 - **Relations:** related to WAY-05 · related to WAY-09 · related to WAY-16
 - **Outranks:** none
-- **Verification:** level 1 — invariants: skill-rule-source. Level 2 for what the skill holds — an
-  agent compares the change with the decision:
+- **Verification:** level 1 — invariants: skill-rule-source · template-language ·
+  invariant-identifier-form · fact-identifier-form. Level 2 for what the skill holds — an agent
+  compares the change with the decision:
   - complies: a fix to the skill's output that concerns the form of a field goes into the
     template, and the skill is left as it is; the skill orders its steps and says what to ask;
   - violates: the skill says a rationale has at most three sentences while the template does not;
@@ -4581,7 +4582,7 @@ version restates word for word are not counted.
   related to WAY-94 · related to WAY-99
 - **Outranks:** none
 - **Verification:** level 1 — invariants: glossary-avoid-growth · glossary-avoid-single ·
-  glossary-avoid-term · glossary-avoid-carrier. Level 2 for what may stand in *Avoid* — an agent compares the change with the
+  glossary-avoid-term · glossary-avoid-carrier · glossary-not-quoted-word. Level 2 for what may stand in *Avoid* — an agent compares the change with the
   decision:
   - complies: "checker", which every use in the files of `foundations/` and the elements' templates
     spends on the format guard, stands in the *Avoid* of that term's entry; a paragraph holding it is rewrapped and the guard stays quiet;

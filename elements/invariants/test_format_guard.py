@@ -138,7 +138,7 @@ BASE = sorted([
     "invariant-version-new/1", "invariant-version-changed/1", "invariant-version-unchanged/1",
     "invariant-earlier-wording/1", "invariant-identifier-persistence/1",
     "invariant-withdrawal-persistence/1", "violated-list-growth/1"])
-MERGE = sorted(["invariant-entry-merge-todo/2", "link-fingerprint-value/1"])
+MERGE = sorted(["invariant-entry-merge-todo/1", "link-fingerprint-value/1"])
 
 
 class GuardTestCase(unittest.TestCase):
@@ -1064,14 +1064,14 @@ class MergeTodo(GuardTestCase):
         self.assertFails(invariants(entry(derives="`TODO — a decision on saves`"), later()),
                          "save-round-trip/1: *Derives from* holds `TODO`, which a merge onto the "
                          "main branch does not take", merge_onto="HEAD")
-        self.assertEqual(self.verdicts("invariant-entry-merge-todo/2"), ["fail"])
+        self.assertEqual(self.verdicts("invariant-entry-merge-todo/1"), ["fail"])
 
     def test_todo_in_a_field_the_form_does_not_give_it_fails_a_merge(self):
         self.commit(invariants())
         self.assertFails(invariants(entry(part="TODO"), later()),
                          "save-round-trip/1: *Part* holds `TODO`, which a merge onto the main "
                          "branch does not take", merge_onto="HEAD")
-        self.assertEqual(self.verdicts("invariant-entry-merge-todo/2"), ["fail"])
+        self.assertEqual(self.verdicts("invariant-entry-merge-todo/1"), ["fail"])
 
     def test_todo_inside_a_part_of_a_value_fails_a_merge(self):
         self.commit(invariants())
@@ -1079,13 +1079,13 @@ class MergeTodo(GuardTestCase):
                                           "found: nothing"), later()),
                          "save-round-trip/1: *Recovered* holds `TODO`, which a merge onto the main "
                          "branch does not take", merge_onto="HEAD")
-        self.assertEqual(self.verdicts("invariant-entry-merge-todo/2"), ["fail"])
+        self.assertEqual(self.verdicts("invariant-entry-merge-todo/1"), ["fail"])
 
     def test_todo_in_method_and_rests_on_passes_a_merge(self):
         self.commit(invariants())
         self.assertPasses(invariants(entry(method="`TODO`", rests="TODO — the store keeps 5 MB, "
                                            "per its documentation"), later()), merge_onto="HEAD")
-        self.assertEqual(self.verdicts("invariant-entry-merge-todo/2"), ["pass"])
+        self.assertEqual(self.verdicts("invariant-entry-merge-todo/1"), ["pass"])
 
     def test_no_todo_passes_a_merge(self):
         self.commit(invariants())
@@ -1370,12 +1370,12 @@ class FactsBeside(GuardTestCase):
         self.assertEqual(self.verdicts("withdrawal-successors/1"), ["pass"])
 
     def test_todo_in_rests_on_fails_a_merge_once_facts_have_entries(self):
-        # invariant: invariant-entry-merge-todo/2
+        # invariant: invariant-entry-merge-todo/1
         self.commit(invariants())
         self.assertFails(invariants(entry(rests="TODO — the store keeps 5 MB"), later()),
                          "*Rests on* holds `TODO`, which a merge onto the main branch does not take "
                          "once the environment facts element has entries", merge_onto="HEAD")
-        self.assertEqual(self.verdicts("invariant-entry-merge-todo/2"), ["fail"])
+        self.assertEqual(self.verdicts("invariant-entry-merge-todo/1"), ["fail"])
 
 
 class HumanVerdicts(GuardTestCase):

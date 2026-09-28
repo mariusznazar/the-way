@@ -1091,8 +1091,8 @@ def check_template_change(top, base, added, report, no_commit=None):
 
 
 def check_examples(entries, examples_path, report):
-    # invariant: decision-example-copy/1
-    check, copy_matches = "check_examples", "decision-example-copy/1"
+    # invariant: decision-example-numbers/1
+    check, copy_matches = "check_examples", "decision-example-numbers/1"
     report.ran(check, copy_matches)
     with open(examples_path, encoding="utf-8") as handle:
         examples = handle.read()
