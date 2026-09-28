@@ -167,9 +167,13 @@ glossary holds a word, the-way's or a product's, is set by WAY-92.
 
 A decision version opens with one to three binding sentences — in the present tense, describing
 a state that is to be true, concrete enough to check — followed by fields a script or an agent
-reads, then rationale, rejected options and consequences in prose. A field stays in the template
-only while someone or something reads it. A rule in `elements/decisions/` changes only with a
-decision, and an example there copies a version from the log word for word.
+reads, then rationale and rejected options in prose, which, where the entry's author writes it
+rather than quotes a source, names no file, script or count, nor what the process's own tools do or
+lack today, and does not tell how the decision was reached. A field stays in the template only
+while someone or something reads it, and what a decision forces on later work stands in a binding
+sentence or a field, never in prose. A rule in `elements/decisions/` changes only with a decision
+and cites its number, and an example there names a decision of the log by its number instead of
+copying it.
 
 - **Change:** new decision
 - **Scope:** decisions
@@ -190,7 +194,7 @@ decision, and an example there copies a version from the log word for word.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-22
+- **Approved by:** Mariusz, 2026-09-29
 
 *Rationale:* norms keep what binds short and checkable and put the explanation next to it; a
 record written like a legal code, in a commanding voice, reads badly and is followed worse.
@@ -326,18 +330,21 @@ measurement can settle stays in the foundation, checked by a person.
 
 On the main branch, this repository holds `foundations/` with the entries of the-way itself, a
 directory for each part of the process other than `repository` — `elements/<element>/` for each
-foundation element, `relation-model/`, `gate/` and `task-cycle/` — the files that serve the whole
-repository, which its part map gives to the `repository` part (WAY-44), and a `README.md` that
-describes the repository. A directory reaches the main branch only once it holds what its part
-requires: an element its template and rules, examples, a skill that writes its entries and a
-format guard; `relation-model/` the script that computes fingerprints; `gate/` the test of every
-critical flow in the part map; `task-cycle/` what the design of the task cycle sets, and until
-then it does not reach the main branch. The entries in `foundations/` are checked by the format
-guards of their elements.
+foundation element, `elements/common/` for what the elements share, `relation-model/`, `gate/` and
+`task-cycle/` — the files that serve the whole repository, which its part map gives to the
+`repository` part (WAY-44), and a `README.md` that describes the repository. A directory reaches
+the main branch only once it holds what its part requires: an element its template and rules,
+examples or a pointer to entries of the-way that serve as its examples, a skill that writes its
+entries and a format guard; `elements/common/` the rules of form and the way of working the
+elements' templates and skills share, the code their format guards share and the procedure of the
+panel; `relation-model/` the script that computes fingerprints; `gate/` the test of every critical
+flow in the part map; `task-cycle/` what the design of the task cycle sets, and until then it does
+not reach the main branch. The entries in `foundations/` are checked by the format guards of their
+elements.
 
 - **Change:** new decision
-- **Scope:** decisions, invariants, glossary, part-map, environment-facts, relation-model, gate,
-  repository, task-cycle
+- **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common,
+  relation-model, gate, repository, task-cycle
 - **Based on:** none
 - **Relations:** related to WAY-02 · related to WAY-04 · related to WAY-06 · related to WAY-21 ·
   related to WAY-44 · related to WAY-55
@@ -347,7 +354,7 @@ guards of their elements.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-27
+- **Approved by:** Mariusz, 2026-09-29
 
 *Rationale:* the repository shows what the process looks like when it works, and an artefact
 brought in on the side turns it into a store of material from the first day. Directories follow
@@ -360,7 +367,7 @@ another agent or by a merge. Until a directory holds what its part requires, it 
 progress, and under WAY-06 such a change lives on a branch. The files that serve the whole
 repository belong to no one part of the process, and WAY-44 gives them a part of their own; they
 stay where the tool that reads them looks for them, and the map, not this list, names which they
-are. The `README.md` binds nothing and only tells a reader what the repository is.
+are. The `README.md` binds nothing.
 *Rejected:* material merged to the main branch as soon as it is written; an element whose only
 tool is a skill — the form then holds only while someone remembers to run it; one `tools/`
 directory for everything shared — it matches no part of the process and grows into a store; the
@@ -381,14 +388,15 @@ to the `repository` part of the map, not by a new version of this decision.
 
 A change to an invariant test or to the foundation is assessed by the panel, which has three
 agents: two assess it independently, each from a different, named perspective and seeing only the
-diff and the foundation, never the author's reasoning, and the third, on a different model where
-one is available, settles between them. The panel decides changes of an invariant test's
-mechanics — selectors, test data, waiting — and a rerun set outside the method's command is never
-such a change. Every other change the panel prepares with the diff, its effects and a
-recommendation, and a human decides.
+diff and the foundation, never the author's reasoning, and one of the two perspectives names what
+of the change can be cut, while the third, on a different model where one is available, settles
+between them. The panel decides changes of an invariant test's mechanics — selectors, test data,
+waiting — and a rerun set outside the method's command is never such a change. Every other change
+the panel prepares with the diff, its effects and a recommendation, and a human decides.
 
 - **Change:** new decision
-- **Scope:** decisions, invariants, glossary, part-map, environment-facts, task-cycle
+- **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common,
+  task-cycle
 - **Based on:** a model assessing text favours its own: llm-self-preference@6d9f4b97.
 - **Relations:** derives from WAY-03@4fa941a4 · related to WAY-07
 - **Outranks:** none
@@ -402,7 +410,7 @@ recommendation, and a human decides.
 - **Review when:** the design of the task cycle begins · check by: 2026-10-02
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-22
+- **Approved by:** Mariusz, 2026-09-29
 
 *Rationale:* the problem is a single executor that checks itself. Agents on the same model with
 the same input share its blind spots, so independence comes from a different perspective, from
@@ -547,9 +555,8 @@ the criticality scale needs, are set when the task cycle is designed.
 
 ### WAY-14/1 — Who approves a version of a decision?
 
-Who approves a version of a decision is set by a process rule for the parts in its scope; the
-entry names an approver, in *Approver override*, only when that rule does not apply to it. Every
-version records who approved it and when.
+A version of a decision is approved by a human, never by an agent, and records who approved it and
+when; in the-way, the approver is Mariusz.
 
 - **Change:** new decision
 - **Scope:** decisions
@@ -561,15 +568,13 @@ version records who approved it and when.
 - **Relations:** related to WAY-05 · related to WAY-07 · related to WAY-10 · related to WAY-13
 - **Outranks:** none
 - **Verification:** level 1 — invariants: decision-approval-record · decision-approver.
-- **Review when:** none
+- **Review when:** who approves decisions for which parts is settled together with guarantee 12 ·
+  check by: 2026-12-31
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-15
+- **Approved by:** Mariusz, 2026-09-29
 
-*Rationale:* an approver written into every entry repeats the same name across the log and goes
-stale when people change roles, while a rule for each part changes in one place. An entry names
-someone only as an exception, so an exception stands out instead of drowning among repeated
-names. The record of who approved and when is what a human considering a change reads, and what
+*Rationale:* the record of who approved and when is what a human considering a change reads, and what
 WAY-07 needs when an entry has to be accepted again.
 *Rejected:* an approver named in every entry — the same name repeated, stale once the team
 changes; lists of decision-makers and of those consulted — nothing reads them.
@@ -754,12 +759,11 @@ latest version of each number. The end that writes a link is the entry that depe
 
 A number stands for the question a decision answers, carries the product's prefix and is given
 in the order entries are written; a new question gets the next free number, and a new rule next
-to an existing decision is a new question, related to its neighbour. On the main branch, every
-change to a decision is a new version of its number, which points to the version before it,
-gives the rationale for the change and restates the binding sentences, fields and consequences
-in full, except that a repeal has no binding sentences. When a new decision answers a question
-that an older one answered in passing, the sentence moves to the new decision, and the older one
-loses it — by a new version on the main branch, by an edit before it.
+to an existing decision is a new question. On the main branch, every change to a decision is a new
+version of its number, which gives the rationale for the change and restates the binding sentences
+and fields in full, except that a repeal has no binding sentences. When a new decision answers a
+question that an older one answered in passing, the sentence moves to the new decision, and the
+older one loses it — by a new version on the main branch, by an edit before it.
 
 - **Change:** new decision
 - **Scope:** decisions
@@ -782,7 +786,7 @@ loses it — by a new version on the main branch, by an edit before it.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-16
+- **Approved by:** Mariusz, 2026-09-29
 
 *Rationale:* a permanent number lets references survive a change (WAY-02): a reference that
 relies on the binding part is flagged by its fingerprint, and the rest follow the decision. A new
@@ -802,10 +806,10 @@ versions, so the view has to reach a decision's earlier versions through a histo
 
 ### WAY-20/1 — What kinds of change can a decision undergo?
 
-Every version after the first names its kind of change from a closed list: editorial correction,
-rationale change, field change, new wording, narrowing, challenge, replacement, repeal. A
-rationale change, a field change and a challenge keep the binding sentences of the previous
-version word for word, and a repeal has none.
+The first version of a decision names its kind of change as new decision, and every later version
+names it from a closed list: editorial correction, unchanged sentences, new wording, narrowing,
+challenge, repeal. A version of the kind unchanged sentences and a challenge keep the binding
+sentences of the previous version word for word, and a repeal has none.
 
 - **Change:** new decision
 - **Scope:** decisions
@@ -821,19 +825,18 @@ version word for word, and a repeal has none.
 - **Verification:** level 1 — invariants: binding-sentence-count · decision-change-kind ·
   decision-binding-across-versions · repeal-binding-sentences. Level 2 for the choice of kind — an
   agent compares the change with the decision:
-  - complies: a version that answers the question anew is called a replacement; a typo fixed in
+  - complies: a version that answers the question anew is called a new wording; a typo fixed in
     a binding sentence is called an editorial correction, and a human confirms that the meaning is
     unchanged;
-  - violates: a version called an editorial correction turns "must" into "may"; a whole new
-    answer is called a new wording.
+  - violates: a version called an editorial correction turns "must" into "may".
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-16
+- **Approved by:** Mariusz, 2026-09-29
 
 *Rationale:* a version has to say what it does to the decision, because everything that relies
-on the decision needs that first: a fixed typo leaves every reliance valid, a new answer does
-not, and a replacement leaves work built on the old answer to be dealt with. A word for a change
+on the decision needs that first: a fixed typo leaves every reliance valid, and a new answer does
+not. A word for a change
 left without a definition ends up meaning something different to each author, so the list is
 closed and each kind is defined in the template. The list was closed before the first entry, so
 every version in the log uses its kind in one sense.
@@ -1003,11 +1006,11 @@ answered with a review record or with the date edited in place is not yet settle
 
 ### WAY-25/1 — What settles a collision between two decisions?
 
-Precedence between decisions is recorded pair by pair in *Outranks*: a decision names the
-decisions that give way to it when both apply and collide, nothing follows along a chain, and two
-decisions that outrank each other are an error. A collision between two decisions with no
-precedence recorded is never settled by the agent that meets it; a human records the precedence
-in one of them — by a new version on the main branch, by an edit before it.
+Where two decisions both apply and collide, the one that prevails names the other in *Relations*
+as `narrows`, and its binding sentences state the area where it prevails; nothing follows along a
+chain, and two decisions that narrow each other are an error. A collision between two decisions
+with no precedence recorded is never settled by the agent that meets it; a human records the
+precedence — by a new version on the main branch, by an edit before it.
 
 - **Change:** new decision
 - **Scope:** decisions, task-cycle
@@ -1023,7 +1026,7 @@ in one of them — by a new version on the main branch, by an edit before it.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-16
+- **Approved by:** Mariusz, 2026-09-29
 
 *Rationale:* a ranked list of principles claims an order between pairs that never meet, and
 every new principle has to be placed against all the others; pairs record only what someone
@@ -1224,9 +1227,8 @@ enters by a new version on the main branch, by an edit before it.
 A change to a decision that a task needs is written into the task's plan and approved with it by
 the decision's approver. When a contradiction shows only during implementation, the agent stops,
 quotes the decision by its number, and either brings the change into line, drops the change, or
-proposes on the task branch a new wording, a narrowing or a replacement of the decision — by a
-new version on the main branch, by an edit before it — and the code that needs it waits for
-the decision's approver. An exception written in advance into a decision's binding sentences is
+proposes on the task branch a new wording or a narrowing of the decision — by a new version on the
+main branch, by an edit before it — and the code that needs it waits for the decision's approver. An exception written in advance into a decision's binding sentences is
 not a contradiction, and no exception lives only in a task's plan.
 
 - **Change:** new decision
@@ -1246,7 +1248,7 @@ not a contradiction, and no exception lives only in a task's plan.
 - **Review when:** the design of the task cycle begins · check by: 2026-10-02
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-16
+- **Approved by:** Mariusz, 2026-09-29
 
 *Rationale:* an exception kept only in a task's plan leaves the foundation describing something
 the code no longer does (WAY-01). Stopping makes the contradiction visible at the moment it is
@@ -1257,8 +1259,8 @@ the exception, and a narrowing made for a situation that may pass carries *Revie
 someone looks at it again (WAY-24). An exception foreseen in the binding sentences belongs to the
 decision, so acting on it contradicts nothing.
 *Rejected:* a justified violation recorded in the plan without a change to the decision, as Spec
-Kit's plan template allows — the foundation stops matching the code; a replacement as the only
-way to change the decision — a narrow exception would take the whole decision with it.
+Kit's plan template allows — the foundation stops matching the code; a whole new answer as the
+only way to change the decision — a narrow exception would take the whole decision with it.
 *Consequences:* the rule on exceptions foreseen in advance in the section "Binding sentences" of
 the decision template belongs to the written form of this decision. The task cycle needs a step
 in the plan for changes to decisions, and a task's plan has no home in the process yet (WAY-01).
@@ -1269,10 +1271,9 @@ needs the decisions in the scope of the change (WAY-21).
 ### WAY-31/1 — Which relations between decisions are flagged when the named decision changes?
 
 A relation `derives from` or `narrows` relies on the binding part of the decision it names and
-carries that decision's fingerprint (`derives from WAY-01@<fingerprint>`), while `related to` is a
-plain identifier. A change to a decision's fingerprint reaches the main branch together with
-every decision that relates to it with a fingerprint, each checked against the new binding part and
-carrying the new fingerprint.
+carries that decision's fingerprint (`derives from WAY-01@<fingerprint>`). A change to a
+decision's fingerprint reaches the main branch together with every decision that relates to it
+with a fingerprint, each checked against the new binding part and carrying the new fingerprint.
 
 - **Change:** new decision
 - **Scope:** decisions, relation-model
@@ -1287,29 +1288,27 @@ carrying the new fingerprint.
 - **Verification:** level 1 — invariants: decision-guard-stale-reference ·
   relation-fingerprint-presence · relation-fingerprint-value. Level 2 for checking against the new
   binding part — an agent compares the change with the decision:
-  - complies: WAY-01 gets a new wording, and the same merge brings field change versions of the
-    decisions deriving from it that still stand, and a new wording of one that no longer does;
+  - complies: WAY-01 gets a new wording, and the same merge brings unchanged sentences versions
+    of the decisions deriving from it that still stand, and a new wording of one that no longer
+    does;
   - violates: a script renews every old fingerprint in the log without anyone reading the
     decisions that carry them.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-16
+- **Approved by:** Mariusz, 2026-09-29
 
 *Rationale:* a decision that derives from another, or narrows it, stands on what the other says:
 invariant tests are read-only (WAY-03) because the foundation comes before the code (WAY-01), and
 a new wording of WAY-01 can take that reason away. A plain identifier points to whatever the other
-says today, so nothing shows that the ground has moved. `related to` is a passing mention, and a
-flag raised on it would be raised for nothing, which teaches people to clear flags without reading
-(WAY-02). The fingerprint is the mechanism WAY-02 already sets for references that rely on a
+says today, so nothing shows that the ground has moved. The fingerprint is the mechanism WAY-02 already sets for references that rely on a
 binding part, so the log needs no second one. The renewal travels in the same merge, because on the
 main branch a decision resting on a binding part no longer in force would bind without anyone having
 checked it, and a renewal written as a version records who checked (WAY-14).
 *Rejected:* flags from the kind of change and the order of the log — a second mechanism next to
 the fingerprint, and a kind misnamed by its author silences the flag; no flags in the log, with
 the author of a change reading the decisions that depend on it — a step that goes missing, and
-nothing catches it; a fingerprint on every relation — flags raised for nothing on passing
-mentions; flags left open on the main branch until a later task — a decision in force on ground
+nothing catches it; flags left open on the main branch until a later task — a decision in force on ground
 nobody checked; flags of different strength for different kinds of change — nothing reads the
 strength, since the flag names the kind that raised it.
 *Consequences:* the rule on relations with fingerprints in the section "Relations and precedence"
@@ -1323,9 +1322,9 @@ between entries of other elements carry a fingerprint is set by those elements (
 
 ### WAY-32/1 — What types of relation can a decision name?
 
-A decision names its relation to another decision with one of three types, and the list is
-closed: `derives from` — a higher decision this one serves; `narrows` — a decision this one
-deliberately goes against in a narrower area; `related to` — any other link.
+A decision names its relation to another decision with one of two types, and the list is closed:
+`derives from` — a higher decision this one serves; `narrows` — a decision this one deliberately
+goes against in a narrower area.
 
 - **Change:** new decision
 - **Scope:** decisions, relation-model
@@ -1343,15 +1342,13 @@ deliberately goes against in a narrower area; `related to` — any other link.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-16
+- **Approved by:** Mariusz, 2026-09-29
 
 *Rationale:* a relation type that each author reads differently tells a reader nothing, so each
-type is defined once and the list is closed. The three types keep apart what a reader acts on:
-`derives from` and `narrows` rely on the binding part of the other decision and carry its fingerprint
-(WAY-31), `narrows` also tells the agent checking a change that the other decision does not apply
-in that area, and every other link is a mention that asks for nothing. Two links that look like
-relations have homes of their own: a new answer to the same question is a new version (WAY-19),
-and precedence between decisions that both apply is recorded in *Outranks* (WAY-25).
+type is defined once and the list is closed. Both types rely on the binding part of the other
+decision and carry its fingerprint (WAY-31), and `narrows` also tells the agent checking a change
+that the other decision does not apply in that area. A link that looks like a relation has a home
+of its own: a new answer to the same question is a new version (WAY-19).
 *Rejected:* none considered
 *Consequences:* the rule on the closed list of relations in the section "Relations and
 precedence" of the decision template is the written form of this decision. A new type enters by a
@@ -1461,11 +1458,14 @@ in the product's own, is set by the first product that writes one.
 
 ### WAY-35/1 — What does an element's skill hold?
 
-An element's skill holds only the way of working: every rule of the element's entries stands in
-the element's template, and the skill reads the rules from there instead of restating them.
+An element's skill holds only the way of working particular to its element: every rule of the
+element's entries stands in the element's template, or once in the part the elements share
+(WAY-09) where it is common to them, each citing the decision that sets it; the way of working the
+skills share stands once in that part, and a skill reads the rules and that way of working from
+there instead of restating them.
 
 - **Change:** new decision
-- **Scope:** decisions, invariants, glossary, part-map, environment-facts
+- **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common
 - **Based on:** none
 - **Relations:** related to WAY-05 · related to WAY-09 · related to WAY-16
 - **Outranks:** none
@@ -1478,14 +1478,14 @@ the element's template, and the skill reads the rules from there instead of rest
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-17
+- **Approved by:** Mariusz, 2026-09-29
 
 *Rationale:* a rule written both in the skill and in the template is two copies that drift apart,
 and then the format guard, which reads the template, and the skill, which writes the entries, hold
-entries to different rules. An entry written by hand or by another agent meets
-only the template, so the template is the one place every writer and every check reaches. The way
-of working — the order of steps, what to ask, when to stop — is not a rule of the entry, so it
-stays with the skill.
+entries to different rules. An entry written by hand or by another agent meets only the template
+and the part the elements share, so they are the places every writer and every check reaches. The
+way of working — the order of steps, what to ask, when to stop — is not a rule of the entry, so it
+stays with the skills, and what they share stands once, in the part the elements share.
 *Rejected:* rules restated in the skill next to the template — two copies that drift, and the
 format guard and the skill hold entries to different rules.
 *Consequences:* a fix to a skill's output that concerns a rule of the entry is a
@@ -1691,10 +1691,10 @@ own under WAY-15.
 ### WAY-41/1 — What identifies an entry of the part map?
 
 Every entry of the part map carries a permanent identifier made of words, such as
-`relation-model`, and it stays the same when the entry's title changes or the files assigned to
-it change. Splitting or merging entries gives each entry that comes out of it a new identifier, and
-the identifier left behind stays in the map as a withdrawn identifier naming its successors; an
-identifier is never reused.
+`relation-model`, and it stays the same when the files assigned to it change. Splitting or merging
+entries gives each entry that comes out of it a new identifier, and the identifier left behind
+stays in the map as a withdrawn identifier giving why and naming its successors; an identifier is
+never reused.
 
 - **Change:** new decision
 - **Scope:** part-map
@@ -1713,12 +1713,11 @@ identifier is never reused.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-22
+- **Approved by:** Mariusz, 2026-09-28
 
 *Rationale:* every reference to a part rests on its identifier — a decision's scope (WAY-21), a
 criticality inherited along a dependency, a rule file generated for an agent — so the identifier
-has to survive the two things that change most often about a part: its title and the files that
-belong to it. Identity taken from the path turns every move of a folder into a change of
+has to survive what changes most often about a part: the files that belong to it. Identity taken from the path turns every move of a folder into a change of
 identity, and the paths already live in the part's assignment rule. Words rather than a number,
 because the identifier is read in a scope field and in a dependency list, where a number says
 nothing about what it names. A withdrawn identifier stays visible, so that a reference left in a
@@ -1920,7 +1919,8 @@ detected". The criticality of a part is computed rather than written by hand: th
 own failure modes, of the critical flows it lies on, and of the parts that depend on it, unless
 the dependency records that the two are separated and a failure of one does not damage the
 other. A part with no failure modes recorded counts as the highest criticality; raising a part's
-criticality needs no reason, and lowering it needs one, written at the part.
+criticality needs no reason, and lowering it is accepted by the human deciding the change, with
+the lowered criticality in front of them.
 
 - **Change:** new decision
 - **Scope:** part-map, task-cycle
@@ -1946,7 +1946,7 @@ criticality needs no reason, and lowering it needs one, written at the part.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-17
+- **Approved by:** Mariusz, 2026-09-29
 
 *Rationale:* criticality is the number that sets how sharply a task is checked (WAY-13), and it
 arises outside the part: from the damage its own failure does, from the flows it serves, and
@@ -1956,7 +1956,8 @@ computation takes the highest rather than an average, because the worst failure 
 process exists for, and it stops at a recorded separation, because a part whose failure cannot
 damage the important one is the only part that has earned a lower number. A part nobody has
 assessed counts as the highest, so that silence raises checks instead of removing them. Raising
-is free and lowering costs a written reason, because lowering is the move made for convenience.
+is free and lowering waits for the human deciding the change, with the lowered criticality in front
+of them, because lowering is the move made for convenience.
 Detection before release sits at the failure mode, and names the invariant that detects it, so
 that the map says which failures the gate would catch and which it would not.
 *Rejected:* criticality written by hand at the part — a second copy of what the flows and
@@ -2323,8 +2324,7 @@ over, and each time the variant in which a person names the value stands in *Rej
 reason.
 *Rejected:* leaving the choice to the author with a definition beside each value — a definition
 tells apart values a reader already distinguishes, and says nothing about a case none of them
-covers; a value meaning "none of these fits" in every closed list — the list of relation types
-already carries one, and it is chosen 166 times out of 191, so it records what came cheapest
+covers; a value meaning "none of these fits" in every closed list — it records what came cheapest
 rather than what was true.
 *Consequences:* a template that asks for the name of a value where a tool can read that value,
 or where a question about the product settles it, is a defect of the template, fixed together
@@ -2499,7 +2499,7 @@ flagged, as WAY-02 has it.
 - **Change:** new decision
 - **Scope:** invariants, relation-model, gate, task-cycle, part-map
 - **Based on:** none
-- **Relations:** derives from WAY-03@4fa941a4 · derives from WAY-10@b16df2fb ·
+- **Relations:** derives from WAY-03@4fa941a4 · derives from WAY-10@08118926 ·
   narrows WAY-02@59bd26f9 · related to WAY-07 · related to WAY-08 · related to WAY-14 ·
   related to WAY-17 · related to WAY-19 · related to WAY-20 · related to WAY-22 ·
   related to WAY-31 · related to WAY-39 · related to WAY-43 · related to WAY-45 ·
@@ -2592,14 +2592,15 @@ test citing the old identifier with no current version to match, so it fails the
 
 An invariant entry that a human chose from what the product already did before the task writing it
 began, as WAY-28 describes, and that names no decision entry of the product's log it derives from,
-carries a field reading `recovered — searched: <…>; found: <…>`; every other invariant entry holds
-`none` there. *found* names the place of
-each source the search found that gives a reason for keeping the behaviour or calls for a different
-one, or reads `nothing`; a place that only cites another is followed to the place it cites, marked
-when that source is superseded, and *found* never states a reason itself, nor one an agent infers.
-When an entry's binding part enters the foundation, the gate reports whether its method passes on the
-commit the task branch left the main branch from and fails there on a deliberate break, and the
-human deciding the change sets the field with that report in front of them.
+stands in `foundations/invariants.md` on the list of recovered invariants, in a row naming its
+identifier, its current version, `searched: <…>` and `found: <…>`; no other invariant entry stands
+there. *found* names the place of each source the search found that gives a reason for keeping the
+behaviour or calls for a different one, or reads `nothing`; a place that only cites another is
+followed to the place it cites, marked when that source is superseded, and *found* never states a
+reason itself, nor one an agent infers. When an entry's binding part enters the foundation, the
+gate reports whether its method passes on the commit the task branch left the main branch from and
+fails there on a deliberate break, and the human deciding the change sets the row with that report
+in front of them.
 
 - **Change:** new decision
 - **Scope:** invariants, gate
@@ -2612,23 +2613,24 @@ human deciding the change sets the field with that report in front of them.
   related to WAY-56 · related to WAY-57
 - **Outranks:** none
 - **Verification:** level 1 — invariants: invariant-recovered-form · invariant-recovered-derived ·
-  gate-fork-point-evidence. Level 3 for the value of the field — the human deciding the change sets
-  it with the gate's report in front of them, and the record of that decision names who and when.
+  gate-fork-point-evidence. Level 3 for the row — the human deciding the change sets it with the
+  gate's report in front of them, and the record of that decision names who and when.
   Level 2 for what counts as already done and what *found* holds — an agent compares the change with
   the decision:
   - complies: entering a game, an agent lists what its save module does, a human chooses "a save of
     another version is rejected whole", the gate reports that the check passes and breaks on the
-    commit the branch left from, and the entry reads `recovered — searched: the save module and its
-    history, the game's own documents; found: the comment above the save format's version constant
-    at commit <sha>, decision D23 of the game's concept document`; an invariant written at a task's
-    foundation step for a feature being built holds `none`;
+    commit the branch left from, and the entry's row on the list of recovered invariants reads
+    `searched: the save module and its history, the game's own documents` and `found: the comment
+    above the save format's version constant at commit <sha>, decision D23 of the game's concept
+    document`; an invariant written at a task's foundation step for a feature being built stands
+    on no row of that list;
   - violates: *found* reads "old saves are dropped because the rules may have changed"; *found*
     lists a comment explaining how the loader parses a save; an invariant about a field the task
     itself adds is marked recovered because its check found nothing to fail on the older commit.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-23
+- **Approved by:** Mariusz, 2026-09-28
 
 *Rationale:* WAY-28 lets an invariant recovered from an existing product bind before anyone knows
 why it holds, and asks for a note that it was recovered. Without the note it reads like a rule
@@ -2638,21 +2640,19 @@ run on the older commit also passes where the thing it checks does not exist yet
 compare equal (WAY-47) — and it passes for a new rule the product happened to meet before anyone
 wrote it down. A deliberate break on the older commit (WAY-08) removes the first case and not the
 second, so the gate's run is evidence for the human, who already decides every change to the
-foundation (WAY-10), not the ruling; the field is marked in the template as resting on a judgment.
-The gate runs the method, never the element's format guard, which keeps only the shape of the entry
+foundation (WAY-10), not the ruling. The gate runs the method, never the element's format guard, which keeps only the shape of the entry
 (WAY-55). The same line places both cases of the return step (WAY-11): behaviour the product had
 before the task can be recovered, while a rule the implementer writes into the task's own code was
-not there before the task and holds `none`. Recording the search spares the next agent the same
+not there before the task and stays off the list. Recording the search spares the next agent the same
 search, as WAY-29 does for an inherited decision. *found* points to places rather than quoting
 them, because an invariant says nothing about why (WAY-22), and it lists a place calling for a
-different behaviour too, since that is what a human weighing the invariant most needs to see. The
-field is present in every entry, with `none` as a statement, because a missing value cannot be told
-from a forgotten one (WAY-71).
+different behaviour too, since that is what a human weighing the invariant most needs to see.
 *Rejected:* the mark only where no cause is known — when the process enters a product, the cause
 usually sits somewhere that is not a decision entry, such as a comment in the code, a concept document or a line
 of requirements, and, tried on a game this process would enter, the rule gave two answers for every
-such case; the mark on every entry that names no decision — WAY-22 lets an invariant stand with no
-choice behind it, so one written for a feature being built would be marked recovered; the mark set
+such case; a row on the list for every entry that names no decision — WAY-22 lets an invariant
+stand with no choice behind it, so one written for a feature being built would stand there as
+recovered; the mark set
 by the gate from the check's result on the older commit, with or without a deliberate break — tried
 on the same game, a rule written for a feature in progress passed there because the feature did not
 yet exist, and one sentence got either mark depending on how its test was phrased; a link to a
@@ -2687,8 +2687,8 @@ by WAY-86.
 
 The binding part of an invariant entry is its one sentence, and the entry's fingerprint covers
 that sentence alone. Everything else the entry carries stays outside the fingerprint — such as its
-method of checking, the links it names beside the sentence, its version, a declaration of a
-correction and the recovered field.
+method of checking, the links it names beside the sentence, its version and a declaration of a
+correction.
 
 - **Change:** new decision
 - **Scope:** invariants, relation-model
@@ -2703,7 +2703,7 @@ correction and the recovered field.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-23
+- **Approved by:** Mariusz, 2026-09-28
 
 *Rationale:* a fingerprint exists to flag what relies on an entry's binding part (WAY-02), and for an
 invariant the first thing that relies on it is its version: when the fingerprint differs from the
@@ -2717,8 +2717,7 @@ a new test for the same meaning is accepted under WAY-08, with the panel and the
 names, without touching the tests that cite the entry; a link names what the invariant rests on or
 comes from, and is often written later, as a decision found behind a recovered invariant is
 (WAY-58); a version and a declaration of a correction are worked out from the fingerprint and
-cannot sit inside what they are worked out from; the recovered field records how the entry was
-found. A raise caused by any of them would fail every citing test for a change that asks nothing of
+cannot sit inside what they are worked out from. A raise caused by any of them would fail every citing test for a change that asks nothing of
 the tests, and a flag raised for nothing is cleared without reading. The part map draws the same
 line (WAY-42): its entry's binding part is one sentence, and the fields that change for other
 reasons stay outside. This decision does not say what the sentence has to name, and that gap has a cost wherever
@@ -2757,7 +2756,7 @@ names its bound or tolerance, statistic and population.
 - **Change:** new decision
 - **Scope:** invariants, decisions, part-map, gate
 - **Based on:** none
-- **Relations:** derives from WAY-59@9ea9277e · derives from WAY-22@dcf291ea ·
+- **Relations:** derives from WAY-59@2d716c3f · derives from WAY-22@dcf291ea ·
   derives from WAY-56@06700ffd · related to WAY-05 · related to WAY-06 · related to WAY-07 ·
   related to WAY-10 · related to WAY-12 · related to WAY-23 · related to WAY-31 ·
   related to WAY-34 · related to WAY-38 · related to WAY-51 · related to WAY-53 ·
@@ -2805,10 +2804,11 @@ and names no commit, branch or revision itself, and the commits its sentence nam
 fills in from the template's closed list. A method checks what its sentence is about, as it stands on
 the commit being checked, so a check fed input made up for it is the method of a sentence about that
 check, never of one about the data the check reads. One run of a command may check many invariants,
-and the result of an entry whose method is a command is the verdict that run records, in a format from
-the template's closed list, for the entry's identifier and its current version; a verdict recorded for
-another version is not its result, and a run that records no verdict for the entry never gives it a
-pass.
+and a method reads what another method's run left only where a decision places it, the gate then
+running the first before the second; the result of an entry whose method is a command is the verdict
+that run records, in a format from the template's closed list, for the entry's identifier and its
+current version; a verdict recorded for another version is not its result, and a run that records
+no verdict for the entry never gives it a pass.
 
 - **Change:** new decision
 - **Scope:** invariants, gate, decisions, part-map
@@ -2839,7 +2839,7 @@ pass.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-22
+- **Approved by:** Mariusz, 2026-09-28
 
 *Rationale:* WAY-08 asks every invariant to name its method and to take its result from running it,
 and WAY-16 has the gate read the methods from the entries, so a method is something the gate can run
@@ -2931,7 +2931,7 @@ names a file the change alters, whatever parts a file collecting entries gives t
 - **Scope:** invariants, part-map, gate, task-cycle
 - **Based on:** none
 - **Relations:** derives from WAY-16@c8486f8b · derives from WAY-44@220f5b85 ·
-  derives from WAY-61@c6bdfd7c · related to WAY-13 · related to WAY-18 · related to WAY-21 ·
+  derives from WAY-61@4804d070 · related to WAY-13 · related to WAY-18 · related to WAY-21 ·
   related to WAY-45 · related to WAY-46 · related to WAY-47 · related to WAY-54 ·
   related to WAY-55 · related to WAY-56 · related to WAY-60
 - **Outranks:** none
@@ -2977,7 +2977,7 @@ is `fail`, or a run records a failure for no entry, and zero otherwise.
 - **Change:** new decision
 - **Scope:** invariants, gate, part-map, task-cycle, environment-facts
 - **Based on:** none
-- **Relations:** derives from WAY-61@c6bdfd7c · derives from WAY-62@d9c21624 ·
+- **Relations:** derives from WAY-61@4804d070 · derives from WAY-62@d9c21624 ·
   derives from WAY-08@9d45e0a9 · related to WAY-16 · related to WAY-38 · related to WAY-45 ·
   related to WAY-47 · related to WAY-53 · related to WAY-55 · related to WAY-57 · related to WAY-58 ·
   related to WAY-60
@@ -3021,10 +3021,10 @@ WAY-67 and WAY-68.
 
 Invariant entries stand in one file, `foundations/invariants.md`, each under an identifier made of
 words that no other entry or withdrawn identifier of that file, of the part map or of
-`foundations/environment_facts.md` holds. An identifier the
-file held on the commit the branch left the main branch from stays, as an entry or as a withdrawn
-identifier naming its successors or `none`. Splitting or merging entries held there gives each
-entry that comes out of it a new identifier, and any other change keeps it.
+`foundations/environment_facts.md` holds. An identifier the file held on the commit the branch left
+the main branch from stays, as an entry or as a withdrawn identifier giving why and naming its
+successors or `none`. Splitting or merging entries held there gives each entry that comes out of it
+a new identifier, and any other change keeps it.
 
 - **Change:** new decision
 - **Scope:** invariants, part-map
@@ -3045,7 +3045,7 @@ entry that comes out of it a new identifier, and any other change keeps it.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-26
+- **Approved by:** Mariusz, 2026-09-28
 
 *Rationale:* words, as in the map (WAY-41): a citation says what it protects, and a mistyped word
 seldom names another entry, as a number does. Unique across invariants and the map, so
@@ -3076,7 +3076,7 @@ on the commit being checked.
 - **Scope:** invariants, gate, decisions, part-map, relation-model, task-cycle
 - **Based on:** none
 - **Relations:** derives from WAY-03@4fa941a4 · derives from WAY-17@b1e26133 ·
-  derives from WAY-57@4313046c · derives from WAY-61@c6bdfd7c · related to WAY-12 ·
+  derives from WAY-57@4313046c · derives from WAY-61@4804d070 · related to WAY-12 ·
   related to WAY-60 · related to WAY-62 · related to WAY-63
 - **Outranks:** none
 - **Verification:** level 1 — invariants: invariant-citation-version · invariant-citation-target ·
@@ -3211,7 +3211,7 @@ run records.
   https://handbook.gitlab.com/handbook/engineering/testing/quarantine-process/). A rerun hides what
   it absorbs: it "encourages developers to ignore flakiness in their own tests" (Micco, Google
   Testing Blog, 2016, https://testing.googleblog.com/2016/05/flaky-tests-at-google-and-how-we.html).
-- **Relations:** derives from WAY-08@9d45e0a9 · derives from WAY-61@c6bdfd7c ·
+- **Relations:** derives from WAY-08@9d45e0a9 · derives from WAY-61@4804d070 ·
   derives from WAY-63@f16348c8 · related to WAY-03 · related to WAY-10 · related to WAY-24 ·
   related to WAY-45 · related to WAY-60 · related to WAY-64 · related to WAY-67
 - **Outranks:** none
@@ -3476,8 +3476,9 @@ invariant with no such fact reads `Rests on: none`, whatever its decisions quote
 The-way's own record of a run is a JSON Lines file at the one `.jsonl` path the command names,
 which git ignores and the gate clears before the run. It holds a line per verdict a check gives an
 invariant or a fact, and per failure recorded for no entry. A line holds `check`, `verdict` as
-`pass`, `fail` or `unchecked` beside a `reason` its element's template lists, `invariant` or `fact`
-as `<identifier>/<version>` or `invariant` as `null`, and at most `description`.
+`pass`, `fail` or `unchecked` beside a `reason` the template of the invariants element lists,
+`invariant` or `fact` as `<identifier>/<version>` or `invariant` as `null`, and at most
+`description`.
 
 - **Change:** new decision
 - **Scope:** invariants, gate, decisions, part-map, repository, environment-facts
@@ -3486,7 +3487,7 @@ as `<identifier>/<version>` or `invariant` as `null`, and at most `description`.
   (https://jsonlines.org/); Python 3.14's `json.loads` reads each such line: "but instead of a
   file-like object, deserialize s (a str, bytes or bytearray instance containing a JSON document) to
   a Python object" (https://docs.python.org/3.14/library/json.html).
-- **Relations:** derives from WAY-61@c6bdfd7c · derives from WAY-63@f16348c8 ·
+- **Relations:** derives from WAY-61@4804d070 · derives from WAY-63@f16348c8 ·
   derives from WAY-65@fbf6bef4 · related to WAY-38 · related to WAY-47 · related to WAY-48 ·
   related to WAY-49 · related to WAY-53
 - **Outranks:** none
@@ -3498,7 +3499,7 @@ as `<identifier>/<version>` or `invariant` as `null`, and at most `description`.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-26
+- **Approved by:** Mariusz, 2026-09-29
 
 *Rationale:* one line per verdict survives a run that stops halfway: the lines before the stop
 stay readable, and an invariant without one gets no pass (WAY-61). JSON escapes whatever a
@@ -3660,8 +3661,8 @@ are named is set by WAY-85.
 
 The binding part of an environment fact entry is its sentence together with its *Holds for*, and
 the entry's fingerprint covers the sentence followed by the value of *Holds for*, computed as
-WAY-39 says. The source, its passage and the date read, *Set by*, the method and a declaration of a
-correction stay outside it, and no digest of the source's text is kept.
+WAY-39 says. The source, its passage and the date read, and the method stay outside it, and no
+digest of the source's text is kept.
 
 - **Change:** new decision
 - **Scope:** environment-facts, relation-model, invariants
@@ -3673,7 +3674,7 @@ correction stay outside it, and no digest of the source's text is kept.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-26
+- **Approved by:** Mariusz, 2026-09-28
 
 *Rationale:* the fingerprint exists to flag what relies on an entry (WAY-02), and what relies on a
 fact relies on what it claims and on where the claim holds: read with another range, the same
@@ -3698,9 +3699,7 @@ to name this decision.
 
 An environment fact entry carries a version number, starting at 1, and holds only its current
 wording. When its fingerprint differs from its fingerprint on the main branch, its version is one
-higher than there, unless the entry declares a correction naming both fingerprints and the human
-deciding the change confirms, seeing the old and the new binding part, that the meaning is
-unchanged. A check citing a fact at a version other than the current one fails the gate.
+higher than there. A check citing a fact at a version other than the current one fails the gate.
 
 - **Change:** new decision
 - **Scope:** environment-facts, relation-model, gate
@@ -3709,18 +3708,17 @@ unchanged. A check citing a fact at a version other than the current one fails t
   related to WAY-61 · related to WAY-75 · related to WAY-78
 - **Outranks:** none
 - **Verification:** level 1 — invariants: fact-version-new · fact-version-changed ·
-  fact-version-unchanged · fact-citation-version. Level 2 for what counts as a correction — a
-  change after which some check citing the fact would need a different expected value is a raise;
-  an agent compares the change with the decision:
-  - complies: a typo in a fact's sentence is fixed under a declaration naming both fingerprints,
-    and the human confirms it; a range widened from CPython 3.14 to CPython 3.14 and 3.15 raises the
-    version, and the probe citing the old version fails until it is checked against the new range;
-  - violates: "strongly recommended" becomes "required" under a confirmed correction; every
-    citation moved to the new version by a script, with no one checking the probe.
+  fact-version-unchanged · fact-citation-version. Level 2 for a raise — an agent compares the
+  change with the decision:
+  - complies: a typo fixed in a fact's sentence raises the version; a range widened from CPython
+    3.14 to CPython 3.14 and 3.15 raises the version, and the probe citing the old version fails
+    until it is checked against the new range;
+  - violates: a typo fixed in a fact's sentence keeps the version; every citation moved to the new
+    version by a script, with no one checking the probe.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-26
+- **Approved by:** Mariusz, 2026-09-28
 
 *Rationale:* a version pins the result of a method to the binding part it checked: a probe cites the
 fact by identifier and version, and fails once the meaning has moved under it, as a check citing an
@@ -3804,7 +3802,7 @@ runner's configuration that could change its verdict, and cites each fact it giv
   https://git-scm.com/docs/git-config); observed: `git check-attr` with and without
   `-c core.ignorecase=false`, on a pattern with a capital letter in a fresh repository, on git
   2.55.0, Windows — the path was assigned differently; run 2026-09-26.
-- **Relations:** derives from WAY-61@c6bdfd7c · related to WAY-08 · related to WAY-38 ·
+- **Relations:** derives from WAY-61@4804d070 · related to WAY-08 · related to WAY-38 ·
   related to WAY-63 · related to WAY-65 · related to WAY-73 · related to WAY-74 ·
   related to WAY-91
 - **Outranks:** none
@@ -3934,10 +3932,11 @@ reaches both row invariants, is set with the first verdict written.
 ### WAY-84/1 — How is a setting that people of the product change outside its repository written?
 
 The current state of a setting that people of the product change outside its repository — who can
-open it, a host's access rule — is an environment fact whose *Set by* names who sets it, and whose
-method reads that state where it lives, or is re-read by that person where reading it takes their
-credentials. A choice of such a setting is a decision only where the product declares it, and that
-decision rests on the fact.
+open it, a host's access rule — is an environment fact whose method reads that state where it
+lives, or is re-read by the person who sets it where reading it takes their credentials. A choice
+of such a setting is a decision only where the product declares it, and that decision rests on the
+fact. A fact about the visibility of a repository the product links to names that one repository,
+and its method reads it anonymously.
 
 - **Change:** new decision
 - **Scope:** environment-facts, decisions
@@ -3948,29 +3947,27 @@ decision rests on the fact.
 - **Outranks:** none
 - **Verification:** level 2 — an agent compares the change with the decision:
   - complies: each repository this one links to has a fact of its own on whether a reader not
-    signed in can open it, reading `Set by: none`; where a condition rests on who can open this
+    signed in can open it, read anonymously; where a condition rests on who can open this
     repository, that is a fact set and re-read by the repository owner, with a verdict dated until
     the end of the quarter, and no decision on its visibility is written, since nothing in the
     repository declares one;
-  - violates: the fact on who can open this repository reads `Set by: none`; a probe decides the
-    repository is private from an anonymous 404; one fact lists every repository this one links
-    to; a decision "the repository is private" is written where the product
-    declares no visibility.
+  - violates: a probe decides the repository is private from an anonymous 404; one fact lists
+    every repository this one links to; a decision "the repository is private" is written where
+    the product declares no visibility.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-26
+- **Approved by:** Mariusz, 2026-09-29
 
 *Rationale:* such a setting changes with a click and no commit, so no change of the product reaches
 what rests on it, and only a method run against the world sees it move — the path a fact has.
-Written without who sets it, it reads like a law of nature; *Set by* tells the person reviewing a
-failed run whom to ask. Where the state can be read only with the setter's credentials, a secret on
+Where the state can be read only with the setter's credentials, a secret on
 the clock's machine would be a new failure of its own, so the setter re-reads it and the verdict
 carries its date (WAY-83); an anonymous 404 cannot tell a private repository from a missing one. A
 decision exists where someone chose and the product says so; elsewhere nothing was chosen, and a
 decision would be one no commit could check.
-*Rejected:* a bare fact without who sets it — it reads like a law of nature; a decision and a fact
-for every such setting — a decision where nobody chose anything; a command holding a token on the
+*Rejected:* a field naming who sets the setting — a failed run shows without it, and it adds only
+whom to ask; a decision and a fact for every such setting — a decision where nobody chose anything; a command holding a token on the
 clock's machine — a secret, and a new reason to be unchecked; a verdict put together from an
 anonymous 404 and the repository's own `origin` — its fidelity depends on who runs it.
 *Consequences:* the template gives the field *Set by*, `none` for what nobody in the product sets.
@@ -4090,7 +4087,7 @@ that obligation.
 - **Change:** new decision
 - **Scope:** part-map, environment-facts, invariants
 - **Based on:** none
-- **Relations:** derives from WAY-46@b0cef8dd · related to WAY-04 · related to WAY-13 ·
+- **Relations:** derives from WAY-46@90337b22 · related to WAY-04 · related to WAY-13 ·
   related to WAY-73 · related to WAY-86
 - **Outranks:** none
 - **Verification:** level 2 — an agent compares the change with the decision:
@@ -4188,11 +4185,11 @@ library that is one run of the fact's method and one list of imports. `.python-v
 
 ### WAY-90/1 — Which citations of a decision's *Based on* become environment fact entries, and how are they named?
 
-Once the environment facts element has entries, a decision's *Based on* names a fact entry for
-every citation that, stopping being true today, would send the decision to review — a finding about
-agents or models, the behaviour of a tool the process uses — and quotes every other citation with
-its source. A fact named there carries its fingerprint, as `<identifier>@<fingerprint>`,
-renewed as WAY-31 renews a relation's.
+A decision's *Based on* quotes every citation with its source, given as WAY-80 gives a fact's
+source; once the environment facts element has entries, it names a fact entry instead for every
+citation that, stopping being true today, would send the decision to review — a finding about agents
+or models, the behaviour of a tool the process uses. A fact named there carries its fingerprint, as
+`<identifier>@<fingerprint>`, renewed as WAY-31 renews a relation's.
 
 - **Change:** new decision
 - **Scope:** decisions, environment-facts, relation-model
@@ -4209,7 +4206,7 @@ renewed as WAY-31 renews a relation's.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-26
+- **Approved by:** Mariusz, 2026-09-29
 
 *Rationale:* WAY-17 has decisions name the facts they rest on, and read literally it would turn
 every citation into an entry — dozens, most with a method nobody needs to run. The test that keeps
@@ -4220,8 +4217,7 @@ a change of the fact reaches the decision, as it reaches an invariant (WAY-66); 
 would leave the decision on ground that has moved with nothing to show it. A product outside that
 pins this one and reads a surface of it is such a fact only when a decision about that surface
 passes the same test.
-*Rejected:* every citation as an entry, as WAY-17's consequence first read — dozens of entries with
-methods nobody needs to run; a fact named in *Based on* by its identifier alone — a changed fact
+*Rejected:* every citation as an entry — many entries with methods nobody needs to run; a fact named in *Based on* by its identifier alone — a changed fact
 would flag no decision; the partners of the part map's external context kept as facts linked from
 the map — a new link with a fingerprint and changes to a template, a guard and two decisions, with
 no known consumer.
@@ -4316,9 +4312,9 @@ with the first entry of a product's glossary.
 Glossary entries stand in one file, `foundations/glossary.md`, each under its term as the foundation
 writes it in running text, which no other entry there holds. Terms are a space of their own, and a
 change that makes a term read like an identifier of the part map, the invariants or the environment
-facts is a warning — unless the identifier is of a part whose files include `elements/<identifier>/`
-and the term, in any of its forms, names that element — after which one side is renamed where the two
-name different things.
+facts is a warning, after which one side is renamed where the two name different things; in the-way,
+a term that names an element raises none against the part whose files include
+`elements/<identifier>/`.
 
 - **Change:** new decision
 - **Scope:** glossary, part-map, invariants, environment-facts
@@ -4338,7 +4334,7 @@ name different things.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-27
+- **Approved by:** Mariusz, 2026-09-29
 
 *Rationale:* nothing cites a term by an identifier: an entry depends on a term by using its word
 (WAY-94), so the word itself is all a reader meets, and heading the entry with the word as it stands
@@ -4414,8 +4410,9 @@ its state where the branch left the main branch to start the review of uses.
 ### WAY-95/1 — Which words take a glossary entry?
 
 A word takes a glossary entry when it stands in the binding part of an entry of the foundation or in
-the rules of an element's template, and at least one of its uses in the files of `foundations/` and
-the elements' templates carries a meaning a reader who knows the product's field would not give it;
+the rules of an element's template or of the part the elements share, and at least one of its uses in
+the files of `foundations/`, the elements' templates and the part the elements share carries a
+meaning a reader who knows the product's field would not give it;
 an agent finds the candidates and a human chooses. A word's definition stands in
 the glossary alone, and a closed list of values a guard reads stays in its template with what each
 value means.
@@ -4448,7 +4445,7 @@ value means.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-27
+- **Approved by:** Mariusz, 2026-09-29
 
 *Rationale:* a glossary that takes every relevant word grows without bound and is kept by one person's
 memory, which WAY-04 rules out; a word used as a reader who knows the field uses it needs no entry,
@@ -4570,8 +4567,8 @@ and irregular forms. The check that every term has a use counts only uses outsid
 
 ### WAY-98/1 — Where is a word of a glossary entry's *Avoid* an error?
 
-A word stands in a glossary entry's *Avoid* only where every use of it in the files of `foundations/`
-and the elements' templates carries the term's meaning, and it is an error where a change makes it
+A word stands in a glossary entry's *Avoid* only where every use of it in the files of `foundations/`,
+the elements' templates and the part the elements share carries the term's meaning, and it is an error where a change makes it
 stand more times in such a file than on the commit the task branch left the main branch from. What a use
 of a term leaves out (WAY-97), text in quotation marks, an identifier of the part map, the invariants
 or the environment facts standing in a field's value, the glossary's entries and text a new decision
@@ -4593,7 +4590,7 @@ version restates word for word are not counted.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-27
+- **Approved by:** Mariusz, 2026-09-29
 
 *Rationale:* a word with another correct meaning cannot be banned without banning that meaning, so it
 goes to the *Not* of the entry for that meaning, and the list of uses settles which. A synonym comes
@@ -4620,8 +4617,8 @@ searches the skills, the README files and the code for it, as for entries that w
 
 ### WAY-99/1 — How does one word keep one meaning in the foundation?
 
-Where a word carries two meanings in the files of `foundations/` and the elements' templates and one
-of them is a meaning a reader who knows the product's field would not give it, one of the two is
+Where a word carries two meanings in the files of `foundations/`, the elements' templates and the
+part the elements share and one of them is a meaning a reader who knows the product's field would not give it, one of the two is
 renamed wherever those files may still be edited, and the glossary entry of the word names in *Not*
 each such meaning it no longer carries, with the term, identifier, closed-list value or quoted word —
 holding neither the term nor its forms — that carries it now. A meaning whose word a human has not yet chosen reads `TODO` in *Not*, which a task
@@ -4644,7 +4641,7 @@ branch may hold and the main branch never does.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-27
+- **Approved by:** Mariusz, 2026-09-29
 
 *Rationale:* a sentence a test cites carries its words as they stand, and a word read in two meanings
 makes one sentence true and false at once; a note in brackets or an area of meaning serves a person
