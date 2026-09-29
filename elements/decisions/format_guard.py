@@ -1,10 +1,13 @@
 """Format guard of a product's decision log.
 
-Runs the checks listed in "What the format guard checks" in template.md, which lies next to this
-script. Field names, kinds of change, relation types, forms of a review record's *Result*, levels of
-verification, the words `none` and `TODO` each field takes and forbidden words are read from the
-template, so the rules of the entry live in one place (WAY-05, WAY-35, WAY-71). Each check cites
-the invariants it gives a verdict for, as `invariant: <identifier>/<version>` (WAY-65).
+Checks the log against the rules of template.md, which lies next to this script. Field names,
+kinds of change, relation types, forms of a review record's *Result*, levels of verification, the
+fields that never take `none` or `TODO`, the number of binding sentences and the words kept out of
+them are read from the template, so the rules of the entry live in one place (WAY-05, WAY-35,
+WAY-71). Each check cites the invariants it gives a verdict for, as
+`invariant: <identifier>/<version>` (WAY-65). In the-way's own log, the guard also checks who
+approved each version (WAY-14) and that every number `examples.md` names is a decision of the log
+(WAY-05).
 
 Usage, from the root of the product's repository:
 
@@ -46,8 +49,7 @@ PROGRAM = "elements/decisions/format_guard.py"
 # The template a change may alter only together with a new version in the log, as the
 # invariant decision-template-change names it, relative to the root of the repository.
 TEMPLATE_PATH = "elements/decisions/template.md"
-# Who approves a version of the-way's own log where *Approver override* names nobody, as the
-# invariant decision-approver names it (WAY-14).
+# Who approves a version of the-way's own log, as the invariant decision-approver names it (WAY-14).
 OWN_APPROVER = "Mariusz"
 # The checks each option selects for the record; every other check reads the log alone and is
 # recorded only by a run given neither option. A run records the checks its options select, and
@@ -109,6 +111,17 @@ def _code_block(section_text, title):
     return match.group(1)
 
 
+def _bullets(section_text):
+    """The text of every top-level bullet of a section, its indented continuation lines joined."""
+    bullets = []
+    for line in section_text.splitlines():
+        if line.startswith("- "):
+            bullets.append(line[2:].strip())
+        elif bullets and line.startswith("  ") and line.strip():
+            bullets[-1] += " " + line.strip()
+    return bullets
+
+
 def read_rules(path=TEMPLATE):
     with open(path, encoding="utf-8") as handle:
         text = handle.read()
@@ -136,12 +149,11 @@ def read_rules(path=TEMPLATE):
     word_errors = {}
     for line in version_section.splitlines():
         cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
-        word = re.match(r"^`(none|TODO)\b", cells[0]) if line.startswith("|") else None
-        if word and len(cells) == 3:
-            errors = re.search(r"in (.*), error", cells[2])
-            word_errors[word.group(1)] = re.findall(r"\*([^*]+)\*", errors.group(1)) if errors else []
+        word = re.match(r"^`(none|TODO)`$", cells[0]) if line.startswith("|") else None
+        if word and len(cells) == 2:
+            word_errors[word.group(1)] = re.findall(r"\*([^*]+)\*", cells[1])
     if set(word_errors) != {"none", "TODO"}:
-        raise TemplateError("cannot read where `none` and `TODO` are errors")
+        raise TemplateError("cannot read which fields never take `none` or `TODO`")
 
     relations_line = re.search(r"^- \*\*Relations:\*\* (.*)$", version_form, re.M).group(1)
     relation_types = {}
@@ -163,19 +175,18 @@ def read_rules(path=TEMPLATE):
         raise TemplateError("cannot read the form of *Origin* of an inherited decision")
     inherited_origin = "^%s$" % "(\\S.*?)".join(re.escape(part) for part in inherited.split("<…>"))
 
-    checks = _section(text, "What the format guard checks")
-    binding_check = re.search(r"^- Binding sentences: (.*)$", checks, re.M)
-    if not binding_check:
-        raise TemplateError("no check of binding sentences in the list of checks")
-    count = re.search(r"to (\w+);", binding_check.group(1))
+    binding_rules = _bullets(_section(text, "Binding sentences"))
+    count = next((match for match in (re.match(r"One to (\w+) sentences\b", rule)
+                                      for rule in binding_rules) if match), None)
     if not count or count.group(1) not in NUMBER_WORDS:
         raise TemplateError("cannot read the number of binding sentences")
-    forbidden_words = re.findall(r"\*(\w+)\*", binding_check.group(1))
-
-    keywords = re.search(r"keywords of RFC 2119 in capitals \(([^)]*)\)",
-                         " ".join(_section(text, "Binding sentences").split()))
-    if not keywords:
-        raise TemplateError("no list of RFC 2119 keywords")
+    kept_out = next((rule for rule in binding_rules if "do not appear" in rule), None)
+    if kept_out is None:
+        raise TemplateError("no rule on the words kept out of binding sentences")
+    forbidden_words = re.findall(r"\*(\w+)\*", kept_out)
+    keywords = re.search(r"keywords of RFC 2119 in capitals \(([^)]*)\)", kept_out)
+    if not forbidden_words or not keywords:
+        raise TemplateError("cannot read the words kept out of binding sentences")
 
     if not (version_fields and prose_fields and review_fields and kinds and result_forms):
         raise TemplateError("the entry forms are incomplete")
@@ -438,10 +449,7 @@ def change_kind(entry, rules, prefix):
         return None
     if entry.version == 1:
         return "new decision"
-    match = re.match(r"^(.+?) · previous: (%s-\d{2,}/\d+)$" % re.escape(prefix), value)
-    if match and match.group(1) in rules.kinds and match.group(1) != "new decision":
-        return match.group(1)
-    return None
+    return value if value in rules.kinds and value != "new decision" else None
 
 
 def check_log(entries, text, rules, prefix, report, today, approver=None):
@@ -590,20 +598,12 @@ def check_changes(entries, rules, prefix, report):
             continue
         if entry.version == 1:
             if value != "new decision":
-                report.error(line, "%s: *Change* of version 1 is not `new decision`" % label, check)
+                report.error(line, "%s: *Change* of version 1 is not `new decision`" % label, check,
+                             (kind_named,))
             continue
-        match = re.match(r"^(.+?) · previous: (%s-\d{2,}/\d+)$" % re.escape(prefix), value)
-        if not match:
-            report.error(line, "%s: *Change* is not `<kind> · previous: %s-NN/V`" % (label, prefix),
-                         check, (kind_named,))
-            continue
-        kind = match.group(1)
-        if kind not in rules.kinds or kind == "new decision":
-            report.error(line, "%s: `%s` is not a kind of change" % (label, kind), check, (kind_named,))
-        expected = "%s-%02d/%d" % (prefix, entry.number, entry.version - 1)
-        if match.group(2) != expected:
-            report.error(line, "%s: `previous:` names %s instead of %s"
-                         % (label, match.group(2), expected), check)
+        if value not in rules.kinds or value == "new decision":
+            report.error(line, "%s: `%s` is not a kind of change" % (label, value), check,
+                         (kind_named,))
 
 
 def check_bindings(entries, rules, prefix, report):
@@ -652,8 +652,9 @@ def check_binding_across_versions(entries, rules, prefix, report, versions):
         if entry.binding is None:
             report.fail(entry.line, "%s: binding sentences are missing" % label, check, (kept,))
         elif previous.binding is None or fingerprint(previous.binding) != fingerprint(entry.binding):
-            report.error(entry.line + 2, "%s: a %s keeps the binding sentences of %s"
-                         % (label, kind, label_of(previous, prefix)), check, (kept,))
+            report.error(entry.line + 2, "%s: a version of the kind %s keeps the binding sentences "
+                                         "of %s" % (label, kind, label_of(previous, prefix)),
+                         check, (kept,))
 
 
 def check_relations(entries, rules, prefix, report):
@@ -736,14 +737,9 @@ def check_approver(entries, approver, prefix, report):
             continue
         match = re.match(r"^(.+), %s$" % DATE, value)
         who = match.group(1) if match else value
-        allowed = [approver]
-        override = field_value(entry, "Approver override")[0]
-        if override and override != "none" and not is_todo(override):
-            allowed.append(override)
-        if who not in allowed:
-            report.error(line, "%s: *Approved by* names %s, who is neither %s nor the approver "
-                               "*Approver override* names" % (label_of(entry, prefix), who, approver),
-                         check, (named,))
+        if who != approver:
+            report.error(line, "%s: *Approved by* names %s, not %s"
+                         % (label_of(entry, prefix), who, approver), check, (named,))
 
 
 def check_review_when(entries, rules, prefix, report):
@@ -800,13 +796,12 @@ def check_references(text, entries, prefix, report, numbers, versions):
         if current is None:
             what, where = "the text", number
         else:
-            what = "`previous:`" if current == "Change" else "*%s*" % current
-            where = start
+            what, where = "*%s*" % current, start
         for match in ref.finditer(line):
             if int(match.group(1)) not in numbers:
                 report.error(where, "%s names %s, which does not exist" % (what, match.group(0)),
                              check, (target,))
-            elif match.group(2) and current in ("Relations", "Outranks", "Change") and \
+            elif match.group(2) and current in ("Relations", "Outranks") and \
                     (int(match.group(1)), int(match.group(2))) not in versions:
                 report.error(where, "%s names %s, which does not exist" % (what, match.group(0)),
                              check)
@@ -1090,26 +1085,21 @@ def check_template_change(top, base, added, report, no_commit=None):
                      % (TEMPLATE_PATH, base), check, (change,))
 
 
-def check_examples(entries, examples_path, report):
+def check_examples(entries, examples_path, prefix, report):
+    """Every decision number `examples.md` names is the number of a decision in the log: an
+    example names a decision by its number instead of copying it (WAY-05)."""
     # invariant: decision-example-numbers/1
-    check, copy_matches = "check_examples", "decision-example-numbers/1"
-    report.ran(check, copy_matches)
+    check, named = "check_examples", "decision-example-numbers/1"
+    report.ran(check, named)
     with open(examples_path, encoding="utf-8") as handle:
         examples = handle.read()
-    by_heading = {entry.heading: entry for entry in entries}
-    for line, lines in split_entries(examples):
-        heading = lines[0]
-        copy = "\n".join(lines).rstrip()
-        entry = by_heading.get(heading)
-        if entry is None:
-            report.error(None, "examples.md:%d: `%s` is not in the log" % (line, heading),
-                         check, (copy_matches,))
-        elif entry.text != copy:
-            copy_lines, log_lines = copy.split("\n"), entry.text.split("\n")
-            offset = next((i for i, (a, b) in enumerate(zip(copy_lines, log_lines)) if a != b),
-                          min(len(copy_lines), len(log_lines)))
-            report.error(entry.line + offset, "examples.md:%d differs from the log"
-                         % (line + offset), check, (copy_matches,))
+    numbers = {entry.number for entry in versions_of(entries)}
+    reference = re.compile(r"\b%s-(\d{2,})\b" % re.escape(prefix))
+    for line, text in enumerate(examples.split("\n"), start=1):
+        for match in reference.finditer(text):
+            if int(match.group(1)) not in numbers:
+                report.error(None, "examples.md:%d: %s is not a number of the log"
+                             % (line, match.group(0)), check, (named,))
 
 
 # --- entry point ----------------------------------------------------------------------------
@@ -1192,7 +1182,7 @@ def run(log_path, base=None, today=None, template=TEMPLATE, examples=EXAMPLES, s
                             "the current binding part")
 
     if os.path.exists(examples) and own:
-        check_examples(entries, examples, report)
+        check_examples(entries, examples, prefix, report)
 
     report.print(stream)
     if record is not None:
