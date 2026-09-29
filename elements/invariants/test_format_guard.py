@@ -526,6 +526,17 @@ class Identifiers(GuardTestCase):
         self.assertPasses(invariants())
         self.assertEqual(self.verdicts("withdrawal-successors/1"), ["pass"])
 
+    def test_withdrawn_identifier_off_the_form(self):
+        # invariant: withdrawal-successors/1
+        for identifier in ("Save-Format", "save_format", "none"):
+            with self.subTest(identifier=identifier):
+                self.assertFails(invariants(withdrawn=WITHDRAWN.replace(
+                    "| save-format |", "| %s |" % identifier)),
+                    "`%s` is not an identifier of words in lower case joined by hyphens"
+                    % identifier)
+                self.assertEqual(self.verdicts("withdrawal-successors/1"), ["fail"])
+                self.assertEqual(self.verdicts("invariant-identifier-form/1"), ["pass"])
+
     def test_withdrawn_identifier_giving_no_why(self):
         # invariant: withdrawal-successors/1
         for why in ("", "none", "`none`", "TODO"):
@@ -617,8 +628,10 @@ class Sentence(GuardTestCase):
                                     later()), "a bound with a tilde")
 
     def test_value_the_gate_does_not_fill_in(self):
+        # invariant: sentence-gate-values/1
         self.assertFails(invariants(entry(sentence="No saved game changes since {base}."), later()),
                          "`{base}` is not a value the gate fills in")
+        self.assertEqual(self.verdicts("sentence-gate-values/1"), ["fail"])
 
     def test_value_its_command_does_not_take(self):
         self.assertFails(invariants(entry(sentence="No saved game changes since {fork-point}."),
@@ -1001,8 +1014,10 @@ class Lists(GuardTestCase):
         self.assertEqual(self.verdicts("quarantine-flow-invariants/1"), [])
 
     def test_violated_list_with_other_columns(self):
+        # invariant: violated-position-version/1
         self.assertFails(invariants(), "the list has columns Id | Ver, not Identifier | Version",
                          violated_text="## Violated invariants\n\n| Id | Ver |\n|---|---|\n")
+        self.assertEqual(self.verdicts("violated-position-version/1"), ["fail"])
 
     def test_violated_position(self):
         self.assertPasses(invariants(), violated_text=violated(("save-round-trip", "1")))
@@ -1110,6 +1125,46 @@ class RecordPaths(GuardTestCase):
                                                               ".runs/b.jsonl")), later()),
                          "save-round-trip/1: the command names 2 records of a run "
                          "(`.runs/a.jsonl`, `.runs/b.jsonl`); it names one")
+        self.assertEqual(self.verdicts("run-record-path/1"), ["fail"])
+
+
+class FactRecordPaths(GuardTestCase):
+    """The commands of the environment facts beside the file name their records of a run under
+    the same rule as the invariants' own (WAY-74)."""
+
+    def facts(self, arguments):
+        self.write("foundations/environment_facts.md", FACTS.replace(
+            "- **Method:** `TODO`", "- **Method:** `python -B probes/quota.py %s`" % arguments))
+
+    def test_record_of_a_fact_in_a_folder_git_ignores(self):
+        # invariant: run-record-path/1
+        self.write(".gitignore", ".runs/\n")
+        self.facts("--record .runs/quota.jsonl")
+        self.assertPasses(invariants())
+        self.assertEqual(self.verdicts("run-record-path/1"), ["pass"])
+
+    def test_record_of_a_fact_git_does_not_ignore(self):
+        # invariant: run-record-path/1
+        self.write(".gitignore", "build/\n")
+        self.facts("--record .runs/quota.jsonl")
+        self.assertFails(invariants(), "environment_facts.md:9: storage-quota/1: git does not "
+                                       "ignore `.runs/quota.jsonl`")
+        self.assertEqual(self.verdicts("run-record-path/1"), ["fail"])
+
+    def test_record_of_a_fact_outside_the_repository(self):
+        # invariant: run-record-path/1
+        self.facts("--record ../quota.jsonl")
+        self.assertFails(invariants(), "environment_facts.md:9: storage-quota/1: "
+                                       "`../quota.jsonl` lies outside the repository")
+        self.assertEqual(self.verdicts("run-record-path/1"), ["fail"])
+
+    def test_fact_command_naming_two_records(self):
+        # invariant: run-record-path/1
+        self.write(".gitignore", ".runs/\n")
+        self.facts("--record .runs/a.jsonl --out .runs/b.jsonl")
+        self.assertFails(invariants(), "environment_facts.md:9: storage-quota/1: the command names "
+                                       "2 records of a run (`.runs/a.jsonl`, `.runs/b.jsonl`); it "
+                                       "names one")
         self.assertEqual(self.verdicts("run-record-path/1"), ["fail"])
 
 

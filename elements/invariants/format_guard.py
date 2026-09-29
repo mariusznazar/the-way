@@ -561,8 +561,9 @@ def check_identifiers(entries, withdrawn, foundation, report, columns=()):
     """Every identifier has the form `elements/common/` gives and is held once among the entries and
     withdrawn identifiers of this file, of the environment facts and of the part map; every
     withdrawn identifier gives why, and names as successors only entries or withdrawn identifiers
-    of this file, or `none` (WAY-64). `columns` are those of the file's list of withdrawn
-    identifiers."""
+    of this file, or `none` (WAY-64). The form of an entry's identifier answers to
+    invariant-identifier-form, and that of a withdrawn one to withdrawal-successors. `columns` are
+    those of the file's list of withdrawn identifiers."""
     # invariant: identifier-holders/1
     # invariant: invariant-identifier-form/1
     # invariant: withdrawal-successors/1
@@ -593,7 +594,8 @@ def check_identifiers(entries, withdrawn, foundation, report, columns=()):
             [(cells[0], line, False) for cells, line in withdrawn]:
         if identifier == "none" or not re.fullmatch(IDENTIFIER, identifier):
             report.error(line, "`%s` is not an identifier of words in lower case joined by "
-                               "hyphens" % identifier, check, (form,) if is_entry else ())
+                               "hyphens" % identifier, check,
+                         (form,) if is_entry else (successors_named,))
         elif identifier in seen:
             report.error(line, "identifier `%s` is used twice (line %d)" % (identifier, seen[identifier]),
                          check, (holders,))
@@ -696,7 +698,7 @@ def check_sentence(entries, rules, report):
         for value in re.findall(BRACED % r"\s", unquoted):
             if value not in rules.gate_values:
                 report.error(line, "%s: `%s` is not a value the gate fills in (%s)"
-                             % (label, value, ", ".join(rules.gate_values)), check)
+                             % (label, value, ", ".join(rules.gate_values)), check, (gate_values,))
             elif command is not None and value not in command:
                 report.error(line, "%s: the sentence names `%s`, which its command does not take"
                              % (label, value), check, (gate_values,))
@@ -1011,7 +1013,7 @@ def check_violated(path, entries, rules, report):
         if table.columns != rules.violated_columns:
             report.error(None, "%s:%d: the list has columns %s, not %s"
                          % (rules.violated_file, table.line, " | ".join(table.columns),
-                            " | ".join(rules.violated_columns)), check)
+                            " | ".join(rules.violated_columns)), check, (position_version,))
     positions = [row for table in tables for row in table.rows]
     for cells, line in positions:
         identifier, version = (cells + ["", ""])[:2]
@@ -1153,32 +1155,51 @@ def record_paths(command):
     return paths
 
 
-def check_record_paths(entries, top, report):
-    """Every `.jsonl` path a command names is one git ignores, as git itself answers, and no
-    command names two (WAY-74). Letter case always counts: git ignores it where core.ignorecase
-    is set, which git init sets on Windows and macOS, and a path would then be ignored there
-    and not on Linux."""
-    # invariant: run-record-path/1
-    check, record_path = "check_record_paths", "run-record-path/1"
-    named = {}   # path -> (entry, line) of the first command naming it
-    for entry in entries:
-        command = command_of(entry)
+def fact_commands(facts):
+    """(where, line, command) for every fact of the environment facts file whose method is a
+    command: `where` names the file, the line and the entry, since the report's own lines are those
+    of the invariants file."""
+    if facts is None:
+        return []
+    module = facts_guard()
+    found = []
+    for entry in sorted(facts.entries.values(), key=lambda item: item.line):
+        command = module.command_of(entry)
         if command is None:
             continue
-        line = value_of(entry, "Method")[1]
+        line = module.value_of(entry, "Method")[1]
+        label = entry.identifier if entry.version is None else module.label_of(entry)
+        found.append(("environment_facts.md:%d: %s" % (line, label), None, command))
+    return found
+
+
+def check_record_paths(entries, top, report, facts=None, facts_read=True):
+    """Every `.jsonl` path a command of this file or of the environment facts beside it names is
+    one git ignores, as git itself answers, and no command names two (WAY-74). Letter case always
+    counts: git ignores it where core.ignorecase is set, which git init sets on Windows and macOS,
+    and a path would then be ignored there and not on Linux. Where the environment facts could not
+    be read, the check records no pass."""
+    # invariant: run-record-path/1
+    check, record_path = "check_record_paths", "run-record-path/1"
+    commands = [(label_of(entry), value_of(entry, "Method")[1], command_of(entry))
+                for entry in entries] + fact_commands(facts)
+    named = {}   # path -> (where, line) of the first command naming it
+    for where, line, command in commands:
+        if command is None:
+            continue
         paths = record_paths(command)
         if len(paths) > 1:
             report.error(line, "%s: the command names %d records of a run (%s); it names one"
-                         % (label_of(entry), len(paths), ", ".join("`%s`" % p for p in paths)),
+                         % (where, len(paths), ", ".join("`%s`" % p for p in paths)),
                          check, (record_path,))
         for path in paths:
-            named.setdefault(path, (entry, line))
+            named.setdefault(path, (where, line))
     inside = []
-    for path, (entry, line) in named.items():
+    for path, (where, line) in named.items():
         normal = os.path.normpath(path).replace(os.sep, "/")
         if os.path.isabs(path) or normal == ".." or normal.startswith("../"):
             report.error(line, "%s: `%s` lies outside the repository, where git ignores nothing"
-                         % (label_of(entry), path), check, (record_path,))
+                         % (where, path), check, (record_path,))
         else:
             inside.append(path)
     ignored = set()
@@ -1191,12 +1212,13 @@ def check_record_paths(entries, top, report):
                          % (message or "git check-ignore exited with %d" % code), check)
             return
         ignored = {path for path in answer.split("\0") if path}
-    report.ran(check, record_path)
+    if facts_read:
+        report.ran(check, record_path)
     for path in inside:
         if path not in ignored:
-            entry, line = named[path]
+            where, line = named[path]
             report.error(line, "%s: git does not ignore `%s`, the record of a run the command names"
-                         % (label_of(entry), path), check, (record_path,))
+                         % (where, path), check, (record_path,))
 
 
 # --- the commit the branch left the main branch from ---------------------------------------
@@ -1542,7 +1564,7 @@ def run(path, base=None, stream=None, template=TEMPLATE, merge_onto=None, record
     check_human_verdicts(path, entries, foundation, rules, report)
     if tracked is not None:
         check_citations(entries, withdrawn, top, tracked, report, withdrawn_columns)
-        check_record_paths(entry_list, top, report)
+        check_record_paths(entry_list, top, report, foundation.facts, foundation.facts_read)
 
     if base == NO_COMMIT:
         no_base = "--base none: there is no commit the branch left the main branch from"
