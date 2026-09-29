@@ -5,77 +5,55 @@ description: Use when a decision has to be written into a product's decision log
 
 # Record a decision
 
-Turns a decision into an entry of a product's decision log. Every rule of the entry lives in
-`template.md`; this skill holds only the way of working. A fix to a rule of the entry goes to
-the template, together with a decision in the log (WAY-05).
+Turns a decision into an entry of a product's decision log. Every rule of an entry stands in this
+element's `template.md` and in `elements/common/rules.md`, and the way of working the skills share
+stands in `elements/common/way_of_working.md`; this skill holds only what is particular to a
+decision (WAY-35).
 
-## 1. Read the rules and the log
+This skill lives in `elements/decisions/skill/` of the-way. Installed globally, its base directory
+is a link, so resolve it first: `realpath <base>` in Bash, `(Get-Item <base>).Target` in
+PowerShell. The element's directory is the parent of the resolved one, and the-way the directory
+three above it. Follow the steps of `elements/common/way_of_working.md` there; below is what a
+decision adds to each.
 
-This skill lives in `elements/decisions/skill/` of the-way repository. Installed globally, its
-base directory is a link, so resolve it first: `realpath <base>` in Bash,
-`(Get-Item <base>).Target` in PowerShell. Read in full `template.md` and `examples.md` from the
-parent of the resolved directory, and the product's `foundations/decisions.md`. Entries take the
-prefix of the log; when the log has no entries, ask for it. When the repository has no
-`foundations/decisions.md`, ask whether the product starts its decision log here; if not, stop.
-Before drafting, read in full the product's `foundations/glossary.md` where it exists and, in a
-product other than the-way, the-way's `foundations/glossary.md` in the pinned copy, three
-directories above the resolved one (WAY-34, WAY-92, WAY-95).
+## 1. Read
+
+- Read the product's `foundations/decisions.md`. When the log has no entries, ask the human for
+  the product's prefix.
 
 ## 2. Decide what the entry is
 
 - Find what was decided and where it is said: the conversation, a document the human names, or
-  existing code (then the template's section on inherited decisions applies).
+  existing code — then the template's section on inherited decisions applies.
 - Apply the template's plan test. When the rule belongs to a plan, stop and say so; no entry is
   written.
 - Name the one question the binding sentences answer. When they answer two independent
   questions, propose two entries, or keep the question the rest serves.
-- Search the log for that question: found on the main branch — a new version, with its kind of
-  change from the template's table; found only on this branch — an edit in place, shown for
-  acceptance again when it changes the meaning; not found — a new number.
-- Search the whole foundation, not only the decisions with an overlapping *Scope*, for entries
-  this one touches that no written link joins to it. The search reads *Rejected* as well as the
-  binding part: an option already weighed and refused stands there, and nowhere else. Each finding
-  becomes a relation, a question about a collision in step 4, or a sentence that answered this
-  question in passing and now needs a version or an edit without it.
-  The search also asks whether the entry uses a glossary term in another meaning than its entry
-  gives, or spells out a term's definition instead of using the term (WAY-33): a paraphrase is
-  rewritten to the term, and another meaning, or a word the glossary does not yet settle, goes
-  through `record-glossary-term`.
+- Search the log for that question. What a question found there takes, and what a new one takes,
+  the template's "Where entries go" and "Numbers and versions" give.
+- The search of the foundation also looks for a collision with another decision, which is a
+  question in step 4 (WAY-25), and for a sentence of another decision that answered this question
+  in passing, which moves as "Numbers and versions" says.
 
 ## 3. Draft
 
-Fill every field according to the template, with extra care for these:
-
-- *Based on*: take each fact about the world from a source the human gives, never from memory.
-  What is not yet known, or the decider's own motive, is not such a fact: it belongs in
-  *Rationale*, or in *Review when* when the decision waits for it.
-- *Verification*: before choosing level 2 or 3, try to state an invariant — a sentence about
-  the product that is false on a commit which breaks this decision. Level 1 names the
-  identifiers of such invariants' entries, each written through `record-invariant` in step 4;
-  level 2 or 3 covers the rest of the decision.
-- `none` and `none considered` are the human's statements. Where the source is silent, the
-  field becomes a question in step 4.
-- A kind of change, a type of relation or any other value the template's closed lists do
-  not hold is a question in step 4, and the list grows by a new version of the decision
-  that closed it. Do not reach for the nearest value and a reason why it will do (WAY-54).
+- *Based on*: sort what the source offers as a reason before filling the field — what is not yet
+  known, or the decider's own motive, is no fact about the world, and the template's fields say
+  where each stands.
+- *Verification*: try first to state an invariant — a sentence about the product that is false on
+  a commit which breaks this decision — and take level 2 or 3 only for what no such sentence
+  covers. Each invariant level 1 names is written through `record-invariant` in step 4.4.
+- `none considered` in *Rejected*, like `none`, is the human's statement.
 - *Approved by* reads `on acceptance` in the draft.
 
-## 4. Ask, show, append
+## 4. Ask, show, write
 
-1. Ask in one round about everything the source leaves open, each question with a proposed
-   value and the reason for it. A question about a fact proposes where to look for it, never
-   the fact from memory, and the draft takes it only as read there.
-2. Show the whole entry. Apply fixes; on acceptance, write who accepted and the date in
-   *Approved by*.
-3. Append the entry at the end of the log and run the format guard from the product's
-   repository root: `python -B <parent of the resolved directory>/format_guard.py`. Fix what
-   the entry broke and run it again; an error or warning elsewhere in the log goes to the human.
-4. What follows from this entry goes through steps 3 and 4 one at a time: a version or an
-   edit of a neighbour found in step 2; every invariant this entry's level 1 verification
-   names that the invariants file does not hold yet, through `record-invariant` (WAY-17); and,
-   when this entry changes a decision's binding sentences, every decision that derives from it
-   or narrows it, and every invariant whose *Derives from* names it, the invariants through
-   `record-invariant` (WAY-66).
+- Step 4.2: on acceptance, write who accepted and the date in *Approved by*.
+- Step 4.4: what follows from this entry is a version or an edit of a neighbour found in step 2;
+  every invariant this entry's level 1 verification names that the invariants file does not hold
+  yet, through `record-invariant`; and, when this entry changes a decision's binding sentences,
+  every decision that derives from it or narrows it, and every invariant whose *Derives from*
+  names it, the invariants through `record-invariant`.
 
 ## Review record
 
