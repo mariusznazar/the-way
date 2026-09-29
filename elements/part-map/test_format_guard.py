@@ -29,8 +29,8 @@ NO_COMMIT = "the method takes a commit the gate filled in as not existing"
 
 
 def heading(identifier, title=None):
-    """The heading of an entry: `## <identifier>`, or the form before the slimming,
-    `## <identifier> — <title>`, where a title is given."""
+    """The heading of an entry: `## <identifier>`, or `## <identifier> — <title>`, which the form
+    does not use, where a title is given."""
     return "## %s" % identifier if title is None else "## %s — %s" % (identifier, title)
 
 
@@ -265,8 +265,8 @@ class Entries(GuardTestCase):
 
 
 class Headings(GuardTestCase):
-    """An entry's heading is its identifier alone, `## <identifier>` (WAY-41). A heading in the
-    form before the slimming, `## <identifier> — <title>`, is reported, and its identifier is
+    """An entry's heading is its identifier alone, `## <identifier>` (WAY-41). A heading with a
+    title, `## <identifier> — <title>`, is reported, and its identifier is
     still read, so that every other check runs on the entry."""
 
     TITLE = ("line 5: `saving` carries a title after its identifier; an entry's heading is "
@@ -570,9 +570,8 @@ class Files(GuardTestCase):
                          ["no part claims `src/render.py`: give it to a part or put it on the "
                           "list of files left out on purpose"])
 
-    def test_a_generated_mark_is_the_form_before_the_slimming(self):
-        """*Files* holds git path patterns alone (WAY-44); a pattern marked `(generated)`, the form
-        before the slimming, is reported, and the pattern is still matched."""
+    def test_a_generated_mark_is_not_part_of_the_form(self):
+        """*Files* holds git path patterns alone (WAY-44); a pattern marked `(generated)` is reported, and the pattern is still matched."""
         self.guard(part_map(part(files=("src/saving.py (generated)", "tests/**")), flow(),
                             surface(), self.rendering(), foundations_part()))
         self.assertEqual([item for item in self.lines if item["verdict"] == "fail"],
@@ -658,8 +657,8 @@ class Flows(GuardTestCase):
         self.assertEqual(self.failures("flow-invariant-link/1"),
                          ["line 22: save-and-load: *Invariant* names no invariant"])
 
-    def test_a_test_path_in_the_invariant_is_the_form_before_the_slimming(self):
-        """The map names no test; a flow written in the form before the slimming, with `— test:`,
+    def test_a_test_path_in_the_invariant_is_not_part_of_the_form(self):
+        """The map names no test; a flow that names a test after `— test:`
         is reported, and its invariant still read."""
         self.write("foundations/invariants.md", "# Invariants\n\n## save-round-trip/1\n\nOne.\n")
         code, output = self.guard(part_map(
@@ -1496,8 +1495,8 @@ class RecordPerCommand(GuardTestCase):
 
 
 class Examples(GuardTestCase):
-    """`examples.md` copies entries of the-way's own map, which keep the heading of the form before
-    the slimming, `## <identifier> — <title>`, until they are rewritten; so do the examples here."""
+    """`examples.md` copies entries of the-way's own map, which keep the heading with a title,
+    `## <identifier> — <title>`, until they are rewritten; so do the examples here."""
 
     def titled_map(self):
         return part_map(part(title="Saving a game"), flow(title="Save and load"),
@@ -1715,7 +1714,7 @@ class TestRuns(GuardTestCase):
 
 
 class OwnMap(unittest.TestCase):
-    """The entries of the-way's map still carry the form before the slimming, which the guard
+    """The entries of the-way's map still carry what the form does not have, which the guard
     reports in three places only: a heading with a title, a test named after `— test:` in a flow's
     *Invariant*, and a pattern marked `(generated)`. Once the entries are rewritten in the new
     form, the map passes with no error."""

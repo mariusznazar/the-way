@@ -6,9 +6,9 @@ forms of the template, so the rules of an entry live in one place (WAY-35, WAY-7
 cites the invariants it gives a verdict for, as `invariant: <identifier>/<version>` (WAY-65).
 
 An entry's heading is its identifier alone, and a critical flow's test is found by a comment line
-`# flow: <identifier>` in a file git tracks, never by a path in the map. An entry written in the
-form before the slimming — a heading `## <identifier> — <title>`, a test named after `— test:` in
-a flow's *Invariant*, a pattern of *Files* marked `(generated)` — is reported, and the identifier,
+`# flow: <identifier>` in a file git tracks, never by a path in the map. An entry that carries what the form does not have — a heading `## <identifier> — <title>`, a test
+named after `— test:` in a flow's *Invariant*, a pattern of *Files* marked `(generated)` — is
+reported, and the identifier,
 the invariant and the pattern are still read from it, so that every other check runs on it.
 
 Usage, from the root of the product's repository:
@@ -93,11 +93,11 @@ LIST_SECTIONS = ["Criticality scale", "External context", "Change paths",
 MAP_LISTS = [title for title in LIST_SECTIONS if title != "Known violations"]
 DATE = re.compile(r"\b\d{4}-\d{2}-\d{2}\b")
 # The heading of an entry, `## <identifier>`, told from the heading of a list by the fields the
-# entry holds; and the heading of the form before the slimming, `## <identifier> — <title>`.
+# entry holds; and the heading with a title, `## <identifier> — <title>`, which the form does not use.
 HEADING = re.compile(r"^## (\S+)[ \t]*$")
 TITLED_HEADING = re.compile(r"^## (.+?) — (.+)$")
 FIELD = re.compile(r"^- \*\*.+?:\*\*")
-# The mark of the form before the slimming after a pattern of *Files*.
+# The mark `(generated)` after a pattern of *Files*, which the form does not use.
 GENERATED = re.compile(r"\s*\(generated\)\s*$")
 # A comment line standing alone on its line that names the critical flow a test checks.
 FLOW_LINE = re.compile(r"^[ \t]*#[ \t]*flow:[ \t]*(.*?)[ \t\r]*$", re.M)
@@ -236,7 +236,7 @@ def read_rules(path=TEMPLATE):
 class Entry:
     line: int
     identifier: str
-    title: str                                    # None, but in the form before the slimming
+    title: str                                    # None, where the heading has no title
     kind: str = None
     binding: str = None
     fields: dict = field(default_factory=dict)   # name -> [value, line]
@@ -325,7 +325,7 @@ def identifiers(value):
 
 def flow_invariant(value):
     """(invariant, test path) a flow's *Invariant* names, each None where it names none. A test
-    path follows `— test:` only in the form before the slimming."""
+    path follows `— test:` only where the form is not kept."""
     flat = " ".join((value or "").split())
     test = re.search(r"(?:^|\s)test:\s*(\S.*)$", flat)
     name = flat[:test.start()] if test else flat
@@ -680,8 +680,8 @@ def check_invariant_names(entries, map_path, report):
 
 
 def patterns(entry, name="Files"):
-    """Yield the path patterns a field lists, one per line. The mark `(generated)` of the form
-    before the slimming is set aside, so the pattern it follows is still matched; check_fields
+    """Yield the path patterns a field lists, one per line. The mark `(generated)`, which the form
+    does not use, is set aside, so the pattern it follows is still matched; check_fields
     reports the mark."""
     for line in (entry.fields.get(name, [""])[0] or "").split("\n"):
         pattern = line.strip()

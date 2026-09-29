@@ -527,9 +527,9 @@ class Fields(GuardTestCase):
                          "field *Correction* is missing")
         self.assertRecorded("invariant-entry-field-presence/1", "fail")
 
-    def test_a_recovered_field_is_the_form_before_the_slimming(self):
+    def test_a_recovered_field_is_not_a_field_of_the_form(self):
         output = self.assertFails(invariants(entry() + "\n- **Recovered:** none", later()),
-                                  "save-round-trip/1: *Recovered* is the form before the slimming; "
+                                  "save-round-trip/1: *Recovered* is not a field of the form; "
                                   "a recovered invariant stands on the list of recovered invariants")
         self.assertNotIn("field *Recovered* is not in the template", output)
         self.assertEqual(self.verdicts("invariant-entry-field-presence/1"), ["pass"])
@@ -1589,12 +1589,12 @@ class HumanVerdicts(GuardTestCase):
 
 
 class OwnFile(unittest.TestCase):
-    """The entries of the-way's invariants still carry the form before the slimming, which the
-    guard reports in one place only: a *Recovered* line in an entry. Once the entries are rewritten
-    in the new form, the file passes with no error."""
+    """The entries of the-way's invariants still carry *Recovered*, which is not a field of the
+    form, and which the guard reports in one place only: a *Recovered* line in an entry. Once the
+    entries are rewritten in the new form, the file passes with no error."""
 
-    OLD_FORM = re.compile(r"^line \d+: [a-z0-9-]+/\d+: \*Recovered\* is the form before the "
-                          r"slimming; a recovered invariant stands on the list of recovered "
+    OLD_FORM = re.compile(r"^line \d+: [a-z0-9-]+/\d+: \*Recovered\* is not a field of the "
+                          r"form; a recovered invariant stands on the list of recovered "
                           r"invariants$")
 
     def test_the_way_invariants_hold_no_error_but_the_old_form(self):

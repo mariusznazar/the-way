@@ -1312,8 +1312,8 @@ class RulesFromTheTemplate(unittest.TestCase):
 
 
 class OwnLog(unittest.TestCase):
-    """The entries of the-way's log still carry the form before the slimming, which the guard
-    reports in two places only: relations `related to` and a kind of change followed by
+    """The entries of the-way's log still carry two things that are not in the form, which the
+    guard reports in two places only: relations `related to` and a kind of change followed by
     `previous:`. Once the entries are rewritten in the new form, the log passes with no error."""
 
     OLD_FORM = (re.compile(r": [A-Z]+-\d{2,}/\d+: relation `related to [A-Z]+-\d{2,}` is not of a "

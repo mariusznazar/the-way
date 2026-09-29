@@ -6,8 +6,8 @@ each may hold, the titles and columns of the lists of quarantined and recovered 
 file of violated invariants, the values the gate fills in and the words a sentence may not use are
 read from the template; the fields the main branch holds `TODO` in, the list of withdrawn
 identifiers and the file and row of human verdicts are read from the rules the elements share; so
-each rule lives in one place (WAY-35, WAY-71). An entry still carrying *Recovered*, the form before
-the slimming, is reported, and every other check reads it as it reads any entry. The decision log
+each rule lives in one place (WAY-35, WAY-71). An entry carrying *Recovered*, which is not a field of
+the form, is reported, and every other check reads it as it reads any entry. The decision log
 and the part map are read with the parsers of their own guards, and the record of a run is written
 with the report the guards share. Each check cites the invariants it gives a verdict for, as
 `invariant: <identifier>/<version>` (WAY-65).
@@ -679,8 +679,8 @@ def check_identifiers(entries, withdrawn, foundation, report, columns=()):
                              check, (successors_named,))
 
 
-# The field of the form before the slimming that marked an entry recovered; a recovered invariant
-# now stands on the list of recovered invariants (WAY-58).
+# *Recovered* is not a field of the form; a recovered invariant stands on the list of recovered
+# invariants (WAY-58).
 OLD_RECOVERED = "Recovered"
 
 
@@ -698,7 +698,7 @@ def check_fields(entries, rules, report, facts_have_entries=False):
         label = label_of(entry)
         for name, (value, line) in entry.fields.items():
             if name == OLD_RECOVERED and name not in names:
-                report.error(line, "%s: *%s* is the form before the slimming; a recovered invariant "
+                report.error(line, "%s: *%s* is not a field of the form; a recovered invariant "
                                    "stands on the list of recovered invariants" % (label, name),
                              check)
             elif name not in names:

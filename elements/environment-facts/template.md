@@ -42,7 +42,7 @@ identifiers, human verdicts, `{fork-point}` and the version of an entry — stan
   decision citing the fact, as a state a script can check, never in the fact (WAY-85, WAY-24).
 - An invariant names in *Rests on* only the facts holding a condition that decides whether a commit
   makes its sentence true (WAY-73). A fact about what runs a method — how a tool behaves under the
-  runner's configuration, which interpreter runs a script — is no such fact (WAY-73).
+  runner's configuration, which interpreter runs a script — is no such fact (`TODO — decision pending: which decision sets that a fact about what runs a method is not one an invariant rests on`).
 - The current state of a setting that people of the product change outside its repository — who
   can open it, a host's access rule — is a fact whose method reads that state where it lives, or is
   a re-read by the person who sets it where reading it takes their credentials. A choice of such a
@@ -275,7 +275,7 @@ reader not built yet is named by the invariant it answers to
 | sentence | whoever reviews what rests on the fact; the fingerprint (`fact-fingerprint-input`) | prose |
 | Holds for | the fingerprint (`fact-fingerprint-input`); whoever writes an invariant naming a version within it; a probe, which compares the release it runs on with it (WAY-91); a script checking a decision's *Review when* against the models a study measured, which no invariant states yet | transcribed from the source |
 | Source | the watch, which checks that the passage still stands; the human reviewing the fact; the format guard (`fact-source-form`) | transcribed |
-| Method | the gate, on a change that enters or changes the fact or alters a file its command names (`gate-fact-run`); the clock (`fact-clock-exit`); a human, for a path; the format guard (`fact-method-form`) | judgment |
+| Method | the gate, on a change that enters or changes the fact (`TODO — decision pending: whether a change of a fact's field that does not reword its entry runs its method`) or alters a file its command names (`gate-fact-run`); the clock (`fact-clock-exit`); a human, for a path; the format guard (`fact-method-form`) | judgment |
 | withdrawn identifiers | whoever follows a citation to a fact shown false; the format guard, which keeps it from coming back and checks its successors (`fact-withdrawal-persistence`, `fact-withdrawal-successors`) | judgment for *Why*; read off for the rest |
 
 ## Examples
