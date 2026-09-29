@@ -889,6 +889,15 @@ def check_flows(entries, report, top, tracked, claims):
             continue
         with open(full, encoding="utf-8", errors="replace") as handle:
             covered = [row[3:].strip() for row in handle if row.startswith("SF:")]
+        if not covered:
+            # A file with no record the guard reads is silence, not agreement (WAY-47).
+            report.cannot_check("the list of parts of `%s`" % entry.identifier,
+                                "its coverage file `%s` holds no `SF:` record the guard reads"
+                                % value)
+            report.unchecked(check, NOT_PRODUCED_REASON,
+                             "coverage file `%s` of `%s` holds no `SF:` record the guard reads"
+                             % (value, entry.identifier), coverage_parts)
+            continue
         for path in covered:
             if os.path.isabs(path):
                 path = os.path.relpath(path, top)

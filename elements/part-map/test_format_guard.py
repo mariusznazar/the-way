@@ -715,6 +715,23 @@ class Flows(GuardTestCase):
         self.assertIn("unchecked: the list of parts of `save-and-load` — its coverage file "
                       "`coverage/missing.info` does not exist\n", output)
 
+    def test_coverage_file_the_guard_cannot_read_is_reported_unchecked(self):
+        """A coverage file that holds no `SF:` record names no file the guard can read; silence is
+        reported as the list of parts unchecked, never as agreement (WAY-47)."""
+        # invariant: map-guard-missing-coverage/1
+        self.write("coverage/save-and-load.json",
+                   '{"files": {"src/render.py": {"executed_lines": [1]}}}\n')
+        code, output = self.guard(self.map_with(flow(coverage="coverage/save-and-load.json")))
+        self.assertEqual(code, 0, output)
+        self.assertEqual([item["verdict"] for item in self.lines
+                          if item["invariant"] == "flow-coverage-parts/1"], ["unchecked"])
+        self.assertRecords(line("check_flows", "unchecked", "flow-coverage-parts/1",
+                                "coverage file `coverage/save-and-load.json` of `save-and-load` "
+                                "holds no `SF:` record the guard reads", NOT_PRODUCED))
+        self.assertIn("unchecked: the list of parts of `save-and-load` — its coverage file "
+                      "`coverage/save-and-load.json` holds no `SF:` record the guard reads\n",
+                      output)
+
     def test_every_flow_that_leaves_no_coverage_file_is_reported_unchecked(self):
         """Two flows leave no coverage file and two name one that does not exist; each is
         reported as its list of parts unchecked, and the record gives the invariant no pass."""
