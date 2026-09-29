@@ -220,8 +220,8 @@ outside it (WAY-42). What its fingerprint covers answers to the invariant `map-f
 
 ## Known violations
 
-The derived file beside the map, `foundations/known_violations.md`, holds the map's debt. A
-row names the source part, the target part, the file and what it reaches for — never a line
+The derived file beside the map, `foundations/known_violations.md`, holds the map's debt:
+every dependency the code holds that the map does not allow. A row names the source part, the target part, the file and what it reaches for — never a line
 number. A new violation breaks the gate; a row the code no longer contradicts breaks it too and
 goes in the same change; a row is added only by a change of the foundation that a human accepts.
 The file is checked as a subset of the list on the commit the task branch left the main branch

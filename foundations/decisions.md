@@ -5,40 +5,35 @@ The decisions of the-way, the process for building products. Entries follow
 
 ### WAY-01/1 — What state does the foundation describe?
 
-On the main branch, the foundation describes the product as it is: its rules, together with
-the listed debt wherever the product does not yet meet them. A task starts implementation with
-its foundation step, and the code follows; when the task closes, the
-foundation again matches the current state. Roadmaps and plans do not change the foundation.
+On the main branch, the foundation describes the product as it is — its rules, together with
+the listed debt wherever the product does not yet meet them — and roadmaps and plans do not change
+it. A task that sets out to change the foundation makes that change in its foundation step, and the
+code follows; a foundation change in progress lives on the task's branch in the product's
+repository and reaches the main branch in the same merge as the code that follows it. When a task
+closes, the foundation again matches the current state.
 
 - **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, task-cycle
-- **Based on:** specifications written separately for each change go unread: in a reported
-  case of 238 such specifications over nine months, none was reopened, and the agent could not
-  tell which were current (Alfredo Perez,
-  https://www.alfredo-perez.dev/blog/2026-08-31-i-wrote-238-specs-and-never-read-one-again).
+- **Based on:** none
 - **Relations:** none
-- **Outranks:** none
-- **Verification:** level 2 — an agent compares the change with the decision:
-  - complies: a task changes the foundation entry first, the code follows, and both reach the
-    main branch together;
-  - violates: a planned feature is written into the foundation before it is built; the
-    foundation is updated only after deployment.
+- **Verification:** level 1 — invariants: foundation-change-merge-route. Level 2 for the rest — an
+  agent compares the change with the decision:
+  - complies: a task branch changes a decision and its code, and both reach the main branch in
+    one merge; a task that brings the code back in line with an invariant runs without a
+    foundation step;
+  - violates: a planned feature is written into the foundation before it is built; the code is
+    merged and the foundation change is left for a later task.
 - **Review when:** none
 - **Origin:** none
-- **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-14
+- **Approved by:** Mariusz, 2026-09-29
 
-*Rationale:* a foundation that describes intent ages with every change of direction, and no
-comparison with the code reveals it, because such a document is expected to differ from the
-code. A foundation that describes the current state can be checked against the working product
-at any time. The order works like test-driven development on a broader scale: the foundation
-changes first, and the code follows.
-*Rejected:* the foundation as a description of the target product; the foundation updated
-only after deployment — a step at the end of a task is the kind of step that goes missing.
-*Consequences:* every task that changes what the product does begins with a foundation step.
-Plans, roadmaps and hypotheses need a home outside the foundation. Where a rule of the
-foundation is not met on the main branch, what the foundation carries is the rule and its listed
-debt, never a weakened rule (WAY-51).
+*Rationale:* a foundation that describes intent ages with every change of direction, unseen,
+because it is expected to differ from the code; one that describes the current state can be
+checked against the product at any time. An abandoned task's foundation change is dropped with its
+branch, leaving no false description.
+*Rejected:* the foundation as a description of the target product — it ages unseen; the foundation
+updated only after deployment — a step at a task's end goes missing; a "designed, not built" mark
+on the main branch — an abandoned task leaves it for good.
 
 ### WAY-02/1 — How do dependents learn that an entry has changed?
 
@@ -86,7 +81,7 @@ foundation step.
 - **Based on:** agents that a test stands in the way of cheat past it, and the Claude models
   measured do so mostly by changing the test, against which read-only tests are particularly
   effective: impossiblebench-test-modification@9cdba560.
-- **Relations:** derives from WAY-01@4deacf15 · related to WAY-02
+- **Relations:** derives from WAY-01@60960941 · related to WAY-02
 - **Outranks:** none
 - **Verification:** level 1 — invariants: invariant-test-change-acceptance.
 - **Review when:** the design of the task cycle begins, or no model in the range of fact
@@ -217,41 +212,6 @@ decision. The format guard,
 rules of the entry hold through review. Whether every field appears in every entry, and which
 words it may hold, is set by WAY-71.
 
-### WAY-06/1 — Where does a foundation change in progress live?
-
-A foundation change in progress lives on the task's branch in the product's repository and
-reaches the main branch in the same merge as the code that follows it.
-
-- **Change:** new decision
-- **Scope:** decisions, invariants, glossary, part-map, environment-facts, task-cycle
-- **Based on:** none
-- **Relations:** derives from WAY-01@4deacf15 · related to WAY-03
-- **Outranks:** none
-- **Verification:** level 1 — invariants: foundation-change-merge-route. Level 2 for the rule
-  that the change travels with its code — an agent compares the change with the decision:
-  - complies: a task branch changes a decision entry and the code that follows it, and both
-    reach the main branch in one merge;
-  - violates: a task's foundation change is merged to the main branch ahead of its code; the
-    code is merged and the foundation change is left for a later task.
-- **Review when:** none
-- **Origin:** none
-- **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-23
-
-*Rationale:* the main branch never describes something the product does not have (WAY-01), and
-an abandoned task leaves no false description behind: its foundation change is dropped with its
-branch.
-*Rejected:* a foundation change kept on the main branch with a "designed, not built" marker —
-the marker has to be removed when the task closes, and an abandoned task leaves a marked entry
-for good.
-*Consequences:* a change with no code behind it — a fix to a rationale, a decision recovered
-from the existing product — also reaches the main branch through a task branch. A file conflict
-catches two tasks that change the same entry in contradictory ways, but contradictory changes to
-different entries merge cleanly; the search against the current main branch before the merge
-(WAY-33) is what catches them. A merge into the main branch keeps a merge commit: a squash or a
-rebase puts the task's commits on the main branch's first-parent history as ordinary commits,
-and the level 1 invariant reads them as commits that reached it without a merge.
-
 ### WAY-07/1 — From when may a decision entry no longer be edited?
 
 An entry in the decision log is edited in place until it reaches the main branch; until then
@@ -262,7 +222,7 @@ the log there only grows at the end.
 - **Change:** new decision
 - **Scope:** decisions
 - **Based on:** none
-- **Relations:** derives from WAY-06@fe7c4068 · related to WAY-05
+- **Relations:** derives from WAY-01@60960941 · related to WAY-05
 - **Outranks:** none
 - **Verification:** level 1 — invariants: log-existing-lines · log-versions-added-per-number ·
   log-merge-copies. Level 2 for acceptance after a change of meaning — an agent compares the change
@@ -275,8 +235,8 @@ the log there only grows at the end.
 - **Approver override:** none
 - **Approved by:** Mariusz, 2026-09-15
 
-*Rationale:* an entry binds only once it describes the product on the main branch (WAY-01,
-WAY-06); before that it belongs to a change in progress. Versions written on a task branch would
+*Rationale:* an entry binds only once it describes the product on the main branch (WAY-01);
+before that it belongs to a change in progress. Versions written on a task branch would
 carry into the log states that never bound anything. On the main branch the log keeps what was in
 force, as it was, so there it only grows. *Approved by* is a trace of what a human accepted; after
 a change of meaning without a new acceptance, it would name someone who did not approve what the
@@ -348,7 +308,7 @@ elements.
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common,
   relation-model, gate, repository, task-cycle
 - **Based on:** none
-- **Relations:** related to WAY-02 · related to WAY-04 · related to WAY-06 · related to WAY-21 ·
+- **Relations:** related to WAY-02 · related to WAY-04 · related to WAY-21 ·
   related to WAY-44 · related to WAY-55
 - **Outranks:** none
 - **Verification:** level 1 — invariants: repository-file-location · element-directory-contents ·
@@ -367,7 +327,7 @@ each tool has a reason only where it has work: a skill writes entries, so it bel
 element; the fingerprint script only reads, so `relation-model` has no skill. The skill writes
 an entry in the right form when someone runs it; the format guard catches a form broken by hand, by
 another agent or by a merge. Until a directory holds what its part requires, it is a change in
-progress, and under WAY-06 such a change lives on a branch. The files that serve the whole
+progress, and under WAY-01 such a change lives on a branch. The files that serve the whole
 repository belong to no one part of the process, and WAY-44 gives them a part of their own; they
 stay where the tool that reads them looks for them, and the map, not this list, names which they
 are. The `README.md` binds nothing.
@@ -435,39 +395,22 @@ in the parts the task touched. A periodic review of the foundation runs apart fr
 - **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-01@4deacf15 · related to WAY-06 · related to WAY-10 ·
-  related to WAY-17
-- **Outranks:** none
+- **Relations:** derives from WAY-01@60960941
 - **Verification:** level 1 — invariants: return-step-record. Level 2 for what the return step finds
   — an agent compares the change with the decision:
-  - complies: a rule the implementer wrote into the code for an edge case comes back as a
-    proposed invariant before the merge;
+  - complies: an edge-case rule the implementer wrote into the code comes back as a proposed
+    invariant before the merge;
   - violates: the return step reports nothing to add, while the diff brings in behaviour that no
     invariant covers.
-- **Review when:** the design of the task cycle begins · check by: 2026-10-02
+- **Review when:** none
 - **Origin:** none
-- **Approver override:** none
 - **Approved by:** Mariusz, 2026-09-26
 
-*Rationale:* some of the foundation is learned only in implementation and in use. Agreement between
-the foundation and the code has to be checked, because a task that missed the foundation will not
-report it by itself. A step at the end of a task is the kind of step that goes missing (WAY-01), so
-the merge waits for its record. Environment facts are on the list because otherwise they reach the
-foundation only when an invariant pulls them in, while the assumption that failed Ariane 5 sat in
-code with no invariant over it (WAY-17). Words are on the list because terms carry rules (WAY-04),
-and a new word, or a second meaning of an old one, is learned in implementation as a rule is.
-*Rejected:* the foundation changed only at the foundation step; mechanical signals in the diff
-that point to a fact — a new dependency, a new import, a browser interface, an address, a value
-arriving from outside — built into the return step now, ahead of the design of the task cycle.
-*Consequences:* the task's log needs a home, because the return step reads it. Comparing the
-foundation with the code in the parts a task touched needs the part map's rule for assigning files.
-How often the periodic review runs is set when the task cycle is designed. Until then the return
-step finds facts by the agent's judgment, and an agent seldom notices one on its own; the mechanical
-signals above are an input to that design. A word of an *Avoid* the change brings back is the
-glossary guard's error (WAY-98); until the task cycle is designed, a new word in a binding sentence
-or in a new identifier the product publishes is found by the agent's judgment, and an old word in a
-new meaning by the search of WAY-33 asked for it (WAY-99); a mechanical list of new words is an
-input to that design, as the signals for facts are.
+*Rationale:* some of the foundation is learned only in implementation and in use, and a task that
+missed the foundation does not report it; an end step goes missing, so the merge waits for its
+record. Facts and words are listed because, like rules, they are learned in code.
+*Rejected:* the foundation changed only at the foundation step — what implementation teaches stays
+in the code.
 
 ### WAY-12/1 — How is a decision checked?
 
@@ -1180,7 +1123,7 @@ never into the entry.
   https://arxiv.org/html/2504.20781v3). A reconstructed record is easily taken for a real one: "The
   retroactive ADR has the form of the decision record but not the substance" (Catio,
   https://www.catio.tech/blog/architecture-decision-record).
-- **Relations:** related to WAY-06 · related to WAY-10 · related to WAY-23 · related to WAY-28
+- **Relations:** related to WAY-10 · related to WAY-23 · related to WAY-28
 - **Outranks:** none
 - **Verification:** level 1 — invariants: inherited-origin-form · inherited-rationale-source. Level
   2 for the agent's role — an agent compares the change with the decision:
@@ -1222,7 +1165,7 @@ not a contradiction, and no exception lives only in a task's plan.
   "Constitution conflicts are automatically CRITICAL and require adjustment of the spec, plan, or
   tasks—not dilution, reinterpretation, or silent ignoring of the principle" (GitHub Spec Kit,
   https://github.com/github/spec-kit/blob/main/templates/commands/analyze.md).
-- **Relations:** derives from WAY-01@4deacf15 · related to WAY-03 · related to WAY-06 ·
+- **Relations:** derives from WAY-01@60960941 · related to WAY-03 ·
   related to WAY-07 · related to WAY-14 · related to WAY-21 · related to WAY-24 · related to WAY-25
 - **Outranks:** none
 - **Verification:** level 2 — an agent compares the change with the decision:
@@ -1451,30 +1394,23 @@ between two states — stays in the plan of that work.
 - **Change:** new decision
 - **Scope:** decisions, task-cycle
 - **Based on:** none
-- **Relations:** related to WAY-01 · related to WAY-07 · related to WAY-22 · related to WAY-26
-- **Outranks:** none
+- **Relations:** none
 - **Verification:** level 2 — an agent compares the change with the decision:
   - complies: "the foundation reaches the main branch whole, once every element is ready" stays in
     the plan of building the foundation; "when what entries wait for arrives, they are fixed in
     the same change" enters the log;
   - violates: a decision on the order in which elements are built; a decision whose binding
-    sentences say what happens until the first merge.
+    sentences say what happens until the first merge; an exclusion that ends with its task
+    written into the log as a product non-goal.
 - **Review when:** none
 - **Origin:** none
-- **Approver override:** none
 - **Approved by:** Mariusz, 2026-09-17
 
-*Rationale:* WAY-01 keeps plans out of the foundation but gives no way to recognise one, and a
-plan written in the present tense reads like a decision. The log binds on the main branch
-(WAY-07), and a rule that ends when its change is merged binds nothing there: from its first day on
-the main branch it is a record of something already done, which would need a repeal at once. The
-test asks the same kind of question as the one between a decision and an invariant — whether the
-sentence can be pointed at a moment where it still binds.
-*Rejected:* plans written into the log and repealed once done — the log fills with the history of
-work instead of what binds.
-*Consequences:* the plan test in the section "Decision or invariant" of the decision template is
-the written form of this decision, and the skill applies it before drafting an entry. A plan of
-work has no home in the process yet (WAY-26).
+*Rationale:* a plan written in the present tense reads like a decision, and WAY-01 gives no way to
+recognise one. The log binds on the main branch (WAY-07), and a rule that ends when its change is
+merged binds nothing there: from its first day it records work already done.
+*Rejected:* plans written into the log and repealed once done — the log fills with history of
+work.
 
 ### WAY-37/1 — What happens to entries that wait for something when it arrives?
 
@@ -1487,29 +1423,21 @@ foundation for what the change brings.
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, relation-model,
   task-cycle
 - **Based on:** none
-- **Relations:** related to WAY-01 · related to WAY-07 · related to WAY-19 · related to WAY-33
-- **Outranks:** none
+- **Relations:** none
 - **Verification:** level 2 — an agent compares the change with the decision:
-  - complies: the change that brings the template of invariants also turns every invariant named
-    in working form in the log into a reference to an entry, and fixes the consequences that
-    waited for that template;
+  - complies: the change bringing the invariants template turns every invariant named in working
+    form into a reference to its entry;
   - violates: the part map arrives, and WAY-21 still says that a scope names parts from a working
     list.
 - **Review when:** none
 - **Origin:** none
-- **Approver override:** none
 - **Approved by:** Mariusz, 2026-09-17
 
-*Rationale:* an entry that says what holds until something exists becomes false the moment it
-arrives, and nothing flags it: no link and no fingerprint (WAY-31) leads from what arrives to the
-entries that wait for it, so the foundation stops describing the product as it is (WAY-01) without
-a sign. Whoever brings the awaited thing knows what it is, while the authors of the waiting
-sentences may be long gone, so the search belongs to the change that brings it. The fix
-travels in the same change, because a fix left for later is a step that goes missing.
-*Rejected:* fixes left to the periodic review (WAY-11) — the foundation says something false
-until the review comes.
-*Consequences:* bringing an element, the part map or a shared script includes reading the whole
-foundation for sentences that wait for it — "until", "not yet", "in working form".
+*Rationale:* an entry that says what holds until something exists turns false when it arrives, and
+nothing leads from what arrives to what waits for it. Whoever brings it knows what it is, while the
+authors of the waiting entries may be gone; a fix left for later goes missing.
+*Rejected:* fixes left to the periodic review (WAY-11) — the foundation says something false until
+the review comes.
 
 ### WAY-38/1 — In what are the scripts of the-way written?
 
@@ -1672,9 +1600,7 @@ there.
 - **Change:** new decision
 - **Scope:** part-map
 - **Based on:** none
-- **Relations:** derives from WAY-01@4deacf15 · related to WAY-07 · related to WAY-19 ·
-  related to WAY-40
-- **Outranks:** none
+- **Relations:** derives from WAY-01@60960941
 - **Verification:** level 1 — invariants: map-entry-version. Level 2 for the rest — an agent
   compares the change with the decision:
   - complies: a part whose responsibility narrows has its sentence rewritten in the same change
@@ -1683,23 +1609,14 @@ there.
     above it; the map holds a section of retired entries next to the live ones.
 - **Review when:** none
 - **Origin:** none
-- **Approver override:** none
 - **Approved by:** Mariusz, 2026-09-17
 
-*Rationale:* a decision keeps its earlier versions because they still bind: their reasons and
-rejected options stop a later change from walking back into what was already weighed (WAY-18).
-An entry of the part map carries no reasons — what put a part where it is lives in a decision —
-so its earlier state binds nothing, and the only reader it has is someone asking what the
-product looked like then, which git answers. Versions would also cost the map its one job: an
-entry read at the start of a task has to say what is true now, and a file of versions makes the
-reader choose.
-*Rejected:* versions as in the decision log — the map would carry history that binds nothing,
-and every reader would have to pick the current entry; an archive of past maps beside the
-current one — git is that archive already.
-*Consequences:* an edit to a binding sentence changes the entry's fingerprint (WAY-42), and
-whoever makes the edit clears the references it flags (WAY-02). The map is not
-append-only, so what protects it is the review of the change, not the format guard. A part that
-disappears leaves a withdrawn identifier, which is the map's only trace of what is gone (WAY-41).
+*Rationale:* a decision keeps earlier versions because their reasons still bind (WAY-18); a map
+entry carries no reasons, so its earlier state binds nothing, and git answers whoever asks what the
+product looked like. An entry read at a task's start says what is true now, without versions to
+choose from.
+*Rejected:* versions as in the decision log — history that binds nothing, and the reader picks the
+current entry; an archive of past maps beside the map — git is one already.
 
 ### WAY-44/1 — What assigns a file to a part?
 
@@ -1877,37 +1794,22 @@ already makes, and this check starts no second run of the tests.
 
 - **Change:** new decision
 - **Scope:** part-map, task-cycle
-- **Based on:** a checking script fails rather than guessing where it cannot read what it needs:
-  "If value could not be extracted then script should fail" (Kubernetes KEP-1209, Metrics
-  Validation and Verification,
-  https://github.com/kubernetes/enhancements/blob/master/keps/sig-instrumentation/1209-metrics-stability/README.md).
-- **Relations:** derives from WAY-45@3798c435 · related to WAY-16 · related to WAY-38 ·
-  related to WAY-44
-- **Outranks:** none
+- **Based on:** none
+- **Relations:** derives from WAY-45@3798c435
 - **Verification:** level 1 — invariants: flow-coverage-parts · map-guard-missing-coverage ·
   map-guard-test-runs.
 - **Review when:** none
 - **Origin:** none
-- **Approver override:** none
 - **Approved by:** Mariusz, 2026-09-17
 
-*Rationale:* a flow's list of parts is written by a human and decides what lies on the flow
-(WAY-45), so a part quietly missing from it sends a change down the light path. Coverage is the
-only thing that says which files the test really ran through. The check is conditional rather
-than required, because a product with no coverage for a flow still gets the rest of the map,
-while a check that demands what a product does not produce gets turned off whole. Silence is
-reported as "unchecked" rather than as agreement, because a check that has stopped seeing
-anything passes — two empty sets compare equal, which is how a route-guarding test in a product
-built with agents needed a second test to protect against a vacuous pass. The coverage comes from
-the run the gate already makes, because an end-to-end run is expensive, and a map that costs a
-second one is a map nobody keeps.
-*Rejected:* a required coverage check — a product without coverage would fail on the map instead
-of using it; coverage used to choose which tests run — a different job, and WAY-45 runs them all;
-silence read as agreement — the emptiest map would be the cleanest; a test run started by the
-map guard — a second end-to-end run for the sake of a check.
-*Consequences:* a product that wants the lists of its flows checked makes its gate leave a
-coverage file for each flow's test, in a format the script reads (WAY-38). "Unchecked" is a state
-of the map that a human reads, not an error that stops the work.
+*Rationale:* the hand-written list of parts decides what lies on the flow (WAY-45), so a part
+missing from it sends a change down the light path; only coverage shows which files the test ran
+through. Silence is "unchecked", because a check that sees nothing passes: two empty sets compare
+equal.
+*Rejected:* a required coverage check — a product without coverage would fail on the map instead of
+using it; coverage choosing which tests run — WAY-45 runs them all; silence read as agreement — the
+emptiest map would pass cleanest; a test run started by the map guard — a second, costly end-to-end
+run.
 
 ### WAY-48/1 — How is a trust boundary recorded?
 
@@ -2047,56 +1949,41 @@ conversion. Those details belong to the product, not to this process. The level 
 a format it saves is chosen knowing that the data already stored is a consumer that will never
 update.
 
-### WAY-51/1 — What does the main branch hold where the map's rules are not met?
+### WAY-51/1 — What does the main branch hold where the product does not meet an invariant or the part map's allowed dependencies?
 
-On the main branch the part map holds its rules together with a listed debt: every place where
-the code does not meet a rule stands on a derived list of known violations. A new violation
-breaks the gate; a row the code no longer contradicts breaks it too and goes in the same
-change; a row is added only by a change of the foundation that a human accepts, never by a
-step of implementation. The state a product is in when this process enters it goes onto that
-list once.
+On the main branch the part map holds its allowed dependencies together with a listed debt:
+every dependency the code holds that the map does not allow stands on a derived list of known
+violations; an invariant the product does not meet stands, by identifier and current version, on
+the derived list `foundations/violated_invariants.md`. A new violation of the map breaks the gate;
+a row the code no longer contradicts breaks it too and goes in the same change; a listed `fail`
+leaves the gate's command at zero, and a listed `pass` makes it fail until the same change drops
+the row. A row of either list is added only by a change of the foundation that a human accepts,
+never by a step of implementation, and the state a product is in when this process enters it goes
+onto the list of known violations once.
 
 - **Change:** new decision
-- **Scope:** part-map, task-cycle
-- **Based on:** a list of known violations grows without limit where adding to it is the cheap
-  move: Packwerk answers most situations with "Simply run `bin/packwerk update-todo`" and holds
-  that "New dependency violations are never hard-blocked"
-  (https://github.com/Shopify/packwerk/blob/main/RESOLVING_VIOLATIONS.md), and its authors record
-  what followed — "the rate at which Packwerk was identifying problems to its users vastly
-  outpaced their capacity to actually fix them (or interest in doing so)" and, for domain
-  components, "monstrously large todo files for every component. With every new feature added,
-  these todo files grew larger" (A Packwerk Retrospective,
-  https://railsatscale.com/2024-01-26-a-packwerk-retrospective/).
-- **Relations:** derives from WAY-40@c3f0b830 · narrows WAY-15@72eb2240 · related to WAY-01 ·
-  related to WAY-28
-- **Outranks:** none
+- **Scope:** part-map, invariants, gate, task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-40@c3f0b830 · derives from WAY-53@aaeafada · derives from
+  WAY-63@f16348c8 · narrows WAY-15@72eb2240
 - **Verification:** level 1 — invariants: known-violation-coverage · known-violations-growth ·
-  known-violation-currency · known-violation-fields · known-violation-line-number.
+  known-violation-currency · known-violation-fields · known-violation-line-number ·
+  gate-exit-code · violated-list-growth · violated-position-version.
 - **Review when:** none
 - **Origin:** none
-- **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-17
+- **Approved by:** Mariusz, 2026-09-29
 
-*Rationale:* this process enters products that already exist (WAY-28), where a rule the code
-breaks in fifty places either stops all work or is quietly dropped. The listed debt keeps the
-rule a rule while making the gap visible and countable. What the list needs is a ratchet, because
-its own failure mode is well recorded: where adding to the list is the easiest move, it grows
-faster than anyone's will to empty it, and an agent takes that move more readily than a person.
-Hence the three mechanisms together — a new violation is an error, a stale row is an error,
-and growing the list is a foundation change a human accepts — since any one of them alone leaves
-the cheap move open. Rows carry no line numbers, because a line number goes stale at the
-next edit while the violation it stands for does not.
-*Rejected:* a main branch holding only what the code already meets — the process could never
-enter an existing product; the rule weakened until the code fits it — the map would then describe
-the accident rather than the intent (WAY-15); rows with line numbers — stale at the next
-edit; a part marked "not checked yet" instead of a list of violations — the gap stops being
-countable, and nothing shows whether it grows.
-*Consequences:* a list growing at one part is a signal to review where that part's boundary runs,
-rather than an order to pay the debt: it is easier to bend a mental model to what the code
-actually does than the other way round. The list is derived and yet cannot be regenerated from
-scratch — regenerating would swallow the new violations — so it is checked as a subset of the
-list on the main branch. What the main branch of a foundation carries (WAY-01) therefore includes
-this debt.
+*Rationale:* the process enters products that already break their rules (WAY-28); listed debt
+keeps each rule whole, since a rule written to fit the code hides the intent, and makes the gap
+countable. Where adding a row is the easy move, agents take it, so both lists share one ratchet.
+*Rejected:* a main branch holding only what the code meets — no existing product could enter; the
+rule weakened until the code fits it — the foundation describes the accident (WAY-15); one list
+for both — the map's rows name parts and files, not entries; rows with line numbers — stale at the
+next edit; a row without a version — a debt for an old meaning excuses a new one; a rule left out
+or marked "not checked yet" until met — the gap stops being countable; debt paid by an end date —
+repaid by weakening the rule; a list any step may grow (Packwerk) — it outgrows the will to empty
+it; an addition check keyed to the entry's fingerprint — a second merge stop for what WAY-10
+decides.
 
 ### WAY-52/1 — What is generated from the part map for an agent?
 
@@ -2508,7 +2395,7 @@ who chooses the invariant is recorded as an inherited decision given by that per
 the invariant names such a decision, its field turns to `none`, and neither the field nor the new
 link raises its version (WAY-59). An invariant a human takes from a product's own requirements, which the product does
 not meet yet, holds `none` and enters as an invariant the product violates, whose place is set by
-WAY-67; its source is not recorded by this decision. The field's readers are the
+WAY-51; its source is not recorded by this decision. The field's readers are the
 human weighing a change to the invariant and the agent recovering a part's decisions. WAY-28's
 consequence on the note is edited in place to name this decision, while the element still has no
 template to carry the note (WAY-37). An invariant holding a condition taken from a requirement of an
@@ -2589,7 +2476,7 @@ names its bound or tolerance, statistic and population.
 - **Scope:** invariants, decisions, part-map, gate
 - **Based on:** none
 - **Relations:** derives from WAY-59@2d716c3f · derives from WAY-22@dcf291ea ·
-  derives from WAY-56@06700ffd · related to WAY-05 · related to WAY-06 · related to WAY-07 ·
+  derives from WAY-56@06700ffd · related to WAY-05 · related to WAY-07 ·
   related to WAY-10 · related to WAY-12 · related to WAY-23 · related to WAY-31 ·
   related to WAY-34 · related to WAY-38 · related to WAY-51 · related to WAY-53 ·
   related to WAY-57 · related to WAY-58 · related to WAY-61
@@ -2843,7 +2730,7 @@ change to the product (WAY-08).
 *Consequences:* the template lists the reasons for `unchecked`, and the list grows by a new version
 of this decision: the method reads `TODO`; the method is a path and no human verdict is in force;
 the method's command or file is not declared or produced, except a command declared on the commit
-the branch left the main branch from, whose drop makes the result `error` (WAY-38, WAY-47, WAY-67);
+the branch left the main branch from, whose drop makes the result `error` (WAY-38, WAY-47, WAY-51);
 the method takes a commit the gate filled in as not existing; the entry stands on the list of
 quarantined invariants at its current version, and the committer date of the commit being checked
 is no later than the quarantine's end date, a later one making the result `error` (WAY-68); for a fact, a probe ran on a release of its tool
@@ -2852,7 +2739,7 @@ human verdict stands, what it names and how long it is in force is set by WAY-83
 results the gate reports are those WAY-82 has it run. A declared command that cannot start, or a record off a closed list, is
 `error`. Runs on a deliberate break, and the run WAY-58 asks for, give evidence, not results. Which
 `fail` a listed violation excuses, and when a checked invariant may turn `unchecked`, is set by
-WAY-67 and WAY-68.
+WAY-51 and WAY-68.
 
 ### WAY-64/1 — Where do invariant and environment fact entries stand, and what identifies one?
 
@@ -2937,47 +2824,6 @@ file's language. Several checks citing one invariant in one run pass only when e
 A path a human assesses against is no invariant test: a change to it reaches its invariant
 (WAY-62), and the human verdict lapses (WAY-63).
 
-### WAY-67/1 — What does the main branch hold where an invariant is not met?
-
-An invariant the product does not meet stands, by identifier and current version, on the derived
-list `foundations/violated_invariants.md`. A listed `fail` leaves the gate's command at zero, and a
-listed `pass` makes it fail until the same change drops the row. A row is added only by a
-change of the foundation that a human accepts, never by a step of implementation.
-
-- **Change:** new decision
-- **Scope:** invariants, gate, task-cycle
-- **Based on:** none
-- **Relations:** derives from WAY-53@aaeafada · derives from WAY-63@f16348c8 · related to WAY-08 ·
-  related to WAY-10 · related to WAY-15 · related to WAY-28 · related to WAY-51 · related to WAY-57 ·
-  related to WAY-58 · related to WAY-60 · related to WAY-61
-- **Outranks:** none
-- **Verification:** level 1 — invariants: gate-exit-code · violated-list-growth ·
-  violated-position-version.
-- **Review when:** none
-- **Origin:** none
-- **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-22
-
-*Rationale:* a product the process enters already breaks some of what it should hold (WAY-28), and a
-rule written to fit the code hides the intent (WAY-15); so the invariant stays whole, and its breach
-is a counted debt, like the map's (WAY-51). Like the map's, the list grows wherever growing it is
-cheap, so it takes the same ratchet. A row carries the entry's current version, so a new meaning
-is not excused by a debt accepted for the old one. Whether a change may turn a checked invariant
-`unchecked`, and when a dropped command is `error` instead, is a question about which result an entry
-has, edited into WAY-63 directly, not answered here.
-*Rejected:* one list shared with the map's — its rows name parts and files, not entries (WAY-51,
-WAY-53); an invariant left out until it holds — the gap WAY-60 rejects for a part left "not checked
-yet" (WAY-51); a row without a version; a debt paid by an end date — WAY-51 sets no end date for
-the map's debt, and an end date repays debt by weakening the rule; a mechanical addition-check keyed
-to a changed fingerprint of the entry — a second check that stops a merge, for what WAY-10 already
-decides for any change to this list.
-*Consequences:* the template names the list as not produced from scratch (WAY-53) and gives its form.
-A change to this list is a foundation change, so WAY-10's panel and a human decide it before it
-merges (WAY-01, WAY-51). Invariants a product fails when the process enters it go onto the list with
-the entering change. An invariant that enters without a method is `unchecked` from its first commit, not debt
-(WAY-60, WAY-63). WAY-63's closed list and exit rule, WAY-53's comparison commit, and the pointers in
-WAY-58 and WAY-61 that left this to a decision on debt are edited in place.
-
 ### WAY-68/1 — What happens to a check that gives different verdicts on one commit?
 
 A check that cites an invariant and records both `pass` and `fail` for one commit is answered by a
@@ -2996,7 +2842,7 @@ run records.
   Testing Blog, 2016, https://testing.googleblog.com/2016/05/flaky-tests-at-google-and-how-we.html).
 - **Relations:** derives from WAY-08@9d45e0a9 · derives from WAY-61@4804d070 ·
   derives from WAY-63@f16348c8 · related to WAY-03 · related to WAY-10 · related to WAY-24 ·
-  related to WAY-45 · related to WAY-60 · related to WAY-64 · related to WAY-67
+  related to WAY-45 · related to WAY-60 · related to WAY-64
 - **Outranks:** none
 - **Verification:** level 1 — invariants: quarantine-position-form · quarantine-flow-invariants ·
   gate-quarantine-result. Level 2 — an agent compares the change with the decision:
@@ -3019,11 +2865,11 @@ WAY-08 forbids. A critical flow's test runs on every change (WAY-45), and a quar
 would silence it. Moving the end date is a foundation change a human decides (WAY-10), not the
 silent extension WAY-24 rejects.
 *Rejected:* a row of the list of violated invariants — that list settles whether the product
-meets an invariant, not whether a check is trusted (WAY-67); a quarantine field in every entry —
+meets an invariant, not whether a check is trusted (WAY-51); a quarantine field in every entry —
 every entry pays for a rare case; a count of passes in a row to enter — k of n (WAY-08) decides
 what enters; the date of the run — the result would follow the hour;
 deletion once the date passes, as GitLab has it — an end date repaying by weakening the check
-(WAY-67).
+(WAY-51).
 *Consequences:* `foundations/invariants.md` ends with a list of quarantined invariants beside its
 withdrawn identifiers. A violated invariant may be quarantined, and its row of that list stays.
 

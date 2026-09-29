@@ -26,7 +26,7 @@ particular to an invariant (WAY-35).
   and its recovered invariants (WAY-58), in that order, the last list closing the file
   (`TODO — decision pending: which decision sets the order of the lists closing the invariants
   file`).
-- One derived file lies beside it: the list of violated invariants (WAY-67).
+- One derived file lies beside it: the list of violated invariants (WAY-51).
 - The identifier names what the sentence constrains, never what it demands, so that a raised
   version leaves it true; where another entry constrains the same thing, it adds the aspect this
   one protects, as `entry-version-number` and `entry-version-correction`
@@ -99,7 +99,7 @@ naming its identifier and its current version, with `searched: <…>` in *Search
   unchecked for that reason (WAY-63). A command whose program the product does not yet declare or
   produce is written out in full all the same, with the program named as it will run; that entry is
   reported unchecked for want of a declared or produced command, a different reason (WAY-63,
-  WAY-38, WAY-47, WAY-67).
+  WAY-38, WAY-47, WAY-51).
 - One run may check many invariants. An entry's result is the verdict the run records for its
   identifier and current version, in a format from this closed list, which grows by a new version of
   WAY-61: the-way's own record of a run, whose form and path answer to the invariants
@@ -259,7 +259,7 @@ WAY-64).
   - the method is a path, and no human verdict is in force;
   - the method's command or file is not declared or produced by the product, except a command
     declared on the commit the branch left the main branch from, whose drop makes the result `error`
-    (WAY-38, WAY-47, WAY-67);
+    (WAY-38, WAY-47, WAY-51);
   - the method takes a commit the gate filled in as not existing;
   - the entry stands on the list of quarantined invariants at its current version, and the
     committer date of the commit being checked is no later than its *Until* (WAY-68);
@@ -297,7 +297,7 @@ the product does not meet today, by identifier and current version. A listed `fa
 gate's command at zero, and a listed `pass` makes it fail until the same change drops the row.
 A row is added only by a change of the foundation that a human accepts, never by a step of
 implementation. The file is checked as a subset of the list on the commit the branch left the main
-branch from, never regenerated from scratch (WAY-53, WAY-67).
+branch from, never regenerated from scratch (WAY-53, WAY-51).
 
 ```markdown
 ## Violated invariants

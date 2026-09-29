@@ -105,10 +105,9 @@ Where {merge-onto} exists, every commit of the first-parent history of {merge-on
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-06@fe7c4068
+- **Derives from:** WAY-01@60960941
 - **Part:** every
 - **Correction:** none
-- **Recovered:** none
 
 ## log-existing-lines/1
 
@@ -251,14 +250,13 @@ Where {merge-onto} exists, no change alters, against {fork-point}, an invariant 
 
 ## return-step-record/1
 
-Where {merge-onto} exists, every change against {fork-point} carries the record of its task's return step.
+Where {merge-onto} exists, every change against {fork-point} holds, in one of its commits, the record of its task's return step.
 
 - **Method:** `TODO`
 - **Rests on:** none
 - **Derives from:** WAY-11@2dde69a7
 - **Part:** every
 - **Correction:** none
-- **Recovered:** none
 
 ## decision-verification-level/1
 
@@ -776,7 +774,6 @@ No entry of the part map carries a version.
 - **Derives from:** WAY-43@6a3b5e9e
 - **Part:** part-map
 - **Correction:** none
-- **Recovered:** none
 
 ## file-part-assignment/1
 
@@ -917,7 +914,6 @@ For every critical flow whose test leaves a coverage file, every part that cover
 - **Derives from:** WAY-47@bc0da442
 - **Part:** every
 - **Correction:** none
-- **Recovered:** none
 
 ## map-guard-missing-coverage/1
 
@@ -928,7 +924,6 @@ The map guard reports a critical flow whose test leaves no coverage file as "lis
 - **Derives from:** WAY-47@bc0da442
 - **Part:** part-map
 - **Correction:** none
-- **Recovered:** none
 
 ## map-guard-test-runs/1
 
@@ -939,7 +934,6 @@ The map guard starts no test run of its own.
 - **Derives from:** WAY-47@bc0da442
 - **Part:** part-map
 - **Correction:** none
-- **Recovered:** none
 
 ## trust-boundary-pattern/1
 
@@ -1031,14 +1025,13 @@ No surface in the part map carries a change path of its own.
 
 ## known-violation-coverage/1
 
-Every violation of a part map rule that the code holds stands on the list of known violations.
+Every dependency the code holds that the part map does not allow stands on the list of known violations.
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-51@bc61e5e2
+- **Derives from:** WAY-51@8bdac21a
 - **Part:** every
 - **Correction:** none
-- **Recovered:** none
 
 ## known-violations-growth/1
 
@@ -1046,21 +1039,19 @@ The list of known violations is a subset of its version on {fork-point}.
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --base {fork-point} --record .runs/part-map-base.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-51@bc61e5e2
+- **Derives from:** WAY-51@8bdac21a
 - **Part:** part-map
 - **Correction:** none
-- **Recovered:** none
 
 ## known-violation-currency/1
 
-Every row of the list of known violations names a violation the code holds.
+Every row of the list of known violations names a dependency the code holds that the part map does not allow.
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-51@bc61e5e2
+- **Derives from:** WAY-51@8bdac21a
 - **Part:** every
 - **Correction:** none
-- **Recovered:** none
 
 ## known-violation-fields/1
 
@@ -1068,10 +1059,9 @@ Every row of the list of known violations names a source part, a target part, a 
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-51@bc61e5e2
+- **Derives from:** WAY-51@8bdac21a
 - **Part:** part-map
 - **Correction:** none
-- **Recovered:** none
 
 ## known-violation-line-number/1
 
@@ -1079,10 +1069,9 @@ No row of the list of known violations names a line number.
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-51@bc61e5e2
+- **Derives from:** WAY-51@8bdac21a
 - **Part:** part-map
 - **Correction:** none
-- **Recovered:** none
 
 ## generated-pattern-source/1
 
@@ -1400,7 +1389,7 @@ The gate's command exits non-zero when some result it reports is `error`, an inv
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-63@f16348c8 · WAY-67@7b216d2a · WAY-82@790a7972
+- **Derives from:** WAY-63@f16348c8 · WAY-51@8bdac21a · WAY-82@790a7972
 - **Part:** gate
 - **Correction:** none
 - **Recovered:** none
@@ -1504,10 +1493,9 @@ The list of violated invariants is a subset of its version on {fork-point}.
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --base {fork-point} --record .runs/invariants-base.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-67@7b216d2a
+- **Derives from:** WAY-51@8bdac21a
 - **Part:** invariants
 - **Correction:** none
-- **Recovered:** none
 
 ## violated-position-version/1
 
@@ -1515,10 +1503,9 @@ The list of violated invariants has the columns the invariants template gives it
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-67@7b216d2a
+- **Derives from:** WAY-51@8bdac21a
 - **Part:** invariants
 - **Correction:** none
-- **Recovered:** none
 
 ## quarantine-position-form/1
 

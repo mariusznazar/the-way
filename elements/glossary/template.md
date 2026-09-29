@@ -98,8 +98,8 @@ particular to a glossary entry (WAY-35).
 - In the return step, a new word in a binding sentence or in a new identifier the product publishes
   is found by the agent's judgment, and an old word in a new meaning by the search of WAY-33 asked
   for it (WAY-11, WAY-33); a word of *Avoid* the change brings back is an error the guard reports
-  (WAY-98). That the change carries the record of its return step answers to the invariant
-  `return-step-record`.
+  (WAY-98). That the change holds, in one of its commits, the record of its task's return step
+  answers to the invariant `return-step-record`.
 
 ## Entry
 

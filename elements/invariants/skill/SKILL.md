@@ -73,6 +73,6 @@ invariant adds to each.
 
 For a row on the list of violated invariants, ask first whether the product is to be fixed
 instead, and whether the entry is one the product does not meet or one with no runnable method,
-which the template reports `unchecked` instead (WAY-67). Before a quarantine, ask for the `pass`
+which the template reports `unchecked` instead (WAY-51). Before a quarantine, ask for the `pass`
 and `fail` recorded on one commit, whether a change of the invariant test's mechanics answers it
 instead, and the end date.

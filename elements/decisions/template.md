@@ -73,7 +73,7 @@ yet is named by the invariant it answers to
 | Field | Who reads it, when | Where its value comes from |
 |---|---|---|
 | number (heading) | references from entries, tests and code (WAY-02); the format guard (`log-reference-target`) | judgment |
-| version (heading) | the format guard (`decision-version-sequence`); the view of the decisions in force (`view-versions`). A reference to a specific version (`WAY-06/1`) is historical and never flagged (WAY-02) | read off |
+| version (heading) | the format guard (`decision-version-sequence`); the view of the decisions in force (`view-versions`). A reference to a specific version (`WAY-01/1`) is historical and never flagged (WAY-02) | read off |
 | question (heading) | the author and the skill: is this a new version of an existing number, or a new number (WAY-19) | prose |
 | binding sentences | an agent comparing a change with the decision (WAY-12); the fingerprint (WAY-31) | prose |
 | Change | the format guard (`decision-change-kind`, `decision-binding-across-versions`); the view (`view-versions`) | judgment |
