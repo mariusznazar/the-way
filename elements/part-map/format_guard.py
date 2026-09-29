@@ -1076,7 +1076,7 @@ def check_withdrawn(entries, sections, rules, report):
             report.error(line, "the list `%s` holds `TODO`" % WITHDRAWN, check)
         identifier = cell(cells, "Identifier")
         why = cell(cells, "Why")
-        if not why or is_todo(why) or holds_todo(why):
+        if not why or is_todo(why) or holds_todo(why) or is_none(why):
             report.error(line, "`%s` gives no why it was withdrawn" % identifier,
                          check, (successors,))
         named = [bare(item) for item in cell(cells, "Successors").split(" · ")

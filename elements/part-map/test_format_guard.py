@@ -1584,7 +1584,7 @@ class Withdrawn(GuardTestCase):
         self.assertRecords(line("check_withdrawn", "pass", "map-withdrawal-successors/1"))
 
     def test_a_row_that_gives_no_why(self):
-        for why in ("", "TODO"):
+        for why in ("", "TODO", "none", "`none`"):
             with self.subTest(why=why):
                 self.guard(part_map(withdrawn=self.withdrawn("| game-state | %s | saving |" % why)))
                 self.assertEqual(self.failures("map-withdrawal-successors/1"),
