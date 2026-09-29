@@ -146,10 +146,10 @@ entry among it, stands in `elements/common/rules.md` (WAY-71).
 - A word of *Avoid* is an error where a change makes it stand more times in such a file, each read
   whole, than on the commit the task branch left the main branch from; what WAY-98 does not count
   is left out, and the guard's code and tests hold how each of it is found (WAY-98).
-- The change that puts a word into *Avoid* also searches the elements' skills and README files and
-  the code for it, as it searches for the entries that wait for it
+- The change that puts a word into *Avoid* also searches the elements' skills, the root
+  `README.md` and the code for it, as it searches for the entries that wait for it
   (`TODO — decision pending: which decision sets that a change putting a word into Avoid searches
-  the skills, the README files, the code and the entries that wait for the word`).
+  the skills, the root README.md, the code and the entries that wait for the word`).
 - A word kept out of one kind of sentence only — "main branch" in an invariant's sentence (WAY-60) —
   stays in that element's template, never in *Avoid*, which holds other words for what a term names
   (WAY-94).
