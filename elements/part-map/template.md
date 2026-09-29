@@ -15,9 +15,10 @@ identifier and its one space with the invariants and the environment facts — s
 ## Where entries go
 
 - The whole map is one Markdown file, `foundations/part_map.md`, of the shape below (WAY-40).
-- It holds three kinds of entry — a **part**, a **critical flow** and a **surface** — and five
-  lists that are not entries: the criticality scale, the external context, the change paths, the
-  files left out on purpose and the withdrawn identifiers (WAY-40).
+- It holds three kinds of entry — a **part**, a **critical flow** and a **surface** (WAY-40) —
+  and five lists that are not entries: the criticality scale, the external context, the change
+  paths, the files left out on purpose and the withdrawn identifiers
+  (`TODO — decision pending: which decision sets the lists the map holds besides its entries`).
 - An allowed dependency is a field of the part it starts from, never an entry of its own (WAY-40).
 - An entry is edited in place and carries no version; its history stays in git (WAY-43).
 - One derived file lies beside the map: the list of known violations (WAY-51).
@@ -108,7 +109,9 @@ steps its task cycle has
 | <who or what> | them → us · us → them · both | trusted · untrusted · — | yes · no |
 ```
 
-A row names no part and no file. It is read by whoever records a trust boundary at the part that
+A row names no part and no file
+(`TODO — decision pending: which decision sets what a row of the external context names`). It is
+read by whoever records a trust boundary at the part that
 handles the exchange (WAY-48), and by whoever sets the change path of a promise level, which has to
 allow for a consumer that does not update together with the product (WAY-50).
 
@@ -144,9 +147,11 @@ The list is the only exception to "every tracked file has a part" (WAY-44).
 
 ## Fields and their readers
 
-A field stays in this template only while someone or something reads it (WAY-05). Each field
-carries the mark of where its value comes from (`elements/common/rules.md`); a reader not built
-yet is named by the invariant it answers to.
+A field stays in this template only while someone or something reads it
+(`TODO — decision pending: which decision keeps a field in an element's template only while it is
+read`). Each field carries the mark of where its value comes from (`elements/common/rules.md`); a
+reader not built yet is named by the invariant it answers to
+(`TODO — decision pending: which decision names a reader not built yet by its invariant`).
 
 | Field | Who reads it, when | Where its value comes from |
 |---|---|---|
