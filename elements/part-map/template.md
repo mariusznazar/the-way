@@ -171,7 +171,7 @@ reader not built yet is named by the invariant it answers to
 | external context | the format guard (`external-exchange-row`); whoever records a trust boundary or sets a change path (WAY-48, WAY-50) | judgment |
 | change paths | whoever changes a surface at that level; the format guard (`surface-change-path`, `promise-level-policy`) | judgment |
 | files left out on purpose | the format guard, as the only exception to file assignment (`file-part-assignment`, `left-out-file-assignment`) | judgment |
-| withdrawn identifiers | the format guards, which reject a reference to one and its reuse (`decision-scope-names`, `identifier-holders`) and check why and the successors (`map-withdrawal-successors`) | as `elements/common/rules.md` gives it |
+| withdrawn identifiers | the format guards, which reject a reference to one and its reuse (`decision-scope-names`, `identifier-holders`) and check why and the successors (`map-withdrawal-successors`) and, against `{fork-point}`, that every identifier held there stays (`map-identifier-persistence`) | as `elements/common/rules.md` gives it |
 
 ## The binding part
 

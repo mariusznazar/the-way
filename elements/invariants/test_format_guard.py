@@ -1529,7 +1529,7 @@ class Unreadable(GuardTestCase):
 
 
 class FactsBeside(GuardTestCase):
-    """The file of environment facts beside the invariants, once it has entries (WAY-31, WAY-75)."""
+    """The file of environment facts beside the invariants, once it has entries (WAY-31, WAY-64)."""
 
     def setUp(self):
         super().setUp()

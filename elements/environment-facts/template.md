@@ -18,7 +18,7 @@ particular to an environment fact (WAY-35).
 
 ## Where entries go
 
-- A product's fact entries stand in one file, `foundations/environment_facts.md` (WAY-75); after
+- A product's fact entries stand in one file, `foundations/environment_facts.md` (WAY-64); after
   its last entry the file carries its withdrawn identifiers, in the form, with the *Why* and the
   *Successors*, that `elements/common/rules.md` gives.
 - The identifier names what the fact is about, never its value or the edition it cites, so that a
@@ -238,15 +238,15 @@ in every entry among it, stands in `elements/common/rules.md` (WAY-71).
 ## Version
 
 - The version of an entry follows `elements/common/rules.md`, with no exception: a change of the
-  sentence or of *Holds for* makes the version one higher than on the main branch, and no
-  correction keeps it (WAY-79).
+  sentence or of *Holds for* makes the version one higher than on the commit the task branch
+  left the main branch from, and no correction keeps it (WAY-79).
 
 ## Withdrawn identifiers
 
 A fact shown false does not leave the file: its identifier moves to the list that closes it, with
 what showed it false in *Why*, so that nobody writes it again and an older decision citing it still
 finds it. A true fact whose last dependant goes is withdrawn in the same change, with that in *Why*,
-or the merge fails (WAY-75, WAY-88).
+or the merge fails (WAY-64, WAY-88).
 
 ## Catalogues and obligations
 

@@ -17,7 +17,7 @@ Usage, from the root of the product's repository:
         [--merge-onto REF] [--record PATH]
 
 FILE defaults to foundations/environment_facts.md. --base names the commit the task branch left the
-main branch from; only with it are identifiers and versions compared with that commit (WAY-75,
+main branch from; only with it are identifiers and versions compared with that commit (WAY-64,
 WAY-79). --merge-onto names the commit of the main branch a merge is made onto; only with it is
 `TODO` outside *Method* reported against a merge, every fingerprint a decision's *Based on* carries
 for a fact compared with the fact's current fingerprint after that merge, and a fact that nothing
@@ -92,7 +92,7 @@ SELECTED_BY = {"check_against_base": "--base", "check_merge_todo": "--merge-onto
                "check_fingerprints": "--merge-onto", "check_dependants": "--merge-onto"}
 NO_COMMIT = shared.NO_COMMIT
 NO_COMMIT_REASON = shared.NO_COMMIT_REASON
-# Where a product's environment facts stand, relative to the root of its repository (WAY-75).
+# Where a product's environment facts stand, relative to the root of its repository (WAY-64).
 FILE_PATH = "foundations/environment_facts.md"
 
 IDENTIFIER = identifier_form.IDENTIFIER
@@ -499,7 +499,7 @@ def based_on(version):
 
 def check_layout(items, rules, report):
     """Entries first, then the list of withdrawn identifiers closing the file; a heading of an
-    entry carries its version as a number (WAY-75, WAY-79)."""
+    entry carries its version as a number (WAY-64, WAY-79)."""
     check = "check_layout"
     titles = [title for title, _ in rules.lists]
     fields = re.compile(r"^- \*\*(%s):\*\*" % "|".join(re.escape(rule.name) for rule in rules.fields))
@@ -530,7 +530,7 @@ def check_layout(items, rules, report):
 
 def check_file(path, top, tracked, report):
     """The repository holds one file of fact entries, at foundations/environment_facts.md
-    (WAY-75). The path is compared, letter case included, as git lists it. Another such file is
+    (WAY-64). The path is compared, letter case included, as git lists it. Another such file is
     known by its content: a tracked Markdown file holding a section `## <identifier>/<version>`
     with a *Holds for* field."""
     # invariant: environment-facts-file/1
@@ -567,7 +567,7 @@ def check_identifiers(entries, withdrawn, foundation, report):
     """Every identifier has the form the template gives and is held once among the entries and
     withdrawn identifiers of this file, of the invariants and of the part map; every withdrawn
     identifier gives why, and names as successors only entries or withdrawn identifiers of this
-    file, or `none` (WAY-75). The form of an entry's identifier answers to fact-identifier-form,
+    file, or `none` (WAY-64). The form of an entry's identifier answers to fact-identifier-form,
     and that of a withdrawn one to fact-withdrawal-successors."""
     # invariant: fact-identifier-form/1
     # invariant: identifier-holders/1
@@ -952,7 +952,7 @@ BASE_INVARIANTS = ("fact-version-new/1", "fact-version-changed/1", "fact-version
 
 
 def check_against_base(path, facts, rules, base, top, report, no_commit=None):
-    """Compares identifiers and versions with the file on the base (WAY-75, WAY-79). Given
+    """Compares identifiers and versions with the file on the base (WAY-64, WAY-79). Given
     `no_commit`, which says why there is no base, records the checks unchecked instead."""
     # invariant: fact-version-new/1
     # invariant: fact-version-changed/1

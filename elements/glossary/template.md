@@ -33,7 +33,7 @@ particular to a glossary entry (WAY-35).
   singular, a verb bare (`TODO — decision pending: which decision sets the letter case and the form
   of a term`). The term identifies the entry, and no other entry of the file holds it (WAY-93).
 - Terms are a space of their own, apart from the identifiers of the part map, the invariants and the
-  environment facts, which share one space (WAY-64, WAY-75, WAY-93). A change that makes a term read
+  environment facts, which share one space (WAY-64, WAY-93). A change that makes a term read
   like such an identifier, by adding or renaming either, is a warning for the panel: where both name
   the same thing the entry stays, and where they do not, one side is renamed (WAY-93, WAY-10). A
   term and an identifier read alike when they match with the hyphens of both read as spaces

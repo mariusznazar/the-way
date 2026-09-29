@@ -2854,52 +2854,45 @@ results the gate reports are those WAY-82 has it run. A declared command that ca
 `fail` a listed violation excuses, and when a checked invariant may turn `unchecked`, is set by
 WAY-67 and WAY-68.
 
-### WAY-64/1 — Where do invariant entries stand, and what identifies one?
+### WAY-64/1 — Where do invariant and environment fact entries stand, and what identifies one?
 
-Invariant entries stand in one file, `foundations/invariants.md`, each under an identifier made of
-words that no other entry or withdrawn identifier of that file, of the part map or of
-`foundations/environment_facts.md` holds. An identifier the file held on the commit the branch left
-the main branch from stays, as an entry or as a withdrawn identifier giving why and naming its
-successors or `none`. Splitting or merging entries held there gives each entry that comes out of it
-a new identifier, and any other change keeps it.
+Invariant entries stand in one file, `foundations/invariants.md`, and environment fact entries in
+one file, `foundations/environment_facts.md`, each under an identifier made of words that no other
+entry or withdrawn identifier of those two files or of the part map holds. An identifier either
+file held on the commit the branch left the main branch from stays in it, as an entry or as a
+withdrawn identifier giving why and naming its successors or `none`, and one it held as a withdrawn
+identifier there never names an entry again. Splitting or merging environment fact entries, or
+invariant entries held there, gives each entry that comes out of it a new identifier, and any other
+change keeps it.
 
 - **Change:** new decision
-- **Scope:** invariants, part-map, elements-common, relation-model
+- **Scope:** environment-facts, invariants, part-map, elements-common, relation-model
 - **Based on:** none
 - **Relations:** derives from WAY-02@3ffcbd46 · derives from WAY-56@06700ffd ·
-  derives from WAY-57@4a838784 · related to WAY-07 · related to WAY-35 ·
-  related to WAY-41 · related to WAY-45 · related to WAY-46 · related to WAY-62
-- **Outranks:** none
+  derives from WAY-57@4a838784
 - **Verification:** level 1 — invariants: identifier-holders · map-invariant-names ·
   invariant-identifier-form · invariants-file · invariant-identifier-persistence ·
-  invariant-withdrawal-persistence · withdrawal-successors. Level 2 for what counts as a split — an
-  agent compares the change with the decision:
-  - complies: an entry drops a clause and keeps its identifier at a raised version
-    (WAY-57); an entry that takes in a clause of another keeps its identifier, and the other is
-    split;
+  invariant-withdrawal-persistence · withdrawal-successors · environment-facts-file ·
+  fact-identifier-form · fact-identifier-persistence · fact-withdrawal-persistence ·
+  fact-withdrawal-successors. Level 2 for what counts as a split — an agent compares the change
+  with the decision:
+  - complies: an invariant drops a clause and keeps its identifier at a raised version (WAY-57);
+    an entry taking in a clause of another keeps its identifier, and the other is split; a fact
+    joining JSON and JSON Lines splits into two new identifiers, the old withdrawn naming both;
   - violates: an entry drops a clause that reappears as a new entry and keeps its identifier; a
     changed meaning is withdrawn naming `none` and restated under a new identifier.
 - **Review when:** none
 - **Origin:** none
-- **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-28
+- **Approved by:** Mariusz, 2026-09-29
 
-*Rationale:* words, as in the map (WAY-41): a citation says what it protects, and a mistyped word
-seldom names another entry, as a number does. Unique across invariants and the map, so
-a reference resolves without naming its element (WAY-02). One file: an entry naming several
-parts or `every` (WAY-62) has no part's file. A version carries a change of meaning (WAY-57), so
-the identifier changes only where one sentence becomes several or several one, and the withdrawn
-identifier shows a citing test, or a decision that is never edited (WAY-07), where the meaning went. Only
-identifiers that reached the main branch stay; a name dropped before was never cited there.
-*Rejected:* a number with a prefix; one entry that comes out of a split keeping the identifier — its
-citing test is rechecked against that half, and nothing sends its reader to the other; a file per part;
-identifiers unique only within the file; every identifier ever written kept.
-*Consequences:* the template gives the file, the identifier's form and withdrawal list as the
-map's, and the naming rule: what the sentence constrains, with an aspect where another entry
-constrains the same, never what it demands (WAY-35). The entry on the main branch WAY-57 compares
-with is the one holding the identifier there. The guard reads the identifiers of the map and of the
-facts file, and the map's guard the invariants file; the facts file joins the space by WAY-75. A flow and a failure mode name an invariant by its identifier, and a
-flow keeps its test.
+*Rationale:* words, so a citation says what it leans on; a version carries a change of meaning
+(WAY-57, WAY-79), so only a split or merge changes an identifier, and a withdrawn one shows a
+citation where the meaning went.
+*Rejected:* a number with a prefix — a mistyped number names another entry; a file per part — an
+entry naming several parts or `every` has none; identifiers unique within a file — a reference
+would need its element; one half of a split keeping the identifier — nothing sends its reader to
+the other half; a fact shown false deleted — an older citation leads nowhere, and the fact can come
+back; every identifier ever written kept — one dropped before the main branch was never cited.
 
 ### WAY-65/1 — How does a check cite its invariant, and which files are invariant tests?
 
@@ -3319,52 +3312,6 @@ travels on the path of that surface's promise level (WAY-50), and the runner rea
 facts guard exists. WAY-61's
 sentence on what the gate reads and WAY-53's rationale are edited in place (WAY-07).
 
-### WAY-75/1 — Where do environment fact entries stand, and what identifies one?
-
-Environment fact entries stand in one file, `foundations/environment_facts.md`, each under an
-identifier of words that no other entry or withdrawn identifier of that file, of
-`foundations/invariants.md` or of the part map holds. An identifier the file held on the commit the
-branch left the main branch from stays, as an entry or as a withdrawn identifier giving why and
-naming its successors or `none`. Splitting or merging entries gives each entry that comes out of it
-a new identifier, and any other change keeps it.
-
-- **Change:** new decision
-- **Scope:** environment-facts, invariants, part-map, elements-common, relation-model
-- **Based on:** a store of facts keeps a value it has shown wrong so that nobody enters it again:
-  the deprecated rank "allows other users to know not to re-add the value to the item" (Wikidata,
-  Help:Ranking, https://www.wikidata.org/wiki/Help:Ranking).
-- **Relations:** derives from WAY-02@3ffcbd46 · related to WAY-04 · related to WAY-17 ·
-  related to WAY-41 · related to WAY-64 · related to WAY-73
-- **Outranks:** none
-- **Verification:** level 1 — invariants: environment-facts-file · fact-identifier-form ·
-  identifier-holders · fact-identifier-persistence · fact-withdrawal-persistence ·
-  fact-withdrawal-successors. Level 2 for what counts as a split — an agent compares the change with
-  the decision:
-  - complies: a fact's range widened from one release to two keeps its identifier at a raised
-    version; a fact joining JSON and JSON Lines is split into two entries with new identifiers, and
-    the old one is withdrawn naming both;
-  - violates: of that split, one half keeps the old identifier; a reworded fact takes a new
-    identifier and the old one is withdrawn naming it.
-- **Review when:** none
-- **Origin:** none
-- **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-26
-
-*Rationale:* an invariant's *Rests on* and a decision's *Based on* reach a fact by its identifier
-(WAY-17, WAY-90), so the identifier outlives a new edition, a new range and a reworded sentence.
-Words, as for parts and invariants (WAY-41, WAY-64), because a reference then says what it leans
-on. One space of identifiers across the three files lets a reference resolve without naming its
-element, the reason WAY-64 gives for invariants and the map. A fact shown false stays as a
-withdrawn identifier with why, so that nobody writes it again and an older decision citing it still
-finds where it went.
-*Rejected:* a fact shown false deleted from the file — an older citation leads nowhere, and the
-fact can come back.
-*Consequences:* the template gives the file, the identifier's form, the naming rule — what the fact
-is about, never its value or the edition it cites, as `json-text` rather than `json-rfc-8259` — and
-the list of withdrawn identifiers with *Why* and *Successors*. Each of the three guards reads the
-identifiers of the other two files (WAY-64). `foundations/environment_facts.md` joins the files of
-the `environment-facts` part when its first entry is written.
-
 ### WAY-76/1 — How much does one environment fact entry hold?
 
 An environment fact entry states in one sentence one fact that one edition of one source says, with
@@ -3376,7 +3323,7 @@ stand as two entries.
 - **Scope:** environment-facts, invariants
 - **Based on:** none
 - **Relations:** derives from WAY-22@dcf291ea · related to WAY-04 · related to WAY-56 ·
-  related to WAY-73 · related to WAY-75 · related to WAY-91
+  related to WAY-73 · related to WAY-91
 - **Outranks:** none
 - **Verification:** level 1 — invariants: fact-sentence-count. Level 2 for what one sentence may
   hold — an agent compares the change with the decision:
@@ -3491,43 +3438,32 @@ to name this decision.
 ### WAY-79/1 — Is an environment fact entry versioned?
 
 An environment fact entry carries a version number, starting at 1, and holds only its current
-wording. When its fingerprint differs from its fingerprint on the main branch, its version is one
-higher than there. A check citing a fact at a version other than the current one fails the gate.
+wording. When its fingerprint differs from its fingerprint on the commit the task branch left the
+main branch from, its version is one higher than there, and otherwise it keeps the version it has
+there. A check citing a fact at a version other than the current one fails the gate.
 
 - **Change:** new decision
 - **Scope:** environment-facts, relation-model, gate, elements-common
 - **Based on:** none
-- **Relations:** related to WAY-10 · related to WAY-14 · related to WAY-43 · related to WAY-57 ·
-  related to WAY-61 · related to WAY-75 · related to WAY-78
-- **Outranks:** none
+- **Relations:** none
 - **Verification:** level 1 — invariants: fact-version-new · fact-version-changed ·
   fact-version-unchanged · fact-citation-version. Level 2 for a raise — an agent compares the
   change with the decision:
   - complies: a typo fixed in a fact's sentence raises the version; a range widened from CPython
-    3.14 to CPython 3.14 and 3.15 raises the version, and the probe citing the old version fails
-    until it is checked against the new range;
+    3.14 to 3.14 and 3.15 raises the version; the probe citing the old version fails until
+    rechecked;
   - violates: a typo fixed in a fact's sentence keeps the version; every citation moved to the new
     version by a script, with no one checking the probe.
 - **Review when:** none
 - **Origin:** none
-- **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-28
+- **Approved by:** Mariusz, 2026-09-29
 
-*Rationale:* a version pins the result of a method to the binding part it checked: a probe cites the
-fact by identifier and version, and fails once the meaning has moved under it, as a check citing an
-invariant does (WAY-57). Without a version, a probe's result would have to be keyed by the fingerprint — a
-new mechanism in the guards and the runner, and harder for a person to read than a number. The
-fact's history binds nothing, so only the current wording stays in the file, and earlier ones are
-read from git.
-*Rejected:* no version, edited in place as the part map is (WAY-43) — a result of a method would
-need the fingerprint as its key, a second mechanism beside WAY-57's.
-*Consequences:* the template gives an entry its version and the form of a declaration of a
-correction; the facts guard computes what the version must be. The guard compares an entry with
-its state where the task branch left the main branch; where there is no main branch it compares
-nothing, says so, and every entry stays at version 1. Who counts as the human deciding the change
-for a fact follows the rule WAY-14 leaves to each element, and where the confirmation is recorded
-is not settled here, as WAY-57 leaves it for invariants; until then the guard reports a declared
-correction as unconfirmed, never as agreeing.
+*Rationale:* a version pins a method's result to the binding part it checked: a probe cites the
+fact by identifier and version and fails once the meaning moves, as for invariants (WAY-57); a
+fact's history binds nothing, so earlier wordings are read from git.
+*Rejected:* no version, as in the part map (WAY-43) — results keyed by fingerprint, a second
+mechanism beside WAY-57's; a correction keeping the version, as for invariants — it saves only
+editing the `fact:` lines, whose failure shows the raise anyway.
 
 ### WAY-80/1 — What is an environment fact's source?
 
@@ -4118,7 +4054,7 @@ a term that names an element raises none against the part whose files include
 - **Scope:** glossary, part-map, invariants, environment-facts
 - **Based on:** none
 - **Relations:** narrows WAY-02@3ffcbd46 · related to WAY-41 · related to WAY-55 · related to WAY-64 ·
-  related to WAY-75 · related to WAY-92 · related to WAY-94
+  related to WAY-92 · related to WAY-94
 - **Outranks:** none
 - **Verification:** level 1 — invariants: glossary-file · glossary-file-sections · glossary-term-holder
   · glossary-term-collision. Level 2 for what follows the warning — an agent compares the change with

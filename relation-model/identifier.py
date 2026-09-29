@@ -1,5 +1,5 @@
 """The form of an identifier and of a version, as foundation entries carry them (WAY-41, WAY-64,
-WAY-75, WAY-57, WAY-79).
+WAY-57, WAY-79).
 
 An identifier of an entry of the part map, the invariants or the environment facts is one or more
 words in lower case joined by hyphens; a version is a number written without a leading zero; an

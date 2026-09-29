@@ -1,4 +1,4 @@
-"""Tests of the form of an identifier and of a version (WAY-41, WAY-64, WAY-75, WAY-57, WAY-79):
+"""Tests of the form of an identifier and of a version (WAY-41, WAY-64, WAY-57, WAY-79):
 words of lower-case letters and digits joined by hyphens, and a version as a number without a
 leading zero.
 

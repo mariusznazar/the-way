@@ -52,23 +52,23 @@ entry a link names, *read off* for its fingerprint
 
 - Every entry of `foundations/invariants.md`, of the part map and of
   `foundations/environment_facts.md` carries an identifier of one or more words in lower case joined
-  by hyphens, such as `relation-model` (WAY-41, WAY-64, WAY-75).
+  by hyphens, such as `relation-model` (WAY-41, WAY-64).
 - The three files share one space of identifiers: no identifier is held by two entries or withdrawn
   identifiers of the three taken together, so that a reference resolves without naming its element;
-  `none` is no identifier, since *Successors* uses that word (WAY-64, WAY-75).
+  `none` is no identifier, since *Successors* uses that word (WAY-64).
 - An identifier stays the same when anything else about its entry changes — its files, its fields,
   its wording or its version. Splitting or merging entries gives each entry that comes out of it a
-  new identifier (WAY-41, WAY-64, WAY-75).
+  new identifier (WAY-41, WAY-64).
 
 ## Withdrawn identifiers
 
 - An identifier the invariants file or the environment facts file held on the commit the task
   branch left the main branch from stays in it, as an entry or as a withdrawn identifier; one that
-  never reached the main branch may go (WAY-64, WAY-75). An identifier of the part map left behind
+  never reached the main branch may go (WAY-64). An identifier of the part map left behind
   by a split or a merge stays in the map as a withdrawn identifier and is never reused (WAY-41).
-- A withdrawn identifier stays withdrawn: it never names an entry again (WAY-41, WAY-64, WAY-75).
+- A withdrawn identifier stays withdrawn: it never names an entry again (WAY-41, WAY-64).
 - Each of the three files carries its withdrawn identifiers in one list after its last entry, in
-  this form (WAY-41, WAY-64, WAY-75):
+  this form (WAY-41, WAY-64):
 
   ```markdown
   ## Withdrawn identifiers
@@ -77,10 +77,10 @@ entry a link names, *read off* for its fingerprint
   ```
 
 - *Why* says why the identifier was withdrawn, and where entries were split or merged, it says so
-  (WAY-41, WAY-64, WAY-75).
+  (WAY-41, WAY-64).
 - *Successors* lists the identifiers that took its place, joined by ` · `, each an entry or a
   withdrawn identifier of the same file. In the invariants file and the environment facts file it
-  may read `none` (WAY-64, WAY-75); in the part map it names one or more identifiers, never `none`:
+  may read `none` (WAY-64); in the part map it names one or more identifiers, never `none`:
   the map withdraws an identifier only on a split or a merge, which leaves entries in its place
   (WAY-41).
 - The identifier and *Successors* are read off (WAY-54), and *Why* is prose

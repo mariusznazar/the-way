@@ -40,8 +40,8 @@ environment fact adds to each.
   pending, such a case stops as the last point of this step says.
 - Search the file, withdrawn identifiers included, for an entry on the same thing: found — a
   change, split, merge or withdrawal; found among the withdrawn — show the human why it went: one
-  shown false comes back only if the world has changed since, one withdrawn for want of dependants
-  may come back; not found — a new identifier.
+  shown false comes back under a new identifier only if the world has changed since, one withdrawn
+  for want of dependants may come back under a new identifier; not found — a new identifier.
 - The search of the foundation also looks for an obligation raising a part's criticality, which
   goes through `update-part-map` (WAY-87).
 - A case needing a pending line to fill a field stops the entry, for the human and

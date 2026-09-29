@@ -722,7 +722,7 @@ No identifier is held by two entries or withdrawn identifiers of the part map, `
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-41@f42aae15 · WAY-64@60c91542 · WAY-75@a0bd7b11
+- **Derives from:** WAY-41@f42aae15 · WAY-64@c5192c61
 - **Part:** part-map · invariants · environment-facts
 - **Correction:** none
 
@@ -839,10 +839,9 @@ Every invariant identifier the part map names is an entry of `foundations/invari
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-64@60c91542
+- **Derives from:** WAY-64@c5192c61
 - **Part:** every
 - **Correction:** none
-- **Recovered:** none
 
 ## failure-mode-severity/1
 
@@ -1135,10 +1134,9 @@ The identifier in the heading of every entry of `foundations/invariants.md` has 
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-64@60c91542 · WAY-35@11333629
-- **Part:** invariants
+- **Derives from:** WAY-64@c5192c61 · WAY-35@11333629
+- **Part:** invariants · elements-common
 - **Correction:** none
-- **Recovered:** none
 
 ## invariant-version-number/1
 
@@ -1413,10 +1411,9 @@ The repository holds exactly one file of invariant entries, `foundations/invaria
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-64@60c91542
+- **Derives from:** WAY-64@c5192c61
 - **Part:** every
 - **Correction:** none
-- **Recovered:** none
 
 ## invariant-identifier-persistence/1
 
@@ -1424,10 +1421,9 @@ Every identifier `foundations/invariants.md` held on {fork-point} stands in it a
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --base {fork-point} --record .runs/invariants-base.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-64@60c91542
+- **Derives from:** WAY-64@c5192c61
 - **Part:** invariants
 - **Correction:** none
-- **Recovered:** none
 
 ## invariant-withdrawal-persistence/1
 
@@ -1435,10 +1431,9 @@ Every identifier that stood as a withdrawn identifier of `foundations/invariants
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --base {fork-point} --record .runs/invariants-base.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-64@60c91542
+- **Derives from:** WAY-64@c5192c61
 - **Part:** invariants
 - **Correction:** none
-- **Recovered:** none
 
 ## withdrawal-successors/1
 
@@ -1446,10 +1441,9 @@ Every withdrawn identifier of `foundations/invariants.md` has the form `elements
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-64@60c91542
-- **Part:** invariants
+- **Derives from:** WAY-64@c5192c61
+- **Part:** invariants · elements-common
 - **Correction:** none
-- **Recovered:** none
 
 ## invariant-citation-target/1
 
@@ -1493,7 +1487,6 @@ Every name in the *Derives from* or *Rests on* of an entry of `foundations/invar
 - **Derives from:** WAY-31@a14c616c
 - **Part:** invariants
 - **Correction:** none
-- **Recovered:** none
 
 ## link-fingerprint-value/1
 
@@ -1504,7 +1497,6 @@ Where {merge-onto} exists, every fingerprint in the *Derives from* or *Rests on*
 - **Derives from:** WAY-31@a14c616c
 - **Part:** every
 - **Correction:** none
-- **Recovered:** none
 
 ## violated-list-growth/1
 
@@ -1721,10 +1713,9 @@ Every environment fact entry the repository holds stands in `foundations/environ
 
 - **Method:** `python -B elements/environment-facts/format_guard.py foundations/environment_facts.md --record .runs/environment-facts.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-75@a0bd7b11
+- **Derives from:** WAY-64@c5192c61
 - **Part:** every
 - **Correction:** none
-- **Recovered:** none
 
 ## fact-identifier-form/1
 
@@ -1732,10 +1723,9 @@ The identifier in the heading of every entry of `foundations/environment_facts.m
 
 - **Method:** `python -B elements/environment-facts/format_guard.py foundations/environment_facts.md --record .runs/environment-facts.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-75@a0bd7b11 · WAY-35@11333629
-- **Part:** environment-facts
+- **Derives from:** WAY-64@c5192c61 · WAY-35@11333629
+- **Part:** environment-facts · elements-common
 - **Correction:** none
-- **Recovered:** none
 
 ## fact-identifier-persistence/1
 
@@ -1743,10 +1733,9 @@ Every identifier `foundations/environment_facts.md` held on {fork-point} stands 
 
 - **Method:** `python -B elements/environment-facts/format_guard.py foundations/environment_facts.md --base {fork-point} --record .runs/environment-facts-base.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-75@a0bd7b11
+- **Derives from:** WAY-64@c5192c61
 - **Part:** environment-facts
 - **Correction:** none
-- **Recovered:** none
 
 ## fact-withdrawal-persistence/1
 
@@ -1754,10 +1743,9 @@ Every identifier that stood as a withdrawn identifier of `foundations/environmen
 
 - **Method:** `python -B elements/environment-facts/format_guard.py foundations/environment_facts.md --base {fork-point} --record .runs/environment-facts-base.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-75@a0bd7b11
+- **Derives from:** WAY-64@c5192c61
 - **Part:** environment-facts
 - **Correction:** none
-- **Recovered:** none
 
 ## fact-withdrawal-successors/1
 
@@ -1765,10 +1753,9 @@ Every withdrawn identifier of `foundations/environment_facts.md` has the form `e
 
 - **Method:** `python -B elements/environment-facts/format_guard.py foundations/environment_facts.md --record .runs/environment-facts.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-75@a0bd7b11
-- **Part:** environment-facts
+- **Derives from:** WAY-64@c5192c61
+- **Part:** environment-facts · elements-common
 - **Correction:** none
-- **Recovered:** none
 
 ## fact-sentence-count/1
 
@@ -1809,10 +1796,9 @@ Every entry of `foundations/environment_facts.md` with no fingerprint on {fork-p
 
 - **Method:** `python -B elements/environment-facts/format_guard.py foundations/environment_facts.md --base {fork-point} --record .runs/environment-facts-base.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-79@feff3cbc
+- **Derives from:** WAY-79@9ee7723d
 - **Part:** environment-facts
 - **Correction:** none
-- **Recovered:** none
 
 ## fact-version-changed/1
 
@@ -1820,10 +1806,9 @@ Every entry of `foundations/environment_facts.md` whose fingerprint differs from
 
 - **Method:** `python -B elements/environment-facts/format_guard.py foundations/environment_facts.md --base {fork-point} --record .runs/environment-facts-base.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-79@feff3cbc
+- **Derives from:** WAY-79@9ee7723d
 - **Part:** environment-facts
 - **Correction:** none
-- **Recovered:** none
 
 ## fact-version-unchanged/1
 
@@ -1831,10 +1816,9 @@ Every entry of `foundations/environment_facts.md` whose fingerprint equals its f
 
 - **Method:** `python -B elements/environment-facts/format_guard.py foundations/environment_facts.md --base {fork-point} --record .runs/environment-facts-base.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-79@feff3cbc
+- **Derives from:** WAY-79@9ee7723d
 - **Part:** environment-facts
 - **Correction:** none
-- **Recovered:** none
 
 ## fact-citation-version/1
 
@@ -1842,10 +1826,9 @@ Every `fact:` line in a check that names an entry of `foundations/environment_fa
 
 - **Method:** `python -B elements/environment-facts/format_guard.py foundations/environment_facts.md --record .runs/environment-facts.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-79@feff3cbc
+- **Derives from:** WAY-79@9ee7723d
 - **Part:** every
 - **Correction:** none
-- **Recovered:** none
 
 ## fact-source-form/1
 

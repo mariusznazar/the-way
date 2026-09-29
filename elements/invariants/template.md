@@ -48,7 +48,7 @@ particular to an invariant (WAY-35).
 - **Rests on:** <environment fact>@<fingerprint> · … | TODO — <the fact, with its source> | none
 - **Derives from:** <decision>@<fingerprint> · … | `TODO — <the decision, and where it is expected>` | none
 - **Part:** <parts from the part map> | every
-- **Correction:** none | <fingerprint on the main branch> → <current fingerprint>
+- **Correction:** none | <fingerprint on the commit the task branch left the main branch from> → <current fingerprint>
 ```
 
 The form above gives each field the words it takes. The rest of the rule on `none` and `TODO` —
