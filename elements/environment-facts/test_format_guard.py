@@ -53,7 +53,7 @@ def fact(identifier="storage-quota", version=1, sentence=QUOTA, holds=QUOTA_HOLD
 
 
 def old_fields(set_by="none", correction="none"):
-    """The fields of the form before the slimming, as the-way's entries still carry them."""
+    """*Set by* and *Correction*, which the-way's entries still carry."""
     return [("Set by", set_by), ("Correction", correction)]
 
 
@@ -476,19 +476,19 @@ class Fields(GuardTestCase):
         self.assertPasses(facts(fact(), lines_fact()))
         self.assertEqual(self.verdicts("fact-entry-field-presence/1"), ["pass"])
 
-    def test_set_by_is_the_form_before_the_slimming(self):
+    def test_set_by_is_no_field_of_the_form(self):
         # invariant: fact-entry-field-presence/1
         output = self.assertFails(facts(fact(extra=[("Set by", "the repository owner")]),
                                         lines_fact()),
-                                  "storage-quota/1: *Set by* is the form before the slimming; the "
+                                  "storage-quota/1: *Set by* is not a field of the form; the "
                                   "form of a fact holds no field naming who sets what it states")
         self.assertNotIn("field *Set by* is not in the template", output)
         self.assertEqual(self.verdicts("fact-entry-field-presence/1"), ["pass"])
 
-    def test_correction_is_the_form_before_the_slimming(self):
+    def test_correction_is_no_field_of_the_form(self):
         # invariant: fact-entry-field-presence/1
         output = self.assertFails(facts(fact(extra=[("Correction", "none")]), lines_fact()),
-                                  "storage-quota/1: *Correction* is the form before the slimming; "
+                                  "storage-quota/1: *Correction* is not a field of the form; "
                                   "every change of the sentence or *Holds for* raises the version")
         self.assertNotIn("field *Correction* is not in the template", output)
         self.assertEqual(self.verdicts("fact-entry-field-presence/1"), ["pass"])
@@ -957,7 +957,7 @@ class AgainstBase(GuardTestCase):
         # invariant: fact-version-new/1
         self.commit(facts(fact()))
         output = self.assertFails(facts(fact(), lines_fact(extra=old_fields(
-            correction="00000000 → " + LINES_FINGERPRINT))), "*Correction* is the form before",
+            correction="00000000 → " + LINES_FINGERPRINT))), "*Correction* is not a field",
             base="HEAD")
         self.assertNotIn("declares no correction", output)
         self.assertEqual(self.verdicts("fact-version-new/1"), ["pass"])
@@ -1020,7 +1020,7 @@ class AgainstBase(GuardTestCase):
         # invariant: fact-version-unchanged/1
         self.commit(facts())
         output = self.assertFails(facts(fact(extra=old_fields(correction="00000000 → 12345678")),
-                                        lines_fact()), "*Correction* is the form before",
+                                        lines_fact()), "*Correction* is not a field",
                                   base="HEAD")
         self.assertNotIn("the correction names", output)
         self.assertEqual(self.verdicts("fact-version-unchanged/1"), ["pass"])
@@ -1302,9 +1302,9 @@ class Record(GuardTestCase):
         self.assertFails(facts(fact(extra=[("Set by", "none")]), lines_fact()), "*Set by*")
         self.assertIn({"check": "elements/environment-facts/format_guard.py::check_fields",
                        "verdict": "fail", "invariant": None,
-                       "description": "line 10: storage-quota/1: *Set by* is the form before the "
-                                      "slimming; the form of a fact holds no field naming who "
-                                      "sets what it states"}, self.lines)
+                       "description": "line 10: storage-quota/1: *Set by* is not a field of the "
+                                      "form; the form of a fact holds no field naming who sets "
+                                      "what it states"}, self.lines)
 
     def test_unreadable_template_stops_the_run(self):
         output = io.StringIO()
@@ -1316,12 +1316,12 @@ class Record(GuardTestCase):
 
 
 class OwnFile(unittest.TestCase):
-    """The entries of the-way's environment facts still carry the form before the slimming, which
-    the guard reports in one place only: a *Set by* or a *Correction* line in an entry. Once the
-    entries are rewritten in the new form, the file passes with no error."""
+    """The entries of the-way's environment facts still carry *Set by* and *Correction*, which the
+    guard reports in one place only: such a line in an entry. Once the entries drop them, the file
+    passes with no error."""
 
-    OLD_FORM = re.compile(r"^line \d+: [a-z0-9-]+/\d+: \*(?:Set by|Correction)\* is the form "
-                          r"before the slimming; ")
+    OLD_FORM = re.compile(r"^line \d+: [a-z0-9-]+/\d+: \*(?:Set by|Correction)\* is not a field "
+                          r"of the form; ")
 
     def test_the_way_facts_hold_no_error_but_the_old_form(self):
         output = io.StringIO()

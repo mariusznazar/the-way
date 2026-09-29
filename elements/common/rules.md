@@ -96,6 +96,7 @@ entry a link names, *read off* for its fingerprint
   lapses; the gate compares that date with the committer date of the commit it checks, and the
   clock with the day it runs (WAY-83).
 - The part of the map that holds the file is set with the first verdict written (WAY-83).
+- The verdict and *Until* of a row rest on a judgment; the rest of the row is read off (WAY-54).
 
 ## `{fork-point}`
 

@@ -35,12 +35,14 @@ identifiers, human verdicts, `{fork-point}` and the version of an entry — stan
   would send the decision to review — a finding about agents or models, the behaviour of a tool the
   process uses — and quotes every other citation with its source, as a precedent or a past event
   (WAY-90).
-- A finding of a study is such a citation. Its fact records what the study measured and stays true;
+- A finding of a study is such a citation. Its fact records what the study measured, with the
+  version of the paper in *Source*, and stays true;
   what the decision draws from it is that the agents of this process behave the same, which stops
   holding as the measured models go. That is a prediction: it stands in *Review when* of each
   decision citing the fact, as a state a script can check, never in the fact (WAY-85, WAY-24).
 - An invariant names in *Rests on* only the facts holding a condition that decides whether a commit
-  makes its sentence true (WAY-73).
+  makes its sentence true (WAY-73). A fact about what runs a method — how a tool behaves under the
+  runner's configuration, which interpreter runs a script — is no such fact (WAY-73).
 - The current state of a setting that people of the product change outside its repository — who
   can open it, a host's access rule — is a fact whose method reads that state where it lives, or is
   a re-read by the person who sets it where reading it takes their credentials. A choice of such a
@@ -48,7 +50,9 @@ identifiers, human verdicts, `{fork-point}` and the version of an entry — stan
   (WAY-84).
 - A fact may be about something outside that depends on the product — a product that pins it and
   reads one of its surfaces — only where a decision about that surface would need review were it no
-  longer true. The partners themselves stay in the part map's external context (WAY-90).
+  longer true. The partners themselves stay in the part map's external context
+  (`TODO — decision pending: which decision sets when a fact may be about something outside that
+  depends on the product`).
 - A fact stands only while an invariant's *Rests on* or a decision's *Based on* names it (WAY-88).
 
 ## Entry
@@ -97,8 +101,10 @@ rule on `none` and `TODO` stands in `elements/common/rules.md` (WAY-71).
   and the value of *Holds for* joined by a line break, computed as WAY-39 says. The source, its
   passage and its date stay outside it, so a re-read source that says the same flags nothing
   (WAY-78).
-- A claim that differs in a new range changes the sentence or *Holds for*, and so the version; the
-  new claim does not refute the claim true in the past range (WAY-77, WAY-79).
+- A claim that differs in a new range changes the sentence or *Holds for*, and so the version
+  (WAY-77, WAY-79); the new claim does not refute the claim true in the past range
+  (`TODO — decision pending: which decision sets that a claim for a new range leaves the claim for
+  the past range true`).
 - A newer release of a tool *Holds for* names coming out fails nothing: the fact about the named
   release stays true, and a probe run on the newer release fails only where the behaviour differs
   (WAY-91). Moving the product to another release is a decision's to make, and what calls for it is
@@ -110,7 +116,8 @@ rule on `none` and `TODO` stands in `elements/common/rules.md` (WAY-71).
 
 ## Source
 
-- Every entry has a source; a fact without one is not written, and finding it is a task (WAY-80).
+- Every entry has a source; a fact without one is not written (WAY-80), and finding it is a task
+  (`TODO — decision pending: which decision sets that finding a missing source is a task`).
 - A source takes one of three forms (WAY-80):
   - an edition with its publisher's own address, the place in it, the passage the fact rests on word
     for word, and the date read. An address the publisher moves to newer text is no edition,
@@ -133,14 +140,16 @@ rule on `none` and `TODO` stands in `elements/common/rules.md` (WAY-71).
   (`TODO — decision pending: which decision sets which edition a citation naming none takes`).
 - A fact resting on a whole section of rules — a pattern syntax, an algorithm — quotes the sentence
   of the source that sets those rules, and names the section by its place alone, where the edition
-  has an address of its own. Where the source publishes worked examples of those rules, they are the
-  probe's test data, not its source (WAY-80).
+  has an address of its own (WAY-80). Where the source publishes worked examples of those rules,
+  they are the probe's test data, not its source
+  (`TODO — decision pending: which decision sets that a probe runs on the test data its source
+  publishes`).
 - A model's memory, an agent's paraphrase, and a text quoting the source are no source (WAY-80).
 - The passage is what a re-reading compares against: the watch checks that it still stands at the
   address, and no digest of the source is kept, so a change to the text next to the passage passes
   unseen (WAY-78, WAY-82).
 - A fact about the visibility of a repository the product links to names that one repository,
-  since each has its own owner and changes on its own (WAY-76), and its method reads it
+  since each has its own owner and changes on its own, and its method reads it
   anonymously (WAY-84); where an invariant rests on the visibility of the repositories linked, each
   new link adds such a fact, named in its *Rests on* (WAY-84, WAY-73).
 - The source of a setting only its setter can read is
@@ -157,16 +166,19 @@ rule on `none` and `TODO` stands in `elements/common/rules.md` (WAY-71).
   declared or produced command, a different reason (WAY-74).
 - A command may probe, watch, or both (WAY-81):
   - a probe runs on test data the source itself publishes where there is any, as NIST's example
-    digests, and asks about the behaviour, never about a version number in its place;
+    digests (`TODO — decision pending: which decision sets that a probe runs on the test data its
+    source publishes`), and asks about the behaviour, never about a version number in its place;
   - a watch reads such data as `obsoleted_by` of an RFC, a withdrawal, a model's deprecation state
     or a support schedule, and checks that the passage still stands.
   A human re-reads what no command can read: law, a licence, an access rule readable only with the
   credentials of whoever sets it (WAY-81, WAY-84).
 - A command sets for itself whatever in the runner's configuration a command can set and could
   change its verdict (`-c core.ignorecase=false`), so that it gives the same verdict on every
-  machine. Where it cannot — a model that runs the method — that configuration is read off the
-  product, and the deliberate break shows the method's fidelity, which holds only where the break
-  gives high confidence of detection (WAY-81). The release of a tool a probe runs is read off the
+  machine (WAY-81). Where it cannot — a model that runs the method — that configuration is read off
+  the product, and the deliberate break shows the method's fidelity, which holds only where the
+  break gives high confidence of detection
+  (`TODO — decision pending: which decision sets how a method whose runner's configuration a command
+  cannot set shows its fidelity`). The release of a tool a probe runs is read off the
   machine instead, as the next point says (WAY-91). Whether a fact's command, like a check citing an invariant,
   counts only when a deliberate break makes it fail is
   `TODO — decision pending: whether WAY-08's deliberate break binds a fact's method`.
@@ -189,11 +201,11 @@ rule on `none` and `TODO` stands in `elements/common/rules.md` (WAY-71).
 
 ## When a method runs
 
-- When a change enters an entry or changes any of its fields, or alters a file its command names, the gate runs its method on that change (WAY-82).
+- When a change enters an entry or changes any of its fields, or alters a file its command names, the gate runs its method on that change (WAY-82; for a change of a field beyond rewording the entry, `TODO — decision pending: whether a change of a fact's field that does not reword its entry runs its method`).
 - By the clock, for every fact at once, on the main branch — never inside the gate of a change that
   neither enters nor changes the entry nor alters a file its command names, since the world changes
-  with no commit and the gate's verdict would then depend on the date (WAY-82, WAY-60). What the
-  clock records and when it exits non-zero answers to the invariant `fact-clock-exit`.
+  with no commit and the gate's verdict would then depend on the date (WAY-82, WAY-60). When the
+  clock exits non-zero answers to the invariant `fact-clock-exit`.
 - A human verdict on a fact whose method is a path stands where `elements/common/rules.md` places
   it; for a fact, *Until* is the date after which the verdict lapses (WAY-83).
 
@@ -208,12 +220,14 @@ rule on `none` and `TODO` stands in `elements/common/rules.md` (WAY-71).
   (WAY-82); what a failure then becomes — a task, a branch, a message — waits for the design of the
   task cycle (`TODO — decision pending: what a fact's failure on the clock becomes`).
 - A watch fails on a published change to its edition — superseded, withdrawn, or updated by a
-  published change — or when its passage no longer stands; that leads to a review of the fact and
-  does not make the sentence false. An announced revision fails nothing: until the new edition is
+  published change — or when its passage no longer stands (WAY-82); that leads to a review of the
+  fact and does not make the sentence false
+  (`TODO — decision pending: which decision sets that a failed watch leads to a review of the fact
+  and leaves its sentence true`). An announced revision fails nothing: until the new edition is
   out, the fact holds, and whoever wants to look ahead writes the condition in *Review when* of the
   decision citing the fact (WAY-82, WAY-24). Only the human deciding the change that follows the
-  review changes the sentence or *Holds for*, and the new fingerprint then reaches every invariant
-  and decision naming the fact (WAY-66, WAY-90).
+  review changes the sentence or *Holds for* (WAY-10), and the new fingerprint then reaches every
+  invariant and decision naming the fact (WAY-66, WAY-90).
 
 ## Version
 
@@ -231,9 +245,10 @@ or the merge fails (WAY-75, WAY-88).
 
 - A voluntary catalogue of requirements — ASVS, WCAG where no law requires it — binds the product
   only through a decision adopting it, naming the catalogue, its edition, the level or list taken,
-  and the area of the product. A requirement it holds is then a fact: its source is the edition, the
-  requirement's identifier and its text word for word, and an invariant taking a condition from it
-  names it in *Rests on* (WAY-86, WAY-73).
+  and the area of the product (WAY-86). A requirement it holds is then a fact: its source is the
+  edition, the requirement's identifier and its text word for word
+  (`TODO — decision pending: which decision sets that a requirement of an adopted catalogue is a
+  fact`), and an invariant taking a condition from it names it in *Rests on* (WAY-73).
 - A binding rule — a law, a contract, a licence — needs no adoption: whether it applies is a fact,
   read as applying until a human settles otherwise (WAY-86). Whether a commit that removes what the
   rule covers makes that fact false is

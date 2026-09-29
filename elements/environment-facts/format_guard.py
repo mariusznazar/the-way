@@ -4,9 +4,9 @@ Checks the file against the rules of template.md, which lies next to this script
 rules of form the elements share, in elements/common/rules.md. The fields of an entry and the words
 each may hold and the words *Holds for* may not read are read from the template; the title and
 columns of the list of withdrawn identifiers and the file and columns of human verdicts are read
-from the rules the elements share; so each rule lives in one place (WAY-35, WAY-71). An entry still
-carrying *Set by* or *Correction*, the form before the slimming, is reported, and every other check
-reads it as it reads any entry. The decision log, the invariants and the part map are read with the
+from the rules the elements share; so each rule lives in one place (WAY-35, WAY-71). An entry carrying
+*Set by* or *Correction*, which are no fields of the form, is reported with what stands in their
+place, and every other check reads it as it reads any entry. The decision log, the invariants and the part map are read with the
 parsers of their own guards, and the record of a run is written with the report the guards share.
 Each check cites the invariants it gives a verdict for, as `invariant: <identifier>/<version>`
 (WAY-65).
@@ -614,10 +614,10 @@ def check_identifiers(entries, withdrawn, foundation, report):
                              check, (successors_named,))
 
 
-# The fields of the form before the slimming, with what stands in their place now: a fact names
-# no one who sets what it states (WAY-84), and every change of its binding part raises its version
-# (WAY-79).
-OLD_FIELDS = {
+# Fields an entry may still carry that the form does not hold, with what stands in their place: a
+# fact names no one who sets what it states (WAY-84), and every change of its binding part raises
+# its version (WAY-79).
+DROPPED_FIELDS = {
     "Set by": "the form of a fact holds no field naming who sets what it states",
     "Correction": "every change of the sentence or *Holds for* raises the version",
 }
@@ -625,8 +625,8 @@ OLD_FIELDS = {
 
 def check_fields(entries, rules, report):
     """Every field of the form is present, and holds `none` or `TODO` only where the form gives
-    it that word; no entry carries a field the form does not hold (WAY-71). A field of the form
-    before the slimming is reported as such."""
+    it that word; no entry carries a field the form does not hold (WAY-71). *Set by* and
+    *Correction* are reported with what stands in their place."""
     # invariant: fact-entry-field-presence/1
     # invariant: fact-entry-field-words/1
     check = "check_fields"
@@ -636,9 +636,9 @@ def check_fields(entries, rules, report):
     for entry in entries:
         label = label_of(entry)
         for name, (value, line) in entry.fields.items():
-            if name in OLD_FIELDS and name not in names:
-                report.error(line, "%s: *%s* is the form before the slimming; %s"
-                             % (label, name, OLD_FIELDS[name]), check)
+            if name in DROPPED_FIELDS and name not in names:
+                report.error(line, "%s: *%s* is not a field of the form; %s"
+                             % (label, name, DROPPED_FIELDS[name]), check)
             elif name not in names:
                 report.error(line, "%s: field *%s* is not in the template" % (label, name), check)
         for rule in rules.fields:
