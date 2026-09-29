@@ -90,12 +90,13 @@ yet is named by the invariant it answers to.
 
 - One to three sentences: the first paragraph under the heading (WAY-05).
 - Present tense, describing a state that is to be true, concrete enough to check (WAY-05).
-- Normative words — *must*, *must not* — appear only here, in lower case (WAY-05).
+- Normative words — *must*, *must not* — appear only here, in lower case
+  (`TODO — decision pending: which decision keeps normative words to binding sentences`).
 - The words *should* and *will*, exclamation marks and the keywords of RFC 2119 in capitals (MUST,
   SHALL, SHOULD, MAY, REQUIRED, RECOMMENDED, OPTIONAL) do not appear; other words in capitals, such
   as `CI`, do (WAY-05).
 - Say what is, rather than what is not, unless the forbidden thing is concrete and visible in
-  a change (WAY-05).
+  a change (`TODO — decision pending: which decision asks binding sentences to say what is`).
 - An exception foreseen in advance is written into the binding sentences ("X is allowed when
   Y"); acting on it is then not a contradiction (WAY-30).
 
@@ -124,6 +125,9 @@ flag references (WAY-02).
 - On the main branch, every change to a decision is a new version of its number, which gives the
   rationale for the change and restates the binding sentences and fields in full; a repeal has no
   binding sentences (WAY-19).
+- *Rationale for change* describes only this change (WAY-19), and so does *Rejected*
+  (`TODO — decision pending: which decision sets that *Rejected* of a later version describes only
+  this change`).
 - When a new decision answers a question that an older one answered in passing, the sentence moves
   to the new decision, and the older one loses it — by a new version on the main branch, by an edit
   before it (WAY-19).
@@ -140,10 +144,11 @@ WAY-31.
 | unchanged sentences | fields, the rationale or the rejected options only | identical | not flagged |
 | new wording | what the decision says, a whole new answer included | differ | flagged |
 | narrowing | an exception is added | differ | flagged |
-| challenge | nothing yet — the decision is in doubt | identical | not flagged; still in force |
+| challenge | nothing yet — the decision is in doubt | identical | not flagged; still in force, and the view shows a warning |
 | repeal | the question no longer needs an answer | none | flagged; in the view, a single line in place of the decision (`view-versions`) |
 
-A reference is flagged when the fingerprint of the binding sentences it carries changes (WAY-31).
+A reference is flagged when the fingerprint of the binding sentences it carries changes, and the
+flag names the kind of change that raised it (WAY-31).
 
 A *narrowing* version writes the exception into the decision itself. The relation `narrows` is
 used when a different, more specific decision deliberately goes against this one (WAY-32).
@@ -239,9 +244,9 @@ relation, not by this field (WAY-31).
 
 *Origin* points to where the full reasoning lives: a research document, a design document, a
 merge request, a ticket, or a file at a fixed commit — never to anything deleted when its task
-closes, nor to anything the log's readers cannot open (WAY-27). When the whole reasoning is in the
-entry, it is `none`. Documents go in *Origin*; *Based on* names facts about the world. The task a
-decision was made in is not recorded: git history gives it
+closes. When the whole reasoning is in the entry, it is `none`. Documents go in *Origin*;
+*Based on* names facts about the world. The task a decision was made in is not recorded: git
+history gives it
 (`TODO — decision pending: which decision sets what *Origin* holds`).
 
 ## Inherited decisions
@@ -252,6 +257,7 @@ A decision recovered from the existing state of a product (WAY-29):
   <…>`.
 - *Rationale* is `unknown`, quoted from the source *Origin* points to, or given by a human who
   knows it. A rationale proposed by an agent goes to a human as a question, never into the entry.
+- While the rationale is unknown, any change to the decision is approved by a human (WAY-14).
 
 ## Approval
 
