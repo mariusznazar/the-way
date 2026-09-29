@@ -567,7 +567,8 @@ def check_identifiers(entries, withdrawn, foundation, report):
     """Every identifier has the form the template gives and is held once among the entries and
     withdrawn identifiers of this file, of the invariants and of the part map; every withdrawn
     identifier gives why, and names as successors only entries or withdrawn identifiers of this
-    file, or `none` (WAY-75)."""
+    file, or `none` (WAY-75). The form of an entry's identifier answers to fact-identifier-form,
+    and that of a withdrawn one to fact-withdrawal-successors."""
     # invariant: fact-identifier-form/1
     # invariant: identifier-holders/1
     # invariant: fact-withdrawal-successors/1
@@ -588,7 +589,8 @@ def check_identifiers(entries, withdrawn, foundation, report):
             [(cells[0] if cells else "", line, False) for cells, line in withdrawn]:
         if identifier == "none" or not re.fullmatch(IDENTIFIER, identifier):
             report.error(line, "`%s` is not an identifier of words in lower case joined by "
-                               "hyphens" % identifier, check, (form,) if is_entry else ())
+                               "hyphens" % identifier, check,
+                         (form,) if is_entry else (successors_named,))
         elif identifier in seen:
             report.error(line, "identifier `%s` is used twice (line %d)" % (identifier, seen[identifier]),
                          check, (holders,))
@@ -798,11 +800,12 @@ def check_human_verdicts(path, facts, foundation, rules, report):
 
 
 def check_based_on(facts, foundation, report):
-    """Every fact the *Based on* of the latest version of a decision names carries a fingerprint
-    (WAY-90). A fact is named as `<identifier>@<fingerprint>`; an identifier of the file standing
-    as a word of its own, outside quoted text, a path or an address, is a fact named without one.
-    Whether the fingerprint is the current one is checked against a merge, in
-    check_fingerprints."""
+    """Every fact the *Based on* of the latest version of a decision names carries a fingerprint,
+    and every `<identifier>@<fingerprint>` it names is an entry or a withdrawn identifier of the
+    file (WAY-90). A fact is named as `<identifier>@<fingerprint>`; an identifier of the file
+    standing as a word of its own, outside quoted text, a path or an address, is a fact named
+    without one. Whether the fingerprint is the current one, and so whether the fact is withdrawn,
+    is checked against a merge, in check_fingerprints."""
     # invariant: based-on-fact-fingerprint/1
     check, presence = "check_based_on", "based-on-fact-fingerprint/1"
     if not foundation.log_read:
@@ -816,7 +819,7 @@ def check_based_on(facts, foundation, report):
         for identifier, digest in based_on_links(value):
             if identifier not in known:
                 report.error(None, "%s: *Based on* names `%s@%s`, which is no environment fact"
-                             % (where, identifier, digest), check)
+                             % (where, identifier, digest), check, (presence,))
             elif not re.fullmatch(FINGERPRINT, digest):
                 report.error(None, "%s: `%s@%s` carries no fingerprint of %d hex digits"
                              % (where, identifier, digest, fingerprint_module.LENGTH),
@@ -894,7 +897,8 @@ def check_record_paths(entries, top, report):
     """Every `.jsonl` path a command names is one git ignores, as git itself answers, and no
     command names two (WAY-74). Letter case always counts: git ignores it where core.ignorecase
     is set, which git init sets on Windows and macOS."""
-    check = "check_record_paths"
+    # invariant: run-record-path/1
+    check, record_path = "check_record_paths", "run-record-path/1"
     named = {}   # path -> (entry, line) of the first command naming it
     for entry in entries:
         command = command_of(entry)
@@ -905,7 +909,7 @@ def check_record_paths(entries, top, report):
         if len(paths) > 1:
             report.error(line, "%s: the command names %d records of a run (%s); it names one"
                          % (label_of(entry), len(paths), ", ".join("`%s`" % p for p in paths)),
-                         check)
+                         check, (record_path,))
         for path in paths:
             named.setdefault(path, (entry, line))
     inside = []
@@ -913,10 +917,11 @@ def check_record_paths(entries, top, report):
         normal = os.path.normpath(path).replace(os.sep, "/")
         if os.path.isabs(path) or normal == ".." or normal.startswith("../"):
             report.error(line, "%s: `%s` lies outside the repository, where git ignores nothing"
-                         % (label_of(entry), path), check)
+                         % (label_of(entry), path), check, (record_path,))
         else:
             inside.append(path)
     if not inside:
+        report.ran(check, record_path)
         return
     code, answer, message = shared.call_git(["-c", "core.ignorecase=false", "check-ignore",
                                                 "-z", "--stdin"], top,
@@ -927,11 +932,12 @@ def check_record_paths(entries, top, report):
                      % (message or "git check-ignore exited with %d" % code))
         return
     ignored = {path for path in answer.split("\0") if path}
+    report.ran(check, record_path)
     for path in inside:
         if path not in ignored:
             entry, line = named[path]
             report.error(line, "%s: git does not ignore `%s`, the record of a run the command names"
-                         % (label_of(entry), path), check)
+                         % (label_of(entry), path), check, (record_path,))
 
 
 # --- the commit the branch left the main branch from ---------------------------------------

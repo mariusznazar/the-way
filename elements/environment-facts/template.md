@@ -282,7 +282,7 @@ reader not built yet is named by the invariant it answers to
 | sentence | whoever reviews what rests on the fact; the fingerprint (`fact-fingerprint-input`) | prose |
 | Holds for | the fingerprint (`fact-fingerprint-input`); whoever writes an invariant naming a version within it; a probe, which compares the release it runs on with it (WAY-91); a script checking a decision's *Review when* against the models a study measured, which no invariant states yet | transcribed from the source |
 | Source | the watch, which checks that the passage still stands; the human reviewing the fact; the format guard (`fact-source-form`) | transcribed |
-| Method | the gate, on a change that enters or changes the fact (`TODO — decision pending: whether a change of a fact's field that does not reword its entry runs its method`) or alters a file its command names (`gate-fact-run`); the clock (`fact-clock-exit`); a human, for a path; the format guard (`fact-method-form`) | judgment |
+| Method | the gate, on a change that enters or changes the fact (`TODO — decision pending: whether a change of a fact's field that does not reword its entry runs its method`) or alters a file its command names (`gate-fact-run`); the clock (`fact-clock-exit`); a human, for a path; the format guard (`fact-method-form`, `run-record-path`) | judgment |
 | withdrawn identifiers | whoever follows a citation to a fact shown false; the format guard, which keeps it from coming back and checks its successors (`fact-withdrawal-persistence`, `fact-withdrawal-successors`) | as `elements/common/rules.md` gives it |
 
 ## Examples

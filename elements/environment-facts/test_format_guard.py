@@ -132,7 +132,7 @@ PLAIN = sorted([
     "fact-withdrawal-successors/1", "fact-entry-field-presence/1", "fact-entry-field-words/1",
     "fact-sentence-count/1", "fact-scope-word/1", "fact-source-form/1", "fact-method-form/1",
     "human-verdict-fact-row/1", "based-on-fact-fingerprint/1", "fact-citation-target/1",
-    "fact-citation-version/1"])
+    "fact-citation-version/1", "run-record-path/1"])
 BASE = sorted(["fact-version-new/1", "fact-version-changed/1", "fact-version-unchanged/1",
                "fact-identifier-persistence/1", "fact-withdrawal-persistence/1"])
 MERGE = sorted(["fact-entry-merge-todo/1", "based-on-fact-fingerprint-value/1",
@@ -428,6 +428,17 @@ class Identifiers(GuardTestCase):
                          "withdrawn `storage-limit` names successor `storage-cap`")
         self.assertEqual(self.verdicts("fact-withdrawal-successors/1"), ["fail"])
 
+    def test_withdrawn_identifier_off_the_form(self):
+        # invariant: fact-withdrawal-successors/1
+        for identifier in ("Storage-Limit", "storage_limit", "none"):
+            with self.subTest(identifier=identifier):
+                withdrawn = WITHDRAWN.replace("| storage-limit |", "| %s |" % identifier)
+                self.assertFails(facts(fact(), lines_fact(), withdrawn=withdrawn),
+                                 "`%s` is not an identifier of words in lower case joined by "
+                                 "hyphens" % identifier)
+                self.assertEqual(self.verdicts("fact-withdrawal-successors/1"), ["fail"])
+                self.assertEqual(self.verdicts("fact-identifier-form/1"), ["pass"])
+
     def test_successors_none(self):
         # invariant: fact-withdrawal-successors/1
         withdrawn = WITHDRAWN.replace("storage-quota · json-lines", "none")
@@ -679,28 +690,38 @@ class Fingerprint(unittest.TestCase):
 
 class RecordPaths(GuardTestCase):
     def test_record_git_ignores(self):
+        # invariant: run-record-path/1
         self.assertPasses(facts(fact(method="`python -B probes/storage_quota.py --record "
                                             ".runs/facts.jsonl`"), lines_fact()))
+        self.assertEqual(self.verdicts("run-record-path/1"), ["pass"])
 
     def test_record_git_does_not_ignore(self):
+        # invariant: run-record-path/1
         self.assertFails(facts(fact(method="`python -B probes/storage_quota.py --record "
                                            "runs/facts.jsonl`"), lines_fact()),
                          "git does not ignore `runs/facts.jsonl`")
+        self.assertEqual(self.verdicts("run-record-path/1"), ["fail"])
 
     def test_record_ignored_only_by_letter_case(self):
+        # invariant: run-record-path/1
         self.assertFails(facts(fact(method="`python -B probes/storage_quota.py --record "
                                            ".Runs/facts.jsonl`"), lines_fact()),
                          "git does not ignore `.Runs/facts.jsonl`")
+        self.assertEqual(self.verdicts("run-record-path/1"), ["fail"])
 
     def test_two_records(self):
+        # invariant: run-record-path/1
         self.assertFails(facts(fact(method="`python -B probes/storage_quota.py --record "
                                            ".runs/a.jsonl --also .runs/b.jsonl`"), lines_fact()),
                          "the command names 2 records of a run")
+        self.assertEqual(self.verdicts("run-record-path/1"), ["fail"])
 
     def test_record_outside_the_repository(self):
+        # invariant: run-record-path/1
         self.assertFails(facts(fact(method="`python -B probes/storage_quota.py --record "
                                            "../facts.jsonl`"), lines_fact()),
                          "lies outside the repository")
+        self.assertEqual(self.verdicts("run-record-path/1"), ["fail"])
 
 
 class Citations(GuardTestCase):
@@ -903,8 +924,16 @@ class BasedOn(GuardTestCase):
         self.check("json-lines@%s, read at https://example.org/json-lines/1" % LINES_FINGERPRINT)
 
     def test_link_to_no_fact(self):
+        # invariant: based-on-fact-fingerprint/1
         self.check("json-lines@%s · storage-cap@12345678" % LINES_FINGERPRINT,
                    "*Based on* names `storage-cap@12345678`, which is no environment fact")
+        self.assertEqual(self.verdicts("based-on-fact-fingerprint/1"), ["fail"])
+
+    def test_link_to_a_withdrawn_fact_is_left_to_the_merge(self):
+        """A withdrawn fact has no current fingerprint; that is reported against a merge
+        (based-on-fact-fingerprint-value), not here."""
+        # invariant: based-on-fact-fingerprint/1
+        self.check("json-lines@%s · storage-limit@12345678" % LINES_FINGERPRINT)
 
     def test_earlier_version_is_not_read(self):
         # invariant: based-on-fact-fingerprint/1
