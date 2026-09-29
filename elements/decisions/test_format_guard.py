@@ -432,6 +432,38 @@ class Relations(GuardTestCase):
     def test_current_fingerprint_passes(self):
         self.assertPasses(log(version(1), version(2, relations="narrows ABC-01@" + CURRENT)))
 
+    def guard_with_a_type_carrying_no_fingerprint(self, text):
+        """Runs the guard with a template whose form lists `mirrors`, a type carrying no
+        fingerprint, beside the two that carry one."""
+        with open(format_guard.TEMPLATE, encoding="utf-8") as handle:
+            template = handle.read()
+        form = "derives from WAY-x@<fingerprint> · narrows WAY-y@<fingerprint> | none"
+        self.assertEqual(template.count(form), 1)
+        path = os.path.join(self.directory.name, "template.md")
+        with open(path, "w", encoding="utf-8", newline="\n") as handle:
+            handle.write(template.replace(form, form.replace(" | none", " · mirrors WAY-z | none")))
+        with open(self.path, "w", encoding="utf-8", newline="\n") as handle:
+            handle.write(text)
+        code = format_guard.run(self.path, today=TODAY, template=path, stream=io.StringIO(),
+                                record=self.record_path)
+        with open(self.record_path, encoding="utf-8") as handle:
+            self.lines = [json.loads(item) for item in handle.read().split("\n") if item]
+        return code
+
+    def test_a_type_the_template_lists_without_a_fingerprint_carrying_one(self):
+        # invariant: relation-fingerprint-presence/1
+        self.assertEqual(self.guard_with_a_type_carrying_no_fingerprint(
+            log(version(1), version(2, relations="mirrors ABC-01@" + CURRENT))), 1)
+        self.assertEqual([item for item in self.lines if item["verdict"] == "fail"],
+                         [line("check_relations", "fail", "relation-fingerprint-presence/1",
+                               "line 30: ABC-02/1: `mirrors ABC-01@%s` carries a fingerprint"
+                               % CURRENT)])
+
+    def test_a_type_the_template_lists_without_a_fingerprint_carrying_none(self):
+        self.assertEqual(self.guard_with_a_type_carrying_no_fingerprint(
+            log(version(1), version(2, relations="mirrors ABC-01"))), 0)
+        self.assertRecords(line("check_relations", "pass", "relation-fingerprint-presence/1"))
+
     def test_mutual_narrows(self):
         self.assertFails(log(*NARROWING_EACH_OTHER),
                          "ABC-01 and ABC-02 narrow each other")

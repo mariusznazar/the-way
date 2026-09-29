@@ -704,6 +704,9 @@ def check_relations(entries, rules, prefix, report):
             elif rules.relation_types[kind] and not re.fullmatch(r"[0-9a-f]+", match.group(2) or ""):
                 report.error(line, "%s: `%s` carries no fingerprint" % (label, item),
                              check, (presence,))
+            elif not rules.relation_types[kind] and match.group(2) is not None:
+                report.error(line, "%s: `%s` carries a fingerprint" % (label, item),
+                             check, (presence,))
 
 
 def check_verification(entries, rules, prefix, report):
