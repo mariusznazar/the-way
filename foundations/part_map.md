@@ -227,5 +227,5 @@ for each outcome of a test.
 
 ## Withdrawn identifiers
 
-| Identifier | Successors |
-|---|---|
+| Identifier | Why | Successors |
+|---|---|---|

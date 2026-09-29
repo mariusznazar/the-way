@@ -67,8 +67,8 @@ entry a link names, *read off* for its fingerprint
   never reached the main branch may go (WAY-64, WAY-75). An identifier of the part map left behind
   by a split or a merge stays in the map as a withdrawn identifier and is never reused (WAY-41).
 - A withdrawn identifier stays withdrawn: it never names an entry again (WAY-41, WAY-64, WAY-75).
-- Each of the three files carries its withdrawn identifiers in one list after its last entry. The
-  invariants file and the environment facts file give it in this form (WAY-64, WAY-75):
+- Each of the three files carries its withdrawn identifiers in one list after its last entry, in
+  this form (WAY-41, WAY-64, WAY-75):
 
   ```markdown
   ## Withdrawn identifiers
@@ -76,14 +76,13 @@ entry a link names, *read off* for its fingerprint
   | Identifier | Why | Successors |
   ```
 
-- *Why* says why the identifier was withdrawn, and where entries were split or merged, it says so.
-  *Successors* lists the identifiers that took its place, joined by ` · `, each an entry or a
-  withdrawn identifier of the same file, or reads `none` (WAY-64, WAY-75).
-- The part map is the exception. Its list has no *Why* column and takes the form its template
-  gives (`TODO — decision pending: when the map's list takes the *Why* WAY-41 asks for`), and its
-  *Successors* names one or more identifiers, each an entry or a withdrawn identifier of the map,
-  never `none`: the map withdraws an identifier only on a split or a merge, which leaves entries in
-  its place (WAY-41).
+- *Why* says why the identifier was withdrawn, and where entries were split or merged, it says so
+  (WAY-41, WAY-64, WAY-75).
+- *Successors* lists the identifiers that took its place, joined by ` · `, each an entry or a
+  withdrawn identifier of the same file. In the invariants file and the environment facts file it
+  may read `none` (WAY-64, WAY-75); in the part map it names one or more identifiers, never `none`:
+  the map withdraws an identifier only on a split or a merge, which leaves entries in its place
+  (WAY-41).
 - The identifier and *Successors* are read off (WAY-54), and *Why* is prose
   (`TODO — decision pending: which decision sets the prose mark`).
 

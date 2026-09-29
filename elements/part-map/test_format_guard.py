@@ -94,8 +94,8 @@ PATHS = "\n".join(["## Change paths", "",
 LEFT_OUT = "\n".join(["## Files left out on purpose", "", "| File | Why |", "|---|---|",
                       "| README.md | the entry point of the repository |"])
 
-WITHDRAWN = "\n".join(["## Withdrawn identifiers", "", "| Identifier | Successors |", "|---|---|",
-                       "| game-state | saving |"])
+WITHDRAWN = "\n".join(["## Withdrawn identifiers", "", "| Identifier | Why | Successors |",
+                       "|---|---|---|", "| game-state | merged into saving | saving |"])
 
 
 def part_map(*entries, **lists):
@@ -128,6 +128,8 @@ REPORT_WITHOUT_COMMANDS = "\n".join([
     "note: there is no invariants.md beside the map: the invariants the map names are not checked",
     "note: there is no decisions.md beside the map: the scopes of decisions are not checked",
     "note: no --base given: the list of known violations is not compared with the main branch",
+    "note: no --base given: the computed criticality of the parts is not compared with the main "
+    "branch, so no lowering is reported",
     "0 error(s), 0 warning(s), 3 unchecked", ""])
 
 
@@ -166,7 +168,7 @@ class GuardTestCase(unittest.TestCase):
         with open(full, "w", encoding="utf-8", newline="\n") as handle:
             handle.write(text)
 
-    def guard(self, text, base=None, own=False, path=None):
+    def guard(self, text, base=None, own=False, path=None, examples=None):
         path = path or self.path
         with open(path, "w", encoding="utf-8", newline="\n") as handle:
             handle.write(text)
@@ -175,7 +177,7 @@ class GuardTestCase(unittest.TestCase):
         output = io.StringIO()
         code = format_guard.run(path, base=base, stream=output,
                                 record=self.record_path, own=own,
-                                examples=os.path.join(self.root, "no-examples.md"))
+                                examples=examples or os.path.join(self.root, "no-examples.md"))
         with open(self.record_path, encoding="utf-8") as handle:
             self.lines = [json.loads(item) for item in handle.read().split("\n") if item]
         return code, output.getvalue()
@@ -822,8 +824,9 @@ class Surfaces(GuardTestCase):
                           "(written in `save-format`)"])
 
     def test_withdrawal_date_elsewhere_in_the_map(self):
-        withdrawn = "\n".join(["## Withdrawn identifiers", "", "| Identifier | Successors |",
-                               "|---|---|", "| game-state | saving, 2026-12-01 |"])
+        withdrawn = "\n".join(["## Withdrawn identifiers", "", "| Identifier | Why | Successors |",
+                               "|---|---|---|",
+                               "| game-state | merged into saving | saving, 2026-12-01 |"])
         self.guard(part_map(part(responsibility="The part answers for saving, withdrawn on "
                                                 "2027-03-01."), flow(), surface(),
                             foundations_part(), withdrawn=withdrawn))
@@ -1057,6 +1060,8 @@ class KnownViolations(GuardTestCase):
         self.assertEqual(code, 1, output)
         self.assertEqual(self.lines, [
             line(None, "fail", None, "git cannot read foundations/known_violations.md at main: "
+                                     "fatal: cannot read the object"),
+            line(None, "fail", None, "git cannot read foundations/part_map.md at main: "
                                      "fatal: cannot read the object")])
 
 
@@ -1352,6 +1357,7 @@ class Record(GuardTestCase):
                  "the levels sit at the declarations, and no command of the product reports them",
                  NOT_PRODUCED),
             line("check_lists", "pass", "external-exchange-row/1"),
+            line("check_withdrawn", "pass", "map-withdrawal-successors/1"),
             line("check_violations", "pass", "known-violation-fields/1"),
             line("check_violations", "pass", "known-violation-line-number/1"),
             line("check_dependencies", "unchecked", "known-violation-coverage/1",
@@ -1459,7 +1465,8 @@ class RecordPerCommand(GuardTestCase):
         "known-violation-line-number/1", "left-out-file-assignment/1",
         "map-entry-field-presence/1", "map-entry-field-words/1", "map-entry-kinds/1",
         "map-entry-version/1", "map-identifier-form/1", "map-invariant-names/1",
-        "map-section-kinds/1", "map-withdrawal-date/1", "part-criticality-field/1",
+        "map-section-kinds/1", "map-withdrawal-date/1", "map-withdrawal-successors/1",
+        "part-criticality-field/1",
         "part-map-file/1", "path-pattern-reach/1", "promise-level-policy/1",
         "surface-change-path/1", "surface-declaration/1", "surface-promise-level/1",
         "trust-boundary-pattern/1"]
@@ -1496,54 +1503,174 @@ class RecordPerCommand(GuardTestCase):
 
 
 class Examples(GuardTestCase):
-    """`examples.md` copies entries of the-way's own map, which keep the heading with a title,
-    `## <identifier> — <title>`, until they are rewritten; so do the examples here."""
+    """`examples.md` names, by identifier, entries of the-way's own map, which the guard checks on
+    that map alone."""
 
-    def titled_map(self):
-        return part_map(part(title="Saving a game"), flow(title="Save and load"),
-                        surface(title="The format of a saved game"),
-                        foundations_part(title="The foundation"))
-
-    def examples(self, *blocks):
+    def examples(self, *items):
         path = os.path.join(self.root, "examples.md")
         with open(path, "w", encoding="utf-8", newline="\n") as handle:
-            handle.write("# Examples\n\nCopies.\n\n" + "\n\n".join(blocks) + "\n")
+            handle.write("# Examples\n\nThe entries of `foundations/part_map.md` that show the "
+                         "form of an entry.\n\n" + "\n".join(items) + "\n")
         return path
 
-    def report_on(self, text, examples_path):
-        rules = format_guard.read_rules()
-        entries, _ = format_guard.parse_map(text, rules)
-        report = format_guard.Report(self.path)
-        format_guard.check_examples(entries, examples_path, report)
-        return report
+    def test_identifiers_of_entries_pass(self):
+        self.guard(part_map(), own=True,
+                   examples=self.examples("- `saving` — a part", "- `save-and-load` — a flow",
+                                          "- `save-format` — a surface"))
+        self.assertRecords(line("check_examples", "pass", "map-example-target/1"))
+        self.assertEqual(self.failures("map-example-target/1"), [])
 
-    def test_example_that_differs_from_its_entry(self):
-        text = self.titled_map()
-        changed = part(title="Saving a game").replace("writing and reading a saved game", "drawing a board")
-        report = self.report_on(text, self.examples("*A part:*", changed))
-        self.assertTrue(any("differs from the map" in message for _, message in report.errors),
-                        report.errors)
+    def test_an_identifier_outside_the_map(self):
+        self.guard(part_map(), own=True,
+                   examples=self.examples("- `saving` — a part", "- `rendering` — a part"))
+        self.assertEqual(self.failures("map-example-target/1"),
+                         ["examples.md:6: `rendering` is not the identifier of an entry of the "
+                          "map"])
 
-    def test_example_of_an_entry_outside_the_map(self):
-        text = self.titled_map()
-        stranger = part("rendering", "Rendering", files="src/render.py",
-                        responsibility="The part answers for drawing.")
-        report = self.report_on(text, self.examples("*A part:*", stranger))
-        self.assertTrue(any("is not in the map" in message for _, message in report.errors),
-                        report.errors)
+    def test_a_withdrawn_identifier_is_no_entry(self):
+        self.guard(part_map(), own=True, examples=self.examples("- game-state — a part"))
+        self.assertEqual(self.failures("map-example-target/1"),
+                         ["examples.md:5: `game-state` is not the identifier of an entry of the "
+                          "map"])
 
-    def test_caption_of_the_next_example_does_not_count_as_a_difference(self):
-        text = self.titled_map()
-        blocks = text.split("\n\n## ")
-        first, second = "## " + blocks[1].rstrip(), "## " + blocks[2].rstrip()
-        report = self.report_on(text, self.examples("*A part:*", first, "*A flow:*", second))
-        self.assertEqual(report.errors, [])
+    def test_a_copied_entry_names_no_identifier_of_the_map(self):
+        self.guard(part_map(), own=True,
+                   examples=self.examples("## rendering — Rendering", "",
+                                          "The part answers for drawing.", "",
+                                          "- **Files:** src/render.py"))
+        self.assertEqual(self.failures("map-example-target/1"),
+                         ["examples.md:9: `**Files:**` is not the identifier of an entry of the "
+                          "map"])
 
-    def test_example_copied_word_for_word_passes(self):
-        text = self.titled_map()
-        copy = "\n".join(text.split("\n\n## ")[1].split("\n")).rstrip()
-        report = self.report_on(text, self.examples("*A part:*", "## " + copy))
-        self.assertEqual(report.errors, [])
+    def test_examples_are_checked_on_the_way_s_own_map_alone(self):
+        self.guard(part_map(), examples=self.examples("- `rendering` — a part"))
+        self.assertNotIn("map-example-target/1", [item["invariant"] for item in self.lines])
+
+
+class Withdrawn(GuardTestCase):
+    """Every withdrawn identifier of the map gives why it was withdrawn and names one or more
+    successors, each an entry or a withdrawn identifier of the map."""
+
+    def withdrawn(self, *rows, header=("Identifier", "Why", "Successors")):
+        return "\n".join(["## Withdrawn identifiers", "", "| %s |" % " | ".join(header),
+                          "|%s" % ("---|" * len(header))] + list(rows))
+
+    def test_why_and_successors_of_the_map_pass(self):
+        self.assertPasses(part_map(withdrawn=self.withdrawn(
+            "| game-state | merged into save-data | save-data |",
+            "| save-data | split into saving and save-format | saving · save-format |")))
+        self.assertRecords(line("check_withdrawn", "pass", "map-withdrawal-successors/1"))
+
+    def test_a_row_that_gives_no_why(self):
+        for why in ("", "TODO"):
+            with self.subTest(why=why):
+                self.guard(part_map(withdrawn=self.withdrawn("| game-state | %s | saving |" % why)))
+                self.assertEqual(self.failures("map-withdrawal-successors/1"),
+                                 ["line 68: `game-state` gives no why it was withdrawn"])
+
+    def test_a_row_that_names_no_successor(self):
+        for successors in ("none", ""):
+            with self.subTest(successors=successors):
+                self.guard(part_map(withdrawn=self.withdrawn(
+                    "| game-state | merged into saving | %s |" % successors)))
+                self.assertEqual(self.failures("map-withdrawal-successors/1"),
+                                 ["line 68: `game-state` names no successor; the map withdraws an "
+                                  "identifier only on a split or a merge, which leaves entries in "
+                                  "its place"])
+
+    def test_a_successor_outside_the_map(self):
+        self.guard(part_map(withdrawn=self.withdrawn(
+            "| game-state | split into saving and rendering | saving · rendering |")))
+        self.assertEqual(self.failures("map-withdrawal-successors/1"),
+                         ["line 68: `game-state` names `rendering` as a successor, which is "
+                          "neither an entry nor a withdrawn identifier of the map"])
+
+    def test_a_list_without_why(self):
+        self.guard(part_map(withdrawn=self.withdrawn("| game-state | saving |",
+                                                     header=("Identifier", "Successors"))))
+        self.assertEqual(self.failures("map-withdrawal-successors/1"), [
+            "line 66: the list of withdrawn identifiers has the columns Identifier, Successors, "
+            "not Identifier, Why, Successors",
+            "line 68: `game-state` gives no why it was withdrawn"])
+
+
+class CriticalityLowering(GuardTestCase):
+    """Given the commit the branch left the main branch from, the guard warns of every part whose
+    computed criticality is lower than on that commit."""
+
+    LOW = ("a save is lost — a step is repeated — low — detected by INV-2",)
+
+    def storage(self):
+        return part("storage", files="src/storage.py",
+                    responsibility="The part answers for the disk.",
+                    failure_modes=("a write fails — a step is repeated — low — not detected",))
+
+    def test_a_lowered_part_is_reported(self):
+        # invariant: criticality-lowering-report/1
+        self.guard(part_map())
+        self.commit()
+        code, output = self.guard(part_map(part(failure_modes=self.LOW), flow(criticality="low"),
+                                           surface(), foundations_part()), base="main")
+        self.assertEqual(code, 0, output)
+        self.assertIn("part_map.md:5: warning: saving: the computed criticality is `low`, lower "
+                      "than `high` on main\n", output)
+        self.assertTrue(output.endswith("0 error(s), 1 warning(s), 3 unchecked\n"), output)
+
+    def test_every_lowered_part_is_reported_a_dependency_included(self):
+        # invariant: criticality-lowering-report/1
+        self.write("src/storage.py", "def write():\n    pass\n")
+        self.guard(part_map(part(depends="storage"), flow(), surface(), self.storage(),
+                            foundations_part()))
+        self.commit()
+        code, output = self.guard(part_map(
+            part(depends="storage (separated — a failed write leaves the game intact)",
+                 failure_modes=self.LOW),
+            flow(criticality="low"), surface(), self.storage(), foundations_part()), base="main")
+        self.assertEqual(code, 0, output)
+        self.assertIn("part_map.md:5: warning: saving: the computed criticality is `low`, lower "
+                      "than `high` on main\n", output)
+        self.assertIn("part_map.md:31: warning: storage: the computed criticality is `low`, lower "
+                      "than `high` on main\n", output)
+
+    def test_a_raised_part_is_not_reported(self):
+        # invariant: criticality-lowering-report/1
+        self.guard(part_map(part(failure_modes=self.LOW), flow(criticality="low"), surface(),
+                            foundations_part()))
+        self.commit()
+        code, output = self.guard(part_map(), base="main")
+        self.assertEqual(code, 0, output)
+        self.assertNotIn("lower than", output)
+
+    def test_a_degree_off_the_scale_is_not_compared(self):
+        # invariant: criticality-lowering-report/1
+        scale = "\n".join(["## Criticality scale", "", "1. low — the player retries a step",
+                           "2. high — the player loses the game",
+                           "3. fatal — the player loses every game"])
+        self.guard(part_map(part(failure_modes=("a save is lost — every game is lost — fatal — "
+                                                "detected by INV-2",)),
+                            flow(), surface(), foundations_part(), scale=scale))
+        self.commit()
+        code, output = self.guard(part_map(), base="main")
+        self.assertEqual(code, 0, output)
+        self.assertNotIn("lower than", output)
+        self.assertIn("note: saving: `fatal` on main is not on the criticality scale, so its "
+                      "computed criticality is not compared\n", output)
+
+    def test_a_base_without_the_map_compares_nothing(self):
+        # invariant: criticality-lowering-report/1
+        self.commit()
+        code, output = self.guard(part_map(), base="main")
+        self.assertEqual(code, 0, output)
+        self.assertIn("note: main has no foundations/part_map.md, so no part's computed "
+                      "criticality is compared with it\n", output)
+
+    def test_base_none_says_it_cannot_compare(self):
+        # invariant: criticality-lowering-report/1
+        code, output = self.guard(part_map(), base="none")
+        self.assertEqual(code, 0, output)
+        self.assertIn("note: --base none: there is no commit the branch left the main branch "
+                      "from, so the computed criticality of the parts is not compared with it "
+                      "and no lowering is reported\n", output)
 
 
 class ComputedCriticality(unittest.TestCase):
@@ -1737,7 +1864,7 @@ class OwnMap(unittest.TestCase):
                 lines = [json.loads(item) for item in handle.read().split("\n") if item]
         self.assertIn(code, (0, 1), output.getvalue())
         self.assertEqual(sorted({item["invariant"] for item in lines if item["invariant"]}),
-                         RecordPerCommand.MAP_ALONE)
+                         sorted(RecordPerCommand.MAP_ALONE + ["map-example-target/1"]))
         failures =[item for item in lines if item["verdict"] == "fail"]
         self.assertEqual([item for item in failures
                           if not any(form.search(item["description"]) for form in self.OLD_FORM)],

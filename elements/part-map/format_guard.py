@@ -17,14 +17,17 @@ Usage, from the root of the product's repository:
 
 MAP defaults to foundations/part_map.md. --base names the commit the task branch left the main
 branch from, which the list of known violations is compared with; without it, that check is
-skipped. `none` in place of that commit is the value the gate fills in where it does not exist
-(WAY-61): the check is then recorded as `unchecked`, and gives no error; a commit that is not
-`none` and does not exist stays an error. A `TODO` in any field of an entry is an error on every
-run, since the template gives it to no field (WAY-71). --record names a JSON Lines file, created
-or overwritten, which receives the-way's own record of the run (WAY-74): a verdict for each
-invariant cited by a check the run's options select — the check against the base with --base, the
-checks of the map alone without it — a line for each error of those checks that belongs to no
-cited invariant, and every failure of the run itself. The report for a person holds every check.
+skipped. Given it, the report for a person also warns of every part whose computed criticality is
+lower than on that commit, for the human who accepts the lowering (WAY-46). `none` in place of that
+commit is the value the gate fills in where it does not exist (WAY-61): the check is then recorded
+as `unchecked`, a note says that no criticality is compared, and the run gives no error; a commit
+that is not `none` and does not exist stays an error. A `TODO` in any field of an entry is an
+error on every run, since the template gives it to no field (WAY-71). --record names a JSON Lines
+file, created or overwritten, which receives the-way's own record of the run (WAY-74): a verdict
+for each invariant cited by a check the run's options select — the check against the base with
+--base, the checks of the map alone without it — a line for each error of those checks that
+belongs to no cited invariant, and every failure of the run itself. The report for a person holds
+every check.
 Exit code: 0 without errors, 1 with errors, 2 when the map or the template cannot be read or the
 record cannot be written.
 """
@@ -91,6 +94,8 @@ LIST_SECTIONS = ["Criticality scale", "External context", "Change paths",
                  "Files left out on purpose", "Withdrawn identifiers", "Known violations"]
 # The lists of the map itself; the list of known violations stands in its own file (WAY-51).
 MAP_LISTS = [title for title in LIST_SECTIONS if title != "Known violations"]
+# The columns of the list of withdrawn identifiers the guard reads (WAY-41).
+WITHDRAWN_COLUMNS = ("Identifier", "Why", "Successors")
 DATE = re.compile(r"\b\d{4}-\d{2}-\d{2}\b")
 # The heading of an entry, `## <identifier>`, told from the heading of a list by the fields the
 # entry holds; and the heading with a title, `## <identifier> — <title>`, which the form does not
@@ -224,6 +229,9 @@ def read_rules(path=TEMPLATE):
         values[heading.group(1)] = [None if "<" in cell else
                                     [choice.strip() for choice in cell.split(" · ")]
                                     for cell in table[1].split("|")] if len(table) > 1 else []
+    if not set(WITHDRAWN_COLUMNS) <= set(lists.get("Withdrawn identifiers", [])):
+        raise TemplateError("the list of withdrawn identifiers has no column %s"
+                            % " or ".join(WITHDRAWN_COLUMNS))
     violations = re.search(r"`([^`]+known_violations[^`]*)`", _section(text, "Known violations"))
     if not violations:
         raise TemplateError("the section on known violations names no file")
@@ -991,6 +999,8 @@ def check_lists(sections, rules, report):
     check, exchange = "check_lists", "external-exchange-row/1"
     report.ran(check, exchange)
     for title, columns in rules.lists.items():
+        if title == "Withdrawn identifiers":
+            continue  # check_withdrawn
         invariants = (exchange,) if title == "External context" else ()
         for cells, line in rows(sections, title):
             if cells == columns:
@@ -1013,36 +1023,69 @@ def check_lists(sections, rules, report):
                                  check, invariants)
 
 
+def check_withdrawn(entries, sections, rules, report):
+    """Every withdrawn identifier of the map gives why it was withdrawn and names one or more
+    successors, each an entry or a withdrawn identifier of the map, never `none`: the map withdraws
+    an identifier only on a split or a merge, which leaves entries in its place (WAY-41)."""
+    # invariant: map-withdrawal-successors/1
+    check, successors = "check_withdrawn", "map-withdrawal-successors/1"
+    report.ran(check, successors)
+    section = sections.get("Withdrawn identifiers")
+    if section is None:
+        return
+    expected = rules.lists["Withdrawn identifiers"]
+    columns, listed = expected, []
+    for cells, line in section.rows:
+        if cells and cells[0] == expected[0]:
+            columns = cells
+            if cells != expected:
+                report.error(line, "the list of withdrawn identifiers has the columns %s, not %s"
+                             % (", ".join(cells), ", ".join(expected)), check, (successors,))
+        else:
+            listed.append((cells, line))
+    known = {entry.identifier for entry in entries}
+    withdrawn = {cells[0] for cells, _ in listed if cells}
+
+    def cell(cells, name):
+        index = columns.index(name) if name in columns else None
+        return cells[index] if index is not None and index < len(cells) else ""
+
+    for cells, line in listed:
+        identifier = cell(cells, "Identifier")
+        why = cell(cells, "Why")
+        if not why or is_todo(why) or holds_todo(why):
+            report.error(line, "`%s` gives no why it was withdrawn" % identifier,
+                         check, (successors,))
+        named = [bare(item) for item in cell(cells, "Successors").split(" · ")
+                 if bare(item)]
+        if not named or all(is_none(item) for item in named):
+            report.error(line, "`%s` names no successor; the map withdraws an identifier only on "
+                               "a split or a merge, which leaves entries in its place"
+                         % identifier, check, (successors,))
+            continue
+        for item in named:
+            if item not in known and item not in withdrawn:
+                report.error(line, "`%s` names `%s` as a successor, which is neither an entry nor "
+                                   "a withdrawn identifier of the map" % (identifier, item),
+                             check, (successors,))
+
+
 def check_examples(entries, examples_path, report):
-    """Every example is an entry of the map copied word for word (WAY-05)."""
-    check = "check_examples"
+    """Every identifier `examples.md` names is the identifier of an entry of the map: an example
+    names an entry of the-way's map by its identifier instead of copying it (WAY-09, WAY-34). An
+    item of a list names the identifier it opens with."""
+    # invariant: map-example-target/1
+    check, target = "check_examples", "map-example-target/1"
     text = read_file(examples_path, report, "the examples")
     if text is None:
         return
-    lines = text.split("\n")
-    by_identifier = entries_by_identifier(entries)
-    index = 0
-    while index < len(lines):
-        heading = re.match(r"^## (.+?) — ", lines[index])
-        if not heading:
-            index += 1
-            continue
-        start = index
-        index += 1
-        while index < len(lines) and not lines[index].startswith("## ") \
-                and not re.match(r"^\*.*\*$", lines[index].strip()):
-            index += 1
-        copy = "\n".join(lines[start:index]).rstrip()
-        entry = by_identifier.get(heading.group(1).strip())
-        if entry is None:
-            report.error(None, "examples.md:%d: `%s` is not in the map"
-                         % (start + 1, heading.group(1).strip()), check)
-        elif entry.text != copy:
-            copy_lines, entry_lines = copy.split("\n"), entry.text.split("\n")
-            offset = next((position for position, (a, b) in enumerate(zip(copy_lines, entry_lines))
-                           if a != b), min(len(copy_lines), len(entry_lines)))
-            report.error(entry.line + offset, "examples.md:%d differs from the map"
-                         % (start + 1 + offset), check)
+    report.ran(check, target)
+    known = {entry.identifier for entry in entries}
+    for number, line in enumerate(text.split("\n"), start=1):
+        item = re.match(r"^- `?([^`\s]+)`?", line)
+        if item and item.group(1) not in known:
+            report.error(None, "examples.md:%d: `%s` is not the identifier of an entry of the map"
+                         % (number, item.group(1)), check, (target,))
 
 
 def latest_scopes(text):
@@ -1191,6 +1234,36 @@ def check_violations_growth(map_path, rules, positions, base, top, report, no_co
                          % (rules.violations, " · ".join(position), base), check, (growth,))
 
 
+def report_lowering(entries, sections, rules, map_path, base, top, report):
+    """Warns of every part whose computed criticality is lower than on the base, so that the human
+    deciding the change has the lowered criticality in front of them (WAY-46)."""
+    relative = os.path.relpath(os.path.abspath(map_path), top).replace(os.sep, "/")
+    base_text, failure = file_at(base, relative, top)
+    if failure:
+        report.error(None, failure)
+        return
+    if base_text is None:
+        report.notes.append("%s has no %s, so no part's computed criticality is compared with it"
+                            % (base, relative))
+        return
+    base_entries, base_sections = parse_map(base_text, rules)
+    before = criticality(base_entries, base_sections)
+    degrees = scale(sections)
+    by_identifier = entries_by_identifier(entries)
+    for identifier, degree in sorted(criticality(entries, sections).items(),
+                                     key=lambda item: by_identifier[item[0]].line):
+        was = before.get(identifier)
+        if was is None or degree is None:
+            continue
+        if was not in degrees:
+            report.notes.append("%s: `%s` on %s is not on the criticality scale, so its computed "
+                                "criticality is not compared" % (identifier, was, base))
+        elif degrees.index(degree) < degrees.index(was):
+            report.warning(by_identifier[identifier].line,
+                           "%s: the computed criticality is `%s`, lower than `%s` on %s"
+                           % (identifier, degree, was, base))
+
+
 # --- entry point ----------------------------------------------------------------------------
 
 
@@ -1244,6 +1317,7 @@ def run(map_path, base=None, stream=None, template=TEMPLATE, record=None,
     check_surfaces(entries, sections, rules, text, report, top)
     check_promise_levels(entries, report)
     check_lists(sections, rules, report)
+    check_withdrawn(entries, sections, rules, report)
     check_scopes(entries, sections, report, map_path)
     positions = check_violations(entries, rules, report, map_path)
     check_dependencies(report)
@@ -1253,12 +1327,17 @@ def run(map_path, base=None, stream=None, template=TEMPLATE, record=None,
         check_violations_growth(map_path, rules, positions, None, None, report, no_commit=no_base)
         report.notes.append(no_base + "; the list of known violations is not compared with it, "
                                       "and that check is unchecked")
+        report.notes.append(no_base + ", so the computed criticality of the parts is not compared "
+                                      "with it and no lowering is reported")
     elif base:
         if top is not None and find_commit(top, "--base", base, report):
             check_violations_growth(map_path, rules, positions, base, top, report)
+            report_lowering(entries, sections, rules, map_path, base, top, report)
     else:
         report.notes.append("no --base given: the list of known violations is not compared with "
                             "the main branch")
+        report.notes.append("no --base given: the computed criticality of the parts is not "
+                            "compared with the main branch, so no lowering is reported")
 
     if own and os.path.exists(examples):
         check_examples(entries, examples, report)
@@ -1272,7 +1351,8 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description="Check a part map against its template.")
     parser.add_argument("map", nargs="?", default=os.path.join("foundations", "part_map.md"))
     parser.add_argument("--base", help="the commit the task branch left the main branch from, "
-                                         "to compare the list of known violations with; `none` "
+                                         "to compare the list of known violations and the "
+                                         "computed criticality of the parts with; `none` "
                                          "where it does not exist, which records that check as "
                                          "unchecked")
     parser.add_argument("--record", help="the JSON Lines file, created or overwritten, that "

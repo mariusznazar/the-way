@@ -10,9 +10,8 @@ not trust.
 The rules of form the elements share — the language of an entry, every field and the words `none`
 and `TODO`, the terms of the glossary, the marks of where a value comes from, the form of an
 identifier, when it stays and when a split or a merge replaces it, its one space with the
-invariants and the environment facts, and the list of withdrawn identifiers, of which the map's
-own is the exception — stand in `elements/common/rules.md`; this template holds what is particular
-to the part map (WAY-35).
+invariants and the environment facts, and the list of withdrawn identifiers — stand in
+`elements/common/rules.md`; this template holds what is particular to the part map (WAY-35).
 
 ## Where entries go
 
@@ -145,8 +144,12 @@ The list is the only exception to "every tracked file has a part" (WAY-44).
 ```markdown
 ## Withdrawn identifiers
 
-| Identifier | Successors |
+| Identifier | Why | Successors |
 ```
+
+The map's *Successors* names one or more identifiers, never `none`: the map withdraws an identifier
+only on a split or a merge, which leaves entries in its place. The format guard checks *Why* and
+the successors of every row (`map-withdrawal-successors`) (WAY-41).
 
 ## Fields and their readers
 
@@ -175,7 +178,7 @@ reader not built yet is named by the invariant it answers to
 | external context | the format guard (`external-exchange-row`); whoever records a trust boundary or sets a change path (WAY-48, WAY-50) | judgment |
 | change paths | whoever changes a surface at that level; the format guard (`surface-change-path`, `promise-level-policy`) | judgment |
 | files left out on purpose | the format guard, as the only exception to file assignment (`file-part-assignment`, `left-out-file-assignment`) | judgment |
-| withdrawn identifiers | the format guards, which reject a reference to one and its reuse (`decision-scope-names`, `identifier-holders`) | as `elements/common/rules.md` gives it |
+| withdrawn identifiers | the format guards, which reject a reference to one and its reuse (`decision-scope-names`, `identifier-holders`) and check why and the successors (`map-withdrawal-successors`) | as `elements/common/rules.md` gives it |
 
 ## The binding part
 
@@ -196,7 +199,9 @@ outside it (WAY-42). What its fingerprint covers answers to the invariant `map-f
   a failure mode of that part, whose detection names an invariant resting on the environment fact
   of that obligation (WAY-87).
 - Raising a part's criticality needs no reason; lowering it is accepted by the human deciding the
-  change, with the lowered criticality in front of them (WAY-46).
+  change, with the lowered criticality in front of them: the format guard, given the commit the
+  task branch left the main branch from, reports every part whose computed criticality is lower
+  than there (`criticality-lowering-report`) (WAY-46).
 - A separation carries its reason in the dependency that records it: why a failure of that part
   does not damage this one (WAY-46).
 - The kind of damage says what a failure does, for whoever sets its severity; the severity, not
@@ -242,5 +247,7 @@ generated rule file answers to the invariants `generated-pattern-source` and `ge
 
 ## Examples
 
-Examples live in `examples.md` (WAY-09): entries copied word for word from this repository's own
-map.
+`examples.md` names, by identifier, the entries of this repository's own map
+(`foundations/part_map.md`) that show the form of an entry; they are read there, in the commit of
+the-way a product pins, instead of being copied (WAY-09, WAY-34). The format guard checks that each
+identifier it names is an entry of the map (`map-example-target`).
