@@ -1,21 +1,25 @@
 """Format guard of a product's glossary.
 
-Runs the checks listed in "What the format guard checks" in template.md, which lies next to this
-script. Read from the templates, so that the rules of an entry live in one place (WAY-05, WAY-35,
-WAY-71): the fields of an entry and the words each may hold, the words a definition may not hold,
-and the values of the closed lists a *Not* may name — the kinds of change, the results of a check
-and the values the gate fills in, from the decision and invariants templates. A template that no
-longer says what the guard reads stops the run. Written in this script, each beside the rule of the
-template it follows: the names *Avoid* and *Not*, the endings of a word's forms, the fields whose
-values the uses leave out, and the file's path. The part map, the invariants and the environment
-facts are read with the parsers of their own guards, and the record of a run is written with the
-report the guards share. Each check cites the invariants it gives a verdict for, as
-`invariant: <identifier>/<version>` (WAY-65).
+Checks the file against the rules of template.md, which lies next to this script; each check cites
+the invariants it gives a verdict for, as `invariant: <identifier>/<version>` (WAY-65). Read from
+the templates, so that the rules of an entry live in one place (WAY-35, WAY-71): the fields of an
+entry and the words each may hold, from the template's section "Entry"; the words a definition may
+not hold, from its section "The definition" and from the decision template; and the values of the
+closed lists a *Not* may name — the kinds of change, the results of a check and the values the gate
+fills in — from the decision and invariants templates. A template that no longer says what the
+guard reads stops the run. Written in this script and its tests alone: the names *Avoid* and *Not*,
+the endings of a word's forms, what a use of a term leaves out and what the count of a word of
+*Avoid* leaves out (WAY-97, WAY-98), and the file's path. The part map, the invariants and the
+environment facts are read with the parsers of their own guards, and the record of a run is written
+with the report the guards share.
 
-The text the checks search is every file git tracks in `foundations/`, and the elements' templates:
-those beside this script's directory, or those given to run() (WAY-97, WAY-98). A word is found as
-the template's section on uses bounds it: in any letter case, across a line break, with the endings
-that section gives.
+The text the checks search is every file git tracks in `foundations/`, the elements' templates and
+the files of the part the elements share, `elements/common/` (WAY-95, WAY-97, WAY-98, WAY-99): those
+beside this script's directory, or those given to run(). A word is found in any letter case, across
+a line break, and in the forms its endings give.
+
+In the-way's own glossary, a term naming an element raises no warning against the part whose files
+include `elements/<identifier>/` (WAY-93); in a product's glossary it does.
 
 Usage, from the root of the product's repository:
 
@@ -37,8 +41,8 @@ a verdict for each invariant cited by a check the run's options select — the c
 base with --base, the checks of a merge with --merge-onto, the checks of the file alone with
 neither — a line for each error of those checks that belongs to no cited invariant, and every
 failure of the run itself. The report for a person holds every check. --uses lists the uses of a
-word, as the template's section on uses bounds them and with the definitions of the glossary's
-entries for other terms, and runs no check: the list the skill reads before judging a word.
+word, with the definitions of the glossary's entries for other terms, and runs no check: the list
+the skill reads before judging a word.
 Exit code: 0 without errors, 1 with errors, 2 when the file or the template cannot be read or the
 record cannot be written.
 """
@@ -57,6 +61,8 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 TEMPLATE = os.path.join(HERE, "template.md")
 EXAMPLES = os.path.join(HERE, "examples.md")
 OWN_FILE = os.path.join(HERE, "..", "..", "foundations", "glossary.md")
+# The part the elements share, whose files the checks search as they search the templates (WAY-95).
+COMMON = os.path.join(HERE, "..", "common")
 
 sys.dont_write_bytecode = True
 
@@ -101,8 +107,9 @@ FOUNDATIONS = "foundations/"
 AVOID, NOT = "Avoid", "Not"
 MARK_FIELD = AVOID
 
-# What the template's sections on uses and on *Avoid* leave out of the text they search. A span in
-# backticks or quotation marks may run onto the next line, never across a blank one.
+# What a use of a term leaves out (WAY-97), and what the count of a word of *Avoid* leaves out
+# besides (WAY-98): this code and its tests are the one place these are written. A span in backticks
+# or quotation marks may run onto the next line, never across a blank one.
 FENCE = re.compile(r"^(```|~~~)[^\n]*\n.*?(?:^\1[^\n]*$|\Z)", re.M | re.S)
 BACKTICKS = re.compile(r"`(?:[^`\n]|\n(?![ \t]*\n))*`")
 QUOTES = re.compile(r'"(?:[^"\n]|\n(?![ \t]*\n))*"|“(?:[^”\n]|\n(?![ \t]*\n))*”')
@@ -135,7 +142,7 @@ class TemplateError(Exception):
 @dataclass
 class Rules:
     fields: list             # FieldRule, in the order of the form
-    must_words: list         # words the glossary template keeps out of a definition
+    must_words: list         # words "The definition" of the glossary template keeps out
     forbidden_words: list    # words the decision template keeps out of binding sentences
     keywords: list           # keywords of RFC 2119 in capitals, kept out likewise
     closed: set = field(default_factory=set)   # values of the closed lists a *Not* may name
@@ -165,22 +172,24 @@ def read_rules(path=TEMPLATE):
         # stops the run rather than leaving its checks with nothing to read
         if name not in names:
             raise TemplateError("the entry form has no field *%s*" % name)
-    checks = " ".join(_section(text, "What the format guard checks").split())
-    words = re.search(r"Every definition is one sentence.*? holds neither (.*?) nor a word the "
-                      r"decision template", checks)
+    definition = " ".join(_section(text, "The definition").split())
+    words = re.search(r"The definition is one sentence.*? neither (.*?) nor (?:any )?word the "
+                      r"decision template", definition)
     must_words = re.findall(r"\*(\w+)\*", words.group(1)) if words else []
     if not must_words:
-        raise TemplateError("the list of checks names no words a definition may not hold")
+        raise TemplateError('the section "The definition" names no words a definition may not '
+                            'hold')
     decision_rules = decision_guard.read_rules()
     return Rules(fields, must_words, decision_rules.forbidden_words, decision_rules.keywords,
                  closed_lists(decision_rules))
 
 
 def closed_lists(decision_rules):
-    """The values of the closed lists the template names as staying in their templates (WAY-95),
-    as their templates write them: the kinds of change of a decision (WAY-20), the results of a
-    check (WAY-63, WAY-74), the words `none` and `TODO` (WAY-71) and the values the gate fills in
-    (WAY-61). A *Not* names one of them in backticks (WAY-99)."""
+    """The values of the closed lists a guard reads, which stay in their templates and take no
+    glossary entry (WAY-95), as their templates write them: the kinds of change of a decision
+    (WAY-20), the results of a check (WAY-63, WAY-74), the words `none` and `TODO` (WAY-71) and the
+    values the gate fills in (WAY-61). This is the one place the lists are named; a *Not* names one
+    of their values in backticks (WAY-99)."""
     invariant_rules = invariant_guard.read_rules()
     with open(invariant_guard.TEMPLATE, encoding="utf-8") as handle:
         results = " ".join(_section(handle.read(), "Result, report and debt").split())
@@ -337,8 +346,10 @@ def terms_of(text, rules):
 
 
 def last_word_forms(word):
-    """A word and the forms the endings give it (WAY-97): `-s`, `-es`, `-ies` in place of a final
-    `y`, `-'s`, `-d`, `-ed` and `-ing`, a final consonant doubled before the last two."""
+    """A word and the forms the endings give it: `-s`, `-es`, `-ies` in place of a final `y`, `-'s`,
+    `-d`, `-ed` and `-ing`, a final consonant doubled before the last two. This code and its tests
+    are the one place the endings are written; a form they miss is found by the review of uses
+    (WAY-97)."""
     forms = {word, word + "s", word + "es", word + "'s", word + "’s", word + "d", word + "ed",
              word + "ing"}
     if word.lower().endswith("y"):
@@ -455,6 +466,17 @@ def template_paths(templates=None):
     return sorted(glob.glob(os.path.join(HERE, "..", "*", "template.md")))
 
 
+def common_paths(common=None):
+    """The files of the part the elements share: those given, or every file standing directly in
+    `elements/common/` beside this script's directory (WAY-95, WAY-98, WAY-99)."""
+    if common is not None:
+        return list(common)
+    if not os.path.isdir(COMMON):
+        return []
+    return sorted(os.path.join(COMMON, name) for name in os.listdir(COMMON)
+                  if os.path.isfile(os.path.join(COMMON, name)))
+
+
 def inside(path, top):
     if top is None:
         return False
@@ -466,10 +488,11 @@ def relative(path, top):
     return os.path.relpath(os.path.abspath(path), top).replace(os.sep, "/")
 
 
-def read_corpus(path, top, tracked, report, templates=None):
+def read_corpus(path, top, tracked, report, templates=None, common=None):
     """Every file git tracks in `foundations/` at the root of the repository, the glossary itself
-    marked, and the elements' templates (WAY-97, WAY-98). Without git, the files of the directory
-    the glossary stands in, on disk."""
+    marked, the elements' templates and the files of the part the elements share (WAY-95, WAY-97,
+    WAY-98, WAY-99). Without git, the files of the directory the glossary stands in, on disk, in
+    place of `foundations/`."""
     directory = os.path.dirname(os.path.abspath(path))
     texts, names = [], []
     if top is not None and tracked is not None:
@@ -500,6 +523,18 @@ def read_corpus(path, top, tracked, report, templates=None):
         else:
             name = "elements/%s/template.md" % os.path.basename(os.path.dirname(template))
             texts.append(Text(name, text, False))
+    for shared_file in common_paths(common):
+        try:
+            with open(shared_file, encoding="utf-8") as handle:
+                text = handle.read()
+        except (OSError, UnicodeDecodeError) as problem:
+            report.error(None, "cannot read %s of the part the elements share: %s"
+                         % (shared_file, problem))
+            continue
+        if inside(shared_file, top):
+            texts.append(Text(relative(shared_file, top), text, tracked is not None))
+        else:
+            texts.append(Text("elements/common/%s" % os.path.basename(shared_file), text, False))
     return texts
 
 
@@ -813,8 +848,8 @@ def check_avoid(entries, report):
 
 
 def used_outside(word, corpus):
-    """Whether the foundation uses a word, as the template bounds a use, outside quotation marks and
-    outside the glossary (WAY-99)."""
+    """Whether the text searched uses a word, as a use is found, outside quotation marks and outside
+    the glossary (WAY-98, WAY-99)."""
     pattern = use_pattern(word)
     if pattern is None:
         return False
@@ -1069,16 +1104,20 @@ def read_alike(term, identifier):
 
 
 def names_its_element(identifier, foundation):
-    """Whether the identifier is a part whose files include `elements/<identifier>/` (WAY-93)."""
+    """Whether the identifier is a part whose files include `elements/<identifier>/`: in the-way,
+    whose parts answer for its elements, a term naming that element raises no warning against it
+    (WAY-93)."""
     return any(pattern.startswith("elements/%s/" % identifier)
                for pattern in foundation.parts.get(identifier, []))
 
 
-def check_against_base(path, entries, rules, corpus, foundation, base, top, report, no_commit=None):
+def check_against_base(path, entries, rules, corpus, foundation, base, top, report, no_commit=None,
+                       own=False):
     """Against the base: no word of *Avoid* stands in a file more times than on the base (WAY-98);
-    a term and an identifier that came to read alike are a warning (WAY-93); the report lists the
-    uses of every term whose definition changed (WAY-97). Given `no_commit`, which says why there is
-    no base, records the count unchecked instead."""
+    a term and an identifier that came to read alike are a warning, save, in the-way's own glossary
+    (`own`), a term naming the element of a part whose files include `elements/<identifier>/`
+    (WAY-93); the report lists the uses of every term whose definition changed (WAY-97). Given
+    `no_commit`, which says why there is no base, records the count unchecked instead."""
     # invariant: glossary-avoid-growth/1
     check, growth = "check_against_base", "glossary-avoid-growth/1"
     if no_commit:
@@ -1134,7 +1173,7 @@ def check_against_base(path, entries, rules, corpus, foundation, base, top, repo
             if not read_alike(entry.term, identifier) or \
                     (entry.term.lower(), identifier) in base_pairs:
                 continue
-            if names_its_element(identifier, foundation):
+            if own and names_its_element(identifier, foundation):
                 continue
             report.warning(entry.line, "term `%s` and identifier `%s` read alike, and did not on "
                                        "%s: where they name the same thing the entry stays, where "
@@ -1295,8 +1334,14 @@ def list_uses(word, corpus, entries, report, stream):
 
 
 def run(path, base=None, stream=None, template=TEMPLATE, merge_onto=None, record=None,
-        examples=EXAMPLES, templates=None, uses=None):
+        examples=EXAMPLES, templates=None, uses=None, common=None, own=None):
+    """Checks the glossary at the path. `templates` and `common` name the elements' templates and
+    the files of the part the elements share that the checks search; given templates in place of
+    those beside this script, the part the elements share is searched only where it is given too.
+    `own` says whether the file is the-way's own glossary, which by default is known by its path."""
     stream = stream or sys.stdout
+    if common is None and templates is not None:
+        common = []
     if uses is not None and (base or merge_onto or record):
         stream.write("--uses lists the uses of a word and runs no check; it takes neither --base, "
                      "--merge-onto nor --record\n")
@@ -1332,11 +1377,13 @@ def run(path, base=None, stream=None, template=TEMPLATE, merge_onto=None, record
     except (OSError, UnicodeDecodeError) as problem:
         return stop("cannot read the glossary: %s" % problem)
 
+    if own is None:
+        own = os.path.exists(OWN_FILE) and os.path.exists(path) and os.path.samefile(path, OWN_FILE)
     top = invariant_guard.repository_root(path, report)
     tracked = invariant_guard.tracked_files(top, report) if top is not None else None
     head, items = parse_file(text, rules)
     entries = entries_of(items)
-    corpus = read_corpus(path, top, tracked, report, templates)
+    corpus = read_corpus(path, top, tracked, report, templates, common)
     if uses is not None:
         return list_uses(uses, corpus, entries, report, stream)
     foundation = read_foundation(path, top, report)
@@ -1359,7 +1406,8 @@ def run(path, base=None, stream=None, template=TEMPLATE, merge_onto=None, record
                                       "definition is compared with it")
     elif base:
         if find_commit(top, "--base", base, report):
-            check_against_base(path, entries, rules, corpus, foundation, base, top, report)
+            check_against_base(path, entries, rules, corpus, foundation, base, top, report,
+                               own=own)
     else:
         report.notes.append("no --base given: the words of *Avoid* are not counted against the main "
                             "branch, terms and identifiers that read alike are not reported, and "
@@ -1383,7 +1431,7 @@ def run(path, base=None, stream=None, template=TEMPLATE, merge_onto=None, record
         report.notes.append("no --merge-onto given: `TODO` in *Not* and a term with no use are only "
                             "warnings")
 
-    if os.path.exists(examples) and os.path.exists(OWN_FILE) and os.path.samefile(path, OWN_FILE):
+    if own and os.path.exists(examples):
         check_examples(items, examples, report)
     report.print(stream)
     if record is not None:

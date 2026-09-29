@@ -145,16 +145,20 @@ class GuardTestCase(unittest.TestCase):
         self.git("add", "-A")
         self.git("commit", "-q", "-m", "base")
 
-    def guard(self, text, base=None, merge_onto=None, path=None, uses=None, **files):
+    def guard(self, text, base=None, merge_onto=None, path=None, uses=None, common=None, own=None,
+              **files):
         if text is not None:
             self.write("foundations/glossary.md", text)
         for name, content in files.items():
             self.write(name.replace("__", "/"), content)
         self.git("add", "-A")
         output = io.StringIO()
+        # the part the elements share and the-way's own file are given only where a test sets them
+        given = {name: value for name, value in (("common", common), ("own", own))
+                 if value is not None}
         code = format_guard.run(path or self.path, base=base, stream=output, merge_onto=merge_onto,
                                 record=self.record_path, templates=self.templates,
-                                examples=self.examples, uses=uses)
+                                examples=self.examples, uses=uses, **given)
         with open(self.record_path, encoding="utf-8") as handle:
             self.lines = [json.loads(item) for item in handle.read().split("\n") if item]
         return code, output.getvalue()
@@ -579,6 +583,19 @@ class TermUse(GuardTestCase):
         self.write("elements/demo/template.md", TEMPLATE_TEXT + "\nA run gives a verdict.\n")
         self.assertPasses(glossary())
 
+    def test_use_in_a_token_with_a_slash_is_no_use(self):
+        # invariant: glossary-term-use/1
+        self.write("foundations/invariants.md", invariants(
+            invariant(sentence="Every game ends in a save slot or in run/saves.")))
+        self.assertWarns(glossary(), "run: the term has no use outside the glossary")
+
+    def test_use_in_a_fenced_block_is_no_use(self):
+        # invariant: glossary-term-use/1
+        self.write("foundations/invariants.md", invariants(
+            invariant(sentence="Every game ends in a save slot.")))
+        self.write("foundations/notes.md", "# Notes\n\n```\nA run gives a verdict.\n```\n")
+        self.assertWarns(glossary(), "run: the term has no use outside the glossary")
+
     def test_merge_reads_a_file_the_main_branch_changed(self):
         # invariant: glossary-term-use/1
         self.commit(glossary())
@@ -749,14 +766,22 @@ class Collision(GuardTestCase):
         self.write("foundations/invariants.md", invariants(invariant(), invariant("run")))
         self.assertWarns(glossary(), "term `run` and identifier `run` read alike", base="HEAD")
 
-    def test_term_naming_the_element_of_its_part(self):
+    def element_term(self):
+        return glossary(entry(), run_entry(),
+                        entry(term="glossary", avoid="none",
+                              definition="A glossary is the file of a game's words, each in one "
+                                         "meaning of a save slot."))
+
+    def test_term_naming_the_element_of_its_part_in_the_way(self):
         # invariant: glossary-term-collision/1
         self.commit(glossary())
-        self.assertPasses(glossary(entry(), run_entry(),
-                                   entry(term="glossary", avoid="none",
-                                         definition="A glossary is the file of a game's words, "
-                                                    "each in one meaning of a save slot.")),
-                          base="HEAD")
+        self.assertPasses(self.element_term(), base="HEAD", own=True)
+
+    def test_term_naming_the_element_of_its_part_outside_the_way(self):
+        # invariant: glossary-term-collision/1
+        self.commit(glossary())
+        self.assertWarns(self.element_term(), "term `glossary` and identifier `glossary` read alike",
+                         base="HEAD")
 
     def test_pair_that_read_alike_on_the_base(self):
         # invariant: glossary-term-collision/1
@@ -911,8 +936,7 @@ class PanelCorrections(GuardTestCase):
 
     def test_template_naming_no_word_kept_out_stops_the_run(self):
         with open(format_guard.TEMPLATE, encoding="utf-8") as handle:
-            text = handle.read().replace("neither *must* nor a word the decision",
-                                         "neither must nor a word the decision")
+            text = handle.read().replace("neither *must* nor", "neither must nor")
         self.write("reworded.md", text)
         output = io.StringIO()
         self.write("foundations/glossary.md", glossary())
@@ -1013,6 +1037,104 @@ class Examples(GuardTestCase):
     def test_example_differing_from_the_file(self):
         errors = self.run_examples("# Examples\n\n" + entry(avoid="none") + "\n")
         self.assertIn("differs from the file", errors[0][1])
+
+
+class Rules(GuardTestCase):
+    """What the guard reads from the template, where the template states it."""
+
+    def test_words_kept_out_of_a_definition_are_read_from_the_definition(self):
+        # invariant: glossary-definition-words/1
+        template = "\n".join([
+            "# Glossary entry template", "", "## Entry", "", "```markdown", "## <term>", "",
+            "<one sentence: the definition>", "",
+            "- **Avoid:** <word> — <what a reader takes it for> · … | none",
+            "- **Not:** <meaning> — <what carries it, or TODO> · … | none", "```", "",
+            "## The definition", "",
+            "- The definition is one sentence in the present tense, with no normative word: neither "
+            "*must* nor *ought* nor any word the decision template keeps out of binding sentences "
+            "(WAY-96).", ""])
+        self.write("demo-template.md", template)
+        self.write("foundations/glossary.md",
+                   glossary(entry(definition="A save slot is the storage that ought to hold one "
+                                             "saved game."), run_entry()))
+        self.git("add", "-A")
+        output = io.StringIO()
+        code = format_guard.run(self.path, stream=output, templates=self.templates,
+                                template=os.path.join(self.root, "demo-template.md"),
+                                examples=self.examples)
+        self.assertEqual(code, 1, output.getvalue())
+        self.assertIn("save slot: the definition holds *ought*", output.getvalue())
+
+
+class Common(GuardTestCase):
+    """The part the elements share is searched as the elements' templates are."""
+
+    def common(self):
+        return [os.path.join(self.root, "elements", "common", "rules.md")]
+
+    def test_use_in_the_part_the_elements_share_counts(self):
+        # invariant: glossary-term-use/1
+        self.write("foundations/invariants.md", invariants(
+            invariant(sentence="Every game ends in a save slot.")))
+        self.write("elements/common/rules.md", "# Shared rules\n\nA run gives a verdict.\n")
+        self.assertWarns(glossary(), "run: the term has no use outside the glossary")
+        self.assertPasses(glossary(), common=self.common())
+
+    def test_word_of_avoid_added_in_the_part_the_elements_share(self):
+        # invariant: glossary-avoid-growth/1
+        self.commit(glossary(), **{"elements__common__rules.md": "# Shared rules\n"})
+        self.assertFails(glossary(), "elements/common/rules.md: `storage cell`, which the *Avoid* "
+                                     "of `save slot` lists", base="HEAD", common=self.common(),
+                         **{"elements__common__rules.md": "# Shared rules\n\nThe storage cell of a "
+                                                          "game.\n"})
+        self.assertEqual(self.verdicts("glossary-avoid-growth/1"), ["fail"])
+
+    def test_quoted_word_used_in_the_part_the_elements_share(self):
+        # invariant: glossary-not-quoted-word/1
+        self.write("elements/common/rules.md", "# Shared rules\n\nA crate holds nothing.\n")
+        text = glossary(entry(not_="a box — \"crate\""), run_entry())
+        self.assertFails(text, "names \"crate\", which the foundation does not use")
+        self.assertPasses(text, common=self.common())
+
+    def test_the_way_corpus_reads_the_part_the_elements_share(self):
+        # invariant: glossary-term-use/1
+        self.write("foundations/glossary.md", glossary())
+        self.git("add", "-A")
+        output = io.StringIO()
+        format_guard.run(self.path, stream=output, uses="identifier")
+        self.assertIn("\nelements/common/rules.md:", "\n" + output.getvalue())
+
+
+class Forms(unittest.TestCase):
+    """The forms of a word the guard finds: the one place the endings are written (WAY-97)."""
+
+    def test_endings_of_a_word(self):
+        self.assertEqual(format_guard.last_word_forms("run"),
+                         {"run", "runs", "runes", "run's", "run’s", "rund", "runed", "runing",
+                          "runned", "running"})
+
+    def test_final_y(self):
+        self.assertIn("entries", format_guard.last_word_forms("entry"))
+
+    def test_multi_word_term_takes_the_ending_on_its_last_word(self):
+        forms = format_guard.forms_of("Save slot")
+        self.assertIn("save slots", forms)
+        self.assertNotIn("saves slot", forms)
+
+
+class OwnFile(unittest.TestCase):
+    """The-way's own glossary holds its entries in the form of the template."""
+
+    def test_the_way_glossary_holds_no_error(self):
+        output = io.StringIO()
+        with tempfile.TemporaryDirectory() as directory:
+            record = os.path.join(directory, "glossary.jsonl")
+            code = format_guard.run(format_guard.OWN_FILE, stream=output, record=record)
+            with open(record, encoding="utf-8") as handle:
+                lines = [json.loads(item) for item in handle.read().split("\n") if item]
+        self.assertEqual(code, 0, output.getvalue())
+        self.assertIn("0 error(s)", output.getvalue())
+        self.assertEqual(sorted(line["invariant"] for line in lines), PLAIN)
 
 
 if __name__ == "__main__":
