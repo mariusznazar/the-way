@@ -67,7 +67,8 @@ except:
 
 A field stays in the template only while someone or something reads it (WAY-05). Each field
 carries the mark of where its value comes from (`elements/common/rules.md`); a reader not built
-yet is named by the invariant it answers to.
+yet is named by the invariant it answers to
+(`TODO — decision pending: which decision names a reader not built yet by its invariant`).
 
 | Field | Who reads it, when | Where its value comes from |
 |---|---|---|
@@ -140,7 +141,7 @@ WAY-31.
 | Kind | What changes | Binding sentences vs previous version | References to the decision |
 |---|---|---|---|
 | new decision | — (version 1) | — | — |
-| editorial correction | wording, not meaning | differ | flagged; whoever clears the flag confirms the meaning is unchanged |
+| editorial correction | wording, not meaning | differ | flagged; whoever clears the flag confirms the meaning is unchanged (`TODO — decision pending: which decision sets that whoever clears the flag of an editorial correction confirms the meaning is unchanged`) |
 | unchanged sentences | fields, the rationale or the rejected options only | identical | not flagged |
 | new wording | what the decision says, a whole new answer included | differ | flagged |
 | narrowing | an exception is added | differ | flagged |

@@ -38,8 +38,8 @@ decision adds to each.
 ## 3. Draft
 
 - *Based on*: sort what the source offers as a reason before filling the field — what is not yet
-  known, or the decider's own motive, is no fact about the world, and the template's fields say
-  where each stands.
+  known, or the decider's own motive, is no fact about the world. What is not yet known goes to
+  *Review when*, as the template's "Review" gives it; the decider's motive goes to *Rationale*.
 - *Verification*: try first to state an invariant — a sentence about the product that is false on
   a commit which breaks this decision — before choosing levels by the template's "Verification".
   Each invariant level 1 names is written through `record-invariant` in step 4.4.
