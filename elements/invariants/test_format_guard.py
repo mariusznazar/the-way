@@ -15,7 +15,6 @@ import subprocess
 import sys
 import tempfile
 import unittest
-from unittest import mock
 
 sys.dont_write_bytecode = True
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -401,10 +400,8 @@ class Layout(GuardTestCase):
     def test_a_copy_in_the_examples_beside_the_template_is_a_second_file(self):
         # invariant: invariants-file/1
         self.write("elements/invariants/examples.md", "# Examples\n\n" + entry() + "\n")
-        copy = os.path.join(self.root, "elements", "invariants", "examples.md")
-        with mock.patch.object(format_guard, "EXAMPLES", copy):
-            self.assertFails(invariants(), "`elements/invariants/examples.md` is a second file of "
-                                           "invariant entries")
+        self.assertFails(invariants(), "`elements/invariants/examples.md` is a second file of "
+                                       "invariant entries")
         self.assertEqual(self.verdicts("invariants-file/1"), ["fail"])
 
     def test_entry_shown_in_a_fenced_block_is_no_file_of_entries(self):
