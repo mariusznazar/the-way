@@ -6,7 +6,9 @@ each may hold, the titles and columns of the lists of quarantined and recovered 
 file of violated invariants, the values the gate fills in and the words a sentence may not use are
 read from the template; the fields the main branch holds `TODO` in, the list of withdrawn
 identifiers and the file and row of human verdicts are read from the rules the elements share; so
-each rule lives in one place (WAY-35, WAY-71). An entry carrying *Recovered*, which is not a field
+each rule lives in one place (WAY-35, WAY-71). The words that open what was searched and what was
+found in a row of the list of recovered invariants, `searched:` and `found:`, are written in this
+script, as WAY-58 writes the row. An entry carrying *Recovered*, which is not a field
 of the form, is reported, and every other check reads it as it reads any entry. The decision log
 and the part map are read with the parsers of their own guards, and the record of a run is written
 with the report the guards share. Each check cites the invariants it gives a verdict for, as
@@ -499,8 +501,7 @@ def check_file(path, top, tracked, report):
     """The repository holds one file of invariant entries, at foundations/invariants.md (WAY-64).
     The path is compared, letter case included, as git lists it. Another such file is known by its
     content: a tracked Markdown file holding a section `## <identifier>/<version>` with a *Method*
-    field and no *Holds for* field. The examples file beside the template this guard reads holds copies of entries, as the
-    template sets it, and is no file of entries."""
+    field and no *Holds for* field."""
     # invariant: invariants-file/1
     check, one_file = "check_file", "invariants-file/1"
     if top is None or tracked is None:
@@ -520,8 +521,6 @@ def check_file(path, top, tracked, report):
         if name == given or not name.endswith(".md"):
             continue
         full = os.path.join(top, *name.split("/"))
-        if os.path.exists(EXAMPLES) and os.path.isfile(full) and os.path.samefile(full, EXAMPLES):
-            continue
         try:
             with open(full, encoding="utf-8") as handle:
                 text = handle.read()
@@ -861,9 +860,14 @@ def check_corrections(entries, report):
                          % (label, declared.group(2), fingerprint(entry.sentence)), check)
 
 
+# The words that open the cells of what was searched and what was found in a row of the list of
+# recovered invariants, as WAY-58 writes the row: `searched: <…>` and `found: <…>`.
+RECOVERED_OPENINGS = (("Searched", "searched:"), ("Found", "found:"))
+
+
 def check_recovered(table, entries, report):
-    """Every row of the list of recovered invariants names an entry, its current version, what was
-    searched and what was found; no entry on the list names a decision in *Derives from*
+    """Every row of the list of recovered invariants names an entry at its current version and
+    holds `searched: <…>` and `found: <…>`; no entry on the list names a decision in *Derives from*
     (WAY-58)."""
     # invariant: invariant-recovered-form/1
     # invariant: invariant-recovered-derived/1
@@ -886,8 +890,13 @@ def check_recovered(table, entries, report):
             report.error(line, "the list of recovered invariants names `%s` at version %s; its "
                                "current version is %d" % (identifier, version, entry.version),
                          check, (form,))
-        for name in ("Searched", "Found"):
-            if not cell(cells, columns, name).strip():
+        for name, opening in RECOVERED_OPENINGS:
+            value = cell(cells, columns, name).strip()
+            if value and not value.startswith(opening):
+                report.error(line, "the row of `%s` on the list of recovered invariants holds `%s` "
+                                   "in *%s*, which does not open with `%s`"
+                             % (identifier, value, name, opening), check, (form,))
+            elif not value[len(opening):].strip():
                 report.error(line, "the row of `%s` on the list of recovered invariants names "
                                    "nothing in *%s*" % (identifier, name), check, (form,))
         if entry is not None and derives_from_a_decision(entry):
@@ -1451,19 +1460,21 @@ def check_fingerprints(entries, merged, report, no_commit=None, facts=None):
 # --- the examples ---------------------------------------------------------------------------
 
 
-def check_examples(items, examples_path, report):
-    check = "check_examples"
+def check_examples(entries, examples_path, report):
+    """Every identifier `examples.md` names is the identifier of an entry of the invariants file: an
+    example names an entry of the-way's invariants by its identifier instead of copying it (WAY-09,
+    WAY-34). An item of a list names the identifier it opens with."""
+    # invariant: invariant-example-target/1
+    check, target = "check_examples", "invariant-example-target/1"
     examples = shared.read_file(examples_path, report, "the examples")
     if examples is None:
         return
-    by_heading = {item.text.split("\n")[0]: item for item in items if isinstance(item, Entry)}
-    for line, lines in shared.split_sections(examples):
-        copy = "\n".join(lines).rstrip()
-        entry = by_heading.get(lines[0])
-        if entry is None:
-            report.error(None, "examples.md:%d: `%s` is not in the file" % (line, lines[0]), check)
-        elif entry.text != copy:
-            report.error(entry.line, "examples.md:%d differs from the file" % line, check)
+    report.ran(check, target)
+    for number, line in enumerate(examples.split("\n"), start=1):
+        item = re.match(r"^- `?([^`\s]+)`?", line)
+        if item and item.group(1) not in entries:
+            report.error(None, "examples.md:%d: `%s` is not the identifier of an entry of the file"
+                         % (number, item.group(1)), check, (target,))
 
 
 # --- entry point ----------------------------------------------------------------------------
@@ -1479,7 +1490,9 @@ def find_commit(path, top, option, commit, report):
 
 
 def run(path, base=None, stream=None, template=TEMPLATE, merge_onto=None, record=None,
-        examples=EXAMPLES, common=COMMON_RULES):
+        examples=EXAMPLES, common=COMMON_RULES, own=None):
+    """Checks the invariants file at the path. `own` says whether it is the-way's own file, whose
+    examples are checked, and which by default is known by its path."""
     stream = stream or sys.stdout
     if record is not None:
         try:
@@ -1576,8 +1589,10 @@ def run(path, base=None, stream=None, template=TEMPLATE, merge_onto=None, record
                             "merge, and the fingerprints their links carry are not compared with "
                             "the current binding part")
 
-    if os.path.exists(examples) and os.path.exists(OWN_FILE) and os.path.samefile(path, OWN_FILE):
-        check_examples(items, examples, report)
+    if own is None:
+        own = os.path.exists(OWN_FILE) and os.path.samefile(path, OWN_FILE)
+    if own and os.path.exists(examples):
+        check_examples(entries, examples, report)
     report.print(stream)
     if record is not None:
         write_record(record, report)

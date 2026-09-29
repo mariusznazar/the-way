@@ -69,7 +69,8 @@ accepts the quarantine (WAY-54):
 ```
 
 A recovered invariant stands on the list of recovered invariants, which closes the file, in a row
-naming its identifier, its current version, what was searched and what was found (WAY-58):
+naming its identifier and its current version, with `searched: <…>` in *Searched* and
+`found: <…>` in *Found* (WAY-58):
 
 ```markdown
 ## Recovered invariants
@@ -330,5 +331,7 @@ reader not built yet is named by the invariant it answers to
 
 ## Examples
 
-Examples live in `examples.md` (WAY-09): entries copied word for word from a real set of
-invariants.
+`examples.md` names, by identifier, the entries of this repository's own invariants
+(`foundations/invariants.md`) that show the form of an entry; they are read there, in the commit of
+the-way a product pins, instead of being copied (WAY-09, WAY-34). The format guard checks that each
+identifier it names is the identifier of an entry of that file (`invariant-example-target`).
