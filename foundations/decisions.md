@@ -191,6 +191,11 @@ copying it.
   reader — an agent compares the change with the decision:
   - complies: a new field enters the template together with the reader named in its table;
   - violates: a "notes" or "related artifacts" field that nothing reads.
+  Level 2 for a rule citing the decision that sets it — an agent compares the change with the
+  decision:
+  - complies: a new rule of an element's template or of the part the elements share ends with the
+    number of the decision that sets it;
+  - violates: a rule of entries added to the shared part cites no decision.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
@@ -350,7 +355,8 @@ elements.
   related to WAY-44 · related to WAY-55
 - **Outranks:** none
 - **Verification:** level 1 — invariants: repository-file-location · element-directory-contents ·
-  relation-model-directory-contents.
+  relation-model-directory-contents · invariant-example-target · map-example-target ·
+  glossary-example-target.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
@@ -1017,7 +1023,7 @@ precedence — by a new version on the main branch, by an edit before it.
 - **Based on:** none
 - **Relations:** related to WAY-07 · related to WAY-14 · related to WAY-20
 - **Outranks:** none
-- **Verification:** level 1 — invariants: outranks-pairs. Level 2 for a collision with no precedence
+- **Verification:** level 1 — invariants: narrows-pairs. Level 2 for a collision with no precedence
   — an agent compares the change with the decision:
   - complies: an agent meets two applicable decisions that pull opposite ways, finds no
     precedence between them, stops and asks for it;
@@ -1476,6 +1482,11 @@ there instead of restating them.
     template, and the skill is left as it is; the skill orders its steps and says what to ask;
   - violates: the skill says a rationale has at most three sentences while the template does not;
     the skill restates the list of fields.
+  Level 2 for a rule citing the decision that sets it — an agent compares the change with the
+  decision:
+  - complies: a new rule of an element's template or of the part the elements share ends with the
+    number of the decision that sets it;
+  - violates: a rule of entries added to the shared part cites no decision.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
@@ -1698,7 +1709,7 @@ stays in the map as a withdrawn identifier giving why and naming its successors;
 never reused.
 
 - **Change:** new decision
-- **Scope:** part-map, elements-common
+- **Scope:** part-map, elements-common, relation-model
 - **Based on:** Packwerk ties a package's identity to its location — "The package name is the
   path to the folder from the project root" (Packwerk USAGE,
   https://github.com/Shopify/packwerk/blob/main/USAGE.md). Backstage makes the name the thing
@@ -1710,7 +1721,7 @@ never reused.
 - **Relations:** derives from WAY-40@c3f0b830 · related to WAY-02 · related to WAY-19
 - **Outranks:** none
 - **Verification:** level 1 — invariants: decision-scope-names · map-identifier-form ·
-  identifier-holders · map-reference-target.
+  identifier-holders · map-reference-target · map-withdrawal-successors.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
@@ -1943,7 +1954,8 @@ the lowered criticality in front of them.
   related to WAY-15 · related to WAY-45
 - **Outranks:** none
 - **Verification:** level 1 — invariants: failure-mode-severity · failure-mode-detection ·
-  part-criticality-field · map-guard-unrecorded-criticality · map-guard-dependency-report.
+  part-criticality-field · map-guard-unrecorded-criticality · map-guard-dependency-report ·
+  criticality-lowering-report.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
@@ -2823,8 +2835,8 @@ no verdict for the entry never gives it a pass.
   related to WAY-55 · related to WAY-56 · related to WAY-58 · related to WAY-59
 - **Outranks:** none
 - **Verification:** level 1 — invariants: invariant-method-form · method-gate-values ·
-  gate-verdict-per-entry · gate-pass-without-verdict. Level 2 for what a method checks — an agent
-  compares the change with the decision:
+  gate-verdict-per-entry · gate-pass-without-verdict · gate-method-order. Level 2 for what a method
+  checks — an agent compares the change with the decision:
   - complies: "every version and review record in the log has every field of the template" names the
     decision guard run on `foundations/decisions.md`, and one run of the guard records a verdict for
     each invariant it checks; "a save of another version is rejected whole" names a test that hands
@@ -2837,6 +2849,11 @@ no verdict for the entry never gives it a pass.
     code is cited for one of the invariants the guard checks; an entry carries "runs as: script"
     beside its command; the gate gives every invariant a guard checks the guard's exit code; a
     command names the main branch where the sentence names `{fork-point}`.
+  Level 2 for which run's output a method reads — an agent compares the change with the decision:
+  - complies: the map guard reads the coverage file a critical flow's test leaves, as WAY-47 places
+    it, and the gate runs the flow's test first;
+  - violates: an invariant's method reads the record another invariant's guard run left, and no
+    decision places that reading.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
@@ -3028,7 +3045,7 @@ successors or `none`. Splitting or merging entries held there gives each entry t
 a new identifier, and any other change keeps it.
 
 - **Change:** new decision
-- **Scope:** invariants, part-map, elements-common
+- **Scope:** invariants, part-map, elements-common, relation-model
 - **Based on:** none
 - **Relations:** derives from WAY-02@59bd26f9 · derives from WAY-56@06700ffd ·
   derives from WAY-57@4313046c · related to WAY-07 · related to WAY-35 · related to WAY-39 ·
@@ -3482,7 +3499,8 @@ invariant or a fact, and per failure recorded for no entry. A line holds `check`
 `description`.
 
 - **Change:** new decision
-- **Scope:** invariants, gate, decisions, part-map, repository, environment-facts
+- **Scope:** invariants, gate, decisions, part-map, repository, environment-facts,
+  elements-common
 - **Based on:** JSON Lines holds one JSON value on each line (json-lines@f16c5b84) and is "a
   convenient format for storing structured data that may be processed one record at a time"
   (https://jsonlines.org/); Python 3.14's `json.loads` reads each such line: "but instead of a
@@ -3537,7 +3555,7 @@ naming its successors or `none`. Splitting or merging entries gives each entry t
 a new identifier, and any other change keeps it.
 
 - **Change:** new decision
-- **Scope:** environment-facts, invariants, part-map, elements-common
+- **Scope:** environment-facts, invariants, part-map, elements-common, relation-model
 - **Based on:** a store of facts keeps a value it has shown wrong so that nobody enters it again:
   the deprecated rank "allows other users to know not to re-add the value to the item" (Wikidata,
   Help:Ranking, https://www.wikidata.org/wiki/Help:Ranking).
@@ -4204,6 +4222,10 @@ or models, the behaviour of a tool the process uses. A fact named there carries 
     on*; the Ariane 501 finding behind WAY-17 stays quoted with its source;
   - violates: a precedent of how Packwerk handles its todo files becomes a fact entry with a probe;
     a finding about models stays quoted after the element has entries.
+  Level 2 for how a citation gives its source — an agent compares the change with the decision:
+  - complies: a finding of a paper is quoted with the address of the edition read, the place and
+    passage, and the date read;
+  - violates: a finding is quoted with its authors and year alone.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none
@@ -4286,7 +4308,8 @@ none of them again. In the-way, whose product is the process, the two are one fi
 - **Based on:** none
 - **Relations:** related to WAY-04 · related to WAY-23 · related to WAY-34 · related to WAY-93
 - **Outranks:** none
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Verification:** level 1 — invariants: glossary-process-terms. Level 2 for which glossary holds
+  a word — an agent compares the change with the decision:
   - complies: a game's glossary defines "level", and its entries use "verdict" in the meaning the
     glossary of the-way gives it at the pinned commit;
   - violates: a game's glossary gives "verdict" a definition of its own; the glossary of the-way

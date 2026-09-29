@@ -201,9 +201,39 @@ Where {merge-onto} exists, `relation-model/` holds the script that computes fing
 - **Correction:** none
 - **Recovered:** none
 
+## invariant-example-target/1
+
+Every identifier `elements/invariants/examples.md` names is the identifier of an entry of `foundations/invariants.md`.
+
+- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
+- **Rests on:** none
+- **Derives from:** WAY-09@57df8e6f
+- **Part:** invariants
+- **Correction:** none
+
+## map-example-target/1
+
+Every identifier `elements/part-map/examples.md` names is the identifier of an entry of the part map.
+
+- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
+- **Rests on:** none
+- **Derives from:** WAY-09@57df8e6f
+- **Part:** part-map
+- **Correction:** none
+
+## glossary-example-target/1
+
+Every term `elements/glossary/examples.md` names is the term of an entry of `foundations/glossary.md`.
+
+- **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
+- **Rests on:** none
+- **Derives from:** WAY-09@57df8e6f
+- **Part:** glossary
+- **Correction:** none
+
 ## foundation-change-panel-record/1
 
-Where {merge-onto} exists, no change alters, against {fork-point}, an invariant test or a foundation entry without a record of the panel's two assessments and its settlement.
+Where {merge-onto} exists, no change alters, against {fork-point}, an invariant test or a foundation entry without a record of the panel's two assessments, one of them naming what of the change can be cut or that nothing can, and its settlement.
 
 - **Method:** `TODO`
 - **Rests on:** none
@@ -487,16 +517,15 @@ Every version of a decision that a review record names exists in the decision lo
 - **Correction:** none
 - **Recovered:** none
 
-## outranks-pairs/1
+## narrows-pairs/1
 
-No two decisions in the decision log outrank each other.
+No two decisions in the decision log name each other as `narrows` in their latest versions.
 
 - **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-25@61320f8a
+- **Derives from:** WAY-25@018149d3
 - **Part:** decisions
 - **Correction:** none
-- **Recovered:** none
 
 ## outbound-link-reach/1
 
@@ -707,6 +736,16 @@ Every part map identifier referred to from the foundation, a test or a generated
 - **Correction:** none
 - **Recovered:** none
 
+## map-withdrawal-successors/1
+
+Every withdrawn identifier of the part map gives why it was withdrawn and names one or more successors, each an entry or a withdrawn identifier of the map.
+
+- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
+- **Rests on:** none
+- **Derives from:** WAY-41@f42aae15
+- **Part:** part-map
+- **Correction:** none
+
 ## map-fingerprint-input/1
 
 The fingerprint a script of the-way gives an entry of the part map is the fingerprint of the entry's binding sentence alone.
@@ -775,7 +814,7 @@ Every part a critical flow of the part map lists is a part of the map.
 
 ## flow-invariant-link/1
 
-Every critical flow in the part map names an invariant and is named by a line `flow: <identifier>` in a test.
+Every critical flow in the part map names an invariant, and some test holds a line `flow: <identifier>` naming that flow.
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
@@ -849,6 +888,16 @@ The map guard reports every dependency running from a part of higher criticality
 - **Part:** part-map
 - **Correction:** none
 - **Recovered:** none
+
+## criticality-lowering-report/1
+
+The map guard, given "{fork-point}", reports every part whose computed criticality is lower than on that commit.
+
+- **Method:** `python -B gate/run_tests.py elements/part-map --record .runs/part-map-tests.jsonl`
+- **Rests on:** none
+- **Derives from:** WAY-46@90337b22
+- **Part:** part-map
+- **Correction:** none
 
 ## flow-coverage-parts/1
 
@@ -1160,7 +1209,7 @@ Every correction an entry of `foundations/invariants.md` declares is confirmed b
 
 ## invariant-recovered-form/1
 
-Every row of the list of recovered invariants in `foundations/invariants.md` names an identifier, the current version of the entry it identifies, `searched: <…>` and `found: <…>`.
+Every row of the list of recovered invariants in `foundations/invariants.md` names an entry at its current version and holds `searched: <…>` and `found: <…>`.
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
@@ -1256,6 +1305,16 @@ The gate reports no pass for an invariant that no run recorded a verdict for.
 - **Part:** gate
 - **Correction:** none
 - **Recovered:** none
+
+## gate-method-order/1
+
+The gate runs a method whose run leaves what another method reads, where a decision places that reading, before the method that reads it.
+
+- **Method:** `TODO`
+- **Rests on:** none
+- **Derives from:** WAY-61@4804d070
+- **Part:** gate
+- **Correction:** none
 
 ## invariant-part-names/1
 
@@ -1993,6 +2052,16 @@ The glossary guard warns on every change that, against "{fork-point}", adds or r
 - **Part:** glossary
 - **Correction:** none
 - **Recovered:** none
+
+## glossary-process-terms/1
+
+The glossary guard, given a product's glossary, reports as an error every entry there whose term, in any of its forms, the glossary of the-way holds at the commit the product pins.
+
+- **Method:** `TODO`
+- **Rests on:** none
+- **Derives from:** WAY-92@4434eb28
+- **Part:** glossary
+- **Correction:** none
 
 ## glossary-entry-field-presence/1
 
