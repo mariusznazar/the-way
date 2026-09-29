@@ -779,11 +779,9 @@ def check_files(entries, sections, report, top, tracked):
     # invariant: file-part-assignment/1
     # invariant: path-pattern-reach/1
     # invariant: left-out-file-assignment/1
-    # invariant: trust-boundary-pattern/1
     check = "check_files"
-    assignment, reach, left_out_claim, boundary = (
-        "file-part-assignment/1", "path-pattern-reach/1", "left-out-file-assignment/1",
-        "trust-boundary-pattern/1")
+    assignment, reach, left_out_claim = (
+        "file-part-assignment/1", "path-pattern-reach/1", "left-out-file-assignment/1")
     wanted, owner = {}, {}
     for entry in entries:
         if entry.kind != "part":
@@ -802,7 +800,7 @@ def check_files(entries, sections, report, top, tracked):
     if found is None:
         report.error(None, "git cannot match the path patterns of the map to files")
         return None
-    report.ran(check, assignment, reach, left_out_claim, boundary)
+    report.ran(check, assignment, reach, left_out_claim)
 
     claims, left_out_claims = {}, {}
     for attribute, matched in found.items():
@@ -814,7 +812,7 @@ def check_files(entries, sections, report, top, tracked):
                              % (pattern, entry.identifier), check, (reach,))
             else:
                 report.error(line, "trust boundary `%s` of `%s` matches no file git tracks"
-                             % (pattern, entry.identifier), check, (reach, boundary))
+                             % (pattern, entry.identifier), check, (reach,))
         if name != "Files":
             continue
         for path in matched:

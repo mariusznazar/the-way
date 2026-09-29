@@ -161,7 +161,7 @@ reader not built yet is named by the invariant it answers to
 | Depends on — separated | the computation of criticality, which stops inheriting there (`map-guard-dependency-report`) | judgment |
 | Failure modes | the computation of criticality (`failure-mode-severity`, `map-guard-unrecorded-criticality`); whoever sets a severity, who reads the kind of damage | judgment |
 | Failure modes — detected by | the format guard (`failure-mode-detection`, `map-invariant-names`); whoever asks which failures the gate would catch | read off |
-| Trust boundary | the format guard (`trust-boundary-pattern`); the choice of how sharply a change is checked (WAY-13) | judgment |
+| Trust boundary | the format guard (`path-pattern-reach`); the choice of how sharply a change is checked (WAY-13) | judgment |
 | Criticality (flow) | the computation of the criticality of every part the flow runs through (WAY-46) | judgment |
 | Parts (flow) | the format guard (`flow-part-names`, `flow-coverage-parts`); whether a change lies on the flow (WAY-45) | judgment |
 | Invariant (flow) | the format guard (`flow-invariant-link`, `map-invariant-names`); the gate, which runs the flow's test on every change (`flow-test-run`) | judgment |
@@ -190,7 +190,7 @@ outside it (WAY-42). What its fingerprint covers answers to the invariant `map-f
 - A part with no failure modes recorded counts as the highest degree (WAY-46).
 - An obligation from a law or a contract that raises the criticality of a part enters the map as
   a failure mode of that part, whose detection names an invariant resting on the environment fact
-  of that obligation (WAY-87).
+  of that obligation (WAY-46).
 - Raising a part's criticality needs no reason; lowering it is accepted by the human deciding the
   change, with the lowered criticality in front of them: the format guard, given the commit the
   task branch left the main branch from, reports every part whose computed criticality is lower
@@ -210,8 +210,11 @@ outside it (WAY-42). What its fingerprint covers answers to the invariant `map-f
   (`TODO — decision pending: which decision lets a part hold no files`).
 - Tests belong to the part they test. Generated files belong to the part of their generator
   (WAY-44).
-- The files that serve the whole repository — the lockfile, the build and the CI configuration —
-  are a part of their own, and a change to them lies on every critical flow (WAY-44, WAY-45).
+- The files that serve the whole repository — the lockfile and the build configuration — are a
+  part of their own, and a change to them lies on every critical flow (WAY-44, WAY-45).
+- The files that only direct whoever carries out the repository's tasks — instructions for agents,
+  skills, hooks and the configuration of agents' tools and of CI — are another part of their own
+  (WAY-44).
 - For a file that collects entries about many parts, the parts a change touches come from the
   field in which the entries it adds or changes name parts — a decision's *Scope*, an invariant's
   *Part*, where `every` names all — not from the file's own part (WAY-44, WAY-62).

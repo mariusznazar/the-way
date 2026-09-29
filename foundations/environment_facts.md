@@ -9,9 +9,7 @@ Git matches a path pattern of an attributes file by the rules of `.gitignore` pa
 
 - **Holds for:** git 2.55.0
 - **Source:** https://git-scm.com/docs/gitattributes/2.55.0 § DESCRIPTION — "The rules by which the pattern matches paths are the same as in .gitignore files (see gitignore[5]), with a few exceptions:" · § DESCRIPTION — "negative patterns are forbidden" · § DESCRIPTION — "patterns that match a directory do not recursively match paths inside that directory (so using the trailing-slash path/ syntax is pointless in an attributes file; use path/** instead)"; read 2026-09-26
-- **Set by:** none
 - **Method:** `python -B gate/run_tests.py probes/git-path-patterns --record .runs/fact-git-path-patterns.jsonl`
-- **Correction:** none
 
 ## gitignore-paths/1
 
@@ -195,9 +193,7 @@ Language models detecting violations of architectural decisions reach substantia
 
 - **Holds for:** arXiv:2602.07609v1, measuring Marco-o1, Mistral-NeMo-Instruct-2407, Qwen3-14B-Base and Llama-3.1-8B-Instruct
 - **Source:** https://arxiv.org/abs/2602.07609v1 § Abstract — "The models achieved substantial agreement and strong accuracy for explicit, code-inferable decisions. Accuracy falls short for implicit or deployment-oriented decisions that depend on deployment configuration or organizational knowledge."; read 2026-09-26 · https://arxiv.org/html/2602.07609v1 § Table II — "Marco-o1" · § Table II — "Mistral-NeMo-Instruct-2407" · § Table II — "Qwen3-14B-Base" · § Table II — "Llama-3.1-8B-Instruct"; read 2026-09-26
-- **Set by:** none
 - **Method:** `python -B gate/run_tests.py probes/llm-decision-violation-detection --record .runs/fact-llm-decision-violation-detection.jsonl`
-- **Correction:** none
 
 ## instruction-density-accuracy/1
 

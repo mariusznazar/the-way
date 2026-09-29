@@ -406,90 +406,67 @@ in the code.
 
 ### WAY-12/1 — How is a decision checked?
 
-A decision is checked through the invariants derived from it, and tests live only with
-invariants. Where no invariant can be derived today, an agent compares a change with the decision
-using a pair of examples — one that complies and one that violates — and where an agent cannot
-judge, a human assesses it and leaves a trace of who and when. A decision can combine levels,
-each covering what it can check of its binding sentences.
+A decision is checked through the invariants derived from it, which its *Verification* names by
+the identifiers of their entries, and tests live only with invariants. Where no invariant can be
+derived today, an agent compares a change with the decision using a pair of examples — one that
+complies and one that violates — and where an agent cannot judge, a human assesses it and leaves a
+trace of who and when. A decision can combine levels, each covering what it can check of its
+binding sentences.
 
 - **Change:** new decision
 - **Scope:** decisions, invariants
-- **Based on:** language models judge only some of what decisions say:
-  llm-decision-violation-detection@92f498f3.
-- **Relations:** related to WAY-05 · related to WAY-08
-- **Outranks:** none
+- **Based on:** llm-decision-violation-detection@92f498f3
+- **Relations:** none
 - **Verification:** level 1 — invariants: decision-verification-level ·
   level-one-decision-invariants · invariant-citation-target · verification-invariant-derivation.
   Level 2 for the choice of level — an agent compares the change with the decision:
   - complies: a decision on the product's direction is checked by an agent with a complying and a
     violating example;
   - violates: a decision whose rule a lint check could enforce is left at level 2.
-- **Review when:** the design of the task cycle begins · check by: 2026-10-02
+- **Review when:** none
 - **Origin:** none
-- **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-23
+- **Approved by:** Mariusz, 2026-09-29
 
-*Rationale:* a test can check an invariant on every commit; a decision about direction, trade-offs
-or non-goals often cannot be checked on a commit. Agents compare a
-change well with a decision that is explicit and readable from the code, and fall short on
-decisions that depend on deployment or on knowledge of the organisation — those stay with a human. The finding it cites measured models of other publishers only, and this decision takes it across publishers (WAY-85).
-A pair of examples shows the agent where the line runs, which the binding sentences alone do not.
-*Rejected:* a rule in code as the only method of checking a decision — decisions that cannot be
-written as a rule would stay unchecked.
-*Consequences:* the section "Verification" of the decision template is the written form of this
-decision. A derived invariant is named in *Verification* by the identifier of its entry in the
-product's invariants file. A decision moves to level 1 once an invariant is derived from it.
+*Rationale:* a test checks an invariant on every commit; a decision about direction or trade-offs
+often cannot be. Agents judge explicit, code-readable decisions well and deployment- or
+organisation-dependent ones poorly, a finding this decision takes across publishers (WAY-85);
+those stay with a human. A pair of examples marks the line.
+*Rejected:* a rule in code as the only check — decisions that cannot be written as a rule go
+unchecked.
 
 ### WAY-13/1 — What sets the weight of a task's process?
 
-What a task touches, never its size, sets its process: an agent's analysis at the start of the
-task settles whether it changes the foundation, which chooses its path, while three things set
-how sharply it is checked — the criticality of the parts it touches, as the part map computes
-it, whether it touches the files of a trust boundary, and whether the change can be undone.
-Paths differ in their steps, never in the outcome a task has to reach; a task's size serves only
-as a signal to split it, and an agent may check a change more sharply than the map computes,
-never less. A human decides on every change that cannot be undone.
+What a task touches, never its size, sets its process: an agent's analysis at the start of the task
+settles whether it changes the foundation, which chooses among the paths that merge a change, while
+three things set how sharply it is checked — the criticality of the parts it touches, as the part
+map computes it, whether it touches the files of a trust boundary, and whether the change can be
+undone. Paths that merge a change differ in their steps, never in the outcome a task has to reach,
+and only a human sets a task to return knowledge instead of a change, which merges nothing. A task's
+size serves only as a signal to split it, an agent may check a change more sharply than the map
+computes, never less, and a human decides on every change that cannot be undone.
 
 - **Change:** new decision
 - **Scope:** task-cycle
-- **Based on:** formal approval does not make changes safer: "No evidence was found to support
-  the hypothesis that a more formal, external review process was associated with lower change
-  fail rates" (DORA, https://dora.dev/capabilities/streamlining-change-approval/). Changes that
-  cannot be undone call for a different process: they are "consequential and irreversible or
-  nearly irreversible – one-way doors – and these decisions must be made methodically,
-  carefully, slowly, with great deliberation and consultation" (Jeff Bezos, 2015 letter to
-  shareholders,
-  https://www.sec.gov/Archives/edgar/data/1018724/000119312516530910/d168744dex991.htm).
-- **Relations:** related to WAY-01 · related to WAY-04 · related to WAY-10 ·
-  related to WAY-46 · related to WAY-48
-- **Outranks:** none
+- **Based on:** none
+- **Relations:** none
 - **Verification:** level 1 — invariants: foundation-change-path. Level 2 for the rest — an agent
   compares the change with the decision:
-  - complies: a one-line change to a stored data format, after which users' saved data no
-    longer loads, goes through the sharpest checks and waits for a human's decision;
+  - complies: a one-line format change that breaks users' saved data gets the sharpest checks and
+    a human's decision;
   - violates: a task gets the heavier path because of the number of lines it changes; a change
-    that cannot be undone reaches the main branch without a human's decision.
-- **Review when:** the design of the task cycle begins · check by: 2026-10-02
+    that cannot be undone reaches the main branch without a human's decision; an agent turns a task
+    into one that returns knowledge instead of a change without a human setting it so.
+- **Review when:** none
 - **Origin:** none
-- **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-15
+- **Approved by:** Mariusz, 2026-09-29
 
-*Rationale:* size misleads both ways: a change across many files can be a mechanical rename
-that is easy to undo, while a one-line change to a stored data format can destroy the data of
-every user. How much process a task needs depends on what can go wrong: whether the task changes
-what the product is meant to be, how serious a failure of the parts it touches is, and whether
-the change can be taken back. Paths differ only in their steps, because a light path allowed a
-weaker outcome becomes a way around the process. Size still matters as a signal: a large task is
-split, so that each piece can be checked and undone on its own. A human's attention goes where
-only a human can decide, to a change that cannot be taken back.
-*Rejected:* one cycle for all tasks; choosing the path by the task's size; a human approving
-every diff — formal review does not lower the rate of failed changes, and it spends a human's
-attention where it adds nothing.
-*Consequences:* every task starts with an agent's analysis of whether it changes the
-foundation. The criticality it reads is the value the part map computes (WAY-46), and the files
-of a trust boundary come from that same map (WAY-48); what nothing defines yet is a way to
-recognise a change that cannot be undone. The paths and their steps, and the number of degrees
-the criticality scale needs, are set when the task cycle is designed.
+*Rationale:* size misleads both ways: a rename across many files is easy to undo, a one-line
+change to a stored format can destroy every user's data. Paths differ only in steps, because a
+weaker outcome would bypass the process; returning knowledge alters what a task delivers, so a
+human sets it.
+*Rejected:* one cycle for all tasks — how much process a task needs depends on what can go wrong;
+the path chosen by size — size misleads; a human approving every diff (DORA) — no fewer failed
+changes, and attention spent where it adds nothing.
 
 ### WAY-14/1 — Who approves a version of a decision?
 
@@ -564,38 +541,30 @@ violations, which WAY-51 keeps as a debt with a ratchet.
 
 ### WAY-16/1 — How are the checks of invariants run?
 
-The gate takes its checks from the methods of checking written in the entries, never
-from a list written by hand, and runs the checks a change calls for with one command, the same
-command for an agent, CI and a human.
+The gate takes its checks from the methods of checking written in the entries, never from a list
+written by hand, and one command runs the checks a change calls for together with the product's own
+tests it calls for — the same command for an agent, for a human and for whatever runs it when a
+change is merged.
 
 - **Change:** new decision
 - **Scope:** invariants, task-cycle
 - **Based on:** none
-- **Relations:** related to WAY-08 · related to WAY-13 · related to WAY-15
-- **Outranks:** none
+- **Relations:** none
 - **Verification:** level 1 — invariants: ci-checking-commands · gate-check-source. Level 2 for the
   same command for everyone — an agent compares the change with the decision:
   - complies: the instructions for agents name the gate's command as the way to check a change;
-  - violates: the instructions for agents list test and lint commands of their own.
-- **Review when:** the design of the task cycle begins · check by: 2026-10-02
+  - violates: the instructions for agents list test and lint commands of their own; the product's
+    tests run under a command of their own beside the gate's.
+- **Review when:** none
 - **Origin:** none
-- **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-15
+- **Approved by:** Mariusz, 2026-09-29
 
-*Rationale:* a list of checks written by hand — in the CI configuration, in the instructions for
-an agent, in a person's habits — is a second copy of the list of invariants, and each copy
-drifts on its own: a new invariant is never run, a removed one still is. A gate that reads the
-methods from the entries runs exactly what the foundation says, and one command for everyone
-removes the question of which list someone ran. Under WAY-08 the current result of an invariant
-comes from running its method; the gate is what runs it.
-*Rejected:* a gate written for each product — it drifts from that product's invariants;
-separate commands for an agent, CI and a human — three lists to keep in step; running every
-check on every change — it leaves no room for checking a change as sharply as what it touches
-calls for (WAY-13).
-*Consequences:* every method of checking is written in a form the gate can read. How the gate
-reports a method it cannot run, such as an inspection by a human, is set by WAY-63. Which checks a change calls for is set when the task
-cycle is designed. Under WAY-55 the gate is a part of the process of its own and reaches
-the main branch in `gate/`.
+*Rationale:* a list of checks written by hand is a second copy of the invariants that drifts: a
+new invariant never runs, a removed one still does. One command for all leaves no doubt which list
+ran.
+*Rejected:* a gate written for each product — it drifts from that product's invariants; separate
+commands for an agent, a human and whatever runs the gate when a change is merged — three lists to
+keep in step; the product's tests under a command of their own — of two commands an agent runs one.
 
 ### WAY-17/1 — Which links between foundation entries are mandatory?
 
@@ -1489,59 +1458,33 @@ current entry; an archive of past maps beside the map — git is one already.
 ### WAY-44/1 — What assigns a file to a part?
 
 Every file git tracks belongs to exactly one part of the map, by path patterns that git itself
-matches; a file that no pattern matches, and a file that two parts claim, breaks the gate,
-unless the map lists that file as left out on purpose. Tests belong to the part they test,
-generated files to the part of their generator, and the files that serve the whole repository —
-the lockfile, the build and the CI configuration — are a part of their own. For a file that
-collects entries about many parts, the parts a change touches follow from the entries it adds or
-changes, not from the part the file itself belongs to.
+matches; a file that no pattern matches, and a file that two parts claim, breaks the gate, unless
+the map lists that file as left out on purpose. Tests belong to the part they test and generated
+files to the part of their generator; the files that serve the whole repository — the lockfile and
+the build configuration — are a part of their own, and the files that only direct whoever carries
+out its tasks — instructions for agents, skills, hooks and the configuration of agents' tools and of
+CI — are another. For a file that collects entries about many parts, the parts a change touches
+follow from the entries it adds or changes, not from the part the file itself belongs to.
 
 - **Change:** new decision
 - **Scope:** part-map, task-cycle
-- **Based on:** Python's standard library does not match paths the way git does: `fnmatch`
-  states that "the filename separator ('/' on Unix) is *not* special"
-  (https://docs.python.org/3.10/library/fnmatch.html), and `PurePath.full_match`, which handles
-  `**`, arrives only in Python 3.13 (https://docs.python.org/3.13/library/pathlib.html). git matches such patterns itself, through `.gitattributes`, by the rules of
-  gitignore patterns (git-path-patterns@1519f3f7), where "a later line overrides an
-  earlier line" (https://git-scm.com/docs/gitattributes), and reports the outcome with
-  `git check-attr` (https://git-scm.com/docs/git-check-attr). import-linter treats a rule that
-  matches nothing as an error by default (https://import-linter.readthedocs.io/).
-- **Relations:** derives from WAY-40@c3f0b830 · related to WAY-04 · related to WAY-15 ·
-  related to WAY-21 · related to WAY-38
-- **Outranks:** none
+- **Based on:** git-path-patterns@1519f3f7
+- **Relations:** derives from WAY-40@c3f0b830
 - **Verification:** level 1 — invariants: file-part-assignment · path-pattern-reach ·
   left-out-file-assignment.
 - **Review when:** none
 - **Origin:** none
-- **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-17
+- **Approved by:** Mariusz, 2026-09-29
 
-*Rationale:* a change is checked against the decisions whose scope names the parts it touches
-(WAY-21), and how sharply it is checked follows from the criticality of those parts, so every
-file a change can carry has to yield one part — not none, and not two with no rule to choose.
-git matches the patterns rather than a script of the-way, because the repository already speaks
-that dialect everywhere, and the standard library does not speak it: `fnmatch` treats the path
-separator as an ordinary character, and a matcher of the scripts' own would be a second dialect
-beside git's, so the same map could resolve one way in a script and another in git. Tests go
-with the part they test, because changing a test changes what that part promises, not some part
-called "tests"; generated files go with their generator, because that is where a change to them
-comes from. The files that serve the whole repository have no natural part, and giving them one
-would tie the lockfile to whichever part happened to claim it. A file that no pattern matches is
-an error rather than a quiet no-man's-land, and where leaving a file out is deliberate the map
-says so by name, so that the error keeps its meaning. A file collecting entries about many parts
-would otherwise pull every change of any part into the single part that owns the file.
-*Rejected:* a file in several parts — the decisions to check and the criticality of the task
-would have two answers and no rule to pick; patterns matched by a script of the-way — two
-dialects of pattern in one repository, resolving differently across systems; tests as a part of
-their own — a change to a test would stop counting as a change to what it tests; files left
-unassigned in silence — the map would keep passing while saying less and less about the
-repository; the part of a ledger file taken from its path — every decision recorded would count
-as a change to the decisions part alone.
-*Consequences:* the map writes its patterns in git's dialect, and the script asks git to match
-them (WAY-38). The element's template gives a part its field of patterns and a mark for
-generated files, and gives the map its list of files left out on purpose. Binding the map's
-script to the format of an element's entries, so that a ledger file yields the parts of a change,
-belongs to the design of that script.
+*Rationale:* a change is checked against the decisions and the criticality of the parts it
+touches, so every file yields one part. git matches, because a second dialect could resolve the
+same map differently. A test changes what its part promises; files directing whoever carries out
+tasks change every later task.
+*Rejected:* a file in several parts — two answers, no rule to pick; patterns matched by a script
+(fnmatch) — a second dialect beside git's; tests as a part of their own — a test change stops
+counting against what it tests; files left unassigned in silence — the map passes while saying
+less and less; a ledger file's part taken from its path — every recorded decision counts against
+the decisions part alone.
 
 ### WAY-45/1 — How does the part map record a critical flow, and when does a change lie on it?
 
@@ -1553,104 +1496,62 @@ test of every critical flow runs on every change.
 
 - **Change:** new decision
 - **Scope:** part-map, task-cycle
-- **Based on:** a tool that picks tests from a change falls back where it cannot reason: "For
-  commits and scenarios that TIA can't understand, it falls back to running all tests […] if the
-  code commit contains changes to HTML or CSS files, it can't reason about them and falls back to
-  running all tests" (Azure DevOps Test Impact Analysis,
-  https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-impact-analysis).
-- **Relations:** derives from WAY-40@c3f0b830 · related to WAY-08 · related to WAY-13 ·
-  related to WAY-16 · related to WAY-44
-- **Outranks:** none
+- **Based on:** none
+- **Relations:** derives from WAY-40@c3f0b830
 - **Verification:** level 1 — invariants: flow-part-names · flow-invariant-link · gate-reported-set
   · flow-test-run.
 - **Review when:** a product holds more critical flows than its gate can run on every change ·
   check by: 2026-12-31
 - **Origin:** none
-- **Approver override:** none
 - **Approved by:** Mariusz, 2026-09-27
 
-*Rationale:* a flow needs a place in the map, not only an invariant, because two things have to
-be computed from it: the criticality it passes to the parts it runs through, and whether a
-given change lies on it. An invariant alone sits outside the map, where neither computation can
-reach it. The list of parts lives at the flow rather than as a mark at each part, so that there
-is one list to read and one place to fix. Files that belong to no part, the build
-configuration and the dependencies lie on every flow, because a change to them can alter any
-flow and nothing in the map says which — the same fallback a test-selection tool makes where it
-cannot reason. Every flow's test runs on every change, because a product holds a handful of
-critical flows, and choosing among a handful costs more than running them.
-*Rejected:* a critical flow as an invariant alone, outside the map — its criticality would reach
-no part, and nothing could tell that a change lies on it; the flow recorded as a mark at each
-part it runs through — the same list in two places, with no place to read the flow whole;
-picking which flow tests to run from the change — with a handful of flows the choice costs more
-than the run, and it fails exactly where it cannot reason.
-*Consequences:* a flow that spans two versions of the product — save, upgrade, load — keeps the
-recorded earlier states its test replays in a part on its list, so that changing them counts as a
-change on the flow (WAY-44). Checking a flow's list of parts against what its test really touches
-needs a rule of its own. A part on a critical flow inherits that flow's criticality.
+*Rationale:* the map computes from a flow the criticality its parts inherit and whether a change
+lies on it. Files left out, the build and dependencies can alter any flow, nothing saying
+which, so they lie on all; a handful of flow tests costs less to run than to choose.
+*Rejected:* a critical flow as an invariant alone — its criticality reaches no part; the flow as a
+mark at each part — the same list in two places; picking flow tests from the change (Azure Test
+Impact Analysis) — it fails where it cannot reason.
 
 ### WAY-46/1 — How does the criticality of a part arise?
 
 A part carries the failure modes a human records at it, each with the kind of damage it does,
 its severity, and how it is detected before release — a named invariant, or an explicit "not
-detected". The criticality of a part is computed rather than written by hand: the highest of its
-own failure modes, of the critical flows it lies on, and of the parts that depend on it, unless
-the dependency records that the two are separated and a failure of one does not damage the
-other. A part with no failure modes recorded counts as the highest criticality; raising a part's
-criticality needs no reason, and lowering it is accepted by the human deciding the change, with
-the lowered criticality in front of them.
+detected"; an obligation from a law or a contract that raises the criticality of a part enters the
+part map as a failure mode of that part, whose detection names an invariant resting on the
+environment fact of that obligation. The criticality of a part is computed rather than written by
+hand: the highest of its own failure modes, of the critical flows it lies on, and of the parts that
+depend on it, unless the dependency records that the two are separated and a failure of one does
+not damage the other. A part with no failure modes recorded counts as the highest criticality;
+raising a part's criticality needs no reason, and lowering it is accepted by the human deciding the
+change, with the lowered criticality in front of them.
 
 - **Change:** new decision
-- **Scope:** part-map, task-cycle
-- **Based on:** safety standards make a part inherit the class of what it belongs to unless a
-  documented separation says otherwise — IEC 62304 4.3 d), quoted on the Elsmar Cove forum
-  (https://elsmar.com/elsmarqualityforum/threads/different-62304-safety-classes-for-modules-in-software-system.90429/):
-  "such SOFTWARE ITEMS shall inherit the software safety classification of the original SOFTWARE
-  ITEM (or SOFTWARE SYSTEM) unless the MANUFACTURER documents a rationale for classification into
-  a different software safety class […]. Such a rationale shall explain how the new SOFTWARE
-  ITEMS are segregated so that they may be classified separately" — and treat what nobody
-  classified as the highest class (Johner Institute, "Safety classes according to IEC 62304",
-  https://blog.johner-institute.com/iec-62304-medical-software/safety-class-iec-62304/): "If the
-  manufacturer does not carry out this safety classification, the software and all software
-  components fall into the highest safety class C." Changing an assessment is asymmetric: "Proprietors
-  may raise Protection Levels for a specific use case. An exception is required to lower a published
-  Protection Level" (UC Berkeley, Data and IT Resource Classification Standard,
-  https://security.berkeley.edu/data-classification-standard).
-- **Relations:** derives from WAY-40@c3f0b830 · related to WAY-04 · related to WAY-13 ·
-  related to WAY-15 · related to WAY-45
-- **Outranks:** none
+- **Scope:** part-map, task-cycle, environment-facts, invariants
+- **Based on:** none
+- **Relations:** derives from WAY-40@c3f0b830
 - **Verification:** level 1 — invariants: failure-mode-severity · failure-mode-detection ·
   part-criticality-field · map-guard-unrecorded-criticality · map-guard-dependency-report ·
-  criticality-lowering-report.
-- **Review when:** none
+  criticality-lowering-report. Level 2 for an obligation from outside — an agent compares the
+  change with the decision:
+  - complies: a part with personal data records "kept past the legal period", detected by an
+    invariant resting on the law's fact;
+  - violates: a part carries a field "minimum criticality: high" citing the law; the obligation is
+    noted in a part's responsibility with no failure mode.
+- **Review when:** TODO — the check-by date for the state: a product that pins the-way holds data
+  under an obligation from a law or a contract on one of its parts
 - **Origin:** none
-- **Approver override:** none
 - **Approved by:** Mariusz, 2026-09-29
 
-*Rationale:* criticality is the number that sets how sharply a task is checked (WAY-13), and it
-arises outside the part: from the damage its own failure does, from the flows it serves, and
-from who leans on it. Written by hand at the part, it would be a copy that goes stale the day a
-new flow crosses the part or a new dependency appears; computed, it follows both. The
-computation takes the highest rather than an average, because the worst failure is the one the
-process exists for, and it stops at a recorded separation, because a part whose failure cannot
-damage the important one is the only part that has earned a lower number. A part nobody has
-assessed counts as the highest, so that silence raises checks instead of removing them. Raising
-is free and lowering waits for the human deciding the change, with the lowered criticality in front
-of them, because lowering is the move made for convenience.
-Detection before release sits at the failure mode, and names the invariant that detects it, so
-that the map says which failures the gate would catch and which it would not.
-*Rejected:* criticality written by hand at the part — a second copy of what the flows and
-dependencies already say; three separate axes of criticality — confidentiality, integrity and
-availability — as fields of a part, since WAY-13 reads one measure of sharpness and nothing
-would read the other two; an unassessed part counting as the lowest — a part nobody looked at
-would never raise a check; raising and lowering treated alike — the direction made for
-convenience has to cost something; "failure symptom" and "first step to limit the damage" as
-fields — they are read by an operator during an incident, and this process has no incident path.
-*Consequences:* WAY-13 reads the computed value, not what a human wrote. The kind of damage
-chooses which checks a task runs, not how sharply it is checked. The number of degrees of the
-scale is `TODO`: it follows from the number of distinct sets of steps the task cycle has, and is
-set when the task cycle is designed. A part whose criticality is raised from outside — by a law
-or a contract — gets it through a failure mode whose detection names an invariant resting on the
-fact of the obligation (WAY-87).
+*Rationale:* criticality sets how sharply a task is checked (WAY-13); hand-written, it goes stale.
+Silence about a part raises checks instead of removing them; lowering, the convenient move, waits
+for a human. Recorded detection shows which failures the gate misses, and lets a changed law reach
+its invariant (WAY-31).
+*Rejected:* criticality written by hand — a second copy of what flows and dependencies say; three
+axes (confidentiality, integrity, availability) — WAY-13 reads one measure; an unassessed part
+counting as the lowest — it would never raise a check; raising and lowering alike — the convenient
+direction must cost something; "failure symptom" and "first step to limit the damage" as fields —
+read in an incident, not when choosing checks; a floor of criticality as a field of the fact — it
+changes the computation before any product needs it.
 
 ### WAY-47/1 — How is a critical flow's list of parts checked?
 
@@ -1684,45 +1585,26 @@ run.
 A trust boundary is recorded at the part that holds it, as a pattern of the code files which
 accept data the product does not trust; an exchange with the external context records its
 direction and marks what comes in as untrusted. A boundary can run inside the product, wherever
-it reads back something it does not control — a browser's storage, a file on the player's disk.
+it reads back something it does not control — a browser's storage, a file on the user's disk.
 A change that touches the files of a boundary is checked for crafted input, whatever the
 criticality of the part.
 
 - **Change:** new decision
 - **Scope:** part-map, task-cycle
-- **Based on:** Chromium picks the review a change needs from the files it touches rather than
-  from their importance, by pinning owners to a file pattern —
-  `per-file *.mojom=file://ipc/SECURITY_OWNERS` (Chromium, IPC security reviews,
-  https://chromium.googlesource.com/chromium/src/+/main/docs/security/ipc-reviews.md). A trust
-  boundary kept as an object of a diagram has no reader: in pytm, none of the threat rules reads
-  the boundaries the model records (https://github.com/OWASP/pytm).
-- **Relations:** derives from WAY-40@c3f0b830 · related to WAY-11 · related to WAY-13 ·
-  related to WAY-44 · related to WAY-46
-- **Outranks:** none
-- **Verification:** level 1 — invariants: trust-boundary-pattern · external-exchange-row ·
+- **Based on:** none
+- **Relations:** derives from WAY-40@c3f0b830
+- **Verification:** level 1 — invariants: path-pattern-reach · external-exchange-row ·
   gate-boundary-change.
 - **Review when:** none
 - **Origin:** none
-- **Approver override:** none
 - **Approved by:** Mariusz, 2026-09-17
 
-*Rationale:* what makes a change dangerous is not only how much the part matters but where the
-data comes from: a part of the lowest criticality that parses what a stranger sends is the
-oldest way in. The boundary therefore feeds the choice of checks on its own, read from the files
-a change touches — the signal Chromium already routes its security review by. It is a pattern of
-files rather than a line in a picture, because a pattern is matched by the same machinery that
-assigns files to parts (WAY-44), while a boundary kept as an object has no reader at all. The
-boundary runs inside the product as well as at its edge, because the product controls neither
-the browser's storage nor the file on the player's disk, and reading either back is the same act
-of trust.
-*Rejected:* a trust boundary as its own kind of entry in the map — nothing would read it that
-the pattern at the part does not already give; the boundary taken from the criticality of the
-part — the two are independent, and the exposed part is often the unimportant one; the boundary
-drawn as a line in a diagram — read by a human looking at the picture, and by nothing else.
-*Consequences:* a part that accepts untrusted data carries the pattern, and every exchange with
-the external context carries a direction. Places that start accepting data outside the pattern
-are caught by the return step (WAY-11). What the check for crafted
-input consists of is set when the task cycle is designed.
+*Rationale:* a part of the lowest criticality that parses what a stranger sends is the oldest way
+in, so the boundary sets checks on its own. A pattern of files is matched like parts (WAY-44);
+reading back a browser's storage or a user's file is the same act of trust.
+*Rejected:* a trust boundary as its own kind of map entry — nothing reads it that the pattern does
+not give; the boundary taken from the part's criticality — the exposed part is often the
+unimportant one; the boundary as a line in a diagram (pytm) — only a human looking reads it.
 
 ### WAY-49/1 — How does a product declare a surface?
 
@@ -2037,7 +1919,7 @@ gate runs and what follows from what it reports belong to the task cycle, not to
 - **Scope:** gate, decisions, invariants, glossary, part-map, environment-facts, relation-model,
   repository, task-cycle
 - **Based on:** none
-- **Relations:** narrows WAY-44@220f5b85 · related to WAY-09 · related to WAY-16 ·
+- **Relations:** narrows WAY-44@2f2b6227 · related to WAY-09 · related to WAY-16 ·
   related to WAY-21 · related to WAY-45 · related to WAY-47
 - **Outranks:** none
 - **Verification:** level 1 — invariants: flow-test-location. Level 2 for the rest — an agent
@@ -2400,7 +2282,7 @@ no verdict for the entry never gives it a pass.
 - **Change:** new decision
 - **Scope:** invariants, gate, decisions, part-map, elements-common
 - **Based on:** none
-- **Relations:** derives from WAY-08@9d45e0a9 · derives from WAY-16@c8486f8b ·
+- **Relations:** derives from WAY-08@9d45e0a9 · derives from WAY-16@5c1d60d4 ·
   derives from WAY-54@f37c232a · derives from WAY-57@4a838784 · derives from WAY-38@6e10c3fd ·
   derives from WAY-60@c85d1ac0 · related to WAY-03 · related to WAY-05 · related to WAY-07 ·
   related to WAY-10 · related to WAY-12 · related to WAY-17 · related to WAY-22 · related to WAY-24 ·
@@ -2522,41 +2404,25 @@ names a file the change alters, whatever parts a file collecting entries gives t
 - **Change:** new decision
 - **Scope:** invariants, part-map, gate, task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-16@c8486f8b · derives from WAY-44@220f5b85 ·
-  derives from WAY-61@4804d070 · related to WAY-13 · related to WAY-18 · related to WAY-21 ·
-  related to WAY-45 · related to WAY-46 · related to WAY-47 · related to WAY-54 ·
-  related to WAY-55 · related to WAY-56 · related to WAY-60
-- **Outranks:** none
+- **Relations:** derives from WAY-16@5c1d60d4 · derives from WAY-44@2f2b6227 ·
+  derives from WAY-61@4804d070
 - **Verification:** level 1 — invariants: invariant-part-names · invariant-part-form · change-reach.
   Level 2 for which parts — an agent compares the change with the decision:
-  - complies: "every version and review record in the log has every field of the template" names
-    `decisions`, and a new decision scoped to `gate` reaches it because the guard's method names the
-    log; "every file git tracks matches the patterns of exactly one part" names `every`;
-  - violates: that sentence on tracked files names `part-map`, so a file added under `gate/`
-    never reaches it; an entry names the flow it protects.
+  - complies: the invariant on the log's fields names `decisions`, and a decision scoped to `gate`
+    reaches it through its method's file; "every file git tracks matches the patterns of exactly
+    one part" names `every`;
+  - violates: that sentence names `part-map`, so a file added under `gate/` never reaches it; an
+    entry names the flow it protects.
 - **Review when:** none
 - **Origin:** none
-- **Approver override:** none
 - **Approved by:** Mariusz, 2026-09-22
 
-*Rationale:* the gate runs the checks a change calls for (WAY-16), so invariants need what scope
-gives decisions (WAY-21): parts, not paths, which would copy the map. Parts alone miss what WAY-44
-does on purpose: a new decision scoped to `gate` touches `gate`, not `decisions`, and would never
-reach the invariants on the log's form. The files a method names are read off the entry (WAY-54);
-a change to them reaches it. A part missing from the list fails silently,
-an extra one costs a run, so doubt names more (WAY-13). Failure modes and flows already name their
-invariant (WAY-45, WAY-46), and a link is written at one end only (WAY-18).
+*Rationale:* invariants need what scope gives decisions (WAY-21): parts, not paths, which would
+copy the map. A decision scoped to `gate` touches `gate`, not the log, so a method's files reach
+the invariant too. A missing part fails silently, an extra one costs a run, so doubt names more.
 *Rejected:* parts computed from what the method reads — a test's command names its test file, not
-the product it reaches, and coverage exists only where a product produces it (WAY-47); every
-invariant run on every change — WAY-16 turns that down; the invariant naming its failure mode, flow
-or surface — one link written at both ends; the part holding the check — the sentence on tracked
-files would never run when a file is added elsewhere.
-*Consequences:* the template of the invariants element gives the field, marked as a judgment, and
-its format guard checks the first two invariants above; what a change reaches is computed from the
-map and the entries (WAY-44), and which checks it calls for beyond that stays with the task cycle
-(WAY-16, WAY-55). In the file holding invariant entries, a change of an entry touches the
-parts it names (WAY-44), and `every` all. WAY-56's consequence that left this question open is
-edited in place.
+what it reaches; the invariant naming its failure mode, flow or surface — one link written at both
+ends; the part holding the check — a file added elsewhere never reaches it.
 
 ### WAY-63/1 — What results does the gate report for invariants, and which make its command fail?
 
@@ -3520,44 +3386,6 @@ names it in *Rests on* (WAY-73); WAY-58's consequence that left this to the elem
 place to name this decision. The field and the script are built on the first product that adopts a
 catalogue or a binding obligation; the first in reach is the CC BY licence of the icons of the game
 `loop`.
-
-### WAY-87/1 — How does an obligation from outside raise the criticality of a part?
-
-An obligation from a law or a contract that raises the criticality of a part enters the part map as
-a failure mode of that part, whose detection names an invariant resting on the environment fact of
-that obligation.
-
-- **Change:** new decision
-- **Scope:** part-map, environment-facts, invariants
-- **Based on:** none
-- **Relations:** derives from WAY-46@90337b22 · related to WAY-04 · related to WAY-13 ·
-  related to WAY-73 · related to WAY-86
-- **Outranks:** none
-- **Verification:** level 2 — an agent compares the change with the decision:
-  - complies: a part storing players' personal data records the failure mode "personal data is
-    kept past the period the law allows", detected by an invariant that rests on the fact that the
-    law applies;
-  - violates: a part carries a field "minimum criticality: high" citing the law; the obligation is
-    noted in a part's responsibility with no failure mode.
-- **Review when:** none
-- **Origin:** none
-- **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-26
-
-*Rationale:* WAY-46 left an obligation from outside with no path into the map. The path exists
-without a new field: a failure mode raises a part's criticality, raising needs no reason (WAY-46),
-and the chain fact → invariant → failure mode carries the obligation to the part, so that a change
-of the law reaches the invariant through its fingerprint (WAY-31). A floor field would change
-WAY-46 and the map guard, and none of the three products in reach holds data under such an
-obligation.
-*Rejected:* a floor of criticality as a field of the fact, read by the map guard beside failure
-modes, flows and dependants — a change of WAY-46 and of the script with no reader today.
-*Consequences:* criticality raised this way does not fall by itself when the obligation lapses —
-the safe direction. A floor field comes back for consideration with the first product that holds
-data under a legal obligation on its parts. Two ways a scoping standard differs from WAY-46 — what
-can reach a system, not only what it depends on, and a separation confirmed by a test — are not
-settled here. WAY-46's consequence on a part whose criticality is raised from outside is edited
-in place to name this decision.
 
 ### WAY-88/1 — May an environment fact stand that nothing rests on?
 

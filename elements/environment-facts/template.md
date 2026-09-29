@@ -265,7 +265,7 @@ or the merge fails (WAY-64, WAY-88).
   fact`).
 - A likeness an agent notices between the product and a requirement nothing has adopted or applied
   goes to a human as a question: "do we adopt this?" or "does this bind us?" (WAY-86).
-- How an obligation raises the criticality of a part stands in the part map template (WAY-87).
+- How an obligation raises the criticality of a part stands in the part map template (WAY-46).
 
 ## Fields and their readers
 

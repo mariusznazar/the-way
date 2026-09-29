@@ -262,10 +262,9 @@ Every decision version in the decision log names its level of verification, or h
 
 - **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-12@23fdae1e · WAY-71@c32828c9
+- **Derives from:** WAY-12@0f1f7ea4 · WAY-71@c32828c9
 - **Part:** decisions
 - **Correction:** none
-- **Recovered:** none
 
 ## level-one-decision-invariants/1
 
@@ -273,10 +272,9 @@ Every decision in force whose verification includes level 1 has at least one ent
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-12@23fdae1e · WAY-17@b1e26133
+- **Derives from:** WAY-12@0f1f7ea4 · WAY-17@b1e26133
 - **Part:** every
 - **Correction:** none
-- **Recovered:** none
 
 ## verification-invariant-derivation/1
 
@@ -284,10 +282,9 @@ Every identifier the level 1 verification of the latest version of a decision in
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-12@23fdae1e · WAY-17@b1e26133
+- **Derives from:** WAY-12@0f1f7ea4 · WAY-17@b1e26133
 - **Part:** every
 - **Correction:** none
-- **Recovered:** none
 
 ## foundation-change-path/1
 
@@ -295,10 +292,9 @@ No change that, against {fork-point}, alters a foundation entry runs on the path
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-13@a51c39e5
+- **Derives from:** WAY-13@c6b33aa9
 - **Part:** every
 - **Correction:** none
-- **Recovered:** none
 
 ## decision-approval-record/1
 
@@ -348,21 +344,19 @@ No CI configuration git tracks runs a checking command other than the gate's com
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-16@c8486f8b
+- **Derives from:** WAY-16@5c1d60d4
 - **Part:** every
 - **Correction:** none
-- **Recovered:** none
 
 ## gate-check-source/1
 
-Every check the gate runs comes from a method of checking written in an entry.
+Every check the gate runs for an entry of the foundation comes from the method of checking written in that entry.
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-16@c8486f8b
-- **Part:** gate · invariants
+- **Derives from:** WAY-16@5c1d60d4
+- **Part:** every
 - **Correction:** none
-- **Recovered:** none
 
 ## view-versions/1
 
@@ -762,10 +756,9 @@ Every file git tracks matches the path patterns of exactly one part of the part 
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** git-path-patterns@1519f3f7
-- **Derives from:** WAY-44@220f5b85
+- **Derives from:** WAY-44@2f2b6227
 - **Part:** every
 - **Correction:** none
-- **Recovered:** none
 
 ## path-pattern-reach/1
 
@@ -773,10 +766,9 @@ Every path pattern in the part map matches at least one file git tracks.
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** git-path-patterns@1519f3f7
-- **Derives from:** WAY-44@220f5b85
+- **Derives from:** WAY-44@2f2b6227 · WAY-48@947e51e4
 - **Part:** every
 - **Correction:** none
-- **Recovered:** none
 
 ## left-out-file-assignment/1
 
@@ -784,10 +776,9 @@ No file on the part map's list of files left out on purpose matches the path pat
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** git-path-patterns@1519f3f7
-- **Derives from:** WAY-44@220f5b85
+- **Derives from:** WAY-44@2f2b6227
 - **Part:** part-map
 - **Correction:** none
-- **Recovered:** none
 
 ## flow-part-names/1
 
@@ -809,7 +800,6 @@ Every critical flow in the part map names an invariant, and some test holds a li
 - **Derives from:** WAY-45@3798c435
 - **Part:** part-map · gate
 - **Correction:** none
-- **Recovered:** none
 
 ## map-invariant-names/1
 
@@ -827,10 +817,9 @@ Every failure mode recorded in the part map names its severity.
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-46@90337b22
+- **Derives from:** WAY-46@fae61ea8
 - **Part:** part-map
 - **Correction:** none
-- **Recovered:** none
 
 ## failure-mode-detection/1
 
@@ -838,10 +827,9 @@ Every failure mode recorded in the part map names an invariant that detects it b
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-46@90337b22
+- **Derives from:** WAY-46@fae61ea8
 - **Part:** part-map
 - **Correction:** none
-- **Recovered:** none
 
 ## part-criticality-field/1
 
@@ -849,10 +837,9 @@ No part of the part map carries a criticality written by hand.
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-46@90337b22
+- **Derives from:** WAY-46@fae61ea8
 - **Part:** part-map
 - **Correction:** none
-- **Recovered:** none
 
 ## map-guard-unrecorded-criticality/1
 
@@ -860,21 +847,19 @@ The map guard computes the highest criticality of the map's scale for a part wit
 
 - **Method:** `python -B gate/run_tests.py elements/part-map --record .runs/part-map-tests.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-46@90337b22
+- **Derives from:** WAY-46@fae61ea8
 - **Part:** part-map
 - **Correction:** none
-- **Recovered:** none
 
 ## map-guard-dependency-report/1
 
-The map guard reports every dependency running from a part of higher criticality to one of lower criticality with no separation recorded.
+The map guard computes the criticality of a part that has failure modes recorded as the highest of the severities of its own failure modes, of the criticalities of the critical flows it lies on, and of the computed criticalities of the parts that depend on it by a dependency recording no separation.
 
 - **Method:** `python -B gate/run_tests.py elements/part-map --record .runs/part-map-tests.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-46@90337b22
+- **Derives from:** WAY-46@fae61ea8
 - **Part:** part-map
 - **Correction:** none
-- **Recovered:** none
 
 ## criticality-lowering-report/1
 
@@ -882,7 +867,7 @@ The map guard, given "{fork-point}", reports every part whose computed criticali
 
 - **Method:** `python -B gate/run_tests.py elements/part-map --record .runs/part-map-tests.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-46@90337b22
+- **Derives from:** WAY-46@fae61ea8
 - **Part:** part-map
 - **Correction:** none
 
@@ -916,27 +901,15 @@ The map guard starts no test run of its own.
 - **Part:** part-map
 - **Correction:** none
 
-## trust-boundary-pattern/1
-
-Every trust boundary in the part map names a pattern of files that matches at least one file git tracks.
-
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
-- **Rests on:** git-path-patterns@1519f3f7
-- **Derives from:** WAY-48@7f42c295
-- **Part:** every
-- **Correction:** none
-- **Recovered:** none
-
 ## external-exchange-row/1
 
-Every exchange with the external context in the part map records its direction, whether what comes in is trusted, and whether its consumer updates together with the product.
+Every exchange with the external context in the part map records its direction, whether what comes in is trusted, and whether the partner updates together with the product.
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-48@7f42c295 · WAY-50@56465170
+- **Derives from:** WAY-48@947e51e4 · WAY-50@56465170
 - **Part:** part-map
 - **Correction:** none
-- **Recovered:** none
 
 ## gate-boundary-change/1
 
@@ -944,10 +917,9 @@ The gate runs the check for crafted input on every change that, against "{fork-p
 
 - **Method:** `TODO`
 - **Rests on:** git-path-patterns@1519f3f7
-- **Derives from:** WAY-48@7f42c295
+- **Derives from:** WAY-48@947e51e4
 - **Part:** gate
 - **Correction:** none
-- **Recovered:** none
 
 ## surface-promise-level/1
 
@@ -1296,7 +1268,6 @@ Every part an entry of `foundations/invariants.md` names is a part of the part m
 - **Derives from:** WAY-62@d9c21624
 - **Part:** invariants · part-map
 - **Correction:** none
-- **Recovered:** none
 
 ## invariant-part-form/1
 
@@ -1307,7 +1278,6 @@ Every entry of `foundations/invariants.md` names `every` or at least one part, n
 - **Derives from:** WAY-62@d9c21624
 - **Part:** invariants
 - **Correction:** none
-- **Recovered:** none
 
 ## change-reach/1
 
@@ -1318,7 +1288,6 @@ The invariants the gate finds a change against "{fork-point}" reaching include e
 - **Derives from:** WAY-62@d9c21624
 - **Part:** gate
 - **Correction:** none
-- **Recovered:** none
 
 ## gate-result-values/1
 
@@ -1351,7 +1320,6 @@ The gate reports a result for every invariant a change against "{fork-point}" re
 - **Derives from:** WAY-45@3798c435 · WAY-63@f16348c8
 - **Part:** gate
 - **Correction:** none
-- **Recovered:** none
 
 ## flow-test-run/1
 
@@ -1362,7 +1330,6 @@ The gate runs, on every change, every test holding a line `flow: <identifier>` t
 - **Derives from:** WAY-45@3798c435
 - **Part:** gate · part-map
 - **Correction:** none
-- **Recovered:** none
 
 ## gate-exit-code/1
 
@@ -1421,10 +1388,9 @@ Every `invariant:` line in a check names an entry of `foundations/invariants.md`
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-12@23fdae1e · WAY-17@b1e26133 · WAY-65@fbf6bef4
+- **Derives from:** WAY-12@0f1f7ea4 · WAY-17@b1e26133 · WAY-65@fbf6bef4
 - **Part:** every
 - **Correction:** none
-- **Recovered:** none
 
 ## data-line-target/1
 

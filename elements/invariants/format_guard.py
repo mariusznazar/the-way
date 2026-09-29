@@ -939,7 +939,7 @@ def check_verifications(entries, foundation, report):
             readable = False
             report.error(None, "%s: the level 1 verification of %s/%d names no invariants as "
                                "`level 1 — invariants: <identifier> · <identifier>.`"
-                         % (where, decision, version.version), check)
+                         % (where, decision, version.version), check, (named,))
             continue
         for name in [bare(item) for item in names.group(1).split(" · ") if item.strip()]:
             if name not in by_identifier:

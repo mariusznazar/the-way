@@ -276,7 +276,7 @@ class Rules(unittest.TestCase):
         self.assertNotIn("examples", inspect.signature(format_guard.run).parameters)
 
     def test_the_template_names_the_obligation_rule_in_the_map_template(self):
-        # the rule of WAY-87 stands in the part map template, which this one points to
+        # the rule of WAY-46 stands in the part map template, which this one points to
         catalogues = " ".join(format_guard._section(self.template(), "Catalogues and obligations")
                               .split())
         self.assertNotIn("enters the part map as a failure mode", catalogues)
@@ -284,7 +284,7 @@ class Rules(unittest.TestCase):
                   encoding="utf-8") as handle:
             map_template = " ".join(handle.read().split())
         self.assertIn("enters the map as a failure mode of that part, whose detection names an "
-                      "invariant resting on the environment fact of that obligation (WAY-87)",
+                      "invariant resting on the environment fact of that obligation (WAY-46)",
                       map_template)
 
 

@@ -592,9 +592,6 @@ class Files(GuardTestCase):
         self.assertFails(part_map(part(boundary="src/parser.py"), self.rendering(),
                                   foundations_part()),
                          "trust boundary `src/parser.py` of `saving` matches no file git tracks")
-        self.assertEqual(self.failures("trust-boundary-pattern/1"),
-                         ["line 14: trust boundary `src/parser.py` of `saving` matches no file git "
-                          "tracks"])
         self.assertEqual(self.failures("path-pattern-reach/1"),
                          ["line 14: trust boundary `src/parser.py` of `saving` matches no file git "
                           "tracks"])
@@ -1285,8 +1282,9 @@ class Reported(GuardTestCase):
 
 
 class Dependencies(GuardTestCase):
-    """Every dependency from a higher criticality to a lower one, with no separation recorded,
-    is reported."""
+    """The map guard computes the criticality of a part that has failure modes recorded as the
+    highest of its own failure modes, of the flows it lies on and of the parts that depend on it by
+    a dependency recording no separation; the tests read the computed value from its warning."""
 
     files = dict(FILES, **{"src/storage.py": "def write():\n    pass\n",
                            "src/cache.py": "def keep():\n    pass\n"})
@@ -1372,7 +1370,6 @@ class Record(GuardTestCase):
             line("check_files", "pass", "file-part-assignment/1"),
             line("check_files", "pass", "path-pattern-reach/1"),
             line("check_files", "pass", "left-out-file-assignment/1"),
-            line("check_files", "pass", "trust-boundary-pattern/1"),
             line("check_flows", "pass", "flow-invariant-link/1"),
             line("check_flows", "unchecked", "flow-coverage-parts/1",
                  "the test of `save-and-load` leaves no coverage file", NOT_PRODUCED),
@@ -1497,8 +1494,7 @@ class RecordPerCommand(GuardTestCase):
         "map-section-kinds/1", "map-withdrawal-date/1", "map-withdrawal-successors/1",
         "part-criticality-field/1",
         "part-map-file/1", "path-pattern-reach/1", "promise-level-policy/1",
-        "surface-change-path/1", "surface-declaration/1", "surface-promise-level/1",
-        "trust-boundary-pattern/1"]
+        "surface-change-path/1", "surface-declaration/1", "surface-promise-level/1"]
 
     def setUp(self):
         super().setUp()

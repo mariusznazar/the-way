@@ -966,7 +966,7 @@ class Verifications(GuardTestCase):
         self.log(decision(verification="level 1 — the gate checks it."))
         self.assertFails(invariants(), "decisions.md:8: the level 1 verification of WAY-01/1 names "
                                        "no invariants as")
-        self.assertEqual(self.verdicts("verification-invariant-derivation/1"), [])
+        self.assertEqual(self.verdicts("verification-invariant-derivation/1"), ["fail"])
 
 
 class Lists(GuardTestCase):
