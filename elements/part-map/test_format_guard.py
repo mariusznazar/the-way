@@ -1585,6 +1585,40 @@ class Withdrawn(GuardTestCase):
                          ["line 68: `game-state` names `rendering` as a successor, which is "
                           "neither an entry nor a withdrawn identifier of the map"])
 
+    def test_todo_in_any_cell_of_a_row(self):
+        for row in ("| TODO | merged into saving | saving |",
+                    "| game-state | merged into saving | TODO |"):
+            with self.subTest(row=row):
+                self.assertFails(part_map(withdrawn=self.withdrawn(row)),
+                                 "the list `Withdrawn identifiers` holds `TODO`")
+                self.assertRecords(line("check_withdrawn", "fail", None,
+                                        "line 68: the list `Withdrawn identifiers` holds `TODO`"))
+
+    def test_an_identifier_whose_row_holds_todo_stays_withdrawn(self):
+        self.assertFails(part_map(part(identifier="game-state"), part(files="tests/**"),
+                                  withdrawn=self.withdrawn("| game-state | TODO | saving |")),
+                         "`game-state` is withdrawn: a withdrawn identifier is never reused")
+
+    def test_a_row_that_names_itself_as_its_successor(self):
+        self.guard(part_map(withdrawn=self.withdrawn("| game-state | merged into saving | "
+                                                     "game-state |")))
+        self.assertEqual(self.failures("map-withdrawal-successors/1"),
+                         ["line 68: `game-state` names itself as a successor"])
+
+    def test_the_form_of_the_list_is_read_from_the_rules_the_elements_share(self):
+        with open(format_guard.TEMPLATE, encoding="utf-8") as handle:
+            self.assertNotIn("| Identifier | Why | Successors |", handle.read())
+        self.assertEqual(format_guard.read_rules().lists["Withdrawn identifiers"],
+                         ["Identifier", "Why", "Successors"])
+        with open(format_guard.shared.COMMON_RULES, encoding="utf-8") as handle:
+            text = handle.read()
+        common = os.path.join(self.root, "rules.md")
+        with open(common, "w", encoding="utf-8", newline="\n") as handle:
+            handle.write(text.replace("| Identifier | Why | Successors |",
+                                      "| Identifier | Why | Successors | Since |", 1))
+        self.assertEqual(format_guard.read_rules(common=common).lists["Withdrawn identifiers"],
+                         ["Identifier", "Why", "Successors", "Since"])
+
     def test_a_list_without_why(self):
         self.guard(part_map(withdrawn=self.withdrawn("| game-state | saving |",
                                                      header=("Identifier", "Successors"))))

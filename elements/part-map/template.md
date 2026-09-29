@@ -29,8 +29,7 @@ invariants and the environment facts, and the list of withdrawn identifiers — 
 ## Identifiers
 
 The rules on when an entry's identifier stays, when a split or a merge replaces it, and how the
-one left behind is withdrawn and never reused stand in `elements/common/rules.md` (WAY-41); the
-map's list of withdrawn identifiers takes the form below.
+one left behind is withdrawn and never reused stand in `elements/common/rules.md` (WAY-41).
 
 ## Part
 
@@ -141,15 +140,9 @@ The list is the only exception to "every tracked file has a part" (WAY-44).
 
 ## Withdrawn identifiers
 
-```markdown
-## Withdrawn identifiers
-
-| Identifier | Why | Successors |
-```
-
-The map's *Successors* names one or more identifiers, never `none`: the map withdraws an identifier
-only on a split or a merge, which leaves entries in its place. The format guard checks *Why* and
-the successors of every row (`map-withdrawal-successors`) (WAY-41).
+After the last entry the map carries its withdrawn identifiers, in the form, with the *Why* and the
+*Successors*, that `elements/common/rules.md` gives (WAY-41). The format guard checks *Why* and the
+successors (`map-withdrawal-successors`) (WAY-41).
 
 ## Fields and their readers
 

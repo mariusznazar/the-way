@@ -94,8 +94,10 @@ LIST_SECTIONS = ["Criticality scale", "External context", "Change paths",
                  "Files left out on purpose", "Withdrawn identifiers", "Known violations"]
 # The lists of the map itself; the list of known violations stands in its own file (WAY-51).
 MAP_LISTS = [title for title in LIST_SECTIONS if title != "Known violations"]
-# The columns of the list of withdrawn identifiers the guard reads (WAY-41).
+# The columns of the list of withdrawn identifiers the guard reads (WAY-41); the list's form
+# stands in the rules the elements share.
 WITHDRAWN_COLUMNS = ("Identifier", "Why", "Successors")
+WITHDRAWN = "Withdrawn identifiers"
 DATE = re.compile(r"\b\d{4}-\d{2}-\d{2}\b")
 # The heading of an entry, `## <identifier>`, told from the heading of a list by the fields the
 # entry holds; and the heading with a title, `## <identifier> — <title>`, which the form does not
@@ -109,8 +111,7 @@ GENERATED = re.compile(r"\s*\(generated\)\s*$")
 FLOW_LINE = re.compile(r"^[ \t]*#[ \t]*flow:[ \t]*(.*?)[ \t\r]*$", re.M)
 
 
-class TemplateError(Exception):
-    pass
+TemplateError = shared.TemplateError
 
 
 # --- words and values -----------------------------------------------------------------------
@@ -196,7 +197,9 @@ def _field_words(form):
             for name, text in texts.items()}
 
 
-def read_rules(path=TEMPLATE):
+def read_rules(path=TEMPLATE, common=shared.COMMON_RULES):
+    """The rules of the map read from its template, and the form of the list of withdrawn
+    identifiers from the rules the elements share (WAY-35, WAY-41)."""
     with open(path, encoding="utf-8") as handle:
         text = handle.read()
 
@@ -219,6 +222,8 @@ def read_rules(path=TEMPLATE):
 
     lists, values = {}, {}
     for title in LIST_SECTIONS:
+        if title == WITHDRAWN:
+            continue
         form = _code_block(text, title)
         heading = re.search(r"^## (.+)$", form, re.M)
         if not heading:
@@ -229,7 +234,11 @@ def read_rules(path=TEMPLATE):
         values[heading.group(1)] = [None if "<" in cell else
                                     [choice.strip() for choice in cell.split(" · ")]
                                     for cell in table[1].split("|")] if len(table) > 1 else []
-    if not set(WITHDRAWN_COLUMNS) <= set(lists.get("Withdrawn identifiers", [])):
+    withdrawn_title, withdrawn_columns = shared.read_common(common)[1]
+    if withdrawn_title != WITHDRAWN:
+        raise TemplateError("the rules the elements share give no list `%s`" % WITHDRAWN)
+    lists[WITHDRAWN], values[WITHDRAWN] = withdrawn_columns, []
+    if not set(WITHDRAWN_COLUMNS) <= set(lists[WITHDRAWN]):
         raise TemplateError("the list of withdrawn identifiers has no column %s"
                             % " or ".join(WITHDRAWN_COLUMNS))
     violations = re.search(r"`([^`]+known_violations[^`]*)`", _section(text, "Known violations"))
@@ -311,10 +320,11 @@ def rows(sections, title):
 
 
 def listed_rows(sections, title):
-    """The rows of a list, without the row of column names and without a row holding `TODO`,
-    which check_lists reports."""
+    """The rows of a list, without a row whose first cell is `TODO`, which names nothing; a `TODO`
+    in any cell is reported by check_lists, and in the list of withdrawn identifiers by
+    check_withdrawn."""
     return [(cells, line) for cells, line in rows(sections, title)
-            if cells and not any(is_todo(cell) for cell in cells)]
+            if cells and not is_todo(cells[0])]
 
 
 def identifiers(value):
@@ -1044,13 +1054,15 @@ def check_withdrawn(entries, sections, rules, report):
         else:
             listed.append((cells, line))
     known = {entry.identifier for entry in entries}
-    withdrawn = {cells[0] for cells, _ in listed if cells}
+    withdrawn = {cells[0] for cells, _ in listed if cells and not is_todo(cells[0])}
 
     def cell(cells, name):
         index = columns.index(name) if name in columns else None
         return cells[index] if index is not None and index < len(cells) else ""
 
     for cells, line in listed:
+        if any(is_todo(value) for value in cells):
+            report.error(line, "the list `%s` holds `TODO`" % WITHDRAWN, check)
         identifier = cell(cells, "Identifier")
         why = cell(cells, "Why")
         if not why or is_todo(why) or holds_todo(why):
@@ -1064,7 +1076,12 @@ def check_withdrawn(entries, sections, rules, report):
                          % identifier, check, (successors,))
             continue
         for item in named:
-            if item not in known and item not in withdrawn:
+            if holds_todo(item):
+                continue
+            if item == identifier:
+                report.error(line, "`%s` names itself as a successor" % identifier,
+                             check, (successors,))
+            elif item not in known and item not in withdrawn:
                 report.error(line, "`%s` names `%s` as a successor, which is neither an entry nor "
                                    "a withdrawn identifier of the map" % (identifier, item),
                              check, (successors,))
