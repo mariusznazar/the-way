@@ -523,7 +523,6 @@ Every inherited decision in the decision log has *Origin* in the form `inherited
 - **Derives from:** WAY-29@306edf37
 - **Part:** decisions
 - **Correction:** none
-- **Recovered:** none
 
 ## inherited-rationale-source/1
 
@@ -534,7 +533,6 @@ The *Rationale* of every inherited decision in the decision log is `unknown`, a 
 - **Derives from:** WAY-29@306edf37
 - **Part:** decisions
 - **Correction:** none
-- **Recovered:** none
 
 ## relation-fingerprint-presence/1
 
@@ -1155,29 +1153,26 @@ Every row of the list of recovered invariants in `foundations/invariants.md` nam
 - **Derives from:** WAY-58@9cad9f54
 - **Part:** invariants
 - **Correction:** none
-- **Recovered:** none
 
 ## invariant-recovered-derived/1
 
-No entry of `foundations/invariants.md` that stands on the list of recovered invariants names a decision in *Derives from*.
+No entry of `foundations/invariants.md` that stands on the list of recovered invariants names in *Derives from* a decision of `foundations/decisions.md`.
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-58@9cad9f54
 - **Part:** invariants
 - **Correction:** none
-- **Recovered:** none
 
 ## gate-fork-point-evidence/1
 
-For every entry whose sentence a change adds or alters against "{fork-point}", the gate's report states whether the entry's method passes on "{fork-point}" and fails there on a deliberate break, or that this could not be checked.
+For every invariant entry whose sentence a change adds or alters against "{fork-point}", the gate's report states whether the entry's method passes on "{fork-point}" and fails there on a deliberate break, or that this could not be checked.
 
 - **Method:** `TODO`
 - **Rests on:** none
 - **Derives from:** WAY-58@9cad9f54
 - **Part:** gate
 - **Correction:** none
-- **Recovered:** none
 
 ## invariant-fingerprint-input/1
 
@@ -1765,10 +1760,9 @@ Every *Source* of an entry of `foundations/environment_facts.md` has one of the 
 
 - **Method:** `python -B elements/environment-facts/format_guard.py foundations/environment_facts.md --record .runs/environment-facts.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-80@a111c18e
+- **Derives from:** WAY-80@ba34ecc9
 - **Part:** environment-facts
 - **Correction:** none
-- **Recovered:** none
 
 ## fact-method-form/1
 

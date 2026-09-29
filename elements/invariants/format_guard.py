@@ -813,9 +813,10 @@ def check_links(entries, foundation, report):
                                    "any more" % (label, item), check)
 
 
-def derives_from_a_decision(entry):
-    derives = value_of(entry, "Derives from")[0]
-    return bool(derives.strip()) and bare(derives) != "none" and not is_todo(derives)
+def derives_from_a_decision(entry, prefix):
+    """Whether an entry's *Derives from* names a decision of the product's own log, the one beside
+    the file; a decision named anywhere else does not count (WAY-58)."""
+    return bool(derived_numbers(entry, prefix))
 
 
 def check_part(entries, foundation, report):
@@ -863,10 +864,10 @@ def check_corrections(entries, report):
 RECOVERED_OPENINGS = (("Searched", "searched:"), ("Found", "found:"))
 
 
-def check_recovered(table, entries, report):
+def check_recovered(table, entries, foundation, report):
     """Every row of the list of recovered invariants names an entry at its current version and
-    holds `searched: <…>` and `found: <…>`; no entry on the list names a decision in *Derives from*
-    (WAY-58)."""
+    holds `searched: <…>` and `found: <…>`; no entry on the list names in *Derives from* a decision
+    of the decision log beside the file (WAY-58)."""
     # invariant: invariant-recovered-form/1
     # invariant: invariant-recovered-derived/1
     check, form, derived = ("check_recovered", "invariant-recovered-form/1",
@@ -897,9 +898,10 @@ def check_recovered(table, entries, report):
             elif not value[len(opening):].strip():
                 report.error(line, "the row of `%s` on the list of recovered invariants names "
                                    "nothing in *%s*" % (identifier, name), check, (form,))
-        if entry is not None and derives_from_a_decision(entry):
+        if entry is not None and derives_from_a_decision(entry, foundation.prefix):
             report.error(line, "%s stands on the list of recovered invariants, while its *Derives "
-                               "from* names a decision" % label_of(entry), check, (derived,))
+                               "from* names a decision of `foundations/decisions.md`"
+                         % label_of(entry), check, (derived,))
 
 
 LEVEL_ONE = re.compile(r"(?:^|\.\s+)level 1\b", re.I)
@@ -1563,7 +1565,7 @@ def run(path, base=None, stream=None, template=TEMPLATE, merge_onto=None, record
     check_links(entry_list, foundation, report)
     check_part(entry_list, foundation, report)
     check_corrections(entry_list, report)
-    check_recovered(tables.get(rules.lists[2][0]), entries, report)
+    check_recovered(tables.get(rules.lists[2][0]), entries, foundation, report)
     check_verifications(entry_list, foundation, report)
     check_quarantine(tables.get(rules.lists[1][0]), entries, foundation, report)
     violated = check_violated(path, entries, rules, report)

@@ -237,7 +237,10 @@ An entry a human chose from what the product already did before the task writing
 names no decision entry of the product's own log it derives from, stands on the list of recovered
 invariants; no other entry stands there (WAY-58). A decision named anywhere but that log — a
 numbered decision in a concept document, a decision of the-way at the commit the product pins — is
-no such decision, and the entry still stands on the list (WAY-58).
+no such decision, and the entry still stands on the list (WAY-58). The source of an invariant taken
+from a product's own requirements, which the product does not meet yet, is not recorded by WAY-58
+(`TODO — decision pending: where the source of an invariant taken from a product's own
+requirements, which the product does not meet yet, is recorded`).
 
 *Found* names the place of each source the search found that gives a reason for keeping the
 behaviour or calls for a different one, or reads `found: nothing`. A place that only cites another is
