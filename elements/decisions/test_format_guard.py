@@ -502,6 +502,16 @@ class Reviews(GuardTestCase):
                                 "line 26: ABC-01 · review 2026-09-01: `condition not met` needs a "
                                 "date in *Next check*"))
 
+    def test_next_check_neither_a_date_nor_none_after_a_kept_decision(self):
+        # invariant: review-next-check/1
+        self.assertFails(log(version(1, review_when=self.DUE),
+                             review(1, "2026-09-01", "condition met, decision kept — saves stay "
+                                                     "local", "next spring")),
+                         "*Next check* is neither a date nor `none`")
+        self.assertRecords(line("check_reviews", "fail", "review-next-check/1",
+                                "line 26: ABC-01 · review 2026-09-01: *Next check* is neither a "
+                                "date nor `none`"))
+
     def test_changed_in_needs_the_version(self):
         self.assertFails(log(version(1, review_when=self.DUE),
                              review(1, "2026-09-01", "condition met — changed in ABC-01/2", "none")),
@@ -764,13 +774,14 @@ class RecordPerCommand(InGit):
 
     def test_the_command_with_merge_onto(self):
         self.guard(log(version(1), version(2)), merge_onto="main")
-        self.assertEqual(self.identifiers(), ["log-entry-merge-todo/1",
+        self.assertEqual(self.identifiers(), ["log-entry-merge-todo/1", "log-merge-copies/1",
                                               "relation-fingerprint-value/1"])
 
     def test_both_options(self):
         self.guard(log(version(1), version(2)), base="main", merge_onto="main")
         self.assertEqual(self.identifiers(), ["decision-template-change/1",
                                               "log-entry-merge-todo/1", "log-existing-lines/1",
+                                              "log-merge-copies/1",
                                               "log-versions-added-per-number/1",
                                               "relation-fingerprint-value/1"])
 
@@ -946,10 +957,11 @@ class MergedLog(InGit):
                                 "fingerprint of ABC-01 is 69b731d5"))
 
     def test_a_version_both_sides_hold_with_different_text(self):
+        # invariant: log-merge-copies/1
         self.commit(log(version(1), version(2)))
         self.assertFails(log(version(1), version(2, approved="Anna, 2026-09-02")),
                          "ABC-02/1 differs from its copy on main", merge_onto="main")
-        self.assertRecords(line("merged_log", "fail", None,
+        self.assertRecords(line("merged_log", "fail", "log-merge-copies/1",
                                 "line 23: ABC-02/1 differs from its copy on main; the log after the "
                                 "merge holds this copy"))
         self.assertRecords(line("check_fingerprints", "pass", "relation-fingerprint-value/1"))
@@ -961,9 +973,15 @@ class MergedLog(InGit):
         self.assertRecords(line("check_fingerprints", "fail", "relation-fingerprint-value/1",
                                 "line 30: ABC-02/1: `derives from ABC-01@00000000` — the current "
                                 "fingerprint of ABC-01 is 798975ff"))
-        self.assertRecords(line("merged_log", "fail", None,
+        self.assertRecords(line("merged_log", "fail", "log-merge-copies/1",
                                 "line 23: ABC-02/1 differs from its copy on main; the log after the "
                                 "merge holds this copy"))
+
+    def test_versions_both_sides_hold_alike_pass(self):
+        # invariant: log-merge-copies/1
+        self.commit(log(version(1), version(2)))
+        self.assertPasses(log(version(1), version(2), version(3)), merge_onto="main")
+        self.assertRecords(line("merged_log", "pass", "log-merge-copies/1"))
 
     def test_a_decision_reworded_in_place_on_the_branch(self):
         self.commit(log(version(1), version(2, relations="derives from ABC-01@798975ff")))
@@ -1091,11 +1109,14 @@ class MergeOntoNone(GuardTestCase):
 
     REASON = "the method takes a commit the gate filled in as not existing"
     DESCRIPTION = "--merge-onto none: there is no commit to merge onto"
-    NOTE = ("note: --merge-onto none: there is no commit to merge onto; `TODO` in the log and the "
-            "fingerprints relations carry are unchecked\n")
+    NOTE = ("note: --merge-onto none: there is no commit to merge onto; `TODO` in the log, the "
+            "copies of a version both logs hold and the fingerprints relations carry are "
+            "unchecked\n")
     UNCHECKED = [
         {"check": GUARD + "::check_merge_todo", "verdict": "unchecked",
          "invariant": "log-entry-merge-todo/1", "reason": REASON, "description": DESCRIPTION},
+        {"check": GUARD + "::merged_log", "verdict": "unchecked",
+         "invariant": "log-merge-copies/1", "reason": REASON, "description": DESCRIPTION},
         {"check": GUARD + "::check_fingerprints", "verdict": "unchecked",
          "invariant": "relation-fingerprint-value/1", "reason": REASON,
          "description": DESCRIPTION},

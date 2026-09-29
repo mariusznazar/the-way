@@ -17,10 +17,11 @@ Usage, from the root of the product's repository:
 LOG defaults to foundations/decisions.md. --base names the commit the task branch left the main
 branch from, to compare the log with; without it, the checks that need it are skipped.
 --merge-onto names the commit of the main branch a merge is made onto; without it, the checks of a
-merge are skipped: the fingerprints relations carry against the current binding part, and `TODO` in
-any field of the log, which the main branch does not hold (WAY-71). `none`, given to either
-option, is the value the gate fills in where that commit does not exist (WAY-61): the checks that
-need the commit are then recorded as `unchecked`, and give no error. --record names a
+merge are skipped: the copies of a version both logs hold (WAY-07), the fingerprints relations carry
+against the current binding part, and `TODO` in any field of the log, which the main branch does
+not hold (WAY-71). `none`, given to either option, is the value the gate fills in where that commit
+does not exist (WAY-61): the checks that need the commit are then recorded as `unchecked`, and
+give no error. --record names a
 JSON Lines file, created or overwritten, which receives the-way's own record of the run (WAY-74):
 a verdict for each invariant cited by a check the run's options select — the checks against the
 base with --base, the checks of a merge with --merge-onto, the checks of the log alone with
@@ -870,7 +871,7 @@ def check_reviews(entries, rules, prefix, report, numbers, versions):
         if next_check[0] and not is_todo(next_check[0]) and next_check[0] != "none" and not (
                 re.match(r"^%s$" % DATE, next_check[0]) and valid_date(next_check[0])):
             report.error(next_check[1], "%s: *Next check* is neither a date nor `none`" % label,
-                         check, (dated,) if not_met else ())
+                         check, (dated,))
         for number, line in enumerate(entry.text.split("\n")[1:], start=entry.line + 1):
             if number == checked_line:
                 continue
@@ -880,22 +881,29 @@ def check_reviews(entries, rules, prefix, report, numbers, versions):
                                  % (label, match.group(0)), check, (named,))
 
 
-def merged_log(log_path, entries, merge_onto, prefix, top, report):
+def merged_log(log_path, entries, merge_onto, prefix, top, report, no_commit=None):
     """The latest version of each number in the log as it stands after the merge onto the given
     commit, as {number: (entry, None or the commit whose log alone holds it)}, or None once the
-    report says why git could not read the log on that commit.
+    report says why git could not read the log on that commit. Given `no_commit`, which says why
+    there is no commit to merge onto, records the check of the copies unchecked instead.
 
     The log is append-only, so the merge holds every version either side holds. On the main
     branch an entry is never edited (WAY-07), so where both sides hold a version with different
     text, the branch changed it and the merge carries the branch's copy, which is the one kept
-    here. The difference itself is reported as a failure for no entry: it is either an edit of an
+    here. The difference itself is a failure of log-merge-copies: it is either an edit of an
     entry the main branch holds, or two versions written under one heading on both sides, and the
     merged log holds one of them only."""
+    # invariant: log-merge-copies/1
+    check, copies = "merged_log", "log-merge-copies/1"
+    if no_commit:
+        report.unchecked(check, NO_COMMIT_REASON, no_commit, copies)
+        return None
     relative = os.path.relpath(os.path.abspath(log_path), top).replace(os.sep, "/")
     onto_text, failure = file_at(merge_onto, relative, top)
     if failure:
         report.error(None, failure)
         return None
+    report.ran(check, copies)
     if onto_text is None:
         report.notes.append("%s has no %s; the log after the merge is this log alone"
                             % (merge_onto, relative))
@@ -908,7 +916,7 @@ def merged_log(log_path, entries, merge_onto, prefix, top, report):
         elif merged[key][0].text != entry.text:
             report.error(merged[key][0].line, "%s differs from its copy on %s; the log after the "
                                               "merge holds this copy"
-                         % (label_of(entry, prefix), merge_onto), "merged_log")
+                         % (label_of(entry, prefix), merge_onto), check, (copies,))
     latest = {}
     for (number, _), item in sorted(merged.items()):
         latest[number] = item
@@ -1189,9 +1197,10 @@ def run(log_path, base=None, today=None, template=TEMPLATE, examples=EXAMPLES, s
     if merge_onto == NO_COMMIT:
         no_onto = "--merge-onto none: there is no commit to merge onto"
         check_merge_todo(entries, prefix, report, no_commit=no_onto)
+        merged_log(log_path, entries, merge_onto, prefix, None, report, no_commit=no_onto)
         check_fingerprints(None, rules, prefix, report, no_commit=no_onto)
-        report.notes.append(no_onto + "; `TODO` in the log and the fingerprints relations carry "
-                                      "are unchecked")
+        report.notes.append(no_onto + "; `TODO` in the log, the copies of a version both logs "
+                                      "hold and the fingerprints relations carry are unchecked")
     elif merge_onto:
         top = find_commit(log_path, "--merge-onto", merge_onto, report)
         if top is not None:
@@ -1201,8 +1210,9 @@ def run(log_path, base=None, today=None, template=TEMPLATE, examples=EXAMPLES, s
                 check_fingerprints(latest, rules, prefix, report)
     else:
         report.notes.append("no --merge-onto given: `TODO` in the log is not checked against a "
-                            "merge, and the fingerprints relations carry are not compared with "
-                            "the current binding part")
+                            "merge, the copies of a version both logs hold are not compared, and "
+                            "the fingerprints relations carry are not compared with the current "
+                            "binding part")
 
     if os.path.exists(examples) and own:
         check_examples(entries, examples, prefix, report)
@@ -1220,7 +1230,8 @@ def main(argv=None):
                                          "to compare the log with; `none` where it does not "
                                          "exist, which records those checks as unchecked")
     parser.add_argument("--merge-onto", help="the commit of the main branch a merge is made onto; "
-                                             "only with it are the fingerprints relations carry "
+                                             "only with it are the copies of a version both logs "
+                                             "hold compared, the fingerprints relations carry "
                                              "compared with the current binding part, and `TODO` in "
                                              "the log reported as an error; `none` where the main "
                                              "branch does not exist, which records those checks "
