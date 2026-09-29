@@ -419,11 +419,7 @@ def read_foundation(path, report, root):
                                        in foundation.facts.entries.items()}
             for identifier, line in foundation.facts.withdrawn.items():
                 foundation.fact_holders.setdefault(identifier, line)
-        except Exception as problem:
-            # the facts guard raises a TemplateError of its own module, not this one's
-            if not isinstance(problem, (OSError, UnicodeDecodeError, AttributeError)) and \
-                    type(problem).__name__ != "TemplateError":
-                raise
+        except (OSError, UnicodeDecodeError, AttributeError, TemplateError) as problem:
             report.error(None, "cannot read the environment facts beside the file: %s" % problem)
 
     log_path = os.path.join(directory, "decisions.md")
@@ -1397,10 +1393,7 @@ def merged_facts(path, foundation, merge_onto, top, report):
     try:
         rules = module.read_rules()
         onto, before = (module.facts_of(text, rules) for text in texts)
-    except Exception as problem:
-        if not isinstance(problem, (OSError, UnicodeDecodeError, AttributeError)) and \
-                type(problem).__name__ != "TemplateError":
-            raise
+    except (OSError, UnicodeDecodeError, AttributeError, TemplateError) as problem:
         report.error(None, "cannot read the environment facts on %s: %s" % (merge_onto, problem))
         return None
     own = foundation.facts or module.Facts()

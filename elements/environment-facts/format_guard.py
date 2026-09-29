@@ -116,8 +116,8 @@ SOURCE = re.compile(r"(?:%s|%s)(?: · (?:%s|%s))*" % (_CITED, _OBSERVED, _CITED,
 SOURCE_DATES = re.compile(r"(?:; read |; run |, )(%s)(?=$|\)| ·)" % DATE)
 
 
-class TemplateError(Exception):
-    pass
+# A template, or the rules the elements share, does not hold a form this guard reads.
+TemplateError = shared.TemplateError
 
 
 def holds_todo(value):
@@ -127,7 +127,7 @@ def holds_todo(value):
     text = re.sub(QUOTED, " ", value or "")
     text = re.sub(r"`([^`]*)`", lambda match: match.group(0) if is_todo(match.group(1)) else " ",
                   text)
-    return invariant_guard.holds_todo(text)
+    return bool(TODO_WORD.search(text))
 
 
 # --- rules read from the template -----------------------------------------------------------
@@ -146,9 +146,9 @@ class Rules:
         return [rule.name for rule in self.fields if rule.todo]
 
 
-_section = invariant_guard._section
-_blocks = invariant_guard._blocks
-_table_form = invariant_guard._table_form
+# Reading a template's sections is code the guards share.
+_section = shared.template_section
+_blocks = shared.markdown_blocks
 
 
 # The words *Holds for* may not read, as the section "Holds for" lists them.
@@ -392,7 +392,7 @@ def read_foundation(path, report, root):
                                    map_guard.rows(sections, "Withdrawn identifiers")
                                    if cells and cells != columns]
             read += 1
-        except (OSError, UnicodeDecodeError, map_guard.TemplateError, AttributeError,
+        except (OSError, UnicodeDecodeError, TemplateError, AttributeError,
                 IndexError) as problem:
             report.error(None, "cannot read the part map beside the file: %s" % problem)
 
@@ -416,8 +416,7 @@ def read_foundation(path, report, root):
                     foundation.invariants_withdrawn |= {cells[0] for cells, _ in item.rows
                                                         if cells and cells[0]}
             read += 1
-        except (OSError, UnicodeDecodeError, invariant_guard.TemplateError,
-                AttributeError) as problem:
+        except (OSError, UnicodeDecodeError, TemplateError, AttributeError) as problem:
             report.error(None, "cannot read the invariants beside the file: %s" % problem)
     foundation.others_read = read == 2
 
@@ -1177,8 +1176,7 @@ def run(path, base=None, stream=None, template=TEMPLATE, merge_onto=None, record
 
     try:
         rules = read_rules(template, common)
-    except (OSError, UnicodeDecodeError, TemplateError, invariant_guard.TemplateError,
-            AttributeError) as problem:
+    except (OSError, UnicodeDecodeError, TemplateError, AttributeError) as problem:
         return stop("cannot read the rules from %s and %s: %s" % (template, common, problem))
     try:
         with open(path, encoding="utf-8") as handle:
