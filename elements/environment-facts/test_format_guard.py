@@ -7,9 +7,11 @@ Inputs, expected fingerprints and expected record lines are written out, never c
 code under test (WAY-70).
 """
 
+import inspect
 import io
 import json
 import os
+import re
 import subprocess
 import sys
 import tempfile
@@ -40,15 +42,19 @@ DECISION_FINGERPRINT = "4dd7fb86"
 
 
 def fact(identifier="storage-quota", version=1, sentence=QUOTA, holds=QUOTA_HOLDS,
-         source=QUOTA_SOURCE, set_by="none", method="`python -B probes/storage_quota.py`",
-         correction="none", omit=(), heading=None, extra=()):
+         source=QUOTA_SOURCE, method="`python -B probes/storage_quota.py`", omit=(), heading=None,
+         extra=()):
     lines = [heading or "## %s/%d" % (identifier, version), ""]
     if sentence is not None:
         lines += [sentence, ""]
-    fields = [("Holds for", holds), ("Source", source), ("Set by", set_by), ("Method", method),
-              ("Correction", correction)] + list(extra)
+    fields = [("Holds for", holds), ("Source", source), ("Method", method)] + list(extra)
     lines += ["- **%s:** %s" % (name, value) for name, value in fields if name not in omit]
     return "\n".join(lines)
+
+
+def old_fields(set_by="none", correction="none"):
+    """The fields of the form before the slimming, as the-way's entries still carry them."""
+    return [("Set by", set_by), ("Correction", correction)]
 
 
 def lines_fact(**changes):
@@ -201,6 +207,87 @@ class GuardTestCase(unittest.TestCase):
         return [line["verdict"] for line in self.lines if line["invariant"] == invariant]
 
 
+class Rules(unittest.TestCase):
+    """What the guard reads from the template and from the rules the elements share."""
+
+    def template(self):
+        with open(format_guard.TEMPLATE, encoding="utf-8") as handle:
+            return handle.read()
+
+    def common(self, **replacements):
+        with open(format_guard.COMMON_RULES, encoding="utf-8") as handle:
+            text = handle.read()
+        for old, new in replacements.items():
+            self.assertIn(old, text)
+            text = text.replace(old, new)
+        directory = tempfile.TemporaryDirectory()
+        self.addCleanup(directory.cleanup)
+        path = os.path.join(directory.name, "rules.md")
+        with open(path, "w", encoding="utf-8", newline="\n") as handle:
+            handle.write(text)
+        return path
+
+    def test_the_form_holds_three_fields(self):
+        # a fact names no one who sets it (WAY-84) and declares no correction (WAY-79)
+        rules = format_guard.read_rules()
+        self.assertEqual([rule.name for rule in rules.fields], ["Holds for", "Source", "Method"])
+        self.assertEqual(rules.todo_fields, ["Method"])
+        self.assertEqual([rule.name for rule in rules.fields if rule.none], [])
+
+    def test_withdrawn_list_is_read_from_the_rules_the_elements_share(self):
+        path = self.common(**{"| Identifier | Why | Successors |":
+                              "| Identifier | Reason | Successors |"})
+        rules = format_guard.read_rules(common=path)
+        self.assertEqual(rules.lists, [("Withdrawn identifiers",
+                                        ["Identifier", "Reason", "Successors"])])
+
+    def test_human_verdicts_are_read_from_the_rules_the_elements_share(self):
+        path = self.common(**{"| Entry | Version | Verdict | By | On | Commit | Until |":
+                              "| Entry | Version | Verdict | By | Until |",
+                              "`foundations/human_verdicts.md`": "`foundations/human_rows.md`"})
+        rules = format_guard.read_rules(common=path)
+        self.assertEqual(rules.verdicts_file, "human_rows.md")
+        self.assertEqual(rules.verdicts_columns, ["Entry", "Version", "Verdict", "By", "Until"])
+
+    def test_scope_words_are_read_from_the_section_holds_for(self):
+        self.assertEqual(format_guard.read_rules().scope_words, ["latest", "newest"])
+        self.assertIn('It never reads "latest" or "newest"',
+                      format_guard._section(self.template(), "Holds for"))
+
+    def test_the_template_lists_no_checks_of_the_guard(self):
+        self.assertNotIn("## What the format guard checks", self.template())
+
+    def test_the_template_carries_no_draft_banner(self):
+        self.assertNotIn("> **Draft.**", self.template())
+
+    def test_the_template_keeps_no_list_of_unchecked_reasons(self):
+        result = format_guard._section(self.template(), "Result")
+        self.assertNotIn("Reasons for `unchecked`", result)
+        self.assertIn("the invariants template", " ".join(result.split()))
+
+    def test_the_examples_are_the_way_s_own_entries(self):
+        examples = format_guard._section(self.template(), "Examples")
+        self.assertIn("`foundations/environment_facts.md`", examples)
+        self.assertNotIn("examples.md", self.template())
+
+    def test_the_guard_reads_no_examples_file(self):
+        self.assertFalse(hasattr(format_guard, "check_examples"))
+        self.assertFalse(hasattr(format_guard, "EXAMPLES"))
+        self.assertNotIn("examples", inspect.signature(format_guard.run).parameters)
+
+    def test_the_template_names_the_obligation_rule_in_the_map_template(self):
+        # the rule of WAY-87 stands in the part map template, which this one points to
+        catalogues = " ".join(format_guard._section(self.template(), "Catalogues and obligations")
+                              .split())
+        self.assertNotIn("enters the part map as a failure mode", catalogues)
+        with open(os.path.join(format_guard.HERE, "..", "part-map", "template.md"),
+                  encoding="utf-8") as handle:
+            map_template = " ".join(handle.read().split())
+        self.assertIn("enters the map as a failure mode of that part, whose detection names an "
+                      "invariant resting on the environment fact of that obligation (WAY-87)",
+                      map_template)
+
+
 class ValidFile(GuardTestCase):
     def test_valid_file_passes(self):
         self.assertPasses(facts())
@@ -351,8 +438,8 @@ class Identifiers(GuardTestCase):
 class Fields(GuardTestCase):
     def test_field_missing(self):
         # invariant: fact-entry-field-presence/1
-        self.assertFails(facts(fact(omit=("Set by",)), lines_fact()),
-                         "storage-quota/1: field *Set by* is missing")
+        self.assertFails(facts(fact(omit=("Method",)), lines_fact()),
+                         "storage-quota/1: field *Method* is missing")
         self.assertEqual(self.verdicts("fact-entry-field-presence/1"), ["fail"])
 
     def test_field_empty(self):
@@ -384,10 +471,27 @@ class Fields(GuardTestCase):
                          "*Holds for* may not hold `TODO`")
         self.assertEqual(self.verdicts("fact-entry-field-words/1"), ["fail"])
 
-    def test_set_by_names_who(self):
-        # invariant: fact-entry-field-words/1
-        self.assertPasses(facts(fact(set_by="the repository owner"), lines_fact()))
-        self.assertEqual(self.verdicts("fact-entry-field-words/1"), ["pass"])
+    def test_an_entry_without_set_by_and_correction_passes(self):
+        # invariant: fact-entry-field-presence/1
+        self.assertPasses(facts(fact(), lines_fact()))
+        self.assertEqual(self.verdicts("fact-entry-field-presence/1"), ["pass"])
+
+    def test_set_by_is_the_form_before_the_slimming(self):
+        # invariant: fact-entry-field-presence/1
+        output = self.assertFails(facts(fact(extra=[("Set by", "the repository owner")]),
+                                        lines_fact()),
+                                  "storage-quota/1: *Set by* is the form before the slimming; the "
+                                  "form of a fact holds no field naming who sets what it states")
+        self.assertNotIn("field *Set by* is not in the template", output)
+        self.assertEqual(self.verdicts("fact-entry-field-presence/1"), ["pass"])
+
+    def test_correction_is_the_form_before_the_slimming(self):
+        # invariant: fact-entry-field-presence/1
+        output = self.assertFails(facts(fact(extra=[("Correction", "none")]), lines_fact()),
+                                  "storage-quota/1: *Correction* is the form before the slimming; "
+                                  "every change of the sentence or *Holds for* raises the version")
+        self.assertNotIn("field *Correction* is not in the template", output)
+        self.assertEqual(self.verdicts("fact-entry-field-presence/1"), ["pass"])
 
     def test_field_the_form_does_not_hold(self):
         self.assertFails(facts(fact(extra=[("Checked", "2026-09-26")]), lines_fact()),
@@ -547,17 +651,6 @@ class Method(GuardTestCase):
         self.assertEqual(self.verdicts("fact-method-form/1"), ["pass"])
 
 
-class Corrections(GuardTestCase):
-    def test_correction_off_the_form(self):
-        self.assertFails(facts(fact(correction="a typo"), lines_fact()),
-                         "*Correction* is neither `none` nor")
-
-    def test_correction_naming_another_current_fingerprint(self):
-        self.assertFails(facts(fact(correction="0635a942 → 00000000"), lines_fact()),
-                         "*Correction* names 00000000 as the current fingerprint, but it is "
-                         + QUOTA_FINGERPRINT)
-
-
 class Fingerprint(unittest.TestCase):
     def entry(self, text):
         return [item for item in format_guard.parse_file(text, format_guard.read_rules())
@@ -574,8 +667,8 @@ class Fingerprint(unittest.TestCase):
 
     def test_the_rest_of_the_entry_leaves_it(self):
         # invariant: fact-fingerprint-input/1
-        entry = self.entry(fact(source=LINES_SOURCE, set_by="the owner", method="`TODO`",
-                                correction="0635a942 → 11ba3f2d"))
+        entry = self.entry(fact(source=LINES_SOURCE, method="`TODO`",
+                                extra=old_fields("the owner", "0635a942 → 11ba3f2d")))
         self.assertEqual(format_guard.entry_fingerprint(entry), QUOTA_FINGERPRINT)
 
     def test_the_sentence_alone_is_not_it(self):
@@ -860,12 +953,14 @@ class AgainstBase(GuardTestCase):
                          "json-lines/2: a new entry carries version 1", base="HEAD")
         self.assertEqual(self.verdicts("fact-version-new/1"), ["fail"])
 
-    def test_new_entry_declaring_a_correction(self):
+    def test_new_entry_at_version_one_carrying_a_correction(self):
         # invariant: fact-version-new/1
         self.commit(facts(fact()))
-        self.assertFails(facts(fact(), lines_fact(correction="00000000 → " + LINES_FINGERPRINT)),
-                         "json-lines/1: a new entry declares no correction", base="HEAD")
-        self.assertEqual(self.verdicts("fact-version-new/1"), ["fail"])
+        output = self.assertFails(facts(fact(), lines_fact(extra=old_fields(
+            correction="00000000 → " + LINES_FINGERPRINT))), "*Correction* is the form before",
+            base="HEAD")
+        self.assertNotIn("declares no correction", output)
+        self.assertEqual(self.verdicts("fact-version-new/1"), ["pass"])
 
     def test_reworded_sentence_at_the_same_version(self):
         # invariant: fact-version-changed/1
@@ -889,21 +984,22 @@ class AgainstBase(GuardTestCase):
                           **{"probes/storage_quota.py": "# fact: storage-quota/2\n"})
         self.assertEqual(self.verdicts("fact-version-changed/1"), ["pass"])
 
-    def test_raised_version_declaring_a_correction(self):
+    def test_a_correction_keeps_no_version(self):
         # invariant: fact-version-changed/1
         self.commit(facts())
-        self.assertFails(facts(fact(version=2, sentence=QUOTA_REWORDED, correction="%s → %s" % (
-            QUOTA_FINGERPRINT, QUOTA_REWORDED_FINGERPRINT)), lines_fact()),
-            "storage-quota/2: a raised version declares no correction", base="HEAD")
+        output = self.assertFails(facts(fact(sentence=QUOTA_REWORDED, extra=old_fields(
+            correction="%s → %s" % (QUOTA_FINGERPRINT, QUOTA_REWORDED_FINGERPRINT))), lines_fact()),
+            "storage-quota/1: the sentence or *Holds for* changed since HEAD (%s → %s); the version "
+            "is 2" % (QUOTA_FINGERPRINT, QUOTA_REWORDED_FINGERPRINT), base="HEAD")
+        self.assertNotIn("correction declared", output)
         self.assertEqual(self.verdicts("fact-version-changed/1"), ["fail"])
 
-    def test_declared_correction_is_not_taken_as_confirmed(self):
+    def test_a_typo_fixed_raises_the_version(self):
         # invariant: fact-version-changed/1
         self.commit(facts())
-        output = self.assertPasses(facts(fact(sentence=QUOTA_REWORDED, correction="%s → %s" % (
-            QUOTA_FINGERPRINT, QUOTA_REWORDED_FINGERPRINT)), lines_fact()), base="HEAD")
-        self.assertIn("unchecked: the correction of `storage-quota` — correction declared, "
-                      "confirmation not checked", output)
+        self.assertPasses(facts(fact(version=2, sentence=QUOTA_REWORDED), lines_fact()),
+                          base="HEAD", **{"probes/storage_quota.py": "# fact: storage-quota/2\n"})
+        self.assertEqual(self.verdicts("fact-version-changed/1"), ["pass"])
 
     def test_new_source_leaves_the_version(self):
         # invariant: fact-version-unchanged/1
@@ -920,12 +1016,14 @@ class AgainstBase(GuardTestCase):
                          "where the version is 1", base="HEAD")
         self.assertEqual(self.verdicts("fact-version-unchanged/1"), ["fail"])
 
-    def test_unchanged_entry_declaring_a_stale_correction(self):
+    def test_unchanged_entry_carrying_a_correction(self):
         # invariant: fact-version-unchanged/1
         self.commit(facts())
-        self.assertFails(facts(fact(correction="00000000 → 12345678"), lines_fact()),
-                         "the correction names 12345678", base="HEAD")
-        self.assertEqual(self.verdicts("fact-version-unchanged/1"), ["fail"])
+        output = self.assertFails(facts(fact(extra=old_fields(correction="00000000 → 12345678")),
+                                        lines_fact()), "*Correction* is the form before",
+                                  base="HEAD")
+        self.assertNotIn("the correction names", output)
+        self.assertEqual(self.verdicts("fact-version-unchanged/1"), ["pass"])
 
     def test_identifier_gone(self):
         # invariant: fact-identifier-persistence/1
@@ -1025,9 +1123,9 @@ class Merge(GuardTestCase):
     def test_todo_elsewhere_is_not_taken(self):
         # invariant: fact-entry-merge-todo/1
         self.commit(facts())
-        self.assertFails(facts(fact(set_by="TODO — who sets the quota"), lines_fact()),
-                         "*Set by* holds `TODO`, which a merge onto the main branch does not take",
-                         merge_onto="HEAD")
+        self.assertFails(facts(fact(holds="Firefox 130; TODO — which release"), lines_fact()),
+                         "*Holds for* holds `TODO`, which a merge onto the main branch does not "
+                         "take", merge_onto="HEAD")
         self.assertEqual(self.verdicts("fact-entry-merge-todo/1"), ["fail"])
 
     def test_no_main_branch(self):
@@ -1201,11 +1299,12 @@ class Record(GuardTestCase):
         self.assertEqual(sorted(line["invariant"] for line in self.lines), MERGE)
 
     def test_error_of_no_invariant_is_a_null_line(self):
-        self.assertFails(facts(fact(correction="a typo"), lines_fact()), "*Correction*")
-        self.assertIn({"check": "elements/environment-facts/format_guard.py::check_corrections",
+        self.assertFails(facts(fact(extra=[("Set by", "none")]), lines_fact()), "*Set by*")
+        self.assertIn({"check": "elements/environment-facts/format_guard.py::check_fields",
                        "verdict": "fail", "invariant": None,
-                       "description": "line 11: storage-quota/1: *Correction* is neither `none` "
-                                      "nor `<fingerprint> → <fingerprint>`"}, self.lines)
+                       "description": "line 10: storage-quota/1: *Set by* is the form before the "
+                                      "slimming; the form of a fact holds no field naming who "
+                                      "sets what it states"}, self.lines)
 
     def test_unreadable_template_stops_the_run(self):
         output = io.StringIO()
@@ -1216,22 +1315,27 @@ class Record(GuardTestCase):
         self.assertIn("cannot read the rules", output.getvalue())
 
 
-class Examples(GuardTestCase):
-    def run_examples(self, examples):
-        items = format_guard.parse_file(facts(), format_guard.read_rules())
-        path = os.path.join(self.root, "examples.md")
-        with open(path, "w", encoding="utf-8", newline="\n") as handle:
-            handle.write(examples)
-        report = format_guard.Report(self.path)
-        format_guard.check_examples(items, path, report)
-        return report.errors
+class OwnFile(unittest.TestCase):
+    """The entries of the-way's environment facts still carry the form before the slimming, which
+    the guard reports in one place only: a *Set by* or a *Correction* line in an entry. Once the
+    entries are rewritten in the new form, the file passes with no error."""
 
-    def test_example_matching_the_file(self):
-        self.assertEqual(self.run_examples("# Examples\n\n" + fact() + "\n"), [])
+    OLD_FORM = re.compile(r"^line \d+: [a-z0-9-]+/\d+: \*(?:Set by|Correction)\* is the form "
+                          r"before the slimming; ")
 
-    def test_example_differing_from_the_file(self):
-        errors = self.run_examples("# Examples\n\n" + fact(holds="Firefox 131") + "\n")
-        self.assertIn("differs from the file", errors[0][1])
+    def test_the_way_facts_hold_no_error_but_the_old_form(self):
+        output = io.StringIO()
+        with tempfile.TemporaryDirectory() as directory:
+            record = os.path.join(directory, "environment-facts.jsonl")
+            code = format_guard.run(format_guard.OWN_FILE, stream=output, record=record)
+            with open(record, encoding="utf-8") as handle:
+                lines = [json.loads(item) for item in handle.read().split("\n") if item]
+        self.assertIn(code, (0, 1), output.getvalue())
+        self.assertEqual(sorted({item["invariant"] for item in lines if item["invariant"]}), PLAIN)
+        failures = [item for item in lines if item["verdict"] == "fail"]
+        self.assertEqual([item for item in failures
+                          if not self.OLD_FORM.search(item["description"])], [])
+        self.assertEqual(code == 1, bool(failures))
 
 
 if __name__ == "__main__":

@@ -1,12 +1,15 @@
 """Format guard of a product's environment facts file.
 
-Runs the checks listed in "What the format guard checks" in template.md, which lies next to this
-script. The fields of an entry and the words each may hold, the title and columns of the list of
-withdrawn identifiers, the file and columns of human verdicts and the words *Holds for* may not read
-are taken from the template, so the rules of an entry live in one place (WAY-05, WAY-35, WAY-71).
-The decision log, the invariants and the part map are read with the parsers of their own guards,
-and the record of a run is written with the report the guards share. Each check cites the
-invariants it gives a verdict for, as `invariant: <identifier>/<version>` (WAY-65).
+Checks the file against the rules of template.md, which lies next to this script, and against the
+rules of form the elements share, in elements/common/rules.md. The fields of an entry and the words
+each may hold and the words *Holds for* may not read are read from the template; the title and
+columns of the list of withdrawn identifiers and the file and columns of human verdicts are read
+from the rules the elements share; so each rule lives in one place (WAY-35, WAY-71). An entry still
+carrying *Set by* or *Correction*, the form before the slimming, is reported, and every other check
+reads it as it reads any entry. The decision log, the invariants and the part map are read with the
+parsers of their own guards, and the record of a run is written with the report the guards share.
+Each check cites the invariants it gives a verdict for, as `invariant: <identifier>/<version>`
+(WAY-65).
 
 Usage, from the root of the product's repository:
 
@@ -40,7 +43,8 @@ from dataclasses import dataclass, field
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 TEMPLATE = os.path.join(HERE, "template.md")
-EXAMPLES = os.path.join(HERE, "examples.md")
+# The rules of form the elements share (WAY-09, WAY-35).
+COMMON_RULES = os.path.join(HERE, "..", "common", "rules.md")
 OWN_FILE = os.path.join(HERE, "..", "..", "foundations", "environment_facts.md")
 
 sys.dont_write_bytecode = True
@@ -147,13 +151,17 @@ _blocks = invariant_guard._blocks
 _table_form = invariant_guard._table_form
 
 
-def read_rules(path=TEMPLATE):
+# The words *Holds for* may not read, as the section "Holds for" lists them.
+SCOPE_WORDS = re.compile(r'never reads ((?:"[^"]+"(?:,?\s+(?:or|nor)\s+|,\s*)?)+)')
+
+
+def read_rules(path=TEMPLATE, common=COMMON_RULES):
     with open(path, encoding="utf-8") as handle:
         text = handle.read()
 
     blocks = _blocks(_section(text, "Entry"))
-    if len(blocks) < 2:
-        raise TemplateError('the section "Entry" does not hold the entry and its list')
+    if not blocks:
+        raise TemplateError('the section "Entry" does not hold the form of an entry')
     fields = []
     for name, form in re.findall(r"^- \*\*(.+?):\*\* (.*)$", blocks[0], re.M):
         choices = [bare(choice) for choice in form.split(" | ")]
@@ -162,21 +170,12 @@ def read_rules(path=TEMPLATE):
             any(choice == "TODO" or choice.startswith("TODO ") for choice in choices)))
     if not fields:
         raise TemplateError("the entry form has no fields")
-    lists = [_table_form(block) for block in blocks[1:]]
+    _, withdrawn, verdicts_file, verdicts_columns = invariant_guard.read_common(common)
 
-    runs = _section(text, "When a method runs")
-    verdicts_file = re.search(r"`foundations/([^`]+\.md)`", runs)
-    header = re.search(r"^\s*\|(.+)\|\s*$", "\n".join(_blocks(runs)), re.M)
-    if not verdicts_file or not header:
-        raise TemplateError("the section on when a method runs names no file of human verdicts or "
-                            "no form of its row")
-    columns = [cell.strip() for cell in header.group(1).split("|")]
-
-    checks = " ".join(_section(text, "What the format guard checks").split())
-    words = re.search(r"no \*Holds for\* reads (.*?)\(WAY-", checks)
+    words = SCOPE_WORDS.search(" ".join(_section(text, "Holds for").split()))
     if not words:
-        raise TemplateError("the list of checks names no words *Holds for* may not read")
-    return Rules(fields, lists, verdicts_file.group(1), columns,
+        raise TemplateError('the section "Holds for" names no words *Holds for* may not read')
+    return Rules(fields, [withdrawn], verdicts_file, verdicts_columns,
                  re.findall(r'"([^"]+)"', words.group(1)))
 
 
@@ -534,8 +533,7 @@ def check_file(path, top, tracked, report):
     """The repository holds one file of fact entries, at foundations/environment_facts.md
     (WAY-75). The path is compared, letter case included, as git lists it. Another such file is
     known by its content: a tracked Markdown file holding a section `## <identifier>/<version>`
-    with a *Holds for* field. The examples file beside the template this guard reads holds copies
-    of entries, as the template sets it, and is no file of entries."""
+    with a *Holds for* field."""
     # invariant: environment-facts-file/1
     check, one_file = "check_file", "environment-facts-file/1"
     if top is None or tracked is None:
@@ -556,8 +554,6 @@ def check_file(path, top, tracked, report):
         if name == given or not name.endswith(".md"):
             continue
         full = os.path.join(top, *name.split("/"))
-        if os.path.exists(EXAMPLES) and os.path.isfile(full) and os.path.samefile(full, EXAMPLES):
-            continue
         try:
             with open(full, encoding="utf-8") as handle:
                 text = handle.read()
@@ -618,9 +614,19 @@ def check_identifiers(entries, withdrawn, foundation, report):
                              check, (successors_named,))
 
 
+# The fields of the form before the slimming, with what stands in their place now: a fact names
+# no one who sets what it states (WAY-84), and every change of its binding part raises its version
+# (WAY-79).
+OLD_FIELDS = {
+    "Set by": "the form of a fact holds no field naming who sets what it states",
+    "Correction": "every change of the sentence or *Holds for* raises the version",
+}
+
+
 def check_fields(entries, rules, report):
     """Every field of the form is present, and holds `none` or `TODO` only where the form gives
-    it that word; no entry carries a field the form does not hold (WAY-71)."""
+    it that word; no entry carries a field the form does not hold (WAY-71). A field of the form
+    before the slimming is reported as such."""
     # invariant: fact-entry-field-presence/1
     # invariant: fact-entry-field-words/1
     check = "check_fields"
@@ -630,7 +636,10 @@ def check_fields(entries, rules, report):
     for entry in entries:
         label = label_of(entry)
         for name, (value, line) in entry.fields.items():
-            if name not in names:
+            if name in OLD_FIELDS and name not in names:
+                report.error(line, "%s: *%s* is the form before the slimming; %s"
+                             % (label, name, OLD_FIELDS[name]), check)
+            elif name not in names:
                 report.error(line, "%s: field *%s* is not in the template" % (label, name), check)
         for rule in rules.fields:
             if rule.name not in entry.fields or not entry.fields[rule.name][0].strip():
@@ -737,23 +746,6 @@ def check_method(entries, tracked, report):
                                "case included" % (label, value), check, (form,))
     if decided:
         report.ran(check, form)
-
-
-def check_corrections(entries, report):
-    """A declared correction names two fingerprints, the second the entry's current one
-    (WAY-79)."""
-    check = "check_corrections"
-    for entry in entries:
-        label = label_of(entry)
-        correction, line = value_of(entry, "Correction")
-        declared = re.fullmatch(r"([0-9a-f]+) → ([0-9a-f]+)", flat(correction))
-        now = entry_fingerprint(entry)
-        if correction.strip() and bare(correction) != "none" and not declared:
-            report.error(line, "%s: *Correction* is neither `none` nor `<fingerprint> → "
-                               "<fingerprint>`" % label, check)
-        elif declared and now is not None and declared.group(2) != now:
-            report.error(line, "%s: *Correction* names %s as the current fingerprint, but it is %s"
-                         % (label, declared.group(2), now), check)
 
 
 def check_human_verdicts(path, facts, foundation, rules, report):
@@ -986,7 +978,6 @@ def check_against_base(path, facts, rules, base, top, report, no_commit=None):
 
     for identifier, entry in facts.entries.items():
         label = label_of(entry)
-        correction = flat(value_of(entry, "Correction")[0])
         now = entry_fingerprint(entry)
         if now is None:
             continue
@@ -995,31 +986,16 @@ def check_against_base(path, facts, rules, base, top, report, no_commit=None):
         if then is None:
             if entry.version != 1:
                 report.error(entry.line, "%s: a new entry carries version 1" % label, check, (new,))
-            if bare(correction) != "none":
-                report.error(entry.line, "%s: a new entry declares no correction" % label,
-                             check, (new,))
             continue
-        declared = re.fullmatch(r"([0-9a-f]+) → ([0-9a-f]+)", correction)
         if now == then:
             if entry.version != before.version:
                 report.error(entry.line, "%s: the sentence and *Holds for* are unchanged since %s, "
                                          "where the version is %d" % (label, base, before.version),
                              check, (unchanged,))
-            if declared and declared.group(2) != now:
-                report.error(entry.line, "%s: the correction names %s, but the fingerprint is %s"
-                             % (label, declared.group(2), now), check, (unchanged,))
-        elif entry.version == before.version + 1:
-            if declared:
-                report.error(entry.line, "%s: a raised version declares no correction" % label,
-                             check, (changed,))
-        elif entry.version == before.version and declared and \
-                (declared.group(1), declared.group(2)) == (then, now):
-            report.cannot_check("the correction of `%s`" % identifier,
-                                "correction declared, confirmation not checked")
-        else:
+        elif entry.version != before.version + 1:
             report.error(entry.line, "%s: the sentence or *Holds for* changed since %s (%s → %s); "
-                                     "the version is %d, or a correction names `%s → %s`"
-                         % (label, base, then, now, before.version + 1, then, now),
+                                     "the version is %d" % (label, base, then, now,
+                                                            before.version + 1),
                          check, (changed,))
 
 
@@ -1170,24 +1146,6 @@ def check_dependants(entries, invariants, latest, report, merge, no_commit=None)
             report.warning(entry.line, message + "; a merge onto the main branch fails on it")
 
 
-# --- the examples ---------------------------------------------------------------------------
-
-
-def check_examples(items, examples_path, report):
-    check = "check_examples"
-    examples = shared.read_file(examples_path, report, "the examples")
-    if examples is None:
-        return
-    by_heading = {item.text.split("\n")[0]: item for item in items if isinstance(item, Entry)}
-    for line, lines in shared.split_sections(examples):
-        copy = "\n".join(lines).rstrip()
-        entry = by_heading.get(lines[0])
-        if entry is None:
-            report.error(None, "examples.md:%d: `%s` is not in the file" % (line, lines[0]), check)
-        elif entry.text != copy:
-            report.error(entry.line, "examples.md:%d differs from the file" % line, check)
-
-
 # --- entry point ----------------------------------------------------------------------------
 
 
@@ -1199,7 +1157,7 @@ def find_commit(path, top, option, commit, report):
 
 
 def run(path, base=None, stream=None, template=TEMPLATE, merge_onto=None, record=None,
-        examples=EXAMPLES):
+        common=COMMON_RULES):
     stream = stream or sys.stdout
     if record is not None:
         try:
@@ -1218,10 +1176,10 @@ def run(path, base=None, stream=None, template=TEMPLATE, merge_onto=None, record
         return 2
 
     try:
-        rules = read_rules(template)
+        rules = read_rules(template, common)
     except (OSError, UnicodeDecodeError, TemplateError, invariant_guard.TemplateError,
             AttributeError) as problem:
-        return stop("cannot read the rules from %s: %s" % (template, problem))
+        return stop("cannot read the rules from %s and %s: %s" % (template, common, problem))
     try:
         with open(path, encoding="utf-8") as handle:
             text = handle.read()
@@ -1246,7 +1204,6 @@ def run(path, base=None, stream=None, template=TEMPLATE, merge_onto=None, record
     check_scope(entry_list, rules, report)
     check_source(entry_list, report)
     check_method(entry_list, tracked, report)
-    check_corrections(entry_list, report)
     check_human_verdicts(path, facts, foundation, rules, report)
     check_based_on(facts, foundation, report)
     if tracked is not None:
@@ -1287,8 +1244,6 @@ def run(path, base=None, stream=None, template=TEMPLATE, merge_onto=None, record
                             "merge, the fingerprints decisions carry for facts are not compared "
                             "with the current binding part, and a fact nothing names is only a warning")
 
-    if os.path.exists(examples) and os.path.exists(OWN_FILE) and os.path.samefile(path, OWN_FILE):
-        check_examples(items, examples, report)
     report.print(stream)
     if record is not None:
         write_record(record, report)

@@ -49,7 +49,7 @@ Where {merge-onto} exists, no change alters, against {fork-point}, an invariant 
 
 ## foundation-file-kinds/1
 
-Every file in `foundations/` holds the entries of one of the five foundation elements, or is a file an element's template names.
+Every file in `foundations/` holds the entries of one of the five foundation elements, or is a file an element's template or the part the elements share names.
 
 - **Method:** `TODO`
 - **Rests on:** none

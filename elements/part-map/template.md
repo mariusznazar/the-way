@@ -189,6 +189,9 @@ outside it (WAY-42). What its fingerprint covers answers to the invariant `map-f
   it lies on, and of the parts that depend on it, stopping where a dependency records a
   separation (WAY-46).
 - A part with no failure modes recorded counts as the highest degree (WAY-46).
+- An obligation from a law or a contract that raises the criticality of a part enters the map as
+  a failure mode of that part, whose detection names an invariant resting on the environment fact
+  of that obligation (WAY-87).
 - Raising a part's criticality needs no reason; lowering it is accepted by the human deciding the
   change, with the lowered criticality in front of them (WAY-46).
 - A separation carries its reason in the dependency that records it: why a failure of that part
