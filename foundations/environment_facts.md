@@ -29,9 +29,7 @@ The Secure Hash Standard specifies SHA-256, whose final output is a 256-bit mess
 
 - **Holds for:** FIPS 180-4 (August 2015)
 - **Source:** https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf § 6.2 — "The final result of SHA-256 is a 256-bit message digest."; read 2026-09-26
-- **Set by:** none
 - **Method:** `python -B gate/run_tests.py probes/sha-256 --record .runs/fact-sha-256.jsonl`
-- **Correction:** none
 
 ## utf-8/1
 
@@ -39,9 +37,7 @@ UTF-8 encodes every character of the range U+0000..U+10FFFF in a sequence of one
 
 - **Holds for:** RFC 3629 (November 2003)
 - **Source:** https://www.rfc-editor.org/rfc/rfc3629.html § 3 — "In UTF-8, characters from the U+0000..U+10FFFF range (the UTF-16 accessible range) are encoded using sequences of 1 to 4 octets."; read 2026-09-26
-- **Set by:** none
 - **Method:** `python -B gate/run_tests.py probes/utf-8 --record .runs/fact-utf-8.jsonl`
-- **Correction:** none
 
 ## json-text/1
 

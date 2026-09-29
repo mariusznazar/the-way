@@ -9,10 +9,9 @@ The decision guard, given "{merge-onto}", reports every `derives from` or `narro
 
 - **Method:** `python -B gate/run_tests.py gate --record .runs/gate-tests.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-02@59bd26f9 · WAY-31@4b29c953
+- **Derives from:** WAY-02@3ffcbd46 · WAY-31@a14c616c
 - **Part:** decisions · relation-model
 - **Correction:** none
-- **Recovered:** none
 
 ## decision-fingerprint-input/1
 
@@ -20,10 +19,9 @@ The fingerprint the decision guard gives a decision version is the fingerprint o
 
 - **Method:** `python -B gate/run_tests.py elements/decisions --record .runs/decisions-tests.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-02@59bd26f9
+- **Derives from:** WAY-02@3ffcbd46
 - **Part:** decisions · relation-model
 - **Correction:** none
-- **Recovered:** none
 
 ## log-reference-target/1
 
@@ -31,10 +29,9 @@ Every decision number the decision log refers to is the number of a decision in 
 
 - **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-02@59bd26f9
+- **Derives from:** WAY-02@3ffcbd46
 - **Part:** decisions
 - **Correction:** none
-- **Recovered:** none
 
 ## invariant-test-change-acceptance/1
 
@@ -576,10 +573,9 @@ A relation in the decision log carries a fingerprint when, and only when, its ty
 
 - **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-31@4b29c953
+- **Derives from:** WAY-31@a14c616c
 - **Part:** decisions
 - **Correction:** none
-- **Recovered:** none
 
 ## relation-fingerprint-value/1
 
@@ -587,10 +583,9 @@ Where {merge-onto} exists, every fingerprint a relation carries in the latest ve
 
 - **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --merge-onto {merge-onto} --record .runs/decisions-merge-onto.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-02@59bd26f9 · WAY-31@4b29c953
+- **Derives from:** WAY-02@3ffcbd46 · WAY-31@a14c616c
 - **Part:** decisions · relation-model
 - **Correction:** none
-- **Recovered:** none
 
 ## relation-type/1
 
@@ -609,10 +604,9 @@ Where {merge-onto} exists, no change alters, against {fork-point}, a foundation 
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-33@b25b8244
+- **Derives from:** WAY-33@65f8dda4
 - **Part:** every
 - **Correction:** none
-- **Recovered:** none
 
 ## skill-rule-source/1
 
@@ -675,10 +669,9 @@ The script of `relation-model` gives a text the first eight characters, in lower
 
 - **Method:** `python -B gate/run_tests.py relation-model --record .runs/relation-model-tests.jsonl`
 - **Rests on:** sha-256@6ba272ed · utf-8@6afd686d
-- **Derives from:** WAY-39@9f8ff3ac
+- **Derives from:** WAY-02@3ffcbd46
 - **Part:** relation-model
 - **Correction:** none
-- **Recovered:** none
 
 ## map-entry-kinds/1
 
@@ -715,14 +708,13 @@ The repository holds exactly one part map, `foundations/part_map.md`.
 
 ## map-identifier-form/1
 
-Every identifier of an entry in the part map is made of words.
+The identifier in the heading of every entry of the part map has the form `elements/common/` gives.
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-41@f42aae15
+- **Derives from:** WAY-41@f42aae15 · WAY-35@11333629
 - **Part:** part-map
 - **Correction:** none
-- **Recovered:** none
 
 ## identifier-holders/1
 
@@ -733,7 +725,6 @@ No identifier is held by two entries or withdrawn identifiers of the part map, `
 - **Derives from:** WAY-41@f42aae15 · WAY-64@60c91542 · WAY-75@a0bd7b11
 - **Part:** part-map · invariants · environment-facts
 - **Correction:** none
-- **Recovered:** none
 
 ## map-reference-target/1
 
@@ -744,13 +735,22 @@ Every part map identifier referred to from the foundation, a test or a generated
 - **Derives from:** WAY-41@f42aae15
 - **Part:** every
 - **Correction:** none
-- **Recovered:** none
 
 ## map-withdrawal-successors/1
 
 Every withdrawn identifier of the part map gives why it was withdrawn and names one or more successors, each an entry or a withdrawn identifier of the map.
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
+- **Rests on:** none
+- **Derives from:** WAY-41@f42aae15
+- **Part:** part-map
+- **Correction:** none
+
+## map-identifier-persistence/1
+
+Every identifier `foundations/part_map.md` held on {fork-point} stands in it as an entry or as a withdrawn identifier.
+
+- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --base {fork-point} --record .runs/part-map-base.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-41@f42aae15
 - **Part:** part-map
@@ -1146,10 +1146,9 @@ The heading of every entry of `foundations/invariants.md` carries a version numb
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-57@4313046c
+- **Derives from:** WAY-57@4a838784
 - **Part:** invariants
 - **Correction:** none
-- **Recovered:** none
 
 ## invariant-version-new/1
 
@@ -1157,10 +1156,9 @@ Every entry of `foundations/invariants.md` with no fingerprint on {fork-point} c
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --base {fork-point} --record .runs/invariants-base.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-57@4313046c
+- **Derives from:** WAY-57@4a838784
 - **Part:** invariants
 - **Correction:** none
-- **Recovered:** none
 
 ## invariant-version-changed/1
 
@@ -1168,10 +1166,9 @@ Every entry of `foundations/invariants.md` whose fingerprint differs from its fi
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --base {fork-point} --record .runs/invariants-base.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-57@4313046c
+- **Derives from:** WAY-57@4a838784
 - **Part:** invariants
 - **Correction:** none
-- **Recovered:** none
 
 ## invariant-version-unchanged/1
 
@@ -1179,10 +1176,9 @@ Every entry of `foundations/invariants.md` whose fingerprint equals its fingerpr
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --base {fork-point} --record .runs/invariants-base.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-57@4313046c
+- **Derives from:** WAY-57@4a838784
 - **Part:** invariants
 - **Correction:** none
-- **Recovered:** none
 
 ## invariant-earlier-wording/1
 
@@ -1190,10 +1186,9 @@ No entry of `foundations/invariants.md` holds, beside its current sentence, a se
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --base {fork-point} --record .runs/invariants-base.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-57@4313046c
+- **Derives from:** WAY-57@4a838784
 - **Part:** invariants
 - **Correction:** none
-- **Recovered:** none
 
 ## invariant-citation-version/1
 
@@ -1201,10 +1196,9 @@ Every `invariant:` line in a check that names an entry of `foundations/invariant
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-57@4313046c · WAY-65@fbf6bef4
+- **Derives from:** WAY-57@4a838784 · WAY-65@fbf6bef4
 - **Part:** every
 - **Correction:** none
-- **Recovered:** none
 
 ## invariant-correction-confirmation/1
 
@@ -1212,10 +1206,9 @@ Every correction an entry of `foundations/invariants.md` declares is confirmed b
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-57@4313046c
+- **Derives from:** WAY-57@4a838784
 - **Part:** invariants
 - **Correction:** none
-- **Recovered:** none
 
 ## invariant-recovered-form/1
 
@@ -1497,7 +1490,7 @@ Every name in the *Derives from* or *Rests on* of an entry of `foundations/invar
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-66@66fb2864
+- **Derives from:** WAY-31@a14c616c
 - **Part:** invariants
 - **Correction:** none
 - **Recovered:** none
@@ -1508,7 +1501,7 @@ Where {merge-onto} exists, every fingerprint in the *Derives from* or *Rests on*
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --merge-onto {merge-onto} --record .runs/invariants-merge-onto.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-66@66fb2864
+- **Derives from:** WAY-31@a14c616c
 - **Part:** every
 - **Correction:** none
 - **Recovered:** none
@@ -1805,7 +1798,7 @@ The fingerprint the environment facts guard gives an entry is the fingerprint of
 
 - **Method:** `python -B gate/run_tests.py elements/environment-facts --record .runs/environment-facts-tests.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-78@dbdb6666
+- **Derives from:** WAY-78@1e07affb
 - **Part:** environment-facts · relation-model
 - **Correction:** none
 - **Recovered:** none

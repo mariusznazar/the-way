@@ -40,7 +40,7 @@ invariant adds to each.
   entries go" gives one; not found — a new identifier.
 - The search of the foundation also looks for a decision whose level 1 verification calls for this
   rule, a flow of the part map carrying its sentence, a failure mode it detects, and a named link
-  whose entry's binding part has changed, to recheck and carry its new fingerprint (WAY-66).
+  whose entry's binding part has changed, to recheck and carry its new fingerprint (WAY-31).
 
 ## 3. Draft
 

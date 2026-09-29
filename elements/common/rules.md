@@ -119,10 +119,10 @@ entry a link names, *read off* for its fingerprint
 - An entry of the invariants or of the environment facts carries a version, starting at 1, in its
   heading as `## <identifier>/<version>`, and holds only its current wording; earlier wordings are
   read from git (WAY-57, WAY-79).
-- When the entry's fingerprint differs from its fingerprint on the main branch, its version is one
-  higher than there; when it does not differ, the entry keeps the version it has there (WAY-57,
-  WAY-79). An invariant that declares a correction is the one exception, and the invariants template
-  gives its form (WAY-57).
+- When the entry's fingerprint differs from its fingerprint on the commit the task branch left the
+  main branch from, its version is one higher than there; when it does not differ, the entry keeps
+  the version it has there (WAY-57, WAY-79). An invariant that declares a correction is the one
+  exception, and the invariants template gives its form (WAY-57).
 - The guard compares an entry with its state on the commit the task branch left the main branch
   from; where there is no main branch, it compares nothing and every entry stays at version 1
   (WAY-57, WAY-79), and it says so

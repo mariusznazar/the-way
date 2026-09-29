@@ -24,7 +24,7 @@ branch from; only with it are the identifiers, versions, corrections and the lis
 invariants compared with that commit. --merge-onto names the commit of the main branch a merge is
 made onto; only with it is a `TODO` in a field the main branch does not hold it in reported as an
 error, and every fingerprint in *Derives from* and *Rests on* compared with the current binding
-part in the decision log that merge leaves (WAY-66, WAY-71). `none`, given to either option, is the value
+part in the decision log that merge leaves (WAY-31, WAY-71). `none`, given to either option, is the value
 the gate fills in where that commit does not exist (WAY-61): the checks that need the commit are
 then recorded as `unchecked`, a note says so, and they give no error; a commit that is not `none`
 and does not exist stays an error. --record names a JSON Lines file, created or overwritten, which
@@ -83,7 +83,7 @@ def facts_guard():
 
 
 count_sentences = decision_guard.count_sentences
-# A fingerprint as the script of `relation-model` gives it: its length in lower-case hex digits (WAY-39).
+# A fingerprint as the script of `relation-model` gives it: its length in lower-case hex digits (WAY-02).
 FINGERPRINT = r"[0-9a-f]{%d}" % fingerprint_module.LENGTH
 # `TODO` as a word of its own anywhere in a value — whole, as an item, or inside a part such as
 # `searched: TODO; found: …` — but not inside a path or a longer word, such as `docs/TODO.md`.
@@ -749,7 +749,7 @@ def check_method(entries, rules, top, report):
 
 def check_links(entries, foundation, report):
     """Every name in *Rests on* and *Derives from*, other than `none` or `TODO`, carries a
-    fingerprint, and every decision named is one in force (WAY-66). Whether the fingerprint is the
+    fingerprint, and every decision named is one in force (WAY-31). Whether the fingerprint is the
     current one is checked against a merge, in check_fingerprints."""
     # invariant: link-fingerprint-presence/1
     check, presence = "check_links", "link-fingerprint-presence/1"
@@ -1432,7 +1432,7 @@ def merged_facts(path, foundation, merge_onto, top, report):
 def check_fingerprints(entries, merged, report, no_commit=None, facts=None):
     """Compares every fingerprint in *Derives from* and *Rests on*, of the entries the file holds
     after the merge, with the current fingerprint of the entry it names in the decision log or the
-    environment facts that merge leaves (WAY-66). The entries are the branch's, and those only the
+    environment facts that merge leaves (WAY-31). The entries are the branch's, and those only the
     commit merged onto holds, as (entry, None or that commit); `facts` maps each fact the merge
     leaves to its fingerprint. Given `no_commit`, which says why there is no commit to merge onto,
     records it unchecked instead."""

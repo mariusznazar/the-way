@@ -16,10 +16,10 @@ Usage, from the root of the product's repository:
     python <the-way>/elements/part-map/format_guard.py [MAP] [--base REF] [--record PATH]
 
 MAP defaults to foundations/part_map.md. --base names the commit the task branch left the main
-branch from, which the list of known violations is compared with; without it, that check is
-skipped. Given it, the report for a person also warns of every part whose computed criticality is
+branch from, which the list of known violations and the identifiers of the map are compared with;
+without it, those checks are skipped. Given it, the report for a person also warns of every part whose computed criticality is
 lower than on that commit, for the human who accepts the lowering (WAY-46). `none` in place of that
-commit is the value the gate fills in where it does not exist (WAY-61): the check is then recorded
+commit is the value the gate fills in where it does not exist (WAY-61): the checks are then recorded
 as `unchecked`, a note says that no criticality is compared, and the run gives no error; a commit
 that is not `none` and does not exist stays an error. A `TODO` in any field of an entry is an
 error on every run, since the template gives it to no field (WAY-71). --record names a JSON Lines
@@ -50,7 +50,7 @@ PROGRAM = "elements/part-map/format_guard.py"
 # The checks each option selects for the record; every other check reads the map alone and is
 # recorded only by a run given neither option. A run records the checks its options select, and
 # its own failures always (WAY-61, WAY-74).
-SELECTED_BY = {"check_violations_growth": "--base"}
+SELECTED_BY = {"check_violations_growth": "--base", "check_identifier_persistence": "--base"}
 # A reason a check records for being unchecked, word for word as the invariants template lists it
 # (WAY-63); the value the gate fills in for a commit that does not exist, and the reason that goes
 # with it, come from the code the guards share.
@@ -1262,14 +1262,31 @@ def check_violations_growth(map_path, rules, positions, base, top, report, no_co
                          % (rules.violations, " · ".join(position), base), check, (growth,))
 
 
-def report_lowering(entries, sections, rules, map_path, base, top, report):
+def check_identifier_persistence(entries, sections, rules, base_text, base, report,
+                                 no_commit=None):
+    """Every identifier the map held on the base stands in it as an entry or as a withdrawn
+    identifier (WAY-41). Given `no_commit`, which says why there is no base, records the check
+    unchecked instead; a base without the map held no identifier."""
+    # invariant: map-identifier-persistence/1
+    check, persistence = "check_identifier_persistence", "map-identifier-persistence/1"
+    if no_commit:
+        report.unchecked(check, NO_COMMIT_REASON, no_commit, persistence)
+        return
+    report.ran(check, persistence)
+    base_entries, base_sections = parse_map(base_text or "", rules)
+    heading = WITHDRAWN_COLUMNS[0]
+
+    def held(entries, sections):
+        return {entry.identifier for entry in entries} |             {cells[0] for cells, _ in listed_rows(sections, WITHDRAWN) if cells[0] != heading}
+
+    for identifier in sorted(held(base_entries, base_sections) - held(entries, sections)):
+        report.error(None, "`%s` stands in the map on %s and is gone; it stays as an entry or a "
+                           "withdrawn identifier" % (identifier, base), check, (persistence,))
+
+
+def report_lowering(entries, sections, rules, base_text, base, relative, report):
     """Warns of every part whose computed criticality is lower than on the base, so that the human
     deciding the change has the lowered criticality in front of them (WAY-46)."""
-    relative = os.path.relpath(os.path.abspath(map_path), top).replace(os.sep, "/")
-    base_text, failure = file_at(base, relative, top)
-    if failure:
-        report.error(None, failure)
-        return
     if base_text is None:
         report.notes.append("%s has no %s, so no part's computed criticality is compared with it"
                             % (base, relative))
@@ -1353,14 +1370,24 @@ def run(map_path, base=None, stream=None, template=TEMPLATE, record=None,
     if base == NO_COMMIT:
         no_base = "--base none: there is no commit the branch left the main branch from"
         check_violations_growth(map_path, rules, positions, None, None, report, no_commit=no_base)
+        check_identifier_persistence(entries, sections, rules, None, None, report,
+                                     no_commit=no_base)
         report.notes.append(no_base + "; the list of known violations is not compared with it, "
                                       "and that check is unchecked")
+        report.notes.append(no_base + "; the identifiers of the map are not compared with it, and "
+                                      "that check is unchecked")
         report.notes.append(no_base + ", so the computed criticality of the parts is not compared "
                                       "with it and no lowering is reported")
     elif base:
         if top is not None and find_commit(top, "--base", base, report):
             check_violations_growth(map_path, rules, positions, base, top, report)
-            report_lowering(entries, sections, rules, map_path, base, top, report)
+            relative = os.path.relpath(os.path.abspath(map_path), top).replace(os.sep, "/")
+            base_text, failure = file_at(base, relative, top)
+            if failure:
+                report.error(None, failure)
+            else:
+                check_identifier_persistence(entries, sections, rules, base_text, base, report)
+                report_lowering(entries, sections, rules, base_text, base, relative, report)
     else:
         report.notes.append("no --base given: the list of known violations is not compared with "
                             "the main branch")
@@ -1379,10 +1406,10 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description="Check a part map against its template.")
     parser.add_argument("map", nargs="?", default=os.path.join("foundations", "part_map.md"))
     parser.add_argument("--base", help="the commit the task branch left the main branch from, "
-                                         "to compare the list of known violations and the "
-                                         "computed criticality of the parts with; `none` "
-                                         "where it does not exist, which records that check as "
-                                         "unchecked")
+                                         "to compare the list of known violations, the "
+                                         "identifiers of the map and the computed criticality "
+                                         "of the parts with; `none` where it does not exist, "
+                                         "which records those checks as unchecked")
     parser.add_argument("--record", help="the JSON Lines file, created or overwritten, that "
                                          "receives a verdict for each invariant a check cites")
     arguments = parser.parse_args(argv)

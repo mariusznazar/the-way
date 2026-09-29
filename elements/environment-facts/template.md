@@ -96,7 +96,7 @@ in every entry among it, stands in `elements/common/rules.md` (WAY-71).
   gives no version: `JSON Lines, which jsonlines.org publishes without versions`. The date read
   stays in *Source*, so that a re-read flags nothing (WAY-77, WAY-78).
 - The sentence and *Holds for* are the binding part: the entry's fingerprint covers the sentence
-  and the value of *Holds for* joined by a line break, computed as WAY-39 says. The source, its
+  and the value of *Holds for* joined by a line break, computed as WAY-02 says. The source, its
   passage and its date stay outside it, so a re-read source that says the same flags nothing
   (WAY-78).
 - A claim that differs in a new range changes the sentence or *Holds for*, and so the version
@@ -233,7 +233,7 @@ in every entry among it, stands in `elements/common/rules.md` (WAY-71).
   out, the fact holds, and whoever wants to look ahead writes the condition in *Review when* of the
   decision citing the fact (WAY-82, WAY-24). Only the human deciding the change that follows the
   review changes the sentence or *Holds for* (WAY-10), and the new fingerprint then reaches every
-  invariant and decision naming the fact (WAY-66, WAY-90).
+  invariant and decision naming the fact (WAY-31, WAY-90).
 
 ## Version
 

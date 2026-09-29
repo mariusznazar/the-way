@@ -232,7 +232,7 @@ def value_of(entry, name):
 
 def entry_fingerprint(entry):
     """The fingerprint of an entry: its sentence and the value of *Holds for* joined by a line
-    break, as WAY-39 computes it (WAY-78); None for an entry with no sentence."""
+    break, as WAY-02 computes it (WAY-78); None for an entry with no sentence."""
     if entry.sentence is None:
         return None
     return fingerprint(entry.sentence + "\n" + value_of(entry, "Holds for")[0])

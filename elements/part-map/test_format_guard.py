@@ -1025,7 +1025,8 @@ class KnownViolations(GuardTestCase):
             line("check_violations_growth", "fail", "known-violations-growth/1",
                  "foundations/known_violations.md: `saving · foundations · src/saving.py · the log "
                  "of decisions` is not on the list of main: a row is added only by a change "
-                 "of the foundation a human accepts")])
+                 "of the foundation a human accepts"),
+            line("check_identifier_persistence", "pass", "map-identifier-persistence/1")])
 
     def test_a_base_without_the_list_and_no_position_needs_no_note(self):
         self.write("other.txt", "x")
@@ -1036,7 +1037,9 @@ class KnownViolations(GuardTestCase):
         self.assertEqual(code, 0, output)
         self.assertNotIn("every row counts as added", output)
         self.assertEqual(self.lines, [line("check_violations_growth", "pass",
-                                           "known-violations-growth/1")])
+                                           "known-violations-growth/1"),
+                                      line("check_identifier_persistence", "pass",
+                                           "map-identifier-persistence/1")])
 
     def test_a_base_without_the_list_and_a_position_says_every_position_is_added(self):
         self.write("other.txt", "x")
@@ -1056,7 +1059,9 @@ class KnownViolations(GuardTestCase):
         code, output = self.guard(part_map(), base="main")
         self.assertEqual(code, 0, output)
         self.assertEqual(self.lines, [line("check_violations_growth", "pass",
-                                           "known-violations-growth/1")])
+                                           "known-violations-growth/1"),
+                                      line("check_identifier_persistence", "pass",
+                                           "map-identifier-persistence/1")])
 
     def test_a_base_that_does_not_exist_is_an_error(self):
         self.guard(part_map())
@@ -1095,6 +1100,8 @@ class BaseNone(GuardTestCase):
     NOTE = ("note: --base none: there is no commit the branch left the main branch from; the list "
             "of known violations is not compared with it, and that check is unchecked\n")
     UNCHECKED = [line("check_violations_growth", "unchecked", "known-violations-growth/1",
+                      DESCRIPTION, NO_COMMIT),
+                 line("check_identifier_persistence", "unchecked", "map-identifier-persistence/1",
                       DESCRIPTION, NO_COMMIT)]
 
     def test_a_clean_map_exits_zero_and_records_the_check_unchecked(self):
@@ -1514,14 +1521,19 @@ class RecordPerCommand(GuardTestCase):
 
     def test_the_command_with_base(self):
         self.guard(self.text, base="main", own=True)
-        self.assertEqual(self.identifiers(), ["known-violations-growth/1"])
+        self.assertEqual(self.identifiers(), ["known-violations-growth/1",
+                                              "map-identifier-persistence/1"])
 
     def test_a_failure_of_the_map_alone_stays_out_of_the_base_record(self):
         code, output = self.guard(self.text.replace("## saving\n", "## Saving\n"), base="main")
         self.assertEqual(code, 1, output)
         self.assertIn("`Saving` is not an identifier", output)
         self.assertEqual(self.lines, [line("check_violations_growth", "pass",
-                                           "known-violations-growth/1")])
+                                           "known-violations-growth/1"),
+                                      line("check_identifier_persistence", "fail",
+                                           "map-identifier-persistence/1",
+                                           "`saving` stands in the map on main and is gone; it "
+                                           "stays as an entry or a withdrawn identifier")])
 
 
 class Examples(GuardTestCase):
@@ -1648,6 +1660,51 @@ class Withdrawn(GuardTestCase):
             "line 66: the list of withdrawn identifiers has the columns Identifier, Successors, "
             "not Identifier, Why, Successors",
             "line 68: `game-state` gives no why it was withdrawn"])
+
+
+class IdentifierPersistence(GuardTestCase):
+    """Given the commit the branch left the main branch from, every identifier the map held there
+    stands in it as an entry or as a withdrawn identifier (WAY-41)."""
+
+    def test_a_withdrawn_identifier_gone_from_the_list(self):
+        # invariant: map-identifier-persistence/1
+        self.guard(part_map())
+        self.commit()
+        code, output = self.guard(part_map(withdrawn=""), base="main")
+        self.assertEqual(code, 1, output)
+        self.assertEqual(self.failures("map-identifier-persistence/1"),
+                         ["`game-state` stands in the map on main and is gone; it stays as an "
+                          "entry or a withdrawn identifier"])
+
+    def test_an_entry_gone_from_the_map(self):
+        # invariant: map-identifier-persistence/1
+        self.guard(part_map())
+        self.commit()
+        self.guard(part_map(part(), flow(), foundations_part()), base="main")
+        self.assertEqual(self.failures("map-identifier-persistence/1"),
+                         ["`save-format` stands in the map on main and is gone; it stays as an "
+                          "entry or a withdrawn identifier"])
+
+    def test_an_entry_moved_to_the_list_of_withdrawn_identifiers(self):
+        # invariant: map-identifier-persistence/1
+        self.guard(part_map())
+        self.commit()
+        withdrawn = "\n".join(["## Withdrawn identifiers", "", "| Identifier | Why | Successors |",
+                               "|---|---|---|", "| game-state | merged into saving | saving |",
+                               "| save-format | merged into saving | saving |"])
+        self.guard(part_map(part(), flow(), foundations_part(), withdrawn=withdrawn), base="main")
+        self.assertEqual(self.failures("map-identifier-persistence/1"), [])
+        self.assertRecords(line("check_identifier_persistence", "pass",
+                                "map-identifier-persistence/1"))
+
+    def test_an_identifier_added_since_the_base(self):
+        # invariant: map-identifier-persistence/1
+        self.guard(part_map(withdrawn=""))
+        self.commit()
+        self.guard(part_map(), base="main")
+        self.assertEqual(self.failures("map-identifier-persistence/1"), [])
+        self.assertRecords(line("check_identifier_persistence", "pass",
+                                "map-identifier-persistence/1"))
 
 
 class CriticalityLowering(GuardTestCase):

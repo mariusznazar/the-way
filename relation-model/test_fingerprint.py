@@ -1,4 +1,4 @@
-"""Tests of the relation model's fingerprint (WAY-39): the first eight lower-case hexadecimal
+"""Tests of the relation model's fingerprint (WAY-02): the first eight lower-case hexadecimal
 characters of the SHA-256 digest of the text in UTF-8, after every run of spaces and line breaks
 becomes one space and both ends are trimmed.
 
@@ -66,7 +66,7 @@ class Fingerprint(unittest.TestCase):
 
     def test_a_tab_at_either_end_is_kept(self):
         """Trimming removes what the replacement left at an end, a space; nothing else in the text
-        is changed (WAY-39), so a tab at an end stays in the text digested."""
+        is changed (WAY-02), so a tab at an end stays in the text digested."""
         # invariant: fingerprint-definition/1
         self.assertEqual(fingerprint("\tThe product keeps every saved game after a reload."),
                          "10fdd923")

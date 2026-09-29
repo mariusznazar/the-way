@@ -123,7 +123,7 @@ naming its identifier and its current version, with `searched: <…>` in *Search
   pass it; what one sentence may join is judged against the complying and violating pair in
   WAY-56's *Verification* (WAY-56, WAY-12).
 - The sentence is the binding part: the entry's fingerprint covers the sentence alone (WAY-59,
-  WAY-39). The method, the links, the version and a declaration of a correction stay outside it
+  WAY-02). The method, the links, the version and a declaration of a correction stay outside it
   (WAY-59).
 - A condition that decides whether a commit makes the sentence true stands in the sentence, unless
   an entry of the foundation or a decision — of the product's own log, or of the-way at the commit
@@ -168,13 +168,13 @@ naming its identifier and its current version, with `searched: <…>` in *Search
   only a reason for a decision the entry derives from stays in that decision's *Based on* (WAY-73).
 - An invariant that depends on a version the product declares names that version in its sentence
   and names the fact in *Rests on*: a change of the fact's range reaches it through the fingerprint
-  (WAY-73, WAY-66), and whoever writes it sees that the version it names lies within the fact's
+  (WAY-73, WAY-31), and whoever writes it sees that the version it names lies within the fact's
   *Holds for*. No script compares the two, since *Holds for* is prose
   (`TODO — decision pending: which decision sets that no script compares a declared version with
   *Holds for*`).
 - Both carry the fingerprint of each entry they name, and *Part* carries none. A change to
   that fingerprint reaches the main branch with every invariant carrying it, each checked against
-  the new binding part and carrying the new fingerprint (WAY-66).
+  the new binding part and carrying the new fingerprint (WAY-31).
 
 ## Part
 
@@ -194,13 +194,12 @@ naming its identifier and its current version, with `searched: <…>` in *Search
 ## Version and correction
 
 - The version of an entry follows `elements/common/rules.md`, with one exception: an entry whose
-  fingerprint differs from its fingerprint on the main branch keeps its version where *Correction*
-  names both fingerprints and the human who decides the change confirms, with the old and the new
-  binding part in front of them, that the meaning is unchanged (WAY-57).
+  fingerprint differs from its fingerprint on the commit the task branch left the main branch from
+  keeps its version where *Correction* names both fingerprints and the human who decides the change
+  confirms, with the old and the new binding part in front of them, that the meaning is unchanged
+  (WAY-57).
 - A change after which some test citing the entry would need a different expected value is a
-  raise, never a correction
-  (`TODO — decision pending: which decision sets that a change a citing test would need a new
-  expected value for is a raise`).
+  raise, never a correction (WAY-57).
 - Whether the human confirmed a declared correction answers to the invariant
   `invariant-correction-confirmation`.
 
