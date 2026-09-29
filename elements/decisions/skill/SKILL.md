@@ -59,4 +59,7 @@ decision adds to each.
 
 When a *Review when* date has come, ask the human what has been observed and write a review
 record in one of the template's three forms. When the condition is met and the decision
-changes, the new version goes through steps 2–4 first, and the review record names it.
+changes, the new version goes through steps 2–4 first, and the review record names it. Before
+the main branch, a decision that changes is instead edited in place: the edit rewrites *Review
+when* from what was observed, and the decision's approver accepts it again, which answers the date
+as well; a check-by date is moved in no other way (WAY-24).

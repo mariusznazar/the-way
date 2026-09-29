@@ -81,7 +81,7 @@ yet is named by the invariant it answers to
 | Based on | the environment facts guard (`based-on-fact-fingerprint`); a human reviewing the decision when a fact changes (WAY-90) | transcribed; for a fact named, judgment, and read off for its fingerprint |
 | Relations | the format guard (`relation-type`, `relation-fingerprint-presence`, `narrows-pairs`, and checking a merge `relation-fingerprint-value`); the view (`view-links`) | judgment, and read off for a fingerprint |
 | Verification | level 1: the invariants guard (`level-one-decision-invariants`, `verification-invariant-derivation`); level 2: an agent comparing a change with the decision; level 3: a human (WAY-12) | judgment |
-| Review when | the agent working in the decision's scope (WAY-24); the format guard (`decision-guard-overdue-review`) | judgment |
+| Review when | the periodic review of the foundation (WAY-24); the format guard (`decision-guard-overdue-review`) | judgment |
 | Origin | whoever wants to change the decision and needs the full reasoning; the next agent, so it does not repeat a search (WAY-29) | transcribed |
 | Approved by | a human considering a change; the format guard (`decision-approval-record`, `decision-approver`) | transcribed |
 | Rationale / Rationale for change | the agent in a borderline case; a human considering a change | prose |
@@ -217,8 +217,8 @@ A decision checked at level 2 alone:
 ## Review
 
 A decision that rests on a prediction carries *Review when*: an observable state and a check-by
-date. The field does not lift the decision; it tells the agent working in scope to check whether
-the state has occurred. On the date, a review record is appended (WAY-24):
+date. The field does not lift the decision; whether the state has come is checked by the periodic
+review of the foundation. On the date, a review record is appended (WAY-24):
 
 ```markdown
 ### WAY-NN · review YYYY-MM-DD
@@ -238,6 +238,10 @@ the state has occurred. On the date, a review record is appended (WAY-24):
 `Next check: none` closes the condition. A review record is not a new version of the decision
 (WAY-24). In a review record, `none` stands only in *Next check*, and every field takes `TODO`
 (WAY-71).
+
+Before the main branch, an edit in place that the decision's approver accepts again answers the
+date as well when it rewrites *Review when* from what was observed; a check-by date is moved in no
+other way (WAY-24).
 
 *Review when* is only for a state of the world or the product that someone is waiting for.
 A change in a decision this one derives from or narrows is caught by the fingerprint of the

@@ -51,7 +51,7 @@ particular to an environment fact (WAY-35).
   longer true. The partners themselves stay in the part map's external context
   (`TODO — decision pending: which decision sets when a fact may be about something outside that
   depends on the product`).
-- A fact stands only while an invariant's *Rests on* or a decision's *Based on* names it (WAY-88).
+- A fact stands only while an invariant's *Rests on* or a decision's *Based on* names it (WAY-73).
 
 ## Entry
 
@@ -246,7 +246,7 @@ in every entry among it, stands in `elements/common/rules.md` (WAY-71).
 A fact shown false does not leave the file: its identifier moves to the list that closes it, with
 what showed it false in *Why*, so that nobody writes it again and an older decision citing it still
 finds it. A true fact whose last dependant goes is withdrawn in the same change, with that in *Why*,
-or the merge fails (WAY-64, WAY-88).
+or the merge fails (WAY-64, WAY-73).
 
 ## Catalogues and obligations
 

@@ -251,9 +251,7 @@ GitHub answers a request for a private resource that is not properly authenticat
 
 - **Holds for:** the GitHub REST API version 2026-03-10, whose documentation docs.github.com publishes for each API version without editions of its own
 - **Source:** https://docs.github.com/en/rest/using-the-rest-api/troubleshooting-the-rest-api?apiVersion=2026-03-10 (archived: http://web.archive.org/web/20260324033245/https://docs.github.com/en/rest/using-the-rest-api/troubleshooting-the-rest-api?apiVersion=2026-03-10, 2026-03-24) § 404 Not Found for an existing resource — "If you make a request to access a private resource and your request isn't properly authenticated, you will receive a 404 Not Found response. GitHub uses a 404 Not Found response instead of a 403 Forbidden response to avoid confirming the existence of private repositories."; read 2026-09-26
-- **Set by:** none
 - **Method:** `python -B gate/run_tests.py probes/github-private-repository-response --record .runs/fact-github-private-repository-response.jsonl`
-- **Correction:** none
 
 ## anthropic-model-states/1
 
@@ -261,9 +259,7 @@ Anthropic describes the lifecycle of its models by the states Active, Legacy, De
 
 - **Holds for:** the model deprecations page of the Claude Platform documentation, which platform.claude.com publishes without versions
 - **Source:** https://platform.claude.com/docs/en/about-claude/model-deprecations (archived: http://web.archive.org/web/20260926103650/https://platform.claude.com/docs/en/about-claude/model-deprecations, 2026-09-26) § Overview — "Anthropic uses the following terms to describe the model lifecycle:" · § Overview — "Active: The model is fully supported and recommended for use." · § Overview — "Legacy: The model will no longer receive updates and may be deprecated in the future." · § Overview — "Deprecated: The model is still functional but no longer recommended." · § Overview — "Retired: The model is no longer available for use. Requests to retired models will fail."; read 2026-09-26
-- **Set by:** none
 - **Method:** `python -B gate/run_tests.py probes/anthropic-model-states --record .runs/fact-anthropic-model-states.jsonl`
-- **Correction:** none
 
 ## Withdrawn identifiers
 

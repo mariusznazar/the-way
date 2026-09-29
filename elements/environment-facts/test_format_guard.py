@@ -1178,7 +1178,7 @@ class Merge(GuardTestCase):
 
 
 class MergeOfTwoBranches(GuardTestCase):
-    """The main branch moved on after the task branch left it (WAY-07, WAY-88, WAY-90)."""
+    """The main branch moved on after the task branch left it (WAY-07, WAY-73, WAY-90)."""
 
     def branch_off(self, main_text, **main_files):
         """Commits a base, leaves it on a task branch, and commits the main branch's next state."""

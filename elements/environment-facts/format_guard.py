@@ -21,7 +21,7 @@ main branch from; only with it are identifiers and versions compared with that c
 WAY-79). --merge-onto names the commit of the main branch a merge is made onto; only with it is
 `TODO` outside *Method* reported against a merge, every fingerprint a decision's *Based on* carries
 for a fact compared with the fact's current fingerprint after that merge, and a fact that nothing
-names reported as an error rather than a warning (WAY-71, WAY-88, WAY-90). `none`, given to either
+names reported as an error rather than a warning (WAY-71, WAY-73, WAY-90). `none`, given to either
 option, is the value the gate fills in where that commit does not exist (WAY-61): the checks that
 need the commit are then recorded as `unchecked`, a note says so, and they give no error; a commit
 that is not `none` and does not exist stays an error. --record names a JSON Lines file, created or
@@ -1131,7 +1131,7 @@ def check_fingerprints(merged, report, no_commit=None):
 
 def check_dependants(entries, invariants, latest, report, merge, no_commit=None):
     """Every entry is named by an invariant's *Rests on* or by the *Based on* of the latest version
-    of a decision; one that is not is a warning, and, checking a merge, an error (WAY-88). Given
+    of a decision; one that is not is a warning, and, checking a merge, an error (WAY-73). Given
     `no_commit`, records the merge's check unchecked instead."""
     # invariant: fact-dependants/1
     check, dependants = "check_dependants", "fact-dependants/1"

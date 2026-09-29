@@ -69,7 +69,7 @@ environment fact adds to each.
   checks and dependants that cite it.
 - Step 4.4: what follows is each invariant this fact serves, or whose fingerprint in *Rests on* it
   moves, through `record-invariant`; and each decision naming it, through `record-decision`. A fact
-  left with nothing naming it goes as WAY-88 and the template's "Withdrawn identifiers" say.
+  left with nothing naming it goes as WAY-73 and the template's "Withdrawn identifiers" say.
 - After step 4.4, where the method is a command, hand the human an instruction for another agent:
   the entry, its method, the checks citing a retired identifier or raised version, and any open
   question about the check — never the conversation itself; a withdrawal hands on the checks

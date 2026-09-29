@@ -459,10 +459,9 @@ Every *Review when* in the decision log other than `none` or `TODO` names both a
 
 - **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-24@3aa83071 · WAY-71@c32828c9
+- **Derives from:** WAY-24@f2dcb6d4 · WAY-71@c32828c9
 - **Part:** decisions
 - **Correction:** none
-- **Recovered:** none
 
 ## decision-guard-overdue-review/1
 
@@ -470,10 +469,9 @@ The decision guard, given a date, warns of every check-by date earlier than it t
 
 - **Method:** `python -B gate/run_tests.py elements/decisions --record .runs/decisions-tests.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-24@3aa83071
+- **Derives from:** WAY-24@f2dcb6d4
 - **Part:** decisions
 - **Correction:** none
-- **Recovered:** none
 
 ## review-next-check/1
 
@@ -481,10 +479,9 @@ Every review record in the decision log that records that the state has not come
 
 - **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-24@3aa83071 · WAY-71@c32828c9
+- **Derives from:** WAY-24@f2dcb6d4 · WAY-71@c32828c9
 - **Part:** decisions
 - **Correction:** none
-- **Recovered:** none
 
 ## review-named-version/1
 
@@ -492,10 +489,9 @@ Every version of a decision that a review record names exists in the decision lo
 
 - **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-24@3aa83071
+- **Derives from:** WAY-24@f2dcb6d4
 - **Part:** decisions
 - **Correction:** none
-- **Recovered:** none
 
 ## narrows-pairs/1
 
@@ -1711,7 +1707,6 @@ No *Holds for* of an entry of `foundations/environment_facts.md` reads "latest" 
 - **Derives from:** WAY-77@6c15f725
 - **Part:** environment-facts
 - **Correction:** none
-- **Recovered:** none
 
 ## fact-fingerprint-input/1
 
@@ -1817,7 +1812,6 @@ Every environment fact the *Based on* of the latest version of a decision names 
 - **Derives from:** WAY-90@e6fa3272
 - **Part:** decisions · environment-facts
 - **Correction:** none
-- **Recovered:** none
 
 ## based-on-fact-fingerprint-value/1
 
@@ -1828,7 +1822,6 @@ Where {merge-onto} exists, every fingerprint the *Based on* of the latest versio
 - **Derives from:** WAY-90@e6fa3272
 - **Part:** decisions · environment-facts
 - **Correction:** none
-- **Recovered:** none
 
 ## gate-fact-run/1
 
@@ -1839,7 +1832,6 @@ The gate runs the method of every environment fact whose entry a change enters o
 - **Derives from:** WAY-82@790a7972
 - **Part:** gate
 - **Correction:** none
-- **Recovered:** none
 
 ## fact-clock-exit/1
 
@@ -1850,7 +1842,6 @@ The clock exits non-zero when some fact's result is `fail` or `error`, and zero 
 - **Derives from:** WAY-82@790a7972
 - **Part:** gate · environment-facts
 - **Correction:** none
-- **Recovered:** none
 
 ## human-verdict-invariant-row/1
 
@@ -1891,10 +1882,9 @@ Where {merge-onto} exists, every entry of `foundations/environment_facts.md` is 
 
 - **Method:** `python -B elements/environment-facts/format_guard.py foundations/environment_facts.md --merge-onto {merge-onto} --record .runs/environment-facts-merge-onto.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-88@91970f10
+- **Derives from:** WAY-73@4cc25894
 - **Part:** environment-facts · invariants · decisions
 - **Correction:** none
-- **Recovered:** none
 
 ## fact-entry-field-presence/1
 
