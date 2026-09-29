@@ -11,6 +11,7 @@ import inspect
 import io
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -27,14 +28,20 @@ NOT_PRODUCED = "the method's command or file is not declared or produced by the 
 NO_COMMIT = "the method takes a commit the gate filled in as not existing"
 
 
-def part(identifier="saving", title="Saving a game", responsibility=None,
+def heading(identifier, title=None):
+    """The heading of an entry: `## <identifier>`, or the form before the slimming,
+    `## <identifier> — <title>`, where a title is given."""
+    return "## %s" % identifier if title is None else "## %s — %s" % (identifier, title)
+
+
+def part(identifier="saving", title=None, responsibility=None,
          files=("src/saving.py", "tests/**"),
          depends="none", failure_modes=("a save is lost — the player loses the game — high — "
                                         "detected by INV-2",),
          boundary="none", omit=()):
     if responsibility is None:
         responsibility = "The part answers for writing and reading a saved game."
-    lines = ["## %s — %s" % (identifier, title), "", responsibility, ""]
+    lines = [heading(identifier, title), "", responsibility, ""]
     if not isinstance(files, str):
         files = "\n  ".join(files)
     fields = [("Files", files), ("Depends on", depends),
@@ -44,28 +51,28 @@ def part(identifier="saving", title="Saving a game", responsibility=None,
     return "\n".join(lines)
 
 
-def flow(identifier="save-and-load", title="Save and load", description=None, criticality="high",
-         parts="saving", invariant="INV-2 — test: tests/test_saving.py", coverage="none", omit=()):
+def flow(identifier="save-and-load", title=None, description=None, criticality="high",
+         parts="saving", invariant="INV-2", coverage="none", omit=()):
     if description is None:
         description = "The player saves a game and loads it back after a restart."
-    lines = ["## %s — %s" % (identifier, title), "", description, ""]
+    lines = [heading(identifier, title), "", description, ""]
     fields = [("Criticality", criticality), ("Parts", parts), ("Invariant", invariant),
               ("Coverage", coverage)]
     lines += ["- **%s:** %s" % (name, value) for name, value in fields if name not in omit]
     return "\n".join(lines)
 
 
-def surface(identifier="save-format", title="The format of a saved game", promise=None,
+def surface(identifier="save-format", title=None, promise=None,
             declared="src/saving.py · SaveFile", omit=()):
     if promise is None:
         promise = "The product reads back every saved game written by an earlier version."
-    lines = ["## %s — %s" % (identifier, title), "", promise, ""]
+    lines = [heading(identifier, title), "", promise, ""]
     lines += [("- **Declared at:** %s" % declared)] if "Declared at" not in omit else []
     return "\n".join(lines)
 
 
-def foundations_part(files="foundations/**"):
-    return part("foundations", "The foundation", files=files,
+def foundations_part(files="foundations/**", title=None):
+    return part("foundations", title, files=files,
                 responsibility="The part answers for what binds the product.",
                 failure_modes=("a rule read wrong — work goes the light path — low — "
                                "not detected",))
@@ -125,7 +132,7 @@ REPORT_WITHOUT_COMMANDS = "\n".join([
 
 
 FILES = {"src/saving.py": "class SaveFile:\n    pass\n\n\ndef save():\n    pass\n",
-         "tests/test_saving.py": "# save-and-load\ndef test_save():\n    pass\n",
+         "tests/test_saving.py": "# flow: save-and-load\ndef test_save():\n    pass\n",
          "README.md": "# Product\n"}
 
 
@@ -203,7 +210,7 @@ class ValidMap(GuardTestCase):
 
 class Entries(GuardTestCase):
     def test_entry_of_no_known_kind(self):
-        strange = "\n".join(["## ghost — A ghost", "", "The part answers for nothing.", "",
+        strange = "\n".join(["## ghost", "", "The part answers for nothing.", "",
                              "- **Notes:** nothing"])
         self.assertFails(part_map(part(), strange), "is neither a part, a critical flow nor a "
                                                     "surface")
@@ -212,7 +219,7 @@ class Entries(GuardTestCase):
                           "field of the template names its kind"])
 
     def test_two_entries_with_one_identifier(self):
-        self.assertFails(part_map(part(), part(title="Saving again", files="tests/**")),
+        self.assertFails(part_map(part(), part(files="tests/**")),
                          "identifier `saving` is used twice")
         self.assertRecords(line("check_identifiers", "fail", None,
                                 "line 16: identifier `saving` is used twice, here and at line 5"))
@@ -255,6 +262,55 @@ class Entries(GuardTestCase):
         self.assertRecords(line("check_references", "fail", None,
                                 "line 11: saving: *Depends on* names `rendering`, which is not in "
                                 "the map as a part"))
+
+
+class Headings(GuardTestCase):
+    """An entry's heading is its identifier alone, `## <identifier>` (WAY-41). A heading in the
+    form before the slimming, `## <identifier> — <title>`, is reported, and its identifier is
+    still read, so that every other check runs on the entry."""
+
+    TITLE = ("line 5: `saving` carries a title after its identifier; an entry's heading is "
+             "`## <identifier>`")
+
+    def test_a_heading_of_the_identifier_alone_passes(self):
+        text = part_map()
+        self.assertIn("\n## saving\n", text)
+        self.assertPasses(text)
+        self.assertRecords(line("check_identifiers", "pass", "map-identifier-form/1"))
+
+    def test_a_heading_with_a_title(self):
+        self.assertFails(part_map(part(title="Saving a game"), flow(), surface(),
+                                  foundations_part()),
+                         "`saving` carries a title after its identifier")
+        self.assertEqual([item for item in self.lines if item["verdict"] == "fail"],
+                         [line("check_identifiers", "fail", None, self.TITLE)])
+
+    def test_every_other_check_reads_the_identifier_of_a_heading_with_a_title(self):
+        self.write("foundations/decisions.md",
+                   "### WAY-01/1 — Q?\n\nS.\n\n- **Scope:** saving, foundations\n")
+        code, output = self.guard(part_map(part(title="Saving a game"),
+                                           flow(title="Save and load"),
+                                           surface(title="The format of a saved game"),
+                                           foundations_part(title="The foundation")))
+        self.assertEqual(code, 1, output)
+        self.assertEqual([item["description"] for item in self.lines
+                          if item["verdict"] == "fail"],
+                         [self.TITLE,
+                          "line 16: `save-and-load` carries a title after its identifier; an "
+                          "entry's heading is `## <identifier>`",
+                          "line 25: `save-format` carries a title after its identifier; an "
+                          "entry's heading is `## <identifier>`",
+                          "line 31: `foundations` carries a title after its identifier; an "
+                          "entry's heading is `## <identifier>`"])
+        self.assertRecords(line("check_references", "pass", "flow-part-names/1"))
+        self.assertRecords(line("check_flows", "pass", "flow-invariant-link/1"))
+        self.assertRecords(line("check_scopes", "pass", "decision-scope-names/1"))
+
+    def test_a_section_with_no_field_under_a_word_is_no_entry(self):
+        self.guard(part_map(part(), flow(), surface(), foundations_part(),
+                            "## Notes\n\nSomething to remember."))
+        self.assertEqual(len(self.failures("map-section-kinds/1")), 1, self.lines)
+        self.assertEqual(self.failures("map-entry-kinds/1"), [])
 
 
 class Sections(GuardTestCase):
@@ -313,12 +369,23 @@ class FieldWords(GuardTestCase):
                               "Coverage": ["none"]},
             "surface": {"Declared at": []}})
 
+    def test_the_rules_stand_without_a_list_of_checks(self):
+        """The template holds no list of the guard's checks: each check cites its invariant, and
+        the guard reads its rules from the forms and the lists alone."""
+        with open(format_guard.TEMPLATE, encoding="utf-8") as handle:
+            text = handle.read()
+        self.assertNotIn("## What the format guard checks", text)
+        self.assertNotIn("(generated)", format_guard._code_block(text, "Part"))
+        self.assertNotIn("test:", format_guard._code_block(text, "Critical flow"))
+        for title in ("Part", "Critical flow", "Surface"):
+            self.assertIn("## <identifier>\n", format_guard._code_block(text, title))
+
     def test_none_where_the_form_gives_it_passes(self):
         self.assertPasses(part_map(part(), flow(coverage="none"), surface(),
-                                   part("foundations", "The foundation", files="foundations/**",
+                                   part("foundations", files="foundations/**",
                                         responsibility="The part answers for what binds.",
                                         failure_modes=("none",)),
-                                   part("idle", "Idle", files="none",
+                                   part("idle", files="none",
                                         responsibility="The part answers for nothing yet.",
                                         failure_modes=("none",))))
 
@@ -408,8 +475,7 @@ class TodoInEveryField(GuardTestCase):
                                      foundations_part()), 21, "save-and-load", "Criticality"),
             ("parts", part_map(part(files=files), flow(parts="saving · TODO"), surface(),
                                foundations_part()), 22, "save-and-load", "Parts"),
-            ("invariant", part_map(part(files=files), flow(invariant="TODO — test: "
-                                                                     "tests/test_saving.py"),
+            ("invariant", part_map(part(files=files), flow(invariant="TODO"),
                                    surface(), foundations_part()), 23, "save-and-load",
              "Invariant"),
             ("coverage", part_map(part(files=files), flow(coverage="TODO"), surface(),
@@ -446,7 +512,7 @@ class Files(GuardTestCase):
     files = dict(FILES, **{"src/render.py": "def draw():\n    pass\n"})
 
     def rendering(self, files="src/render.py"):
-        return part("rendering", "Rendering", files=files,
+        return part("rendering", files=files,
                     responsibility="The part answers for drawing the board.",
                     failure_modes=("nothing is drawn — the player is stuck — high — "
                                    "not detected",))
@@ -504,6 +570,17 @@ class Files(GuardTestCase):
                          ["no part claims `src/render.py`: give it to a part or put it on the "
                           "list of files left out on purpose"])
 
+    def test_a_generated_mark_is_the_form_before_the_slimming(self):
+        """*Files* holds git path patterns alone (WAY-44); a pattern marked `(generated)`, the form
+        before the slimming, is reported, and the pattern is still matched."""
+        self.guard(part_map(part(files=("src/saving.py (generated)", "tests/**")), flow(),
+                            surface(), self.rendering(), foundations_part()))
+        self.assertEqual([item for item in self.lines if item["verdict"] == "fail"],
+                         [line("check_fields", "fail", None,
+                               "line 9: saving: `(generated)` follows the pattern `src/saving.py`; "
+                               "*Files* holds git path patterns alone")])
+        self.assertRecords(line("check_files", "pass", "file-part-assignment/1"))
+
     def test_trust_boundary_pattern_that_matches_nothing(self):
         self.assertFails(part_map(part(boundary="src/parser.py"), self.rendering(),
                                   foundations_part()),
@@ -542,10 +619,10 @@ class MapFile(GuardTestCase):
 class Flows(GuardTestCase):
     files = dict(FILES, **{"src/render.py": "def draw():\n    pass\n",
                            "coverage/save-and-load.info": "SF:src/saving.py\nDA:1,1\nend_of_record\n",
-                           "gate/test_save_and_load.py": "# save-and-load\n"})
+                           "gate/test_save_and_load.py": "# flow: save-and-load\n"})
 
     def rendering(self):
-        return part("rendering", "Rendering", files="src/render.py",
+        return part("rendering", files="src/render.py",
                     responsibility="The part answers for drawing the board.",
                     failure_modes=("nothing is drawn — the player is stuck — high — "
                                    "not detected",))
@@ -556,28 +633,48 @@ class Flows(GuardTestCase):
     def map_with(self, the_flow):
         return part_map(part(), the_flow, surface(), self.rendering(), self.foundations())
 
-    def test_invariant_without_a_test(self):
-        self.assertFails(self.map_with(flow(invariant="INV-2")),
-                         "*Invariant* names no test of the flow")
-        self.assertEqual(self.failures("flow-invariant-link/1"),
-                         ["line 22: save-and-load: *Invariant* names no test of the flow"])
+    def test_a_test_naming_the_flow_in_a_flow_line_passes(self):
+        """The map names no test: the guard finds the flow's test by its line `# flow:`."""
+        self.assertPasses(self.map_with(flow(invariant="INV-2")))
+        self.assertRecords(line("check_flows", "pass", "flow-invariant-link/1"))
 
-    def test_test_without_an_invariant(self):
-        self.guard(self.map_with(flow(invariant="— test: tests/test_saving.py")))
+    def test_a_flow_no_test_names(self):
+        self.assertFails(self.map_with(flow(identifier="load-and-save")),
+                         "no test names the flow in a line `# flow: load-and-save`")
+        self.assertEqual(self.failures("flow-invariant-link/1"),
+                         ["line 22: load-and-save: no test names the flow in a line "
+                          "`# flow: load-and-save`"])
+
+    def test_a_mention_of_the_flow_outside_a_flow_line_names_no_test(self):
+        self.write("tests/test_saving.py", "# save-and-load\ndef test_save():\n    pass\n")
+        self.write("gate/test_save_and_load.py", "# the flow save-and-load\n")
+        self.guard(self.map_with(flow()))
+        self.assertEqual(self.failures("flow-invariant-link/1"),
+                         ["line 22: save-and-load: no test names the flow in a line "
+                          "`# flow: save-and-load`"])
+
+    def test_a_flow_without_an_invariant(self):
+        self.guard(self.map_with(flow(invariant="none")))
         self.assertEqual(self.failures("flow-invariant-link/1"),
                          ["line 22: save-and-load: *Invariant* names no invariant"])
 
-    def test_test_that_does_not_exist(self):
-        self.assertFails(self.map_with(flow(invariant="INV-2 — test: tests/test_missing.py")),
-                         "test `tests/test_missing.py` of `save-and-load` does not exist")
-
-    def test_test_that_does_not_name_the_flow(self):
-        self.assertFails(self.map_with(flow(identifier="load-and-save",
-                                            invariant="INV-2 — test: tests/test_saving.py")),
-                         "test `tests/test_saving.py` does not name `load-and-save`")
-        self.assertEqual(self.failures("flow-invariant-link/1"),
-                         ["line 22: load-and-save: test `tests/test_saving.py` does not name "
-                          "`load-and-save`"])
+    def test_a_test_path_in_the_invariant_is_the_form_before_the_slimming(self):
+        """The map names no test; a flow written in the form before the slimming, with `— test:`,
+        is reported, and its invariant still read."""
+        self.write("foundations/invariants.md", "# Invariants\n\n## save-round-trip/1\n\nOne.\n")
+        code, output = self.guard(part_map(
+            part(failure_modes=("a save is lost — the game is lost — high — detected by "
+                                "save-round-trip",)),
+            flow(invariant="save-round-trip — test: gate/test_save_and_load.py"), surface(),
+            self.rendering(), self.foundations()))
+        self.assertEqual(code, 1, output)
+        self.assertRecords(line("check_flows", "fail", None,
+                                "line 22: save-and-load: *Invariant* names a test after `— test:`; "
+                                "the flow's test names the flow in a line `# flow: save-and-load` "
+                                "instead"))
+        self.assertEqual([item for item in self.lines if item["verdict"] == "fail"
+                          and item["invariant"] is not None], [])
+        self.assertRecords(line("check_invariant_names", "pass", "map-invariant-names/1"))
 
     def test_flow_without_coverage_is_reported_unchecked(self):
         # invariant: map-guard-missing-coverage/1
@@ -620,14 +717,14 @@ class Flows(GuardTestCase):
         """Two flows leave no coverage file and two name one that does not exist; each is
         reported as its list of parts unchecked, and the record gives the invariant no pass."""
         # invariant: map-guard-missing-coverage/1
-        self.write("tests/test_more.py", "# load-after-restart\n# save-on-exit\n"
-                                         "# load-on-start\n")
-        more = "INV-2 — test: tests/test_more.py"
+        self.write("tests/test_more.py", "# flow: load-after-restart\n# flow: save-on-exit\n"
+                                         "# flow: load-on-start\n")
+        more = "INV-2"
         code, output = self.guard(part_map(
-            part(), flow(), flow("load-after-restart", "Load after restart", invariant=more),
-            flow("save-on-exit", "Save on exit", invariant=more,
+            part(), flow(), flow("load-after-restart", invariant=more),
+            flow("save-on-exit", invariant=more,
                  coverage="coverage/missing.info"),
-            flow("load-on-start", "Load on start", invariant=more, coverage="coverage/gone.info"),
+            flow("load-on-start", invariant=more, coverage="coverage/gone.info"),
             surface(), self.rendering(), self.foundations()))
         self.assertEqual(code, 1, output)
         for unchecked in ("the list of parts of `save-and-load` — its test leaves no coverage "
@@ -643,14 +740,16 @@ class Flows(GuardTestCase):
                           if item["invariant"] == "flow-coverage-parts/1"], ["unchecked"])
 
     def test_a_flow_test_outside_gate_in_the_way_s_own_map(self):
+        """tests/test_saving.py and gate/test_save_and_load.py both name the flow; the first lies
+        outside gate/."""
         self.guard(self.map_with(flow()), own=True)
         self.assertEqual(self.failures("flow-test-location/1"),
-                         ["line 22: save-and-load: the test of the flow lies under `gate/`, not "
-                          "at `tests/test_saving.py`"])
+                         ["line 22: save-and-load: `tests/test_saving.py` names the flow in a line "
+                          "`# flow: save-and-load` and lies outside `gate/`"])
 
     def test_a_flow_test_under_gate_in_the_way_s_own_map_passes(self):
-        self.guard(self.map_with(flow(invariant="INV-2 — test: gate/test_save_and_load.py")),
-                   own=True)
+        self.write("tests/test_saving.py", "def test_save():\n    pass\n")
+        self.guard(self.map_with(flow()), own=True)
         self.assertRecords(line("check_flow_tests", "pass", "flow-test-location/1"))
         self.assertEqual(self.failures("flow-invariant-link/1"), [])
 
@@ -671,7 +770,7 @@ class InvariantNames(GuardTestCase):
     def test_names_that_are_entries_pass(self):
         self.guard(part_map(part(failure_modes=("a save is lost — the game is lost — high — "
                                                 "detected by load-order",)),
-                            flow(invariant="save-round-trip — test: tests/test_saving.py"),
+                            flow(invariant="save-round-trip"),
                             surface(), foundations_part()))
         self.assertRecords(line("check_invariant_names", "pass", "map-invariant-names/1"))
 
@@ -1064,7 +1163,7 @@ class Criticality(GuardTestCase):
     def test_failure_mode_wrapped_over_two_lines(self):
         wrapped = part(failure_modes=("a save is lost — the player loses the game — high —\n"
                                       "    detected by INV-2",))
-        foundations = part("foundations", "The foundation", files="foundations/**",
+        foundations = part("foundations", files="foundations/**",
                            responsibility="The part answers for what binds.",
                            failure_modes=("a rule read wrong — work goes the light path — low — "
                                           "not detected",))
@@ -1096,8 +1195,7 @@ class Criticality(GuardTestCase):
 
     def test_todo_as_a_word_inside_a_value(self):
         cases = [
-            ("a flow's invariant", part_map(part(), flow(invariant="the TODO invariant — test: "
-                                                                   "tests/test_saving.py"),
+            ("a flow's invariant", part_map(part(), flow(invariant="the TODO invariant"),
                                             surface(), foundations_part()),
              "line 22: save-and-load: *Invariant* holds `TODO`, which its form does not give it"),
             ("a symbol", part_map(part(), flow(), surface(declared="src/saving.py · (TODO)"),
@@ -1120,7 +1218,7 @@ class Reported(GuardTestCase):
 
     def test_dependency_from_higher_to_lower_is_reported(self):
         # invariant: map-guard-dependency-report/1
-        storage = part("storage", "Storage", files="src/storage.py",
+        storage = part("storage", files="src/storage.py",
                        responsibility="The part answers for the disk.",
                        failure_modes=("a write fails — a step is repeated — low — not detected",))
         code, output = self.guard(part_map(part(depends="storage"), flow(), surface(), storage,
@@ -1129,7 +1227,7 @@ class Reported(GuardTestCase):
         self.assertIn("so storage is computed as `high`, above its own failure modes", output)
 
     def test_a_degree_outside_the_scale_at_a_part_something_depends_on(self):
-        storage = part("storage", "Storage", files="src/storage.py",
+        storage = part("storage", files="src/storage.py",
                        responsibility="The part answers for the disk.",
                        failure_modes=("a write fails — a step is repeated — fatal — "
                                       "not detected",))
@@ -1161,7 +1259,7 @@ class Dependencies(GuardTestCase):
 
     def lower(self, identifier, title, depends="none"):
         """A part of low criticality of its own, in src/<identifier>.py."""
-        return part(identifier, title, files="src/%s.py" % identifier, depends=depends,
+        return part(identifier, files="src/%s.py" % identifier, depends=depends,
                     responsibility="The part answers for %s." % title.lower(),
                     failure_modes=("it fails — a step is repeated — low — not detected",))
 
@@ -1351,7 +1449,8 @@ class Record(GuardTestCase):
 class RecordPerCommand(GuardTestCase):
     """A run records the checks its options select; the report for a person keeps them all."""
 
-    files = dict(FILES, **{"gate/test_save_and_load.py": "# save-and-load\n"})
+    files = dict(FILES, **{"gate/test_save_and_load.py": "# flow: save-and-load\n",
+                           "tests/test_saving.py": "def test_save():\n    pass\n"})
     MAP_ALONE = [
         "decision-scope-names/1", "external-exchange-row/1", "failure-mode-detection/1",
         "failure-mode-severity/1", "file-part-assignment/1", "flow-coverage-parts/1",
@@ -1371,7 +1470,7 @@ class RecordPerCommand(GuardTestCase):
         self.write("foundations/decisions.md", "### WAY-01/1 — Q?\n\nS.\n\n- **Scope:** saving\n")
         self.text = part_map(part(failure_modes=("a save is lost — the game is lost — high — "
                                                  "detected by save-round-trip",)),
-                             flow(invariant="save-round-trip — test: gate/test_save_and_load.py"),
+                             flow(invariant="save-round-trip"),
                              surface(), foundations_part("foundations/**\n  gate/**"))
         self.guard(self.text)
         self.commit()
@@ -1389,7 +1488,7 @@ class RecordPerCommand(GuardTestCase):
         self.assertEqual(self.identifiers(), ["known-violations-growth/1"])
 
     def test_a_failure_of_the_map_alone_stays_out_of_the_base_record(self):
-        code, output = self.guard(self.text.replace("## saving —", "## Saving —"), base="main")
+        code, output = self.guard(self.text.replace("## saving\n", "## Saving\n"), base="main")
         self.assertEqual(code, 1, output)
         self.assertIn("`Saving` is not an identifier", output)
         self.assertEqual(self.lines, [line("check_violations_growth", "pass",
@@ -1397,6 +1496,14 @@ class RecordPerCommand(GuardTestCase):
 
 
 class Examples(GuardTestCase):
+    """`examples.md` copies entries of the-way's own map, which keep the heading of the form before
+    the slimming, `## <identifier> — <title>`, until they are rewritten; so do the examples here."""
+
+    def titled_map(self):
+        return part_map(part(title="Saving a game"), flow(title="Save and load"),
+                        surface(title="The format of a saved game"),
+                        foundations_part(title="The foundation"))
+
     def examples(self, *blocks):
         path = os.path.join(self.root, "examples.md")
         with open(path, "w", encoding="utf-8", newline="\n") as handle:
@@ -1411,14 +1518,14 @@ class Examples(GuardTestCase):
         return report
 
     def test_example_that_differs_from_its_entry(self):
-        text = part_map()
-        changed = part().replace("writing and reading a saved game", "drawing a board")
+        text = self.titled_map()
+        changed = part(title="Saving a game").replace("writing and reading a saved game", "drawing a board")
         report = self.report_on(text, self.examples("*A part:*", changed))
         self.assertTrue(any("differs from the map" in message for _, message in report.errors),
                         report.errors)
 
     def test_example_of_an_entry_outside_the_map(self):
-        text = part_map()
+        text = self.titled_map()
         stranger = part("rendering", "Rendering", files="src/render.py",
                         responsibility="The part answers for drawing.")
         report = self.report_on(text, self.examples("*A part:*", stranger))
@@ -1426,14 +1533,14 @@ class Examples(GuardTestCase):
                         report.errors)
 
     def test_caption_of_the_next_example_does_not_count_as_a_difference(self):
-        text = part_map()
+        text = self.titled_map()
         blocks = text.split("\n\n## ")
         first, second = "## " + blocks[1].rstrip(), "## " + blocks[2].rstrip()
         report = self.report_on(text, self.examples("*A part:*", first, "*A flow:*", second))
         self.assertEqual(report.errors, [])
 
     def test_example_copied_word_for_word_passes(self):
-        text = part_map()
+        text = self.titled_map()
         copy = "\n".join(text.split("\n\n## ")[1].split("\n")).rstrip()
         report = self.report_on(text, self.examples("*A part:*", "## " + copy))
         self.assertEqual(report.errors, [])
@@ -1455,22 +1562,22 @@ class ComputedCriticality(unittest.TestCase):
         self.assertEqual(self.compute(text)["saving"], "high")
 
     def test_a_part_inherits_from_the_part_that_depends_on_it(self):
-        text = part_map(part(), part("storage", "Storage", files="src/storage.py",
+        text = part_map(part(), part("storage", files="src/storage.py",
                                      responsibility="The part answers for the disk.",
                                      failure_modes=("a write fails — a step is repeated — low — "
                                                     "not detected",)),
-                        part("saving2", "Saving again", files="src/other.py", depends="storage",
+                        part("saving2", files="src/other.py", depends="storage",
                              responsibility="The part answers for saving elsewhere.",
                              failure_modes=("a save is lost — the game is lost — high — "
                                             "not detected",)))
         self.assertEqual(self.compute(text)["storage"], "high")
 
     def test_a_separation_stops_the_inheritance(self):
-        text = part_map(part("storage", "Storage", files="src/storage.py",
+        text = part_map(part("storage", files="src/storage.py",
                              responsibility="The part answers for the disk.",
                              failure_modes=("a write fails — a step is repeated — low — "
                                             "not detected",)),
-                        part("saving2", "Saving again", files="src/other.py",
+                        part("saving2", files="src/other.py",
                              depends="storage (separated — a failed write leaves the game intact)",
                              responsibility="The part answers for saving elsewhere.",
                              failure_modes=("a save is lost — the game is lost — high — "
@@ -1507,7 +1614,7 @@ class TestRuns(GuardTestCase):
     test in it runs, so a run of it by any route — a child process of any kind, a test runner in
     the process, an import of the file and a call of its tests — leaves the marker behind. The
     guard runs on maps whose flow leaves a coverage file, leaves none, or names one that does not
-    exist, with the flow's test outside `gate/` and under it. Beside that, every program the
+    exist, with the flow named by a test outside `gate/` and by one under it. Beside that, every program the
     guard starts through `subprocess.Popen` or the `os` functions that start one must be git, and
     no `unittest` runner or loader may be called inside the process."""
 
@@ -1518,7 +1625,7 @@ class TestRuns(GuardTestCase):
         super().setUp()
         self.marker = os.path.join(self.root, "flow-test-ran.txt")
         test = "\n".join([
-            "# save-and-load",
+            "# flow: save-and-load",
             "import unittest",
             "",
             "MARKER = %r" % self.marker,
@@ -1539,13 +1646,9 @@ class TestRuns(GuardTestCase):
 
     def maps(self):
         parts = foundations_part("foundations/**\n  coverage/**\n  gate/**")
-        under_gate = "INV-2 — test: gate/test_save_and_load.py"
         return [part_map(part(), flow(coverage="coverage/save-and-load.info"), surface(), parts),
                 part_map(part(), flow(), surface(), parts),
-                part_map(part(), flow(coverage="coverage/missing.info"), surface(), parts),
-                part_map(part(), flow(invariant=under_gate), surface(), parts),
-                part_map(part(), flow(invariant=under_gate, coverage="coverage/missing.info"),
-                         surface(), parts)]
+                part_map(part(), flow(coverage="coverage/missing.info"), surface(), parts)]
 
     def watchers(self, started):
         """Patches that note every start of a program or of a test run in `started`."""
@@ -1612,17 +1715,34 @@ class TestRuns(GuardTestCase):
 
 
 class OwnMap(unittest.TestCase):
-    def test_the_way_map_passes(self):
+    """The entries of the-way's map still carry the form before the slimming, which the guard
+    reports in three places only: a heading with a title, a test named after `— test:` in a flow's
+    *Invariant*, and a pattern marked `(generated)`. Once the entries are rewritten in the new
+    form, the map passes with no error."""
+
+    OLD_FORM = (re.compile(r"^line \d+: `[a-z0-9-]+` carries a title after its identifier; an "
+                           r"entry's heading is `## <identifier>`$"),
+                re.compile(r"^line \d+: [a-z0-9-]+: \*Invariant\* names a test after `— test:`; "
+                           r"the flow's test names the flow in a line `# flow: [a-z0-9-]+` "
+                           r"instead$"),
+                re.compile(r"^line \d+: [a-z0-9-]+: `\(generated\)` follows the pattern `[^`]+`; "
+                           r"\*Files\* holds git path patterns alone$"))
+
+    def test_the_way_map_holds_no_error_but_the_old_form(self):
         output = io.StringIO()
         with tempfile.TemporaryDirectory() as directory:
             record = os.path.join(directory, "part-map.jsonl")
             code = format_guard.run(format_guard.OWN_MAP, stream=output, record=record)
             with open(record, encoding="utf-8") as handle:
                 lines = [json.loads(item) for item in handle.read().split("\n") if item]
-        self.assertEqual(code, 0, output.getvalue())
-        self.assertEqual(sorted({item["invariant"] for item in lines}),
+        self.assertIn(code, (0, 1), output.getvalue())
+        self.assertEqual(sorted({item["invariant"] for item in lines if item["invariant"]}),
                          RecordPerCommand.MAP_ALONE)
-        self.assertEqual([item for item in lines if item["verdict"] == "fail"], [])
+        failures =[item for item in lines if item["verdict"] == "fail"]
+        self.assertEqual([item for item in failures
+                          if not any(form.search(item["description"]) for form in self.OLD_FORM)],
+                         [])
+        self.assertEqual(code == 1, bool(failures))
 
 
 if __name__ == "__main__":

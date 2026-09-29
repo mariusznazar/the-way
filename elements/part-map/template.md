@@ -7,38 +7,37 @@ contain today — what the code contains is computed from it and checked against
 Alongside the joins it records how badly each part can fail and where it takes in what it does
 not trust.
 
+The rules of form the elements share — the language of an entry, every field and the words `none`
+and `TODO`, the terms of the glossary, the marks of where a value comes from, the form of an
+identifier and its one space with the invariants and the environment facts — stand in
+`elements/common/rules.md`; this template holds what is particular to the part map (WAY-35).
+
 ## Where entries go
 
 - The whole map is one Markdown file, `foundations/part_map.md`, of the shape below (WAY-40).
 - It holds three kinds of entry — a **part**, a **critical flow** and a **surface** — and five
   lists that are not entries: the criticality scale, the external context, the change paths, the
-  files left out on purpose and the withdrawn identifiers.
-- An allowed dependency is a field of the part it starts from, never an entry of its own.
+  files left out on purpose and the withdrawn identifiers (WAY-40).
+- An allowed dependency is a field of the part it starts from, never an entry of its own (WAY-40).
 - An entry is edited in place and carries no version; its history stays in git (WAY-43).
 - One derived file lies beside the map: the list of known violations (WAY-51).
-- Every field the form of an entry's kind gives appears in that entry, and holds `none` only where
-  the form gives it that word; no field of the map holds `TODO` (WAY-71).
-- An entry is written in English, whatever language the product shows the people who use it and
-  whatever language its team speaks (WAY-72).
+- The forms below give `none` to the fields that take it, and `TODO` to no field
+  (`elements/common/rules.md`, WAY-71).
 
 ## Identifiers
 
-- Every entry carries a permanent identifier of one or more words in lower case joined by
-  hyphens (`relation-model`), unique across the three kinds, the product's invariant entries and
-  its environment fact entries (WAY-64).
-- It does not change when the entry's title, its files or its fields change.
+- An entry's identifier does not change when its files or its fields change (WAY-41).
 - Splitting or merging gives each entry that comes out of it a new identifier; the one left behind
   goes to the list of withdrawn identifiers, names its successors and is never reused (WAY-41).
 
 ## Part
 
 ```markdown
-## <identifier> — <title>
+## <identifier>
 
 <one sentence: what this part is responsible for>
 
-- **Files:** <git path patterns, one per line; `(generated)` after a pattern whose files this
-  part's code writes> | none
+- **Files:** <git path patterns, one per line> | none
 - **Depends on:** <identifier> · <identifier> (separated — <why a failure of that part does not
   damage this one>) | none
 - **Failure modes:** none | one line for each:
@@ -46,21 +45,27 @@ not trust.
 - **Trust boundary:** <git path patterns of the files that take in untrusted data> | none
 ```
 
-A part has no criticality field: its criticality is computed (WAY-46).
+A part has no criticality field: its criticality is computed (WAY-46). What the code holds against
+*Depends on* comes from the product's dependency graph, through the list of known violations
+(`known-violation-coverage`, `known-violation-currency`); where the product declares no command
+that reports its graph, that is reported as not checked, never as agreement (WAY-38, WAY-51).
 
 ## Critical flow
 
 ```markdown
-## <identifier> — <title>
+## <identifier>
 
 <one sentence: what this flow does, end to end>
 
 - **Criticality:** <a degree from the criticality scale>
 - **Parts:** <identifier> · <identifier> · …
-- **Invariant:** <identifier of the invariant that has to stay true along the flow> — test: <path
-  of the end-to-end test that names this flow>
-- **Coverage:** <path of the coverage file that test leaves> | none
+- **Invariant:** <identifier of the invariant that has to stay true along the flow>
+- **Coverage:** <path of the coverage file the flow's test leaves> | none
 ```
+
+The flow's end-to-end test names the flow (WAY-45), in a comment line of its own reading
+`# flow: <identifier>`; the map does not name the test
+(`TODO — decision pending: which decision sets how a test names its flow`).
 
 `Coverage: none` makes the format guard report the flow's list of parts as unchecked, never as
 agreeing with the map (WAY-47).
@@ -68,7 +73,7 @@ agreeing with the map (WAY-47).
 ## Surface
 
 ```markdown
-## <identifier> — <title>
+## <identifier>
 
 <one sentence: what the product promises to keep>
 
@@ -83,7 +88,8 @@ being withdrawn. Neither is written in the map (WAY-49).
 
 The degrees a product uses, lowest first. Every degree named by a failure mode or by a flow
 stands on this list. How many degrees a product needs follows from how many distinct sets of
-steps its task cycle has (WAY-46).
+steps its task cycle has
+(`TODO — decision pending: which decision sets the criticality scale and how many degrees it holds`).
 
 ```markdown
 ## Criticality scale
@@ -102,8 +108,9 @@ steps its task cycle has (WAY-46).
 | <who or what> | them → us · us → them · both | trusted · untrusted · — | yes · no |
 ```
 
-The direction and the trust choose the checks a change at the boundary runs (WAY-48); the last
-column chooses the change path a surface at that edge may take (WAY-50).
+A row names no part and no file. It is read by whoever records a trust boundary at the part that
+handles the exchange (WAY-48), and by whoever sets the change path of a promise level, which has to
+allow for a consumer that does not update together with the product (WAY-50).
 
 ## Change paths
 
@@ -123,8 +130,9 @@ One row per promise level, never per surface (WAY-50).
 | File | Why |
 ```
 
-A file here belongs to no part and counts as the highest criticality. The list is the only
-exception to "every tracked file has a part" (WAY-44).
+A file here belongs to no part and counts as the highest criticality
+(`TODO — decision pending: which decision sets the criticality of a file left out on purpose`).
+The list is the only exception to "every tracked file has a part" (WAY-44).
 
 ## Withdrawn identifiers
 
@@ -136,61 +144,65 @@ exception to "every tracked file has a part" (WAY-44).
 
 ## Fields and their readers
 
-A field stays in this template only while someone or something reads it (WAY-05).
+A field stays in this template only while someone or something reads it (WAY-05). Each field
+carries the mark of where its value comes from (`elements/common/rules.md`); a reader not built
+yet is named by the invariant it answers to.
 
 | Field | Who reads it, when | Where its value comes from |
 |---|---|---|
-| identifier | a decision's *Scope*, an invariant, a flow's list of parts, a generated rule file | prose |
-| responsibility / description / promise | the agent working in the part; the fingerprint | prose |
-| Files | the script that assigns a change to parts, computes coverage of the repository and generates rule files | judgment |
-| Depends on | the script comparing the map with the dependency graph; the generator of rule files | judgment |
-| Depends on — separated | the script computing criticality, which stops inheriting there | judgment |
-| Failure modes | the computation of criticality; the choice of which checks a task runs | judgment |
-| Failure modes — detected by | whoever asks which failures the gate would catch | read off |
-| Trust boundary | the choice of how sharply a change is checked (WAY-13) | judgment |
-| Criticality (flow) | the criticality of every part the flow runs through | judgment |
-| Parts (flow) | the test that a change lies on this flow; the coverage check | judgment |
-| Invariant (flow) | the gate, which runs that test on every change | judgment |
-| Coverage (flow) | the check of the flow's list of parts | read off |
-| Declared at | whoever changes the item; the tool computing shape and breaking change | read off |
-| criticality scale | the format guard, which rejects a degree not on the list | judgment |
-| external context | the checks at a trust boundary; the change path of a surface | judgment |
-| change paths | whoever changes a surface at that level | judgment |
-| files left out on purpose | the format guard, as the only exception to file assignment | judgment |
-| withdrawn identifiers | a reference to an identifier that no longer names a part | read off |
-A field marked *judgment* holds someone's call: no tool reads its value off the product, and no question with a factual answer settles it. A reader takes such a value as a call, not as a reading (WAY-54). A field marked *prose* carries text rather than a value.
+| identifier | the format guards, in a decision's *Scope* (`decision-scope-names`), an invariant's *Part* (`invariant-part-names`) and a flow's *Parts* (`flow-part-names`); a generated rule file (`generated-pattern-source`) | prose |
+| responsibility / description / promise | whoever changes the part, the flow or the surface; a generated rule file (WAY-52); the fingerprint (`map-fingerprint-input`) | prose |
+| Files | the format guard (`file-part-assignment`, `path-pattern-reach`); the gate, finding the invariants a change reaches (`change-reach`); a generated rule file (`generated-pattern-source`) | judgment |
+| Depends on | the computation of criticality (`map-guard-dependency-report`); the comparison with the dependency graph (`known-violation-coverage`) | judgment |
+| Depends on — separated | the computation of criticality, which stops inheriting there (`map-guard-dependency-report`) | judgment |
+| Failure modes | the computation of criticality (`failure-mode-severity`, `map-guard-unrecorded-criticality`); whoever sets a severity, who reads the kind of damage | judgment |
+| Failure modes — detected by | the format guard (`failure-mode-detection`, `map-invariant-names`); whoever asks which failures the gate would catch | read off |
+| Trust boundary | the format guard (`trust-boundary-pattern`); the choice of how sharply a change is checked (WAY-13) | judgment |
+| Criticality (flow) | the computation of the criticality of every part the flow runs through (WAY-46) | judgment |
+| Parts (flow) | the format guard (`flow-part-names`, `flow-coverage-parts`); whether a change lies on the flow (WAY-45) | judgment |
+| Invariant (flow) | the format guard (`flow-invariant-link`, `map-invariant-names`); the gate, which runs the flow's test on every change (`flow-test-run`) | judgment |
+| Coverage (flow) | the format guard (`flow-coverage-parts`) | read off |
+| Declared at | the format guard (`surface-declaration`); whoever changes the item | read off |
+| criticality scale | the format guard, which rejects a degree not on the list (`failure-mode-severity`); the computation of criticality, which orders the degrees by it | judgment |
+| external context | the format guard (`external-exchange-row`); whoever records a trust boundary or sets a change path (WAY-48, WAY-50) | judgment |
+| change paths | whoever changes a surface at that level; the format guard (`surface-change-path`, `promise-level-policy`) | judgment |
+| files left out on purpose | the format guard, as the only exception to file assignment (`file-part-assignment`, `left-out-file-assignment`) | judgment |
+| withdrawn identifiers | the format guards, which reject a reference to one and its reuse (`decision-scope-names`, `identifier-holders`) | read off |
 
 ## The binding part
 
 The binding part of an entry is one sentence: a part's responsibility, a flow's description, a
-surface's promise. Its fingerprint covers that sentence alone (WAY-42, WAY-39). Path
-patterns, dependencies, failure modes and a flow's list of parts stay outside it; a change to a
-part's patterns is shown instead as the list of files that changed part. Any sentence of an entry
-that speaks of what a glossary term defines uses the term, never a paraphrase of its definition (WAY-100).
+surface's promise. Path patterns, dependencies, failure modes and a flow's list of parts stay
+outside it (WAY-42). What its fingerprint covers answers to the invariant `map-fingerprint-input`.
 
 ## Criticality: what is written and what is computed
 
 - A human writes the failure modes and the separations. A failure mode names what fails, the
   kind of damage it does, its severity, and how it is detected before release — a named
-  invariant, or an explicit "not detected".
+  invariant, or an explicit "not detected" (WAY-46).
 - The script computes a part's criticality: the highest of its own failure modes, of the flows
   it lies on, and of the parts that depend on it, stopping where a dependency records a
-  separation.
-- A part with no failure modes recorded counts as the highest degree.
-- Raising a severity needs no reason. Lowering one, or adding a separation, carries its reason
-  in the row that changes.
-- The kind of damage chooses which checks a task runs; the degree chooses how sharply (WAY-46).
+  separation (WAY-46).
+- A part with no failure modes recorded counts as the highest degree (WAY-46).
+- Raising a part's criticality needs no reason; lowering it is accepted by the human deciding the
+  change, with the lowered criticality in front of them (WAY-46).
+- A separation carries its reason in the dependency that records it: why a failure of that part
+  does not damage this one (WAY-46).
+- The kind of damage says what a failure does, for whoever sets its severity; the severity, not
+  the kind, enters the computed criticality, and the criticality sets how sharply a change is
+  checked (WAY-13, WAY-46).
 
 ## Assigning files
 
 - Every file git tracks belongs to exactly one part, through the patterns in its *Files* field,
-  matched by git rather than by a script of this process.
+  matched by git rather than by a script of this process (WAY-44).
 - A part whose tool does not exist yet holds no files (`Files: none`); every file git tracks
-  still belongs to exactly one part.
-- Tests belong to the part they test. Generated files belong to the part of their generator and
-  carry `(generated)`.
+  still belongs to exactly one part
+  (`TODO — decision pending: which decision lets a part hold no files`).
+- Tests belong to the part they test. Generated files belong to the part of their generator
+  (WAY-44).
 - The files that serve the whole repository — the lockfile, the build and the CI configuration —
-  are a part of their own, and a change to them lies on every critical flow.
+  are a part of their own, and a change to them lies on every critical flow (WAY-44, WAY-45).
 - For a file that collects entries about many parts, the parts a change touches come from the
   field in which the entries it adds or changes name parts — a decision's *Scope*, an invariant's
   *Part*, where `every` names all — not from the file's own part (WAY-44, WAY-62).
@@ -213,56 +225,8 @@ the task branch left the main branch from, never regenerated from scratch (WAY-5
 
 ## What is generated from the map
 
-Rules pinned to path patterns, in the channels the tools read: a part's responsibility, its
-allowed dependencies, and the binding sentences of the decisions whose scope names it. The
-patterns come from the part's *Files*. No overview of the repository is generated for an agent
-(WAY-52).
-
-## What the format guard checks
-
-- Every section of the map is an entry — a part, a critical flow or a surface — or one of the five
-  lists above; the list of known violations stands in its own file (WAY-40, WAY-51).
-- The map stands in `foundations/part_map.md`, and no other file git tracks is named
-  `part_map.md` (WAY-40).
-- Every identifier is made of words in lower case joined by hyphens, is unique, and is no
-  withdrawn one; no identifier ends in a version and no entry carries a *Version* field (WAY-41,
-  WAY-43).
-- Every entry carries every field of its kind's form; `none` stands only where that form gives it
-  the word, and `TODO` in no field of an entry and in no cell of a list, on every run, since the
-  form gives `TODO` to no field (WAY-71).
-- Every part a flow lists or a part depends on, and every name in the scope of the latest version
-  of a decision, is a part of the map; a withdrawn one is reported as withdrawn (WAY-21, WAY-45).
-- Where `foundations/invariants.md` stands beside the map, every invariant a flow or a failure
-  mode names is an entry of it (WAY-64).
-- Every file git tracks matches exactly one part's patterns, or stands on the list of files left
-  out on purpose; no file on that list, tracked or not, matches a part's patterns; every pattern
-  of *Files* and of *Trust boundary* matches at least one file git tracks (WAY-44, WAY-48).
-- Every flow names an invariant, and a test that exists and names the flow; in this repository's
-  own map, that test lies under `gate/` (WAY-45, WAY-55).
-- Where a flow leaves a coverage file, every part that coverage names stands in its list;
-  where it leaves none, the list is reported unchecked (WAY-47).
-- Every degree used stands on the criticality scale; no part carries a criticality field (WAY-46).
-- Every failure mode names a severity, a degree of the criticality scale, and either a detecting
-  invariant or "not detected" (WAY-46).
-- Every dependency running from a higher criticality to a lower one, with no separation
-  recorded, is reported.
-- Every surface names a declaration — a file that exists and holds the item named — or reads
-  `not markable` and names a test that exists; no promise level is written in the map, and no
-  withdrawal date anywhere in it; no surface carries a change path of its own, and no row of the
-  change paths names a surface (WAY-49, WAY-50). Whether every declaration carries a level, and
-  every level used has a change path, is reported unchecked until the product reports its levels.
-- Every exchange with the external context records its direction, its trust and whether its
-  consumer updates with the product.
-- Every row on the list of known violations names a source part and a target part of the
-  map, a file and what it reaches for, and no line number; given the commit the task branch left
-  the main branch from, the list is a subset of the list there. Whether the code holds every
-  row and no other violation is reported unchecked until the product reports its dependency
-  graph (WAY-51).
-- Every example in `examples.md` matches its entry in this repository's own map word for word.
-- Given the path of a record, the format guard writes the-way's own record of the run there, with a
-  verdict for each invariant its checks cite (WAY-61, WAY-74); given `none` as the commit the task
-  branch left the main branch from, it records the check that needs that commit as `unchecked`; a
-  call to git that fails is a failure of the run, never an unchecked check (WAY-61, WAY-63).
+From the map a product generates for its agents only rules pinned to path patterns (WAY-52); a
+generated rule file answers to the invariants `generated-pattern-source` and `generated-overview`.
 
 ## Examples
 

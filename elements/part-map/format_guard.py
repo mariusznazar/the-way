@@ -1,10 +1,15 @@
 """Format guard of a product's part map.
 
-Runs the checks listed in "What the format guard checks" in template.md, which lies next to this
-script. The fields of each kind of entry, the words `none` and `TODO` each field takes and the
-titles of the lists are read from the template, so the rules of an entry live in one place
-(WAY-35, WAY-71). Each check cites the invariants it gives a verdict for, as
-`invariant: <identifier>/<version>` (WAY-65).
+Checks a map against template.md, which lies next to this script. The fields of each kind of
+entry, the words `none` and `TODO` each field takes and the titles of the lists are read from the
+forms of the template, so the rules of an entry live in one place (WAY-35, WAY-71). Each check
+cites the invariants it gives a verdict for, as `invariant: <identifier>/<version>` (WAY-65).
+
+An entry's heading is its identifier alone, and a critical flow's test is found by a comment line
+`# flow: <identifier>` in a file git tracks, never by a path in the map. An entry written in the
+form before the slimming — a heading `## <identifier> — <title>`, a test named after `— test:` in
+a flow's *Invariant*, a pattern of *Files* marked `(generated)` — is reported, and the identifier,
+the invariant and the pattern are still read from it, so that every other check runs on it.
 
 Usage, from the root of the product's repository:
 
@@ -87,6 +92,15 @@ LIST_SECTIONS = ["Criticality scale", "External context", "Change paths",
 # The lists of the map itself; the list of known violations stands in its own file (WAY-51).
 MAP_LISTS = [title for title in LIST_SECTIONS if title != "Known violations"]
 DATE = re.compile(r"\b\d{4}-\d{2}-\d{2}\b")
+# The heading of an entry, `## <identifier>`, told from the heading of a list by the fields the
+# entry holds; and the heading of the form before the slimming, `## <identifier> — <title>`.
+HEADING = re.compile(r"^## (\S+)[ \t]*$")
+TITLED_HEADING = re.compile(r"^## (.+?) — (.+)$")
+FIELD = re.compile(r"^- \*\*.+?:\*\*")
+# The mark of the form before the slimming after a pattern of *Files*.
+GENERATED = re.compile(r"\s*\(generated\)\s*$")
+# A comment line standing alone on its line that names the critical flow a test checks.
+FLOW_LINE = re.compile(r"^[ \t]*#[ \t]*flow:[ \t]*(.*?)[ \t\r]*$", re.M)
 
 
 class TemplateError(Exception):
@@ -222,7 +236,7 @@ def read_rules(path=TEMPLATE):
 class Entry:
     line: int
     identifier: str
-    title: str
+    title: str                                    # None, but in the form before the slimming
     kind: str = None
     binding: str = None
     fields: dict = field(default_factory=dict)   # name -> [value, line]
@@ -236,10 +250,23 @@ class Section:
     rows: list = field(default_factory=list)     # (cells, line)
 
 
+def entry_heading(lines):
+    """(identifier, title) of a section that is an entry, its title None for a heading of the
+    identifier alone; None for a section that is no entry. A heading of one word is an entry's
+    when the section holds a field, and a list's otherwise."""
+    titled = TITLED_HEADING.match(lines[0])
+    if titled:
+        return titled.group(1).strip(), titled.group(2).strip()
+    heading = HEADING.match(lines[0])
+    if heading and any(FIELD.match(line) for line in lines[1:]):
+        return heading.group(1), None
+    return None
+
+
 def parse_map(text, rules):
     entries, sections = [], {}
     for line, lines in split_sections(text):
-        heading = re.match(r"^## (.+?) — (.+)$", lines[0])
+        heading = entry_heading(lines)
         if not heading:
             title = lines[0][3:].strip()
             section = Section(line, title)
@@ -252,7 +279,7 @@ def parse_map(text, rules):
             sections[title] = section
             continue
 
-        entry = Entry(line, heading.group(1).strip(), heading.group(2).strip())
+        entry = Entry(line, *heading)
         body = lines[1:]
         index = 0
         while index < len(body) and not body[index].strip():
@@ -297,14 +324,33 @@ def identifiers(value):
 
 
 def flow_invariant(value):
-    """(invariant, test path) a flow's *Invariant* names, each None where it names none."""
+    """(invariant, test path) a flow's *Invariant* names, each None where it names none. A test
+    path follows `— test:` only in the form before the slimming."""
     flat = " ".join((value or "").split())
     test = re.search(r"(?:^|\s)test:\s*(\S.*)$", flat)
     name = flat[:test.start()] if test else flat
     name = re.sub(r"\s*—\s*$", "", name).strip()
     path = test.group(1).strip() if test else None
-    return (name if name and not holds_todo(name) else None,
+    return (name if name and not holds_todo(name) and not is_none(name) else None,
             path if path and not holds_todo(path) else None)
+
+
+def flow_tests(top, tracked):
+    """{identifier: [paths]} of the files git tracks holding a comment line `# flow: <identifier>`
+    standing alone on its line; a value that is no identifier names no flow."""
+    named = {}
+    for path in tracked:
+        try:
+            with open(os.path.join(top, *path.split("/")), "rb") as handle:
+                data = handle.read()
+        except OSError:
+            continue
+        if b"flow:" not in data:
+            continue
+        for value in FLOW_LINE.findall(data.decode("utf-8", errors="replace")):
+            if re.fullmatch(IDENTIFIER, value) and path not in named.get(value, []):
+                named.setdefault(value, []).append(path)
+    return named
 
 
 # --- the report and the record of a run -----------------------------------------------------
@@ -327,7 +373,7 @@ def check_sections(text, report):
     check, kinds = "check_sections", "map-section-kinds/1"
     report.ran(check, kinds)
     for line, lines in split_sections(text):
-        if re.match(r"^## (.+?) — (.+)$", lines[0]):
+        if entry_heading(lines):
             continue
         title = lines[0][3:].strip()
         if title not in MAP_LISTS:
@@ -368,6 +414,9 @@ def check_identifiers(entries, sections, report):
     withdrawn = {cells[0]: line for cells, line in listed_rows(sections, "Withdrawn identifiers")}
     seen = {}
     for entry in entries:
+        if entry.title is not None:
+            report.error(entry.line, "`%s` carries a title after its identifier; an entry's "
+                                     "heading is `## <identifier>`" % entry.identifier, check)
         if not re.match(r"^%s$" % IDENTIFIER, entry.identifier):
             report.error(entry.line, "`%s` is not an identifier of words in lower case joined by "
                                      "hyphens" % entry.identifier, check, (form,))
@@ -401,6 +450,15 @@ def check_fields(entries, rules, report):
                          check)
         if entry.kind is None:
             continue
+        value, line = entry.fields.get("Files", ["", entry.line])
+        for pattern in (value or "").split("\n"):
+            pattern = pattern.strip()
+            if pattern.startswith("- "):
+                pattern = pattern[2:].strip()
+            if GENERATED.search(pattern):
+                report.error(line, "%s: `(generated)` follows the pattern `%s`; *Files* holds git "
+                                   "path patterns alone"
+                             % (entry.identifier, GENERATED.sub("", pattern)), check)
         for name in rules.kinds[entry.kind]:
             if name not in entry.fields or not entry.fields[name][0]:
                 report.error(entry.line, "%s: field *%s* is missing" % (entry.identifier, name),
@@ -622,12 +680,14 @@ def check_invariant_names(entries, map_path, report):
 
 
 def patterns(entry, name="Files"):
-    """Yield the path patterns a field lists, one per line, without the mark of a generated file."""
+    """Yield the path patterns a field lists, one per line. The mark `(generated)` of the form
+    before the slimming is set aside, so the pattern it follows is still matched; check_fields
+    reports the mark."""
     for line in (entry.fields.get(name, [""])[0] or "").split("\n"):
         pattern = line.strip()
         if pattern.startswith("- "):
             pattern = pattern[2:].strip()
-        pattern = re.sub(r"\s*\(generated\)\s*$", "", pattern).strip()
+        pattern = GENERATED.sub("", pattern).strip()
         if pattern and not is_none(pattern) and not is_todo(pattern):
             yield pattern
 
@@ -757,15 +817,19 @@ def check_files(entries, sections, report, top, tracked):
     return claims
 
 
-def check_flows(entries, report, top, claims):
+def check_flows(entries, report, top, tracked, claims):
+    """Every critical flow names an invariant and is named by a test, in a comment line
+    `# flow: <identifier>` of a file git tracks (WAY-45); the map names no test. Returns the
+    tests found for each flow, or None where git lists no file."""
     # invariant: flow-invariant-link/1
     # invariant: flow-coverage-parts/1
     check, link, coverage_parts = "check_flows", "flow-invariant-link/1", "flow-coverage-parts/1"
-    if top is None:
-        return
+    if top is None or tracked is None:
+        return None
     report.ran(check, link)
     if claims is not None:
         report.ran(check, coverage_parts)
+    named = flow_tests(top, tracked)
     for entry in entries:
         if entry.kind != "critical flow":
             continue
@@ -774,20 +838,13 @@ def check_flows(entries, report, top, claims):
         if invariant is None:
             report.error(line, "%s: *Invariant* names no invariant" % entry.identifier,
                          check, (link,))
-        if relative is None:
-            report.error(line, "%s: *Invariant* names no test of the flow" % entry.identifier,
-                         check, (link,))
-        else:
-            full = os.path.join(top, relative.replace("/", os.sep))
-            if not os.path.isfile(full):
-                report.error(line, "%s: test `%s` of `%s` does not exist"
-                             % (entry.identifier, relative, entry.identifier), check, (link,))
-            else:
-                with open(full, encoding="utf-8", errors="replace") as handle:
-                    if entry.identifier not in handle.read():
-                        report.error(line, "%s: test `%s` does not name `%s`"
-                                     % (entry.identifier, relative, entry.identifier),
-                                     check, (link,))
+        if relative is not None:
+            report.error(line, "%s: *Invariant* names a test after `— test:`; the flow's test "
+                               "names the flow in a line `# flow: %s` instead"
+                         % (entry.identifier, entry.identifier), check)
+        if not named.get(entry.identifier):
+            report.error(line, "%s: no test names the flow in a line `# flow: %s`"
+                         % (entry.identifier, entry.identifier), check, (link,))
 
         if claims is None:
             continue
@@ -824,22 +881,24 @@ def check_flows(entries, report, top, claims):
                                  % (entry.identifier, entry.identifier, owner.identifier),
                                  check, (coverage_parts,))
                     listed.add(owner.identifier)
+    return named
 
 
-def check_flow_tests(entries, report):
-    """Every critical flow of the-way's own map names a test under gate/ (WAY-55)."""
+def check_flow_tests(entries, named, report):
+    """Every test naming a critical flow of the-way's own map in a line `# flow: <identifier>`
+    lies under gate/ (WAY-55)."""
     # invariant: flow-test-location/1
     check, location = "check_flow_tests", "flow-test-location/1"
     report.ran(check, location)
     for entry in entries:
         if entry.kind != "critical flow":
             continue
-        value, line = entry.fields.get("Invariant", ["", entry.line])
-        relative = flow_invariant(value)[1]
-        if relative is None or not relative.startswith(GATE_DIRECTORY):
-            report.error(line, "%s: the test of the flow lies under `%s`, not at `%s`"
-                         % (entry.identifier, GATE_DIRECTORY, relative or "no path"),
-                         check, (location,))
+        line = entry.fields.get("Invariant", ["", entry.line])[1]
+        for path in named.get(entry.identifier, []):
+            if not path.startswith(GATE_DIRECTORY):
+                report.error(line, "%s: `%s` names the flow in a line `# flow: %s` and lies "
+                                   "outside `%s`" % (entry.identifier, path, entry.identifier,
+                                                     GATE_DIRECTORY), check, (location,))
 
 
 def promise_levels(sections):
@@ -1178,9 +1237,9 @@ def run(map_path, base=None, stream=None, template=TEMPLATE, record=None,
     if tracked is not None:
         check_map_file(map_path, top, tracked, report)
         claims = check_files(entries, sections, report, top, tracked)
-    check_flows(entries, report, top if tracked is not None else None, claims)
-    if own:
-        check_flow_tests(entries, report)
+    named = check_flows(entries, report, top, tracked, claims)
+    if own and named is not None:
+        check_flow_tests(entries, named, report)
     check_surfaces(entries, sections, rules, text, report, top)
     check_promise_levels(entries, report)
     check_lists(sections, rules, report)
