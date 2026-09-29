@@ -14,9 +14,10 @@ running that method, never from a status written by hand (WAY-08).
 
 The rules of form the elements share — the language of an entry, every field and the words `none`
 and `TODO`, the terms of the glossary, the marks of where a value comes from, the form of an
-identifier and its one space with the part map and the environment facts, the list of withdrawn
-identifiers, human verdicts, `{fork-point}` and the version of an entry — stand in
-`elements/common/rules.md`; this template holds what is particular to an invariant (WAY-35).
+identifier, when it stays and when a split or a merge replaces it, its one space with the part map
+and the environment facts, the list of withdrawn identifiers, human verdicts, `{fork-point}` and
+the version of an entry — stand in `elements/common/rules.md`; this template holds what is
+particular to an invariant (WAY-35).
 
 ## Where entries go
 
@@ -30,15 +31,11 @@ identifiers, human verdicts, `{fork-point}` and the version of an entry — stan
   version leaves it true; where another entry constrains the same thing, it adds the aspect this
   one protects, as `entry-version-number` and `entry-version-correction`
   (`TODO — decision pending: which decision sets how an invariant's identifier is named`).
-- An identifier the file held on the commit the task branch left the main branch from stays, as
-  an entry or as a withdrawn identifier giving why and naming its successors or `none`; one that
-  never reached the main branch may go (WAY-64).
-- Splitting or merging entries held there gives each entry that comes out of it a new identifier,
-  and any other change keeps it (WAY-64); a change of meaning then moves the version (WAY-57). An
-  entry that takes in a clause of another keeps its identifier, and the other is split
+- Where a change keeps an entry's identifier, as `elements/common/rules.md` gives it (WAY-64), a
+  change of meaning moves the version (WAY-57). An entry that takes in a clause of another keeps
+  its identifier, and the other is split
   (`TODO — decision pending: which decision sets that an entry taking in a clause of another keeps
   its identifier`).
-- An entry holds only its current wording; earlier wordings are read from git (WAY-57).
 
 ## Entry
 
@@ -54,9 +51,9 @@ identifiers, human verdicts, `{fork-point}` and the version of an entry — stan
 - **Correction:** none | <fingerprint on the main branch> → <current fingerprint>
 ```
 
-The form above gives each field the words it takes. Every field appears in every entry, and the
-rest of the rule on `none` and `TODO` — the fields the main branch holds `TODO` in among them —
-stands in `elements/common/rules.md` (WAY-71).
+The form above gives each field the words it takes. The rest of the rule on `none` and `TODO` —
+every field in every entry, and the fields the main branch holds `TODO` in — stands in
+`elements/common/rules.md` (WAY-71).
 
 After the last entry the file carries its withdrawn identifiers, in the form, with the *Why* and
 the *Successors*, that `elements/common/rules.md` gives (WAY-64).
@@ -147,10 +144,10 @@ naming its identifier, its current version, what was searched and what was found
 - A sentence may be about a check the product itself holds, as it may be about anything else the
   product holds: whether a check belongs to the product is settled by the part map
   (`TODO — decision pending: which decision lets the part map settle whether a check belongs to
-  the product`), and the method of such a sentence is a test fed input made up for it (WAY-61). Such a sentence names a value of
-  the gate's list in quotation marks, as what the check is given, and its command need not take it
-  (WAY-60, WAY-61). Quoted text, in this template, is text between quotation marks; a value in
-  backticks is not quoted.
+  the product`), and the method of such a sentence is a test fed input made up for it (WAY-61).
+  Such a sentence names a value of the gate's list in quotation marks, as what the check is given,
+  and its command need not take it (WAY-60, WAY-61). Quoted text, in this template, is text
+  between quotation marks; a value in backticks is not quoted.
 - A sentence that bounds or equates a quantity measured while the product runs names its bound or
   tolerance, the statistic and the population it is computed over (WAY-60). A bound written with a
   tilde — `~2 seconds` — names no bound, so the sentence states one as a number or has none
@@ -208,12 +205,11 @@ naming its identifier, its current version, what was searched and what was found
 
 ## Test
 
-- A check cites its invariant by identifier and version, and a check that cites a version other
-  than the current one fails the gate (WAY-57).
 - A check cites each invariant it gives a verdict for, at the check, as a line
   `invariant: <identifier>/<version>` in the comment form of its file's language; a run records no
-  verdict for an invariant its check does not cite (WAY-65). Several checks citing one invariant in
-  one run pass only when each of them does
+  verdict for an invariant its check does not cite (WAY-65). The version a check cites follows
+  `elements/common/rules.md` (WAY-57). Several checks citing one invariant in one run pass only
+  when each of them does
   (`TODO — decision pending: which decision sets that several checks citing one invariant pass only
   together`).
 - Each file such a check reads and names there stands on a line `data: <path>` — a recorded output
@@ -278,7 +274,7 @@ WAY-64).
   a record holding a line off the form above gives `error` to every entry whose method wrote it
   (`TODO — decision pending: which decision sets which failures of a run give an error, and to
   which entries`).
-  Runs on a deliberate break, and the run WAY-58 asks for, give evidence, not results
+- Runs on a deliberate break, and the run WAY-58 asks for, give evidence, not results
   (`TODO — decision pending: which decision sets that runs on a deliberate break give evidence, not
   results`).
 
@@ -309,28 +305,30 @@ branch from, never regenerated from scratch (WAY-53, WAY-67).
 | Identifier | Version |
 ```
 
-## Where each value comes from
+## Fields and their readers
 
 A field stays in this template only while someone or something reads it
 (`TODO — decision pending: which decision keeps a field in an element's template only while it is
-read`). Each field carries the mark of where its value comes from (`elements/common/rules.md`):
+read`). Each field carries the mark of where its value comes from (`elements/common/rules.md`); a
+reader not built yet is named by the invariant it answers to
+(`TODO — decision pending: which decision names a reader not built yet by its invariant`).
 
-| Field | Where its value comes from |
-|---|---|
-| identifier (heading) | judgment |
-| version (heading) | read off |
-| sentence | prose |
-| Method | judgment |
-| Rests on | judgment for the fact named; read off for its fingerprint |
-| Derives from | judgment for the decision named; read off for its fingerprint |
-| Part | judgment |
-| Correction | judgment for the declaration; read off for both fingerprints |
-| withdrawn identifiers | read off; prose for *Why* |
-| quarantined invariants | judgment for the date; read off for the version |
-| recovered invariants | judgment for what was searched and found; read off for the version |
-| violated invariants | judgment for the row; read off for the version |
+| Field | Who reads it, when | Where its value comes from |
+|---|---|---|
+| identifier (heading) | a check citing the invariant; the format guard (`invariant-identifier-form`, `identifier-holders`, `invariant-citation-target`); the part map's guard, in a flow and a failure mode's detection (`flow-invariant-link`, `map-invariant-names`) | judgment |
+| version (heading) | a check citing the invariant, and the test runner, which records the verdict at the version cited (`invariant-citation-version`, `test-runner-pass-line`); the format guard, which computes what the version must be (`invariant-version-new`, `invariant-version-changed`, `invariant-version-unchanged`) | read off |
+| sentence | the agent checking a change against the invariant; the fingerprint (`invariant-fingerprint-input`); the format guard (`invariant-sentence-count`, `sentence-branch-names`, `sentence-gate-values`) | prose |
+| Method | the gate, which runs a command or hands a path to a human (`gate-check-source`, `gate-verdict-per-entry`); the format guard (`invariant-method-form`, `method-gate-values`, `run-record-path`) | judgment |
+| Rests on | whoever reviews the invariant when a fact changes; the format guard, which compares each fingerprint with the current one (`link-fingerprint-presence`, `link-fingerprint-value`) | judgment for the fact named; read off for its fingerprint |
+| Derives from | whoever changes the decision; the format guard, which checks a decision's level 1 verification against it and each fingerprint against the current one (`level-one-decision-invariants`, `verification-invariant-derivation`, `link-fingerprint-presence`, `link-fingerprint-value`) | judgment for the decision named; read off for its fingerprint |
+| Part | the gate, which runs the invariants a change reaches (`change-reach`); the format guard (`invariant-part-names`, `invariant-part-form`) | judgment |
+| Correction | the format guard, which lets the version stand (`invariant-version-changed`); the human who confirms it (`invariant-correction-confirmation`) | judgment for the declaration; read off for both fingerprints |
+| withdrawn identifiers | whoever follows an identifier that no longer names an entry; the format guard, which keeps a withdrawn identifier from coming back and checks its successors (`invariant-identifier-persistence`, `invariant-withdrawal-persistence`, `withdrawal-successors`) | as `elements/common/rules.md` gives it |
+| quarantined invariants | the gate, which reports the entry `unchecked` or `error` (`gate-quarantine-result`); the format guard (`quarantine-position-form`, `quarantine-flow-invariants`) | judgment for the date; read off for the version |
+| recovered invariants | the human weighing a change to the invariant; the format guard (`invariant-recovered-form`, `invariant-recovered-derived`) | judgment for what was searched and found; read off for the version |
+| violated invariants | the gate, which leaves a listed `fail` at zero and fails on a listed `pass` (`gate-exit-code`); the format guard, which compares the list with the commit the branch left the main branch from (`violated-list-growth`, `violated-position-version`) | judgment for the row; read off for the version |
 
 ## Examples
 
-Examples live in `examples.md`: entries copied word for word from a real set of invariants. Until
-the first entries are written, only the forms above stand (WAY-05).
+Examples live in `examples.md` (WAY-09): entries copied word for word from a real set of
+invariants.

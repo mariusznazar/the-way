@@ -39,7 +39,7 @@ def decision(version=1, binding=DECISION, verification=None, change=None):
     if binding is not None:
         lines += [binding, ""]
     lines.append("- **Change:** %s" % (change or ("new decision" if version == 1 else
-                                                 "reword · previous: WAY-01/%d" % (version - 1))))
+                                                 "new wording")))
     if verification is not None:
         lines.append("- **Verification:** %s" % verification)
     return "\n".join(lines) + "\n"
@@ -111,7 +111,7 @@ FACTS = "\n".join([
     "", "- **Holds for:** Firefox 130",
     '- **Source:** https://developer.mozilla.org/docs/storage/130 § Web Storage — "at least 5 MB '
     'per origin"; read 2026-09-26',
-    "- **Set by:** none", "- **Method:** `TODO`", "- **Correction:** none", "",
+    "- **Method:** `TODO`", "",
     "## Withdrawn identifiers", "", "| Identifier | Why | Successors |", "|---|---|---|",
     "| storage-limit | split into two facts | storage-quota |", ""])
 VERDICT_HEADER = "| Entry | Version | Verdict | By | On | Commit | Until |\n|---|---|---|---|---|---|---|\n"
@@ -674,7 +674,7 @@ class Links(GuardTestCase):
 
     def test_decision_repealed_since(self):
         self.write("foundations/decisions.md", LOG + "\n" + decision(
-            2, binding=None, change="repeal · previous: WAY-01/1"))
+            2, binding=None, change="repeal"))
         self.assertFails(invariants(), "`WAY-01@4dd7fb86` names a decision that does not exist or "
                                        "binds nothing any more")
 
@@ -852,14 +852,14 @@ class Verifications(GuardTestCase):
 
     def test_repealed_decision_no_entry_derives_from(self):
         self.log(decision(verification="level 1 — invariants: save-round-trip."),
-                 decision(2, binding=None, change="repeal · previous: WAY-01/1",
+                 decision(2, binding=None, change="repeal",
                           verification="level 2 — an agent compares the change with the decision."))
         self.assertPasses(invariants(entry(derives="none"), later()))
         self.assertEqual(self.verdicts("level-one-decision-invariants/1"), ["pass"])
 
     def test_repealed_decision_verified_at_level_one_needs_no_entry_deriving_from_it(self):
         self.log(decision(verification="level 1 — invariants: save-round-trip."),
-                 decision(2, binding=None, change="repeal · previous: WAY-01/1",
+                 decision(2, binding=None, change="repeal",
                           verification="level 1 — invariants: save-round-trip."))
         self.assertFails(invariants(entry(derives="none"), later()),
                          "its *Derives from* does not name WAY-01")
@@ -1481,7 +1481,7 @@ class FactsBeside(GuardTestCase):
     def test_fact_held_by_the_part_map(self):
         # invariant: identifier-holders/1
         self.write("foundations/environment_facts.md", FACTS.replace("storage-limit", "saving"))
-        self.assertFails(invariants(), "environment_facts.md:17: identifier `saving` is held by the "
+        self.assertFails(invariants(), "environment_facts.md:15: identifier `saving` is held by the "
                                        "part map")
         self.assertEqual(self.verdicts("identifier-holders/1"), ["fail"])
 
