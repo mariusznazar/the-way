@@ -844,8 +844,21 @@ class HumanVerdicts(GuardTestCase):
         self.check(self.row(entry="saves-fit-quota", until="none"))
 
     def test_row_naming_neither(self):
+        """A row carrying a date in *Until* has a fact's form (rules.md), so one that names no
+        entry of either file is a fact row naming no fact."""
+        # invariant: human-verdict-fact-row/1
         self.assertFails(facts(), "`storage-cap` is neither an invariant nor an environment fact",
                          **{"foundations/human_verdicts.md": verdicts(self.row(entry="storage-cap"))})
+        self.assertEqual(self.verdicts("human-verdict-fact-row/1"), ["fail"])
+
+    def test_row_naming_neither_with_none_in_until_is_the_invariants_guards(self):
+        """A row reading `none` in *Until* has an invariant's form; one that names no entry of
+        either file is reported, and the invariants guard judges it as an invariant row."""
+        # invariant: human-verdict-fact-row/1
+        self.assertFails(facts(), "`storage-cap` is neither an invariant nor an environment fact",
+                         **{"foundations/human_verdicts.md":
+                            verdicts(self.row(entry="storage-cap", until="none"))})
+        self.assertEqual(self.verdicts("human-verdict-fact-row/1"), ["pass"])
 
     def test_list_with_other_columns(self):
         self.assertFails(facts(), "the list has columns Entry | Verdict",

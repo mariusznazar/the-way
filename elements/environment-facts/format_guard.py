@@ -753,7 +753,8 @@ def check_human_verdicts(path, facts, foundation, rules, report):
     """Every row of the file of human verdicts names an entry of the invariants or of the
     environment facts; a row naming a fact names an entry whose method is a path, gives `pass` or
     `fail`, names who gave it, when and the commit assessed, and carries a date in *Until*
-    (WAY-83). The rows naming an invariant are the invariants guard's to check further."""
+    (WAY-83). A row naming neither is a fact row when it carries a date in *Until*. The rows naming
+    an invariant are the invariants guard's to check further."""
     # invariant: human-verdict-fact-row/1
     check, fact_row = "check_human_verdicts", "human-verdict-fact-row/1"
     verdicts_path = os.path.join(os.path.dirname(os.path.abspath(path)), rules.verdicts_file)
@@ -795,8 +796,11 @@ def check_human_verdicts(path, facts, foundation, rules, report):
             for problem in problems:
                 report.error(None, "%s: %s" % (where, problem), check, (fact_row,))
         elif name not in {entry.identifier for entry in foundation.invariants}:
+            # A row carrying a date in *Until* has a fact's form (rules.md), so it names a fact
+            # that is no entry; an undated row is the invariants guard's to judge.
+            invariant = (fact_row,) if re.fullmatch(DATE, values.get("Until", "")) else ()
             report.error(None, "%s: `%s` is neither an invariant nor an environment fact"
-                         % (where, name), check)
+                         % (where, name), check, invariant)
 
 
 def check_based_on(facts, foundation, report):
