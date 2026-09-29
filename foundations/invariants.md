@@ -50,10 +50,9 @@ Every file in `foundations/` holds the entries of one of the five foundation ele
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-04@f07bb569
+- **Derives from:** WAY-04@29a75d2c
 - **Part:** every
 - **Correction:** none
-- **Recovered:** none
 
 ## binding-sentence-count/1
 
@@ -322,10 +321,9 @@ Every derived file git tracks that its generator can produce from scratch is ide
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-15@72eb2240 · WAY-52@93101108 · WAY-53@aaeafada
+- **Derives from:** WAY-04@29a75d2c · WAY-52@93101108 · WAY-53@aaeafada
 - **Part:** every
 - **Correction:** none
-- **Recovered:** none
 
 ## derived-subset-naming/1
 
@@ -336,7 +334,6 @@ Every derived file compared as a subset of its version on {fork-point} is named 
 - **Derives from:** WAY-53@aaeafada
 - **Part:** decisions · part-map · invariants · glossary · environment-facts
 - **Correction:** none
-- **Recovered:** none
 
 ## ci-checking-commands/1
 

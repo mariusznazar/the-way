@@ -204,7 +204,7 @@ read`). Each field carries the mark of where its value comes from (`elements/com
 | Field | Who reads it, when | Where its value comes from |
 |---|---|---|
 | term (heading) | whoever writes a sentence of any element, which depends on the term by using its word; the format guard (`glossary-term-holder`, `glossary-term-collision`, `glossary-term-use`) | judgment |
-| definition | the agent reviewing the uses when it changes; whoever writes a sentence using the term; the format guard (`glossary-definition-count`, `glossary-definition-words`, `glossary-definition-uses`) | prose |
+| definition | the agent reviewing the uses when it changes; whoever writes a sentence using the term; the format guard (`glossary-definition-count`, `glossary-definition-words`, `glossary-definition-uses`) | judgment |
 | Avoid | whoever writes a sentence; the format guard (`glossary-avoid-growth`, `glossary-avoid-single`, `glossary-avoid-term`, `glossary-avoid-carrier`) | judgment for the word; read off, from the list of uses, for whether it may stand there |
 | Not | the panel judging a change, which sees the foundation; the search of WAY-33; the format guard (`glossary-not-target`, `glossary-not-quoted-word`, `glossary-entry-merge-todo`) | judgment for the meaning and the word chosen; read off for whether it exists |
 

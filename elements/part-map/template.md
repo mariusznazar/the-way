@@ -3,7 +3,7 @@
 This file defines how a product's part map is written. The map holds the parts of a product and
 what joins them: which part may depend on which, which flows run across several parts, and what
 crosses the edge to the world outside. It says what is allowed, not what the code happens to
-contain today — what the code contains is computed from it and checked against the map (WAY-15).
+contain today — what the code contains is computed from it and checked against the map (WAY-04).
 Alongside the joins it records how badly each part can fail and where it takes in what it does
 not trust.
 
@@ -154,8 +154,8 @@ reader not built yet is named by the invariant it answers to
 
 | Field | Who reads it, when | Where its value comes from |
 |---|---|---|
-| identifier | the format guards, in a decision's *Scope* (`decision-scope-names`), an invariant's *Part* (`invariant-part-names`), a flow's *Parts* and a part's *Depends on* (`flow-part-names`); a generated rule file (`generated-pattern-source`) | prose |
-| responsibility / description / promise | whoever changes the part, the flow or the surface; a generated rule file (WAY-52); the fingerprint (`map-fingerprint-input`) | prose |
+| identifier | the format guards, in a decision's *Scope* (`decision-scope-names`), an invariant's *Part* (`invariant-part-names`), a flow's *Parts* and a part's *Depends on* (`flow-part-names`); a generated rule file (`generated-pattern-source`) | judgment |
+| responsibility / description / promise | whoever changes the part, the flow or the surface; a generated rule file (WAY-52); the fingerprint (`map-fingerprint-input`) | judgment |
 | Files | the format guard (`file-part-assignment`, `path-pattern-reach`); the gate, finding the invariants a change reaches (`change-reach`); a generated rule file (`generated-pattern-source`) | judgment |
 | Depends on | the format guard (`flow-part-names`); the computation of criticality (`map-guard-dependency-report`); the comparison with the dependency graph (`known-violation-coverage`) | judgment |
 | Depends on — separated | the computation of criticality, which stops inheriting there (`map-guard-dependency-report`) | judgment |

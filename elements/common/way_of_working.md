@@ -65,9 +65,8 @@ looks for in its element.
   about before anything is written in it`); what stays open after step 4 is written as `rules.md`
   gives it (WAY-71).
 - A value that a closed list of the template does not hold is a question in step 4, never the
-  nearest value on the list with a reason why it will do; the list grows as the template says
-  (`TODO — decision pending: which decision sets that a value off a closed list is a question
-  rather than the nearest value`).
+  nearest value on the list with a reason why it will do (WAY-54); the list grows as the template
+  says.
 
 ## 4. Ask, show, write
 

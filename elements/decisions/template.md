@@ -74,8 +74,8 @@ yet is named by the invariant it answers to
 |---|---|---|
 | number (heading) | references from entries, tests and code (WAY-02); the format guard (`log-reference-target`) | judgment |
 | version (heading) | the format guard (`decision-version-sequence`); the view of the decisions in force (`view-versions`). A reference to a specific version (`WAY-01/1`) is historical and never flagged (WAY-02) | read off |
-| question (heading) | the author and the skill: is this a new version of an existing number, or a new number (WAY-19) | prose |
-| binding sentences | an agent comparing a change with the decision (WAY-12); the fingerprint (WAY-31) | prose |
+| question (heading) | the author and the skill: is this a new version of an existing number, or a new number (WAY-19) | judgment |
+| binding sentences | an agent comparing a change with the decision (WAY-12); the fingerprint (WAY-31) | judgment |
 | Change | the format guard (`decision-change-kind`, `decision-binding-across-versions`); the view (`view-versions`) | judgment |
 | Scope | the part map's guard (`decision-scope-names`); finding the decisions for a change (`decisions-found-for-change`) | judgment |
 | Based on | the environment facts guard (`based-on-fact-fingerprint`); a human reviewing the decision when a fact changes (WAY-90) | transcribed; for a fact named, judgment, and read off for its fingerprint |
@@ -84,8 +84,8 @@ yet is named by the invariant it answers to
 | Review when | the periodic review of the foundation (WAY-24); the format guard (`decision-guard-overdue-review`) | judgment |
 | Origin | whoever wants to change the decision and needs the full reasoning; the next agent, so it does not repeat a search (WAY-29) | transcribed |
 | Approved by | a human considering a change; the format guard (`decision-approval-record`, `decision-approver`) | transcribed |
-| Rationale / Rationale for change | the agent in a borderline case; a human considering a change | prose |
-| Rejected | the agent, before proposing an option already rejected; the search of the foundation (WAY-33) | prose |
+| Rationale / Rationale for change | the agent in a borderline case; a human considering a change | judgment |
+| Rejected | the agent, before proposing an option already rejected; the search of the foundation (WAY-33) | judgment |
 
 ## Binding sentences
 

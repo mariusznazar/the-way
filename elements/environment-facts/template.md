@@ -279,7 +279,7 @@ reader not built yet is named by the invariant it answers to
 |---|---|---|
 | identifier (heading) | an invariant's *Rests on*, a decision's *Based on*, a `fact:` line; the format guard (`fact-identifier-form`, `identifier-holders`) | judgment |
 | version (heading) | a check citing the fact (`fact-citation-version`); the format guard, which computes what the version must be (`fact-version-new`, `fact-version-changed`, `fact-version-unchanged`) | read off |
-| sentence | whoever reviews what rests on the fact; the fingerprint (`fact-fingerprint-input`) | prose |
+| sentence | whoever reviews what rests on the fact; the fingerprint (`fact-fingerprint-input`) | judgment |
 | Holds for | the fingerprint (`fact-fingerprint-input`); whoever writes an invariant naming a version within it; a probe, which compares the release it runs on with it (WAY-91); a script checking a decision's *Review when* against the models a study measured, which no invariant states yet | transcribed from the source |
 | Source | the watch, which checks that the passage still stands; the human reviewing the fact; the format guard (`fact-source-form`) | transcribed |
 | Method | the gate, on a change that enters or changes the fact (`TODO — decision pending: whether a change of a fact's field that does not reword its entry runs its method`) or alters a file its command names (`gate-fact-run`); the clock (`fact-clock-exit`); a human, for a path; the format guard (`fact-method-form`, `run-record-path`) | judgment |

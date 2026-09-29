@@ -32,21 +32,17 @@ that element's template (WAY-35).
 
 ## Where the value of a field comes from
 
-Each template marks, for every field, where its value comes from, with one of four marks:
+Each template marks, for every field, where its value comes from, with one of three marks:
 
-- *read off* — the value is read off, or follows from what the template asks for, as a version the
-  guard computes; a template asks for what a value follows from rather than for the name of a
-  value (WAY-54);
+- *read off* — the value is read off, as a version the guard computes; a template asks for what a
+  value follows from rather than for the name of a value (WAY-54);
 - *transcribed* — a human copies the value unchanged from a record outside the product (WAY-54);
-- *judgment* — the value is neither read off, nor follows from what the template asks for, nor is
-  transcribed: it holds someone's call, and no question with a factual answer settles it. A reader
-  takes such a value as a call, not as a reading (WAY-54);
-- *prose* — the field carries text rather than a value
-  (`TODO — decision pending: which decision sets the prose mark`).
+- *judgment* — the value is neither read off nor transcribed: it holds someone's call, and no
+  question with a factual answer settles it. A reader takes such a value as a call, not as a
+  reading (WAY-54).
 
 A field whose parts come from different places carries a mark for each part: *judgment* for the
-entry a link names, *read off* for its fingerprint
-(`TODO — decision pending: which decision sets a mark for each part of a field`).
+entry a link names, *read off* for its fingerprint (WAY-54).
 
 ## Identifiers
 
@@ -83,8 +79,7 @@ entry a link names, *read off* for its fingerprint
   may read `none` (WAY-64); in the part map it names one or more identifiers, never `none`:
   the map withdraws an identifier only on a split or a merge, which leaves entries in its place
   (WAY-41).
-- The identifier and *Successors* are read off (WAY-54), and *Why* is prose
-  (`TODO — decision pending: which decision sets the prose mark`).
+- The identifier and *Successors* are read off, and *Why* rests on a judgment (WAY-54).
 
 ## Human verdicts
 

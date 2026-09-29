@@ -98,62 +98,47 @@ removes that move instead of forbidding it.
 by the invariant they cite (WAY-02). Even a change of mechanics — a selector, test data, waiting —
 goes through the foundation step and its acceptance.
 
-### WAY-04/1 — What elements make up a product's foundation?
+### WAY-04/1 — What makes up a product's foundation, and what in it is derived rather than written by hand?
 
 A product's foundation has five elements, and the list is closed: invariants, decisions, a
 glossary of product terms, a part map, and environment facts. A new pattern enters the
 foundation only as a field or a rule of one of the five, and only when a mechanism keeps it
 without human memory: a test, a lint, a check that stops a merge, a mandatory relation or
-configuration.
+configuration. What can be derived from what the product executes — code, configuration,
+infrastructure as code, runtime traces — is derived, never written by hand, and what is derived
+describes the state; rules are written by hand: what is allowed, how bad a failure would be and
+what the product promises, which the code cannot show.
 
 - **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts
-- **Based on:** documentation that nobody maintains turns into "a culture of 'paper safety' at
-  the expense of real safety" (Haddon-Cave, The Nimrod Review, 2009; summary:
-  https://aerossurance.com/safety-management/nimrod-xv230-haddon-cave/).
-- **Relations:** related to WAY-02
-- **Outranks:** none
-- **Verification:** level 1 — invariants: foundation-file-kinds. Level 2 for the rule on new
-  patterns — an agent compares the change with the decision:
-  - complies: the failure modes a part can suffer enter the foundation as fields of that part
-    in the part map, and its criticality is computed from them;
-  - violates: a hand-written architecture document appears next to the part map.
+- **Based on:** none
+- **Relations:** none
+- **Verification:** level 1 — invariants: foundation-file-kinds · derived-file-content. Level 2
+  for the rule on new patterns and for what is derived — an agent compares the change with the
+  decision:
+  - complies: a part's failure modes enter the foundation as fields of the part, and its
+    criticality is computed from them; existing dependencies between parts are read from the
+    product's own dependency graph and compared with the map's allowed ones;
+  - violates: a hand-written architecture document appears next to the part map; a hand-written
+    list of the product's endpoints kept next to the code; the allowed dependencies in the part
+    map copied from the current import graph.
 - **Review when:** none
 - **Origin:** none
-- **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-14
+- **Approved by:** Mariusz, 2026-09-29
 
-*Rationale:* each element holds what no other can. A task must not break an invariant.
-Decisions are the only place for reasons and rejected options, and they constrain later changes
-only when they are read as rules rather than as history. The glossary exists because terms
-carry rules: without it, the same word means one thing in the concept, another in the
-requirements and a third in the code. The part map lists the parts that criticality and scope
-refer to; it holds rules — allowed dependencies — because code yields only the current state,
-and its rule for assigning files lets a script check the map against the code and compute what
-a task touches. Environment facts exist because an invariant with a green test can rest on a
-fact about the world that nobody wrote down, as the assumption hidden in the code of Ariane 5
-did. The list was checked for completeness against arc42, ISO/IEC/IEEE 42010 and the
-documentation of several existing products. It is closed, and a new pattern needs a mechanism,
-because research produced at least nine candidates for new kinds of entries and fields, and a
-large foundation that nobody maintains gives only paper safety.
-*Rejected:* as separate elements — tests (a method of checking an invariant), documentation of
-"why" (the rationale of decisions), product identity (the foundation as a whole defines it;
-"what for" and "for whom" are decisions), classes of task risk (a task inherits risk from the
-parts it touches), structural code rules and quality scenarios (forms of an invariant), the
-environment an agent runs, and the return step (both belong to the task cycle); a separate
-element recording criticality (criticality is a field of a part);
-external constraints as a field of the map (a constraint is an environment fact, and the
-obligation it creates is an invariant); product principles and non-goals as a separate kind of
-entry (they are decisions like any other); diagrams and an ARCHITECTURE.md written by hand (a
-second copy of the map); environment facts as hypotheses in the backlog (they are true or false
-today); assumptions as a kind of entry — anything inconvenient could be called an assumption and
-escape checking, and a mandatory condition for disproving it with a review date narrows that way
-round without closing it.
-*Consequences:* each element is described in `elements/<element>/` of the process repository; the
-description grows into the element's template as the element goes through its steps. Every picture
-of the architecture — a diagram, a description — is generated from the part map and the code, and is
-made for a human on request; no such picture is generated into an agent's context (WAY-52). Which
-glossary holds a word, the-way's or a product's, is set by WAY-95.
+*Rationale:* each element holds what no other can, and a foundation nobody maintains gives only
+paper safety; a hand-written copy of the state goes stale, and code shows only what exists: a
+view derived from it shows accidents as architecture, a rule copied from it turns one into law.
+*Rejected:* as elements of their own — tests (a method of an invariant), the "why" (a decision's
+rationale), product identity, principles and non-goals (decisions), classes of task risk
+(inherited from parts), structural code rules and quality scenarios (invariants), criticality (a
+field of a part), the agent's environment and the return step (the task cycle); external
+constraints as a field of the map — a fact plus the invariant it creates; a hand-written
+architecture document or diagram — a second copy of the map; environment facts as backlog
+hypotheses — they are true or false today; assumptions as a kind of entry — anything
+inconvenient would be called one and escape checking; "do not write by hand what can be derived
+from code" as the whole rule — it reads as a demand to derive the map's rules; derivation from
+code alone — behaviour shows in runtime traces, deployment in infrastructure files.
 
 ### WAY-05/1 — How is a decision entry written?
 
@@ -487,57 +472,6 @@ when; in the-way, the approver is Mariusz.
 WAY-07 needs when an entry has to be accepted again.
 *Rejected:* a field in every entry naming who is to approve it — the same name repeated, stale once
 the team changes; lists of decision-makers and of those consulted — nothing reads them.
-
-### WAY-15/1 — What in a foundation is written by hand, and what is derived?
-
-What can be derived from what the product executes — code, configuration, infrastructure as
-code, runtime traces — is derived, never written by hand, and what is derived describes the
-state. Rules are written by hand: what is allowed, how bad a failure would be and what the
-product promises, which the code cannot show.
-
-- **Change:** new decision
-- **Scope:** decisions, invariants, glossary, part-map, environment-facts
-- **Based on:** code shows what exists, not the rules: "Your architecture models and your source
-  code will not show the same things. The difference between them is the model-code gap", and
-  "intensional elements establish general rules that apply to all elements, but standard
-  programming languages cannot directly express these rules" (George Fairbanks,
-  https://www.georgefairbanks.com/software-architecture/model-code-gap/). A view recovered from
-  the code shows accidents as decisions: "Principal architecture decisions may not have been
-  implemented and are therefore out of reach of architecture recovery. Conversely, the system
-  may reflect inadvertent decisions […]" (Link et al., ISEC 2019,
-  https://arxiv.org/abs/1901.07700).
-- **Relations:** related to WAY-04 · related to WAY-08 · related to WAY-11
-- **Outranks:** none
-- **Verification:** level 1 — invariant in working form: every derived file in the repository
-  is identical to what its generator produces on the same commit, except the list of known
-  violations of the part map's rules, which is checked as a subset of the list on the main
-  branch (WAY-51). Level 2 for what is derived and what is written by hand — an agent compares
-  the change with the decision:
-  - complies: the view of the decisions in force is generated from the log; the existing
-    dependencies between parts are read from the dependency graph the product's own tooling
-    produces and compared with the allowed dependencies written in the part map;
-  - violates: a hand-written list of the product's endpoints kept next to the code; the allowed
-    dependencies in the part map copied from the current import graph.
-- **Review when:** none
-- **Origin:** none
-- **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-15
-
-*Rationale:* a description written by hand of what the product simply has — a list of screens,
-endpoints or configuration options — is a second copy that nobody reconciles with the code, and
-it goes stale with the next change; a generator is written once and stays true on every commit.
-The line runs between state and rules: code shows what exists, not what is allowed, so a view
-derived from it presents an accidental state as the architecture, and a rule copied from the
-current state turns an accident into law. Rules therefore stay with a human, and deriving the
-state is what lets it be compared with them.
-*Rejected:* "do not write by hand what can be derived from code" as the whole rule — it reads
-as a demand to derive the part map, whose rules code cannot show; derivation from code alone —
-the code shows structure, while behaviour shows in runtime traces and deployment in
-infrastructure files.
-*Consequences:* every derived view has a generator, and a derived file is regenerated, never
-edited by hand. Comparing the derived state with the rules uses the part map's rule for
-assigning files (WAY-44). One derived file is not regenerated from scratch — the list of known
-violations, which WAY-51 keeps as a debt with a ratchet.
 
 ### WAY-16/1 — How are the checks of invariants run?
 
@@ -901,8 +835,7 @@ tasks. Decisions are recovered only when a task touches the parts they govern.
   is slow and can fail outright: MongoDB reports "10 weeks of effort without successfully
   trace-checking one spec" (MongoDB engineering blog,
   https://www.mongodb.com/company/blog/engineering/conformance-checking-at-mongodb-testing-our-code-matches-our-tla-specs).
-- **Relations:** related to WAY-01 · related to WAY-04 · related to WAY-11 · related to WAY-13 ·
-  related to WAY-15
+- **Relations:** related to WAY-01 · related to WAY-04 · related to WAY-11 · related to WAY-13
 - **Outranks:** none
 - **Verification:** level 2 — an agent compares the change with the decision:
   - complies: on entering a product, the part map comes first, and the invariants of a critical
@@ -922,7 +855,7 @@ tempts an agent to write reasons that look like decisions, so decisions wait unt
 them. The critical flows and the parts they run through cannot wait, because a break there is
 expensive (WAY-13), so their invariants come first. A human chooses among what they do, because
 only a human knows what the product is meant to protect, and what it does today is a state, not
-yet a rule (WAY-15). Invariants and decisions are separate lists: an invariant needs no decision
+yet a rule (WAY-04). Invariants and decisions are separate lists: an invariant needs no decision
 above it, so a recovered invariant can bind before anyone knows why it holds.
 *Rejected:* recovering the whole foundation at the start — slow, with reasons invented where none
 are known; everything on demand, the critical flows and the parts they run through included — a
@@ -1315,7 +1248,7 @@ Markdown file of fixed shape in `foundations/`.
 - **Change:** new decision
 - **Scope:** part-map
 - **Based on:** none
-- **Relations:** derives from WAY-04@f07bb569 · related to WAY-15
+- **Relations:** derives from WAY-04@29a75d2c
 - **Outranks:** none
 - **Verification:** level 1 — invariants: map-entry-kinds · map-section-kinds · part-map-file ·
   flow-part-names.
@@ -1331,18 +1264,18 @@ allowed dependency has no identity of its own — the pair of parts names it —
 for a relation pays off only where something points at the relation itself rather than at its
 ends, as a flow that names its steps does. The known violations are what the rules do not hold
 today, computed from the map and the code, so they belong with what is derived rather than among
-rules written by hand (WAY-15). One file, because the map is read whole at the start of a task
+rules written by hand (WAY-04). One file, because the map is read whole at the start of a task
 and its three kinds refer to one another constantly.
 *Rejected:* an allowed dependency as an entry with its own identifier — it buys a short
 reference to something nothing refers to on its own, and costs a second field to check in every
 reference; criticality as a fourth kind of entry — it is a field of a part and of a flow
 (WAY-04); the known violations kept inside the map file — a rule written by hand and a computed
-state in one file, which WAY-15 keeps apart; one file per part — a rename of a part would become
+state in one file, which WAY-04 keeps apart; one file per part — a rename of a part would become
 a move of files, and the map is short enough to read whole.
 *Consequences:* the element's template gives the shape of each kind and the fields it carries.
 The binding part of each kind, and so what its fingerprint covers, needs its own decision. The file of
 known violations is derived and yet cannot be regenerated from scratch, so it needs a rule of its
-own under WAY-15.
+own under WAY-04.
 
 ### WAY-41/1 — What identifies an entry of the part map?
 
@@ -1601,8 +1534,7 @@ map by hand and checked by a test.
   (https://api-extractor.com/pages/messages/ae-missing-release-tag/) — and turn a withdrawal date
   written there into a check, where removing the item before the date is a breaking change
   (oasdiff, https://github.com/oasdiff/oasdiff/blob/main/docs/DEPRECATION.md).
-- **Relations:** derives from WAY-40@c3f0b830 · related to WAY-15 · related to WAY-34 ·
-  related to WAY-44
+- **Relations:** derives from WAY-40@c3f0b830 · related to WAY-34 · related to WAY-44
 - **Outranks:** none
 - **Verification:** level 1 — invariants: surface-promise-level · surface-declaration ·
   map-withdrawal-date.
@@ -1626,7 +1558,7 @@ items, never which of them the product promises to keep; the declaration kept on
 — whoever changes the item does not read the map, and no tool would find it there; a list of
 withdrawals in progress in the map — a second place to update, stale the day the item goes.
 *Consequences:* the product's own tool computes the shape of declared items, a breaking change
-against the main branch, and a declaration missing its level (WAY-15). A product with a format of
+against the main branch, and a declaration missing its level (WAY-04). A product with a format of
 its own, such as a saved game, sets the shape of the mark and a parser that fails on a record it
 does not recognise. The surfaces this repository promises to the products pinned to a commit
 (WAY-34) — the format of entries, the way a fingerprint is computed, the commands of the scripts
@@ -1694,7 +1626,7 @@ onto the list of known violations once.
 - **Scope:** part-map, invariants, gate, task-cycle
 - **Based on:** none
 - **Relations:** derives from WAY-40@c3f0b830 · derives from WAY-53@aaeafada · derives from
-  WAY-63@f16348c8 · narrows WAY-15@72eb2240
+  WAY-63@f16348c8 · narrows WAY-04@29a75d2c
 - **Verification:** level 1 — invariants: known-violation-coverage · known-violations-growth ·
   known-violation-currency · known-violation-fields · known-violation-line-number ·
   gate-exit-code · violated-list-growth · violated-position-version.
@@ -1706,7 +1638,7 @@ onto the list of known violations once.
 keeps each rule whole, since a rule written to fit the code hides the intent, and makes the gap
 countable. Where adding a row is the easy move, agents take it, so both lists share one ratchet.
 *Rejected:* a main branch holding only what the code meets — no existing product could enter; the
-rule weakened until the code fits it — the foundation describes the accident (WAY-15); one list
+rule weakened until the code fits it — the foundation describes the accident (WAY-04); one list
 for both — the map's rows name parts and files, not entries; rows with line numbers — stale at the
 next edit; a row without a version — a debt for an old meaning excuses a new one; a rule left out
 or marked "not checked yet" until met — the gap stops being countable; debt paid by an end date —
@@ -1729,8 +1661,7 @@ overview of the repository is generated for an agent.
   "Auto-attached when a matching file is in context" (https://cursor.com/docs/rules) — and Kiro
   steering — "Files are automatically included only when working with files that match the specified
   pattern" (https://kiro.dev/docs/steering/).
-- **Relations:** derives from WAY-40@c3f0b830 · related to WAY-15 · related to WAY-21 ·
-  related to WAY-44
+- **Relations:** derives from WAY-40@c3f0b830 · related to WAY-21 · related to WAY-44
 - **Outranks:** none
 - **Verification:** level 1 — invariants: derived-file-content · generated-pattern-source ·
   generated-overview.
@@ -1757,7 +1688,7 @@ context, and such an overview for an agent leaves the views WAY-04 expects. The 
 agent reads at the start of a task comes from the step that goes from changed files to parts to
 decisions, not from this channel alone: in Claude Code a rule pinned to paths is added only once
 the agent reads a matching file. Generated rule files sit in the product's repository and are
-checked as derived files (WAY-15).
+checked as derived files (WAY-04).
 
 ### WAY-53/1 — How is a derived file compared with what its generator produces?
 
@@ -1769,122 +1700,51 @@ on the commit the branch left the main branch from.
 - **Change:** new decision
 - **Scope:** decisions, part-map, invariants, gate
 - **Based on:** none
-- **Relations:** derives from WAY-15@72eb2240 · related to WAY-08 · related to WAY-51
-- **Outranks:** none
+- **Relations:** derives from WAY-04@29a75d2c
 - **Verification:** level 1 — invariants: derived-file-content · derived-subset-naming.
 - **Review when:** none
 - **Origin:** none
-- **Approver override:** none
 - **Approved by:** Mariusz, 2026-09-20
 
-*Rationale:* the rule that a derived file equals its generator's output catches a file edited by
-hand, and that is why it holds. A record of results, however, carries the moment of the run, so a
-second run never reproduces it, and the rule would fail on the gate's own output at every pass.
-Skipping declared values keeps the rule over everything the generator decides and lifts it only
-where the file says the value varies — a narrower opening than taking whole files out. The second
-sentence drops a count the earlier wording carried by accident: the exception was written for one
-file, and a product that keeps a second such list had nowhere to put it.
-*Rejected:* keeping records of results outside the repository — whether an invariant was green on a
-given commit can then be read only from whatever ran it, never from the repository; lifting whole
-files out of the comparison — it lifts the rule from their content too, where it still holds and
-still catches a hand edit.
-*Consequences:* the format guard of an element compares derived files with their generators' output
-and reads the skipped values from the file itself. The record of an invariant's result carries the
-moment of the run and is compared for everything else. The list of violated invariants joins the
-list of known violations of the part map's rules as a file that is not produced from scratch. WAY-15
-gets a version whose verification no longer spells this out. Where that commit does not exist, the
-comparison finds nothing to compare against, and the guard says so, as it already does for an
-invariant's version (WAY-57).
+*Rationale:* equality with the generator's output catches a hand edit; a record of results the
+gate keeps carries the moment of the run, so only declared values are skipped. A list of debt
+regenerated from scratch would swallow new violations, so it is compared as a subset.
+*Rejected:* records of results kept outside the repository — a commit's result readable only
+from whatever ran it; whole files lifted out of the comparison — a hand edit in them goes
+uncaught.
 
 ### WAY-54/1 — Where does the value of a field in a template come from?
 
-The value of a field is read off the product wherever a tool can read it, and a template asks
-for what a value follows from rather than for the name of a value. A field whose value a human
-copies unchanged from a record outside the product is marked in the template as transcribed. A
-field whose value neither can be read off, nor follows from what the template asks for, nor is
-transcribed is marked in the template as resting on a judgment.
+The value of a field is read off the product wherever a tool can read it, and a template asks for
+what a value follows from rather than for the name of a value; a value that a closed list of the
+template does not hold is a question to the human, never the nearest value on the list. A template
+marks where the value of each field comes from, part by part where a field's parts come from
+different places: read off, where a tool gives the value; transcribed, where a human copies it
+unchanged from a record outside the product; resting on a judgment, where it is neither.
 
 - **Change:** new decision
 - **Scope:** decisions, part-map, invariants, glossary, environment-facts, elements-common
 - **Based on:** none
-- **Relations:** related to WAY-05 · related to WAY-15 · related to WAY-44 · related to WAY-46 ·
-  related to WAY-49
-- **Outranks:** none
+- **Relations:** none
 - **Verification:** level 2 — an agent compares the change with the decision:
-  - complies: the criticality of a part is computed from its failure modes and the flows it lies
-    on, and no criticality is written at a part; a method of checking names the command the gate
-    runs, and what kind of check it is follows from that command;
-  - violates: a template asks the author to name the kind of a method, where the command the
-    gate runs already tells the kinds apart; a field that rests on a judgment stands beside
-    fields that are read off, with nothing saying which is which.
+  - complies: a part's criticality is computed from its failure modes and the flows it lies on,
+    never written at the part; a method names the command the gate runs, and its kind follows
+    from that command; a field holding a link and its fingerprint is marked judgment for the
+    link, read off for the fingerprint;
+  - violates: a template asks the author to name a method's kind, which the command the gate
+    runs already tells; a field that rests on a judgment stands beside fields that are read off,
+    with nothing saying which is which; a skill writes the nearest value of a closed list, with a
+    reason why it will do.
 - **Review when:** none
 - **Origin:** none
-- **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-27
+- **Approved by:** Mariusz, 2026-09-29
 
-*Rationale:* an author asked to name a value picks from the names in front of them and writes a
-reason why the nearest one will do; the reason reads well, and the record then says something
-that was never true. The failure leaves no trace, because a wrongly named value looks exactly
-like a rightly named one. A value read off the product cannot be talked into place, and a
-question about the product — which command the gate runs, which files a pattern matches — has an
-answer the author can check instead of argue. Where the value is a judgment after all, saying so
-keeps a reader from taking it for a reading. This product already decides this way four times
-over, and each time the variant in which a person names the value stands in *Rejected* with its
-reason.
-*Rejected:* leaving the choice to the author with a definition beside each value — a definition
-tells apart values a reader already distinguishes, and says nothing about a case none of them
-covers; a value meaning "none of these fits" in every closed list — it records what came cheapest
-rather than what was true.
-*Consequences:* a template that asks for the name of a value where a tool can read that value,
-or where a question about the product settles it, is a defect of the template, fixed together
-with a decision. A field that rests on a judgment says so where it stands. The skill of the
-decisions element gains the sentence the map's skill already holds: a value the template's
-closed list does not hold is a question to the human in the same change, and the list grows by a
-new version of the decision that closed it. This decision moves to level 1 once a check can tell
-apart a field that could have been read off from one that could not.
-
-### WAY-15/2 — What in a foundation is written by hand, and what is derived?
-
-What can be derived from what the product executes — code, configuration, infrastructure as
-code, runtime traces — is derived, never written by hand, and what is derived describes the
-state. Rules are written by hand: what is allowed, how bad a failure would be and what the
-product promises, which the code cannot show.
-
-- **Change:** field change · previous: WAY-15/1
-- **Scope:** decisions, invariants, glossary, part-map, environment-facts
-- **Based on:** code shows what exists, not the rules: "Your architecture models and your source
-  code will not show the same things. The difference between them is the model-code gap", and
-  "intensional elements establish general rules that apply to all elements, but standard
-  programming languages cannot directly express these rules" (George Fairbanks,
-  https://www.georgefairbanks.com/software-architecture/model-code-gap/). A view recovered from
-  the code shows accidents as decisions: "Principal architecture decisions may not have been
-  implemented and are therefore out of reach of architecture recovery. Conversely, the system
-  may reflect inadvertent decisions [...]" (Link et al., ISEC 2019,
-  https://arxiv.org/abs/1901.07700).
-- **Relations:** related to WAY-04 · related to WAY-08 · related to WAY-11 · related to WAY-53
-- **Outranks:** none
-- **Verification:** level 1 — invariants: derived-file-content. Level 2 for what is derived and what
-  is written by hand — an agent compares the change with the decision:
-  - complies: the view of the decisions in force is generated from the log; the existing
-    dependencies between parts are read from the dependency graph the product's own tooling
-    produces and compared with the allowed dependencies written in the part map;
-  - violates: a hand-written list of the product's endpoints kept next to the code; the allowed
-    dependencies in the part map copied from the current import graph.
-- **Review when:** none
-- **Origin:** none
-- **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-20
-
-*Rationale for change:* the verification of this decision spelled out how a derived file is
-compared with its generator's output, and named a single file that cannot be produced from
-scratch. Both now belong to WAY-53, which answers that question on its own, and a rule said in
-two places drifts apart.
-*Rejected:* leaving the comparison rule here as well — two entries would then say how a derived
-file is compared, and whichever is read second would win by accident.
-*Consequences:* every derived view has a generator, and a derived file is regenerated, never
-edited by hand. Comparing the derived state with the rules uses the part map's rule for
-assigning files (WAY-44). How a derived file is compared with what its generator produces, and
-which derived files cannot be produced from scratch, is set by WAY-53.
+*Rationale:* an author naming a value picks the nearest with a plausible reason, and a wrong name
+looks like a right one; a value read off cannot be talked into place. Where none fits, that pull
+is strongest. A mark, part by part, keeps a judgment from passing as a reading.
+*Rejected:* a definition beside each value — it says nothing about a case none of them covers; a
+value meaning "none of these fits" in every closed list — it records what came cheapest; a mark
+of its own for a field that carries text — the mark of a judgment already says it.
 
 ### WAY-55/1 — Which part of the process holds the gate?
 
@@ -2214,7 +2074,7 @@ no verdict for the entry never gives it a pass.
 - **Scope:** invariants, gate, decisions, part-map, elements-common
 - **Based on:** none
 - **Relations:** derives from WAY-08@9d45e0a9 · derives from WAY-16@5c1d60d4 ·
-  derives from WAY-54@f37c232a · derives from WAY-57@4a838784 · derives from WAY-38@6e10c3fd ·
+  derives from WAY-54@57b93cf6 · derives from WAY-57@4a838784 · derives from WAY-38@6e10c3fd ·
   derives from WAY-60@c85d1ac0 · related to WAY-03 · related to WAY-05 · related to WAY-07 ·
   related to WAY-10 · related to WAY-12 · related to WAY-17 · related to WAY-22 · related to WAY-24 ·
   related to WAY-31 · related to WAY-34 · related to WAY-37 · related to WAY-43 · related to WAY-45 ·
@@ -3384,7 +3244,7 @@ part, and a sentence depends on a term by using its word, carrying no fingerprin
 - **Change:** new decision
 - **Scope:** glossary, relation-model
 - **Based on:** none
-- **Relations:** narrows WAY-02@3ffcbd46 · derives from WAY-04@f07bb569
+- **Relations:** narrows WAY-02@3ffcbd46 · derives from WAY-04@29a75d2c
 - **Verification:** level 1 — invariants: glossary-entry-field-presence · glossary-entry-field-words.
   Level 2 for the binding part — an agent compares the change with the decision:
   - complies: an invariant's sentence uses "verdict" with no fingerprint, and a changed definition of
