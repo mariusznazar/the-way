@@ -72,10 +72,11 @@ environment fact adds to each.
   left with nothing naming it goes as WAY-88 and the template's "Withdrawn identifiers" say.
 - After step 4.4, where the method is a command, hand the human an instruction for another agent:
   the entry, its method, the checks citing a retired identifier or raised version, and any open
-  question about the check — never the conversation itself; a withdrawal hands on the checks still citing the withdrawn identifier.
-  Where the method is a path, the human re-reads the source; write their verdict into
-  `foundations/human_verdicts.md` in the row `elements/common/rules.md` gives, the first row giving
-  that file to a part through `update-part-map`. `TODO` hands on nothing.
+  question about the check — never the conversation itself; a withdrawal hands on the checks
+  still citing the withdrawn identifier. Where the method is a path, the human re-reads the
+  source; write their verdict into `foundations/human_verdicts.md` in the row
+  `elements/common/rules.md` gives, the first row giving that file to a part through
+  `update-part-map`. `TODO` hands on nothing.
 
 ## A failed run and a withdrawal
 

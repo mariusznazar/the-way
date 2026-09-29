@@ -81,7 +81,7 @@ def invariant(identifier="saves-fit-quota", rests="storage-quota@" + QUOTA_FINGE
                       "A saved game fits within the storage an origin keeps.", "",
                       "- **Method:** %s" % method, "- **Rests on:** %s" % rests,
                       "- **Derives from:** WAY-01@%s" % DECISION_FINGERPRINT, "- **Part:** saving",
-                      "- **Correction:** none", "- **Recovered:** none"])
+                      "- **Correction:** none"])
 
 
 def invariants(*entries):
@@ -96,7 +96,7 @@ def decision(version=1, based_on="JSON Lines holds one value on each line: json-
     return "\n".join(["### WAY-01/%d — Where does a saved game go?" % version, "",
                       "A saved game is written to the player's own storage only.", "",
                       "- **Change:** %s" % ("new decision" if version == 1 else
-                                            "reword · previous: WAY-01/%d" % (version - 1)),
+                                            "new wording"),
                       "- **Based on:** %s" % based_on]) + "\n"
 
 
@@ -1243,7 +1243,7 @@ class PanelCorrections(GuardTestCase):
                                   **{"foundations/decisions.md": log(decision(), decision(
                                       2, "json-lines@%s" % LINES_FINGERPRINT).replace(
                                       "WAY-01/2", "WAY-02/1").replace(
-                                      "reword · previous: WAY-01/1", "new decision"),
+                                      "new wording", "new decision"),
                                       decision(1, "none").replace("WAY-01/1", "WAY-03/1"))})
         self.assertIn("`none` is not an identifier", output)
         self.assertNotIn("names the fact `none`", output)

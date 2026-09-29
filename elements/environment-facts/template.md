@@ -11,10 +11,10 @@ written by hand`).
 
 The rules of form the elements share — the language of an entry, every field and the words `none`
 and `TODO`, the terms of the glossary, the marks of where a value comes from, the form of an
-identifier and its one space with the invariants and the part map, the list of withdrawn
-identifiers, human verdicts, `{fork-point}` and the version of an entry — stand in
-`elements/common/rules.md`; this template holds what is particular to an environment fact
-(WAY-35).
+identifier, when it stays and when a split or a merge replaces it, its one space with the
+invariants and the part map, the list of withdrawn identifiers, human verdicts, `{fork-point}` and
+the version of an entry — stand in `elements/common/rules.md`; this template holds what is
+particular to an environment fact (WAY-35).
 
 ## Where entries go
 
@@ -24,10 +24,6 @@ identifiers, human verdicts, `{fork-point}` and the version of an entry — stan
 - The identifier names what the fact is about, never its value or the edition it cites, so that a
   new edition or a new range leaves it true: `json-text`, not `json-rfc-8259`
   (`TODO — decision pending: which decision sets how an environment fact's identifier is named`).
-- An identifier the file held on the commit the task branch left the main branch from stays, as an
-  entry or as a withdrawn identifier giving why and naming its successors or `none`. Splitting or
-  merging entries gives each entry that comes out of it a new identifier, and any other change keeps
-  it (WAY-75).
 
 ## Which facts are written
 
@@ -42,7 +38,9 @@ identifiers, human verdicts, `{fork-point}` and the version of an entry — stan
   decision citing the fact, as a state a script can check, never in the fact (WAY-85, WAY-24).
 - An invariant names in *Rests on* only the facts holding a condition that decides whether a commit
   makes its sentence true (WAY-73). A fact about what runs a method — how a tool behaves under the
-  runner's configuration, which interpreter runs a script — is no such fact (`TODO — decision pending: which decision sets that a fact about what runs a method is not one an invariant rests on`).
+  runner's configuration, which interpreter runs a script — is no such fact
+  (`TODO — decision pending: which decision sets that a fact about what runs a method is not one an
+  invariant rests on`).
 - The current state of a setting that people of the product change outside its repository — who
   can open it, a host's access rule — is a fact whose method reads that state where it lives, or is
   a re-read by the person who sets it where reading it takes their credentials. A choice of such a
@@ -68,8 +66,8 @@ identifiers, human verdicts, `{fork-point}` and the version of an entry — stan
 ```
 
 The form above gives each field the words it takes: *Method* alone takes `TODO`, no field takes
-`none`, and *Source* takes neither (WAY-80). Every field appears in every entry, and the rest of the
-rule on `none` and `TODO` stands in `elements/common/rules.md` (WAY-71).
+`none`, and *Source* takes neither (WAY-80). The rest of the rule on `none` and `TODO`, every field
+in every entry among it, stands in `elements/common/rules.md` (WAY-71).
 
 ## The sentence
 
@@ -153,17 +151,21 @@ rule on `none` and `TODO` stands in `elements/common/rules.md` (WAY-71).
   anonymously (WAY-84); where an invariant rests on the visibility of the repositories linked, each
   new link adds such a fact, named in its *Rests on* (WAY-84, WAY-73).
 - The source of a setting only its setter can read is
-  `TODO — decision pending: which form of Source a setting read only with its setter's credentials takes, since WAY-80 gives none`.
+  `TODO — decision pending: which form of Source a setting read only with its setter's credentials
+  takes, since WAY-80 gives none`.
 
 ## Method
 
 - A method is a command that begins with the name of the program it runs, or the path alone of a
   file a human re-reads the source against, or `TODO` (WAY-81); no kind of method is written beside
   it (`TODO — decision pending: which decision keeps a method's kind from being written beside
-  it`). A fact whose method reads `TODO` is unchecked, and never counts as passed (WAY-74).
+  it`). A fact whose method reads `TODO` is unchecked, for a reason on the list the invariants
+  template gives (WAY-74), and never counts as passed
+  (`TODO — decision pending: which decision sets that a fact whose method reads TODO never counts
+  as passed`).
 - A command whose program the product does not yet declare or produce is written out in full all
   the same, with the program named as it will run (WAY-81); the fact is then unchecked for want of a
-  declared or produced command, a different reason (WAY-74).
+  declared or produced command, a different reason on that list (WAY-74).
 - A command may probe, watch, or both (WAY-81):
   - a probe runs on test data the source itself publishes where there is any, as NIST's example
     digests (`TODO — decision pending: which decision sets that a probe runs on the test data its
@@ -178,9 +180,9 @@ rule on `none` and `TODO` stands in `elements/common/rules.md` (WAY-71).
   the product, and the deliberate break shows the method's fidelity, which holds only where the
   break gives high confidence of detection
   (`TODO — decision pending: which decision sets how a method whose runner's configuration a command
-  cannot set shows its fidelity`). The release of a tool a probe runs is read off the
-  machine instead, as the next point says (WAY-91). Whether a fact's command, like a check citing an invariant,
-  counts only when a deliberate break makes it fail is
+  cannot set shows its fidelity`). The release of a tool a probe runs is read off the machine
+  instead, as the next point says (WAY-91). Whether a fact's command, like a check citing an
+  invariant, counts only when a deliberate break makes it fail is
   `TODO — decision pending: whether WAY-08's deliberate break binds a fact's method`.
 - Where *Holds for* names a release of the tool a probe runs, the probe reads the release it runs
   on and records it in the `description` of its line: a `fail` on any release is a `fail`, and a
@@ -188,8 +190,9 @@ rule on `none` and `TODO` stands in `elements/common/rules.md` (WAY-71).
   builds git. The method rests on no fact about that release (WAY-91, WAY-73).
 - A check cites each fact it gives a verdict for, at the check, as a line
   `fact: <identifier>/<version>` in the comment form of its file's language, and a run records no
-  verdict for a fact no check cites (WAY-81); a check citing a version other than the current one
-  fails the gate (WAY-79). A check stands in a file of code; a Markdown file holds no citing check
+  verdict for a fact no check cites (WAY-81); the version a check cites follows
+  `elements/common/rules.md` (WAY-79). A check stands in a file of code; a Markdown file holds no
+  citing check
   (`TODO — decision pending: which decision sets that a citing check stands in a file of code`).
 - Where the checks of a product's facts stand in the part map is set when its first fact is written
   (`TODO — decision pending: which decision sets that where the checks of a product's facts stand is
@@ -201,7 +204,10 @@ rule on `none` and `TODO` stands in `elements/common/rules.md` (WAY-71).
 
 ## When a method runs
 
-- When a change enters an entry or changes any of its fields, or alters a file its command names, the gate runs its method on that change (WAY-82; for a change of a field beyond rewording the entry, `TODO — decision pending: whether a change of a fact's field that does not reword its entry runs its method`).
+- When a change enters an entry or changes any of its fields, or alters a file its command names,
+  the gate runs its method on that change (WAY-82; for a change of a field beyond rewording the
+  entry, `TODO — decision pending: whether a change of a fact's field that does not reword its
+  entry runs its method`).
 - By the clock, for every fact at once, on the main branch — never inside the gate of a change that
   neither enters nor changes the entry nor alters a file its command names, since the world changes
   with no commit and the gate's verdict would then depend on the date (WAY-82, WAY-60). When the
@@ -231,8 +237,9 @@ rule on `none` and `TODO` stands in `elements/common/rules.md` (WAY-71).
 
 ## Version
 
-- The version of an entry follows `elements/common/rules.md`, with no exception: every change of the
-  sentence or of *Holds for* raises the version by one, and no correction keeps it (WAY-79).
+- The version of an entry follows `elements/common/rules.md`, with no exception: a change of the
+  sentence or of *Holds for* makes the version one higher than on the main branch, and no
+  correction keeps it (WAY-79).
 
 ## Withdrawn identifiers
 
@@ -276,7 +283,7 @@ reader not built yet is named by the invariant it answers to
 | Holds for | the fingerprint (`fact-fingerprint-input`); whoever writes an invariant naming a version within it; a probe, which compares the release it runs on with it (WAY-91); a script checking a decision's *Review when* against the models a study measured, which no invariant states yet | transcribed from the source |
 | Source | the watch, which checks that the passage still stands; the human reviewing the fact; the format guard (`fact-source-form`) | transcribed |
 | Method | the gate, on a change that enters or changes the fact (`TODO — decision pending: whether a change of a fact's field that does not reword its entry runs its method`) or alters a file its command names (`gate-fact-run`); the clock (`fact-clock-exit`); a human, for a path; the format guard (`fact-method-form`) | judgment |
-| withdrawn identifiers | whoever follows a citation to a fact shown false; the format guard, which keeps it from coming back and checks its successors (`fact-withdrawal-persistence`, `fact-withdrawal-successors`) | judgment for *Why*; read off for the rest |
+| withdrawn identifiers | whoever follows a citation to a fact shown false; the format guard, which keeps it from coming back and checks its successors (`fact-withdrawal-persistence`, `fact-withdrawal-successors`) | as `elements/common/rules.md` gives it |
 
 ## Examples
 
