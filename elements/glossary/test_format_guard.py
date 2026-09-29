@@ -262,10 +262,12 @@ class File(GuardTestCase):
         self.write("docs/form.md", "# Form\n\n```markdown\n" + entry() + "\n```\n")
         self.assertPasses(glossary())
 
-    def test_examples_beside_the_template_are_no_file_of_entries(self):
+    def test_a_copy_in_the_examples_beside_the_template_is_a_second_file(self):
         # invariant: glossary-file/1
         self.write("elements/glossary/examples.md", "# Examples\n\n" + entry() + "\n")
-        self.assertPasses(glossary())
+        self.assertFails(glossary(), "`elements/glossary/examples.md` is a second file of glossary "
+                                     "entries")
+        self.assertEqual(self.verdicts("glossary-file/1"), ["fail"])
 
 
 class Terms(GuardTestCase):
@@ -1043,21 +1045,64 @@ class Record(GuardTestCase):
 
 
 class Examples(GuardTestCase):
-    def run_examples(self, examples):
-        _, items = format_guard.parse_file(glossary(), format_guard.read_rules())
-        path = os.path.join(self.root, "examples.md")
+    """`examples.md` names, by term, entries of the-way's own glossary, which the guard checks on
+    that glossary alone."""
+
+    def write_examples(self, *items):
+        # outside the repository, so that a copied entry is no second file of entries
+        path = os.path.join(self.outside.name, "examples.md")
         with open(path, "w", encoding="utf-8", newline="\n") as handle:
-            handle.write(examples)
-        report = format_guard.Report(self.path)
-        format_guard.check_examples(items, path, report)
-        return report.errors
+            handle.write("# Examples\n\nThe entries of `foundations/glossary.md` that show the form "
+                         "of an entry.\n\n" + "\n".join(items) + "\n")
+        self.examples = path
 
-    def test_example_matching_the_file(self):
-        self.assertEqual(self.run_examples("# Examples\n\n" + entry() + "\n"), [])
+    def failures(self, invariant):
+        return [line["description"] for line in self.lines
+                if line["invariant"] == invariant and line["verdict"] == "fail"]
 
-    def test_example_differing_from_the_file(self):
-        errors = self.run_examples("# Examples\n\n" + entry(avoid="none") + "\n")
-        self.assertIn("differs from the file", errors[0][1])
+    def test_terms_of_entries_pass(self):
+        # invariant: glossary-example-target/1
+        self.write_examples("- `save slot` — an entry with *Avoid* filled",
+                            "- `run` — an entry whose *Not* names what carries another meaning")
+        self.assertPasses(glossary(), own=True)
+        self.assertIn({"check": "elements/glossary/format_guard.py::check_examples",
+                       "verdict": "pass", "invariant": "glossary-example-target/1"}, self.lines)
+
+    def test_a_term_outside_the_glossary(self):
+        # invariant: glossary-example-target/1
+        self.write_examples("- `save slot` — an entry", "- `save game` — an entry")
+        self.assertFails(glossary(), "is not the term of an entry", own=True)
+        self.assertEqual(self.failures("glossary-example-target/1"),
+                         ["examples.md:6: `save game` is not the term of an entry of the "
+                          "glossary"])
+
+    def test_a_term_in_another_letter_case(self):
+        # invariant: glossary-example-target/1
+        self.write_examples("- `Save slot` — an entry")
+        self.assertFails(glossary(), "is not the term of an entry", own=True)
+        self.assertEqual(self.failures("glossary-example-target/1"),
+                         ["examples.md:5: `Save slot` is not the term of an entry of the "
+                          "glossary"])
+
+    def test_a_term_without_backticks_is_read_to_its_first_space(self):
+        # invariant: glossary-example-target/1
+        self.write_examples("- run — an entry", "- save slot — an entry")
+        self.assertFails(glossary(), "is not the term of an entry", own=True)
+        self.assertEqual(self.failures("glossary-example-target/1"),
+                         ["examples.md:6: `save` is not the term of an entry of the glossary"])
+
+    def test_a_copied_entry_names_no_term_of_the_glossary(self):
+        # invariant: glossary-example-target/1
+        self.write_examples("## run", "", RUN, "", "- **Avoid:** none")
+        self.assertFails(glossary(), "is not the term of an entry", own=True)
+        self.assertEqual(self.failures("glossary-example-target/1"),
+                         ["examples.md:9: `**Avoid:**` is not the term of an entry of the "
+                          "glossary"])
+
+    def test_examples_are_checked_on_the_way_s_own_glossary_alone(self):
+        self.write_examples("- `save game` — an entry")
+        self.assertPasses(glossary())
+        self.assertNotIn("glossary-example-target/1", [line["invariant"] for line in self.lines])
 
 
 class Rules(GuardTestCase):
@@ -1183,7 +1228,8 @@ class OwnFile(unittest.TestCase):
                 lines = [json.loads(item) for item in handle.read().split("\n") if item]
         self.assertEqual(code, 0, output.getvalue())
         self.assertIn("0 error(s)", output.getvalue())
-        self.assertEqual(sorted(line["invariant"] for line in lines), PLAIN)
+        self.assertEqual(sorted(line["invariant"] for line in lines),
+                         sorted(PLAIN + ["glossary-example-target/1"]))
 
 
 if __name__ == "__main__":

@@ -19,9 +19,8 @@ particular to a glossary entry (WAY-35).
   entries name. A product's glossary holds the words of its domain. In the-way, whose product is
   the process, the two are one file (WAY-92).
 - A product takes the words of the process from the-way at the commit it pins, and its glossary
-  defines none of them again (WAY-92). That a product's guard reads the-way's glossary at that
-  commit is `TODO — decision pending: which invariant states that a product's glossary guard reads
-  the-way's glossary at the commit the product pins`.
+  defines none of them again (WAY-92). That the glossary guard reports an entry of a product's
+  glossary defining one of them answers to the invariant `glossary-process-terms`.
 
 ## Where entries go
 
@@ -213,4 +212,7 @@ read`). Each field carries the mark of where its value comes from (`elements/com
 
 ## Examples
 
-Examples live in `examples.md` (WAY-09): entries copied word for word from a real glossary.
+`examples.md` names, by term, the entries of this repository's own glossary
+(`foundations/glossary.md`) that show the form of an entry; they are read there, in the commit of
+the-way a product pins, instead of being copied (WAY-09, WAY-34). The format guard checks that each
+term it names is the term of an entry of that glossary (`glossary-example-target`).

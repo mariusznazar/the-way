@@ -132,8 +132,8 @@ CONSONANT = re.compile(r"[b-df-hj-np-tv-z]$", re.I)
 HEADING = re.compile(r"^#{1,6}(?:[ \t]|$)")
 
 
-class TemplateError(Exception):
-    pass
+# A template, or the rules the elements share, does not hold a form this guard reads.
+TemplateError = shared.TemplateError
 
 
 # --- rules read from the template -----------------------------------------------------------
@@ -152,8 +152,9 @@ class Rules:
         return [rule.name for rule in self.fields]
 
 
-_section = invariant_guard._section
-_blocks = invariant_guard._blocks
+# Reading a template's sections is code the guards share.
+_section = shared.template_section
+_blocks = shared.markdown_blocks
 
 
 def read_rules(path=TEMPLATE):
@@ -610,8 +611,7 @@ def read_foundation(path, top, report):
         texts.append(shared.read_file(full, report, "%s beside the file" % name))
     try:
         return foundation_of(*texts)
-    except (map_guard.TemplateError, invariant_guard.TemplateError, facts_guard.TemplateError,
-            AttributeError, IndexError) as problem:
+    except (TemplateError, AttributeError, IndexError) as problem:
         report.error(None, "cannot read the identifiers beside the file: %s" % problem)
         return Foundation()
 
@@ -670,11 +670,10 @@ def holds_entries(text):
     return False
 
 
-def check_file(path, top, tracked, report, examples=EXAMPLES):
+def check_file(path, top, tracked, report):
     """The repository holds one file of glossary entries, at foundations/glossary.md (WAY-93). The
     path is compared, letter case included, as git lists it. Another such file is known by its
-    content (holds_entries). The examples file beside the template this guard reads holds copies of
-    entries, as the template sets it, and is no file of entries."""
+    content (holds_entries)."""
     # invariant: glossary-file/1
     check, one_file = "check_file", "glossary-file/1"
     if top is None or tracked is None:
@@ -694,8 +693,6 @@ def check_file(path, top, tracked, report, examples=EXAMPLES):
         if name == given or not name.lower().endswith((".md", ".markdown")):
             continue
         full = os.path.join(top, *name.split("/"))
-        if os.path.exists(examples) and os.path.isfile(full) and os.path.samefile(full, examples):
-            continue
         try:
             with open(full, encoding="utf-8") as handle:
                 text = handle.read()
@@ -1138,8 +1135,7 @@ def check_against_base(path, entries, rules, corpus, foundation, base, top, repo
         base_foundation = foundation_at(path, base, top, report)
     except LookupError:
         return
-    except (map_guard.TemplateError, invariant_guard.TemplateError, facts_guard.TemplateError,
-            AttributeError, IndexError) as problem:
+    except (TemplateError, AttributeError, IndexError) as problem:
         report.error(None, "cannot read the identifiers on %s: %s" % (base, problem))
         return
     identifiers = foundation.entries | foundation.withdrawn
@@ -1307,19 +1303,23 @@ def merged_corpus(path, corpus, merge_onto, top, report):
 # --- the examples ---------------------------------------------------------------------------
 
 
-def check_examples(items, examples_path, report):
-    check = "check_examples"
+def check_examples(entries, examples_path, report):
+    """Every term `examples.md` names is the term of an entry of the glossary: an example names an
+    entry of the-way's glossary by its term instead of copying it (WAY-09, WAY-34). An item of a
+    list names the term it opens with: the words in backticks, or else its first word."""
+    # invariant: glossary-example-target/1
+    check, target = "check_examples", "glossary-example-target/1"
     examples = shared.read_file(examples_path, report, "the examples")
     if examples is None:
         return
-    by_heading = {item.text.split("\n")[0]: item for item in items if isinstance(item, Entry)}
-    for line, lines in shared.split_sections(examples):
-        copy = "\n".join(lines).rstrip()
-        entry = by_heading.get(lines[0])
-        if entry is None:
-            report.error(None, "examples.md:%d: `%s` is not in the file" % (line, lines[0]), check)
-        elif entry.text != copy:
-            report.error(entry.line, "examples.md:%d differs from the file" % line, check)
+    report.ran(check, target)
+    terms = {entry.term for entry in entries}
+    for number, line in enumerate(examples.split("\n"), start=1):
+        item = re.match(r"^- (?:`([^`]+)`|([^`\s]+))", line)
+        term = item and (item.group(1) or item.group(2))
+        if term and term not in terms:
+            report.error(None, "examples.md:%d: `%s` is not the term of an entry of the glossary"
+                         % (number, term), check, (target,))
 
 
 # --- entry point ----------------------------------------------------------------------------
@@ -1374,8 +1374,8 @@ def run(path, base=None, stream=None, template=TEMPLATE, merge_onto=None, record
 
     try:
         rules = read_rules(template)
-    except (OSError, UnicodeDecodeError, TemplateError, invariant_guard.TemplateError,
-            decision_guard.TemplateError, AttributeError) as problem:
+    except (OSError, UnicodeDecodeError, TemplateError, decision_guard.TemplateError,
+            AttributeError) as problem:
         return stop("cannot read the rules from %s: %s" % (template, problem))
     try:
         with open(path, encoding="utf-8") as handle:
@@ -1400,7 +1400,7 @@ def run(path, base=None, stream=None, template=TEMPLATE, merge_onto=None, record
 
     merging = bool(merge_onto) and merge_onto != NO_COMMIT
     check_layout(head, items, report)
-    check_file(path, top, tracked, report, examples)
+    check_file(path, top, tracked, report)
     check_terms(entries, report)
     check_fields(entries, rules, report)
     check_definitions(entries, rules, report)
@@ -1442,7 +1442,7 @@ def run(path, base=None, stream=None, template=TEMPLATE, merge_onto=None, record
                             "warnings")
 
     if own and os.path.exists(examples):
-        check_examples(items, examples, report)
+        check_examples(entries, examples, report)
     report.print(stream)
     if record is not None:
         write_record(record, report)
