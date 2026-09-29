@@ -24,7 +24,7 @@ the map of the-way itself.
 
 - **Files:** elements/part-map/**
   foundations/part_map.md
-- **Depends on:** relation-model
+- **Depends on:** relation-model · elements-common
 - **Failure modes:**
   - the guard assigns a file to the wrong part, or to none — a change is checked against the
     wrong decisions and at the wrong sharpness — high — not detected
@@ -49,7 +49,7 @@ and for the invariants of the-way itself.
 - **Files:** elements/invariants/**
   foundations/invariants.md
   foundations/violated_invariants.md
-- **Depends on:** decisions · part-map · relation-model · environment-facts
+- **Depends on:** decisions · part-map · relation-model · environment-facts · elements-common
 - **Failure modes:** none
 - **Trust boundary:** none
 
@@ -60,7 +60,7 @@ the tools that write and check one, and the glossary of the-way itself.
 
 - **Files:** elements/glossary/**
   foundations/glossary.md
-- **Depends on:** decisions · part-map · invariants · environment-facts
+- **Depends on:** decisions · part-map · invariants · environment-facts · elements-common
 - **Failure modes:** none
 - **Trust boundary:** none
 
@@ -71,7 +71,17 @@ The part answers for a product's environment facts.
 - **Files:** elements/environment-facts/**
   foundations/environment_facts.md
   probes/**
-- **Depends on:** decisions · part-map · invariants · relation-model
+- **Depends on:** decisions · part-map · invariants · relation-model · elements-common
+- **Failure modes:** none
+- **Trust boundary:** none
+
+## elements-common — What the elements share
+
+The part answers for the rules of form and the way of working the elements' templates and skills
+share, the code their format guards share, and the procedure of the panel.
+
+- **Files:** elements/common/**
+- **Depends on:** none
 - **Failure modes:** none
 - **Trust boundary:** none
 
@@ -212,7 +222,7 @@ for each outcome of a test.
 
 | File | Why |
 |---|---|
-| README.md | it binds nothing and only tells a reader what the repository is, so no part answers for it (WAY-09) |
+| README.md | it binds nothing, so no part answers for it (WAY-09) |
 
 ## Withdrawn identifiers
 

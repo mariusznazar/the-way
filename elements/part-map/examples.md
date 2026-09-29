@@ -16,7 +16,7 @@ the map of the-way itself.
 
 - **Files:** elements/part-map/**
   foundations/part_map.md
-- **Depends on:** relation-model
+- **Depends on:** relation-model · elements-common
 - **Failure modes:**
   - the guard assigns a file to the wrong part, or to none — a change is checked against the
     wrong decisions and at the wrong sharpness — high — not detected
