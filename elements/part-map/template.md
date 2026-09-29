@@ -154,10 +154,10 @@ reader not built yet is named by the invariant it answers to
 
 | Field | Who reads it, when | Where its value comes from |
 |---|---|---|
-| identifier | the format guards, in a decision's *Scope* (`decision-scope-names`), an invariant's *Part* (`invariant-part-names`) and a flow's *Parts* (`flow-part-names`); a generated rule file (`generated-pattern-source`) | prose |
+| identifier | the format guards, in a decision's *Scope* (`decision-scope-names`), an invariant's *Part* (`invariant-part-names`), a flow's *Parts* and a part's *Depends on* (`flow-part-names`); a generated rule file (`generated-pattern-source`) | prose |
 | responsibility / description / promise | whoever changes the part, the flow or the surface; a generated rule file (WAY-52); the fingerprint (`map-fingerprint-input`) | prose |
 | Files | the format guard (`file-part-assignment`, `path-pattern-reach`); the gate, finding the invariants a change reaches (`change-reach`); a generated rule file (`generated-pattern-source`) | judgment |
-| Depends on | the computation of criticality (`map-guard-dependency-report`); the comparison with the dependency graph (`known-violation-coverage`) | judgment |
+| Depends on | the format guard (`flow-part-names`); the computation of criticality (`map-guard-dependency-report`); the comparison with the dependency graph (`known-violation-coverage`) | judgment |
 | Depends on — separated | the computation of criticality, which stops inheriting there (`map-guard-dependency-report`) | judgment |
 | Failure modes | the computation of criticality (`failure-mode-severity`, `map-guard-unrecorded-criticality`); whoever sets a severity, who reads the kind of damage | judgment |
 | Failure modes — detected by | the format guard (`failure-mode-detection`, `map-invariant-names`); whoever asks which failures the gate would catch | read off |

@@ -261,9 +261,14 @@ class Entries(GuardTestCase):
     def test_dependency_on_a_part_that_does_not_exist(self):
         self.assertFails(part_map(part(depends="rendering")),
                          "*Depends on* names `rendering`, which is not in the map")
-        self.assertRecords(line("check_references", "fail", None,
+        self.assertRecords(line("check_references", "fail", "flow-part-names/1",
                                 "line 11: saving: *Depends on* names `rendering`, which is not in "
                                 "the map as a part"))
+
+    def test_dependency_on_a_withdrawn_part(self):
+        self.guard(part_map(part(depends="game-state"), flow(), surface(), foundations_part()))
+        self.assertEqual(self.failures("flow-part-names/1"),
+                         ["line 11: saving: *Depends on* names `game-state`, which is withdrawn"])
 
 
 class Headings(GuardTestCase):

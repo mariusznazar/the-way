@@ -1674,7 +1674,8 @@ Markdown file of fixed shape in `foundations/`.
 - **Based on:** none
 - **Relations:** derives from WAY-04@f07bb569 · related to WAY-15 · related to WAY-23
 - **Outranks:** none
-- **Verification:** level 1 — invariants: map-entry-kinds · map-section-kinds · part-map-file.
+- **Verification:** level 1 — invariants: map-entry-kinds · map-section-kinds · part-map-file ·
+  flow-part-names.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none

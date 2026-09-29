@@ -813,11 +813,11 @@ No file on the part map's list of files left out on purpose matches the path pat
 
 ## flow-part-names/1
 
-Every part a critical flow of the part map lists is a part of the map.
+Every part a critical flow of the part map lists, and every part a part's *Depends on* names, is a part of the map.
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-45@3798c435
+- **Derives from:** WAY-40@c3f0b830 · WAY-45@3798c435
 - **Part:** part-map
 - **Correction:** none
 - **Recovered:** none

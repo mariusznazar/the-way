@@ -505,7 +505,9 @@ def check_references(entries, sections, report):
         for name in ("Depends on", "Parts"):
             if name not in entry.fields:
                 continue
-            invariants = (flow_parts,) if name == "Parts" and entry.kind == "critical flow" else ()
+            cited = (name == "Parts" and entry.kind == "critical flow"
+                     or name == "Depends on" and entry.kind == "part")
+            invariants = (flow_parts,) if cited else ()
             value, line = entry.fields[name]
             for identifier in identifiers(value):
                 if identifier in parts:
