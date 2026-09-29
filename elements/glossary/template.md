@@ -15,12 +15,13 @@ particular to a glossary entry (WAY-35).
 
 ## Two glossaries
 
-- The glossary of the-way holds the words of the process — what its templates, decisions and entries
-  name. A product's glossary holds the words of its domain. In the-way, whose product is the process,
-  the two are one file (WAY-92).
+- The glossary of the-way holds the words of the process — what its templates, decisions and
+  entries name. A product's glossary holds the words of its domain. In the-way, whose product is
+  the process, the two are one file (WAY-92).
 - A product takes the words of the process from the-way at the commit it pins, and its glossary
   defines none of them again (WAY-92). That a product's guard reads the-way's glossary at that
-  commit is `TODO — decision pending: which invariant states that a product's glossary guard reads the-way's glossary at the commit the product pins`.
+  commit is `TODO — decision pending: which invariant states that a product's glossary guard reads
+  the-way's glossary at the commit the product pins`.
 
 ## Where entries go
 
@@ -46,9 +47,10 @@ particular to a glossary entry (WAY-35).
 - A term renamed becomes a new entry. Its old word goes to the new entry's *Avoid* where no other
   meaning keeps it; where one does, the *Not* of that meaning's entry names the new term. Both are
   done wherever the foundation may still be edited (WAY-93, WAY-94, WAY-98, WAY-99).
-- An entry is written in English, whatever language the product shows the people who use it and
-  whatever language its team speaks (WAY-72). How a word the product shows them in another language
-  stands in an entry is `TODO — decision pending: how does a word the product shows in another language stand in a glossary entry? (WAY-72)`.
+- The language of an entry follows `elements/common/rules.md` (WAY-72). How a word the product
+  shows the people who use it in another language stands in an entry is
+  `TODO — decision pending: how does a word the product shows in another language stand in a
+  glossary entry? (WAY-72)`.
 
 ## Which words take an entry
 
@@ -111,8 +113,9 @@ particular to a glossary entry (WAY-35).
 - **Not:** <meaning> — <what carries it, or TODO> · … | none
 ```
 
-Every field of the form above appears in every entry. `none` stands for a whole field with nothing
-in it; `TODO` stands only in *Not*, in place of what carries a meaning (WAY-71, WAY-99).
+`none` stands for a whole field with nothing in it; `TODO` stands only in *Not*, in place of what
+carries a meaning (WAY-71, WAY-99). The rest of the rule on `none` and `TODO`, every field in every
+entry among it, stands in `elements/common/rules.md` (WAY-71).
 
 ## The definition
 
@@ -135,10 +138,12 @@ in it; `TODO` stands only in *Not*, in place of what carries a meaning (WAY-71, 
 
 - *Avoid* lists the other words for what the term names, each with what a reader takes it for
   (WAY-94). A word stands there only where every use of it in the files of `foundations/`, the
-  elements' templates and the Markdown files of the part the elements share carries the term's
-  meaning; a word that also has another correct meaning there goes to the *Not* of the entry for that
-  meaning instead. The list of uses settles which, never the author's sense of the word (WAY-98,
-  WAY-99).
+  elements' templates and the part the elements share carries the term's meaning; a word that also
+  has another correct meaning there goes to the *Not* of the entry for that meaning instead. The
+  list of uses settles which, never the author's sense of the word (WAY-98, WAY-99). Of the part
+  the elements share, its Markdown files alone are read
+  (`TODO — decision pending: which decision sets that only the Markdown files of the part the
+  elements share are searched`).
 - A word of *Avoid* is an error where a change makes it stand more times in such a file, each read
   whole, than on the commit the task branch left the main branch from; what WAY-98 does not count
   is left out, and the guard's code and tests hold how each of it is found (WAY-98).
@@ -156,16 +161,18 @@ in it; `TODO` stands only in *Not*, in place of what carries a meaning (WAY-71, 
 ## Not
 
 - *Not* names each meaning the word carried or carries in the files of `foundations/`, the elements'
-  templates and the Markdown files of the part the elements share, besides its definition and a
-  meaning a reader who knows the product's field gives it, with what carries it now: the term of
+  templates and the part the elements share — of which its Markdown files alone are read
+  (`TODO — decision pending: which decision sets that only the Markdown files of the part the
+  elements share are searched`) — besides its definition and a meaning a reader who knows the
+  product's field gives it, with what carries it now: the term of
   another entry of this glossary; the identifier in backticks of an entry of the part map, the
   invariants or the environment facts; in backticks, a value of a template's closed list as that
   template writes it; or, between quotation marks, a word used, as WAY-98 counts a use, outside
   quotation marks and outside this glossary. No carrier holds the term or any of its forms (WAY-94,
   WAY-99), the hyphens of both read as spaces (`TODO — decision pending: which decision sets that
   hyphens read as spaces when a term is compared with an identifier or a carrier`).
-- Where a human has not yet chosen the word for the other meaning, *Not* reads `TODO` in place of what
-  carries it. A task branch may hold it; the main branch never does (WAY-99, WAY-71).
+- Where a human has not yet chosen the word for the other meaning, *Not* reads `TODO` in place of
+  what carries it. A task branch may hold it; the main branch never does (WAY-99, WAY-71).
 
 ## Uses and a changed definition
 
@@ -206,5 +213,4 @@ read`). Each field carries the mark of where its value comes from (`elements/com
 
 ## Examples
 
-Examples live in `examples.md`: entries copied word for word from a real glossary. Until the first
-entries are written, only the forms above stand (WAY-05).
+Examples live in `examples.md` (WAY-09): entries copied word for word from a real glossary.
