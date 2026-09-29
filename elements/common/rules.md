@@ -32,7 +32,7 @@ that element's template (WAY-35).
 
 ## Where the value of a field comes from
 
-Each template marks, for every field, where its value comes from, with one of four marks (WAY-54):
+Each template marks, for every field, where its value comes from, with one of four marks:
 
 - *read off* — the value is read off, or follows from what the template asks for, as a version the
   guard computes; a template asks for what a value follows from rather than for the name of a
