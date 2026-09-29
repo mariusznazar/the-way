@@ -889,13 +889,18 @@ def merged_log(log_path, entries, merge_onto, prefix, top, report, no_commit=Non
     report says why git could not read the log on that commit. Given `no_commit`, which says why
     there is no commit to merge onto, records the check of the copies unchecked instead.
 
-    The log is append-only, so the merge holds every version either side holds. Where both sides
-    hold a version with different text, the copy kept is the one git's merge keeps: the copy on
-    the commit merged onto where the branch's copy reads as on the merge base of HEAD and that
-    commit, so that an edit made on that side alone survives; the branch's copy otherwise, where
-    the branch changed the version or both sides wrote it (a conflict git leaves to a person).
-    The difference itself is a failure of log-merge-copies: it is either an edit of an entry
-    one side holds, or two versions written under one heading on both sides."""
+    Each version is decided against the merge base of HEAD and that commit, as git's merge does.
+    The merge holds every version either side added since the merge base, and every version of
+    the merge base that neither side removed. A version of the merge base that one side removed
+    and the other left as the merge base holds it is gone after the merge; where the other side
+    changed it, the changed copy is kept (a conflict git leaves to a person, which no invariant
+    covers: log-merge-copies speaks of versions both sides hold). Where both sides hold a version
+    with different text, the copy kept is the copy on the commit merged onto where the branch's
+    copy reads as on the merge base, so that an edit made on that side alone survives; the
+    branch's copy otherwise, where the branch changed the version or both sides wrote it (a
+    conflict too). That difference is a failure of log-merge-copies: it is either an edit of an
+    entry one side holds, or two versions written under one heading on both sides. Where the
+    commit merged onto holds no log, the log after the merge is this log alone."""
     # invariant: log-merge-copies/1
     check, copies = "merged_log", "log-merge-copies/1"
     if no_commit:
@@ -910,24 +915,34 @@ def merged_log(log_path, entries, merge_onto, prefix, top, report, no_commit=Non
     if onto_text is None:
         report.notes.append("%s has no %s; the log after the merge is this log alone"
                             % (merge_onto, relative))
-        onto_text = ""
-    merged = {(entry.number, entry.version): (entry, None) for entry in versions_of(entries)}
-    on_base = None   # (number, version) -> text on the merge base, read at the first difference
-    for entry in versions_of(parse_log(onto_text, prefix)):
-        key = (entry.number, entry.version)
-        if key not in merged:
-            merged[key] = (entry, merge_onto)
-        elif merged[key][0].text != entry.text:
-            if on_base is None:
-                on_base = log_on_merge_base(relative, merge_onto, prefix, top, report)
-            ours = merged[key][0]
+    ours = {(entry.number, entry.version): entry for entry in versions_of(entries)}
+    theirs = {(entry.number, entry.version): entry
+              for entry in versions_of(parse_log(onto_text or "", prefix))}
+    # (number, version) -> text on the merge base; a version one side alone holds is decided by it
+    on_base = ({} if onto_text is None or ours.keys() == theirs.keys()
+               and all(ours[key].text == theirs[key].text for key in ours)
+               else log_on_merge_base(relative, merge_onto, prefix, top, report))
+    merged = {}
+    for key in sorted(ours.keys() | theirs.keys()):
+        mine, other = ours.get(key), theirs.get(key)
+        if mine is not None and other is not None:
+            merged[key] = (mine, None)
+            if mine.text == other.text:
+                continue
             kept = "this copy"
-            if on_base.get(key) == ours.text:
-                merged[key] = (entry, merge_onto)
+            if on_base.get(key) == mine.text:
+                merged[key] = (other, merge_onto)
                 kept = "the copy on %s" % merge_onto
-            report.error(ours.line, "%s differs from its copy on %s; the log after the merge "
-                                    "holds %s" % (label_of(entry, prefix), merge_onto, kept),
+            report.error(mine.line, "%s differs from its copy on %s; the log after the merge "
+                                    "holds %s" % (label_of(mine, prefix), merge_onto, kept),
                          check, (copies,))
+        # held by one side alone: gone where the other side removed it from the merge base
+        # unchanged; kept where it is new since the merge base or this side changed it
+        elif mine is not None:
+            if on_base.get(key) != mine.text:
+                merged[key] = (mine, None)
+        elif on_base.get(key) != other.text:
+            merged[key] = (other, merge_onto)
     latest, setters = {}, {}
     for (number, _), item in sorted(merged.items()):
         current = item[0].binding

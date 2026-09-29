@@ -970,28 +970,37 @@ class MergedLog(InGit):
 
     REWORDED = version(1, ver=2, binding=CHANGED, change="new wording")
 
+    def fork(self, base, onto):
+        """Commit `base` on main, and `onto` on a branch `onto` that leaves main there; HEAD stays
+        on main, so the merge base of HEAD and `onto` holds `base`."""
+        self.commit(base)
+        self.git("checkout", "-q", "-b", "onto")
+        self.commit(onto)
+        self.git("checkout", "-q", "main")
+
     def test_a_decision_reworded_only_on_the_commit_merged_onto(self):
-        self.commit(log(version(1), self.REWORDED))
+        self.fork(log(version(1)), log(version(1), self.REWORDED))
         text = log(version(1), version(2, relations="derives from ABC-01@" + CURRENT))
         self.assertPasses(text)
         self.assertFails(text, "the current fingerprint of ABC-01 is " + CHANGED_FINGERPRINT,
-                         merge_onto="main")
+                         merge_onto="onto")
         self.assertRecords(line("check_fingerprints", "fail", "relation-fingerprint-value/1",
                                 "line 30: ABC-02/1: `derives from ABC-01@798975ff` — the current "
                                 "fingerprint of ABC-01 is 69b731d5, set by ABC-01/2, a change of the "
                                 "kind new wording"))
 
     def test_a_relation_renewed_for_the_wording_on_the_commit_merged_onto(self):
-        self.commit(log(version(1), self.REWORDED))
+        self.fork(log(version(1)), log(version(1), self.REWORDED))
         self.assertPasses(log(version(1), version(2, relations="derives from ABC-01@"
-                                                   + CHANGED_FINGERPRINT)), merge_onto="main")
+                                                   + CHANGED_FINGERPRINT)), merge_onto="onto")
         self.assertRecords(line("check_fingerprints", "pass", "relation-fingerprint-value/1"))
 
     def test_a_decision_only_the_commit_merged_onto_holds_leans_on_a_reworded_one(self):
-        self.commit(log(version(1), version(2, relations="derives from ABC-01@" + CURRENT)))
-        self.assertFails(log(version(1), self.REWORDED), "ABC-02/1 (on main)", merge_onto="main")
+        self.fork(log(version(1)),
+                  log(version(1), version(2, relations="derives from ABC-01@" + CURRENT)))
+        self.assertFails(log(version(1), self.REWORDED), "ABC-02/1 (on onto)", merge_onto="onto")
         self.assertRecords(line("check_fingerprints", "fail", "relation-fingerprint-value/1",
-                                "ABC-02/1 (on main): `derives from ABC-01@798975ff` — the current "
+                                "ABC-02/1 (on onto): `derives from ABC-01@798975ff` — the current "
                                 "fingerprint of ABC-01 is 69b731d5, set by ABC-01/2, a change of the "
                                 "kind new wording"))
 
@@ -1057,6 +1066,52 @@ class MergedLog(InGit):
         self.commit(log(version(1), version(2)))
         self.assertPasses(log(version(1), version(2), version(3)), merge_onto="main")
         self.assertRecords(line("merged_log", "pass", "log-merge-copies/1"))
+
+    def test_a_version_removed_on_the_commit_merged_onto(self):
+        """The commit merged onto drops ABC-01/2, which the branch leaves as the merge base holds
+        it: a merge drops it too, so ABC-01/1 is the latest version and a relation carrying its
+        fingerprint is current."""
+        self.fork(log(version(1), self.REWORDED), log(version(1)))
+        self.assertPasses(log(version(1), self.REWORDED,
+                              version(2, relations="derives from ABC-01@" + CURRENT)),
+                          merge_onto="onto")
+        self.assertRecords(line("check_fingerprints", "pass", "relation-fingerprint-value/1"))
+        self.assertRecords(line("merged_log", "pass", "log-merge-copies/1"))
+
+    def test_a_version_removed_on_the_branch(self):
+        """The branch drops ABC-01/2, which the commit merged onto leaves as the merge base holds
+        it: a merge drops it, so a relation carrying the fingerprint of ABC-01/1 is current."""
+        self.fork(log(version(1), self.REWORDED), log(version(1), self.REWORDED, version(3)))
+        self.assertPasses(log(version(1), version(2, relations="derives from ABC-01@" + CURRENT)),
+                          merge_onto="onto")
+        self.assertRecords(line("check_fingerprints", "pass", "relation-fingerprint-value/1"))
+
+    def test_a_version_removed_on_one_side_and_changed_on_the_other(self):
+        """The commit merged onto drops ABC-01/2 and the branch edits it: git stops with a
+        conflict, and the guard keeps the changed copy, so its fingerprint is the current one."""
+        self.fork(log(version(1), self.REWORDED), log(version(1)))
+        self.assertFails(log(version(1), version(1, ver=2, binding=CHANGED, change="new wording",
+                                                 approved="Anna, 2026-09-02"),
+                             version(2, relations="derives from ABC-01@" + CURRENT)),
+                         "the current fingerprint of ABC-01 is " + CHANGED_FINGERPRINT,
+                         merge_onto="onto")
+        self.assertRecords(line("merged_log", "pass", "log-merge-copies/1"))
+
+    def test_a_reworded_version_removed_and_its_relation_renewed_on_the_commit_merged_onto(self):
+        """The merge base holds ABC-01/2, a new wording, and ABC-02/1 carrying its fingerprint. The
+        commit merged onto drops ABC-01/2 and renews ABC-02/1 to the fingerprint of ABC-01/1; the
+        branch leaves both as the merge base holds them. A merge keeps both changes of that side,
+        so the relation is current; only the two copies of ABC-02/1 differ."""
+        # invariant: log-merge-copies/1
+        before = log(version(1), self.REWORDED,
+                     version(2, relations="derives from ABC-01@" + CHANGED_FINGERPRINT))
+        self.fork(before, log(version(1), version(2, relations="derives from ABC-01@" + CURRENT)))
+        self.assertFails(before, "ABC-02/1 differs from its copy on onto", merge_onto="onto")
+        self.assertRecords(line("check_fingerprints", "pass", "relation-fingerprint-value/1"))
+        self.assertEqual([item for item in self.lines if item["verdict"] == "fail"],
+                         [line("merged_log", "fail", "log-merge-copies/1",
+                               "line 41: ABC-02/1 differs from its copy on onto; the log after the "
+                               "merge holds the copy on onto")])
 
     def test_a_decision_reworded_in_place_on_the_branch(self):
         self.commit(log(version(1), version(2, relations="derives from ABC-01@798975ff")))
