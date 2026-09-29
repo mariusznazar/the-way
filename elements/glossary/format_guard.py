@@ -9,7 +9,7 @@ longer says what the guard reads stops the run. Written in this script, each bes
 template it follows: the names *Avoid* and *Not*, the endings of a word's forms, the fields whose
 values the uses leave out, and the file's path. The part map, the invariants and the environment
 facts are read with the parsers of their own guards, and the record of a run is written with the
-part map guard's report. Each check cites the invariants it gives a verdict for, as
+report the guards share. Each check cites the invariants it gives a verdict for, as
 `invariant: <identifier>/<version>` (WAY-65).
 
 The text the checks search is every file git tracks in `foundations/`, and the elements' templates:
@@ -70,6 +70,9 @@ def _load(name, path):
 
 decision_guard = _load("decision_format_guard", os.path.join(HERE, "..", "decisions", "format_guard.py"))
 map_guard = _load("part_map_format_guard", os.path.join(HERE, "..", "part-map", "format_guard.py"))
+# The code the format guards share (WAY-09).
+shared = _load("elements_common_guard_shared",
+               os.path.join(HERE, "..", "common", "guard_shared.py"))
 invariant_guard = _load("invariants_format_guard",
                         os.path.join(HERE, "..", "invariants", "format_guard.py"))
 facts_guard = invariant_guard.facts_guard()
@@ -80,7 +83,7 @@ listed = invariant_guard.listed
 is_todo = invariant_guard.is_todo
 stray_lines = invariant_guard.stray_lines
 FieldRule = invariant_guard.FieldRule
-TODO_WORD = map_guard.TODO_WORD
+TODO_WORD = shared.TODO_WORD
 
 # The name a record gives this program, and each of its checks as PROGRAM::<function>.
 PROGRAM = "elements/glossary/format_guard.py"
@@ -88,8 +91,8 @@ PROGRAM = "elements/glossary/format_guard.py"
 # recorded only by a run given neither option (WAY-61, WAY-74).
 SELECTED_BY = {"check_against_base": "--base", "check_merge_todo": "--merge-onto",
                "check_term_use": "--merge-onto"}
-NO_COMMIT = map_guard.NO_COMMIT
-NO_COMMIT_REASON = map_guard.NO_COMMIT_REASON
+NO_COMMIT = shared.NO_COMMIT
+NO_COMMIT_REASON = shared.NO_COMMIT_REASON
 # Where a product's glossary stands, relative to the root of its repository (WAY-93).
 FILE_PATH = "foundations/glossary.md"
 FOUNDATIONS = "foundations/"
@@ -264,7 +267,7 @@ def parse_file(text, rules):
 
     items = []
     field_line = re.compile(r"^- \*\*(%s):\*\*" % "|".join(re.escape(name) for name in rules.names))
-    for line, section in map_guard.split_sections(text):
+    for line, section in shared.split_sections(text):
         heading = section[0][3:].strip()
         body = section[1:]
         if not any(field_line.match(row) for row in body):
@@ -284,7 +287,7 @@ def parse_file(text, rules):
         if paragraph:
             entry.definition = "\n".join(paragraph)
             entry.definition_line = line + 1 + start
-        entry.fields = map_guard.parse_fields(body[index:], line + 1 + index)
+        entry.fields = shared.parse_fields(body[index:], line + 1 + index)
         entry.strays = stray_lines(body[index:], line + 1 + index)
         # the shared parser keeps the first of two fields of one name and drops the second
         seen = set()
@@ -559,7 +562,7 @@ def read_foundation(path, top, report):
             report.notes.append("there is no %s beside the file: it holds no identifier" % name)
             texts.append(None)
             continue
-        texts.append(map_guard.read_file(full, report, "%s beside the file" % name))
+        texts.append(shared.read_file(full, report, "%s beside the file" % name))
     try:
         return foundation_of(*texts)
     except (map_guard.TemplateError, invariant_guard.TemplateError, facts_guard.TemplateError,
@@ -571,15 +574,15 @@ def read_foundation(path, top, report):
 # --- the report and the record of a run -----------------------------------------------------
 
 
-class Report(map_guard.Report):
-    """The part map guard's report, naming this program and its checks in the record."""
+class Report(shared.Report):
+    """The report the guards share, naming this program and its checks in the record."""
 
     def __init__(self, path, options=()):
         super().__init__(path, options, program=PROGRAM, selected_by=SELECTED_BY)
 
 
-start_record = map_guard.start_record
-write_record = map_guard.write_record
+start_record = shared.start_record
+write_record = shared.write_record
 
 
 # --- checks of the file's shape -------------------------------------------------------------
@@ -1040,7 +1043,7 @@ def count_word(word, text, identifiers, names, terms, glossary=False):
 
 
 def glossary_at(path, commit, top, report):
-    text, failure = map_guard.file_at(commit, relative(path, top), top)
+    text, failure = shared.file_at(commit, relative(path, top), top)
     if failure:
         report.error(None, failure)
         raise LookupError
@@ -1051,7 +1054,7 @@ def foundation_at(path, commit, top, report):
     directory = foundations_directory(path, top)
     texts = []
     for name in BESIDE:
-        text, failure = map_guard.file_at(commit, relative(os.path.join(directory, name), top), top)
+        text, failure = shared.file_at(commit, relative(os.path.join(directory, name), top), top)
         if failure:
             report.error(None, failure)
             raise LookupError
@@ -1103,7 +1106,7 @@ def check_against_base(path, entries, rules, corpus, foundation, base, top, repo
     befores = {}
     for text in corpus:
         if text.in_repo and words:
-            befores[text.name], failure = map_guard.file_at(base, text.name, top)
+            befores[text.name], failure = shared.file_at(base, text.name, top)
             if failure:
                 # a failure of the run, not of the check, which then records no verdict (WAY-63)
                 report.error(None, failure)
@@ -1171,7 +1174,7 @@ def check_merge_todo(entries, report, no_commit=None):
 def merge_base(top, commit):
     """(the merge base of HEAD and the commit or None where they have none, git's message where
     git fails): `git merge-base` exits 1 for no common ancestor and otherwise for a failure."""
-    code, answer, message = map_guard.call_git(["merge-base", "HEAD", commit], top)
+    code, answer, message = shared.call_git(["merge-base", "HEAD", commit], top)
     if code == 0 and answer.strip():
         return answer.strip(), None
     if code == 1 and not message:
@@ -1190,7 +1193,7 @@ def merge_texts(mine, before, theirs, top):
             paths.append(os.path.join(directory, name))
             with open(paths[-1], "w", encoding="utf-8", newline="\n") as handle:
                 handle.write(text)
-        code, merged, message = map_guard.call_git(["merge-file", "-p"] + paths, top)
+        code, merged, message = shared.call_git(["merge-file", "-p"] + paths, top)
     finally:
         shutil.rmtree(directory, ignore_errors=True)
     if code == 0:
@@ -1210,7 +1213,7 @@ def merged_corpus(path, corpus, merge_onto, top, report):
     if failure:
         report.error(None, failure)
         return None
-    code, listing, message = map_guard.call_git(["ls-tree", "-r", "--full-tree", "-z",
+    code, listing, message = shared.call_git(["ls-tree", "-r", "--full-tree", "-z",
                                                  "--name-only", merge_onto, "--", FOUNDATIONS], top)
     if code != 0:
         report.error(None, "git cannot list %s at %s: %s" % (FOUNDATIONS, merge_onto, message))
@@ -1225,10 +1228,10 @@ def merged_corpus(path, corpus, merge_onto, top, report):
                                      if text.in_repo and not text.glossary}):
         if name in own and own[name].glossary:
             continue
-        theirs, failure = map_guard.file_at(merge_onto, name, top)
+        theirs, failure = shared.file_at(merge_onto, name, top)
         before = None
         if not failure and base is not None:
-            before, failure = map_guard.file_at(base, name, top)
+            before, failure = shared.file_at(base, name, top)
         if failure:
             report.error(None, failure)
             return None
@@ -1257,11 +1260,11 @@ def merged_corpus(path, corpus, merge_onto, top, report):
 
 def check_examples(items, examples_path, report):
     check = "check_examples"
-    examples = map_guard.read_file(examples_path, report, "the examples")
+    examples = shared.read_file(examples_path, report, "the examples")
     if examples is None:
         return
     by_heading = {item.text.split("\n")[0]: item for item in items if isinstance(item, Entry)}
-    for line, lines in map_guard.split_sections(examples):
+    for line, lines in shared.split_sections(examples):
         copy = "\n".join(lines).rstrip()
         entry = by_heading.get(lines[0])
         if entry is None:
@@ -1277,7 +1280,7 @@ def find_commit(top, option, commit, report):
     if top is None:
         report.error(None, "%s %s given, but the file is not in a git repository" % (option, commit))
         return False
-    return map_guard.find_commit(top, option, commit, report)
+    return shared.find_commit(top, option, commit, report)
 
 
 def list_uses(word, corpus, entries, report, stream):

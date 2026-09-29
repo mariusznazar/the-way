@@ -5,7 +5,7 @@ script. The fields of an entry and the words each may hold, the title and column
 withdrawn identifiers, the file and columns of human verdicts and the words *Holds for* may not read
 are taken from the template, so the rules of an entry live in one place (WAY-05, WAY-35, WAY-71).
 The decision log, the invariants and the part map are read with the parsers of their own guards,
-and the record of a run is written with the part map guard's report. Each check cites the
+and the record of a run is written with the report the guards share. Each check cites the
 invariants it gives a verdict for, as `invariant: <identifier>/<version>` (WAY-65).
 
 Usage, from the root of the product's repository:
@@ -55,13 +55,19 @@ def _load(name, path):
 
 decision_guard = _load("decision_format_guard", os.path.join(HERE, "..", "decisions", "format_guard.py"))
 map_guard = _load("part_map_format_guard", os.path.join(HERE, "..", "part-map", "format_guard.py"))
+# The code the format guards share (WAY-09), and the form of an identifier and of a version
+# from the relation model.
+shared = _load("elements_common_guard_shared",
+               os.path.join(HERE, "..", "common", "guard_shared.py"))
+identifier_form = _load("relation_model_identifier",
+                        os.path.join(HERE, "..", "..", "relation-model", "identifier.py"))
 invariant_guard = _load("invariants_format_guard",
                         os.path.join(HERE, "..", "invariants", "format_guard.py"))
 fingerprint_module = invariant_guard.fingerprint_module
 fingerprint = decision_guard.fingerprint
 count_sentences = decision_guard.count_sentences
 FINGERPRINT = invariant_guard.FINGERPRINT
-TODO_WORD = map_guard.TODO_WORD
+TODO_WORD = shared.TODO_WORD
 bare = invariant_guard.bare
 is_todo = invariant_guard.is_todo
 flat = invariant_guard.flat
@@ -80,12 +86,12 @@ PROGRAM = "elements/environment-facts/format_guard.py"
 # recorded only by a run given neither option (WAY-61, WAY-74).
 SELECTED_BY = {"check_against_base": "--base", "check_merge_todo": "--merge-onto",
                "check_fingerprints": "--merge-onto", "check_dependants": "--merge-onto"}
-NO_COMMIT = map_guard.NO_COMMIT
-NO_COMMIT_REASON = map_guard.NO_COMMIT_REASON
+NO_COMMIT = shared.NO_COMMIT
+NO_COMMIT_REASON = shared.NO_COMMIT_REASON
 # Where a product's environment facts stand, relative to the root of its repository (WAY-75).
 FILE_PATH = "foundations/environment_facts.md"
 
-IDENTIFIER = map_guard.IDENTIFIER
+IDENTIFIER = identifier_form.IDENTIFIER
 DATE = r"\d{4}-\d{2}-\d{2}"
 # A commit as a row of human verdicts names it: an abbreviated or full object name.
 COMMIT = r"[0-9a-f]{7,40}"
@@ -191,10 +197,10 @@ class Entry:
 def parse_file(text, rules):
     """Entries, the lists closing the file, and headings that are neither, in file order."""
     items, list_titles = [], [title for title, _ in rules.lists]
-    for line, lines in map_guard.split_sections(text):
+    for line, lines in shared.split_sections(text):
         heading = lines[0][3:].strip()
         # a version is a number from 1, written without a leading zero (WAY-79)
-        match = re.match(r"^(.+?)/([1-9][0-9]*)$", heading)
+        match = re.match(r"^(.+?)/(%s)$" % identifier_form.VERSION, heading)
         if heading in list_titles:
             items.append(parse_table(heading, line, lines[1:]))
             continue
@@ -211,7 +217,7 @@ def parse_file(text, rules):
             paragraph.append(body[index])
             index += 1
         entry.sentence = "\n".join(paragraph) or None
-        entry.fields = map_guard.parse_fields(body[index:], line + 1 + index)
+        entry.fields = shared.parse_fields(body[index:], line + 1 + index)
         entry.strays = stray_lines(body[index:], line + 1 + index)
         items.append(entry)
     return items
@@ -296,7 +302,7 @@ def merged_facts(branch, onto, base):
 
 def merge_base(top, commit):
     """The merge base of HEAD and the commit, or None where git finds none."""
-    code, answer, _ = map_guard.call_git(["merge-base", "HEAD", commit], top)
+    code, answer, _ = shared.call_git(["merge-base", "HEAD", commit], top)
     return answer.strip() if code == 0 and answer.strip() else None
 
 
@@ -339,15 +345,15 @@ def verdict_rows(text, columns):
 # --- the report and the record of a run -----------------------------------------------------
 
 
-class Report(map_guard.Report):
-    """The part map guard's report, naming this program and its checks in the record."""
+class Report(shared.Report):
+    """The report the guards share, naming this program and its checks in the record."""
 
     def __init__(self, path, options=()):
         super().__init__(path, options, program=PROGRAM, selected_by=SELECTED_BY)
 
 
-start_record = map_guard.start_record
-write_record = map_guard.write_record
+start_record = shared.start_record
+write_record = shared.write_record
 
 
 # --- what the checks read beside the facts file ---------------------------------------------
@@ -421,7 +427,7 @@ def read_foundation(path, report, root):
         foundation.log_read = True
         report.notes.append("there is no decisions.md beside the file: no decision rests on a fact")
         return foundation
-    log = map_guard.read_file(log_path, report, "the decision log beside the file")
+    log = shared.read_file(log_path, report, "the decision log beside the file")
     if log is None:
         return foundation
     foundation.log_read = True
@@ -762,7 +768,7 @@ def check_human_verdicts(path, facts, foundation, rules, report):
         report.notes.append("there is no %s; no human verdict is given" % rules.verdicts_file)
         report.ran(check, fact_row)
         return
-    text = map_guard.read_file(verdicts_path, report, "the human verdicts")
+    text = shared.read_file(verdicts_path, report, "the human verdicts")
     if text is None:
         return
     report.ran(check, fact_row)
@@ -780,7 +786,7 @@ def check_human_verdicts(path, facts, foundation, rules, report):
             problems = []
             if not method_is_path(entry):
                 problems.append("the method of `%s` is not a path" % name)
-            if not re.fullmatch(r"[1-9][0-9]*", values.get("Version", "")):
+            if not re.fullmatch(identifier_form.VERSION, values.get("Version", "")):
                 problems.append("*Version* is not a number")
             if values.get("Verdict") not in ("pass", "fail"):
                 problems.append("*Verdict* is neither `pass` nor `fail`")
@@ -877,7 +883,7 @@ def check_citations(facts, top, tracked, report):
         for number, value in found:
             where = "%s:%d" % (name, number)
             # a version is a number written without a leading zero
-            cited = re.fullmatch(r"(\S+)/([1-9][0-9]*)", value)
+            cited = re.fullmatch(r"(\S+)/(%s)" % identifier_form.VERSION, value)
             identifier = cited.group(1) if cited else value.split()[0].split("/")[0]
             if identifier in facts.withdrawn:
                 report.error(None, "%s: cites `%s`, which is withdrawn" % (where, identifier),
@@ -921,7 +927,7 @@ def check_record_paths(entries, top, report):
             inside.append(path)
     if not inside:
         return
-    code, answer, message = map_guard.call_git(["-c", "core.ignorecase=false", "check-ignore",
+    code, answer, message = shared.call_git(["-c", "core.ignorecase=false", "check-ignore",
                                                 "-z", "--stdin"], top,
                                                stdin="\0".join(inside) + "\0")
     if code not in (0, 1):
@@ -958,7 +964,7 @@ def check_against_base(path, facts, rules, base, top, report, no_commit=None):
         report.unchecked(check, NO_COMMIT_REASON, no_commit, *BASE_INVARIANTS)
         return
     relative = os.path.relpath(os.path.abspath(path), top).replace(os.sep, "/")
-    base_text, failure = map_guard.file_at(base, relative, top)
+    base_text, failure = shared.file_at(base, relative, top)
     if failure:
         report.error(None, failure)
         return
@@ -1057,7 +1063,7 @@ def merged_foundation(path, facts, foundation, rules, merge_onto, top, report):
 
     def on_commit(commit, name):
         relative = os.path.relpath(os.path.join(directory, name), top).replace(os.sep, "/")
-        text, failure = map_guard.file_at(commit, relative, top)
+        text, failure = shared.file_at(commit, relative, top)
         if failure:
             report.error(None, failure)
             raise LookupError
@@ -1094,7 +1100,7 @@ def merged_foundation(path, facts, foundation, rules, merge_onto, top, report):
         texts = [onto_log or ""]
         log_path = os.path.join(directory, "decisions.md")
         if foundation.prefix and os.path.exists(log_path):
-            log_text = map_guard.read_file(log_path, report, "the decision log beside the file")
+            log_text = shared.read_file(log_path, report, "the decision log beside the file")
             if log_text is None:
                 return None
             texts.insert(0, log_text)
@@ -1169,11 +1175,11 @@ def check_dependants(entries, invariants, latest, report, merge, no_commit=None)
 
 def check_examples(items, examples_path, report):
     check = "check_examples"
-    examples = map_guard.read_file(examples_path, report, "the examples")
+    examples = shared.read_file(examples_path, report, "the examples")
     if examples is None:
         return
     by_heading = {item.text.split("\n")[0]: item for item in items if isinstance(item, Entry)}
-    for line, lines in map_guard.split_sections(examples):
+    for line, lines in shared.split_sections(examples):
         copy = "\n".join(lines).rstrip()
         entry = by_heading.get(lines[0])
         if entry is None:
@@ -1189,7 +1195,7 @@ def find_commit(path, top, option, commit, report):
     if top is None:
         report.error(None, "%s %s given, but the file is not in a git repository" % (option, commit))
         return False
-    return map_guard.find_commit(top, option, commit, report)
+    return shared.find_commit(top, option, commit, report)
 
 
 def run(path, base=None, stream=None, template=TEMPLATE, merge_onto=None, record=None,

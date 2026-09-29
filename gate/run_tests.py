@@ -76,6 +76,7 @@ holds the lines written until then.
 import argparse
 import ast
 import fnmatch
+import importlib.util
 import inspect
 import json
 import os
@@ -90,8 +91,21 @@ sys.dont_write_bytecode = True
 # The name a record gives this program, as the check of a failure no test gave.
 PROGRAM = "gate/run_tests.py"
 PATTERN = "test_*.py"
-# A version is a number written without a leading zero, as the invariants guard reads it.
-CITED = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*/[1-9][0-9]*")
+
+
+def _load(name, path):
+    spec = importlib.util.spec_from_file_location(name, path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+# The form of an identifier at a version, from the relation model, as the format guards read it
+# (WAY-57, WAY-79); how a citation stands in a test is this program's own, below (WAY-65).
+identifier_form = _load("relation_model_identifier",
+                        os.path.join(os.path.dirname(os.path.abspath(__file__)), "..",
+                                     "relation-model", "identifier.py"))
+CITED = re.compile(identifier_form.CITED)
 # A comment line reading `invariant:` or `fact:` cites what follows it, all of it: a value of
 # more than one word, or of none, is a citation off the form, never silence. A citation is kept as
 # (kind, value), and the kind is the key its verdict stands under in the record (WAY-74, WAY-81).

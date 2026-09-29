@@ -1698,7 +1698,7 @@ stays in the map as a withdrawn identifier giving why and naming its successors;
 never reused.
 
 - **Change:** new decision
-- **Scope:** part-map
+- **Scope:** part-map, elements-common
 - **Based on:** Packwerk ties a package's identity to its location — "The package name is the
   path to the folder from the project root" (Packwerk USAGE,
   https://github.com/Shopify/packwerk/blob/main/USAGE.md). Backstage makes the name the thing
@@ -2297,7 +2297,7 @@ field whose value neither can be read off, nor follows from what the template as
 transcribed is marked in the template as resting on a judgment.
 
 - **Change:** new decision
-- **Scope:** decisions, part-map, invariants, glossary, environment-facts
+- **Scope:** decisions, part-map, invariants, glossary, environment-facts, elements-common
 - **Based on:** none
 - **Relations:** related to WAY-05 · related to WAY-15 · related to WAY-44 · related to WAY-46 ·
   related to WAY-49
@@ -2498,7 +2498,7 @@ not the current one, while elsewhere a reference to an invariant's version is hi
 flagged, as WAY-02 has it.
 
 - **Change:** new decision
-- **Scope:** invariants, relation-model, gate, task-cycle, part-map
+- **Scope:** invariants, relation-model, gate, task-cycle, part-map, elements-common
 - **Based on:** none
 - **Relations:** derives from WAY-03@4fa941a4 · derives from WAY-10@08118926 ·
   narrows WAY-02@59bd26f9 · related to WAY-07 · related to WAY-08 · related to WAY-14 ·
@@ -2812,7 +2812,7 @@ current version; a verdict recorded for another version is not its result, and a
 no verdict for the entry never gives it a pass.
 
 - **Change:** new decision
-- **Scope:** invariants, gate, decisions, part-map
+- **Scope:** invariants, gate, decisions, part-map, elements-common
 - **Based on:** none
 - **Relations:** derives from WAY-08@9d45e0a9 · derives from WAY-16@c8486f8b ·
   derives from WAY-54@f37c232a · derives from WAY-57@4313046c · derives from WAY-38@6e10c3fd ·
@@ -3028,7 +3028,7 @@ successors or `none`. Splitting or merging entries held there gives each entry t
 a new identifier, and any other change keeps it.
 
 - **Change:** new decision
-- **Scope:** invariants, part-map
+- **Scope:** invariants, part-map, elements-common
 - **Based on:** none
 - **Relations:** derives from WAY-02@59bd26f9 · derives from WAY-56@06700ffd ·
   derives from WAY-57@4313046c · related to WAY-07 · related to WAY-35 · related to WAY-39 ·
@@ -3340,7 +3340,7 @@ invariant's *Rests on* until the facts element has entries. A guard reports a mi
 word not given it, as an error.
 
 - **Change:** new decision
-- **Scope:** decisions, part-map, invariants, glossary, environment-facts
+- **Scope:** decisions, part-map, invariants, glossary, environment-facts, elements-common
 - **Based on:** none
 - **Relations:** related to WAY-01 · related to WAY-05 · related to WAY-09 · related to WAY-17 ·
   related to WAY-38 · related to WAY-46 · related to WAY-54 · related to WAY-57 · related to WAY-58 ·
@@ -3390,7 +3390,7 @@ A product's foundation is written in English, whatever language the product show
 use it and whatever language its team speaks.
 
 - **Change:** new decision
-- **Scope:** decisions, part-map, invariants, glossary, environment-facts
+- **Scope:** decisions, part-map, invariants, glossary, environment-facts, elements-common
 - **Based on:** none
 - **Relations:** related to WAY-04 · related to WAY-05 · related to WAY-35 · related to WAY-38 ·
   related to WAY-60 · related to WAY-71
@@ -3537,7 +3537,7 @@ naming its successors or `none`. Splitting or merging entries gives each entry t
 a new identifier, and any other change keeps it.
 
 - **Change:** new decision
-- **Scope:** environment-facts, invariants, part-map
+- **Scope:** environment-facts, invariants, part-map, elements-common
 - **Based on:** a store of facts keeps a value it has shown wrong so that nobody enters it again:
   the deprecated rank "allows other users to know not to re-add the value to the item" (Wikidata,
   Help:Ranking, https://www.wikidata.org/wiki/Help:Ranking).
@@ -3703,7 +3703,7 @@ wording. When its fingerprint differs from its fingerprint on the main branch, i
 higher than there. A check citing a fact at a version other than the current one fails the gate.
 
 - **Change:** new decision
-- **Scope:** environment-facts, relation-model, gate
+- **Scope:** environment-facts, relation-model, gate, elements-common
 - **Based on:** none
 - **Relations:** related to WAY-10 · related to WAY-14 · related to WAY-43 · related to WAY-57 ·
   related to WAY-61 · related to WAY-75 · related to WAY-78
@@ -3896,7 +3896,7 @@ the date in *Until*, which the gate compares with the checked commit's committer
 with the day it runs.
 
 - **Change:** new decision
-- **Scope:** invariants, environment-facts, gate
+- **Scope:** invariants, environment-facts, gate, elements-common
 - **Based on:** none
 - **Relations:** derives from WAY-63@f16348c8 · related to WAY-08 · related to WAY-10 ·
   related to WAY-14 · related to WAY-57 · related to WAY-61 · related to WAY-68 · related to WAY-79 ·
@@ -4668,7 +4668,7 @@ paraphrase of its definition. A term whose definition holds a word an invariant'
 hold enters such a sentence only where the human deciding the change accepts it.
 
 - **Change:** new decision
-- **Scope:** glossary, decisions, invariants, part-map, environment-facts
+- **Scope:** glossary, decisions, invariants, part-map, environment-facts, elements-common
 - **Based on:** none
 - **Relations:** narrows WAY-60@c85d1ac0 · related to WAY-10 · related to WAY-59 · related to WAY-94 ·
   related to WAY-97

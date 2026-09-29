@@ -25,10 +25,9 @@ record cannot be written.
 """
 
 import argparse
-import json
+import importlib.util
 import os
 import re
-import subprocess
 import sys
 import tempfile
 from dataclasses import dataclass, field
@@ -44,10 +43,9 @@ PROGRAM = "elements/part-map/format_guard.py"
 # recorded only by a run given neither option. A run records the checks its options select, and
 # its own failures always (WAY-61, WAY-74).
 SELECTED_BY = {"check_violations_growth": "--base"}
-# The value the gate fills in for a commit that does not exist (WAY-61), and the reasons a check
-# records for being unchecked, word for word as the invariants template lists them (WAY-63).
-NO_COMMIT = "none"
-NO_COMMIT_REASON = "the method takes a commit the gate filled in as not existing"
+# A reason a check records for being unchecked, word for word as the invariants template lists it
+# (WAY-63); the value the gate fills in for a commit that does not exist, and the reason that goes
+# with it, come from the code the guards share.
 NOT_PRODUCED_REASON = "the method's command or file is not declared or produced by the product"
 # Where a product's part map stands, relative to the root of its repository (WAY-40).
 MAP_PATH = "foundations/part_map.md"
@@ -56,7 +54,34 @@ GATE_DIRECTORY = "gate/"
 
 sys.dont_write_bytecode = True
 
-IDENTIFIER = r"[a-z0-9]+(?:-[a-z0-9]+)*"
+
+def _load(name, path):
+    spec = importlib.util.spec_from_file_location(name, path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+# The code the format guards share (WAY-09), and the form of an identifier from the relation model.
+shared = _load("elements_common_guard_shared",
+               os.path.join(HERE, "..", "common", "guard_shared.py"))
+identifier_form = _load("relation_model_identifier",
+                        os.path.join(HERE, "..", "..", "relation-model", "identifier.py"))
+NO_COMMIT = shared.NO_COMMIT
+NO_COMMIT_REASON = shared.NO_COMMIT_REASON
+TODO_WORD = shared.TODO_WORD
+read_file = shared.read_file
+split_sections = shared.split_sections
+parse_fields = shared.parse_fields
+describe = shared.describe
+start_record = shared.start_record
+write_record = shared.write_record
+git = shared.git
+call_git = shared.call_git
+file_at = shared.file_at
+find_commit = shared.find_commit
+
+IDENTIFIER = identifier_form.IDENTIFIER
 LIST_SECTIONS = ["Criticality scale", "External context", "Change paths",
                  "Files left out on purpose", "Withdrawn identifiers", "Known violations"]
 # The lists of the map itself; the list of known violations stands in its own file (WAY-51).
@@ -88,26 +113,9 @@ def is_none(value):
     return bare(value) == "none"
 
 
-# `TODO` as a word of its own anywhere in a value — whole, as an item, or inside a part such as
-# `detected by TODO` or `searched: TODO; found: …` — but not inside a path or a longer word, such
-# as `docs/TODO.md`. The invariants guard reads it from here.
-TODO_WORD = re.compile(r"(?:^|[\s;,:(`])TODO(?=$|[\s;,:)`])")
-
-
 def holds_todo(value):
     """Whether a value holds `TODO` as a word of its own anywhere in it (WAY-71)."""
     return bool(TODO_WORD.search(value or ""))
-
-
-def read_file(path, report, what):
-    """The text of a file, or None once the report holds why it cannot be read: a failure of the
-    run, recorded by every run whatever its options. The invariants guard calls it too."""
-    try:
-        with open(path, encoding="utf-8") as handle:
-            return handle.read()
-    except (OSError, UnicodeDecodeError) as problem:
-        report.error(None, "cannot read %s: %s" % (what, problem))
-        return None
 
 
 # --- rules read from the template -----------------------------------------------------------
@@ -228,29 +236,6 @@ class Section:
     rows: list = field(default_factory=list)     # (cells, line)
 
 
-def split_sections(text):
-    lines = text.split("\n")
-    starts = [index for index, line in enumerate(lines) if line.startswith("## ")]
-    for position, start in enumerate(starts):
-        end = starts[position + 1] if position + 1 < len(starts) else len(lines)
-        yield start + 1, lines[start:end]
-
-
-def parse_fields(body, first_line):
-    fields, current = {}, None
-    for offset, line in enumerate(body, start=first_line):
-        match = re.match(r"^- \*\*(.+?):\*\*(?: (.*))?$", line)
-        if match:
-            current = match.group(1)
-            fields.setdefault(current, [(match.group(2) or "").strip(), offset])
-        elif not line.strip():
-            current = None
-        elif current is not None and line.startswith(" "):
-            value, at = fields[current]
-            fields[current] = [(value + "\n" + line.rstrip()).strip("\n"), at]
-    return fields
-
-
 def parse_map(text, rules):
     entries, sections = [], {}
     for line, lines in split_sections(text):
@@ -325,126 +310,11 @@ def flow_invariant(value):
 # --- the report and the record of a run -----------------------------------------------------
 
 
-def describe(line, message):
-    return "line %d: %s" % (line, message) if line else message
+class Report(shared.Report):
+    """The report the guards share (WAY-74), naming this program and its checks in the record."""
 
-
-class Report:
-    """What a person reads, and the record of the run the gate reads (WAY-74).
-
-    A check that runs names the invariants it cites with ran(); an error or a failure it finds
-    names the check and the invariants the finding makes false. A check with no finding for an
-    invariant it cites records `pass`; a check that cannot decide an invariant for a reason on the
-    invariants template's list names it with unchecked() and records `unchecked` beside that
-    reason and a description of the case, unless it found a failure of that invariant as well. An
-    error that names no invariant is a failure recorded for no entry, and one that names no check
-    is a failure of the run itself. The record holds the checks of the options the run was given,
-    or of the map alone when it was given none; the report for a person holds every check.
-
-    error(line, message), warning(line, message), cannot_check(what, why) and notes keep the form
-    the invariants guard, which imports this class, calls them in.
-    """
-
-    def __init__(self, path, options=(), program=PROGRAM, selected_by=None):
-        self.path = path
-        self.options = set(options)
-        self.program = program
-        self.selected_by = SELECTED_BY if selected_by is None else selected_by
-        self.errors = []
-        self.warnings = []
-        self.not_checked = []   # (what, why), printed for a person as `unchecked:`
-        self.notes = []
-        self.order = []         # (check, invariant) in the order a check first named it
-        self.verdicts = {}      # (check, invariant) -> descriptions of its failures
-        self.skipped = {}       # (check, invariant) -> (the reason it is unchecked, description)
-        self.unowned = []       # (check or None, description) of errors that belong to no invariant
-
-    def _name(self, check, invariant):
-        if (check, invariant) not in self.verdicts and (check, invariant) not in self.skipped:
-            self.order.append((check, invariant))
-
-    def ran(self, check, *invariants):
-        for invariant in invariants:
-            self._name(check, invariant)
-            self.verdicts.setdefault((check, invariant), [])
-
-    def unchecked(self, check, reason, description, *invariants):
-        for invariant in invariants:
-            self._name(check, invariant)
-            self.skipped.setdefault((check, invariant), (reason, description))
-
-    def fail(self, line, message, check, invariants):
-        """Records a failure of each invariant, without a line in the report for a person."""
-        for invariant in invariants:
-            self._name(check, invariant)
-            self.verdicts.setdefault((check, invariant), []).append(describe(line, message))
-
-    def error(self, line, message, check=None, invariants=()):
-        self.errors.append((line, message))
-        if invariants:
-            self.fail(line, message, check, invariants)
-        else:
-            self.unowned.append((check, describe(line, message)))
-
-    def warning(self, line, message):
-        self.warnings.append((line, message))
-
-    def cannot_check(self, what, why):
-        self.not_checked.append((what, why))
-
-    def print(self, stream):
-        for level, items in (("error", self.errors), ("warning", self.warnings)):
-            for line, message in sorted(items, key=lambda item: item[0] or 0):
-                stream.write("%s:%s: %s: %s\n" % (self.path, line or 0, level, message))
-        for what, why in self.not_checked:
-            stream.write("unchecked: %s — %s\n" % (what, why))
-        for note in self.notes:
-            stream.write("note: %s\n" % note)
-        stream.write("%d error(s), %d warning(s), %d unchecked\n"
-                     % (len(self.errors), len(self.warnings), len(self.not_checked)))
-
-    def recorded(self, check):
-        if check is None:
-            return True
-        if self.options:
-            return self.selected_by.get(check) in self.options
-        return check not in self.selected_by
-
-    def record(self):
-        lines = []
-        for check, invariant in self.order:
-            if not self.recorded(check):
-                continue
-            name = "%s::%s" % (self.program, check)
-            failures = self.verdicts.get((check, invariant), [])
-            for description in failures:
-                lines.append({"check": name, "verdict": "fail", "invariant": invariant,
-                              "description": description})
-            if failures:
-                continue
-            if (check, invariant) in self.skipped:
-                reason, description = self.skipped[(check, invariant)]
-                lines.append({"check": name, "verdict": "unchecked", "invariant": invariant,
-                              "reason": reason, "description": description})
-            else:
-                lines.append({"check": name, "verdict": "pass", "invariant": invariant})
-        for check, description in self.unowned:
-            if self.recorded(check):
-                lines.append({"check": "%s::%s" % (self.program, check) if check else self.program,
-                              "verdict": "fail", "invariant": None, "description": description})
-        return lines
-
-
-def start_record(path):
-    directory = os.path.dirname(os.path.abspath(path))
-    os.makedirs(directory, exist_ok=True)
-    open(path, "w", encoding="utf-8").close()
-
-
-def write_record(path, report):
-    with open(path, "w", encoding="utf-8", newline="\n") as handle:
-        for line in report.record():
-            handle.write(json.dumps(line, ensure_ascii=False) + "\n")
+    def __init__(self, path, options=()):
+        super().__init__(path, options, program=PROGRAM, selected_by=SELECTED_BY)
 
 
 # --- checks of the map's shape --------------------------------------------------------------
@@ -1259,50 +1129,6 @@ def check_violations_growth(map_path, rules, positions, base, top, report, no_co
             report.error(None, "%s: `%s` is not on the list of %s: a row is added only by a "
                                "change of the foundation a human accepts"
                          % (rules.violations, " · ".join(position), base), check, (growth,))
-
-
-# --- git ------------------------------------------------------------------------------------
-
-
-def git(arguments, cwd, stdin=None):
-    """Exit code and output of a call to git; the invariants guard calls it in this form."""
-    return call_git(arguments, cwd, stdin)[:2]
-
-
-def call_git(arguments, cwd, stdin=None):
-    """Exit code, output and error output of a call to git."""
-    try:
-        result = subprocess.run(["git"] + arguments, cwd=cwd, capture_output=True,
-                                input=stdin.encode("utf-8") if stdin is not None else None)
-    except OSError as problem:
-        return 127, "", str(problem)
-    return (result.returncode, result.stdout.decode("utf-8", "replace").replace("\r\n", "\n"),
-            result.stderr.decode("utf-8", "replace").strip())
-
-
-def file_at(commit, path, top):
-    """(text, None) for the file at the path, relative to the root of the repository, on the
-    commit; (None, None) where the commit holds no such path; (None, git's message) where git
-    fails for any other reason, so that no check reads a failure as an absent file."""
-    code, text, message = call_git(["show", "%s:%s" % (commit, path)], top)
-    if code == 0:
-        return text, None
-    listed, listing, listing_message = call_git(["ls-tree", "--full-tree", "-z", "--name-only",
-                                                 commit, "--", path], top)
-    if listed == 0 and not listing:
-        return None, None
-    return None, "git cannot read %s at %s: %s" % (
-        path, commit, message or listing_message or "git show exited with %d" % code)
-
-
-def find_commit(top, option, commit, report):
-    """Whether the commit exists; where it does not, the report says so. A failure here is no
-    rule's: it belongs to the run."""
-    code, _, _ = call_git(["rev-parse", "--verify", "--quiet", commit + "^{commit}"], top)
-    if code != 0:
-        report.error(None, "%s %s does not exist" % (option, commit))
-        return False
-    return True
 
 
 # --- entry point ----------------------------------------------------------------------------

@@ -5,7 +5,7 @@ script. The fields of an entry and the words each may hold, the fields the main 
 in, the titles and columns of the lists, the values the gate fills in and the words a sentence may
 not use are read from the template, so the rules of an entry live in one place (WAY-05, WAY-35,
 WAY-71). The decision log and the part map are read with the parsers of their own guards, and the
-record of a run is written with the part map guard's report. Each check cites the invariants it
+record of a run is written with the report the guards share. Each check cites the invariants it
 gives a verdict for, as `invariant: <identifier>/<version>` (WAY-65).
 
 Usage, from the root of the product's repository:
@@ -54,6 +54,12 @@ def _load(name, path):
 
 decision_guard = _load("decision_format_guard", os.path.join(HERE, "..", "decisions", "format_guard.py"))
 map_guard = _load("part_map_format_guard", os.path.join(HERE, "..", "part-map", "format_guard.py"))
+# The code the format guards share (WAY-09), and the form of an identifier and of a version
+# from the relation model.
+shared = _load("elements_common_guard_shared",
+               os.path.join(HERE, "..", "common", "guard_shared.py"))
+identifier_form = _load("relation_model_identifier",
+                        os.path.join(HERE, "..", "..", "relation-model", "identifier.py"))
 fingerprint_module = _load("relation_model_fingerprint",
                            os.path.join(HERE, "..", "..", "relation-model", "fingerprint.py"))
 fingerprint = decision_guard.fingerprint
@@ -73,7 +79,7 @@ count_sentences = decision_guard.count_sentences
 FINGERPRINT = r"[0-9a-f]{%d}" % fingerprint_module.LENGTH
 # `TODO` as a word of its own anywhere in a value — whole, as an item, or inside a part such as
 # `searched: TODO; found: …` — but not inside a path or a longer word, such as `docs/TODO.md`.
-TODO_WORD = map_guard.TODO_WORD
+TODO_WORD = shared.TODO_WORD
 # A value in braces in a command or a sentence, but not a shell variable such as `${HOME}`.
 BRACED = r"(?<!\$)\{[^{}%s]*\}"
 
@@ -86,12 +92,12 @@ SELECTED_BY = {"check_against_base": "--base", "check_merge_todo": "--merge-onto
                "check_fingerprints": "--merge-onto"}
 # The value the gate fills in for a commit that does not exist (WAY-61), and the reason a check
 # that needs that commit records for being unchecked, word for word as the template lists it.
-NO_COMMIT = map_guard.NO_COMMIT
-NO_COMMIT_REASON = map_guard.NO_COMMIT_REASON
+NO_COMMIT = shared.NO_COMMIT
+NO_COMMIT_REASON = shared.NO_COMMIT_REASON
 # Where a product's invariants stand, relative to the root of its repository (WAY-64).
 FILE_PATH = "foundations/invariants.md"
 
-IDENTIFIER = map_guard.IDENTIFIER
+IDENTIFIER = identifier_form.IDENTIFIER
 DATE = r"\d{4}-\d{2}-\d{2}"
 QUOTED = r'"[^"]*"|“[^”]*”'
 
@@ -283,7 +289,7 @@ def stray_lines(body, first_line):
 def parse_file(text, rules):
     """Entries, the lists closing the file, and headings that are neither, in file order."""
     items, list_titles = [], [title for title, _ in rules.lists]
-    for line, lines in map_guard.split_sections(text):
+    for line, lines in shared.split_sections(text):
         heading = lines[0][3:].strip()
         match = re.match(r"^(.+?)/(\d+)$", heading)
         if heading in list_titles:
@@ -302,7 +308,7 @@ def parse_file(text, rules):
             paragraph.append(body[index])
             index += 1
         entry.sentence = "\n".join(paragraph) or None
-        entry.fields = map_guard.parse_fields(body[index:], line + 1 + index)
+        entry.fields = shared.parse_fields(body[index:], line + 1 + index)
         entry.strays = stray_lines(body[index:], line + 1 + index)
         items.append(entry)
     return items
@@ -346,15 +352,15 @@ def derived_numbers(entry, prefix):
 # --- the report and the record of a run -----------------------------------------------------
 
 
-class Report(map_guard.Report):
-    """The part map guard's report, naming this program and its checks in the record."""
+class Report(shared.Report):
+    """The report the guards share, naming this program and its checks in the record."""
 
     def __init__(self, path, options=()):
         super().__init__(path, options, program=PROGRAM, selected_by=SELECTED_BY)
 
 
-start_record = map_guard.start_record
-write_record = map_guard.write_record
+start_record = shared.start_record
+write_record = shared.write_record
 
 
 # --- what the checks read beside the invariants file ----------------------------------------
@@ -450,7 +456,7 @@ def read_foundation(path, report, root):
         foundation.log_read = True
         report.notes.append("there is no decisions.md beside the file: no decision is in force")
         return foundation
-    log = map_guard.read_file(log_path, report, "the decision log beside the file")
+    log = shared.read_file(log_path, report, "the decision log beside the file")
     if log is None:
         return foundation
     foundation.log_read = True
@@ -964,7 +970,7 @@ def check_quarantine(table, entries, foundation, report):
 
 def violated_tables(text, rules):
     return [parse_table(rules.violated_title, line, lines[1:])
-            for line, lines in map_guard.split_sections(text)
+            for line, lines in shared.split_sections(text)
             if lines[0][3:].strip() == rules.violated_title]
 
 
@@ -981,7 +987,7 @@ def check_violated(path, entries, rules, report):
                             % rules.violated_file)
         report.ran(check, position_version)
         return []
-    text = map_guard.read_file(violated_path, report, "the list of violated invariants")
+    text = shared.read_file(violated_path, report, "the list of violated invariants")
     if text is None:
         return []
     report.ran(check, position_version)
@@ -1017,7 +1023,7 @@ def check_human_verdicts(path, entries, foundation, rules, report):
         report.notes.append("there is no %s; no human verdict is given" % rules.verdicts_file)
         report.ran(check, invariant_row)
         return
-    text = map_guard.read_file(verdicts_path, report, "the human verdicts")
+    text = shared.read_file(verdicts_path, report, "the human verdicts")
     if text is None:
         return
     report.ran(check, invariant_row)
@@ -1054,7 +1060,7 @@ def check_human_verdicts(path, entries, foundation, rules, report):
 
 def repository_root(path, report):
     """The root of the file's repository, or None once the report holds the failure."""
-    code, top, _ = map_guard.call_git(["rev-parse", "--show-toplevel"],
+    code, top, _ = shared.call_git(["rev-parse", "--show-toplevel"],
                                       os.path.dirname(os.path.abspath(path)))
     if code != 0:
         report.error(None, "the file does not lie in a git repository, so no check that asks git "
@@ -1064,7 +1070,7 @@ def repository_root(path, report):
 
 
 def tracked_files(top, report):
-    code, listing, message = map_guard.call_git(["ls-files", "-z"], top)
+    code, listing, message = shared.call_git(["ls-files", "-z"], top)
     if code != 0:
         report.error(None, "git cannot list the files it tracks in %s: %s" % (top, message))
         return None
@@ -1106,7 +1112,7 @@ def check_citations(entries, withdrawn, top, tracked, report):
                                  check, (data,))
                 continue
             # a version is a number written without a leading zero
-            cited = re.fullmatch(r"(\S+)/([1-9][0-9]*)", value)
+            cited = re.fullmatch(r"(\S+)/(%s)" % identifier_form.VERSION, value)
             identifier = cited.group(1) if cited else value.split("/")[0]
             if identifier in successors:
                 report.error(None, "%s: cites `%s`, which is withdrawn (successors: %s)"
@@ -1162,7 +1168,7 @@ def check_record_paths(entries, top, report):
             inside.append(path)
     ignored = set()
     if inside:
-        code, answer, message = map_guard.call_git(["-c", "core.ignorecase=false", "check-ignore",
+        code, answer, message = shared.call_git(["-c", "core.ignorecase=false", "check-ignore",
                                                     "-z", "--stdin"], top,
                                                    stdin="\0".join(inside) + "\0")
         if code not in (0, 1):
@@ -1205,11 +1211,11 @@ def check_against_base(path, entries, withdrawn, violated, rules, base, top, rep
         return
     relative = os.path.relpath(os.path.abspath(path), top).replace(os.sep, "/")
     violated_relative = "/".join(filter(None, [os.path.dirname(relative), rules.violated_file]))
-    base_text, failure = map_guard.file_at(base, relative, top)
+    base_text, failure = shared.file_at(base, relative, top)
     if failure:
         report.error(None, failure)
         return
-    base_violated, failure = map_guard.file_at(base, violated_relative, top)
+    base_violated, failure = shared.file_at(base, violated_relative, top)
     if failure:
         report.error(None, failure)
         return
@@ -1319,7 +1325,7 @@ def merged_decisions(path, foundation, merge_onto, top, report):
     one, the merge carries the branch's copy (WAY-07), as the decision guard reads it."""
     log = os.path.join(os.path.dirname(os.path.abspath(path)), "decisions.md")
     relative = os.path.relpath(log, top).replace(os.sep, "/")
-    onto_text, failure = map_guard.file_at(merge_onto, relative, top)
+    onto_text, failure = shared.file_at(merge_onto, relative, top)
     if failure:
         report.error(None, failure)
         return None
@@ -1330,7 +1336,7 @@ def merged_decisions(path, foundation, merge_onto, top, report):
     prefix = foundation.prefix or decision_guard.detect_prefix(onto_text)
     texts = [onto_text]
     if foundation.prefix and os.path.exists(log):
-        log_text = map_guard.read_file(log, report, "the decision log beside the file")
+        log_text = shared.read_file(log, report, "the decision log beside the file")
         if log_text is None:
             return None
         texts.insert(0, log_text)
@@ -1346,7 +1352,7 @@ def entries_on(path, commit, rules, top, report):
     """The entries of the file on the commit, or None once the report says why git could not read
     it."""
     relative = os.path.relpath(os.path.abspath(path), top).replace(os.sep, "/")
-    text, failure = map_guard.file_at(commit, relative, top)
+    text, failure = shared.file_at(commit, relative, top)
     if failure:
         report.error(None, failure)
         return None
@@ -1364,7 +1370,7 @@ def merged_facts(path, foundation, merge_onto, top, report):
     base = module.merge_base(top, merge_onto)
     texts = []
     for commit in (merge_onto, base):
-        text, failure = map_guard.file_at(commit, relative, top) if commit else (None, None)
+        text, failure = shared.file_at(commit, relative, top) if commit else (None, None)
         if failure:
             report.error(None, failure)
             return None
@@ -1437,11 +1443,11 @@ def check_fingerprints(entries, merged, report, no_commit=None, facts=None):
 
 def check_examples(items, examples_path, report):
     check = "check_examples"
-    examples = map_guard.read_file(examples_path, report, "the examples")
+    examples = shared.read_file(examples_path, report, "the examples")
     if examples is None:
         return
     by_heading = {item.text.split("\n")[0]: item for item in items if isinstance(item, Entry)}
-    for line, lines in map_guard.split_sections(examples):
+    for line, lines in shared.split_sections(examples):
         copy = "\n".join(lines).rstrip()
         entry = by_heading.get(lines[0])
         if entry is None:
@@ -1459,7 +1465,7 @@ def find_commit(path, top, option, commit, report):
     if top is None:
         report.error(None, "%s %s given, but the file is not in a git repository" % (option, commit))
         return False
-    return map_guard.find_commit(top, option, commit, report)
+    return shared.find_commit(top, option, commit, report)
 
 
 def run(path, base=None, stream=None, template=TEMPLATE, merge_onto=None, record=None,

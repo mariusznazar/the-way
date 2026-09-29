@@ -946,14 +946,14 @@ class KnownViolations(GuardTestCase):
         self.violations("| saving | foundations | src/saving.py | the log of decisions |")
         self.guard(part_map())
         self.commit()
-        real = format_guard.call_git
+        real = format_guard.shared.call_git
 
         def failing(arguments, cwd, stdin=None):
             if arguments[0] in ("show", "ls-tree"):
                 return 128, "", "fatal: cannot read the object"
             return real(arguments, cwd, stdin)
 
-        with unittest.mock.patch.object(format_guard, "call_git", failing):
+        with unittest.mock.patch.object(format_guard.shared, "call_git", failing):
             code, output = self.guard(part_map(), base="main")
         self.assertEqual(code, 1, output)
         self.assertEqual(self.lines, [
