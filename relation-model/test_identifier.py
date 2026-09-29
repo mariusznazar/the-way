@@ -17,21 +17,30 @@ sys.path.insert(0, HERE)
 from identifier import CITED, IDENTIFIER, VERSION, is_cited, is_identifier  # noqa: E402
 
 
+IDENTIFIERS = ("relation-model", "gate", "json-text", "run-record-keys", "python-3-14")
+NO_IDENTIFIERS = ("", "Relation-model", "relation_model", "relation--model", "-gate", "gate-",
+                  "relation model", "gate/1", "elements/common", "WAY-09", "gate.")
+
+
 class Identifier(unittest.TestCase):
     def test_words_in_lower_case_joined_by_hyphens_are_an_identifier(self):
-        for text in ("relation-model", "gate", "json-text", "run-record-keys", "python-3-14"):
+        for text in IDENTIFIERS:
             with self.subTest(text=text):
                 self.assertTrue(is_identifier(text))
 
     def test_anything_else_is_no_identifier(self):
-        for text in ("", "Relation-model", "relation_model", "relation--model", "-gate", "gate-",
-                     "relation model", "gate/1", "elements/common", "WAY-09", "gate."):
+        for text in NO_IDENTIFIERS:
             with self.subTest(text=text):
                 self.assertFalse(is_identifier(text))
 
-    def test_the_pattern_matches_what_is_identifier_accepts(self):
-        self.assertEqual(IDENTIFIER, r"[a-z0-9]+(?:-[a-z0-9]+)*")
-        self.assertIsNotNone(re.fullmatch(IDENTIFIER, "entry-version-number"))
+    def test_the_pattern_a_reader_embeds_takes_the_whole_identifier(self):
+        heading = re.compile(r"^## (%s)/(%s)$" % (IDENTIFIER, VERSION))
+        for text in IDENTIFIERS:
+            with self.subTest(text=text):
+                self.assertEqual(heading.match("## %s/12" % text).groups(), (text, "12"))
+        for text in NO_IDENTIFIERS:
+            with self.subTest(text=text):
+                self.assertIsNone(heading.match("## %s/12" % text))
 
 
 class Version(unittest.TestCase):
