@@ -267,8 +267,9 @@ the log there only grows at the end.
 - **Based on:** none
 - **Relations:** derives from WAY-06@fe7c4068 · related to WAY-05
 - **Outranks:** none
-- **Verification:** level 1 — invariants: log-existing-lines · log-versions-added-per-number. Level
-  2 for acceptance after a change of meaning — an agent compares the change with the decision:
+- **Verification:** level 1 — invariants: log-existing-lines · log-versions-added-per-number ·
+  log-merge-copies. Level 2 for acceptance after a change of meaning — an agent compares the change
+  with the decision:
   - complies: an accepted entry whose binding sentences changed on the task branch is shown to
     its approver again before the merge;
   - violates: an entry reaches the main branch with binding sentences its approver never saw.

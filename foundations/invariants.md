@@ -135,6 +135,16 @@ Against {fork-point}, the decision log gains at most one version of each number.
 - **Correction:** none
 - **Recovered:** none
 
+## log-merge-copies/1
+
+Where {merge-onto} exists, every decision version that the decision log and the decision log on {merge-onto} both hold reads the same in both.
+
+- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --merge-onto {merge-onto} --record .runs/decisions-merge-onto.jsonl`
+- **Rests on:** none
+- **Derives from:** WAY-07@acacb194
+- **Part:** decisions
+- **Correction:** none
+
 ## invariant-method-form/1
 
 Every entry of `foundations/invariants.md` names as its method a command that begins with the name of the program it runs, the path alone of a file that exists, or `TODO`, alone or followed by ` — ` and what is missing.
@@ -497,7 +507,7 @@ The decision guard, given a date, warns of every check-by date earlier than it t
 
 ## review-next-check/1
 
-Every review record in the decision log that records that the state has not come names a date, or holds `TODO`, in *Next check*.
+Every review record in the decision log that records that the state has not come names a date, or holds `TODO`, in *Next check*, and every other one holds nothing there but a date, `none` or `TODO`.
 
 - **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
@@ -1264,7 +1274,7 @@ No sentence in `foundations/invariants.md`, outside quoted text, contains the wo
 
 ## sentence-gate-values/1
 
-Every value from the gate's list that a sentence of `foundations/invariants.md` names outside quoted text is taken by its command, unless its method is not a command.
+Every value in braces that a sentence of `foundations/invariants.md` names outside quoted text stands on the gate's list, and is taken by its command unless its method is not a command.
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
@@ -1439,7 +1449,7 @@ Every identifier that stood as a withdrawn identifier of `foundations/invariants
 
 ## withdrawal-successors/1
 
-Every withdrawn identifier of `foundations/invariants.md` gives why it was withdrawn and names as successors only entries or withdrawn identifiers of that file, or `none`.
+Every withdrawn identifier of `foundations/invariants.md` has the form `elements/common/` gives, gives why it was withdrawn and names as successors only entries or withdrawn identifiers of that file, or `none`.
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
@@ -1516,7 +1526,7 @@ The list of violated invariants is a subset of its version on {fork-point}.
 
 ## violated-position-version/1
 
-Every row of the list of violated invariants names an entry of `foundations/invariants.md` at its current version and no other.
+The list of violated invariants has the columns the invariants template gives it, and every row of it names an entry of `foundations/invariants.md` at its current version and no other.
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
@@ -1670,12 +1680,12 @@ Every line of the-way's own record of a run is one JSON object holding `check`, 
 
 ## run-record-path/1
 
-Every path ending in `.jsonl` that a command in `foundations/invariants.md` names is one git ignores, and no such command names two.
+Every path ending in `.jsonl` that a command in `foundations/invariants.md` or `foundations/environment_facts.md` names is one git ignores, and no such command names two.
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** gitignore-paths@3218da8f
 - **Derives from:** WAY-74@1e1c88d7
-- **Part:** invariants · repository
+- **Part:** invariants · environment-facts · repository
 - **Correction:** none
 - **Recovered:** none
 
@@ -1758,7 +1768,7 @@ Every identifier that stood as a withdrawn identifier of `foundations/environmen
 
 ## fact-withdrawal-successors/1
 
-Every withdrawn identifier of `foundations/environment_facts.md` gives why it was withdrawn and names as successors only entries or withdrawn identifiers of that file, or `none`.
+Every withdrawn identifier of `foundations/environment_facts.md` has the form `elements/common/` gives, gives why it was withdrawn and names as successors only entries or withdrawn identifiers of that file, or `none`.
 
 - **Method:** `python -B elements/environment-facts/format_guard.py foundations/environment_facts.md --record .runs/environment-facts.jsonl`
 - **Rests on:** none
@@ -1890,7 +1900,7 @@ A run records a verdict for an environment fact only from a command that cites t
 
 ## based-on-fact-fingerprint/1
 
-Every environment fact the *Based on* of the latest version of a decision names carries a fingerprint.
+Every environment fact the *Based on* of the latest version of a decision names carries a fingerprint, and every `<identifier>@<fingerprint>` that *Based on* names outside quoted text names an entry or a withdrawn identifier of `foundations/environment_facts.md`.
 
 - **Method:** `python -B elements/environment-facts/format_guard.py foundations/environment_facts.md --record .runs/environment-facts.jsonl`
 - **Rests on:** none
