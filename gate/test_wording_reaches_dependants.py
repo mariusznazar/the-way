@@ -38,24 +38,31 @@ NEW_WORDING_FINGERPRINT = "69b731d5"
 class WordingReachesDependants(unittest.TestCase):
     def guard(self, text, onto=None):
         """Runs the guard as it checks a merge onto the main branch, the only run that compares
-        fingerprints with the current wording. The commit it merges onto holds the log `onto`,
-        or is an empty one; the working tree holds the branch's log `text`."""
+        fingerprints with the current wording. The branch leaves the main branch at an empty
+        commit; the commit it merges onto is that one, or, given `onto`, a later commit holding
+        the log `onto`, so that the merge takes that log's versions as added on the main branch.
+        The working tree holds the branch's log `text`."""
         with tempfile.TemporaryDirectory() as directory:
             path = os.path.join(directory, "decisions.md")
-            subprocess.run(["git", "init", "-q", "-b", "main"], cwd=directory, check=True,
-                           capture_output=True)
+
+            def git(*arguments):
+                subprocess.run(["git", "-c", "user.name=Gate", "-c", "user.email=gate@example.com"]
+                               + list(arguments), cwd=directory, check=True, capture_output=True)
+
+            git("init", "-q", "-b", "main")
+            git("commit", "-q", "--allow-empty", "-m", "main")
             if onto is not None:
+                git("checkout", "-q", "-b", "onto")
                 with open(path, "w", encoding="utf-8", newline="\n") as handle:
                     handle.write(onto)
-                subprocess.run(["git", "add", "decisions.md"], cwd=directory, check=True,
-                               capture_output=True)
-            subprocess.run(["git", "-c", "user.name=Gate", "-c", "user.email=gate@example.com",
-                            "commit", "-q", "--allow-empty", "-m", "main"], cwd=directory,
-                           check=True, capture_output=True)
+                git("add", "decisions.md")
+                git("commit", "-q", "-m", "onto")
+                git("checkout", "-q", "main")
             with open(path, "w", encoding="utf-8", newline="\n") as handle:
                 handle.write(text)
             output = io.StringIO()
-            code = format_guard.run(path, today=TODAY, stream=output, merge_onto="main")
+            code = format_guard.run(path, today=TODAY, stream=output,
+                                    merge_onto="main" if onto is None else "onto")
             return code, output.getvalue()
 
     def test_the_wording_this_test_stands_on_has_not_changed(self):
