@@ -692,6 +692,10 @@ def check_relations(entries, rules, prefix, report):
             if kind is None:
                 report.error(line, "%s: relation `%s` is not of a known type" % (label, item),
                              check, (typed,))
+                # a fingerprint only a relation of a type on the list carries
+                if re.search(r"@[0-9a-f]+$", item):
+                    report.error(line, "%s: `%s` carries a fingerprint" % (label, item),
+                                 check, (presence,))
                 continue
             match = re.fullmatch(r"(%s-\d{2,})(?:@(\S*))?" % re.escape(prefix), item[len(kind) + 1:])
             if not match:
@@ -699,9 +703,6 @@ def check_relations(entries, rules, prefix, report):
                              % (label, item, prefix), check)
             elif rules.relation_types[kind] and not re.fullmatch(r"[0-9a-f]+", match.group(2) or ""):
                 report.error(line, "%s: `%s` carries no fingerprint" % (label, item),
-                             check, (presence,))
-            elif not rules.relation_types[kind] and match.group(2) is not None:
-                report.error(line, "%s: `%s` carries a fingerprint" % (label, item),
                              check, (presence,))
 
 
@@ -883,16 +884,18 @@ def check_reviews(entries, rules, prefix, report, numbers, versions):
 
 def merged_log(log_path, entries, merge_onto, prefix, top, report, no_commit=None):
     """The latest version of each number in the log as it stands after the merge onto the given
-    commit, as {number: (entry, None or the commit whose log alone holds it)}, or None once the
+    commit, as {number: (entry, None or the commit whose log alone holds it, the version that set
+    its current fingerprint)}, or None once the
     report says why git could not read the log on that commit. Given `no_commit`, which says why
     there is no commit to merge onto, records the check of the copies unchecked instead.
 
-    The log is append-only, so the merge holds every version either side holds. On the main
-    branch an entry is never edited (WAY-07), so where both sides hold a version with different
-    text, the branch changed it and the merge carries the branch's copy, which is the one kept
-    here. The difference itself is a failure of log-merge-copies: it is either an edit of an
-    entry the main branch holds, or two versions written under one heading on both sides, and the
-    merged log holds one of them only."""
+    The log is append-only, so the merge holds every version either side holds. Where both sides
+    hold a version with different text, the copy kept is the one git's merge keeps: the copy on
+    the commit merged onto where the branch's copy reads as on the merge base of HEAD and that
+    commit, so that an edit made on that side alone survives; the branch's copy otherwise, where
+    the branch changed the version or both sides wrote it (a conflict git leaves to a person).
+    The difference itself is a failure of log-merge-copies: it is either an edit of an entry
+    one side holds, or two versions written under one heading on both sides."""
     # invariant: log-merge-copies/1
     check, copies = "merged_log", "log-merge-copies/1"
     if no_commit:
@@ -909,18 +912,55 @@ def merged_log(log_path, entries, merge_onto, prefix, top, report, no_commit=Non
                             % (merge_onto, relative))
         onto_text = ""
     merged = {(entry.number, entry.version): (entry, None) for entry in versions_of(entries)}
+    on_base = None   # (number, version) -> text on the merge base, read at the first difference
     for entry in versions_of(parse_log(onto_text, prefix)):
         key = (entry.number, entry.version)
         if key not in merged:
             merged[key] = (entry, merge_onto)
         elif merged[key][0].text != entry.text:
-            report.error(merged[key][0].line, "%s differs from its copy on %s; the log after the "
-                                              "merge holds this copy"
-                         % (label_of(entry, prefix), merge_onto), check, (copies,))
-    latest = {}
+            if on_base is None:
+                on_base = log_on_merge_base(relative, merge_onto, prefix, top, report)
+            ours = merged[key][0]
+            kept = "this copy"
+            if on_base.get(key) == ours.text:
+                merged[key] = (entry, merge_onto)
+                kept = "the copy on %s" % merge_onto
+            report.error(ours.line, "%s differs from its copy on %s; the log after the merge "
+                                    "holds %s" % (label_of(entry, prefix), merge_onto, kept),
+                         check, (copies,))
+    latest, setters = {}, {}
     for (number, _), item in sorted(merged.items()):
+        current = item[0].binding
+        previous = latest.get(number)
+        # the version that set the fingerprint: the first of the run that ends here with it
+        if previous is None or not same_binding(previous[0].binding, current):
+            setters[number] = item[0]
         latest[number] = item
-    return latest
+    return {number: (entry, onto, setters[number]) for number, (entry, onto) in latest.items()}
+
+
+def same_binding(one, other):
+    """Whether two versions' binding sentences give one fingerprint, a repeal's none included."""
+    if one is None or other is None:
+        return one is None and other is None
+    return fingerprint(one) == fingerprint(other)
+
+
+def log_on_merge_base(relative, merge_onto, prefix, top, report):
+    """{(number, version): text} of the log on the merge base of HEAD and the commit merged onto;
+    empty where the two have no common ancestor or that commit holds no log, and where git fails,
+    once the report says why."""
+    code, answer, message = git(["merge-base", "HEAD", merge_onto], top)
+    if code != 0 or not answer.strip():
+        if code != 1 or message:
+            report.error(None, "git cannot find the merge base of HEAD and %s: %s"
+                         % (merge_onto, message or "git merge-base exited with %d" % code))
+        return {}
+    text, failure = file_at(answer.strip(), relative, top)
+    if failure:
+        report.error(None, failure)
+    return {(entry.number, entry.version): entry.text
+            for entry in versions_of(parse_log(text or "", prefix))}
 
 
 def check_merge_todo(entries, prefix, report, no_commit=None):
@@ -945,7 +985,8 @@ def check_merge_todo(entries, prefix, report, no_commit=None):
 
 def check_fingerprints(latest, rules, prefix, report, no_commit=None):
     """Compares every fingerprint a relation carries, in the latest version of each number of the
-    log after the merge, with the current fingerprint of the decision it names there. Given
+    log after the merge, with the current fingerprint of the decision it names there; a stale one
+    is reported with the version that set the current fingerprint and its kind of change. Given
     `no_commit`, which says why there is no commit to merge onto, records it unchecked instead."""
     # invariant: relation-fingerprint-value/1
     check, current_value = "check_fingerprints", "relation-fingerprint-value/1"
@@ -953,10 +994,10 @@ def check_fingerprints(latest, rules, prefix, report, no_commit=None):
         report.unchecked(check, NO_COMMIT_REASON, no_commit, current_value)
         return
     report.ran(check, current_value)
-    current = {number: fingerprint(entry.binding) for number, (entry, _) in latest.items()
+    current = {number: fingerprint(entry.binding) for number, (entry, _, _) in latest.items()
                if entry.binding is not None}
     pattern = re.compile(r"^(.+?) %s-(\d{2,})@([0-9a-f]+)$" % re.escape(prefix))
-    for entry, onto in latest.values():
+    for entry, onto, _ in latest.values():
         relations = entry.fields.get("Relations")
         if not relations:
             continue
@@ -967,10 +1008,16 @@ def check_fingerprints(latest, rules, prefix, report, no_commit=None):
                 continue
             number = int(match.group(2))
             if number in latest and current.get(number) != match.group(3):
+                # the flag names the kind of change that raised it (template: Kinds of change)
+                setter = latest[number][2]
+                kind = change_kind(setter, rules, prefix)
+                raised = ("a change of the kind %s" % kind if kind else
+                          "whose *Change* names no kind of change")
                 report.error(None if onto else relations[1],
-                             "%s%s: `%s` — the current fingerprint of %s-%02d is %s"
+                             "%s%s: `%s` — the current fingerprint of %s-%02d is %s, set by %s, %s"
                              % (label_of(entry, prefix), where, item.strip(), prefix, number,
-                                current.get(number, "none (no binding sentences)")),
+                                current.get(number, "none (no binding sentences)"),
+                                label_of(setter, prefix), raised),
                              check, (current_value,))
 
 
