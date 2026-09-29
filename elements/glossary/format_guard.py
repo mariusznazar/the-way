@@ -14,9 +14,9 @@ environment facts are read with the parsers of their own guards, and the record 
 with the report the guards share.
 
 The text the checks search is every file git tracks in `foundations/`, the elements' templates and
-the files of the part the elements share, `elements/common/` (WAY-95, WAY-97, WAY-98, WAY-99): those
-beside this script's directory, or those given to run(). A word is found in any letter case, across
-a line break, and in the forms its endings give.
+the Markdown files of the part the elements share, `elements/common/` (WAY-95, WAY-97, WAY-98,
+WAY-99): those beside this script's directory, or those given to run(). A word is found in any
+letter case, across a line break, and in the forms its endings give.
 
 In the-way's own glossary, a term naming an element raises no warning against the part whose files
 include `elements/<identifier>/` (WAY-93); in a product's glossary it does.
@@ -467,14 +467,18 @@ def template_paths(templates=None):
 
 
 def common_paths(common=None):
-    """The files of the part the elements share: those given, or every file standing directly in
-    `elements/common/` beside this script's directory (WAY-95, WAY-98, WAY-99)."""
-    if common is not None:
-        return list(common)
-    if not os.path.isdir(COMMON):
+    """The Markdown files of the part the elements share, standing directly in its directory: the
+    one given, or `elements/common/` beside this script's directory (WAY-95, WAY-98, WAY-99); none
+    for `False`. Its code is not searched: the rules of a use and of a count are written for
+    prose."""
+    if common is False:
         return []
-    return sorted(os.path.join(COMMON, name) for name in os.listdir(COMMON)
-                  if os.path.isfile(os.path.join(COMMON, name)))
+    directory = COMMON if common is None else common
+    if not os.path.isdir(directory):
+        return []
+    return sorted(os.path.join(directory, name) for name in os.listdir(directory)
+                  if os.path.isfile(os.path.join(directory, name))
+                  and name.lower().endswith((".md", ".markdown")))
 
 
 def inside(path, top):
@@ -1335,13 +1339,13 @@ def list_uses(word, corpus, entries, report, stream):
 
 def run(path, base=None, stream=None, template=TEMPLATE, merge_onto=None, record=None,
         examples=EXAMPLES, templates=None, uses=None, common=None, own=None):
-    """Checks the glossary at the path. `templates` and `common` name the elements' templates and
-    the files of the part the elements share that the checks search; given templates in place of
+    """Checks the glossary at the path. `templates` names the elements' templates and `common` the
+    directory of the part the elements share that the checks search; given templates in place of
     those beside this script, the part the elements share is searched only where it is given too.
     `own` says whether the file is the-way's own glossary, which by default is known by its path."""
     stream = stream or sys.stdout
     if common is None and templates is not None:
-        common = []
+        common = False
     if uses is not None and (base or merge_onto or record):
         stream.write("--uses lists the uses of a word and runs no check; it takes neither --base, "
                      "--merge-onto nor --record\n")

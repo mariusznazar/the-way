@@ -2018,7 +2018,7 @@ No field of an entry of `foundations/glossary.md` holds `none` or `TODO` where t
 
 ## glossary-term-use/1
 
-Where {merge-onto} exists, every term of `foundations/glossary.md` has a use outside the glossary in a file of `foundations/` or `elements/common/` or in an element's template.
+Where {merge-onto} exists, every term of `foundations/glossary.md` has a use outside the glossary in a file of `foundations/`, in a Markdown file of `elements/common/` or in an element's template.
 
 - **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --merge-onto {merge-onto} --record .runs/glossary-merge-onto.jsonl`
 - **Rests on:** none
@@ -2073,7 +2073,7 @@ For every entry of `foundations/glossary.md` whose definition differs from its d
 
 ## glossary-avoid-growth/1
 
-No word of an *Avoid* in `foundations/glossary.md` stands, outside the text WAY-98 does not count, more times in a file of `foundations/` or `elements/common/` or in an element's template than on {fork-point}.
+No word of an *Avoid* in `foundations/glossary.md` stands, outside the text WAY-98 does not count, more times in a file of `foundations/`, in a Markdown file of `elements/common/` or in an element's template than on {fork-point}.
 
 - **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --base {fork-point} --record .runs/glossary-base.jsonl`
 - **Rests on:** none
@@ -2128,7 +2128,7 @@ Every term, identifier and closed-list value the *Not* of an entry of `foundatio
 
 ## glossary-not-quoted-word/1
 
-Nothing the *Not* of an entry of `foundations/glossary.md` names holds the term or its forms, and every word it names in quotation marks is used, as WAY-98 counts a use, outside quotation marks and outside the glossary in a file of `foundations/` or `elements/common/` or in an element's template.
+Nothing the *Not* of an entry of `foundations/glossary.md` names holds the term or its forms, and every word it names in quotation marks is used, as WAY-98 counts a use, outside quotation marks and outside the glossary in a file of `foundations/`, in a Markdown file of `elements/common/` or in an element's template.
 
 - **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
 - **Rests on:** none

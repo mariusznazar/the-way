@@ -1070,7 +1070,25 @@ class Common(GuardTestCase):
     """The part the elements share is searched as the elements' templates are."""
 
     def common(self):
-        return [os.path.join(self.root, "elements", "common", "rules.md")]
+        return os.path.join(self.root, "elements", "common")
+
+    def test_code_of_the_part_the_elements_share_is_not_searched(self):
+        # invariant: glossary-avoid-growth/1
+        self.commit(glossary(), **{"elements__common__rules.md": "# Shared rules\n",
+                                   "elements__common__shared.py": "def share():\n    pass\n"})
+        self.assertPasses(glossary(), base="HEAD", common=self.common(),
+                          **{"elements__common__shared.py": "def share():\n    # the storage cell "
+                                                            "of a game\n    return 'storage cell'\n"})
+        self.assertEqual(self.verdicts("glossary-avoid-growth/1"), ["pass"])
+
+    def test_use_only_in_the_code_of_the_part_the_elements_share_is_no_use(self):
+        # invariant: glossary-term-use/1
+        self.write("foundations/invariants.md", invariants(
+            invariant(sentence="Every game ends in a save slot.")))
+        self.write("elements/common/rules.md", "# Shared rules\n")
+        self.write("elements/common/shared.py", "# A run gives a verdict.\n")
+        self.assertWarns(glossary(), "run: the term has no use outside the glossary",
+                         common=self.common())
 
     def test_use_in_the_part_the_elements_share_counts(self):
         # invariant: glossary-term-use/1

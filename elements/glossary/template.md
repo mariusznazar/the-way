@@ -2,7 +2,8 @@
 
 This file defines how a glossary entry is written. A glossary entry gives one word of the foundation
 one meaning, so that the same word does not mean one thing in a decision, another in an invariant
-and a third in the code (WAY-04, WAY-94, WAY-99). A mechanism keeps the words, never their meaning:
+(WAY-94, WAY-99) and a third in the code (`TODO — decision pending: which decision sets that a
+glossary term keeps its meaning in the code`). A mechanism keeps the words, never their meaning:
 a script finds where a word stands and whether a word to avoid came back, while whether a word is
 used in its meaning is judged by an agent, by the panel and by the search of WAY-33 (WAY-97,
 WAY-98, WAY-10, WAY-33).
@@ -60,9 +61,13 @@ particular to a glossary entry (WAY-35).
   occurrence of what its verb does, or what does it — a run, to run; a probe, to probe — carries the
   verb's meaning; any other noun and verb of one word are weighed by the same test
   (`TODO — decision pending: which decision sets when two uses of a word carry two meanings`).
-- A word naming what a kind of foundation entry records, or what a rule computes, is defined by what
-  the thing is; how the foundation records or computes it stays in the decision that sets it, and a
-  definition holding it carries a rule, as the section on the definition tests (WAY-96).
+- A word naming what a kind of foundation entry records names the entry that records it too, in one
+  meaning (`TODO — decision pending: which decision sets that a word naming what a kind of entry
+  records names the entry too, in one meaning`); a word naming what a rule computes keeps the
+  meaning a reader of the field gives it (`TODO — decision pending: which decision sets that a word
+  naming what a rule computes keeps the meaning a reader of the field gives it`). Either is defined
+  by what the thing is; how the foundation records or computes it stays in the decision that sets
+  it, and a definition holding it carries a rule, as the section on the definition tests (WAY-96).
 - Where a word carries two meanings in the files its uses are searched in, and one of them is a
   meaning a reader who knows the product's field would not give it, one of the two is renamed
   wherever those files may still be edited, never marked by a note beside the word, and the uses of
@@ -130,16 +135,17 @@ in it; `TODO` stands only in *Not*, in place of what carries a meaning (WAY-71, 
 
 - *Avoid* lists the other words for what the term names, each with what a reader takes it for
   (WAY-94). A word stands there only where every use of it in the files of `foundations/`, the
-  elements' templates and the part the elements share carries the term's meaning; a word that also
-  has another correct meaning there goes to the *Not* of the entry for that meaning instead. The list
-  of uses settles which, never the author's sense of the word (WAY-98, WAY-99).
+  elements' templates and the Markdown files of the part the elements share carries the term's
+  meaning; a word that also has another correct meaning there goes to the *Not* of the entry for that
+  meaning instead. The list of uses settles which, never the author's sense of the word (WAY-98,
+  WAY-99).
 - A word of *Avoid* is an error where a change makes it stand more times in such a file, each read
   whole, than on the commit the task branch left the main branch from; what WAY-98 does not count
   is left out, and the guard's code and tests hold how each of it is found (WAY-98).
 - The change that puts a word into *Avoid* also searches the elements' skills and README files and
-  the code for it (`TODO — decision pending: which decision sets that a word put into Avoid is
-  searched for in the skills, the README files and the code`), as it searches for the entries that
-  wait for it (WAY-37).
+  the code for it, as it searches for the entries that wait for it
+  (`TODO — decision pending: which decision sets that a change putting a word into Avoid searches
+  the skills, the README files, the code and the entries that wait for the word`).
 - A word kept out of one kind of sentence only — "main branch" in an invariant's sentence (WAY-60) —
   stays in that element's template, never in *Avoid*, which holds other words for what a term names
   (WAY-94).
@@ -150,24 +156,26 @@ in it; `TODO` stands only in *Not*, in place of what carries a meaning (WAY-71, 
 ## Not
 
 - *Not* names each meaning the word carried or carries in the files of `foundations/`, the elements'
-  templates and the part the elements share, besides its definition and a meaning a reader who knows
-  the product's field gives it, with what carries it now: the term of another entry of this glossary;
-  the identifier in backticks of an entry of the part map, the invariants or the environment facts;
-  in backticks, a value of a template's closed list as that template writes it; or, between
-  quotation marks, a word used, as WAY-98 counts a use, outside quotation marks and outside this
-  glossary. No carrier holds the term or any of its forms (WAY-94, WAY-99), the hyphens of both read
-  as spaces (`TODO — decision pending: which decision sets that hyphens read as spaces when a term is
-  compared with an identifier or a carrier`).
+  templates and the Markdown files of the part the elements share, besides its definition and a
+  meaning a reader who knows the product's field gives it, with what carries it now: the term of
+  another entry of this glossary; the identifier in backticks of an entry of the part map, the
+  invariants or the environment facts; in backticks, a value of a template's closed list as that
+  template writes it; or, between quotation marks, a word used, as WAY-98 counts a use, outside
+  quotation marks and outside this glossary. No carrier holds the term or any of its forms (WAY-94,
+  WAY-99), the hyphens of both read as spaces (`TODO — decision pending: which decision sets that
+  hyphens read as spaces when a term is compared with an identifier or a carrier`).
 - Where a human has not yet chosen the word for the other meaning, *Not* reads `TODO` in place of what
   carries it. A task branch may hold it; the main branch never does (WAY-99, WAY-71).
 
 ## Uses and a changed definition
 
 - The uses of a term are the places in the files of `foundations/`, the elements' templates and the
-  part the elements share — every version the files hold included, and of the glossary only the
-  definitions of other entries — where its word stands as a word (WAY-97, WAY-98). The guard lists
-  them, `--uses` given a word lists that word's uses alone, and the guard's code and tests hold what
-  a use leaves out (WAY-97).
+  Markdown files of the part the elements share — every version the files hold included, and of the
+  glossary only the definitions of other entries — where its word stands as a word (WAY-97,
+  WAY-98); the shared part's code is not searched
+  (`TODO — decision pending: which decision sets that only the Markdown files of the part the
+  elements share are searched`). The guard lists them, `--uses` given a word lists that word's uses
+  alone, and the guard's code and tests hold what a use leaves out (WAY-97).
 - The guard finds a term's forms by regular endings, which its code and tests hold; an irregular
   form, a short form ("the map" for "part map") or a verb split by its object ("read the value off")
   is found by the review of uses, never by the guard (WAY-97).
