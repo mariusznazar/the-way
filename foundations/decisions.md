@@ -193,9 +193,8 @@ copying it.
   - violates: a "notes" or "related artifacts" field that nothing reads.
   Level 2 for a rule citing the decision that sets it — an agent compares the change with the
   decision:
-  - complies: a new rule of an element's template or of the part the elements share ends with the
-    number of the decision that sets it;
-  - violates: a rule of entries added to the shared part cites no decision.
+  - complies: a new rule of the decision template ends with the number of the decision that sets it;
+  - violates: a rule added to `elements/decisions/` cites no decision.
 - **Review when:** none
 - **Origin:** none
 - **Approver override:** none

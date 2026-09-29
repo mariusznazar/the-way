@@ -241,7 +241,7 @@ numbered decision in a concept document, a decision of the-way at the commit the
 no such decision, and the entry still stands on the list (WAY-58).
 
 *Found* names the place of each source the search found that gives a reason for keeping the
-behaviour or calls for a different one, or reads `nothing`. A place that only cites another is
+behaviour or calls for a different one, or reads `found: nothing`. A place that only cites another is
 followed to the place it cites, and is marked where that source is superseded. *Found* never states
 a reason itself, nor one an agent infers (WAY-58). The row rests on a judgment: the human deciding
 the change sets it with the gate's report in front of them, which answers to the invariant
