@@ -41,10 +41,12 @@ Each template marks, for every field, where its value comes from, with one of fo
 - *judgment* — the value is neither read off, nor follows from what the template asks for, nor is
   transcribed: it holds someone's call, and no question with a factual answer settles it. A reader
   takes such a value as a call, not as a reading (WAY-54);
-- *prose* — the field carries text rather than a value (WAY-54).
+- *prose* — the field carries text rather than a value
+  (`TODO — decision pending: which decision sets the prose mark`).
 
 A field whose parts come from different places carries a mark for each part: *judgment* for the
-entry a link names, *read off* for its fingerprint (WAY-54).
+entry a link names, *read off* for its fingerprint
+(`TODO — decision pending: which decision sets a mark for each part of a field`).
 
 ## Identifiers
 
