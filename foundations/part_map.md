@@ -32,7 +32,8 @@ the map of the-way itself.
 
 ## relation-model — The relation model
 
-The part answers for how the fingerprint of an entry is computed from its binding part.
+The part answers for how the fingerprint of an entry is computed from its binding part, and for
+the code that tells whether a string has the form of an identifier or of a version.
 
 - **Files:** relation-model/**
 - **Depends on:** none
