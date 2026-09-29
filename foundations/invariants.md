@@ -2150,10 +2150,15 @@ Where {merge-onto} exists, no field of an entry of `foundations/glossary.md` hol
 
 ## Withdrawn identifiers
 
-| Identifier | Successors |
-|---|---|
+| Identifier | Why | Successors |
+|---|---|---|
 
 ## Quarantined invariants
 
 | Identifier | Version | Until |
 |---|---|---|
+
+## Recovered invariants
+
+| Identifier | Version | Searched | Found |
+|---|---|---|---|

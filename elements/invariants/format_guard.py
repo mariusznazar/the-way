@@ -1,12 +1,16 @@
 """Format guard of a product's invariants file.
 
-Runs the checks listed in "What the format guard checks" in template.md, which lies next to this
-script. The fields of an entry and the words each may hold, the fields the main branch holds `TODO`
-in, the titles and columns of the lists, the values the gate fills in and the words a sentence may
-not use are read from the template, so the rules of an entry live in one place (WAY-05, WAY-35,
-WAY-71). The decision log and the part map are read with the parsers of their own guards, and the
-record of a run is written with the report the guards share. Each check cites the invariants it
-gives a verdict for, as `invariant: <identifier>/<version>` (WAY-65).
+Checks the file against the rules of template.md, which lies next to this script, and against the
+rules of form the elements share, in elements/common/rules.md. The fields of an entry and the words
+each may hold, the titles and columns of the lists of quarantined and recovered invariants, the
+file of violated invariants, the values the gate fills in and the words a sentence may not use are
+read from the template; the fields the main branch holds `TODO` in, the list of withdrawn
+identifiers and the file and row of human verdicts are read from the rules the elements share; so
+each rule lives in one place (WAY-35, WAY-71). An entry still carrying *Recovered*, the form before
+the slimming, is reported, and every other check reads it as it reads any entry. The decision log
+and the part map are read with the parsers of their own guards, and the record of a run is written
+with the report the guards share. Each check cites the invariants it gives a verdict for, as
+`invariant: <identifier>/<version>` (WAY-65).
 
 Usage, from the root of the product's repository:
 
@@ -39,6 +43,8 @@ from dataclasses import dataclass, field
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 TEMPLATE = os.path.join(HERE, "template.md")
+# The rules of form the elements share (WAY-09, WAY-35).
+COMMON_RULES = os.path.join(HERE, "..", "common", "rules.md")
 EXAMPLES = os.path.join(HERE, "examples.md")
 OWN_FILE = os.path.join(HERE, "..", "..", "foundations", "invariants.md")
 
@@ -178,7 +184,41 @@ def holds_todo(value):
     return bool(TODO_WORD.search(value or ""))
 
 
-def read_rules(path=TEMPLATE):
+def _dedented(block):
+    """A block of a list item, its lines freed of the indentation that places it in the item."""
+    return "\n".join(line.strip() for line in block.split("\n"))
+
+
+def read_common(path=COMMON_RULES):
+    """(fields the main branch holds `TODO` in for an invariant, (title, columns) of the list of
+    withdrawn identifiers, name of the file of human verdicts, columns of its row), read from the
+    rules of form the elements share."""
+    with open(path, encoding="utf-8") as handle:
+        text = handle.read()
+    main = re.search(r"The main branch holds `TODO` only in (.*?)\(WAY-71\)", " ".join(text.split()))
+    if not main:
+        raise TemplateError("the rules the elements share do not say which fields the main branch "
+                            "holds `TODO` in")
+    main_todo = re.findall(r"an invariant's (?:or an environment fact's )?\*([^*]+)\*", main.group(1))
+    withdrawn = [_dedented(block) for block in _blocks(_section(text, "Withdrawn identifiers"))]
+    if not withdrawn:
+        raise TemplateError("the rules the elements share give no form of the list of withdrawn "
+                            "identifiers")
+    verdicts = _section(text, "Human verdicts")
+    verdicts_file = re.search(r"`foundations/(human_[^`]+\.md)`", verdicts)
+    verdicts_header = re.search(r"^\s*\|(.+)\|\s*$", "\n".join(_blocks(verdicts)), re.M)
+    if not verdicts_file or not verdicts_header:
+        raise TemplateError("the rules the elements share name no file of human verdicts or no "
+                            "form of its row")
+    return (main_todo, _table_form(withdrawn[0]), verdicts_file.group(1),
+            [cell.strip() for cell in verdicts_header.group(1).split("|")])
+
+
+# The words a sentence may not hold outside quoted text, as "The sentence" lists them.
+FORBIDDEN = re.compile(r'outside quoted text it holds neither the words ((?:"[^"]+"(?:\s+nor\s+)?)+)')
+
+
+def read_rules(path=TEMPLATE, common=COMMON_RULES):
     with open(path, encoding="utf-8") as handle:
         text = handle.read()
 
@@ -193,13 +233,8 @@ def read_rules(path=TEMPLATE):
                                 any(choice == "TODO" or choice.startswith("TODO ") for choice in choices)))
     if not fields:
         raise TemplateError("the entry form has no fields")
-    lists = [_table_form(block) for block in blocks[1:]]
-    main = re.search(r"The main branch holds `TODO` only in (.*?)\(WAY-71\)",
-                     " ".join(entry_section.split()))
-    if not main:
-        raise TemplateError("the section \"Entry\" does not say which fields the main branch holds "
-                            "`TODO` in")
-    main_todo = re.findall(r"\*([^*]+)\*", main.group(1))
+    main_todo, withdrawn, verdicts_file, verdicts_columns = read_common(common)
+    lists = [withdrawn] + [_table_form(block) for block in blocks[1:]]
 
     violated_section = _section(text, "Violated invariants")
     violated_file = re.search(r"`foundations/([^`]+\.md)`", violated_section)
@@ -212,20 +247,12 @@ def read_rules(path=TEMPLATE):
     if not gate_values:
         raise TemplateError("the section on the method lists no value the gate fills in")
 
-    checks = _section(text, "What the format guard checks")
-    words = re.search(r"^- No sentence, outside quoted text, contains the words (.*)$", checks, re.M)
+    words = FORBIDDEN.search(" ".join(_section(text, "The sentence").split()))
     if not words:
-        raise TemplateError("the list of checks names no words a sentence may not hold")
-    result = _section(text, "Result, report and debt")
-    verdicts_file = re.search(r"`foundations/(human_[^`]+\.md)`", result)
-    verdicts_header = re.search(r"^\s*\|(.+)\|\s*$", "\n".join(_blocks(result)), re.M)
-    if not verdicts_file or not verdicts_header:
-        raise TemplateError("the section on the result names no file of human verdicts or no "
-                            "form of its row")
+        raise TemplateError("the section on the sentence names no words a sentence may not hold")
     return Rules(fields, lists, violated_file.group(1), violated_title, violated_columns,
                  gate_values, re.findall(r'"([^"]+)"', words.group(1)), main_todo,
-                 verdicts_file.group(1),
-                 [cell.strip() for cell in verdicts_header.group(1).split("|")])
+                 verdicts_file, verdicts_columns)
 
 
 # --- parsing the file -----------------------------------------------------------------------
@@ -582,7 +609,19 @@ def holds_entries(text):
     return bool(heading and method and not holds)
 
 
-def check_identifiers(entries, withdrawn, foundation, report):
+def cell(cells, columns, name):
+    """The cell of a row under the column of that name, or "" where the row or the list has
+    none."""
+    index = columns.index(name) if name in columns else None
+    return cells[index] if index is not None and index < len(cells) else ""
+
+
+def check_identifiers(entries, withdrawn, foundation, report, columns=()):
+    """Every identifier has the form `elements/common/` gives and is held once among the entries and
+    withdrawn identifiers of this file, of the environment facts and of the part map; every
+    withdrawn identifier gives why, and names as successors only entries or withdrawn identifiers
+    of this file, or `none` (WAY-64). `columns` are those of the file's list of withdrawn
+    identifiers."""
     # invariant: identifier-holders/1
     # invariant: invariant-identifier-form/1
     # invariant: withdrawal-successors/1
@@ -626,7 +665,11 @@ def check_identifiers(entries, withdrawn, foundation, report):
         seen.setdefault(identifier, line)
     names = set(seen)
     for cells, line in withdrawn:
-        successors = cells[1] if len(cells) > 1 else ""
+        why = cell(cells, columns, "Why")
+        successors = cell(cells, columns, "Successors")
+        if not why.strip() or bare(why) == "none" or holds_todo(why):
+            report.error(line, "withdrawn `%s` gives no reason in *Why*" % cells[0],
+                         check, (successors_named,))
         if bare(successors) == "none":
             continue
         for successor in listed(successors) or [""]:
@@ -634,6 +677,11 @@ def check_identifiers(entries, withdrawn, foundation, report):
                 report.error(line, "withdrawn `%s` names successor `%s`, which is neither an entry "
                                    "nor a withdrawn identifier of this file" % (cells[0], successor),
                              check, (successors_named,))
+
+
+# The field of the form before the slimming that marked an entry recovered; a recovered invariant
+# now stands on the list of recovered invariants (WAY-58).
+OLD_RECOVERED = "Recovered"
 
 
 def check_fields(entries, rules, report, facts_have_entries=False):
@@ -649,7 +697,11 @@ def check_fields(entries, rules, report, facts_have_entries=False):
     for entry in entries:
         label = label_of(entry)
         for name, (value, line) in entry.fields.items():
-            if name not in names:
+            if name == OLD_RECOVERED and name not in names:
+                report.error(line, "%s: *%s* is the form before the slimming; a recovered invariant "
+                                   "stands on the list of recovered invariants" % (label, name),
+                             check)
+            elif name not in names:
                 report.error(line, "%s: field *%s* is not in the template" % (label, name), check)
         for rule in rules.fields:
             if rule.name not in entry.fields or not entry.fields[rule.name][0].strip():
@@ -863,26 +915,38 @@ def check_corrections(entries, report):
                          % (label, declared.group(2), fingerprint(entry.sentence)), check)
 
 
-def check_recovered(entries, report):
+def check_recovered(table, entries, report):
+    """Every row of the list of recovered invariants names an entry, its current version, what was
+    searched and what was found; no entry on the list names a decision in *Derives from*
+    (WAY-58)."""
     # invariant: invariant-recovered-form/1
     # invariant: invariant-recovered-derived/1
     check, form, derived = ("check_recovered", "invariant-recovered-form/1",
                             "invariant-recovered-derived/1")
     report.ran(check, form, derived)
-    for entry in entries:
-        label = label_of(entry)
-        recovered, line = value_of(entry, "Recovered")
-        if not recovered.strip():
-            report.fail(line, "%s: *Recovered* is empty" % label, check, (form,))
+    columns = table.columns if table else []
+    for cells, line in table.rows if table else []:
+        if len(cells) < 4:
+            report.error(line, "a row of the list of recovered invariants names an identifier, a "
+                               "version, what was searched and what was found", check, (form,))
             continue
-        if bare(recovered) == "none":
-            continue
-        if not re.fullmatch(r"recovered — searched: .+; found: .+", flat(recovered)):
-            report.error(line, "%s: *Recovered* is neither `none` nor `recovered — searched: …; "
-                               "found: …`" % label, check, (form,))
-        if derives_from_a_decision(entry):
-            report.error(line, "%s: *Recovered* is not `none`, while *Derives from* names a decision"
-                         % label, check, (derived,))
+        identifier = cell(cells, columns, "Identifier") or cells[0]
+        version = cell(cells, columns, "Version") or cells[1]
+        entry = entries.get(identifier)
+        if entry is None:
+            report.error(line, "the list of recovered invariants names `%s`, which is not an entry"
+                         % identifier, check, (form,))
+        elif version != str(entry.version):
+            report.error(line, "the list of recovered invariants names `%s` at version %s; its "
+                               "current version is %d" % (identifier, version, entry.version),
+                         check, (form,))
+        for name in ("Searched", "Found"):
+            if not cell(cells, columns, name).strip():
+                report.error(line, "the row of `%s` on the list of recovered invariants names "
+                                   "nothing in *%s*" % (identifier, name), check, (form,))
+        if entry is not None and derives_from_a_decision(entry):
+            report.error(line, "%s stands on the list of recovered invariants, while its *Derives "
+                               "from* names a decision" % label_of(entry), check, (derived,))
 
 
 LEVEL_ONE = re.compile(r"(?:^|\.\s+)level 1\b", re.I)
@@ -1081,7 +1145,7 @@ CITATION = re.compile(r"^\s*(?:#|//|--|;|%|\*|/\*|<!--|REM\b)\s*(invariant|data)
                       r"(?:\*/|-->)?\s*$")
 
 
-def check_citations(entries, withdrawn, top, tracked, report):
+def check_citations(entries, withdrawn, top, tracked, report, columns=()):
     # invariant: invariant-citation-version/1
     # invariant: invariant-citation-target/1
     # invariant: data-line-target/1
@@ -1089,7 +1153,7 @@ def check_citations(entries, withdrawn, top, tracked, report):
     version, target, data = ("invariant-citation-version/1", "invariant-citation-target/1",
                              "data-line-target/1")
     report.ran(check, version, target, data)
-    successors = {cells[0]: (cells[1] if len(cells) > 1 else "none") for cells, _ in withdrawn}
+    successors = {cells[0]: (cell(cells, columns, "Successors") or "none") for cells, _ in withdrawn}
     for name in tracked:
         if name.endswith(".md"):
             continue
@@ -1469,7 +1533,7 @@ def find_commit(path, top, option, commit, report):
 
 
 def run(path, base=None, stream=None, template=TEMPLATE, merge_onto=None, record=None,
-        examples=EXAMPLES):
+        examples=EXAMPLES, common=COMMON_RULES):
     stream = stream or sys.stdout
     if record is not None:
         try:
@@ -1488,9 +1552,9 @@ def run(path, base=None, stream=None, template=TEMPLATE, merge_onto=None, record
         return 2
 
     try:
-        rules = read_rules(template)
+        rules = read_rules(template, common)
     except (OSError, UnicodeDecodeError, TemplateError, AttributeError) as problem:
-        return stop("cannot read the rules from %s: %s" % (template, problem))
+        return stop("cannot read the rules from %s and %s: %s" % (template, common, problem))
     try:
         with open(path, encoding="utf-8") as handle:
             text = handle.read()
@@ -1508,23 +1572,24 @@ def run(path, base=None, stream=None, template=TEMPLATE, merge_onto=None, record
     tables = {item.title: item for item in items if isinstance(item, Table)}
     withdrawn_table = tables.get(rules.lists[0][0])
     withdrawn = withdrawn_table.rows if withdrawn_table else []
+    withdrawn_columns = withdrawn_table.columns if withdrawn_table else rules.lists[0][1]
 
     check_layout(items, rules, report)
     check_file(path, top, tracked, report)
-    check_identifiers(entry_list, withdrawn, foundation, report)
+    check_identifiers(entry_list, withdrawn, foundation, report, withdrawn_columns)
     check_fields(entry_list, rules, report, foundation.facts_have_entries)
     check_sentence(entry_list, rules, report)
     check_method(entry_list, rules, top, report)
     check_links(entry_list, foundation, report)
     check_part(entry_list, foundation, report)
     check_corrections(entry_list, report)
-    check_recovered(entry_list, report)
+    check_recovered(tables.get(rules.lists[2][0]), entries, report)
     check_verifications(entry_list, foundation, report)
-    check_quarantine(tables.get(rules.lists[-1][0]), entries, foundation, report)
+    check_quarantine(tables.get(rules.lists[1][0]), entries, foundation, report)
     violated = check_violated(path, entries, rules, report)
     check_human_verdicts(path, entries, foundation, rules, report)
     if tracked is not None:
-        check_citations(entries, withdrawn, top, tracked, report)
+        check_citations(entries, withdrawn, top, tracked, report, withdrawn_columns)
         check_record_paths(entry_list, top, report)
 
     if base == NO_COMMIT:

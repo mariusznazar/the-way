@@ -1,37 +1,42 @@
 # Invariant entry template
 
 > **Draft.** This template is written ahead of the decisions it still waits for, so that they can
-> be settled against real entries instead of imagined ones. Every place that waits carries
-> `TODO — decision pending: <question>`, naming the question as the queue of the invariants
-> element holds it. A rule that cites no decision is a proposal settled during the element's
-> research, waiting for its decision. Until those decisions are written, nothing here binds beyond
-> what the cited decisions already say, and the template does not reach the main branch (WAY-06,
-> WAY-09).
+> be settled against real entries instead of imagined ones. A rule that cites no decision is a
+> proposal settled during the element's research, waiting for its decision. Until those decisions
+> are written, nothing here binds beyond what the cited decisions already say, and the template
+> does not reach the main branch (WAY-06, WAY-09).
 
 This file defines how an invariant entry is written. An invariant names its method of checking and
 says nothing about why, or about what was rejected (WAY-08, WAY-22). Its current result comes from
 running that method, never from a status written by hand (WAY-08).
 
+The rules of form the elements share — the language of an entry, every field and the words `none`
+and `TODO`, the terms of the glossary, the marks of where a value comes from, the form of an
+identifier and its one space with the part map and the environment facts, the list of withdrawn
+identifiers, human verdicts, `{fork-point}` and the version of an entry — stand in
+`elements/common/rules.md`; this template holds what is particular to an invariant (WAY-35).
+
 ## Where entries go
 
-- A product's invariant entries stand in one file, `foundations/invariants.md`, which ends with
-  its list of withdrawn identifiers (WAY-64) and its list of quarantined invariants (WAY-68).
+- A product's invariant entries stand in one file, `foundations/invariants.md` (WAY-64). After its
+  last entry the file holds its withdrawn identifiers (WAY-64), its quarantined invariants (WAY-68)
+  and its recovered invariants (WAY-58), in that order, the last list closing the file
+  (`TODO — decision pending: which decision sets the order of the lists closing the invariants
+  file`).
 - One derived file lies beside it: the list of violated invariants (WAY-67).
-- Every entry carries an identifier of one or more words in lower case joined by hyphens, held by
-  no other entry or withdrawn identifier of this file, of the environment facts or of the part map
-  (WAY-64); `none` is no identifier, since *Successors* uses that word.
 - The identifier names what the sentence constrains, never what it demands, so that a raised
   version leaves it true; where another entry constrains the same thing, it adds the aspect this
-  one protects, as `entry-version-number` and `entry-version-correction` (WAY-64).
+  one protects, as `entry-version-number` and `entry-version-correction`
+  (`TODO — decision pending: which decision sets how an invariant's identifier is named`).
 - An identifier the file held on the commit the task branch left the main branch from stays, as
-  an entry or as a withdrawn identifier naming its successors or `none`; one that never reached
-  the main branch may go (WAY-64).
+  an entry or as a withdrawn identifier giving why and naming its successors or `none`; one that
+  never reached the main branch may go (WAY-64).
 - Splitting or merging entries held there gives each entry that comes out of it a new identifier,
   and any other change keeps it (WAY-64); a change of meaning then moves the version (WAY-57). An
-  entry that takes in a clause of another keeps its identifier, and the other is split (WAY-64).
+  entry that takes in a clause of another keeps its identifier, and the other is split
+  (`TODO — decision pending: which decision sets that an entry taking in a clause of another keeps
+  its identifier`).
 - An entry holds only its current wording; earlier wordings are read from git (WAY-57).
-- An entry is written in English, whatever language the product shows the people who use it and
-  whatever language its team speaks (WAY-72).
 
 ## Entry
 
@@ -45,26 +50,18 @@ running that method, never from a status written by hand (WAY-08).
 - **Derives from:** <decision>@<fingerprint> · … | `TODO — <the decision, and where it is expected>` | none
 - **Part:** <parts from the part map> | every
 - **Correction:** none | <fingerprint on the main branch> → <current fingerprint>
-- **Recovered:** none | recovered — searched: <…>; found: <…>
 ```
 
-Every field of the form above appears in every entry. A field holds `none` or `TODO` only where the
-form above gives it that word: `none` states that nothing is there, `TODO` that something is known
-to be missing. The main branch holds `TODO` only in *Method*, and in *Rests on* until the
-environment facts element has entries (WAY-71).
+The form above gives each field the words it takes. Every field appears in every entry, and the
+rest of the rule on `none` and `TODO` — the fields the main branch holds `TODO` in among them —
+stands in `elements/common/rules.md` (WAY-71).
 
-After the last entry the file carries its withdrawn identifiers, and then the list of quarantined
-invariants that closes it (WAY-68); *Successors* lists identifiers joined by ` · `, or reads
-`none`:
+After the last entry the file carries its withdrawn identifiers, in the form, with the *Why* and
+the *Successors*, that `elements/common/rules.md` gives (WAY-64).
 
-```markdown
-## Withdrawn identifiers
-
-| Identifier | Successors |
-```
-
-A quarantined invariant stands on the last list in the file; *Until* is a date as
-`YYYY-MM-DD`, resting on a judgment of the human who accepts the quarantine (WAY-68):
+A quarantined invariant stands on the list of quarantined invariants, after the withdrawn
+identifiers; *Until* is a date as `YYYY-MM-DD` (WAY-68), resting on a judgment of the human who
+accepts the quarantine (WAY-54):
 
 ```markdown
 ## Quarantined invariants
@@ -72,18 +69,27 @@ A quarantined invariant stands on the last list in the file; *Until* is a date a
 | Identifier | Version | Until |
 ```
 
+A recovered invariant stands on the list of recovered invariants, which closes the file, in a row
+naming its identifier, its current version, what was searched and what was found (WAY-58):
+
+```markdown
+## Recovered invariants
+
+| Identifier | Version | Searched | Found |
+```
+
 ## Method
 
 - A method is either a command the gate runs, which counts as a command the product declares
   (WAY-38), begins with the name of the program it runs and is never a path alone, or the path
-  alone of a file a human assesses the product against. The form is the route; no kind of method is
-  written beside it (WAY-61).
+  alone of a file a human assesses the product against (WAY-61). The form is the route; no kind of
+  method is written beside it
+  (`TODO — decision pending: which decision keeps a method's kind from being written beside it`).
 - A command is the same on every run and names no commit, branch or revision itself. A commit the
   sentence names is a value the gate fills in, from this closed list, which grows by a new version
-  of WAY-61: `{fork-point}` — the commit the task branch left the main branch from, which is the
-  last commit of the main branch the branch contains; `{merge-onto}` — the commit of the main branch
-  that a merge into it is made onto. Where the commit does not exist, the gate fills in `none` in its
-  place (WAY-61).
+  of WAY-61: `{fork-point}`, as `elements/common/rules.md` gives it; `{merge-onto}` — the commit of
+  the main branch that a merge into it is made onto. Where the commit does not exist, the gate
+  fills in `none` in its place (WAY-61).
 - A method checks what its sentence is about, as it stands on the commit being checked: a check fed
   input made up for it is the method of a sentence about that check, not about the data it reads
   (WAY-61).
@@ -96,17 +102,9 @@ A quarantined invariant stands on the last list in the file; *Until* is a date a
   WAY-38, WAY-47, WAY-67).
 - One run may check many invariants. An entry's result is the verdict the run records for its
   identifier and current version, in a format from this closed list, which grows by a new version of
-  WAY-61: the-way's own record of a run — a JSON Lines file at the one `.jsonl` path the command
-  names, one line per verdict a check gives an invariant or an environment fact and per failure
-  recorded for no entry, each holding `check`, `verdict` (`pass`, `fail`, or `unchecked` beside a
-  `reason` from the list of reasons for `unchecked` in the template of its entry's element),
-  `invariant` (`<identifier>/<version>` or
-  `null`) — or in its place `fact` (`<identifier>/<version>`) for a fact's verdict — and at most
-  `description` (WAY-74). A run that records no verdict for the entry never gives it a pass
-  (WAY-61).
-- The path of the-way's own record is one git ignores, and the gate clears it before the run and
-  runs no command naming a path git does not ignore (WAY-74). A failure no rule of a check gave names
-  the program that ran as its `check`.
+  WAY-61: the-way's own record of a run, whose form and path answer to the invariants
+  `run-record-form`, `run-record-path` and `run-record-lines` (WAY-74). A run that records no
+  verdict for the entry never gives it a pass (WAY-61).
 - A population the product meets only in use — the loads real players make, for one — has no form
   yet: the method of a sentence about it reads
   `TODO — decision pending: the method of a population met only in use`, and the gate reports the
@@ -119,39 +117,33 @@ A quarantined invariant stands on the last list in the file; *Until* is a date a
   pass it; what one sentence may join is judged against the complying and violating pair in
   WAY-56's *Verification* (WAY-56, WAY-12).
 - The sentence is the binding part: the entry's fingerprint covers the sentence alone (WAY-59,
-  WAY-39). The method, the links, the version, a declaration of a correction and the *Recovered*
-  field stay outside it.
-- A condition that decides whether a commit makes the sentence true stands in the sentence, or
-  outside it only where changing it takes a change that a human decides — of an
-  entry of the foundation or of an element's template, each written as the record of a decision — or
-  where a decision of the product's own log, or of the-way at the commit the product pins, places
-  it; where it has no such place, it stands in the sentence (WAY-60).
-- A condition held in a document the product neither writes nor pins, such as an outside standard,
-  has no such place: it stands in the sentence, and the fact it rests on is named in *Rests on*
-  (WAY-60, WAY-73).
+  WAY-39). The method, the links, the version and a declaration of a correction stay outside it
+  (WAY-59).
+- A condition that decides whether a commit makes the sentence true stands in the sentence, unless
+  an entry of the foundation or a decision — of the product's own log, or of the-way at the commit
+  the product pins — holds it; then the entry links to that entry or decision (WAY-60, WAY-17). A
+  condition held in a document the product neither writes nor pins, such as an outside standard,
+  stands in the sentence, and the fact it rests on is named in *Rests on* (WAY-60, WAY-73).
 - A sentence names no branch — neither as a point to compare with nor as the place where it holds —
-  since a branch names a different commit by the hour. A sentence measuring what a commit, a merge
-  or a merge request changes names the commit it is measured against by its value on the gate's
-  list above: `{fork-point}`, unless the decision the entry derives from chooses `{merge-onto}`. A
+  since a branch names a different commit by the hour: outside quoted text it holds neither the
+  words "main branch" nor "task branch" (WAY-60). A sentence measuring what a commit, a merge or a
+  merge request changes names the commit it is measured against by its value on the gate's list
+  above: `{fork-point}`, unless the decision the entry derives from chooses `{merge-onto}`. A
   sentence that is to hold on the main branch alone holds where `{merge-onto}` exists (WAY-60,
   WAY-61).
-- A sentence about a check the product itself holds names a value of that list in quotation marks,
-  as what the check is given, and its command, a test fed input made up for it, need not take it
+- A sentence may be about a check the product itself holds, as it may be about anything else the
+  product holds: whether a check belongs to the product is settled by the part map, and the method
+  of such a sentence is a test fed input made up for it (WAY-61). Such a sentence names a value of
+  the gate's list in quotation marks, as what the check is given, and its command need not take it
   (WAY-60, WAY-61). Quoted text, in this template, is text between quotation marks; a value in
   backticks is not quoted.
 - A sentence that bounds or equates a quantity measured while the product runs names its bound or
   tolerance, the statistic and the population it is computed over (WAY-60). A bound written with a
   tilde — `~2 seconds` — names no bound, so the sentence states one as a number or has none
   (WAY-60).
-- A sentence may be about a check the product itself holds, as it may be about anything else the
-  product holds: whether a check belongs to the product is settled by the part map, and the method
-  of such a sentence is a test fed input made up for it (WAY-61).
 - A sentence about what a check reports may also mean that the data it reads meets a rule; where
   it does, the data takes a sentence of its own, and the two stand as two entries, one about the
   check and one about the data (WAY-56, WAY-61).
-- A sentence that speaks of what a glossary term defines uses the term, never a paraphrase of its
-  definition; a term whose definition holds a word an invariant's sentence may not hold (WAY-60)
-  enters it only where the human deciding the change accepts it (WAY-100).
 
 ## Links
 
@@ -169,9 +161,6 @@ A quarantined invariant stands on the last list in the file; *Until* is a date a
 - Both carry the fingerprint of each entry they name, and *Part* carries none. A change to
   that fingerprint reaches the main branch with every invariant carrying it, each checked against
   the new binding part and carrying the new fingerprint (WAY-66).
-- Until the environment facts element has entries, a fact is written as
-  `TODO — <the fact, with its source>` (WAY-66); such a fact reaches the main branch in that form until
-  then (WAY-71).
 
 ## Part
 
@@ -180,7 +169,8 @@ A quarantined invariant stands on the last list in the file; *Until* is a date a
   running where it can break, and nothing shows it, so a writer in doubt names more (WAY-62).
 - *Part* has no third value. A sentence no commit of this product can make false is not an
   invariant of this product: it belongs to the foundation of the product whose commits
-  decide it.
+  decide it (`TODO — decision pending: which decision sets that a sentence no commit of the product
+  can make false belongs to another product's foundation`).
 - A change, against the commit its branch left the main branch from, reaches an entry that names
   `every` or a part the change touches, or whose method names a file the change alters (WAY-62).
 - The entry names no failure mode, critical flow or surface (WAY-62).
@@ -189,17 +179,16 @@ A quarantined invariant stands on the last list in the file; *Until* is a date a
 
 ## Version and correction
 
-- An entry carries a version, starting at 1. When its fingerprint differs from its fingerprint on
-  the main branch, its version is one higher than there, unless *Correction* names both
-  fingerprints and the human who decides the change confirms, with the old and the new binding
-  part in front of them, that the meaning is unchanged (WAY-57).
+- The version of an entry follows `elements/common/rules.md`, with one exception: an entry whose
+  fingerprint differs from its fingerprint on the main branch keeps its version where *Correction*
+  names both fingerprints and the human who decides the change confirms, with the old and the new
+  binding part in front of them, that the meaning is unchanged (WAY-57).
 - A change after which some test citing the entry would need a different expected value is a
-  raise, never a correction (WAY-57).
-- The guard compares an entry with its state where the task branch left the main branch; where
-  there is no main branch, it compares nothing, says so, and every entry stays at version 1
-  (WAY-57).
-- Until the confirmation has a home, the guard reports a declared correction as "correction
-  declared, confirmation not checked", never as agreeing (WAY-57).
+  raise, never a correction
+  (`TODO — decision pending: which decision sets that a change a citing test would need a new
+  expected value for is a raise`).
+- Whether the human confirmed a declared correction answers to the invariant
+  `invariant-correction-confirmation`.
 
 ## Test
 
@@ -207,11 +196,14 @@ A quarantined invariant stands on the last list in the file; *Until* is a date a
   than the current one fails the gate (WAY-57).
 - A check cites each invariant it gives a verdict for, at the check, as a line
   `invariant: <identifier>/<version>` in the comment form of its file's language; a run records no
-  verdict for an invariant its check does not cite. Several checks citing one invariant in one run
-  pass only when each of them does (WAY-65).
+  verdict for an invariant its check does not cite (WAY-65). Several checks citing one invariant in
+  one run pass only when each of them does
+  (`TODO — decision pending: which decision sets that several checks citing one invariant pass only
+  together`).
 - Each file such a check reads and names there stands on a line `data: <path>` — a recorded output
   it compares against, for one (WAY-65).
-- A check stands in a file of code; a Markdown file holds no citing check.
+- A check stands in a file of code; a Markdown file holds no citing check
+  (`TODO — decision pending: which decision sets that a citing check stands in a file of code`).
 - An invariant test is read-only during implementation (WAY-03), and a file is one for the task
   when it is one on the commit the task branch left the main branch from or on the commit being
   checked. A path a human assesses against is no invariant test (WAY-65).
@@ -228,19 +220,18 @@ A quarantined invariant stands on the last list in the file; *Until* is a date a
 ## Recovered
 
 An entry a human chose from what the product already did before the task writing it began, and that
-names no decision entry of the product's own log it derives from, reads
-`recovered — searched: <…>; found: <…>`; every other entry reads `none` (WAY-58). A decision named
-anywhere but that log — a numbered decision in a concept document, a decision of the-way at the
-commit the product pins — is no such decision, and the entry still reads `recovered`.
+names no decision entry of the product's own log it derives from, stands on the list of recovered
+invariants; no other entry stands there (WAY-58). A decision named anywhere but that log — a
+numbered decision in a concept document, a decision of the-way at the commit the product pins — is
+no such decision, and the entry still stands on the list (WAY-58).
 
-*found* names the place of each source the search found that gives a reason for keeping the
+*Found* names the place of each source the search found that gives a reason for keeping the
 behaviour or calls for a different one, or reads `nothing`. A place that only cites another is
-followed to the place it cites, and is marked where that source is superseded. *found* never states
-a reason itself, nor one an agent infers. The field rests on a judgment: the human deciding the
-change sets it with the gate's report in front of them — whether the entry's method passes on the
-commit the branch left the main branch from and fails there on a deliberate break, or that this
-could not be checked (WAY-58). An entry whose binding part changes — by a raised version, by a
-correction, or by a split or a merge — enters again, and its field is set again (WAY-57, WAY-58,
+followed to the place it cites, and is marked where that source is superseded. *Found* never states
+a reason itself, nor one an agent infers (WAY-58). The row rests on a judgment: the human deciding
+the change sets it with the gate's report in front of them, which answers to the invariant
+`gate-fork-point-evidence` (WAY-58). An entry whose binding part changes — by a raised version, by
+a correction, or by a split or a merge — enters again, and its row is set again (WAY-57, WAY-58,
 WAY-64).
 
 ## Result, report and debt
@@ -248,11 +239,8 @@ WAY-64).
 - An entry's result on the commit being checked is `pass`, `fail`, `unchecked` for a reason on the
   list below, or `error` where there is no verdict for any other reason, or where a quarantine has
   lapsed (WAY-63, WAY-68).
-- The gate reports a result for at least every entry a change reaches and every entry a critical
-  flow names. Its command exits non-zero when some result it reports is `error`, when an entry on
-  the list of violated invariants results `pass`, when an entry not on that list results `fail`, or
-  when a run records a failure for no entry, and zero otherwise (WAY-63, WAY-67).
-- Reasons for `unchecked` — a closed list, which grows by a new version of WAY-63:
+- Reasons for `unchecked` — one closed list for invariants and environment facts, which grows by a
+  new version of WAY-63 (WAY-63, WAY-74):
   - the method reads `TODO`;
   - the method is a path, and no human verdict is in force;
   - the method's command or file is not declared or produced by the product, except a command
@@ -262,18 +250,12 @@ WAY-64).
   - the entry stands on the list of quarantined invariants at its current version, and the
     committer date of the commit being checked is no later than its *Until* (WAY-68);
   - for an environment fact, a probe ran on a release of its tool outside *Holds for* (WAY-91).
-- A human verdict stands in a row of `foundations/human_verdicts.md`, written by hand, which serves
-  invariants and environment facts alike, and counts only for the entry's current version; an
-  invariant's row reads `none` in *Until* and is in force until a change since the assessed commit
-  reaches the entry (WAY-83, WAY-63):
-
-  ```markdown
-  | Entry | Version | Verdict | By | On | Commit | Until |
-  ```
-- A declared command that cannot start, or a record holding a value off a closed list, is `error`;
-  a record holding a line off the form above gives `error` to every entry whose method wrote it
-  (WAY-63, WAY-74).
-  Runs on a deliberate break, and the run WAY-58 asks for, give evidence, not results (WAY-63).
+- Which entries the gate reports a result for, when its command exits non-zero, and how it reads a
+  record of a run and a human verdict answer to the invariants of the part `gate`:
+  `gate-reported-set`, `gate-exit-code`, `gate-result-values`, `gate-unchecked-reason`,
+  `gate-verdict-per-entry`, `gate-pass-without-verdict`, `gate-quarantine-result` and
+  `gate-human-verdict`. A human verdict on an entry whose method is a path stands where
+  `elements/common/rules.md` places it (WAY-83).
 
 ## Quarantine
 
@@ -283,7 +265,7 @@ WAY-64).
   result on that commit until a foundation change answers the flipping, whatever a later run
   records (WAY-68).
 - A quarantine row names the entry's identifier, its current version and an end date, and
-  stands on the last list in the file (WAY-68).
+  stands on the list of quarantined invariants (WAY-68).
 - A rerun set anywhere but the method's command is no change of an invariant test's mechanics, so a
   human decides it (WAY-10).
 
@@ -302,98 +284,26 @@ branch from, never regenerated from scratch (WAY-53, WAY-67).
 | Identifier | Version |
 ```
 
-## Fields and their readers
+## Where each value comes from
 
-A field stays in this template only while someone or something reads it (WAY-05).
+A field stays in this template only while someone or something reads it
+(`TODO — decision pending: which decision keeps a field in an element's template only while it is
+read`). Each field carries the mark of where its value comes from (`elements/common/rules.md`):
 
-| Field | Who reads it, when | Where its value comes from |
-|---|---|---|
-| identifier (heading) | a citing test; the part map, in a flow and a failure mode's detection | judgment |
-| version (heading) | a citing test; the guard, which computes what the version must be | read off |
-| sentence | the agent checking a change against the invariant; the fingerprint; the gate, through the method | prose |
-| Method | the gate, which runs a command or hands a path to a human | judgment |
-| Rests on | whoever reviews the invariant when a fact changes; the format guard, which compares each fingerprint with the current one (WAY-66) | judgment for the fact named; read off for its fingerprint |
-| Derives from | whoever changes the decision; the check that an invariant named in a decision's level 1 verification names that decision (WAY-17); the format guard, which compares each fingerprint with the current one (WAY-66) | judgment for the decision named; read off for its fingerprint |
-| Part | the gate, which runs the invariants a change reaches; the agent analysing a task | judgment |
-| Correction | the guard, which lets the version stand; the human who confirms it | judgment for the declaration; read off for both fingerprints |
-| Recovered | the human weighing a change to the invariant; the agent recovering a part's decisions | judgment |
-| withdrawn identifiers | whoever follows an identifier that no longer names an entry, from a citing test or a decision on the main branch (WAY-07, WAY-64); the format guard, which keeps a withdrawn identifier from coming back and checks its successors (WAY-64) | read off |
-| quarantined invariants | the gate, which reports the entry `unchecked` or `error`; the format guard | judgment for the date; read off for the version |
-| violated invariants | the gate, which leaves a listed `fail` at zero and fails on a listed `pass`; the format guard, which compares the list with the commit the branch left the main branch from | judgment for the row; read off for the version |
-A field marked *judgment* holds someone's call: no tool reads its value off the product, and no question with a factual answer settles it. A reader takes such a value as a call, not as a reading (WAY-54). A field marked *prose* carries text rather than a value.
-
-## What the format guard checks
-
-- The product has exactly one file of invariant entries: the file checked stands in
-  `foundations/invariants.md` from the root of its repository, letter case included, as git lists
-  it, and no other Markdown file git tracks holds an entry — a section `## <identifier>/<version>`
-  carrying a *Method* field and no *Holds for* field, outside a fenced block — save `examples.md` beside this template,
-  which holds copies (WAY-64).
-- The file holds its entries, then its withdrawn identifiers, then its quarantined invariants, each
-  in the form above, and no other heading; the heading of an entry carries its version as a number
-  (WAY-57, WAY-64, WAY-68).
-- Every identifier of an entry has the form above, and no identifier is held twice among the
-  entries and withdrawn identifiers of this file, of the environment facts and of the part map
-  taken together (WAY-64).
-- Every identifier the file held on the commit the task branch left the main branch from stands in
-  it, and one withdrawn there is withdrawn still (WAY-64).
-- Every successor a withdrawn identifier names is an entry or a withdrawn identifier of this file,
-  or `none` (WAY-64).
-- Every entry carries every field of the form above, and no field holds `none` or `TODO` where the
-  form does not give it that word; a `TODO` the form gives, in a field the main branch does not
-  hold it in, is a warning, and, checking a merge onto the main branch, a `TODO` in any field other
-  than *Method* and *Rests on* is an error (WAY-71).
-- No entry carries a field the form above does not hold, nor text outside its sentence and fields.
-- Every entry states its invariant in one sentence (WAY-56).
-- Every entry carries a method (WAY-08).
-- Every entry carries a version; an entry with no fingerprint on the main branch carries version 1
-  and no correction; an entry whose fingerprint differs from there carries a version one higher or
-  a correction naming both fingerprints; an entry whose fingerprint equals it there keeps its
-  version and declares no correction whose second fingerprint differs from it (WAY-57).
-- No entry holds, beside its current wording, a wording it held on the commit the branch left the
-  main branch from (WAY-57).
-- The fingerprint of an entry is the fingerprint of its sentence alone, and a change to anything
-  else in the entry leaves it unchanged (WAY-59).
-- Every entry carries *Recovered*, as `none` or in its form; an entry that names a decision entry
-  of the product's own log it derives from holds `none` (WAY-58).
-- No sentence, outside quoted text, contains the words "main branch" or "task branch" (WAY-60).
-- Every value from the gate's list that a sentence names outside quoted text is taken by its
-  command, unless its method is not a command (WAY-60).
-- No sentence bounds or equates a measured quantity with a tilde in place of a number (WAY-60).
-- Every entry names `every` or at least one part of the part map, never both (WAY-62).
-- Every method is a command that begins with a program's name, the path alone of a file that
-  exists, or `TODO`; every value a command takes from the gate, and every value in braces a sentence
-  names outside quoted text, stands on the list above (WAY-61, WAY-63).
-- Every path ending in `.jsonl` that a command names is one git ignores, as git itself answers, and
-  no command names two (WAY-74).
-- Every name in *Rests on* or *Derives from*, other than `none` or `TODO`, carries a fingerprint
-  of the length the script of `relation-model` gives (WAY-39); every decision named is in force in the
-  decision log; *Rests on* names a fact only as `TODO — <the fact, with its source>` while the
-  environment facts element has no entries, and once it has, every fact *Rests on* names is an entry
-  of `foundations/environment_facts.md`, never a withdrawn identifier (WAY-66).
-  Checking a merge onto the main branch, every fingerprint equals the current fingerprint of the
-  entry it names in the decision log or the environment facts that merge leaves, for the entries of
-  the file and for those only the commit merged onto holds (WAY-66).
-- Every decision in force whose *Verification* includes level 1 has an entry deriving from it, and
-  every identifier the level 1 verification of the latest version of a decision names, as
-  `level 1 — invariants: <identifier> · <identifier>.`, is an entry whose *Derives from* names that
-  decision (WAY-12, WAY-17).
-- Every `invariant:` line in a check names an entry, never a withdrawn identifier, and cites its
-  current version; every `data:` line in a file holding such a check names a file that exists
-  (WAY-57, WAY-65).
-- The list of violated invariants is a subset of the list on the commit the branch left the main
-  branch from; every row names an entry at its current version and no other (WAY-67).
-- Every quarantine row names an entry at its current version and an end date, and none names
-  an invariant a critical flow names (WAY-68).
-- Every row of `foundations/human_verdicts.md` naming an invariant names an entry whose method is a
-  path, gives `pass` or `fail`, and reads `none` in *Until* (WAY-83).
-- Every example in `examples.md` matches its entry in the file word for word (WAY-05).
-- The guard reports what it could not check and why, never agreement (WAY-38).
-- Given the path of a record, the guard writes the-way's own record of the run there, with a
-  verdict for each invariant its checks cite (WAY-61, WAY-74); given `none` as either commit, it
-  records the checks that need that commit as `unchecked`; a call to git that fails, the file
-  standing outside a git repository included, is a failure of the run, never an unchecked check
-  (WAY-61, WAY-63).
+| Field | Where its value comes from |
+|---|---|
+| identifier (heading) | judgment |
+| version (heading) | read off |
+| sentence | prose |
+| Method | judgment |
+| Rests on | judgment for the fact named; read off for its fingerprint |
+| Derives from | judgment for the decision named; read off for its fingerprint |
+| Part | judgment |
+| Correction | judgment for the declaration; read off for both fingerprints |
+| withdrawn identifiers | read off; prose for *Why* |
+| quarantined invariants | judgment for the date; read off for the version |
+| recovered invariants | judgment for what was searched and found; read off for the version |
+| violated invariants | judgment for the row; read off for the version |
 
 ## Examples
 
