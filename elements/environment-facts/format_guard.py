@@ -170,7 +170,7 @@ def read_rules(path=TEMPLATE, common=COMMON_RULES):
             any(choice == "TODO" or choice.startswith("TODO ") for choice in choices)))
     if not fields:
         raise TemplateError("the entry form has no fields")
-    _, withdrawn, verdicts_file, verdicts_columns = invariant_guard.read_common(common)
+    _, withdrawn, verdicts_file, verdicts_columns = shared.read_common(common)
 
     words = SCOPE_WORDS.search(" ".join(_section(text, "Holds for").split()))
     if not words:

@@ -1,14 +1,18 @@
 """Code the format guards of the elements share (WAY-09): reading a file and the sections and
-fields of an entry, the report of a run and the-way's own record of it (WAY-74), and the calls to
-git. A guard loads this module by its path; the form of an identifier and of a version comes from
-the relation model (`relation-model/identifier.py`), and what each guard checks stays in the guard
-of its element.
+fields of an entry, reading the rules of form the elements share from `rules.md` beside this
+module, the report of a run and the-way's own record of it (WAY-74), and the calls to git. A guard
+loads this module by its path; the form of an identifier and of a version comes from the relation
+model (`relation-model/identifier.py`), and what each guard checks stays in the guard of its
+element.
 """
 
 import json
 import os
 import re
 import subprocess
+
+# The rules of form the elements share (WAY-09, WAY-35).
+COMMON_RULES = os.path.join(os.path.dirname(os.path.abspath(__file__)), "rules.md")
 
 # The value the gate fills in for a commit that does not exist (WAY-61), and the reason a check
 # that needs that commit records for being unchecked, word for word as the invariants template
@@ -60,6 +64,78 @@ def parse_fields(body, first_line):
             value, at = fields[current]
             fields[current] = [(value + "\n" + line.rstrip()).strip("\n"), at]
     return fields
+
+
+# --- rules read from a template and from the rules the elements share ------------------------
+
+
+class TemplateError(Exception):
+    """A template, or the rules the elements share, does not hold a form a guard reads."""
+
+
+def template_section(text, title):
+    """The text under a heading of the template, up to the next one outside a code block."""
+    found, fenced, lines = None, False, []
+    for line in text.split("\n"):
+        if line.startswith("```"):
+            fenced = not fenced
+        elif line.startswith("## ") and not fenced:
+            if found:
+                break
+            found = line[3:].strip() == title
+            continue
+        if found:
+            lines.append(line)
+    if not found:
+        raise TemplateError('section "%s" not found' % title)
+    return "\n".join(lines)
+
+
+def markdown_blocks(section_text):
+    """The Markdown code blocks of a section, without their fences."""
+    return re.findall(r"```markdown\n(.*?)```", section_text, re.S)
+
+
+def table_form(block):
+    """(title, columns) of a list whose form a code block gives as a heading and a table header."""
+    title = re.search(r"^## (.+)$", block, re.M)
+    header = re.search(r"^\|(.+)\|$", block, re.M)
+    if not title or not header:
+        raise TemplateError("a list form has no title or no columns")
+    return title.group(1).strip(), [cell.strip() for cell in header.group(1).split("|")]
+
+
+def _dedented(block):
+    """A block of a list item, its lines freed of the indentation that places it in the item."""
+    return "\n".join(line.strip() for line in block.split("\n"))
+
+
+def read_common(path=COMMON_RULES):
+    """(fields the main branch holds `TODO` in for an invariant, (title, columns) of the list of
+    withdrawn identifiers, name of the file of human verdicts, columns of its row), read from the
+    rules of form the elements share."""
+    with open(path, encoding="utf-8") as handle:
+        text = handle.read()
+    main = re.search(r"The main branch holds `TODO` only in (.*?)\(WAY-71\)",
+                     " ".join(text.split()))
+    if not main:
+        raise TemplateError("the rules the elements share do not say which fields the main branch "
+                            "holds `TODO` in")
+    main_todo = re.findall(r"an invariant's (?:or an environment fact's )?\*([^*]+)\*",
+                           main.group(1))
+    withdrawn = [_dedented(block)
+                 for block in markdown_blocks(template_section(text, "Withdrawn identifiers"))]
+    if not withdrawn:
+        raise TemplateError("the rules the elements share give no form of the list of withdrawn "
+                            "identifiers")
+    verdicts = template_section(text, "Human verdicts")
+    verdicts_file = re.search(r"`foundations/(human_[^`]+\.md)`", verdicts)
+    verdicts_header = re.search(r"^\s*\|(.+)\|\s*$", "\n".join(markdown_blocks(verdicts)), re.M)
+    if not verdicts_file or not verdicts_header:
+        raise TemplateError("the rules the elements share name no file of human verdicts or no "
+                            "form of its row")
+    return (main_todo, table_form(withdrawn[0]), verdicts_file.group(1),
+            [cell.strip() for cell in verdicts_header.group(1).split("|")])
 
 
 # --- the report and the record of a run -----------------------------------------------------

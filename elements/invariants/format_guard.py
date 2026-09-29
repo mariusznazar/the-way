@@ -6,8 +6,8 @@ each may hold, the titles and columns of the lists of quarantined and recovered 
 file of violated invariants, the values the gate fills in and the words a sentence may not use are
 read from the template; the fields the main branch holds `TODO` in, the list of withdrawn
 identifiers and the file and row of human verdicts are read from the rules the elements share; so
-each rule lives in one place (WAY-35, WAY-71). An entry carrying *Recovered*, which is not a field of
-the form, is reported, and every other check reads it as it reads any entry. The decision log
+each rule lives in one place (WAY-35, WAY-71). An entry carrying *Recovered*, which is not a field
+of the form, is reported, and every other check reads it as it reads any entry. The decision log
 and the part map are read with the parsers of their own guards, and the record of a run is written
 with the report the guards share. Each check cites the invariants it gives a verdict for, as
 `invariant: <identifier>/<version>` (WAY-65).
@@ -108,8 +108,8 @@ DATE = r"\d{4}-\d{2}-\d{2}"
 QUOTED = r'"[^"]*"|“[^”]*”'
 
 
-class TemplateError(Exception):
-    pass
+# A template, or the rules the elements share, does not hold a form this guard reads.
+TemplateError = shared.TemplateError
 
 
 # --- rules read from the template -----------------------------------------------------------
@@ -136,34 +136,10 @@ class Rules:
     verdicts_columns: list = field(default_factory=list)
 
 
-def _section(text, title):
-    """The text under a heading of the template, up to the next one outside a code block."""
-    found, fenced, lines = None, False, []
-    for line in text.split("\n"):
-        if line.startswith("```"):
-            fenced = not fenced
-        elif line.startswith("## ") and not fenced:
-            if found:
-                break
-            found = line[3:].strip() == title
-            continue
-        if found:
-            lines.append(line)
-    if not found:
-        raise TemplateError('section "%s" not found' % title)
-    return "\n".join(lines)
-
-
-def _blocks(section_text):
-    return re.findall(r"```markdown\n(.*?)```", section_text, re.S)
-
-
-def _table_form(block):
-    title = re.search(r"^## (.+)$", block, re.M)
-    header = re.search(r"^\|(.+)\|$", block, re.M)
-    if not title or not header:
-        raise TemplateError("a list form has no title or no columns")
-    return title.group(1).strip(), [cell.strip() for cell in header.group(1).split("|")]
+# Reading a template's sections and the rules the elements share is code the guards share.
+_section = shared.template_section
+_blocks = shared.markdown_blocks
+_table_form = shared.table_form
 
 
 def bare(value):
@@ -182,36 +158,6 @@ def is_todo(value):
 def holds_todo(value):
     """Whether a value holds `TODO` as a word of its own anywhere in it (WAY-71)."""
     return bool(TODO_WORD.search(value or ""))
-
-
-def _dedented(block):
-    """A block of a list item, its lines freed of the indentation that places it in the item."""
-    return "\n".join(line.strip() for line in block.split("\n"))
-
-
-def read_common(path=COMMON_RULES):
-    """(fields the main branch holds `TODO` in for an invariant, (title, columns) of the list of
-    withdrawn identifiers, name of the file of human verdicts, columns of its row), read from the
-    rules of form the elements share."""
-    with open(path, encoding="utf-8") as handle:
-        text = handle.read()
-    main = re.search(r"The main branch holds `TODO` only in (.*?)\(WAY-71\)", " ".join(text.split()))
-    if not main:
-        raise TemplateError("the rules the elements share do not say which fields the main branch "
-                            "holds `TODO` in")
-    main_todo = re.findall(r"an invariant's (?:or an environment fact's )?\*([^*]+)\*", main.group(1))
-    withdrawn = [_dedented(block) for block in _blocks(_section(text, "Withdrawn identifiers"))]
-    if not withdrawn:
-        raise TemplateError("the rules the elements share give no form of the list of withdrawn "
-                            "identifiers")
-    verdicts = _section(text, "Human verdicts")
-    verdicts_file = re.search(r"`foundations/(human_[^`]+\.md)`", verdicts)
-    verdicts_header = re.search(r"^\s*\|(.+)\|\s*$", "\n".join(_blocks(verdicts)), re.M)
-    if not verdicts_file or not verdicts_header:
-        raise TemplateError("the rules the elements share name no file of human verdicts or no "
-                            "form of its row")
-    return (main_todo, _table_form(withdrawn[0]), verdicts_file.group(1),
-            [cell.strip() for cell in verdicts_header.group(1).split("|")])
 
 
 # The words a sentence may not hold outside quoted text, as "The sentence" lists them.
@@ -233,7 +179,7 @@ def read_rules(path=TEMPLATE, common=COMMON_RULES):
                                 any(choice == "TODO" or choice.startswith("TODO ") for choice in choices)))
     if not fields:
         raise TemplateError("the entry form has no fields")
-    main_todo, withdrawn, verdicts_file, verdicts_columns = read_common(common)
+    main_todo, withdrawn, verdicts_file, verdicts_columns = shared.read_common(common)
     lists = [withdrawn] + [_table_form(block) for block in blocks[1:]]
 
     violated_section = _section(text, "Violated invariants")
