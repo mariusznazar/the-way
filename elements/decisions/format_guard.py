@@ -458,7 +458,6 @@ def check_log(entries, text, rules, prefix, report, today, approver=None):
     numbers, versions = check_headings(entries, text, rules, prefix, report)
     latest = {number: items[-1] for number, items in numbers.items()}
     check_fields(entries, rules, prefix, report)
-    check_change_rationale(entries, rules, report)
     check_changes(entries, rules, prefix, report)
     check_bindings(entries, rules, prefix, report)
     check_binding_across_versions(entries, rules, prefix, report, versions)
@@ -581,24 +580,6 @@ def check_fields(entries, rules, prefix, report):
                 if wrong in entry.fields:
                     report.error(entry.fields[wrong][1], "%s: version %d uses *%s*"
                                  % (label_of(entry, prefix), entry.version, wrong), check)
-
-
-def check_change_rationale(entries, rules, report):
-    # invariant: decision-change-rationale/1
-    check, rationale = "check_change_rationale", "decision-change-rationale/1"
-    report.ran(check, rationale)
-    for entry in versions_of(entries):
-        if entry.version == 1:
-            continue
-        for name in rules.renamed_after_first.values():
-            value, line = field_value(entry, name)
-            if not value:
-                report.fail(entry.line, "field *%s* is missing" % name, check, (rationale,))
-            elif is_todo(value) and takes_todo(rules, name):
-                continue  # check_fields warns
-            elif is_todo(value) or value == "none":
-                report.fail(line, "*%s* is `%s`" % (name, "none" if value == "none" else "TODO"),
-                            check, (rationale,))
 
 
 def check_changes(entries, rules, prefix, report):

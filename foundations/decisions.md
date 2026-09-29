@@ -222,8 +222,7 @@ the log there only grows at the end.
 - **Change:** new decision
 - **Scope:** decisions
 - **Based on:** none
-- **Relations:** derives from WAY-01@60960941 · related to WAY-05
-- **Outranks:** none
+- **Relations:** derives from WAY-01@60960941
 - **Verification:** level 1 — invariants: log-existing-lines · log-versions-added-per-number ·
   log-merge-copies. Level 2 for acceptance after a change of meaning — an agent compares the change
   with the decision:
@@ -232,20 +231,13 @@ the log there only grows at the end.
   - violates: an entry reaches the main branch with binding sentences its approver never saw.
 - **Review when:** none
 - **Origin:** none
-- **Approver override:** none
 - **Approved by:** Mariusz, 2026-09-15
 
-*Rationale:* an entry binds only once it describes the product on the main branch (WAY-01);
-before that it belongs to a change in progress. Versions written on a task branch would
-carry into the log states that never bound anything. On the main branch the log keeps what was in
-force, as it was, so there it only grows. *Approved by* is a trace of what a human accepted; after
-a change of meaning without a new acceptance, it would name someone who did not approve what the
-entry says.
+*Rationale:* an entry binds only once it is on the main branch (WAY-01), so versions written
+before would carry states that never bound anything; there the log keeps what was in force. After a
+change of meaning without new acceptance, *Approved by* would name someone who did not approve it.
 *Rejected:* an entry fixed from the moment it is written — every edit made during a task
 becomes a version that never bound anything.
-*Consequences:* the format guard compares the log with the commit the task branch left the main
-branch from, not with the previous commit. Until this log reaches the main branch, its entries are
-edited in place. A copy in `examples.md` follows its version when the version is edited.
 
 ### WAY-08/1 — How is an invariant checked?
 
@@ -506,31 +498,18 @@ when; in the-way, the approver is Mariusz.
 
 - **Change:** new decision
 - **Scope:** decisions
-- **Based on:** the UK government's decision record framework sets the level at which a decision
-  is made from the reach of its impact — a team's decision is "Local to a single team or working
-  group", with "No impact on other teams or shared platforms" — and its record has no field for
-  an owner (Architectural Decision Record Framework, GOV.UK,
-  https://www.gov.uk/government/publications/architectural-decision-record-framework/architectural-decision-record-framework).
-- **Relations:** related to WAY-05 · related to WAY-07 · related to WAY-10 · related to WAY-13
-- **Outranks:** none
+- **Based on:** none
+- **Relations:** none
 - **Verification:** level 1 — invariants: decision-approval-record · decision-approver.
-- **Review when:** who approves decisions for which parts is settled together with guarantee 12 ·
-  check by: 2026-12-31
+- **Review when:** the-way decides which of its elements a team may adapt, and with it who approves
+  decisions for which parts · check by: 2026-12-31
 - **Origin:** none
-- **Approver override:** none
 - **Approved by:** Mariusz, 2026-09-29
 
 *Rationale:* the record of who approved and when is what a human considering a change reads, and what
 WAY-07 needs when an entry has to be accepted again.
-*Rejected:* an approver named in every entry — the same name repeated, stale once the team
-changes; lists of decision-makers and of those consulted — nothing reads them.
-*Consequences:* the section "Approval" of the decision template is the written form of this
-decision. The rule that names the approver for each part has no home yet; until it has one, the
-format guard checks only that every version records who approved it and when, as `<who>, YYYY-MM-DD`
-— `TODO` there is an error — and every version in this log is approved by Mariusz. Nothing yet
-settles who approves a decision whose scope spans parts with different approvers. This decision
-covers decisions only; approval of other foundation entries is set when their elements are designed;
-a glossary entry is accepted by the human deciding the change (WAY-10).
+*Rejected:* a field in every entry naming who is to approve it — the same name repeated, stale once
+the team changes; lists of decision-makers and of those consulted — nothing reads them.
 
 ### WAY-15/1 — What in a foundation is written by hand, and what is derived?
 
@@ -642,46 +621,37 @@ only its writer knows what it rests on.
 links — a missing one looks unneeded; research findings outside the environment facts —
 decisions about agents would have no fact to flag them.
 
-### WAY-18/1 — How are the history of decisions and what is in force kept apart?
+### WAY-18/1 — How is a product's decision log kept?
 
-The decision log holds every decision version and review record in the order it was written, and
-what is in force today is a view that a script generates from the log: the latest version of each
-number, and in place of a repealed decision a single line pointing to the version that repealed
-it. A link between entries is written at one end only, and the view shows it at the other.
+A product keeps all its decisions in one log, whatever they are about. The decision log holds every
+decision version and review record in the order it was written, and what is in force today is a view
+that a script generates from the log: the latest version of each number, and in place of a repealed
+decision a single line pointing to the version that repealed it. A link between entries is written at
+one end only, and the view shows it at the other; the one exception is a decision's level 1
+invariants, which its *Verification* names while each of them names the decision in *Derives from*.
 
 - **Change:** new decision
 - **Scope:** decisions
-- **Based on:** Python's decision process keeps the settled record apart from the current
-  description: "a PEP is considered a historical document rather than a living specification",
-  and "Formal documentation of the expected behavior should be maintained elsewhere, such as the
-  Language Reference" (PEP 1, https://peps.python.org/pep-0001/). Polish rules for consolidated
-  legal texts keep the place of a repealed provision with a pointer: its designation and the word
-  "repealed" are entered, with a note giving the title of the repealing act (Zasady techniki
-  prawodawczej, § 106, own translation,
-  https://www.senat.gov.pl/gfx/senat/userfiles/_public/k10/kancelaria/wydawnictwa/pdf/zasady_techniki.pdf).
-- **Relations:** related to WAY-05 · related to WAY-07 · related to WAY-15 · related to WAY-17
-- **Outranks:** none
-- **Verification:** level 1 — invariants: view-versions · view-links.
+- **Based on:** none
+- **Relations:** none
+- **Verification:** level 1 — invariants: view-versions · view-links. Level 2 for one log — an
+  agent compares the change with the decision:
+  - complies: a business rule and a technical constraint of one product stand in the same log
+    under one numbering; a product's existing architecture records stay a source, and a decision
+    recovered from them enters the one log;
+  - violates: a separate log for business decisions next to the technical one.
 - **Review when:** none
 - **Origin:** none
-- **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-16
+- **Approved by:** Mariusz, 2026-09-29
 
-*Rationale:* the history of a decision and the statement of what holds today serve different
-reads: whoever wants to change a decision needs its versions and reasons, while an agent checking
-a change works from what is in force and reaches the options rejected earlier through the
-history. One document edited in place loses the history; one document that only grows buries the
-current state. A mark written by hand at the other end of a link is the kind of step that goes
-missing, because nobody reopens an old entry when a new one refers to it, so each link is written
-once and the generated view shows both ends.
-*Rejected:* a single document edited in place — the history is lost and nothing shows what
-changed when; a log without a view — every reader reconstructs the current state by hand; marks
-written by hand at the other end of a link — they go missing.
-*Consequences:* the opening paragraph of the decision template, its rule that decision versions and
-review records are appended in the order they are written and its rule on who writes a relation
-are the written form of this decision. The view script does not exist yet; until it does, what is in force is read from the log as the
-latest version of each number. The end that writes a link is the entry that depends on the other
-(WAY-17), for relations between decisions as for links between elements.
+*Rationale:* what is in force and the history serve different reads — checking a change, and
+reaching the options rejected earlier; one log, because a collision is caught only between decisions
+in the set a change is checked against; a link is written once, because nobody reopens an old entry.
+*Rejected:* a single document edited in place — the history is lost; a log without a view — every
+reader reconstructs the current state by hand; marks written by hand at a link's other end — they go
+missing; separate logs for business and technical decisions — collisions between them go unseen; a
+log per approver — each version records who approved it (WAY-14); a field for an entry's topic —
+nothing reads it (WAY-05).
 
 ### WAY-19/1 — How are decisions numbered and versioned?
 
@@ -695,17 +665,11 @@ older one loses it — by a new version on the main branch, by an edit before it
 
 - **Change:** new decision
 - **Scope:** decisions
-- **Based on:** legislative drafting restates a changed provision whole and forbids a change
-  hidden in a new provision: under the Polish rules of legislative drafting, an amended provision
-  is cited "in its full new wording", and an amendment may not replace an old provision with a
-  new one "without indicating at the same time that this change is being made" (Zasady techniki
-  prawodawczej, §§ 87(1) and 86, own translation,
-  https://www.senat.gov.pl/gfx/senat/userfiles/_public/k10/kancelaria/wydawnictwa/pdf/zasady_techniki.pdf).
-- **Relations:** derives from WAY-02@3ffcbd46 · related to WAY-07 · related to WAY-18
-- **Outranks:** none
+- **Based on:** none
+- **Relations:** derives from WAY-02@3ffcbd46
 - **Verification:** level 1 — invariants: decision-heading-form · decision-version-sequence ·
-  decision-change-rationale. Level 2 for one number per question and for sentences answered in
-  passing — an agent compares the change with the decision:
+  log-entry-field-presence · log-entry-field-words. Level 2 for one number per question and for
+  sentences answered in passing — an agent compares the change with the decision:
   - complies: once on the main branch, a new rule for who approves a version of a decision is
     written as WAY-14/2; when a decision on a question arrives, an older decision that answered
     it in passing loses that sentence;
@@ -713,24 +677,14 @@ older one loses it — by a new version on the main branch, by an edit before it
     changed; the sentence stays in both decisions.
 - **Review when:** none
 - **Origin:** none
-- **Approver override:** none
 - **Approved by:** Mariusz, 2026-09-29
 
-*Rationale:* a permanent number lets references survive a change (WAY-02): a reference that
-relies on the binding part is flagged by its fingerprint, and the rest follow the decision. A new
-number for every change would force every reference to be rewired, or leave it pointing at a dead
-entry, and the current answer would be reached through a chain of replacements. Each version
-restates the decision whole, so no reader assembles it from pieces. A sentence answered in
-passing moves to the decision that now answers its question, because two entries answering one
-question drift apart, and a change to one of them hides a change to the other. The prefix keeps
-numbers of different products apart in references, and numbers carry no topic, so nothing is
-renumbered when topics shift.
-*Rejected:* a new number for every change, with the old entry marked as replaced — references
-must be rewired or stay with a dead entry; numbering by topic — topics move, and numbers would
-have to move with them.
-*Consequences:* the section "Numbers and versions" of the decision template and its rule on the
-prefix are the written form of this decision. The reasoning behind a decision is spread over its
-versions, so the view has to reach a decision's earlier versions through a history line.
+*Rationale:* a permanent number lets references survive a change (WAY-02); a version restates the
+decision whole, so no reader assembles it from pieces; a sentence answered in passing moves, because
+two entries answering one question drift apart; the product's prefix keeps numbers of different
+products apart in references.
+*Rejected:* a new number for every change, the old entry marked as replaced — references rewired or
+left on a dead entry; numbering by topic — topics move, and numbers would move with them.
 
 ### WAY-20/1 — What kinds of change can a decision undergo?
 
@@ -822,71 +776,22 @@ behind it is an invariant alone.
 - **Change:** new decision
 - **Scope:** decisions, invariants
 - **Based on:** none
-- **Relations:** related to WAY-04 · related to WAY-08 · related to WAY-12 · related to WAY-17
-- **Outranks:** none
+- **Relations:** none
 - **Verification:** level 2 — an agent compares the change with the decision:
-  - complies: "the product has no multiplayer" is a decision with its reason, and "no screen
-    offers a second player" is an invariant derived from it; "a saved game is never lost on
-    reload" is an invariant with a test;
+  - complies: "the product has no multiplayer" is a decision, and "no screen offers a second
+    player" an invariant derived from it; "a saved game is never lost on reload" is an invariant
+    with a test;
   - violates: a non-goal that a commit can break is left without a derived invariant; an
     invariant carries a rationale and rejected options.
 - **Review when:** none
 - **Origin:** none
-- **Approver override:** none
 - **Approved by:** Mariusz, 2026-09-27
 
-*Rationale:* the two are read differently: an invariant is checked mechanically on every commit,
-while a decision is weighed when a later choice is made. A checkable rule left only in a
-decision's prose escapes the gate, and a choice written only as an invariant loses its reasons.
-When a rule is both, each side goes where it is read: the choice and its reasons stay in the
-decision, and the checkable sentence becomes an invariant that names it.
+*Rationale:* an invariant is checked mechanically on every commit, a decision weighed when a later
+choice is made; a checkable rule left only in a decision's prose escapes the gate, and a choice
+written only as an invariant loses its reasons.
 *Rejected:* one kind of entry for both — either the gate reads prose or the reasons are lost;
 moving a checkable sentence out of its decision — the rule would be cut off from its reason.
-*Consequences:* the section "Decision or invariant" of the decision template, apart from its
-plan test, which belongs to WAY-36, and its last rule, which belongs to WAY-12, is the written form
-of this decision. An invariant derived from a decision is named by its identifier in the
-decision's *Verification* (WAY-12).
-
-### WAY-23/1 — How many decision logs does a product have?
-
-A product keeps all its decisions in one log, whatever they are about.
-
-- **Change:** new decision
-- **Scope:** decisions
-- **Based on:** long-lived document series keep different kinds of decisions, approved in
-  different ways, in one series: "Various contributors provide input to the RFC Series. These
-  contributors come from several different communities, each with its own defined process for
-  approving documents that will be published by the RFC Editor" (RFC 8729,
-  https://www.rfc-editor.org/rfc/rfc8729.html), and Python's series holds process documents next
-  to technical ones — "A Process PEP describes a process surrounding Python, or proposes a change
-  to (or an event in) a process" (PEP 1, https://peps.python.org/pep-0001/).
-- **Relations:** related to WAY-14 · related to WAY-18 · related to WAY-21
-- **Outranks:** none
-- **Verification:** level 2 — an agent compares the change with the decision:
-  - complies: a business rule and a technical constraint of one product stand in the same log
-    under one numbering; a product that arrives with a folder of architecture records keeps it as
-    a source and writes a decision recovered from it into its log when a task first touches the
-    parts that decision governs;
-  - violates: a separate log for business decisions next to the technical one.
-- **Review when:** none
-- **Origin:** none
-- **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-16
-
-*Rationale:* a collision between a product decision and a technical one is caught only when both
-are in the set a change is checked against; two logs each look consistent while contradicting
-each other. A topic needs no log of its own: the scope selects which decisions to check (WAY-21),
-and who approves follows from the parts in scope (WAY-14), so the reason other processes split
-their logs — different approvers — needs no second log. The log of this process is separate from
-the logs of the products built with it, because they are separate products.
-*Rejected:* separate logs for business and technical decisions — collisions between them go
-unseen; a field for the topic of an entry — nothing reads it (WAY-05).
-*Consequences:* the rule in the decision template that the log has no topical sections is the
-written form of this decision. Decision records a product already has when the process enters it
-are a source for inherited decisions, not a second log. The decisions of this process bind every
-product without standing in its log: a product reads them from the commit of the-way it pins
-(WAY-34), and which of them a task is checked against is set when the task cycle is designed
-(WAY-21).
 
 ### WAY-24/1 — How is a decision that rests on a prediction reviewed?
 
@@ -943,85 +848,49 @@ precedence — by a new version on the main branch, by an edit before it.
 - **Change:** new decision
 - **Scope:** decisions, task-cycle
 - **Based on:** none
-- **Relations:** related to WAY-07 · related to WAY-14 · related to WAY-20
-- **Outranks:** none
+- **Relations:** none
 - **Verification:** level 1 — invariants: narrows-pairs. Level 2 for a collision with no precedence
   — an agent compares the change with the decision:
   - complies: an agent meets two applicable decisions that pull opposite ways, finds no
     precedence between them, stops and asks for it;
   - violates: an agent settles the collision in favour of the newer decision; an agent infers
-    that A outranks C because A outranks B and B outranks C.
+    that A prevails over C because A narrows B and B narrows C.
 - **Review when:** none
 - **Origin:** none
-- **Approver override:** none
 - **Approved by:** Mariusz, 2026-09-29
 
-*Rationale:* a ranked list of principles claims an order between pairs that never meet, and
-every new principle has to be placed against all the others; pairs record only what someone
-actually weighed. Nothing follows along a chain, because A over B and B over C were weighed in
-different situations and say nothing about A and C. An agent that settles an unrecorded
-collision itself makes a trade-off no human made. One person records the precedence, so that one
-person answers for the trade-off when it is questioned.
-*Rejected:* one ranked list of principles, as in organisations that keep no more than seven
-tenets "in descending order of priority" (AWS,
-https://aws.amazon.com/blogs/enterprise-strategy/tenets-supercharging-decision-making/) — an
-order claimed for pairs nobody weighed; levels of authority over whole groups of decisions — a
-collision inside a level stays unresolved; the newest decision wins — the date of a decision is
-not its weight.
-*Consequences:* the field *Outranks* and the rules on precedence in the decision template — in
-"Relations and precedence" and in the sentence on precedence between principles — are the
-written form of this decision. When a new decision is less important than an existing one, the
-existing one gets the new number in its *Outranks*: by a field change on the main branch, by an
-edit before it. `narrows` stays for a decision that deliberately goes against another in a
-narrower area; *Outranks* is for two decisions that both apply. What the agent does once it has
-stopped is set by the rules for a change that contradicts a decision.
+*Rationale:* pairs record only what someone actually weighed; nothing follows along a chain, because
+A over B and B over C were weighed in different situations; an agent that settles an unrecorded
+collision makes a trade-off no human made, and the human who records it answers for it.
+*Rejected:* one ranked list of principles (AWS tenets) — an order claimed for pairs nobody weighed;
+levels of authority over whole groups of decisions — a collision inside a level stays unresolved;
+the newest decision wins — the date of a decision is not its weight.
 
 ### WAY-26/1 — How are trade-off principles and non-goals written?
 
 Each trade-off principle is a decision of its own, whose binding sentence says which of two good
 things is chosen when they conflict and whose rationale names the problem it solves. Each
-non-goal is a decision of its own that says what the product does not do and why; non-goals
-exist only at product level, and a task's exclusions stay in the task's plan unless they outlive
-the task.
+non-goal is a decision of its own that says what the product does not do and why.
 
 - **Change:** new decision
 - **Scope:** decisions, task-cycle
-- **Based on:** a principle guides only when both sides are worth having: principles of this kind
-  weigh "two things that could be entirely good choices" (The Uncertainty Project,
-  https://www.theuncertaintyproject.org/tools/even-over-statements), and "A tenet takes a stand by
-  declaring that a team cares more about one thing than another" (Kindel,
-  https://blog.kindel.com/2020/02/10/tenets/). Exclusions made for one piece of work carry that
-  work's reason: "No-gos — Anything specifically excluded from the concept: functionality or use
-  cases we intentionally aren't covering to fit the appetite or make the problem tractable"
-  (Shape Up, https://basecamp.com/shapeup/1.5-chapter-06).
-- **Relations:** related to WAY-04 · related to WAY-11 · related to WAY-22 · related to WAY-25
-- **Outranks:** none
+- **Based on:** none
+- **Relations:** none
 - **Verification:** level 2 — an agent compares the change with the decision:
-  - complies: "When speed of release conflicts with completeness of a feature, we choose speed",
-    as an entry of its own, with a rationale naming the problem it solves; "The product has no
-    multiplayer", with its reason, as an entry of its own;
+  - complies: "When speed of release conflicts with completeness, we choose speed", an entry of its
+    own whose rationale names the problem; "The product has no multiplayer", with its reason, as an
+    entry of its own;
   - violates: a principle naming one good thing only ("we value quality"); several principles or
-    several non-goals in one entry; an exclusion that ends with its task written into the log as
-    a product non-goal.
+    several non-goals in one entry.
 - **Review when:** none
 - **Origin:** none
-- **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-16
+- **Approved by:** Mariusz, 2026-09-29
 
-*Rationale:* a principle rules later choices only when it names what it gives up; a sentence in
-favour of one good thing decides nothing. The rationale names the problem, so that a later reader
-can tell when the principle has stopped serving it. Each principle and each non-goal is an entry
-of its own, so that each one changes on its own, with its own reason, and so that precedence can
-be recorded between principles pair by pair (WAY-25). A task's exclusions end with the task,
-while a product's non-goals hold until they are changed, so only the latter belong in the log.
+*Rationale:* a principle rules later choices only when it names what it gives up; the rationale names
+the problem, so a later reader can tell when the principle stops serving it; one entry each, so each
+changes on its own and precedence is recorded pair by pair (WAY-25).
 *Rejected:* several principles or non-goals in one entry — a change to one flags them all, and no
-precedence can be recorded between them; every task exclusion in the log — most expire with their
-task and bury the product's non-goals.
-*Consequences:* the section "Trade-off principles and non-goals" of the decision template, apart
-from its sentence on precedence between principles, which belongs to WAY-25, is the written form
-of this decision. A non-goal that a commit can break gets an invariant derived from it (WAY-22).
-A task's exclusion that turns out to outlive the task comes back through the return step (WAY-11)
-as a non-goal. A task's plan has no home in the process yet (WAY-01).
+precedence can be recorded between them.
 
 ### WAY-27/1 — Where may this repository point for its reasoning?
 
@@ -1073,7 +942,7 @@ tasks. Decisions are recovered only when a task touches the parts they govern.
   trace-checking one spec" (MongoDB engineering blog,
   https://www.mongodb.com/company/blog/engineering/conformance-checking-at-mongodb-testing-our-code-matches-our-tla-specs).
 - **Relations:** related to WAY-01 · related to WAY-04 · related to WAY-11 · related to WAY-13 ·
-  related to WAY-15 · related to WAY-23
+  related to WAY-15
 - **Outranks:** none
 - **Verification:** level 2 — an agent compares the change with the decision:
   - complies: on entering a product, the part map comes first, and the invariants of a critical
@@ -1102,7 +971,7 @@ break there is found only when a task happens to touch them.
 sets, recording what was searched and what was found for or against keeping it, which the invariants
 template carries as the field *Recovered*. A decision recovered for a task is written as the section
 "Inherited decisions" of the decision template says, and decision records the product already has
-are read as sources when their parts are touched (WAY-23). No glossary is written in bulk when the
+are read as sources when their parts are touched. No glossary is written in bulk when the
 process enters a product: a word takes an entry with the entries written when the process enters it
 that stand on it, the return step brings the rest, and candidates an agent finds in the product's
 documents or its rule files for agents become questions to a human at once, with no list of them
@@ -1123,7 +992,7 @@ never into the entry.
   https://arxiv.org/html/2504.20781v3). A reconstructed record is easily taken for a real one: "The
   retroactive ADR has the form of the decision record but not the substance" (Catio,
   https://www.catio.tech/blog/architecture-decision-record).
-- **Relations:** related to WAY-10 · related to WAY-23 · related to WAY-28
+- **Relations:** related to WAY-10 · related to WAY-28
 - **Outranks:** none
 - **Verification:** level 1 — invariants: inherited-origin-form · inherited-rationale-source. Level
   2 for the agent's role — an agent compares the change with the decision:
@@ -1307,8 +1176,7 @@ version of the process enters a product only through a task in the product that 
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, relation-model,
   task-cycle
 - **Based on:** none
-- **Relations:** related to WAY-01 · related to WAY-09 · related to WAY-16 · related to WAY-21 ·
-  related to WAY-23
+- **Relations:** related to WAY-01 · related to WAY-09 · related to WAY-16 · related to WAY-21
 - **Outranks:** none
 - **Verification:** level 2 — an agent compares the change with the decision; the invariants of
   this decision belong to each product's foundation, since no commit of the-way decides them:
@@ -1499,7 +1367,7 @@ Markdown file of fixed shape in `foundations/`.
 - **Change:** new decision
 - **Scope:** part-map
 - **Based on:** none
-- **Relations:** derives from WAY-04@f07bb569 · related to WAY-15 · related to WAY-23
+- **Relations:** derives from WAY-04@f07bb569 · related to WAY-15
 - **Outranks:** none
 - **Verification:** level 1 — invariants: map-entry-kinds · map-section-kinds · part-map-file ·
   flow-part-names.
@@ -2327,7 +2195,7 @@ in front of them.
 - **Relations:** derives from WAY-28@94d8ef12 · derives from WAY-22@dcf291ea ·
   derives from WAY-17@b1e26133 · related to WAY-04 · related to WAY-05 · related to WAY-07 ·
   related to WAY-08 · related to WAY-10 · related to WAY-11 · related to WAY-16 ·
-  related to WAY-19 · related to WAY-23 · related to WAY-29 · related to WAY-37 ·
+  related to WAY-19 · related to WAY-29 · related to WAY-37 ·
   related to WAY-38 · related to WAY-47 · related to WAY-54 · related to WAY-55 ·
   related to WAY-56 · related to WAY-57
 - **Outranks:** none
@@ -2477,7 +2345,7 @@ names its bound or tolerance, statistic and population.
 - **Based on:** none
 - **Relations:** derives from WAY-59@2d716c3f · derives from WAY-22@dcf291ea ·
   derives from WAY-56@06700ffd · related to WAY-05 · related to WAY-07 ·
-  related to WAY-10 · related to WAY-12 · related to WAY-23 · related to WAY-31 ·
+  related to WAY-10 · related to WAY-12 · related to WAY-31 ·
   related to WAY-34 · related to WAY-38 · related to WAY-51 · related to WAY-53 ·
   related to WAY-57 · related to WAY-58 · related to WAY-61
 - **Outranks:** none
@@ -2979,7 +2847,7 @@ word not given it, as an error.
   invariant-entry-field-presence · invariant-entry-field-words · invariant-entry-merge-todo ·
   fact-entry-field-presence · fact-entry-field-words · fact-entry-merge-todo ·
   glossary-entry-field-presence · glossary-entry-field-words · glossary-entry-merge-todo ·
-  decision-verification-level · decision-change-rationale · decision-change-kind ·
+  decision-verification-level · decision-change-kind ·
   review-when-form · review-next-check. Level 2
   for what `none` states — an agent compares the change with the decision:
   - complies: an invariant whose author searched the log and found no decision it derives from
@@ -3862,7 +3730,7 @@ none of them again. In the-way, whose product is the process, the two are one fi
 - **Change:** new decision
 - **Scope:** glossary
 - **Based on:** none
-- **Relations:** related to WAY-04 · related to WAY-23 · related to WAY-34 · related to WAY-93
+- **Relations:** related to WAY-04 · related to WAY-34 · related to WAY-93
 - **Outranks:** none
 - **Verification:** level 1 — invariants: glossary-process-terms. Level 2 for which glossary holds
   a word — an agent compares the change with the decision:
@@ -3880,7 +3748,7 @@ product pinned to the-way, and the words of its own domain. Defined again in eac
 of the process would drift apart between products and from the templates that use them; defined in
 the-way, they reach every product through the pin (WAY-34), as a statute takes the terms of the code
 it builds on instead of defining them afresh, and as the decisions of the-way bind a product without
-standing in its log (WAY-23). In the-way the domain is the process, so the two are one.
+standing in its log (WAY-34). In the-way the domain is the process, so the two are one.
 *Rejected:* none considered
 *Consequences:* WAY-04's "a glossary of product terms" names, for a product, the words of its domain,
 and for the-way the words of the process. The guard of a product's glossary does not read the

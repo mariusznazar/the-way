@@ -203,15 +203,12 @@ class Fields(GuardTestCase):
     def test_rationale_for_change_in_later_versions(self):
         self.assertFails(log(version(1), version(1, ver=2, rationale="Rationale")),
                          "field *Rationale for change* is missing")
-        self.assertRecords(line("check_change_rationale", "fail", "decision-change-rationale/1",
-                                "line 23: field *Rationale for change* is missing"))
 
     def test_todo_rationale_for_change_passes_with_a_warning(self):
         code, output = self.guard(log(version(1), version(1, ver=2).replace(
             "*Rationale for change:* players lose trust.", "*Rationale for change:* TODO — ask Anna")))
         self.assertEqual(code, 0, output)
         self.assertIn("decisions.md:38: warning: *Rationale for change* is `TODO`", output)
-        self.assertRecords(line("check_change_rationale", "pass", "decision-change-rationale/1"))
         self.assertEqual([item for item in self.lines if item["verdict"] != "pass"], [])
 
     def test_none_rationale_for_change_is_an_error(self):
@@ -219,8 +216,6 @@ class Fields(GuardTestCase):
             "*Rationale for change:* players lose trust.", "*Rationale for change:* none")),
             "decisions.md:38: error: *Rationale for change* is `none`")
         self.assertRecords(line("check_fields", "fail", "log-entry-field-words/1",
-                                "line 38: *Rationale for change* is `none`"))
-        self.assertRecords(line("check_change_rationale", "fail", "decision-change-rationale/1",
                                 "line 38: *Rationale for change* is `none`"))
 
 
@@ -622,7 +617,6 @@ class Record(GuardTestCase):
             line("check_headings", "pass", "decision-version-sequence/1"),
             line("check_fields", "pass", "log-entry-field-presence/1"),
             line("check_fields", "pass", "log-entry-field-words/1"),
-            line("check_change_rationale", "pass", "decision-change-rationale/1"),
             line("check_changes", "pass", "decision-change-kind/1"),
             line("check_bindings", "pass", "binding-sentence-count/1"),
             line("check_bindings", "pass", "binding-sentence-words/1"),
@@ -800,7 +794,7 @@ class RecordPerCommand(InGit):
     LOG_ALONE = [
         "binding-sentence-count/1", "binding-sentence-words/1", "decision-approval-record/1",
         "decision-binding-across-versions/1", "decision-change-kind/1",
-        "decision-change-rationale/1", "decision-heading-form/1", "decision-verification-level/1",
+        "decision-heading-form/1", "decision-verification-level/1",
         "decision-version-sequence/1", "inherited-origin-form/1", "log-entry-field-presence/1",
         "log-entry-field-words/1", "log-reference-target/1", "narrows-pairs/1",
         "relation-fingerprint-presence/1", "relation-type/1", "repeal-binding-sentences/1",
@@ -1544,7 +1538,7 @@ class OwnLog(unittest.TestCase):
         self.assertEqual(sorted({item["invariant"] for item in lines if item["invariant"]}), [
             "binding-sentence-count/1", "binding-sentence-words/1", "decision-approval-record/1",
             "decision-approver/1", "decision-binding-across-versions/1",
-            "decision-change-kind/1", "decision-change-rationale/1", "decision-example-numbers/1",
+            "decision-change-kind/1", "decision-example-numbers/1",
             "decision-heading-form/1", "decision-verification-level/1",
             "decision-version-sequence/1", "inherited-origin-form/1", "log-entry-field-presence/1",
             "log-entry-field-words/1", "log-reference-target/1", "narrows-pairs/1",

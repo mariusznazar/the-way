@@ -13,7 +13,7 @@ marks of where a value comes from, the terms of the glossary — stand in
 ## Where entries go
 
 - Every decision version and review record is appended at the end of `foundations/decisions.md`,
-  in the order it is written (WAY-18). The log has no topical sections (WAY-23).
+  in the order it is written (WAY-18). The log has no topical sections (WAY-18).
 - The log holds **decision versions** and **review records** (WAY-18, WAY-24).
 - An entry on the main branch is never edited; a fix to it, however small, is a new version.
   Before the main branch, an entry is edited in place, and an edit that changes its meaning is
@@ -177,7 +177,7 @@ used when a different, more specific decision deliberately goes against this one
 
 - Level 1 — invariants derived from the decision, each named by the identifier of its entry in
   the product's invariants file; every entry named names the decision in *Derives from* (WAY-12,
-  WAY-17).
+  WAY-17, WAY-18).
 - Level 2 — an agent compares a change with the decision, using a pair of examples:
   `complies:` and `violates:` (WAY-12).
 - Level 3 — a human assessment, leaving a trace of who and when (WAY-12).
@@ -210,7 +210,8 @@ A decision checked at level 2 alone:
 - Precedence between principles is recorded pair by pair, as between any two decisions: the one
   that prevails names the other as `narrows`. There is no single ranked list (WAY-25).
 - A non-goal is an ordinary decision, one per non-goal: "The product does not do X", with the
-  reason. Non-goals live only at product level; a task's exclusions live in its plan (WAY-26).
+  reason (WAY-26). Non-goals live only at product level; a task's exclusions live in its plan
+  (WAY-36).
   A non-goal that can be checked on a commit gets a derived invariant (WAY-22).
 
 ## Review

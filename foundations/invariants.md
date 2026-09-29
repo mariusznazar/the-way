@@ -118,7 +118,6 @@ The decision log begins with every line it held on {fork-point}, unchanged and i
 - **Derives from:** WAY-07@acacb194
 - **Part:** decisions
 - **Correction:** none
-- **Recovered:** none
 
 ## log-versions-added-per-number/1
 
@@ -129,7 +128,6 @@ Against {fork-point}, the decision log gains at most one version of each number.
 - **Derives from:** WAY-07@acacb194
 - **Part:** decisions
 - **Correction:** none
-- **Recovered:** none
 
 ## log-merge-copies/1
 
@@ -311,7 +309,6 @@ Every decision version in the decision log records in *Approved by* who approved
 - **Derives from:** WAY-14@e8ef4843
 - **Part:** decisions
 - **Correction:** none
-- **Recovered:** none
 
 ## decision-approver/1
 
@@ -322,7 +319,6 @@ Every decision version in the decision log names Mariusz in *Approved by*.
 - **Derives from:** WAY-14@e8ef4843
 - **Part:** decisions
 - **Correction:** none
-- **Recovered:** none
 
 ## derived-file-content/1
 
@@ -374,10 +370,9 @@ The view of the decisions in force holds only the latest version of every number
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-18@01c06a1f
+- **Derives from:** WAY-18@8c477ea2
 - **Part:** every
 - **Correction:** none
-- **Recovered:** none
 
 ## view-links/1
 
@@ -385,10 +380,9 @@ The view of the decisions in force shows every link the decision log writes at b
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-18@01c06a1f
+- **Derives from:** WAY-18@8c477ea2
 - **Part:** every
 - **Correction:** none
-- **Recovered:** none
 
 ## decision-heading-form/1
 
@@ -399,7 +393,6 @@ The heading of every decision version in the decision log has the form `### <pre
 - **Derives from:** WAY-19@ab65670f
 - **Part:** decisions
 - **Correction:** none
-- **Recovered:** none
 
 ## decision-version-sequence/1
 
@@ -410,18 +403,6 @@ The versions of each number in the decision log are consecutive.
 - **Derives from:** WAY-19@ab65670f
 - **Part:** decisions
 - **Correction:** none
-- **Recovered:** none
-
-## decision-change-rationale/1
-
-Every decision version after the first gives a rationale for the change, or holds `TODO` in *Rationale for change*.
-
-- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-19@ab65670f · WAY-71@c32828c9
-- **Part:** decisions
-- **Correction:** none
-- **Recovered:** none
 
 ## decision-change-kind/1
 
@@ -1546,7 +1527,7 @@ Every decision version and review record of the decision log carries every field
 
 - **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-71@c32828c9
+- **Derives from:** WAY-19@ab65670f · WAY-71@c32828c9
 - **Part:** decisions
 - **Correction:** none
 - **Recovered:** none
@@ -1557,7 +1538,7 @@ No field of a decision version or review record of the decision log holds `none`
 
 - **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-71@c32828c9
+- **Derives from:** WAY-19@ab65670f · WAY-71@c32828c9
 - **Part:** decisions
 - **Correction:** none
 - **Recovered:** none
