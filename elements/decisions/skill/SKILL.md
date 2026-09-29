@@ -41,9 +41,9 @@ decision adds to each.
   known, or the decider's own motive, is no fact about the world, and the template's fields say
   where each stands.
 - *Verification*: try first to state an invariant — a sentence about the product that is false on
-  a commit which breaks this decision — and take level 2 or 3 only for what no such sentence
-  covers. Each invariant level 1 names is written through `record-invariant` in step 4.4.
-- `none considered` in *Rejected*, like `none`, is the human's statement.
+  a commit which breaks this decision — before choosing levels by the template's "Verification".
+  Each invariant level 1 names is written through `record-invariant` in step 4.4.
+- `none considered` in *Rejected* is the human's statement.
 - *Approved by* reads `on acceptance` in the draft.
 
 ## 4. Ask, show, write

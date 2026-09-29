@@ -45,7 +45,8 @@ part map adds to each.
   the repository. Propose a pattern together with the files it claims and the files it takes from
   another part.
 - *Depends on*: write what the part may depend on, not what the code reaches for today. Where the
-  two differ, the difference becomes a row of the list of known violations, shown in step 4.
+  two differ, write the difference as the template's "Known violations" says, and show it in
+  step 4.
 - Failure modes come from the human: ask what fails, what damage it does, how severe it is and
   what detects it before release. A criticality dictated by hand is a question about failure
   modes.
@@ -65,5 +66,5 @@ part map adds to each.
 
 A product with no map gets its parts written one at a time, by the steps above, until the format guard
 reports every file git tracks assigned to a part or left out on purpose. What the code holds
-against the map at that moment goes onto the list of known violations once, and only then
-(WAY-28, WAY-51).
+against the map at that moment is then written as WAY-51 says of the state a product is in when
+this process enters it (WAY-28).

@@ -30,13 +30,14 @@ invariant adds to each.
   human chooses becomes an entry (WAY-28).
 - Apply the test in the decision template's section "Decision or invariant": a rule that records
   a choice goes through `record-decision` first, and the invariant is written as derived from it.
-  A reason found behind recovered behaviour is not recovered as a decision in this change; one the
-  human gives is (WAY-28).
+  A reason found behind recovered behaviour is not recovered as a decision in this change (WAY-28);
+  one the human gives is (`TODO — decision pending: which decision sets that a reason the human
+  gives for recovered behaviour is written as a decision`).
 - When the rule holds more than one sentence can state, propose one entry per sentence; the
   template says what one sentence may join.
 - Search the file, including its withdrawn identifiers, for an entry this rule would change:
-  found — a change, split, merge or withdrawal, unless it protects a different aspect of the same
-  thing, which takes its own identifier; not found — a new identifier.
+  found — a change, split, merge or withdrawal, or an entry of its own where the template's "Where
+  entries go" gives one; not found — a new identifier.
 - The search of the foundation also looks for a decision whose level 1 verification calls for this
   rule, a flow of the part map carrying its sentence, a failure mode it detects, and a named link
   whose entry's binding part has changed, to recheck and carry its new fingerprint (WAY-66).

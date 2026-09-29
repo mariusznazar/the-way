@@ -32,9 +32,8 @@ environment fact adds to each.
   method, or a fact left `unchecked` because its probe ran on a release outside *Holds for*
   (WAY-91).
 - Put it through the template's "Which facts are written" and "The sentence", and send what
-  fails them where they say: a citation stays quoted in *Based on*; a fact that is only a reason
-  leaves an invariant's *Rests on* through `record-invariant`; a study's transfer to this
-  process's agents goes to *Review when* of each decision citing it, through `record-decision`.
+  fails them where they say — into an invariant through `record-invariant`, into a decision
+  through `record-decision`.
 - A requirement of a catalogue nothing has adopted goes to the human with the question the
   template's "Catalogues and obligations" gives, before any entry; for a binding rule, that
   question is asked in step 4. While that section holds whether "the rule applies" is a fact as
@@ -47,7 +46,8 @@ environment fact adds to each.
   goes through `update-part-map` (WAY-87).
 - A case needing a pending line to fill a field stops the entry, for the human and
   `record-decision`, before it is written; one about the check alone — the method, or the
-  deliberate break — travels as an open question in step 4 instead.
+  deliberate break — travels as an open question in the instruction handed on after step 4.4
+  instead.
 
 ## 3. Draft
 
@@ -71,17 +71,17 @@ environment fact adds to each.
   moves, through `record-invariant`; and each decision naming it, through `record-decision`. A fact
   left with nothing naming it goes as WAY-88 and the template's "Withdrawn identifiers" say.
 - After step 4.4, where the method is a command, hand the human an instruction for another agent:
-  the entry, its method, and the checks citing a retired identifier or raised version — never the
-  conversation itself; a withdrawal hands on the checks still citing the withdrawn identifier.
+  the entry, its method, the checks citing a retired identifier or raised version, and any open
+  question about the check — never the conversation itself; a withdrawal hands on the checks still citing the withdrawn identifier.
   Where the method is a path, the human re-reads the source; write their verdict into
   `foundations/human_verdicts.md` in the row `elements/common/rules.md` gives, the first row giving
   that file to a part through `update-part-map`. `TODO` hands on nothing.
 
 ## A failed run and a withdrawal
 
-- A failed watch opens a review, not a verdict of falsehood: show the human the old passage beside
-  what stands now, with the decisions naming the fact; they decide whether it moves to the new
-  edition, stays on the old, or is withdrawn as shown false.
+- On a failed watch, show the human the old passage beside what stands now, with the decisions
+  naming the fact; they decide whether it moves to the new edition, stays on the old, or is
+  withdrawn as shown false.
 - A failed probe: show its output beside the passage; whether the world changed, the probe is
   wrong, or the machine runs a release outside *Holds for* is theirs to settle, and a wrong probe
   goes back to its author. A human re-read giving `fail` is handled the same way as a failed

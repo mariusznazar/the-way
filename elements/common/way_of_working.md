@@ -26,15 +26,19 @@ resolving its own directory (WAY-34).
   not, stop
   (`TODO — decision pending: which decision sets that a product starts an element's file only on
   the human's word`). If so, the same change gives the new file to a part of the map through
-  `update-part-map`, and where the product has no part map, `update-part-map` writes it first
-  (WAY-44).
+  `update-part-map` (WAY-44), and where the product has no part map, `update-part-map` writes it
+  first (WAY-28, for a product the process enters;
+  `TODO — decision pending: which decision sets that the part map is written before another
+  element's first file`).
 
 ## 2. Search the foundation
 
 Once the skill has settled what the entry is, search the whole foundation for entries it touches
 that no written link joins to it — not only those a link, a shared *Scope* or a shared *Part*
 leads to (WAY-33). Read each entry whole: a decision's *Rejected* holds an option already weighed
-and refused, and nowhere else says so (WAY-33). The search also asks:
+and refused, and nowhere else says so
+(`TODO — decision pending: which decision sets that the search reads a decision's *Rejected*`).
+The search also asks:
 
 - whether the entry uses a glossary term in another meaning than its entry gives, or spells out a
   term's definition instead of using the term: a paraphrase is rewritten to the term, and another
@@ -56,8 +60,10 @@ looks for in its element.
   takes it only as read there (WAY-80 for the source of a fact and of a citation;
   `TODO — decision pending: which decision sets that any other value the source does not give is
   asked for, never taken from memory`).
-- A field its source is silent on is a question in step 4, never a `none` the agent writes; what
-  stays open after step 4 is written as `rules.md` gives it (WAY-71).
+- A field its source is silent on is a question in step 4, never a `none` the agent writes
+  (`TODO — decision pending: which decision sets that a field its source is silent on is asked
+  about before anything is written in it`); what stays open after step 4 is written as `rules.md`
+  gives it (WAY-71).
 - A value that a closed list of the template does not hold is a question in step 4, never the
   nearest value on the list with a reason why it will do; the list grows as the template says
   (`TODO — decision pending: which decision sets that a value off a closed list is a question
