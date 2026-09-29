@@ -531,7 +531,21 @@ def check_headings(entries, text, rules, prefix, report):
     return numbers, versions
 
 
+# Fields a decision version may still carry that the form does not hold, with what stands in their
+# place: precedence is a relation `narrows` (WAY-25), the approver is who *Approved by* names
+# (WAY-14), and what a decision forces on later work stands in a binding sentence or a field
+# (WAY-05).
+DROPPED_FIELDS = {
+    "Outranks": "the decision that prevails names the other in *Relations* as `narrows`",
+    "Approver override": "*Approved by* names who approved the version",
+    "Consequences": "what a decision forces on later work stands in a binding sentence or a field",
+}
+
+
 def check_fields(entries, rules, prefix, report):
+    """Every field of the form is present, and holds `none` or `TODO` only where the table of
+    states gives it that word (WAY-71). *Outranks*, *Approver override* and *Consequences* are
+    reported with what stands in their place."""
     # invariant: log-entry-field-presence/1
     # invariant: log-entry-field-words/1
     check, presence, words = "check_fields", "log-entry-field-presence/1", "log-entry-field-words/1"
@@ -557,6 +571,10 @@ def check_fields(entries, rules, prefix, report):
             elif value == "none" and name not in takes_none:
                 report.error(line, "*%s* is `none`" % name, check, (words,))
         if entry.kind == "version":
+            for name, (value, line) in entry.fields.items():
+                if name in DROPPED_FIELDS and name not in names:
+                    report.error(line, "%s: *%s* is not a field of the form; %s"
+                                 % (label_of(entry, prefix), name, DROPPED_FIELDS[name]), check)
             for name, renamed in rules.renamed_after_first.items():
                 wrong = renamed if entry.version == 1 else name
                 if wrong in entry.fields:

@@ -622,7 +622,8 @@ class Record(GuardTestCase):
         code, output = self.guard(log(version(1, outranks="ABC-02"), version(2, outranks="ABC-01")))
         self.assertEqual(code, 1)
         self.assertIn("decisions.md:13: error: ABC-01 and ABC-02 outrank each other\n", output)
-        self.assertTrue(output.endswith("1 error(s), 0 warning(s)\n"), output)
+        # The other two errors are the field *Outranks* itself, which the form no longer holds.
+        self.assertTrue(output.endswith("3 error(s), 0 warning(s)\n"), output)
 
     def test_each_verdict_stands_at_a_check_citing_its_invariant(self):
         self.guard(log(version(1, outranks="ABC-02", review_when="next year", approved="Anna"),
@@ -1188,6 +1189,17 @@ class SlimForm(GuardTestCase):
     def test_a_version_without_any_dropped_field_passes(self):
         self.assertPasses(log(version(1, omit=DROPPED), version(2, omit=DROPPED)))
 
+    def test_a_dropped_field_is_no_field_of_the_form(self):
+        texts = {"Outranks": version(1, outranks="none"),
+                 "Approver override": version(1, override="none"),
+                 "Consequences": version(1).replace("*Rejected:*",
+                                                    "*Consequences:* more tests.\n*Rejected:*")}
+        for name, text in texts.items():
+            with self.subTest(name):
+                self.assertFails(log(text), "ABC-01/1: *%s* is not a field of the form; " % name)
+                self.assertEqual([item["invariant"] for item in self.lines
+                                  if item["verdict"] == "fail"], [None])
+
     def test_a_later_version_names_its_kind_alone(self):
         for kind in NEW_KINDS:
             binding = {"unchanged sentences": BINDING, "challenge": BINDING,
@@ -1290,7 +1302,6 @@ class RulesFromTheTemplate(unittest.TestCase):
         start = text.index("## Binding sentences\n")
         end = text.index("\n## ", start + 1)
         text = text[:start] + change(text[start:end]) + text[end:]
-        text = re.sub(r"^## What the format guard checks\n.*?(?=^## |\Z)", "", text, flags=re.M | re.S)
         with tempfile.TemporaryDirectory() as directory:
             path = os.path.join(directory, "template.md")
             with open(path, "w", encoding="utf-8", newline="\n") as handle:
@@ -1312,14 +1323,17 @@ class RulesFromTheTemplate(unittest.TestCase):
 
 
 class OwnLog(unittest.TestCase):
-    """The entries of the-way's log still carry two things that are not in the form, which the
-    guard reports in two places only: relations `related to` and a kind of change followed by
-    `previous:`. Once the entries are rewritten in the new form, the log passes with no error."""
+    """The entries of the-way's log still carry what is not in the form, which the guard reports
+    in three places only: relations `related to`, a kind of change followed by `previous:`, and
+    the fields *Outranks*, *Approver override* and *Consequences*. Once the entries are rewritten
+    in the new form, the log passes with no error."""
 
     OLD_FORM = (re.compile(r": [A-Z]+-\d{2,}/\d+: relation `related to [A-Z]+-\d{2,}` is not of a "
                            r"known type$"),
                 re.compile(r": [A-Z]+-\d{2,}/\d+: `[a-z ]+ · previous: [A-Z]+-\d{2,}/\d+` is not a "
-                           r"kind of change$"))
+                           r"kind of change$"),
+                re.compile(r": [A-Z]+-\d{2,}/\d+: \*(?:Outranks|Approver override|Consequences)\* "
+                           r"is not a field of the form; "))
 
     def test_the_way_log_holds_no_error_but_the_old_form(self):
         output = io.StringIO()
@@ -1333,7 +1347,7 @@ class OwnLog(unittest.TestCase):
         self.assertEqual([item for item in errors
                           if not any(form.search(item) for form in self.OLD_FORM)], [])
         self.assertEqual(code == 1, bool(errors))
-        self.assertEqual(sorted({item["invariant"] for item in lines}), [
+        self.assertEqual(sorted({item["invariant"] for item in lines if item["invariant"]}), [
             "binding-sentence-count/1", "binding-sentence-words/1", "decision-approval-record/1",
             "decision-approver/1", "decision-binding-across-versions/1",
             "decision-change-kind/1", "decision-change-rationale/1", "decision-example-numbers/1",
