@@ -467,18 +467,24 @@ def template_paths(templates=None):
 
 
 def common_paths(common=None):
-    """The Markdown files of the part the elements share, standing directly in its directory: the
-    one given, or `elements/common/` beside this script's directory (WAY-95, WAY-98, WAY-99); none
-    for `False`. Its code is not searched: the rules of a use and of a count are written for
-    prose."""
+    """The Markdown files git tracks in the part the elements share, standing directly in its
+    directory: the one given, or `elements/common/` beside this script's directory (WAY-95, WAY-98,
+    WAY-99); none for `False`. Where the directory lies in no repository git can read, the files
+    on disk stand in their place. Its code is not searched: the rules of a use and of a count are
+    written for prose."""
     if common is False:
         return []
     directory = COMMON if common is None else common
     if not os.path.isdir(directory):
         return []
-    return sorted(os.path.join(directory, name) for name in os.listdir(directory)
-                  if os.path.isfile(os.path.join(directory, name))
-                  and name.lower().endswith((".md", ".markdown")))
+    code, listing = shared.git(["ls-files", "-z", "--", "."], directory)
+    if code == 0:
+        names = [name for name in listing.split("\0") if name and "/" not in name]
+    else:
+        names = [name for name in os.listdir(directory)
+                 if os.path.isfile(os.path.join(directory, name))]
+    return sorted(os.path.join(directory, name) for name in names
+                  if name.lower().endswith((".md", ".markdown")))
 
 
 def inside(path, top):

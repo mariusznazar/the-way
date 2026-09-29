@@ -15,6 +15,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+import unittest.mock
 
 sys.dont_write_bytecode = True
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -63,7 +64,7 @@ def invariant(identifier="saving-check", sentence="Every run ends with its game 
     return "\n".join(["## %s/1" % identifier, "", sentence, "",
                       "- **Method:** docs/review.md", "- **Rests on:** none",
                       "- **Derives from:** WAY-01@4dd7fb86", "- **Part:** saving",
-                      "- **Correction:** none", "- **Recovered:** none"])
+                      "- **Correction:** none"])
 
 
 def invariants(*entries):
@@ -76,7 +77,7 @@ def decision(version=1, binding="A saved game is written to a save slot of the p
              rationale="The player owns the game."):
     return "\n".join(["### WAY-01/%d — Where does a saved game go?" % version, "", binding, "",
                       "- **Change:** %s" % ("new decision" if version == 1 else
-                                            "reword · previous: WAY-01/%d" % (version - 1)),
+                                            "new wording"),
                       "- **Scope:** saving", "",
                       ("*Rationale:* " if version == 1 else "*Rationale for change:* ") + rationale])
 
@@ -783,6 +784,26 @@ class Collision(GuardTestCase):
         self.assertWarns(self.element_term(), "term `glossary` and identifier `glossary` read alike",
                          base="HEAD")
 
+    def own_given_against_the_base(self, path):
+        """Whether a run on the path, left to find by itself whether it checks the-way's own
+        glossary, hands the check against the base `own`."""
+        given = []
+        with unittest.mock.patch.object(format_guard, "check_against_base",
+                                        side_effect=lambda *args, **kwargs:
+                                        given.append(kwargs.get("own"))):
+            format_guard.run(path, base="HEAD", stream=io.StringIO())
+        self.assertEqual(len(given), 1)
+        return given[0]
+
+    def test_the_way_is_known_by_the_path_of_its_glossary(self):
+        # invariant: glossary-term-collision/1
+        self.assertIs(self.own_given_against_the_base(format_guard.OWN_FILE), True)
+
+    def test_a_product_glossary_is_not_the_way(self):
+        # invariant: glossary-term-collision/1
+        self.commit(glossary())
+        self.assertIs(self.own_given_against_the_base(self.path), False)
+
     def test_pair_that_read_alike_on_the_base(self):
         # invariant: glossary-term-collision/1
         text = glossary(entry(), run_entry(), entry(term="saving", avoid="none",
@@ -1087,6 +1108,16 @@ class Common(GuardTestCase):
             invariant(sentence="Every game ends in a save slot.")))
         self.write("elements/common/rules.md", "# Shared rules\n")
         self.write("elements/common/shared.py", "# A run gives a verdict.\n")
+        self.assertWarns(glossary(), "run: the term has no use outside the glossary",
+                         common=self.common())
+
+    def test_use_in_a_file_git_does_not_track_is_no_use(self):
+        # invariant: glossary-term-use/1
+        self.write("foundations/invariants.md", invariants(
+            invariant(sentence="Every game ends in a save slot.")))
+        self.write("elements/common/rules.md", "# Shared rules\n")
+        self.write(".gitignore", "elements/common/draft.md\n")
+        self.write("elements/common/draft.md", "# Draft\n\nA run gives a verdict.\n")
         self.assertWarns(glossary(), "run: the term has no use outside the glossary",
                          common=self.common())
 
