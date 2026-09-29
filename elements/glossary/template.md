@@ -17,17 +17,15 @@ particular to a glossary entry (WAY-35).
 
 - The glossary of the-way holds the words of the process — what its templates, decisions and
   entries name. A product's glossary holds the words of its domain. In the-way, whose product is
-  the process, the two are one file (WAY-92).
+  the process, the two are one file (WAY-95).
 - A product takes the words of the process from the-way at the commit it pins, and its glossary
-  defines none of them again (WAY-92). That the glossary guard reports an entry of a product's
+  defines none of them again (WAY-95). That the glossary guard reports an entry of a product's
   glossary defining one of them answers to the invariant `glossary-process-terms`.
 
 ## Where entries go
 
-- A product's glossary entries stand in one file, `foundations/glossary.md` (WAY-93), which opens
-  with a title and a paragraph saying what it holds
-  (`TODO — decision pending: which decision sets that the glossary file opens with a title and a
-  paragraph`).
+- A product's glossary entries stand in one file, `foundations/glossary.md`, which opens with a
+  title and a paragraph saying what it holds (WAY-93).
 - An entry is headed by its term: the word or words as the foundation writes them in running text
   (WAY-93), in lower case unless the word itself takes a capital, in its base form — a noun in the
   singular, a verb bare (`TODO — decision pending: which decision sets the letter case and the form
@@ -83,7 +81,7 @@ particular to a glossary entry (WAY-35).
   values take no entry (WAY-95).
 - Where a binding sentence says what a term is, the entry takes that, and the sentence keeps what is
   required of the thing, using the term. The change that writes the entry rewrites the sentence: an
-  edit before the main branch, a new version after it (WAY-95, WAY-100, WAY-19).
+  edit before the main branch, a new version after it (WAY-95, WAY-97, WAY-19).
 - An agent finds the candidate words, and the human deciding the change decides which become entries
   and accepts each entry (WAY-95, WAY-10).
 - On the main branch every term has a use outside the glossary (WAY-95); on a task branch an entry

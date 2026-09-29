@@ -1969,10 +1969,9 @@ Every glossary entry the repository holds stands in `foundations/glossary.md`.
 
 - **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-93@73fcf554
+- **Derives from:** WAY-93@f6b3a7d4
 - **Part:** every
 - **Correction:** none
-- **Recovered:** none
 
 ## glossary-file-sections/1
 
@@ -1980,10 +1979,9 @@ Every glossary entry the repository holds stands in `foundations/glossary.md`.
 
 - **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-93@73fcf554
+- **Derives from:** WAY-93@f6b3a7d4
 - **Part:** glossary
 - **Correction:** none
-- **Recovered:** none
 
 ## glossary-term-holder/1
 
@@ -1991,10 +1989,9 @@ No term is held by two entries of `foundations/glossary.md`.
 
 - **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-93@73fcf554
+- **Derives from:** WAY-93@f6b3a7d4
 - **Part:** glossary
 - **Correction:** none
-- **Recovered:** none
 
 ## glossary-term-collision/1
 
@@ -2002,10 +1999,9 @@ The glossary guard warns on every change that, against "{fork-point}", adds or r
 
 - **Method:** `python -B gate/run_tests.py elements/glossary --record .runs/glossary-tests.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-93@73fcf554
+- **Derives from:** WAY-93@f6b3a7d4
 - **Part:** glossary
 - **Correction:** none
-- **Recovered:** none
 
 ## glossary-process-terms/1
 
@@ -2013,7 +2009,7 @@ The glossary guard, given a product's glossary, reports as an error every entry 
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-92@4434eb28
+- **Derives from:** WAY-95@1cc58b42
 - **Part:** glossary
 - **Correction:** none
 
@@ -2023,10 +2019,9 @@ Every entry of `foundations/glossary.md` carries every field the glossary templa
 
 - **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-94@bbf52723 · WAY-71@c32828c9
+- **Derives from:** WAY-94@05a966c6 · WAY-71@c32828c9
 - **Part:** glossary
 - **Correction:** none
-- **Recovered:** none
 
 ## glossary-entry-field-words/1
 
@@ -2034,10 +2029,9 @@ No field of an entry of `foundations/glossary.md` holds `none` or `TODO` where t
 
 - **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-94@bbf52723 · WAY-71@c32828c9
+- **Derives from:** WAY-94@05a966c6 · WAY-71@c32828c9
 - **Part:** glossary
 - **Correction:** none
-- **Recovered:** none
 
 ## glossary-term-use/1
 
@@ -2045,10 +2039,9 @@ Where {merge-onto} exists, every term of `foundations/glossary.md` has a use out
 
 - **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --merge-onto {merge-onto} --record .runs/glossary-merge-onto.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-95@e081349a
-- **Part:** glossary · decisions · invariants · part-map · environment-facts
+- **Derives from:** WAY-95@1cc58b42
+- **Part:** glossary · decisions · invariants · part-map · environment-facts · elements-common
 - **Correction:** none
-- **Recovered:** none
 
 ## glossary-definition-count/1
 
@@ -2078,10 +2071,9 @@ No entry of `foundations/glossary.md` carries a version.
 
 - **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-97@bcc32ba6
+- **Derives from:** WAY-97@822734ed
 - **Part:** glossary
 - **Correction:** none
-- **Recovered:** none
 
 ## glossary-definition-uses/1
 
@@ -2089,10 +2081,9 @@ For every entry of `foundations/glossary.md` whose definition differs from its d
 
 - **Method:** `python -B gate/run_tests.py elements/glossary --record .runs/glossary-tests.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-97@bcc32ba6
+- **Derives from:** WAY-97@822734ed
 - **Part:** glossary
 - **Correction:** none
-- **Recovered:** none
 
 ## glossary-avoid-growth/1
 
@@ -2103,7 +2094,6 @@ No word of an *Avoid* in `foundations/glossary.md` stands, outside the text WAY-
 - **Derives from:** WAY-98@94371030
 - **Part:** every
 - **Correction:** none
-- **Recovered:** none
 
 ## glossary-avoid-single/1
 
@@ -2114,7 +2104,6 @@ No word stands in the *Avoid* of two entries of `foundations/glossary.md`.
 - **Derives from:** WAY-98@94371030
 - **Part:** glossary
 - **Correction:** none
-- **Recovered:** none
 
 ## glossary-avoid-term/1
 
@@ -2125,7 +2114,6 @@ No word of an *Avoid* in `foundations/glossary.md` is a term there.
 - **Derives from:** WAY-98@94371030
 - **Part:** glossary
 - **Correction:** none
-- **Recovered:** none
 
 ## glossary-avoid-carrier/1
 
@@ -2136,7 +2124,6 @@ No word of an *Avoid* in `foundations/glossary.md` is a word the *Not* of an ent
 - **Derives from:** WAY-98@94371030
 - **Part:** glossary
 - **Correction:** none
-- **Recovered:** none
 
 ## glossary-not-target/1
 
@@ -2145,9 +2132,8 @@ Every term, identifier and closed-list value the *Not* of an entry of `foundatio
 - **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-99@7d44dfd7
-- **Part:** glossary · part-map · invariants · environment-facts
+- **Part:** glossary · decisions · part-map · invariants · environment-facts
 - **Correction:** none
-- **Recovered:** none
 
 ## glossary-not-quoted-word/1
 
@@ -2156,9 +2142,8 @@ Nothing the *Not* of an entry of `foundations/glossary.md` names holds the term 
 - **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-99@7d44dfd7 · WAY-98@94371030
-- **Part:** glossary · decisions · invariants · part-map · environment-facts
+- **Part:** glossary · decisions · invariants · part-map · environment-facts · elements-common
 - **Correction:** none
-- **Recovered:** none
 
 ## glossary-entry-merge-todo/1
 
@@ -2169,7 +2154,6 @@ Where {merge-onto} exists, no field of an entry of `foundations/glossary.md` hol
 - **Derives from:** WAY-99@7d44dfd7 · WAY-71@c32828c9
 - **Part:** glossary
 - **Correction:** none
-- **Recovered:** none
 
 ## Withdrawn identifiers
 

@@ -21,7 +21,7 @@ skill reaches by resolving its own directory (WAY-34).
   the skill names.
 - Before drafting, read in full the product's `foundations/glossary.md` where it exists and, in a
   product other than the-way, the-way's `foundations/glossary.md` at the commit the product pins,
-  so that the draft uses each term in its meaning (WAY-92, WAY-100).
+  so that the draft uses each term in its meaning (WAY-95, WAY-97).
 - Where the product has no file of the element's entries, ask whether it starts that file here; if
   not, stop
   (`TODO — decision pending: which decision sets that a product starts an element's file only on
@@ -43,7 +43,7 @@ The search also asks:
 - whether the entry uses a glossary term in another meaning than its entry gives, or spells out a
   term's definition instead of using the term: a paraphrase is rewritten to the term, and another
   meaning, or a word the glossary does not yet settle, goes through `record-glossary-term`
-  (WAY-33, WAY-99, WAY-100);
+  (WAY-33, WAY-97, WAY-99);
 - whether the change brings what entries of the foundation wait for — an element's template, the
   part map, a script; each such entry is fixed in the same change (WAY-37).
 

@@ -26,9 +26,9 @@ that element's template (WAY-35).
 
 - Any sentence of an entry of any element, its rationale included, that speaks of what a glossary
   term defines uses the term, never a paraphrase of its definition, so that the list of the term's
-  uses finds it (WAY-100).
+  uses finds it (WAY-97).
 - A term whose definition holds a word an invariant's sentence may not hold (WAY-60) enters such a
-  sentence only where the human deciding the change accepts it (WAY-100).
+  sentence only where the human deciding the change accepts it (WAY-97).
 
 ## Where the value of a field comes from
 

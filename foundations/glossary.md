@@ -2,7 +2,7 @@
 
 The words of the process, each in one meaning: every word a binding part of the-way's foundation or a
 rule of an element's template uses in a meaning that a reader who knows the field would not give it.
-A product takes these words from the-way at the commit it pins (WAY-92, WAY-95).
+A product takes these words from the-way at the commit it pins (WAY-95).
 
 ## binding part
 
