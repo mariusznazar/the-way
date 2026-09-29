@@ -4,7 +4,9 @@
 > be settled against real entries instead of imagined ones. A rule that cites no decision is a
 > proposal settled during the element's research, waiting for its decision. Until those decisions
 > are written, nothing here binds beyond what the cited decisions already say, and the template
-> does not reach the main branch (WAY-06, WAY-09).
+> does not reach the main branch
+> (`TODO — decision pending: which decision keeps a draft template off the main branch until its
+> decisions are written`).
 
 This file defines how an invariant entry is written. An invariant names its method of checking and
 says nothing about why, or about what was rejected (WAY-08, WAY-22). Its current result comes from
@@ -94,7 +96,7 @@ naming its identifier, its current version, what was searched and what was found
   input made up for it is the method of a sentence about that check, not about the data it reads
   (WAY-61).
 - k and n, for a method that does not give the same verdict every time, stand in the command
-  (WAY-08, WAY-61).
+  (WAY-08; `TODO — decision pending: which decision sets that k and n stand in the command`).
 - A method a product cannot yet name as any command reads `TODO`, and the entry is reported
   unchecked for that reason (WAY-63). A command whose program the product does not yet declare or
   produce is written out in full all the same, with the program named as it will run; that entry is
@@ -105,6 +107,12 @@ naming its identifier, its current version, what was searched and what was found
   WAY-61: the-way's own record of a run, whose form and path answer to the invariants
   `run-record-form`, `run-record-path` and `run-record-lines` (WAY-74). A run that records no
   verdict for the entry never gives it a pass (WAY-61).
+- The path of the-way's own record is one git ignores, and the gate clears it before the run
+  (WAY-74) and runs no command naming a path git does not ignore
+  (`TODO — decision pending: which decision keeps the gate from running a command that names a
+  path git does not ignore`). A failure no rule of a check gave names the program that ran as its
+  `check` (`TODO — decision pending: which decision sets what a failure no rule gave names as its
+  check`).
 - A population the product meets only in use — the loads real players make, for one — has no form
   yet: the method of a sentence about it reads
   `TODO — decision pending: the method of a population met only in use`, and the gate reports the
@@ -121,19 +129,25 @@ naming its identifier, its current version, what was searched and what was found
   (WAY-59).
 - A condition that decides whether a commit makes the sentence true stands in the sentence, unless
   an entry of the foundation or a decision — of the product's own log, or of the-way at the commit
-  the product pins — holds it; then the entry links to that entry or decision (WAY-60, WAY-17). A
-  condition held in a document the product neither writes nor pins, such as an outside standard,
-  stands in the sentence, and the fact it rests on is named in *Rests on* (WAY-60, WAY-73).
+  the product pins — holds it; then the entry links to that entry or decision (WAY-60;
+  `TODO — decision pending: which decision sets that an entry links to any entry or decision
+  holding its condition`). A condition held in a document the product neither writes nor pins,
+  such as an outside standard, stands in the sentence, and the fact it rests on is named in
+  *Rests on* (WAY-60, WAY-73).
 - A sentence names no branch — neither as a point to compare with nor as the place where it holds —
   since a branch names a different commit by the hour: outside quoted text it holds neither the
   words "main branch" nor "task branch" (WAY-60). A sentence measuring what a commit, a merge or a
   merge request changes names the commit it is measured against by its value on the gate's list
-  above: `{fork-point}`, unless the decision the entry derives from chooses `{merge-onto}`. A
-  sentence that is to hold on the main branch alone holds where `{merge-onto}` exists (WAY-60,
-  WAY-61).
+  above (WAY-60, WAY-61): `{fork-point}`, unless the decision the entry derives from chooses
+  `{merge-onto}` (`TODO — decision pending: which decision makes the fork point the commit a
+  sentence measures against unless its decision chooses the merge commit`). A sentence that is to
+  hold on the main branch alone holds where `{merge-onto}` exists
+  (`TODO — decision pending: which decision sets that a sentence to hold on the main branch alone
+  holds where the merge commit exists`).
 - A sentence may be about a check the product itself holds, as it may be about anything else the
-  product holds: whether a check belongs to the product is settled by the part map, and the method
-  of such a sentence is a test fed input made up for it (WAY-61). Such a sentence names a value of
+  product holds: whether a check belongs to the product is settled by the part map
+  (`TODO — decision pending: which decision lets the part map settle whether a check belongs to
+  the product`), and the method of such a sentence is a test fed input made up for it (WAY-61). Such a sentence names a value of
   the gate's list in quotation marks, as what the check is given, and its command need not take it
   (WAY-60, WAY-61). Quoted text, in this template, is text between quotation marks; a value in
   backticks is not quoted.
@@ -157,7 +171,9 @@ naming its identifier, its current version, what was searched and what was found
 - An invariant that depends on a version the product declares names that version in its sentence
   and names the fact in *Rests on*: a change of the fact's range reaches it through the fingerprint
   (WAY-73, WAY-66), and whoever writes it sees that the version it names lies within the fact's
-  *Holds for*. No script compares the two, since *Holds for* is prose (WAY-77).
+  *Holds for*. No script compares the two, since *Holds for* is prose
+  (`TODO — decision pending: which decision sets that no script compares a declared version with
+  *Holds for*`).
 - Both carry the fingerprint of each entry they name, and *Part* carries none. A change to
   that fingerprint reaches the main branch with every invariant carrying it, each checked against
   the new binding part and carrying the new fingerprint (WAY-66).
@@ -206,7 +222,9 @@ naming its identifier, its current version, what was searched and what was found
   (`TODO — decision pending: which decision sets that a citing check stands in a file of code`).
 - An invariant test is read-only during implementation (WAY-03), and a file is one for the task
   when it is one on the commit the task branch left the main branch from or on the commit being
-  checked. A path a human assesses against is no invariant test (WAY-65).
+  checked. A path a human assesses against is no invariant test
+  (`TODO — decision pending: which decision sets that a path a human assesses against is no
+  invariant test`).
 - A test counts only when a deliberate break of the invariant makes it fail (WAY-08).
 - A test takes the input it asserts on and the value it expects written out, wherever the code its
   invariant is about would otherwise compute either; only the side it compares against comes from
@@ -256,6 +274,13 @@ WAY-64).
   `gate-verdict-per-entry`, `gate-pass-without-verdict`, `gate-quarantine-result` and
   `gate-human-verdict`. A human verdict on an entry whose method is a path stands where
   `elements/common/rules.md` places it (WAY-83).
+- A declared command that cannot start, or a record holding a value off a closed list, is `error`;
+  a record holding a line off the form above gives `error` to every entry whose method wrote it
+  (`TODO — decision pending: which decision sets which failures of a run give an error, and to
+  which entries`).
+  Runs on a deliberate break, and the run WAY-58 asks for, give evidence, not results
+  (`TODO — decision pending: which decision sets that runs on a deliberate break give evidence, not
+  results`).
 
 ## Quarantine
 
