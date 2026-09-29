@@ -82,7 +82,7 @@ class WordingReachesDependants(unittest.TestCase):
         code, output = self.guard(
             log(version(1), version(2, relations="derives from ABC-01@" + CURRENT)),
             onto=log(version(1), version(1, ver=2, binding=NEW_WORDING,
-                                         change="new wording · previous: ABC-01/1")))
+                                         change="new wording")))
         self.assertEqual(code, 1, output)
         self.assertIn("ABC-02/1: `derives from ABC-01@" + CURRENT + "` — the current fingerprint "
                       "of ABC-01 is " + NEW_WORDING_FINGERPRINT, output)
