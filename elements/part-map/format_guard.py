@@ -6,9 +6,9 @@ forms of the template, so the rules of an entry live in one place (WAY-35, WAY-7
 cites the invariants it gives a verdict for, as `invariant: <identifier>/<version>` (WAY-65).
 
 An entry's heading is its identifier alone, and a critical flow's test is found by a comment line
-`# flow: <identifier>` in a file git tracks, never by a path in the map. An entry that carries what the form does not have — a heading `## <identifier> — <title>`, a test
-named after `— test:` in a flow's *Invariant*, a pattern of *Files* marked `(generated)` — is
-reported, and the identifier,
+`# flow: <identifier>` in a file git tracks, never by a path in the map. An entry that carries what
+the form does not have — a heading `## <identifier> — <title>`, a test named after `— test:` in a
+flow's *Invariant*, a pattern of *Files* marked `(generated)` — is reported, and the identifier,
 the invariant and the pattern are still read from it, so that every other check runs on it.
 
 Usage, from the root of the product's repository:
@@ -93,7 +93,8 @@ LIST_SECTIONS = ["Criticality scale", "External context", "Change paths",
 MAP_LISTS = [title for title in LIST_SECTIONS if title != "Known violations"]
 DATE = re.compile(r"\b\d{4}-\d{2}-\d{2}\b")
 # The heading of an entry, `## <identifier>`, told from the heading of a list by the fields the
-# entry holds; and the heading with a title, `## <identifier> — <title>`, which the form does not use.
+# entry holds; and the heading with a title, `## <identifier> — <title>`, which the form does not
+# use.
 HEADING = re.compile(r"^## (\S+)[ \t]*$")
 TITLED_HEADING = re.compile(r"^## (.+?) — (.+)$")
 FIELD = re.compile(r"^- \*\*.+?:\*\*")

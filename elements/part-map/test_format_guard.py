@@ -266,8 +266,8 @@ class Entries(GuardTestCase):
 
 class Headings(GuardTestCase):
     """An entry's heading is its identifier alone, `## <identifier>` (WAY-41). A heading with a
-    title, `## <identifier> — <title>`, is reported, and its identifier is
-    still read, so that every other check runs on the entry."""
+    title, `## <identifier> — <title>`, is reported, and its identifier is still read, so that
+    every other check runs on the entry."""
 
     TITLE = ("line 5: `saving` carries a title after its identifier; an entry's heading is "
              "`## <identifier>`")
@@ -571,7 +571,8 @@ class Files(GuardTestCase):
                           "list of files left out on purpose"])
 
     def test_a_generated_mark_is_not_part_of_the_form(self):
-        """*Files* holds git path patterns alone (WAY-44); a pattern marked `(generated)` is reported, and the pattern is still matched."""
+        """*Files* holds git path patterns alone (WAY-44); a pattern marked `(generated)` is
+        reported, and the pattern is still matched."""
         self.guard(part_map(part(files=("src/saving.py (generated)", "tests/**")), flow(),
                             surface(), self.rendering(), foundations_part()))
         self.assertEqual([item for item in self.lines if item["verdict"] == "fail"],
@@ -658,8 +659,8 @@ class Flows(GuardTestCase):
                          ["line 22: save-and-load: *Invariant* names no invariant"])
 
     def test_a_test_path_in_the_invariant_is_not_part_of_the_form(self):
-        """The map names no test; a flow that names a test after `— test:`
-        is reported, and its invariant still read."""
+        """The map names no test; a flow that names a test after `— test:` is reported, and its
+        invariant still read."""
         self.write("foundations/invariants.md", "# Invariants\n\n## save-round-trip/1\n\nOne.\n")
         code, output = self.guard(part_map(
             part(failure_modes=("a save is lost — the game is lost — high — detected by "

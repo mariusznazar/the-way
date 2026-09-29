@@ -9,8 +9,10 @@ not trust.
 
 The rules of form the elements share — the language of an entry, every field and the words `none`
 and `TODO`, the terms of the glossary, the marks of where a value comes from, the form of an
-identifier and its one space with the invariants and the environment facts — stand in
-`elements/common/rules.md`; this template holds what is particular to the part map (WAY-35).
+identifier, when it stays and when a split or a merge replaces it, its one space with the
+invariants and the environment facts, and the list of withdrawn identifiers, of which the map's
+own is the exception — stand in `elements/common/rules.md`; this template holds what is particular
+to the part map (WAY-35).
 
 ## Where entries go
 
@@ -27,9 +29,9 @@ identifier and its one space with the invariants and the environment facts — s
 
 ## Identifiers
 
-- An entry's identifier does not change when its files or its fields change (WAY-41).
-- Splitting or merging gives each entry that comes out of it a new identifier; the one left behind
-  goes to the list of withdrawn identifiers, names its successors and is never reused (WAY-41).
+The rules on when an entry's identifier stays, when a split or a merge replaces it, and how the
+one left behind is withdrawn and never reused stand in `elements/common/rules.md` (WAY-41); the
+map's list of withdrawn identifiers takes the form below.
 
 ## Part
 
@@ -90,7 +92,8 @@ being withdrawn. Neither is written in the map (WAY-49).
 The degrees a product uses, lowest first. Every degree named by a failure mode or by a flow
 stands on this list. How many degrees a product needs follows from how many distinct sets of
 steps its task cycle has
-(`TODO — decision pending: which decision sets the criticality scale and how many degrees it holds`).
+(`TODO — decision pending: which decision sets the criticality scale and how many degrees it
+holds`).
 
 ```markdown
 ## Criticality scale
@@ -172,7 +175,7 @@ reader not built yet is named by the invariant it answers to
 | external context | the format guard (`external-exchange-row`); whoever records a trust boundary or sets a change path (WAY-48, WAY-50) | judgment |
 | change paths | whoever changes a surface at that level; the format guard (`surface-change-path`, `promise-level-policy`) | judgment |
 | files left out on purpose | the format guard, as the only exception to file assignment (`file-part-assignment`, `left-out-file-assignment`) | judgment |
-| withdrawn identifiers | the format guards, which reject a reference to one and its reuse (`decision-scope-names`, `identifier-holders`) | read off |
+| withdrawn identifiers | the format guards, which reject a reference to one and its reuse (`decision-scope-names`, `identifier-holders`) | as `elements/common/rules.md` gives it |
 
 ## The binding part
 
@@ -222,8 +225,9 @@ outside it (WAY-42). What its fingerprint covers answers to the invariant `map-f
 The derived file beside the map, `foundations/known_violations.md`, holds the map's debt. A
 row names the source part, the target part, the file and what it reaches for — never a line
 number. A new violation breaks the gate; a row the code no longer contradicts breaks it too and
-goes in the same change; a row is added only by a change of the foundation that a human accepts. The file is checked as a subset of the list on the commit
-the task branch left the main branch from, never regenerated from scratch (WAY-51).
+goes in the same change; a row is added only by a change of the foundation that a human accepts.
+The file is checked as a subset of the list on the commit the task branch left the main branch
+from, never regenerated from scratch (WAY-51).
 
 ```markdown
 ## Known violations
@@ -238,5 +242,5 @@ generated rule file answers to the invariants `generated-pattern-source` and `ge
 
 ## Examples
 
-Examples live in `examples.md`: entries copied word for word from a real map. The first ones come
-from this repository's own map, so until that map exists only the forms above stand (WAY-05).
+Examples live in `examples.md` (WAY-09): entries copied word for word from this repository's own
+map.
