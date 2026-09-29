@@ -1031,8 +1031,9 @@ def check_violated(path, entries, rules, report):
 def check_human_verdicts(path, entries, foundation, rules, report):
     """Every row of the file of human verdicts names an entry of the invariants or of the
     environment facts; a row naming an invariant names an entry whose method is a path, gives
-    `pass` or `fail`, and reads `none` in *Until* (WAY-83). The rows naming a fact are the
-    environment facts guard's to check further."""
+    `pass` or `fail`, and reads `none` in *Until* (WAY-83). A row naming neither is an invariant
+    row unless it carries a fact's date in *Until*. The rows naming a fact are the environment
+    facts guard's to check further."""
     # invariant: human-verdict-invariant-row/1
     check, invariant_row = "check_human_verdicts", "human-verdict-invariant-row/1"
     verdicts_path = os.path.join(os.path.dirname(os.path.abspath(path)), rules.verdicts_file)
@@ -1057,8 +1058,13 @@ def check_human_verdicts(path, entries, foundation, rules, report):
         entry = entries.get(name)
         if entry is None:
             if name not in facts and foundation.facts_read:
+                # A row that does not carry a fact's date in *Until* has an invariant's form
+                # (rules.md), so it names an invariant that is no entry; a dated row is the facts
+                # guard's to judge.
+                invariant = (() if re.fullmatch(DATE, values.get("Until", ""))
+                             else (invariant_row,))
                 report.error(None, "%s: `%s` is neither an invariant nor an environment fact"
-                             % (where, name), check)
+                             % (where, name), check, invariant)
             continue
         method = flat(value_of(entry, "Method")[0])
         if is_todo(method) or command_of(entry) is not None or "`" in method or " " in method:
