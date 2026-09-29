@@ -67,8 +67,8 @@ entry a link names, *read off* for its fingerprint
   never reached the main branch may go (WAY-64, WAY-75). An identifier of the part map left behind
   by a split or a merge stays in the map as a withdrawn identifier and is never reused (WAY-41).
 - A withdrawn identifier stays withdrawn: it never names an entry again (WAY-41, WAY-64, WAY-75).
-- Each of the three files carries its withdrawn identifiers in one list after its last entry, in
-  this form (WAY-41, WAY-64, WAY-75):
+- Each of the three files carries its withdrawn identifiers in one list after its last entry. The
+  invariants file and the environment facts file give it in this form (WAY-64, WAY-75):
 
   ```markdown
   ## Withdrawn identifiers
@@ -78,12 +78,21 @@ entry a link names, *read off* for its fingerprint
 
 - *Why* says why the identifier was withdrawn, and where entries were split or merged, it says so.
   *Successors* lists the identifiers that took its place, joined by ` · `, each an entry or a
-  withdrawn identifier of the same file, or reads `none` (WAY-41, WAY-64, WAY-75).
+  withdrawn identifier of the same file, or reads `none` (WAY-64, WAY-75).
+- The part map is the exception. Its list has no *Why* column and takes the form its template
+  gives (`TODO — decision pending: when the map's list takes the *Why* WAY-41 asks for`), and its
+  *Successors* names one or more identifiers, each an entry or a withdrawn identifier of the map,
+  never `none`: the map withdraws an identifier only on a split or a merge, which leaves entries in
+  its place (WAY-41).
+- The identifier and *Successors* are read off (WAY-54), and *Why* is prose
+  (`TODO — decision pending: which decision sets the prose mark`).
 
 ## Human verdicts
 
 - A human verdict on an invariant or an environment fact stands in a row of
-  `foundations/human_verdicts.md`, one file written by hand for both elements (WAY-83):
+  `foundations/human_verdicts.md`, one file for both elements (WAY-83), written by hand
+  (`TODO — decision pending: which decision sets that the file of human verdicts is written by
+  hand`):
 
   ```markdown
   | Entry | Version | Verdict | By | On | Commit | Until |
@@ -95,7 +104,9 @@ entry a link names, *read off* for its fingerprint
   assessed commit reaches the entry. A fact's row carries a date in *Until*, after which its verdict
   lapses; the gate compares that date with the committer date of the commit it checks, and the
   clock with the day it runs (WAY-83).
-- The part of the map that holds the file is set with the first verdict written (WAY-83).
+- The part of the map that holds the file is set with the first verdict written
+  (`TODO — decision pending: which decision sets that the part holding the file of human verdicts
+  is set with the first verdict`).
 - The verdict and *Until* of a row rest on a judgment; the rest of the row is read off (WAY-54).
 
 ## `{fork-point}`
@@ -114,7 +125,9 @@ entry a link names, *read off* for its fingerprint
   WAY-79). An invariant that declares a correction is the one exception, and the invariants template
   gives its form (WAY-57).
 - The guard compares an entry with its state on the commit the task branch left the main branch
-  from; where there is no main branch, it compares nothing, says so, and every entry stays at
-  version 1 (WAY-57, WAY-79).
+  from; where there is no main branch, it compares nothing and every entry stays at version 1
+  (WAY-57, WAY-79), and it says so
+  (`TODO — decision pending: which decision sets that the guard says when there is no main branch
+  to compare with`).
 - A check cites such an entry by identifier and version, as `<identifier>/<version>`, and a check
   citing a version other than the current one fails the gate (WAY-57, WAY-79).

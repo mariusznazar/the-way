@@ -6,8 +6,8 @@ the way of working particular to its element, and adds it to the steps below at 
 names (WAY-35). A fix to a rule goes to the template or to `rules.md`, with the decision that sets
 it; in the decisions element, a rule changes only with a decision in the log (WAY-35, WAY-05).
 
-Paths below are those of the-way at the commit the product pins, which the skill reaches by
-resolving its own directory (WAY-34).
+Paths under `elements/` below are those of the-way at the commit the product pins, which the
+skill reaches by resolving its own directory (WAY-34).
 
 ## 1. Read
 
@@ -79,11 +79,13 @@ looks for in its element.
    before the human accepts the entry
    (`TODO — decision pending: which decision sets that an entry is shown whole and accepted before
    it is written`).
-3. Write the entry in its place in the file and run the element's format guard from the product's
-   repository root, `python -B <the element's directory>/format_guard.py`, with the arguments its
-   `--help` gives for this file and for the commit the task branch left the main branch from, or
-   for no main branch (WAY-09). Fix what the entry broke and run it again; an error, a warning or an
-   unchecked line elsewhere in the file goes to the human.
+3. Write the entry in its place in the file and run the element's format guard (WAY-09) from the
+   product's repository root, `python -B <the element's directory>/format_guard.py`, with the
+   arguments its `--help` gives for this file and for the commit the task branch left the main
+   branch from, or for no main branch
+   (`TODO — decision pending: which decision sets that the skill runs the format guard on the file
+   it writes`). Fix what the entry broke and run it again; an error, a warning or an unchecked line
+   elsewhere in the file goes to the human.
 4. What follows from the entry goes through these steps one at a time, each through the skill of
    its element
    (`TODO — decision pending: which decision sets that the entries following from one entry are
