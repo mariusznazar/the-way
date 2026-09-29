@@ -160,7 +160,7 @@ reader not built yet is named by the invariant it answers to
 | Depends on | the format guard (`flow-part-names`); the computation of criticality (`map-guard-dependency-report`); the comparison with the dependency graph (`known-violation-coverage`) | judgment |
 | Depends on — separated | the computation of criticality, which stops inheriting there (`map-guard-dependency-report`) | judgment |
 | Failure modes | the computation of criticality (`failure-mode-severity`, `map-guard-unrecorded-criticality`); whoever sets a severity, who reads the kind of damage | judgment |
-| Failure modes — detected by | the format guard (`failure-mode-detection`, `map-invariant-names`); whoever asks which failures the gate would catch | read off |
+| Failure modes — detected by | the format guard (`failure-mode-detection`, `map-invariant-names`); whoever asks which failures the gate would catch | judgment |
 | Trust boundary | the format guard (`path-pattern-reach`); the choice of how sharply a change is checked (WAY-13) | judgment |
 | Criticality (flow) | the computation of the criticality of every part the flow runs through (WAY-46) | judgment |
 | Parts (flow) | the format guard (`flow-part-names`, `flow-coverage-parts`); whether a change lies on the flow (WAY-45) | judgment |
