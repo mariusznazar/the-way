@@ -2835,8 +2835,8 @@ no verdict for the entry never gives it a pass.
   related to WAY-55 · related to WAY-56 · related to WAY-58 · related to WAY-59
 - **Outranks:** none
 - **Verification:** level 1 — invariants: invariant-method-form · method-gate-values ·
-  gate-verdict-per-entry · gate-pass-without-verdict · gate-method-order. Level 2 for what a method
-  checks — an agent compares the change with the decision:
+  gate-verdict-per-entry · gate-pass-without-verdict · gate-method-order · test-runner-pass-line.
+  Level 2 for what a method checks — an agent compares the change with the decision:
   - complies: "every version and review record in the log has every field of the template" names the
     decision guard run on `foundations/decisions.md`, and one run of the guard records a verdict for
     each invariant it checks; "a save of another version is rejected whole" names a test that hands
@@ -3367,7 +3367,9 @@ word not given it, as an error.
   log-entry-merge-todo · map-entry-field-presence · map-entry-field-words ·
   invariant-entry-field-presence · invariant-entry-field-words · invariant-entry-merge-todo ·
   fact-entry-field-presence · fact-entry-field-words · fact-entry-merge-todo ·
-  glossary-entry-field-presence · glossary-entry-field-words · glossary-entry-merge-todo. Level 2
+  glossary-entry-field-presence · glossary-entry-field-words · glossary-entry-merge-todo ·
+  decision-verification-level · decision-change-rationale · decision-change-kind ·
+  review-when-form · review-next-check. Level 2
   for what `none` states — an agent compares the change with the decision:
   - complies: an invariant whose author searched the log and found no decision it derives from
     reads `Derives from: none`; a decision whose source is silent on what it rests on reads

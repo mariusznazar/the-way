@@ -57,6 +57,11 @@ def version(number, ver=1, binding=BINDING, change=None, relations="none", outra
     return "\n".join(lines)
 
 
+# Two decisions whose latest versions name each other as `narrows`.
+NARROWING_EACH_OTHER = (version(1, relations="narrows ABC-02@" + CURRENT),
+                        version(2, relations="narrows ABC-01@" + CURRENT))
+
+
 def review(number, date, result, next_check, checked_by="Anna"):
     return "\n".join(["### ABC-%02d · review %s" % (number, date), "",
                       "- **Result:** %s" % result, "- **Next check:** %s" % next_check,
@@ -409,9 +414,14 @@ class Relations(GuardTestCase):
     def test_current_fingerprint_passes(self):
         self.assertPasses(log(version(1), version(2, relations="narrows ABC-01@" + CURRENT)))
 
-    def test_mutual_outranks(self):
-        self.assertFails(log(version(1, outranks="ABC-02"), version(2, outranks="ABC-01")),
-                         "ABC-01 and ABC-02 outrank each other")
+    def test_mutual_narrows(self):
+        self.assertFails(log(*NARROWING_EACH_OTHER),
+                         "ABC-01 and ABC-02 narrow each other")
+        self.assertRecords(line("check_narrows", "fail", "narrows-pairs/1",
+                                "line 12: ABC-01 and ABC-02 narrow each other"))
+
+    def test_mutual_narrows_counts_only_in_the_latest_versions(self):
+        self.assertPasses(log(*NARROWING_EACH_OTHER, version(1, ver=2)))
 
 
 class Reviews(GuardTestCase):
@@ -568,11 +578,11 @@ class Record(GuardTestCase):
             line("check_reviews", "pass", "review-next-check/1"),
             line("check_reviews", "pass", "review-named-version/1"),
             line("check_reviews", "pass", "log-reference-target/1"),
-            line("check_outranks", "pass", "outranks-pairs/1"),
+            line("check_narrows", "pass", "narrows-pairs/1"),
         ])
 
     def test_a_line_holds_only_the_keys_of_the_form(self):
-        self.guard(log(version(1, outranks="ABC-02"), version(2, outranks="ABC-01"),
+        self.guard(log(*NARROWING_EACH_OTHER,
                        version(3, change="unchanged sentences")))
         for item in self.lines:
             self.assertTrue(set(item) <= {"check", "verdict", "invariant", "description"}, item)
@@ -580,10 +590,10 @@ class Record(GuardTestCase):
             self.assertEqual("description" in item, item["verdict"] == "fail", item)
 
     def test_a_finding_records_fail_and_no_pass(self):
-        self.guard(log(version(1, outranks="ABC-02"), version(2, outranks="ABC-01")))
-        self.assertRecords(line("check_outranks", "fail", "outranks-pairs/1",
-                                "line 13: ABC-01 and ABC-02 outrank each other"))
-        self.assertNotIn(line("check_outranks", "pass", "outranks-pairs/1"), self.lines)
+        self.guard(log(*NARROWING_EACH_OTHER))
+        self.assertRecords(line("check_narrows", "fail", "narrows-pairs/1",
+                                "line 12: ABC-01 and ABC-02 narrow each other"))
+        self.assertNotIn(line("check_narrows", "pass", "narrows-pairs/1"), self.lines)
 
     def test_an_error_of_no_cited_invariant_records_null(self):
         self.guard(log(version(1).replace("- **Scope:**", "*Rationale for change:* x\n- **Scope:**")))
@@ -613,21 +623,21 @@ class Record(GuardTestCase):
     def test_the_record_is_overwritten(self):
         os.makedirs(os.path.dirname(self.record_path))
         with open(self.record_path, "w", encoding="utf-8") as handle:
-            handle.write('{"check": "old", "verdict": "pass", "invariant": "outranks-pairs/1"}\n')
+            handle.write('{"check": "old", "verdict": "pass", "invariant": "narrows-pairs/1"}\n')
         self.guard(log(version(1)))
-        self.assertNotIn({"check": "old", "verdict": "pass", "invariant": "outranks-pairs/1"},
+        self.assertNotIn({"check": "old", "verdict": "pass", "invariant": "narrows-pairs/1"},
                          self.lines)
 
     def test_the_report_for_a_person_stays(self):
-        code, output = self.guard(log(version(1, outranks="ABC-02"), version(2, outranks="ABC-01")))
+        code, output = self.guard(log(*NARROWING_EACH_OTHER))
         self.assertEqual(code, 1)
-        self.assertIn("decisions.md:13: error: ABC-01 and ABC-02 outrank each other\n", output)
-        # The other two errors are the field *Outranks* itself, which the form no longer holds.
-        self.assertTrue(output.endswith("3 error(s), 0 warning(s)\n"), output)
+        self.assertIn("decisions.md:12: error: ABC-01 and ABC-02 narrow each other\n", output)
+        self.assertTrue(output.endswith("1 error(s), 0 warning(s)\n"), output)
 
     def test_each_verdict_stands_at_a_check_citing_its_invariant(self):
-        self.guard(log(version(1, outranks="ABC-02", review_when="next year", approved="Anna"),
-                       version(2, outranks="ABC-01", relations="supersedes ABC-07",
+        self.guard(log(version(1, relations="narrows ABC-02@" + CURRENT, review_when="next year",
+                               approved="Anna"),
+                       version(2, relations="narrows ABC-01@" + CURRENT + " · supersedes ABC-07",
                                verification="none", origin="inherited"),
                        version(2, ver=3, binding="Must not. A. B. C!"),
                        review(5, "2026-09-01", "condition not met — ABC-01/4", "none")),
@@ -732,7 +742,7 @@ class RecordPerCommand(InGit):
         "decision-binding-across-versions/1", "decision-change-kind/1",
         "decision-change-rationale/1", "decision-heading-form/1", "decision-verification-level/1",
         "decision-version-sequence/1", "inherited-origin-form/1", "log-entry-field-presence/1",
-        "log-entry-field-words/1", "log-reference-target/1", "outranks-pairs/1",
+        "log-entry-field-words/1", "log-reference-target/1", "narrows-pairs/1",
         "relation-fingerprint-presence/1", "relation-type/1", "repeal-binding-sentences/1",
         "review-named-version/1", "review-next-check/1", "review-when-form/1"]
 
@@ -1353,7 +1363,7 @@ class OwnLog(unittest.TestCase):
             "decision-change-kind/1", "decision-change-rationale/1", "decision-example-numbers/1",
             "decision-heading-form/1", "decision-verification-level/1",
             "decision-version-sequence/1", "inherited-origin-form/1", "log-entry-field-presence/1",
-            "log-entry-field-words/1", "log-reference-target/1", "outranks-pairs/1",
+            "log-entry-field-words/1", "log-reference-target/1", "narrows-pairs/1",
             "relation-fingerprint-presence/1", "relation-type/1", "repeal-binding-sentences/1",
             "review-named-version/1", "review-next-check/1", "review-when-form/1"])
 

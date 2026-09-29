@@ -470,7 +470,7 @@ def check_log(entries, text, rules, prefix, report, today, approver=None):
     check_inherited(entries, rules, prefix, report)
     check_references(text, entries, prefix, report, numbers, versions)
     check_reviews(entries, rules, prefix, report, numbers, versions)
-    check_outranks(latest, prefix, report)
+    check_narrows(latest, prefix, report)
     check_review_dates(entries, latest, prefix, report, today)
     return latest
 
@@ -966,20 +966,25 @@ def check_fingerprints(latest, rules, prefix, report, no_commit=None):
                              check, (current_value,))
 
 
-def check_outranks(latest, prefix, report):
-    # invariant: outranks-pairs/1
-    check, pairs = "check_outranks", "outranks-pairs/1"
+def check_narrows(latest, prefix, report):
+    """No two decisions name each other as `narrows` in their latest versions: the one that
+    prevails names the other, never both (WAY-25)."""
+    # invariant: narrows-pairs/1
+    check, pairs = "check_narrows", "narrows-pairs/1"
     report.ran(check, pairs)
-    outranks = {}
+    relation = re.compile(r"^narrows %s-(\d{2,})\b" % re.escape(prefix))
+    narrowed = {}
     for number, entry in latest.items():
-        value = entry.fields.get("Outranks", ["none"])[0]
-        outranks[number] = {int(n) for n in re.findall(r"\b%s-(\d{2,})\b" % re.escape(prefix), value)}
-    for number, others in sorted(outranks.items()):
+        value = field_value(entry, "Relations")[0] or ""
+        narrowed[number] = {int(match.group(1)) for match in
+                            (relation.match(item.strip()) for item in
+                             " ".join(value.split()).split(" · ")) if match}
+    for number, others in sorted(narrowed.items()):
         for other in sorted(others):
-            if other > number and number in outranks.get(other, set()):
-                report.error(latest[number].fields["Outranks"][1],
-                             "%s-%02d and %s-%02d outrank each other" % (prefix, number, prefix, other),
-                             check, (pairs,))
+            if other > number and number in narrowed.get(other, set()):
+                report.error(field_value(latest[number], "Relations")[1],
+                             "%s-%02d and %s-%02d narrow each other"
+                             % (prefix, number, prefix, other), check, (pairs,))
 
 
 def check_review_dates(entries, latest, prefix, report, today):

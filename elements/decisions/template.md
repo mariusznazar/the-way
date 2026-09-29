@@ -79,7 +79,7 @@ yet is named by the invariant it answers to
 | Change | the format guard (`decision-change-kind`, `decision-binding-across-versions`); the view (`view-versions`) | judgment |
 | Scope | the part map's guard (`decision-scope-names`); finding the decisions for a change (`decisions-found-for-change`) | judgment |
 | Based on | the environment facts guard (`based-on-fact-fingerprint`); a human reviewing the decision when a fact changes (WAY-90) | transcribed; for a fact named, judgment, and read off for its fingerprint |
-| Relations | the format guard (`relation-type`, `relation-fingerprint-presence`, and checking a merge `relation-fingerprint-value`); the view (`view-links`) | judgment, and read off for a fingerprint |
+| Relations | the format guard (`relation-type`, `relation-fingerprint-presence`, `narrows-pairs`, and checking a merge `relation-fingerprint-value`); the view (`view-links`) | judgment, and read off for a fingerprint |
 | Verification | level 1: the invariants guard (`level-one-decision-invariants`, `verification-invariant-derivation`); level 2: an agent comparing a change with the decision; level 3: a human (WAY-12) | judgment |
 | Review when | the agent working in the decision's scope (WAY-24); the format guard (`decision-guard-overdue-review`) | judgment |
 | Origin | whoever wants to change the decision and needs the full reasoning; the next agent, so it does not repeat a search (WAY-29) | transcribed |
@@ -167,7 +167,8 @@ used when a different, more specific decision deliberately goes against this one
   entry (WAY-18).
 - Where two decisions both apply and collide, the one that prevails names the other in
   *Relations* as `narrows`, and its binding sentences state the area where it prevails; nothing
-  follows along a chain, and two decisions that narrow each other are an error (WAY-25).
+  follows along a chain, and two decisions that narrow each other are an error, which the format
+  guard reports (`narrows-pairs`) (WAY-25).
 - A collision between two decisions with no precedence recorded stops the work: the agent that
   meets it never settles it, and a human records the precedence — by a new version on the main
   branch, by an edit before it (WAY-25).
