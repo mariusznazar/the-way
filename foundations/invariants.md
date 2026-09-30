@@ -1427,7 +1427,6 @@ Every decision version and review record of the decision log carries every field
 - **Derives from:** WAY-19@ab65670f · WAY-71@c32828c9
 - **Part:** decisions
 - **Correction:** none
-- **Recovered:** none
 
 ## log-entry-field-words/1
 
@@ -1438,7 +1437,6 @@ No field of a decision version or review record of the decision log holds `none`
 - **Derives from:** WAY-19@ab65670f · WAY-71@c32828c9
 - **Part:** decisions
 - **Correction:** none
-- **Recovered:** none
 
 ## log-entry-merge-todo/1
 
@@ -1449,7 +1447,6 @@ Where {merge-onto} exists, no field of a decision version or review record of th
 - **Derives from:** WAY-71@c32828c9
 - **Part:** decisions
 - **Correction:** none
-- **Recovered:** none
 
 ## map-entry-field-presence/1
 
@@ -1460,7 +1457,6 @@ Every entry of the part map carries every field the part map template gives an e
 - **Derives from:** WAY-71@c32828c9
 - **Part:** part-map
 - **Correction:** none
-- **Recovered:** none
 
 ## map-entry-field-words/1
 
@@ -1471,7 +1467,6 @@ No field of an entry of the part map holds `none` or `TODO` where the part map t
 - **Derives from:** WAY-71@c32828c9
 - **Part:** part-map
 - **Correction:** none
-- **Recovered:** none
 
 ## invariant-entry-field-presence/1
 
@@ -1482,7 +1477,6 @@ Every entry of `foundations/invariants.md` carries every field the invariants te
 - **Derives from:** WAY-71@c32828c9
 - **Part:** invariants
 - **Correction:** none
-- **Recovered:** none
 
 ## invariant-entry-field-words/1
 
@@ -1493,7 +1487,6 @@ No field of an entry of `foundations/invariants.md` holds `none` or `TODO` where
 - **Derives from:** WAY-71@c32828c9
 - **Part:** invariants
 - **Correction:** none
-- **Recovered:** none
 
 ## invariant-entry-merge-todo/1
 
@@ -1504,18 +1497,6 @@ Where {merge-onto} exists, no field of an entry of `foundations/invariants.md` o
 - **Derives from:** WAY-71@c32828c9
 - **Part:** invariants · environment-facts
 - **Correction:** none
-- **Recovered:** none
-
-## template-language/1
-
-`elements/common/` states that the entries of every element are written in English, and every element's template refers there for that rule.
-
-- **Method:** `TODO`
-- **Rests on:** none
-- **Derives from:** WAY-72@ac27f7ee · WAY-35@11333629
-- **Part:** decisions · part-map · invariants · glossary · environment-facts
-- **Correction:** none
-- **Recovered:** none
 
 ## run-record-form/1
 
@@ -1627,7 +1608,6 @@ Every entry of `foundations/environment_facts.md` states its fact in one sentenc
 - **Derives from:** WAY-76@42d7b6fb
 - **Part:** environment-facts
 - **Correction:** none
-- **Recovered:** none
 
 ## fact-scope-word/1
 
@@ -1648,7 +1628,6 @@ The fingerprint the environment facts guard gives an entry is the fingerprint of
 - **Derives from:** WAY-78@1e07affb
 - **Part:** environment-facts · relation-model
 - **Correction:** none
-- **Recovered:** none
 
 ## fact-version-new/1
 
@@ -1819,7 +1798,6 @@ Every entry of `foundations/environment_facts.md` carries every field the enviro
 - **Derives from:** WAY-71@c32828c9
 - **Part:** environment-facts
 - **Correction:** none
-- **Recovered:** none
 
 ## fact-entry-field-words/1
 
@@ -1830,18 +1808,6 @@ No field of an entry of `foundations/environment_facts.md` holds `none` or `TODO
 - **Derives from:** WAY-71@c32828c9
 - **Part:** environment-facts
 - **Correction:** none
-- **Recovered:** none
-
-## fact-entry-merge-todo/1
-
-Where {merge-onto} exists, no field of an entry of `foundations/environment_facts.md` other than *Method* holds `TODO`.
-
-- **Method:** `python -B elements/environment-facts/format_guard.py foundations/environment_facts.md --merge-onto {merge-onto} --record .runs/environment-facts-merge-onto.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-71@c32828c9
-- **Part:** environment-facts
-- **Correction:** none
-- **Recovered:** none
 
 ## glossary-file/1
 
@@ -1930,9 +1896,8 @@ Every entry of `foundations/glossary.md` gives its definition in one sentence, c
 - **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-96@38f5315a
-- **Part:** glossary
+- **Part:** glossary · decisions
 - **Correction:** none
-- **Recovered:** none
 
 ## glossary-definition-words/1
 
@@ -1941,9 +1906,8 @@ No definition in `foundations/glossary.md` contains, outside code, *must* or a w
 - **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-96@38f5315a
-- **Part:** glossary
+- **Part:** glossary · decisions
 - **Correction:** none
-- **Recovered:** none
 
 ## glossary-entry-version/1
 

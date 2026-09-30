@@ -19,13 +19,13 @@ Usage, from the root of the product's repository:
 FILE defaults to foundations/environment_facts.md. --base names the commit the task branch left the
 main branch from; only with it are identifiers and versions compared with that commit (WAY-64,
 WAY-79). --merge-onto names the commit of the main branch a merge is made onto; only with it is
-`TODO` outside *Method* reported against a merge, every fingerprint a decision's *Based on* carries
-for a fact compared with the fact's current fingerprint after that merge, and a fact that nothing
-names reported as an error rather than a warning (WAY-71, WAY-73, WAY-90). `none`, given to either
-option, is the value the gate fills in where that commit does not exist (WAY-61): the checks that
-need the commit are then recorded as `unchecked`, a note says so, and they give no error; a commit
-that is not `none` and does not exist stays an error. --record names a JSON Lines file, created or
-overwritten, which receives the-way's own record of the run (WAY-74): a verdict for each invariant
+every fingerprint a decision's *Based on* carries for a fact compared with the fact's current
+fingerprint after that merge, and a fact that nothing names reported as an error rather than a
+warning (WAY-73, WAY-90). `none`, given to either option, is the value the gate fills in where that
+commit does not exist (WAY-61): the checks that need the commit are then recorded as `unchecked`, a
+note says so, and they give no error; a commit that is not `none` and does not exist stays an error.
+--record names a JSON Lines file, created or overwritten, which receives the-way's own record of
+the run (WAY-74): a verdict for each invariant
 cited by a check the run's options select — the checks against the base with --base, the checks of
 a merge with --merge-onto, the checks of the file alone with neither — a line for each error of
 those checks that belongs to no cited invariant, and every failure of the run itself. The report
@@ -88,8 +88,8 @@ record_paths = invariant_guard.record_paths
 PROGRAM = "elements/environment-facts/format_guard.py"
 # The checks each option selects for the record; every other check reads the file alone and is
 # recorded only by a run given neither option (WAY-61, WAY-74).
-SELECTED_BY = {"check_against_base": "--base", "check_merge_todo": "--merge-onto",
-               "check_fingerprints": "--merge-onto", "check_dependants": "--merge-onto"}
+SELECTED_BY = {"check_against_base": "--base", "check_fingerprints": "--merge-onto",
+               "check_dependants": "--merge-onto"}
 NO_COMMIT = shared.NO_COMMIT
 NO_COMMIT_REASON = shared.NO_COMMIT_REASON
 # Where a product's environment facts stand, relative to the root of its repository (WAY-64).
@@ -1011,22 +1011,6 @@ def check_against_base(path, facts, rules, base, top, report, no_commit=None):
 # --- the commit a merge onto the main branch is made onto ----------------------------------
 
 
-def check_merge_todo(entries, rules, report, no_commit=None):
-    """Reports every field of every entry, other than those the form gives `TODO`, that holds
-    `TODO` (WAY-71). Given `no_commit`, records it unchecked instead."""
-    # invariant: fact-entry-merge-todo/1
-    check, merge_todo = "check_merge_todo", "fact-entry-merge-todo/1"
-    if no_commit:
-        report.unchecked(check, NO_COMMIT_REASON, no_commit, merge_todo)
-        return
-    report.ran(check, merge_todo)
-    for entry in entries:
-        for name, (value, line) in entry.fields.items():
-            if name not in rules.todo_fields and holds_todo(value):
-                report.error(line, "%s: *%s* holds `TODO`, which a merge onto the main branch does "
-                                   "not take" % (label_of(entry), name), check, (merge_todo,))
-
-
 @dataclass
 class Merged:
     """The foundation a merge onto the main branch leaves."""
@@ -1232,25 +1216,23 @@ def run(path, base=None, stream=None, template=TEMPLATE, merge_onto=None, record
 
     if merge_onto == NO_COMMIT:
         no_onto = "--merge-onto none: there is no commit to merge onto"
-        check_merge_todo(entry_list, rules, report, no_commit=no_onto)
         check_fingerprints(None, report, no_commit=no_onto)
         check_dependants(entry_list, foundation.invariants, foundation.latest, report, False)
         check_dependants(entry_list, [], {}, report, True, no_commit=no_onto)
-        report.notes.append(no_onto + "; `TODO` in the entries, the fingerprints decisions carry "
-                                      "for facts and the facts nothing names are not checked "
-                                      "against a merge, and those checks are unchecked")
+        report.notes.append(no_onto + "; the fingerprints decisions carry for facts and the facts "
+                                      "nothing names are not checked against a merge, and those "
+                                      "checks are unchecked")
     elif merge_onto:
         if find_commit(path, top, "--merge-onto", merge_onto, report):
-            check_merge_todo(entry_list, rules, report)
             merged = merged_foundation(path, facts, foundation, rules, merge_onto, top, report)
             if merged is not None:
                 check_fingerprints(merged, report)
                 check_dependants(entry_list, merged.invariants, merged.latest, report, True)
     else:
         check_dependants(entry_list, foundation.invariants, foundation.latest, report, False)
-        report.notes.append("no --merge-onto given: `TODO` in the entries is not checked against a "
-                            "merge, the fingerprints decisions carry for facts are not compared "
-                            "with the current binding part, and a fact nothing names is only a warning")
+        report.notes.append("no --merge-onto given: the fingerprints decisions carry for facts are "
+                            "not compared with the current binding part, and a fact nothing names "
+                            "is only a warning")
 
     report.print(stream)
     if record is not None:
@@ -1266,12 +1248,11 @@ def main(argv=None):
                                        "compare identifiers and versions with; `none` where it "
                                        "does not exist, which records those checks as unchecked")
     parser.add_argument("--merge-onto", help="the commit of the main branch a merge is made onto; "
-                                             "only with it is `TODO` outside *Method* reported, "
-                                             "every fingerprint a decision's *Based on* carries for "
-                                             "a fact compared with the fact after the merge, and a "
-                                             "fact nothing names an error; `none` where the main "
-                                             "branch does not exist, which records those checks as "
-                                             "unchecked")
+                                             "only with it is every fingerprint a decision's "
+                                             "*Based on* carries for a fact compared with the fact "
+                                             "after the merge, and a fact nothing names an error; "
+                                             "`none` where the main branch does not exist, which "
+                                             "records those checks as unchecked")
     parser.add_argument("--record", help="the JSON Lines file, created or overwritten, that "
                                          "receives a verdict for each invariant a check cites")
     arguments = parser.parse_args(argv)

@@ -135,8 +135,7 @@ PLAIN = sorted([
     "fact-citation-version/1", "run-record-path/1"])
 BASE = sorted(["fact-version-new/1", "fact-version-changed/1", "fact-version-unchanged/1",
                "fact-identifier-persistence/1", "fact-withdrawal-persistence/1"])
-MERGE = sorted(["fact-entry-merge-todo/1", "based-on-fact-fingerprint-value/1",
-                "fact-dependants/1"])
+MERGE = sorted(["based-on-fact-fingerprint-value/1", "fact-dependants/1"])
 
 
 class GuardTestCase(unittest.TestCase):
@@ -1156,19 +1155,11 @@ class Merge(GuardTestCase):
                              1, "json-lines@%s · storage-events@00000000" % LINES_FINGERPRINT))})
         self.assertEqual(self.verdicts("based-on-fact-fingerprint-value/1"), ["fail"])
 
-    def test_todo_in_method_is_taken(self):
-        # invariant: fact-entry-merge-todo/1
-        self.commit(facts())
-        self.assertPasses(facts(), merge_onto="HEAD")
-        self.assertEqual(self.verdicts("fact-entry-merge-todo/1"), ["pass"])
-
     def test_todo_elsewhere_is_not_taken(self):
-        # invariant: fact-entry-merge-todo/1
-        self.commit(facts())
+        # invariant: fact-entry-field-words/1
         self.assertFails(facts(fact(holds="Firefox 130; TODO — which release"), lines_fact()),
-                         "*Holds for* holds `TODO`, which a merge onto the main branch does not "
-                         "take", merge_onto="HEAD")
-        self.assertEqual(self.verdicts("fact-entry-merge-todo/1"), ["fail"])
+                         "*Holds for* may not hold `TODO`")
+        self.assertEqual(self.verdicts("fact-entry-field-words/1"), ["fail"])
 
     def test_no_main_branch(self):
         output = self.assertPasses(facts(), merge_onto="none")
@@ -1251,14 +1242,11 @@ class PanelCorrections(GuardTestCase):
 
     def test_passage_holding_the_word_todo(self):
         # invariant: fact-entry-field-words/1
-        # invariant: fact-entry-merge-todo/1
         self.commit(facts())
         source = ('https://example.org/linter/4.0 § Rules — "Comments marked TODO are reported."; '
                   'read 2026-09-26')
         self.assertPasses(facts(fact(source=source), lines_fact()))
         self.assertEqual(self.verdicts("fact-entry-field-words/1"), ["pass"])
-        self.assertPasses(facts(fact(source=source), lines_fact()), merge_onto="HEAD")
-        self.assertEqual(self.verdicts("fact-entry-merge-todo/1"), ["pass"])
 
     def test_text_between_two_quoted_parts(self):
         # invariant: fact-source-form/1

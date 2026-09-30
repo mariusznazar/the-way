@@ -987,7 +987,7 @@ there instead of restating them.
 - **Based on:** none
 - **Relations:** related to WAY-05 · related to WAY-09 · related to WAY-16
 - **Outranks:** none
-- **Verification:** level 1 — invariants: skill-rule-source · template-language ·
+- **Verification:** level 1 — invariants: skill-rule-source ·
   invariant-identifier-form · fact-identifier-form. Level 2 for what the skill holds — an agent
   compares the change with the decision:
   - complies: a fix to the skill's output that concerns the form of a field goes into the
@@ -2012,57 +2012,38 @@ verdict leans on — every tracked file turns read-only.
 
 Every field an element's template gives an entry of its kind appears in every entry of its kind —
 in every version of a decision and every review record, the fields their forms give — holding a
-value, or `none` or `TODO` where the template gives it that word: `none` says nothing is there, `TODO` that something
-is missing. The main branch holds `TODO` only in an invariant's or a fact's *Method*, and in an
-invariant's *Rests on* until the facts element has entries. A guard reports a missing field, or a
-word not given it, as an error.
+value, or `none` or `TODO` where the template gives it that word: `none` says nothing is there,
+`TODO` that something is missing. The main branch holds `TODO` only in an invariant's or a fact's
+*Method*, and in an invariant's *Rests on* until the facts element has entries. A guard reports a
+missing field, or a word not given it, as an error.
 
 - **Change:** new decision
 - **Scope:** decisions, part-map, invariants, glossary, environment-facts, elements-common
 - **Based on:** none
-- **Relations:** related to WAY-01 · related to WAY-05 · related to WAY-09 · related to WAY-17 ·
-  related to WAY-38 · related to WAY-46 · related to WAY-54 · related to WAY-57 · related to WAY-58 ·
-  related to WAY-60 · related to WAY-62 · related to WAY-63
-- **Outranks:** none
+- **Relations:** none
 - **Verification:** level 1 — invariants: log-entry-field-presence · log-entry-field-words ·
   log-entry-merge-todo · map-entry-field-presence · map-entry-field-words ·
   invariant-entry-field-presence · invariant-entry-field-words · invariant-entry-merge-todo ·
-  fact-entry-field-presence · fact-entry-field-words · fact-entry-merge-todo ·
-  glossary-entry-field-presence · glossary-entry-field-words · glossary-entry-merge-todo ·
-  decision-verification-level · decision-change-kind ·
-  review-when-form · review-next-check. Level 2
+  fact-entry-field-presence · fact-entry-field-words · glossary-entry-field-presence ·
+  glossary-entry-field-words · glossary-entry-merge-todo · decision-verification-level ·
+  decision-change-kind · review-when-form · review-next-check. Level 2
   for what `none` states — an agent compares the change with the decision:
   - complies: an invariant whose author searched the log and found no decision it derives from
     reads `Derives from: none`; a decision whose source is silent on what it rests on reads
-    `Based on: TODO — <what is missing>` until a human answers;
+    `Based on: TODO — <what is missing>`;
   - violates: an invariant reads `Derives from: none` though nobody searched the log; a decision
     reads `Based on: none` where its source says nothing of what it rests on.
 - **Review when:** none
 - **Origin:** none
-- **Approver override:** none
 - **Approved by:** Mariusz, 2026-09-26
 
-*Rationale:* a field left out on purpose cannot be told from one forgotten (WAY-58). `none` and
-`TODO` carry that difference only where a reader acts on them — the map's guard reads `TODO` in
-*Depends on* as no dependency, and `TODO` in *Part* gives the gate no part to run the invariant in
-(WAY-62) — so a field takes a word only where its template says what it means there. `TODO` marks
-work in progress, and the main branch describes the product as it is (WAY-01), so a `TODO` there is
-a gap nothing counts, except in *Method*, which the gate reports unchecked (WAY-63), and in *Rests
-on*, where the fact stands with its source until it has an entry to name (WAY-31); keeping such an
-invariant out is the gap WAY-60 rejects. A fact's *Method* takes `TODO` on the same ground, and its
-source never (WAY-80).
-*Rejected:* a decision for the invariants element alone — every element to come would need a copy; a
-wider scope for WAY-05 — its question is how a decision entry is written; `none` and `TODO` in every
-field of every element — the readings above; optional fields left out when empty — an intended gap
-and a forgotten one look the same; for facts, a field of state and a ratcheted list of unchecked
-facts — three mechanisms where one serves.
-*Consequences:* each element's template says which of the two words each field takes — the decision
-template in its table of states, the others in the form of each field. A guard warns on a `TODO`
-its template gives, and reports it as an error where `{merge-onto}` exists (WAY-60), which leaves
-the merge creating the main branch unchecked. A ratchet for facts comes back once unchecked facts
-get in the way. Each
-element's guard checks the level 1 invariants above for its own entries;
-`invariant-entry-merge-todo` drops *Rests on* once the environment facts element has entries.
+*Rationale:* a field left out on purpose cannot be told from one forgotten (WAY-58), and a word the
+template gives no meaning misleads its reader. A `TODO` on the main branch is a gap nothing counts,
+except where the gate reports it (WAY-63) or a fact awaits its entry (WAY-31).
+*Rejected:* a decision for invariants alone — every element would need a copy; a wider scope for
+WAY-05 — it answers how a decision entry is written; both words in every field — a word with no
+meaning; optional fields left out when empty — intended and forgotten gaps look alike; for facts, a
+state field and a ratcheted list — three mechanisms where one serves.
 
 ### WAY-72/1 — In what language is a product's foundation written?
 
@@ -2072,37 +2053,23 @@ use it and whatever language its team speaks.
 - **Change:** new decision
 - **Scope:** decisions, part-map, invariants, glossary, environment-facts, elements-common
 - **Based on:** none
-- **Relations:** related to WAY-04 · related to WAY-05 · related to WAY-35 · related to WAY-38 ·
-  related to WAY-60 · related to WAY-71
-- **Outranks:** none
-- **Verification:** level 1 — invariants: template-language. Level 2 for the rest — an agent
-  compares the change with the decision:
+- **Relations:** none
+- **Verification:** level 2 — an agent compares the change with the decision:
   - complies: the foundation of a game whose players read Polish, built by a team that speaks
     Polish, is written in English;
   - violates: a product starts its decision log in Polish because its users and its team speak it.
 - **Review when:** none
 - **Origin:** none
-- **Approver override:** none
 - **Approved by:** Mariusz, 2026-09-23
 
-*Rationale:* the fields, the words `none` and `TODO` and the kinds of change are English in every
-template, and the format guards check words in English: the decision guard forbids *should*, *will*
-and the keywords of RFC 2119 and ends a sentence only before a capital from A to Z, and the
-invariants guard forbids "main branch" and "task branch" outside quoted text. An entry in another
-language passes those checks without a word, so they look kept while checking nothing, and keeping
-them for another language takes a list of words and a sentence counter for each language a product
-speaks. One language also lets the entries of this repository serve as examples for every product.
-*Rejected:* entries in the language of the product, with the words of each check listed per
-language in the templates — every check grows a list for each language used, and a language with
-none is checked by nothing; the language of the file, asked for when the file has no entries — the
-checks of words go silent on every other language; a guard reporting an entry in another language
-as unchecked — it would have to recognise the language first, which the standard library cannot do
-(WAY-38).
-*Consequences:* each element's template states that its entries are written in English, and the
-element's skill reads the rule from there and asks for no language (WAY-35). How text the product
-shows the people who use it stands in an entry — quoted in its own language or described in
-English — and how a source in another language is cited are not settled here; the first product
-whose users read another language settles them.
+*Rationale:* every template's fields are English, and the words the rules of form keep out (WAY-05,
+WAY-60) are English words: an entry in another language passes those rules without a word, so they
+look kept while checking nothing. One language also makes the entries of the-way examples for every
+product.
+*Rejected:* entries in the product's language, each check's words listed per language — a list for
+every language, and one without a list checked by nothing; the file's language, asked while it has
+no entries — word checks go silent on other languages; a guard reporting other languages unchecked
+— recognising a language needs more than the standard library (WAY-38).
 
 ### WAY-73/1 — Which entries name an environment fact?
 
@@ -2182,36 +2149,24 @@ stand as two entries.
 - **Change:** new decision
 - **Scope:** environment-facts, invariants
 - **Based on:** none
-- **Relations:** derives from WAY-22@dcf291ea · related to WAY-04 · related to WAY-56 ·
-  related to WAY-73
-- **Outranks:** none
+- **Relations:** derives from WAY-22@dcf291ea
 - **Verification:** level 1 — invariants: fact-sentence-count. Level 2 for what one sentence may
   hold — an agent compares the change with the decision:
-  - complies: how git matches a path pattern of an attributes file, with the two exceptions its
-    page gives, is one fact, and what `git check-attr` prints about a path is left out of it; the
-    rules by which git ignores a path, from the page of the same edition, stand as a second entry;
+  - complies: git's path-pattern rule for attributes files, with its page's two exceptions, is one
+    fact, without what `git check-attr` prints; git's ignore rules, from a page of the same edition,
+    stand as a second entry;
   - violates: the digest SHA-256 gives and the octets UTF-8 uses stand in one entry; "the
     repository declares Python 3.14" is written as a fact.
 - **Review when:** none
 - **Origin:** none
-- **Approver override:** none
 - **Approved by:** Mariusz, 2026-09-26
 
-*Rationale:* a fact is reviewed when its source changes, so what changes together has to stand
-together and what changes apart has to stand apart. Two publishers, two rhythms of change and two
-methods in one entry mean that a new edition of one flags every entry resting on the other; the
-facts behind this repository's own invariants glued such pairs in single lines — SHA-256 with
-UTF-8, JSON with JSON Lines. An edition of one document is one source, because it changes as a
-whole. The count sets how much an entry may hold, not a reason to join: two facts from one page
-about different things change for different readers. An invariant written as an environment
-fact would never be checked on the commit that breaks it.
-*Rejected:* the pattern rule of git and what `git check-attr` reports kept in one entry — the
-second is about the tool that runs a method, and changes on no commit whether the sentence holds
-(WAY-73); both halves as two facts in *Rests on* — the second holds no condition of the sentence
-(WAY-73).
-*Consequences:* the facts guard counts sentences, as the invariants guard does, and two facts in
-one sentence are left to review. What `git check-attr` reports is no fact: a probe reads the release of the tool it runs on
-instead (WAY-81).
+*Rationale:* a fact is reviewed when its source changes, so what changes together stands together:
+two sources in one entry let a new edition of one flag every entry resting on the other. An
+invariant written as a fact would never be checked on the commit that breaks it.
+*Rejected:* git's pattern rule and what `git check-attr` reports in one entry — the second is about
+a method's tool, and no commit changes it (WAY-73); both as facts in *Rests on* — the second holds
+no condition of the sentence (WAY-73).
 
 ### WAY-77/1 — What does an environment fact's *Holds for* name?
 
@@ -2253,32 +2208,18 @@ digest of the source's text is kept.
 - **Change:** new decision
 - **Scope:** environment-facts, relation-model, invariants
 - **Based on:** none
-- **Relations:** derives from WAY-02@3ffcbd46 · related to WAY-42 · related to WAY-77
-- **Outranks:** none
+- **Relations:** derives from WAY-02@3ffcbd46
 - **Verification:** level 1 — invariants: fact-fingerprint-input.
 - **Review when:** none
 - **Origin:** none
-- **Approver override:** none
 - **Approved by:** Mariusz, 2026-09-28
 
-*Rationale:* the fingerprint exists to flag what relies on an entry (WAY-02), and what relies on a
-fact relies on what it claims and on where the claim holds: read with another range, the same
-sentence says something else about a script — `import cgi` passes under 3.12 and fails under 3.13.
-The source and its date change at every re-reading and every rebuilt page, and a flag raised by them
-would be raised for nothing; a source that really changes fails the watch, which leads to a review
-of the fact, and only a human in that review changes the sentence or the range (WAY-82). The passage
-quoted word for word is the one anchor the watch compares against at the address, so no digest is
-kept beside it.
-*Rejected:* the text of the source inside the fingerprint — a rebuilt page flags every dependent,
-against WAY-82's rule that a change in a source is not a change of what is true; the sentence alone
-— a widened range passes with no signal; a digest of the passage read, kept beside it as a lock file
-keeps one — the passage quoted word for word is already the anchor.
-*Consequences:* the facts guard computes the fingerprint with the script of `relation-model`. The
-sentence names an edition of its source only where the product stands on that edition. A change
-to the text of the source next to the quoted passage passes with no signal; that cost is accepted.
-Every change of range sends everything resting on the fact to review, since its fingerprint moves
-(WAY-31, WAY-90). WAY-31's consequence that left this question to the element is edited in place
-to name this decision.
+*Rationale:* what relies on a fact relies on its claim and the range it holds for; the source and
+its date change at every re-reading, so flags from them would mean nothing; a source that changes
+fails the watch (WAY-82). Text changed beside the quoted passage passes unseen, an accepted cost.
+*Rejected:* the source's text in the fingerprint — a rebuilt page flags every dependent (WAY-82);
+the sentence alone — a widened range passes unseen; a digest of the passage (as a lock file keeps
+one) — the quoted passage is already the anchor.
 
 ### WAY-79/1 — Is an environment fact entry versioned?
 
@@ -2744,44 +2685,28 @@ definition of one uses the other.
 
 - **Change:** new decision
 - **Scope:** glossary
-- **Based on:** a definition carries no requirement: "A definition shall not take the form of, or
-  contain, a requirement" (ISO/IEC Directives, Part 2, eighth edition, 16.5.6,
-  https://metanorma.github.io/mn-samples-iso/documents/directives/part2/document.html).
-- **Relations:** related to WAY-05 · related to WAY-22 · related to WAY-63 · related to WAY-94 ·
-  related to WAY-97
-- **Outranks:** none
+- **Based on:** none
+- **Relations:** none
 - **Verification:** level 1 — invariants: glossary-definition-count · glossary-definition-words.
   Level 2 for the shape, the rule and neighbouring terms — a definition carries a rule when it holds
   something the decision or invariant setting it could change while the word went on naming the same
   thing; an agent compares the change with the decision:
-  - complies: "The panel is the group of agents that assesses a change", with which changes, how many
-    agents and who decides left to WAY-10; "A result is the value reported for an entry on one
-    commit: the verdict that counts for it there, or …";
+  - complies: "The panel is the group of agents that assesses a change", the rest left to WAY-10;
+    the definition of result names its neighbour: "the verdict that counts for it there, or …";
   - violates: "The panel is the three agents that assess a change…", with the number WAY-10 sets;
-    "The binding part is the part of an entry that…", its genus the word the part map uses for a
-    part; the definitions of verdict and result each standing alone.
+    "The binding part is the part of an entry that…", its genus a term of the part map; the
+    definitions of verdict and result each standing alone.
 - **Review when:** none
 - **Origin:** none
-- **Approver override:** none
 - **Approved by:** Mariusz, 2026-09-27
 
-*Rationale:* the foundation binds with sentences (WAY-05, WAY-56), and a definition counted as one
-sentence lets the same count serve every guard. A genus places the word among things the reader
-knows, and a genus that is itself a term in another meaning puts the homonym back into the
-definition. A rule inside a definition changes the definition whenever the rule moves, and sends the
-review of uses after what is a change of a decision; asking what the decision setting a rule could
-change while the word still names the same thing tells the two apart. Neighbouring terms are kept apart only where one definition says how
-they differ: a rationale calling `unchecked` a missing verdict contradicts the record of a run,
-which lists it as one (WAY-74).
-*Rejected:* a phrase that replaces the term, without an article or a full stop — the guard would count
-something other than sentences; a test sorting by a number, a date or a list — a place or a party
-passes it, as "run on the main branch" did for the clock; the definition put in place of the word in
-the sentence that sets the rule — a definition says what the thing does, that sentence repeats it,
-and the test failed this decision's own panel; a field naming neighbouring terms — the definitions
-carry it.
-*Consequences:* the shape is checked by review, the count and the words by the guard. The normative
-words kept out of a definition are *must* and *must not* besides the words the decision template
-keeps out of binding sentences.
+*Rationale:* a genus that is a term in another meaning brings the homonym back; a rule inside a
+definition changes it whenever the rule moves and sends the review of uses after what is a
+decision's change; neighbouring terms stay apart only where one definition says how they differ.
+*Rejected:* a phrase replacing the term, with no article or full stop — the count would count
+something other than sentences; a rule told by a number, a date or a list — a place or a party
+passes it; a rule told by putting the definition into the sentence setting the rule — that sentence
+repeats what the thing does; a field naming neighbouring terms — the definitions carry it.
 
 ### WAY-97/1 — How does a sentence rely on a glossary term, and what does a change to a definition go through?
 
