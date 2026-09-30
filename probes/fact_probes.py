@@ -133,16 +133,10 @@ def named_release(identifier, tool):
 # --- pages ----------------------------------------------------------------------------------
 
 
-class _NoRedirect(urllib.request.HTTPRedirectHandler):
-    def redirect_request(self, request, handle, code, message, headers, address):
-        return None
-
-
-def fetch(address, follow_redirects=True):
+def fetch(address):
     """(status, content type, body) of an anonymous GET, sent with no header but USER_AGENT. A
     status other than 2xx is returned, never raised; a network failure raises NoVerdict."""
-    handlers = [] if follow_redirects else [_NoRedirect()]
-    opener = urllib.request.build_opener(*handlers)
+    opener = urllib.request.build_opener()
     opener.addheaders = [("User-Agent", USER_AGENT)]
     try:
         with opener.open(urllib.request.Request(address), timeout=TIMEOUT) as answer:
