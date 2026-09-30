@@ -876,7 +876,7 @@ Every exchange with the external context in the part map records its direction, 
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-48@947e51e4 · WAY-50@56465170
+- **Derives from:** WAY-48@947e51e4 · WAY-49@e8e0ff7c
 - **Part:** part-map
 - **Correction:** none
 
@@ -896,21 +896,19 @@ Every item declared a surface carries a level of promise.
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-49@1e1a52ad
+- **Derives from:** WAY-49@e8e0ff7c
 - **Part:** every
 - **Correction:** none
-- **Recovered:** none
 
 ## surface-declaration/1
 
-Every surface in the part map names a declaration that exists, or says that it cannot be marked at the item and names the test that checks it.
+Every surface in the part map names a file that exists and an item whose name stands in that file, or says that it cannot be marked at the item and names a test file that exists.
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-49@1e1a52ad
+- **Derives from:** WAY-49@e8e0ff7c
 - **Part:** every
 - **Correction:** none
-- **Recovered:** none
 
 ## map-withdrawal-date/1
 
@@ -918,10 +916,9 @@ No withdrawal date is written in the part map.
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-49@1e1a52ad
+- **Derives from:** WAY-49@e8e0ff7c
 - **Part:** part-map
 - **Correction:** none
-- **Recovered:** none
 
 ## promise-level-policy/1
 
@@ -929,10 +926,9 @@ Every level of promise a declaration uses has a policy in the part map.
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-50@56465170
+- **Derives from:** WAY-49@e8e0ff7c
 - **Part:** every
 - **Correction:** none
-- **Recovered:** none
 
 ## surface-change-path/1
 
@@ -940,10 +936,9 @@ No surface in the part map carries a change path of its own.
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-50@56465170
+- **Derives from:** WAY-49@e8e0ff7c
 - **Part:** part-map
 - **Correction:** none
-- **Recovered:** none
 
 ## known-violation-coverage/1
 

@@ -114,7 +114,7 @@ A row names no part and no file
 (`TODO — decision pending: which decision sets what a row of the external context names`). It is
 read by whoever records a trust boundary at the part that
 handles the exchange (WAY-48), and by whoever sets the change path of a promise level, which has to
-allow for a consumer that does not update together with the product (WAY-50).
+allow for a consumer that does not update together with the product (WAY-49).
 
 ## Change paths
 
@@ -124,7 +124,7 @@ allow for a consumer that does not update together with the product (WAY-50).
 | Promise level | What a change at this level may do | What it owes the consumer first |
 ```
 
-One row per promise level, never per surface (WAY-50).
+One row per promise level, never per surface (WAY-49).
 
 ## Files left out on purpose
 
@@ -168,7 +168,7 @@ reader not built yet is named by the invariant it answers to
 | Coverage (flow) | the format guard (`flow-coverage-parts`) | read off |
 | Declared at | the format guard (`surface-declaration`); whoever changes the item | read off |
 | criticality scale | the format guard, which rejects a degree not on the list (`failure-mode-severity`); the computation of criticality, which orders the degrees by it | judgment |
-| external context | the format guard (`external-exchange-row`); whoever records a trust boundary or sets a change path (WAY-48, WAY-50) | judgment |
+| external context | the format guard (`external-exchange-row`); whoever records a trust boundary or sets a change path (WAY-48, WAY-49) | judgment |
 | change paths | whoever changes a surface at that level; the format guard (`surface-change-path`, `promise-level-policy`) | judgment |
 | files left out on purpose | the format guard, as the only exception to file assignment (`file-part-assignment`, `left-out-file-assignment`) | judgment |
 | withdrawn identifiers | the format guards, which reject a reference to one and its reuse (`decision-scope-names`, `identifier-holders`) and check why and the successors (`map-withdrawal-successors`) and, against `{fork-point}`, that every identifier held there stays (`map-identifier-persistence`) | as `elements/common/rules.md` gives it |

@@ -985,7 +985,10 @@ def check_surfaces(entries, sections, rules, text, report, top):
         if not declared or not os.path.isfile(full):
             report.error(line, "%s: declaration `%s` of `%s` does not exist"
                          % (entry.identifier, declared, entry.identifier), check, (declaration,))
-        elif len(pieces) > 1 and pieces[1]:
+        elif len(pieces) < 2 or not pieces[1]:
+            report.error(line, "%s: declaration `%s` of `%s` names no item"
+                         % (entry.identifier, declared, entry.identifier), check, (declaration,))
+        else:
             with open(full, encoding="utf-8", errors="replace") as handle:
                 if pieces[1] not in handle.read():
                     report.error(line, "%s: `%s` does not stand in `%s`"
@@ -1002,7 +1005,7 @@ def check_surfaces(entries, sections, rules, text, report, top):
 
 def check_promise_levels(entries, report):
     """The levels of promise sit at the declarations, and no command of the product reports them,
-    so what the map says of them cannot be read against the code (WAY-49, WAY-50)."""
+    so what the map says of them cannot be read against the code (WAY-49)."""
     # invariant: surface-promise-level/1
     # invariant: promise-level-policy/1
     check = "check_promise_levels"

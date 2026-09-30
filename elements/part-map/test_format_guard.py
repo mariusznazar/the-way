@@ -826,6 +826,14 @@ class Surfaces(GuardTestCase):
         self.assertEqual(self.failures("surface-declaration/1"),
                          ["line 29: save-format: `LoadFile` does not stand in `src/saving.py`"])
 
+    def test_declaration_that_names_no_item(self):
+        self.assertFails(part_map(part(), flow(), surface(declared="src/saving.py"),
+                                  foundations_part()),
+                         "declaration `src/saving.py` of `save-format` names no item")
+        self.assertEqual(self.failures("surface-declaration/1"),
+                         ["line 29: save-format: declaration `src/saving.py` of `save-format` "
+                          "names no item"])
+
     def test_promise_level_written_in_the_map(self):
         self.assertFails(part_map(part(), flow(), surface(declared="src/saving.py · SaveFile · "
                                                                    "stable"),

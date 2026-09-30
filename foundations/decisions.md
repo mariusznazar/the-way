@@ -1427,97 +1427,49 @@ reading back a browser's storage or a user's file is the same act of trust.
 not give; the boundary taken from the part's criticality — the exposed part is often the
 unimportant one; the boundary as a line in a diagram (pytm) — only a human looking reads it.
 
-### WAY-49/1 — How does a product declare a surface?
+### WAY-49/1 — How does a product declare a surface, and by what path may it change?
 
 A surface is declared at the item itself, in the code or in the schema, with the level of the
-promise and, once the surface is being withdrawn, the date of the withdrawal. The map holds one
-entry per surface — its identifier, the promise in words, and where the declaration sits — and holds
-no list of withdrawals in progress. A surface that cannot be marked at the item is written in the
-map by hand and checked by a test.
+promise and, once the surface is being withdrawn, the date of the withdrawal; a surface that cannot
+be marked at the item is written in the map by hand and checked by a test. The map holds one entry
+per surface — its identifier, the promise in words, and where the declaration sits — and holds no
+list of withdrawals in progress; each level of promise carries one policy for changing a surface at
+that level, written once in the map, every surface follows the policy of its level, and no surface
+carries a path of its own. What a level's policy has to allow follows from whether the consumers at
+that level update together with the product, and data already stored at the user is a consumer
+that never updates; an exchange with the external context records whether the partner updates
+together with the product.
 
 - **Change:** new decision
 - **Scope:** part-map
-- **Based on:** what counts as a surface is declared, not discovered: "Software using Semantic
-  Versioning MUST declare a public API" (https://semver.org/). Tools read the promise where it is
-  written at the item — API Extractor reports an exported item with no release tag
-  (https://api-extractor.com/pages/messages/ae-missing-release-tag/) — and turn a withdrawal date
-  written there into a check, where removing the item before the date is a breaking change
-  (oasdiff, https://github.com/oasdiff/oasdiff/blob/main/docs/DEPRECATION.md).
-- **Relations:** derives from WAY-40@c3f0b830 · related to WAY-34 · related to WAY-44
-- **Outranks:** none
+- **Based on:** none
+- **Relations:** derives from WAY-40@c3f0b830
 - **Verification:** level 1 — invariants: surface-promise-level · surface-declaration ·
-  map-withdrawal-date.
+  map-withdrawal-date · external-exchange-row · promise-level-policy · surface-change-path.
+  Level 2 for the test of a surface that cannot be marked — an agent compares the change with the
+  decision:
+  - complies: for a save-file format, the map names a test that reads a stored sample and fails
+    on a renamed field;
+  - violates: the map names, for a command-line interface, a test file that never runs the command.
+  Level 2 for how a change follows its level's policy — an agent compares the change with the
+  decision:
+  - complies: a field of a format stored at the user is renamed, and the product still reads the
+    old records;
+  - violates: a command-line option is dropped unannounced, though its level's policy owes an
+    announcement first; a level whose consumer never updates allows a break with nothing owed.
 - **Review when:** none
 - **Origin:** none
-- **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-17
+- **Approved by:** Mariusz, 2026-09-29
 
-*Rationale:* a surface stands on a promise, and no tool reads a promise out of code: a tool computes
-the shape of what somebody declared, and the declaring falls to a human. It sits at the item,
-where whoever changes it sees it and where the tools that compute shape and breaking change look
-for it. The map keeps the promise in words and the place of the declaration, because that is
-what a scope, a criticality and a change path are read against, and a header comment cannot
-carry them. The withdrawal date stays at the item as well, because it is checked against the
-item's removal; kept in the map it would be a second copy, and the entry nobody deletes. A
-surface that cannot be marked at the item — the format of a saved file, a command-line
-interface — exists all the same, and a hand-written entry with a test is what keeps it from
-disappearing quietly.
-*Rejected:* the list of surfaces computed from the code — tools compute the shape of declared
-items, never which of them the product promises to keep; the declaration kept only in the map
-— whoever changes the item does not read the map, and no tool would find it there; a list of
-withdrawals in progress in the map — a second place to update, stale the day the item goes.
-*Consequences:* the product's own tool computes the shape of declared items, a breaking change
-against the main branch, and a declaration missing its level (WAY-04). A product with a format of
-its own, such as a saved game, sets the shape of the mark and a parser that fails on a record it
-does not recognise. The surfaces this repository promises to the products pinned to a commit
-(WAY-34) — the format of entries, the way a fingerprint is computed, the commands of the scripts
-— are declared when its own map is written.
-
-### WAY-50/1 — By what path may a surface change?
-
-Each level of promise carries one policy for changing a surface at that level, written once in
-the map; every surface follows the policy of its level, and no surface carries a path of its
-own. What a level's policy has to allow follows from whether the consumers at that level update
-together with the product, and data already stored at the user is a consumer that never updates.
-An exchange with the external context records whether its consumer updates together with the
-product.
-
-- **Change:** new decision
-- **Scope:** part-map
-- **Based on:** Kubernetes ties the life of a surface to its level rather than to the surface
-  itself — "Rule #4a: API lifetime is determined by the API stability level" — and treats stored
-  data as a consumer that cannot be made to move: "no API versions that have been persisted to
-  storage may be removed […] the API server must remain capable of decoding/converting previously
-  persisted data from storage" (Kubernetes deprecation policy,
-  https://kubernetes.io/docs/reference/using-api/deprecation-policy/).
-- **Relations:** derives from WAY-49@1e1a52ad · related to WAY-34 · related to WAY-48
-- **Outranks:** none
-- **Verification:** level 1 — invariants: external-exchange-row · promise-level-policy ·
-  surface-change-path.
-- **Review when:** none
-- **Origin:** none
-- **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-17
-
-*Rationale:* a path written at each surface is written many times and read once, and the same
-promise means the same path, so the level — which is the promise — is where the path belongs.
-What the path has to allow is not a matter of taste but of who has to move: a consumer that
-ships with the product can be changed in the same commit, while one that does not update needs a
-route it can take at its own pace. Data already written at the user is the strictest such
-consumer, because it never updates and nothing can ask it to, which is why a system that has
-persisted data keeps the ability to read it back after the version that wrote it is gone.
-Recording at the exchange whether the consumer updates keeps that choice out of the hands of
-whoever happens to be making the change.
-*Rejected:* a change path written at each surface — the same sentence copied per surface, drifting
-apart as they are edited; the path chosen by how important the surface is — importance says how
-bad a break would be, not who is able to follow; the trait "updates together with us" recorded
-for every dependency inside the product — parts of one repository always update together, so the
-trait says something only at the edge.
-*Consequences:* a product sets its levels of promise and one policy for each, saying what a
-change at that level may do and what it owes the consumer first — a period, an announcement, a
-conversion. Those details belong to the product, not to this process. The level a product gives
-a format it saves is chosen knowing that the data already stored is a consumer that will never
-update.
+*Rationale:* a surface that cannot be marked and has no test disappears quietly. A consumer
+shipping with the product changes in the same commit, one that does not update needs a route at
+its own pace; the exchange records whether the partner updates — for what goes out, the consumer
+— so whoever makes a change does not choose.
+*Rejected:* surfaces computed from the code — tools see shape, never the promise; the declaration
+only in the map — whoever changes the item does not read it; withdrawals in progress in the map —
+a second copy, stale the day the item goes; a path per surface — copies drift apart; the path by
+importance — it says how bad a break is, not who can follow; "updates together" for every internal
+dependency — inside one repository it always holds.
 
 ### WAY-51/1 — What does the main branch hold where the product does not meet an invariant or the part map's allowed dependencies?
 
