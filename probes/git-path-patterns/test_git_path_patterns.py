@@ -3,7 +3,7 @@ by the rules of `.gitignore` patterns, except that a negative pattern is forbidd
 that matches a directory does not match the paths inside it.
 
 The probe asks `git -c core.ignorecase=false check-attr` in a temporary repository; the watch reads
-the passages of the fact's *Source* at their address. Expected values are written out (WAY-70).
+the passages of the fact's *Source* at their address. Expected values are written out (WAY-69).
 """
 
 import os

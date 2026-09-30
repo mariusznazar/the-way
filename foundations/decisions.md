@@ -71,32 +71,26 @@ nothing gained; one computation per element — a reference would need its eleme
 ### WAY-03/1 — Who may change an invariant test, and when?
 
 Invariant tests are written and accepted together with the foundation change, and during
-implementation they are read-only. A mechanism outside the model enforces this: a local hook,
-and in the merge request a CI check that rejects any change to an invariant test without an
-accepted foundation change. A task that needs an invariant test changed goes back to the
-foundation step.
+implementation they are read-only. A mechanism outside the model enforces this: when a change is
+merged, a check whose definition is taken from the main branch rejects any change to an invariant
+test not accepted by the panel or by a human. A task that needs an invariant test changed goes back
+to the foundation step.
 
 - **Change:** new decision
 - **Scope:** invariants, task-cycle
-- **Based on:** agents that a test stands in the way of cheat past it, and the Claude models
-  measured do so mostly by changing the test, against which read-only tests are particularly
-  effective: impossiblebench-test-modification@9cdba560.
-- **Relations:** derives from WAY-01@60960941 · related to WAY-02
-- **Outranks:** none
+- **Based on:** impossiblebench-test-modification@9cdba560
+- **Relations:** derives from WAY-01@60960941
 - **Verification:** level 1 — invariants: invariant-test-change-acceptance.
-- **Review when:** the design of the task cycle begins, or no model in the range of fact
-  impossiblebench-test-modification is Active in Anthropic's table of models · check by: 2026-10-02
+- **Review when:** no model in the range of fact impossiblebench-test-modification is Active in
+  Anthropic's table of models · check by: 2026-10-02
 - **Origin:** none
-- **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-14
+- **Approved by:** Mariusz, 2026-09-29
 
 *Rationale:* an agent that a test stands in the way of adjusts the test to the code: the build
 turns green, and the foundation lies. Keeping invariant tests out of the implementer's reach
 removes that move instead of forbidding it.
-*Rejected:* a written rule "do not change the tests" — a rule written in prose stops nothing.
-*Consequences:* the CI check has to tell invariant tests from other tests; it recognises them
-by the invariant they cite (WAY-02). Even a change of mechanics — a selector, test data, waiting —
-goes through the foundation step and its acceptance.
+*Rejected:* a written rule "do not change the tests" — prose stops nothing; a local hook — one
+switch skips it.
 
 ### WAY-04/1 — What makes up a product's foundation, and what in it is derived rather than written by hand?
 
@@ -317,39 +311,38 @@ to the `repository` part of the map, not by a new version of this decision.
 ### WAY-10/1 — Who assesses a change to an invariant test or to the foundation?
 
 A change to an invariant test or to the foundation is assessed by the panel, which has three
-agents: two assess it independently, each from a different, named perspective and seeing only the
-diff and the foundation, never the author's reasoning, and one of the two perspectives names what
-of the change can be cut, while the third, on a different model where one is available, settles
-between them. The panel decides changes of an invariant test's mechanics — selectors, test data,
-waiting — and a rerun set outside the method's command is never such a change. Every other change
-the panel prepares with the diff, its effects and a recommendation, and a human decides.
+agents: two assess it independently, on different models where two are available, each from a
+different, named perspective and seeing the diff and the files of the commit it assesses without
+the task's chronicle, never the author's reasoning, and one of the two perspectives names what of
+the change can be cut, while the third settles between them twice, reading the two assessments in
+swapped order. The panel decides a change of an invariant test's mechanics — selectors, test data,
+waiting — where its two settlements agree, and a rerun set outside the method's command is never
+such a change. Every other change, and one on which the two settlements differ, the panel prepares
+with the diff, its effects, its settlements and a recommendation, and a human decides.
 
 - **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common,
   task-cycle
-- **Based on:** a model assessing text favours its own: llm-self-preference@6d9f4b97.
-- **Relations:** derives from WAY-03@4fa941a4 · related to WAY-07
-- **Outranks:** none
+- **Based on:** llm-self-preference@6d9f4b97 · TODO — the finding that settling in both orders
+  rests on
+- **Relations:** derives from WAY-03@97d336a9
 - **Verification:** level 1 — invariants: invariant-test-change-acceptance ·
   foundation-change-panel-record. Level 2 for what the panel decides — an agent compares the change
   with the decision:
-  - complies: the panel accepts a new selector in an invariant test, and the change is merged
-    without a human;
+  - complies: both settlements accept a new selector in an invariant test, and it merges without a
+    human;
   - violates: the panel accepts a changed expected value in an invariant test; an assessing agent
-    receives the author's reasoning.
-- **Review when:** the design of the task cycle begins · check by: 2026-10-02
+    receives the author's reasoning; one order's settlement stands though the other order's differs.
+- **Review when:** TODO
 - **Origin:** none
-- **Approver override:** none
 - **Approved by:** Mariusz, 2026-09-29
 
-*Rationale:* the problem is a single executor that checks itself. Agents on the same model with
-the same input share its blind spots, so independence comes from a different perspective, from
-not seeing the author's reasoning, and from a different model for the agent that settles. Only a
-human knows what the product is meant to protect, so every change to what the foundation says goes to a human. The finding it cites measured models of other publishers only, and this decision takes it across publishers (WAY-85).
-*Rejected:* a panel that settles everything; a single agent without a panel.
-*Consequences:* the CI check from WAY-03 accepts a change to an invariant test only with the
-panel's record, and, beyond a change of mechanics, only with a human decision. Changes waiting for a
-human grow with the number of tasks, and nothing yet limits how many may wait.
+*Rationale:* the problem is a single executor that checks itself: agents on one model with one
+input share its blind spots, so independence comes from different perspectives and from not seeing
+the author's reasoning; settling in both orders costs little. Only a human knows what the product is
+meant to protect.
+*Rejected:* a panel that settles everything — it does not know what the product protects; a single
+agent without a panel — it checks itself.
 
 ### WAY-11/1 — How does a task end?
 
@@ -1819,7 +1812,7 @@ reference to an invariant's version is historical and never flagged, as WAY-02 h
 - **Change:** new decision
 - **Scope:** invariants, relation-model, gate, task-cycle, part-map, elements-common
 - **Based on:** none
-- **Relations:** derives from WAY-03@4fa941a4 · derives from WAY-10@08118926 ·
+- **Relations:** derives from WAY-03@97d336a9 · derives from WAY-10@9b8b1401 ·
   narrows WAY-02@3ffcbd46
 - **Verification:** level 1 — invariants: invariant-version-number · invariant-version-new ·
   invariant-version-changed · invariant-version-unchanged · invariant-earlier-wording ·
@@ -2174,7 +2167,7 @@ on the commit being checked. Where several checks cite one invariant in a run, t
 - **Change:** new decision
 - **Scope:** invariants, gate, decisions, part-map, relation-model, task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-03@4fa941a4 · derives from WAY-17@b1e26133 ·
+- **Relations:** derives from WAY-03@97d336a9 · derives from WAY-17@b1e26133 ·
   derives from WAY-57@4a838784 · derives from WAY-61@4804d070
 - **Verification:** level 1 — invariants: invariant-citation-version · invariant-citation-target ·
   data-line-target · invariant-tests-of-change · test-runner-pass-line · gate-verdict-per-entry.
@@ -2227,90 +2220,40 @@ change (WAY-10).
 in a row to enter — k of n decides that (WAY-08); the date of the run — the result would follow
 the hour; deletion once the date passes (GitLab) — the check is weakened.
 
-### WAY-69/1 — Who writes an invariant's sentence, its check and its deliberate break?
+### WAY-69/1 — Who writes an invariant's sentence, its check and its deliberate break, and what may the check compute for itself?
 
 An invariant's sentence and a check that cites it come from separate acts by different agents, and
 the deliberate break the check is accepted on is written from the sentence by an agent other than
-the check's author, with that check and the files it reads out of its input.
+the check's author, with that check and the files it reads out of its input. A check that cites an
+invariant takes the input it asserts on and the value it expects written out, wherever the code its
+invariant is about would otherwise compute either; only the side it compares against comes from the
+run.
 
 - **Change:** new decision
-- **Scope:** invariants, decisions, part-map, gate, task-cycle
-- **Based on:** what a model sees of a check, it may game: visible-scoring-reward-hacking@39a85ced.
-  With the check in the loop the agent builds for it: oracle-in-loop-building@d13c8e26.
-- **Relations:** derives from WAY-08@2343e09f · related to WAY-03 · related to WAY-05 ·
-  related to WAY-10 · related to WAY-11 · related to WAY-16 · related to WAY-58 ·
-  related to WAY-61 · related to WAY-65
-- **Outranks:** none
-- **Verification:** level 3 — the human deciding the foundation change assesses how the work was
-  handed out, and the record of that decision names who and when.
-- **Review when:** the design of the task cycle begins, or no model in the range of fact
-  oracle-in-loop-building is Active in Anthropic's table of models · check by: 2026-10-02
+- **Scope:** invariants, decisions, part-map, gate, task-cycle, relation-model
+- **Based on:** visible-scoring-reward-hacking@39a85ced · oracle-in-loop-building@d13c8e26
+- **Relations:** derives from WAY-08@2343e09f
+- **Verification:** level 3 for who writes what — the human deciding the foundation change assesses
+  how the work was handed out, and the record of that decision names who and when. Level 2 for what
+  a check computes — an agent compares the change with the decision:
+  - complies: a guard's test carries its expected wording and fingerprint as literals, so a longer
+    fingerprint fails it;
+  - violates: a test builds its reference by calling the code its invariant is about, and expects
+    that call's message; a test reads the value it expects, at run time, from the file its
+    invariant is about.
+- **Review when:** no model in the range of fact oracle-in-loop-building is Active in Anthropic's
+  table of models · check by: 2026-10-02
 - **Origin:** none
-- **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-22
+- **Approved by:** Mariusz, 2026-09-29
 
-*Rationale:* a break chosen by the author of a check is aimed at what the check does, not at what
-the sentence says, so the teeth WAY-08 asks for show only that the check catches itself. The same
-holds for the check: written by whoever wrote the sentence, it inherits the reading that sentence
-was written with, and a sentence two readings wide stays wide. Keeping the acts apart costs the
-order of the work and nothing else, and is the move WAY-03 and WAY-10 already make: take the
-oracle out of the hands of whoever is measured by it, rather than forbid its use. The finding on visible scoring measured a model of another publisher only, and this decision takes it across publishers (WAY-85).
-*Rejected:* hiding checks from the executor — it costs honest work, and WAY-16 keeps one command
-for an agent, CI and a human; one agent writing all three under a written rule not to aim a break
-at its own check — a rule written in prose stops nothing (WAY-03); a field naming the writers —
-nothing reads it (WAY-05), and the gate already reports the break WAY-58 asks for.
-*Consequences:* the task cycle hands out the sentence, the check and the break as separate
-instructions, and gives the record of a change its home; until then nothing in a change shows
-which agent wrote what, and the human deciding the change is the only reader, so the decision
-moves to level 1 by a field change once that record exists. A break written without the check may
-pass for a reason the sentence does not name, and WAY-58's report is where that shows: the entry
-is accepted only once the break makes the check fail (WAY-08). A check joins a file that other
-checks already stand in, so this binds the act of writing a check, not the history of its file
-(WAY-65).
-
-### WAY-70/1 — What may a check compute for itself?
-
-A check that cites an invariant takes the input it asserts on and the value it expects written out,
-wherever the code its invariant is about would otherwise compute either; only the side it compares
-against comes from the run.
-
-- **Change:** new decision
-- **Scope:** invariants, gate, decisions, part-map, relation-model
-- **Based on:** none
-- **Relations:** derives from WAY-08@2343e09f · related to WAY-03 · related to WAY-10 ·
-  related to WAY-57 · related to WAY-61 · related to WAY-65 · related to WAY-69
-- **Outranks:** none
-- **Verification:** level 2 — an agent compares the change with the decision:
-  - complies: the flow test in `gate/` carries the wording and the fingerprint it expects as
-    literals, so a change to the length of a fingerprint makes it fail;
-  - violates: a test builds the reference it asserts on by calling the code its invariant is
-    about, and expects the message that same call returns; a test reads the value it expects, at
-    run time, from the file its invariant is about.
-- **Review when:** none
-- **Origin:** none
-- **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-22
-
-*Rationale:* where both sides of a comparison come from the same code, a change to that code moves
-them together and the test stays green — it never had teeth, rather than losing them, and nothing
-in its record says so. Measured here: raising the length of a fingerprint from 8 to 10 in
-`relation-model/fingerprint.py` left all eight tests of the decision guard's `Relations` class
-green, `test_stale_fingerprint` among them, and failed only two: the flow test in `gate/`, which
-carries its fingerprint as a literal, and the test that runs the guard on the real log, where
-every reference still carries the fingerprint computed at the old length. Writing the input out as
-well is what the measurement asks for: four of the five calls to `fingerprint()` in that file
-build the input, not the expected value.
-*Rejected:* writing out the expected value alone, as the draft template has it — the same
-measurement shows it misses four cases out of five; naming, on a `data:` line, each file a verdict
-leans on — no cutoff was found: the map guard's own test leans on every file git tracks, so through
-WAY-65 and WAY-03 the whole repository would be read-only during implementation, which is the
-variant WAY-65 rejects.
-*Consequences:* the tests of both guards are written under this rule; the decision guard's `Relations` class is where it bites. The draft template's sentence on
-the expected value is edited in place to this wording and gains its citation (WAY-37, WAY-54).
-Which files a check names, so that a fixture or a builder of its input cannot be changed
-underneath it, stays open — `gate/test_wording_reaches_dependants.py` imports its fixture and
-names it nowhere, and it protects it today with an assertion that the fixture still matches a
-literal.
+*Rationale:* a break chosen by a check's author aims at what the check does, not what the sentence
+says, and a check by the sentence's author inherits its reading; two sides computed by one code move
+together, and the test stays green unseen. This takes the visible-scoring finding across publishers
+(WAY-85).
+*Rejected:* hiding checks from the executor — it costs honest work; one agent writing all three under
+a written rule — prose stops nothing; a field naming the writers — nothing reads it; the expected
+value alone written out — the input still moves with the code; a `data:` line naming each file a
+verdict leans on — every tracked file turns read-only.
 
 ### WAY-71/1 — Does every field of a foundation entry appear in every entry, and what may it hold?
 

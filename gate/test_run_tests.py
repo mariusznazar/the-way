@@ -1,7 +1,7 @@
 """Tests of the test runner: each outcome a `unittest` test can have reaches the record as its line.
 
 Every test writes a module of tests out, runs the runner on it in a process of its own, and
-compares the record with the lines written out below (WAY-70). The citations in those modules
+compares the record with the lines written out below (WAY-69). The citations in those modules
 stand inside strings, never at the start of a line of this file, so that the invariants guard
 reads none of them as a citation of this file.
 

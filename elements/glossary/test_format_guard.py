@@ -3,7 +3,7 @@
 Run from the root of the-way:
     python -B gate/run_tests.py elements/glossary --record .runs/glossary-tests.jsonl
 
-Inputs and expected record lines are written out, never computed by the code under test (WAY-70).
+Inputs and expected record lines are written out, never computed by the code under test (WAY-69).
 Each test repository holds its own element template, given to the guard in place of the-way's, so
 that the words of the-way's templates do not reach the counts.
 """

@@ -35,14 +35,13 @@ Every decision number the decision log refers to is the number of a decision in 
 
 ## invariant-test-change-acceptance/1
 
-Where {merge-onto} exists, no change alters, against {fork-point}, an invariant test without carrying an accepted foundation change.
+Where {merge-onto} exists, no change alters, against {fork-point}, an invariant test without carrying either the panel's two agreeing settlements accepting it as a change of only the test's mechanics or a human's decision accepting it.
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-03@4fa941a4 · WAY-10@08118926
+- **Derives from:** WAY-03@97d336a9 · WAY-10@9b8b1401
 - **Part:** every
 - **Correction:** none
-- **Recovered:** none
 
 ## foundation-file-kinds/1
 
@@ -223,14 +222,13 @@ Every term `elements/glossary/examples.md` names is the term of an entry of `fou
 
 ## foundation-change-panel-record/1
 
-Where {merge-onto} exists, no change alters, against {fork-point}, an invariant test or a foundation entry without a record of the panel's two assessments, one of them naming what of the change can be cut or that nothing can, and its settlement.
+Where {merge-onto} exists, no change alters, against {fork-point}, an invariant test or a foundation entry without a record of the panel's two assessments, one of them naming what of the change can be cut or that nothing can, and of its two settlements, one for each order of the assessments.
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-10@08118926
+- **Derives from:** WAY-10@9b8b1401
 - **Part:** every
 - **Correction:** none
-- **Recovered:** none
 
 ## return-step-record/1
 

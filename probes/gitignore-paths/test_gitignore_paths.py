@@ -4,7 +4,7 @@ parent directory is excluded cannot be re-included.
 
 The probe asks `git -c core.ignorecase=false check-ignore` in a temporary repository; the watch
 reads the passages of the fact's *Source* at their address. Expected values are written out
-(WAY-70).
+(WAY-69).
 """
 
 import os

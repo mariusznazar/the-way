@@ -23,7 +23,7 @@ import format_guard  # noqa: E402
 
 TODAY = datetime.date(2026, 9, 17)
 BINDING = "The product keeps every saved game after a reload."
-# The fingerprint of BINDING, and of CHANGED, written out (WAY-70).
+# The fingerprint of BINDING, and of CHANGED, written out (WAY-69).
 CURRENT = "798975ff"
 CHANGED = "The product keeps every saved game after any reload."
 CHANGED_FINGERPRINT = "69b731d5"

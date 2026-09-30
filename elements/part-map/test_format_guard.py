@@ -1,6 +1,6 @@
 """Tests of the part map guard: every check fires on a map broken on purpose.
 
-Inputs and expected values are written out, never computed by the guard (WAY-70).
+Inputs and expected values are written out, never computed by the guard (WAY-69).
 
 Run from the root of the-way:
     python -B gate/run_tests.py elements/part-map --record .runs/part-map-tests.jsonl

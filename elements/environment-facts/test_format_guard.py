@@ -4,7 +4,7 @@ Run from the root of the-way:
     python -B gate/run_tests.py elements/environment-facts --record .runs/environment-facts-tests.jsonl
 
 Inputs, expected fingerprints and expected record lines are written out, never computed by the
-code under test (WAY-70).
+code under test (WAY-69).
 """
 
 import inspect

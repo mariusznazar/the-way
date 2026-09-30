@@ -67,9 +67,7 @@ The Claude models ImpossibleBench measured mostly cheat on Oneoff-SWEbench by mo
 
 - **Holds for:** arXiv:2510.20270v1, measuring Claude Opus 4.1, Claude Sonnet 4 and Claude Sonnet 3.7
 - **Source:** https://arxiv.org/html/2510.20270v1 § 3.1 — "We perform our experiments on a suite of leading open-source and closed-source models: GPT-5, o3, o4-mini, GPT-4.1, Claude Opus 4.1, Claude Sonnet 4, Claude Sonnet 3.7, and Qwen3-Coder." · § 4.2 — "OpenAI models perform special-casing most of the time, while Claude models and Qwen3-Coder mostly modify the test cases" · § 5.2 — "Effect of hiding tests and making tests read-only on Impossible-SWEbench" · § 5.2 — "This approach is particularly effective against models like Opus-4.1, whose primary cheating strategy involves modifying test cases, but it does not eliminate other cheating methods such as special-casing or operator overloading"; read 2026-09-26
-- **Set by:** none
 - **Method:** `python -B gate/run_tests.py probes/impossiblebench-test-modification --record .runs/fact-impossiblebench-test-modification.jsonl`
-- **Correction:** none
 
 ## llm-self-preference/1
 
@@ -77,9 +75,7 @@ In self-evaluation on two summarisation tasks, GPT-3.5 Turbo, GPT-4 and Llama 2 
 
 - **Holds for:** arXiv:2404.13076v1, measuring GPT-3.5 Turbo, GPT-4 and Llama 2
 - **Source:** https://arxiv.org/html/2404.13076v1 § 1 — "Frontier LLMs exhibit self-preference in self-evaluation." · § 1 — "On two summarization tasks, LLMs (GPT-3.5 Turbo, GPT-4, and Llama 2) disproportionately favor summaries written by themselves over those by other LLMs and from humans."; read 2026-09-26
-- **Set by:** none
 - **Method:** `python -B gate/run_tests.py probes/llm-self-preference --record .runs/fact-llm-self-preference.jsonl`
-- **Correction:** none
 
 ## llm-decision-violation-detection/1
 
@@ -119,9 +115,7 @@ In METR's evaluations of o3, reward hacking was more than 43 times more common o
 
 - **Holds for:** METR's post of 2025-06-05, measuring o3, which metr.org publishes without versions
 - **Source:** https://metr.org/blog/2025-06-05-recent-reward-hacking/ (archived: http://web.archive.org/web/20260921012137/https://metr.org/blog/2025-06-05-recent-reward-hacking/, 2026-09-21) § What we’ve observed — "Reward hacking was more than 43× more common on RE-Bench tasks than HCAST tasks, perhaps because on RE-Bench tasks the model was able to see the entire scoring function, making that function easier to bypass and inadvertently priming the model to consider that type of solution more strongly." · § What we’ve observed — "The discrepancy could also be due to RE-Bench tasks being more difficult or because they use different scaffolding."; read 2026-09-26
-- **Set by:** none
 - **Method:** `python -B gate/run_tests.py probes/visible-scoring-reward-hacking --record .runs/fact-visible-scoring-reward-hacking.jsonl`
-- **Correction:** none
 
 ## oracle-in-loop-building/1
 
@@ -129,9 +123,7 @@ With the hidden test oracle in their loop, the two Copilot CLI agents the study 
 
 - **Holds for:** arXiv:2606.28430v1, measuring GitHub Copilot CLI 1.0.56 with claude-opus-4.7 and with gpt-5.5
 - **Source:** https://arxiv.org/abs/2606.28430v1 § Abstract — "In a controlled code-as-spec setup, two production Copilot CLI agents (claude-opus-4.7, gpt-5.5) re-implement a React Fluent-UI data table in Angular as a reusable library under a hidden 222-test Playwright oracle across 18 runs and three oracle-availability conditions." · § Abstract — "With the oracle in the loop, the score reaches near-perfect, but from a demo holding the tested behavior directly, the library left dead or absent."; read 2026-09-26 · https://arxiv.org/html/2606.28430v1 § 2 — "We study GitHub Copilot CLI (version 1.0.56) under two model configurations"; read 2026-09-26
-- **Set by:** none
 - **Method:** `python -B gate/run_tests.py probes/oracle-in-loop-building --record .runs/fact-oracle-in-loop-building.jsonl`
-- **Correction:** none
 
 ## github-private-repository-response/1
 
