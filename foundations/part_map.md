@@ -4,33 +4,33 @@ What this repository is made of, and what joins it: which part may depend on whi
 promises to the products pinned to its commits. The map says what is allowed; what the code holds
 is computed from it.
 
-## decisions — The decision log
+## decisions
 
-The part answers for the decision log: the form of an entry, the tools that write and check one,
-and the log of the-way itself.
+The part answers for the decision log: the form of an entry, the skill that writes one and the
+format guard that checks it, and the log of the-way itself.
 
 - **Files:** elements/decisions/**
   foundations/decisions.md
 - **Depends on:** relation-model
 - **Failure modes:**
-  - the guard accepts an entry the template forbids — a wrong entry reaches the main branch, and
-    every product pinned to that commit inherits it — high — not detected
+  - the format guard accepts an entry the template forbids — a wrong entry reaches the main
+    branch — high — not detected
 - **Trust boundary:** none
 
-## part-map — The part map
+## part-map
 
-The part answers for the part map: the form of an entry, the tools that write and check one, and
-the map of the-way itself.
+The part answers for the part map: the form of an entry, the skill that writes one and the format
+guard that checks it, and the map of the-way itself.
 
 - **Files:** elements/part-map/**
   foundations/part_map.md
 - **Depends on:** relation-model · elements-common
 - **Failure modes:**
-  - the guard assigns a file to the wrong part, or to none — a change is checked against the
-    wrong decisions and at the wrong sharpness — high — not detected
+  - the format guard assigns a file to the wrong part, or to none — a change is checked against
+    the wrong decisions and at the wrong sharpness — high — not detected
 - **Trust boundary:** elements/part-map/format_guard.py
 
-## relation-model — The relation model
+## relation-model
 
 The part answers for how the fingerprint of an entry is computed from its binding part, and for
 the code that tells whether a string has the form of an identifier or of a version.
@@ -42,7 +42,7 @@ the code that tells whether a string has the form of an identifier or of a versi
     for nothing, and flags raised for nothing are cleared unread — high — not detected
 - **Trust boundary:** none
 
-## invariants — Invariants
+## invariants
 
 The part answers for what a product states as an invariant and for how that statement is checked,
 and for the invariants of the-way itself.
@@ -54,10 +54,10 @@ and for the invariants of the-way itself.
 - **Failure modes:** none
 - **Trust boundary:** none
 
-## glossary — The glossary
+## glossary
 
 The part answers for the words a foundation's rules use, each in one meaning: the form of an entry,
-the tools that write and check one, and the glossary of the-way itself.
+the skill that writes one and the format guard that checks it, and the glossary of the-way itself.
 
 - **Files:** elements/glossary/**
   foundations/glossary.md
@@ -65,7 +65,7 @@ the tools that write and check one, and the glossary of the-way itself.
 - **Failure modes:** none
 - **Trust boundary:** none
 
-## environment-facts — Environment facts
+## environment-facts
 
 The part answers for a product's environment facts.
 
@@ -76,7 +76,7 @@ The part answers for a product's environment facts.
 - **Failure modes:** none
 - **Trust boundary:** none
 
-## elements-common — What the elements share
+## elements-common
 
 The part answers for the rules of form and the way of working the elements' templates and skills
 share, the code their format guards share, and the procedure of the panel.
@@ -86,7 +86,7 @@ share, the code their format guards share, and the procedure of the panel.
 - **Failure modes:** none
 - **Trust boundary:** none
 
-## task-cycle — The task cycle
+## task-cycle
 
 The part answers for the steps a task runs through and for how sharply a change is checked along
 them.
@@ -96,7 +96,7 @@ them.
 - **Failure modes:** none
 - **Trust boundary:** none
 
-## gate — The gate
+## gate
 
 The part answers for the gate and the clock, and for the tests of critical flows.
 
@@ -104,17 +104,16 @@ The part answers for the gate and the clock, and for the tests of critical flows
 - **Depends on:** decisions · relation-model
 - **Failure modes:**
   - the gate reports a check as passed although it never ran — a change that breaks an invariant
-    reaches the main branch, and every product pinned to that commit inherits the gap — high —
-    not detected
+    reaches the main branch — high — not detected
   - the test runner records a pass, and no fail, for an invariant although a test citing it never
-    ran to its end, or failed — a change that breaks an invariant reaches the main branch, and
-    every product pinned to that commit inherits the gap — high — detected by test-runner-pass-line
+    ran to its end, or failed — a change that breaks an invariant reaches the main branch — high —
+    detected by test-runner-pass-line
   - a change to the test runner's own path for recording a failed test records that failure as a
-    pass, its own tests included — a change that breaks an invariant reaches the main branch, and
-    every product pinned to that commit inherits the gap — high — not detected
+    pass, its own tests included — a change that breaks an invariant reaches the main branch —
+    high — not detected
 - **Trust boundary:** none
 
-## repository — The files that serve the whole repository
+## repository
 
 The part answers for the files that configure the repository itself rather than any one part.
 
@@ -129,69 +128,69 @@ The part answers for the files that configure the repository itself rather than 
     answers for it — low — not detected
 - **Trust boundary:** none
 
-## wording-reaches-dependants — A change of a binding part reaches what leans on it
+## wording-reaches-dependants
 
 Someone changes the binding sentences of a foundation entry, and every reference that leans on
 the old binding part is reported before the change reaches the main branch.
 
 - **Criticality:** high
 - **Parts:** relation-model · decisions · gate
-- **Invariant:** decision-guard-stale-reference — test: gate/test_wording_reaches_dependants.py
+- **Invariant:** decision-guard-stale-reference
 - **Coverage:** none
 
-## entry-format — The form of an entry
+## entry-format
 
 The form of an entry changes for a product only when that product moves the commit it pins.
 
 - **Declared at:** not markable — test: elements/decisions/test_format_guard.py
 
-## content-fingerprint — The fingerprint
+## content-fingerprint
 
 The same wording gives the same fingerprint.
 
 - **Declared at:** relation-model/fingerprint.py · fingerprint
 
-## decisions-guard-command — The command of the decision guard
+## decisions-guard-command
 
 The command that runs the guard of a decision log keeps its name, its arguments and its exit
 codes.
 
 - **Declared at:** elements/decisions/format_guard.py · main
 
-## run-record-keys — The form of the-way's record of a run
+## run-record-keys
 
 A line of the-way's record of a run keeps its keys and the values each of them takes.
 
 - **Declared at:** not markable — test: elements/decisions/test_format_guard.py
 
-## part-map-guard-command — The command of the map guard
+## part-map-guard-command
 
 The command that runs the guard of a part map keeps its name, its arguments and its exit codes.
 
 - **Declared at:** elements/part-map/format_guard.py · main
 
-## invariants-guard-command — The command of the invariants guard
+## invariants-guard-command
 
 The command that runs the guard of a product's invariants keeps its name, its arguments and its
 exit codes.
 
 - **Declared at:** elements/invariants/format_guard.py · main
 
-## environment-facts-guard-command — The command of the environment facts guard
+## environment-facts-guard-command
 
 The command that runs the guard of a product's environment facts keeps its name, its arguments and
 its exit codes.
 
 - **Declared at:** elements/environment-facts/format_guard.py · main
 
-## glossary-guard-command — The command of the glossary guard
+## glossary-guard-command
 
 The command that runs the guard of a product's glossary keeps its name, its arguments and its exit
 codes.
 
 - **Declared at:** elements/glossary/format_guard.py · main
 
-## test-runner-command — The command of the test runner
+## test-runner-command
 
 The command that runs the tests of a directory and records a verdict for each invariant and each
 environment fact they cite keeps its name, its arguments, its exit codes and the verdict it records
