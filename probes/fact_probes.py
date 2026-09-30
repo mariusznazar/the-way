@@ -121,6 +121,17 @@ def cited_pages(identifier):
     return pages
 
 
+def current_raw_page(identifier, branch="main"):
+    """The moving branch counterpart of a fact's commit-pinned GitHub raw source."""
+    address = cited_pages(identifier)[0].address
+    match = re.fullmatch(r"https://raw\.githubusercontent\.com/([^/]+/[^/]+)/[0-9a-f]{40}/(.+)",
+                         address)
+    if match is None:
+        raise NoVerdict("%s has no commit-pinned GitHub raw source" % identifier)
+    return "https://raw.githubusercontent.com/%s/%s/%s" % (match.group(1), branch,
+                                                           match.group(2))
+
+
 def named_release(identifier, tool):
     """The release of a tool the fact's *Holds for* names, as `2.55.0`."""
     holds = field_value(identifier, "Holds for")

@@ -75,6 +75,14 @@ In self-evaluation on two summarisation tasks, GPT-3.5 Turbo, GPT-4 and Llama 2 
 - **Source:** https://arxiv.org/html/2404.13076v1 § 1 — "Frontier LLMs exhibit self-preference in self-evaluation." · § 1 — "On two summarization tasks, LLMs (GPT-3.5 Turbo, GPT-4, and Llama 2) disproportionately favor summaries written by themselves over those by other LLMs and from humans."; read 2026-09-26
 - **Method:** `python -B gate/run_tests.py probes/llm-self-preference --record .runs/fact-llm-self-preference.jsonl`
 
+## llm-design-rationale-expert-overlap/1
+
+In Zhou et al.'s study, five LLMs given a chain-of-thought prompt produced design-rationale arguments for architecture decisions with mean precision 0.237, recall 0.684, and F1 0.351 for overlap with expert-provided arguments.
+
+- **Holds for:** arXiv:2504.20781v3, measuring gpt-3.5-turbo, gpt-4-0613, gemini-1.0-pro, llama3-8B, and mistral-7B
+- **Source:** https://arxiv.org/html/2504.20781v3 § 3.5 — "individual arguments" · § 3.5.1 — "with those extracted from human experts" · § 4.2.1 — "Precision, Recall, and F1-score" · § 4.2.1 — "0.237, 0.684, and 0.351, respectively" · § Table 1 — "gpt-3.5-turbo" · § Table 1 — "gpt-4-0613" · § Table 1 — "gemini-1.0-pro" · § Table 1 — "llama3-8B" · § Table 1 — "mistral-7B"; read 2026-10-01
+- **Method:** `python -B gate/run_tests.py probes/llm-design-rationale-expert-overlap --record .runs/fact-llm-design-rationale-expert-overlap.jsonl`
+
 ## llm-decision-violation-detection/1
 
 Language models detecting violations of architectural decisions reach substantial agreement and strong accuracy for explicit, code-inferable decisions, and fall short in accuracy for implicit or deployment-oriented decisions that depend on deployment configuration or organisational knowledge.
@@ -138,6 +146,22 @@ Anthropic describes the lifecycle of its models by the states Active, Legacy, De
 - **Holds for:** the model deprecations page of the Claude Platform documentation, which platform.claude.com publishes without versions
 - **Source:** https://platform.claude.com/docs/en/about-claude/model-deprecations (archived: http://web.archive.org/web/20260926103650/https://platform.claude.com/docs/en/about-claude/model-deprecations, 2026-09-26) § Overview — "Anthropic uses the following terms to describe the model lifecycle:" · § Overview — "Active: The model is fully supported and recommended for use." · § Overview — "Legacy: The model will no longer receive updates and may be deprecated in the future." · § Overview — "Deprecated: The model is still functional but no longer recommended." · § Overview — "Retired: The model is no longer available for use. Requests to retired models will fail."; read 2026-09-26
 - **Method:** `python -B gate/run_tests.py probes/anthropic-model-states --record .runs/fact-anthropic-model-states.jsonl`
+
+## python-314-bugfix-status/1
+
+Python 3.14 is in the bugfix phase of its release cycle.
+
+- **Holds for:** Python 3.14 in the Python release metadata at commit faecbe2865bd44e2f816a558ccf22e60ae2ff63e
+- **Source:** https://raw.githubusercontent.com/python/peps/faecbe2865bd44e2f816a558ccf22e60ae2ff63e/release_management/python-releases.toml § Python 3.14 metadata — “status = "bugfix"”; read 2026-09-30
+- **Method:** `python -B gate/run_tests.py probes/python-314-bugfix-status --record .runs/fact-python-314-bugfix-status.jsonl`
+
+## python-release-binaries/1
+
+The Python Developer's Guide says the bugfix phase builds and releases new binaries, while the security phase releases no more binaries.
+
+- **Holds for:** Python release lifecycle in the Python Developer's Guide at commit 999633216399256b6ce5376c9287f07efd6c9a65
+- **Source:** https://raw.githubusercontent.com/python/devguide/999633216399256b6ce5376c9287f07efd6c9a65/versions.rst § Status key, bugfix — "New binaries are built and released roughly every two months." · § Status key, security — "After two years (18 months for versions before 3.13), only security fixes are accepted and no more binaries are released."; read 2026-09-30
+- **Method:** `python -B gate/run_tests.py probes/python-release-binaries --record .runs/fact-python-release-binaries.jsonl`
 
 ## Withdrawn identifiers
 

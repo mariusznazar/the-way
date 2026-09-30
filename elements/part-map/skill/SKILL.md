@@ -64,7 +64,9 @@ part map adds to each.
 
 ## The first map of a product
 
-A product with no map gets its parts written one at a time, by the steps above, until the format
-guard reports every file git tracks assigned to a part or left out on purpose. What the code holds
+A product with no map gets its parts written one at a time, by the steps above. After the human
+accepts the first part, the current invocation writes it in the new map without invoking
+`update-part-map` again to create that map. Continue until the format guard reports every file git
+tracks assigned to a part or left out on purpose. What the code holds
 against the map at that moment is then written as WAY-51 says of the state a product is in when
 this process enters it (WAY-28).

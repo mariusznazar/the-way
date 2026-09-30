@@ -77,7 +77,8 @@ glossary entry adds to each.
   looks for every other form of the word — a short form, an irregular form, a verb split by its
   object — and lists each use whose meaning moves, the sentence before and after. A moved use in
   an entry on the main branch sends the draft back to step 3, as that section says. An entry new
-  on this branch has no uses to review.
+  on this branch has no main-branch uses to preserve; review its uses in the current tree before
+  changing its definition.
 - Step 4.2: show the entry with its list of uses; for a changed entry, the definition the review
   started from beside the new one, with the moved uses.
 - After step 4.3, for a word put into *Avoid*, make the search the template's "Avoid" asks for, and

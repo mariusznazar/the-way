@@ -12,7 +12,7 @@ format guard that checks it, and the log of the-way itself.
 
 - **Files:** elements/decisions/**
   foundations/decisions.md
-- **Depends on:** relation-model
+- **Depends on:** relation-model · elements-common
 - **Failure modes:**
   - the format guard accepts an entry the template forbids — a wrong entry reaches the main
     branch — high — not detected
@@ -131,8 +131,8 @@ The part answers for the files that configure the repository itself rather than 
 
 ## wording-reaches-dependants
 
-Someone changes the binding sentences of a foundation entry, and every reference that leans on
-the old binding part is reported before the change reaches the main branch.
+Someone changes a decision's binding sentences, and every `derives from` or `narrows` relation
+carrying its old fingerprint is reported before the change reaches the main branch.
 
 - **Criticality:** high
 - **Parts:** relation-model · decisions · gate

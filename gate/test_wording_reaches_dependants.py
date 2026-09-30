@@ -1,9 +1,9 @@
 """End-to-end test of the critical flow `wording-reaches-dependants`.
 
-Someone rewrites the binding sentences of a decision; every reference that leans on the old
-wording has to be reported before the change reaches the main branch. This test runs the whole
-path: the fingerprint of an entry's binding part, a reference in another entry that carries a
-fingerprint, and the guard that compares the two.
+Someone rewrites the binding sentences of a decision; every `derives from` or `narrows` relation
+carrying the old fingerprint has to be reported before the change reaches the main branch. This
+test runs the whole path: the fingerprint of a decision's binding part, a relation in another
+decision that carries it, and the guard that compares the two.
 
 The expected fingerprints are written out below on purpose. A test does not compute its expected
 value with the code it checks: were this test to call `fingerprint()`, a change to that function
