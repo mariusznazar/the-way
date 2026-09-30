@@ -20,7 +20,7 @@ A binding sentence is a sentence of a binding part.
 
 ## clock
 
-The clock is the command that runs the method of every environment fact.
+The clock is the command that, unlike the gate, runs checks apart from any change.
 
 - **Avoid:** none
 - **Not:** none
