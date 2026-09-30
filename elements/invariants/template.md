@@ -122,9 +122,9 @@ naming its identifier and its current version, with `searched: <…>` in *Search
   inside it (WAY-56). The format guard counts sentences only, so two rules joined in one sentence
   pass it; what one sentence may join is judged against the complying and violating pair in
   WAY-56's *Verification* (WAY-56, WAY-12).
-- The sentence is the binding part: the entry's fingerprint covers the sentence alone (WAY-59,
+- The sentence is the binding part: the entry's fingerprint covers the sentence alone (WAY-56,
   WAY-02). The method, the links, the version and a declaration of a correction stay outside it
-  (WAY-59).
+  (WAY-56).
 - A condition that decides whether a commit makes the sentence true stands in the sentence, unless
   an entry of the foundation or a decision — of the product's own log, or of the-way at the commit
   the product pins — holds it; then the entry links to that entry or decision (WAY-60;
@@ -136,12 +136,9 @@ naming its identifier and its current version, with `searched: <…>` in *Search
   since a branch names a different commit by the hour: outside quoted text it holds neither the
   words "main branch" nor "task branch" (WAY-60). A sentence measuring what a commit, a merge or a
   merge request changes names the commit it is measured against by its value on the gate's list
-  above (WAY-60, WAY-61): `{fork-point}`, unless the decision the entry derives from chooses
-  `{merge-onto}` (`TODO — decision pending: which decision makes the fork point the commit a
-  sentence measures against unless its decision chooses the merge commit`). A sentence that is to
-  hold on the main branch alone holds where `{merge-onto}` exists
-  (`TODO — decision pending: which decision sets that a sentence to hold on the main branch alone
-  holds where the merge commit exists`).
+  above, `{fork-point}`, while a state it compares may be the one on `{merge-onto}` (WAY-60,
+  WAY-61). A sentence that is to hold on the main branch alone holds where `{merge-onto}` exists
+  (WAY-60).
 - A sentence may be about a check the product itself holds, as it may be about anything else the
   product holds: whether a check belongs to the product is settled by the part map
   (`TODO — decision pending: which decision lets the part map settle whether a check belongs to

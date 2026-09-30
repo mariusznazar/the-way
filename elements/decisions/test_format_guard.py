@@ -290,6 +290,13 @@ class Changes(GuardTestCase):
         self.assertRecords(line("check_changes", "pass", "decision-change-kind/1"))
         self.assertEqual([item for item in self.lines if item["verdict"] != "pass"], [])
 
+    def test_todo_kind_of_a_first_version_passes_with_a_warning(self):
+        code, output = self.guard(log(version(1, change="TODO — which kind")))
+        self.assertEqual(code, 0, output)
+        self.assertIn("decisions.md:9: warning: *Change* is `TODO`", output)
+        self.assertRecords(line("check_changes", "pass", "decision-change-kind/1"))
+        self.assertEqual([item for item in self.lines if item["verdict"] != "pass"], [])
+
     def test_a_missing_change_names_no_kind(self):
         self.guard(log(version(1), version(1, ver=2, omit=("Change",))))
         self.assertRecords(line("check_changes", "fail", "decision-change-kind/1",

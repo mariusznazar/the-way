@@ -62,7 +62,6 @@ Every decision version in the decision log, other than a repeal, opens with one 
 - **Derives from:** WAY-05@2f8233e2 · WAY-20@deffabbb
 - **Part:** decisions
 - **Correction:** none
-- **Recovered:** none
 
 ## binding-sentence-words/1
 
@@ -73,7 +72,6 @@ No binding sentence in the decision log contains, outside code, a word the decis
 - **Derives from:** WAY-05@2f8233e2
 - **Part:** decisions
 - **Correction:** none
-- **Recovered:** none
 
 ## decision-example-numbers/1
 
@@ -84,7 +82,6 @@ Every decision number `elements/decisions/examples.md` names is the number of a 
 - **Derives from:** WAY-05@2f8233e2
 - **Part:** decisions
 - **Correction:** none
-- **Recovered:** none
 
 ## decision-template-change/1
 
@@ -95,7 +92,6 @@ A change that, against {fork-point}, alters `elements/decisions/template.md` als
 - **Derives from:** WAY-05@2f8233e2
 - **Part:** decisions
 - **Correction:** none
-- **Recovered:** none
 
 ## foundation-change-merge-route/1
 
@@ -382,14 +378,13 @@ The versions of each number in the decision log are consecutive.
 
 ## decision-change-kind/1
 
-The first version of every number in the decision log names `new decision` in *Change*, and every later version names there a kind of change from the list in the decision template or holds `TODO`.
+The first version of every number in the decision log names `new decision` in *Change* and every later version a kind of change from the list in the decision template, unless *Change* holds `TODO`.
 
 - **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-20@deffabbb · WAY-71@c32828c9
 - **Part:** decisions
 - **Correction:** none
-- **Recovered:** none
 
 ## decision-binding-across-versions/1
 
@@ -400,7 +395,6 @@ Every decision version in the decision log whose kind of change is unchanged sen
 - **Derives from:** WAY-20@deffabbb
 - **Part:** decisions
 - **Correction:** none
-- **Recovered:** none
 
 ## repeal-binding-sentences/1
 
@@ -411,7 +405,6 @@ No repeal in the decision log has binding sentences.
 - **Derives from:** WAY-20@deffabbb
 - **Part:** decisions
 - **Correction:** none
-- **Recovered:** none
 
 ## decision-scope-names/1
 
@@ -542,7 +535,6 @@ Every relation in the decision log has the type `derives from` or `narrows`.
 - **Derives from:** WAY-32@1131acb7
 - **Part:** decisions
 - **Correction:** none
-- **Recovered:** none
 
 ## foundation-search-record/1
 
@@ -621,10 +613,9 @@ Every entry of the part map is a part, a critical flow or a surface.
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-40@c3f0b830
+- **Derives from:** WAY-40@3d01f9cd
 - **Part:** part-map
 - **Correction:** none
-- **Recovered:** none
 
 ## map-section-kinds/1
 
@@ -632,10 +623,9 @@ The part map holds no section other than its entries and the lists its template 
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-40@c3f0b830
+- **Derives from:** WAY-40@3d01f9cd
 - **Part:** part-map
 - **Correction:** none
-- **Recovered:** none
 
 ## part-map-file/1
 
@@ -643,10 +633,9 @@ The repository holds exactly one part map, `foundations/part_map.md`.
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-40@c3f0b830
+- **Derives from:** WAY-40@3d01f9cd
 - **Part:** every
 - **Correction:** none
-- **Recovered:** none
 
 ## map-identifier-form/1
 
@@ -704,10 +693,9 @@ The fingerprint a script of the-way gives an entry of the part map is the finger
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-42@dd9f63b6
+- **Derives from:** WAY-42@b4b45de7
 - **Part:** part-map · relation-model
 - **Correction:** none
-- **Recovered:** none
 
 ## map-entry-version/1
 
@@ -755,10 +743,9 @@ Every part a critical flow of the part map lists, and every part a part's *Depen
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-40@c3f0b830 · WAY-45@3798c435
+- **Derives from:** WAY-40@3d01f9cd · WAY-45@3798c435
 - **Part:** part-map
 - **Correction:** none
-- **Recovered:** none
 
 ## flow-invariant-link/1
 
@@ -1027,10 +1014,9 @@ Every entry of `foundations/invariants.md` states its invariant in one sentence.
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-56@06700ffd
+- **Derives from:** WAY-56@0d6340a8
 - **Part:** invariants
 - **Correction:** none
-- **Recovered:** none
 
 ## invariant-identifier-form/1
 
@@ -1148,10 +1134,9 @@ The fingerprint the invariants guard gives an invariant entry is the fingerprint
 
 - **Method:** `python -B gate/run_tests.py elements/invariants --record .runs/invariants-tests.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-59@2d716c3f
+- **Derives from:** WAY-56@0d6340a8
 - **Part:** invariants · relation-model
 - **Correction:** none
-- **Recovered:** none
 
 ## sentence-branch-names/1
 
@@ -1159,10 +1144,9 @@ No sentence in `foundations/invariants.md`, outside quoted text, contains the wo
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-60@c85d1ac0
+- **Derives from:** WAY-60@6e862c88
 - **Part:** invariants
 - **Correction:** none
-- **Recovered:** none
 
 ## sentence-gate-values/1
 
@@ -1170,10 +1154,9 @@ Every value in braces that a sentence of `foundations/invariants.md` names outsi
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-60@c85d1ac0
+- **Derives from:** WAY-60@6e862c88
 - **Part:** invariants
 - **Correction:** none
-- **Recovered:** none
 
 ## method-gate-values/1
 
