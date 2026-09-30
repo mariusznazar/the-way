@@ -252,14 +252,12 @@ or the merge fails (WAY-64, WAY-73).
 
 - A voluntary catalogue of requirements — ASVS, WCAG where no law requires it — binds the product
   only through a decision adopting it, naming the catalogue, its edition, the level or list taken,
-  and the area of the product (WAY-86). A requirement it holds is then a fact: its source is the
-  edition, the requirement's identifier and its text word for word
-  (`TODO — decision pending: which decision sets that a requirement of an adopted catalogue is a
-  fact`), and an invariant taking a condition from it names it in *Rests on* (WAY-73).
-- A binding rule — a law, a contract, a licence — needs no adoption: whether it applies is a fact,
-  read as applying until a human settles otherwise (WAY-86). Whether a commit that removes what the
-  rule covers makes that fact false is
-  `TODO — decision pending: whether "the rule applies" is a fact, against WAY-76`.
+  and the area of the product (WAY-86). A requirement of it that an invariant takes a condition
+  from is then a fact (WAY-86): its source is the edition, the requirement's identifier and its
+  text word for word, and the invariant names it in *Rests on* (WAY-73).
+- A binding rule — a law, a contract, a licence — needs no adoption: what it requires is a fact,
+  and the product is held to it until a human settles, in a decision, that the rule does not apply
+  (WAY-86).
 - A descriptive source — an RFC, a list of modules — needs nothing beyond the fact
   (`TODO — decision pending: which decision sets that a descriptive source needs nothing beyond the
   fact`).

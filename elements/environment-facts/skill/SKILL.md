@@ -36,8 +36,7 @@ environment fact adds to each.
   through `record-decision`.
 - A requirement of a catalogue nothing has adopted goes to the human with the question the
   template's "Catalogues and obligations" gives, before any entry; for a binding rule, that
-  question is asked in step 4. While that section holds whether "the rule applies" is a fact as
-  pending, such a case stops as the last point of this step says.
+  question is asked in step 4.
 - Search the file, withdrawn identifiers included, for an entry on the same thing: found — a
   change, split, merge or withdrawal; found among the withdrawn — show the human why it went: one
   shown false comes back under a new identifier only if the world has changed since, one withdrawn

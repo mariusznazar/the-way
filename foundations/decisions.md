@@ -824,44 +824,26 @@ tasks. Decisions are recovered only when a task touches the parts they govern.
 
 - **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, task-cycle
-- **Based on:** checking an existing product against a description written long after its code
-  is slow and can fail outright: MongoDB reports "10 weeks of effort without successfully
-  trace-checking one spec" (MongoDB engineering blog,
-  https://www.mongodb.com/company/blog/engineering/conformance-checking-at-mongodb-testing-our-code-matches-our-tla-specs).
-- **Relations:** related to WAY-01 · related to WAY-04 · related to WAY-11 · related to WAY-13
-- **Outranks:** none
+- **Based on:** none
+- **Relations:** none
 - **Verification:** level 2 — an agent compares the change with the decision:
-  - complies: on entering a product, the part map comes first, and the invariants of a critical
-    payment flow are chosen by a human from the agent's list of what the flow does; a decision is
-    recovered when a task first touches the parts it governs;
-  - violates: an agent turns everything the critical flows and the parts they run through do
-    today into invariants without a human's choice; an agent recovers from the code decisions for
-    the whole product before any task touches them; the critical flows and the parts they run
-    through wait for a task like any other.
+  - complies: on entering a product, the part map comes first; a human picks a critical payment
+    flow's invariants from the agent's list of what it does; a decision is recovered when a task
+    first touches the parts it governs;
+  - violates: an agent turns everything the critical flows do today into invariants without a
+    human's choice; an agent recovers from the code decisions for the whole product before any
+    task touches them; the critical flows and the parts they run through wait for a task like any
+    other.
 - **Review when:** none
 - **Origin:** none
-- **Approver override:** none
 - **Approved by:** Mariusz, 2026-09-27
 
-*Rationale:* matching a whole product to a description written afterwards is slow, and it
-tempts an agent to write reasons that look like decisions, so decisions wait until a task needs
-them. The critical flows and the parts they run through cannot wait, because a break there is
-expensive (WAY-13), so their invariants come first. A human chooses among what they do, because
-only a human knows what the product is meant to protect, and what it does today is a state, not
-yet a rule (WAY-04). Invariants and decisions are separate lists: an invariant needs no decision
-above it, so a recovered invariant can bind before anyone knows why it holds.
+*Rationale:* decisions recovered in advance tempt an agent to invent reasons that look like
+decisions. What the product does today is a state, not a rule (WAY-04); only a human knows what it
+must protect. An invariant needs no decision above it, so it binds before anyone knows why.
 *Rejected:* recovering the whole foundation at the start — slow, with reasons invented where none
-are known; everything on demand, the critical flows and the parts they run through included — a
-break there is found only when a task happens to touch them.
-*Consequences:* an invariant recovered from behaviour needs a method of checking and the note WAY-58
-sets, recording what was searched and what was found for or against keeping it, which the invariants
-template carries as the field *Recovered*. A decision recovered for a task is written as the section
-"Inherited decisions" of the decision template says, and decision records the product already has
-are read as sources when their parts are touched. No glossary is written in bulk when the
-process enters a product: a word takes an entry with the entries written when the process enters it
-that stand on it, the return step brings the rest, and candidates an agent finds in the product's
-documents or its rule files for agents become questions to a human at once, with no list of them
-kept (WAY-95).
+are known; everything on demand, the critical flows included — a break there shows only when a task
+happens to touch them.
 
 ### WAY-29/1 — How is a decision recovered from an existing product written?
 
@@ -899,45 +881,30 @@ A change to a decision that a task needs is written into the task's plan and app
 the decision's approver. When a contradiction shows only during implementation, the agent stops,
 quotes the decision by its number, and either brings the change into line, drops the change, or
 proposes on the task branch a new wording or a narrowing of the decision — by a new version on the
-main branch, by an edit before it — and the code that needs it waits for the decision's approver. An exception written in advance into a decision's binding sentences is
-not a contradiction, and no exception lives only in a task's plan.
+main branch, by an edit before it — and the code that needs it waits for the decision's approver. An
+exception written in advance into a decision's binding sentences is not a contradiction, and no
+exception lives only in a task's plan.
 
 - **Change:** new decision
 - **Scope:** decisions, task-cycle
-- **Based on:** tools that protect principles in agent work refuse a quiet way around them:
-  "Constitution conflicts are automatically CRITICAL and require adjustment of the spec, plan, or
-  tasks—not dilution, reinterpretation, or silent ignoring of the principle" (GitHub Spec Kit,
-  https://github.com/github/spec-kit/blob/main/templates/commands/analyze.md).
-- **Relations:** derives from WAY-01@60960941 · related to WAY-03 ·
-  related to WAY-07 · related to WAY-14 · related to WAY-21 · related to WAY-24 · related to WAY-25
-- **Outranks:** none
+- **Based on:** none
+- **Relations:** derives from WAY-01@60960941
 - **Verification:** level 2 — an agent compares the change with the decision:
-  - complies: a task branch whose code goes against a decision also carries a proposed narrowing
-    of that decision, and the merge waits for its approver;
+  - complies: a task branch whose code goes against a decision carries a proposed narrowing, and
+    the merge waits for its approver;
   - violates: a task branch whose code contradicts a decision that stays unchanged; a task's plan
     that records a "justified violation" of a decision.
-- **Review when:** the design of the task cycle begins · check by: 2026-10-02
+- **Review when:** none
 - **Origin:** none
-- **Approver override:** none
 - **Approved by:** Mariusz, 2026-09-29
 
-*Rationale:* an exception kept only in a task's plan leaves the foundation describing something
-the code no longer does (WAY-01). Stopping makes the contradiction visible at the moment it is
-found. The agent may bring its change into line or drop it on its own, because both leave the
-decision as it is; changing the decision is for its approver, and the code waits for that, as the
-foundation comes before the code (WAY-01). A narrowing keeps the decision for everything outside
-the exception, and a narrowing made for a situation that may pass carries *Review when*, so that
-someone looks at it again (WAY-24). An exception foreseen in the binding sentences belongs to the
-decision, so acting on it contradicts nothing.
-*Rejected:* a justified violation recorded in the plan without a change to the decision, as Spec
-Kit's plan template allows — the foundation stops matching the code; a whole new answer as the
-only way to change the decision — a narrow exception would take the whole decision with it.
-*Consequences:* the rule on exceptions foreseen in advance in the section "Binding sentences" of
-the decision template belongs to the written form of this decision. The task cycle needs a step
-in the plan for changes to decisions, and a task's plan has no home in the process yet (WAY-01).
-When the contradiction is a collision between two decisions with no precedence recorded, the
-agent stops and asks for the precedence (WAY-25). Checking an implementation against decisions
-needs the decisions in the scope of the change (WAY-21).
+*Rationale:* an exception kept only in a plan leaves the foundation describing what the code no
+longer does (WAY-01); stopping shows the contradiction when it is found. Aligning or dropping the
+change leaves the decision intact, so the agent may do either; changing the decision is its
+approver's.
+*Rejected:* a justified violation recorded in the plan, the decision unchanged — the foundation
+stops matching the code; a whole new answer as the only way to change a decision — a narrow
+exception takes the whole decision with it.
 
 ### WAY-31/1 — Which links between entries are flagged when the named entry changes?
 
@@ -3028,49 +2995,36 @@ and a fact no longer true or false today.
 ### WAY-86/1 — How does a catalogue of requirements or a binding rule reach a product?
 
 A voluntary catalogue of requirements binds a product only through a decision adopting it that
-names the catalogue, its edition, the level or list taken and the area of the product. A binding
-rule — a law, a contract, a licence — needs no adoption: whether it applies is a fact, read as
-applying until a human settles otherwise. An agent that notices a likeness to a requirement nothing
-has adopted or applied asks a human.
+names the catalogue, its edition, the level or list taken and the area of the product, and a
+requirement an invariant takes a condition from is an environment fact. A binding rule — a law,
+a contract, a licence — needs no adoption: what it requires is an environment fact, and the
+product is held to it until a human settles, in a decision, that the rule does not apply. An agent
+that notices a likeness to a requirement nothing has adopted or applied asks a human.
 
 - **Change:** new decision
 - **Scope:** environment-facts, decisions, invariants
-- **Based on:** a binding standard starts from inclusion: "the best practice approach is to start
-  with the assumption that everything is in scope until verified otherwise" (PCI Security Standards
-  Council, Information Supplement: Guidance for PCI DSS Scoping and Network Segmentation, v1.1, May
-  2017,
-  https://listings.pcisecuritystandards.org/documents/Guidance-PCI-DSS-Scoping-and-Segmentation_v1_1.pdf).
-- **Relations:** related to WAY-04 · related to WAY-17 · related to WAY-58 · related to WAY-73 ·
-  related to WAY-76
-- **Outranks:** none
+- **Based on:** none
+- **Relations:** none
 - **Verification:** level 2 — an agent compares the change with the decision:
-  - complies: a product adopts WCAG in a decision naming the edition, level AA and the screens it
-    covers, and an invariant taking a criterion's condition names that requirement as a fact in
-    *Rests on*; the licence of a product's icons stands as a fact that it applies;
+  - complies: a decision adopts WCAG, naming its edition, level AA and the screens covered; an
+    invariant taking a criterion's condition rests on that requirement's environment fact; the
+    attribution an icon licence requires is an environment fact, and the invariant crediting the
+    icons' author rests on it;
   - violates: an agent writes an invariant from an ASVS requirement because the code looks like
-    it, with no adopting decision; a licence is left out because nobody adopted it.
+    it, with no adopting decision; a licence is left out because nobody adopted it; "the licence
+    applies to the product's icons" is written as an environment fact.
 - **Review when:** none
 - **Origin:** none
-- **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-26
+- **Approved by:** Mariusz, 2026-09-29
 
-*Rationale:* a voluntary catalogue binds only because someone chose it, so the choice is a
-decision with its scope, and without one an agent would bind the product to whatever it recognised.
-A law or a licence binds whether anyone chose it, so the only open question is whether it applies,
-and reading it as applying until settled makes silence raise checks rather than remove them. A
-descriptive source — an RFC, a list of modules — needs nothing beyond the fact. A likeness goes to
-a human as "do we adopt this?" or "does this bind us?", because only a human knows what the product
-means to take on.
-*Rejected:* a field naming the kind of source, and a script checking that every requirement of an
-adopted catalogue has a fact and an invariant, now — neither has a reader until a product adopts a
-catalogue or takes on a binding obligation (WAY-05); a fact that nothing names is caught by WAY-73
-already.
-*Consequences:* a requirement of an adopted catalogue is a fact whose source is the edition, the
-requirement's identifier and its text word for word, and an invariant taking a condition from it
-names it in *Rests on* (WAY-73); WAY-58's consequence that left this to the element is edited in
-place to name this decision. The field and the script are built on the first product that adopts a
-catalogue or a binding obligation; the first in reach is the CC BY licence of the icons of the game
-`loop`.
+*Rationale:* a voluntary catalogue binds only because someone chose it; without that choice an
+agent would bind the product to whatever it recognised. A law binds whether chosen or not, and
+holding the product to it until a human settles otherwise makes silence raise checks rather than
+remove them.
+*Rejected:* a field naming the kind of source — no reader until a product adopts a catalogue or
+takes on a binding rule (WAY-05); a script matching adopted requirements to facts and invariants —
+the same, and WAY-73 already catches an unnamed fact; "the rule applies" as an environment fact — a
+commit removing what the rule covers would make it false (WAY-76).
 
 ### WAY-89/1 — Which version of Python do the scripts of the-way run on, and when does it move?
 
