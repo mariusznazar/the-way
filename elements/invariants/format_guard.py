@@ -107,6 +107,8 @@ FILE_PATH = "foundations/invariants.md"
 
 IDENTIFIER = identifier_form.IDENTIFIER
 DATE = r"\d{4}-\d{2}-\d{2}"
+# How a row of human verdicts names the commit it assessed: an abbreviated or full commit name.
+COMMIT = r"[0-9a-f]{7,40}"
 QUOTED = r'"[^"]*"|“[^”]*”'
 
 
@@ -1030,12 +1032,15 @@ def check_violated(path, entries, rules, report):
     return [(cells[0], cells[1]) for cells, _ in positions if len(cells) > 1]
 
 
-def check_human_verdicts(path, entries, foundation, rules, report):
+def check_human_verdicts(path, entries, foundation, rules, report, top=None):
     """Every row of the file of human verdicts names an entry of the invariants or of the
     environment facts; a row naming an invariant names an entry whose method is a path, gives
-    `pass` or `fail`, and reads `none` in *Until* (WAY-83). A row naming neither is an invariant
-    row unless it carries a fact's date in *Until*. The rows naming a fact are the environment
-    facts guard's to check further."""
+    `pass` or `fail`, names who gave it, when and the commit assessed, and reads `none` in *Until*
+    (WAY-08, WAY-83). The commit assessed is one of the history of the commit being checked —
+    HEAD or a commit it descends from — since a change since that commit is what lapses the
+    verdict (WAY-83); where the file lies in no git repository, only its form is checked. A row
+    naming neither is an invariant row unless it carries a fact's date in *Until*. The rows naming
+    a fact are the environment facts guard's to check further."""
     # invariant: human-verdict-invariant-row/1
     check, invariant_row = "check_human_verdicts", "human-verdict-invariant-row/1"
     verdicts_path = os.path.join(os.path.dirname(os.path.abspath(path)), rules.verdicts_file)
@@ -1075,9 +1080,39 @@ def check_human_verdicts(path, entries, foundation, rules, report):
         if values.get("Verdict") not in ("pass", "fail"):
             report.error(None, "%s: *Verdict* is neither `pass` nor `fail`" % where,
                          check, (invariant_row,))
+        by = values.get("By", "")
+        if not by or bare(by) == "none" or holds_todo(by):
+            report.error(None, "%s: *By* names nobody" % where, check, (invariant_row,))
+        on = values.get("On", "")
+        if not re.fullmatch(DATE, on) or not decision_guard.valid_date(on):
+            report.error(None, "%s: *On* is not a date YYYY-MM-DD" % where, check,
+                         (invariant_row,))
+        commit = values.get("Commit", "")
+        if not re.fullmatch(COMMIT, commit):
+            report.error(None, "%s: *Commit* names no commit" % where, check, (invariant_row,))
+        elif top is not None:
+            check_assessed_commit(where, commit, top, check, invariant_row, report)
         if values.get("Until") != "none":
             report.error(None, "%s: an invariant's verdict reads `none` in *Until*" % where,
                          check, (invariant_row,))
+
+
+def check_assessed_commit(where, commit, top, check, invariant_row, report):
+    """The commit a row of human verdicts assessed is in the history of the commit being checked:
+    it exists, and HEAD is it or descends from it."""
+    code, _, _ = shared.call_git(["rev-parse", "--verify", "--quiet", commit + "^{commit}"], top)
+    if code != 0:
+        report.error(None, "%s: *Commit* `%s` is no commit of the repository" % (where, commit),
+                     check, (invariant_row,))
+        return
+    code, _, message = shared.call_git(["merge-base", "--is-ancestor", commit, "HEAD"], top)
+    if code == 1:
+        report.error(None, "%s: *Commit* `%s` is not in the history of the commit being checked"
+                     % (where, commit), check, (invariant_row,))
+    elif code != 0:
+        # git failed for a reason of its own, which is no verdict on the row
+        report.error(None, "%s: git cannot tell whether `%s` is in the history of HEAD: %s"
+                     % (where, commit, message or "git merge-base exited with %d" % code), check)
 
 
 # --- checks against the repository ----------------------------------------------------------
@@ -1569,7 +1604,7 @@ def run(path, base=None, stream=None, template=TEMPLATE, merge_onto=None, record
     check_verifications(entry_list, foundation, report)
     check_quarantine(tables.get(rules.lists[1][0]), entries, foundation, report)
     violated = check_violated(path, entries, rules, report)
-    check_human_verdicts(path, entries, foundation, rules, report)
+    check_human_verdicts(path, entries, foundation, rules, report, top)
     if tracked is not None:
         check_citations(entries, withdrawn, top, tracked, report, withdrawn_columns)
         check_record_paths(entry_list, top, report, foundation.facts, foundation.facts_read)

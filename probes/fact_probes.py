@@ -1,4 +1,4 @@
-"""What the probes and watches of the-way's environment facts share (WAY-81, WAY-82, WAY-91).
+"""What the probes and watches of the-way's environment facts share (WAY-81, WAY-82).
 
 The checks of each fact stand in `probes/<identifier>/`, and its method
 runs them, from the root of the repository:
@@ -18,7 +18,7 @@ Verdicts, as the test runner reads a test's outcome:
   `error`, never `fail`;
 - a probe whose tool runs a release outside *Holds for*, and whose behaviour agreed with the fact:
   the test skips with the reason the template lists for `unchecked`, naming the release it ran on
-  (WAY-91). The runner writes no `unchecked` yet, so the line holds the reason in its
+  (WAY-81). The runner writes no `unchecked` yet, so the line holds the reason in its
   `description` while the gate reads the fact as it reads any skip. A failure names the release
   first in its message, which the runner writes into the `description` of the line; a pass line
   holds no `description`, so a pass records no release.
@@ -51,7 +51,7 @@ GUARD_FILE = os.path.join(ROOT, "elements", "environment-facts", "format_guard.p
 TIMEOUT = 60
 # The one header a request sends: a user agent that identifies nobody.
 USER_AGENT = "fact-probe"
-# The reason for `unchecked` the template lists for a probe on another release (WAY-91, WAY-63).
+# The reason for `unchecked` the template lists for a probe on another release (WAY-81, WAY-63).
 OUTSIDE_HOLDS_FOR = "a probe ran on a release of its tool outside *Holds for*"
 
 
@@ -433,7 +433,7 @@ class Repository:
 
 def built_from(release, named):
     """Whether a release git prints is the named release or a build of it, as Git for Windows
-    `2.55.0.windows.3` builds git 2.55.0 (WAY-91)."""
+    `2.55.0.windows.3` builds git 2.55.0 (WAY-81)."""
     return release == named or re.fullmatch(r"%s\.windows\.\d+" % re.escape(named), release) \
         is not None
 
@@ -450,7 +450,7 @@ class FactCheck(unittest.TestCase):
         return repository
 
     def judge_release(self, identifier, tool, release, differences):
-        """A probe's verdict on the release it ran on (WAY-91): a difference fails the fact on
+        """A probe's verdict on the release it ran on (WAY-81): a difference fails the fact on
         any release, naming it; agreement counts only on the release *Holds for* names, a build
         of it included, and elsewhere leaves the fact unchecked for that reason."""
         if differences:

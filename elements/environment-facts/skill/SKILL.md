@@ -30,7 +30,7 @@ environment fact adds to each.
 - Find what asks for the fact: a `TODO` in an invariant's *Rests on*, a citation in a decision's
   *Based on*, a fact a task's return step listed (WAY-11), the conversation, a failed run of a
   method, or a fact left `unchecked` because its probe ran on a release outside *Holds for*
-  (WAY-91).
+  (WAY-81).
 - Put it through the template's "Which facts are written" and "The sentence", and send what
   fails them where they say — into an invariant through `record-invariant`, into a decision
   through `record-decision`.

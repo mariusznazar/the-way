@@ -5,7 +5,7 @@ The probe gives `hashlib.sha256` the example messages NIST publishes for SHA-256
 digests with NIST's. The watch reads the passage of the fact's *Source* in the FIPS 180-4 PDF, and
 the state of the standard on its page at NIST's Computer Security Resource Center. The expected
 values are written out (WAY-70); *Holds for* names an edition of a standard and no release of a
-tool, so the probe reads no release (WAY-91).
+tool, so the probe reads no release (WAY-81).
 """
 
 import hashlib

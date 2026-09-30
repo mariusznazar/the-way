@@ -144,10 +144,9 @@ Every entry of `foundations/invariants.md` names as its method a command that be
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-08@9d45e0a9 · WAY-61@4804d070 · WAY-63@f16348c8
+- **Derives from:** WAY-08@2343e09f · WAY-61@4804d070 · WAY-63@f16348c8
 - **Part:** every
 - **Correction:** none
-- **Recovered:** none
 
 ## invariant-test-break/1
 
@@ -155,21 +154,9 @@ Every check that cites an invariant fails, in k of n runs where its command sets
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-08@9d45e0a9
+- **Derives from:** WAY-08@2343e09f
 - **Part:** every
 - **Correction:** none
-- **Recovered:** none
-
-## human-verdict-trace/1
-
-Every human verdict on an invariant names who gave it, when, and the commit it assessed.
-
-- **Method:** `TODO`
-- **Rests on:** none
-- **Derives from:** WAY-08@9d45e0a9 · WAY-63@f16348c8
-- **Part:** every
-- **Correction:** none
-- **Recovered:** none
 
 ## repository-file-location/1
 
@@ -1122,7 +1109,7 @@ Every `invariant:` line in a check that names an entry of `foundations/invariant
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-57@4a838784 · WAY-65@fbf6bef4
+- **Derives from:** WAY-57@4a838784 · WAY-65@581724fc
 - **Part:** every
 - **Correction:** none
 
@@ -1208,29 +1195,26 @@ Every value a command in `foundations/invariants.md` takes from the gate stands 
 - **Derives from:** WAY-61@4804d070
 - **Part:** invariants
 - **Correction:** none
-- **Recovered:** none
 
 ## gate-verdict-per-entry/1
 
-For every invariant whose command a run of the gate carried out, the gate's report shows the verdict that run recorded for the entry's identifier and current version.
+For every invariant whose command a run of the gate carried out, the gate's report shows the verdict that run recorded for the entry's identifier and current version, and `pass` only where every check of that run citing the entry recorded `pass`.
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-61@4804d070
+- **Derives from:** WAY-61@4804d070 · WAY-65@581724fc
 - **Part:** gate
 - **Correction:** none
-- **Recovered:** none
 
 ## gate-pass-without-verdict/1
 
-The gate reports no pass for an invariant that no run recorded a verdict for.
+The gate reports no pass for an invariant for which neither a run of its command recorded a verdict nor a human verdict for it is in force.
 
 - **Method:** `TODO`
 - **Rests on:** none
 - **Derives from:** WAY-61@4804d070
 - **Part:** gate
 - **Correction:** none
-- **Recovered:** none
 
 ## gate-method-order/1
 
@@ -1281,7 +1265,6 @@ Every result the gate reports for an invariant is `pass`, `fail`, `unchecked` or
 - **Derives from:** WAY-63@f16348c8
 - **Part:** gate
 - **Correction:** none
-- **Recovered:** none
 
 ## gate-unchecked-reason/1
 
@@ -1292,7 +1275,6 @@ Every `unchecked` the gate reports names a reason on the list in the invariants 
 - **Derives from:** WAY-63@f16348c8
 - **Part:** gate · invariants
 - **Correction:** none
-- **Recovered:** none
 
 ## gate-reported-set/1
 
@@ -1323,7 +1305,6 @@ The gate's command exits non-zero when some result it reports is `error`, an inv
 - **Derives from:** WAY-63@f16348c8 · WAY-51@8bdac21a · WAY-82@790a7972
 - **Part:** gate
 - **Correction:** none
-- **Recovered:** none
 
 ## invariants-file/1
 
@@ -1371,7 +1352,7 @@ Every `invariant:` line in a check names an entry of `foundations/invariants.md`
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-12@0f1f7ea4 · WAY-17@b1e26133 · WAY-65@fbf6bef4
+- **Derives from:** WAY-12@0f1f7ea4 · WAY-17@b1e26133 · WAY-65@581724fc
 - **Part:** every
 - **Correction:** none
 
@@ -1381,10 +1362,9 @@ Every `data:` line in an invariant test names a file that exists.
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-65@fbf6bef4
+- **Derives from:** WAY-65@581724fc
 - **Part:** every
 - **Correction:** none
-- **Recovered:** none
 
 ## invariant-tests-of-change/1
 
@@ -1392,10 +1372,9 @@ The invariant tests of a change include every file that is an invariant test on 
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-65@fbf6bef4
+- **Derives from:** WAY-65@581724fc
 - **Part:** gate
 - **Correction:** none
-- **Recovered:** none
 
 ## link-fingerprint-presence/1
 
@@ -1446,7 +1425,6 @@ Every quarantine row in `foundations/invariants.md` names an entry at its curren
 - **Derives from:** WAY-68@3335280b
 - **Part:** invariants
 - **Correction:** none
-- **Recovered:** none
 
 ## quarantine-flow-invariants/1
 
@@ -1457,7 +1435,6 @@ No quarantine row in `foundations/invariants.md` names an invariant a critical f
 - **Derives from:** WAY-68@3335280b
 - **Part:** invariants · part-map
 - **Correction:** none
-- **Recovered:** none
 
 ## gate-quarantine-result/1
 
@@ -1468,7 +1445,6 @@ The gate reports a quarantined entry `unchecked` while the checked commit's comm
 - **Derives from:** WAY-68@3335280b
 - **Part:** gate
 - **Correction:** none
-- **Recovered:** none
 
 ## log-entry-field-presence/1
 
@@ -1576,9 +1552,8 @@ Every line of the-way's own record of a run is one JSON object holding `check`, 
 - **Method:** `TODO`
 - **Rests on:** json-text@8141eb36 · json-lines@f16c5b84
 - **Derives from:** WAY-74@1e1c88d7
-- **Part:** decisions · part-map · invariants · gate · environment-facts
+- **Part:** decisions · part-map · invariants · glossary · environment-facts · elements-common · gate
 - **Correction:** none
-- **Recovered:** none
 
 ## run-record-path/1
 
@@ -1589,7 +1564,6 @@ Every path ending in `.jsonl` that a command in `foundations/invariants.md` or `
 - **Derives from:** WAY-74@1e1c88d7
 - **Part:** invariants · environment-facts · repository
 - **Correction:** none
-- **Recovered:** none
 
 ## run-record-lines/1
 
@@ -1600,7 +1574,6 @@ The gate reads, from the-way's own record of a run, only the lines the run it st
 - **Derives from:** WAY-74@1e1c88d7
 - **Part:** gate
 - **Correction:** none
-- **Recovered:** none
 
 ## test-runner-pass-line/1
 
@@ -1608,10 +1581,9 @@ The test runner's record of a run holds a `pass` line for an invariant's identif
 
 - **Method:** `python -B gate/run_tests.py gate --record .runs/gate-tests.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-61@4804d070 · WAY-65@fbf6bef4
+- **Derives from:** WAY-61@4804d070 · WAY-65@581724fc
 - **Part:** gate
 - **Correction:** none
-- **Recovered:** none
 
 ## python-version-declared/1
 
@@ -1762,10 +1734,9 @@ Every entry of `foundations/environment_facts.md` names as its method a command 
 
 - **Method:** `python -B elements/environment-facts/format_guard.py foundations/environment_facts.md --record .runs/environment-facts.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-81@ba037b75
-- **Part:** environment-facts
+- **Derives from:** WAY-81@37613ee7
+- **Part:** every
 - **Correction:** none
-- **Recovered:** none
 
 ## fact-citation-target/1
 
@@ -1773,10 +1744,9 @@ Every `fact:` line in a check names an entry of `foundations/environment_facts.m
 
 - **Method:** `python -B elements/environment-facts/format_guard.py foundations/environment_facts.md --record .runs/environment-facts.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-81@ba037b75
+- **Derives from:** WAY-81@37613ee7
 - **Part:** every
 - **Correction:** none
-- **Recovered:** none
 
 ## fact-verdict-citation/1
 
@@ -1784,10 +1754,9 @@ A run records a verdict for an environment fact only from a command that cites t
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-81@ba037b75
+- **Derives from:** WAY-81@37613ee7
 - **Part:** gate
 - **Correction:** none
-- **Recovered:** none
 
 ## based-on-fact-fingerprint/1
 
@@ -1831,14 +1800,13 @@ The clock exits non-zero when some fact's result is `fail` or `error`, and zero 
 
 ## human-verdict-invariant-row/1
 
-Every row of `foundations/human_verdicts.md` naming an invariant names an entry of `foundations/invariants.md` whose method is a path, gives `pass` or `fail`, and reads `none` in *Until*.
+Every row of `foundations/human_verdicts.md` naming an invariant names an entry of `foundations/invariants.md` whose method is a path, gives `pass` or `fail`, names who gave it, when and the commit assessed, and reads `none` in *Until*.
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-83@827c14d1
+- **Derives from:** WAY-08@2343e09f · WAY-83@827c14d1
 - **Part:** invariants
 - **Correction:** none
-- **Recovered:** none
 
 ## human-verdict-fact-row/1
 
@@ -1849,18 +1817,16 @@ Every row of `foundations/human_verdicts.md` naming an environment fact names an
 - **Derives from:** WAY-83@827c14d1
 - **Part:** environment-facts
 - **Correction:** none
-- **Recovered:** none
 
 ## gate-human-verdict/1
 
-The gate counts a human verdict for an entry only from the row naming its current version, and for an environment fact only while the committer date of the commit being checked is no later than the row's *Until*.
+The gate counts a human verdict for an entry only from the row naming its current version, for an invariant only while no change since the commit the row names reaches the entry, and for an environment fact only while the committer date of the commit being checked is no later than the row's *Until*.
 
 - **Method:** `TODO`
 - **Rests on:** none
 - **Derives from:** WAY-83@827c14d1
 - **Part:** gate
 - **Correction:** none
-- **Recovered:** none
 
 ## fact-dependants/1
 

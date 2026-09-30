@@ -1642,9 +1642,20 @@ class FactsBeside(GuardTestCase):
 
 
 class HumanVerdicts(GuardTestCase):
+    def setUp(self):
+        super().setUp()
+        # the commit a row assesses is one of the history of the commit being checked
+        self.git("add", "-A")
+        self.git("commit", "-q", "-m", "assessed")
+        self.assessed = self.head()
+
+    def head(self):
+        return subprocess.run(["git", "rev-parse", "--short=7", "HEAD"], cwd=self.root, check=True,
+                              capture_output=True, text=True).stdout.strip()
+
     def row(self, **changes):
         values = dict(entry="save-round-trip", version="1", verdict="pass", by="Mariusz",
-                      on="2026-09-26", commit="b06eacd", until="none")
+                      on="2026-09-26", commit=self.assessed, until="none")
         values.update(changes)
         return tuple(values[name] for name in ("entry", "version", "verdict", "by", "on", "commit",
                                                "until"))
@@ -1689,6 +1700,52 @@ class HumanVerdicts(GuardTestCase):
     def test_until_a_date(self):
         # invariant: human-verdict-invariant-row/1
         self.check(self.row(until="2026-12-31"), "an invariant's verdict reads `none` in *Until*")
+
+    def test_by_names_nobody(self):
+        # invariant: human-verdict-invariant-row/1
+        self.check(self.row(by="none"), "human_verdicts.md:5: *By* names nobody")
+
+    def test_by_empty(self):
+        # invariant: human-verdict-invariant-row/1
+        self.check(self.row(by=""), "human_verdicts.md:5: *By* names nobody")
+
+    def test_on_not_a_date(self):
+        # invariant: human-verdict-invariant-row/1
+        self.check(self.row(on="yesterday"), "human_verdicts.md:5: *On* is not a date YYYY-MM-DD")
+
+    def test_on_a_day_no_calendar_has(self):
+        # invariant: human-verdict-invariant-row/1
+        self.check(self.row(on="2026-02-30"), "*On* is not a date YYYY-MM-DD")
+
+    def test_commit_not_a_commit_name(self):
+        # invariant: human-verdict-invariant-row/1
+        self.check(self.row(commit="HEAD"), "human_verdicts.md:5: *Commit* names no commit")
+
+    def test_commit_of_no_repository(self):
+        """A commit name in the form of one that the repository does not hold."""
+        # invariant: human-verdict-invariant-row/1
+        self.check(self.row(commit="0000000"),
+                   "human_verdicts.md:5: *Commit* `0000000` is no commit of the repository")
+
+    def test_commit_off_the_history_of_head(self):
+        """A commit of another branch, which HEAD does not descend from, is not the history the
+        verdict lapses along."""
+        # invariant: human-verdict-invariant-row/1
+        self.git("checkout", "-q", "-b", "elsewhere")
+        self.write("src/elsewhere.py", "pass\n")
+        self.git("add", "-A")
+        self.git("commit", "-q", "-m", "elsewhere")
+        elsewhere = self.head()
+        self.git("checkout", "-q", "main")
+        self.check(self.row(commit=elsewhere), "human_verdicts.md:5: *Commit* `%s` is not in the "
+                                               "history of the commit being checked" % elsewhere)
+
+    def test_commit_earlier_in_the_history_of_head(self):
+        # invariant: human-verdict-invariant-row/1
+        self.write("src/later.py", "pass\n")
+        self.git("add", "-A")
+        self.git("commit", "-q", "-m", "later")
+        self.check(self.row())
 
     def test_row_naming_a_fact_is_the_facts_guards(self):
         # invariant: human-verdict-invariant-row/1

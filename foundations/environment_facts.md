@@ -17,9 +17,7 @@ Within one level of precedence of its gitignore sources, the last pattern that m
 
 - **Holds for:** git 2.55.0
 - **Source:** https://git-scm.com/docs/gitignore/2.55.0 § DESCRIPTION — "within one level of precedence, the last matching pattern decides the outcome" · § PATTERN FORMAT — "It is not possible to re-include a file if a parent directory of that file is excluded."; read 2026-09-26
-- **Set by:** none
 - **Method:** `python -B gate/run_tests.py probes/gitignore-paths --record .runs/fact-gitignore-paths.jsonl`
-- **Correction:** none
 
 ## sha-256/1
 
@@ -43,9 +41,7 @@ A JSON text is a serialized value, in which numeric values that the grammar cann
 
 - **Holds for:** RFC 8259 (December 2017)
 - **Source:** https://www.rfc-editor.org/rfc/rfc8259.html § 2 — "A JSON text is a serialized value." · § 6 — "Numeric values that cannot be represented in the grammar below (such as Infinity and NaN) are not permitted." · § 4 — "The names within an object SHOULD be unique."; read 2026-09-26
-- **Set by:** none
 - **Method:** `python -B gate/run_tests.py probes/json-text --record .runs/fact-json-text.jsonl`
-- **Correction:** none
 
 ## json-lines/1
 
@@ -53,9 +49,7 @@ A JSON Lines file holds one valid JSON value on each line, ends each line with '
 
 - **Holds for:** JSON Lines, which jsonlines.org publishes without versions
 - **Source:** https://jsonlines.org/ (archived: http://web.archive.org/web/20260918132122/https://jsonlines.org/, 2026-09-18) § 2 — "Each Line is a Valid JSON Value" · § 3 — "Line Terminator is '\n'" · § 3 — "This means '\r\n' is also supported because surrounding white space is implicitly ignored when parsing JSON values." · § 3 — "Including a line terminator after the last JSON value in a file is strongly recommended but not required."; read 2026-09-26
-- **Set by:** none
 - **Method:** `python -B gate/run_tests.py probes/json-lines --record .runs/fact-json-lines.jsonl`
-- **Correction:** none
 
 ## python-stdlib-modules/1
 

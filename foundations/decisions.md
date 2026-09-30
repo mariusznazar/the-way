@@ -230,40 +230,30 @@ Every invariant names its method of checking, and its current result comes from 
 method, never from a status written by hand. The default method is a test in the broad sense —
 a code test, an end-to-end test or an exploratory test run by an agent on the working product —
 and a test counts only when a deliberately introduced break of the invariant makes it fail, in k
-of n runs for a test that does not give the same verdict every time. Human inspection is used for
-assessments that neither an automated check nor a repeatable measurement can settle, and it
-leaves a trace of who checked and when.
+of n runs, which its method's command sets and records as one verdict, for a test that does not
+give the same verdict every time. Human inspection is used for assessments that neither an
+automated check nor a repeatable measurement can settle, and it leaves a trace of who checked and
+when.
 
 - **Change:** new decision
 - **Scope:** invariants
-- **Based on:** a test can cover code without checking it: a pseudo-tested method is "covered by
-  the test suite, yet no test case fails when the method body is removed" (Vera-Pérez, Danglot,
-  Monperrus, Baudry, 2019, https://arxiv.org/abs/1807.05030). Automated tools leave cases that
-  only a person can settle: "axe-core will return elements as "incomplete" where axe-core could
-  not be certain, and manual review is needed" (https://github.com/dequelabs/axe-core).
-- **Relations:** related to WAY-03 · related to WAY-04
-- **Outranks:** none
+- **Based on:** none
+- **Relations:** none
 - **Verification:** level 1 — invariants: invariant-method-form · invariant-test-break ·
-  human-verdict-trace. Level 2 for the choice of method — an agent compares the change with the
-  decision:
+  human-verdict-invariant-row. Level 2 for the choice of method — an agent compares the change
+  with the decision:
   - complies: a person settles whether an image's text alternative describes it, after the
     accessibility check marked it incomplete;
   - violates: an invariant that a repeatable measurement can settle is left to human inspection.
 - **Review when:** none
 - **Origin:** none
-- **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-15
+- **Approved by:** Mariusz, 2026-09-29
 
-*Rationale:* coverage does not mean that a test checks anything: code can be covered while no
-test fails when it is removed, so a test counts only when a break it is meant to catch makes it
-fail. A result written by hand is a second copy of what running the method says, and it goes
-stale with the next commit. Some assessments stay with a person, because even the tools built
-for them hand the uncertain cases over for manual review.
-*Rejected:* "every invariant has test coverage" — it either pushes invariants that cannot be
-tested out of the foundation, or gives them a test that always passes.
-*Consequences:* a check that cites an invariant is accepted only after a deliberate break has made
-it fail, so the gate needs a way to introduce such breaks. An invariant that no test or
-measurement can settle stays in the foundation, checked by a person.
+*Rationale:* coverage is not checking: code can be covered while no test fails when it is
+removed; a status written by hand goes stale with the next commit; k and n in the command let one
+run's verdict cover the n runs; even accessibility tools hand uncertain cases to a person.
+*Rejected:* test coverage for every invariant — untestable ones leave the foundation or get a
+test that always passes.
 
 ### WAY-09/1 — What may enter the process repository?
 
@@ -2033,116 +2023,41 @@ no verdict for the entry never gives it a pass.
 - **Change:** new decision
 - **Scope:** invariants, gate, decisions, part-map, elements-common
 - **Based on:** none
-- **Relations:** derives from WAY-08@9d45e0a9 · derives from WAY-16@5c1d60d4 ·
+- **Relations:** derives from WAY-08@2343e09f · derives from WAY-16@5c1d60d4 ·
   derives from WAY-54@57b93cf6 · derives from WAY-57@4a838784 · derives from WAY-38@6e10c3fd ·
-  derives from WAY-60@c85d1ac0 · related to WAY-03 · related to WAY-05 · related to WAY-07 ·
-  related to WAY-10 · related to WAY-12 · related to WAY-17 · related to WAY-22 · related to WAY-24 ·
-  related to WAY-31 · related to WAY-34 · related to WAY-37 · related to WAY-43 · related to WAY-45 ·
-  related to WAY-47 · related to WAY-48 · related to WAY-49 · related to WAY-50 · related to WAY-53 ·
-  related to WAY-55 · related to WAY-56 · related to WAY-58 · related to WAY-59
-- **Outranks:** none
+  derives from WAY-60@c85d1ac0
 - **Verification:** level 1 — invariants: invariant-method-form · method-gate-values ·
   gate-verdict-per-entry · gate-pass-without-verdict · gate-method-order · test-runner-pass-line.
   Level 2 for what a method checks — an agent compares the change with the decision:
-  - complies: "every version and review record in the log has every field of the template" names the
-    decision guard run on `foundations/decisions.md`, and one run of the guard records a verdict for
-    each invariant it checks; "a save of another version is rejected whole" names a test that hands
-    the loader a save written in another version, since the sentence is about the loader; an
-    exploratory test names the command that starts an agent on the working product with its steps;
-    whether an image's text alternative describes it, after the accessibility check marked it
-    incomplete (WAY-08), names the path of the checklist a person assesses the page against;
-  - violates: a sentence about the real log names, as its method, the guard's test that feeds the
-    guard logs made up for it; a test that runs the guard on the real log and asserts only its exit
-    code is cited for one of the invariants the guard checks; an entry carries "runs as: script"
-    beside its command; the gate gives every invariant a guard checks the guard's exit code; a
-    command names the main branch where the sentence names `{fork-point}`.
+  - complies: a sentence about the log's fields names the decision guard run on
+    `foundations/decisions.md`, one run giving each invariant a verdict; a sentence about the loader
+    names a test handing it a save of another version; an exploratory test names the command
+    starting an agent on the working product with its steps; a sentence on whether an image's text
+    alternative describes it names the checklist a person assesses the page against;
+  - violates: a sentence about the real log names as its method the guard's test, which feeds it
+    made-up logs; a test asserting only the guard's exit code on the real log is the method of one
+    of its invariants; an entry carries "runs as: script" beside its command; the gate gives every
+    invariant a guard checks the guard's exit code; a command names the main branch where the
+    sentence names `{fork-point}`.
   Level 2 for which run's output a method reads — an agent compares the change with the decision:
-  - complies: the map guard reads the coverage file a critical flow's test leaves, as WAY-47 places
-    it, and the gate runs the flow's test first;
+  - complies: the map guard reads a flow test's coverage file, as WAY-47 places it, after the gate
+    runs that test;
   - violates: an invariant's method reads the record another invariant's guard run left, and no
     decision places that reading.
 - **Review when:** none
 - **Origin:** none
-- **Approver override:** none
 - **Approved by:** Mariusz, 2026-09-28
 
-*Rationale:* WAY-08 asks every invariant to name its method and to take its result from running it,
-and WAY-16 has the gate read the methods from the entries, so a method is something the gate can run
-or hand to a person, never prose. Two forms cover that, and they differ in form: a command, which
-begins with the program it runs, and a path alone. An exploratory test run by an agent on the working
-product is a test (WAY-08) and needs no form of its own, since a command can start the agent with its
-steps; a path is then left to the one check only a person can make. The form is the route, and no kind
-is named beside it, because a kind says nothing the method does not already say and can disagree with
-it (WAY-54). A method checks what its sentence is about: a sentence about the log is checked by reading
-the log, while a test that feeds a guard made-up logs shows that the guard catches a break — what
-WAY-08 asks before a method counts — and is the method of a sentence about the guard. In this
-repository the guards belong to the product, so both kinds of sentence exist here, and each needs its
-own method. One run checks many invariants, as one pass of a format guard checks every rule on its
-template's list and one run of a test suite checks every test, so an exit code tells at most that
-something failed, and not even that where a check was skipped; a run once per entry would repeat an
-expensive run for each invariant it serves, which WAY-47 refuses for coverage. So the run records a
-verdict for each entry, and a result comes from a record of a run, never from a status written by
-hand (WAY-08, WAY-53). A verdict counts only for the entry's current version, so that a raised
-version fails every check still written for the old meaning, as WAY-57 has it for a test. Silence is
-never a pass, because a check that quietly sees nothing passes (WAY-38). A comparison the sentence
-ties to a fixed commit (WAY-60) needs that commit in the command; a command that resolved a branch
-or a revision itself would answer by the hour rather than by the commit, which WAY-60 rules out, so
-the gate fills the commit in from a closed list. Anything else in the command that varied between
-runs would make the verdict depend on who ran it; what the runner's own environment supplies — its
-network access, and for a product its interpreter — is settled neither here nor by WAY-63, while
-the-way's own interpreter is set by WAY-89.
-*Rejected:* a kind of method named beside it, as `script`, `declared` or `human` — nothing the gate needs
-that the form does not tell, and a second value that can disagree with it (WAY-54); a form of its own for
-an exploratory test run by an agent, as a path to its steps — it looks like the path a human assesses
-against, and telling them apart would take a kind named by the author; the exit code of a run as the
-verdict of every invariant it checks — one broken rule fails them all, and a rule the run skipped passes
-with the rest; one run per entry, with a selector for the entry — a check shared by many invariants runs
-as many times, and a product's own test runner cannot always run a single test; a verdict for whichever
-version a check cites — a check still written for an earlier meaning would pass the raised entry; the
-tests of a check, run on input made up for them, as the method of a sentence about the data that check
-reads — they show the check catches a break, not that the data holds; a method in prose — the gate
-cannot run it (WAY-16).
-*Consequences:* the template of the invariants element gives the two forms of a method; the closed
-list of values the gate fills into a command, which starts with the commit the task branch left the
-main branch from (WAY-57), which is the last commit of the main branch the branch contains, and the
-commit of the main branch that a merge into it is made onto, and grows by a new version of this
-decision; and the closed list of formats a run's record may take, which starts with the-way's own
-record of a run and grows the same way, together with the adapter that reads a product's format
-(WAY-38). Where a commit on the list does not exist, as the main branch in this repository, the gate fills in `none`
-in its place and the check records its verdict, as WAY-57 already says for its own checks; the
-gate never turns that into a pass. A command that leaves its record in a file names that file's path
-in the command itself, at a place in the working tree that does not change between runs; a method
-may read what another method's run left only where a decision places it, as WAY-47 does, and the
-gate then runs the first before the second. What a run leaves — its output, or the file its command
-names — is what the gate reads; the record of the result it keeps in the repository is the one WAY-53 compares. The result an entry has is the
-verdict of the run on the commit being checked; the run WAY-58 asks for on the commit the branch
-left from is evidence for a human, not a result. The format guards of decisions, of the part map and
-of invariants, once they record a verdict for each invariant they check, cite those invariants and
-are invariant tests under WAY-65, read-only during implementation (WAY-03) and changing through the
-panel (WAY-10). Recording a verdict for each invariant, and taking `none` in place of a commit
-that does not exist, changes the commands of those three guards, which the map declares as
-surfaces; the change travels on the change path of their promise level (WAY-49, WAY-50). A failure a run
-records for no entry is reported by the gate as such, never dropped; how it counts is set by WAY-63.
-The invariant of the critical flow `wording-reaches-dependants` was a sentence about the real log
-with a test on made-up logs as its method; the same change rewrites it in the map, in place
-(WAY-43), as a sentence about what the decision guard reports, and the log's own freshness stays
-WAY-31's invariant, checked by the guard run on the log. The adapter through which the gate reads a
-product's record of a run accepts what the map's external context marks as untrusted, so its files
-become the trust boundary of the gate part (WAY-48) once they exist. A quantity measured while the
-product runs is checked by a command that takes its measurements on the commit being checked, where
-the population the sentence names is those measurements; a population the product meets only in use,
-such as the loads real players make, fits neither form, and such an invariant still enters, as
-WAY-60 has it, with its method written as `TODO — decision pending: the method of a population met
-only in use`, and the gate reports it as unchecked, never as passing (WAY-38), until a new version
-of this decision gives that method. Where a product's method runs the-way's own guard, the path of
-the pinned the-way in the command, and the interpreter that runs it, follow from how the product
-pins the-way (WAY-34), which this decision does not settle. How the result of a human assessment is
-recorded, and which states a result may take and which of them make the gate's command fail, is set
-by WAY-63; how a check cites its invariant, by WAY-65. When a method counts stays with WAY-08 — the
-deliberate break, and k of n runs for a method that does not give the same verdict every time; k and
-n stand in the method's command, so the verdict one run records for the entry already covers n runs
-of the check. Who writes the break is set by WAY-69. WAY-16's consequence that left the reporting of
-a method the gate cannot run to the invariants element is edited in place to point to WAY-63.
+*Rationale:* the gate runs a method or hands it to a person (WAY-16), so prose is none; one run
+serves many invariants, each needing a verdict of its own; a check that sees nothing passes quietly
+(WAY-38); a branch resolved at run time answers by the hour (WAY-60).
+*Rejected:* a kind named beside the method — a second value that can disagree (WAY-54); a form of
+its own for an exploratory test — it looks like a human's path; the run's exit code as each
+invariant's verdict — one broken rule fails all, a skipped one passes; one run per entry — a shared
+check runs many times; a verdict for whichever version a check cites — a check for an old meaning
+passes the raised entry; a check's tests on made-up input as the method of a sentence about real
+data — they show the check works, not that the data holds; a method in prose — the gate cannot run
+it.
 
 ### WAY-62/1 — What does an invariant entry name in the part map?
 
@@ -2187,13 +2102,10 @@ is `fail`, or a run records a failure for no entry, and zero otherwise.
 - **Scope:** invariants, gate, part-map, task-cycle, environment-facts
 - **Based on:** none
 - **Relations:** derives from WAY-61@4804d070 · derives from WAY-62@d9c21624 ·
-  derives from WAY-08@9d45e0a9 · related to WAY-16 · related to WAY-38 · related to WAY-45 ·
-  related to WAY-47 · related to WAY-53 · related to WAY-55 · related to WAY-57 · related to WAY-58 ·
-  related to WAY-60
-- **Outranks:** none
-- **Verification:** level 1 — invariants: invariant-method-form · human-verdict-trace ·
-  gate-result-values · gate-unchecked-reason · gate-reported-set · gate-exit-code. Level 2 for the
-  reasons — an agent compares the change with the decision:
+  derives from WAY-08@2343e09f
+- **Verification:** level 1 — invariants: invariant-method-form · gate-result-values ·
+  gate-unchecked-reason · gate-reported-set · gate-exit-code. Level 2 for the reasons — an agent
+  compares the change with the decision:
   - complies: a flow's list of parts with no coverage file is `unchecked` (WAY-47); so is a check
     needing a commit the gate filled in as not existing;
   - violates: a guard whose call to git fails reports `unchecked`; a human's `pass` stays in force
@@ -2201,30 +2113,14 @@ is `fail`, or a run records a failure for no entry, and zero otherwise.
     the command exits zero.
 - **Review when:** none
 - **Origin:** none
-- **Approver override:** none
 - **Approved by:** Mariusz, 2026-09-26
 
-*Rationale:* a check can always call itself unchecked, so `unchecked` holds only for listed reasons,
-and an entry with no verdict for any other reason is `error`. `unchecked` leaves the command at
-zero, because WAY-60 and WAY-61 let an invariant enter before its method can run, and WAY-47 makes
-"unchecked" a state a human reads, not one that stops work.
-*Rejected:* `unchecked` making the command fail — every invariant entering without a method would
-fail every change; an open list of reasons — whatever a check says of itself would pass; a third
-exit code — nothing reads it; a human's verdict valid for the entry's version — it outlives every
-change to the product (WAY-08).
-*Consequences:* the template lists the reasons for `unchecked`, and the list grows by a new version
-of this decision: the method reads `TODO`; the method is a path and no human verdict is in force;
-the method's command or file is not declared or produced, except a command declared on the commit
-the branch left the main branch from, whose drop makes the result `error` (WAY-38, WAY-47, WAY-51);
-the method takes a commit the gate filled in as not existing; the entry stands on the list of
-quarantined invariants at its current version, and the committer date of the commit being checked
-is no later than the quarantine's end date, a later one making the result `error` (WAY-68); for a fact, a probe ran on a release of its tool
-outside *Holds for* (WAY-91). Where a
-human verdict stands, what it names and how long it is in force is set by WAY-83. The facts whose
-results the gate reports are those WAY-82 has it run. A declared command that cannot start, or a record off a closed list, is
-`error`. Runs on a deliberate break, and the run WAY-58 asks for, give evidence, not results. Which
-`fail` a listed violation excuses, and when a checked invariant may turn `unchecked`, is set by
-WAY-51 and WAY-68.
+*Rationale:* a check can always call itself unchecked, so only listed reasons count; `unchecked`
+leaves the command at zero, because an invariant may enter before its method can run (WAY-60,
+WAY-61), and a human reads it (WAY-47).
+*Rejected:* `unchecked` failing the command — every invariant without a method would fail every
+change; an open list of reasons — any excuse passes; a third exit code — nothing reads it; a
+human's verdict valid for the entry's version — it outlives changes to the product.
 
 ### WAY-64/1 — Where do invariant and environment fact entries stand, and what identifies one?
 
@@ -2272,42 +2168,30 @@ A check cites, at the smallest unit whose outcome a run records on its own, each
 a verdict for as `invariant: <identifier>/<version>`, and a run records no verdict for an invariant
 its check does not cite. A file is named as a check's data by a line `data: <path>`, and a file is
 an invariant test of a change when it is one on the commit the branch left the main branch from or
-on the commit being checked.
+on the commit being checked. Where several checks cite one invariant in a run, the run gives it
+`pass` only when each of them records `pass`.
 
 - **Change:** new decision
 - **Scope:** invariants, gate, decisions, part-map, relation-model, task-cycle
 - **Based on:** none
 - **Relations:** derives from WAY-03@4fa941a4 · derives from WAY-17@b1e26133 ·
-  derives from WAY-57@4a838784 · derives from WAY-61@4804d070 · related to WAY-12 ·
-  related to WAY-60 · related to WAY-62 · related to WAY-63
-- **Outranks:** none
+  derives from WAY-57@4a838784 · derives from WAY-61@4804d070
 - **Verification:** level 1 — invariants: invariant-citation-version · invariant-citation-target ·
-  data-line-target · invariant-tests-of-change · test-runner-pass-line. Level 2 for where a
-  citation stands — an agent compares the change with the decision:
+  data-line-target · invariant-tests-of-change · test-runner-pass-line · gate-verdict-per-entry.
+  Level 2 for where a citation stands — an agent compares the change with the decision:
   - complies: the decision guard cites `log-entry-field-presence/1` at the rule checking
     fields; a test comparing a load with a recorded save names the save on a `data:` line;
-  - violates: a test file cites at its top every invariant its tests serve, though the checks
-    giving the verdicts are its methods.
+  - violates: a test file cites at its top every invariant its tests serve.
 - **Review when:** none
 - **Origin:** none
-- **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-27
+- **Approved by:** Mariusz, 2026-09-29
 
-*Rationale:* WAY-61 already makes the file holding a check that records verdicts for invariants it
-cites an invariant test; this decision gives that citation its written form and settles which files
-carry it. One run checks many invariants (WAY-61), so a citation stands where the verdict is given:
-at the smallest unit whose outcome a run records on its own — a test for a test runner, a rule's
-report for a guard. A file cited on either commit counts, so a change that drops a citation or
-deletes the file is still a change to an invariant test. A recorded save a test compares
-a load against is named on `data:` by the test that reads it, the dependent end (WAY-17).
-*Rejected:* the paths a method names as the invariant tests — a method names the data its
-sentence is about, not a file that checks anything; one citation per file — one broken check
-fails all it serves (WAY-61); only files citing on the commit being checked — dropping a citation
-frees the file.
-*Consequences:* the template gives the `invariant:` and `data:` lines, in the comment form of the
-file's language. Several checks citing one invariant in one run pass only when each of them does.
-A path a human assesses against is no invariant test: a change to it reaches its invariant
-(WAY-62), and the human verdict lapses (WAY-63).
+*Rationale:* a citation stands where the verdict is given (WAY-61); a pass from one check would
+hide another's fail; counting either commit keeps a dropped citation or deleted file protected
+(WAY-03); a test names its data as the dependent end (WAY-17).
+*Rejected:* the paths a method names as the invariant tests — a method names data, not checks; one
+citation per file — one broken check fails all it serves (WAY-61); only files citing on the commit
+checked — dropping a citation frees the file.
 
 ### WAY-68/1 — What happens to a check that gives different verdicts on one commit?
 
@@ -2320,43 +2204,28 @@ run records.
 
 - **Change:** new decision
 - **Scope:** invariants, gate, task-cycle
-- **Based on:** a quarantine works with an end date: "Fix immediately … Quarantine: If investigation
-  or fix will take longer than the required response time" (GitLab, Quarantine process,
-  https://handbook.gitlab.com/handbook/engineering/testing/quarantine-process/). A rerun hides what
-  it absorbs: it "encourages developers to ignore flakiness in their own tests" (Micco, Google
-  Testing Blog, 2016, https://testing.googleblog.com/2016/05/flaky-tests-at-google-and-how-we.html).
-- **Relations:** derives from WAY-08@9d45e0a9 · derives from WAY-61@4804d070 ·
-  derives from WAY-63@f16348c8 · related to WAY-03 · related to WAY-10 · related to WAY-24 ·
-  related to WAY-45 · related to WAY-60 · related to WAY-64
-- **Outranks:** none
+- **Based on:** none
+- **Relations:** derives from WAY-08@2343e09f · derives from WAY-61@4804d070 ·
+  derives from WAY-63@f16348c8
 - **Verification:** level 1 — invariants: quarantine-position-form · quarantine-flow-invariants ·
   gate-quarantine-result. Level 2 — an agent compares the change with the decision:
-  - complies: a save-load test fails and then passes on one commit, and the panel accepts a wait
-    for the load-finished signal instead of a fixed interval;
+  - complies: a save-load test fails, then passes, on one commit; the panel accepts waiting for the
+    load signal;
   - violates: a failing test is called flaky with no `pass` recorded on that commit; a fixed-wait
     failure is quarantined instead of fixed as a change of mechanics; a green rerun is taken as the
     commit's result while the `fail` it follows stands unanswered.
 - **Review when:** none
 - **Origin:** none
-- **Approver override:** none
 - **Approved by:** Mariusz, 2026-09-22
 
-*Rationale:* a test that flips stops every task it reaches, and the implementer may not touch
-it (WAY-03), so "it is just flaky" becomes the way around the gate unless the claim needs evidence:
-a pass and a fail on one commit. A later green run
-does not undo the one recorded, or rerunning until green becomes the answer. `unchecked`, and
-`error` once the date passes, are set as WAY-63's other reasons are, not the hand-written verdict
-WAY-08 forbids. A critical flow's test runs on every change (WAY-45), and a quarantine
-would silence it. Moving the end date is a foundation change a human decides (WAY-10), not the
-silent extension WAY-24 rejects.
-*Rejected:* a row of the list of violated invariants — that list settles whether the product
-meets an invariant, not whether a check is trusted (WAY-51); a quarantine field in every entry —
-every entry pays for a rare case; a count of passes in a row to enter — k of n (WAY-08) decides
-what enters; the date of the run — the result would follow the hour;
-deletion once the date passes, as GitLab has it — an end date repaying by weakening the check
-(WAY-51).
-*Consequences:* `foundations/invariants.md` ends with a list of quarantined invariants beside its
-withdrawn identifiers. A violated invariant may be quarantined, and its row of that list stays.
+*Rationale:* a flipping test stops every task it reaches and the implementer may not touch it
+(WAY-03), so "just flaky" needs evidence; a green rerun undoing a fail makes rerunning the answer;
+a critical flow's test runs on every change (WAY-45); moving the end date is a human's foundation
+change (WAY-10).
+*Rejected:* a row of the list of violated invariants — it judges the product, not the check
+(WAY-51); a quarantine field in every entry — every entry pays for a rare case; a count of passes
+in a row to enter — k of n decides that (WAY-08); the date of the run — the result would follow
+the hour; deletion once the date passes (GitLab) — the check is weakened.
 
 ### WAY-69/1 — Who writes an invariant's sentence, its check and its deliberate break?
 
@@ -2368,7 +2237,7 @@ the check's author, with that check and the files it reads out of its input.
 - **Scope:** invariants, decisions, part-map, gate, task-cycle
 - **Based on:** what a model sees of a check, it may game: visible-scoring-reward-hacking@39a85ced.
   With the check in the loop the agent builds for it: oracle-in-loop-building@d13c8e26.
-- **Relations:** derives from WAY-08@9d45e0a9 · related to WAY-03 · related to WAY-05 ·
+- **Relations:** derives from WAY-08@2343e09f · related to WAY-03 · related to WAY-05 ·
   related to WAY-10 · related to WAY-11 · related to WAY-16 · related to WAY-58 ·
   related to WAY-61 · related to WAY-65
 - **Outranks:** none
@@ -2408,7 +2277,7 @@ against comes from the run.
 - **Change:** new decision
 - **Scope:** invariants, gate, decisions, part-map, relation-model
 - **Based on:** none
-- **Relations:** derives from WAY-08@9d45e0a9 · related to WAY-03 · related to WAY-10 ·
+- **Relations:** derives from WAY-08@2343e09f · related to WAY-03 · related to WAY-10 ·
   related to WAY-57 · related to WAY-61 · related to WAY-65 · related to WAY-69
 - **Outranks:** none
 - **Verification:** level 2 — an agent compares the change with the decision:
@@ -2584,15 +2453,9 @@ invariant or a fact, and per failure recorded for no entry. A line holds `check`
 - **Change:** new decision
 - **Scope:** invariants, gate, decisions, part-map, repository, environment-facts,
   elements-common
-- **Based on:** JSON Lines holds one JSON value on each line (json-lines@f16c5b84) and is "a
-  convenient format for storing structured data that may be processed one record at a time"
-  (https://jsonlines.org/); Python 3.14's `json.loads` reads each such line: "but instead of a
-  file-like object, deserialize s (a str, bytes or bytearray instance containing a JSON document) to
-  a Python object" (https://docs.python.org/3.14/library/json.html).
+- **Based on:** JSON Lines holds one JSON value on each line: json-lines@f16c5b84.
 - **Relations:** derives from WAY-61@4804d070 · derives from WAY-63@f16348c8 ·
-  derives from WAY-65@fbf6bef4 · related to WAY-38 · related to WAY-47 · related to WAY-48 ·
-  related to WAY-49 · related to WAY-53
-- **Outranks:** none
+  derives from WAY-65@581724fc
 - **Verification:** level 1 — invariants: run-record-form · run-record-path · run-record-lines.
   Level 2 for the report beside the record — an agent compares the change with the decision:
   - complies: the decision guard, given a record's path, writes its verdicts there and still
@@ -2600,33 +2463,18 @@ invariant or a fact, and per failure recorded for no entry. A line holds `check`
   - violates: a guard writes its verdicts only into its report.
 - **Review when:** none
 - **Origin:** none
-- **Approver override:** none
 - **Approved by:** Mariusz, 2026-09-29
 
-*Rationale:* one line per verdict survives a run that stops halfway: the lines before the stop
-stay readable, and an invariant without one gets no pass (WAY-61). JSON escapes whatever a
-description holds, and the standard library reads it (WAY-38). A file left by an earlier run would
-give verdicts for a run that did not happen, and a tracked one would change with every run. Each
-key has a reader: the gate the invariant, verdict and reason (WAY-63), a person the check and
-description of a failure; several checks citing one invariant each give a line (WAY-65). A check
-that cannot read what the product does not produce says so, since the gate cannot tell silence
-from a crash (WAY-47).
-*Rejected:* plain text lines — a description with spaces needs a syntax of its own; JUnit XML — its
-unit is a test case, not an invariant; a product's format, read through an adapter (WAY-61); the
-run's output as the record — a person loses the guard's report, and a test runner mixes in its own;
-`pass` and `fail` alone — a check that cannot read a coverage file could only stay silent, which
-the gate reads as `error`; the commit, the moment and the tool versions in every line — the gate
-knows them, and nothing would read them; one key `entry` for both — a rename across every guard,
-test and record written; a fact's verdict under `invariant` — the key would lie about what it
-names.
-*Consequences:* the invariants template's closed list of formats names this form as the written
-form of this decision. The gate runs no command naming a path git does not ignore, and a record
-holding a line off this form gives `error` to every entry whose method wrote it (WAY-63). The
-record of results the gate keeps (WAY-53) is another file, set with the gate. The form is a
-surface of the-way (WAY-49), and the gate's reader of it a trust boundary (WAY-48); adding `fact`
-travels on the path of that surface's promise level (WAY-50), and the runner reads the key once the
-facts guard exists. WAY-61's
-sentence on what the gate reads and WAY-53's rationale are edited in place (WAY-07).
+*Rationale:* lines survive a run stopping halfway, and an invariant without one gets no pass
+(WAY-61); the standard library reads JSON, which escapes any description (WAY-38); a stale file
+gives verdicts of a run that never happened, a tracked one changes every run; each key has a
+reader.
+*Rejected:* plain text lines — spaces in a description need their own syntax; JUnit XML — its unit
+is a test case, not an invariant; a product's format — the gate reads it through an adapter
+(WAY-61); the run's output as the record — a person loses the guard's report; `pass` and `fail`
+alone — a check unable to read a coverage file could only stay silent; the commit, moment and tool
+versions in every line — nothing reads them; one key `entry` for both — a rename across every guard
+and test; a fact's verdict under `invariant` — the key would lie.
 
 ### WAY-76/1 — How much does one environment fact entry hold?
 
@@ -2639,7 +2487,7 @@ stand as two entries.
 - **Scope:** environment-facts, invariants
 - **Based on:** none
 - **Relations:** derives from WAY-22@dcf291ea · related to WAY-04 · related to WAY-56 ·
-  related to WAY-73 · related to WAY-91
+  related to WAY-73
 - **Outranks:** none
 - **Verification:** level 1 — invariants: fact-sentence-count. Level 2 for what one sentence may
   hold — an agent compares the change with the decision:
@@ -2667,7 +2515,7 @@ second is about the tool that runs a method, and changes on no commit whether th
 (WAY-73).
 *Consequences:* the facts guard counts sentences, as the invariants guard does, and two facts in
 one sentence are left to review. What `git check-attr` reports is no fact: a probe reads the release of the tool it runs on
-instead (WAY-91).
+instead (WAY-81).
 
 ### WAY-77/1 — What does an environment fact's *Holds for* name?
 
@@ -2802,57 +2650,50 @@ summary in place of the passage — the drift this decision exists to stop; a wh
 narrowed to those the product uses — a pattern outside them rests on no fact; such a section quoted
 rule by rule — a standing `TODO` in the source.
 
-### WAY-81/1 — How is an environment fact's method written?
+### WAY-81/1 — How is an environment fact's method written, and on which release of its tool does a probe's verdict count?
 
 A fact's method is a command beginning with the program it runs, the path alone of a
 file a human re-reads the source against, or `TODO`; a command probes the behaviour the sentence
 states, watches the state its source publishes, or both. A command sets what it can of the
 runner's configuration that could change its verdict, and cites each fact it gives a verdict for as
-`fact: <identifier>/<version>`, and a run records no verdict for an uncited fact.
+`fact: <identifier>/<version>`, and a run records no verdict for an uncited fact. Where a fact's
+*Holds for* names a release of the tool its probe runs, the probe reads the release it runs on and
+records it in the `description` of its line; a `fail` on any release is a `fail`; a `pass` counts
+only on a release *Holds for* names, a build of it included, and on another the fact is
+`unchecked`.
 
 - **Change:** new decision
 - **Scope:** environment-facts, gate, invariants
-- **Based on:** git sets a setting of its own that changes how it matches paths: "git-clone[1] or
-  git-init[1] will probe and set core.ignoreCase true if appropriate" (git-config,
-  https://git-scm.com/docs/git-config); observed: `git check-attr` with and without
-  `-c core.ignorecase=false`, on a pattern with a capital letter in a fresh repository, on git
-  2.55.0, Windows — the path was assigned differently; run 2026-09-26.
-- **Relations:** derives from WAY-61@4804d070 · related to WAY-08 · related to WAY-38 ·
-  related to WAY-63 · related to WAY-65 · related to WAY-73 · related to WAY-74 ·
-  related to WAY-91
-- **Outranks:** none
+- **Based on:** none
+- **Relations:** derives from WAY-61@4804d070
 - **Verification:** level 1 — invariants: fact-method-form · fact-citation-target ·
   fact-verdict-citation. Level 2 for what a command asks and what it sets — an agent compares the
   change with the decision:
   - complies: the fact on path patterns runs `git -c core.ignorecase=false check-attr` on patterns
     the page's rules decide; the fact on SHA-256 probes the digests NIST publishes for it; the fact
     on JSON watches `obsoleted_by` of its RFC and that its passage still stands;
-  - violates: a probe asks `git --version` and compares the number in place of the behaviour; a probe relies on the git
-    configuration of the machine it runs on.
+  - violates: a probe asks `git --version` and compares the number in place of the behaviour; a
+    probe relies on the git configuration of the machine it runs on.
+  Level 2 for the release a probe's verdict counts on — an agent compares the change with the
+  decision:
+  - complies: run on git 2.56.0, the probe of a git 2.55.0 fact writes `git 2.56.0` in
+    `description`; it fails the fact where the behaviour differs and leaves it `unchecked` where it
+    agrees; on Git for Windows 2.55.0.windows.3, a build of git 2.55.0, its pass counts; the probe
+    of the SHA-256 fact, whose *Holds for* names no tool release, reads none;
+  - violates: the probe passes the fact on git 2.56.0; it skips on another release without asking
+    about the behaviour; it writes the release under a key of its own beside `description`.
 - **Review when:** none
 - **Origin:** none
-- **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-26
+- **Approved by:** Mariusz, 2026-09-29
 
-*Rationale:* the forms are those WAY-61 gives an invariant, so the gate and a person read both
-alike. A probe asks about the behaviour, because a version number says
-nothing about what the named release does. A watch reads what the source publishes as data —
-`obsoleted_by` of an RFC, a model's state, a support schedule — and whether the passage still
-stands. A person re-reads what no command can read. The environment that runs a method changes how faithfully it reads the world, not what
-is true: git matches differently when the machine ignores case. So the command makes that
-environment irrelevant, and a fact about what runs a method is no fact an invariant rests on.
-*Rejected:* a kind of method named beside it — the form already says it (WAY-54, WAY-61); a probe asking for a version number in place of the behaviour — it trusts the label; the runner's configuration
-recorded as a fact in *Rests on* — it changes the method's fidelity, not the sentence's truth.
-*Consequences:* a command whose program is not yet declared or produced is written out in full all
-the same and is unchecked for that reason, and a fact with no verdict for any other reason results
-`error`, as WAY-63 has it. Where the environment cannot be made irrelevant — a model that runs a
-method — it is configuration read off the product (WAY-54), while the release of a tool a probe runs is
-read off the machine (WAY-91), and the deliberate break shows the
-method's fidelity, which holds only where the break gives high confidence of detection. A command
-records its verdicts under the key `fact` (WAY-74). WAY-73's rationale is edited in place to name
-this decision. Where the checks of a product's facts stand in the part map is set when its first
-fact is written; this repository's stand in `probes/`, outside every directory whose tests run as a
-suite.
+*Rationale:* the forms are WAY-61's, so both elements read alike; a version number says nothing
+of what a release does; the machine running a method changes its fidelity, not the truth; a pass on
+another release says nothing of the named one, while a fail there still calls for review.
+*Rejected:* a kind of method named beside it — the form says it (WAY-54); a version number in
+place of the behaviour — it trusts the label; the runner's configuration or the tool's release as
+a fact in *Rests on* — it changes fidelity, not truth (WAY-73); a pass counted on any release — it
+passes a fact about another release; the release under a key of its own — nothing reads it
+(WAY-74).
 
 ### WAY-82/1 — When does an environment fact's method run, and what fails its watch?
 
@@ -2895,37 +2736,21 @@ with the day it runs.
 - **Change:** new decision
 - **Scope:** invariants, environment-facts, gate, elements-common
 - **Based on:** none
-- **Relations:** derives from WAY-63@f16348c8 · related to WAY-08 · related to WAY-10 ·
-  related to WAY-14 · related to WAY-57 · related to WAY-61 · related to WAY-68 · related to WAY-79 ·
-  related to WAY-81
-- **Outranks:** none
+- **Relations:** derives from WAY-63@f16348c8
 - **Verification:** level 1 — invariants: human-verdict-invariant-row · human-verdict-fact-row ·
-  gate-human-verdict.
+  gate-human-verdict. Level 2 for the clock — an agent compares the change with the decision:
+  - complies: the clock, run on a day after a fact's *Until*, counts no human verdict for that fact;
+  - violates: the clock compares *Until* with the committer date of the commit it runs on.
 - **Review when:** none
 - **Origin:** none
-- **Approver override:** none
 - **Approved by:** Mariusz, 2026-09-26
 
-*Rationale:* a method that is a path gives no result until a person assesses the product or
-re-reads the source (WAY-61, WAY-81), and WAY-63 says what a verdict names; it lacks a place the gate
-can read. A row in the repository is visible, fixed like any other line, and read by the guards
-that know the entries. One file serves both elements, because the two verdicts differ only in when
-they lapse: an invariant's when the product changes under it, a fact's when the world may have
-changed, which only a date can stand for. A row counts only for the current version, so a new
-meaning is never excused by an old verdict. The gate compares the date with the commit it checks,
-as a quarantine does (WAY-68), so that its verdict follows the commit; the clock runs against the
-world, so it compares with the day. The first case waits already: who can open this repository can
-be read only with the credentials of whoever sets it.
+*Rationale:* a path method gives no result until a person assesses (WAY-61, WAY-81), and WAY-08
+asks for a trace; a row is visible, fixable and checkable; one file serves both, as only the lapse
+differs; the gate's date follows the commit, the clock's the world.
 *Rejected:* the verdict in a commit message — invisible to a reader of the foundation, never
-fixed, and its author is often an agent; waiting for a second case — the rule on verdicts with
-a date would stay dead.
-*Consequences:* both templates name the file and give its row as
-`| Entry | Version | Verdict | By | On | Commit | Until |`; the invariants template's place that waits
-for this decision is rewritten to follow it, and WAY-63's consequence on how long a verdict is in force
-moves here. The file is written by hand and is no element's entries, so the invariant
-`foundation-file-kinds` names files an element's template names. The guards check a row's form and
-that the entry exists; the gate reads the row. The part that holds the file, so that a change to it
-reaches both row invariants, is set with the first verdict written.
+fixed, often written by an agent; waiting until a first verdict is needed — the rule on dated
+verdicts would stay dead.
 
 ### WAY-84/1 — How is a setting that people of the product change outside its repository written?
 
@@ -3098,52 +2923,6 @@ The fingerprint carries the fact's change to the decision, as to an invariant (W
 *Rejected:* every citation as an entry — many entries with methods nobody runs; a fact named by its
 identifier alone — a changed fact would flag no decision; the partners of the part map's external
 context as linked facts — a new link with no known consumer.
-
-### WAY-91/1 — On which release of its tool does a probe's verdict count?
-
-Where a fact's *Holds for* names a release of the tool its probe runs, the probe reads the release
-it runs on and records it in the `description` of its line. A `fail` on any release is a `fail`; a
-`pass` counts only on a release *Holds for* names, a build of it included, and on another the fact
-is `unchecked`.
-
-- **Change:** new decision
-- **Scope:** environment-facts, gate
-- **Based on:** none
-- **Relations:** related to WAY-63 · related to WAY-73 · related to WAY-74 · related to WAY-76 ·
-  related to WAY-77 · related to WAY-81 · related to WAY-82 · related to WAY-89
-- **Outranks:** none
-- **Verification:** level 2 — an agent compares the change with the decision:
-  - complies: the probe of the fact about git 2.55.0, run on git 2.56.0, writes `git 2.56.0` in the
-    description of its line, fails the fact where the behaviour differs and leaves it `unchecked`
-    where it agrees; on Git for Windows 2.55.0.windows.3, a build of git 2.55.0, its pass counts;
-    the probe of the fact on SHA-256, whose *Holds for* names an edition of a standard and no
-    release of a tool, reads no release;
-  - violates: the probe passes the fact on git 2.56.0; it skips on another release without asking
-    about the behaviour; it writes the release under a key of its own beside `description`.
-- **Review when:** none
-- **Origin:** none
-- **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-26
-
-*Rationale:* a fact names a release, while the machine holds whichever release it was last updated
-to, and the product runs on that one. A failure there says the tool the product depends on behaves
-otherwise than the fact, which is worth a review whether the world moved or the machine left the
-fact's range. A pass there says nothing about the release the fact names. The release read is no
-fact an invariant rests on (WAY-73): it decides whether a verdict counts, not what is true. It goes
-in `description`, where the human reviewing a `fail` or an `unchecked` reads it; WAY-74 keeps tool
-versions out of the keys of a line, which nothing would read.
-*Rejected:* leaving the question until the first probe is written — it would come back to a human
-in another session, without the reasons; a fact about the tool's release beside the method — it
-changes the method's fidelity, not the sentence's truth (WAY-73, WAY-81); a pass counted on any
-release — the fact about one release would pass on another it says nothing about.
-*Consequences:* WAY-63 is edited in place so that its closed list of reasons for `unchecked`
-gains, for a fact, "a probe ran on a release of its tool outside *Holds for*", and the facts
-template's pending question on a method resting on the tool that runs it is closed: a method rests
-on no fact about that release. The clock's report names each fact left `unchecked` for this reason,
-and the skill writing facts takes such a fact as a case to move to the release the machine runs.
-Moving it changes *Holds for*, so the fact's version rises and every invariant naming it gets a new
-fingerprint in *Rests on*: for git, eight invariants after each update of git that the fact is
-moved to.
 
 ### WAY-93/1 — Where do glossary entries stand, and what identifies one?
 

@@ -94,7 +94,7 @@ naming its identifier and its current version, with `searched: <…>` in *Search
   input made up for it is the method of a sentence about that check, not about the data it reads
   (WAY-61).
 - k and n, for a method that does not give the same verdict every time, stand in the command
-  (WAY-08; `TODO — decision pending: which decision sets that k and n stand in the command`).
+  (WAY-08).
 - A method a product cannot yet name as any command reads `TODO`, and the entry is reported
   unchecked for that reason (WAY-63). A command whose program the product does not yet declare or
   produce is written out in full all the same, with the program named as it will run; that entry is
@@ -209,9 +209,7 @@ naming its identifier and its current version, with `searched: <…>` in *Search
   `invariant: <identifier>/<version>` in the comment form of its file's language; a run records no
   verdict for an invariant its check does not cite (WAY-65). The version a check cites follows
   `elements/common/rules.md` (WAY-57). Several checks citing one invariant in one run pass only
-  when each of them does
-  (`TODO — decision pending: which decision sets that several checks citing one invariant pass only
-  together`).
+  when each of them does (WAY-65).
 - Each file such a check reads and names there stands on a line `data: <path>` — a recorded output
   it compares against, for one (WAY-65).
 - A check stands in a file of code; a Markdown file holds no citing check
@@ -266,7 +264,7 @@ WAY-64).
   - the method takes a commit the gate filled in as not existing;
   - the entry stands on the list of quarantined invariants at its current version, and the
     committer date of the commit being checked is no later than its *Until* (WAY-68);
-  - for an environment fact, a probe ran on a release of its tool outside *Holds for* (WAY-91).
+  - for an environment fact, a probe ran on a release of its tool outside *Holds for* (WAY-81).
 - Which entries the gate reports a result for, when its command exits non-zero, and how it reads a
   record of a run and a human verdict answer to the invariants of the part `gate`:
   `gate-reported-set`, `gate-exit-code`, `gate-result-values`, `gate-unchecked-reason`,

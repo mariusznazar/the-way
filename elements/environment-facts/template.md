@@ -105,7 +105,7 @@ in every entry among it, stands in `elements/common/rules.md` (WAY-71).
   the past range true`).
 - A newer release of a tool *Holds for* names coming out fails nothing: the fact about the named
   release stays true, and a probe run on the newer release fails only where the behaviour differs
-  (WAY-91). Moving the product to another release is a decision's to make, and what calls for it is
+  (WAY-81). Moving the product to another release is a decision's to make, and what calls for it is
   a condition in that decision's *Review when*, such as the named release leaving support (WAY-24;
   `TODO — decision pending: which decision sets that moving the product to another release of a
   tool is a decision's to make`).
@@ -181,13 +181,13 @@ in every entry among it, stands in `elements/common/rules.md` (WAY-71).
   break gives high confidence of detection
   (`TODO — decision pending: which decision sets how a method whose runner's configuration a command
   cannot set shows its fidelity`). The release of a tool a probe runs is read off the machine
-  instead, as the next point says (WAY-91). Whether a fact's command, like a check citing an
+  instead, as the next point says (WAY-81). Whether a fact's command, like a check citing an
   invariant, counts only when a deliberate break makes it fail is
   `TODO — decision pending: whether WAY-08's deliberate break binds a fact's method`.
 - Where *Holds for* names a release of the tool a probe runs, the probe reads the release it runs
   on and records it in the `description` of its line: a `fail` on any release is a `fail`, and a
   `pass` counts only on a release *Holds for* names, a build of it included, as Git for Windows
-  builds git. The method rests on no fact about that release (WAY-91, WAY-73).
+  builds git. The method rests on no fact about that release (WAY-81, WAY-73).
 - A check cites each fact it gives a verdict for, at the check, as a line
   `fact: <identifier>/<version>` in the comment form of its file's language, and a run records no
   verdict for a fact no check cites (WAY-81); the version a check cites follows
@@ -278,7 +278,7 @@ reader not built yet is named by the invariant it answers to
 | identifier (heading) | an invariant's *Rests on*, a decision's *Based on*, a `fact:` line; the format guard (`fact-identifier-form`, `identifier-holders`) | judgment |
 | version (heading) | a check citing the fact (`fact-citation-version`); the format guard, which computes what the version must be (`fact-version-new`, `fact-version-changed`, `fact-version-unchanged`) | read off |
 | sentence | whoever reviews what rests on the fact; the fingerprint (`fact-fingerprint-input`) | judgment |
-| Holds for | the fingerprint (`fact-fingerprint-input`); whoever writes an invariant naming a version within it; a probe, which compares the release it runs on with it (WAY-91); a script checking a decision's *Review when* against the models a study measured, which no invariant states yet | transcribed from the source |
+| Holds for | the fingerprint (`fact-fingerprint-input`); whoever writes an invariant naming a version within it; a probe, which compares the release it runs on with it (WAY-81); a script checking a decision's *Review when* against the models a study measured, which no invariant states yet | transcribed from the source |
 | Source | the watch, which checks that the passage still stands; the human reviewing the fact; the format guard (`fact-source-form`) | transcribed |
 | Method | the gate, on a change that enters or changes the fact (`TODO — decision pending: whether a change of a fact's field that does not reword its entry runs its method`) or alters a file its command names (`gate-fact-run`); the clock (`fact-clock-exit`); a human, for a path; the format guard (`fact-method-form`, `run-record-path`) | judgment |
 | withdrawn identifiers | whoever follows a citation to a fact shown false; the format guard, which keeps it from coming back and checks its form, that it gives why it was withdrawn, and its successors (`fact-withdrawal-persistence`, `fact-withdrawal-successors`) | as `elements/common/rules.md` gives it |
