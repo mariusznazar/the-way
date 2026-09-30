@@ -505,11 +505,10 @@ No two decisions in the decision log name each other as `narrows` in their lates
 No file git tracks contains a link into a private note collection, or into a repository that a reader not signed in to its host cannot open.
 
 - **Method:** `TODO`
-- **Rests on:** dequelabs-axe-core-visibility@d0762f1e · github-spec-kit-visibility@483cec57 · doorstop-dev-doorstop-visibility@fff695c4 · obi1kenobi-cargo-semver-checks-visibility@347970d8 · shopify-packwerk-visibility@1860c0d7 · backstage-backstage-visibility@1f71d395 · kubernetes-enhancements-visibility@28969041 · owasp-pytm-visibility@28909543 · oasdiff-oasdiff-visibility@ea766246 · chromium-src-visibility@9af96eac
+- **Rests on:** none
 - **Derives from:** WAY-27@770078ba
 - **Part:** every
 - **Correction:** none
-- **Recovered:** none
 
 ## inherited-origin-form/1
 

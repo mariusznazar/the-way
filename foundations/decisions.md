@@ -796,29 +796,22 @@ entry instead of being pointed to.
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, relation-model,
   task-cycle
 - **Based on:** none
-- **Relations:** related to WAY-09 · related to WAY-17
-- **Outranks:** none
+- **Relations:** none
 - **Verification:** level 1 — invariants: outbound-link-reach. Level 2 for the reasoning in the
   entry — an agent compares the change with the decision:
-  - complies: a decision quotes a public study with its address; a pattern observed in a product
-    outside the repository is described in the rationale — what was seen and where it went
-    wrong — without a pointer to it;
+  - complies: a decision quotes a public study with its address; a pattern seen in a product
+    outside the repository is described in the rationale, without a pointer to it;
   - violates: *Origin* points to a private note; a rationale rests on "as in our other product"
     without saying what was seen.
 - **Review when:** none
 - **Origin:** none
-- **Approver override:** none
 - **Approved by:** Mariusz, 2026-09-16
 
-*Rationale:* a pointer to a source the reader cannot open is a dead end, and it leaves the reader
-to trust a claim that cannot be checked. The reasoning therefore travels with the entry, and an
-observation made where readers cannot look is written down as what was seen, so that it can at least be
-judged, and WAY-17 still has a fact to name.
-*Rejected:* *Origin* pointing to the notes where the reasoning was worked out — no reader of the
-repository can open them.
-*Consequences:* *Origin* in this log is `none` or points to a document its readers can open. The
-entries written before this one already follow it. Products built with this process are not
-bound by this decision; their logs may point to their own documents.
+*Rationale:* a pointer to a source the reader cannot open is a dead end, leaving a claim nobody
+can check; what was seen there, written down, can at least be judged, and WAY-17 still has a fact
+to name.
+*Rejected:* *Origin* pointing to the notes where the reasoning was worked out — no reader can open
+them.
 
 ### WAY-28/1 — How does the process enter a product that already exists?
 

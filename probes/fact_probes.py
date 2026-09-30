@@ -121,17 +121,6 @@ def cited_pages(identifier):
     return pages
 
 
-def observed_address(identifier):
-    """The address the observed command of the fact's *Source* asks."""
-    source = field_value(identifier, "Source")
-    command = re.search(r"observed: `([^`]+)`", source)
-    address = re.search(guard._URL, command.group(1)) if command else None
-    if address is None:
-        raise NoVerdict("the *Source* of `%s` names no observed command with an address"
-                        % identifier)
-    return address.group(0)
-
-
 def named_release(identifier, tool):
     """The release of a tool the fact's *Holds for* names, as `2.55.0`."""
     holds = field_value(identifier, "Holds for")
@@ -511,13 +500,3 @@ class FactCheck(unittest.TestCase):
             found.append("a change to the edition: %s" % "; ".join(changed))
         if found:
             self.fail("%s shows %s" % (address, " — and ".join(found)))
-
-    def probe_visibility(self, identifier):
-        """An anonymous GET of the address the fact's observed command asks: 200 passes, 404
-        fails, and any other answer, a redirect included, gives no verdict."""
-        address = observed_address(identifier)
-        status, _, _ = fetch(address, follow_redirects=False)
-        if status == 404:
-            self.fail("%s answered HTTP 404 to a reader who is not signed in" % address)
-        if status != 200:
-            raise NoVerdict("%s answered HTTP %d" % (address, status))
