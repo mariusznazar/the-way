@@ -148,8 +148,9 @@ WAY-31.
 | challenge | nothing yet — the decision is in doubt | identical | not flagged; still in force, and the view shows a warning |
 | repeal | the question no longer needs an answer | none | flagged; in the view, a single line in place of the decision (`view-versions`) |
 
-A reference is flagged when the fingerprint of the binding sentences it carries changes, and the
-flag names the kind of change that raised it (WAY-31).
+A reference is flagged when the fingerprint of the binding sentences it carries changes (WAY-31),
+and the flag names the kind of change that raised it (`TODO — decision pending: which decision sets
+that the flag names the kind of change that raised it`).
 
 A *narrowing* version writes the exception into the decision itself. The relation `narrows` is
 used when a different, more specific decision deliberately goes against this one (WAY-32).

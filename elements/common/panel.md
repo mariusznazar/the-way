@@ -1,8 +1,9 @@
 # The panel
 
 What the panel assesses, what it decides and who sits on it are set by WAY-10; this file holds how
-it is run. Steps 1, 3, 4 and 5 below follow WAY-10; step 2 is the way panels have been run, and no
-decision sets it.
+it is run. The sentences of steps 1, 3 and 4 that cite WAY-10 follow it; step 2, step 3's check of
+every remark against the files of the repository and the form of its recommendation, and step 5's
+place for the record are the way panels have been run, and no decision sets them.
 
 1. Each assessor receives the diff and the files of the commit it assesses — never the task's
    chronicle, never the author's reasoning, never the other assessor's assessment (WAY-10) — and a

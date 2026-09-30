@@ -2016,7 +2016,7 @@ missing field, or a word not given it, as an error.
 
 *Rationale:* a field left out on purpose cannot be told from one forgotten (WAY-58), and a word the
 template gives no meaning misleads its reader. A `TODO` on the main branch is a gap nothing counts,
-except where the gate reports it (WAY-63) or a fact awaits its entry (WAY-31).
+except where the gate reports it (WAY-63).
 *Rejected:* a decision for invariants alone — every element would need a copy; a wider scope for
 WAY-05 — it answers how a decision entry is written; both words in every field — a word with no
 meaning; optional fields left out when empty — intended and forgotten gaps look alike; for facts, a
