@@ -11,7 +11,6 @@ import inspect
 import io
 import json
 import os
-import re
 import shutil
 import subprocess
 import sys
@@ -1959,34 +1958,19 @@ class TestRuns(GuardTestCase):
 
 
 class OwnMap(unittest.TestCase):
-    """The entries of the-way's map still carry what the form does not have, which the guard
-    reports in three places only: a heading with a title, a test named after `— test:` in a flow's
-    *Invariant*, and a pattern marked `(generated)`. Once the entries are rewritten in the new
-    form, the map passes with no error."""
+    """The-way's own map holds its entries in the form of the template."""
 
-    OLD_FORM = (re.compile(r"^line \d+: `[a-z0-9-]+` carries a title after its identifier; an "
-                           r"entry's heading is `## <identifier>`$"),
-                re.compile(r"^line \d+: [a-z0-9-]+: \*Invariant\* names a test after `— test:`; "
-                           r"the flow's test names the flow in a line `# flow: [a-z0-9-]+` "
-                           r"instead$"),
-                re.compile(r"^line \d+: [a-z0-9-]+: `\(generated\)` follows the pattern `[^`]+`; "
-                           r"\*Files\* holds git path patterns alone$"))
-
-    def test_the_way_map_holds_no_error_but_the_old_form(self):
+    def test_the_way_map_holds_no_error(self):
         output = io.StringIO()
         with tempfile.TemporaryDirectory() as directory:
             record = os.path.join(directory, "part-map.jsonl")
             code = format_guard.run(format_guard.OWN_MAP, stream=output, record=record)
             with open(record, encoding="utf-8") as handle:
                 lines = [json.loads(item) for item in handle.read().split("\n") if item]
-        self.assertIn(code, (0, 1), output.getvalue())
+        self.assertEqual(code, 0, output.getvalue())
         self.assertEqual(sorted({item["invariant"] for item in lines if item["invariant"]}),
                          sorted(RecordPerCommand.MAP_ALONE + ["map-example-target/1"]))
-        failures =[item for item in lines if item["verdict"] == "fail"]
-        self.assertEqual([item for item in failures
-                          if not any(form.search(item["description"]) for form in self.OLD_FORM)],
-                         [])
-        self.assertEqual(code == 1, bool(failures))
+        self.assertEqual([item for item in lines if item["verdict"] == "fail"], [])
 
 
 if __name__ == "__main__":

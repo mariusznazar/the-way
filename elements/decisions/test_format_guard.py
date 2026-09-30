@@ -1518,19 +1518,17 @@ class RulesFromTheTemplate(unittest.TestCase):
 
 
 class OwnLog(unittest.TestCase):
-    """The entries of the-way's log still carry what is not in the form, which the guard reports
-    in three places only: relations `related to`, a kind of change followed by `previous:`, and
-    the fields *Outranks*, *Approver override* and *Consequences*. Once the entries are rewritten
-    in the new form, the log passes with no error."""
+    """Three entries of the-way's log, WAY-21, WAY-52 and WAY-55, still carry what is not in the
+    form, which the guard reports in two places only: relations `related to`, and the fields
+    *Outranks*, *Approver override* and *Consequences*. Every other entry holds the form; once
+    those three are rewritten in it, the log passes with no error."""
 
-    OLD_FORM = (re.compile(r": [A-Z]+-\d{2,}/\d+: relation `related to [A-Z]+-\d{2,}` is not of a "
-                           r"known type$"),
-                re.compile(r": [A-Z]+-\d{2,}/\d+: `[a-z ]+ · previous: [A-Z]+-\d{2,}/\d+` is not a "
-                           r"kind of change$"),
-                re.compile(r": [A-Z]+-\d{2,}/\d+: \*(?:Outranks|Approver override|Consequences)\* "
-                           r"is not a field of the form; "))
+    OLD_FORM = (re.compile(r": WAY-(?:21|52|55)/\d+: relation `related to [A-Z]+-\d{2,}` is not "
+                           r"of a known type$"),
+                re.compile(r": WAY-(?:21|52|55)/\d+: \*(?:Outranks|Approver override|"
+                           r"Consequences)\* is not a field of the form; "))
 
-    def test_the_way_log_holds_no_error_but_the_old_form(self):
+    def test_the_way_log_holds_no_error_but_the_old_form_of_three_entries(self):
         output = io.StringIO()
         with tempfile.TemporaryDirectory() as directory:
             record = os.path.join(directory, "decisions.jsonl")

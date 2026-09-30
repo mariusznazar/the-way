@@ -1840,28 +1840,19 @@ class Examples(GuardTestCase):
 
 
 class OwnFile(unittest.TestCase):
-    """The entries of the-way's invariants still carry *Recovered*, which is not a field of the
-    form, and which the guard reports in one place only: a *Recovered* line in an entry. Once the
-    entries are rewritten in the new form, the file passes with no error."""
+    """The-way's own invariants hold their entries in the form of the template."""
 
-    OLD_FORM = re.compile(r"^line \d+: [a-z0-9-]+/\d+: \*Recovered\* is not a field of the "
-                          r"form; a recovered invariant stands on the list of recovered "
-                          r"invariants$")
-
-    def test_the_way_invariants_hold_no_error_but_the_old_form(self):
+    def test_the_way_invariants_hold_no_error(self):
         output = io.StringIO()
         with tempfile.TemporaryDirectory() as directory:
             record = os.path.join(directory, "invariants.jsonl")
             code = format_guard.run(format_guard.OWN_FILE, stream=output, record=record)
             with open(record, encoding="utf-8") as handle:
                 lines = [json.loads(item) for item in handle.read().split("\n") if item]
-        self.assertIn(code, (0, 1), output.getvalue())
+        self.assertEqual(code, 0, output.getvalue())
         self.assertEqual(sorted({item["invariant"] for item in lines if item["invariant"]}),
                          sorted(PLAIN + ["invariant-example-target/1"]))
-        failures = [item for item in lines if item["verdict"] == "fail"]
-        self.assertEqual([item for item in failures
-                          if not self.OLD_FORM.search(item["description"])], [])
-        self.assertEqual(code == 1, bool(failures))
+        self.assertEqual([item for item in lines if item["verdict"] == "fail"], [])
 
 
 if __name__ == "__main__":

@@ -11,7 +11,6 @@ import inspect
 import io
 import json
 import os
-import re
 import subprocess
 import sys
 import tempfile
@@ -53,7 +52,7 @@ def fact(identifier="storage-quota", version=1, sentence=QUOTA, holds=QUOTA_HOLD
 
 
 def old_fields(set_by="none", correction="none"):
-    """*Set by* and *Correction*, which the-way's entries still carry."""
+    """*Set by* and *Correction*, which are not fields of the form."""
     return [("Set by", set_by), ("Correction", correction)]
 
 
@@ -1346,26 +1345,18 @@ class Record(GuardTestCase):
 
 
 class OwnFile(unittest.TestCase):
-    """The entries of the-way's environment facts still carry *Set by* and *Correction*, which the
-    guard reports in one place only: such a line in an entry. Once the entries drop them, the file
-    passes with no error."""
+    """The-way's own environment facts hold their entries in the form of the template."""
 
-    OLD_FORM = re.compile(r"^line \d+: [a-z0-9-]+/\d+: \*(?:Set by|Correction)\* is not a field "
-                          r"of the form; ")
-
-    def test_the_way_facts_hold_no_error_but_the_old_form(self):
+    def test_the_way_facts_hold_no_error(self):
         output = io.StringIO()
         with tempfile.TemporaryDirectory() as directory:
             record = os.path.join(directory, "environment-facts.jsonl")
             code = format_guard.run(format_guard.OWN_FILE, stream=output, record=record)
             with open(record, encoding="utf-8") as handle:
                 lines = [json.loads(item) for item in handle.read().split("\n") if item]
-        self.assertIn(code, (0, 1), output.getvalue())
+        self.assertEqual(code, 0, output.getvalue())
         self.assertEqual(sorted({item["invariant"] for item in lines if item["invariant"]}), PLAIN)
-        failures = [item for item in lines if item["verdict"] == "fail"]
-        self.assertEqual([item for item in failures
-                          if not self.OLD_FORM.search(item["description"])], [])
-        self.assertEqual(code == 1, bool(failures))
+        self.assertEqual([item for item in lines if item["verdict"] == "fail"], [])
 
 
 if __name__ == "__main__":
