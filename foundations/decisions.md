@@ -2777,3 +2777,104 @@ new label. The word is the human's choice (WAY-10).
 word — nobody citing the sentence reads it; renaming two meanings a reader of the field tells apart —
 neither is the product's own; a *Not* that always names a word — the author would choose before the
 human sees the case.
+
+### WAY-100/1 — When does a method or practice borrowed from elsewhere bind a product?
+
+A method or practice borrowed from outside a product binds its way of working only through a
+decision that names what is adopted, where it applies, and why. When an agent recognizes a likeness
+to a method or practice no decision has adopted, it asks a human before treating it as a rule.
+
+- **Change:** new decision
+- **Scope:** decisions, part-map, relation-model, invariants, glossary, environment-facts,
+  elements-common, task-cycle, gate, repository
+- **Based on:** none
+- **Relations:** none
+- **Verification:** level 2 — an agent compares the change with the decision:
+  - complies: a decision adopts only the risk assessment step of an outside process for task
+    planning and gives its reason; an agent offers an unadopted technique as a proposal;
+  - violates: a skill makes an outside planning ritual mandatory because an agent recognizes it,
+    without a decision adopting it.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, 2026-09-30
+
+*Rationale:* borrowing pieces without a conscious choice makes the product's boundaries hard to
+explain and change. Naming the chosen piece, its scope and its reason lets later work distinguish
+it from a resemblance or a habit.
+*Rejected:* importing a whole outside method by default — its unrelated steps become obligations;
+treating recognition by an agent as adoption — recognition does not settle fit or scope.
+
+### WAY-101/1 — Who chooses the backlog tool used with the-way?
+
+The-way's task cycle requires no particular backlog application or service; each product chooses
+where it keeps its roadmap, projects and tasks.
+
+- **Change:** new decision
+- **Scope:** decisions, elements-common, task-cycle
+- **Based on:** none
+- **Relations:** none
+- **Verification:** level 2 — an agent compares the change with the decision:
+  - complies: a task-cycle step accepts task information supplied from a product's chosen files or
+    tracker;
+  - violates: the step can obtain tasks only from one named backlog service.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, 2026-09-30
+
+*Rationale:* the backlog hierarchy belongs to the process, while its storage belongs to the
+product. Requiring one service would force a product to move its tasks before it could use the
+process.
+*Rejected:* one fixed backlog service for all products — adopting the process would also require
+adopting that service.
+
+### WAY-102/1 — What is the-way for?
+
+The-way is a process for work on a technology product in which a change of premises or direction is
+an ordinary step: it passes through the product's foundation and needs no memory of what is linked
+to what.
+
+- **Change:** new decision
+- **Scope:** decisions, part-map, relation-model, invariants, glossary, environment-facts,
+  elements-common, task-cycle, gate, repository
+- **Based on:** none
+- **Relations:** none
+- **Verification:** level 2 — an agent compares the change with the decision:
+  - complies: a change of product direction goes through the foundation, and references to affected
+    entries are checked before the change is merged;
+  - violates: a change of direction relies on the author remembering which decisions and documents
+    to update.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, 2026-09-30
+
+*Rationale:* a process that relies on a person to remember every affected artifact fails when work
+spans tasks and sessions. Making foundation changes routine gives each change a place to start and
+a route to its dependents.
+*Rejected:* disconnected steps joined by hand — the person carrying the work must reconstruct
+their links; treating a change of premises as an exceptional repair — the foundation falls behind
+the product's direction.
+
+### WAY-103/1 — Who is the-way for?
+
+The-way is built first for its author and aims at anyone who builds a technology product and adopts
+the process for their own needs; the process is written for the agents that carry out the task cycle
+too.
+
+- **Change:** new decision
+- **Scope:** decisions, elements-common, task-cycle
+- **Based on:** none
+- **Relations:** none
+- **Verification:** level 2 — an agent compares the change with the decision:
+  - complies: an element's skill gives an agent steps it can perform, and a new task-cycle step is
+    understandable to a builder using their own product;
+  - violates: a task-cycle step relies on private shorthand only the author understands, or leaves
+    the agent's action unstated.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, 2026-09-30
+
+*Rationale:* starting with the author gives the process a real first user; aiming at independent
+builders keeps one person's setup from defining the audience. Agents need instructions they can
+execute because they perform the task cycle.
+*Rejected:* an author-only procedure — another builder would have to reconstruct its unwritten
+conventions; prose addressed only to humans — an agent could not take its assigned steps from it.
