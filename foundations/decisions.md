@@ -236,7 +236,8 @@ test that always passes.
 On the main branch, this repository holds `foundations/` with the entries of the-way itself, a
 directory for each part of the process other than `repository` — `elements/<element>/` for each
 foundation element, `elements/common/` for what the elements share, `relation-model/`, `gate/` and
-`task-cycle/` — the files that serve the whole repository, which its part map gives to the
+`task-cycle/` — with `probes/` as a second directory of the environment facts part, for the checks
+of the-way's own facts, the files that serve the whole repository, which its part map gives to the
 `repository` part (WAY-44), and a `README.md` that describes the repository. A directory reaches
 the main branch only once it holds what its part requires: an element its template and rules,
 examples or a pointer to entries of the-way that serve as its examples, a skill that writes its
@@ -251,44 +252,29 @@ elements.
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common,
   relation-model, gate, repository, task-cycle
 - **Based on:** none
-- **Relations:** related to WAY-02 · related to WAY-04 · related to WAY-21 ·
-  related to WAY-44 · related to WAY-55
-- **Outranks:** none
+- **Relations:** none
 - **Verification:** level 1 — invariants: repository-file-location · element-directory-contents ·
   relation-model-directory-contents · invariant-example-target · map-example-target ·
-  glossary-example-target.
+  glossary-example-target. Level 2 for what `elements/common/` and `task-cycle/` hold and for the
+  format guards checking `foundations/` — an agent compares the change with the decision:
+  - complies: code two format guards share moves into `elements/common/`, and both load it from
+    there; a new file of entries in `foundations/` comes with the format guard of its element;
+  - violates: a `tools/` directory for shared scripts reaches the main branch; `task-cycle/`
+    reaches the main branch before the design of the task cycle sets what it holds.
 - **Review when:** none
 - **Origin:** none
-- **Approver override:** none
 - **Approved by:** Mariusz, 2026-09-29
 
-*Rationale:* the repository shows what the process looks like when it works, and an artefact
-brought in on the side turns it into a store of material from the first day. Directories follow
-the parts of the process, so that the files a change touches name the part it belongs to and the
-decisions to check it against (WAY-21). What a directory must hold depends on its part, because
-each tool has a reason only where it has work: a skill writes entries, so it belongs to an
-element; the fingerprint script only reads, so `relation-model` has no skill. The skill writes
-an entry in the right form when someone runs it; the format guard catches a form broken by hand, by
-another agent or by a merge. Until a directory holds what its part requires, it is a change in
-progress, and under WAY-01 such a change lives on a branch. The files that serve the whole
-repository belong to no one part of the process, and WAY-44 gives them a part of their own; they
-stay where the tool that reads them looks for them, and the map, not this list, names which they
-are. The `README.md` binds nothing.
-*Rejected:* material merged to the main branch as soon as it is written; an element whose only
-tool is a skill — the form then holds only while someone remembers to run it; one `tools/`
-directory for everything shared — it matches no part of the process and grows into a store; the
-same set of template, skill and script required of every directory — a script that only reads has
-no entries for a skill to write; the files that serve the whole repository on the map's list of
-files left out on purpose, beside the `README.md` — they would lose their part and the failure
-mode recorded at it, although a wrong line in `.gitattributes` turns whole files over.
-*Consequences:* element descriptions in `elements/` reach the main branch as templates with their
-skills and scripts, not as descriptions. The script that computes fingerprints lives in
-`relation-model/`, and a reference whose fingerprint is no longer current is flagged by the format
-guard that checks the entry carrying it (WAY-31, WAY-90). The gate is a part of the process of its own, with a
-directory of its own (WAY-55), and what `task-cycle/` must hold is set when the task cycle is
-designed. The map's rule for assigning files follows these directories, and a file that serves the
-whole repository added later — the CI configuration, once the gate runs in CI — enters by a change
-to the `repository` part of the map, not by a new version of this decision.
+*Rationale:* anything brought in on the side makes the repository a store of material; directories
+follow the parts, so a change's files name its part and decisions (WAY-21); an incomplete directory
+is work in progress, kept on a branch (WAY-01); probes stand apart, so an element's tests run no
+fact's method.
+*Rejected:* material merged as soon as it is written — a store from the first day; an element whose
+only tool is a skill — the form holds only while someone remembers to run it; one `tools/`
+directory for everything shared — it matches no part and grows into a store; one set of template,
+skill and script for every directory — a script that only reads has nothing for a skill to write;
+the files serving the whole repository left out of the map on purpose — they lose their part and
+its failure mode.
 
 ### WAY-10/1 — Who assesses a change to an invariant test or to the foundation?
 
@@ -985,13 +971,12 @@ there instead of restating them.
 - **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common
 - **Based on:** none
-- **Relations:** related to WAY-05 · related to WAY-09 · related to WAY-16
-- **Outranks:** none
-- **Verification:** level 1 — invariants: skill-rule-source ·
-  invariant-identifier-form · fact-identifier-form. Level 2 for what the skill holds — an agent
+- **Relations:** none
+- **Verification:** level 1 — invariants: skill-rule-source · invariant-identifier-form ·
+  fact-identifier-form · map-identifier-form. Level 2 for what the skill holds — an agent
   compares the change with the decision:
-  - complies: a fix to the skill's output that concerns the form of a field goes into the
-    template, and the skill is left as it is; the skill orders its steps and says what to ask;
+  - complies: a fix to a field's form in the skill's output goes into the template, not the
+    skill; the skill orders its steps and says what to ask;
   - violates: the skill says a rationale has at most three sentences while the template does not;
     the skill restates the list of fields.
   Level 2 for a rule citing the decision that sets it — an agent compares the change with the
@@ -1001,21 +986,13 @@ there instead of restating them.
   - violates: a rule of entries added to the shared part cites no decision.
 - **Review when:** none
 - **Origin:** none
-- **Approver override:** none
 - **Approved by:** Mariusz, 2026-09-29
 
-*Rationale:* a rule written both in the skill and in the template is two copies that drift apart,
-and then the format guard, which reads the template, and the skill, which writes the entries, hold
-entries to different rules. An entry written by hand or by another agent meets only the template
-and the part the elements share, so they are the places every writer and every check reaches. The
-way of working — the order of steps, what to ask, when to stop — is not a rule of the entry, so it
-stays with the skills, and what they share stands once, in the part the elements share.
+*Rationale:* an entry written by hand or by another agent meets only the template and the shared
+part, so the rules stand where every writer and every check reaches them; a rule cites its
+decision, the one place for its reason (WAY-04); steps and questions are no rule of an entry.
 *Rejected:* rules restated in the skill next to the template — two copies that drift, and the
 format guard and the skill hold entries to different rules.
-*Consequences:* a fix to a skill's output that concerns a rule of the entry is a
-fix to the template; for decisions it comes with a decision in the log (WAY-05). The
-opening paragraph of `record-decision` follows this decision, and the skills of the other elements
-follow it once they are written.
 
 ### WAY-36/1 — Is a rule a decision or does it belong in a plan?
 
@@ -2496,36 +2473,27 @@ version comes out.
 - **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, relation-model, gate,
   repository, task-cycle
-- **Based on:** Python 3.14 has a date for its last regular bugfix release: "3.14.14: Tuesday,
-  2027-10-05 (Final regular bugfix release with binary installers)" (PEP 745,
-  https://peps.python.org/pep-0745/); observed: the table of versions of the Python Developer's
-  Guide (https://devguide.python.org/versions/) gives 3.14 the status "bugfix" and the end of life
-  2030-10; read 2026-09-26.
-- **Relations:** related to WAY-34 · related to WAY-38 · related to WAY-77 · related to WAY-81
-- **Outranks:** none
+- **Based on:** Python 3.14's last regular bugfix release is due 2027-10-05:
+  https://peps.python.org/pep-0745/ (archived: TODO — the closest archived copy and its date)
+  § TODO — "3.14.14: Tuesday, 2027-10-05 (Final regular bugfix release with binary installers)";
+  read 2026-09-26 · the Python Developer's Guide gives 3.14 the status "bugfix":
+  https://devguide.python.org/versions/ (archived: TODO — the closest archived copy and its date)
+  § TODO — "TODO — the passage word for word"; read 2026-09-26
+- **Relations:** none
 - **Verification:** level 1 — invariants: python-version-declared · script-imports.
 - **Review when:** the status of Python 3.14 in the table of versions of the Python Developer's
   Guide no longer reads "bugfix" · check by: 2027-10-05
 - **Origin:** none
-- **Approver override:** none
 - **Approved by:** Mariusz, 2026-09-26
 
-*Rationale:* one version, declared, rather than a floor, because a floor gives a script's verdict
-per interpreter: `import cgi` passes under 3.12 and fails under 3.13, a version "3.12 or later"
-promised. The version moves when the one in use leaves bugfix support, not when a newer one is
-released, which changes nothing here. Past the end of bugfix support no binary installers are
-released, which hurts a new machine or CI, so the move comes before the end of security support.
-Versions out of support are no target, as the-way does not aim at legacy systems.
-*Rejected:* the newest release, unnamed — the verdict would depend on the date; "3.12 or later"
-with an invariant for every version it admits — a fact and a verdict for each version; 3.12 alone
-— a version already past its bugfix support; a move whenever a newer release comes out — a yearly
-review nothing here needs; a move at the end of security support, about 2030.
-*Consequences:* a product's CI provides Python 3.14 to run the scripts of the-way it pins (WAY-34),
-and the-way's own commands run on this interpreter. A move changes the declaration and the version
-of the fact on the standard library, and sends the invariants naming the version to review; it may
-cross several versions at once, and the modules removed on the way add up — for the standard
-library that is one run of the fact's method and one list of imports. `.python-version` joins the files of the
-`repository` part.
+*Rationale:* one declared version, not a floor, because a floor gives a script's verdict per
+interpreter; the end of bugfix support sets the move, because binary installers stop there and a
+new machine or CI could not install it; the price: a product pinning the-way provides exactly this
+version (WAY-34, WAY-38).
+*Rejected:* the newest release, unnamed — the verdict depends on the date; "3.12 or later" with an
+invariant per version admitted — a fact and a verdict for each; 3.12 alone — past its bugfix
+support; a move at each new release — a yearly review nothing here needs; a move at the end of
+security support — years without installers.
 
 ### WAY-90/1 — Which citations of a decision's *Based on* become environment fact entries, and how are they named?
 

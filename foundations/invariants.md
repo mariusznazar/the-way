@@ -155,14 +155,13 @@ Every check that cites an invariant fails, in k of n runs where its command sets
 
 ## repository-file-location/1
 
-Where {merge-onto} exists, every file git tracks lies in `foundations/` or in the directory of a part of the process, belongs to the `repository` part of the part map, or is the `README.md` at the root.
+Where {merge-onto} exists, every file git tracks lies in `foundations/` or in a directory WAY-09 names for a part of the process, belongs to the `repository` part of the part map, or is the `README.md` at the root.
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-09@57df8e6f
+- **Derives from:** WAY-09@c2be4997
 - **Part:** every
 - **Correction:** none
-- **Recovered:** none
 
 ## element-directory-contents/1
 
@@ -170,10 +169,9 @@ Where {merge-onto} exists, every element directory holds a template, examples or
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-09@57df8e6f
+- **Derives from:** WAY-09@c2be4997
 - **Part:** decisions · part-map · invariants · glossary · environment-facts
 - **Correction:** none
-- **Recovered:** none
 
 ## relation-model-directory-contents/1
 
@@ -181,10 +179,9 @@ Where {merge-onto} exists, `relation-model/` holds the script that computes fing
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-09@57df8e6f
+- **Derives from:** WAY-09@c2be4997
 - **Part:** relation-model
 - **Correction:** none
-- **Recovered:** none
 
 ## invariant-example-target/1
 
@@ -192,7 +189,7 @@ Every identifier `elements/invariants/examples.md` names is the identifier of an
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-09@57df8e6f
+- **Derives from:** WAY-09@c2be4997
 - **Part:** invariants
 - **Correction:** none
 
@@ -202,7 +199,7 @@ Every identifier `elements/part-map/examples.md` names is the identifier of an e
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-09@57df8e6f
+- **Derives from:** WAY-09@c2be4997
 - **Part:** part-map
 - **Correction:** none
 
@@ -212,7 +209,7 @@ Every term `elements/glossary/examples.md` names is the term of an entry of `fou
 
 - **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-09@57df8e6f
+- **Derives from:** WAY-09@c2be4997
 - **Part:** glossary
 - **Correction:** none
 
@@ -555,7 +552,6 @@ Every element's skill names its element's template and `elements/common/` as the
 - **Derives from:** WAY-35@11333629
 - **Part:** decisions · part-map · invariants · glossary · environment-facts
 - **Correction:** none
-- **Recovered:** none
 
 ## script-language/1
 
@@ -1004,9 +1000,8 @@ Every test holding a line `flow: <identifier>` that names a critical flow of the
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-55@d30c3b6c
-- **Part:** part-map · gate
+- **Part:** every
 - **Correction:** none
-- **Recovered:** none
 
 ## invariant-sentence-count/1
 
@@ -1547,7 +1542,6 @@ The repository declares Python 3.14 in `.python-version`.
 - **Derives from:** WAY-89@fbb25ae3
 - **Part:** repository
 - **Correction:** none
-- **Recovered:** none
 
 ## environment-facts-file/1
 
