@@ -101,9 +101,7 @@ Of the 20 models IFScale evaluated across seven providers, even the best reach o
 
 - **Holds for:** arXiv:2507.11538v1, measuring claude-3.5-haiku, claude-3.7-sonnet, claude-opus-4, claude-sonnet-4, deepseek-r1-0528, gemini-2.5-flash-preview, gemini-2.5-pro-preview, llama-4-maverick, llama-4-scout, gpt-4.1, gpt-4.1-mini, gpt-4.1-nano, gpt-4o, gpt-4o-mini, gpt-4.5-preview, o3, o4-mini, qwen3-235b-a22b, grok-3-beta and grok-3-mini-beta
 - **Source:** https://arxiv.org/abs/2507.11538v1 § Abstract — "We evaluate 20 state-of-the-art models across seven major providers and find that even the best frontier models only achieve 68% accuracy at the max density of 500 instructions."; read 2026-09-26
-- **Set by:** none
 - **Method:** `python -B gate/run_tests.py probes/instruction-density-accuracy --record .runs/fact-instruction-density-accuracy.jsonl`
-- **Correction:** none
 
 ## context-file-effect/1
 
@@ -111,9 +109,7 @@ Providing context files to coding agents does not generally improve their task s
 
 - **Holds for:** arXiv:2602.11988v2, measuring Claude Code with Sonnet-4.5, Codex with GPT-5.2 and GPT-5.1 mini, and Qwen Code with Qwen3-30b-coder
 - **Source:** https://arxiv.org/abs/2602.11988v2 § Abstract — "Surprisingly, we find that providing context files does not generally improve task success rates, while increasing inference cost by over 20% on average." · § Abstract — "Specifically, we find that while instructions in the context files are well followed by coding agents, repository overviews, although popular and recommended by model providers, are not helpful."; read 2026-09-26 · https://arxiv.org/html/2602.11988v2 § 4.1 — "We consider four coding agents, paired with suitable models: Claude Code [3] with Sonnet-4.5 [4], Codex [26] with GPT-5.2 and GPT-5.1 mini [32], and Qwen Code [28] with Qwen3-30b-coder [34]."; read 2026-09-26
-- **Set by:** none
 - **Method:** `python -B gate/run_tests.py probes/context-file-effect --record .runs/fact-context-file-effect.jsonl`
-- **Correction:** none
 
 ## claude-code-path-rules/1
 
@@ -121,9 +117,7 @@ Claude Code applies a rule whose frontmatter gives `paths` only when it works wi
 
 - **Holds for:** Claude Code, whose documentation code.claude.com publishes for its current release without versions
 - **Source:** https://code.claude.com/docs/en/memory (archived: http://web.archive.org/web/20260925131337/https://code.claude.com/docs/en/memory, 2026-09-25) § Path-specific rules — "Rules can be scoped to specific files using YAML frontmatter with the paths field. These conditional rules only apply when Claude is working with files matching the specified patterns."; read 2026-09-26
-- **Set by:** none
 - **Method:** `python -B gate/run_tests.py probes/claude-code-path-rules --record .runs/fact-claude-code-path-rules.jsonl`
-- **Correction:** none
 
 ## visible-scoring-reward-hacking/1
 

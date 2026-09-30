@@ -437,7 +437,6 @@ Every name in the scope of the latest version of a decision in the decision log 
 - **Derives from:** WAY-21@586e4a38 · WAY-41@f42aae15
 - **Part:** every
 - **Correction:** none
-- **Recovered:** none
 
 ## decisions-found-for-change/1
 
@@ -448,7 +447,6 @@ The decisions found for a change against {fork-point} include every decision who
 - **Derives from:** WAY-21@586e4a38
 - **Part:** every
 - **Correction:** none
-- **Recovered:** none
 
 ## review-when-form/1
 
@@ -1025,7 +1023,6 @@ Every path pattern in a generated rule file comes from a part's rule for assigni
 - **Derives from:** WAY-52@93101108
 - **Part:** part-map
 - **Correction:** none
-- **Recovered:** none
 
 ## generated-overview/1
 
@@ -1036,7 +1033,6 @@ No file generated for an agent holds an overview of the repository's directories
 - **Derives from:** WAY-52@93101108
 - **Part:** part-map
 - **Correction:** none
-- **Recovered:** none
 
 ## flow-test-location/1
 
