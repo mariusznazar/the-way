@@ -1518,17 +1518,9 @@ class RulesFromTheTemplate(unittest.TestCase):
 
 
 class OwnLog(unittest.TestCase):
-    """Three entries of the-way's log, WAY-21, WAY-52 and WAY-55, still carry what is not in the
-    form, which the guard reports in two places only: relations `related to`, and the fields
-    *Outranks*, *Approver override* and *Consequences*. Every other entry holds the form; once
-    those three are rewritten in it, the log passes with no error."""
+    """The way's own decision log passes its format guard without errors."""
 
-    OLD_FORM = (re.compile(r": WAY-(?:21|52|55)/\d+: relation `related to [A-Z]+-\d{2,}` is not "
-                           r"of a known type$"),
-                re.compile(r": WAY-(?:21|52|55)/\d+: \*(?:Outranks|Approver override|"
-                           r"Consequences)\* is not a field of the form; "))
-
-    def test_the_way_log_holds_no_error_but_the_old_form_of_three_entries(self):
+    def test_the_way_log_holds_no_error(self):
         output = io.StringIO()
         with tempfile.TemporaryDirectory() as directory:
             record = os.path.join(directory, "decisions.jsonl")
@@ -1536,10 +1528,8 @@ class OwnLog(unittest.TestCase):
             with open(record, encoding="utf-8") as handle:
                 lines = [json.loads(item) for item in handle.read().split("\n") if item]
         errors = [item for item in output.getvalue().split("\n") if ": error: " in item]
-        self.assertIn(code, (0, 1), output.getvalue())
-        self.assertEqual([item for item in errors
-                          if not any(form.search(item) for form in self.OLD_FORM)], [])
-        self.assertEqual(code == 1, bool(errors))
+        self.assertEqual(code, 0, output.getvalue())
+        self.assertEqual(errors, [])
         self.assertEqual(sorted({item["invariant"] for item in lines if item["invariant"]}), [
             "binding-sentence-count/1", "binding-sentence-words/1", "decision-approval-record/1",
             "decision-approver/1", "decision-binding-across-versions/1",

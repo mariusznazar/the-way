@@ -576,30 +576,19 @@ the part map's rule for assigning files.
 
 - **Change:** new decision
 - **Scope:** decisions, part-map, task-cycle
-- **Based on:** an agent loses rules as their number grows: instruction-density-accuracy@f62b9a6d;
-  and a tool vendor advises keeping an agent's instructions short for the same reason: "target under
-  200 lines per CLAUDE.md file. Longer files consume more context and reduce adherence" (Claude Code
-  documentation, https://code.claude.com/docs/en/memory).
-- **Relations:** related to WAY-04 · related to WAY-11 · related to WAY-13 · related to WAY-14
-- **Outranks:** none
+- **Based on:** instruction-density-accuracy@f62b9a6d
+- **Relations:** none
 - **Verification:** level 1 — invariants: decision-scope-names · decisions-found-for-change.
 - **Review when:** no model in the range of fact instruction-density-accuracy is Active in
   Anthropic's table of models · check by: 2026-10-02
 - **Origin:** none
-- **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-16
+- **Approved by:** Mariusz, 2026-09-30
 
-*Rationale:* an agent checks a change only against the decisions it reads, and among many rules
-it loses some, so the decisions that govern what a change touches have to be found for it. Parts
-rather than paths, because the part map already assigns files to parts: paths written into each
-decision would be a second copy that drifts as soon as files move. Parts rather than topics,
-because a part can be computed from a change and a topic cannot.
-*Rejected:* file paths in each decision, as rule files for agents do — a second copy of the part
-map; topics as scope — they cannot be computed from a change; no scope — every change checked
-against every decision, and the ones that matter lost among the rest.
-*Consequences:* finding the decisions for a change uses the part map's rule for assigning
-files (WAY-44). Which other decisions a change is checked against — those that govern every task,
-and collisions between decisions of different scopes — is set when the task cycle is designed.
+*Rationale:* an agent can apply only decisions it sees. The part map already assigns files to
+parts, so using those parts as scope makes the governing decisions discoverable without copying
+paths into each entry. Topics cannot be derived from changed files.
+*Rejected:* file paths in each decision — duplicate the map; topics — cannot be derived from a
+change; no scope — relevant decisions get lost among the rest.
 
 ### WAY-22/1 — Is a rule a decision or an invariant?
 
@@ -1419,39 +1408,21 @@ overview of the repository is generated for an agent.
 
 - **Change:** new decision
 - **Scope:** part-map, decisions
-- **Based on:** measured on coding agents: context-file-effect@5e46b997. The tools carry channels
-  for rules pinned to path patterns: Claude Code (claude-code-path-rules@ac99f128), Cursor rules —
-  "Auto-attached when a matching file is in context" (https://cursor.com/docs/rules) — and Kiro
-  steering — "Files are automatically included only when working with files that match the specified
-  pattern" (https://kiro.dev/docs/steering/).
-- **Relations:** derives from WAY-40@3d01f9cd · related to WAY-21 · related to WAY-44
-- **Outranks:** none
+- **Based on:** context-file-effect@c44e5ef0 · claude-code-path-rules@ac99f128
+- **Relations:** derives from WAY-40@3d01f9cd · derives from WAY-21@586e4a38 · derives from WAY-44@2f2b6227
 - **Verification:** level 1 — invariants: derived-file-content · generated-pattern-source ·
   generated-overview.
 - **Review when:** no model in the range of fact context-file-effect is Active in Anthropic's table
   of models · check by: 2026-10-02
 - **Origin:** none
-- **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-17
+- **Approved by:** Mariusz, 2026-09-30
 
-*Rationale:* what a context file does for an agent has been measured, and the two halves of the
-answer point opposite ways: instructions pinned to files are followed, while an overview of the
-repository does not help and is paid for in every call. So the map gives the agent what in
-it is an instruction — what this part is responsible for, what it may depend on, what
-the decisions in its scope bind — and nothing that merely says where things are. The tools' own
-channels carry it, because a rule that arrives with the file the agent opens reaches it at the
-moment it binds. Generated rather than written by hand, because a rule file written by hand is a
-second copy of the map, which is the reason WAY-21 keeps paths out of decisions in the first
-place.
-*Rejected:* an overview of the code or the repository generated for an agent — measured as not
-helpful, at a fixed cost in context; rule files written by hand — a second copy of the map, drifting
-from it; the whole decision log pinned to every path — an agent loses rules as their number grows.
-*Consequences:* a picture of the architecture for a human is made on request, outside an agent's
-context, and such an overview for an agent leaves the views WAY-04 expects. The set of decisions an
-agent reads at the start of a task comes from the step that goes from changed files to parts to
-decisions, not from this channel alone: in Claude Code a rule pinned to paths is added only once
-the agent reads a matching file. Generated rule files sit in the product's repository and are
-checked as derived files (WAY-04).
+*Rationale:* agents follow instructions in context files, while repository overviews have not
+helped. Path rules supply the relevant instructions when an agent works with matching files.
+Generating them from the map avoids a second hand-written account of part boundaries.
+*Rejected:* an overview for agents — added context cost without measured benefit; rule files
+written by hand — a copy of the map; the whole decision log on every path — relevant rules get
+lost among the rest.
 
 ### WAY-53/1 — How is a derived file compared with what its generator produces?
 
@@ -1521,56 +1492,24 @@ gate runs and what follows from what it reports belong to the task cycle, not to
 - **Scope:** gate, decisions, invariants, glossary, part-map, environment-facts, relation-model,
   repository, task-cycle
 - **Based on:** none
-- **Relations:** narrows WAY-44@2f2b6227 · related to WAY-09 · related to WAY-16 ·
-  related to WAY-21 · related to WAY-45 · related to WAY-47
-- **Outranks:** none
-- **Verification:** level 1 — invariants: flow-test-location. Level 2 for the rest — an agent
-  compares the change with the decision:
-  - complies: the gate's code is added under `gate/`, and what the gate does with a
-    failing check is settled in the task cycle;
-  - violates: the one command CI invokes to run every check (WAY-16) is added inside an element's
-    directory, or under `gate/` as a call to a body kept in one; `gate/` holds the rule that picks
-    which checks a change calls for, or the rule that says what a failing check stops.
+- **Relations:** narrows WAY-44@2f2b6227
+- **Verification:** level 1 — invariants: flow-test-location. Level 2 for code ownership and the
+  boundary with the task cycle — an agent compares the change with the decision:
+  - complies: the gate's code and a critical flow's test live under `gate/`, while the task cycle
+    decides when the gate runs and how to use its result;
+  - violates: a file under `gate/` only calls the gate's body kept in an element, or `gate/`
+    decides which checks a change calls for.
 - **Review when:** the gate runs as a program CI invokes, and the rule that picks its checks has a
   home · check by: 2026-10-02
 - **Origin:** none
-- **Approver override:** none
-- **Approved by:** Mariusz, 2026-09-20
+- **Approved by:** Mariusz, 2026-09-30
 
-*Rationale:* the gate runs the checks written in the entries of every element (WAY-16), so a home
-inside `elements/invariants/` would put the checks of the decision log and of the part map inside
-the element of invariants. The task cycle answers for the steps a task runs through and for how
-sharply a change is checked along them — that is when the gate runs and on what, not the code that
-runs it; keeping the two apart lets the steps change without moving the gate's code. WAY-44
-already gives the rule for files that serve the whole repository rather than any one part: they
-are a part of their own. A test of a critical flow has no single part to belong to, because a flow
-crosses parts by definition and the gate is what runs it; that is why this decision goes
-against WAY-44's rule for tests in this narrow place, and nowhere else. A part of its own is also
-what gives the gate its own failure modes and its own criticality.
-*Rejected:* the gate in `elements/invariants/` — a program serving every element tied to one of
-them; the gate in `task-cycle/` — the gate's code would move whenever the steps of a
-task changed; the gate among the files that serve the whole repository, beside `.gitattributes` —
-that part answers for files that configure the repository and has no tests of its own, while the
-gate has failure modes, tests and dependencies on other parts; a critical flow's test kept with
-the single part it tests, as WAY-44 has every other test — a flow runs through several parts and
-none of them owns its test, and the cost WAY-44 named is paid by the flow carrying the gate on its
-list of parts rather than left unsaid.
-*Consequences:* WAY-09 gains `gate/` in its list of the directories a part of the process may
-have, and the sentences in WAY-09 and WAY-16 that left the gate's home to be settled between the
-invariants element and the task cycle go, both edited in place, since neither entry has reached
-the main branch (WAY-07). A critical flow's test living in `gate/` puts `gate` on that flow's list
-of parts, so `gate` inherits the flow's criticality (WAY-46), a change to the test lies on the
-flow (WAY-45) and is checked against the decisions of every part on the list (WAY-21), and the
-coverage of that test agrees with the list (WAY-47); `wording-reaches-dependants` gains `gate` on
-its list with this change. The map guard gains a check that a flow's test path lies under
-`gate/`, made only against this repository's own map, the way its check of `examples.md` already
-is; until it does, the level 1 invariant has nothing that runs it. A file under `gate/` may use
-the code of a part the map lets the gate depend on — the existing flow test reads the decision
-element's test fixtures, and that is such a dependency, not the gate living in an element. When
-the gate's code is built, the gate's dependencies in the map grow to the parts whose checks it
-runs. The invariants element gets a format guard of its own, which is not the gate: the guard
-keeps the shape of an entry, the gate runs what the entry says to check. Whether a product built
-with this process keeps its own gate and flow tests in `gate/` is left to that product.
+*Rationale:* critical-flow tests span parts and need a single owner. The gate serves every
+element, so an element directory is the wrong owner; the task cycle decides the work to run, not
+where its runner lives. As its own part, the gate carries its failures and criticality.
+*Rejected:* gate inside the invariants element — shared work owned by one element; gate inside
+task-cycle — code coupled to task steps; gate among repository configuration — its failures lose
+their own part; critical-flow tests in individual elements — no one element owns a cross-part flow.
 
 ### WAY-56/1 — How much does one invariant entry hold, and what is its binding part?
 
@@ -2014,9 +1953,10 @@ missing field, or a word not given it, as an error.
 - **Origin:** none
 - **Approved by:** Mariusz, 2026-09-26
 
-*Rationale:* a field left out on purpose cannot be told from one forgotten (WAY-58), and a word the
-template gives no meaning misleads its reader. A `TODO` on the main branch is a gap nothing counts,
-except where the gate reports it (WAY-63).
+*Rationale:* an omitted field looks forgotten (WAY-58); an undefined value misleads. A missing
+*Method* yields `unchecked`, not a false pass (WAY-63). Before facts have entries, an invariant can
+expose a needed fact as `TODO` instead of falsely claiming `none`; once they do, the gap must be
+resolved.
 *Rejected:* a decision for invariants alone — every element would need a copy; a wider scope for
 WAY-05 — it answers how a decision entry is written; both words in every field — a word with no
 meaning; optional fields left out when empty — intended and forgotten gaps look alike; for facts, a

@@ -1,8 +1,9 @@
 # Part map
 
 What this repository is made of, and what joins it: which part may depend on which, and what it
-promises to the products pinned to its commits. The map says what is allowed; what the code holds
-is computed from it.
+promises to the products pinned to its commits. The map says which dependencies are allowed; the
+product's dependency graph shows which dependencies the code actually holds. When no command
+reports that graph, the comparison is unchecked.
 
 ## decisions
 

@@ -2,10 +2,10 @@
 
 This file defines how a product's part map is written. The map holds the parts of a product and
 what joins them: which part may depend on which, which flows run across several parts, and what
-crosses the edge to the world outside. It says what is allowed, not what the code happens to
-contain today — what the code contains is computed from it and checked against the map (WAY-04).
-Alongside the joins it records how badly each part can fail and where it takes in what it does
-not trust.
+crosses the edge to the world outside. It says which dependencies are allowed; the product's
+dependency graph shows which dependencies the code actually holds. When no command reports that
+graph, the comparison is unchecked (WAY-04, WAY-38, WAY-51). Alongside the joins it records how
+badly each part can fail and where it takes in what it does not trust.
 
 The rules of form the elements share — the language of an entry, every field and the words `none`
 and `TODO`, the terms of the glossary, the marks of where a value comes from, the form of an
