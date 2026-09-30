@@ -340,7 +340,8 @@ with the diff, its effects, its settlements and a recommendation, and a human de
 *Rationale:* the problem is a single executor that checks itself: agents on one model with one
 input share its blind spots, so independence comes from different perspectives and from not seeing
 the author's reasoning; settling in both orders costs little. Only a human knows what the product is
-meant to protect.
+meant to protect. The finding it cites measured models of other publishers only, and this decision
+takes it across publishers (WAY-85).
 *Rejected:* a panel that settles everything — it does not know what the product protects; a single
 agent without a panel — it checks itself.
 
