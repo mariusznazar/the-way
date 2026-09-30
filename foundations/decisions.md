@@ -1001,39 +1001,24 @@ version of the process enters a product only through a task in the product that 
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, relation-model,
   task-cycle
 - **Based on:** none
-- **Relations:** related to WAY-01 · related to WAY-09 · related to WAY-16 · related to WAY-21
-- **Outranks:** none
+- **Relations:** none
 - **Verification:** level 2 — an agent compares the change with the decision; the invariants of
   this decision belong to each product's foundation, since no commit of the-way decides them:
   - complies: a product's foundation holds the invariants "this repository pins a commit of
-    the-way" and "the product's CI runs only the gate and the scripts of its pinned commit"; a
-    task in the product moves the pin, and its merge request carries what the newer version
-    changes for the product;
+    the-way" and "CI runs only that commit's scripts"; a task in the product moves the pin and
+    carries what the newer version changes for the product;
   - violates: a product's CI fetches the latest the-way on every run; a skill in a product session
     comes from a copy of the-way other than the pinned commit.
 - **Review when:** the first product has moved its pin to a newer the-way twice · check by:
   2026-11-17
 - **Origin:** none
-- **Approver override:** none
 - **Approved by:** Mariusz, 2026-09-23
 
-*Rationale:* a product checked with whatever the-way is newest gives a different result on the
-same commit from one day to the next, and a change to the process can stop the CI of every product
-at once, with no change in any of them. A pinned commit makes a change of the process a visible
-change in the product, as a change of the foundation comes before the code (WAY-01): a new decision
-of the-way binds a product only once someone in that product has taken it in. Tools defined once
-are shared by pinning, not by copying, because copies drift apart (WAY-16).
-*Rejected:* every product on the newest the-way — results that change without a change in the
-product, and process decisions binding a product nobody in it has seen; templates and scripts
-copied into each product — the copies drift.
-*Consequences:* products lag behind the process, and moving a pin is work of its own, like
-updating a dependency. A product session uses the skills of its pinned commit, so the global link
-to a skill described in `elements/decisions/README.md` serves only work on the-way itself. How a
-product pins the commit is set by the first product that does. Which decisions of the-way an agent
-checks a task against is set when the task cycle is designed (WAY-21); they come from the pinned
-commit. The-way itself uses the commit it is on. How a product's invariant that pins the commit
-names this decision in *Derives from*, when this decision stands in the log of the-way rather than
-in the product's own, is set by the first product that writes one.
+*Rationale:* a pinned commit turns a change of the process into a change in each product, taken
+in there before it binds, so one change cannot stop every product's checks at once. The price:
+products lag behind the process, and moving a pin is work, like updating a dependency.
+*Rejected:* every product on the newest the-way — results change with no change in the product;
+templates and scripts copied into each product — the copies drift.
 
 ### WAY-35/1 — What does an element's skill hold?
 
@@ -1135,52 +1120,32 @@ the review comes.
 ### WAY-38/1 — In what are the scripts of the-way written?
 
 Every script of the-way runs on the version of Python the repository declares, with its standard
-library alone, and installs nothing. It calls git, and the commands a product declares in its own repository — a
-dependency graph, a detector of breaking changes, coverage — reading their output through an
-adapter for the format. Where a product declares no such command, the script reports what it
-could not check, never agreement.
+library alone, and installs nothing. It calls git, and the commands a product declares in its own
+repository — a dependency graph, a detector of breaking changes, coverage — reading their output
+through an adapter for the format. Where a product declares no such command, the script reports
+what it could not check, never agreement.
 
 - **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, relation-model,
   task-cycle
-- **Based on:** computing a language's state is work that mature tools do as separate programs —
-  buf, API Extractor, japicmp, cargo-semver-checks, oasdiff — and reimplementing it was given up
-  as "requires re-implementing large swaths of rust's semantics"
-  (https://github.com/obi1kenobi/cargo-semver-checks).
-- **Relations:** related to WAY-02 · related to WAY-09 · related to WAY-16 · related to WAY-34 ·
-  related to WAY-89
-- **Outranks:** none
+- **Based on:** none
+- **Relations:** none
 - **Verification:** level 1 — invariants: script-language · script-imports · script-subprocesses ·
   map-guard-missing-command.
 - **Review when:** none
 - **Origin:** none
-- **Approver override:** none
 - **Approved by:** Mariusz, 2026-09-26
 
-*Rationale:* a product runs the scripts of the commit of the-way it pins (WAY-34), so every
-language and every package they need becomes something each product's CI has to provide. One
-language with its standard library alone leaves one interpreter to provide and nothing to
-install. Which version that is, and when it moves, is set by WAY-89. What the
-scripts cannot do themselves is compute the state of a language they do not parse: a dependency
-graph outside Python, a breaking change in a schema, the reach of a test. Those the product
-already computes with its own tools, so the script runs the command the product declares and
-reads its output, rather than parsing a language it would get wrong. Silence is reported as
-unchecked rather than as agreement, because a check that quietly sees nothing passes.
-*Rejected:* Node.js without packages — as able as Python; a second language adds a second
-interpreter to every product's CI; shell scripts in Bash or PowerShell — neither runs the same
-on Windows and on Linux; a compiled program in Go or Rust — every change needs a build and
-published files; each script in the language its author picks — a product's CI needs every
-interpreter any script chose; the product's CI writing that output into a committed file that
-the scripts then read — an agent would get no signal before pushing, and the product would carry
-a CI step existing only for this process; the scripts parsing other languages themselves — the
-tools that tried gave it up.
-*Consequences:* a product's CI provides the Python WAY-89 declares and git, and declares in its
-repository the commands whose output the scripts read. What those commands cost in time, and how
-much their output depends on the environment they run in, the product pays. The format guard of
-decisions, the fingerprint script of `relation-model` (WAY-09), the view of decisions in force
-(WAY-18) and the gate (WAY-16) are written in Python. Skills and templates are not
-scripts, and this decision does not bind them. A check runs the same way for an agent locally, in
-CI and for a human (WAY-16), because all three run the same declared command.
+*Rationale:* a product runs the scripts of its pinned commit (WAY-34), so every language and
+package they need is something each product has to provide. The state of a language the scripts do
+not parse, the product's tools already compute; a check that quietly sees nothing would pass.
+*Rejected:* Node.js without packages — no abler than Python, and a second interpreter for every
+product; shell scripts in Bash or PowerShell — they run differently on Windows and on Linux; a
+compiled program in Go or Rust — every change needs a build and published files; each script in
+its author's language — every product needs every interpreter chosen; the product's CI committing
+that output for the scripts to read — no signal before a push, and a CI step for this process
+alone; the scripts parsing other languages themselves — tools that tried gave it up
+(cargo-semver-checks).
 
 ### WAY-40/1 — What kinds of entry does the part map hold?
 

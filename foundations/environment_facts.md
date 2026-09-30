@@ -57,9 +57,7 @@ The standard library of Python 3.14 holds the modules that `sys.stdlib_module_na
 
 - **Holds for:** CPython 3.14, whose documentation docs.python.org publishes for the 3.14 series with no page for each bugfix release
 - **Source:** https://docs.python.org/3.14/library/sys.html (archived: http://web.archive.org/web/20260907072947/https://docs.python.org/3.14/library/sys.html, 2026-09-07) § sys.stdlib_module_names — "A frozenset of strings containing the names of standard library modules." · § sys.stdlib_module_names — "It is the same on all platforms. Modules which are not available on some platforms and modules disabled at Python build are also listed. All module kinds are listed: pure Python, built-in, frozen and extension modules. Test modules are excluded." · § sys.stdlib_module_names — "For packages, only the main package is listed: sub-packages and sub-modules are not listed."; read 2026-09-26
-- **Set by:** none
 - **Method:** `python -B gate/run_tests.py probes/python-stdlib-modules --record .runs/fact-python-stdlib-modules.jsonl`
-- **Correction:** none
 
 ## impossiblebench-test-modification/1
 

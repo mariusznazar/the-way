@@ -574,7 +574,6 @@ Every script git tracks is a Python file.
 - **Derives from:** WAY-38@6e10c3fd
 - **Part:** every
 - **Correction:** none
-- **Recovered:** none
 
 ## script-imports/1
 
@@ -585,7 +584,6 @@ No script git tracks imports a module other than one of the standard library of 
 - **Derives from:** WAY-38@6e10c3fd · WAY-89@fbb25ae3
 - **Part:** every
 - **Correction:** none
-- **Recovered:** none
 
 ## script-subprocesses/1
 
@@ -596,7 +594,6 @@ No script git tracks starts a program other than git or a command the product de
 - **Derives from:** WAY-38@6e10c3fd
 - **Part:** every
 - **Correction:** none
-- **Recovered:** none
 
 ## map-guard-missing-command/1
 
@@ -607,7 +604,6 @@ The map guard reports a check whose declared command the product lacks as unchec
 - **Derives from:** WAY-38@6e10c3fd
 - **Part:** part-map
 - **Correction:** none
-- **Recovered:** none
 
 ## fingerprint-definition/1
 
