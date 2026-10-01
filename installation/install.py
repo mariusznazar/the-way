@@ -22,6 +22,17 @@ ELEMENTS = {
     "part-map": ("update-part-map", "part_map.md"),
     "environment-facts": ("record-environment-fact", "environment_facts.md"),
 }
+# Claude Code reads project skills from .claude/skills, Codex from .agents/skills.
+SKILL_DIRECTORIES = (".claude", ".agents")
+RULE = Path(".claude") / "rules" / "the-way.md"
+AGENTS = "AGENTS.md"
+BEGIN = "<!-- the-way:begin -->"
+END = "<!-- the-way:end -->"
+IGNORE = ".gitignore"
+RUNS = ".runs/"
+# Codex reads AGENTS.override.md instead of AGENTS.md, and at most this many bytes of them.
+CODEX_OVERRIDE = "AGENTS.override.md"
+CODEX_LIMIT = 32 * 1024
 
 
 # Set by run() only when the submodule URL is a local path or a file:// URL.
@@ -74,6 +85,11 @@ def empty_foundations() -> dict[str, str]:
     }
 
 
+def sibling_names() -> str:
+    names = [f"`{name}`" for name, _ in ELEMENTS.values()]
+    return ", ".join(names[:-1]) + " or " + names[-1]
+
+
 def skill_wrapper(element: str, name: str, commit: str) -> str:
     original = committed(f"elements/{element}/skill/SKILL.md", commit)
     original_name = re.search(r"^name: (.+)$", original, re.M)
@@ -97,20 +113,97 @@ def skill_wrapper(element: str, name: str, commit: str) -> str:
             f"Read `{SUBMODULE}/elements/{element}/skill/SKILL.md` in full and follow it. "
             f"Read its referenced template and `elements/common/` files inside `{SUBMODULE}`. "
             "Its paragraph about resolving a global skill link applies only to a global install; "
-            f"here the process root is `{SUBMODULE}`. Do not substitute a global skill.\n")
+            f"here the process root is `{SUBMODULE}`. Do not substitute a global skill.\n\n"
+            f"Where this skill or a file it reads names another the-way skill — {sibling_names()} "
+            "— use this product's project skill of the same name with the `the-way-` prefix, "
+            "never an unprefixed one.\n")
 
 
-def project_rule(commit: str) -> str:
-    names = ", ".join(f"`/the-way-{name}`" for name, _ in ELEMENTS.values())
+def product_guidance() -> str:
+    """The guidance for agents in a product. It names no commit: the gitlink records the commit,
+    so the text changes only when the guidance itself changes, not when the pin moves."""
+    names = ", ".join(f"`the-way-{name}`" for name, _ in ELEMENTS.values())
     return ("# Pinned the-way process\n\n"
-            f"This repository uses the-way at commit `{commit}` through the `{SUBMODULE}` "
-            "Git submodule. Initialize it after a fresh clone with "
-            f"`git submodule update --init -- {SUBMODULE}`. Check that "
-            f"`git -C {SUBMODULE} rev-parse HEAD` matches the gitlink commit before using it.\n\n"
-            f"For foundation entries, use the project skills {names}. "
-            "They read the pinned submodule. Personal skills with similar unprefixed names may "
-            "use another version of the process. If the submodule cannot be initialized, stop "
-            "rather than using a different version.\n")
+            "This repository uses the-way, the process for its foundation, at the commit the "
+            f"gitlink of the Git submodule `{SUBMODULE}` records. After a fresh clone run "
+            f"`git submodule update --init -- {SUBMODULE}`; it needs read access to the Git URL in "
+            f"`.gitmodules`. Before use, `git -C {SUBMODULE} rev-parse HEAD` must show the commit "
+            f"`git ls-files --stage -- {SUBMODULE}` records. If initialization fails or the commits "
+            "differ, stop; never use another copy or version of the-way.\n\n"
+            f"Write foundation entries only through the project skills {names}. Where a skill or "
+            "a file it reads names one without the `the-way-` prefix, use the prefixed project "
+            "skill, never a personal skill of that name.\n\n"
+            "Run the-way's scripts from this repository's root as "
+            f"`{SUBMODULE}/<path>` and always name this repository's file or directory, e.g. "
+            f"`python -B {SUBMODULE}/gate/run_tests.py <directory>` and "
+            f"`python -B {SUBMODULE}/elements/<element>/format_guard.py foundations/<file>`. "
+            f"A guard run inside `{SUBMODULE}` without a file checks the-way's own files. "
+            f"Records of a run (`--record`) go under `{RUNS}`, which `.gitignore` must keep "
+            "ignored.\n\n"
+            "On a task branch pass `--base` the commit `git merge-base HEAD main` prints, and "
+            "`--merge-onto` the commit of `main` the merge goes onto (the part map's guard takes "
+            "no `--merge-onto`). Pass `none` only while this repository has no `main`; the checks "
+            "that need the commit are then unchecked.\n\n"
+            "Until the part map has its first parts, its guard reports every tracked file as "
+            "claimed by no part; that is expected, and it is not a pass.\n\n"
+            "Nothing runs these checks automatically. Before a merge, run the format guard of "
+            "every changed foundation file and the tests of every changed part, and report what "
+            "failed and what stayed unchecked. A check that did not run is never a pass.\n")
+
+
+def agents_block() -> str:
+    return f"{BEGIN}\n{product_guidance()}{END}\n"
+
+
+def read_text_file(path: Path, name: str) -> str:
+    if path.is_symlink() or not path.is_file():
+        raise RuntimeError(f"Existing {name} is not a regular file")
+    try:
+        return path.read_bytes().decode("utf-8")
+    except UnicodeDecodeError as error:
+        raise RuntimeError(f"Existing {name} is not UTF-8 text") from error
+
+
+def appended(text: str, addition: str, blank_line: bool) -> str:
+    """What to append to an existing text so that `addition` starts on its own line, after a
+    blank line when asked, in the file's own line ending."""
+    normal = text.replace("\r\n", "\n")
+    if not normal or normal.endswith("\n\n") or (normal.endswith("\n") and not blank_line):
+        separator = ""
+    elif normal.endswith("\n"):
+        separator = "\n"
+    else:
+        separator = "\n\n" if blank_line else "\n"
+    return (separator + addition).replace("\n", "\r\n" if "\r\n" in text else "\n")
+
+
+def agents_change(path: Path) -> tuple[str, str]:
+    """CREATE, APPEND or KEEP the marked block of the product guidance in AGENTS.md."""
+    block = agents_block()
+    if not os.path.lexists(path):
+        return "CREATE", block
+    text = read_text_file(path, AGENTS)
+    normal = text.replace("\r\n", "\n")
+    begins, ends = normal.count(BEGIN), normal.count(END)
+    if begins == ends == 0:
+        return "APPEND", appended(text, block, blank_line=True)
+    if begins == ends == 1 and normal.index(BEGIN) < normal.index(END):
+        if normal[normal.index(BEGIN):normal.index(END) + len(END)] == block[:-1]:
+            return "KEEP", ""
+        raise RuntimeError(f"{AGENTS} holds a the-way block that differs from this commit's "
+                           f"guidance; remove the block from {BEGIN} to {END} and run again")
+    raise RuntimeError(f"{AGENTS} holds {begins} {BEGIN} and {ends} {END} markers; it must hold "
+                       "one complete block or none. Fix it by hand and run again")
+
+
+def ignore_change(path: Path) -> tuple[str, str]:
+    """CREATE .gitignore or APPEND the line that ignores the-way's records of a run."""
+    if not os.path.lexists(path):
+        return "CREATE", RUNS + "\n"
+    text = read_text_file(path, IGNORE)
+    if RUNS in text.replace("\r\n", "\n").split("\n"):
+        return "KEEP", ""
+    return "APPEND", appended(text, RUNS + "\n", blank_line=False)
 
 
 def inside_repo(target: Path) -> None:
@@ -151,14 +244,18 @@ def verify_remote(url: str, commit: str) -> None:
             raise RuntimeError(f"Commit {commit} is not available from {url}; publish it first")
 
 
-def plan(target: Path, commit: str, url: str) -> tuple[dict[Path, str], bool, bool]:
+def plan(target: Path, commit: str,
+         url: str) -> tuple[dict[Path, str], dict[Path, tuple[str, str]], bool, bool]:
     files: dict[Path, str] = {}
     for filename, content in empty_foundations().items():
         files[target / "foundations" / filename] = content
     for element, (name, _) in ELEMENTS.items():
-        files[target / ".claude" / "skills" / f"the-way-{name}" / "SKILL.md"] = \
-            skill_wrapper(element, name, commit)
-    files[target / ".claude" / "rules" / "the-way.md"] = project_rule(commit)
+        wrapper = skill_wrapper(element, name, commit)
+        for directory in SKILL_DIRECTORIES:
+            files[target / directory / "skills" / f"the-way-{name}" / "SKILL.md"] = wrapper
+    files[target / RULE] = product_guidance()
+    shared = {target / AGENTS: agents_change(target / AGENTS),
+              target / IGNORE: ignore_change(target / IGNORE)}
 
     pin = existing_pin(target)
     submodule_path = target / SUBMODULE
@@ -208,7 +305,22 @@ def plan(target: Path, commit: str, url: str) -> tuple[dict[Path, str], bool, bo
         checked_out = git("-C", SUBMODULE, "rev-parse", "HEAD", cwd=target).stdout.strip()
         if checked_out != pin:
             raise RuntimeError(f"{SUBMODULE} has {checked_out} checked out but the gitlink pins {pin}")
-    return files, pin is None, bool(pin and not os.path.lexists(submodule_path / ".git"))
+    return files, shared, pin is None, bool(pin and not os.path.lexists(submodule_path / ".git"))
+
+
+def codex_warnings(target: Path, shared: dict[Path, tuple[str, str]]) -> list[str]:
+    warnings = []
+    if os.path.lexists(target / CODEX_OVERRIDE):
+        warnings.append(f"{CODEX_OVERRIDE} exists; Codex reads it instead of {AGENTS}, so it will "
+                        f"not see the the-way block unless {CODEX_OVERRIDE} carries the same text")
+    action, text = shared[target / AGENTS]
+    size = len(text.encode("utf-8"))
+    if action != "CREATE":
+        size += (target / AGENTS).stat().st_size
+    if size > CODEX_LIMIT:
+        warnings.append(f"{AGENTS} will hold {size} bytes; Codex reads at most {CODEX_LIMIT} bytes "
+                        "of instructions, so it may not see the whole the-way block")
+    return warnings
 
 
 def run() -> int:
@@ -228,7 +340,7 @@ def run() -> int:
         raise RuntimeError("Submodule URL contains credentials; use a credential-free URL")
     if is_local(url):
         FILE_PROTOCOL[:] = ["-c", "protocol.file.allow=always"]
-    files, add_submodule, initialize_submodule = plan(target, commit, url)
+    files, shared, add_submodule, initialize_submodule = plan(target, commit, url)
 
     print(f"Product: {target}\nProcess commit: {commit}\nSubmodule URL: {url}")
     print(f"{'ADD' if add_submodule else 'KEEP'} {SUBMODULE} (gitlink at {commit})")
@@ -245,11 +357,27 @@ def run() -> int:
             print("\n".join(difflib.unified_diff([], content.splitlines(), fromfile="/dev/null",
                                                  tofile=path.relative_to(target).as_posix(),
                                                  lineterm="")))
+    for path, (action, text) in shared.items():
+        name = path.relative_to(target).as_posix()
+        print(f"{action} {name}")
+        if action == "CREATE":
+            print("\n".join(difflib.unified_diff([], text.splitlines(), fromfile="/dev/null",
+                                                 tofile=name, lineterm="")))
+        elif action == "APPEND":
+            print("(added at the end; the existing content stays byte for byte)")
+            shown = text.replace("\r\n", "\n")
+            existing = path.read_bytes()
+            if existing and not existing.endswith(b"\n"):
+                shown = shown[1:]   # this newline only ends the existing last line
+            print("\n".join("+" + line for line in shown.split("\n")[:-1]))
+    for warning in codex_warnings(target, shared):
+        print(f"WARNING: {warning}")
     if not args.apply:
         print("Preview only. Run again with --apply to confirm and write.")
         return 0
     if not add_submodule and not initialize_submodule and \
-            all(os.path.lexists(path) for path in files):
+            all(os.path.lexists(path) for path in files) and \
+            all(action == "KEEP" for action, _ in shared.values()):
         print("Already installed; no changes.")
         return 0
     if input("Apply these changes? [y/N] ").strip().lower() != "y":
@@ -272,6 +400,13 @@ def run() -> int:
         path.parent.mkdir(parents=True, exist_ok=True)
         with path.open("x", encoding="utf-8", newline="\n") as handle:
             handle.write(content)
+    for path, (action, text) in shared.items():
+        if action == "CREATE":
+            with path.open("x", encoding="utf-8", newline="\n") as handle:
+                handle.write(text)
+        elif action == "APPEND":
+            with path.open("ab") as handle:
+                handle.write(text.encode("utf-8"))
     print("Installed. Commit the product files and gitlink when ready.")
     return 0
 
