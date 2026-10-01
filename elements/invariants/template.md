@@ -100,6 +100,10 @@ naming its identifier and its current version, with `searched: <…>` in *Search
   produce is written out in full all the same, with the program named as it will run; that entry is
   reported unchecked for want of a declared or produced command, a different reason (WAY-63,
   WAY-38, WAY-47, WAY-51).
+- A command whose program is a Python interpreter may name a script not yet written, since no
+  format guard judges whether a command's script exists; its script is read as a POSIX shell splits
+  the command. A method whose program is declared or produced by the product but is no Python
+  interpreter, and whose script does not exist yet, reads `TODO` instead (WAY-105).
 - One run may check many invariants. An entry's result is the verdict the run records for its
   identifier and current version, in a format from this closed list, which grows by a new version of
   WAY-61: the-way's own record of a run, whose form and path answer to the invariants
@@ -257,7 +261,7 @@ WAY-64).
   - the method is a path, and no human verdict is in force;
   - the method's command or file is not declared or produced by the product, except a command
     declared on the commit the branch left the main branch from, whose drop makes the result `error`
-    (WAY-38, WAY-47, WAY-51);
+    (WAY-38, WAY-47, WAY-51, WAY-105);
   - the method takes a commit the gate filled in as not existing;
   - the entry stands on the list of quarantined invariants at its current version, and the
     committer date of the commit being checked is no later than its *Until* (WAY-68);
@@ -316,7 +320,7 @@ reader not built yet is named by the invariant it answers to
 | identifier (heading) | a check citing the invariant; the format guard (`invariant-identifier-form`, `identifier-holders`, `invariant-citation-target`); the part map's guard, in a flow and a failure mode's detection (`flow-invariant-link`, `map-invariant-names`) | judgment |
 | version (heading) | a check citing the invariant, and the test runner, which records the verdict at the version cited (`invariant-citation-version`, `test-runner-pass-line`); the format guard, which computes what the version must be (`invariant-version-new`, `invariant-version-changed`, `invariant-version-unchanged`) | read off |
 | sentence | the agent checking a change against the invariant; the fingerprint (`invariant-fingerprint-input`); the format guard (`invariant-sentence-count`, `sentence-branch-names`, `sentence-gate-values`) | judgment |
-| Method | the gate, which runs a command or hands a path to a human (`gate-check-source`, `gate-verdict-per-entry`); the format guard (`invariant-method-form`, `method-gate-values`, `run-record-path`) | judgment |
+| Method | the gate, which runs a command or hands a path to a human, and reports a command run under a Python interpreter whose script does not exist (`gate-check-source`, `gate-verdict-per-entry`, `gate-missing-script`); the format guard (`invariant-method-form`, `method-gate-values`, `run-record-path`) | judgment |
 | Rests on | whoever reviews the invariant when a fact changes; the format guard, which compares each fingerprint with the current one (`link-fingerprint-presence`, `link-fingerprint-value`) | judgment for the fact named; read off for its fingerprint |
 | Derives from | whoever changes the decision; the format guard, which checks a decision's level 1 verification against it and each fingerprint against the current one (`level-one-decision-invariants`, `verification-invariant-derivation`, `link-fingerprint-presence`, `link-fingerprint-value`) | judgment for the decision named; read off for its fingerprint |
 | Part | the gate, which runs the invariants a change reaches (`change-reach`); the format guard (`invariant-part-names`, `invariant-part-form`) | judgment |

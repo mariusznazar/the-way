@@ -2867,3 +2867,52 @@ for the domain — a plain word in a product's sentence may still carry either m
 keeps nothing apart, and every entry of the-way is rewritten to it; a word holding neither the word
 of the process nor its forms, as WAY-99 asks of a carrier — for words the field uses daily, such as
 "part", "entry" or "result", the foundation drifts from the words the product's people and code use.
+
+### WAY-105/1 — Which check reports an invariant whose command runs a script that does not exist, and how is that script read?
+
+The gate, when it runs an invariant's method whose program is a Python interpreter — `python`,
+`python3`, `python3.<minor>` or `py`, with or without `.exe` — reports the entry `unchecked` for
+want of a declared or produced command where the script the command runs does not exist on the
+commit being checked, or `error` where that script exists on the commit the branch left the main
+branch from; no format guard judges whether a command's script exists. The gate reads such a
+command as a POSIX shell splits it into words, quotes, backslashes and operators included, and its
+script is the first word after the interpreter's own options and the values they take, never a
+value the gate fills in. A method whose program is declared or produced by the product but is no
+Python interpreter, and whose script does not exist yet, reads `TODO`.
+
+- **Change:** new decision
+- **Scope:** gate, invariants
+- **Based on:** none
+- **Relations:** derives from WAY-63@f16348c8 · derives from WAY-61@4804d070 ·
+  derives from WAY-38@6e10c3fd
+- **Verification:** level 1 — invariants: gate-missing-script. Level 2 for what the format guard
+  leaves alone, which word of a command is its script, and the method of another program — an
+  agent compares the change with the decision:
+  - complies: an entry whose method is `python -B tools/check_saves.py --record .runs/saves.jsonl`,
+    written before `tools/check_saves.py` exists, passes the format guard with no warning; the gate
+    takes `my tools/check.py` as the script of `python -B "my tools/check.py" --base {fork-point}`,
+    and `tools/check.py` as that of `py -3 -W error tools/check.py`; in a product that declares
+    `node`, an entry whose check will be `node tools/check_saves.js`, not written yet, reads `TODO`;
+  - violates: the format guard warns on that entry; the gate takes `error` as the script of
+    `python -W error tools/check.py`, `"my` as that of the quoted path, or `{fork-point}` as a
+    script; in a product that declares `node`, an entry names `node tools/check_saves.js` before
+    that script exists.
+- **Review when:** none
+- **Origin:** the panel's record of the change that counts the checks a `none` option leaves
+  unchecked in every guard's summary, in the message of commit d389623 of the-way
+- **Approved by:** Mariusz, 2026-10-02
+
+*Rationale:* an invariant may be written before the code that checks it, so when the entry is
+written a wrong path and a script not yet written look alike, and a warning there falls on the case
+the template allows, each one reaching a human. The gate runs the method, so it meets a missing
+script where the result is read, and the closed list of reasons already holds this one; a script
+the branch removed is a check the change dropped, which the list already makes an error. The cost
+is that a wrong path shows at the first run of the gate, not when the entry is written. A command
+is read as a POSIX shell reads it: a path in quotes is one word, and a word an option takes, or a
+word after the script, belongs to the option or the script. Which word is the script follows from
+the interpreter's own options, known for Python alone, so the method of another program waits as
+`TODO` until its script exists.
+*Rejected:* a warning of the format guard when the entry is written — it falls on the case the
+template allows, and every one reaches a human; nobody reporting it — a method with a wrong path
+looks checked until its first run; a command split on spaces — a quoted path breaks in two, and a
+word an option takes is read as the script.
