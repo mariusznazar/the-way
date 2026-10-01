@@ -235,46 +235,55 @@ test that always passes.
 
 On the main branch, this repository holds `foundations/` with the entries of the-way itself, a
 directory for each part of the process other than `repository` — `elements/<element>/` for each
-foundation element, `elements/common/` for what the elements share, `relation-model/`, `gate/` and
-`task-cycle/` — with `probes/` as a second directory of the environment facts part, for the checks
-of the-way's own facts, the files that serve the whole repository, which its part map gives to the
-`repository` part (WAY-44), and a `README.md` that describes the repository. A directory reaches
-the main branch only once it holds what its part requires: an element its template and rules,
-examples or a pointer to entries of the-way that serve as its examples, a skill that writes its
-entries and a format guard; `elements/common/` the rules of form and the way of working the
-elements' templates and skills share, the code their format guards share and the procedure of the
-panel; `relation-model/` the script that computes fingerprints; `gate/` the test of every critical
-flow in the part map; `task-cycle/` what the design of the task cycle sets, and until then it does
-not reach the main branch. The entries in `foundations/` are checked by the format guards of their
-elements.
+foundation element, `elements/common/` for what the elements share, `relation-model/`, `gate/`,
+`installation/`, `agent-instructions/` and `task-cycle/` — with `probes/` as a second directory of
+the environment facts part, for the checks of the-way's own facts, the files that configure the
+whole repository, which its part map gives to the `repository` part (WAY-44), the root agent
+instruction files, which the map gives to `agent-instructions` (WAY-44), and a `README.md` that
+describes the repository.
+A directory reaches the main branch only once it holds what its part requires: an element its
+template and rules, examples or a pointer to entries of the-way that serve as its examples, a
+skill that writes its entries and a format guard; `elements/common/` the rules of form and the way
+of working the elements' templates and skills share, the code their format guards share and the
+procedure of the panel; `relation-model/` the script that computes fingerprints; `gate/` the test
+of every critical flow in the part map; `installation/` the installer, its tests and a README
+explaining how a product uses the pinned version; `agent-instructions/` the instructions for agents
+working on this repository, led to from the root agent instruction files; `task-cycle/` what the design of
+the task cycle sets, and until then it does not reach the main branch. The entries in
+`foundations/` are checked by the format guards of their elements.
 
 - **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common,
-  relation-model, gate, repository, task-cycle
+  relation-model, gate, installation, agent-instructions, repository, task-cycle
 - **Based on:** none
 - **Relations:** none
 - **Verification:** level 1 — invariants: repository-file-location · element-directory-contents ·
   relation-model-directory-contents · invariant-example-target · map-example-target ·
-  glossary-example-target. Level 2 for what `elements/common/` and `task-cycle/` hold and for the
-  format guards checking `foundations/` — an agent compares the change with the decision:
+  glossary-example-target. Level 2 for what `elements/common/`, `installation/`,
+  `agent-instructions/` and `task-cycle/` hold and for the format guards checking `foundations/`
+  — an agent compares the change with the decision:
   - complies: code two format guards share moves into `elements/common/`, and both load it from
     there; a new file of entries in `foundations/` comes with the format guard of its element;
+    the installer, its tests and instructions stand together in `installation/`; the agent
+    instructions have their own part and root entry points;
   - violates: a `tools/` directory for shared scripts reaches the main branch; `task-cycle/`
     reaches the main branch before the design of the task cycle sets what it holds.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-29
+- **Approved by:** Mariusz, 2026-10-01
 
 *Rationale:* anything brought in on the side makes the repository a store of material; directories
 follow the parts, so a change's files name its part and decisions (WAY-21); an incomplete directory
 is work in progress, kept on a branch (WAY-01); probes stand apart, so an element's tests run no
-fact's method.
+fact's method; product installation and agent instructions have different failures from repository
+configuration.
 *Rejected:* material merged as soon as it is written — a store from the first day; an element whose
 only tool is a skill — the form holds only while someone remembers to run it; one `tools/`
 directory for everything shared — it matches no part and grows into a store; one set of template,
 skill and script for every directory — a script that only reads has nothing for a skill to write;
 the files serving the whole repository left out of the map on purpose — they lose their part and
-its failure mode.
+its failure mode; installation or agent instructions folded into repository configuration — their
+failures lose their own parts.
 
 ### WAY-10/1 — Who assesses a change to an invariant test or to the foundation?
 
@@ -433,7 +442,7 @@ tests it calls for — the same command for an agent, for a human and for whatev
 change is merged.
 
 - **Change:** new decision
-- **Scope:** invariants, task-cycle
+- **Scope:** invariants, agent-instructions, task-cycle
 - **Based on:** none
 - **Relations:** none
 - **Verification:** level 1 — invariants: ci-checking-commands · gate-check-source. Level 2 for the
@@ -716,7 +725,7 @@ entry instead of being pointed to.
 
 - **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, relation-model,
-  task-cycle
+  installation, agent-instructions, task-cycle
 - **Based on:** none
 - **Relations:** none
 - **Verification:** level 1 — invariants: outbound-link-reach. Level 2 for the reasoning in the
@@ -928,7 +937,7 @@ version of the process enters a product only through a task in the product that 
 
 - **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, relation-model,
-  task-cycle
+  installation, task-cycle
 - **Based on:** none
 - **Relations:** none
 - **Verification:** level 2 — an agent compares the change with the decision; the invariants of
@@ -1047,7 +1056,7 @@ what it could not check, never agreement.
 
 - **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, relation-model,
-  task-cycle
+  installation, task-cycle
 - **Based on:** none
 - **Relations:** none
 - **Verification:** level 1 — invariants: script-language · script-imports · script-subprocesses ·
@@ -1180,7 +1189,7 @@ CI — are another. For a file that collects entries about many parts, the parts
 follow from the entries it adds or changes, not from the part the file itself belongs to.
 
 - **Change:** new decision
-- **Scope:** part-map, task-cycle
+- **Scope:** part-map, agent-instructions, task-cycle
 - **Based on:** git-path-patterns@1519f3f7
 - **Relations:** derives from WAY-40@3d01f9cd
 - **Verification:** level 1 — invariants: file-part-assignment · path-pattern-reach ·
@@ -2413,7 +2422,7 @@ version comes out.
 
 - **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, relation-model, gate,
-  repository, task-cycle
+  installation, repository, task-cycle
 - **Based on:** python-314-bugfix-status@cb6aa573 · python-release-binaries@6d2c12f8 ·
   https://raw.githubusercontent.com/python/peps/b53285d29f16cc743a7a6339c947c49ccf70c525/peps/pep-0745.rst
   § Bugfix releases — "3.14.14: Tuesday, 2027-10-05 (Final regular bugfix release with binary installers)";

@@ -129,6 +129,35 @@ The part answers for the files that configure the repository itself rather than 
     answers for it — low — not detected
 - **Trust boundary:** none
 
+## agent-instructions
+
+The part answers for the instructions agents read when they work on this repository, and for the
+hooks and the configuration of agents' tools and of CI that direct them.
+
+- **Files:** /AGENTS.md
+  /CLAUDE.md
+  agent-instructions/**
+- **Depends on:** decisions · invariants · glossary · part-map · environment-facts ·
+  elements-common · gate
+- **Failure modes:**
+  - an agent follows stale integration instructions — a change enters the integration branch
+    without the required checks or acceptance — high — not detected
+- **Trust boundary:** none
+
+## installation
+
+The part answers for preparing a product repository to use one pinned commit of the-way.
+
+- **Files:** installation/**
+- **Depends on:** decisions · invariants · glossary · part-map · environment-facts ·
+  elements-common
+- **Failure modes:**
+  - the installer pins the wrong commit or replaces an existing product file — a product starts
+    with the wrong process or loses its own foundation — high — not detected
+  - a project skill resolves to another process version — a product entry is written under the
+    wrong rules — high — not detected
+- **Trust boundary:** installation/install.py
+
 ## wording-reaches-dependants
 
 Someone changes a decision's binding sentences, and every `derives from` or `narrows` relation
@@ -199,6 +228,13 @@ for each outcome of a test.
 
 - **Declared at:** gate/run_tests.py · main
 
+## installation-command
+
+The command that prepares a product's pinned the-way checkout, empty foundation files and project
+skills keeps its preview, confirmation and no-replacement behaviour.
+
+- **Declared at:** installation/install.py · run
+
 ## Criticality scale
 
 1. low — a failure is seen by the next person who reads the file, and costs a fix
@@ -209,7 +245,7 @@ for each outcome of a test.
 
 | Partner | Direction | What comes in | Updates with the product |
 |---|---|---|---|
-| a product pinned to a commit | us → them | — | no |
+| a product pinned to a commit | both | untrusted | no |
 | git | them → us | trusted | no |
 | a command a product declares — a dependency graph, coverage | them → us | untrusted | no |
 

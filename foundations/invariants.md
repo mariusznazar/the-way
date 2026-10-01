@@ -155,11 +155,11 @@ Every check that cites an invariant fails, in k of n runs where its command sets
 
 ## repository-file-location/1
 
-Where {merge-onto} exists, every file git tracks lies in `foundations/` or in a directory WAY-09 names for a part of the process, belongs to the `repository` part of the part map, or is the `README.md` at the root.
+Where {merge-onto} exists, every file git tracks lies in `foundations/` or in a directory WAY-09 names for a part of the process, belongs to the `repository` or the `agent-instructions` part of the part map, or is the `README.md` at the root.
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-09@c2be4997
+- **Derives from:** WAY-09@e06e8dfc
 - **Part:** every
 - **Correction:** none
 
@@ -169,7 +169,7 @@ Where {merge-onto} exists, every element directory holds a template, examples or
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-09@c2be4997
+- **Derives from:** WAY-09@e06e8dfc
 - **Part:** decisions · part-map · invariants · glossary · environment-facts
 - **Correction:** none
 
@@ -179,7 +179,7 @@ Where {merge-onto} exists, `relation-model/` holds the script that computes fing
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-09@c2be4997
+- **Derives from:** WAY-09@e06e8dfc
 - **Part:** relation-model
 - **Correction:** none
 
@@ -189,7 +189,7 @@ Every identifier `elements/invariants/examples.md` names is the identifier of an
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-09@c2be4997
+- **Derives from:** WAY-09@e06e8dfc
 - **Part:** invariants
 - **Correction:** none
 
@@ -199,7 +199,7 @@ Every identifier `elements/part-map/examples.md` names is the identifier of an e
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-09@c2be4997
+- **Derives from:** WAY-09@e06e8dfc
 - **Part:** part-map
 - **Correction:** none
 
@@ -209,7 +209,7 @@ Every term `elements/glossary/examples.md` names is the term of an entry of `fou
 
 - **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-09@c2be4997
+- **Derives from:** WAY-09@e06e8dfc
 - **Part:** glossary
 - **Correction:** none
 
