@@ -152,8 +152,10 @@ The part answers for preparing a product repository to use one pinned commit of 
 - **Depends on:** decisions · invariants · glossary · part-map · environment-facts ·
   elements-common
 - **Failure modes:**
-  - the installer pins the wrong commit or replaces an existing product file — a product starts
-    with the wrong process or loses its own foundation — high — not detected
+  - the installer pins the wrong commit, or replaces an existing product file or changes it beyond
+    the additions `installation-command` names — a product starts with the wrong process, or loses
+    what its own files held: its foundation, its instructions to agents, its ignore rules or its
+    other submodules — high — not detected
   - a project skill resolves to another process version — a product entry is written under the
     wrong rules — high — not detected
 - **Trust boundary:** installation/install.py
@@ -230,8 +232,11 @@ for each outcome of a test.
 
 ## installation-command
 
-The command that prepares a product's pinned the-way checkout, empty foundation files and project
-skills keeps its preview, confirmation and no-replacement behaviour.
+The command that installs a pinned the-way checkout, empty foundation files, project skills, agent
+guidance for Claude Code and Codex and a `.runs/` ignore line in a product keeps its preview and
+confirmation, replaces no existing file, and adds to an existing file of the working tree only the
+`.the-way` section of `.gitmodules`, a marked block at the end of `AGENTS.md` and the `.runs/` line
+at the end of `.gitignore`.
 
 - **Declared at:** installation/install.py · run
 
