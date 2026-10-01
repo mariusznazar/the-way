@@ -280,6 +280,10 @@ def plan(target: Path, commit: str,
             raise RuntimeError(f"Uninitialized {SUBMODULE} contains other files")
     elif os.path.lexists(submodule_path):
         raise RuntimeError(f"{submodule_path} already exists; refusing to replace it")
+    elif ignored_paths(target, [submodule_path]):
+        # `git submodule add` refuses an ignored path, so the run could not finish.
+        raise RuntimeError(f"Git ignores {SUBMODULE} in this repository, so the submodule cannot "
+                           f"be added; stop ignoring {SUBMODULE} and run again")
     elif os.path.lexists(modules_file):
         if modules_file.is_symlink() or not modules_file.is_file():
             raise RuntimeError("Existing .gitmodules is not a regular file")

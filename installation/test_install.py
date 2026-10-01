@@ -305,6 +305,18 @@ class InstallTest(unittest.TestCase):
                       "committed and other clones and cloud sessions will not get them: AGENTS.md\n",
                       preview.stdout)
 
+    def test_rejects_an_ignored_submodule_path_before_writing(self) -> None:
+        # git submodule add refuses an ignored path, so the run is refused, not warned about.
+        ignore = self.product / ".gitignore"
+        ignore.write_bytes(b".*\n!.gitignore\n")
+        for args in ((), ("--apply",)):
+            result = self.install(*args, input_text="y\n")
+            self.assertNotEqual(result.returncode, 0, result.stdout)
+            self.assertIn("Git ignores .the-way in this repository", result.stderr)
+        self.assertEqual(ignore.read_bytes(), b".*\n!.gitignore\n")
+        self.assertEqual(sorted(path.name for path in self.product.iterdir()),
+                         [".git", ".gitignore"])
+
     def test_guidance_finds_a_main_branch_not_called_main(self) -> None:
         self.assertEqual(command("git", "symbolic-ref", "HEAD", "refs/heads/master",
                                  cwd=self.product).returncode, 0)
