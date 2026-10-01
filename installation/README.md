@@ -81,8 +81,11 @@ the existing content of both stays byte for byte, and the added lines use the fi
 ending. An `AGENTS.md` that holds the same block, or a `.gitignore` that holds the line, is left
 unchanged. The run stops when `AGENTS.md` holds a different block, only one of the markers, or two
 blocks, and when either file is not a regular UTF-8 file. Every refusal happens before anything is
-written. The preview warns when an `AGENTS.override.md` at the root would hide `AGENTS.md` from
-Codex, or when `AGENTS.md` would exceed the 32 KiB Codex reads.
+written. The plan, shown both in the preview and before the `--apply` confirmation, warns when Git
+ignores a path the installer writes — through `.gitignore` or any other ignore source Git applies —
+since such a file cannot be committed and other clones and cloud sessions never get it; it warns
+when an `AGENTS.override.md` at the root would hide `AGENTS.md` from Codex, and when `AGENTS.md`
+would exceed the 32 KiB Codex reads. A warning does not stop the run.
 An existing `.the-way` pin to another commit also stops the run. The installer never changes an
 existing product entry to make it fit a template. Before adding a new submodule, an existing
 `.gitmodules` must be tracked and clean; Git then adds the new section without replacing its
@@ -105,8 +108,12 @@ python -B gate/run_tests.py installation
 ```
 
 The tests use temporary Git repositories to check the preview, refusal, exact gitlink, repeated
-run, preservation of existing files, both wrapper locations, the guidance without a commit, each
-case of `AGENTS.md` and `.gitignore`, empty file form, the invariants guard accepting a record
-under `.runs/`, and initialization in a fresh checkout. They
+run, preservation of existing files, a conflicting wrapper in either skill directory, the guidance
+without a commit or a branch name and its commands on a main branch not called `main`, each case of
+`AGENTS.md` and `.gitignore` above — created, appended with the lines the preview shows, kept, or
+refused as a directory, as non-UTF-8 text or for its markers — the three warnings, empty file form,
+the invariants guard accepting a record under `.runs/`, and initialization in a fresh checkout.
+A symlinked `AGENTS.md` or `.gitignore` is refused by the same check as a directory but is not
+tested, since creating a symlink needs extra rights on Windows. They
 install this checkout's committed `HEAD`, so uncommitted changes to skills, templates or guards are
 not exercised until they are committed.

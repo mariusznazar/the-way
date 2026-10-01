@@ -43,8 +43,9 @@ def is_local(url: str) -> bool:
     return url.startswith("file://") or Path(url).exists()
 
 
-def git(*args: str, cwd: Path, check: bool = True) -> subprocess.CompletedProcess[str]:
-    result = subprocess.run(["git", *FILE_PROTOCOL, *args], cwd=cwd,
+def git(*args: str, cwd: Path, check: bool = True,
+        stdin: str | None = None) -> subprocess.CompletedProcess[str]:
+    result = subprocess.run(["git", *FILE_PROTOCOL, *args], cwd=cwd, input=stdin,
                             text=True, encoding="utf-8", stdout=subprocess.PIPE,
                             stderr=subprocess.PIPE, check=False)
     if check and result.returncode:
@@ -140,10 +141,14 @@ def product_guidance() -> str:
             f"A guard run inside `{SUBMODULE}` without a file checks the-way's own files. "
             f"Records of a run (`--record`) go under `{RUNS}`, which `.gitignore` must keep "
             "ignored.\n\n"
-            "On a task branch pass `--base` the commit `git merge-base HEAD main` prints, and "
-            "`--merge-onto` the commit of `main` the merge goes onto (the part map's guard takes "
-            "no `--merge-onto`). Pass `none` only while this repository has no `main`; the checks "
-            "that need the commit are then unchecked.\n\n"
+            "The main branch is the branch task branches merge into. In a clone, "
+            "`git symbolic-ref --short refs/remotes/origin/HEAD` names it as `origin/<branch>`; "
+            "otherwise ask the human. On a task branch pass `--base` the commit "
+            "`git merge-base HEAD <main branch>` prints and `--merge-onto` the commit of the main "
+            "branch the merge goes onto (the part map's guard takes no `--merge-onto`). Pass "
+            "`none` only while this repository has no main branch at all; a command that cannot "
+            "find the branch means a wrong name, not a missing branch. With `none` the checks that "
+            "need the commit stay unchecked.\n\n"
             "Until the part map has its first parts, its guard reports every tracked file as "
             "claimed by no part; that is expected, and it is not a pass.\n\n"
             "Nothing runs these checks automatically. Before a merge, run the format guard of "
@@ -308,8 +313,27 @@ def plan(target: Path, commit: str,
     return files, shared, pin is None, bool(pin and not os.path.lexists(submodule_path / ".git"))
 
 
-def codex_warnings(target: Path, shared: dict[Path, tuple[str, str]]) -> list[str]:
+def ignored_paths(target: Path, paths: list[Path]) -> list[str]:
+    """The paths the installer writes that git ignores in the product, so they cannot be
+    committed. A tracked path counts as not ignored, since git commits it anyway."""
+    names = [path.relative_to(target).as_posix() for path in paths]
+    result = git("check-ignore", "-z", "--stdin", cwd=target, check=False,
+                 stdin="\0".join(names) + "\0")
+    if result.returncode not in (0, 1):
+        raise RuntimeError("git cannot tell which paths it ignores: " +
+                           (result.stderr.strip() or f"exit code {result.returncode}"))
+    ignored = set(result.stdout.split("\0"))
+    return [name for name in names if name in ignored]
+
+
+def warnings_for(target: Path, files: dict[Path, str],
+                 shared: dict[Path, tuple[str, str]]) -> list[str]:
     warnings = []
+    ignored = ignored_paths(target, [*files, *shared])
+    if ignored:
+        warnings.append("git ignores these paths in this repository, so they cannot be committed "
+                        "and other clones and cloud sessions will not get them: " +
+                        ", ".join(ignored))
     if os.path.lexists(target / CODEX_OVERRIDE):
         warnings.append(f"{CODEX_OVERRIDE} exists; Codex reads it instead of {AGENTS}, so it will "
                         f"not see the the-way block unless {CODEX_OVERRIDE} carries the same text")
@@ -370,7 +394,7 @@ def run() -> int:
             if existing and not existing.endswith(b"\n"):
                 shown = shown[1:]   # this newline only ends the existing last line
             print("\n".join("+" + line for line in shown.split("\n")[:-1]))
-    for warning in codex_warnings(target, shared):
+    for warning in warnings_for(target, files, shared):
         print(f"WARNING: {warning}")
     if not args.apply:
         print("Preview only. Run again with --apply to confirm and write.")
