@@ -598,7 +598,7 @@ class Reviews(GuardTestCase):
                                              "TODO — ask Anna when to look again")))
         self.assertEqual(code, 0, output)
         self.assertIn("decisions.md:26: warning: *Next check* is `TODO`", output)
-        self.assertTrue(output.endswith("0 error(s), 1 warning(s)\n"), output)
+        self.assertTrue(output.endswith("0 error(s), 1 warning(s), 0 unchecked\n"), output)
         self.assertRecords(line("check_reviews", "pass", "review-next-check/1"))
         self.assertEqual([item for item in self.lines if item["verdict"] != "pass"], [])
 
@@ -693,7 +693,7 @@ class Record(GuardTestCase):
         code, output = self.guard(log(*NARROWING_EACH_OTHER))
         self.assertEqual(code, 1)
         self.assertIn("decisions.md:12: error: ABC-01 and ABC-02 narrow each other\n", output)
-        self.assertTrue(output.endswith("1 error(s), 0 warning(s)\n"), output)
+        self.assertTrue(output.endswith("1 error(s), 0 warning(s), 0 unchecked\n"), output)
 
     def test_each_verdict_stands_at_a_check_citing_its_invariant(self):
         self.guard(log(version(1, relations="narrows ABC-02@" + CURRENT, review_when="next year",
@@ -783,6 +783,15 @@ class AgainstBase(InGit):
         code, output = self.guard(log(version(1)), base="main")
         self.assertEqual(code, 0, output)
         self.assertRecords(line("check_against_base", "pass", "log-existing-lines/1"))
+
+    def test_a_real_base_and_merge_onto_leave_nothing_unchecked(self):
+        # the count of unchecked checks grows only where an option reads `none`
+        self.commit(log(version(1)))
+        code, output = self.guard(log(version(1), version(2)), base="main", merge_onto="main")
+        self.assertEqual(code, 0, output)
+        self.assertNotIn("unchecked:", output)
+        self.assertTrue(output.endswith("0 error(s), 0 warning(s), 0 unchecked\n"), output)
+        self.assertEqual([item for item in self.lines if item["verdict"] == "unchecked"], [])
 
     def test_base_without_the_log(self):
         with open(os.path.join(self.directory.name, "other.txt"), "w") as handle:
@@ -1273,9 +1282,10 @@ class MergeOntoNone(GuardTestCase):
 
     REASON = "the method takes a commit the gate filled in as not existing"
     DESCRIPTION = "--merge-onto none: there is no commit to merge onto"
-    NOTE = ("note: --merge-onto none: there is no commit to merge onto; `TODO` in the log, the "
-            "copies of a version both logs hold and the fingerprints relations carry are "
-            "unchecked\n")
+    # every check the run skips is a line of the report, and counts in its last line
+    NOT_CHECKED = ("unchecked: `TODO` in the log — %s\n"
+                   "unchecked: the copies of a version both logs hold — %s\n"
+                   "unchecked: the fingerprints relations carry — %s\n") % ((DESCRIPTION,) * 3)
     UNCHECKED = [
         {"check": GUARD + "::check_merge_todo", "verdict": "unchecked",
          "invariant": "log-entry-merge-todo/1", "reason": REASON, "description": DESCRIPTION},
@@ -1289,8 +1299,11 @@ class MergeOntoNone(GuardTestCase):
     def test_a_clean_log_exits_zero_and_records_both_checks_unchecked(self):
         code, output = self.guard(log(version(1), version(2)), merge_onto="none")
         self.assertEqual(code, 0, output)
-        self.assertIn(self.NOTE, output)
-        self.assertTrue(output.endswith("0 error(s), 0 warning(s)\n"), output)
+        self.assertIn(self.NOT_CHECKED, output)
+        self.assertTrue(output.endswith("0 error(s), 0 warning(s), 3 unchecked\n"), output)
+        # the notes the `unchecked:` lines replace stay gone
+        self.assertNotIn("note: --base none", output)
+        self.assertNotIn("note: --merge-onto none", output)
         self.assertEqual(self.lines, self.UNCHECKED)
 
     def test_todo_stays_a_warning(self):
@@ -1324,8 +1337,10 @@ class BaseNone(GuardTestCase):
 
     REASON = "the method takes a commit the gate filled in as not existing"
     DESCRIPTION = "--base none: there is no commit the branch left the main branch from"
-    NOTE = ("note: --base none: there is no commit the branch left the main branch from; the "
-            "checks against it are unchecked\n")
+    NOT_CHECKED = ("unchecked: the lines the log holds on the main branch, and the versions it "
+                   "gains per number — %s\n"
+                   "unchecked: a change to the template without a new version in the log — %s\n"
+                   ) % ((DESCRIPTION,) * 2)
     UNCHECKED = [
         {"check": GUARD + "::check_against_base", "verdict": "unchecked",
          "invariant": "log-existing-lines/1", "reason": REASON, "description": DESCRIPTION},
@@ -1339,8 +1354,11 @@ class BaseNone(GuardTestCase):
     def test_a_clean_log_exits_zero_and_records_every_base_check_unchecked(self):
         code, output = self.guard(log(version(1), version(2)), base="none")
         self.assertEqual(code, 0, output)
-        self.assertIn(self.NOTE, output)
-        self.assertTrue(output.endswith("0 error(s), 0 warning(s)\n"), output)
+        self.assertIn(self.NOT_CHECKED, output)
+        self.assertTrue(output.endswith("0 error(s), 0 warning(s), 2 unchecked\n"), output)
+        # the notes the `unchecked:` lines replace stay gone
+        self.assertNotIn("note: --base none", output)
+        self.assertNotIn("note: --merge-onto none", output)
         self.assertEqual(self.lines, self.UNCHECKED)
 
     def test_two_versions_of_one_number_are_not_counted(self):
@@ -1353,6 +1371,11 @@ class BaseNone(GuardTestCase):
         code, output = self.guard(log(version(1)), base="none", merge_onto="none")
         self.assertEqual(code, 0, output)
         self.assertEqual(self.lines, self.UNCHECKED + MergeOntoNone.UNCHECKED)
+        self.assertIn(self.NOT_CHECKED + MergeOntoNone.NOT_CHECKED, output)
+        self.assertTrue(output.endswith("0 error(s), 0 warning(s), 5 unchecked\n"), output)
+        # the notes the `unchecked:` lines replace stay gone
+        self.assertNotIn("note: --base none", output)
+        self.assertNotIn("note: --merge-onto none", output)
 
     def test_the_command_line_takes_none(self):
         with open(self.path, "w", encoding="utf-8", newline="\n") as handle:

@@ -22,8 +22,9 @@ WAY-79). --merge-onto names the commit of the main branch a merge is made onto; 
 every fingerprint a decision's *Based on* carries for a fact compared with the fact's current
 fingerprint after that merge, and a fact that nothing names reported as an error rather than a
 warning (WAY-73, WAY-90). `none`, given to either option, is the value the gate fills in where that
-commit does not exist (WAY-61): the checks that need the commit are then recorded as `unchecked`, a
-note says so, and they give no error; a commit that is not `none` and does not exist stays an error.
+commit does not exist (WAY-61): the checks that need the commit are then recorded as `unchecked`,
+the report names each on an `unchecked:` line and counts it in its last line, and they give no
+error; a commit that is not `none` and does not exist stays an error.
 --record names a JSON Lines file, created or overwritten, which receives the-way's own record of
 the run (WAY-74): a verdict for each invariant
 cited by a check the run's options select — the checks against the base with --base, the checks of
@@ -963,6 +964,7 @@ def check_against_base(path, facts, rules, base, top, report, no_commit=None):
     new, changed, unchanged, persistence, withdrawal = BASE_INVARIANTS
     if no_commit:
         report.unchecked(check, NO_COMMIT_REASON, no_commit, *BASE_INVARIANTS)
+        report.cannot_check("identifiers and versions", no_commit)
         return
     relative = os.path.relpath(os.path.abspath(path), top).replace(os.sep, "/")
     base_text, failure = shared.file_at(base, relative, top)
@@ -1089,6 +1091,7 @@ def check_fingerprints(merged, report, no_commit=None):
     check, value = "check_fingerprints", "based-on-fact-fingerprint-value/1"
     if no_commit:
         report.unchecked(check, NO_COMMIT_REASON, no_commit, value)
+        report.cannot_check("the fingerprints decisions carry for facts", no_commit)
         return
     report.ran(check, value)
     for number, version in sorted(merged.latest.items()):
@@ -1121,6 +1124,7 @@ def check_dependants(entries, invariants, latest, report, merge, no_commit=None)
     check, dependants = "check_dependants", "fact-dependants/1"
     if no_commit:
         report.unchecked(check, NO_COMMIT_REASON, no_commit, dependants)
+        report.cannot_check("the facts nothing names after the merge", no_commit)
         return
     named = set(rests_on_names(invariants))
     for version in latest.values():
@@ -1205,23 +1209,19 @@ def run(path, base=None, stream=None, template=TEMPLATE, merge_onto=None, record
     if base == NO_COMMIT:
         no_base = "--base none: there is no commit the branch left the main branch from"
         check_against_base(path, facts, rules, None, None, report, no_commit=no_base)
-        report.notes.append(no_base + "; identifiers and versions are not compared with it, and "
-                                      "those checks are unchecked")
     elif base:
         if find_commit(path, top, "--base", base, report):
             check_against_base(path, facts, rules, base, top, report)
     else:
         report.notes.append("no --base given: identifiers and versions are not compared with the "
-                            "main branch")
+                            "main branch; those checks are not run, and are not counted in the "
+                            "last line")
 
     if merge_onto == NO_COMMIT:
         no_onto = "--merge-onto none: there is no commit to merge onto"
         check_fingerprints(None, report, no_commit=no_onto)
         check_dependants(entry_list, foundation.invariants, foundation.latest, report, False)
         check_dependants(entry_list, [], {}, report, True, no_commit=no_onto)
-        report.notes.append(no_onto + "; the fingerprints decisions carry for facts and the facts "
-                                      "nothing names are not checked against a merge, and those "
-                                      "checks are unchecked")
     elif merge_onto:
         if find_commit(path, top, "--merge-onto", merge_onto, report):
             merged = merged_foundation(path, facts, foundation, rules, merge_onto, top, report)
@@ -1232,7 +1232,8 @@ def run(path, base=None, stream=None, template=TEMPLATE, merge_onto=None, record
         check_dependants(entry_list, foundation.invariants, foundation.latest, report, False)
         report.notes.append("no --merge-onto given: the fingerprints decisions carry for facts are "
                             "not compared with the current binding part, and a fact nothing names "
-                            "is only a warning")
+                            "is only a warning; the checks of a merge are not run, and are not "
+                            "counted in the last line")
 
     report.print(stream)
     if record is not None:

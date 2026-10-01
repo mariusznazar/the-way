@@ -126,9 +126,11 @@ REPORT_WITHOUT_COMMANDS = "\n".join([
     "product reports the dependency graph",
     "note: there is no invariants.md beside the map: the invariants the map names are not checked",
     "note: there is no decisions.md beside the map: the scopes of decisions are not checked",
-    "note: no --base given: the list of known violations is not compared with the main branch",
+    "note: no --base given: the list of known violations is not compared with the main branch; "
+    "that check is not run, and is not counted in the last line",
     "note: no --base given: the computed criticality of the parts is not compared with the main "
-    "branch, so no lowering is reported",
+    "branch, so no lowering is reported; that check is not run, and is not counted in the last "
+    "line",
     "0 error(s), 0 warning(s), 3 unchecked", ""])
 
 
@@ -1101,8 +1103,11 @@ class BaseNone(GuardTestCase):
     against it is unchecked, and nothing fails."""
 
     DESCRIPTION = "--base none: there is no commit the branch left the main branch from"
-    NOTE = ("note: --base none: there is no commit the branch left the main branch from; the list "
-            "of known violations is not compared with it, and that check is unchecked\n")
+    # every check the run skips is a line of the report, and counts in its last line
+    NOT_CHECKED = ("unchecked: the list of known violations — %s\n"
+                   "unchecked: the identifiers of the map — %s\n"
+                   "unchecked: the lowering of a part's computed criticality — %s\n"
+                   ) % ((DESCRIPTION,) * 3)
     UNCHECKED = [line("check_violations_growth", "unchecked", "known-violations-growth/1",
                       DESCRIPTION, NO_COMMIT),
                  line("check_identifier_persistence", "unchecked", "map-identifier-persistence/1",
@@ -1111,9 +1116,22 @@ class BaseNone(GuardTestCase):
     def test_a_clean_map_exits_zero_and_records_the_check_unchecked(self):
         code, output = self.guard(part_map(), base="none")
         self.assertEqual(code, 0, output)
-        self.assertIn(self.NOTE, output)
-        self.assertTrue(output.endswith("0 error(s), 0 warning(s), 3 unchecked\n"), output)
+        self.assertIn(self.NOT_CHECKED, output)
+        # three checks of the map the product gives no command for, three against the base
+        self.assertTrue(output.endswith("0 error(s), 0 warning(s), 6 unchecked\n"), output)
+        # the notes the `unchecked:` lines replace stay gone
+        self.assertNotIn("note: --base none", output)
+        self.assertNotIn("note: --merge-onto none", output)
         self.assertEqual(self.lines, self.UNCHECKED)
+
+    def test_a_real_base_counts_only_the_checks_the_product_gives_no_command_for(self):
+        # the count of unchecked checks grows only where --base reads `none`
+        self.guard(part_map())
+        self.commit()
+        code, output = self.guard(part_map(), base="main")
+        self.assertEqual(code, 0, output)
+        self.assertNotIn(self.DESCRIPTION, output)
+        self.assertTrue(output.endswith("0 error(s), 0 warning(s), 3 unchecked\n"), output)
 
     def test_an_added_position_is_not_compared(self):
         self.write("foundations/known_violations.md",
@@ -1784,9 +1802,8 @@ class CriticalityLowering(GuardTestCase):
         # invariant: criticality-lowering-report/1
         code, output = self.guard(part_map(), base="none")
         self.assertEqual(code, 0, output)
-        self.assertIn("note: --base none: there is no commit the branch left the main branch "
-                      "from, so the computed criticality of the parts is not compared with it "
-                      "and no lowering is reported\n", output)
+        self.assertIn("unchecked: the lowering of a part's computed criticality — --base none: "
+                      "there is no commit the branch left the main branch from\n", output)
 
 
 class ComputedCriticality(unittest.TestCase):

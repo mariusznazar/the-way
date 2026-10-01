@@ -1106,7 +1106,12 @@ class AgainstBase(GuardTestCase):
 
     def test_no_main_branch(self):
         output = self.assertPasses(facts(), base="none")
-        self.assertIn("--base none", output)
+        self.assertIn("unchecked: identifiers and versions — --base none: there is no commit the "
+                      "branch left the main branch from\n", output)
+        self.assertTrue(output.endswith("0 error(s), 0 warning(s), 1 unchecked\n"), output)
+        # the notes the `unchecked:` lines replace stay gone
+        self.assertNotIn("note: --base none", output)
+        self.assertNotIn("note: --merge-onto none", output)
         for invariant in BASE:
             self.assertEqual(self.verdicts(invariant), ["unchecked"], invariant)
         self.assertTrue(all(line.get("reason") == NO_COMMIT for line in self.lines))
@@ -1162,9 +1167,32 @@ class Merge(GuardTestCase):
 
     def test_no_main_branch(self):
         output = self.assertPasses(facts(), merge_onto="none")
-        self.assertIn("--merge-onto none", output)
+        self.assertIn("unchecked: the fingerprints decisions carry for facts — --merge-onto none: "
+                      "there is no commit to merge onto\n"
+                      "unchecked: the facts nothing names after the merge — --merge-onto none: "
+                      "there is no commit to merge onto\n", output)
+        self.assertTrue(output.endswith("0 error(s), 0 warning(s), 2 unchecked\n"), output)
+        # the notes the `unchecked:` lines replace stay gone
+        self.assertNotIn("note: --base none", output)
+        self.assertNotIn("note: --merge-onto none", output)
         for invariant in MERGE:
             self.assertEqual(self.verdicts(invariant), ["unchecked"], invariant)
+
+    def test_both_options_none_count_every_check_they_skip(self):
+        output = self.assertPasses(facts(), base="none", merge_onto="none")
+        self.assertEqual(output.count("unchecked: "), 3, output)
+        self.assertTrue(output.endswith("0 error(s), 0 warning(s), 3 unchecked\n"), output)
+        # the notes the `unchecked:` lines replace stay gone
+        self.assertNotIn("note: --base none", output)
+        self.assertNotIn("note: --merge-onto none", output)
+
+    def test_a_real_base_and_merge_onto_leave_nothing_unchecked(self):
+        # the count of unchecked checks grows only where an option reads `none`
+        self.commit(facts())
+        output = self.assertPasses(facts(), base="HEAD", merge_onto="HEAD")
+        self.assertNotIn("unchecked:", output)
+        self.assertTrue(output.endswith("0 error(s), 0 warning(s), 0 unchecked\n"), output)
+        self.assertEqual([line for line in self.lines if line["verdict"] == "unchecked"], [])
 
 
 class MergeOfTwoBranches(GuardTestCase):

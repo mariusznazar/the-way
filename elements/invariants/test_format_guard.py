@@ -22,6 +22,7 @@ import format_guard  # noqa: E402
 
 GUARD = "elements/invariants/format_guard.py"
 NO_COMMIT = "the method takes a commit the gate filled in as not existing"
+NOT_RUN = "those checks are not run, and are not counted in the last line"
 
 DECISION = "A saved game is written to the player's own storage only."
 DECISION_FINGERPRINT = "4dd7fb86"
@@ -238,6 +239,9 @@ class ValidFile(GuardTestCase):
                       "violated invariants are not compared with the main branch", output)
         self.assertIn("note: no --merge-onto given: `TODO` in the entries is not checked against a "
                       "merge", output)
+        # checks no option selects are not run, so the last line does not count them
+        self.assertIn("are not compared with the main branch; %s\n" % NOT_RUN, output)
+        self.assertTrue(output.endswith("0 error(s), 0 warning(s), 0 unchecked\n"), output)
 
     def test_method_as_the_path_of_a_file_a_human_assesses_against(self):
         self.assertPasses(invariants(entry(method="docs/review_checklist.md"), later()))
@@ -1279,8 +1283,13 @@ class BaseNone(GuardTestCase):
     def test_none_records_the_checks_against_the_base_unchecked(self):
         code, output = self.guard(invariants(), base="none")
         self.assertEqual(code, 0, output)
-        self.assertIn("note: --base none: there is no commit the branch left the main branch from",
-                      output)
+        self.assertIn("unchecked: identifiers, versions, corrections and the list of violated "
+                      "invariants — --base none: there is no commit the branch left the main "
+                      "branch from\n", output)
+        self.assertTrue(output.endswith("0 error(s), 0 warning(s), 1 unchecked\n"), output)
+        # the notes the `unchecked:` lines replace stay gone
+        self.assertNotIn("note: --base none", output)
+        self.assertNotIn("note: --merge-onto none", output)
         self.assertEqual(sorted(line["invariant"] for line in self.lines), BASE)
         for line in self.lines:
             self.assertEqual((line["verdict"], line["reason"]), ("unchecked", NO_COMMIT))
@@ -1301,10 +1310,35 @@ class MergeOntoNone(GuardTestCase):
         code, output = self.guard(invariants(entry(derives="`TODO — a decision on saves`"),
                                              later()), merge_onto="none")
         self.assertEqual(code, 0, output)
-        self.assertIn("note: --merge-onto none: there is no commit to merge onto", output)
+        self.assertIn("unchecked: `TODO` in the entries — --merge-onto none: there is no commit to "
+                      "merge onto\n"
+                      "unchecked: the fingerprints the links of the entries carry — --merge-onto "
+                      "none: there is no commit to merge onto\n", output)
+        self.assertTrue(output.endswith("0 error(s), 1 warning(s), 2 unchecked\n"), output)
+        # the notes the `unchecked:` lines replace stay gone
+        self.assertNotIn("note: --base none", output)
+        self.assertNotIn("note: --merge-onto none", output)
         self.assertEqual(sorted(line["invariant"] for line in self.lines), MERGE)
         for line in self.lines:
             self.assertEqual((line["verdict"], line["reason"]), ("unchecked", NO_COMMIT))
+
+    def test_both_options_none_count_every_check_they_skip(self):
+        code, output = self.guard(invariants(), base="none", merge_onto="none")
+        self.assertEqual(code, 0, output)
+        self.assertEqual(output.count("unchecked: "), 3, output)
+        self.assertTrue(output.endswith("0 error(s), 0 warning(s), 3 unchecked\n"), output)
+        # the notes the `unchecked:` lines replace stay gone
+        self.assertNotIn("note: --base none", output)
+        self.assertNotIn("note: --merge-onto none", output)
+
+    def test_a_real_base_and_merge_onto_leave_nothing_unchecked(self):
+        # the count of unchecked checks grows only where an option reads `none`
+        self.commit(invariants())
+        code, output = self.guard(invariants(), base="HEAD", merge_onto="HEAD")
+        self.assertEqual(code, 0, output)
+        self.assertNotIn("unchecked:", output)
+        self.assertTrue(output.endswith("0 error(s), 0 warning(s), 0 unchecked\n"), output)
+        self.assertEqual([line for line in self.lines if line["verdict"] == "unchecked"], [])
 
     def test_a_commit_that_does_not_exist_stays_an_error(self):
         self.commit(invariants())
