@@ -20,8 +20,9 @@ branch from, to compare the log with; without it, the checks that need it are sk
 merge are skipped: the copies of a version both logs hold (WAY-07), the fingerprints relations carry
 against the current binding part, and `TODO` in any field of the log, which the main branch does
 not hold (WAY-71). `none`, given to either option, is the value the gate fills in where that commit
-does not exist (WAY-61): the checks that need the commit are then recorded as `unchecked`, and
-give no error. --record names a
+does not exist (WAY-61): the checks that need the commit are then recorded as `unchecked`, the
+report names each on an `unchecked:` line and counts it in its last line, and they give no
+error. --record names a
 JSON Lines file, created or overwritten, which receives the-way's own record of the run (WAY-74):
 a verdict for each invariant cited by a check the run's options select — the checks against the
 base with --base, the checks of a merge with --merge-onto, the checks of the log alone with
@@ -298,6 +299,12 @@ class Report:
     that names no invariant is a failure recorded for no entry, and one that names no check is a
     failure no rule gave. The record holds the checks of the options the run was given, or of the
     log alone when it was given none; the report for a person holds every check.
+
+    The last line of the report counts what the person is told was left unchecked, one for each
+    `unchecked:` line a check names with cannot_check() — in this guard, a check needing a commit
+    given as `none`. It is not a count of the record's `unchecked` verdicts, which stand one for
+    each check and invariant.
+    Checks left out because an option was not given stand in notes, and are not counted.
     """
 
     def __init__(self, path, options=()):
@@ -305,6 +312,7 @@ class Report:
         self.options = set(options)
         self.errors = []
         self.warnings = []
+        self.not_checked = []  # (what, why), printed for a person as `unchecked:`
         self.notes = []
         self.verdicts = {}  # (check, invariant) -> descriptions of its failures
         self.skipped = {}  # (check, invariant) -> (the reason it is unchecked, its description)
@@ -333,13 +341,19 @@ class Report:
     def warning(self, line, message):
         self.warnings.append((line, message))
 
+    def cannot_check(self, what, why):
+        self.not_checked.append((what, why))
+
     def print(self, stream):
         for level, items in (("error", self.errors), ("warning", self.warnings)):
             for line, message in sorted(items, key=lambda item: item[0] or 0):
                 stream.write("%s:%s: %s: %s\n" % (self.path, line or 0, level, message))
+        for what, why in self.not_checked:
+            stream.write("unchecked: %s — %s\n" % (what, why))
         for note in self.notes:
             stream.write("note: %s\n" % note)
-        stream.write("%d error(s), %d warning(s)\n" % (len(self.errors), len(self.warnings)))
+        stream.write("%d error(s), %d warning(s), %d unchecked\n"
+                     % (len(self.errors), len(self.warnings), len(self.not_checked)))
 
     def recorded(self, check):
         if check is None:
@@ -889,6 +903,7 @@ def merged_log(log_path, entries, merge_onto, prefix, top, report, no_commit=Non
     check, copies = "merged_log", "log-merge-copies/1"
     if no_commit:
         report.unchecked(check, NO_COMMIT_REASON, no_commit, copies)
+        report.cannot_check("the copies of a version both logs hold", no_commit)
         return None
     relative = os.path.relpath(os.path.abspath(log_path), top).replace(os.sep, "/")
     onto_text, failure = file_at(merge_onto, relative, top)
@@ -970,6 +985,7 @@ def check_merge_todo(entries, prefix, report, no_commit=None):
     check, merge_todo = "check_merge_todo", "log-entry-merge-todo/1"
     if no_commit:
         report.unchecked(check, NO_COMMIT_REASON, no_commit, merge_todo)
+        report.cannot_check("`TODO` in the log", no_commit)
         return
     report.ran(check, merge_todo)
     for entry in entries:
@@ -991,6 +1007,7 @@ def check_fingerprints(latest, rules, prefix, report, no_commit=None):
     check, current_value = "check_fingerprints", "relation-fingerprint-value/1"
     if no_commit:
         report.unchecked(check, NO_COMMIT_REASON, no_commit, current_value)
+        report.cannot_check("the fingerprints relations carry", no_commit)
         return
     report.ran(check, current_value)
     current = {number: fingerprint(entry.binding) for number, (entry, _, _) in latest.items()
@@ -1109,6 +1126,8 @@ def check_against_base(log_path, text, base, prefix, report, top, no_commit=None
     existing, added_per_number = "log-existing-lines/1", "log-versions-added-per-number/1"
     if no_commit:
         report.unchecked(check, NO_COMMIT_REASON, no_commit, existing, added_per_number)
+        report.cannot_check("the lines the log holds on the main branch, and the versions it gains "
+                            "per number", no_commit)
         return None
     relative = os.path.relpath(os.path.abspath(log_path), top).replace(os.sep, "/")
     base_text, failure = file_at(base, relative, top)
@@ -1146,6 +1165,7 @@ def check_template_change(top, base, added, report, no_commit=None):
     check, change = "check_template_change", "decision-template-change/1"
     if no_commit:
         report.unchecked(check, NO_COMMIT_REASON, no_commit, change)
+        report.cannot_check("a change to the template without a new version in the log", no_commit)
         return
     base_template, failure = file_at(base, TEMPLATE_PATH, top)
     if failure:
@@ -1230,7 +1250,6 @@ def run(log_path, base=None, today=None, template=TEMPLATE, examples=EXAMPLES, s
         no_base = "--base none: there is no commit the branch left the main branch from"
         check_against_base(log_path, text, None, prefix, report, None, no_commit=no_base)
         check_template_change(None, None, None, report, no_commit=no_base)
-        report.notes.append(no_base + "; the checks against it are unchecked")
     elif base:
         top = find_commit(log_path, "--base", base, report)
         if top is not None:
@@ -1238,15 +1257,14 @@ def run(log_path, base=None, today=None, template=TEMPLATE, examples=EXAMPLES, s
             if added is not None:
                 check_template_change(top, base, added, report)
     else:
-        report.notes.append("no --base given: the checks against the main branch are skipped")
+        report.notes.append("no --base given: the checks against the main branch are not run, and "
+                            "are not counted in the last line")
 
     if merge_onto == NO_COMMIT:
         no_onto = "--merge-onto none: there is no commit to merge onto"
         check_merge_todo(entries, prefix, report, no_commit=no_onto)
         merged_log(log_path, entries, merge_onto, prefix, None, report, no_commit=no_onto)
         check_fingerprints(None, rules, prefix, report, no_commit=no_onto)
-        report.notes.append(no_onto + "; `TODO` in the log, the copies of a version both logs "
-                                      "hold and the fingerprints relations carry are unchecked")
     elif merge_onto:
         top = find_commit(log_path, "--merge-onto", merge_onto, report)
         if top is not None:
@@ -1258,7 +1276,8 @@ def run(log_path, base=None, today=None, template=TEMPLATE, examples=EXAMPLES, s
         report.notes.append("no --merge-onto given: `TODO` in the log is not checked against a "
                             "merge, the copies of a version both logs hold are not compared, and "
                             "the fingerprints relations carry are not compared with the current "
-                            "binding part")
+                            "binding part; those checks are not run, and are not counted in the "
+                            "last line")
 
     if os.path.exists(examples) and own:
         check_examples(entries, examples, prefix, report)

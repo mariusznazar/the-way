@@ -745,6 +745,40 @@ class AgainstBase(GuardTestCase):
                                        "description": "--base none: there is no commit the branch "
                                                       "left the main branch from"}])
 
+    def test_base_none_counts_every_check_it_skips(self):
+        code, output = self.guard(glossary(), base="none")
+        self.assertEqual(code, 0, output)
+        reason = "--base none: there is no commit the branch left the main branch from"
+        self.assertIn("unchecked: the count of the words of *Avoid* — %s\n"
+                      "unchecked: terms and identifiers that came to read alike — %s\n"
+                      "unchecked: the uses of every term whose definition changed — %s\n"
+                      % (reason, reason, reason), output)
+        self.assertTrue(output.endswith("0 error(s), 0 warning(s), 3 unchecked\n"), output)
+        # the notes the `unchecked:` lines replace stay gone
+        self.assertNotIn("note: --base none", output)
+        self.assertNotIn("note: --merge-onto none", output)
+
+    def test_merge_onto_none_counts_every_check_it_skips(self):
+        code, output = self.guard(glossary(), merge_onto="none")
+        self.assertEqual(code, 0, output)
+        reason = "--merge-onto none: there is no commit to merge onto"
+        self.assertIn("unchecked: `TODO` in the entries — %s\n"
+                      "unchecked: the terms with no use after the merge — %s\n"
+                      % (reason, reason), output)
+        self.assertTrue(output.endswith("0 error(s), 0 warning(s), 2 unchecked\n"), output)
+        # the notes the `unchecked:` lines replace stay gone
+        self.assertNotIn("note: --base none", output)
+        self.assertNotIn("note: --merge-onto none", output)
+
+    def test_a_real_base_and_merge_onto_leave_nothing_unchecked(self):
+        # the count of unchecked checks grows only where an option reads `none`
+        self.commit(glossary())
+        code, output = self.guard(glossary(), base="HEAD", merge_onto="HEAD")
+        self.assertEqual(code, 0, output)
+        self.assertNotIn("unchecked:", output)
+        self.assertTrue(output.endswith("0 error(s), 0 warning(s), 0 unchecked\n"), output)
+        self.assertEqual([line for line in self.lines if line["verdict"] == "unchecked"], [])
+
     def test_base_that_does_not_exist(self):
         self.assertFails(glossary(), "--base nowhere does not exist", base="nowhere")
 

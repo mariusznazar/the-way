@@ -26,8 +26,9 @@ made onto; only with it is a `TODO` in a field the main branch does not hold it 
 error, and every fingerprint in *Derives from* and *Rests on* compared with the current binding
 part in the decision log that merge leaves (WAY-31, WAY-71). `none`, given to either option, is the value
 the gate fills in where that commit does not exist (WAY-61): the checks that need the commit are
-then recorded as `unchecked`, a note says so, and they give no error; a commit that is not `none`
-and does not exist stays an error. --record names a JSON Lines file, created or overwritten, which
+then recorded as `unchecked`, the report names each on an `unchecked:` line and counts it in its
+last line, and they give no error; a commit that is not `none` and does not exist stays an error.
+--record names a JSON Lines file, created or overwritten, which
 receives the-way's own record of the run (WAY-74): a verdict for each invariant cited by a check
 the run's options select — the checks against the base with --base, the checks of a merge with
 --merge-onto, the checks of the file alone with neither — a line for each error of those checks
@@ -1288,6 +1289,8 @@ def check_against_base(path, entries, withdrawn, violated, rules, base, top, rep
     new, changed, unchanged, wording, persistence, withdrawal, growth = BASE_INVARIANTS
     if no_commit:
         report.unchecked(check, NO_COMMIT_REASON, no_commit, *BASE_INVARIANTS)
+        report.cannot_check("identifiers, versions, corrections and the list of violated "
+                            "invariants", no_commit)
         return
     relative = os.path.relpath(os.path.abspath(path), top).replace(os.sep, "/")
     violated_relative = "/".join(filter(None, [os.path.dirname(relative), rules.violated_file]))
@@ -1381,6 +1384,7 @@ def check_merge_todo(entries, rules, report, no_commit=None, facts_have_entries=
     check, merge_todo = "check_merge_todo", "invariant-entry-merge-todo/1"
     if no_commit:
         report.unchecked(check, NO_COMMIT_REASON, no_commit, merge_todo)
+        report.cannot_check("`TODO` in the entries", no_commit)
         return
     report.ran(check, merge_todo)
     for entry in entries:
@@ -1477,6 +1481,7 @@ def check_fingerprints(entries, merged, report, no_commit=None, facts=None):
     check, value = "check_fingerprints", "link-fingerprint-value/1"
     if no_commit:
         report.unchecked(check, NO_COMMIT_REASON, no_commit, value)
+        report.cannot_check("the fingerprints the links of the entries carry", no_commit)
         return
     report.ran(check, value)
     prefix, current = merged
@@ -1613,23 +1618,18 @@ def run(path, base=None, stream=None, template=TEMPLATE, merge_onto=None, record
         no_base = "--base none: there is no commit the branch left the main branch from"
         check_against_base(path, entries, withdrawn, violated, rules, None, None, report,
                            no_commit=no_base)
-        report.notes.append(no_base + "; identifiers, versions, corrections and the list of "
-                                      "violated invariants are not compared with it, and those "
-                                      "checks are unchecked")
     elif base:
         if find_commit(path, top, "--base", base, report):
             check_against_base(path, entries, withdrawn, violated, rules, base, top, report)
     else:
         report.notes.append("no --base given: identifiers, versions, corrections and the list of "
-                            "violated invariants are not compared with the main branch")
+                            "violated invariants are not compared with the main branch; "
+                            "those checks are not run, and are not counted in the last line")
 
     if merge_onto == NO_COMMIT:
         no_onto = "--merge-onto none: there is no commit to merge onto"
         check_merge_todo(entry_list, rules, report, no_commit=no_onto)
         check_fingerprints(None, None, report, no_commit=no_onto)
-        report.notes.append(no_onto + "; `TODO` in the entries and the fingerprints their links "
-                                      "carry are not checked against a merge, and those checks "
-                                      "are unchecked")
     elif merge_onto:
         if find_commit(path, top, "--merge-onto", merge_onto, report):
             facts = merged_facts(path, foundation, merge_onto, top, report)
@@ -1645,7 +1645,8 @@ def run(path, base=None, stream=None, template=TEMPLATE, merge_onto=None, record
     else:
         report.notes.append("no --merge-onto given: `TODO` in the entries is not checked against a "
                             "merge, and the fingerprints their links carry are not compared with "
-                            "the current binding part")
+                            "the current binding part; those checks are not run, and are not "
+                            "counted in the last line")
 
     if own is None:
         own = os.path.exists(OWN_FILE) and os.path.samefile(path, OWN_FILE)

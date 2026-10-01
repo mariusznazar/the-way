@@ -20,8 +20,9 @@ branch from, which the list of known violations and the identifiers of the map a
 without it, those checks are skipped. Given it, the report for a person also warns of every part whose computed criticality is
 lower than on that commit, for the human who accepts the lowering (WAY-46). `none` in place of that
 commit is the value the gate fills in where it does not exist (WAY-61): the checks are then recorded
-as `unchecked`, a note says that no criticality is compared, and the run gives no error; a commit
-that is not `none` and does not exist stays an error. A `TODO` in any field of an entry is an
+as `unchecked`, the report names what each leaves unchecked, the comparison of criticality
+with it included, on `unchecked:` lines and counts them in its last line, and the run gives no
+error; a commit that is not `none` and does not exist stays an error. A `TODO` in any field of an entry is an
 error on every run, since the template gives it to no field (WAY-71). --record names a JSON Lines
 file, created or overwritten, which receives the-way's own record of the run (WAY-74): a verdict
 for each invariant cited by a check the run's options select — the check against the base with
@@ -1243,6 +1244,7 @@ def check_violations_growth(map_path, rules, positions, base, top, report, no_co
     check, growth = "check_violations_growth", "known-violations-growth/1"
     if no_commit:
         report.unchecked(check, NO_COMMIT_REASON, no_commit, growth)
+        report.cannot_check("the list of known violations", no_commit)
         return
     relative = os.path.relpath(violations_path(map_path, rules), top).replace(os.sep, "/")
     base_text, failure = file_at(base, relative, top)
@@ -1272,6 +1274,7 @@ def check_identifier_persistence(entries, sections, rules, base_text, base, repo
     check, persistence = "check_identifier_persistence", "map-identifier-persistence/1"
     if no_commit:
         report.unchecked(check, NO_COMMIT_REASON, no_commit, persistence)
+        report.cannot_check("the identifiers of the map", no_commit)
         return
     report.ran(check, persistence)
     base_entries, base_sections = parse_map(base_text or "", rules)
@@ -1373,12 +1376,7 @@ def run(map_path, base=None, stream=None, template=TEMPLATE, record=None,
         check_violations_growth(map_path, rules, positions, None, None, report, no_commit=no_base)
         check_identifier_persistence(entries, sections, rules, None, None, report,
                                      no_commit=no_base)
-        report.notes.append(no_base + "; the list of known violations is not compared with it, "
-                                      "and that check is unchecked")
-        report.notes.append(no_base + "; the identifiers of the map are not compared with it, and "
-                                      "that check is unchecked")
-        report.notes.append(no_base + ", so the computed criticality of the parts is not compared "
-                                      "with it and no lowering is reported")
+        report.cannot_check("the lowering of a part's computed criticality", no_base)
     elif base:
         if top is not None and find_commit(top, "--base", base, report):
             check_violations_growth(map_path, rules, positions, base, top, report)
@@ -1391,9 +1389,11 @@ def run(map_path, base=None, stream=None, template=TEMPLATE, record=None,
                 report_lowering(entries, sections, rules, base_text, base, relative, report)
     else:
         report.notes.append("no --base given: the list of known violations is not compared with "
-                            "the main branch")
+                            "the main branch; that check is not run, and is not counted in the "
+                            "last line")
         report.notes.append("no --base given: the computed criticality of the parts is not "
-                            "compared with the main branch, so no lowering is reported")
+                            "compared with the main branch, so no lowering is reported; "
+                            "that check is not run, and is not counted in the last line")
 
     if own and os.path.exists(examples):
         check_examples(entries, examples, report)

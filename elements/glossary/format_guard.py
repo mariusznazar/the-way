@@ -41,8 +41,9 @@ listed (WAY-93, WAY-97, WAY-98). --merge-onto names the commit of the main branc
 onto; only with it are `TODO` in *Not* and a term with no use outside the glossary errors rather
 than warnings, a term's uses then read as the merge leaves the files (WAY-71, WAY-95, WAY-99).
 `none`, given to either option, is the value the gate fills in where that commit does not exist
-(WAY-61): the checks that need the commit are then recorded as `unchecked`, a note says so, and
-they give no error; a commit that is not `none` and does not exist stays an error. --record names a
+(WAY-61): the checks that need the commit are then recorded as `unchecked`, the report names what
+each leaves unchecked on `unchecked:` lines and counts them in its last line, and they give no
+error; a commit that is not `none` and does not exist stays an error. --record names a
 JSON Lines file, created or overwritten, which receives the-way's own record of the run (WAY-74):
 a verdict for each invariant cited by a check the run's options select — the checks against the
 base with --base, the checks of a merge with --merge-onto, the checks of the file alone with
@@ -1088,6 +1089,7 @@ def check_term_use(entries, corpus, report, merge, no_commit=None):
     check, use = "check_term_use", "glossary-term-use/1"
     if no_commit:
         report.unchecked(check, NO_COMMIT_REASON, no_commit, use)
+        report.cannot_check("the terms with no use after the merge", no_commit)
         return
     if merge:
         report.ran(check, use)
@@ -1224,6 +1226,9 @@ def check_against_base(path, entries, rules, corpus, foundation, base, top, repo
     check, growth = "check_against_base", "glossary-avoid-growth/1"
     if no_commit:
         report.unchecked(check, NO_COMMIT_REASON, no_commit, growth)
+        report.cannot_check("the count of the words of *Avoid*", no_commit)
+        report.cannot_check("terms and identifiers that came to read alike", no_commit)
+        report.cannot_check("the uses of every term whose definition changed", no_commit)
         return
     try:
         base_glossary = glossary_at(path, base, top, report)
@@ -1302,6 +1307,7 @@ def check_merge_todo(entries, report, no_commit=None):
     check, merge_todo = "check_merge_todo", "glossary-entry-merge-todo/1"
     if no_commit:
         report.unchecked(check, NO_COMMIT_REASON, no_commit, merge_todo)
+        report.cannot_check("`TODO` in the entries", no_commit)
         return
     report.ran(check, merge_todo)
     for entry in entries:
@@ -1507,9 +1513,6 @@ def run(path, base=None, stream=None, template=TEMPLATE, merge_onto=None, record
         no_base = "--base none: there is no commit the branch left the main branch from"
         check_against_base(path, entries, rules, corpus, foundation, None, None, report,
                            no_commit=no_base)
-        report.notes.append(no_base + "; the words of *Avoid* are not counted against it, terms "
-                                      "and identifiers that read alike are not reported, and no "
-                                      "definition is compared with it")
     elif base:
         if find_commit(top, "--base", base, report):
             check_against_base(path, entries, rules, corpus, foundation, base, top, report,
@@ -1517,15 +1520,14 @@ def run(path, base=None, stream=None, template=TEMPLATE, merge_onto=None, record
     else:
         report.notes.append("no --base given: the words of *Avoid* are not counted against the main "
                             "branch, terms and identifiers that read alike are not reported, and "
-                            "no changed definition has its uses listed")
+                            "no changed definition has its uses listed; those checks are not run, "
+                            "and are not counted in the last line")
 
     if merge_onto == NO_COMMIT:
         no_onto = "--merge-onto none: there is no commit to merge onto"
         check_merge_todo(entries, report, no_commit=no_onto)
         check_term_use(entries, corpus, report, False)
         check_term_use(entries, corpus, report, True, no_commit=no_onto)
-        report.notes.append(no_onto + "; `TODO` in the entries and terms with no use are not "
-                                      "checked against a merge, and those checks are unchecked")
     elif merge_onto:
         if find_commit(top, "--merge-onto", merge_onto, report):
             check_merge_todo(entries, report)
@@ -1535,7 +1537,8 @@ def run(path, base=None, stream=None, template=TEMPLATE, merge_onto=None, record
     else:
         check_term_use(entries, corpus, report, False)
         report.notes.append("no --merge-onto given: `TODO` in *Not* and a term with no use are only "
-                            "warnings")
+                            "warnings; the checks of a merge are not run, and are not counted in "
+                            "the last line")
 
     if own and os.path.exists(examples):
         check_examples(entries, examples, report)

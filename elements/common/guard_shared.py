@@ -157,6 +157,12 @@ class Report:
     is a failure of the run itself. The record holds the checks of the options the run was given,
     or of the file alone when it was given none; the report for a person holds every check.
 
+    The last line of the report counts what the person is told was left unchecked, one for each
+    `unchecked:` line a check names with cannot_check(): a check needing a commit given as `none`,
+    a command the product does not yet declare or produce, a file that cannot be read. It is not a
+    count of the record's `unchecked` verdicts, which stand one for each check and invariant.
+    Checks left out because an option was not given stand in notes, and are not counted.
+
     Each guard gives the name of its program and the checks each of its options selects
     (`selected_by`: check -> option); every other check reads the file alone.
     """
