@@ -23,6 +23,8 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import format_guard  # noqa: E402
 
 NO_COMMIT = "the method takes a commit the gate filled in as not existing"
+NO_PIN_LINE = ("unchecked: whether the glossary defines a word the glossary of the-way holds — the "
+               "repository holds no gitlink .the-way at its root, so it pins no commit of the-way")
 
 SLOT = "A save slot is the storage that holds one saved game."
 RUN = "A run is one play of the game from its start to the player's death."
@@ -753,7 +755,9 @@ class AgainstBase(GuardTestCase):
                       "unchecked: terms and identifiers that came to read alike — %s\n"
                       "unchecked: the uses of every term whose definition changed — %s\n"
                       % (reason, reason, reason), output)
-        self.assertTrue(output.endswith("0 error(s), 0 warning(s), 3 unchecked\n"), output)
+        # the fourth is the comparison with the glossary of the-way: the test repository pins none
+        self.assertIn(NO_PIN_LINE, output)
+        self.assertTrue(output.endswith("0 error(s), 0 warning(s), 4 unchecked\n"), output)
         # the notes the `unchecked:` lines replace stay gone
         self.assertNotIn("note: --base none", output)
         self.assertNotIn("note: --merge-onto none", output)
@@ -765,7 +769,8 @@ class AgainstBase(GuardTestCase):
         self.assertIn("unchecked: `TODO` in the entries — %s\n"
                       "unchecked: the terms with no use after the merge — %s\n"
                       % (reason, reason), output)
-        self.assertTrue(output.endswith("0 error(s), 0 warning(s), 2 unchecked\n"), output)
+        self.assertIn(NO_PIN_LINE, output)
+        self.assertTrue(output.endswith("0 error(s), 0 warning(s), 3 unchecked\n"), output)
         # the notes the `unchecked:` lines replace stay gone
         self.assertNotIn("note: --base none", output)
         self.assertNotIn("note: --merge-onto none", output)
@@ -775,8 +780,11 @@ class AgainstBase(GuardTestCase):
         self.commit(glossary())
         code, output = self.guard(glossary(), base="HEAD", merge_onto="HEAD")
         self.assertEqual(code, 0, output)
-        self.assertNotIn("unchecked:", output)
-        self.assertTrue(output.endswith("0 error(s), 0 warning(s), 0 unchecked\n"), output)
+        # only the comparison with the glossary of the-way stays unchecked: the test repository
+        # pins no commit of the-way
+        self.assertEqual([line for line in output.splitlines() if line.startswith("unchecked:")],
+                         [NO_PIN_LINE])
+        self.assertTrue(output.endswith("0 error(s), 0 warning(s), 1 unchecked\n"), output)
         self.assertEqual([line for line in self.lines if line["verdict"] == "unchecked"], [])
 
     def test_base_that_does_not_exist(self):
