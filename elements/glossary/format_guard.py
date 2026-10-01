@@ -21,6 +21,13 @@ letter case, across a line break, and in the forms its endings give.
 In the-way's own glossary, a term naming an element raises no warning against the part whose files
 include `elements/<identifier>/` (WAY-93); in a product's glossary it does.
 
+A product's glossary is known by the submodule `.the-way` at the root of its repository, whose
+gitlink records the commit of the-way the product pins, as the installer adds it (WAY-34). In a
+product's glossary, a term the glossary of the-way holds at that commit, in any of its forms, is an
+error (WAY-95, WAY-104); the-way's glossary is read from the submodule's repository at that commit,
+never from its working tree. The-way's own glossary is no product's glossary, and its terms are
+compared with nothing; in a repository with no such gitlink, the comparison is reported unchecked.
+
 Usage, from the root of the product's repository:
 
     python <the-way>/elements/glossary/format_guard.py [FILE] [--base REF] [--merge-onto REF]
@@ -101,6 +108,11 @@ NO_COMMIT = shared.NO_COMMIT
 NO_COMMIT_REASON = shared.NO_COMMIT_REASON
 # Where a product's glossary stands, relative to the root of its repository (WAY-93).
 FILE_PATH = "foundations/glossary.md"
+# Where a product holds the-way, relative to the root of its repository: the submodule whose gitlink
+# records the commit the product pins (WAY-34), at the path the installer gives it; the-way holds
+# none.
+PINNED = ".the-way"
+GITLINK = "160000"
 FOUNDATIONS = "foundations/"
 # The two fields of an entry, which the checks of *Avoid* and *Not* read by name (WAY-94). *Avoid*
 # marks a section of a Markdown file as a glossary entry (WAY-93).
@@ -938,6 +950,89 @@ def check_not(entries, rules, foundation, corpus, report, warn_todo=True):
                              % (entry.term, what), check, (target,))
 
 
+# --- the words of the process ---------------------------------------------------------------
+
+
+def pinned_commit(top):
+    """(the commit of the-way the repository pins, None): the gitlink `.the-way` at the root of the
+    repository, as the index holds it; (None, None) where the repository holds no such gitlink, so
+    that its glossary is no product's; (None, why) where git fails or the gitlink is unmerged."""
+    code, listing, message = shared.call_git(["ls-files", "--stage", "-z", "--", PINNED], top)
+    if code != 0:
+        return None, "git cannot list %s: %s" % (PINNED, message or "git ls-files exited with %d"
+                                                  % code)
+    stages = {}
+    for item in listing.split("\0"):
+        info, _, name = item.partition("\t")
+        fields = info.split()
+        if name == PINNED and len(fields) == 3 and fields[0] == GITLINK:
+            stages[fields[2]] = fields[1]
+    if "0" in stages:
+        return stages["0"], None
+    if stages:
+        return None, ("the gitlink %s is unmerged, so the commit the product pins is not known; "
+                      "settle the pin and run the guard again" % PINNED)
+    return None, None
+
+
+def check_process_terms(entries, rules, top, own, report):
+    """In a product's glossary, no term is, in any of its forms, a term the glossary of the-way
+    holds at the commit the product pins (WAY-95, WAY-104). The-way's own glossary is no product's,
+    and the check does not run on it; on a glossary in a repository holding no gitlink `.the-way`,
+    or pinning a commit of the-way that holds no glossary, it does not run either, and the report
+    says it is unchecked."""
+    # invariant: glossary-process-terms/1
+    check, process = "check_process_terms", "glossary-process-terms/1"
+    what = "whether the glossary defines a word the glossary of the-way holds"
+    if own:
+        report.notes.append("the-way's own glossary is no product's: its terms are not compared "
+                            "with the glossary of the-way")
+        return
+    if top is None:
+        report.cannot_check(what, "the file is in no git repository, so no commit of the-way it "
+                                  "pins can be read")
+        return
+    commit, failure = pinned_commit(top)
+    if failure:
+        report.error(None, failure)
+        return
+    if commit is None:
+        report.cannot_check(what, "the repository holds no gitlink %s at its root, so it pins no "
+                                  "commit of the-way" % PINNED)
+        return
+    checkout = os.path.join(top, PINNED)
+    if not os.path.exists(os.path.join(checkout, ".git")):
+        report.error(None, "the submodule %s is not initialized, so the glossary of the-way at %s "
+                           "cannot be read; run `git submodule update --init -- %s`"
+                     % (PINNED, commit, PINNED))
+        return
+    code, _, _ = shared.call_git(["cat-file", "-e", commit + "^{commit}"], checkout)
+    if code != 0:
+        report.error(None, "the submodule %s does not hold %s, the commit the product pins; run "
+                           "`git submodule update --init -- %s`" % (PINNED, commit, PINNED))
+        return
+    text, failure = shared.file_at(commit, FILE_PATH, checkout)
+    if failure:
+        report.error(None, failure)
+        return
+    if text is None:
+        report.cannot_check(what, "the-way at %s, the commit the product pins, holds no %s to "
+                                  "compare the terms with" % (commit, FILE_PATH))
+        return
+    report.ran(check, process)
+    held = list(terms_of(text, rules))
+    for entry in entries:
+        if not entry.term:
+            continue
+        term = next((word for word in held if same_word(word, entry.term)), None)
+        if term is not None:
+            report.error(entry.line, "%s: the glossary of the-way holds `%s` at %s, the commit the "
+                                     "product pins; a word of the product's domain that it holds "
+                                     "is written with a qualifier, and the bare word keeps the "
+                                     "meaning of the process (WAY-104)" % (entry.term, term, commit),
+                         check, (process,))
+
+
 # --- uses of a term -------------------------------------------------------------------------
 
 
@@ -1406,6 +1501,7 @@ def run(path, base=None, stream=None, template=TEMPLATE, merge_onto=None, record
     check_definitions(entries, rules, report)
     check_avoid(entries, report)
     check_not(entries, rules, foundation, corpus, report, warn_todo=not merging)
+    check_process_terms(entries, rules, top, own, report)
 
     if base == NO_COMMIT:
         no_base = "--base none: there is no commit the branch left the main branch from"

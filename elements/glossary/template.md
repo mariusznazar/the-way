@@ -3,10 +3,11 @@
 This file defines how a glossary entry is written. A glossary entry gives one word of the foundation
 one meaning, so that the same word does not mean one thing in a decision, another in an invariant
 (WAY-94, WAY-99) and a third in the code (`TODO — decision pending: which decision sets that a
-glossary term keeps its meaning in the code`). A mechanism keeps the words, never their meaning:
-a script finds where a word stands and whether a word to avoid came back, while whether a word is
-used in its meaning is judged by an agent, by the panel and by the search of WAY-33 (WAY-97,
-WAY-98, WAY-10, WAY-33).
+term of a product's glossary keeps its meaning in the product's code`); a word the glossary of
+the-way holds keeps its domain meaning in a product's code (WAY-104). A mechanism keeps the words,
+never their meaning: a script finds where a word stands and whether a word to avoid came back, while
+whether a word is used in its meaning is judged by an agent, by the panel and by the search of
+WAY-33 (WAY-97, WAY-98, WAY-10, WAY-33).
 
 The rules of form the elements share — the language of an entry, every field and the words `none`
 and `TODO`, a sentence using a term rather than a paraphrase of its definition, and the marks of
@@ -21,6 +22,11 @@ particular to a glossary entry (WAY-35).
 - A product takes the words of the process from the-way at the commit it pins, and its glossary
   defines none of them again (WAY-95). That the glossary guard reports an entry of a product's
   glossary defining one of them answers to the invariant `glossary-process-terms`.
+- A word of the product's domain that the glossary of the-way holds, in any of its forms, is
+  written in the product's foundation with a qualifier — "game clock" for "clock" — and the bare
+  word there keeps the meaning of the process. The qualified word takes an entry only as "Which
+  words take an entry" says. The product's code, its interface and talk about the product use the
+  word of the domain unchanged (WAY-104).
 
 ## Where entries go
 
@@ -75,7 +81,10 @@ particular to a glossary entry (WAY-35).
   foundation uses both in its everyday meaning and in place of a term, or of the term the change
   writes, either becomes the term, its everyday uses rewritten, or keeps its everyday meaning alone,
   its other uses rewritten to the term (WAY-99); it never stands in *Avoid* (WAY-98), and never
-  takes an entry for its everyday meaning alone (WAY-95).
+  takes an entry for its everyday meaning alone (WAY-95). In a product, none of this applies to a
+  word of its domain that the glossary of the-way holds: the word is written as "Two glossaries"
+  says, and the entry of the word in the glossary of the-way records no *Not* for its meaning of the
+  domain (WAY-104).
 - The definition of a word stands in the glossary, not in a decision or a template. A closed list of
   values that a guard reads stays in its template together with what each value means, and its
   values take no entry (WAY-95).
@@ -203,7 +212,7 @@ read`). Each field carries the mark of where its value comes from (`elements/com
 
 | Field | Who reads it, when | Where its value comes from |
 |---|---|---|
-| term (heading) | whoever writes a sentence of any element, which depends on the term by using its word; the format guard (`glossary-term-holder`, `glossary-term-collision`, `glossary-term-use`) | judgment |
+| term (heading) | whoever writes a sentence of any element, which depends on the term by using its word; the format guard (`glossary-term-holder`, `glossary-term-collision`, `glossary-term-use`, `glossary-process-terms`) | judgment |
 | definition | the agent reviewing the uses when it changes; whoever writes a sentence using the term; the format guard (`glossary-definition-count`, `glossary-definition-words`, `glossary-definition-uses`) | judgment |
 | Avoid | whoever writes a sentence; the format guard (`glossary-avoid-growth`, `glossary-avoid-single`, `glossary-avoid-term`, `glossary-avoid-carrier`) | judgment for the word; read off, from the list of uses, for whether it may stand there |
 | Not | the panel judging a change, which sees the foundation; the search of WAY-33; the format guard (`glossary-not-target`, `glossary-not-quoted-word`, `glossary-entry-merge-todo`) | judgment for the meaning and the word chosen; read off for whether it exists |

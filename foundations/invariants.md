@@ -1847,10 +1847,10 @@ The glossary guard warns on every change that, against "{fork-point}", adds or r
 
 The glossary guard, given a product's glossary, reports as an error every entry there whose term, in any of its forms, the glossary of the-way holds at the commit the product pins.
 
-- **Method:** `TODO`
+- **Method:** `python -B gate/run_tests.py elements/glossary --record .runs/glossary-tests.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-95@1cc58b42
-- **Part:** glossary
+- **Derives from:** WAY-95@1cc58b42 · WAY-104@b06072b4
+- **Part:** glossary · installation
 - **Correction:** none
 
 ## glossary-entry-field-presence/1

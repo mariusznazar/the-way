@@ -8,6 +8,7 @@ Each test repository holds its own element template, given to the guard in place
 that the words of the-way's templates do not reach the counts.
 """
 
+import importlib.util
 import io
 import json
 import os
@@ -153,6 +154,9 @@ class GuardTestCase(unittest.TestCase):
         for name, content in files.items():
             self.write(name.replace("__", "/"), content)
         self.git("add", "-A")
+        if getattr(self, "gitlink", None):
+            # the pin a test sets, which `git add -A` would otherwise take from the checkout
+            self.git("update-index", "--cacheinfo", "160000,%s,.the-way" % self.gitlink)
         output = io.StringIO()
         # the part the elements share and the-way's own file are given only where a test sets them
         given = {name: value for name, value in (("common", common), ("own", own))
@@ -821,6 +825,236 @@ class Collision(GuardTestCase):
                                          definition="Saving is writing a game to a save slot.")))
 
 
+PROCESS_GLOSSARY = "\n".join([
+    "# Glossary", "", "The words of the process, each in one meaning.", "",
+    "## clock", "", "A clock is the command the gate runs on a schedule.", "",
+    "- **Avoid:** none", "- **Not:** none", "",
+    "## verdict", "", "A verdict is the outcome a check gives for an invariant on one commit.", "",
+    "- **Avoid:** none", "- **Not:** none", ""])
+PROCESS_GLOSSARY_WITHOUT_CLOCK = "\n".join([
+    "# Glossary", "", "The words of the process, each in one meaning.", "",
+    "## verdict", "", "A verdict is the outcome a check gives for an invariant on one commit.", "",
+    "- **Avoid:** none", "- **Not:** none", ""])
+CLOCK = "A clock is the timer that counts down a player's turn."
+GAME_CLOCK = "A game clock is the timer that counts down a player's turn."
+NOTES = "# Notes\n\nThe clock of a match, and the game clock of a match.\n"
+
+
+class ProcessTerms(GuardTestCase):
+    """A product's glossary is checked against the glossary of the-way at the commit the product
+    pins, held as the submodule `.the-way` the installer adds."""
+
+    def setUp(self):
+        super().setUp()
+        self.process = tempfile.TemporaryDirectory()
+        self.process_git("init", "-q", "-b", "main")
+        self.process_git("config", "user.email", "guard@example.com")
+        self.process_git("config", "user.name", "Guard")
+        self.first = self.process_commit(PROCESS_GLOSSARY_WITHOUT_CLOCK)
+        self.second = self.process_commit(PROCESS_GLOSSARY)
+
+    def tearDown(self):
+        super().tearDown()
+        self.process.cleanup()
+
+    def process_git(self, *arguments, cwd=None):
+        return subprocess.run(["git"] + list(arguments), cwd=cwd or self.process.name, check=True,
+                              capture_output=True, text=True).stdout.strip()
+
+    def process_commit(self, text):
+        full = os.path.join(self.process.name, "foundations", "glossary.md")
+        os.makedirs(os.path.dirname(full), exist_ok=True)
+        with open(full, "w", encoding="utf-8", newline="\n") as handle:
+            handle.write(text)
+        self.process_git("add", "-A")
+        self.process_git("commit", "-q", "-m", "glossary")
+        return self.process_git("rev-parse", "HEAD")
+
+    def pin(self, commit=None):
+        """Adds the submodule as the installer does, checked out at the commit given."""
+        self.git("-c", "protocol.file.allow=always", "submodule", "add", "-q", self.process.name,
+                 ".the-way")
+        if commit:
+            self.process_git("checkout", "-q", "--detach", commit,
+                             cwd=os.path.join(self.root, ".the-way"))
+
+    def test_term_the_way_holds_fails(self):
+        # invariant: glossary-process-terms/1
+        self.pin()
+        self.assertFails(glossary(entry(), run_entry(),
+                                  entry(term="clock", avoid="none", definition=CLOCK)),
+                         "clock: the glossary of the-way holds `clock` at %s" % self.second,
+                         **{"foundations__notes.md": NOTES})
+        self.assertEqual(self.verdicts("glossary-process-terms/1"), ["fail"])
+
+    def test_term_in_another_form_and_case_fails(self):
+        # invariant: glossary-process-terms/1
+        self.pin()
+        self.assertFails(glossary(entry(), run_entry(),
+                                  entry(term="Verdicts", avoid="none",
+                                        definition="Verdicts are the scores the judges of a match "
+                                                   "give.")),
+                         "Verdicts: the glossary of the-way holds `verdict`",
+                         **{"foundations__notes.md": NOTES + "\nThe verdicts of a match.\n"})
+        self.assertEqual(self.verdicts("glossary-process-terms/1"), ["fail"])
+
+    def test_term_with_a_qualifier_passes(self):
+        # invariant: glossary-process-terms/1
+        self.pin()
+        self.assertPasses(glossary(entry(), run_entry(),
+                                   entry(term="game clock", avoid="none", definition=GAME_CLOCK)),
+                          **{"foundations__notes.md": NOTES})
+        self.assertEqual(self.verdicts("glossary-process-terms/1"), ["pass"])
+
+    def test_gitlink_not_the_checkout_of_the_submodule_is_read(self):
+        # invariant: glossary-process-terms/1
+        self.pin(self.first)
+        self.gitlink = self.second
+        self.assertFails(glossary(entry(), run_entry(),
+                                  entry(term="clock", avoid="none", definition=CLOCK)),
+                         "clock: the glossary of the-way holds `clock` at %s" % self.second,
+                         **{"foundations__notes.md": NOTES})
+        self.assertEqual(self.verdicts("glossary-process-terms/1"), ["fail"])
+
+    def test_checkout_of_the_submodule_ahead_of_the_gitlink_is_not_read(self):
+        # invariant: glossary-process-terms/1
+        self.pin()
+        self.gitlink = self.first
+        self.assertPasses(glossary(entry(), run_entry(),
+                                   entry(term="clock", avoid="none", definition=CLOCK)),
+                          **{"foundations__notes.md": NOTES})
+        self.assertEqual(self.verdicts("glossary-process-terms/1"), ["pass"])
+
+    def test_working_tree_of_the_submodule_is_not_read(self):
+        # invariant: glossary-process-terms/1
+        self.pin()
+        with open(os.path.join(self.root, ".the-way", "foundations", "glossary.md"), "w",
+                  encoding="utf-8", newline="\n") as handle:
+            handle.write(PROCESS_GLOSSARY_WITHOUT_CLOCK)
+        self.assertFails(glossary(entry(), run_entry(),
+                                  entry(term="clock", avoid="none", definition=CLOCK)),
+                         "clock: the glossary of the-way holds `clock`",
+                         **{"foundations__notes.md": NOTES})
+        self.assertEqual(self.verdicts("glossary-process-terms/1"), ["fail"])
+
+    def test_submodule_not_initialized_is_a_failure_of_the_run(self):
+        self.pin()
+        self.git("submodule", "deinit", "-q", "-f", ".the-way")
+        self.assertFails(glossary(entry(), run_entry(),
+                                  entry(term="clock", avoid="none", definition=CLOCK)),
+                         "the submodule .the-way is not initialized", **{"foundations__notes.md": NOTES})
+        self.assertEqual(self.verdicts("glossary-process-terms/1"), [])
+        self.assertIn({"check": "elements/glossary/format_guard.py", "verdict": "fail",
+                       "invariant": None,
+                       "description": "the submodule .the-way is not initialized, so the glossary "
+                                      "of the-way at %s cannot be read; run `git submodule update "
+                                      "--init -- .the-way`" % self.second}, self.lines)
+
+    def test_repository_without_the_submodule_is_unchecked(self):
+        output = self.assertPasses(glossary(entry(), run_entry(),
+                                            entry(term="clock", avoid="none", definition=CLOCK)),
+                                   **{"foundations__notes.md": NOTES})
+        self.assertIn("unchecked: whether the glossary defines a word the glossary of the-way "
+                      "holds — the repository holds no gitlink .the-way at its root, so it pins no "
+                      "commit of the-way", output)
+        self.assertIn("0 error(s), 0 warning(s), 1 unchecked", output)
+        self.assertEqual(self.verdicts("glossary-process-terms/1"), [])
+
+    def test_term_with_a_hyphen_against_a_held_term_with_a_space_fails(self):
+        # invariant: glossary-process-terms/1
+        self.process_commit(PROCESS_GLOSSARY + "\n".join([
+            "", "## fork point", "", "A fork point is the commit a task branch leaves from.", "",
+            "- **Avoid:** none", "- **Not:** none", ""]))
+        self.pin()
+        self.assertFails(glossary(entry(), run_entry(),
+                                  entry(term="fork-point", avoid="none",
+                                        definition="A fork-point is the square where a road "
+                                                   "splits.")),
+                         "fork-point: the glossary of the-way holds `fork point`",
+                         **{"foundations__notes.md": NOTES + "\nThe fork-point of a road.\n"})
+        self.assertEqual(self.verdicts("glossary-process-terms/1"), ["fail"])
+
+    def assertNotPinned(self, path, content):
+        """A `.the-way` that git tracks as a plain file or directory is no pin."""
+        self.write(path, content)
+        output = self.assertPasses(glossary(entry(), run_entry(),
+                                            entry(term="clock", avoid="none", definition=CLOCK)),
+                                   **{"foundations__notes.md": NOTES})
+        self.assertIn("unchecked: whether the glossary defines a word the glossary of the-way "
+                      "holds — the repository holds no gitlink .the-way at its root", output)
+        self.assertEqual(self.verdicts("glossary-process-terms/1"), [])
+
+    def test_plain_file_named_like_the_submodule_is_no_pin(self):
+        self.assertNotPinned(".the-way", self.second + "\n")
+
+    def test_plain_directory_named_like_the_submodule_is_no_pin(self):
+        self.assertNotPinned(".the-way/README.md", "# the-way\n")
+
+    def test_pinned_commit_holding_no_glossary_is_unchecked(self):
+        os.remove(os.path.join(self.process.name, "foundations", "glossary.md"))
+        self.process_git("add", "-A")
+        self.process_git("commit", "-q", "-m", "no glossary")
+        bare = self.process_git("rev-parse", "HEAD")
+        self.pin()
+        output = self.assertPasses(glossary(entry(), run_entry(),
+                                            entry(term="clock", avoid="none", definition=CLOCK)),
+                                   **{"foundations__notes.md": NOTES})
+        self.assertIn("unchecked: whether the glossary defines a word the glossary of the-way "
+                      "holds — the-way at %s, the commit the product pins, holds no "
+                      "foundations/glossary.md to compare the terms with" % bare, output)
+        self.assertIn("0 error(s), 0 warning(s), 1 unchecked", output)
+        self.assertEqual(self.verdicts("glossary-process-terms/1"), [])
+
+    def test_pinned_commit_the_submodule_does_not_hold_is_a_failure_of_the_run(self):
+        self.pin()
+        third = self.process_commit(PROCESS_GLOSSARY_WITHOUT_CLOCK)
+        self.gitlink = third
+        self.assertFails(glossary(entry(), run_entry(),
+                                  entry(term="clock", avoid="none", definition=CLOCK)),
+                         "the submodule .the-way does not hold %s, the commit the product pins; "
+                         "run `git submodule update --init -- .the-way`" % third,
+                         **{"foundations__notes.md": NOTES})
+        self.assertEqual(self.verdicts("glossary-process-terms/1"), [])
+
+    def test_pin_in_a_merge_conflict_is_a_failure_of_the_run(self):
+        third = self.process_commit(PROCESS_GLOSSARY_WITHOUT_CLOCK)
+        self.pin(self.second)
+        self.write("foundations/glossary.md",
+                   glossary(entry(), run_entry(), entry(term="clock", avoid="none",
+                                                        definition=CLOCK)))
+        self.write("foundations/notes.md", NOTES)
+        self.git("add", "-A")
+        self.git("update-index", "--cacheinfo", "160000,%s,.the-way" % self.second)
+        self.git("commit", "-q", "-m", "pin")
+        self.git("checkout", "-q", "-b", "other")
+        self.git("update-index", "--cacheinfo", "160000,%s,.the-way" % self.first)
+        self.git("commit", "-q", "-m", "pin the first")
+        self.git("checkout", "-q", "main")
+        self.git("update-index", "--cacheinfo", "160000,%s,.the-way" % third)
+        self.git("commit", "-q", "-m", "pin the third")
+        merge = subprocess.run(["git", "merge", "-q", "--no-edit", "other"], cwd=self.root,
+                               capture_output=True)
+        self.assertNotEqual(merge.returncode, 0)
+        output = io.StringIO()
+        code = format_guard.run(self.path, stream=output, record=self.record_path,
+                                templates=self.templates, examples=self.examples)
+        self.assertEqual(code, 1, output.getvalue())
+        self.assertIn("the gitlink .the-way is unmerged, so the commit the product pins is not "
+                      "known; settle the pin and run the guard again", output.getvalue())
+        with open(self.record_path, encoding="utf-8") as handle:
+            lines = [json.loads(item) for item in handle.read().split("\n") if item]
+        self.assertEqual([line for line in lines
+                          if line["invariant"] == "glossary-process-terms/1"], [])
+
+    def test_path_of_the_submodule_is_the_installer_s(self):
+        installer = importlib.util.spec_from_file_location(
+            "the_way_install", os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..",
+                                            "installation", "install.py"))
+        install = importlib.util.module_from_spec(installer)
+        installer.loader.exec_module(install)
+        self.assertEqual(format_guard.PINNED, install.SUBMODULE)
+
+
 class DefinitionUses(GuardTestCase):
     def test_changed_definition_lists_the_uses(self):
         # invariant: glossary-definition-uses/1
@@ -1230,6 +1464,13 @@ class OwnFile(unittest.TestCase):
         self.assertIn("0 error(s)", output.getvalue())
         self.assertEqual(sorted(line["invariant"] for line in lines),
                          sorted(PLAIN + ["glossary-example-target/1"]))
+
+    def test_the_way_glossary_is_no_product_glossary(self):
+        output = io.StringIO()
+        code = format_guard.run(format_guard.OWN_FILE, stream=output)
+        self.assertEqual(code, 0, output.getvalue())
+        self.assertNotIn("the glossary of the-way holds", output.getvalue())
+        self.assertIn("note: the-way's own glossary is no product's", output.getvalue())
 
 
 if __name__ == "__main__":
