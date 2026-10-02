@@ -21,12 +21,16 @@ particular to a glossary entry (WAY-35).
   the process, the two are one file (WAY-95).
 - A product takes the words of the process from the-way at the commit it pins, and its glossary
   defines none of them again (WAY-95). That the glossary guard reports an entry of a product's
-  glossary defining one of them answers to the invariant `glossary-process-terms`.
+  glossary defining one of them, or listing one, or the last word of one, in its *Avoid*, answers
+  to the invariant `glossary-process-terms`.
 - A word of the product's domain that the glossary of the-way holds, in any of its forms, is
   written in the product's foundation with a qualifier — "game clock" for "clock" — and the bare
   word there keeps the meaning of the process. The qualified word takes an entry only as "Which
-  words take an entry" says. The product's code, its interface and talk about the product use the
-  word of the domain unchanged (WAY-104).
+  words take an entry" says. The *Avoid* of an entry of the product's glossary holds a word the
+  glossary of the-way holds, or the last word of a term it holds, in any of its forms, only with a
+  qualifier: the entry "match timer" may list "match clock", never "clock", and the entry "lab
+  result" may list "lab test", never "test", the last word of "invariant test". The product's code,
+  its interface and talk about the product use the word of the domain unchanged (WAY-104).
 
 ## Where entries go
 
@@ -214,7 +218,7 @@ read`). Each field carries the mark of where its value comes from (`elements/com
 |---|---|---|
 | term (heading) | whoever writes a sentence of any element, which depends on the term by using its word; the format guard (`glossary-term-holder`, `glossary-term-collision`, `glossary-term-use`, `glossary-process-terms`) | judgment |
 | definition | the agent reviewing the uses when it changes; whoever writes a sentence using the term; the format guard (`glossary-definition-count`, `glossary-definition-words`, `glossary-definition-uses`) | judgment |
-| Avoid | whoever writes a sentence; the format guard (`glossary-avoid-growth`, `glossary-avoid-single`, `glossary-avoid-term`, `glossary-avoid-carrier`) | judgment for the word; read off, from the list of uses, for whether it may stand there |
+| Avoid | whoever writes a sentence; the format guard (`glossary-avoid-growth`, `glossary-avoid-single`, `glossary-avoid-term`, `glossary-avoid-carrier`, `glossary-process-terms`) | judgment for the word; read off, from the list of uses, for whether it may stand there |
 | Not | the panel judging a change, which sees the foundation; the search of WAY-33; the format guard (`glossary-not-target`, `glossary-not-quoted-word`, `glossary-entry-merge-todo`) | judgment for the meaning and the word chosen; read off for whether it exists |
 
 ## Examples

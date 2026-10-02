@@ -24,9 +24,12 @@ include `elements/<identifier>/` (WAY-93); in a product's glossary it does.
 A product's glossary is known by the submodule `.the-way` at the root of its repository, whose
 gitlink records the commit of the-way the product pins, as the installer adds it (WAY-34). In a
 product's glossary, a term the glossary of the-way holds at that commit, in any of its forms, is an
-error (WAY-95, WAY-104); the-way's glossary is read from the submodule's repository at that commit,
-never from its working tree. The-way's own glossary is no product's glossary, and its terms are
-compared with nothing; in a repository with no such gitlink, the comparison is reported unchecked.
+error, as a term or as a word of an *Avoid*, and so is the last word of such a term of more than one
+word in an *Avoid* (WAY-95, WAY-104); the-way's glossary is read from the
+submodule's repository at that commit, never from its working tree. The-way's own glossary is no
+product's glossary, and its terms are compared with nothing; in a repository with no such gitlink,
+the comparison is reported unchecked. The files of the submodule are the-way's history, not the
+product's: --base counts no word of *Avoid* in them, and reports them unchecked.
 
 Usage, from the root of the product's repository:
 
@@ -140,7 +143,14 @@ FIELD_VALUE = re.compile(r"(?m)^([ \t]*- \*\*[^*\n]+?:\*\*)([^\n]*(?:\n[ \t]+\S[
 IDENTIFIER_TOKEN = re.compile(r"(?<![\w-])[\w-]+(?![\w-])")
 # A sentence ends where the decision guard counts the end of a binding sentence.
 SENTENCE_END = re.compile(r"(?<=[.!?])\s+(?=[\"'(A-Z“])")
-CONSONANT = re.compile(r"[b-df-hj-np-tv-z]$", re.I)
+# What the endings of a word's forms read (WAY-97): a final hissing sound, which takes `-es`; a
+# consonant before a final `y`, which becomes `-ies` and `-ied`; a vowel before a final `c`, which
+# takes `k` before `-ed` and `-ing`; one vowel, after a consonant or `qu`, before one final consonant
+# other than `c`, `w`, `x` and `y`, which doubles before an ending.
+HISSING = ("s", "x", "z", "ch", "sh")
+CONSONANT_Y = re.compile(r"[^aeiou]y$", re.I)
+VOWEL_C = re.compile(r"[aeiou]c$", re.I)
+DOUBLES = re.compile(r"(?:^|[^aeiou]|qu)[aeiou][bdfghjklmnpqrstvz]$", re.I)
 # A Markdown heading: one to six `#` followed by a space or the end of the line; `#tag` is text.
 HEADING = re.compile(r"^#{1,6}(?:[ \t]|$)")
 
@@ -360,17 +370,47 @@ def terms_of(text, rules):
 
 
 def last_word_forms(word):
-    """A word and the forms the endings give it: `-s`, `-es`, `-ies` in place of a final `y`, `-'s`,
-    `-d`, `-ed` and `-ing`, a final consonant doubled before the last two. This code and its tests
-    are the one place the endings are written; a form they miss is found by the review of uses
-    (WAY-97)."""
-    forms = {word, word + "s", word + "es", word + "'s", word + "’s", word + "d", word + "ed",
-             word + "ing"}
-    if word.lower().endswith("y"):
-        forms.add(word[:-1] + "ies")
-    if CONSONANT.search(word):
+    """A word and the forms the regular endings of English give it: the plural or third person in
+    `-s`, `-es` or `-ies`; the past in `-d`, `-ed` or `-ied`; `-ing`, a final `e` dropped before it
+    and a final `ie` read as `y`; `k` after a final `c` that follows a vowel in a word of more than
+    one syllable (panicked); a final consonant doubled before an ending; and `-'s`. A word ending in
+    `o` takes both `-s` and `-es`, and a word ending in `nge` takes `-ing` with and without its `e`
+    (changing, singeing). A word of more than one syllable that may double its consonant, and a word
+    ending in `s`, take the forms with and without the double (committed, visited; topazes,
+    topazzes; bused, bussed), since the stress or the usage that decides it is not written. This
+    code and its tests are the one place the endings are written; an irregular form, such as "ran"
+    for "run", is found by the review of uses (WAY-97)."""
+    lower = word.lower()
+    forms = {word, word + "'s", word + "’s"}
+    if CONSONANT_Y.search(lower):
+        stem = word[:-1]
+        return forms | {stem + "ies", stem + "ied", word + "ing"}
+    doubles = bool(DOUBLES.search(lower))
+    one_syllable = len(re.findall(r"[aeiou]+", lower.replace("qu", "q"))) == 1
+    if doubles and lower.endswith(("s", "z")):
+        forms.add(word + word[-1] + "es")
+    if lower.endswith(HISSING):
+        if not (doubles and one_syllable and lower.endswith("z")):
+            forms.add(word + "es")
+    else:
+        forms.add(word + "s")
+    if lower.endswith("o"):
+        forms.add(word + "es")
+    if lower.endswith("ie"):
+        return forms | {word + "d", word[:-2] + "ying"}
+    if lower.endswith(("ee", "oe", "ye")):
+        return forms | {word + "d", word + "ing"}
+    if lower.endswith("nge"):
+        return forms | {word + "d", word[:-1] + "ing", word + "ing"}
+    if lower.endswith("e"):
+        return forms | {word + "d", word[:-1] + "ing"}
+    if VOWEL_C.search(lower) and not one_syllable:
+        return forms | {word + "ked", word + "king"}
+    if doubles:
         forms |= {word + word[-1] + "ed", word + word[-1] + "ing"}
-    return forms
+        if one_syllable and not lower.endswith("s"):
+            return forms
+    return forms | {word + "ed", word + "ing"}
 
 
 def forms_of(term):
@@ -512,6 +552,27 @@ def relative(path, top):
     return os.path.relpath(os.path.abspath(path), top).replace(os.sep, "/")
 
 
+def held_by(path, top):
+    """Whether the file lies in the repository at the root `top` and in no repository nested in it:
+    the files of the submodule `.the-way` a product pins (WAY-34) are the history of the-way, which
+    the product's commits do not hold."""
+    if not inside(path, top):
+        return False
+    code, root, _ = shared.call_git(["rev-parse", "--show-toplevel"],
+                                    os.path.dirname(os.path.abspath(path)))
+    return code == 0 and os.path.normcase(os.path.abspath(root.strip())) == \
+        os.path.normcase(os.path.abspath(top))
+
+
+def corpus_text(path, top, tracked, text, element_name):
+    """A template or a file of the part the elements share as the corpus holds it: named by its path
+    from the root of the repository where it lies there, and read on another commit only where the
+    repository's own history holds it (WAY-98)."""
+    if inside(path, top):
+        return Text(relative(path, top), text, tracked is not None and held_by(path, top))
+    return Text(element_name, text, False)
+
+
 def read_corpus(path, top, tracked, report, templates=None, common=None):
     """Every file git tracks in `foundations/` at the root of the repository, the glossary itself
     marked, the elements' templates and the files of the part the elements share (WAY-95, WAY-97,
@@ -542,11 +603,8 @@ def read_corpus(path, top, tracked, report, templates=None, common=None):
         except (OSError, UnicodeDecodeError) as problem:
             report.error(None, "cannot read the template %s: %s" % (template, problem))
             continue
-        if inside(template, top):
-            texts.append(Text(relative(template, top), text, tracked is not None))
-        else:
-            name = "elements/%s/template.md" % os.path.basename(os.path.dirname(template))
-            texts.append(Text(name, text, False))
+        texts.append(corpus_text(template, top, tracked, text, "elements/%s/template.md"
+                                 % os.path.basename(os.path.dirname(template))))
     for shared_file in common_paths(common):
         try:
             with open(shared_file, encoding="utf-8") as handle:
@@ -555,10 +613,8 @@ def read_corpus(path, top, tracked, report, templates=None, common=None):
             report.error(None, "cannot read %s of the part the elements share: %s"
                          % (shared_file, problem))
             continue
-        if inside(shared_file, top):
-            texts.append(Text(relative(shared_file, top), text, tracked is not None))
-        else:
-            texts.append(Text("elements/common/%s" % os.path.basename(shared_file), text, False))
+        texts.append(corpus_text(shared_file, top, tracked, text,
+                                 "elements/common/%s" % os.path.basename(shared_file)))
     return texts
 
 
@@ -977,14 +1033,17 @@ def pinned_commit(top):
 
 
 def check_process_terms(entries, rules, top, own, report):
-    """In a product's glossary, no term is, in any of its forms, a term the glossary of the-way
-    holds at the commit the product pins (WAY-95, WAY-104). The-way's own glossary is no product's,
+    """In a product's glossary, no term is, in any of its forms, a term the glossary of the-way holds
+    at the commit the product pins (WAY-95, WAY-104), and no word of an *Avoid* is, in any of its
+    forms, such a term or the last word of one (WAY-104). A phrase holding such a word, as a
+    qualified word does, is neither. The-way's own glossary is no product's,
     and the check does not run on it; on a glossary in a repository holding no gitlink `.the-way`,
     or pinning a commit of the-way that holds no glossary, it does not run either, and the report
     says it is unchecked."""
     # invariant: glossary-process-terms/1
     check, process = "check_process_terms", "glossary-process-terms/1"
-    what = "whether the glossary defines a word the glossary of the-way holds"
+    what = ("whether the glossary defines, or lists in an *Avoid*, a word the glossary of the-way "
+            "holds")
     if own:
         report.notes.append("the-way's own glossary is no product's: its terms are not compared "
                             "with the glossary of the-way")
@@ -1023,15 +1082,39 @@ def check_process_terms(entries, rules, top, own, report):
     report.ran(check, process)
     held = list(terms_of(text, rules))
     for entry in entries:
-        if not entry.term:
-            continue
-        term = next((word for word in held if same_word(word, entry.term)), None)
+        term = next((word for word in held if entry.term and same_word(word, entry.term)), None)
         if term is not None:
             report.error(entry.line, "%s: the glossary of the-way holds `%s` at %s, the commit the "
                                      "product pins; a word of the product's domain that it holds "
                                      "is written with a qualifier, and the bare word keeps the "
                                      "meaning of the process (WAY-104)" % (entry.term, term, commit),
                          check, (process,))
+        value, line = value_of(entry, AVOID)
+        for word, _ in pairs(value):
+            word = re.sub(MARKS, "", word).strip()
+            found = held_word(word, held)
+            if found is not None:
+                report.error(line, "%s: *Avoid* lists `%s`, %s at %s, the commit the product pins; "
+                                   "the bare word keeps the meaning of the process and stands in no "
+                                   "*Avoid* of the product's glossary: qualify it, as \"match clock\" "
+                                   "qualifies \"clock\", or drop it (WAY-104)"
+                             % (entry.term, word, found, commit), check, (process,))
+
+
+def held_word(word, held):
+    """How a word of a product's *Avoid* is a word the glossary of the-way holds, in one of its
+    forms: as a term, or as the last word of a term of more than one word (WAY-104); None where it
+    is neither. A phrase holding such a word, as a qualified word does, is neither."""
+    if not word:
+        return None
+    term = next((term for term in held if same_word(term, word)), None)
+    if term is not None:
+        return "which the glossary of the-way holds as `%s`" % term
+    term = next((term for term in held if len(term.split()) > 1
+                 and same_word(term.split()[-1], word)), None)
+    if term is not None:
+        return "the last word of `%s`, which the glossary of the-way holds" % term
+    return None
 
 
 # --- uses of a term -------------------------------------------------------------------------

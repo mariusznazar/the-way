@@ -1845,11 +1845,11 @@ The glossary guard warns on every change that, against "{fork-point}", adds or r
 
 ## glossary-process-terms/1
 
-The glossary guard, given a product's glossary, reports as an error every entry there whose term, in any of its forms, the glossary of the-way holds at the commit the product pins.
+The glossary guard, given a product's glossary, reports as an error every entry there whose term, in any of its forms, is a term the glossary of the-way holds at the commit the product pins, or whose *Avoid* lists, in any of its forms, such a term or the last word of one.
 
 - **Method:** `python -B gate/run_tests.py elements/glossary --record .runs/glossary-tests.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-95@1cc58b42 · WAY-104@b06072b4
+- **Derives from:** WAY-95@1cc58b42 · WAY-104@bd0113f6
 - **Part:** glossary · installation
 - **Correction:** none
 

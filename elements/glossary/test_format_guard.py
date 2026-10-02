@@ -23,8 +23,9 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import format_guard  # noqa: E402
 
 NO_COMMIT = "the method takes a commit the gate filled in as not existing"
-NO_PIN_LINE = ("unchecked: whether the glossary defines a word the glossary of the-way holds — the "
-               "repository holds no gitlink .the-way at its root, so it pins no commit of the-way")
+NO_PIN_LINE = ("unchecked: whether the glossary defines, or lists in an *Avoid*, a word the "
+               "glossary of the-way holds — the repository holds no gitlink .the-way at its root, "
+               "so it pins no commit of the-way")
 
 SLOT = "A save slot is the storage that holds one saved game."
 RUN = "A run is one play of the game from its start to the player's death."
@@ -541,6 +542,13 @@ class TermUse(GuardTestCase):
             invariant(sentence="Every run ends with its game in one of the save slots.")))
         self.assertPasses(glossary())
 
+    def test_use_with_a_final_e_dropped(self):
+        # invariant: glossary-term-use/1
+        self.assertPasses(glossary(entry(), run_entry(),
+                                   entry(term="probe", avoid="none",
+                                         definition="A probe is a run that tests a save slot.")),
+                          **{"foundations__notes.md": "# Notes\n\nProbing a save slot.\n"})
+
     def test_use_across_a_line_break(self):
         # invariant: glossary-term-use/1
         self.write("foundations/invariants.md", invariants(
@@ -662,6 +670,13 @@ class AgainstBase(GuardTestCase):
     def test_word_added_in_another_form_and_case(self):
         # invariant: glossary-avoid-growth/1
         self.grown("foundations__notes.md", "# Notes\n", "# Notes\n\nStorage cells of a game.\n")
+
+    def test_word_added_with_a_final_e_dropped(self):
+        # invariant: glossary-avoid-growth/1
+        text = glossary(entry(avoid="stage — the same storage"), run_entry())
+        self.commit(text, **{"foundations__notes.md": "# Notes\n"})
+        self.assertFails(text, "`stage`, which the *Avoid* of `save slot` lists, stands 1 time(s)",
+                         base="HEAD", **{"foundations__notes.md": "# Notes\n\nStaging a game.\n"})
 
     def test_word_added_across_a_line_break(self):
         # invariant: glossary-avoid-growth/1
@@ -880,6 +895,8 @@ PROCESS_GLOSSARY_WITHOUT_CLOCK = "\n".join([
 CLOCK = "A clock is the timer that counts down a player's turn."
 GAME_CLOCK = "A game clock is the timer that counts down a player's turn."
 NOTES = "# Notes\n\nThe clock of a match, and the game clock of a match.\n"
+MATCH_TIMER = "A match timer is the timer that counts down a player's turn."
+MATCH_TIMER_USE = "\nThe match timer of a match.\n"
 
 
 class ProcessTerms(GuardTestCase):
@@ -948,6 +965,117 @@ class ProcessTerms(GuardTestCase):
                           **{"foundations__notes.md": NOTES})
         self.assertEqual(self.verdicts("glossary-process-terms/1"), ["pass"])
 
+    def test_bare_word_the_way_holds_in_avoid_fails(self):
+        # invariant: glossary-process-terms/1
+        self.pin()
+        output = self.assertFails(glossary(entry(), run_entry(),
+                                           entry(term="match timer", avoid="clock — the same timer",
+                                                 definition=MATCH_TIMER)),
+                                  "match timer: *Avoid* lists `clock`, which the glossary of the-way "
+                                  "holds as `clock` at %s" % self.second,
+                                  **{"foundations__notes.md": NOTES + MATCH_TIMER_USE})
+        self.assertIn("qualify it, as \"match clock\" qualifies \"clock\", or drop it (WAY-104)",
+                      output)
+        self.assertEqual(self.verdicts("glossary-process-terms/1"), ["fail"])
+
+    def test_word_the_way_holds_in_avoid_with_marks_fails(self):
+        # invariant: glossary-process-terms/1
+        self.pin()
+        self.assertFails(glossary(entry(), run_entry(),
+                                  entry(term="match timer", avoid="`clock` — the same timer",
+                                        definition=MATCH_TIMER)),
+                         "match timer: *Avoid* lists `clock`, which the glossary of the-way holds "
+                         "as `clock`", **{"foundations__notes.md": NOTES + MATCH_TIMER_USE})
+        self.assertEqual(self.verdicts("glossary-process-terms/1"), ["fail"])
+
+    def commit_terms_of_more_than_one_word(self):
+        self.process_commit(PROCESS_GLOSSARY + "\n".join([
+            "", "## environment fact", "", "An environment fact is a fact the product rests on.", "",
+            "- **Avoid:** none", "- **Not:** none", "",
+            "## invariant test", "", "An invariant test is a test that cites an invariant.", "",
+            "- **Avoid:** none", "- **Not:** none", ""]))
+
+    def test_last_word_of_a_term_the_way_holds_in_avoid_fails(self):
+        # invariant: glossary-process-terms/1
+        self.commit_terms_of_more_than_one_word()
+        self.pin()
+        output = self.assertFails(glossary(entry(), run_entry(),
+                                           entry(term="match timer",
+                                                 avoid="fact — the time left · Tests — the checks",
+                                                 definition=MATCH_TIMER)),
+                                  "match timer: *Avoid* lists `fact`, the last word of `environment "
+                                  "fact`, which the glossary of the-way holds",
+                                  **{"foundations__notes.md": NOTES + MATCH_TIMER_USE})
+        self.assertIn("match timer: *Avoid* lists `Tests`, the last word of `invariant test`, which "
+                      "the glossary of the-way holds", output)
+        self.assertEqual(self.verdicts("glossary-process-terms/1"), ["fail", "fail"])
+
+    def test_qualified_last_word_in_avoid_passes(self):
+        # invariant: glossary-process-terms/1
+        self.commit_terms_of_more_than_one_word()
+        self.pin()
+        self.assertPasses(glossary(entry(), run_entry(),
+                                   entry(term="match timer",
+                                         avoid="lab test — the check · match clock — the timer",
+                                         definition=MATCH_TIMER)),
+                          **{"foundations__notes.md": NOTES + MATCH_TIMER_USE})
+        self.assertEqual(self.verdicts("glossary-process-terms/1"), ["pass"])
+
+    def test_word_the_way_holds_in_avoid_in_another_form_and_case_fails(self):
+        # invariant: glossary-process-terms/1
+        self.pin()
+        self.assertFails(glossary(entry(), run_entry(),
+                                  entry(term="game clock",
+                                        avoid="timer — the same timer · Verdicts — the score",
+                                        definition=GAME_CLOCK)),
+                         "game clock: *Avoid* lists `Verdicts`, which the glossary of the-way holds "
+                         "as `verdict`", **{"foundations__notes.md": NOTES})
+        self.assertEqual(self.verdicts("glossary-process-terms/1"), ["fail"])
+
+    def test_qualified_word_in_avoid_passes(self):
+        # invariant: glossary-process-terms/1
+        self.pin()
+        self.assertPasses(glossary(entry(), run_entry(),
+                                   entry(term="game clock", avoid="match clock — the same timer",
+                                         definition=GAME_CLOCK)),
+                          **{"foundations__notes.md": NOTES})
+        self.assertEqual(self.verdicts("glossary-process-terms/1"), ["pass"])
+
+    def test_word_in_avoid_the_pinned_commit_does_not_hold_passes(self):
+        # invariant: glossary-process-terms/1
+        self.pin()
+        self.gitlink = self.first
+        self.assertPasses(glossary(entry(), run_entry(),
+                                   entry(term="game clock", avoid="clock — the same timer",
+                                         definition=GAME_CLOCK)),
+                          **{"foundations__notes.md": NOTES})
+        self.assertEqual(self.verdicts("glossary-process-terms/1"), ["pass"])
+
+    def test_files_of_the_pinned_the_way_are_not_counted_against_the_base(self):
+        # invariant: glossary-avoid-growth/1
+        for name, content in (("elements/demo/template.md",
+                               TEMPLATE_TEXT + "\nA stopwatch stops a check.\n"),
+                              ("elements/common/rules.md", "# Rules\n\nNo stopwatch runs.\n")):
+            full = os.path.join(self.process.name, *name.split("/"))
+            os.makedirs(os.path.dirname(full), exist_ok=True)
+            with open(full, "w", encoding="utf-8", newline="\n") as handle:
+                handle.write(content)
+        self.process_commit(PROCESS_GLOSSARY)
+        self.pin()
+        pinned = os.path.join(self.root, ".the-way", "elements")
+        self.templates = [os.path.join(pinned, "demo", "template.md")]
+        text = glossary(entry(), run_entry(),
+                        entry(term="game clock", avoid="stopwatch — the same timer",
+                              definition=GAME_CLOCK))
+        self.commit(text, **{"foundations__notes.md": NOTES})
+        base = subprocess.run(["git", "rev-parse", "HEAD"], cwd=self.root, check=True,
+                              capture_output=True, text=True).stdout.strip()
+        output = self.assertPasses(text, base=base, common=os.path.join(pinned, "common"))
+        self.assertIn("unchecked: the words of *Avoid* in .the-way/elements/demo/template.md, "
+                      ".the-way/elements/common/rules.md — git does not hold them in this "
+                      "repository, so nothing reads them on %s" % base, output)
+        self.assertEqual(self.verdicts("glossary-avoid-growth/1"), ["pass"])
+
     def test_gitlink_not_the_checkout_of_the_submodule_is_read(self):
         # invariant: glossary-process-terms/1
         self.pin(self.first)
@@ -996,9 +1124,9 @@ class ProcessTerms(GuardTestCase):
         output = self.assertPasses(glossary(entry(), run_entry(),
                                             entry(term="clock", avoid="none", definition=CLOCK)),
                                    **{"foundations__notes.md": NOTES})
-        self.assertIn("unchecked: whether the glossary defines a word the glossary of the-way "
-                      "holds — the repository holds no gitlink .the-way at its root, so it pins no "
-                      "commit of the-way", output)
+        self.assertIn("unchecked: whether the glossary defines, or lists in an *Avoid*, a word the "
+                      "glossary of the-way holds — the repository holds no gitlink .the-way at "
+                      "its root, so it pins no commit of the-way", output)
         self.assertIn("0 error(s), 0 warning(s), 1 unchecked", output)
         self.assertEqual(self.verdicts("glossary-process-terms/1"), [])
 
@@ -1022,8 +1150,9 @@ class ProcessTerms(GuardTestCase):
         output = self.assertPasses(glossary(entry(), run_entry(),
                                             entry(term="clock", avoid="none", definition=CLOCK)),
                                    **{"foundations__notes.md": NOTES})
-        self.assertIn("unchecked: whether the glossary defines a word the glossary of the-way "
-                      "holds — the repository holds no gitlink .the-way at its root", output)
+        self.assertIn("unchecked: whether the glossary defines, or lists in an *Avoid*, a word the "
+                      "glossary of the-way holds — the repository holds no gitlink .the-way at "
+                      "its root", output)
         self.assertEqual(self.verdicts("glossary-process-terms/1"), [])
 
     def test_plain_file_named_like_the_submodule_is_no_pin(self):
@@ -1041,9 +1170,9 @@ class ProcessTerms(GuardTestCase):
         output = self.assertPasses(glossary(entry(), run_entry(),
                                             entry(term="clock", avoid="none", definition=CLOCK)),
                                    **{"foundations__notes.md": NOTES})
-        self.assertIn("unchecked: whether the glossary defines a word the glossary of the-way "
-                      "holds — the-way at %s, the commit the product pins, holds no "
-                      "foundations/glossary.md to compare the terms with" % bare, output)
+        self.assertIn("unchecked: whether the glossary defines, or lists in an *Avoid*, a word the "
+                      "glossary of the-way holds — the-way at %s, the commit the product pins, "
+                      "holds no foundations/glossary.md to compare the terms with" % bare, output)
         self.assertIn("0 error(s), 0 warning(s), 1 unchecked", output)
         self.assertEqual(self.verdicts("glossary-process-terms/1"), [])
 
@@ -1478,18 +1607,67 @@ class Common(GuardTestCase):
 class Forms(unittest.TestCase):
     """The forms of a word the guard finds: the one place the endings are written (WAY-97)."""
 
-    def test_endings_of_a_word(self):
-        self.assertEqual(format_guard.last_word_forms("run"),
-                         {"run", "runs", "runes", "run's", "run’s", "rund", "runed", "runing",
-                          "runned", "running"})
+    # Each word with every form the guard finds for it, `-'s` and `-’s` left out; the table holds
+    # one word for each regular ending of English and no other word for a word.
+    TABLE = {
+        "probe": {"probes", "probed", "probing"},           # a final `e` dropped before `-ing`
+        "gate": {"gates", "gated", "gating"},
+        "agree": {"agrees", "agreed", "agreeing"},          # `ee` keeps its `e`
+        "tie": {"ties", "tied", "tying"},                   # `ie` read as `y` before `-ing`
+        "run": {"runs", "runned", "running"},               # one syllable doubles its consonant
+        "set": {"sets", "setted", "setting"},
+        "map": {"maps", "mapped", "mapping"},
+        "quit": {"quits", "quitted", "quitting"},           # `qu` reads as a consonant
+        "commit": {"commits", "committed", "committing", "commited", "commiting"},
+        "need": {"needs", "needed", "needing"},             # two vowels: no double
+        "fix": {"fixes", "fixed", "fixing"},                # `x`, `w` and `y` never double
+        "show": {"shows", "showed", "showing"},
+        "watch": {"watches", "watched", "watching"},        # a hissing sound takes `-es`
+        "pass": {"passes", "passed", "passing"},
+        "entry": {"entries", "entried", "entrying"},        # a consonant and `y` take `-ies`, `-ied`
+        "apply": {"applies", "applied", "applying"},
+        "play": {"plays", "played", "playing"},             # a vowel and `y` keep the `y`
+        "echo": {"echos", "echoes", "echoed", "echoing"},   # `o` takes both `-s` and `-es`
+        "quiz": {"quizzes", "quizzed", "quizzing"},         # a doubled `z` before `-es` too
+        "bus": {"buses", "busses", "bused", "bussed", "busing", "bussing"},  # `s`: both
+        "panic": {"panics", "panicked", "panicking"},       # a vowel and `c` take `k`
+        "mechanic": {"mechanics", "mechanicked", "mechanicking"},
+        "arc": {"arcs", "arced", "arcing"},                 # a consonant and `c` take none
+        "doc": {"docs", "doced", "docing"},                 # one syllable and `c` take none
+        "topaz": {"topazes", "topazzes", "topazed", "topazzed", "topazing", "topazzing"},
+        "change": {"changes", "changed", "changing", "changeing"},  # `nge`: with and without `e`
+        "singe": {"singes", "singed", "singeing", "singing"},
+    }
+    # Words the guard does not take for a form of the word: a wrong ending, and an irregular form,
+    # which the review of uses finds.
+    NOT_FORMS = [("run", "runes"), ("run", "rund"), ("run", "ran"), ("probe", "probeing"),
+                 ("probe", "probeed"), ("gate", "gatees"), ("entry", "entrys"), ("watch", "watchs"),
+                 ("set", "seted"), ("map", "maped"), ("fix", "fixxed"), ("play", "plaies"),
+                 ("tie", "tieing"), ("quiz", "quizes"), ("panic", "panicced"),
+                 ("panic", "paniced"), ("mechanic", "mechanicced"), ("arc", "arcced"),
+                 ("doc", "docking"), ("pic", "picked")]
 
-    def test_final_y(self):
-        self.assertIn("entries", format_guard.last_word_forms("entry"))
+    def test_table_of_forms(self):
+        for word, forms in self.TABLE.items():
+            with self.subTest(word=word):
+                self.assertEqual(format_guard.last_word_forms(word),
+                                 {word, word + "'s", word + "’s"} | forms)
+
+    def test_words_that_are_no_form(self):
+        for word, other in self.NOT_FORMS:
+            with self.subTest(word=word, other=other):
+                self.assertNotIn(other, format_guard.last_word_forms(word))
+                self.assertFalse(format_guard.same_word(word, other))
+
+    def test_letter_case_is_kept(self):
+        self.assertIn("Probing", format_guard.last_word_forms("Probe"))
+        self.assertTrue(format_guard.same_word("PROBE", "probing"))
 
     def test_multi_word_term_takes_the_ending_on_its_last_word(self):
         forms = format_guard.forms_of("Save slot")
         self.assertIn("save slots", forms)
         self.assertNotIn("saves slot", forms)
+        self.assertIn("health probing", format_guard.forms_of("health probe"))
 
 
 class OwnFile(unittest.TestCase):
