@@ -1245,9 +1245,9 @@ class ProcessTerms(GuardTestCase):
             code = format_guard.run(path, stream=output, record=self.record_path,
                                     templates=self.templates, examples=self.examples)
         self.assertEqual(code, 1, output.getvalue())
-        self.assertIn("unchecked: whether the glossary defines a word the glossary of the-way "
-                      "holds — the file is in no git repository, so no commit of the-way it pins "
-                      "can be read", output.getvalue())
+        self.assertIn("unchecked: whether the glossary defines, or lists in an *Avoid*, a word the "
+                      "glossary of the-way holds — the file is in no git repository, so no commit "
+                      "of the-way it pins can be read", output.getvalue())
         with open(self.record_path, encoding="utf-8") as handle:
             lines = [json.loads(item) for item in handle.read().split("\n") if item]
         self.assertEqual([line for line in lines
