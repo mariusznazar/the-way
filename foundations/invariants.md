@@ -1243,6 +1243,16 @@ Every `unchecked` the gate reports names a reason on the list in the invariants 
 - **Part:** gate · invariants
 - **Correction:** none
 
+## gate-missing-script/1
+
+The gate reports an invariant whose command runs, under a Python interpreter, a script that does not exist on the commit being checked `unchecked` for want of a declared or produced command where that script does not exist on "{fork-point}" either, and `error` where it exists there.
+
+- **Method:** `TODO`
+- **Rests on:** none
+- **Derives from:** WAY-105@a95814a3
+- **Part:** gate
+- **Correction:** none
+
 ## gate-reported-set/1
 
 The gate reports a result for every invariant a change against "{fork-point}" reaches, and for every invariant a critical flow names.
