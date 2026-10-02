@@ -82,6 +82,15 @@ def conditions(text, before_approval=False):
     return [(f.condition, f.message) for f in readiness_check.check(text, before_approval)]
 
 
+class Template(unittest.TestCase):
+    def test_the_form_the_template_gives_has_the_structure_the_check_reads(self):
+        path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "definition_template.md")
+        with open(path, encoding="utf-8") as handle:
+            text = handle.read()
+        form = text.split("\n## The form\n", 1)[1].split("```markdown\n", 1)[1].split("\n```", 1)[0]
+        self.assertEqual(readiness_check.check_structure(*readiness_check.split(form)), [])
+
+
 class Whole(unittest.TestCase):
     def test_a_whole_approved_definition_has_no_finding(self):
         self.assertEqual(conditions(definition()), [])
