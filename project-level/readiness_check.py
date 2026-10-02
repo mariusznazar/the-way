@@ -11,10 +11,15 @@ The definition follows `project-level/definition_template.md`. The check reports
 - structure — a `Status:` line under the title, and every heading of the template once, in its
   order, with no other second-level heading;
 - a — no section holds the word `TODO`, and none is empty (`none` states that nothing is there);
+  under "Projected foundation changes" a `TODO` in a field of an entry — a line `- **<Field>:** …`
+  and the indented lines that continue it — or in a translation (lines beginning with `>`) is no
+  gap: the format guard of the element checks the fields in the task that writes the entry;
 - d — every item under "Open questions" ends with `— resolved in: breakdown` or
   `— resolved in: task: <name>`;
 - b — no projected decision still reads `**Approved by:** on acceptance`;
-- e — the gate record holds its three lines, and its fingerprint matches the definition.
+- e — the gate record holds its three lines, and its fingerprint matches the definition;
+- f — "Projected foundation changes" begins with `Candidates: <n> shown, <k> accepted —
+  YYYY-MM-DD`, k is no more than n, and no working table `### Candidates in progress` stands in it.
 
 With --before-approval the check leaves out b and e and the gate record, since the human has not
 approved yet. --fingerprint prints the fingerprint the gate record is to carry, once the
@@ -48,6 +53,10 @@ ITEM = re.compile(r"^- ")
 NESTED_ITEM = re.compile(r"^\s+([-*+]|\d+[.)]) ")
 RESOLVED = re.compile(r"— resolved in: (breakdown|task: \S.*)$")
 PENDING_APPROVAL = re.compile(r"^\s*- \*\*Approved by:\*\* on acceptance\s*$")
+CANDIDATES = re.compile(r"^Candidates: (\d+) shown, (\d+) accepted — \d{4}-\d{2}-\d{2}$")
+WORKING_TABLE = "### Candidates in progress"
+FIELD = re.compile(r"^- \*\*[^*]+:\*\*")
+TRANSLATION = re.compile(r"^>")
 STATUS = re.compile(r"^Status: (definition — open: \S.*|ready for gate|approved \d{4}-\d{2}-\d{2})$")
 GATE_LINES = (
     ("Approved by", re.compile(r"^- Approved by: \S.*, \d{4}-\d{2}-\d{2}$")),
@@ -123,6 +132,20 @@ def content(section):
     return [(n, line) for n, line in section.lines if line.strip()]
 
 
+def field_lines(section):
+    """Return the numbers of the lines of a section that belong to a field of an entry — a line
+    `- **<Field>:** …` and the indented lines that continue it — or to a translation."""
+    numbers, in_field = set(), False
+    for number, line in section.lines:
+        if FIELD.match(line):
+            in_field = True
+        elif not (in_field and line.startswith((" ", "\t")) and line.strip()):
+            in_field = False
+        if in_field or TRANSLATION.match(line):
+            numbers.add(number)
+    return numbers
+
+
 def check_gaps(sections):
     findings = []
     for section in sections:
@@ -130,9 +153,30 @@ def check_gaps(sections):
         if not lines:
             findings.append(Finding("a", section.heading_line, "`## %s` is empty — write `none` "
                                     "or `TODO`" % section.name))
+        exempt = field_lines(section) if section.name == PROJECTED else set()
         for number, line in lines:
-            if TODO.search(line):
+            if TODO.search(line) and number not in exempt:
                 findings.append(Finding("a", number, "`## %s` holds TODO" % section.name))
+    return findings
+
+
+def check_candidates(section):
+    """Condition f: the step that finds foundation entries has ended and left its line."""
+    lines = content(section)
+    if not lines or [line.strip() for _, line in lines] == ["TODO"]:
+        return []  # condition a reports the section as empty or open
+    findings = []
+    number, first = lines[0]
+    match = CANDIDATES.match(first.rstrip())
+    if not match:
+        findings.append(Finding("f", number, "`## %s` does not begin with `Candidates: <n> shown, "
+                                "<k> accepted — YYYY-MM-DD`" % PROJECTED))
+    elif int(match.group(2)) > int(match.group(1)):
+        findings.append(Finding("f", number, "more candidates accepted than shown"))
+    for number, line in lines:
+        if line.rstrip() == WORKING_TABLE:
+            findings.append(Finding("f", number, "the working table of candidates still stands — "
+                                    "the step that finds foundation entries has not ended"))
     return findings
 
 
@@ -215,6 +259,7 @@ def check(text, before_approval=False):
     checked = [s for s in sections if not (before_approval and s.name == GATE_RECORD)]
     findings += check_gaps(checked)
     findings += check_open_questions(by_name[OPEN_QUESTIONS])
+    findings += check_candidates(by_name[PROJECTED])
     if not before_approval:
         findings += check_approvals(by_name[PROJECTED])
         findings += check_gate_record(by_name[GATE_RECORD], text)

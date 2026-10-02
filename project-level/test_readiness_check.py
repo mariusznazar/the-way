@@ -22,7 +22,7 @@ sys.dont_write_bytecode = True
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import readiness_check  # noqa: E402
 
-DECISION = """### (new) — What does the game exclude for good?
+DECISION = """#### (new) — What does the game exclude for good?
 
 The game has no multiplayer mode.
 
@@ -40,6 +40,29 @@ The game has no multiplayer mode.
 
 > **Translation (pl):** Gra nie ma trybu wieloosobowego."""
 
+INVARIANT = """#### one-team-per-character/1
+
+Every character belongs to exactly one team.
+
+- **Method:** TODO
+- **Rests on:** none
+- **Derives from:** TODO — the decision on who owns a character, projected in this definition
+- **Part:** every
+- **Correction:** none
+
+> **Translation (pl):** Każda postać należy do dokładnie jednej drużyny.
+> - **Method:** TODO"""
+
+CANDIDATES_LINE = "Candidates: 3 shown, 1 accepted — 2026-10-03"
+
+
+def projected(approval="Mariusz, 2026-10-03", entries=None, first=CANDIDATES_LINE):
+    """The section of projected foundation changes: its candidates line, then its entries."""
+    if entries is None:
+        entries = "### Decisions\n\n" + DECISION.format(approval=approval)
+    return "%s\n\n%s" % (first, entries)
+
+
 BODIES = {
     "Goal": "Gracz przechodzi pierwszą mapę od początku do końca.",
     "Background": "Gra istnieje tylko jako koncepcja.",
@@ -52,7 +75,7 @@ BODIES = {
     "Open questions": "- Jak mierzymy postęp? — resolved in: breakdown\n"
                       "- Jakie narzędzia ma autor? — resolved in: task: edytor",
     "Touched parts and decisions": "none",
-    "Projected foundation changes": DECISION.format(approval="Mariusz, 2026-10-03"),
+    "Projected foundation changes": projected(),
 }
 
 
@@ -98,7 +121,7 @@ class Whole(unittest.TestCase):
     def test_a_definition_waiting_for_approval_passes_before_approval(self):
         text = definition(status="Status: ready for gate", gate="",
                           bodies={"Projected foundation changes":
-                                  DECISION.format(approval="on acceptance")})
+                                  projected(approval="on acceptance")})
         self.assertEqual(conditions(text, before_approval=True), [])
 
 
@@ -153,11 +176,51 @@ class Gaps(unittest.TestCase):
         self.assertEqual(len(todo), 1)
         self.assertEqual(text.splitlines()[todo[0].line - 1], "TODO")
 
-    def test_todo_in_a_projected_decision_is_reported(self):
+    def test_todo_in_a_field_of_a_projected_entry_is_no_gap(self):
         decision = DECISION.format(approval="Mariusz, 2026-10-03").replace(
             "- **Review when:** none", "- **Review when:** TODO")
-        found = conditions(definition(bodies={"Projected foundation changes": decision}))
+        text = definition(bodies={"Projected foundation changes":
+                                  projected(entries="### Decisions\n\n" + decision)})
+        self.assertEqual(conditions(text), [])
+
+    def test_todo_on_a_line_continuing_a_field_is_no_gap(self):
+        decision = DECISION.format(approval="Mariusz, 2026-10-03").replace(
+            "- **Verification:** level 2 — an agent compares the change with the decision",
+            "- **Verification:** level 2 — an agent compares the change with the decision:\n"
+            "  - complies: TODO")
+        text = definition(bodies={"Projected foundation changes":
+                                  projected(entries="### Decisions\n\n" + decision)})
+        self.assertEqual(conditions(text), [])
+
+    def test_todo_in_the_fields_and_the_translation_of_an_invariant_is_no_gap(self):
+        entries = "### Decisions\n\n%s\n\n### Invariants\n\n%s" % (
+            DECISION.format(approval="Mariusz, 2026-10-03"), INVARIANT)
+        text = definition(bodies={"Projected foundation changes": projected(entries=entries)})
+        self.assertEqual(conditions(text), [])
+
+    def test_todo_in_the_binding_sentence_of_a_projected_entry_is_reported(self):
+        decision = DECISION.format(approval="Mariusz, 2026-10-03").replace(
+            "The game has no multiplayer mode.", "TODO")
+        found = conditions(definition(bodies={"Projected foundation changes":
+                                              projected(entries="### Decisions\n\n" + decision)}))
         self.assertIn(("a", "`## Projected foundation changes` holds TODO"), found)
+
+    def test_todo_in_the_definition_of_a_projected_term_is_reported(self):
+        term = "#### loop\n\nTODO\n\n- **Avoid:** none\n- **Not:** none"
+        found = conditions(definition(bodies={"Projected foundation changes":
+                                              projected(entries="### Glossary\n\n" + term)}))
+        self.assertIn(("a", "`## Projected foundation changes` holds TODO"), found)
+
+    def test_a_field_ends_at_the_line_that_does_not_continue_it(self):
+        decision = DECISION.format(approval="Mariusz, 2026-10-03").replace(
+            "*Rationale:* one player is the audience.", "*Rationale:* TODO")
+        found = conditions(definition(bodies={"Projected foundation changes":
+                                              projected(entries="### Decisions\n\n" + decision)}))
+        self.assertIn(("a", "`## Projected foundation changes` holds TODO"), found)
+
+    def test_a_field_line_outside_projected_changes_still_holds_todo(self):
+        found = conditions(definition(bodies={"Risks": "- **Risk:** TODO"}))
+        self.assertIn(("a", "`## Risks` holds TODO"), found)
 
     def test_a_word_holding_todo_is_no_todo(self):
         text = definition(bodies={"In scope": "- lista TODOs gracza\n- mastodon"})
@@ -205,10 +268,59 @@ class OpenQuestions(unittest.TestCase):
         self.assertEqual(conditions(definition(bodies={"Open questions": "none"})), [])
 
 
+WORKING_TABLE = ("### Candidates in progress\n\n"
+                 "| # | Settlement | Kind | Source | What the next reader would guess | State |\n"
+                 "|---|---|---|---|---|---|\n"
+                 "| 1 | Postać należy do jednej drużyny | decision | material: koncepcja §5 "
+                 "| model danych drużyny | waiting |")
+WORKING_TABLE_MESSAGE = ("the working table of candidates still stands — the step that finds "
+                         "foundation entries has not ended")
+
+
+class Candidates(unittest.TestCase):
+    def test_a_projected_section_without_the_candidates_line_is_reported(self):
+        found = conditions(definition(bodies={"Projected foundation changes": "none"}))
+        self.assertEqual(found, [("f", "`## Projected foundation changes` does not begin with "
+                                       "`Candidates: <n> shown, <k> accepted — YYYY-MM-DD`")])
+
+    def test_a_candidates_line_off_its_form_is_reported(self):
+        body = projected(first="Candidates: 3 shown, 1 accepted")
+        self.assertEqual([c for c, _ in conditions(definition(
+            bodies={"Projected foundation changes": body}))], ["f"])
+
+    def test_the_candidates_line_stands_first(self):
+        body = "### Decisions\n\n%s\n\n%s" % (DECISION.format(approval="Mariusz, 2026-10-03"),
+                                             CANDIDATES_LINE)
+        self.assertEqual([c for c, _ in conditions(definition(
+            bodies={"Projected foundation changes": body}))], ["f"])
+
+    def test_more_accepted_than_shown_is_reported(self):
+        body = projected(first="Candidates: 1 shown, 3 accepted — 2026-10-03")
+        self.assertEqual(conditions(definition(bodies={"Projected foundation changes": body})),
+                         [("f", "more candidates accepted than shown")])
+
+    def test_none_below_the_candidates_line_passes(self):
+        body = projected(entries="none")
+        self.assertEqual(conditions(definition(bodies={"Projected foundation changes": body})), [])
+
+    def test_a_working_table_still_standing_is_reported_before_approval(self):
+        body = projected(approval="on acceptance", entries=WORKING_TABLE + "\n\n### Decisions\n\n"
+                         + DECISION.format(approval="on acceptance"))
+        text = definition(status="Status: ready for gate", gate="",
+                          bodies={"Projected foundation changes": body})
+        self.assertEqual(conditions(text, before_approval=True), [("f", WORKING_TABLE_MESSAGE)])
+
+    def test_a_section_still_reading_todo_is_one_gap_and_no_f(self):
+        text = definition(status="Status: definition — open: Projected foundation changes",
+                          gate="", bodies={"Projected foundation changes": "TODO"})
+        self.assertEqual(conditions(text, before_approval=True),
+                         [("a", "`## Projected foundation changes` holds TODO")])
+
+
 class Approvals(unittest.TestCase):
     def test_a_projected_decision_on_acceptance_is_reported_after_approval(self):
         text = definition(bodies={"Projected foundation changes":
-                                  DECISION.format(approval="on acceptance")})
+                                  projected(approval="on acceptance")})
         self.assertIn(("b", "a projected decision still reads `Approved by: on acceptance`"),
                       conditions(text))
 
