@@ -23,6 +23,8 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import format_guard  # noqa: E402
 
 NO_COMMIT = "the method takes a commit the gate filled in as not existing"
+NO_PIN = ("the product does not pin the-way, or the commit of the-way it pins does not hold what "
+          "the method compares with")
 NO_PIN_LINE = ("unchecked: whether the glossary defines a word the glossary of the-way holds — the "
                "repository holds no gitlink .the-way at its root, so it pins no commit of the-way")
 
@@ -1000,7 +1002,13 @@ class ProcessTerms(GuardTestCase):
                       "holds — the repository holds no gitlink .the-way at its root, so it pins no "
                       "commit of the-way", output)
         self.assertIn("0 error(s), 0 warning(s), 1 unchecked", output)
-        self.assertEqual(self.verdicts("glossary-process-terms/1"), [])
+        self.assertEqual([line for line in self.lines
+                          if line["invariant"] == "glossary-process-terms/1"],
+                         [{"check": "elements/glossary/format_guard.py::check_process_terms",
+                           "verdict": "unchecked", "invariant": "glossary-process-terms/1",
+                           "reason": NO_PIN,
+                           "description": "the repository holds no gitlink .the-way at its root, "
+                                          "so it pins no commit of the-way"}])
 
     def test_term_with_a_hyphen_against_a_held_term_with_a_space_fails(self):
         # invariant: glossary-process-terms/1
@@ -1024,7 +1032,7 @@ class ProcessTerms(GuardTestCase):
                                    **{"foundations__notes.md": NOTES})
         self.assertIn("unchecked: whether the glossary defines a word the glossary of the-way "
                       "holds — the repository holds no gitlink .the-way at its root", output)
-        self.assertEqual(self.verdicts("glossary-process-terms/1"), [])
+        self.assertEqual(self.verdicts("glossary-process-terms/1"), ["unchecked"])
 
     def test_plain_file_named_like_the_submodule_is_no_pin(self):
         self.assertNotPinned(".the-way", self.second + "\n")
@@ -1045,7 +1053,14 @@ class ProcessTerms(GuardTestCase):
                       "holds — the-way at %s, the commit the product pins, holds no "
                       "foundations/glossary.md to compare the terms with" % bare, output)
         self.assertIn("0 error(s), 0 warning(s), 1 unchecked", output)
-        self.assertEqual(self.verdicts("glossary-process-terms/1"), [])
+        self.assertEqual([line for line in self.lines
+                          if line["invariant"] == "glossary-process-terms/1"],
+                         [{"check": "elements/glossary/format_guard.py::check_process_terms",
+                           "verdict": "unchecked", "invariant": "glossary-process-terms/1",
+                           "reason": NO_PIN,
+                           "description": "the-way at %s, the commit the product pins, holds no "
+                                          "foundations/glossary.md to compare the terms with"
+                                          % bare}])
 
     def test_pinned_commit_the_submodule_does_not_hold_is_a_failure_of_the_run(self):
         self.pin()
@@ -1087,6 +1102,41 @@ class ProcessTerms(GuardTestCase):
             lines = [json.loads(item) for item in handle.read().split("\n") if item]
         self.assertEqual([line for line in lines
                           if line["invariant"] == "glossary-process-terms/1"], [])
+
+    def test_glossary_in_no_repository_records_no_unchecked_comparison(self):
+        # the run fails on its own, and a failure of git leaves no `unchecked` (WAY-63)
+        with tempfile.TemporaryDirectory() as loose:
+            path = os.path.join(loose, "foundations", "glossary.md")
+            os.makedirs(os.path.dirname(path))
+            with open(path, "w", encoding="utf-8", newline="\n") as handle:
+                handle.write(glossary(entry(), run_entry()))
+            self.assertNotEqual(subprocess.run(["git", "rev-parse", "--show-toplevel"], cwd=loose,
+                                               capture_output=True).returncode, 0)
+            output = io.StringIO()
+            code = format_guard.run(path, stream=output, record=self.record_path,
+                                    templates=self.templates, examples=self.examples)
+        self.assertEqual(code, 1, output.getvalue())
+        self.assertIn("unchecked: whether the glossary defines a word the glossary of the-way "
+                      "holds — the file is in no git repository, so no commit of the-way it pins "
+                      "can be read", output.getvalue())
+        with open(self.record_path, encoding="utf-8") as handle:
+            lines = [json.loads(item) for item in handle.read().split("\n") if item]
+        self.assertEqual([line for line in lines
+                          if line["invariant"] == "glossary-process-terms/1"], [])
+        self.assertIn({"check": "elements/glossary/format_guard.py", "verdict": "fail",
+                       "invariant": None,
+                       "description": "the file does not lie in a git repository, so no check "
+                                      "that asks git which files it tracks or ignores can run"},
+                      lines)
+
+    def test_reason_for_no_pin_stands_on_the_closed_list_of_the_invariants_template(self):
+        template = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "invariants",
+                                "template.md")
+        with open(template, encoding="utf-8") as handle:
+            text = " ".join(handle.read().split())
+        listed = text[text.index("Reasons for `unchecked`"):]
+        listed = listed[:listed.index("- Which entries the gate reports")]
+        self.assertIn("- %s " % NO_PIN, listed)
 
     def test_path_of_the_submodule_is_the_installer_s(self):
         installer = importlib.util.spec_from_file_location(
@@ -1283,8 +1333,11 @@ class Uses(GuardTestCase):
 
 class Record(GuardTestCase):
     def test_plain_run_records_the_checks_of_the_file_alone(self):
+        # a product's glossary in a repository that pins no the-way: the comparison with the
+        # glossary of the-way is recorded unchecked
         self.assertPasses(glossary())
-        self.assertEqual(sorted(line["invariant"] for line in self.lines), PLAIN)
+        self.assertEqual(sorted(line["invariant"] for line in self.lines),
+                         sorted(PLAIN + ["glossary-process-terms/1"]))
 
     def test_base_run_records_the_checks_against_the_base(self):
         self.commit(glossary())

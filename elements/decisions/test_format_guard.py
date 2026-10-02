@@ -711,6 +711,45 @@ class Record(GuardTestCase):
             self.assertIn("# invariant: %s\n" % item["invariant"],
                           inspect.getsource(getattr(format_guard, function)), item)
 
+    def test_the_report_and_the_record_are_the_ones_the_guards_share(self):
+        # the code the format guards share stands in elements/common/ (WAY-09)
+        common = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "common",
+                              "guard_shared.py")
+        self.assertTrue(os.path.samefile(format_guard.shared.__file__, common))
+        self.assertEqual(format_guard.Report.__bases__, (format_guard.shared.Report,))
+        self.assertEqual([name for name in vars(format_guard.Report)
+                          if callable(vars(format_guard.Report)[name])], ["__init__"])
+        for method in ("ran", "unchecked", "fail", "error", "warning", "cannot_check", "print",
+                       "recorded", "record"):
+            self.assertIs(getattr(format_guard.Report, method),
+                          getattr(format_guard.shared.Report, method), method)
+        for function in ("start_record", "write_record"):
+            self.assertIs(getattr(format_guard, function), getattr(format_guard.shared, function),
+                          function)
+
+    def test_the_description_a_none_leaves_begins_with_the_option_and_none(self):
+        # the way of working the skills share tells such `unchecked:` lines by this beginning
+        common = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "common")
+        with open(os.path.join(common, "way_of_working.md"), encoding="utf-8") as handle:
+            rule = " ".join(handle.read().split())
+        self.assertIn("those that a `none` given to an option leaves — the text after the dash "
+                      "begins with that option and `none` — go to the human once per run of the "
+                      "guard, as their number, and every other `unchecked:` line goes to the human "
+                      "on its own", rule)
+        for option, description in (("--base", format_guard.shared.NO_BASE),
+                                    ("--merge-onto", format_guard.shared.NO_MERGE_ONTO)):
+            report = format_guard.Report(self.path)
+            report.cannot_check("the copies", description)
+            output = io.StringIO()
+            report.print(output)
+            line = next(item for item in output.getvalue().splitlines()
+                        if item.startswith("unchecked: "))
+            self.assertTrue(line.split(" — ", 1)[1].startswith(option + " none:"), line)
+        self.assertEqual(format_guard.shared.NO_BASE,
+                         "--base none: there is no commit the branch left the main branch from")
+        self.assertEqual(format_guard.shared.NO_MERGE_ONTO,
+                         "--merge-onto none: there is no commit to merge onto")
+
 
 class InGit(GuardTestCase):
     def setUp(self):

@@ -20,6 +20,18 @@ COMMON_RULES = os.path.join(os.path.dirname(os.path.abspath(__file__)), "rules.m
 NO_COMMIT = "none"
 NO_COMMIT_REASON = "the method takes a commit the gate filled in as not existing"
 
+
+def given_none(option, why):
+    """The description of a check left unchecked because `none` was given to the option: it begins
+    with the option and `none`, which is how the way of working the skills share tells, after the
+    dash of an `unchecked:` line, the lines a `none` leaves from every other one."""
+    return "%s %s: %s" % (option, NO_COMMIT, why)
+
+
+# The descriptions of the checks a `none` given to --base or to --merge-onto leaves unchecked.
+NO_BASE = given_none("--base", "there is no commit the branch left the main branch from")
+NO_MERGE_ONTO = given_none("--merge-onto", "there is no commit to merge onto")
+
 # `TODO` as a word of its own anywhere in a value — whole, as an item, or inside a part such as
 # `detected by TODO` or `searched: TODO; found: …` — but not inside a path or a longer word, such
 # as `docs/TODO.md` (WAY-71).
@@ -159,8 +171,9 @@ class Report:
 
     The last line of the report counts what the person is told was left unchecked, one for each
     `unchecked:` line a check names with cannot_check(): a check needing a commit given as `none`,
-    a command the product does not yet declare or produce, a file that cannot be read. It is not a
-    count of the record's `unchecked` verdicts, which stand one for each check and invariant.
+    a command the product does not yet declare or produce, a file that cannot be read, a comparison
+    with the-way where the product pins none. It is not a count of the record's `unchecked`
+    verdicts, which stand one for each check and invariant.
     Checks left out because an option was not given stand in notes, and are not counted.
 
     Each guard gives the name of its program and the checks each of its options selects

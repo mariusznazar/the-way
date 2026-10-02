@@ -1372,7 +1372,7 @@ def run(map_path, base=None, stream=None, template=TEMPLATE, record=None,
     check_dependencies(report)
 
     if base == NO_COMMIT:
-        no_base = "--base none: there is no commit the branch left the main branch from"
+        no_base = shared.NO_BASE
         check_violations_growth(map_path, rules, positions, None, None, report, no_commit=no_base)
         check_identifier_persistence(entries, sections, rules, None, None, report,
                                      no_commit=no_base)

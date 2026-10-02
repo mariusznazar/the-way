@@ -259,6 +259,8 @@ WAY-64).
     declared on the commit the branch left the main branch from, whose drop makes the result `error`
     (WAY-38, WAY-47, WAY-51);
   - the method takes a commit the gate filled in as not existing;
+  - the product does not pin the-way, or the commit of the-way it pins does not hold what the
+    method compares with (WAY-34);
   - the entry stands on the list of quarantined invariants at its current version, and the
     committer date of the commit being checked is no later than its *Until* (WAY-68);
   - for an environment fact, a probe ran on a release of its tool outside *Holds for* (WAY-81).
