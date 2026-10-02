@@ -9,6 +9,23 @@ it; in the decisions element, a rule changes only with a decision in the log (WA
 Paths under `elements/` below are those of the-way at the commit the product pins, which the
 skill reaches by resolving its own directory (WAY-34).
 
+## How a skill asks
+
+Every skill of the-way that asks the human asks this way
+(`TODO — decision pending: which decision sets how a skill of the-way asks the human`):
+
+- A question stands as plain text in the conversation, never in a tool that opens a separate panel
+  for a question or its options.
+- A question of decision — a choice that settles something in a file — gives the ways open, what
+  each costs, and a recommendation; the question with a proposed answer and its reason of step 4.1
+  is one such.
+- Once the human has chosen, and the choice enters the binding part of an entry, ask one question
+  against the answer given: its anchor quoted from a sentence of the human or of the material the
+  work starts from, asking whether the choice still holds against it. A choice that ends with the
+  work passes without one.
+- A question of assessment — what something is worth, what may go wrong, what is done today — is
+  open, with no ways offered.
+
 ## 1. Read
 
 - Read in full the element's `template.md`, `elements/common/rules.md` and this file.
@@ -101,3 +118,27 @@ looks for in its element.
    written one at a time`): every entry that names this one with its fingerprint, when its binding
    part changes (WAY-31, WAY-90); every link the entry names that the foundation does not
    hold yet (WAY-17); and each finding of step 2. The skill names what follows in its element.
+
+## Projected mode
+
+A project definition projects entries of the foundation before the project is broken into tasks.
+The skill `find-foundation-entries`, or `define-project` at the readiness gate, hands an entry to
+the skill of its element in projected mode, naming the definition. The steps above run with these
+differences, and each element's skill adds its own
+(`TODO — decision pending: which decision sets how an entry is projected in a project
+definition`):
+
+- Step 1: read the product's file of the element's entries where it exists; ask about no file to
+  start and write no part map first — nothing is written into `foundations/`.
+- Step 4.2: the human's acceptance of the wording writes nothing into a field of approval; the
+  readiness gate approves the projected entries.
+- Step 4.3: write the entry under "Projected foundation changes" of the definition, in the
+  subsection of its kind and with the heading `project-level/definition_template.md` gives,
+  followed by its translation; write nothing into `foundations/`. Run no format guard, and tell
+  the human that no script checked the entry's form: the guard checks it in the task that writes
+  the entry into the foundation.
+- Step 4.4: what follows from the entry is another projected entry, through the skill of its
+  element in projected mode, or, where it cannot be written before the code exists, an open
+  question of the definition with its place of resolution. What a skill hands to other agents
+  after step 4.4 — a check, a deliberate break, a review of uses — waits for the task that writes
+  the entry.

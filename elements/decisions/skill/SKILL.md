@@ -19,7 +19,7 @@ decision adds to each.
 ## 1. Read
 
 - Read the product's `foundations/decisions.md`. When the log has no entries, ask the human for
-  the product's prefix.
+  the product's prefix — except in projected mode, where a decision has no prefix yet.
 
 ## 2. Decide what the entry is
 
@@ -57,24 +57,19 @@ decision adds to each.
 
 ## Projected mode
 
-The skill `define-project` hands a decision to this skill in projected mode, naming a project
-definition. Steps 1–4 run as above, with these differences
-(`TODO — decision pending: which decision sets how a decision is projected in a project
+Projected mode runs as `elements/common/way_of_working.md` gives it, with these differences for a
+decision (`TODO — decision pending: which decision sets how a decision is projected in a project
 definition`):
 
+- Step 1: ask for no prefix; the task that writes the decision into the log asks for it, when the
+  log has no entries.
 - Step 2: apply the plan test first. An exclusion or a rule that ends with the project stays in the
   definition, under "Out of scope", and no entry is written (WAY-36, WAY-26).
-- Step 3: the heading reads `### (new) — <question>` for a new decision, or the current decision's
-  number with its next version; *Approved by* reads `on acceptance`.
-- Step 4.2: the human's acceptance of the wording writes nothing into *Approved by*, which reads
-  `on acceptance` until `define-project` writes it at the readiness gate.
-- Step 4.3: write the entry under "Projected foundation changes" of the definition, followed by its
-  translation as the definition's template gives it, and nothing into `foundations/decisions.md`.
-  Run no format guard, and tell the human that no script checked the entry's form: the guard
-  checks it in the task that writes the decision into the log.
-- Step 4.4: nothing that follows is written into the foundation either. A change to a neighbouring
-  decision is another projected decision; an invariant the verification names is an open question
-  of the definition, with its place of resolution.
+- Step 3: the heading reads `#### (new) — <question>` for a new decision, or
+  `#### <PREFIX>-<NN>/<version> — <question>` for the next version of a current one; *Approved by*
+  reads `on acceptance` until `define-project` writes it at the readiness gate.
+- Step 4.4: an invariant the verification names is a projected invariant, through
+  `record-invariant` in projected mode.
 
 ## Review record
 
