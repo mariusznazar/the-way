@@ -106,12 +106,26 @@ def conditions(text, before_approval=False):
 
 
 class Template(unittest.TestCase):
-    def test_the_form_the_template_gives_has_the_structure_the_check_reads(self):
+    def template(self):
         path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "definition_template.md")
         with open(path, encoding="utf-8") as handle:
-            text = handle.read()
+            return handle.read()
+
+    def test_the_form_the_template_gives_has_the_structure_the_check_reads(self):
+        text = self.template()
         form = text.split("\n## The form\n", 1)[1].split("```markdown\n", 1)[1].split("\n```", 1)[0]
         self.assertEqual(readiness_check.check_structure(*readiness_check.split(form)), [])
+
+    def test_the_projected_section_the_template_gives_passes_its_checks(self):
+        text = self.template()
+        marker = "```markdown\n## Projected foundation changes\n"
+        block = "## Projected foundation changes\n" + text.split(marker, 1)[1].split("\n```", 1)[0]
+        _, sections = readiness_check.split(block)
+        self.assertEqual(readiness_check.check_candidates(sections[0]), [])
+        self.assertEqual(readiness_check.check_gaps(sections), [])
+
+    def test_the_working_table_the_template_gives_is_the_one_the_check_reads(self):
+        self.assertIn("```markdown\n%s\n" % readiness_check.WORKING_TABLE, self.template())
 
 
 class Whole(unittest.TestCase):

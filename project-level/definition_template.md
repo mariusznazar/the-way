@@ -31,8 +31,8 @@ no decision in the log of the-way yet: every rule below ends with the decision i
   (WAY-101; `TODO — decision pending: which decision sets where a product names the place of its
   backlog`.)
 - The text of the definition, its title included, is in the language the human opened the
-  conversation in. The headings, the status line, the markers below and the projected decisions
-  are in English, whatever that language (WAY-72 for the decisions;
+  conversation in. The headings, the status line, the markers below and the projected entries
+  are in English, whatever that language (WAY-72 for the entries;
   `TODO — decision pending: which decision sets the language of a project definition`).
 
 ## The form
@@ -94,19 +94,23 @@ A section is never left empty
 |---|---|
 | Goal | one sentence: what the project is to achieve and why that matters |
 | Background | what the people the project serves do today without it and where that hurts; for a revised definition, which premise broke |
-| In scope | what the project delivers; the plan breaks the project into tasks from it |
-| Out of scope | only exclusions that end with the project; an exclusion for good is a projected decision (WAY-26) |
-| Inputs and constraints | what the project starts from — documents, code, systems, decisions — and what its surroundings impose on it; a constraint that outlives the project is a projected decision or a candidate environment fact |
+| In scope | what the project delivers; the plan breaks the project into tasks from it, and the step that finds foundation entries takes the rules its lines carry |
+| Out of scope | only exclusions that end with the project; an exclusion for good is a candidate projected decision (WAY-26) |
+| Inputs and constraints | what the project starts from — documents, code, systems, decisions — and what its surroundings impose on it; a constraint that outlives the project is a candidate projected decision or environment fact |
 | Deliverables | the concrete results |
 | Success | the signals read after the fact and those read during the work; each carries its falsification condition |
 | Risks | the risks, and the assumptions whose failure would change the result |
 | Open questions | only questions for later, each with its place of resolution |
 | Touched parts and decisions | what the foundation says of the project: the parts it touches, the decisions whose *Scope* names them, the invariants it may break |
-| Projected foundation changes | new decisions and new versions of current ones, in the form of a log entry, each with its translation |
+| Projected foundation changes | what the definition settles about the product, as projected entries of the foundation, each with its translation, below the line that records the step finding them |
 | Gate record | who approved the gate and when, the commit of the foundation searched, the fingerprint |
 
 `TODO — decision pending: which decision sets the sections of a project definition`.
 
+- **Background, Success and Risks** hold what the human answered. The agent asks for them; what it
+  finds in the material enters a question as its anchor, never the section
+  (`TODO — decision pending: which decision sets that a definition's background, success and risks
+  come from the human's answers`).
 - **A frame of success** — each signal or criterion under "Success" — carries one sentence saying
   what would show it false, marked `**OBALENIE:**` in a Polish definition and `**FALSIFIED IF:**`
   in an English one
@@ -125,7 +129,7 @@ definition`):
 
 1. something missing from the definition itself — its goal, scope or success — is `TODO` in its
    section;
-2. a decision not yet worded is a projected decision whose binding sentences read `TODO`;
+2. an entry not yet worded is a projected entry whose binding sentence or definition reads `TODO`;
 3. a question for later is an item under "Open questions".
 
 ## Open questions
@@ -142,22 +146,80 @@ A section without questions reads `none`.
 
 ## Projected foundation changes
 
-Each projected decision is an entry in the form of `elements/decisions/template.md`, written by
-the decisions skill in its projected mode. A new decision is headed `### (new) — <question>`; a new
-version of a current decision is headed with that decision's number and its next version. Below
-the entry stands its translation into the language of the definition, which helps the human weigh
-the wording and is not approved:
+The section holds what the definition settles about the product before the breakdown, as entries
+of the foundation, projected: decisions, invariants, glossary terms, environment facts, and the
+changes to the part map whose every field is known before the code
+(`TODO — decision pending: which decision sets which kinds of entry a project definition
+projects`). The skill `find-foundation-entries` finds them with the human and hands each to the
+skill of its element in projected mode, which writes it here. The section reads `TODO` until that
+step begins.
+
+While the step runs, the section holds its working table, so that a fresh agent resumes it from
+the file. The headings of the columns stay in English; the rows are in the language of the
+definition:
 
 ```markdown
-### (new) — What does the game exclude for good?
+### Candidates in progress
+
+| # | Settlement | Kind | Source | What the next reader would guess | State |
+|---|---|---|---|---|---|
+| 1 | Postać należy do dokładnie jednej drużyny i korzysta z jej skrzynki | decision | material: koncepcja §5 | the data model of a team and its chest | accepted |
+```
+
+A row's state is `waiting`, `accepted`, `rejected` or `written`. Once every row is `rejected` or
+`written`, the table goes and the section begins with the line that records the step:
+
+```markdown
+## Projected foundation changes
+
+Candidates: 24 shown, 17 accepted — 2026-10-05
+
+### Decisions
+
+#### (new) — Who owns a character?
 
 <the entry, its *Approved by* reading `on acceptance` until the gate>
 
 > **Translation (pl):** <the same entry in Polish>
+
+### Invariants
+
+#### one-team-per-character/1
+
+<the entry>
+
+> **Translation (pl):** <the same entry in Polish>
 ```
 
-A section without projected decisions reads `none`
-(`TODO — decision pending: which decision sets the form of a projected decision`).
+- The line `Candidates: <rows shown> shown, <rows accepted> accepted — YYYY-MM-DD` stands first;
+  with no row accepted, `none` follows it. Rejected rows are not kept
+  (`TODO — decision pending: which decision sets the record of the step that finds foundation
+  entries`).
+- A subsection stands for each kind that has entries, in this order: `### Decisions`,
+  `### Invariants`, `### Glossary`, `### Environment facts`, `### Part map`. Each entry is in the
+  form of its element's template, its heading two levels lower:
+
+  | Kind | Heading |
+  |---|---|
+  | decision | `#### (new) — <question>`; for a new version of a current decision, `#### <PREFIX>-<NN>/<version> — <question>` |
+  | invariant | `#### <identifier>/1`; for a new version, the current identifier and its next version |
+  | glossary term | `#### <term>` |
+  | environment fact | `#### <identifier>/1`; for a new version, the current identifier and its next version |
+  | part map | `#### <identifier> (changed)` with the whole entry as it will read; `#### <identifier> (new)` for a critical flow through existing parts |
+
+- A projected entry needs no number and no prefix: the task that writes it into the foundation
+  gives them.
+- Below each entry stands its translation into the language of the definition, every line
+  beginning with `>`; it helps the human weigh the wording and is not approved.
+- At the gate the wording of every projected entry is whole; its fields need not be. `TODO` in a
+  field — a line `- **<Field>:** …` and the indented lines that continue it — or in a translation
+  is no gap the gate stops at: the format guard of the element checks the fields in the task that
+  writes the entry. `TODO` anywhere else in the section is a gap
+  (`TODO — decision pending: which decision sets that the gate asks a projected entry for its whole
+  wording, not its whole fields`).
+
+A section with no projected entry reads the line and `none`
+(`TODO — decision pending: which decision sets the form of a projected entry`).
 
 ## Gate record
 
