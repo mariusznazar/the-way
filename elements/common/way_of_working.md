@@ -85,8 +85,13 @@ looks for in its element.
    arguments its `--help` gives for this file and for the commit the task branch left the main
    branch from, or for no main branch
    (`TODO — decision pending: which decision sets that the skill runs the format guard on the file
-   it writes`). Fix what the entry broke and run it again; an error, a warning or an unchecked line
-   elsewhere in the file goes to the human.
+   it writes`). Fix what the entry broke and run it again; an error or a warning elsewhere in the
+   file goes to the human. Of the report's `unchecked:` lines, those that a `none` given to an
+   option leaves — the text after the dash begins with that option and `none` — go to the human
+   once per run of the guard, as their number, and every other `unchecked:` line goes to the human
+   on its own
+   (`TODO — decision pending: which decision sets how the unchecked lines of a guard's report reach
+   the human`).
 4. What follows from the entry goes through these steps one at a time, each through the skill of
    its element
    (`TODO — decision pending: which decision sets that the entries following from one entry are

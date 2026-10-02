@@ -1778,21 +1778,26 @@ is `fail`, or a run records a failure for no entry, and zero otherwise.
 - **Verification:** level 1 — invariants: invariant-method-form · gate-result-values ·
   gate-unchecked-reason · gate-reported-set · gate-exit-code. Level 2 for the reasons — an agent
   compares the change with the decision:
-  - complies: a flow's list of parts with no coverage file is `unchecked` (WAY-47); so is a check
-    needing a commit the gate filled in as not existing;
+  - complies: a flow's list of parts with no coverage file is `unchecked` (WAY-47), as are a check
+    needing a commit the gate filled in as not existing and the comparison of a product's glossary
+    with the glossary of the-way in a repository that pins no the-way;
   - violates: a guard whose call to git fails reports `unchecked`; a human's `pass` stays in force
     after a change since the assessed commit reaches the entry; a critical flow's test is left out and
     the command exits zero.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-26
+- **Approved by:** Mariusz, 2026-10-02
 
 *Rationale:* a check can always call itself unchecked, so only listed reasons count; `unchecked`
 leaves the command at zero, because an invariant may enter before its method can run (WAY-60,
-WAY-61), and a human reads it (WAY-47).
+WAY-61), and a human reads it (WAY-47). A product that pins no the-way, or pins a commit of it
+holding no glossary, has no words of the process to compare its own with (WAY-34), so that
+comparison is undecided, not failed.
 *Rejected:* `unchecked` failing the command — every invariant without a method would fail every
 change; an open list of reasons — any excuse passes; a third exit code — nothing reads it; a
-human's verdict valid for the entry's version — it outlives changes to the product.
+human's verdict valid for the entry's version — it outlives changes to the product; no reason for
+a product that pins no the-way — its comparison with the glossary of the-way records nothing, and
+the gate reads `error` there.
 
 ### WAY-64/1 — Where do invariant and environment fact entries stand, and what identifies one?
 

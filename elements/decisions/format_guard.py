@@ -7,7 +7,8 @@ them are read from the template, so the rules of the entry live in one place (WA
 WAY-71). Each check cites the invariants it gives a verdict for, as
 `invariant: <identifier>/<version>` (WAY-65). In the-way's own log, the guard also checks who
 approved each version (WAY-14) and that every number `examples.md` names is a decision of the log
-(WAY-05).
+(WAY-05). The report and the record of a run are written with the code the format guards share
+(WAY-09).
 
 Usage, from the root of the product's repository:
 
@@ -34,7 +35,7 @@ written.
 
 import argparse
 import datetime
-import json
+import importlib.util
 import os
 import re
 import subprocess
@@ -59,15 +60,24 @@ OWN_APPROVER = "Mariusz"
 SELECTED_BY = {"check_against_base": "--base", "check_template_change": "--base",
                "check_fingerprints": "--merge-onto", "merged_log": "--merge-onto",
                "check_merge_todo": "--merge-onto"}
-# The value the gate fills in for a commit that does not exist (WAY-61), and the reason a check
-# that needs that commit records for being unchecked, word for word as the invariants template
-# lists it (WAY-63).
-NO_COMMIT = "none"
-NO_COMMIT_REASON = "the method takes a commit the gate filled in as not existing"
 
 sys.dont_write_bytecode = True
 sys.path.insert(0, os.path.join(HERE, "..", "..", "relation-model"))
 from fingerprint import fingerprint  # noqa: E402
+
+
+def _load(name, path):
+    spec = importlib.util.spec_from_file_location(name, path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+# The code the format guards share (WAY-09): the report of a run and the-way's own record of it.
+shared = _load("elements_common_guard_shared",
+               os.path.join(HERE, "..", "common", "guard_shared.py"))
+NO_COMMIT = shared.NO_COMMIT
+NO_COMMIT_REASON = shared.NO_COMMIT_REASON
 
 DATE = r"\d{4}-\d{2}-\d{2}"
 NUMBER_WORDS = {"one": 1, "two": 2, "three": 3, "four": 4, "five": 5}
@@ -284,116 +294,15 @@ def parse_log(text, prefix):
 # --- the report and the record of a run -----------------------------------------------------
 
 
-def describe(line, message):
-    return "line %d: %s" % (line, message) if line else message
-
-
-class Report:
-    """What a person reads, and the record of the run the gate reads (WAY-74).
-
-    A check that runs names the invariants it cites with ran(); an error or a failure it finds
-    names the check and the invariants the finding makes false. A check with no finding for an
-    invariant it cites records `pass`; a check that cannot run for a reason on the invariants
-    template's list names it with unchecked() and records `unchecked` beside that reason and a
-    description of the case; an error
-    that names no invariant is a failure recorded for no entry, and one that names no check is a
-    failure no rule gave. The record holds the checks of the options the run was given, or of the
-    log alone when it was given none; the report for a person holds every check.
-
-    The last line of the report counts what the person is told was left unchecked, one for each
-    `unchecked:` line a check names with cannot_check() — in this guard, a check needing a commit
-    given as `none`. It is not a count of the record's `unchecked` verdicts, which stand one for
-    each check and invariant.
-    Checks left out because an option was not given stand in notes, and are not counted.
-    """
+class Report(shared.Report):
+    """The report the guards share, naming this program and its checks in the record."""
 
     def __init__(self, path, options=()):
-        self.path = path
-        self.options = set(options)
-        self.errors = []
-        self.warnings = []
-        self.not_checked = []  # (what, why), printed for a person as `unchecked:`
-        self.notes = []
-        self.verdicts = {}  # (check, invariant) -> descriptions of its failures
-        self.skipped = {}  # (check, invariant) -> (the reason it is unchecked, its description)
-        self.unowned = []  # (check or None, description) of errors that belong to no invariant
-
-    def ran(self, check, *invariants):
-        for invariant in invariants:
-            self.verdicts.setdefault((check, invariant), [])
-
-    def unchecked(self, check, reason, description, *invariants):
-        for invariant in invariants:
-            self.skipped[(check, invariant)] = (reason, description)
-
-    def fail(self, line, message, check, invariants):
-        """Records a failure of each invariant, without a line in the report for a person."""
-        for invariant in invariants:
-            self.verdicts.setdefault((check, invariant), []).append(describe(line, message))
-
-    def error(self, line, message, check=None, invariants=()):
-        self.errors.append((line, message))
-        if invariants:
-            self.fail(line, message, check, invariants)
-        else:
-            self.unowned.append((check, describe(line, message)))
-
-    def warning(self, line, message):
-        self.warnings.append((line, message))
-
-    def cannot_check(self, what, why):
-        self.not_checked.append((what, why))
-
-    def print(self, stream):
-        for level, items in (("error", self.errors), ("warning", self.warnings)):
-            for line, message in sorted(items, key=lambda item: item[0] or 0):
-                stream.write("%s:%s: %s: %s\n" % (self.path, line or 0, level, message))
-        for what, why in self.not_checked:
-            stream.write("unchecked: %s — %s\n" % (what, why))
-        for note in self.notes:
-            stream.write("note: %s\n" % note)
-        stream.write("%d error(s), %d warning(s), %d unchecked\n"
-                     % (len(self.errors), len(self.warnings), len(self.not_checked)))
-
-    def recorded(self, check):
-        if check is None:
-            return True
-        return SELECTED_BY.get(check) in self.options if self.options else check not in SELECTED_BY
-
-    def record(self):
-        lines = []
-        for (check, invariant), failures in self.verdicts.items():
-            if not self.recorded(check):
-                continue
-            name = "%s::%s" % (PROGRAM, check)
-            if not failures:
-                lines.append({"check": name, "verdict": "pass", "invariant": invariant})
-            for description in failures:
-                lines.append({"check": name, "verdict": "fail", "invariant": invariant,
-                              "description": description})
-        for (check, invariant), (reason, description) in self.skipped.items():
-            if self.recorded(check):
-                lines.append({"check": "%s::%s" % (PROGRAM, check), "verdict": "unchecked",
-                              "invariant": invariant, "reason": reason,
-                              "description": description})
-        for check, description in self.unowned:
-            if not self.recorded(check):
-                continue
-            lines.append({"check": "%s::%s" % (PROGRAM, check) if check else PROGRAM,
-                          "verdict": "fail", "invariant": None, "description": description})
-        return lines
+        super().__init__(path, options, program=PROGRAM, selected_by=SELECTED_BY)
 
 
-def start_record(path):
-    directory = os.path.dirname(os.path.abspath(path))
-    os.makedirs(directory, exist_ok=True)
-    open(path, "w", encoding="utf-8").close()
-
-
-def write_record(path, report):
-    with open(path, "w", encoding="utf-8", newline="\n") as handle:
-        for line in report.record():
-            handle.write(json.dumps(line, ensure_ascii=False) + "\n")
+start_record = shared.start_record
+write_record = shared.write_record
 
 
 # --- checks ---------------------------------------------------------------------------------
@@ -1247,7 +1156,7 @@ def run(log_path, base=None, today=None, template=TEMPLATE, examples=EXAMPLES, s
         report.notes.append("who approves a version is checked only in the-way's own log")
 
     if base == NO_COMMIT:
-        no_base = "--base none: there is no commit the branch left the main branch from"
+        no_base = shared.NO_BASE
         check_against_base(log_path, text, None, prefix, report, None, no_commit=no_base)
         check_template_change(None, None, None, report, no_commit=no_base)
     elif base:
@@ -1261,7 +1170,7 @@ def run(log_path, base=None, today=None, template=TEMPLATE, examples=EXAMPLES, s
                             "are not counted in the last line")
 
     if merge_onto == NO_COMMIT:
-        no_onto = "--merge-onto none: there is no commit to merge onto"
+        no_onto = shared.NO_MERGE_ONTO
         check_merge_todo(entries, prefix, report, no_commit=no_onto)
         merged_log(log_path, entries, merge_onto, prefix, None, report, no_commit=no_onto)
         check_fingerprints(None, rules, prefix, report, no_commit=no_onto)

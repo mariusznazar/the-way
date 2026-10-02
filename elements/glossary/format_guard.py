@@ -28,8 +28,10 @@ error, as a term or as a word of an *Avoid*, and so is the last word of such a t
 word in an *Avoid* (WAY-95, WAY-104); the-way's glossary is read from the
 submodule's repository at that commit, never from its working tree. The-way's own glossary is no
 product's glossary, and its terms are compared with nothing; in a repository with no such gitlink,
-the comparison is reported unchecked. The files of the submodule are the-way's history, not the
-product's: --base counts no word of *Avoid* in them, and reports them unchecked.
+or pinning a commit of the-way that holds no glossary, the comparison is reported unchecked and
+recorded `unchecked` for the reason the invariants template gives for a product that pins no
+the-way (WAY-63). The files of the submodule are the-way's history, not the product's: --base
+counts no word of *Avoid* in them, and reports them unchecked.
 
 Usage, from the root of the product's repository:
 
@@ -110,6 +112,11 @@ SELECTED_BY = {"check_against_base": "--base", "check_merge_todo": "--merge-onto
                "check_term_use": "--merge-onto"}
 NO_COMMIT = shared.NO_COMMIT
 NO_COMMIT_REASON = shared.NO_COMMIT_REASON
+# The reason the comparison with the glossary of the-way records for being unchecked where
+# there is no commit of it to compare with, word for word as the invariants template lists it
+# (WAY-63).
+UNPINNED_REASON = ("the product does not pin the-way, or the commit of the-way it pins does "
+                   "not hold what the method compares with")
 # Where a product's glossary stands, relative to the root of its repository (WAY-93).
 FILE_PATH = "foundations/glossary.md"
 # Where a product holds the-way, relative to the root of its repository: the submodule whose gitlink
@@ -1032,14 +1039,22 @@ def pinned_commit(top):
     return None, None
 
 
+def unpinned(report, check, what, why, invariant):
+    """The comparison with the glossary of the-way left unchecked for want of a pinned commit
+    holding it: an `unchecked:` line for a person, and `unchecked` in the record (WAY-63, WAY-74)."""
+    report.unchecked(check, UNPINNED_REASON, why, invariant)
+    report.cannot_check(what, why)
+
+
 def check_process_terms(entries, rules, top, own, report):
     """In a product's glossary, no term is, in any of its forms, a term the glossary of the-way holds
     at the commit the product pins (WAY-95, WAY-104), and no word of an *Avoid* is, in any of its
     forms, such a term or the last word of one (WAY-104). A phrase holding such a word, as a
     qualified word does, is neither. The-way's own glossary is no product's,
     and the check does not run on it; on a glossary in a repository holding no gitlink `.the-way`,
-    or pinning a commit of the-way that holds no glossary, it does not run either, and the report
-    says it is unchecked."""
+    or pinning a commit of the-way that holds no glossary, it does not run either: the report says
+    it is unchecked, and the record holds `unchecked` for the invariant beside the reason the
+    invariants template gives for a product that pins no the-way (WAY-63)."""
     # invariant: glossary-process-terms/1
     check, process = "check_process_terms", "glossary-process-terms/1"
     what = ("whether the glossary defines, or lists in an *Avoid*, a word the glossary of the-way "
@@ -1049,6 +1064,7 @@ def check_process_terms(entries, rules, top, own, report):
                             "with the glossary of the-way")
         return
     if top is None:
+        # the run has already failed: the file lies in no git repository
         report.cannot_check(what, "the file is in no git repository, so no commit of the-way it "
                                   "pins can be read")
         return
@@ -1057,8 +1073,8 @@ def check_process_terms(entries, rules, top, own, report):
         report.error(None, failure)
         return
     if commit is None:
-        report.cannot_check(what, "the repository holds no gitlink %s at its root, so it pins no "
-                                  "commit of the-way" % PINNED)
+        unpinned(report, check, what, "the repository holds no gitlink %s at its root, so it pins "
+                                      "no commit of the-way" % PINNED, process)
         return
     checkout = os.path.join(top, PINNED)
     if not os.path.exists(os.path.join(checkout, ".git")):
@@ -1076,8 +1092,8 @@ def check_process_terms(entries, rules, top, own, report):
         report.error(None, failure)
         return
     if text is None:
-        report.cannot_check(what, "the-way at %s, the commit the product pins, holds no %s to "
-                                  "compare the terms with" % (commit, FILE_PATH))
+        unpinned(report, check, what, "the-way at %s, the commit the product pins, holds no %s to "
+                                      "compare the terms with" % (commit, FILE_PATH), process)
         return
     report.ran(check, process)
     held = list(terms_of(text, rules))
@@ -1593,7 +1609,7 @@ def run(path, base=None, stream=None, template=TEMPLATE, merge_onto=None, record
     check_process_terms(entries, rules, top, own, report)
 
     if base == NO_COMMIT:
-        no_base = "--base none: there is no commit the branch left the main branch from"
+        no_base = shared.NO_BASE
         check_against_base(path, entries, rules, corpus, foundation, None, None, report,
                            no_commit=no_base)
     elif base:
@@ -1607,7 +1623,7 @@ def run(path, base=None, stream=None, template=TEMPLATE, merge_onto=None, record
                             "and are not counted in the last line")
 
     if merge_onto == NO_COMMIT:
-        no_onto = "--merge-onto none: there is no commit to merge onto"
+        no_onto = shared.NO_MERGE_ONTO
         check_merge_todo(entries, report, no_commit=no_onto)
         check_term_use(entries, corpus, report, False)
         check_term_use(entries, corpus, report, True, no_commit=no_onto)

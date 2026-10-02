@@ -1207,7 +1207,7 @@ def run(path, base=None, stream=None, template=TEMPLATE, merge_onto=None, record
         check_record_paths(entry_list, top, report)
 
     if base == NO_COMMIT:
-        no_base = "--base none: there is no commit the branch left the main branch from"
+        no_base = shared.NO_BASE
         check_against_base(path, facts, rules, None, None, report, no_commit=no_base)
     elif base:
         if find_commit(path, top, "--base", base, report):
@@ -1218,7 +1218,7 @@ def run(path, base=None, stream=None, template=TEMPLATE, merge_onto=None, record
                             "last line")
 
     if merge_onto == NO_COMMIT:
-        no_onto = "--merge-onto none: there is no commit to merge onto"
+        no_onto = shared.NO_MERGE_ONTO
         check_fingerprints(None, report, no_commit=no_onto)
         check_dependants(entry_list, foundation.invariants, foundation.latest, report, False)
         check_dependants(entry_list, [], {}, report, True, no_commit=no_onto)
