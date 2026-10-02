@@ -901,9 +901,9 @@ MATCH_TIMER = "A match timer is the timer that counts down a player's turn."
 MATCH_TIMER_USE = "\nThe match timer of a match.\n"
 
 
-class ProcessTerms(GuardTestCase):
-    """A product's glossary is checked against the glossary of the-way at the commit the product
-    pins, held as the submodule `.the-way` the installer adds."""
+class PinnedCase(GuardTestCase):
+    """A product holding the-way as the submodule `.the-way` the installer adds, and a repository
+    of the-way with two commits of its glossary."""
 
     def setUp(self):
         super().setUp()
@@ -923,12 +923,20 @@ class ProcessTerms(GuardTestCase):
                               capture_output=True, text=True).stdout.strip()
 
     def process_commit(self, text):
-        full = os.path.join(self.process.name, "foundations", "glossary.md")
-        os.makedirs(os.path.dirname(full), exist_ok=True)
-        with open(full, "w", encoding="utf-8", newline="\n") as handle:
-            handle.write(text)
+        return self.process_files(**{"foundations/glossary.md": text})
+
+    def process_files(self, **files):
+        """Commits the files to the repository of the-way, a file given None removed."""
+        for name, content in files.items():
+            full = os.path.join(self.process.name, *name.split("/"))
+            if content is None:
+                os.remove(full)
+                continue
+            os.makedirs(os.path.dirname(full), exist_ok=True)
+            with open(full, "w", encoding="utf-8", newline="\n") as handle:
+                handle.write(content)
         self.process_git("add", "-A")
-        self.process_git("commit", "-q", "-m", "glossary")
+        self.process_git("commit", "-q", "-m", "change")
         return self.process_git("rev-parse", "HEAD")
 
     def pin(self, commit=None):
@@ -938,6 +946,11 @@ class ProcessTerms(GuardTestCase):
         if commit:
             self.process_git("checkout", "-q", "--detach", commit,
                              cwd=os.path.join(self.root, ".the-way"))
+
+
+class ProcessTerms(PinnedCase):
+    """A product's glossary is checked against the glossary of the-way at the commit the product
+    pins, held as the submodule `.the-way` the installer adds."""
 
     def test_term_the_way_holds_fails(self):
         # invariant: glossary-process-terms/1
@@ -1052,31 +1065,6 @@ class ProcessTerms(GuardTestCase):
                                          definition=GAME_CLOCK)),
                           **{"foundations__notes.md": NOTES})
         self.assertEqual(self.verdicts("glossary-process-terms/1"), ["pass"])
-
-    def test_files_of_the_pinned_the_way_are_not_counted_against_the_base(self):
-        # invariant: glossary-avoid-growth/1
-        for name, content in (("elements/demo/template.md",
-                               TEMPLATE_TEXT + "\nA stopwatch stops a check.\n"),
-                              ("elements/common/rules.md", "# Rules\n\nNo stopwatch runs.\n")):
-            full = os.path.join(self.process.name, *name.split("/"))
-            os.makedirs(os.path.dirname(full), exist_ok=True)
-            with open(full, "w", encoding="utf-8", newline="\n") as handle:
-                handle.write(content)
-        self.process_commit(PROCESS_GLOSSARY)
-        self.pin()
-        pinned = os.path.join(self.root, ".the-way", "elements")
-        self.templates = [os.path.join(pinned, "demo", "template.md")]
-        text = glossary(entry(), run_entry(),
-                        entry(term="game clock", avoid="stopwatch — the same timer",
-                              definition=GAME_CLOCK))
-        self.commit(text, **{"foundations__notes.md": NOTES})
-        base = subprocess.run(["git", "rev-parse", "HEAD"], cwd=self.root, check=True,
-                              capture_output=True, text=True).stdout.strip()
-        output = self.assertPasses(text, base=base, common=os.path.join(pinned, "common"))
-        self.assertIn("unchecked: the words of *Avoid* in .the-way/elements/demo/template.md, "
-                      ".the-way/elements/common/rules.md — git does not hold them in this "
-                      "repository, so nothing reads them on %s" % base, output)
-        self.assertEqual(self.verdicts("glossary-avoid-growth/1"), ["pass"])
 
     def test_gitlink_not_the_checkout_of_the_submodule_is_read(self):
         # invariant: glossary-process-terms/1
@@ -1274,6 +1262,425 @@ class ProcessTerms(GuardTestCase):
         install = importlib.util.module_from_spec(installer)
         installer.loader.exec_module(install)
         self.assertEqual(format_guard.PINNED, install.SUBMODULE)
+
+
+RULES = "# Rules\n\nEvery check runs to its end.\n"
+RULES_WITH_COUNTDOWN = RULES + "\nNo countdown stops a check.\n"
+TIMERS = "# Timers\n\nA countdown of a check.\n"
+TIMER_GLOSSARY = glossary(entry(), run_entry(),
+                          entry(term="match timer", avoid="countdown — the same timer",
+                                definition=MATCH_TIMER))
+MATCH_NOTES = "# Notes\n\nThe match timer of a match.\n"
+COUNTDOWN_NOTES = MATCH_NOTES + "\nThe countdown of a match.\n"
+GROWTH = "elements/glossary/format_guard.py::check_against_base"
+UNMERGED = ("the gitlink .the-way is unmerged, so the commit the product pins is not known; settle "
+            "the pin and run the guard again")
+
+
+class AvoidInTheWay(PinnedCase):
+    """In a product, a word of *Avoid* is counted in the files of the-way at the commit the base
+    pins and at the one the product pins now, both read from the submodule's repository (WAY-34,
+    WAY-98)."""
+
+    def setUp(self):
+        super().setUp()
+        # `quiet` holds no `countdown` in the-way's files, `loud` holds it once in rules.md
+        self.quiet = self.process_files(**{"elements/demo/template.md": TEMPLATE_TEXT,
+                                           "elements/common/rules.md": RULES})
+        self.loud = self.process_files(**{"elements/common/rules.md": RULES_WITH_COUNTDOWN})
+        checkout = os.path.join(self.root, ".the-way", "elements")
+        self.templates = [os.path.join(checkout, "demo", "template.md")]
+        self.common = os.path.join(checkout, "common")
+
+    def commit_pinned(self, pin):
+        """Commits the product, its gitlink at the commit given, or none for None; its hash."""
+        self.write("foundations/glossary.md", TIMER_GLOSSARY)
+        self.write("foundations/notes.md", MATCH_NOTES)
+        self.git("add", "-A")
+        if pin:
+            self.git("update-index", "--cacheinfo", "160000,%s,.the-way" % pin)
+        self.git("commit", "-q", "-m", "base")
+        return self.process_git("rev-parse", "HEAD", cwd=self.root)
+
+    def count(self, base, pin, notes=MATCH_NOTES, common=None):
+        self.gitlink = pin
+        return self.guard(TIMER_GLOSSARY, base=base, common=common or self.common,
+                          **{"foundations__notes.md": notes})
+
+    def growth(self):
+        return [line for line in self.lines if line["invariant"] == "glossary-avoid-growth/1"]
+
+    def test_word_growing_in_a_file_of_the_pinned_the_way_fails(self):
+        # invariant: glossary-avoid-growth/1
+        self.pin()
+        base = self.commit_pinned(self.quiet)
+        code, output = self.count(base, self.loud)
+        message = (".the-way/elements/common/rules.md: `countdown`, which the *Avoid* of `match "
+                   "timer` lists, stands 1 time(s), 0 in the-way at %s, the commit pinned on %s; "
+                   "the-way at %s uses it in a meaning of its own, which the product cannot edit: "
+                   "qualify the word in *Avoid*, as \"match clock\" qualifies \"clock\", or drop it "
+                   "(WAY-98)" % (self.quiet, base, self.loud))
+        self.assertEqual(code, 1, output)
+        self.assertIn("error: " + message + "\n", output)
+        self.assertNotIn("unchecked: the words of *Avoid*", output)
+        self.assertTrue(output.endswith("1 error(s), 0 warning(s), 0 unchecked\n"), output)
+        self.assertEqual(self.lines, [{"check": GROWTH, "verdict": "fail",
+                                       "invariant": "glossary-avoid-growth/1",
+                                       "description": message}])
+
+    def test_same_pin_on_the_base_and_now_passes(self):
+        # invariant: glossary-avoid-growth/1
+        self.pin()
+        base = self.commit_pinned(self.loud)
+        code, output = self.count(base, self.loud)
+        self.assertEqual(code, 0, output)
+        self.assertNotIn("unchecked: the words of *Avoid*", output)
+        self.assertTrue(output.endswith("0 error(s), 0 warning(s), 0 unchecked\n"), output)
+        self.assertEqual(self.lines, [{"check": GROWTH, "verdict": "pass",
+                                       "invariant": "glossary-avoid-growth/1"}])
+
+    def test_working_tree_of_the_submodule_is_not_counted(self):
+        # invariant: glossary-avoid-growth/1
+        self.pin()
+        base = self.commit_pinned(self.quiet)
+        # the checkout stands at `loud`, and its working tree holds the word twice more
+        with open(os.path.join(self.common, "rules.md"), "a", encoding="utf-8",
+                  newline="\n") as handle:
+            handle.write("\nA countdown, and another countdown.\n")
+        code, output = self.count(base, self.quiet)
+        self.assertEqual(code, 0, output)
+        self.assertEqual(self.verdicts("glossary-avoid-growth/1"), ["pass"])
+
+    def test_pin_moving_to_fewer_uses_passes(self):
+        # invariant: glossary-avoid-growth/1
+        self.pin()
+        base = self.commit_pinned(self.loud)
+        code, output = self.count(base, self.quiet)
+        self.assertEqual(code, 0, output)
+        self.assertEqual(self.verdicts("glossary-avoid-growth/1"), ["pass"])
+
+    def test_word_growing_in_a_product_file_and_in_the_way_fails_twice(self):
+        # invariant: glossary-avoid-growth/1
+        self.pin()
+        base = self.commit_pinned(self.quiet)
+        code, output = self.count(base, self.loud, notes=COUNTDOWN_NOTES)
+        product = ("foundations/notes.md: `countdown`, which the *Avoid* of `match timer` lists, "
+                   "stands 1 time(s), 0 on %s" % base)
+        the_way = (".the-way/elements/common/rules.md: `countdown`, which the *Avoid* of `match "
+                   "timer` lists, stands 1 time(s), 0 in the-way at %s, the commit pinned on %s; "
+                   "the-way at %s uses it in a meaning of its own" % (self.quiet, base, self.loud))
+        self.assertEqual(code, 1, output)
+        self.assertIn("error: " + product + "\n", output)
+        self.assertIn("error: " + the_way, output)
+        self.assertEqual([line["verdict"] for line in self.growth()], ["fail", "fail"])
+        descriptions = [line["description"] for line in self.growth()]
+        self.assertEqual(descriptions[0], product)
+        self.assertTrue(descriptions[1].startswith(the_way), descriptions)
+
+    def test_file_new_at_the_pin_is_counted_against_none(self):
+        # invariant: glossary-avoid-growth/1
+        added = self.process_files(**{"elements/common/timers.md": TIMERS})
+        self.pin()
+        base = self.commit_pinned(self.loud)
+        code, output = self.count(base, added)
+        message = (".the-way/elements/common/timers.md: `countdown`, which the *Avoid* of `match "
+                   "timer` lists, stands 1 time(s), 0 in the-way at %s, the commit pinned on %s; "
+                   "the-way at %s uses it in a meaning of its own, which the product cannot edit: "
+                   "qualify the word in *Avoid*, as \"match clock\" qualifies \"clock\", or drop it "
+                   "(WAY-98)" % (self.loud, base, added))
+        self.assertEqual(code, 1, output)
+        self.assertEqual(self.lines, [{"check": GROWTH, "verdict": "fail",
+                                       "invariant": "glossary-avoid-growth/1",
+                                       "description": message}])
+
+    def test_file_dropped_at_the_pin_passes(self):
+        # invariant: glossary-avoid-growth/1
+        added = self.process_files(**{"elements/common/timers.md": TIMERS})
+        dropped = self.process_files(**{"elements/common/timers.md": None})
+        # the checkout still holds the file the pin drops, so the corpus holds it
+        self.pin(added)
+        self.assertTrue(os.path.exists(os.path.join(self.common, "timers.md")))
+        base = self.commit_pinned(added)
+        code, output = self.count(base, dropped)
+        self.assertEqual(code, 0, output)
+        self.assertEqual(self.verdicts("glossary-avoid-growth/1"), ["pass"])
+
+    def test_base_without_the_gitlink_records_the_count_unchecked(self):
+        # invariant: glossary-avoid-growth/1
+        base = self.commit_pinned(None)
+        self.pin()
+        code, output = self.count(base, self.loud)
+        why = ("%s holds no gitlink .the-way at the root of the repository, so it pins no commit "
+               "of the-way to count them on" % base)
+        self.assertEqual(code, 0, output)
+        self.assertIn("unchecked: the words of *Avoid* in .the-way/elements/demo/template.md, "
+                      ".the-way/elements/common/rules.md — %s\n" % why, output)
+        self.assertTrue(output.endswith("0 error(s), 0 warning(s), 1 unchecked\n"), output)
+        self.assertEqual(self.lines, [{"check": GROWTH, "verdict": "unchecked",
+                                       "invariant": "glossary-avoid-growth/1", "reason": NO_PIN,
+                                       "description": why}])
+
+    def test_base_without_the_gitlink_fails_on_a_file_of_the_product(self):
+        # invariant: glossary-avoid-growth/1
+        base = self.commit_pinned(None)
+        self.pin()
+        code, output = self.count(base, self.loud, notes=COUNTDOWN_NOTES)
+        message = ("foundations/notes.md: `countdown`, which the *Avoid* of `match timer` lists, "
+                   "stands 1 time(s), 0 on %s" % base)
+        self.assertEqual(code, 1, output)
+        self.assertIn("unchecked: the words of *Avoid* in .the-way/elements/demo/template.md, "
+                      ".the-way/elements/common/rules.md — %s holds no gitlink .the-way" % base,
+                      output)
+        self.assertEqual(self.lines, [{"check": GROWTH, "verdict": "fail",
+                                       "invariant": "glossary-avoid-growth/1",
+                                       "description": message}])
+
+    def test_submodule_not_initialized_is_a_failure_of_the_run(self):
+        # the guard's own copy of the-way lies outside the product, so the run goes on; the
+        # product's submodule, which holds the files counted and the commits they are counted at,
+        # is not initialized
+        common = self.copy_of_the_way()
+        self.pin()
+        base = self.commit_pinned(self.quiet)
+        self.git("submodule", "deinit", "-q", "-f", ".the-way")
+        code, output = self.count(base, self.loud, common=common)
+        message = ("the submodule .the-way is not initialized, so the files of the-way at %s and %s "
+                   "cannot be read to count the words of *Avoid* in them; run `git submodule "
+                   "update --init -- .the-way`" % (self.quiet, self.loud))
+        self.assertEqual(code, 1, output)
+        self.assertIn(message, output)
+        self.assertEqual(self.growth(), [])
+        self.assertIn({"check": "elements/glossary/format_guard.py", "verdict": "fail",
+                       "invariant": None, "description": message}, self.lines)
+        # the remedy the message gives lets the count run
+        self.git("-c", "protocol.file.allow=always", "submodule", "update", "-q", "--init", "--",
+                 ".the-way")
+        code, output = self.count(base, self.loud, common=common)
+        self.assertEqual(code, 1, output)
+        self.assertIn("error: .the-way/elements/common/rules.md: `countdown`, which the *Avoid* of "
+                      "`match timer` lists, stands 1 time(s), 0 in the-way at %s" % self.quiet,
+                      output)
+        self.assertEqual(self.verdicts("glossary-avoid-growth/1"), ["fail"])
+
+    def test_submodule_without_the_commit_the_base_pins_is_a_failure_of_the_run(self):
+        self.pin()
+        later = self.process_files(**{"elements/common/rules.md": RULES + "\nA later rule.\n"})
+        base = self.commit_pinned(later)
+        code, output = self.count(base, self.loud)
+        message = ("the submodule .the-way does not hold %s, the commit of the-way %s pins; run "
+                   "`git -C .the-way fetch origin %s`; where the-way's remote does not hold that "
+                   "commit either, stop and ask a human to restore it there or to start the "
+                   "branch from a commit pinning one it holds" % (later, base, later))
+        self.assertEqual(code, 1, output)
+        self.assertIn(message, output)
+        self.assertEqual(self.growth(), [])
+        self.assertIn({"check": "elements/glossary/format_guard.py", "verdict": "fail",
+                       "invariant": None, "description": message}, self.lines)
+        # the remedy the message gives lets the count run
+        self.git("-C", ".the-way", "fetch", "-q", "origin", later)
+        code, output = self.count(base, self.loud)
+        self.assertEqual(code, 1, output)
+        self.assertIn("error: .the-way/elements/common/rules.md: `countdown`, which the *Avoid* of "
+                      "`match timer` lists, stands 1 time(s), 0 in the-way at %s" % later, output)
+
+    def test_unmerged_gitlink_is_one_failure_of_the_run(self):
+        self.pin()
+        base = self.commit_pinned(self.quiet)
+        self.git("checkout", "-q", "-b", "other")
+        self.git("update-index", "--cacheinfo", "160000,%s,.the-way" % self.loud)
+        self.git("commit", "-q", "-m", "pin loud")
+        self.git("checkout", "-q", "main")
+        self.git("update-index", "--cacheinfo", "160000,%s,.the-way" % self.first)
+        self.git("commit", "-q", "-m", "pin the first")
+        merge = subprocess.run(["git", "merge", "-q", "--no-edit", "other"], cwd=self.root,
+                               capture_output=True)
+        self.assertNotEqual(merge.returncode, 0)
+        output = io.StringIO()
+        code = format_guard.run(self.path, base=base, stream=output, record=self.record_path,
+                                templates=self.templates, examples=self.examples,
+                                common=self.common)
+        self.assertEqual(code, 1, output.getvalue())
+        self.assertEqual(output.getvalue().count(UNMERGED), 1, output.getvalue())
+        with open(self.record_path, encoding="utf-8") as handle:
+            lines = [json.loads(item) for item in handle.read().split("\n") if item]
+        self.assertEqual(lines, [{"check": "elements/glossary/format_guard.py", "verdict": "fail",
+                                  "invariant": None, "description": UNMERGED}])
+
+    def test_repository_pinning_no_the_way_keeps_its_count(self):
+        # invariant: glossary-avoid-growth/1
+        # the-way's own repository holds no gitlink, and its templates and the files of the part
+        # the elements share are its own: they are counted on the base, and no pin is looked for
+        templates = self.templates = [os.path.join(self.root, "elements", "demo", "template.md")]
+        self.assertTrue(os.path.exists(templates[0]))
+        self.commit(glossary(), **{"elements__common__rules.md": "# Shared rules\n"})
+        with unittest.mock.patch.object(format_guard, "pinned_on",
+                                        side_effect=AssertionError("a pin was looked for")):
+            output = self.assertFails(glossary(), "elements/common/rules.md: `storage cell`, which "
+                                                  "the *Avoid* of `save slot` lists, stands 1 "
+                                                  "time(s), 0 on HEAD", base="HEAD",
+                                      common=os.path.join(self.root, "elements", "common"),
+                                      **{"elements__common__rules.md": "# Shared rules\n\nThe "
+                                                                       "storage cell of a game.\n"})
+        self.assertNotIn("unchecked: the words of *Avoid*", output)
+        self.assertNotIn("in the-way at", output)
+        self.assertEqual(self.verdicts("glossary-avoid-growth/1"), ["fail"])
+
+    def copy_of_the_way(self):
+        """A clone of the repository of the-way outside the product, standing at `loud`, whose
+        templates and files of the part the elements share the run reads."""
+        copy = tempfile.TemporaryDirectory()
+        self.addCleanup(copy.cleanup)
+        self.process_git("clone", "-q", self.process.name, copy.name)
+        self.templates = [os.path.join(copy.name, "elements", "demo", "template.md")]
+        return os.path.join(copy.name, "elements", "common")
+
+    def test_files_outside_a_repository_pinning_no_the_way_stay_unchecked(self):
+        # invariant: glossary-avoid-growth/1
+        # a copy of the-way outside a repository that pins none: nothing pins them on the base
+        common = self.copy_of_the_way()
+        self.commit(glossary())
+        output = self.assertPasses(glossary(), base="HEAD", common=common)
+        why = ("the repository holds no gitlink .the-way at its root, so it pins no commit of "
+               "the-way to count them on")
+        self.assertIn("unchecked: the words of *Avoid* in elements/demo/template.md, "
+                      "elements/common/rules.md — %s\n" % why, output)
+        self.assertEqual(self.lines, [{"check": GROWTH, "verdict": "unchecked",
+                                       "invariant": "glossary-avoid-growth/1", "reason": NO_PIN,
+                                       "description": why}])
+
+    def test_files_outside_a_repository_pinning_no_the_way_leave_a_product_file_failing(self):
+        # invariant: glossary-avoid-growth/1
+        common = self.copy_of_the_way()
+        self.commit(glossary(), **{"foundations__notes.md": "# Notes\n"})
+        self.assertFails(glossary(), "foundations/notes.md: `storage cell`, which the *Avoid* of "
+                                     "`save slot` lists, stands 1 time(s), 0 on HEAD", base="HEAD",
+                         common=common,
+                         **{"foundations__notes.md": "# Notes\n\nThe storage cell of a game.\n"})
+        self.assertEqual(self.verdicts("glossary-avoid-growth/1"), ["fail"])
+
+    def test_a_copy_of_the_way_outside_the_product_is_not_counted(self):
+        # invariant: glossary-avoid-growth/1
+        # the guard's copy holds the word (it stands at `loud`); the pins hold it as often
+        common = self.copy_of_the_way()
+        self.pin()
+        base = self.commit_pinned(self.quiet)
+        code, output = self.count(base, self.quiet, common=common)
+        self.assertEqual(code, 0, output)
+        self.assertEqual(self.verdicts("glossary-avoid-growth/1"), ["pass"])
+
+    def test_file_the_pin_adds_is_counted_though_the_checkout_lacks_it(self):
+        # invariant: glossary-avoid-growth/1
+        # `extra` adds the file and holds rules.md as `quiet` does, so extra.md alone grows
+        extra = self.process_files(**{"elements/common/extra.md": "# Extra\n\nA countdown.\n",
+                                      "elements/common/rules.md": RULES})
+        self.pin(self.quiet)
+        self.assertFalse(os.path.exists(os.path.join(self.common, "extra.md")))
+        base = self.commit_pinned(self.quiet)
+        code, output = self.count(base, extra)
+        message = (".the-way/elements/common/extra.md: `countdown`, which the *Avoid* of `match "
+                   "timer` lists, stands 1 time(s), 0 in the-way at %s, the commit pinned on %s; "
+                   "the-way at %s uses it in a meaning of its own, which the product cannot edit: "
+                   "qualify the word in *Avoid*, as \"match clock\" qualifies \"clock\", or drop it "
+                   "(WAY-98)" % (self.quiet, base, extra))
+        self.assertEqual(code, 1, output)
+        self.assertEqual(self.lines, [{"check": GROWTH, "verdict": "fail",
+                                       "invariant": "glossary-avoid-growth/1",
+                                       "description": message}])
+
+    def test_field_names_of_the_way_come_from_the_pin_not_the_checkout(self):
+        # invariant: glossary-avoid-growth/1
+        # the pin now adds a field named Countdown and a heading of that name: a field's name, as
+        # a heading or a label, is no use, whichever commit the checkout stands at
+        named = self.process_files(**{"elements/common/rules.md":
+                                      RULES + "\n## Countdown\n\n- **Countdown:** none\n"})
+        self.pin(self.quiet)
+        base = self.commit_pinned(self.quiet)
+        checkout = os.path.join(self.root, ".the-way")
+        for standing in (self.quiet, named):
+            self.process_git("checkout", "-q", "--detach", standing, cwd=checkout)
+            code, output = self.count(base, named)
+            self.assertEqual(code, 0, output)
+            self.assertEqual(self.verdicts("glossary-avoid-growth/1"), ["pass"])
+
+    def test_base_with_a_plain_directory_named_like_the_submodule_is_unpinned(self):
+        # invariant: glossary-avoid-growth/1
+        self.write(".the-way/README.md", "# the-way\n")
+        base = self.commit_pinned(None)
+        self.git("rm", "-r", "-q", "--cached", ".the-way")
+        os.remove(os.path.join(self.root, ".the-way", "README.md"))
+        os.rmdir(os.path.join(self.root, ".the-way"))
+        self.pin()
+        code, output = self.count(base, self.loud)
+        why = ("%s holds no gitlink .the-way at the root of the repository, so it pins no commit "
+               "of the-way to count them on" % base)
+        self.assertEqual(code, 0, output)
+        self.assertIn("unchecked: the words of *Avoid* in .the-way/elements/demo/template.md, "
+                      ".the-way/elements/common/rules.md — %s\n" % why, output)
+        self.assertEqual(self.lines, [{"check": GROWTH, "verdict": "unchecked",
+                                       "invariant": "glossary-avoid-growth/1", "reason": NO_PIN,
+                                       "description": why}])
+
+    def test_markdown_file_below_the_part_the_elements_share_is_not_counted(self):
+        # invariant: glossary-avoid-growth/1
+        nested = self.process_files(**{"elements/common/sub/x.md": "# X\n\nA countdown.\n"})
+        self.pin()
+        base = self.commit_pinned(self.loud)
+        code, output = self.count(base, nested)
+        self.assertEqual(code, 0, output)
+        self.assertEqual(self.verdicts("glossary-avoid-growth/1"), ["pass"])
+
+    def failing_listing(self, listed):
+        """A run in which git cannot list the path `listed` with `ls-tree`."""
+        real = format_guard.shared.call_git
+
+        def call(arguments, cwd, stdin=None):
+            if arguments[0] == "ls-tree" and arguments[-1] == listed:
+                return 128, "", "fatal: bad tree object"
+            return real(arguments, cwd, stdin)
+        return unittest.mock.patch.object(format_guard.shared, "call_git", side_effect=call)
+
+    def assertRunFails(self, message):
+        self.assertIn({"check": "elements/glossary/format_guard.py", "verdict": "fail",
+                       "invariant": None, "description": message}, self.lines)
+        self.assertEqual(self.growth(), [])
+
+    def test_base_git_cannot_list_is_a_failure_of_the_run_with_a_remedy(self):
+        self.pin()
+        base = self.commit_pinned(self.quiet)
+        with self.failing_listing(".the-way"):
+            code, output = self.count(base, self.loud)
+        self.assertEqual(code, 1, output)
+        self.assertRunFails("git cannot list .the-way at %s: fatal: bad tree object; check the "
+                            "repository with `git fsck` and run the guard again" % base)
+
+    def test_pin_git_cannot_list_is_a_failure_of_the_run_with_a_remedy(self):
+        self.pin()
+        base = self.commit_pinned(self.quiet)
+        with self.failing_listing("elements"):
+            code, output = self.count(base, self.loud)
+        self.assertEqual(code, 1, output)
+        self.assertRunFails("git cannot list the files of the-way at %s: fatal: bad tree object; "
+                            "check the submodule with `git -C .the-way fsck` and run the guard "
+                            "again" % self.loud)
+
+    def test_identifier_gone_since_the_base_counts_in_a_file_of_the_way(self):
+        # invariant: glossary-avoid-growth/1
+        # `countdown` names an invariant of the product on the base and none now: on the base pin
+        # it is an identifier in a field's value, left out of the count, and now it is a word
+        pinned = self.process_files(**{"elements/common/rules.md":
+                                       RULES + "\n- **Owner:** countdown\n"})
+        self.pin()
+        self.write("foundations/invariants.md", invariants(
+            invariant(), invariant("countdown", "Every turn ends in a save slot.")))
+        base = self.commit_pinned(pinned)
+        self.write("foundations/invariants.md", invariants(
+            invariant(), invariant("turn-check", "Every turn ends in a save slot.")))
+        code, output = self.count(base, pinned)
+        self.assertEqual(code, 1, output)
+        self.assertIn("error: .the-way/elements/common/rules.md: `countdown`, which the *Avoid* of "
+                      "`match timer` lists, stands 1 time(s), 0 in the-way at %s, the commit pinned "
+                      "on %s" % (pinned, base), output)
+        self.assertEqual(self.verdicts("glossary-avoid-growth/1"), ["fail"])
 
 
 class DefinitionUses(GuardTestCase):

@@ -156,7 +156,12 @@ entry among it, stands in `elements/common/rules.md` (WAY-71).
   elements share are searched`).
 - A word of *Avoid* is an error where a change makes it stand more times in such a file, each read
   whole, than on the commit the task branch left the main branch from; what WAY-98 does not count
-  is left out, and the guard's code and tests hold how each of it is found (WAY-98).
+  is left out, and the guard's code and tests hold how each of it is found (WAY-98). In a product, a
+  file of the-way is counted by its path in the-way at two commits of the-way, the one pinned on
+  the commit the task branch left the main branch from and the one the product pins now, both read
+  from the history of the-way, never from its files on disk; where that commit pins none, the files
+  of the-way are left `unchecked` and the product's own files are still counted (WAY-34, WAY-63,
+  WAY-98).
 - The change that puts a word into *Avoid* also searches the elements' skills, the root
   `README.md` and the code for it, as it searches for the entries that wait for it
   (`TODO — decision pending: which decision sets that a change putting a word into Avoid searches
