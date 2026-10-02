@@ -2833,24 +2833,28 @@ A word of a product's domain that the glossary of the-way holds at the commit th
 any of its forms, is written in the files of the product's `foundations/` with a qualifier — a
 phrase holding the word — and the bare word keeps there the meaning of the process; the qualified
 word takes a glossary entry only where WAY-95 gives a word one, and the entry of the bare word in
-the glossary of the-way records no *Not* for it. The product's code, its interface and talk about
-the product use the word of the domain unchanged.
+the glossary of the-way records no *Not* for it. The *Avoid* of an entry of the product's glossary
+holds a word the glossary of the-way holds, or the last word of a term it holds, in any of its
+forms, only with a qualifier. The product's code, its interface and talk about the product use the
+word of the domain unchanged.
 
 - **Change:** new decision
 - **Scope:** glossary, decisions, invariants, part-map, environment-facts
 - **Based on:** none
-- **Relations:** derives from WAY-95@1cc58b42 · narrows WAY-99@7d44dfd7
+- **Relations:** derives from WAY-95@1cc58b42 · derives from WAY-98@94371030 ·
+  narrows WAY-99@7d44dfd7
 - **Verification:** level 1 — invariants: glossary-process-terms. Level 2 for how the sentences of
   a product's foundation, its code and its interface write the word — an agent compares the change
   with the decision:
   - complies: a game's invariants say "game clock" for the timer of a match, and its glossary,
     holding no entry for it, defines no "clock", while its code names a class `Clock` and its
-    screen shows "Clock";
+    screen shows "Clock"; a game's glossary entry "game clock" lists "match clock" in *Avoid*;
   - violates: a game's glossary defines "clock" as the timer of a match; a game's invariant says
-    "clock" for the timer of a match.
+    "clock" for the timer of a match; a game's glossary entry "match timer" lists "clock" in
+    *Avoid*, or its entry "lab result" lists "fact", the last word of "environment fact".
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-10-01
+- **Approved by:** Mariusz, 2026-10-02
 
 *Rationale:* a word of the process written bare in a product's foundation for something of its
 domain carries two meanings for an agent that reads the-way's rules beside the product's, and a
@@ -2858,7 +2862,11 @@ qualifier keeps each word in one meaning where the rules are read; the people wh
 product keep the words of its domain, since the rule protects the reading of the foundation alone.
 A product cannot edit the glossary of the-way, so the *Not* that WAY-99 asks of the word's entry has
 nowhere to stand, and a phrase holding the word, which WAY-99 refuses as a carrier, here keeps the
-word of the field recognizable.
+word of the field recognizable. A word of *Avoid* counts as an error at every use WAY-98 counts,
+whatever meaning the use carries, so the bare word in a product's *Avoid* would bar the meaning of
+the process that the bare word keeps; the last word of a term of the-way, such as "fact" for
+"environment fact", stands for the whole term (WAY-94), so in a product's *Avoid* it would bar that
+term's short form in the same way.
 *Rejected:* the bare word of the process in a product's glossary, its meaning of the domain marked
 beside it and reported as a warning rather than an error — one word carries two meanings in the
 repository, and whoever reads the foundation tells at every use which one it carries; the words of
@@ -2866,4 +2874,6 @@ the process written in a fixed form in the-way, such as in backticks, leaving th
 for the domain — a plain word in a product's sentence may still carry either meaning, so the form
 keeps nothing apart, and every entry of the-way is rewritten to it; a word holding neither the word
 of the process nor its forms, as WAY-99 asks of a carrier — for words the field uses daily, such as
-"part", "entry" or "result", the foundation drifts from the words the product's people and code use.
+"part", "entry" or "result", the foundation drifts from the words the product's people and code use;
+the bare word in a product's *Avoid*, its uses in the meaning of the process left out of the count —
+no count tells one meaning of a word from another.
