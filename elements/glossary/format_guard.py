@@ -30,8 +30,16 @@ submodule's repository at that commit, never from its working tree. The-way's ow
 product's glossary, and its terms are compared with nothing; in a repository with no such gitlink,
 or pinning a commit of the-way that holds no glossary, the comparison is reported unchecked and
 recorded `unchecked` for the reason the invariants template gives for a product that pins no
-the-way (WAY-63). The files of the submodule are the-way's history, not the product's: --base
-counts no word of *Avoid* in them, and reports them unchecked.
+the-way (WAY-63). The templates and the files of the part the elements share are, in a product,
+the-way's history, not the product's: --base counts each word of *Avoid* in them, by their path in
+the-way, at two commits of it, the one the gitlink records on the base and the one the index
+records now. The list of those files and their text are read from the history of the-way in the
+submodule's repository, never from the files of the-way on disk, and a file one commit does not
+hold is empty there; the names of the fields whose mentions their count leaves out come from the
+product's own files and from the-way's at the commit pinned now (WAY-34, WAY-97, WAY-98). Where the base holds no gitlink `.the-way`, they are reported
+unchecked and recorded `unchecked` for that same reason, unless a file of the product fails the
+count; so are, in a repository whose index holds no such gitlink, the files of the-way git does
+not hold there.
 
 Usage, from the root of the product's repository:
 
@@ -574,7 +582,8 @@ def held_by(path, top):
 def corpus_text(path, top, tracked, text, element_name):
     """A template or a file of the part the elements share as the corpus holds it: named by its path
     from the root of the repository where it lies there, and read on another commit only where the
-    repository's own history holds it (WAY-98)."""
+    repository's own history holds it (WAY-98); in a product, the count of *Avoid* reads the files
+    of the-way from the history of the-way it pins instead (pinned_texts)."""
     if inside(path, top):
         return Text(relative(path, top), text, tracked is not None and held_by(path, top))
     return Text(element_name, text, False)
@@ -1039,6 +1048,36 @@ def pinned_commit(top):
     return None, None
 
 
+def pinned_on(commit, top):
+    """(the commit of the-way the repository pins on a commit of its own, None): the gitlink
+    `.the-way` at the root of that commit's tree; (None, None) where the commit holds no such
+    gitlink; (None, why) where git fails."""
+    code, listing, message = shared.call_git(["ls-tree", "--full-tree", "-z", commit, "--", PINNED],
+                                             top)
+    if code != 0:
+        return None, ("git cannot list %s at %s: %s; check the repository with `git fsck` and run "
+                      "the guard again" % (PINNED, commit, message or
+                                           "git ls-tree exited with %d" % code))
+    for item in listing.split("\0"):
+        info, _, name = item.partition("\t")
+        fields = info.split()
+        if name == PINNED and len(fields) == 3 and fields[0] == GITLINK:
+            return fields[2], None
+    return None, None
+
+
+def submodule_holds(checkout, commit):
+    """Whether the submodule's repository holds the commit."""
+    code, _, _ = shared.call_git(["cat-file", "-e", commit + "^{commit}"], checkout)
+    return code == 0
+
+
+def not_held(commit):
+    """The failure of a run whose submodule does not hold the commit the product pins."""
+    return ("the submodule %s does not hold %s, the commit the product pins; run "
+            "`git submodule update --init -- %s`" % (PINNED, commit, PINNED))
+
+
 def unpinned(report, check, what, why, invariant):
     """The comparison with the glossary of the-way left unchecked for want of a pinned commit
     holding it: an `unchecked:` line for a person, and `unchecked` in the record (WAY-63, WAY-74)."""
@@ -1082,10 +1121,8 @@ def check_process_terms(entries, rules, top, own, report):
                            "cannot be read; run `git submodule update --init -- %s`"
                      % (PINNED, commit, PINNED))
         return
-    code, _, _ = shared.call_git(["cat-file", "-e", commit + "^{commit}"], checkout)
-    if code != 0:
-        report.error(None, "the submodule %s does not hold %s, the commit the product pins; run "
-                           "`git submodule update --init -- %s`" % (PINNED, commit, PINNED))
+    if not submodule_holds(checkout, commit):
+        report.error(None, not_held(commit))
         return
     text, failure = shared.file_at(commit, FILE_PATH, checkout)
     if failure:
@@ -1314,13 +1351,98 @@ def names_its_element(identifier, foundation):
                for pattern in foundation.parts.get(identifier, []))
 
 
+def failed(report, message):
+    """Stops a check on a failure of the run (WAY-63), reported once however many checks meet it."""
+    if (None, message) not in report.errors:
+        report.error(None, message)
+    raise LookupError
+
+
+# The files of the-way the count of *Avoid* reads in a product, by their path in the-way: the
+# elements' templates and the Markdown files standing directly in the part the elements share
+# (WAY-95, WAY-98), as common_paths and template_paths find them in the-way itself.
+THE_WAY_FILE = re.compile(r"^elements/(?:[^/]+/template\.md|common/[^/]+\.(?:md|markdown))$", re.I)
+
+
+def the_way_files(commit, checkout, report):
+    """The paths in the-way, at the commit, of the files the count of *Avoid* reads, listed by git
+    from the history of the-way in the submodule's repository, never from its files on disk."""
+    code, listing, message = shared.call_git(["ls-tree", "-r", "--full-tree", "-z", "--name-only",
+                                              commit, "--", "elements"], checkout)
+    if code != 0:
+        failed(report, "git cannot list the files of the-way at %s: %s; check the submodule with "
+                       "`git -C %s fsck` and run the guard again"
+               % (commit, message or "git ls-tree exited with %d" % code, PINNED))
+    return {name for name in listing.split("\0") if THE_WAY_FILE.match(name)}
+
+
+def pinned_texts(base, top, report):
+    """(the commit of the-way the base pins, the commit the product pins now, the paths in the-way
+    of the files the count reads, {path: (its text at the first commit, at the second)}) in a
+    product. The paths are those either commit lists, read from the history of the-way in the
+    submodule's repository, never from its files on disk, and a file one commit does not hold is
+    empty there (WAY-34, WAY-98).
+    Where the index holds no gitlink `.the-way`, both commits are None and no file is listed;
+    where the base holds none, the first is None, the files are those the second lists and none is
+    read. Raises LookupError once the report says why they cannot be read: a failure of the run
+    (WAY-63)."""
+    now_pin, failure = pinned_commit(top)
+    if failure:
+        failed(report, failure)
+    if now_pin is None:
+        return None, None, [], {}
+    then_pin, failure = pinned_on(base, top)
+    if failure:
+        failed(report, failure)
+    checkout = os.path.join(top, PINNED)
+    if not os.path.exists(os.path.join(checkout, ".git")):
+        failed(report, "the submodule %s is not initialized, so the files of the-way at %s cannot "
+                       "be read to count the words of *Avoid* in them; run `git submodule update "
+                       "--init -- %s`" % (PINNED, now_pin if then_pin in (None, now_pin) else
+                                          "%s and %s" % (then_pin, now_pin), PINNED))
+    if not submodule_holds(checkout, now_pin):
+        failed(report, not_held(now_pin))
+    if then_pin is not None and not submodule_holds(checkout, then_pin):
+        failed(report, "the submodule %s does not hold %s, the commit of the-way %s pins; run "
+                       "`git -C %s fetch origin %s`; where the-way's remote does not hold that "
+                       "commit either, stop and ask a human to restore it there or to start the "
+                       "branch from a commit pinning one it holds"
+               % (PINNED, then_pin, base, PINNED, then_pin))
+    paths = the_way_files(now_pin, checkout, report)
+    if then_pin is not None:
+        paths |= the_way_files(then_pin, checkout, report)
+    # the order of the corpus: the templates, then the part the elements share
+    paths = sorted(paths, key=lambda name: (name.lower().startswith("elements/common/"), name))
+    texts = {}
+    for name in paths if then_pin is not None else []:
+        before, failure = shared.file_at(then_pin, name, checkout)
+        now = None
+        if not failure:
+            now, failure = shared.file_at(now_pin, name, checkout)
+        if failure:
+            failed(report, failure)
+        texts[name] = (before, now)
+    return then_pin, now_pin, paths, texts
+
+
 def check_against_base(path, entries, rules, corpus, foundation, base, top, report, no_commit=None,
                        own=False):
     """Against the base: no word of *Avoid* stands in a file more times than on the base (WAY-98);
     a term and an identifier that came to read alike are a warning, save, in the-way's own glossary
     (`own`), a term naming the element of a part whose files include `elements/<identifier>/`
     (WAY-93); the report lists the uses of every term whose definition changed (WAY-97). Given
-    `no_commit`, which says why there is no base, records the count unchecked instead."""
+    `no_commit`, which says why there is no base, records the count unchecked instead.
+
+    In a product, a file of the-way is counted, by its path in the-way, at the commit the base pins
+    and at the one the product pins now, the files either commit lists, all read from the history
+    of the-way in the submodule's repository (WAY-34, WAY-98); both sides leave out the mentions
+    of the fields the product's own files and the-way's at the commit pinned now name (WAY-97).
+    The files of the-way on disk beside the guard, in the submodule's checkout or in a copy
+    elsewhere, play no part in that count. Where the base holds no gitlink
+    `.the-way`, those files are reported unchecked and the count is recorded `unchecked` for the
+    reason the invariants template gives for a product that pins no the-way (WAY-63), or `fail`
+    where a file of the product fails it; so are, in a repository whose index holds no such
+    gitlink, the files of the-way git does not hold there."""
     # invariant: glossary-avoid-growth/1
     check, growth = "check_against_base", "glossary-avoid-growth/1"
     if no_commit:
@@ -1343,10 +1465,14 @@ def check_against_base(path, entries, rules, corpus, foundation, base, top, repo
              for word, _ in pairs(value_of(entry, AVOID)[0])]
     words = [(entry, word) for entry, word in words if word]
     outside = [text.name for text in corpus if not text.in_repo and not text.glossary]
-    if words and outside:
-        report.cannot_check("the words of *Avoid* in %s" % ", ".join(outside),
-                            "git does not hold them in this repository, so nothing reads them on %s"
-                            % base)
+    then_pin = now_pin = None
+    paths, the_way = [], {}
+    if words:
+        try:
+            then_pin, now_pin, paths, the_way = pinned_texts(base, top, report)
+        except LookupError:
+            # a failure of the run, not of the check, which then records no verdict (WAY-63)
+            return
     befores = {}
     for text in corpus:
         if text.in_repo and words:
@@ -1355,6 +1481,15 @@ def check_against_base(path, entries, rules, corpus, foundation, base, top, repo
                 # a failure of the run, not of the check, which then records no verdict (WAY-63)
                 report.error(None, failure)
                 return
+    if words and now_pin is None and outside:
+        unpinned(report, check, "the words of *Avoid* in %s" % ", ".join(outside),
+                 "the repository holds no gitlink %s at its root, so it pins no commit of the-way "
+                 "to count them on" % PINNED, growth)
+    elif words and now_pin is not None and then_pin is None and paths:
+        unpinned(report, check, "the words of *Avoid* in %s" % ", ".join(
+            "%s/%s" % (PINNED, name) for name in paths),
+                 "%s holds no gitlink %s at the root of the repository, so it pins no commit of "
+                 "the-way to count them on" % (base, PINNED), growth)
     report.ran(check, growth)
     names = field_names(text.text for text in corpus)
     terms = [entry.term for entry in entries if entry.term]
@@ -1368,6 +1503,25 @@ def check_against_base(path, entries, rules, corpus, foundation, base, top, repo
             if now > then:
                 report.error(None, "%s: `%s`, which the *Avoid* of `%s` lists, stands %d time(s), "
                                    "%d on %s" % (text.name, word, entry.term, now, then, base),
+                             check, (growth,))
+    # the field names that leave text of the-way's files out of the count come from the texts the
+    # count reads: the product's own and the-way's at the commit pinned now, both sides read alike
+    # with them, as the product's files are with the names of the corpus as it stands now; the
+    # files of the-way on disk beside the guard give none
+    pinned_names = field_names([text.text for text in corpus if text.in_repo] +
+                               [after for _, after in the_way.values() if after is not None])
+    for name, (before, after) in the_way.items():
+        for entry, word in words:
+            now = count_word(word, after, identifiers, pinned_names, terms)
+            then = count_word(word, before, base_identifiers, pinned_names, terms)
+            if now > then:
+                report.error(None, "%s: `%s`, which the *Avoid* of `%s` lists, stands %d time(s), "
+                                   "%d in the-way at %s, the commit pinned on %s; the-way at %s "
+                                   "uses it in a meaning of its own, which the product cannot "
+                                   "edit: qualify the word in *Avoid*, as \"match clock\" "
+                                   "qualifies \"clock\", or drop it (WAY-98)"
+                             % ("%s/%s" % (PINNED, name), word, entry.term, now, then,
+                                then_pin, base, now_pin),
                              check, (growth,))
 
     base_terms = terms_of(base_glossary, rules)
