@@ -6,16 +6,18 @@ description: Use when a project of a product that uses the-way has to be defined
 # Define a project
 
 Leads the first two steps of the project level: the definition, written with a human, and the
-readiness gate. The form of a definition and the rule of each section stand in
-`definition_template.md`; this skill holds the order of the work and what to ask. The project
-level has no decision in the log of the-way yet, so a rule below ends with the decision it waits
-for.
+readiness gate. A definition records what is settled about the product before the project is
+broken into tasks — as projected entries of the foundation — so that the breakdown and the tasks
+guess as little as they can. The form of a definition and the rule of each section stand in
+`definition_template.md`; how a skill asks stands in `elements/common/way_of_working.md`; this
+skill holds the order of the work. The project level has no decision in the log of the-way yet, so
+a rule below ends with the decision it waits for.
 
 This skill lives in `project-level/skill/` of the-way. Installed globally, its base directory is a
 link, so resolve it first: `realpath <base>` in Bash, `(Get-Item <base>).Target` in PowerShell. The
 project level's directory is the parent of the resolved one, and the-way the directory above that.
-In a product, the-way is the product's pinned `.the-way`, and the decisions skill named below is
-the product's `the-way-record-decision`.
+In a product, the-way is the product's pinned `.the-way`, and each skill named below is the
+product's skill of that name with the `the-way-` prefix.
 
 The project level reads the product's foundation and writes nothing in it
 (`TODO — decision pending: which decision sets that the project level writes nothing in the
@@ -23,12 +25,14 @@ foundation`).
 
 ## 0. Start or resume
 
-- Read `definition_template.md` in full.
+- Read `definition_template.md` in full, and the section "How a skill asks" of
+  `elements/common/way_of_working.md`.
 - When the human names an existing definition, read it whole and go on from where its status line
-  says. A definition whose status reads `approved` is checked first:
+  says; a working table under "Projected foundation changes" means step 5 is under way. A
+  definition whose status reads `approved` is checked first:
   `python -B <the-way>/project-level/readiness_check.py <definition>`. A finding that its
   fingerprint no longer matches means the definition changed after the gate, and it goes through
-  step 5 again.
+  step 6 again.
 - Otherwise begin with step 1.
 
 ## 1. The idea
@@ -57,16 +61,21 @@ foundation`).
 - Find where the product keeps its projects: the `## Backlog` section of the product's root
   `AGENTS.md` or `CLAUDE.md`. Where neither names it, ask once, and offer to add the answer as the
   template gives it.
-- Propose the definition's file name and path there, and on the human's word write the definition:
-  the confirmed goal, `TODO` in every other section but the gate record, which the template gives,
-  and the status line.
+- Once the human has confirmed the goal, write the definition there without asking: the confirmed
+  goal, `TODO` in every other section but the gate record, which the template gives, and the
+  status line. Give the definition's full path in the same message
+  (`TODO — decision pending: which decision sets that the first write of a definition waits for no
+  word of the human`).
 
 ## 4. Rounds through the sections
 
-- Ask a few questions at a time, about the largest unknowns first: what is in and out of scope,
-  what success looks like and what would show it false, the risks, the inputs and constraints.
-  After each round update the definition and its status line, so that a fresh agent reading only
-  the file knows where the work stands.
+- Ask about the largest unknowns first: what is in and out of scope, what success looks like and
+  what would show it false, the risks, the inputs and constraints.
+- Write each answer into the definition, with its status line, before the next question, so that a
+  fresh agent reading only the file knows where the work stands
+  (`TODO — decision pending: which decision sets that each answer is written before the next
+  question`).
+- Background, Success and Risks hold what the human answered: ask for them, as the template gives.
 - Three moves run through the rounds
   (`TODO — decision pending: which decision sets how the definition questions the human's
   frames`):
@@ -77,27 +86,36 @@ foundation`).
     costs;
   - what the files can answer, read yourself instead of asking.
 - Never ask for a deadline; the template says how one enters.
-- A choice that binds beyond the project — an exclusion for good (WAY-26), a constraint that
-  outlives the project, a change to a current decision — goes to the decisions skill in its
-  projected mode, naming this definition.
+- A settlement that binds beyond the project stays in the text of its section for now; step 5 makes
+  it an entry. "Projected foundation changes" reads `TODO` until then.
 - What is not yet known goes to one of the three places the template names.
-- Once the status line reads `ready for gate`, as the template gives it, step 5 begins.
+- Once no section but "Projected foundation changes" holds `TODO`, step 5 begins.
 
-## 5. The readiness gate
+## 5. Find the entries
 
-1. Run `python -B <the-way>/project-level/readiness_check.py <definition> --before-approval`. Each
-   finding goes back to step 4.
+- Run `find-foundation-entries` with this definition, the conversation and the material it started
+  from as the source, the breakdown of the project as the next reader, and projected entries into
+  "Projected foundation changes" as the mode.
+- A projected entry needs no number and no prefix: ask for none.
+- Once the section begins with its `Candidates:` line and holds no working table, and no section
+  holds `TODO`, set the status line to `ready for gate`, as the template gives it; step 6 begins.
+
+## 6. The readiness gate
+
+1. Run `python -B <the-way>/project-level/readiness_check.py <definition> --before-approval`. A
+   finding in "Projected foundation changes" goes back to step 5, any other to step 4.
 2. Search the whole foundation for what the definition collides with that no written link joins
    (WAY-33): a decision whose binding sentences the project would break, an invariant, a glossary
-   term the definition uses in another meaning. Settle each before the gate: a projected new
-   version of the decision through the decisions skill, or the definition brought into line with
-   it. Note the commit of the product's foundation you searched, as `git rev-parse HEAD` in the
-   product prints it.
-3. Show the human each projected decision whole, with its translation, and ask whether its wording
-   is approved. A wording the human changes goes through the decisions skill's projected mode
+   term the definition uses in another meaning, a fact the project contradicts. Settle each before
+   the gate: a projected new version of the entry through the skill of its element in projected
+   mode, or the definition brought into line with it. Note the commit of the product's foundation
+   you searched, as `git rev-parse HEAD` in the product prints it.
+3. Show the human each projected entry whole, with its translation, and ask whether its wording is
+   approved. A wording the human changes goes through the skill of its element in projected mode
    again.
 4. On the human's approval, write `<who>, YYYY-MM-DD` into *Approved by* of every projected
-   decision; then print the fingerprint with
+   decision; the other kinds have no field of approval, and the gate record approves them. Then
+   print the fingerprint with
    `python -B <the-way>/project-level/readiness_check.py <definition> --fingerprint`, write the
    gate record, and set the status line to `approved YYYY-MM-DD`.
 5. Run the check with no option; it must report nothing found. Tell the human what it reported,
