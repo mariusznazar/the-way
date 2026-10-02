@@ -68,8 +68,8 @@ definition`):
 - Step 3: the heading reads `#### (new) — <question>` for a new decision, or
   `#### <PREFIX>-<NN>/<version> — <question>` for the next version of a current one; *Approved by*
   reads `on acceptance` until `define-project` writes it at the readiness gate.
-- Step 4.4: an invariant the verification names is a projected invariant, through
-  `record-invariant` in projected mode.
+- Step 4.4: an invariant the verification names is a projected invariant, which follows from this
+  entry as `way_of_working.md` gives it for projected mode.
 
 ## Review record
 

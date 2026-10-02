@@ -92,5 +92,6 @@ For each accepted row, in the table's order:
 
 - Once every row is `rejected` or `written`, take the working table out and write as the section's
   first line `Candidates: <rows shown> shown, <rows accepted> accepted — YYYY-MM-DD`, as the
-  template gives it; with no row accepted, `none` below it.
+  template gives it; the rows shown are every row the table held, the rows step 4 added
+  included. With no row accepted, `none` stands below the line.
 - Tell the caller how many entries of each kind were written.

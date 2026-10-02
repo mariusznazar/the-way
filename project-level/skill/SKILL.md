@@ -97,13 +97,16 @@ foundation`).
   from as the source, the breakdown of the project as the next reader, and projected entries into
   "Projected foundation changes" as the mode.
 - A projected entry needs no number and no prefix: ask for none.
-- Once the section begins with its `Candidates:` line and holds no working table, and no section
-  holds `TODO`, set the status line to `ready for gate`, as the template gives it; step 6 begins.
+- Once `python -B <the-way>/project-level/readiness_check.py <definition> --before-approval`
+  reports nothing — a `TODO` in a field of a projected entry is no gap — set the status line to
+  `ready for gate`, as the template gives it; step 6 begins.
 
 ## 6. The readiness gate
 
 1. Run `python -B <the-way>/project-level/readiness_check.py <definition> --before-approval`. A
-   finding in "Projected foundation changes" goes back to step 5, any other to step 4.
+   finding of condition f goes back to step 5; a finding of condition a inside a projected entry
+   goes to the skill of its element in projected mode, which completes that entry's wording; any
+   other finding goes back to step 4.
 2. Search the whole foundation for what the definition collides with that no written link joins
    (WAY-33): a decision whose binding sentences the project would break, an invariant, a glossary
    term the definition uses in another meaning, a fact the project contradicts. Settle each before

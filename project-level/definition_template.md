@@ -77,7 +77,7 @@ the title where the place of the definition asks for one
 | Status | When |
 |---|---|
 | `definition — open: <sections>` | some section above the gate record still holds `TODO` |
-| `ready for gate` | no section above the gate record holds `TODO` |
+| `ready for gate` | `readiness_check.py --before-approval` reports nothing: no section above the gate record holds a `TODO` it counts as a gap |
 | `approved YYYY-MM-DD` | the gate record is written |
 
 `TODO — decision pending: which decision sets that a project definition carries its state in a

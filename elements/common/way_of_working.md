@@ -137,8 +137,12 @@ definition`):
   followed by its translation; write nothing into `foundations/`. Run no format guard, and tell
   the human that no script checked the entry's form: the guard checks it in the task that writes
   the entry into the foundation.
-- Step 4.4: what follows from the entry is another projected entry, through the skill of its
-  element in projected mode, or, where it cannot be written before the code exists, an open
-  question of the definition with its place of resolution. What a skill hands to other agents
-  after step 4.4 — a check, a deliberate break, a review of uses — waits for the task that writes
-  the entry.
+- Step 4.4: what follows from the entry is another projected entry, or, where it cannot be written
+  before the code exists, an open question of the definition with its place of resolution. Where
+  `find-foundation-entries` called the skill, report what follows to it, which adds it to its
+  table, and write nothing; otherwise write it through the skill of its element in projected
+  mode. What a skill hands to other agents after step 4.4 — a check, a deliberate break, a review
+  of uses — waits for the task that writes the entry.
+- In every step, a skill this one hands to runs in projected mode on the same definition, and no
+  step writes into `foundations/`: neither an entry nor a row of a list or a scale the element's
+  file holds. Such a row is an open question of the definition, `— resolved in: breakdown`.
