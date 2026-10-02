@@ -211,12 +211,16 @@ Candidates: 24 shown, 17 accepted — 2026-10-05
   gives them.
 - Below each entry stands its translation into the language of the definition, every line
   beginning with `>`; it helps the human weigh the wording and is not approved.
-- At the gate the wording of every projected entry is whole; its fields need not be. `TODO` in a
-  field — a line `- **<Field>:** …` and the indented lines that continue it — or in a translation
-  is no gap the gate stops at: the format guard of the element checks the fields in the task that
-  writes the entry. `TODO` anywhere else in the section is a gap
-  (`TODO — decision pending: which decision sets that the gate asks a projected entry for its whole
-  wording, not its whole fields`).
+- At the gate a projected entry holds whole what only the human gives, and gives at the project
+  level: its binding sentence or definition and, for a decision, its *Rationale* and *Rejected*
+  (`none considered` being the human's statement). A field that waits for the code or the world —
+  a source, a verification, a method, the parts, the links, each a line `- **<Field>:** …` with
+  the indented lines that continue it — may read `TODO`, as may a translation: the format guard
+  of the element checks those fields in the task that writes the entry. `TODO` anywhere else in
+  the section is a gap
+  (`TODO — decision pending: which decision sets that the gate asks a projected entry for what
+  only the human gives at the project level, and lets the fields waiting for the code or the
+  world read TODO`).
 
 A section with no projected entry reads the line and `none`
 (`TODO — decision pending: which decision sets the form of a projected entry`).

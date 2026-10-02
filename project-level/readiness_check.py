@@ -13,7 +13,9 @@ The definition follows `project-level/definition_template.md`. The check reports
 - a — no section holds the word `TODO`, and none is empty (`none` states that nothing is there);
   under "Projected foundation changes" a `TODO` in a field of an entry — a line `- **<Field>:** …`
   and the indented lines that continue it — or in a translation (lines beginning with `>`) is no
-  gap: the format guard of the element checks the fields in the task that writes the entry;
+  gap: the format guard of the element checks the fields in the task that writes the entry; the
+  binding sentence, a definition, and a decision's *Rationale* and *Rejected*, which only the human
+  gives, stay gaps;
 - d — every item under "Open questions" ends with `— resolved in: breakdown` or
   `— resolved in: task: <name>`;
 - b — no projected decision still reads `**Approved by:** on acceptance`;

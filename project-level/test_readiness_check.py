@@ -225,9 +225,16 @@ class Gaps(unittest.TestCase):
                                               projected(entries="### Glossary\n\n" + term)}))
         self.assertIn(("a", "`## Projected foundation changes` holds TODO"), found)
 
-    def test_a_field_ends_at_the_line_that_does_not_continue_it(self):
+    def test_todo_in_the_rationale_of_a_projected_decision_is_reported(self):
         decision = DECISION.format(approval="Mariusz, 2026-10-03").replace(
             "*Rationale:* one player is the audience.", "*Rationale:* TODO")
+        found = conditions(definition(bodies={"Projected foundation changes":
+                                              projected(entries="### Decisions\n\n" + decision)}))
+        self.assertIn(("a", "`## Projected foundation changes` holds TODO"), found)
+
+    def test_todo_in_the_rejected_options_of_a_projected_decision_is_reported(self):
+        decision = DECISION.format(approval="Mariusz, 2026-10-03").replace(
+            "*Rejected:* none considered", "*Rejected:* TODO")
         found = conditions(definition(bodies={"Projected foundation changes":
                                               projected(entries="### Decisions\n\n" + decision)}))
         self.assertIn(("a", "`## Projected foundation changes` holds TODO"), found)
