@@ -58,7 +58,8 @@ foundation`).
   `AGENTS.md` or `CLAUDE.md`. Where neither names it, ask once, and offer to add the answer as the
   template gives it.
 - Propose the definition's file name and path there, and on the human's word write the definition:
-  the confirmed goal, `TODO` in every other section, and the status line.
+  the confirmed goal, `TODO` in every other section but the gate record, which the template gives,
+  and the status line.
 
 ## 4. Rounds through the sections
 
@@ -80,7 +81,7 @@ foundation`).
   outlives the project, a change to a current decision — goes to the decisions skill in its
   projected mode, naming this definition.
 - What is not yet known goes to one of the three places the template names.
-- Once no section holds `TODO`, the status line reads `ready for gate`, and step 5 begins.
+- Once the status line reads `ready for gate`, as the template gives it, step 5 begins.
 
 ## 5. The readiness gate
 

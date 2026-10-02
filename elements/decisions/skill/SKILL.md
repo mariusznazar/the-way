@@ -66,6 +66,8 @@ definition`):
   definition, under "Out of scope", and no entry is written (WAY-36, WAY-26).
 - Step 3: the heading reads `### (new) — <question>` for a new decision, or the current decision's
   number with its next version; *Approved by* reads `on acceptance`.
+- Step 4.2: the human's acceptance of the wording writes nothing into *Approved by*, which reads
+  `on acceptance` until `define-project` writes it at the readiness gate.
 - Step 4.3: write the entry under "Projected foundation changes" of the definition, followed by its
   translation as the definition's template gives it, and nothing into `foundations/decisions.md`.
   Run no format guard, and tell the human that no script checked the entry's form: the guard

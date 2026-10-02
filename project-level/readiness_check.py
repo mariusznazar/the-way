@@ -45,6 +45,7 @@ HEADING = re.compile(r"^## (?!#)(.*?)\s*$")
 FENCE = re.compile(r"^\s*(```|~~~)")
 TODO = re.compile(r"\bTODO\b")
 ITEM = re.compile(r"^- ")
+NESTED_ITEM = re.compile(r"^\s+([-*+]|\d+[.)]) ")
 RESOLVED = re.compile(r"— resolved in: (breakdown|task: \S.*)$")
 PENDING_APPROVAL = re.compile(r"^\s*- \*\*Approved by:\*\* on acceptance\s*$")
 STATUS = re.compile(r"^Status: (definition — open: \S.*|ready for gate|approved \d{4}-\d{2}-\d{2})$")
@@ -136,17 +137,23 @@ def check_gaps(sections):
 
 
 def items(section):
-    """Return each list item of a section as (first line number, its text joined over the
-    indented lines that continue it), and every other line of text as (number, None)."""
+    """Return each list item of a section as (first line number, its own text joined over the
+    indented lines that continue it), and every other line of text as (number, None).
+
+    A nested list under an item is a detail of it, and what follows the first nested item is no
+    longer the item's own text."""
     result = []
     for number, line in content(section):
         if ITEM.match(line):
-            result.append([number, line[2:].strip()])
+            result.append([number, line[2:].strip(), True])
         elif line.startswith((" ", "\t")) and result and result[-1][1] is not None:
-            result[-1][1] += " " + line.strip()
+            if NESTED_ITEM.match(line):
+                result[-1][2] = False
+            elif result[-1][2]:
+                result[-1][1] += " " + line.strip()
         else:
-            result.append([number, None])
-    return result
+            result.append([number, None, False])
+    return [(number, text) for number, text, _ in result]
 
 
 def check_open_questions(section):

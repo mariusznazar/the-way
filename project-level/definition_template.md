@@ -30,9 +30,9 @@ no decision in the log of the-way yet: every rule below ends with the decision i
 
   (WAY-101; `TODO — decision pending: which decision sets where a product names the place of its
   backlog`.)
-- The text of the definition is in the language the human opened the conversation in. The title
-  line, the headings, the status line, the markers below and the projected decisions are in
-  English, whatever that language (WAY-72 for the decisions;
+- The text of the definition, its title included, is in the language the human opened the
+  conversation in. The headings, the status line, the markers below and the projected decisions
+  are in English, whatever that language (WAY-72 for the decisions;
   `TODO — decision pending: which decision sets the language of a project definition`).
 
 ## The form
@@ -76,8 +76,8 @@ the title where the place of the definition asks for one
 
 | Status | When |
 |---|---|
-| `definition — open: <sections>` | some section still holds `TODO` |
-| `ready for gate` | no section holds `TODO` |
+| `definition — open: <sections>` | some section above the gate record still holds `TODO` |
+| `ready for gate` | no section above the gate record holds `TODO` |
 | `approved YYYY-MM-DD` | the gate record is written |
 
 `TODO — decision pending: which decision sets that a project definition carries its state in a
@@ -98,7 +98,7 @@ A section is never left empty
 | Out of scope | only exclusions that end with the project; an exclusion for good is a projected decision (WAY-26) |
 | Inputs and constraints | what the project starts from — documents, code, systems, decisions — and what its surroundings impose on it; a constraint that outlives the project is a projected decision or a candidate environment fact |
 | Deliverables | the concrete results |
-| Success | the signals read after the fact and those read during the work; every frame carries its falsification condition |
+| Success | the signals read after the fact and those read during the work; each carries its falsification condition |
 | Risks | the risks, and the assumptions whose failure would change the result |
 | Open questions | only questions for later, each with its place of resolution |
 | Touched parts and decisions | what the foundation says of the project: the parts it touches, the decisions whose *Scope* names them, the invariants it may break |
@@ -107,10 +107,10 @@ A section is never left empty
 
 `TODO — decision pending: which decision sets the sections of a project definition`.
 
-- **A frame** — the goal, an item in scope, a criterion of success, the people the project
-  serves — carries one sentence saying what would show it false, marked `**OBALENIE:**` in a
-  Polish definition and `**FALSIFIED IF:**` in an English one
-  (`TODO — decision pending: which decision sets that every frame of a definition carries its
+- **A frame of success** — each signal or criterion under "Success" — carries one sentence saying
+  what would show it false, marked `**OBALENIE:**` in a Polish definition and `**FALSIFIED IF:**`
+  in an English one
+  (`TODO — decision pending: which decision sets that every frame of success carries its
   falsification condition`).
 - **A deadline** appears under "Inputs and constraints" only when the human names one imposed from
   outside, in the human's own words, with how firmly it binds. The agent never asks for a
@@ -161,7 +161,8 @@ A section without projected decisions reads `none`
 
 ## Gate record
 
-Written once the human approves the gate, in this form and order:
+Until the gate the section reads `none`. It is written once the human approves the gate, in this
+form and order:
 
 ```markdown
 - Approved by: <who>, YYYY-MM-DD

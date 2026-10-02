@@ -186,6 +186,17 @@ class OpenQuestions(unittest.TestCase):
                                   "- Jak mierzymy postęp\n  na drugiej mapie? — resolved in: breakdown"})
         self.assertEqual(conditions(text), [])
 
+    def test_a_nested_detail_under_a_question_with_its_place_is_no_finding(self):
+        text = definition(bodies={"Open questions":
+                                  "- Jak mierzymy postęp? — resolved in: breakdown\n"
+                                  "  - kontekst: mapa 2"})
+        self.assertEqual(conditions(text), [])
+
+    def test_a_place_on_a_nested_detail_is_no_place_of_the_question(self):
+        text = definition(bodies={"Open questions":
+                                  "- Jak mierzymy postęp?\n\t- detal — resolved in: breakdown"})
+        self.assertEqual([c for c, _ in conditions(text)], ["d"])
+
     def test_prose_under_open_questions_is_reported(self):
         text = definition(bodies={"Open questions": "Kilka pytań zostaje."})
         self.assertEqual([c for c, _ in conditions(text)], ["d"])
