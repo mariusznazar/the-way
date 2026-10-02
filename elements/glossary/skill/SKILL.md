@@ -1,6 +1,6 @@
 ---
 name: record-glossary-term
-description: Use when a product's glossary, foundations/glossary.md, has to gain or change an entry — a word a binding sentence or a template's rule uses in two meanings or in a meaning a reader of the field would not give it, a word a task's return step or a search of the foundation found, a sentence that defines a word, a reworded definition, a renamed term, a second meaning moved to another word, or a word added to Avoid.
+description: Use when a product's glossary, foundations/glossary.md, has to gain or change an entry — a word a binding sentence or a template's rule uses in two meanings or in a meaning a reader of the field would not give it, a word a task's return step or a search of the foundation found, a sentence that defines a word, a reworded definition, a renamed term, a second meaning moved to another word, a word added to Avoid, or a term a project definition projects.
 ---
 
 # Record a glossary term
@@ -89,6 +89,20 @@ glossary entry adds to each.
   rewritten or accepted by the human in step 4.2. Each goes through the skill of the element its
   entry belongs to; a sentence of an element's template or of `elements/common/` is rewritten
   there, as a fix to a rule is.
+
+## Projected mode
+
+Projected mode runs as `elements/common/way_of_working.md` gives it, with these differences for a
+term (`TODO — decision pending: which decision sets how a glossary term is projected in a project
+definition`):
+
+- Step 2: the candidate words are those the binding sentences of the definition's projected
+  entries use, weighed by the template's "Which words take an entry"; a projected term has no uses
+  on the main branch.
+- Step 4: no other agent reviews uses before step 4.2, and no search for a word put into *Avoid*
+  runs in the product's files after step 4.3; step 4.4 rewrites to the term only the projected
+  entries of the same definition.
+- Step 4.3: the heading reads `#### <term>`.
 
 ## A renamed term, and a term with no use
 

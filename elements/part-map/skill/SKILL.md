@@ -1,6 +1,6 @@
 ---
 name: update-part-map
-description: Use when a product's part map, foundations/part_map.md, has to gain or change an entry — a part whose responsibility or files change, a part split or merged, a new critical flow or a new surface, failure modes or a trust boundary recorded at a part, a file no part claims, or the first map written for a product.
+description: Use when a product's part map, foundations/part_map.md, has to gain or change an entry — a part whose responsibility or files change, a part split or merged, a new critical flow or a new surface, failure modes or a trust boundary recorded at a part, a file no part claims, the first map written for a product, or a change a project definition projects.
 ---
 
 # Update the part map
@@ -61,6 +61,20 @@ part map adds to each.
 - Step 4.4: what follows from this entry is the references a changed binding sentence flags
   (WAY-02), the renames an identifier left behind leaves, and the entries of the foundation found
   in step 2. A decision that has to change goes through `record-decision`.
+
+## Projected mode
+
+Projected mode runs as `elements/common/way_of_working.md` gives it, with these differences for
+the part map (`TODO — decision pending: which decision sets which changes to the part map a
+project definition projects`):
+
+- Step 2: project only an entry whose every field is known before the code: a change to an
+  existing part — its sentence, *Depends on*, *Failure modes*, a *Trust boundary* over files it
+  already holds — or a critical flow through existing parts. A new part or a new surface is an
+  open question of the definition, `— resolved in: breakdown`, carrying what is known of it.
+- Step 4.3: the heading reads `#### <identifier> (changed)` above the whole entry as it will read,
+  or `#### <identifier> (new)` for a new critical flow.
+- "The first map of a product" below does not apply.
 
 ## The first map of a product
 
