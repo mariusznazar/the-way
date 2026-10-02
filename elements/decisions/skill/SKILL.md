@@ -1,6 +1,6 @@
 ---
 name: record-decision
-description: Use when a decision has to be written into a product's decision log, foundations/decisions.md — a choice just settled in conversation that binds later work, a new answer to a question the log already holds, a decision recovered from existing code, or a due review of a decision whose review-when date has come.
+description: Use when a decision has to be written into a product's decision log, foundations/decisions.md — a choice just settled in conversation that binds later work, a new answer to a question the log already holds, a decision recovered from existing code, a due review of a decision whose review-when date has come, or a decision a project definition projects.
 ---
 
 # Record a decision
@@ -54,6 +54,25 @@ decision adds to each.
   yet, through `record-invariant`; and, when this entry changes a decision's binding sentences,
   every decision that derives from it or narrows it, and every invariant whose *Derives from*
   names it, the invariants through `record-invariant`.
+
+## Projected mode
+
+The skill `define-project` hands a decision to this skill in projected mode, naming a project
+definition. Steps 1–4 run as above, with these differences
+(`TODO — decision pending: which decision sets how a decision is projected in a project
+definition`):
+
+- Step 2: apply the plan test first. An exclusion or a rule that ends with the project stays in the
+  definition, under "Out of scope", and no entry is written (WAY-36, WAY-26).
+- Step 3: the heading reads `### (new) — <question>` for a new decision, or the current decision's
+  number with its next version; *Approved by* reads `on acceptance`.
+- Step 4.3: write the entry under "Projected foundation changes" of the definition, followed by its
+  translation as the definition's template gives it, and nothing into `foundations/decisions.md`.
+  Run no format guard, and tell the human that no script checked the entry's form: the guard
+  checks it in the task that writes the decision into the log.
+- Step 4.4: nothing that follows is written into the foundation either. A change to a neighbouring
+  decision is another projected decision; an invariant the verification names is an open question
+  of the definition, with its place of resolution.
 
 ## Review record
 

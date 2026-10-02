@@ -76,8 +76,11 @@ looks for in its element.
    reason for it
    (`TODO — decision pending: which decision sets that the questions of one entry are asked in one
    round, each with a proposed answer`).
-2. Show the whole entry, with what the skill adds beside it. Apply the fixes, and write nothing
-   before the human accepts the entry
+2. Show the whole entry, with what the skill adds beside it. Where the human writes in a language
+   other than English, show beside the entry its translation into that language; the translation
+   is never written into the foundation
+   (`TODO — decision pending: which decision sets that an entry is shown with its translation into
+   the human's language`). Apply the fixes, and write nothing before the human accepts the entry
    (`TODO — decision pending: which decision sets that an entry is shown whole and accepted before
    it is written`).
 3. Write the entry in its place in the file and run the element's format guard (WAY-09) from the
