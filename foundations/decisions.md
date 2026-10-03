@@ -236,7 +236,7 @@ test that always passes.
 On the main branch, this repository holds `foundations/` with the entries of the-way itself, a
 directory for each part of the process other than `repository` — `elements/<element>/` for each
 foundation element, `elements/common/` for what the elements share, `relation-model/`, `gate/`,
-`installation/`, `agent-instructions/` and `task-cycle/` — with `probes/` as a second directory of
+`installation/`, `agent-instructions/`, `project-level/` and `task-cycle/` — with `probes/` as a second directory of
 the environment facts part, for the checks of the-way's own facts, the files that configure the
 whole repository, which its part map gives to the `repository` part (WAY-44), the root agent
 instruction files, which the map gives to `agent-instructions` (WAY-44), and a `README.md` that
@@ -245,7 +245,7 @@ A directory reaches the main branch only once it holds what its part requires: a
 template and rules, examples or a pointer to entries of the-way that serve as its examples, a
 skill that writes its entries and a format guard; `elements/common/` the rules of form and the way
 of working the elements' templates and skills share, the code their format guards share and the
-procedure of the panel; `relation-model/` the script that computes fingerprints; `gate/` the test
+procedure of the panel and the skills that find entries and critique proposals; `project-level/` the definition template, its skill, the readiness check and its tests; `relation-model/` the script that computes fingerprints; `gate/` the test
 of every critical flow in the part map; `installation/` the installer, its tests and a README
 explaining how a product uses the pinned version; `agent-instructions/` the instructions for agents
 working on this repository, led to from the root agent instruction files; `task-cycle/` what the design of
@@ -254,29 +254,29 @@ the task cycle sets, and until then it does not reach the main branch. The entri
 
 - **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common,
-  relation-model, gate, installation, agent-instructions, repository, task-cycle
+  relation-model, gate, installation, agent-instructions, repository, project-level, task-cycle
 - **Based on:** none
 - **Relations:** none
 - **Verification:** level 1 — invariants: repository-file-location · element-directory-contents ·
   relation-model-directory-contents · invariant-example-target · map-example-target ·
   glossary-example-target. Level 2 for what `elements/common/`, `installation/`,
-  `agent-instructions/` and `task-cycle/` hold and for the format guards checking `foundations/`
+  `agent-instructions/`, `project-level/` and `task-cycle/` hold and for the format guards checking `foundations/`
   — an agent compares the change with the decision:
   - complies: code two format guards share moves into `elements/common/`, and both load it from
     there; a new file of entries in `foundations/` comes with the format guard of its element;
-    the installer, its tests and instructions stand together in `installation/`; the agent
+    the installer, its tests and instructions stand together in `installation/`; the definition and its readiness check stand in `project-level/`; the agent
     instructions have their own part and root entry points;
   - violates: a `tools/` directory for shared scripts reaches the main branch; `task-cycle/`
     reaches the main branch before the design of the task cycle sets what it holds.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-10-01
+- **Approved by:** Mariusz, 2026-10-04
 
 *Rationale:* anything brought in on the side makes the repository a store of material; directories
 follow the parts, so a change's files name its part and decisions (WAY-21); an incomplete directory
 is work in progress, kept on a branch (WAY-01); probes stand apart, so an element's tests run no
 fact's method; product installation and agent instructions have different failures from repository
-configuration.
+configuration; the project definition and task cycle answer different questions.
 *Rejected:* material merged as soon as it is written — a store from the first day; an element whose
 only tool is a skill — the form holds only while someone remembers to run it; one `tools/`
 directory for everything shared — it matches no part and grows into a store; one set of template,
@@ -2834,14 +2834,14 @@ conventions; prose addressed only to humans — an agent could not take its assi
 
 ### WAY-104/1 — How does a product write a word of its domain that the glossary of the-way holds?
 
-A word of a product's domain that the glossary of the-way holds at the commit the product pins, in
-any of its forms, is written in the files of the product's `foundations/` with a qualifier — a
-phrase holding the word — and the bare word keeps there the meaning of the process; the qualified
-word takes a glossary entry only where WAY-95 gives a word one, and the entry of the bare word in
-the glossary of the-way records no *Not* for it. The *Avoid* of an entry of the product's glossary
-holds a word the glossary of the-way holds, or the last word of a term it holds, in any of its
-forms, only with a qualifier. The product's code, its interface and talk about the product use the
-word of the domain unchanged.
+A word of a product's domain that the glossary of the-way holds at the commit the product pins, or
+the last word of a term it holds, in any of its forms, is written in the files of the product's
+`foundations/` with a qualifier — a phrase holding the word — and the bare word keeps there the
+meaning of the process; the qualified word takes a glossary entry only where WAY-95 gives a word
+one, and where the bare word itself has an entry in the glossary of the-way, that entry records no
+*Not* for its domain meaning. The *Avoid*
+of an entry of the product's glossary holds such a word only with a qualifier. The product's code,
+its interface and talk about the product use the word of the domain unchanged.
 
 - **Change:** new decision
 - **Scope:** glossary, decisions, invariants, part-map, environment-facts
@@ -2851,15 +2851,15 @@ word of the domain unchanged.
 - **Verification:** level 1 — invariants: glossary-process-terms. Level 2 for how the sentences of
   a product's foundation, its code and its interface write the word — an agent compares the change
   with the decision:
-  - complies: a game's invariants say "game clock" for the timer of a match, and its glossary,
-    holding no entry for it, defines no "clock", while its code names a class `Clock` and its
-    screen shows "Clock"; a game's glossary entry "game clock" lists "match clock" in *Avoid*;
-  - violates: a game's glossary defines "clock" as the timer of a match; a game's invariant says
-    "clock" for the timer of a match; a game's glossary entry "match timer" lists "clock" in
-    *Avoid*, or its entry "lab result" lists "fact", the last word of "environment fact".
+  - complies: a game's invariants say "game clock" for the timer of a match, and a factory's say
+    "assembly step" for an operation, while their code and interfaces use `Clock` and "Step";
+    a game's glossary entry "game clock" lists "match clock" in *Avoid*;
+  - violates: a game's invariant says "clock" for the timer of a match or a factory's says "step"
+    for an operation; a game's glossary defines "clock" as the timer of a match, or an entry
+    "lab result" lists "fact", the last word of "environment fact", in *Avoid*.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-10-02
+- **Approved by:** Mariusz, 2026-10-04
 
 *Rationale:* a word of the process written bare in a product's foundation for something of its
 domain carries two meanings for an agent that reads the-way's rules beside the product's, and a
@@ -2867,8 +2867,10 @@ qualifier keeps each word in one meaning where the rules are read; the people wh
 product keep the words of its domain, since the rule protects the reading of the foundation alone.
 A product cannot edit the glossary of the-way, so the *Not* that WAY-99 asks of the word's entry has
 nowhere to stand, and a phrase holding the word, which WAY-99 refuses as a carrier, here keeps the
-word of the field recognizable. A word of *Avoid* counts as an error at every use WAY-98 counts,
-whatever meaning the use carries, so the bare word in a product's *Avoid* would bar the meaning of
+word of the field recognizable. A term's last word can stand for the process term in short form, so
+the qualifier also keeps a domain use of that word apart. A word of *Avoid* counts as an error at
+every use WAY-98 counts, whatever meaning the use carries, so the bare word in a product's *Avoid*
+would bar the meaning of
 the process that the bare word keeps; the last word of a term of the-way, such as "fact" for
 "environment fact", stands for the whole term (WAY-94), so in a product's *Avoid* it would bar that
 term's short form in the same way.
@@ -2881,7 +2883,8 @@ keeps nothing apart, and every entry of the-way is rewritten to it; a word holdi
 of the process nor its forms, as WAY-99 asks of a carrier — for words the field uses daily, such as
 "part", "entry" or "result", the foundation drifts from the words the product's people and code use;
 the bare word in a product's *Avoid*, its uses in the meaning of the process left out of the count —
-no count tells one meaning of a word from another.
+no count tells one meaning of a word from another; qualifying a domain word only when it is a whole
+process term — a short use of a multiword term can still collide with the domain meaning.
 
 ### WAY-105/1 — Which check reports an invariant whose command runs a script that does not exist, and how is that script read?
 
@@ -2931,3 +2934,422 @@ the interpreter's own options, known for Python alone, so the method of another 
 template allows, and every one reaches a human; nobody reporting it — a method with a wrong path
 looks checked until its first run; a command split on spaces — a quoted path breaks in two, and a
 word an option takes is read as the script.
+
+### WAY-106/1 — What does the project level write before tasks exist?
+
+The project level reads a product's foundation and records prospective changes in the project
+definition; it writes no foundation entries. The definition holds the project's settled scope and
+projected foundation entries, while the project plan holds phases, task order and which task
+realizes or writes each projected entry.
+
+- **Change:** new decision
+- **Scope:** project-level, task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-01@60960941
+- **Verification:** level 2 — an agent compares the change with the decision:
+  - complies: a definition projects a new decision and the plan later assigns a task to write it;
+  - violates: the definition writes the future decision into the product's foundation, or assigns
+    projected entries to tasks before the breakdown has made those tasks.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, 2026-10-04
+
+*Rationale:* the foundation describes what the product holds today; a project first settles what
+the product is to become. The task assignment follows the breakdown and changes with it, while
+the definition remains the source of what was settled.
+*Rejected:* putting projected entries into the foundation at the readiness gate — it would describe
+a future product as current; keeping the task assignment in the definition — it would duplicate
+the plan and change as the plan changes.
+
+### WAY-107/1 — Where does a product tell the project level where its backlog stands?
+
+A product names where it keeps projects and tasks in a `## Backlog` section of its root `AGENTS.md`,
+outside the block the-way's installer owns. A project definition stands in the named project
+place; when the place is unnamed, the agent asks the human and offers to record the answer there.
+
+- **Change:** new decision
+- **Scope:** project-level, installation
+- **Based on:** none
+- **Relations:** derives from WAY-101@518c4b32
+- **Verification:** level 2 — an agent compares the change with the decision:
+  - complies: a product names a directory for projects and a tracker for tasks in its own backlog
+    section, and the project definition is written in that directory;
+  - violates: the project skill assumes one backlog service for every product, or puts the
+    product's paths inside the installer's marked block.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, 2026-10-04
+
+*Rationale:* the product chooses its own backlog place, and a root instruction gives an agent one
+place to find it. Keeping the place outside the generated block lets the product change it without
+editing the process's installed guidance.
+*Rejected:* a fixed backlog location for all products — it would require moving an existing
+backlog; asking for the location in every project conversation — the answer would be lost between
+sessions.
+
+### WAY-108/1 — What form does a project definition take?
+
+A project definition is one document with the ordered sections of the project-level template; its
+title and content use the language in which the human opened the conversation, while headings,
+status values, markers read by the readiness check and projected foundation entries keep their
+English forms. A `Status:` line
+records whether sections are open, the definition is ready for the gate, or it is approved; every
+section contains content, `none` for nothing there, or `TODO` for something missing. An unknown
+stays as `TODO` in the section or projected entry that needs it, or as an open question naming
+the breakdown or task that resolves it.
+
+- **Change:** new decision
+- **Scope:** project-level
+- **Based on:** none
+- **Relations:** none
+- **Verification:** level 1 — invariants: project-definition-form. Level 2 for the language of
+  content and the meaning of `none` — an agent compares the change with the decision:
+  - complies: a Polish conversation produces Polish section content under fixed English headings,
+    and a section with no risks reads `none` only after the human has said there are none;
+  - violates: translated headings make the readiness check unable to read the document, or an
+    unanswered section silently reads `none`.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, 2026-10-04
+
+*Rationale:* the person deciding the project reads its content in the language of the conversation;
+fixed structural words let later work resume and check the document. A written state and
+an explicit missing value show where the next conversation begins.
+*Rejected:* translating structural words with the content — a checker could not read every
+language; inferring progress from prose alone — a fresh agent would reconstruct the state.
+
+### WAY-109/1 — What may a project definition treat as settled without the human's answer?
+
+The definition's background, success and risks come from the human's answers; material supplied to
+the agent anchors questions and is not silently adopted as a settlement. Every success signal
+states what would falsify it.
+
+- **Change:** new decision
+- **Scope:** project-level
+- **Based on:** none
+- **Relations:** none
+- **Verification:** level 2 — an agent compares the change with the decision:
+  - complies: a concept's claim of success enters the agent's question, and the definition records
+    the person's answer with a condition that would show it false;
+  - violates: a concept's assumption becomes a risk without asking, or a success signal names no
+    circumstance that would show it false.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, 2026-10-04
+
+*Rationale:* a fluent draft makes an agent's inference look like the human's decision. A condition
+that could disprove success gives later work a way to judge it.
+*Rejected:* filling gaps from plausible material — later tasks would inherit invented choices.
+
+### WAY-110/1 — When does a deadline enter a project definition?
+
+A deadline enters the definition only when the human names one imposed from outside, in the
+human's own words and with how firmly it binds. The agent neither asks for a deadline nor derives
+one from material, and does not argue the project's scope or cost from it.
+
+- **Change:** new decision
+- **Scope:** project-level
+- **Based on:** none
+- **Relations:** none
+- **Verification:** level 2 — an agent compares the change with the decision:
+  - complies: the human names an externally imposed launch date and says how firm it is, so the
+    definition records that answer in their words;
+  - violates: the agent asks for a deadline as a routine field, infers one from a concept's date,
+    or uses a stated date to press for a smaller scope.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, 2026-10-04
+
+*Rationale:* a date imposed by the surroundings can constrain the work, while a date invented for
+planning makes the constraint appear to come from the human.
+*Rejected:* a routine deadline question — it creates pressure without an external constraint;
+deriving a deadline from background material — it mistakes context for a settlement.
+
+### WAY-111/1 — What does the project level read in the current foundation?
+
+Before drafting, the agent reads the product's whole foundation: the part map's files, trust
+boundaries and surfaces; decisions' binding sentences, scope and relations; invariants' sentences
+and parts; the glossary; and environment facts. It brings a touched part, a decision the project
+may change, an invariant it may break or a boundary it crosses to the human as material and asks
+whether the project changes an existing decision or fits it.
+
+- **Change:** new decision
+- **Scope:** project-level
+- **Based on:** none
+- **Relations:** none
+- **Verification:** level 2 — an agent compares the work with the decision:
+  - complies: the agent names an existing decision and boundary that the idea touches, and asks
+    whether the new project changes the decision or fits it;
+  - violates: the agent reads only decisions already linked to the idea and misses an unlinked
+    invariant or a boundary in the map.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, 2026-10-04
+
+*Rationale:* the current foundation gives the project its starting constraints; a whole reading
+finds relationships that no existing link can lead an agent to.
+*Rejected:* reading only entries with a matching scope — an unlinked conflict stays hidden.
+
+### WAY-112/1 — How does an agent develop and resume a project definition?
+
+The agent confirms its understanding of the goal with the human before the definition's first
+write, then creates the initial sketch in the product's project place without a separate request
+and gives its full path. It asks about the largest gaps, challenges a frame only from an anchor in
+the human's words or material, reads what product files can answer, and treats "I do not know" on
+assessment as an open question with its resolver but on a choice as a reason to offer a
+recommendation with costs. It writes each answer and the updated `Status:` line before the next
+question; work resumes from that line and, while entries are being found, from the candidate table.
+
+- **Change:** new decision
+- **Scope:** project-level
+- **Based on:** none
+- **Relations:** none
+- **Verification:** level 2 — an agent compares the work with the decision:
+  - complies: after the goal is confirmed, an agent writes a sketch, then records each answer and
+    its new status before continuing; a later agent resumes from the recorded open section;
+  - violates: an agent writes a complete definition from the source before checking the goal, or
+    asks another question while the prior answer exists only in conversation.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, 2026-10-04
+
+*Rationale:* the first confirmation prevents a polished document for the wrong goal; saving each
+answer makes the document a reliable place to resume. Source-anchored challenges can change an
+assumption without asking the human to defend an invented objection.
+*Rejected:* waiting for a second permission after confirming the goal — it adds a stop without a
+new decision; writing only at the end — an interruption loses settled answers; challenging every
+line by a fixed script — questions without a real anchor consume the person's attention.
+
+### WAY-113/1 — How does an agent of the-way ask a human decision?
+
+An agent asks in plain conversation text: a decision question gives the available ways, the cost
+of each and a recommendation, while a question of assessment stays open; neither opens a separate
+question panel. After a human choice enters an entry's binding part, the agent asks one question
+against that choice anchored in the human's words or supplied material, unless the choice ends
+with the work.
+
+- **Change:** new decision
+- **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common,
+  project-level
+- **Based on:** none
+- **Relations:** none
+- **Verification:** level 2 — an agent compares the exchange with the decision:
+  - complies: a choice is presented in text with the costs of both ways and a recommendation,
+    followed by a source-anchored question against the answer when it enters a binding entry;
+  - violates: the choice appears only in a separate option panel, or an agent asks a generic
+    challenge unrelated to the person's answer.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, 2026-10-04
+
+*Rationale:* the person sees the trade-off where they make the choice. A challenge grounded in
+their own material can expose a contradiction without inventing one.
+*Rejected:* a panel of options separate from the conversation — its context is detached from the
+material; a challenge to every choice, including one that ends with the work — repeated questions
+would add no later protection.
+
+### WAY-114/1 — What does a human see and accept before an entry is written?
+
+An agent shows a foundation entry whole, including permitted unresolved fields, and places a
+translation beside it when the human uses another language; the translation never enters the
+foundation. The agent writes an ordinary entry only after the human accepts its wording, while a
+projected entry goes into the definition with approval recorded at the readiness gate.
+
+- **Change:** new decision
+- **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common,
+  project-level
+- **Based on:** none
+- **Relations:** none
+- **Verification:** level 2 — an agent compares the work with the decision:
+  - complies: the human sees every field of the proposed entry with a Polish translation before
+    accepting its wording, and only the English entry is written into the foundation;
+  - violates: the agent shows a summary but writes an unseen field into the foundation, or treats
+    selection of a candidate row as approval of its projected entry's final wording.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, 2026-10-04
+
+*Rationale:* the human can judge the exact wording that later work treats as binding; a
+translation makes it possible to review English entries in the conversation's language.
+*Rejected:* a short summary for acceptance — unseen fields could change the meaning; storing a
+translation in the foundation — two binding wordings could drift apart.
+
+### WAY-115/1 — How are foundation entries found in a project's source?
+
+The agent reads the project's sources and the product's whole foundation, then shows the human a
+complete candidate table with each proposed settlement, its kind, its source and the concrete
+choice or action the next reader would otherwise have to guess; a row without such a consequence
+is shown as rejected. The human accepts or rejects rows before they are handed to the skills of
+their kinds, and each accepted row is recorded as it is worked through. The definition keeps the
+working table until the step ends, then replaces it with a `Candidates:` line recording how many
+rows were shown and accepted.
+
+- **Change:** new decision
+- **Scope:** elements-common, project-level
+- **Based on:** none
+- **Relations:** none
+- **Verification:** level 2 — an agent compares the work with the decision:
+  - complies: the human sees every column of the candidate table, rejects an exclusion whose
+    absence would make no task guess, and the completed definition carries the candidates line;
+  - violates: the conversation hides the source and the next reader's guess while a file holds
+    them, or entries are written before the human has cut the table.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, 2026-10-04
+
+*Rationale:* the source distinguishes a human settlement from material offered for consideration;
+the concrete guess filters noise before it becomes a rule. A table with row states lets work
+resume, and a final line shows that the search occurred even when it yields no entry.
+*Rejected:* turning every scope line into a foundation entry — exclusions that nobody would
+misread become permanent noise; showing a shortened table — the human cannot judge provenance or
+the reason a candidate matters.
+
+### WAY-116/1 — Which foundation entries may a project definition project?
+
+A project definition projects decisions, invariants and glossary terms that the human can settle
+before the breakdown, and environment facts only where a projected decision or invariant rests on
+them. Of the part map it projects a changed existing part or a critical flow through existing
+parts only when every field is already known; a new part or surface remains an open question for
+the breakdown.
+
+- **Change:** new decision
+- **Scope:** project-level, decisions, invariants, glossary, environment-facts, part-map
+- **Based on:** none
+- **Relations:** none
+- **Verification:** level 2 — an agent compares the definition with the decision:
+  - complies: the definition holds a proposed access rule, a related glossary term and a
+    changed known part, while a future new part is an open question resolved in the breakdown;
+  - violates: it invents files for a part that has not been designed, or records a fact with no
+    projected entry depending on it.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, 2026-10-04
+
+*Rationale:* a project can settle rules of a future product before it has tasks, but some map
+fields exist only once code and files do. Restricting facts to what a proposed rule rests on
+prevents a speculative inventory of the surrounding world.
+*Rejected:* decisions alone at the project level — later work would still have to infer known
+invariants and terms; projecting new parts with guessed files or missing fields — the map would
+look complete while naming a structure that does not exist.
+
+### WAY-117/1 — How does a foundation entry stand in a project definition before it is written?
+
+The skill of each entry's kind writes its whole proposal under the definition's `Projected
+foundation changes`, in that kind's subsection with the template's projected heading and a
+translation, without writing the product's foundation or running the entry's format guard. A
+new projected decision uses `(new)` without a number or prefix, while versions and other kinds
+use the identifiers their templates give; an entry following from it remains projected or becomes
+an open question when its fields await the code.
+
+- **Change:** new decision
+- **Scope:** project-level, elements-common, decisions, invariants, glossary, environment-facts,
+  part-map
+- **Based on:** none
+- **Relations:** none
+- **Verification:** level 2 — an agent compares the work with the decision:
+  - complies: a new decision carries `(new)`, a revised decision carries its version, and an
+    invariant's method remains `TODO` until a task can write its check;
+  - violates: a projected proposal is written directly into the foundation, or a decision's
+    revised version loses its identifier in the definition.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, 2026-10-04
+
+*Rationale:* the project's definition keeps a future rule visible without claiming it already
+holds. Code-dependent evidence can be completed when the task writes the entry.
+*Rejected:* filling every field with an invented future method or file — it makes the proposal
+look checked before the product exists; leaving the human's reasoning to later tasks — they
+cannot recover what was considered during definition.
+
+### WAY-118/1 — What makes a project definition ready for breakdown?
+
+The readiness gate blocks a definition with a missing section, unresolved content, an open
+question without its place of resolution, an unfinished candidate search, or an unsettled
+human-given part of a projected entry: its binding sentence or definition and a decision's
+*Change*, rationale and rejected options; *Approved by* reads `on acceptance` until the gate,
+and only projected fields awaiting code or the world, including an expressly deferred
+*Review when* as WAY-119 permits, may read `TODO`.
+Before approval an agent searches the whole current foundation for unlinked collisions, and the
+human approves the whole projected entries with permitted `TODO`; the gate record then names the
+approver, the foundation commit searched and the fingerprint of the definition's sections from
+Goal through Projected foundation changes. A change to those sections after approval goes through
+the gate again before breakdown relies on it.
+
+- **Change:** new decision
+- **Scope:** project-level
+- **Based on:** none
+- **Relations:** none
+- **Verification:** level 1 — invariants: project-readiness-gate. Level 2 for the foundation
+  search and human approval — an agent compares the work with the decision:
+  - complies: the script stops an unfinished candidate table, the agent resolves a collision with
+    an existing decision, and the human approves the finished proposals;
+  - violates: a warning-only review lets the breakdown begin with a missing decision reason, or
+    an edit to a fingerprinted section after approval keeps the old gate record.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, 2026-10-04
+
+*Rationale:* a warning lets a later step guess precisely what definition was meant to settle;
+blocking exposes the missing answer while the person who can give it is present. The search and
+fingerprint show which foundation and wording were approved.
+*Rejected:* a final checklist that only warns — it cannot prevent an unfinished search from
+passing; an approval without a content fingerprint — later edits would still look approved.
+
+### WAY-119/1 — When may a projected decision leave Review when unresolved at the gate?
+
+At the readiness gate, a projected decision's *Review when* holds a review condition and date, or
+`none` after the human has settled that no such condition applies. It may read `TODO` only when
+the timing depends on later work, the human expressly accepts deferral, and a related open
+question names the breakdown or task that settles it.
+
+- **Change:** new decision
+- **Scope:** project-level, decisions
+- **Based on:** none
+- **Relations:** derives from WAY-118@5af868b3
+- **Verification:** level 2 — an agent compares the definition and human approval with the
+  decision:
+  - complies: a prediction's review date depends on the release, so the human accepts `TODO` and
+    an open question names the task that will set the date;
+  - violates: the gate passes a `Review when: TODO` with no related open question, or an agent
+    writes `none` simply because the source said nothing about review.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, 2026-10-04
+
+*Rationale:* the date for testing a prediction can depend on delivery that has not yet been
+planned. An explicit deferral keeps that uncertainty visible and gives later work a place to
+finish it.
+*Rejected:* blocking every `TODO` — the human would have to guess a date before the plan exists;
+allowing an unexplained `TODO` — no later task would own the missing answer.
+
+### WAY-120/1 — How does the-way critique an agent's proposal?
+
+An agent may invoke critique for any proposal without waiting for the human to express doubt; a
+completed set for collective human review always goes through it. An independent critique gives
+one fresh agent the full proposal or set, its sources and applicable rules without the author's
+defense; the author checks each observation and gives one explicit verdict. For a collectively
+reviewed set the critic checks
+form, fidelity to source and contradictions across entries before presentation; human review of
+entries one by one needs no additional critic, and a foundation change still goes through its
+panel before integration.
+
+- **Change:** new decision
+- **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common,
+  project-level, relation-model, gate, installation, agent-instructions, repository, task-cycle
+- **Based on:** none
+- **Relations:** none
+- **Verification:** level 2 — an agent compares the review with the decision:
+  - complies: one fresh critic receives a finished set and its sources, reports evidence for each
+    concern, and the author verifies it before presenting corrected proposals and open questions;
+  - violates: one critic is run per row of a set, the author silently changes a human settlement,
+    or a critique is treated as a substitute for the foundation's panel.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, 2026-10-04
+
+*Rationale:* the author is attached to its own fluent proposal, and an independent reading can
+find a mismatch with its source or another entry before the human spends attention on the set.
+The author's verdict keeps the critic an aid rather than a second decision-maker.
+*Rejected:* a fresh critic for every entry accepted with the human — it repeats the human's
+review; letting the critic's remarks edit human settlements without asking — it would disguise a
+new decision as a correction.

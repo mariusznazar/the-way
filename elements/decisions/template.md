@@ -185,6 +185,9 @@ used when a different, more specific decision deliberately goes against this one
 - Level 2 or 3 only while no invariant can be derived today. When one is derived, the decision
   moves to level 1 — by a version of the kind unchanged sentences on the main branch, by an edit
   before it (WAY-12).
+- Deriving an invariant means naming a sentence that a commit can make false. Knowing how to
+  check it is separate: its *Method* may still be `TODO` (WAY-12, WAY-71). An unknown method alone
+  does not move the decision to level 2 or 3.
 - A decision can combine levels: each level covers what it can check of the binding
   sentences (WAY-12).
 

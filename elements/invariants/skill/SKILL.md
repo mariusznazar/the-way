@@ -1,6 +1,6 @@
 ---
 name: record-invariant
-description: Use when a product's invariants file, foundations/invariants.md, has to gain or change an entry — a rule the product must keep, from conversation, a task's return step, the behaviour of the critical flows and the parts they run through or an invariant a decision's verification calls for; a changed, split, merged or withdrawn invariant; or a row on the list of violated or quarantined invariants.
+description: Use when a product's invariants file, foundations/invariants.md, has to gain or change an entry — a rule the product must keep, from conversation, a task's return step, the behaviour of the critical flows and the parts they run through or an invariant a decision's verification calls for; a changed, split, merged or withdrawn invariant; a row on the list of violated or quarantined invariants; or an invariant a project definition projects.
 ---
 
 # Record an invariant
@@ -68,6 +68,20 @@ invariant adds to each.
   agents: for the check — the entry, its method, and the checks citing an identifier this change
   retires or a version it raises; for the deliberate break — the sentence, without the check and
   the files it reads (WAY-69). Where it is not a command, there is nothing to hand on.
+
+## Projected mode
+
+Projected mode runs as `elements/common/way_of_working.md` gives it, with these differences for an
+invariant (WAY-117):
+
+- Step 3: *Method* reads `TODO` where the product cannot yet name a command or a file to assess it
+  against, as the template allows; *Part* names parts the product's map holds, and `every` where
+  the map holds no part yet; *Derives from* a projected decision reads
+  `TODO — <the decision's question>, projected in <the definition's path>`.
+- Step 4.3: the heading reads `#### <identifier>/1`, or the current identifier with its next
+  version.
+- After step 4.4 nothing is handed on: the check and the deliberate break wait for the task that
+  writes the invariant.
 
 ## Violated and quarantined invariants
 

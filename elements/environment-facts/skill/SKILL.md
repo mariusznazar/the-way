@@ -1,6 +1,6 @@
 ---
 name: record-environment-fact
-description: Use when a product's environment facts file, foundations/environment_facts.md, has to gain or change an entry — a fact an invariant's Rests on or a decision's Based on needs, a citation whose change would send its decision to review, a fact a task's return step found, a failed run of a fact's method, or a fact shown false or left with nothing resting on it.
+description: Use when a product's environment facts file, foundations/environment_facts.md, has to gain or change an entry — a fact an invariant's Rests on or a decision's Based on needs, a citation whose change would send its decision to review, a fact a task's return step found, a failed run of a fact's method, a fact shown false or left with nothing resting on it, or a fact a project definition projects.
 ---
 
 # Record an environment fact
@@ -76,6 +76,19 @@ environment fact adds to each.
   source; write their verdict into `foundations/human_verdicts.md` in the row
   `elements/common/rules.md` gives, the first row giving that file to a part through
   `update-part-map`. `TODO` hands on nothing.
+
+## Projected mode
+
+Projected mode runs as `elements/common/way_of_working.md` gives it, with these differences for a
+fact (WAY-117):
+
+- Step 2: a fact is projected only where a projected decision's *Based on* or a projected
+  invariant's *Rests on* names it (WAY-73, WAY-90).
+- Step 3: the entry is written whole; its source exists today and is read now.
+- Step 4: the mechanical check before step 4.1 runs as above. After step 4.4 nothing is handed on,
+  and no verdict is written into `foundations/human_verdicts.md`.
+- Step 4.3: the heading reads `#### <identifier>/1`, or the current identifier with its next
+  version.
 
 ## A failed run and a withdrawal
 

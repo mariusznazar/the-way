@@ -980,6 +980,28 @@ class ProcessTerms(PinnedCase):
                           **{"foundations__notes.md": NOTES})
         self.assertEqual(self.verdicts("glossary-process-terms/1"), ["pass"])
 
+    def test_last_word_of_process_term_as_heading_fails(self):
+        # invariant: glossary-process-terms/1
+        self.commit_terms_of_more_than_one_word()
+        self.pin()
+        self.assertFails(glossary(entry(), run_entry(),
+                                  entry(term="Tests", avoid="none",
+                                        definition="Tests are trials of materials.")),
+                         "Tests: the last word of `invariant test`, which the glossary of the-way "
+                         "holds at",
+                         **{"foundations__notes.md": "# Notes\n\nTests of materials.\n"})
+        self.assertEqual(self.verdicts("glossary-process-terms/1"), ["fail"])
+
+    def test_qualified_last_word_as_heading_passes(self):
+        # invariant: glossary-process-terms/1
+        self.commit_terms_of_more_than_one_word()
+        self.pin()
+        self.assertPasses(glossary(entry(), run_entry(),
+                                   entry(term="lab test", avoid="none",
+                                         definition="A lab test is a trial of materials.")),
+                          **{"foundations__notes.md": "# Notes\n\nThe lab test of a material.\n"})
+        self.assertEqual(self.verdicts("glossary-process-terms/1"), ["pass"])
+
     def test_bare_word_the_way_holds_in_avoid_fails(self):
         # invariant: glossary-process-terms/1
         self.pin()

@@ -79,13 +79,35 @@ The part answers for a product's environment facts.
 
 ## elements-common
 
-The part answers for the rules of form and the way of working the elements' templates and skills
-share, the code their format guards share, and the procedure of the panel.
+The part answers for rules of form and the way of working shared by foundation-entry skills, the
+code shared by their format guards, the skill that finds entries in a source, the critique skill,
+and the panel procedure.
 
 - **Files:** elements/common/**
-- **Depends on:** none
-- **Failure modes:** none
+- **Depends on:** project-level · decisions · invariants · glossary · part-map · environment-facts
+- **Failure modes:**
+  - the entry finder omits a settlement that a later task must guess — a project can pass its gate
+    with an incomplete projected foundation — high — not detected
+  - a critique presents a source mismatch as an accepted correction — the human approves wording
+    they did not settle — high — not detected
 - **Trust boundary:** none
+
+## project-level
+
+The part answers for the form and writing of a project definition and for the readiness gate that
+decides whether the definition can guide a breakdown into tasks.
+
+- **Files:** project-level/**
+- **Depends on:** decisions · invariants · glossary · part-map · environment-facts ·
+  elements-common · relation-model
+- **Failure modes:**
+  - the gate accepts an unresolved placeholder in a required section — tasks inherit an explicit
+    gap as project scope or a future foundation rule — high — detected by project-readiness-gate
+  - an agent fills a missing human answer with a plausible settlement — tasks inherit an invented
+    scope or rule — high — not detected
+  - the gate approves wording that was not searched against the current foundation — a conflict
+    enters the project plan — high — not detected
+- **Trust boundary:** project-level/readiness_check.py
 
 ## task-cycle
 
@@ -150,7 +172,7 @@ The part answers for preparing a product repository to use one pinned commit of 
 
 - **Files:** installation/**
 - **Depends on:** decisions · invariants · glossary · part-map · environment-facts ·
-  elements-common
+  elements-common · project-level
 - **Failure modes:**
   - the installer pins the wrong commit, or replaces an existing product file or changes it beyond
     the additions `installation-command` names — a product starts with the wrong process, or loses
