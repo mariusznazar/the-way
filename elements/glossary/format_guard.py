@@ -1142,6 +1142,13 @@ def check_process_terms(entries, rules, top, own, report):
                                      "is written with a qualifier, and the bare word keeps the "
                                      "meaning of the process (WAY-104)" % (entry.term, term, commit),
                          check, (process,))
+        else:
+            found = held_word(entry.term, held)
+            if found is not None:
+                report.error(entry.line, "%s: %s at %s, the commit the product pins; a word of "
+                                         "the product's domain that is the last word of a process "
+                                         "term is written with a qualifier (WAY-104)"
+                             % (entry.term, found, commit), check, (process,))
         value, line = value_of(entry, AVOID)
         for word, _ in pairs(value):
             word = re.sub(MARKS, "", word).strip()

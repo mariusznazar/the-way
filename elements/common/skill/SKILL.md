@@ -11,7 +11,7 @@ entry itself. The rules of each entry stand in its element's template; how a ski
 `elements/common/way_of_working.md`. This skill serves a project definition for now; the breakdown
 of a project, the return step of a task (WAY-11) and the entry of the process into an existing
 product (WAY-28) will call it too, each adding what it needs
-(`TODO — decision pending: which decision sets how foundation entries are found in a source`).
+(WAY-115).
 
 This skill lives in `elements/common/skill/` of the-way. Installed globally, its base directory is
 a link, so resolve it first: `realpath <base>` in Bash, `(Get-Item <base>).Target` in PowerShell.
@@ -56,8 +56,9 @@ When that section already holds a working table, resume from the first row whose
   shown as rejected, with its reason, and is not proposed.
 - A candidate from the material is a proposal: it enters only on the human's word, and the
   conversation may change it.
-- Write the table into the definition as the template's working table, every row `waiting`; then
-  show it.
+- Write the table into the definition as the template's working table: proposed rows start
+  `waiting`, and rows with no concrete next-reader consequence start `rejected`. Show the whole
+  table, including the source and next-reader column, with a reason for each rejected row.
 
 ## 3. The human cuts
 
@@ -85,8 +86,11 @@ For each accepted row, in the table's order:
    answers as its source: `record-decision`, `record-invariant`, `record-glossary-term`,
    `record-environment-fact` or `update-part-map`. Once the entry is written, set the row to
    `written`.
-4. An entry that skill reports as following from this one becomes a row of the table, `accepted`,
-   its source naming the entry it follows from.
+4. An entry that skill reports as following from this one becomes a row of the table, `waiting`,
+   with its source naming the entry it follows from and the concrete choice the next reader would
+   otherwise have to guess. Show the whole added row and ask the human to accept or reject it
+   before handing it to a skill. If the human rejects a row required by an accepted entry, reopen
+   that entry with the human; do not silently remove its link or weaken its verification.
 
 ## 5. Close
 

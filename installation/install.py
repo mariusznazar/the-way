@@ -22,6 +22,15 @@ ELEMENTS = {
     "part-map": ("update-part-map", "part_map.md"),
     "environment-facts": ("record-environment-fact", "environment_facts.md"),
 }
+SKILLS = {
+    name: f"elements/{element}/skill/SKILL.md"
+    for element, (name, _) in ELEMENTS.items()
+}
+SKILLS.update({
+    "find-foundation-entries": "elements/common/skill/SKILL.md",
+    "define-project": "project-level/skill/SKILL.md",
+    "critique": "elements/common/critique/SKILL.md",
+})
 # Claude Code reads project skills from .claude/skills, Codex from .agents/skills.
 SKILL_DIRECTORIES = (".claude", ".agents")
 RULE = Path(".claude") / "rules" / "the-way.md"
@@ -87,18 +96,18 @@ def empty_foundations() -> dict[str, str]:
 
 
 def sibling_names() -> str:
-    names = [f"`{name}`" for name, _ in ELEMENTS.values()]
+    names = [f"`{name}`" for name in SKILLS]
     return ", ".join(names[:-1]) + " or " + names[-1]
 
 
-def skill_wrapper(element: str, name: str, commit: str) -> str:
-    original = committed(f"elements/{element}/skill/SKILL.md", commit)
+def skill_wrapper(path: str, name: str, commit: str) -> str:
+    original = committed(path, commit)
     original_name = re.search(r"^name: (.+)$", original, re.M)
     if not original_name or original_name.group(1) != name:
-        raise RuntimeError(f"Unexpected skill name for {element} at {commit}")
+        raise RuntimeError(f"Unexpected skill name for {path} at {commit}")
     description = re.search(r"^description: (.+)$", original, re.M)
     if not description:
-        raise RuntimeError(f"Missing skill description for {element}")
+        raise RuntimeError(f"Missing skill description for {path}")
     project_name = f"the-way-{name}"
     return (f"---\nname: {project_name}\n"
             f"description: {description.group(1)} Use this product's pinned the-way commit.\n"
@@ -106,13 +115,13 @@ def skill_wrapper(element: str, name: str, commit: str) -> str:
             f"# {project_name}\n\n"
             f"The process for this repository is pinned as the Git submodule `{SUBMODULE}`. "
             f"Its commit is `{commit}`.\n\n"
-            f"If `{SUBMODULE}/elements/{element}/skill/SKILL.md` is absent, run "
+            f"If `{SUBMODULE}/{path}` is absent, run "
             f"`git submodule update --init -- {SUBMODULE}` from the product root. "
             f"Check `git ls-files --stage -- {SUBMODULE}` and "
             f"`git -C {SUBMODULE} rev-parse HEAD`: both must show `{commit}`. "
             "If initialization fails or either commit differs, stop.\n\n"
-            f"Read `{SUBMODULE}/elements/{element}/skill/SKILL.md` in full and follow it. "
-            f"Read its referenced template and `elements/common/` files inside `{SUBMODULE}`. "
+            f"Read `{SUBMODULE}/{path}` in full and follow it. "
+            f"Read the files it references inside `{SUBMODULE}`. "
             "Its paragraph about resolving a global skill link applies only to a global install; "
             f"here the process root is `{SUBMODULE}`. Do not substitute a global skill.\n\n"
             f"Where this skill or a file it reads names another the-way skill — {sibling_names()} "
@@ -124,6 +133,8 @@ def product_guidance() -> str:
     """The guidance for agents in a product. It names no commit: the gitlink records the commit,
     so the text changes only when the guidance itself changes, not when the pin moves."""
     names = ", ".join(f"`the-way-{name}`" for name, _ in ELEMENTS.values())
+    other_names = ", ".join(f"`the-way-{name}`" for name in SKILLS if name not in
+                            {entry_name for entry_name, _ in ELEMENTS.values()})
     return ("# Pinned the-way process\n\n"
             "This repository uses the-way, the process for its foundation, at the commit the "
             f"gitlink of the Git submodule `{SUBMODULE}` records. After a fresh clone run "
@@ -131,7 +142,8 @@ def product_guidance() -> str:
             f"`.gitmodules`. Before use, `git -C {SUBMODULE} rev-parse HEAD` must show the commit "
             f"`git ls-files --stage -- {SUBMODULE}` records. If initialization fails or the commits "
             "differ, stop; never use another copy or version of the-way.\n\n"
-            f"Write foundation entries only through the project skills {names}. Where a skill or "
+            f"Write foundation entries only through the project skills {names}. Use the project "
+            f"skills {other_names} for their named work. Where a skill or "
             "a file it reads names one without the `the-way-` prefix, use the prefixed project "
             "skill, never a personal skill of that name.\n\n"
             "Run the-way's scripts from this repository's root as "
@@ -254,8 +266,8 @@ def plan(target: Path, commit: str,
     files: dict[Path, str] = {}
     for filename, content in empty_foundations().items():
         files[target / "foundations" / filename] = content
-    for element, (name, _) in ELEMENTS.items():
-        wrapper = skill_wrapper(element, name, commit)
+    for name, path in SKILLS.items():
+        wrapper = skill_wrapper(path, name, commit)
         for directory in SKILL_DIRECTORIES:
             files[target / directory / "skills" / f"the-way-{name}" / "SKILL.md"] = wrapper
     files[target / RULE] = product_guidance()

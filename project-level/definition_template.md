@@ -2,18 +2,17 @@
 
 A project definition says what a project is to achieve and what it rests on, before the project
 is broken into tasks. The skill in `skill/` beside this file writes it with a human, and
-`readiness_check.py` checks what a script can decide at the readiness gate. The project level has
-no decision in the log of the-way yet: every rule below ends with the decision it waits for.
+`readiness_check.py` checks what a script can decide at the readiness gate. The decisions that
+set the rules below are cited beside them.
 
 ## What a definition is not
 
 - It changes nothing in the foundation. It reads the foundation and projects changes to it; the
   tasks of the project make them (WAY-01;
-  `TODO — decision pending: which decision sets that the project level writes nothing in the
-  foundation`).
+  WAY-106).
 - It holds no plan: phases, the order of work, the tasks and which task carries which decision
   stand in the plan of the project (WAY-36;
-  `TODO — decision pending: which decision sets what the plan of a project holds`).
+  WAY-106).
 
 ## Where it stands, and in what language
 
@@ -28,12 +27,11 @@ no decision in the log of the-way yet: every rule below ends with the decision i
   - Tasks: <a path or a tool>
   ```
 
-  (WAY-101; `TODO — decision pending: which decision sets where a product names the place of its
-  backlog`.)
+  (WAY-101; WAY-107.)
 - The text of the definition, its title included, is in the language the human opened the
   conversation in. The headings, the status line, the markers below and the projected entries
   are in English, whatever that language (WAY-72 for the entries;
-  `TODO — decision pending: which decision sets the language of a project definition`).
+  WAY-108).
 
 ## The form
 
@@ -70,7 +68,7 @@ Status: definition — open: <the sections still holding TODO>
 The headings stand once each, in this order, and no other second-level heading stands in the
 definition; a third-level heading may stand inside a section. A YAML front matter may stand above
 the title where the place of the definition asks for one
-(`TODO — decision pending: which decision sets the form of a project definition`).
+(WAY-108).
 
 ## The status line
 
@@ -80,15 +78,14 @@ the title where the place of the definition asks for one
 | `ready for gate` | `readiness_check.py --before-approval` reports nothing: no section above the gate record holds a `TODO` it counts as a gap |
 | `approved YYYY-MM-DD` | the gate record is written |
 
-`TODO — decision pending: which decision sets that a project definition carries its state in a
-status line`.
+WAY-108.
 
 ## Every section, and the words `none` and `TODO`
 
 Every section holds text, `none` or `TODO`: `none` states that nothing is there, `TODO` that
 something is known to be missing, as `elements/common/rules.md` gives them for an entry (WAY-71).
 A section is never left empty
-(`TODO — decision pending: which decision sets the words none and TODO in a project definition`).
+(WAY-108).
 
 | Section | What it holds |
 |---|---|
@@ -105,27 +102,24 @@ A section is never left empty
 | Projected foundation changes | what the definition settles about the product, as projected entries of the foundation, each with its translation, below the line that records the step finding them |
 | Gate record | who approved the gate and when, the commit of the foundation searched, the fingerprint |
 
-`TODO — decision pending: which decision sets the sections of a project definition`.
+WAY-108.
 
 - **Background, Success and Risks** hold what the human answered. The agent asks for them; what it
   finds in the material enters a question as its anchor, never the section
-  (`TODO — decision pending: which decision sets that a definition's background, success and risks
-  come from the human's answers`).
+  (WAY-109).
 - **A frame of success** — each signal or criterion under "Success" — carries one sentence saying
   what would show it false, marked `**OBALENIE:**` in a Polish definition and `**FALSIFIED IF:**`
   in an English one
-  (`TODO — decision pending: which decision sets that every frame of success carries its
-  falsification condition`).
+  (WAY-109).
 - **A deadline** appears under "Inputs and constraints" only when the human names one imposed from
   outside, in the human's own words, with how firmly it binds. The agent never asks for a
   deadline, never derives one from the material, and never argues scope or cost from it
-  (`TODO — decision pending: which decision sets how a deadline enters a project definition`).
+  (WAY-110).
 
 ## What is not yet known
 
 What is not yet known stands in one of three places
-(`TODO — decision pending: which decision sets the three places of an unknown in a project
-definition`):
+(WAY-108):
 
 1. something missing from the definition itself — its goal, scope or success — is `TODO` in its
    section;
@@ -138,8 +132,8 @@ Each question is an item of a list ending with its place of resolution — the b
 project, or one task of it, named:
 
 ```markdown
-- How is a program shown to fail on the second map? — resolved in: breakdown
-- What tools does the author mode have? — resolved in: task: map editor
+- Which records may a contractor view? — resolved in: breakdown
+- How does the exporter handle a failed transfer? — resolved in: task: export records
 ```
 
 A section without questions reads `none`.
@@ -149,8 +143,7 @@ A section without questions reads `none`.
 The section holds what the definition settles about the product before the breakdown, as entries
 of the foundation, projected: decisions, invariants, glossary terms, environment facts, and the
 changes to the part map whose every field is known before the code
-(`TODO — decision pending: which decision sets which kinds of entry a project definition
-projects`). The skill `find-foundation-entries` finds them with the human and hands each to the
+(WAY-116). The skill `find-foundation-entries` finds them with the human and hands each to the
 skill of its element in projected mode, which writes it here. The section reads `TODO` until that
 step begins.
 
@@ -163,7 +156,7 @@ definition:
 
 | # | Settlement | Kind | Source | What the next reader would guess | State |
 |---|---|---|---|---|---|
-| 1 | Postać należy do dokładnie jednej drużyny i korzysta z jej skrzynki | decision | material: koncepcja §5 | the data model of a team and its chest | accepted |
+| 1 | Dokument należy do dokładnie jednego obszaru roboczego | decision | material: opis produktu §5 | the document's ownership and access rules | accepted |
 ```
 
 A row's state is `waiting`, `accepted`, `rejected` or `written`. Once every row is `rejected` or
@@ -172,11 +165,11 @@ A row's state is `waiting`, `accepted`, `rejected` or `written`. Once every row 
 ```markdown
 ## Projected foundation changes
 
-Candidates: 24 shown, 17 accepted — 2026-10-05
+Candidates: 3 shown, 2 accepted — 2026-01-01
 
 ### Decisions
 
-#### (new) — Who owns a character?
+#### (new) — Who owns a document?
 
 <the entry, its *Approved by* reading `on acceptance` until the gate>
 
@@ -184,7 +177,7 @@ Candidates: 24 shown, 17 accepted — 2026-10-05
 
 ### Invariants
 
-#### one-team-per-character/1
+#### one-workspace-per-document/1
 
 <the entry>
 
@@ -193,8 +186,7 @@ Candidates: 24 shown, 17 accepted — 2026-10-05
 
 - The line `Candidates: <rows shown> shown, <rows accepted> accepted — YYYY-MM-DD` stands first;
   with no row accepted, `none` follows it. Rejected rows are not kept
-  (`TODO — decision pending: which decision sets the record of the step that finds foundation
-  entries`).
+  (WAY-115).
 - A subsection stands for each kind that has entries, in this order: `### Decisions`,
   `### Invariants`, `### Glossary`, `### Environment facts`, `### Part map`. Each entry is in the
   form of its element's template, its heading two levels lower:
@@ -207,23 +199,26 @@ Candidates: 24 shown, 17 accepted — 2026-10-05
   | environment fact | `#### <identifier>/1`; for a new version, the current identifier and its next version |
   | part map | `#### <identifier> (changed)` with the whole entry as it will read; `#### <identifier> (new)` for a critical flow through existing parts |
 
-- A projected entry needs no number and no prefix: the task that writes it into the foundation
-  gives them.
+- Before a product has a main branch, a proposed edit of an existing decision keeps its current
+  identifier and version in the heading: the entry is edited in place when written (WAY-07).
+- A new projected decision needs no number and no prefix: the task that writes it into the
+  foundation gives them. Other projected headings keep the identifier their element requires.
 - Below each entry stands its translation into the language of the definition, every line
   beginning with `>`; it helps the human weigh the wording and is not approved.
-- At the gate a projected entry holds whole what only the human gives, and gives at the project
-  level: its binding sentence or definition and, for a decision, its *Rationale* and *Rejected*
-  (`none considered` being the human's statement). A field that waits for the code or the world —
-  a source, a verification, a method, the parts, the links, each a line `- **<Field>:** …` with
-  the indented lines that continue it — may read `TODO`, as may a translation: the format guard
-  of the element checks those fields in the task that writes the entry. `TODO` anywhere else in
-  the section is a gap
-  (`TODO — decision pending: which decision sets that the gate asks a projected entry for what
-  only the human gives at the project level, and lets the fields waiting for the code or the
-  world read TODO`).
+- At the gate a projected entry holds whole what only the human gives at the project level: its
+  binding sentence or definition and, for a decision, its *Change*, *Rationale* and *Rejected*
+  (`none considered` being the human's statement). *Review when* holds a condition and date, or
+  `none` when the human knows none; it may read `TODO` when the human expressly defers it because
+  the review timing depends on later work, and an item under "Open questions" names the
+  breakdown or task that resolves it. A field that waits for the code or the world — a source, a
+  verification, a method, the parts, the links, each a line `- **<Field>:** …` with the indented
+  lines that continue it — may read `TODO`, as may a translation; *Approved by* reads
+  `on acceptance` until the gate, never `TODO`. The format guard of the element checks those
+  deferred fields in the task that writes the entry. `TODO` anywhere else in the section is a gap
+  (WAY-118, WAY-119).
 
 A section with no projected entry reads the line and `none`
-(`TODO — decision pending: which decision sets the form of a projected entry`).
+(WAY-117).
 
 ## Gate record
 
@@ -239,4 +234,4 @@ form and order:
 The fingerprint is that of the definition's text from `## Goal` up to `## Gate record`, as
 `relation-model/fingerprint.py` computes it. A definition whose text no longer gives its recorded
 fingerprint changed after the gate, and goes through the gate again
-(`TODO — decision pending: which decision sets the readiness gate of a project`).
+(WAY-118).

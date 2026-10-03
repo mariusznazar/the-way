@@ -16,9 +16,14 @@ INSTALL = SOURCE / "installation" / "install.py"
 sys.path.insert(0, str(SOURCE / "installation"))
 import install  # noqa: E402
 
-NAMES = (("decisions", "record-decision"), ("invariants", "record-invariant"),
-         ("glossary", "record-glossary-term"), ("part-map", "update-part-map"),
-         ("environment-facts", "record-environment-fact"))
+NAMES = (("elements/decisions/skill/SKILL.md", "record-decision"),
+         ("elements/invariants/skill/SKILL.md", "record-invariant"),
+         ("elements/glossary/skill/SKILL.md", "record-glossary-term"),
+         ("elements/part-map/skill/SKILL.md", "update-part-map"),
+         ("elements/environment-facts/skill/SKILL.md", "record-environment-fact"),
+         ("elements/common/skill/SKILL.md", "find-foundation-entries"),
+         ("project-level/skill/SKILL.md", "define-project"),
+         ("elements/common/critique/SKILL.md", "critique"))
 BLOCK = install.agents_block()
 
 
@@ -67,7 +72,7 @@ class InstallTest(unittest.TestCase):
                          command("git", "show", f"{self.commit}:README.md", cwd=SOURCE).stdout)
         staged = command("git", "ls-files", "--stage", "--", ".the-way", cwd=self.product)
         self.assertIn("160000 " + self.commit, staged.stdout)
-        for element, name in NAMES:
+        for path, name in NAMES:
             claude = self.product / ".claude" / "skills" / f"the-way-{name}" / "SKILL.md"
             codex = self.product / ".agents" / "skills" / f"the-way-{name}" / "SKILL.md"
             self.assertTrue(claude.is_file(), claude)
@@ -75,7 +80,7 @@ class InstallTest(unittest.TestCase):
             text = claude.read_text(encoding="utf-8")
             self.assertIn(f"name: the-way-{name}", text)
             self.assertIn(self.commit, text)
-            self.assertIn(f".the-way/elements/{element}/skill/SKILL.md", text)
+            self.assertIn(f".the-way/{path}", text)
             self.assertIn("git ls-files --stage -- .the-way", text)
             self.assertIn("use this product's project skill of the same name with the "
                           "`the-way-` prefix, never an unprefixed one", text)
@@ -207,7 +212,7 @@ class InstallTest(unittest.TestCase):
         self.assertEqual(applied.returncode, 0, applied.stderr)
         path = self.product / "foundations" / "invariants.md"
         entry = ("## save-round-trip/1\n\n"
-                 "A game saved and loaded back holds the same state as before it was saved.\n\n"
+                 "A document saved and loaded back holds the same content as before it was saved.\n\n"
                  "- **Method:** `python -B tools/check.py --record .runs/saving.jsonl`\n"
                  "- **Rests on:** none\n- **Derives from:** none\n- **Part:** saving\n"
                  "- **Correction:** none\n\n")

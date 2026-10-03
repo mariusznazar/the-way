@@ -1,8 +1,8 @@
 # Install the-way in a product repository
 
 This directory owns the first connection between a product repository and the-way. The installer
-pins one commit of this repository, creates the five empty foundation files, makes the five
-foundation skills available to Claude Code and Codex in local and cloud sessions, gives both tools
+pins one commit of this repository, creates the five empty foundation files, makes eight skills
+available to Claude Code and Codex in local and cloud sessions, gives both tools
 the same guidance for working with the pinned process, and makes Git ignore the-way's records of a
 run. It does not write product entries or start the product's task cycle. The `installation` part and its failure modes are in
 `foundations/part_map.md`; WAY-09 describes its place in this repository and WAY-34 governs the pin.
@@ -53,8 +53,8 @@ installer allows Git's file protocol only when the URL is a local path or a `fil
 | `foundations/glossary.md` | Empty glossary with its required description. |
 | `foundations/part_map.md` | Empty map with its required sections and table headers. |
 | `foundations/environment_facts.md` | Empty fact file with its required withdrawn identifiers table. |
-| `.claude/skills/the-way-*/SKILL.md` | Five project skill entry points for Claude Code, with names distinct from personal skills. Each reads the skill, template, and shared rules from `.the-way` at the pinned commit, and sends work that the skill hands to another the-way skill to the `the-way-` project skill of that name. |
-| `.agents/skills/the-way-*/SKILL.md` | The same five entry points for Codex, byte for byte. |
+| `.claude/skills/the-way-*/SKILL.md` | Eight project skill entry points for Claude Code: the five foundation entry skills, `find-foundation-entries`, `define-project`, and `critique`. Each reads its source skill and referenced files from `.the-way` at the pinned commit, and sends work that skill hands to another the-way skill to the `the-way-` project skill of that name. |
+| `.agents/skills/the-way-*/SKILL.md` | The same eight entry points for Codex, byte for byte. |
 | `.claude/rules/the-way.md` | The product guidance for Claude Code: initializing the submodule, using only the `the-way-*` skills, running the-way's scripts as `.the-way/<path>` on the product's files, the `--base` and `--merge-onto` commits, the empty part map's reports, and running the checks before a merge. It names no commit, so it changes only when the guidance changes. |
 | `AGENTS.md` | The same guidance for Codex, between `<!-- the-way:begin -->` and `<!-- the-way:end -->`. |
 | `.gitignore` | The line `.runs/`. The invariants format guard requires the record of a run that a command names to be ignored by Git. |
@@ -63,10 +63,10 @@ The product commits the gitlink, `.gitmodules`, the foundation files, the `.clau
 files, `AGENTS.md` and `.gitignore` as one product change. The installer stages only the two submodule paths; review and stage the other
 files in the product's normal workflow. A later process version enters the product through a
 separate product task that moves the gitlink and updates its project skill entry points (WAY-34).
-In that task, move the gitlink and the `.the-way` checkout to the new commit, delete the ten
+In that task, move the gitlink and the `.the-way` checkout to the new commit, delete the installed
 wrappers in `.claude/skills/the-way-*/SKILL.md` and `.agents/skills/the-way-*/SKILL.md` and
 `.claude/rules/the-way.md`, then run the installer from a the-way checkout at the new commit with
-`--apply`. It recreates those eleven files for the new commit and leaves the foundation files as
+`--apply`. It recreates the sixteen wrappers and rule for the new commit and leaves the foundation files as
 they are. The block in `AGENTS.md` stays as it is unless the guidance text changed between the two
 commits; then the installer stops on the block, and the task removes it, markers included, before
 running the installer again.

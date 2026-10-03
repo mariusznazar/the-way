@@ -72,8 +72,7 @@ invariant adds to each.
 ## Projected mode
 
 Projected mode runs as `elements/common/way_of_working.md` gives it, with these differences for an
-invariant (`TODO — decision pending: which decision sets how an invariant is projected in a
-project definition`):
+invariant (WAY-117):
 
 - Step 3: *Method* reads `TODO` where the product cannot yet name a command or a file to assess it
   against, as the template allows; *Part* names parts the product's map holds, and `every` where

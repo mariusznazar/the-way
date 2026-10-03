@@ -93,8 +93,7 @@ glossary entry adds to each.
 ## Projected mode
 
 Projected mode runs as `elements/common/way_of_working.md` gives it, with these differences for a
-term (`TODO — decision pending: which decision sets how a glossary term is projected in a project
-definition`):
+term (WAY-117):
 
 - Step 2: the candidate words are those the binding sentences of the definition's projected
   entries use, weighed by the template's "Which words take an entry"; a projected term has no uses

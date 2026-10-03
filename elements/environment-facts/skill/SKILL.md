@@ -80,8 +80,7 @@ environment fact adds to each.
 ## Projected mode
 
 Projected mode runs as `elements/common/way_of_working.md` gives it, with these differences for a
-fact (`TODO — decision pending: which decision sets how an environment fact is projected in a
-project definition`):
+fact (WAY-117):
 
 - Step 2: a fact is projected only where a projected decision's *Based on* or a projected
   invariant's *Rests on* names it (WAY-73, WAY-90).

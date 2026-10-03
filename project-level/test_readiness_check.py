@@ -22,12 +22,12 @@ sys.dont_write_bytecode = True
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import readiness_check  # noqa: E402
 
-DECISION = """#### (new) — What does the game exclude for good?
+DECISION = """#### (new) — What does the archive exclude for good?
 
-The game has no multiplayer mode.
+The archive has no public write API.
 
 - **Change:** new decision
-- **Scope:** game
+- **Scope:** archive
 - **Based on:** none
 - **Relations:** none
 - **Verification:** level 2 — an agent compares the change with the decision
@@ -35,22 +35,22 @@ The game has no multiplayer mode.
 - **Origin:** none
 - **Approved by:** {approval}
 
-*Rationale:* one player is the audience.
+*Rationale:* publishing is outside the archive's purpose.
 *Rejected:* none considered
 
-> **Translation (pl):** Gra nie ma trybu wieloosobowego."""
+> **Translation (pl):** Archiwum nie udostępnia publicznego interfejsu zapisu."""
 
-INVARIANT = """#### one-team-per-character/1
+INVARIANT = """#### one-workspace-per-document/1
 
-Every character belongs to exactly one team.
+Every document belongs to exactly one workspace.
 
 - **Method:** TODO
 - **Rests on:** none
-- **Derives from:** TODO — the decision on who owns a character, projected in this definition
+- **Derives from:** TODO — the decision on who owns a document, projected in this definition
 - **Part:** every
 - **Correction:** none
 
-> **Translation (pl):** Każda postać należy do dokładnie jednej drużyny.
+> **Translation (pl):** Każdy dokument należy do dokładnie jednego obszaru roboczego.
 > - **Method:** TODO"""
 
 CANDIDATES_LINE = "Candidates: 3 shown, 1 accepted — 2026-10-03"
@@ -141,29 +141,35 @@ class Whole(unittest.TestCase):
 
 class Structure(unittest.TestCase):
     def test_a_missing_status_line_is_reported(self):
+        # invariant: project-definition-form/1
         self.assertEqual(conditions(definition(status="")),
                          [("structure", "no `Status:` line above the first section")])
 
     def test_a_status_off_its_forms_is_reported(self):
+        # invariant: project-definition-form/1
         found = conditions(definition(status="Status: almost done"))
         self.assertEqual([c for c, _ in found], ["structure"])
 
     def test_a_missing_section_is_reported(self):
+        # invariant: project-definition-form/1
         order = [n for n in readiness_check.SECTIONS[:-1] if n != "Risks"]
         found = conditions(definition(order=order))
         self.assertIn(("structure", "the section `## Risks` is missing"), found)
 
     def test_a_section_standing_twice_is_reported(self):
+        # invariant: project-definition-form/1
         order = list(readiness_check.SECTIONS[:-1]) + ["Risks"]
         found = conditions(definition(order=order))
         self.assertIn(("structure", "`## Risks` stands a second time"), found)
 
     def test_a_section_outside_the_template_is_reported(self):
+        # invariant: project-definition-form/1
         text = definition().replace("## Risks", "## Stakeholders\n\nMariusz\n\n## Risks")
         self.assertIn(("structure", "`## Stakeholders` is no section of the template"),
                       conditions(text))
 
     def test_sections_out_of_order_are_reported(self):
+        # invariant: project-definition-form/1
         order = list(readiness_check.SECTIONS[:-1])
         order[0], order[1] = order[1], order[0]
         found = conditions(definition(order=order))
@@ -184,15 +190,39 @@ class Structure(unittest.TestCase):
 
 class Gaps(unittest.TestCase):
     def test_todo_in_a_section_is_reported_with_its_line(self):
+        # invariant: project-readiness-gate/1
         text = definition(bodies={"Success": "TODO"})
         findings = readiness_check.check(text)
         todo = [f for f in findings if f.condition == "a"]
         self.assertEqual(len(todo), 1)
         self.assertEqual(text.splitlines()[todo[0].line - 1], "TODO")
 
-    def test_todo_in_a_field_of_a_projected_entry_is_no_gap(self):
+    def test_review_when_todo_with_open_question_is_no_machine_gap(self):
         decision = DECISION.format(approval="Mariusz, 2026-10-03").replace(
             "- **Review when:** none", "- **Review when:** TODO")
+        text = definition(bodies={
+            "Open questions": "- Kiedy przejrzymy regułę? — resolved in: task: wydanie gry",
+            "Projected foundation changes": projected(entries="### Decisions\n\n" + decision)})
+        self.assertEqual(conditions(text), [])
+
+    def test_change_todo_in_a_projected_decision_blocks_the_gate(self):
+        # invariant: project-readiness-gate/1
+        decision = DECISION.format(approval="Mariusz, 2026-10-03").replace(
+            "- **Change:** new decision", "- **Change:** TODO")
+        text = definition(bodies={"Projected foundation changes":
+                                  projected(entries="### Decisions\n\n" + decision)})
+        self.assertIn(("a", "`## Projected foundation changes` holds TODO"), conditions(text))
+
+    def test_approved_by_todo_in_a_projected_decision_blocks_the_gate(self):
+        # invariant: project-readiness-gate/1
+        text = definition(bodies={"Projected foundation changes":
+                                  projected(approval="TODO")})
+        self.assertIn(("a", "`## Projected foundation changes` holds TODO"), conditions(text))
+
+    def test_todo_in_a_field_waiting_for_code_is_no_gap(self):
+        decision = DECISION.format(approval="Mariusz, 2026-10-03").replace(
+            "- **Verification:** level 2 — an agent compares the change with the decision",
+            "- **Verification:** TODO")
         text = definition(bodies={"Projected foundation changes":
                                   projected(entries="### Decisions\n\n" + decision)})
         self.assertEqual(conditions(text), [])
@@ -213,21 +243,22 @@ class Gaps(unittest.TestCase):
         self.assertEqual(conditions(text), [])
 
     def test_todo_in_the_binding_sentence_of_a_projected_entry_is_reported(self):
+        # invariant: project-readiness-gate/1
         decision = DECISION.format(approval="Mariusz, 2026-10-03").replace(
-            "The game has no multiplayer mode.", "TODO")
+            "The archive has no public write API.", "TODO")
         found = conditions(definition(bodies={"Projected foundation changes":
                                               projected(entries="### Decisions\n\n" + decision)}))
         self.assertIn(("a", "`## Projected foundation changes` holds TODO"), found)
 
     def test_todo_in_the_definition_of_a_projected_term_is_reported(self):
-        term = "#### loop\n\nTODO\n\n- **Avoid:** none\n- **Not:** none"
+        term = "#### parcel\n\nTODO\n\n- **Avoid:** none\n- **Not:** none"
         found = conditions(definition(bodies={"Projected foundation changes":
                                               projected(entries="### Glossary\n\n" + term)}))
         self.assertIn(("a", "`## Projected foundation changes` holds TODO"), found)
 
     def test_todo_in_the_rationale_of_a_projected_decision_is_reported(self):
         decision = DECISION.format(approval="Mariusz, 2026-10-03").replace(
-            "*Rationale:* one player is the audience.", "*Rationale:* TODO")
+            "*Rationale:* publishing is outside the archive's purpose.", "*Rationale:* TODO")
         found = conditions(definition(bodies={"Projected foundation changes":
                                               projected(entries="### Decisions\n\n" + decision)}))
         self.assertIn(("a", "`## Projected foundation changes` holds TODO"), found)
@@ -248,6 +279,7 @@ class Gaps(unittest.TestCase):
         self.assertEqual([c for c, _ in conditions(text) if c == "a"], [])
 
     def test_an_empty_section_is_reported(self):
+        # invariant: project-readiness-gate/1
         found = conditions(definition(bodies={"Risks": ""}))
         self.assertIn(("a", "`## Risks` is empty — write `none` or `TODO`"), found)
 
@@ -258,6 +290,7 @@ class Gaps(unittest.TestCase):
 
 class OpenQuestions(unittest.TestCase):
     def test_a_question_without_its_place_is_reported(self):
+        # invariant: project-readiness-gate/1
         text = definition(bodies={"Open questions": "- Jak mierzymy postęp?"})
         self.assertEqual([c for c, _ in conditions(text)], ["d"])
 
@@ -300,6 +333,7 @@ WORKING_TABLE_MESSAGE = ("the working table of candidates still stands — the s
 
 class Candidates(unittest.TestCase):
     def test_a_projected_section_without_the_candidates_line_is_reported(self):
+        # invariant: project-readiness-gate/1
         found = conditions(definition(bodies={"Projected foundation changes": "none"}))
         self.assertEqual(found, [("f", "`## Projected foundation changes` does not begin with "
                                        "`Candidates: <n> shown, <k> accepted — YYYY-MM-DD`")])
@@ -325,6 +359,7 @@ class Candidates(unittest.TestCase):
         self.assertEqual(conditions(definition(bodies={"Projected foundation changes": body})), [])
 
     def test_a_working_table_still_standing_is_reported_before_approval(self):
+        # invariant: project-readiness-gate/1
         body = projected(approval="on acceptance", entries=WORKING_TABLE + "\n\n### Decisions\n\n"
                          + DECISION.format(approval="on acceptance"))
         text = definition(status="Status: ready for gate", gate="",

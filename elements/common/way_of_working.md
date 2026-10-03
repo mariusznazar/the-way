@@ -9,10 +9,19 @@ it; in the decisions element, a rule changes only with a decision in the log (WA
 Paths under `elements/` below are those of the-way at the commit the product pins, which the
 skill reaches by resolving its own directory (WAY-34).
 
+## Critique before collective review
+
+When an agent has finished a set of proposals that the human will review together, one fresh
+agent critiques the complete set before it is shown. This includes entries added as consequences
+of earlier proposals. When the human reviews entries one by one, that review supplies the second
+reader. The agent follows `elements/common/critique/SKILL.md` for the same critical mechanism in
+either case and for an independently requested critique
+(WAY-120).
+
 ## How a skill asks
 
 Every skill of the-way that asks the human asks this way
-(`TODO — decision pending: which decision sets how a skill of the-way asks the human`):
+(WAY-113):
 
 - A question stands as plain text in the conversation, never in a tool that opens a separate panel
   for a question or its options.
@@ -96,10 +105,8 @@ looks for in its element.
 2. Show the whole entry, with what the skill adds beside it. Where the human writes in a language
    other than English, show beside the entry its translation into that language; the translation
    is never written into the foundation
-   (`TODO — decision pending: which decision sets that an entry is shown with its translation into
-   the human's language`). Apply the fixes, and write nothing before the human accepts the entry
-   (`TODO — decision pending: which decision sets that an entry is shown whole and accepted before
-   it is written`).
+   (WAY-114). Apply the fixes, and write nothing before the human accepts the entry
+   (WAY-114).
 3. Write the entry in its place in the file and run the element's format guard (WAY-09) from the
    product's repository root, `python -B <the element's directory>/format_guard.py`, with the
    arguments its `--help` gives for this file and for the commit the task branch left the main
@@ -125,13 +132,14 @@ A project definition projects entries of the foundation before the project is br
 The skill `find-foundation-entries`, or `define-project` at the readiness gate, hands an entry to
 the skill of its element in projected mode, naming the definition. The steps above run with these
 differences, and each element's skill adds its own
-(`TODO — decision pending: which decision sets how an entry is projected in a project
-definition`):
+(WAY-117):
 
 - Step 1: read the product's file of the element's entries where it exists; ask about no file to
   start and write no part map first — nothing is written into `foundations/`.
-- Step 4.2: the human's acceptance of the wording writes nothing into a field of approval; the
-  readiness gate approves the projected entries.
+- Step 4.2: prepare the whole entry and its translation, but do not ask for wording acceptance
+  before writing the proposal into the definition. Candidate selection accepts what is worth
+  projecting, not the proposal's final wording. The readiness gate shows the projected entries
+  whole and approves their wording, one by one or as a complete set.
 - Step 4.3: write the entry under "Projected foundation changes" of the definition, in the
   subsection of its kind and with the heading `project-level/definition_template.md` gives,
   followed by its translation; write nothing into `foundations/`. Run no format guard, and tell

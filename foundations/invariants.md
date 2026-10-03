@@ -159,7 +159,7 @@ Where {merge-onto} exists, every file git tracks lies in `foundations/` or in a 
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-09@e06e8dfc
+- **Derives from:** WAY-09@b8db4002
 - **Part:** every
 - **Correction:** none
 
@@ -169,7 +169,7 @@ Where {merge-onto} exists, every element directory holds a template, examples or
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-09@e06e8dfc
+- **Derives from:** WAY-09@b8db4002
 - **Part:** decisions · part-map · invariants · glossary · environment-facts
 - **Correction:** none
 
@@ -179,7 +179,7 @@ Where {merge-onto} exists, `relation-model/` holds the script that computes fing
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-09@e06e8dfc
+- **Derives from:** WAY-09@b8db4002
 - **Part:** relation-model
 - **Correction:** none
 
@@ -189,7 +189,7 @@ Every identifier `elements/invariants/examples.md` names is the identifier of an
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-09@e06e8dfc
+- **Derives from:** WAY-09@b8db4002
 - **Part:** invariants
 - **Correction:** none
 
@@ -199,7 +199,7 @@ Every identifier `elements/part-map/examples.md` names is the identifier of an e
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-09@e06e8dfc
+- **Derives from:** WAY-09@b8db4002
 - **Part:** part-map
 - **Correction:** none
 
@@ -209,7 +209,7 @@ Every term `elements/glossary/examples.md` names is the term of an entry of `fou
 
 - **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-09@e06e8dfc
+- **Derives from:** WAY-09@b8db4002
 - **Part:** glossary
 - **Correction:** none
 
@@ -1855,11 +1855,13 @@ The glossary guard warns on every change that, against "{fork-point}", adds or r
 
 ## glossary-process-terms/1
 
-The glossary guard, given a product's glossary, reports as an error every entry there whose term, in any of its forms, is a term the glossary of the-way holds at the commit the product pins, or whose *Avoid* lists, in any of its forms, such a term or the last word of one.
+The glossary guard, given a product's glossary, reports as an error every entry there whose term,
+in any of its forms, is a term the glossary of the-way holds at the commit the product pins or the
+last word of one, or whose *Avoid* lists, in any of its forms, such a term or last word.
 
 - **Method:** `python -B gate/run_tests.py elements/glossary --record .runs/glossary-tests.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-95@1cc58b42 · WAY-104@bd0113f6
+- **Derives from:** WAY-95@1cc58b42 · WAY-104@b1f1850d
 - **Part:** glossary · installation
 - **Correction:** none
 
@@ -2001,6 +2003,28 @@ Where {merge-onto} exists, no field of an entry of `foundations/glossary.md` hol
 - **Rests on:** none
 - **Derives from:** WAY-99@7d44dfd7 · WAY-71@c32828c9
 - **Part:** glossary
+- **Correction:** none
+
+## project-definition-form/1
+
+The project readiness check rejects a definition with no valid `Status:` line, a missing,
+repeated or unexpected required second-level section, or required sections out of order.
+
+- **Method:** `python -B gate/run_tests.py project-level --record .runs/project-level-tests.jsonl`
+- **Rests on:** none
+- **Derives from:** WAY-108@f70cfcdd
+- **Part:** project-level
+- **Correction:** none
+
+## project-readiness-gate/1
+
+Before approval, the project readiness check rejects a definition with a missing or unresolved
+required section, an open question with no place of resolution, or an unfinished candidate search.
+
+- **Method:** `python -B gate/run_tests.py project-level --record .runs/project-level-tests.jsonl`
+- **Rests on:** none
+- **Derives from:** WAY-118@5af868b3
+- **Part:** project-level
 - **Correction:** none
 
 ## Withdrawn identifiers

@@ -65,8 +65,7 @@ part map adds to each.
 ## Projected mode
 
 Projected mode runs as `elements/common/way_of_working.md` gives it, with these differences for
-the part map (`TODO — decision pending: which decision sets which changes to the part map a
-project definition projects`):
+the part map (WAY-116):
 
 - Step 2: project only an entry whose every field is known before the code: a change to an
   existing part — its sentence, *Depends on*, *Failure modes*, a *Trust boundary* over files it

@@ -19,7 +19,7 @@ decision adds to each.
 ## 1. Read
 
 - Read the product's `foundations/decisions.md`. When the log has no entries, ask the human for
-  the product's prefix — except in projected mode, where a decision has no prefix yet.
+  the product's prefix — except in projected mode, where a new decision has no prefix yet.
 
 ## 2. Decide what the entry is
 
@@ -58,16 +58,20 @@ decision adds to each.
 ## Projected mode
 
 Projected mode runs as `elements/common/way_of_working.md` gives it, with these differences for a
-decision (`TODO — decision pending: which decision sets how a decision is projected in a project
-definition`):
+decision (WAY-117):
 
-- Step 1: ask for no prefix; the task that writes the decision into the log asks for it, when the
-  log has no entries.
+- Step 1: ask for no prefix for a new decision; the task that writes it into the log asks for the
+  prefix when the log has no entries. A projected new version keeps its current identifier.
 - Step 2: apply the plan test first. An exclusion or a rule that ends with the project stays in the
   definition, under "Out of scope", and no entry is written (WAY-36, WAY-26).
 - Step 3: the heading reads `#### (new) — <question>` for a new decision, or
   `#### <PREFIX>-<NN>/<version> — <question>` for the next version of a current one; *Approved by*
   reads `on acceptance` until `define-project` writes it at the readiness gate.
+- Step 3: before a product has a main branch, a projected edit of an existing decision keeps its
+  current identifier and version (WAY-07).
+- Step 3: if *Review when* depends on later work, ask whether the human wants to defer it and add
+  a related open question with its place of resolution. Leave `TODO` only on that explicit answer;
+  never infer `none` from silence. `define-project` checks the connection at the gate.
 - Step 4.4: an invariant the verification names is a projected invariant, which follows from this
   entry as `way_of_working.md` gives it for projected mode.
 
