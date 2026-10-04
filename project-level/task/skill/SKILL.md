@@ -100,5 +100,3 @@ skill named here is the product skill with the `the-way-` prefix.
   of declaring readiness.
 - The task document carries what and why. Do not insert a separate implementation spec, test
   plan, or execution log here. The task cycle records those on the task branch.
-
-Use the language the human opened in for conversation and document content.
