@@ -179,21 +179,27 @@ that settles it (WAY-121). The skill `settle-technology` writes it before the re
 - A choice the section settles no longer stands under "Open questions"; a question that asks
   several choices narrows to what it still asks
   (WAY-108).
-- The options of each open choice come from research against the definition, one choice at a
-  time, never from a fixed list of stacks. An option the project's code is written in or against
-  — a language, a framework, a library, a store of data — is offered to the human for choice only
-  when its documentation shows that it uses explicit types, follows conventions of layout and
-  naming and has current, versioned documentation, and a public record of its use, such as a
-  package registry or a survey, shows it widely used within its language family; for a store of
-  data, its types are those it declares for what it stores, and its family is that of its query
-  language. An option the human names that fails is offered with the properties it fails, which
-  the decision records if the human chooses it, and every option is offered only after a critique
-  that refutes every claimed difference no source supports
+- The options of each open choice come from research of that choice against the definition,
+  never from a fixed list of stacks; the research of every choice that depends on no unsettled
+  choice starts once the list is confirmed, each in a report of its own. An option the project's
+  code is written in or against — a language, a framework, a library, a store of data — is weighed
+  by whether its documentation shows that it uses explicit types, follows conventions of layout
+  and naming and has current, versioned documentation, and whether a public record of its use,
+  such as a package registry or a survey, shows it widely used within its language family; for a
+  store of data, its types are those it declares for what it stores, and its family is that of its
+  query language. An option lacking one of these properties is offered with what each lack means
+  for the product, which the decision records if the human chooses it; an option with no
+  documentation or with a project no longer maintained is left out with that reason, unless the
+  human named it or the definition holds it as a constraint, and then it is offered with that
+  reason as such a lack; every option is offered only after a critique that refutes every claimed
+  difference no source supports
   (WAY-122).
 - The human sees the options through their consequences for the product — what each costs, where
   it runs, what keeping it running takes and what changing it later costs — and chooses between
   them; where no difference with a consequence remains, the step recommends the simplest and
-  cheapest option (WAY-123). `settle-technology` leads that.
+  cheapest option. The choices whose research started together reach the human together, in one
+  table, once every one of their comparisons has passed the critique, each with its recommendation
+  and the weak point of the option recommended (WAY-123). `settle-technology` leads that.
 
 ## Projected foundation changes
 
