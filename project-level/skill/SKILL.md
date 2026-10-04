@@ -33,6 +33,13 @@ The project level reads the product's foundation and writes nothing in it
   `python -B <the-way>/project-level/readiness_check.py <definition>`. A finding that its
   fingerprint no longer matches means the definition changed after the gate, and it goes through
   step 7 again.
+- A definition with no `## Technology` section was written before the step that settles the
+  technology. Say so, and ask whether the project is reopened, with the cost of each way:
+  reopening settles the technology at step 6 and takes the definition through the gate again
+  (WAY-118); leaving it leaves the choices to the breakdown, and the check keeps reporting the
+  missing section. On reopening, add `## Technology` reading `TODO` before "Projected foundation
+  changes", set the status line to `definition — open: Technology`, and go on at step 6
+  (WAY-121).
 - Otherwise begin with step 1.
 
 ## 1. The idea
@@ -111,10 +118,10 @@ The project level reads the product's foundation and writes nothing in it
 ## 7. The readiness gate
 
 1. Run `python -B <the-way>/project-level/readiness_check.py <definition> --before-approval`. A
-   finding of condition f goes back to step 5; a finding of condition g goes back to step 6; a
-   finding of condition a inside a projected entry
-   goes to the skill of its element in projected mode, which completes that entry's wording; any
-   other finding goes back to step 4.
+   finding of condition f goes back to step 5; a finding of condition g, or of condition a in
+   "Technology", goes back to step 6; a finding of condition a inside a projected entry goes to the
+   skill of its element in projected mode, which completes that entry's wording; any other finding
+   goes back to step 4.
 2. Search the whole foundation for what the definition collides with that no written link joins
    (WAY-33): a decision whose binding sentences the project would break, an invariant, a glossary
    term the definition uses in another meaning, a fact the project contradicts. Settle each before
@@ -132,8 +139,10 @@ The project level reads the product's foundation and writes nothing in it
    projected entries whole, with their translations, for collective approval. For review one by
    one, show each entry whole with its translation and ask whether its wording is approved; the
    human supplies the critical second reading. A wording the human changes goes through the skill
-   of its element in projected mode again.
-4. After the final review changes, for each projected decision whose *Review when* reads `TODO`,
+   of its element in projected mode again; where it changes the question of a decision an item of
+   "Technology" names, the item takes the new question.
+4. After the final review changes, run the check of 7.1 again; a finding goes where 7.1 sends it.
+   Then, for each projected decision whose *Review when* reads `TODO`,
    confirm that the human expressly deferred it and that a related item under "Open questions"
    names the breakdown or task that will settle it. The readiness script does not establish this
    relation. On the human's approval, write `<who>, YYYY-MM-DD` into *Approved by* of every projected

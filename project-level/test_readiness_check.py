@@ -462,6 +462,30 @@ class Technology(unittest.TestCase):
         self.assertEqual(self.technology("- Hosting — projected: 2026-10-03"),
                          [("g", DANGLING_MESSAGE)])
 
+    def test_projected_naming_part_of_a_heading_question_is_reported(self):
+        # invariant: project-technology-record/1
+        self.assertEqual(self.technology("- Archiwum — projected: What does the archive"),
+                         [("g", DANGLING_MESSAGE)])
+
+    def test_a_decision_heading_outside_projected_changes_holds_no_question(self):
+        # invariant: project-technology-record/1
+        text = definition(bodies={
+            "Background": "Gra istnieje tylko jako koncepcja.\n\n"
+                          "#### (new) — Where is data stored?",
+            "Technology": "- Magazyn danych — projected: Where is data stored?"})
+        self.assertEqual(conditions(text), [("g", DANGLING_MESSAGE)])
+
+    def test_an_open_choice_after_a_settled_one_is_reported(self):
+        # invariant: project-technology-record/1
+        body = "- Język aplikacji — held by: ARC-01/1\n- Magazyn danych — open"
+        self.assertEqual(self.technology(body), [("g", OPEN_MESSAGE)])
+
+    def test_none_followed_by_choices_is_reported(self):
+        # invariant: project-technology-record/1
+        found = self.technology("none\n- Magazyn danych — open")
+        self.assertIn(("g", OPEN_MESSAGE), found)
+        self.assertIn(("g", "a line under `## Technology` that is no choice item"), found)
+
     def test_indented_prose_under_technology_is_reported(self):
         # invariant: project-technology-record/1
         self.assertEqual(self.technology("  Zostajemy przy obecnym stacku."),

@@ -107,6 +107,12 @@ decides whether the definition can guide a breakdown into tasks.
     scope or rule — high — not detected
   - the gate approves wording that was not searched against the current foundation — a conflict
     enters the project plan — high — not detected
+  - a definition reaches the breakdown with a listed technology choice still open or naming no
+    entry — the first task chooses the store of data — high — detected by project-technology-record
+  - a technology choice the project needs is missing from the definition's list — the first task
+    chooses it — high — not detected
+  - the technology step shows a difference between options that no source supports — the human
+    chooses on an invented consequence — high — not detected
 - **Trust boundary:** project-level/readiness_check.py
 
 ## task-cycle

@@ -245,7 +245,7 @@ A directory reaches the main branch only once it holds what its part requires: a
 template and rules, examples or a pointer to entries of the-way that serve as its examples, a
 skill that writes its entries and a format guard; `elements/common/` the rules of form and the way
 of working the elements' templates and skills share, the code their format guards share and the
-procedure of the panel and the skills that find entries and critique proposals; `project-level/` the definition template, its skill, the readiness check and its tests; `relation-model/` the script that computes fingerprints; `gate/` the test
+procedure of the panel and the skills that find entries and critique proposals; `project-level/` the definition template, the skills that write a definition, the readiness check and its tests; `relation-model/` the script that computes fingerprints; `gate/` the test
 of every critical flow in the part map; `installation/` the installer, its tests and a README
 explaining how a product uses the pinned version; `agent-instructions/` the instructions for agents
 working on this repository, led to from the root agent instruction files; `task-cycle/` what the design of
@@ -264,7 +264,7 @@ the task cycle sets, and until then it does not reach the main branch. The entri
   — an agent compares the change with the decision:
   - complies: code two format guards share moves into `elements/common/`, and both load it from
     there; a new file of entries in `foundations/` comes with the format guard of its element;
-    the installer, its tests and instructions stand together in `installation/`; the definition and its readiness check stand in `project-level/`; the agent
+    the installer, its tests and instructions stand together in `installation/`; the definition, the skills that write it and its readiness check stand in `project-level/`; the agent
     instructions have their own part and root entry points;
   - violates: a `tools/` directory for shared scripts reaches the main branch; `task-cycle/`
     reaches the main branch before the design of the task cycle sets what it holds.
@@ -3359,8 +3359,10 @@ new decision as a correction.
 Before a project definition goes through its readiness gate, a step of its own lists the
 technology and architecture choices the project needs — such as a language, a framework, a store
 of data or a place to run — and settles each one the foundation does not already hold as a
-projected decision of the definition. When the foundation already holds every such choice, the
-step records that finding and settles nothing.
+projected decision of the definition. A choice belongs on the list when settling it later could
+change how the work is cut into tasks, or when it adds something the product has to run, pay for
+or back up; a choice one task can make and change alone stays with that task. When the foundation
+already holds every such choice, the step records the decision that holds each and settles nothing.
 
 - **Change:** new decision
 - **Scope:** project-level, decisions
@@ -3392,22 +3394,28 @@ run wherever nothing changes.
 ### WAY-122/1 — How are the options of a technology choice found and checked before a human sees them?
 
 The options of each technology choice a project needs come from research against the project
-definition, one choice at a time, rather than from a fixed list of bundled stacks. An option
-reaches the human only when its documentation shows that it uses explicit types, follows
-conventions of layout and naming, is widely used within its language family and has current,
-versioned documentation, and only after a critique that refutes every claimed difference between
-the options which no source supports.
+definition, one choice at a time, rather than from a fixed list of bundled stacks. An option the
+project's code is written in or against — a language, a framework, a library, a store of data —
+is offered to the human for choice only when its documentation shows that it uses explicit types,
+follows conventions of layout and naming and has current, versioned documentation, and a public
+record of its use, such as a package registry or a survey, shows it widely used within its
+language family; for a store of data, its types are those it declares for what it stores, and its
+family is that of its query language. An option the human names that fails is offered with the
+properties it fails, which the decision records if the human chooses it, and every option is
+offered only after a critique that refutes every claimed difference between the options which no
+source supports.
 
 - **Change:** new decision
 - **Scope:** project-level, decisions
 - **Based on:** none
-- **Relations:** derives from WAY-121@debe90ec · derives from WAY-120@f9317d23
+- **Relations:** derives from WAY-121@740c254e · derives from WAY-120@f9317d23
 - **Verification:** level 2 — an agent compares the work with the decision:
   - complies: research for a store of data compares a file kept beside the application with a
     database server, each typed and documented, and the critique strikes a claimed difference in
     speed that no source gives;
   - violates: the step offers a framework, a database and a host as one bundle from a fixed list;
-    a comparison reaches the human with a difference no source supports.
+    a comparison reaches the human with a difference no source supports; an option the human
+    names disappears from the comparison without the properties it fails.
 - **Review when:** none
 - **Origin:** none
 - **Approved by:** Mariusz, 2026-10-04
@@ -3415,16 +3423,18 @@ the options which no source supports.
 *Rationale:* a fixed list of stacks, each bundling a framework, a store of data and a place to
 run, settles several choices at once and without the project, so a bundle can run against choices
 the project already holds and leave others unsettled; research for each choice starts from what
-the project needs. The four properties are adopted from an outside course's step of choosing a
-stack, where they filter the stacks it proposes: an agent can read each off an option's
-documentation without the human knowing the technology, and each bears on how well an agent works
-in the stack. A comparison the human cannot verify needs an independent reader that refutes what
-no source supports.
+the project needs. An agent can read each of the properties off an option's documentation or its
+public record of use without the human knowing the technology, and each bears on how well an agent
+works in the stack. A place to run or a way of logging in has no types and no language family, so
+it is weighed by its consequences alone and checked by the critique. An option the human brings
+stays the human's to choose, with what it lacks on record. A comparison the human cannot verify
+needs an independent reader that refutes what no source supports.
 *Rejected:* a fixed list of bundled stacks with a default for each kind of product and language —
 one pick settles several choices, unrelated to the project; options from research shown unchecked
 — the human cannot tell a sound comparison from an invented one; the human checking the options —
 the human this step serves cannot assess the technology; a critic for each option — one critique of
-the whole comparison serves (WAY-120).
+the whole comparison serves (WAY-120); never offering an option the human names that fails the
+filter — a constraint from outside the project would lose to the filter.
 
 ### WAY-123/1 — How does a technology choice reach a human who cannot assess the technology?
 
@@ -3437,7 +3447,7 @@ remains, the step recommends the simplest and cheapest option.
 - **Change:** new decision
 - **Scope:** project-level, decisions
 - **Based on:** none
-- **Relations:** derives from WAY-121@debe90ec · derives from WAY-113@fd4f5aa7
+- **Relations:** derives from WAY-121@740c254e · derives from WAY-113@fd4f5aa7
 - **Verification:** level 2 — an agent compares the work with the decision:
   - complies: two stores of data are shown as "a file kept with the application and copied with
     it for a backup" against "a server to keep running in the container, with backups of its
