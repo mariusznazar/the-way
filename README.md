@@ -67,13 +67,16 @@ instead of the rule being weakened.
 - `probes/` — scripts that check the environment facts again.
 - `installation/` — prepares a product repository to use one pinned commit of the-way; see
   `installation/README.md`.
+- `project-level/` — defines a project, settles its technology, and refines its tasks before their
+  implementation cycles.
 - `agent-instructions/`, with `AGENTS.md` and `CLAUDE.md` at the root — instructions for agents
   working on the-way itself.
 
 ## Using the skills
 
-Each element's `skill/` directory holds one skill, named in its `SKILL.md`. An agent tool that
-reads skills from a directory uses one once that directory is linked there under the skill's name.
+Each element's `skill/` directory and the project level's skill directories hold one skill, named
+in its `SKILL.md`. An agent tool that reads skills from a directory uses one once that directory
+is linked there under the skill's name.
 For work on the-way itself with Claude Code on Windows:
 
 ```powershell
