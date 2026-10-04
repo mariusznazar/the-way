@@ -1,6 +1,6 @@
 ---
 name: refine-task
-description: Use to define or refine one task of an approved the-way project before its implementation cycle. Produces a task document with scope, answered questions and the foundation decisions it carries; not for defining a project or writing the implementation plan.
+description: Use to define or refine one product task before its the-way implementation cycle, whether independent, in a project plan, or based on a project's settlements without belonging to it. Not for defining a project or writing the implementation plan.
 ---
 
 # Refine a task
@@ -16,23 +16,28 @@ skill named here is the product skill with the `the-way-` prefix.
 ## 1. Read the sources
 
 - Read the template in full, the "How a skill asks" section of
-  `elements/common/way_of_working.md`, the project definition, the project's task plan, the
-  product foundation, and any existing wording of this task. Run
-  `python -B <the-way>/project-level/readiness_check.py <definition>` before treating the
-  definition or its projected entries as approved. A finding returns to `define-project`.
-  If a task plan or approved definition is absent, report the gap; a draft may be refined,
-  but it cannot be marked ready.
-- Identify the exact plan item, its dependencies, and the projected entries assigned to it.
-  Copy its identifier or link into `Plan item:`. A proposed split or scope change goes back to
-  the project plan before either resulting task can be ready.
+  `elements/common/way_of_working.md`, the product foundation, and any existing wording of this
+  task. Determine from the request whether it is independent, belongs to a project plan, or uses
+  a project's settlements without plan membership. Record that relationship; do not infer
+  membership merely because a project definition is a source.
+- If the task belongs to a project, read its approved definition and plan. Identify the exact
+  plan item, dependencies and assigned projected entries. A proposed split or scope change goes
+  back to the project plan before either resulting task can be ready.
+- If the task uses a project's settlements without belonging to its plan, read that definition
+  in full but take no plan assignment or dependency from it. Select the goal, scope, technology,
+  projected entries and open questions relevant to the stated task. An independent task requires
+  neither definition nor plan. Whenever an approved definition is used, run
+  `python -B <the-way>/project-level/readiness_check.py <definition>` before relying on its
+  approval; a finding returns to `define-project`.
 - Read the product root `AGENTS.md` section `## Backlog` to find the task system. Check whether
   it can hold the whole document. If it holds short task entries only, create a separate Markdown
   document in the product's task area and link it from that entry; do not paste the document into
   a checklist item. If the document's location is unclear, ask once and offer to record it in
   the backlog guidance.
-- Check that this is one task. If the request joins independent outcomes, identify the split
-  and update the plan through its owning workflow before refining either new item. Read product
-  files to answer factual questions before asking the human.
+- Check that this is one task. If it joins independent outcomes, identify the split. For a
+  project member, update its plan through the owning workflow before refining either new item;
+  for another task, ask which item to refine first. Read product files to answer factual
+  questions before asking the human.
 
 ## 2. Draft from what is known
 
@@ -58,19 +63,24 @@ skill named here is the product skill with the `the-way-` prefix.
 - If two answers conflict, show both and ask which holds. If the answer changes the approved
   project definition or a current foundation decision, route that change to its own process;
   do not silently settle it inside the task.
-- A product choice must be settled before the cycle. A choice of implementation method stays
-  with the cycle's plan. An unanswered question that blocks the task keeps `Status: waiting for
-  human`; never turn it into an apparently executable `To do` item.
-- Reconcile every open question whose resolver in the project definition names this plan item.
-  Answer a question that determines product behavior in this document; reproduce an
-  implementation question under `Questions carried to cycle`. Do not let either disappear.
+- Settle known product choices needed to state the task's outcome before the cycle. A choice of
+  implementation method stays with the cycle's plan. An unanswered question that blocks taking
+  the task keeps `Status: waiting for human`; never turn it into an apparently executable `To do`
+  item. A new choice discovered during the cycle belongs in its decision record for the PR.
+- For a project member, reconcile every open question whose resolver names its plan item. For a
+  source-only task, reconcile the project questions explicitly brought into this task, without
+  absorbing the project's other work. Answer a question that determines required product
+  behavior in this document; reproduce an implementation question under `Questions carried to
+  cycle`. Do not let a question in the task's scope disappear.
 
 ## 4. Carry the foundation decisions
 
-- From the project's assignments and the approved definition, bring in the exact approved
-  projected entries this task realizes or writes. Search the current foundation for decisions
-  the task touches, including an unlinked collision; quote their current wording and version.
-- Compare the task's numbered work, dependencies and projected entries against the identified
+- Search the current foundation for decisions the task touches, including an unlinked
+  collision; quote their current wording and version. If a project definition is a source,
+  bring in its relevant approved projected wording. For a project member, use the plan to
+  identify which entries it is assigned to realize or write. For source-only use, do not claim
+  that assignment merely because the wording informs the task.
+- For a project member, compare the numbered work, dependencies and projected entries with its
   plan item. A mismatch returns to the plan, not an unrecorded change in this document.
 - If the task would contradict a current decision or a projected entry, show the conflict and
   its consequences. The human chooses whether to change the task or reopen the upstream
@@ -83,10 +93,11 @@ skill named here is the product skill with the `the-way-` prefix.
   Context or remove, with a short reason for each; apply the moves the human accepts. If there
   is nothing worth moving, say so and continue.
 - Check that every blocking question has an answer, the numbered work is executable, the
-  assigned project questions are accounted for, the plan item and its assignments match,
-  the decisions in play are present or explicitly `none` after a search, and the project
-  definition still passes its approval check. Mark `Status: ready for cycle` only then;
-  report any remaining obstacle instead of declaring readiness.
+  questions brought into this task are accounted for, and the decisions in play are present or
+  explicitly `none` after a search. For a project member, also check its plan item and
+  assignments; for any task using approved project settlements, check the definition's approval.
+  Mark `Status: ready for cycle` only when its applicable checks pass; report an obstacle instead
+  of declaring readiness.
 - The task document carries what and why. Do not insert a separate implementation spec, test
   plan, or execution log here. The task cycle records those on the task branch.
 

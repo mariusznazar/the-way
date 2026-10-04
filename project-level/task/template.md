@@ -1,9 +1,10 @@
 # The task document
 
 A task document states what one task must change and why. It is written before the task cycle and
-copied onto the task branch at the cycle's start. The project definition holds the project's
-settlements; the project plan assigns work and dependencies; the task document carries only the
-portion needed to execute this task. The cycle's record holds the implementation plan and results.
+copied onto the task branch at the cycle's start. A task may belong to a project, use a project's
+approved settlements without belonging to its plan, or stand on its own. The document carries
+the sources and scope needed for this task; the cycle's record holds the implementation plan and
+results.
 
 Write the title and content in the language in which the human opened the task. Keep the headings,
 status values and `none` / `TODO` markers in English so an agent can resume the document.
@@ -12,7 +13,7 @@ status values and `none` / `TODO` markers in English so an agent can resume the 
 # <task title>
 
 Status: refining
-Plan item: <the exact task item in the project plan, or TODO>
+Project relation: independent | plan item: <project and item> | source only: <project definition>
 
 ## Description
 
@@ -39,12 +40,11 @@ Plan item: <the exact task item in the project plan, or TODO>
 
 ## Questions carried to cycle
 
-<project questions assigned to this task that concern implementation choices, or none>
+<implementation questions carried from the task's sources, or none>
 
 ## Decisions in play
 
-<approved projected entries this task realizes or writes, and current foundation decisions it
-touches, or none>
+<current foundation decisions the task touches and relevant approved project settlements, or none>
 
 ## Out of scope
 
@@ -53,15 +53,16 @@ touches, or none>
 
 `Acceptance criteria` and `Questions to settle` appear only when they have content. The other
 sections always appear. `Status:` reads `refining`, `waiting for human`, or `ready for cycle`.
-`Plan item:` identifies one item of the approved project plan, including its dependencies and
-assignment of projected foundation entries; it reads `TODO` before that match is established.
+`Project relation:` records whether the task is independent, belongs to an item of an approved
+project plan, or only uses an approved project definition as a source. A task that uses a
+definition without plan membership never acquires that plan's assignments or dependencies.
 `TODO` marks a missing answer; never use it to make an unfinished task look ready.
 
 ## What each section carries
 
-- **Need:** the concrete absence or present problem, its recipient, and its connection to the
-  approved project goal. Describe a claimed current behavior as a user's report until code or
-  another source confirms it.
+- **Need:** the concrete absence or present problem and its recipient. For a project task, state
+  how it serves the approved project goal; for another task, use its own stated purpose.
+  Describe a claimed current behavior as a user's report until code or another source confirms it.
 - **To do:** a numbered list of distinct, executable changes to behavior or deliverables. Keep
   data needed to make a change in its item. Do not prescribe classes, functions or implementation
   steps unless the approved source makes one a constraint. The cycle's plan chooses how.
@@ -72,15 +73,16 @@ assignment of projected foundation entries; it reads `TODO` before that match is
   an implementation choice belongs to the cycle's plan.
 - **Context:** concise provenance, constraints, links and code entry points that a reader is
   likely to ask about. Never repeat Description or prove the writer's own inference here.
-- **Questions carried to cycle:** reproduce by name every open question assigned to this task by
-  the approved project definition that concerns how to implement an already settled behavior.
-  `none` means no such question was assigned. An assigned question about product behavior must
-  instead be answered in the task document before readiness.
-- **Decisions in play:** copy the approved wording of each projected foundation entry this task
-  realizes or writes, identifying its heading in the project definition. Name and quote the
-  current foundation decisions this task touches with their identifiers and versions. A link
-  alone is insufficient for projected wording that the cycle must carry. `none` means the search
-  found no applicable entry; it is not a substitute for the search.
+- **Questions carried to cycle:** name implementation questions taken from the task's sources.
+  For a task belonging to a project, account for every open question assigned to its plan item.
+  For a task using a project as a source only, include only the questions the task explicitly
+  takes on. `none` means none is carried. A known question about required product behavior is
+  answered before readiness rather than left as an unspecified implementation choice.
+- **Decisions in play:** name and quote current foundation decisions this task touches with their
+  identifiers and versions. If the task uses an approved project definition, copy the relevant
+  projected wording and identify its heading there. A project plan determines which entries a
+  member task is assigned to realize or write; source-only use does not assign that work. `none`
+  means the search found no applicable entry; it is not a substitute for the search.
 - **Out of scope:** only task-bound exclusions. A lasting exclusion belongs in a projected or
   current decision, not here.
 
