@@ -94,8 +94,9 @@ and the panel procedure.
 
 ## project-level
 
-The part answers for the form and writing of a project definition and for the readiness gate that
-decides whether the definition can guide a breakdown into tasks.
+The part answers for the form and writing of a project definition, its readiness gate, and the
+refinement of a task before its implementation cycle, whether the task belongs to a project,
+uses its settlements as a source, or stands on its own.
 
 - **Files:** project-level/**
 - **Depends on:** decisions · invariants · glossary · part-map · environment-facts ·
@@ -113,6 +114,8 @@ decides whether the definition can guide a breakdown into tasks.
     chooses it — high — not detected
   - the technology step shows a difference between options that no source supports — the human
     chooses on an invented consequence — high — not detected
+  - a task using a project definition only as a source inherits work or dependencies from that
+    project's plan — the cycle delivers a different task — high — not detected
 - **Trust boundary:** project-level/readiness_check.py
 
 ## task-cycle

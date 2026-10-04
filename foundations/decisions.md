@@ -3496,3 +3496,33 @@ the agent choosing alone — the choice binds the product, and a human approves 
 every choice shown on its own, followed by a question against it — the human waits between choices,
 and each choice costs two exchanges; each comparison shown as soon as its critique passes — the
 tables come one choice at a time.
+
+### WAY-124/1 — When is a task ready for its cycle?
+
+A task document records whether the task is independent, belongs to an item of a project's plan,
+or uses an approved project definition as a source without belonging to its plan; it carries the
+task's scope, temporary exclusions, relevant current foundation decisions and any approved
+projected wording it uses. It is ready when its required outcome is stated, every known question
+blocking that outcome is answered, and implementation questions carried into the cycle are named.
+A project member also matches its plan item's scope, dependencies and assigned entries; any task
+using an approved definition checks that its approval still holds, while source-only use takes no
+assignment or dependency from the plan.
+
+- **Change:** new decision
+- **Scope:** project-level, task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-106@63eddf70 · derives from WAY-118@5af868b3
+- **Verification:** level 2 — an agent compares the task document with its stated sources:
+  - complies: an independent task is ready without a project plan, a source-only task uses
+    approved project wording without taking its plan's assignments, and a project member matches
+    its plan item;
+  - violates: a source-only task is blocked for lack of a plan item, or a project member is ready
+    despite a mismatch with its assigned work.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, 2026-10-05
+
+*Rationale:* a project can inform a task without owning it; the handoff must show which
+relationship applies so the next agent does not import work or dependencies the task never took on.
+*Rejected:* requiring every task to belong to a project plan — it excludes independent tasks and
+gives source-only tasks assignments they do not have.
