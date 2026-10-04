@@ -75,6 +75,7 @@ BODIES = {
     "Open questions": "- Jak mierzymy postęp? — resolved in: breakdown\n"
                       "- Jakie narzędzia ma autor? — resolved in: task: edytor",
     "Touched parts and decisions": "none",
+    "Technology": "- Język i miejsce działania aplikacji — held by: ARC-01/1",
     "Projected foundation changes": projected(),
 }
 
@@ -123,6 +124,16 @@ class Template(unittest.TestCase):
         _, sections = readiness_check.split(block)
         self.assertEqual(readiness_check.check_candidates(sections[0]), [])
         self.assertEqual(readiness_check.check_gaps(sections), [])
+
+    def test_the_technology_section_the_template_gives_passes_its_checks(self):
+        text = self.template()
+        technology = ("## Technology\n" +
+                      text.split("```markdown\n## Technology\n", 1)[1].split("\n```", 1)[0])
+        marker = "```markdown\n## Projected foundation changes\n"
+        block = ("## Projected foundation changes\n" +
+                 text.split(marker, 1)[1].split("\n```", 1)[0])
+        _, sections = readiness_check.split(technology + "\n" + block)
+        self.assertEqual(readiness_check.check_technology(sections[0], sections[1]), [])
 
     def test_the_working_table_the_template_gives_is_the_one_the_check_reads(self):
         self.assertIn("```markdown\n%s\n" % readiness_check.WORKING_TABLE, self.template())
@@ -371,6 +382,100 @@ class Candidates(unittest.TestCase):
                           gate="", bodies={"Projected foundation changes": "TODO"})
         self.assertEqual(conditions(text, before_approval=True),
                          [("a", "`## Projected foundation changes` holds TODO")])
+
+
+TECHNOLOGY_PROJECTED = ("- Archiwum dokumentów — projected: What does the archive exclude for good?\n"
+                        "- Język i miejsce działania aplikacji — held by: ARC-01/1")
+NONE_MESSAGE = ("`## Technology` reads `none` — list the choices the project needs, each with the "
+                "entry that settles it")
+NO_MARKER_MESSAGE = ("the choice ends with none of `— held by: <decision>`, "
+                     "`— projected: <question>`")
+OPEN_MESSAGE = "the choice is still open — the step that settles the technology has not ended"
+HELD_FORM_MESSAGE = "`held by:` names no decision as `<PREFIX>-<NN>/<version>`"
+DANGLING_MESSAGE = ("`projected:` names a question no heading under "
+                    "`## Projected foundation changes` holds")
+
+
+class Technology(unittest.TestCase):
+    def technology(self, body, **kwargs):
+        return conditions(definition(bodies={"Technology": body}, **kwargs))
+
+    def test_a_definition_without_the_technology_section_is_reported(self):
+        # invariant: project-technology-record/1
+        order = [n for n in readiness_check.SECTIONS[:-1] if n != "Technology"]
+        self.assertIn(("structure", "the section `## Technology` is missing"),
+                      conditions(definition(order=order)))
+
+    def test_none_is_reported(self):
+        # invariant: project-technology-record/1
+        self.assertEqual(self.technology("none"), [("g", NONE_MESSAGE)])
+
+    def test_a_choice_without_its_entry_is_reported(self):
+        # invariant: project-technology-record/1
+        self.assertEqual(self.technology("- Magazyn danych"), [("g", NO_MARKER_MESSAGE)])
+
+    def test_an_open_choice_is_reported_before_approval(self):
+        # invariant: project-technology-record/1
+        text = definition(status="Status: ready for gate", gate="",
+                          bodies={"Technology": "- Magazyn danych — open"})
+        self.assertEqual(conditions(text, before_approval=True), [("g", OPEN_MESSAGE)])
+
+    def test_held_by_off_the_identifier_form_is_reported(self):
+        # invariant: project-technology-record/1
+        self.assertEqual(self.technology("- Język — held by: decyzja o języku"),
+                         [("g", HELD_FORM_MESSAGE)])
+
+    def test_a_projected_question_no_heading_holds_is_reported(self):
+        # invariant: project-technology-record/1
+        self.assertEqual(self.technology("- Magazyn danych — projected: Where is data stored?"),
+                         [("g", DANGLING_MESSAGE)])
+
+    def test_projected_naming_an_invariant_heading_is_reported(self):
+        # invariant: project-technology-record/1
+        entries = "### Decisions\n\n%s\n\n### Invariants\n\n%s" % (
+            DECISION.format(approval="Mariusz, 2026-10-03"), INVARIANT)
+        text = definition(bodies={
+            "Technology": "- Dokumenty — projected: one-workspace-per-document/1",
+            "Projected foundation changes": projected(entries=entries)})
+        self.assertEqual(conditions(text), [("g", DANGLING_MESSAGE)])
+
+    def test_prose_under_technology_is_reported(self):
+        # invariant: project-technology-record/1
+        self.assertEqual(self.technology("Wszystko jest w fundamencie."),
+                         [("g", "a line under `## Technology` that is no choice item")])
+
+    def test_choices_held_and_projected_pass(self):
+        self.assertEqual(self.technology(TECHNOLOGY_PROJECTED), [])
+
+    def test_choices_all_held_by_the_foundation_pass(self):
+        body = ("- Język i miejsce działania aplikacji — held by: ARC-01/1\n"
+                "- Magazyn kont i zapisów — held by: ARC-02/3")
+        self.assertEqual(self.technology(body), [])
+
+    def test_a_choice_whose_name_holds_a_dash_reads_its_last_marker(self):
+        self.assertEqual(self.technology("- Serwer — konta i zapisy — held by: ARC-02/1"), [])
+
+    def test_a_choice_on_two_lines_counts(self):
+        self.assertEqual(self.technology("- Magazyn kont\n  i zapisów — held by: ARC-02/1"), [])
+
+    def test_a_nested_detail_under_a_choice_is_no_finding(self):
+        body = "- Magazyn kont — held by: ARC-02/1\n  - kontekst: konta graczy"
+        self.assertEqual(self.technology(body), [])
+
+    def test_projected_naming_a_new_version_of_a_decision_passes(self):
+        decision = DECISION.format(approval="Mariusz, 2026-10-03").replace(
+            "#### (new) — What does the archive exclude for good?",
+            "#### WAY-07/2 — What does the archive exclude for good?")
+        text = definition(bodies={
+            "Technology": TECHNOLOGY_PROJECTED,
+            "Projected foundation changes": projected(entries="### Decisions\n\n" + decision)})
+        self.assertEqual(conditions(text), [])
+
+    def test_a_section_still_reading_todo_is_one_gap_and_no_g(self):
+        text = definition(status="Status: definition — open: Technology", gate="",
+                          bodies={"Technology": "TODO"})
+        self.assertEqual(conditions(text, before_approval=True),
+                         [("a", "`## Technology` holds TODO")])
 
 
 class Approvals(unittest.TestCase):

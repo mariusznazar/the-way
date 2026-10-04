@@ -23,7 +23,11 @@ The definition follows `project-level/definition_template.md`. The check reports
 - b — no projected decision still reads `**Approved by:** on acceptance`;
 - e — the gate record holds its three lines, and its fingerprint matches the definition;
 - f — "Projected foundation changes" begins with `Candidates: <n> shown, <k> accepted —
-  YYYY-MM-DD`, k is no more than n, and no working table `### Candidates in progress` stands in it.
+  YYYY-MM-DD`, k is no more than n, and no working table `### Candidates in progress` stands in it;
+- g — "Technology" lists the choices the project needs, each item ending
+  `— held by: <PREFIX>-<NN>/<version>` or `— projected: <question>`, whose question a heading
+  `#### <identifier> — <question>` under "Projected foundation changes" holds; no item still
+  reads `— open`, and the section never reads `none`.
 
 With --before-approval the check leaves out b and e and the gate record, since the human has not
 approved yet. --fingerprint prints the fingerprint the gate record is to carry, once the
@@ -45,10 +49,11 @@ from fingerprint import fingerprint  # noqa: E402
 
 SECTIONS = ("Goal", "Background", "In scope", "Out of scope", "Inputs and constraints",
             "Deliverables", "Success", "Risks", "Open questions", "Touched parts and decisions",
-            "Projected foundation changes", "Gate record")
+            "Technology", "Projected foundation changes", "Gate record")
 GATE_RECORD = "Gate record"
 OPEN_QUESTIONS = "Open questions"
 PROJECTED = "Projected foundation changes"
+TECHNOLOGY = "Technology"
 
 HEADING = re.compile(r"^## (?!#)(.*?)\s*$")
 FENCE = re.compile(r"^\s*(```|~~~)")
@@ -59,6 +64,10 @@ RESOLVED = re.compile(r"— resolved in: (breakdown|task: \S.*)$")
 PENDING_APPROVAL = re.compile(r"^\s*- \*\*Approved by:\*\* on acceptance\s*$")
 CANDIDATES = re.compile(r"^Candidates: (\d+) shown, (\d+) accepted — \d{4}-\d{2}-\d{2}$")
 WORKING_TABLE = "### Candidates in progress"
+TECHNOLOGY_ITEM = re.compile(r"^\S.*? — (?:held by: (?P<held>\S.*?)|projected: (?P<question>\S.*?)"
+                             r"|(?P<open>open))\s*$")
+DECISION_IDENTIFIER = re.compile(r"^[A-Z][A-Z0-9]*-\d+/\d+$")
+PROJECTED_HEADING = re.compile(r"^#### .+? — (.+?)\s*$")
 FIELD = re.compile(r"^- \*\*([^*]+):\*\*")
 TRANSLATION = re.compile(r"^>")
 STATUS = re.compile(r"^Status: (definition — open: \S.*|ready for gate|approved \d{4}-\d{2}-\d{2})$")
@@ -222,6 +231,44 @@ def check_open_questions(section):
     return findings
 
 
+def projected_questions(section):
+    """Return the question of every decision heading `#### <identifier> — <question>` of a
+    section."""
+    return {match.group(1) for _, line in section.lines
+            if (match := PROJECTED_HEADING.match(line))}
+
+
+def check_technology(section, projected_section):
+    """Condition g: the step that settles the project's technology has ended and left its list."""
+    lines = content(section)
+    if not lines or [line.strip() for _, line in lines] == ["TODO"]:
+        return []  # condition a reports the section as empty or open
+    if [line.strip() for _, line in lines] == ["none"]:
+        return [Finding("g", lines[0][0], "`## %s` reads `none` — list the choices the project "
+                        "needs, each with the entry that settles it" % TECHNOLOGY)]
+    questions = projected_questions(projected_section)
+    findings = []
+    for number, text in items(section):
+        if text is None:
+            findings.append(Finding("g", number, "a line under `## %s` that is no choice item"
+                                    % TECHNOLOGY))
+            continue
+        match = TECHNOLOGY_ITEM.match(text)
+        if not match:
+            findings.append(Finding("g", number, "the choice ends with none of "
+                                    "`— held by: <decision>`, `— projected: <question>`"))
+        elif match.group("open"):
+            findings.append(Finding("g", number, "the choice is still open — the step that "
+                                    "settles the technology has not ended"))
+        elif match.group("held") is not None and not DECISION_IDENTIFIER.match(match.group("held")):
+            findings.append(Finding("g", number, "`held by:` names no decision as "
+                                    "`<PREFIX>-<NN>/<version>`"))
+        elif match.group("question") is not None and match.group("question") not in questions:
+            findings.append(Finding("g", number, "`projected:` names a question no heading under "
+                                    "`## %s` holds" % PROJECTED))
+    return findings
+
+
 def check_approvals(section):
     return [Finding("b", number, "a projected decision still reads `Approved by: on acceptance`")
             for number, line in section.lines if PENDING_APPROVAL.match(line)]
@@ -266,6 +313,7 @@ def check(text, before_approval=False):
     findings += check_gaps(checked)
     findings += check_open_questions(by_name[OPEN_QUESTIONS])
     findings += check_candidates(by_name[PROJECTED])
+    findings += check_technology(by_name[TECHNOLOGY], by_name[PROJECTED])
     if not before_approval:
         findings += check_approvals(by_name[PROJECTED])
         findings += check_gate_record(by_name[GATE_RECORD], text)
