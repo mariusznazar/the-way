@@ -3126,7 +3126,8 @@ An agent asks in plain conversation text: a decision question gives the availabl
 of each and a recommendation, while a question of assessment stays open; neither opens a separate
 question panel. After a human choice enters an entry's binding part, the agent asks one question
 against that choice anchored in the human's words or supplied material, unless the choice ends
-with the work.
+with the work, or the human took one of the ways offered and the decision question named, anchored
+in the material, the weak point of that way.
 
 - **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common,
@@ -3135,18 +3136,25 @@ with the work.
 - **Relations:** none
 - **Verification:** level 2 — an agent compares the exchange with the decision:
   - complies: a choice is presented in text with the costs of both ways and a recommendation,
-    followed by a source-anchored question against the answer when it enters a binding entry;
-  - violates: the choice appears only in a separate option panel, or an agent asks a generic
-    challenge unrelated to the person's answer.
+    followed by a source-anchored question against the answer when it enters a binding entry,
+    unless the person took a way offered whose weak point the question named;
+  - violates: the choice appears only in a separate option panel, an agent asks a generic
+    challenge unrelated to the person's answer, or an agent asks against a way offered whose weak
+    point the question already named and the person took as offered.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-10-04
+- **Approved by:** Mariusz, 2026-10-05
 
 *Rationale:* the person sees the trade-off where they make the choice. A challenge grounded in
-their own material can expose a contradiction without inventing one.
+their own material can expose a contradiction without inventing one. Where the question already
+named the weak point of a way and the person took that way as offered, a challenge asks again what
+was weighed at the choice; it is kept for an answer in the person's own words, which the question
+did not weigh.
 *Rejected:* a panel of options separate from the conversation — its context is detached from the
 material; a challenge to every choice, including one that ends with the work — repeated questions
-would add no later protection.
+would add no later protection; a challenge to every choice entering a binding entry, even a way
+taken as offered whose weak point the question named — it asks again what the choice already
+weighed.
 
 ### WAY-114/1 — What does a human see and accept before an entry is written?
 
@@ -3393,17 +3401,20 @@ run wherever nothing changes.
 
 ### WAY-122/1 — How are the options of a technology choice found and checked before a human sees them?
 
-The options of each technology choice a project needs come from research against the project
-definition, one choice at a time, rather than from a fixed list of bundled stacks. An option the
-project's code is written in or against — a language, a framework, a library, a store of data —
-is offered to the human for choice only when its documentation shows that it uses explicit types,
-follows conventions of layout and naming and has current, versioned documentation, and a public
-record of its use, such as a package registry or a survey, shows it widely used within its
-language family; for a store of data, its types are those it declares for what it stores, and its
-family is that of its query language. An option the human names that fails is offered with the
-properties it fails, which the decision records if the human chooses it, and every option is
-offered only after a critique that refutes every claimed difference between the options which no
-source supports.
+The options of each technology choice a project needs come from research of that choice against
+the project definition, rather than from a fixed list of bundled stacks, and the research of every
+choice that depends on no unsettled choice starts once the list of choices is confirmed, each in a
+report of its own. An option the project's code is written in or against — a language, a
+framework, a library, a store of data — is weighed by whether its documentation shows that it uses
+explicit types, follows conventions of layout and naming and has current, versioned documentation,
+and whether a public record of its use, such as a package registry or a survey, shows it widely
+used within its language family; for a store of data, its types are those it declares for what it
+stores, and its family is that of its query language. An option lacking one of these properties is
+offered with what each lack means for the product, which the decision records if the human chooses
+it; an option with no documentation or with a project no longer maintained is left out with that
+reason, unless the human named it or the definition holds it as a constraint, and then it is offered
+with that reason as such a lack; and every option is offered only after a critique that refutes
+every claimed difference between the options which no source supports.
 
 - **Change:** new decision
 - **Scope:** project-level, decisions
@@ -3412,29 +3423,40 @@ source supports.
 - **Verification:** level 2 — an agent compares the work with the decision:
   - complies: research for a store of data compares a file kept beside the application with a
     database server, each typed and documented, and the critique strikes a claimed difference in
-    speed that no source gives;
+    speed that no source gives; a built-in module with no record of wide use stays in the
+    comparison beside a widely used library, its lack said as what it means for the product;
   - violates: the step offers a framework, a database and a host as one bundle from a fixed list;
-    a comparison reaches the human with a difference no source supports; an option the human
-    names disappears from the comparison without the properties it fails.
+    a comparison reaches the human with a difference no source supports; an option with
+    documentation and a maintained project disappears from the comparison because it lacks one of
+    the properties; an option the human names disappears from the comparison; the research of a
+    choice that depends on no unsettled choice waits for another choice to be settled.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-10-04
+- **Approved by:** Mariusz, 2026-10-05
 
-*Rationale:* a fixed list of stacks, each bundling a framework, a store of data and a place to
-run, settles several choices at once and without the project, so a bundle can run against choices
-the project already holds and leave others unsettled; research for each choice starts from what
-the project needs. An agent can read each of the properties off an option's documentation or its
-public record of use without the human knowing the technology, and each bears on how well an agent
-works in the stack. A place to run or a way of logging in has no types and no language family, so
-it is weighed by its consequences alone and checked by the critique. An option the human brings
-stays the human's to choose, with what it lacks on record. A comparison the human cannot verify
-needs an independent reader that refutes what no source supports.
+*Rationale:* a fixed list of stacks, each bundling a framework, a store of data and a place to run,
+settles several choices at once and without the project, so a bundle can run against choices the
+project already holds and leave others unsettled; research for each choice starts from what the
+project needs. Research of independent choices run side by side and kept in reports lets the
+conversation settle one choice while the next is researched, and nothing found is lost to a long
+conversation. An agent can read each of the properties off an option's documentation or its public
+record of use without the human knowing the technology, and each bears on how well an agent works in
+the stack; a lack of one is a cost to weigh, not proof the option fails the product, while an option
+with no documentation or no maintenance leaves nothing to weigh. A place to run or a way of logging
+in has no types and no language family, so it is weighed by its consequences alone and checked by
+the critique. An option the human brings stays the human's to choose, with what it lacks on record.
+A comparison the human cannot verify needs an independent reader that refutes what no source
+supports.
 *Rejected:* a fixed list of bundled stacks with a default for each kind of product and language —
 one pick settles several choices, unrelated to the project; options from research shown unchecked
 — the human cannot tell a sound comparison from an invented one; the human checking the options —
 the human this step serves cannot assess the technology; a critic for each option — one critique of
-the whole comparison serves (WAY-120); never offering an option the human names that fails the
-filter — a constraint from outside the project would lose to the filter.
+the whole comparison serves (WAY-120); never offering an option the human names that lacks a
+property — a constraint from outside the project would lose to the properties; the properties as a
+filter that leaves out every option lacking one — a missing version on a documentation page
+excludes an option whose lack costs the product nothing, and the recommendation turns to the widely
+used option with no gain for the product; research one choice at a time — the human waits for each
+research in turn.
 
 ### WAY-123/1 — How does a technology choice reach a human who cannot assess the technology?
 
@@ -3442,27 +3464,35 @@ The step that settles a project's technology shows the options of each choice by
 consequences for the product — what it costs, where it runs, what keeping it running takes and
 what changing it later costs — and the human chooses between those consequences. A difference with
 no consequence for the product decides nothing, and where no difference with a consequence
-remains, the step recommends the simplest and cheapest option.
+remains, the step recommends the simplest and cheapest option. The choices whose research started
+together reach the human together, in one table, once every one of their comparisons has passed
+the critique, each with its recommendation and the weak point of the option recommended.
 
 - **Change:** new decision
 - **Scope:** project-level, decisions
 - **Based on:** none
-- **Relations:** derives from WAY-121@740c254e · derives from WAY-113@fd4f5aa7
+- **Relations:** derives from WAY-121@740c254e · derives from WAY-113@d3e5cbfa
 - **Verification:** level 2 — an agent compares the work with the decision:
   - complies: two stores of data are shown as "a file kept with the application and copied with
     it for a backup" against "a server to keep running in the container, with backups of its
     own", and the human picks one;
   - violates: the options are shown as lists of technical features; two options with no
     difference in consequences are offered as a matter of taste instead of the simpler one being
-    recommended.
+    recommended; two choices whose research started together reach the human in separate
+    tables.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-10-04
+- **Approved by:** Mariusz, 2026-10-05
 
 *Rationale:* a human who cannot assess the technology can still weigh what an option costs and
 where it fails, so a technical difference reaches the decision only through a consequence. Where
 options differ in nothing the product feels, a choice between them is blind, and the simplest and
-cheapest keeps cost and upkeep lowest.
+cheapest keeps cost and upkeep lowest. Independent choices shown together are settled in one
+answer, and the weak point stated with the recommendation lets the choice stand without a question
+asked after it (WAY-113).
 *Rejected:* technical differences shown as they stand — the human cannot weigh them; falling back
 on a default bundle when the human cannot judge — with no fixed list (WAY-122) there is no default;
-the agent choosing alone — the choice binds the product, and a human approves decisions (WAY-14).
+the agent choosing alone — the choice binds the product, and a human approves decisions (WAY-14);
+every choice shown on its own, followed by a question against it — the human waits between choices,
+and each choice costs two exchanges; each comparison shown as soon as its critique passes — the
+tables come one choice at a time.

@@ -31,7 +31,9 @@ Every skill of the-way that asks the human asks this way
 - Once the human has chosen, and the choice enters the binding part of an entry, ask one question
   against the answer given: its anchor quoted from a sentence of the human or of the material the
   work starts from, asking whether the choice still holds against it. A choice that ends with the
-  work passes without one.
+  work passes without one, and so does a way the human took as offered when the question of
+  decision named its weak point, anchored in the material; an answer in the human's own words, or
+  one that adds a condition to the way, still gets the question.
 - A question of assessment — what something is worth, what may go wrong, what is done today — is
   open, with no ways offered.
 
