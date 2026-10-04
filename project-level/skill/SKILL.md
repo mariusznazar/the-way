@@ -6,7 +6,8 @@ description: Use when a project of a product that uses the-way has to be defined
 # Define a project
 
 Leads the first two steps of the project level: the definition, written with a human, and the
-readiness gate. A definition records what is settled about the product before the project is
+readiness gate; the settling of the project's technology, between them, it hands to
+`settle-technology`. A definition records what is settled about the product before the project is
 broken into tasks — as projected entries of the foundation — so that the breakdown and the tasks
 guess as little as they can. The form of a definition and the rule of each section stand in
 `definition_template.md`; how a skill asks stands in `elements/common/way_of_working.md`; this
@@ -26,11 +27,12 @@ The project level reads the product's foundation and writes nothing in it
 - Read `definition_template.md` in full, and the section "How a skill asks" of
   `elements/common/way_of_working.md`.
 - When the human names an existing definition, read it whole and go on from where its status line
-  says; a working table under "Projected foundation changes" means step 5 is under way. A
-  definition whose status reads `approved` is checked first:
+  says; a working table under "Projected foundation changes" means step 5 is under way, and an
+  item of "Technology" ending `— open` that step 6 is. A definition whose status reads `approved`
+  is checked first:
   `python -B <the-way>/project-level/readiness_check.py <definition>`. A finding that its
   fingerprint no longer matches means the definition changed after the gate, and it goes through
-  step 6 again.
+  step 7 again.
 - Otherwise begin with step 1.
 
 ## 1. The idea
@@ -82,8 +84,11 @@ The project level reads the product's foundation and writes nothing in it
 - Never ask for a deadline; the template says how one enters.
 - A settlement that binds beyond the project stays in the text of its section for now; step 5 makes
   it an entry. "Projected foundation changes" reads `TODO` until then.
+- A technology choice the human cannot settle stays in the text or as an open question for now;
+  step 6 settles it. "Technology" reads `TODO` until then.
 - What is not yet known goes to one of the three places the template names.
-- Once no section but "Projected foundation changes" holds `TODO`, step 5 begins.
+- Once no section but "Technology" and "Projected foundation changes" holds `TODO`, step 5
+  begins.
 
 ## 5. Find the entries
 
@@ -92,15 +97,22 @@ The project level reads the product's foundation and writes nothing in it
   "Projected foundation changes" as the mode.
 - A new projected decision needs no number and no prefix: ask for none. Keep the identifiers that
   other projected headings require.
+- A technology choice the human has not settled is no candidate: step 6 settles it.
+- Once the step ends, set the status line to `definition — open: Technology`; step 6 begins.
+
+## 6. Settle the technology
+
+- Run `settle-technology` with this definition
+  (WAY-121).
 - Once `python -B <the-way>/project-level/readiness_check.py <definition> --before-approval`
   reports nothing — a `TODO` in a projected field awaiting code or the world is no machine gap —
-  set the status line to
-  `ready for gate`, as the template gives it; step 6 begins.
+  set the status line to `ready for gate`, as the template gives it; step 7 begins.
 
-## 6. The readiness gate
+## 7. The readiness gate
 
 1. Run `python -B <the-way>/project-level/readiness_check.py <definition> --before-approval`. A
-   finding of condition f goes back to step 5; a finding of condition a inside a projected entry
+   finding of condition f goes back to step 5; a finding of condition g goes back to step 6; a
+   finding of condition a inside a projected entry
    goes to the skill of its element in projected mode, which completes that entry's wording; any
    other finding goes back to step 4.
 2. Search the whole foundation for what the definition collides with that no written link joins
