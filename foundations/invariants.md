@@ -2027,6 +2027,16 @@ required section, an open question with no place of resolution, or an unfinished
 - **Part:** project-level
 - **Correction:** none
 
+## project-technology-record/1
+
+Before approval, the project readiness check rejects a definition that holds no record of the technology step.
+
+- **Method:** `TODO`
+- **Rests on:** none
+- **Derives from:** WAY-121@debe90ec
+- **Part:** project-level
+- **Correction:** none
+
 ## Withdrawn identifiers
 
 | Identifier | Why | Successors |
