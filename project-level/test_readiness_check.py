@@ -439,6 +439,34 @@ class Technology(unittest.TestCase):
             "Projected foundation changes": projected(entries=entries)})
         self.assertEqual(conditions(text), [("g", DANGLING_MESSAGE)])
 
+    def test_held_by_without_a_version_is_reported(self):
+        # invariant: project-technology-record/1
+        self.assertEqual(self.technology("- Magazyn danych — held by: ARC-02"),
+                         [("g", HELD_FORM_MESSAGE)])
+
+    def test_a_choice_still_open_after_a_held_marker_is_reported(self):
+        # invariant: project-technology-record/1
+        found = self.technology("- Magazyn danych — held by: ARC-02/1 — open")
+        self.assertEqual([c for c, _ in found], ["g"])
+
+    def test_projected_with_no_decision_heading_in_the_section_is_reported(self):
+        # invariant: project-technology-record/1
+        text = definition(bodies={
+            "Technology": "- Magazyn danych — projected: Which database?",
+            "Projected foundation changes": projected(
+                first="Candidates: 0 shown, 0 accepted — 2026-10-03", entries="none")})
+        self.assertEqual(conditions(text), [("g", DANGLING_MESSAGE)])
+
+    def test_projected_matching_the_candidates_line_is_reported(self):
+        # invariant: project-technology-record/1
+        self.assertEqual(self.technology("- Hosting — projected: 2026-10-03"),
+                         [("g", DANGLING_MESSAGE)])
+
+    def test_indented_prose_under_technology_is_reported(self):
+        # invariant: project-technology-record/1
+        self.assertEqual(self.technology("  Zostajemy przy obecnym stacku."),
+                         [("g", "a line under `## Technology` that is no choice item")])
+
     def test_prose_under_technology_is_reported(self):
         # invariant: project-technology-record/1
         self.assertEqual(self.technology("Wszystko jest w fundamencie."),
