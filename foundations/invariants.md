@@ -159,7 +159,7 @@ Where {merge-onto} exists, every file git tracks lies in `foundations/` or in a 
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-09@b8db4002
+- **Derives from:** WAY-09@6ec91a1d
 - **Part:** every
 - **Correction:** none
 
@@ -169,7 +169,7 @@ Where {merge-onto} exists, every element directory holds a template, examples or
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-09@b8db4002
+- **Derives from:** WAY-09@6ec91a1d
 - **Part:** decisions · part-map · invariants · glossary · environment-facts
 - **Correction:** none
 
@@ -179,7 +179,7 @@ Where {merge-onto} exists, `relation-model/` holds the script that computes fing
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-09@b8db4002
+- **Derives from:** WAY-09@6ec91a1d
 - **Part:** relation-model
 - **Correction:** none
 
@@ -189,7 +189,7 @@ Every identifier `elements/invariants/examples.md` names is the identifier of an
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-09@b8db4002
+- **Derives from:** WAY-09@6ec91a1d
 - **Part:** invariants
 - **Correction:** none
 
@@ -199,7 +199,7 @@ Every identifier `elements/part-map/examples.md` names is the identifier of an e
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-09@b8db4002
+- **Derives from:** WAY-09@6ec91a1d
 - **Part:** part-map
 - **Correction:** none
 
@@ -209,7 +209,7 @@ Every term `elements/glossary/examples.md` names is the term of an entry of `fou
 
 - **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-09@b8db4002
+- **Derives from:** WAY-09@6ec91a1d
 - **Part:** glossary
 - **Correction:** none
 
@@ -2024,6 +2024,16 @@ required section, an open question with no place of resolution, or an unfinished
 - **Method:** `python -B gate/run_tests.py project-level --record .runs/project-level-tests.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-118@5af868b3
+- **Part:** project-level
+- **Correction:** none
+
+## project-technology-record/1
+
+Before approval, the project readiness check rejects a definition whose Technology section is missing or reads `none`, or holds a line that is no choice item, a choice still open, or a choice that names neither a decision as `<PREFIX>-<NN>/<version>` nor a question a heading of a projected decision holds.
+
+- **Method:** `python -B gate/run_tests.py project-level --record .runs/project-level-tests.jsonl`
+- **Rests on:** none
+- **Derives from:** WAY-121@740c254e
 - **Part:** project-level
 - **Correction:** none
 

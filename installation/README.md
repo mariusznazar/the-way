@@ -1,7 +1,7 @@
 # Install the-way in a product repository
 
 This directory owns the first connection between a product repository and the-way. The installer
-pins one commit of this repository, creates the five empty foundation files, makes eight skills
+pins one commit of this repository, creates the five empty foundation files, makes nine skills
 available to Claude Code and Codex in local and cloud sessions, gives both tools
 the same guidance for working with the pinned process, and makes Git ignore the-way's records of a
 run. It does not write product entries or start the product's task cycle. The `installation` part and its failure modes are in
@@ -53,8 +53,8 @@ installer allows Git's file protocol only when the URL is a local path or a `fil
 | `foundations/glossary.md` | Empty glossary with its required description. |
 | `foundations/part_map.md` | Empty map with its required sections and table headers. |
 | `foundations/environment_facts.md` | Empty fact file with its required withdrawn identifiers table. |
-| `.claude/skills/the-way-*/SKILL.md` | Eight project skill entry points for Claude Code: the five foundation entry skills, `find-foundation-entries`, `define-project`, and `critique`. Each reads its source skill and referenced files from `.the-way` at the pinned commit, and sends work that skill hands to another the-way skill to the `the-way-` project skill of that name. |
-| `.agents/skills/the-way-*/SKILL.md` | The same eight entry points for Codex, byte for byte. |
+| `.claude/skills/the-way-*/SKILL.md` | Nine project skill entry points for Claude Code: the five foundation entry skills, `find-foundation-entries`, `define-project`, `settle-technology`, and `critique`. Each reads its source skill and referenced files from `.the-way` at the pinned commit, and sends work that skill hands to another the-way skill to the `the-way-` project skill of that name. |
+| `.agents/skills/the-way-*/SKILL.md` | The same nine entry points for Codex, byte for byte. |
 | `.claude/rules/the-way.md` | The product guidance for Claude Code: initializing the submodule, using only the `the-way-*` skills, running the-way's scripts as `.the-way/<path>` on the product's files, the `--base` and `--merge-onto` commits, the empty part map's reports, and running the checks before a merge. It names no commit, so it changes only when the guidance changes. |
 | `AGENTS.md` | The same guidance for Codex, between `<!-- the-way:begin -->` and `<!-- the-way:end -->`. |
 | `.gitignore` | The line `.runs/`. The invariants format guard requires the record of a run that a command names to be ignored by Git. |

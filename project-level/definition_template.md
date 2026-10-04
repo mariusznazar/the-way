@@ -1,9 +1,9 @@
 # The project definition
 
 A project definition says what a project is to achieve and what it rests on, before the project
-is broken into tasks. The skill in `skill/` beside this file writes it with a human, and
-`readiness_check.py` checks what a script can decide at the readiness gate. The decisions that
-set the rules below are cited beside them.
+is broken into tasks. The skills in `skill/` and `technology/` beside this file write it with a
+human, and `readiness_check.py` checks what a script can decide at the readiness gate. The
+decisions that set the rules below are cited beside them.
 
 ## What a definition is not
 
@@ -38,7 +38,7 @@ set the rules below are cited beside them.
 ```markdown
 # <project name>
 
-Status: definition — open: <the sections still holding TODO>
+Status: definition — open: <the sections still open>
 
 ## Goal
 
@@ -60,6 +60,8 @@ Status: definition — open: <the sections still holding TODO>
 
 ## Touched parts and decisions
 
+## Technology
+
 ## Projected foundation changes
 
 ## Gate record
@@ -74,7 +76,7 @@ the title where the place of the definition asks for one
 
 | Status | When |
 |---|---|
-| `definition — open: <sections>` | some section above the gate record still holds `TODO` |
+| `definition — open: <sections>` | some section above the gate record still holds `TODO`, or the step that settles the technology has not ended |
 | `ready for gate` | `readiness_check.py --before-approval` reports nothing: no section above the gate record holds a `TODO` it counts as a gap |
 | `approved YYYY-MM-DD` | the gate record is written |
 
@@ -99,6 +101,7 @@ A section is never left empty
 | Risks | the risks, and the assumptions whose failure would change the result |
 | Open questions | only questions for later, each with its place of resolution |
 | Touched parts and decisions | what the foundation says of the project: the parts it touches, the decisions whose *Scope* names them, the invariants it may break |
+| Technology | the technology choices the project needs, each with the entry that settles it; the skill `settle-technology` writes it, and it reads `TODO` until that step begins |
 | Projected foundation changes | what the definition settles about the product, as projected entries of the foundation, each with its translation, below the line that records the step finding them |
 | Gate record | who approved the gate and when, the commit of the foundation searched, the fingerprint |
 
@@ -138,6 +141,60 @@ project, or one task of it, named:
 
 A section without questions reads `none`.
 
+## Technology
+
+The section lists the technology and architecture choices the project needs — a language, a
+framework, a library, a store of data, a way of logging in, a place to run — each with the entry
+that settles it (WAY-121). The skill `settle-technology` writes it before the readiness gate
+(WAY-121), after the step that finds the definition's foundation entries; until then it reads
+`TODO`.
+
+```markdown
+## Technology
+
+- Język i miejsce działania aplikacji — held by: DOC-02/1
+- Magazyn dokumentów i ich właścicieli — projected: Where are documents and their owners stored?
+```
+
+- A choice belongs on the list when settling it later could change how the work is cut into
+  tasks, or when it adds something the product has to run, pay for or back up; a choice one task
+  can make and change alone stays with that task
+  (WAY-121).
+- Each item names one choice in the language of the definition, by what the product needs it
+  for, and ends with one marker in English
+  (WAY-121; WAY-108 for the English form):
+
+  | Marker | When |
+  |---|---|
+  | `— held by: <PREFIX>-<NN>/<version>` | a decision of the product's foundation settles the choice |
+  | `— projected: <question>` | a projected decision of this definition settles it; the question reads as in that decision's heading |
+  | `— open` | the step is still settling it; the readiness gate stops it |
+
+- An item may hold nested items under it, such as the human's preference for the choice; they
+  are no choices of the list
+  (WAY-112).
+- The section never reads `none`: it records the decision that holds each choice, and a project
+  whose choices the foundation already holds lists each of them `held by`
+  (WAY-121).
+- A choice the section settles no longer stands under "Open questions"; a question that asks
+  several choices narrows to what it still asks
+  (WAY-108).
+- The options of each open choice come from research against the definition, one choice at a
+  time, never from a fixed list of stacks. An option the project's code is written in or against
+  — a language, a framework, a library, a store of data — is offered to the human for choice only
+  when its documentation shows that it uses explicit types, follows conventions of layout and
+  naming and has current, versioned documentation, and a public record of its use, such as a
+  package registry or a survey, shows it widely used within its language family; for a store of
+  data, its types are those it declares for what it stores, and its family is that of its query
+  language. An option the human names that fails is offered with the properties it fails, which
+  the decision records if the human chooses it, and every option is offered only after a critique
+  that refutes every claimed difference no source supports
+  (WAY-122).
+- The human sees the options through their consequences for the product — what each costs, where
+  it runs, what keeping it running takes and what changing it later costs — and chooses between
+  them; where no difference with a consequence remains, the step recommends the simplest and
+  cheapest option (WAY-123). `settle-technology` leads that.
+
 ## Projected foundation changes
 
 The section holds what the definition settles about the product before the breakdown, as entries
@@ -175,6 +232,12 @@ Candidates: 3 shown, 2 accepted — 2026-01-01
 
 > **Translation (pl):** <the same entry in Polish>
 
+#### (new) — Where are documents and their owners stored?
+
+<the entry>
+
+> **Translation (pl):** <the same entry in Polish>
+
 ### Invariants
 
 #### one-workspace-per-document/1
@@ -186,6 +249,9 @@ Candidates: 3 shown, 2 accepted — 2026-01-01
 
 - The line `Candidates: <rows shown> shown, <rows accepted> accepted — YYYY-MM-DD` stands first;
   with no row accepted, `none` follows it. Rejected rows are not kept
+  (WAY-115).
+- A decision `settle-technology` projects stands under `### Decisions` among the others and
+  leaves the line as it is: it is no row of the step that finds entries
   (WAY-115).
 - A subsection stands for each kind that has entries, in this order: `### Decisions`,
   `### Invariants`, `### Glossary`, `### Environment facts`, `### Part map`. Each entry is in the

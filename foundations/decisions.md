@@ -245,7 +245,7 @@ A directory reaches the main branch only once it holds what its part requires: a
 template and rules, examples or a pointer to entries of the-way that serve as its examples, a
 skill that writes its entries and a format guard; `elements/common/` the rules of form and the way
 of working the elements' templates and skills share, the code their format guards share and the
-procedure of the panel and the skills that find entries and critique proposals; `project-level/` the definition template, its skill, the readiness check and its tests; `relation-model/` the script that computes fingerprints; `gate/` the test
+procedure of the panel and the skills that find entries and critique proposals; `project-level/` the definition template, the skills that write a definition, the readiness check and its tests; `relation-model/` the script that computes fingerprints; `gate/` the test
 of every critical flow in the part map; `installation/` the installer, its tests and a README
 explaining how a product uses the pinned version; `agent-instructions/` the instructions for agents
 working on this repository, led to from the root agent instruction files; `task-cycle/` what the design of
@@ -264,7 +264,7 @@ the task cycle sets, and until then it does not reach the main branch. The entri
   — an agent compares the change with the decision:
   - complies: code two format guards share moves into `elements/common/`, and both load it from
     there; a new file of entries in `foundations/` comes with the format guard of its element;
-    the installer, its tests and instructions stand together in `installation/`; the definition and its readiness check stand in `project-level/`; the agent
+    the installer, its tests and instructions stand together in `installation/`; the definition, the skills that write it and its readiness check stand in `project-level/`; the agent
     instructions have their own part and root entry points;
   - violates: a `tools/` directory for shared scripts reaches the main branch; `task-cycle/`
     reaches the main branch before the design of the task cycle sets what it holds.
@@ -3353,3 +3353,116 @@ The author's verdict keeps the critic an aid rather than a second decision-maker
 *Rejected:* a fresh critic for every entry accepted with the human — it repeats the human's
 review; letting the critic's remarks edit human settlements without asking — it would disguise a
 new decision as a correction.
+
+### WAY-121/1 — Where does a project settle the technology it needs?
+
+Before a project definition goes through its readiness gate, a step of its own lists the
+technology and architecture choices the project needs — such as a language, a framework, a store
+of data or a place to run — and settles each one the foundation does not already hold as a
+projected decision of the definition. A choice belongs on the list when settling it later could
+change how the work is cut into tasks, or when it adds something the product has to run, pay for
+or back up; a choice one task can make and change alone stays with that task. When the foundation
+already holds every such choice, the step records the decision that holds each and settles nothing.
+
+- **Change:** new decision
+- **Scope:** project-level, decisions
+- **Based on:** none
+- **Relations:** derives from WAY-106@63eddf70 · derives from WAY-116@afbcd2fa
+- **Verification:** level 1 — invariants: project-technology-record. Level 2 for what the step
+  lists and settles — an agent compares the work with the decision:
+  - complies: a project that adds an account server lists its store of data and its way of
+    logging in, and the definition projects a decision on each; a project that changes only how a
+    screen looks records that the foundation holds every choice it needs;
+  - violates: the first task of the breakdown chooses the database; a definition reaches the gate
+    with a store of data in its scope and no choice of it projected or found in the foundation.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, 2026-10-04
+
+*Rationale:* whether a technology choice changes how the work is cut into tasks cannot be judged
+by someone who does not know the technologies, so the choice is settled before the cut; a step of
+its own keeps the comparison of technologies out of the talk about the project's goal and scope,
+while its agent still knows the whole project. Settled before the gate, the choices are approved
+with the rest of the definition, and an exit for a project whose choices the foundation already
+holds keeps the step from being an empty run.
+*Rejected:* a round inside the conversation about goal and scope — no place to compare
+technologies; the first tasks of the breakdown — the cut itself may depend on the choice; the step
+after the readiness gate — each settled choice would change approved sections and send the
+definition through the gate again (WAY-118); one step for every project with no exit — an empty
+run wherever nothing changes.
+
+### WAY-122/1 — How are the options of a technology choice found and checked before a human sees them?
+
+The options of each technology choice a project needs come from research against the project
+definition, one choice at a time, rather than from a fixed list of bundled stacks. An option the
+project's code is written in or against — a language, a framework, a library, a store of data —
+is offered to the human for choice only when its documentation shows that it uses explicit types,
+follows conventions of layout and naming and has current, versioned documentation, and a public
+record of its use, such as a package registry or a survey, shows it widely used within its
+language family; for a store of data, its types are those it declares for what it stores, and its
+family is that of its query language. An option the human names that fails is offered with the
+properties it fails, which the decision records if the human chooses it, and every option is
+offered only after a critique that refutes every claimed difference between the options which no
+source supports.
+
+- **Change:** new decision
+- **Scope:** project-level, decisions
+- **Based on:** none
+- **Relations:** derives from WAY-121@740c254e · derives from WAY-120@f9317d23
+- **Verification:** level 2 — an agent compares the work with the decision:
+  - complies: research for a store of data compares a file kept beside the application with a
+    database server, each typed and documented, and the critique strikes a claimed difference in
+    speed that no source gives;
+  - violates: the step offers a framework, a database and a host as one bundle from a fixed list;
+    a comparison reaches the human with a difference no source supports; an option the human
+    names disappears from the comparison without the properties it fails.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, 2026-10-04
+
+*Rationale:* a fixed list of stacks, each bundling a framework, a store of data and a place to
+run, settles several choices at once and without the project, so a bundle can run against choices
+the project already holds and leave others unsettled; research for each choice starts from what
+the project needs. An agent can read each of the properties off an option's documentation or its
+public record of use without the human knowing the technology, and each bears on how well an agent
+works in the stack. A place to run or a way of logging in has no types and no language family, so
+it is weighed by its consequences alone and checked by the critique. An option the human brings
+stays the human's to choose, with what it lacks on record. A comparison the human cannot verify
+needs an independent reader that refutes what no source supports.
+*Rejected:* a fixed list of bundled stacks with a default for each kind of product and language —
+one pick settles several choices, unrelated to the project; options from research shown unchecked
+— the human cannot tell a sound comparison from an invented one; the human checking the options —
+the human this step serves cannot assess the technology; a critic for each option — one critique of
+the whole comparison serves (WAY-120); never offering an option the human names that fails the
+filter — a constraint from outside the project would lose to the filter.
+
+### WAY-123/1 — How does a technology choice reach a human who cannot assess the technology?
+
+The step that settles a project's technology shows the options of each choice by their
+consequences for the product — what it costs, where it runs, what keeping it running takes and
+what changing it later costs — and the human chooses between those consequences. A difference with
+no consequence for the product decides nothing, and where no difference with a consequence
+remains, the step recommends the simplest and cheapest option.
+
+- **Change:** new decision
+- **Scope:** project-level, decisions
+- **Based on:** none
+- **Relations:** derives from WAY-121@740c254e · derives from WAY-113@fd4f5aa7
+- **Verification:** level 2 — an agent compares the work with the decision:
+  - complies: two stores of data are shown as "a file kept with the application and copied with
+    it for a backup" against "a server to keep running in the container, with backups of its
+    own", and the human picks one;
+  - violates: the options are shown as lists of technical features; two options with no
+    difference in consequences are offered as a matter of taste instead of the simpler one being
+    recommended.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, 2026-10-04
+
+*Rationale:* a human who cannot assess the technology can still weigh what an option costs and
+where it fails, so a technical difference reaches the decision only through a consequence. Where
+options differ in nothing the product feels, a choice between them is blind, and the simplest and
+cheapest keeps cost and upkeep lowest.
+*Rejected:* technical differences shown as they stand — the human cannot weigh them; falling back
+on a default bundle when the human cannot judge — with no fixed list (WAY-122) there is no default;
+the agent choosing alone — the choice binds the product, and a human approves decisions (WAY-14).
