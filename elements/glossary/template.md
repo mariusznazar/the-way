@@ -2,12 +2,12 @@
 
 This file defines how a glossary entry is written. A glossary entry gives one word of the foundation
 one meaning, so that the same word does not mean one thing in a decision, another in an invariant
-(WAY-94, WAY-99) and a third in the code (`TODO — decision pending: which decision sets that a
-term of a product's glossary keeps its meaning in the product's code`); a word the glossary of
-the-way holds keeps its domain meaning in a product's code (WAY-104). A mechanism keeps the words,
-never their meaning: a script finds where a word stands and whether a word to avoid came back, while
-whether a word is used in its meaning is judged by an agent, by the independent assessment and by the search of
-WAY-33 (WAY-97, WAY-98, WAY-10, WAY-33).
+(WAY-94, WAY-99) and a third in the code (`TODO — decision pending: which decision sets that a term
+of a product's glossary keeps its meaning in the product's code`); a word the glossary of the-way
+holds keeps its domain meaning in a product's code (WAY-104). A mechanism keeps the words, never
+their meaning: a script finds where a word stands and whether a word to avoid came back, while
+whether a word is used in its meaning is judged by an agent, by the independent assessment and by
+the search of WAY-33 (WAY-97, WAY-98, WAY-10, WAY-33).
 
 The rules of form the elements share — the language of an entry, every field and the words `none`
 and `TODO`, a sentence using a term rather than a paraphrase of its definition, and the marks of
@@ -42,12 +42,12 @@ particular to a glossary entry (WAY-35).
   singular, a verb bare (`TODO — decision pending: which decision sets the letter case and the form
   of a term`). The term identifies the entry, and no other entry of the file holds it (WAY-93).
 - Terms are a space of their own, apart from the identifiers of the part map, the invariants and the
-  environment facts, which share one space (WAY-64, WAY-93). A change that makes a term read
-  like such an identifier, by adding or renaming either, is a warning for the independent assessment: where both name
-  the same thing the entry stays, and where they do not, one side is renamed (WAY-93, WAY-10). A
-  term and an identifier read alike when they match with the hyphens of both read as spaces
-  (`TODO — decision pending: which decision sets that hyphens read as spaces when a term is compared
-  with an identifier or a carrier`).
+  environment facts, which share one space (WAY-64, WAY-93). A change that makes a term read like
+  such an identifier, by adding or renaming either, is a warning for the independent assessment:
+  where both name the same thing the entry stays, and where they do not, one side is renamed
+  (WAY-93, WAY-10). A term and an identifier read alike when they match with the hyphens of both
+  read as spaces (`TODO — decision pending: which decision sets that hyphens read as spaces when a
+  term is compared with an identifier or a carrier`).
 - Nothing cites a term by an identifier or a fingerprint: a sentence depends on a term by using its
   word (WAY-94), and an entry carries no version and is edited in place (WAY-97); the file keeps no
   list of withdrawn terms (`TODO — decision pending: which decision sets that the glossary keeps no

@@ -242,13 +242,13 @@ from a product's own requirements, which the product does not meet yet, is not r
 requirements, which the product does not meet yet, is recorded`).
 
 *Found* names the place of each source the search found that gives a reason for keeping the
-behaviour or calls for a different one, or reads `found: nothing`. A place that only cites another is
-followed to the place it cites, and is marked where that source is superseded. *Found* never states
-a reason itself, nor one an agent infers (WAY-58). The row rests on a judgment: the human accepting
-the change at the merge sets it with the gate's report in front of them, which answers to the invariant
-`gate-fork-point-evidence` (WAY-58). An entry whose binding part changes — by a raised version, by
-a correction, or by a split or a merge — enters again, and its row is set again (WAY-57, WAY-58,
-WAY-64).
+behaviour or calls for a different one, or reads `found: nothing`. A place that only cites another
+is followed to the place it cites, and is marked where that source is superseded. *Found* never
+states a reason itself, nor one an agent infers (WAY-58). The row rests on a judgment: the human
+accepting the change at the merge sets it with the gate's report in front of them, which answers to
+the invariant `gate-fork-point-evidence` (WAY-58). An entry whose binding part changes — by a raised
+version, by a correction, or by a split or a merge — enters again, and its row is set again (WAY-57,
+WAY-58, WAY-64).
 
 ## Result, report and debt
 

@@ -38,7 +38,7 @@ The archive has no public write API.
 *Rationale:* publishing is outside the archive's purpose.
 *Rejected:* none considered
 
-> **Translation (pl):** Archiwum nie udostępnia publicznego interfejsu zapisu."""
+> **Meaning (pl):** Archiwum nie udostępnia publicznego interfejsu zapisu."""
 
 INVARIANT = """#### one-workspace-per-document/1
 
@@ -50,7 +50,7 @@ Every document belongs to exactly one workspace.
 - **Part:** every
 - **Correction:** none
 
-> **Translation (pl):** Każdy dokument należy do dokładnie jednego obszaru roboczego.
+> **Meaning (pl):** Każdy dokument należy do dokładnie jednego obszaru roboczego.
 > - **Method:** TODO"""
 
 CANDIDATES_LINE = "Candidates: 3 shown, 1 accepted — 2026-10-03"
@@ -247,7 +247,7 @@ class Gaps(unittest.TestCase):
                                   projected(entries="### Decisions\n\n" + decision)})
         self.assertEqual(conditions(text), [])
 
-    def test_todo_in_the_fields_and_the_translation_of_an_invariant_is_no_gap(self):
+    def test_todo_in_the_fields_and_the_meaning_sentence_of_an_invariant_is_no_gap(self):
         entries = "### Decisions\n\n%s\n\n### Invariants\n\n%s" % (
             DECISION.format(approval="Mariusz, 2026-10-03"), INVARIANT)
         text = definition(bodies={"Projected foundation changes": projected(entries=entries)})

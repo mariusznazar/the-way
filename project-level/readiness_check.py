@@ -12,12 +12,12 @@ The definition follows `project-level/definition_template.md`. The check reports
   order, with no other second-level heading;
 - a — no section holds the word `TODO`, and none is empty (`none` states that nothing is there);
   under "Projected foundation changes" a `TODO` in a field of an entry — a line `- **<Field>:** …`
-  and the indented lines that continue it — or in a translation (lines beginning with `>`) is no
-  gap, except for a decision's *Change* and *Approved by*. The format guard of the
-  element checks fields waiting for code or the world in the task that writes the entry; the
-  binding sentence, a definition, and a decision's *Rationale*, *Rejected* and *Change*, which
-  the human can settle at the project level, stay gaps. A deferred *Review when* requires a
-  related open question and the human's agreement, which this script cannot judge;
+  and the indented lines that continue it — or in a meaning sentence (lines beginning with `>`) is
+  no gap, except for a decision's *Change* and *Approved by*. The format guard of the element checks
+  fields waiting for code or the world in the task that writes the entry; the binding sentence, a
+  definition, and a decision's *Rationale*, *Rejected* and *Change*, which the human can settle at
+  the project level, stay gaps. A deferred *Review when* requires a related open question and the
+  human's agreement, which this script cannot judge;
 - d — every item under "Open questions" ends with `— resolved in: breakdown` or
   `— resolved in: task: <name>`;
 - b — no projected decision still reads `**Approved by:** on acceptance`;
@@ -69,7 +69,7 @@ TECHNOLOGY_ITEM = re.compile(r"^\S.*? — (?:held by: (?P<held>\S.*?)|projected:
 DECISION_IDENTIFIER = re.compile(r"^[A-Z][A-Z0-9]*-\d+/\d+$")
 PROJECTED_HEADING = re.compile(r"^#### .+? — (.+?)\s*$")
 FIELD = re.compile(r"^- \*\*([^*]+):\*\*")
-TRANSLATION = re.compile(r"^>")
+MEANING = re.compile(r"^>")
 STATUS = re.compile(r"^Status: (definition — open: \S.*|ready for gate|approved \d{4}-\d{2}-\d{2})$")
 GATE_LINES = (
     ("Approved by", re.compile(r"^- Approved by: \S.*, \d{4}-\d{2}-\d{2}$")),
@@ -147,7 +147,7 @@ def content(section):
 
 def field_lines(section):
     """Return the numbers of the lines of a section that belong to a field of an entry — a line
-    `- **<Field>:** …` and the indented lines that continue it — or to a translation.
+    `- **<Field>:** …` and the indented lines that continue it — or to a meaning sentence.
     A decision's Change and Approved by are not exempt."""
     numbers, in_field = set(), False
     for number, line in section.lines:
@@ -156,7 +156,7 @@ def field_lines(section):
             in_field = field.group(1) not in {"Change", "Approved by"}
         elif not (in_field and line.startswith((" ", "\t")) and line.strip()):
             in_field = False
-        if in_field or TRANSLATION.match(line):
+        if in_field or MEANING.match(line):
             numbers.add(number)
     return numbers
 
