@@ -8,7 +8,8 @@ decisions that set the rules below are cited beside them.
 ## What a definition is not
 
 - It changes nothing in the foundation. It reads the foundation and projects changes to it; each
-  enters the foundation with the task whose code makes it true (WAY-01; WAY-106; WAY-126).
+  enters the foundation with the first task whose code makes it true, or, where no code does,
+  with the task the plan assigns (WAY-01; WAY-106; WAY-126).
 - It holds no plan: phases, the order of work, the tasks and which task carries which decision
   stand in the plan of the project (WAY-36;
   WAY-106).

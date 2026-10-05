@@ -36,7 +36,8 @@ commit that adds it. A correction after review repeats this pair.
 
 Include questions that were answered by a binding source as well as new micro decisions. Mark
 choices requiring a human foundation decision as proposed, never approved. A choice whose cost of
-being wrong reaches beyond the request becomes a proposed foundation entry.
+being wrong reaches beyond the request becomes a proposed foundation entry when it still binds
+after the merge (WAY-36), and a question under *To decide* in the request otherwise.
 
 ## Artifacts
 
@@ -45,9 +46,8 @@ being wrong reaches beyond the request becomes a proposed foundation entry.
 
 Include the frozen task, `spec.md`, `plan.md`, code commits, tests and full agent reports. Name
 commits and commit ranges instead of copying diffs or files that git holds. A foundation proposal
-has one current version and one wording in the task document's language for the human; the
-manifest records the assessed range by commit hashes, plus a diff only of changes made after the
-panel.
+has one current version, with its translation beside it in the task document's language for the
+human (WAY-114).
 
 ## Verification
 
@@ -69,7 +69,8 @@ check is unchecked.
 
 ## Panel
 
-- Assessed commit or range and its files: <commit or range and paths>
+- Manifest — assessed range and its files: <commit hashes and paths, plus a diff only of changes
+  made after the panel>
 - Independent assessments: <links to full reports>
 - Settlement, first order: <link to full report and concise call>
 - Settlement, swapped order: <link to full report and concise call>
@@ -78,7 +79,8 @@ check is unchecked.
 ## Request handoff
 
 - Request URL and status: <URL and draft/ready/blocked>
-- Proposed foundation entries from choices: <IDs from the questions table, or none>
+- *To decide* — proposed entries and questions from choices: <IDs from the questions table, or
+  none>
 - Choices within the request: <count and link to the questions table>
 - Writes to the task's backlog entry: <request link and state, or none>
 - Remaining limitations: <list or none>
