@@ -54,14 +54,15 @@ invariant adds to each.
   map hands the matching of a pattern to git.
 - An entry the human chose from what the product already does: search the decision log, the
   product's documents and the history of the code, and draft its row on the list of recovered
-  invariants; the human accepting the change at the merge sets it, as the template's "Recovered" says.
+  invariants; the human accepting the change at the merge sets it, as the template's "Recovered"
+  says.
 
 ## 4. Ask, show, write
 
 - Step 4.2: for a changed entry, show the wording on `{fork-point}` beside the new one, with the
   checks that cite it, so that the human settles a raise or a correction as the template's
-  "Version and correction" says. In a task cycle the orchestrator settles it, writes the entry and
-  the human accepts its meaning at the merge (WAY-114).
+  "Version and correction" says. In a task cycle the orchestrator proposes a raise or a correction,
+  which the request shows (WAY-57).
 - Step 4.4: what follows from this entry is a decision whose level 1 verification gains, loses or
   renames it, through `record-decision`; and a flow or a failure mode that names it, or names an
   identifier this change retires, through `update-part-map`.

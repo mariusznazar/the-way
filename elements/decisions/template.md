@@ -83,7 +83,7 @@ yet is named by the invariant it answers to
 | Verification | level 1: the invariants guard (`level-one-decision-invariants`, `verification-invariant-derivation`); level 2: an agent comparing a change with the decision; level 3: a human (WAY-12) | judgment |
 | Review when | the periodic review of the foundation (WAY-24); the format guard (`decision-guard-overdue-review`) | judgment |
 | Origin | whoever wants to change the decision and needs the full reasoning; the next agent, so it does not repeat a search (WAY-29) | transcribed |
-| Approved by | a human considering a change; the format guard (`decision-approval-record`, `decision-approver`) | transcribed; `<who>, merge of <request URL>` when an agent writes the entry before the merge |
+| Approved by | a human considering a change; the format guard (`decision-approval-record`, `decision-approver`) | transcribed |
 | Rationale / Rationale for change | the agent in a borderline case; a human considering a change | judgment |
 | Rejected | the agent, before proposing an option already rejected; the search of the foundation (WAY-33) | judgment |
 

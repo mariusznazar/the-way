@@ -104,10 +104,9 @@ looks for in its element.
    (`TODO — decision pending: which decision sets that the questions of one entry are asked in one
    round, each with a proposed answer`).
 2. Show the whole entry with what the skill adds beside it, and one sentence of its meaning in the
-   human's language (WAY-114). In conversation, apply the human's fixes and write when the human
-   accepts the meaning. In a task cycle, write without waiting: the human accepts the meaning at the
-   merge; ask before writing only where you have no recommendation or the entry would change the
-   meaning of an approved decision (WAY-114).
+   human's language. Write it on your recommendation; ask before writing only where you have no
+   recommendation or the entry would change the meaning of an approved decision. The human accepts
+   the meaning at the merge, or at the readiness gate for a projected entry (WAY-114).
 3. Write the entry in its place in the file and run the element's format guard (WAY-09) from the
    product's repository root, `python -B <the element's directory>/format_guard.py`, with the
    arguments its `--help` gives for this file and for the commit the task branch left the main
