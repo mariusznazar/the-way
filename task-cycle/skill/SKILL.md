@@ -111,21 +111,23 @@ changes the handoff and approval points, not the borrowed method's work within e
 ## Execute, verify and review
 
 Before dependent implementation, run the foundation step required by WAY-01 and WAY-03 whenever the
-task changes a foundation entry or an invariant test, or its code makes true a projected entry of
-its sources (WAY-126). Invoke the pinned element skills for the affected entries and check existing
-approval of projected wording. Write a projected entry the task marks whole, with *Approved by*
-transcribed from the definition's gate record; a plan member writes only the entries its plan item
-assigns, and one assigned to another item returns to the plan through a blocked draft request. Carry
-a part of a projected entry to the request as a proposal while the code proceeds; a deferred *Review
-when* goes to the request under *To decide* with a proposed value. Search the whole foundation and
-run the applicable guards and panel. Keep unapproved wording as a proposal outside the binding
-files; where the foundation requires a human's acceptance before the dependent code and that
-authority is missing, prepare the blocked draft request. For invariant checks, use different agents
-for the sentence, check and deliberate break under WAY-69, withhold the check and its inputs from
-the break author, and record their identities and inputs for human assessment. Establish the
-required acceptance before the dependent code proceeds; accepted invariant tests are read-only
-during implementation. If later work needs one changed, return to this foundation step before
-continuing that work.
+task changes a foundation entry or an invariant test, or its plan item assigns, or its code makes
+true, a projected entry of its sources (WAY-126). Invoke the pinned element skills for the affected
+entries and check existing approval of projected wording. Write a projected entry the task marks or
+its plan item assigns whole, with *Approved by* transcribed from the definition's gate record; a
+plan member writes only the entries its plan item assigns, and one assigned to another item returns
+to the plan through a blocked draft request. Carry a part of a projected entry to the request as a
+proposal while the code proceeds, except a part of an invariant, which waits for the human's
+acceptance before its dependent code (WAY-03). A deferred *Review when* reads `TODO` in the entry on
+the task branch and goes to the request under *To decide* with a proposed value, which the human
+sets before the merge. Search the whole foundation and run the applicable guards and panel. Keep
+unapproved wording as a proposal outside the binding files; where the foundation requires a human's
+acceptance before the dependent code and that authority is missing, prepare the blocked draft
+request. For invariant checks, use different agents for the sentence, check and deliberate break
+under WAY-69, withhold the check and its inputs from the break author, and record their identities
+and inputs for human assessment. Establish the required acceptance before the dependent code
+proceeds; accepted invariant tests are read-only during implementation. If later work needs one
+changed, return to this foundation step before continuing that work.
 
 9. Use Superpowers `subagent-driven-development`: fresh implementer and reviewer contexts for
    each meaningful plan task, followed by a whole-branch review. Its boundary is the final review
@@ -149,28 +151,26 @@ continuing that work.
     wrong reaches beyond this request becomes a foundation proposal when it still binds after the
     merge (WAY-36), and a question under *To decide* otherwise. Read the projected entries of the
     task's sources: one the code makes true that the foundation step did not write sends the task
-    back to that step, or, for a plan member and an entry assigned to another item, back to the
-    plan. For a projected invariant found this way, set aside the code it covers, have agents that
-    have not seen that code write the invariant and its test, then redo the code against the
-    accepted test. Propose a new entry only for a rule none of them states (WAY-126). Prepare the
-    required foundation proposals in the working record as one current version: a proposed
-    foundation diff against a named commit, explicitly marked unapproved, with its translation
-    beside it in the task document's language for the human (WAY-114) and the commits that hold
-    the relevant code evidence. Write a binding foundation change only where prior human approval
-    authorizes its content; otherwise keep it proposed.
-    Send return-step proposals to the panel as foundation changes even when no binding
-    foundation file has changed (WAY-11), then carry the proposal and panel result to the
-    request.
-    For actual foundation or invariant-test changes, run their guards and the panel on the final
-    change. Filter the assessment diff and supplied file set to code, foundation and proposed
-    entries: exclude spec, plan, frozen task, chronology, reports, prompts and author reasoning,
-    including those in earlier commits or later reassessments. Record the assessed range by commit
-    hashes and its file list in the record's manifest, plus a diff only of changes made after
-    the panel; commit the chronology only after the panel. If a panel fix changes code, rerun
-    affected checks and code review. Do not invent `Approved by` for a decision awaiting the
-    human. A contradiction with a current decision follows WAY-30; a collision without recorded
-    precedence follows WAY-25.
-    If those rules prevent the required code, report the task as blocked in a draft request.
+    back to that step, with its foundation route recorded again (WAY-13), or, for a plan member and
+    an entry assigned to another item, back to the plan. For a projected invariant found this way,
+    set aside the code it covers, have agents that have not seen that code write the invariant and
+    its test, then redo the code against the accepted test. Propose a new entry only for a rule none
+    of them states (WAY-126). Prepare the required foundation proposals in the working record as one
+    current version: a proposed foundation diff against a named commit, explicitly marked
+    unapproved, with its translation beside it in the task document's language for the human
+    (WAY-114) and the commits that hold the relevant code evidence. Write a binding foundation
+    change only where prior human approval authorizes its content; otherwise keep it proposed. Send
+    return-step proposals to the panel as foundation changes even when no binding foundation file
+    has changed (WAY-11), then carry the proposal and panel result to the request. For actual
+    foundation or invariant-test changes, run their guards and the panel on the final change. Filter
+    the assessment diff and supplied file set to code, foundation and proposed entries: exclude
+    spec, plan, frozen task, chronology, reports, prompts and author reasoning, including those in
+    earlier commits or later reassessments. Record the assessed range by commit hashes and its file
+    list in the record's manifest, plus a diff only of changes made after the panel; commit the
+    chronology only after the panel. If a panel fix changes code, rerun affected checks and code
+    review. Do not invent `Approved by` for a decision awaiting the human. A contradiction with a
+    current decision follows WAY-30; a collision without recorded precedence follows WAY-25. If
+    those rules prevent the required code, report the task as blocked in a draft request.
 
 ## Request and handoff
 
@@ -184,9 +184,9 @@ continuing that work.
     copies, commit them after the assessed change and commit their removal immediately after, so
     the request's changed files show only the change and the target branch's files never hold
     the record; the panel record lives there under the task cycle, as `elements/common/panel.md`
-    specifies. Link the record by the SHA of the commit that adds it, never by branch name. The
-    link survives only if the request is merged with its commits kept; where the product's rules
-    squash or rebase on merge, name that as a limitation in the request.
+    specifies. Link the record by the SHA of the commit that adds it, never by branch name. Ask in
+    the request for a merge that keeps its commits, since the link survives only then; where the
+    product's rules squash or rebase on merge, name that as a limitation in the request.
     Use Superpowers `finishing-a-development-branch` for verification and request preparation,
     then take the pull or merge request route already chosen by the user, without presenting its
     integration menu. Do not merge. Keep the worktree for review changes.
