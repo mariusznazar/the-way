@@ -275,11 +275,12 @@ No change that, against {fork-point}, alters a foundation entry runs on the path
 
 ## decision-approval-record/1
 
-Every decision version in the decision log records in *Approved by* who approved it and on what date.
+Every decision version in the decision log records in *Approved by* who approved it and either on what
+date, or by the merge of which request.
 
 - **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-14@e8ef4843
+- **Derives from:** WAY-14@3a9cc628
 - **Part:** decisions
 - **Correction:** none
 
@@ -289,7 +290,7 @@ Every decision version in the decision log names Mariusz in *Approved by*.
 
 - **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-14@e8ef4843
+- **Derives from:** WAY-14@3a9cc628
 - **Part:** decisions
 - **Correction:** none
 

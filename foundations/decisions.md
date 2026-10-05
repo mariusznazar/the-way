@@ -417,7 +417,8 @@ changes, and attention spent where it adds nothing.
 ### WAY-14/1 — Who approves a version of a decision?
 
 A version of a decision is approved by a human, never by an agent, and records who approved it and
-when; in the-way, the approver is Mariusz.
+either when, or the merge of the request by which they accepted it; in the-way, the approver is
+Mariusz.
 
 - **Change:** new decision
 - **Scope:** decisions
@@ -427,7 +428,7 @@ when; in the-way, the approver is Mariusz.
 - **Review when:** the-way decides which of its elements a team may adapt, and with it who approves
   decisions for which parts · check by: 2026-12-31
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-29
+- **Approved by:** Mariusz, 2026-10-06
 
 *Rationale:* the record of who approved and when is what a human considering a change reads, and what
 WAY-07 needs when an entry has to be accepted again.

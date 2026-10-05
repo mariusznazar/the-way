@@ -80,6 +80,7 @@ NO_COMMIT = shared.NO_COMMIT
 NO_COMMIT_REASON = shared.NO_COMMIT_REASON
 
 DATE = r"\d{4}-\d{2}-\d{2}"
+MERGE = r"merge of https?://\S+"
 NUMBER_WORDS = {"one": 1, "two": 2, "three": 3, "four": 4, "five": 5}
 
 
@@ -644,9 +645,12 @@ def check_approval(entries, prefix, report):
         elif is_todo(value):
             report.fail(line, "*Approved by* is `TODO`", check, (record,))
         else:
+            if re.match(r"^.+, %s$" % MERGE, value):
+                continue
             match = re.match(r"^.+, (%s)$" % DATE, value)
             if not match or not valid_date(match.group(1)):
-                report.error(line, "%s: *Approved by* is not `<who>, YYYY-MM-DD`"
+                report.error(line, "%s: *Approved by* is not `<who>, YYYY-MM-DD` or "
+                                   "`<who>, merge of <request URL>`"
                              % label_of(entry, prefix), check, (record,))
 
 
@@ -662,7 +666,7 @@ def check_approver(entries, approver, prefix, report):
         if is_todo(value):
             report.fail(line, "*Approved by* is `TODO`", check, (named,))
             continue
-        match = re.match(r"^(.+), %s$" % DATE, value)
+        match = re.match(r"^(.+), (?:%s|%s)$" % (DATE, MERGE), value)
         who = match.group(1) if match else value
         if who != approver:
             report.error(line, "%s: *Approved by* names %s, not %s"

@@ -198,7 +198,15 @@ class Fields(GuardTestCase):
     def test_approved_by_without_date(self):
         self.assertFails(log(version(1, approved="Anna")), "*Approved by* is not")
         self.assertRecords(line("check_approval", "fail", "decision-approval-record/1",
-                                "line 18: ABC-01/1: *Approved by* is not `<who>, YYYY-MM-DD`"))
+                                "line 18: ABC-01/1: *Approved by* is not `<who>, YYYY-MM-DD` "
+                                "or `<who>, merge of <request URL>`"))
+
+    def test_approved_by_a_merge(self):
+        self.assertPasses(log(version(1, approved="Anna, merge of https://github.com/o/r/pull/5")))
+        self.assertRecords(line("check_approval", "pass", "decision-approval-record/1"))
+
+    def test_approved_by_a_merge_without_its_request(self):
+        self.assertFails(log(version(1, approved="Anna, merge of")), "*Approved by* is not")
 
     def test_rationale_for_change_in_later_versions(self):
         self.assertFails(log(version(1), version(1, ver=2, rationale="Rationale")),
@@ -355,6 +363,14 @@ class Approver(GuardTestCase):
                          approver="Mariusz")
         self.assertRecords(line("check_approver", "fail", "decision-approver/1",
                                 "line 18: ABC-01/1: *Approved by* names Anna, not Mariusz"))
+
+    def test_the_approver_of_a_merge(self):
+        self.assertPasses(log(version(1, approved="Anna, merge of https://github.com/o/r/pull/5")),
+                          approver="Anna")
+
+    def test_another_approver_of_a_merge(self):
+        self.assertFails(log(version(1, approved="Bea, merge of https://github.com/o/r/pull/5")),
+                         "*Approved by* names Bea, not Anna", approver="Anna")
 
     def test_not_checked_outside_the_way_s_own_log(self):
         code, output = self.guard(log(version(1)))
