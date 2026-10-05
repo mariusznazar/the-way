@@ -82,7 +82,8 @@ definition without plan membership never acquires that plan's assignments or dep
   identifiers and versions. If the task uses an approved project definition, copy the relevant
   projected wording and identify its heading there. A project plan determines which entries a
   member task is assigned to realize or write; a source-only task carries only the projected
-  entries, or the parts of them, that its code makes true, and names the part. `none`
+  entries, or the parts of them, that its code makes true, and names the part (WAY-124,
+  WAY-126). `none`
   means the search found no applicable entry; it is not a substitute for the search.
 - **Out of scope:** only task-bound exclusions. A lasting exclusion belongs in a projected or
   current decision, not here.

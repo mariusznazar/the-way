@@ -25,11 +25,11 @@ choice approved or changed the rule.
 1. Read the task document in full. Require `Status: ready for cycle`. Its `Project relation:`
    controls the sources: independent tasks need no project; plan members require the exact
    approved plan item, dependencies and assignments; source-only tasks use relevant approved
-   project settlements without importing plan work. Any task carries into `foundations/` each
-   projected entry of its sources, or the part of it, that its code makes true now, also under
-   source only, and leaves the rest projected (WAY-124, WAY-125). Recheck approval and current
-   foundation versions before starting. If a source changed, reconcile the task against it and
-   record the effect; stop only when its required outcome can no longer be established.
+   project settlements without importing plan work. A task using an approved definition writes,
+   in its foundation step, each projected entry its code makes true, and brings a part of one to
+   the human as a proposal (WAY-126). Recheck approval and current foundation versions before
+   starting. If a source changed, reconcile the task against it and record the effect; stop only
+   when its required outcome can no longer be established.
 2. Read the product's `AGENTS.md`, process pin, foundation and relevant code. Verify that the
    pinned the-way checkout matches the product's gitlink. Follow product-specific git and test
    rules. Search the current foundation for additional applicable entries or collisions; the
@@ -113,8 +113,10 @@ changes the handoff and approval points, not the borrowed method's work within e
 
 Before dependent implementation, run the foundation step required by WAY-01 and WAY-03 whenever
 the task changes a foundation entry or an invariant test. Invoke the pinned element skills for
-the affected entries, check existing approval of projected wording, search the whole foundation,
-and run the applicable guards and panel. Keep unapproved wording as a proposal outside the binding
+the affected entries, check existing approval of projected wording; write a projected entry the
+task names whole, with *Approved by* transcribed from the definition's gate record, and keep a
+part of one as a proposal (WAY-126); search the whole foundation, and run the applicable guards
+and panel. Keep unapproved wording as a proposal outside the binding
 files; if the necessary change lacks the human authority required by the foundation, prepare the
 blocked draft request. For invariant checks, use different agents for the sentence, check and
 deliberate break under WAY-69, withhold the check and its inputs from the break author, and record
@@ -142,12 +144,12 @@ work needs one changed, return to this foundation step before continuing that wo
     learned decisions, rules, uncovered behavior, environment facts, terms and part-map changes;
     compare touched parts of the foundation with code. Every autonomous choice whose cost of being
     wrong reaches beyond this request becomes a foundation proposal. Read the projected entries of
-    the task's sources: carry each one, or the part of it, that the code makes true now, in its
-    approved wording, shortened but never reworded, and leave the rest projected; propose a new
-    entry only for what those entries lack (WAY-125). Prepare the required foundation proposals
-    in the working record as one current version: a proposed foundation diff against a named
-    commit, explicitly marked unapproved, with one wording in the task document's language for
-    the human and the commits that hold the relevant code evidence. Write a binding foundation
+    the task's sources: one the code makes true that the foundation step did not write sends the
+    task back to that step; propose a new entry only for a rule none of them states (WAY-126).
+    Prepare the required foundation proposals in the working record as one current version: a
+    proposed foundation diff against a named commit, explicitly marked unapproved, with one
+    wording in the task document's language for the human and the commits that hold the relevant
+    code evidence. Write a binding foundation
     change only where prior human approval authorizes its content; otherwise keep it proposed.
     Send return-step proposals to the panel as foundation changes even when no binding
     foundation file has changed (WAY-11), then carry the proposal and panel result to the

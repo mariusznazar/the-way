@@ -81,7 +81,7 @@ skill named here is the product skill with the `the-way-` prefix.
   identify which entries it is assigned to realize or write. A source-only task takes no plan
   assignment, but it carries a projected entry its code will make true: name that entry under
   *Decisions in play* with the part made true now, also when the plan assigns it to another task
-  (WAY-106, WAY-124).
+  (WAY-124, WAY-126).
 - For a project member, compare the numbered work, dependencies and projected entries with its
   plan item. A mismatch returns to the plan, not an unrecorded change in this document.
 - If the task would contradict a current decision or a projected entry, show the conflict and
@@ -97,7 +97,8 @@ skill named here is the product skill with the `the-way-` prefix.
 - Check that every blocking question has an answer, the numbered work is executable, the
   questions brought into this task are accounted for, and the decisions in play are present or
   explicitly `none` after a search. For a project member, also check its plan item and
-  assignments; for any task using approved project settlements, check the definition's approval.
+  assignments; for any task using approved project settlements, check the definition's approval
+  and that every projected entry its code makes true is named with the part made true.
   Mark `Status: ready for cycle` only when its applicable checks pass; report an obstacle instead
   of declaring readiness.
 - The task document carries what and why. Do not insert a separate implementation spec, test

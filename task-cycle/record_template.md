@@ -64,6 +64,7 @@ check is unchecked.
 - Behavior with no invariant: <finding or none after search>
 - Environment facts and glossary terms: <links or none after search>
 - Part-map changes: <links or none after search>
+- Projected entries written whole or proposed in part: <links or none after search>
 - Panel and foundation comparison: <reports or not applicable>
 
 ## Panel
