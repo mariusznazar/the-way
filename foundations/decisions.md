@@ -73,18 +73,18 @@ nothing gained; one computation per element — a reference would need its eleme
 Invariant tests are written and accepted together with the foundation change, and during
 implementation they are read-only. A mechanism outside the model enforces this: when a change is
 merged, a check whose definition is taken from the main branch rejects any change to an invariant
-test not accepted by the panel or by a human. A task that needs an invariant test changed goes back
-to the foundation step.
+test that carries no record of its independent assessment (WAY-10). A task that needs an invariant
+test changed goes back to the foundation step.
 
 - **Change:** new decision
 - **Scope:** invariants, task-cycle
 - **Based on:** impossiblebench-test-modification@9cdba560
 - **Relations:** derives from WAY-01@60960941
-- **Verification:** level 1 — invariants: invariant-test-change-acceptance.
+- **Verification:** level 1 — invariants: foundation-change-assessment-record.
 - **Review when:** no model in the range of fact impossiblebench-test-modification is Active in
   Anthropic's table of models · check by: 2026-10-02
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-29
+- **Approved by:** Mariusz, 2026-10-06
 
 *Rationale:* an agent that a test stands in the way of adjusts the test to the code: the build
 turns green, and the foundation lies. Keeping invariant tests out of the implementer's reach
@@ -245,7 +245,7 @@ A directory reaches the main branch only once it holds what its part requires: a
 template and rules, examples or a pointer to entries of the-way that serve as its examples, a
 skill that writes its entries and a format guard; `elements/common/` the rules of form and the way
 of working the elements' templates and skills share, the code their format guards share and the
-procedure of the panel and the skills that find entries and critique proposals; `project-level/` the definition template, the skills that write a definition, the readiness check and its tests; `relation-model/` the script that computes fingerprints; `gate/` the test
+skills that find entries and that critique proposals and assess changes; `project-level/` the definition template, the skills that write a definition, the readiness check and its tests; `relation-model/` the script that computes fingerprints; `gate/` the test
 of every critical flow in the part map; `installation/` the installer, its tests and a README
 explaining how a product uses the pinned version; `agent-instructions/` the instructions for agents
 working on this repository, led to from the root agent instruction files; `task-cycle/` what the design of
@@ -270,7 +270,7 @@ the task cycle sets, and until then it does not reach the main branch. The entri
     reaches the main branch before the design of the task cycle sets what it holds.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-10-04
+- **Approved by:** Mariusz, 2026-10-06
 
 *Rationale:* anything brought in on the side makes the repository a store of material; directories
 follow the parts, so a change's files name its part and decisions (WAY-21); an incomplete directory
@@ -287,40 +287,36 @@ failures lose their own parts.
 
 ### WAY-10/1 — Who assesses a change to an invariant test or to the foundation?
 
-A change to an invariant test or to the foundation is assessed by the panel, which has three
-agents: two assess it independently, on different models where two are available, each from a
-different, named perspective and seeing the diff and the files of the commit it assesses without
-the task's chronicle, never the author's reasoning, and one of the two perspectives names what of
-the change can be cut, while the third settles between them twice, reading the two assessments in
-swapped order. The panel decides a change of an invariant test's mechanics — selectors, test data,
-waiting — where its two settlements agree, and a rerun set outside the method's command is never
-such a change. Every other change, and one on which the two settlements differ, the panel prepares
-with the diff, its effects, its settlements and a recommendation, and a human decides.
+A change to an invariant test or to the foundation is assessed by one independent agent, on a model
+other than its author's where one is available, which sees the diff and the files of the commit it
+assesses without the task's chronicle or the author's reasoning and names what of the change can be
+cut, or that nothing can. The author settles each of its remarks and records how, and a human
+accepts the change, with the assessment and its settlement, when merging it.
 
 - **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common,
   task-cycle
-- **Based on:** llm-self-preference@6d9f4b97 · TODO — the finding that settling in both orders
-  rests on
-- **Relations:** derives from WAY-03@97d336a9
-- **Verification:** level 1 — invariants: invariant-test-change-acceptance ·
-  foundation-change-panel-record. Level 2 for what the panel decides — an agent compares the change
-  with the decision:
-  - complies: both settlements accept a new selector in an invariant test, and it merges without a
-    human;
-  - violates: the panel accepts a changed expected value in an invariant test; an assessing agent
-    receives the author's reasoning; one order's settlement stands though the other order's differs.
-- **Review when:** TODO
+- **Based on:** llm-self-preference@6d9f4b97
+- **Relations:** derives from WAY-03@7c2d4ca1
+- **Verification:** level 1 — invariants: foundation-change-assessment-record. Level 2 — an agent
+  compares the change with the decision:
+  - complies: one assessor on another model reads the diff without the author's reasoning, and the
+    author records how each remark was settled before the merge;
+  - violates: the assessor receives the author's reasoning; the author changes a remark's subject
+    without recording it; a change merges with no assessment record.
+- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-29
+- **Approved by:** Mariusz, 2026-10-06
 
 *Rationale:* the problem is a single executor that checks itself: agents on one model with one
-input share its blind spots, so independence comes from different perspectives and from not seeing
-the author's reasoning; settling in both orders costs little. Only a human knows what the product is
-meant to protect. The finding it cites measured models of other publishers only, and this decision
-takes it across publishers (WAY-85).
-*Rejected:* a panel that settles everything — it does not know what the product protects; a single
-agent without a panel — it checks itself.
+input share its blind spots, so independence comes from another model and from not seeing the
+author's reasoning; one such reader finds what a reader can, and the human who accepts at the merge
+reads the change with the assessment beside it. More readers multiply questions faster than
+findings. The finding it cites measured models of other publishers only, and this decision takes it
+across publishers (WAY-85).
+*Rejected:* a panel of two assessors and a settler reading both orders — its cost per change
+outweighs what one independent reader misses, and its uncertainty becomes questions for the human;
+the author assessing its own change — it checks itself.
 
 ### WAY-11/1 — How does a task end?
 
@@ -1407,7 +1403,7 @@ next edit; a row without a version — a debt for an old meaning excuses a new o
 or marked "not checked yet" until met — the gap stops being countable; debt paid by an end date —
 repaid by weakening the rule; a list any step may grow (Packwerk) — it outgrows the will to empty
 it; an addition check keyed to the entry's fingerprint — a second merge stop for what WAY-10
-decides.
+assesses.
 
 ### WAY-52/1 — What is generated from the part map for an agent?
 
@@ -1557,9 +1553,9 @@ field — every reference would name its field.
 An invariant entry carries a version number, starting at 1, and holds only its current wording,
 and earlier wordings are read from git. When the entry's fingerprint differs from its fingerprint
 on the commit the task branch left the main branch from, its version is one higher than there,
-unless the entry declares a correction naming both fingerprints and the human who decides the
-change under WAY-10 confirms, with the old and the new binding part in front of them, that the
-meaning is unchanged; a change after which some test citing the entry would need a different
+unless the entry declares a correction naming both fingerprints and the human who accepts the
+change at the merge (WAY-10) confirms, with the old and the new binding part in front of them,
+that the meaning is unchanged; a change after which some test citing the entry would need a different
 expected value is never a correction; when the fingerprint does not differ, the entry keeps the
 version it has there. A check cites its invariant by identifier and version, in the form the
 template gives, and fails the gate when that version is not the current one, while elsewhere a
@@ -1568,7 +1564,7 @@ reference to an invariant's version is historical and never flagged, as WAY-02 h
 - **Change:** new decision
 - **Scope:** invariants, relation-model, gate, task-cycle, part-map, elements-common
 - **Based on:** none
-- **Relations:** derives from WAY-03@97d336a9 · derives from WAY-10@9b8b1401 ·
+- **Relations:** derives from WAY-03@7c2d4ca1 · derives from WAY-10@2bdd69c7 ·
   narrows WAY-02@3ffcbd46
 - **Verification:** level 1 — invariants: invariant-version-number · invariant-version-new ·
   invariant-version-changed · invariant-version-unchanged · invariant-earlier-wording ·
@@ -1582,7 +1578,7 @@ reference to an invariant's version is historical and never flagged, as WAY-02 h
     moves every citation to a new version, nobody checking the tests.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-29
+- **Approved by:** Mariusz, 2026-10-06
 
 *Rationale:* a read-only test cited by fingerprint would move with every typo, and by bare
 identifier never, checking a meaning gone; a version moves with meaning; the human already deciding
@@ -1697,7 +1693,7 @@ no verdict for the entry never gives it a pass.
 - **Scope:** invariants, gate, decisions, part-map, elements-common
 - **Based on:** none
 - **Relations:** derives from WAY-08@2343e09f · derives from WAY-16@5c1d60d4 ·
-  derives from WAY-54@57b93cf6 · derives from WAY-57@4a838784 · derives from WAY-38@6e10c3fd ·
+  derives from WAY-54@57b93cf6 · derives from WAY-57@89a75ebe · derives from WAY-38@6e10c3fd ·
   derives from WAY-60@6e862c88
 - **Verification:** level 1 — invariants: invariant-method-form · method-gate-values ·
   gate-verdict-per-entry · gate-pass-without-verdict · gate-method-order · test-runner-pass-line.
@@ -1815,7 +1811,7 @@ change keeps it.
 - **Scope:** environment-facts, invariants, part-map, elements-common, relation-model
 - **Based on:** none
 - **Relations:** derives from WAY-02@3ffcbd46 · derives from WAY-56@0d6340a8 ·
-  derives from WAY-57@4a838784
+  derives from WAY-57@89a75ebe
 - **Verification:** level 1 — invariants: identifier-holders · map-invariant-names ·
   invariant-identifier-form · invariants-file · invariant-identifier-persistence ·
   invariant-withdrawal-persistence · withdrawal-successors · environment-facts-file ·
@@ -1852,8 +1848,8 @@ on the commit being checked. Where several checks cite one invariant in a run, t
 - **Change:** new decision
 - **Scope:** invariants, gate, decisions, part-map, relation-model, task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-03@97d336a9 · derives from WAY-17@b1e26133 ·
-  derives from WAY-57@4a838784 · derives from WAY-61@4804d070
+- **Relations:** derives from WAY-03@7c2d4ca1 · derives from WAY-17@b1e26133 ·
+  derives from WAY-57@89a75ebe · derives from WAY-61@4804d070
 - **Verification:** level 1 — invariants: invariant-citation-version · invariant-citation-target ·
   data-line-target · invariant-tests-of-change · test-runner-pass-line · gate-verdict-per-entry.
   Level 2 for where a citation stands — an agent compares the change with the decision:
@@ -1887,8 +1883,8 @@ run records.
   derives from WAY-63@f16348c8
 - **Verification:** level 1 — invariants: quarantine-position-form · quarantine-flow-invariants ·
   gate-quarantine-result. Level 2 — an agent compares the change with the decision:
-  - complies: a save-load test fails, then passes, on one commit; the panel accepts waiting for the
-    load signal;
+  - complies: a save-load test fails, then passes, on one commit; the independent assessment accepts
+    waiting for the load signal;
   - violates: a failing test is called flaky with no `pass` recorded on that commit; a fixed-wait
     failure is quarantined instead of fixed as a change of mechanics; a green rerun is taken as the
     commit's result while the `fail` it follows stands unanswered.
@@ -2613,9 +2609,10 @@ definition of one uses the other.
   Level 2 for the shape, the rule and neighbouring terms — a definition carries a rule when it holds
   something the decision or invariant setting it could change while the word went on naming the same
   thing; an agent compares the change with the decision:
-  - complies: "The panel is the group of agents that assesses a change", the rest left to WAY-10;
+  - complies: "The assessor is the agent that assesses a change", the rest left to WAY-10;
     the definition of result names its neighbour: "the verdict that counts for it there, or …";
-  - violates: "The panel is the three agents that assess a change…", with the number WAY-10 sets;
+  - violates: "The assessor is the agent on another model that assesses a change…", with the
+    model rule WAY-10 sets;
     "The binding part is the part of an entry that…", its genus a term of the part map; the
     definitions of verdict and result each standing alone.
 - **Review when:** none
@@ -2726,7 +2723,7 @@ branch may hold and the main branch never does.
 
 *Rationale:* a sentence a test cites carries its words as they stand, so a word read in two meanings
 makes it true and false at once. A carrier holding the word itself would keep the homonym under a
-new label. The word is the human's choice (WAY-10).
+new label. The word is the human's choice, accepted at the merge (WAY-10).
 *Rejected:* two meanings told apart by an area — the sentence carries no area; a note beside the
 word — nobody citing the sentence reads it; renaming two meanings a reader of the field tells apart —
 neither is the product's own; a *Not* that always names a word — the author would choose before the
@@ -3334,27 +3331,26 @@ allowing an unexplained `TODO` — no later task would own the missing answer.
 ### WAY-120/1 — How does the-way critique an agent's proposal?
 
 An agent may invoke critique for any proposal without waiting for the human to express doubt; a
-completed set for collective human review always goes through it. An independent critique gives
-one fresh agent the full proposal or set, its sources and applicable rules without the author's
-defense; the author checks each observation and gives one explicit verdict. For a collectively
-reviewed set the critic checks
-form, fidelity to source and contradictions across entries before presentation; human review of
-entries one by one needs no additional critic, and a foundation change still goes through its
-panel before integration.
+completed set for collective human review and every change to an invariant test or to the
+foundation go through it, and for such a change the critique is its independent assessment
+(WAY-10). An independent critique gives one fresh agent the full proposal or set, its sources and
+applicable rules without the author's defense; the author checks each observation and gives one
+explicit verdict. For a collectively reviewed set the critic checks form, fidelity to source and
+contradictions across entries before presentation.
 
 - **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common,
   project-level, relation-model, gate, installation, agent-instructions, repository, task-cycle
 - **Based on:** none
-- **Relations:** none
+- **Relations:** derives from WAY-10@2bdd69c7
 - **Verification:** level 2 — an agent compares the review with the decision:
   - complies: one fresh critic receives a finished set and its sources, reports evidence for each
     concern, and the author verifies it before presenting corrected proposals and open questions;
   - violates: one critic is run per row of a set, the author silently changes a human settlement,
-    or a critique is treated as a substitute for the foundation's panel.
+    or two critics are run on one change.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-10-04
+- **Approved by:** Mariusz, 2026-10-06
 
 *Rationale:* the author is attached to its own fluent proposal, and an independent reading can
 find a mismatch with its source or another entry before the human spends attention on the set.
@@ -3420,7 +3416,7 @@ every claimed difference between the options which no source supports.
 - **Change:** new decision
 - **Scope:** project-level, decisions
 - **Based on:** none
-- **Relations:** derives from WAY-121@740c254e · derives from WAY-120@f9317d23
+- **Relations:** derives from WAY-121@740c254e · derives from WAY-120@81f84997
 - **Verification:** level 2 — an agent compares the work with the decision:
   - complies: research for a store of data compares a file kept beside the application with a
     database server, each typed and documented, and the critique strikes a claimed difference in

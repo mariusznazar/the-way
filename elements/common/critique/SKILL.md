@@ -1,6 +1,6 @@
 ---
 name: critique
-description: Use when an agent's proposal needs an independent critical reading, or when a complete set of proposals will be reviewed together by a human. Checks purpose, evidence, cost, source fidelity and contradictions before the author gives a verdict.
+description: Use when an agent's proposal needs an independent critical reading, when a complete set of proposals will be reviewed together by a human, or when a change to an invariant test or to the foundation needs its independent assessment. Checks purpose, evidence, cost, source fidelity and contradictions before the author gives a verdict.
 ---
 
 # Critique a proposal
@@ -17,8 +17,13 @@ case use one fresh agent as a second reader. For a set, start after it is comple
 proposals added as consequences of earlier ones, and before presenting it to the human.
 One critic reads the whole set, not one proposal at a time. When the human reviews entries one by
 one, that review supplies the second reader; do not add a fresh agent by default.
-For a change to the-way's foundation, this critique precedes the panel and does not replace the
-panel's independent assessments (WAY-10).
+For a change to an invariant test or to the foundation, this critique is the change's independent
+assessment (WAY-10). Run it on a model other than the author's where one is available. Give it the
+diff and the files of the assessed commit — never the task's chronicle or the author's reasoning —
+and ask it to name what of the change can be cut, or that nothing can. In the task cycle its full
+report and the author's settlement go in the cycle record's `reports/`; outside the cycle, the
+assessment and the settlement of each remark go in short in the message of the commit that carries
+the change.
 
 If a fresh agent cannot be started without the author's conversation context, say so and perform
 the same checks yourself as interim work. Do not describe that as an independent review. A set
@@ -66,6 +71,5 @@ settlements. Automated format checks may help, but they do not establish fidelit
 Verify each observation against the source, target and the human's settled answers. State what
 you accept, reject or could not verify. Never silently change a human settlement because a critic
 disagrees with it; take the conflict back to the human with the relevant text. Give one explicit
-verdict: apply, rewrite (with the full revised wording), reject, or defer with the missing
-condition. Show the human the corrected proposal and any remaining open questions. The critic
+verdict: apply, rewrite (with the full revised wording), or reject. Show the human the corrected proposal and any remaining open questions. The critic
 does not write files; the workflow that called this skill makes accepted changes.

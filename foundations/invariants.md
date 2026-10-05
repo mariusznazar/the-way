@@ -33,16 +33,6 @@ Every decision number the decision log refers to is the number of a decision in 
 - **Part:** decisions
 - **Correction:** none
 
-## invariant-test-change-acceptance/1
-
-Where {merge-onto} exists, no change alters, against {fork-point}, an invariant test without carrying either the panel's two agreeing settlements accepting it as a change of only the test's mechanics or a human's decision accepting it.
-
-- **Method:** `TODO`
-- **Rests on:** none
-- **Derives from:** WAY-03@97d336a9 · WAY-10@9b8b1401
-- **Part:** every
-- **Correction:** none
-
 ## foundation-file-kinds/1
 
 Every file in `foundations/` holds the entries of one of the five foundation elements, or is a file an element's template or the part the elements share names.
@@ -159,7 +149,7 @@ Where {merge-onto} exists, every file git tracks lies in `foundations/` or in a 
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-09@6ec91a1d
+- **Derives from:** WAY-09@b829b86a
 - **Part:** every
 - **Correction:** none
 
@@ -169,7 +159,7 @@ Where {merge-onto} exists, every element directory holds a template, examples or
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-09@6ec91a1d
+- **Derives from:** WAY-09@b829b86a
 - **Part:** decisions · part-map · invariants · glossary · environment-facts
 - **Correction:** none
 
@@ -179,7 +169,7 @@ Where {merge-onto} exists, `relation-model/` holds the script that computes fing
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-09@6ec91a1d
+- **Derives from:** WAY-09@b829b86a
 - **Part:** relation-model
 - **Correction:** none
 
@@ -189,7 +179,7 @@ Every identifier `elements/invariants/examples.md` names is the identifier of an
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-09@6ec91a1d
+- **Derives from:** WAY-09@b829b86a
 - **Part:** invariants
 - **Correction:** none
 
@@ -199,7 +189,7 @@ Every identifier `elements/part-map/examples.md` names is the identifier of an e
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-09@6ec91a1d
+- **Derives from:** WAY-09@b829b86a
 - **Part:** part-map
 - **Correction:** none
 
@@ -209,17 +199,17 @@ Every term `elements/glossary/examples.md` names is the term of an entry of `fou
 
 - **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-09@6ec91a1d
+- **Derives from:** WAY-09@b829b86a
 - **Part:** glossary
 - **Correction:** none
 
-## foundation-change-panel-record/1
+## foundation-change-assessment-record/1
 
-Where {merge-onto} exists, no change alters, against {fork-point}, an invariant test or a foundation entry without a record of the panel's two assessments, one of them naming what of the change can be cut or that nothing can, and of its two settlements, one for each order of the assessments.
+Where {merge-onto} exists, no change alters, against {fork-point}, an invariant test or a foundation entry without a record of its independent assessment, naming what of the change can be cut or that nothing can, and of how each remark was settled.
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-10@9b8b1401
+- **Derives from:** WAY-10@2bdd69c7 · WAY-03@7c2d4ca1
 - **Part:** every
 - **Correction:** none
 
@@ -1030,7 +1020,7 @@ The heading of every entry of `foundations/invariants.md` carries a version numb
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-57@4a838784
+- **Derives from:** WAY-57@89a75ebe
 - **Part:** invariants
 - **Correction:** none
 
@@ -1040,7 +1030,7 @@ Every entry of `foundations/invariants.md` with no fingerprint on {fork-point} c
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --base {fork-point} --record .runs/invariants-base.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-57@4a838784
+- **Derives from:** WAY-57@89a75ebe
 - **Part:** invariants
 - **Correction:** none
 
@@ -1050,7 +1040,7 @@ Every entry of `foundations/invariants.md` whose fingerprint differs from its fi
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --base {fork-point} --record .runs/invariants-base.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-57@4a838784
+- **Derives from:** WAY-57@89a75ebe
 - **Part:** invariants
 - **Correction:** none
 
@@ -1060,7 +1050,7 @@ Every entry of `foundations/invariants.md` whose fingerprint equals its fingerpr
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --base {fork-point} --record .runs/invariants-base.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-57@4a838784
+- **Derives from:** WAY-57@89a75ebe
 - **Part:** invariants
 - **Correction:** none
 
@@ -1070,7 +1060,7 @@ No entry of `foundations/invariants.md` holds, beside its current sentence, a se
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --base {fork-point} --record .runs/invariants-base.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-57@4a838784
+- **Derives from:** WAY-57@89a75ebe
 - **Part:** invariants
 - **Correction:** none
 
@@ -1080,7 +1070,7 @@ Every `invariant:` line in a check that names an entry of `foundations/invariant
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-57@4a838784 · WAY-65@581724fc
+- **Derives from:** WAY-57@89a75ebe · WAY-65@581724fc
 - **Part:** every
 - **Correction:** none
 
@@ -1090,7 +1080,7 @@ Every correction an entry of `foundations/invariants.md` declares is confirmed b
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-57@4a838784
+- **Derives from:** WAY-57@89a75ebe
 - **Part:** invariants
 - **Correction:** none
 
@@ -2042,6 +2032,8 @@ Before approval, the project readiness check rejects a definition whose Technolo
 
 | Identifier | Why | Successors |
 |---|---|---|
+| invariant-test-change-acceptance | replaced: a change to an invariant test is covered by the one independent assessment of any change to an invariant test or to the foundation | foundation-change-assessment-record |
+| foundation-change-panel-record | replaced: the record of a panel of two assessors and two settlements became the record of one independent assessment and of how each remark was settled | foundation-change-assessment-record |
 
 ## Quarantined invariants
 

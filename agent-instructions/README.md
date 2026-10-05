@@ -39,9 +39,9 @@ command stays visible as debt rather than being treated as agreement.
 
 Before integration, compare the task branch with the current `foundations` tip. For a foundation
 change, search the whole foundation again against that tip (WAY-33), update affected entries and
-rerun the checks. A foundation change or a change to an invariant test goes through the panel in
-`elements/common/panel.md` (WAY-10); its record goes where that procedure says. Mariusz decides
-changes the panel cannot decide and accepts changes to the meaning of a decision.
+rerun the checks. A foundation change or a change to an invariant test is assessed once by an independent agent
+following `elements/common/critique/SKILL.md` (WAY-10); its record goes in the message of the commit
+that carries the change. Mariusz accepts the change at the merge.
 
 Show the diff, test results, warnings and unchecked work before asking Mariusz to accept the merge.
 Merge into `foundations` only after that review. Creating `main` is a separate release decision

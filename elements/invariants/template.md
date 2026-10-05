@@ -291,8 +291,7 @@ WAY-64).
   records (WAY-68).
 - A quarantine row names the entry's identifier, its current version and an end date, and
   stands on the list of quarantined invariants (WAY-68).
-- A rerun set anywhere but the method's command is no change of an invariant test's mechanics, so a
-  human decides it (WAY-10).
+- A rerun set anywhere but the method's command is no change of an invariant test's mechanics.
 
 ## Violated invariants
 

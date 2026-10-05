@@ -231,8 +231,8 @@ in every entry among it, stands in `elements/common/rules.md` (WAY-71).
   (`TODO — decision pending: which decision sets that a failed watch leads to a review of the fact
   and leaves its sentence true`). An announced revision fails nothing: until the new edition is
   out, the fact holds, and whoever wants to look ahead writes the condition in *Review when* of the
-  decision citing the fact (WAY-82, WAY-24). Only the human deciding the change that follows the
-  review changes the sentence or *Holds for* (WAY-10), and the new fingerprint then reaches every
+  decision citing the fact (WAY-82, WAY-24). Only the human accepting, at the merge, the change that
+  follows the review changes the sentence or *Holds for* (WAY-10), and the new fingerprint then reaches every
   invariant and decision naming the fact (WAY-31, WAY-90).
 
 ## Version

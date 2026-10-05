@@ -15,8 +15,8 @@ When an agent has finished a set of proposals that the human will review togethe
 agent critiques the complete set before it is shown. This includes entries added as consequences
 of earlier proposals. When the human reviews entries one by one, that review supplies the second
 reader. The agent follows `elements/common/critique/SKILL.md` for the same critical mechanism in
-either case and for an independently requested critique
-(WAY-120).
+either case and for an independently requested critique (WAY-120). A change to an invariant test
+or to the foundation is assessed by the same skill (WAY-10, WAY-120).
 
 ## How a skill asks
 

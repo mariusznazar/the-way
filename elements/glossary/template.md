@@ -6,7 +6,7 @@ one meaning, so that the same word does not mean one thing in a decision, anothe
 term of a product's glossary keeps its meaning in the product's code`); a word the glossary of
 the-way holds keeps its domain meaning in a product's code (WAY-104). A mechanism keeps the words,
 never their meaning: a script finds where a word stands and whether a word to avoid came back, while
-whether a word is used in its meaning is judged by an agent, by the panel and by the search of
+whether a word is used in its meaning is judged by an agent, by the independent assessment and by the search of
 WAY-33 (WAY-97, WAY-98, WAY-10, WAY-33).
 
 The rules of form the elements share — the language of an entry, every field and the words `none`
@@ -43,7 +43,7 @@ particular to a glossary entry (WAY-35).
   of a term`). The term identifies the entry, and no other entry of the file holds it (WAY-93).
 - Terms are a space of their own, apart from the identifiers of the part map, the invariants and the
   environment facts, which share one space (WAY-64, WAY-93). A change that makes a term read
-  like such an identifier, by adding or renaming either, is a warning for the panel: where both name
+  like such an identifier, by adding or renaming either, is a warning for the independent assessment: where both name
   the same thing the entry stays, and where they do not, one side is renamed (WAY-93, WAY-10). A
   term and an identifier read alike when they match with the hyphens of both read as spaces
   (`TODO — decision pending: which decision sets that hyphens read as spaces when a term is compared
@@ -225,7 +225,7 @@ read`). Each field carries the mark of where its value comes from (`elements/com
 | term (heading) | whoever writes a sentence of any element, which depends on the term by using its word; the format guard (`glossary-term-holder`, `glossary-term-collision`, `glossary-term-use`, `glossary-process-terms`) | judgment |
 | definition | the agent reviewing the uses when it changes; whoever writes a sentence using the term; the format guard (`glossary-definition-count`, `glossary-definition-words`, `glossary-definition-uses`) | judgment |
 | Avoid | whoever writes a sentence; the format guard (`glossary-avoid-growth`, `glossary-avoid-single`, `glossary-avoid-term`, `glossary-avoid-carrier`, `glossary-process-terms`) | judgment for the word; read off, from the list of uses, for whether it may stand there |
-| Not | the panel judging a change, which sees the foundation; the search of WAY-33; the format guard (`glossary-not-target`, `glossary-not-quoted-word`, `glossary-entry-merge-todo`) | judgment for the meaning and the word chosen; read off for whether it exists |
+| Not | the independent assessment judging a change, which sees the foundation; the search of WAY-33; the format guard (`glossary-not-target`, `glossary-not-quoted-word`, `glossary-entry-merge-todo`) | judgment for the meaning and the word chosen; read off for whether it exists |
 
 ## Examples
 
