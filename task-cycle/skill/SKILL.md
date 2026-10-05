@@ -43,7 +43,8 @@ choice approved or changed the rule.
 The cycle writes only in the task's worktree and changes nothing outside the product repository. A
 remark about the-way, the user's agent instructions or another repository goes into the cycle
 record's process remarks, never into the request. The one exception: in the task's source entry in
-the backlog the product names (WAY-107), the cycle may add the request link and set the task's state.
+the backlog the product names (WAY-107), the cycle may add the request link and set the task's
+state.
 
 ## Start and record
 
@@ -77,8 +78,10 @@ For every dispatch, pass the user's delegation to the orchestrator, the applicab
 sources, the agent's exact stage boundary, the write boundary, and the path for its full report.
 The agent sends questions back to you and returns at that boundary, without invoking the next
 Superpowers skill or seeking direct human approval. Answer workflow approval prompts
-provisionally with evidence; a human accepts the foundation entries the cycle writes when merging the request (WAY-114). This adapter
-changes the handoff and approval points, not the borrowed method's work within each stage.
+provisionally with evidence; a human accepts the foundation entries the cycle writes when merging
+the request (WAY-114). This adapter changes the handoff and approval points, not the borrowed
+method's work within each stage, except that the code review also writes the deliberate break of
+an invariant's check (WAY-69).
 
 ## Design and plan
 
@@ -152,15 +155,18 @@ before continuing that work.
     listed for later. Read the projected entries of the task's sources: write one the code makes
     true that the foundation step missed (WAY-126) — for an invariant, its check comes from an agent
     that did not write the code it covers and runs on that code; an entry assigned to another plan
-    item returns to the plan. Write a new entry only for a rule none of them states. Then have the
+    item returns to the plan. A check the return step writes then goes to a code reviewer that did
+    not write it, which writes its deliberate break from the sentence, runs the check on it and
+    reports whether it fails (WAY-69, WAY-08). Write a new entry only for a rule none of them
+    states. Then have the
     change's foundation entries and invariant tests assessed once, following
     `elements/common/critique/SKILL.md` (WAY-10): one agent on a model other than the author's where
     available, given the diff and the files of the assessed commit filtered to code, foundation and
     invariant tests — never spec, plan, frozen task, chronology, reports, prompts or author
     reasoning. Settle each remark yourself and record how; a remark reaches the human only as the
     foundation step allows a question. If a settlement changes code, rerun the affected checks and
-    code review. Record the assessed range by commit hashes and its file list. A contradiction with a
-    current decision follows WAY-30; a collision without recorded precedence follows WAY-25. If
+    code review. Record the assessed range by commit hashes and its file list. A contradiction with
+    a current decision follows WAY-30; a collision without recorded precedence follows WAY-25. If
     those rules prevent the required code, report the task as blocked in a draft request.
 
 ## Request and handoff
@@ -188,9 +194,13 @@ before continuing that work.
     changed and why, test and review evidence with every check that did not run named, and *What
     this request settles*: each foundation entry the change writes or changes, as its identifier and
     one sentence of its meaning in the task document's language, projected entries apart from new
-    ones. Under *Questions*, only the questions the foundation step allows, each with its options
-    and a recommendation where one exists; where there are none, say so. Give the number of other
-    choices and a link to the choice log. Link the cycle record and full reports by the SHA of the
+    ones. Beside them, what the foundation puts in front of the human at the merge: an invariant
+    kept at its version under a correction, with its old and new sentence (WAY-57); a part whose
+    computed criticality fell (WAY-46); a recovered row, with the gate's report (WAY-58); a moved
+    use of a changed definition and a term WAY-97 asks the request to name. Under *Questions*, only
+    the questions the foundation step allows, each with its options and a recommendation where one
+    exists; where there are none, say so. Give the number of other choices and a link to the choice
+    log. Link the cycle record and full reports by the SHA of the
     record commit. If the task was impossible, mark the request `blocked`, show the smallest missing
     fact or authorization and the attempted alternatives; do not present partial work as complete.
 14. Before reporting completion, confirm the record lists all dispatches, choices, rulings,
@@ -205,5 +215,6 @@ branch. First merge, never rebase, the current target branch, the the-way pin in
 that the pinned checkout matches the product's gitlink. Treat the remarks as binding input, recorded
 as new events in the working record. Repeat only the stages the remarks touch, with their reviews,
 checks and return step, and the independent assessment only where the correction changes the
-foundation or an invariant test, and then the record's pair of commits from step 12. Update the request's
-description, including its record links and *What this request settles*.
+foundation or an invariant test, and then the record's pair of commits from step 12. A decision
+written in a correction takes the existing request's URL directly in its *Approved by*. Update the
+request's description, including its record links and *What this request settles*.

@@ -44,8 +44,8 @@ nothing else.
 |---|---|---|---|
 
 Include the frozen task, `spec.md`, `plan.md`, code commits, tests and full agent reports. Name
-commits and commit ranges instead of copying diffs or files that git holds. A foundation entry the cycle writes lives in its commits; the record keeps its meaning sentence for
-the request.
+commits and commit ranges instead of copying diffs or files that git holds. A foundation entry
+the cycle writes lives in its commits; the record keeps its meaning sentence for the request.
 
 ## Verification
 
@@ -62,6 +62,7 @@ check is unchecked.
 - Behavior with no invariant: <finding or none after search>
 - Environment facts and glossary terms: <links or none after search>
 - Part-map changes: <links or none after search>
+- Foundation compared with code in touched parts: <finding or none>
 - Projected entries written whole or in part: <links or none after search>
 
 ## Independent assessment
@@ -74,6 +75,10 @@ check is unchecked.
 
 - Request URL and status: <URL and draft/ready/blocked>
 - What this request settles: <identifier and meaning sentence for each entry>
+- What the foundation puts in front of the human at the merge: <an invariant kept at its version
+  under a correction, with its old and new sentence; a part whose computed criticality fell; a
+  recovered row, with the gate's report; a moved use of a changed definition; a term WAY-97 asks the
+  request to name; or none>
 - Questions: <only those the foundation step allows, or none>
 - Choices within the request: <count and link to the questions table>
 - Writes to the task's backlog entry: <request link and state, or none>
