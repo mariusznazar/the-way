@@ -42,7 +42,8 @@ choice approved or changed the rule.
 
 ## Start and record
 
-4. Calculate and record the three WAY-13 sharpness inputs: criticality from the touched parts
+4. Determine and record whether the task changes the foundation (WAY-13), which selects its
+   foundation route before implementation. Calculate the three sharpness inputs: criticality from the touched parts
    (unknown failure modes count as highest), whether touched files are trust boundaries, and
    whether any operation cannot be undone. Use the full subagent review loop even for low
    criticality. For a trust boundary, add adversarial input checks under WAY-48. Stage but do not
@@ -98,6 +99,17 @@ points, not the borrowed method's work within each stage.
 
 ## Execute, verify and review
 
+Before dependent implementation, run the foundation step required by WAY-01 and WAY-03 whenever
+the task changes a foundation entry or an invariant test. Invoke the pinned element skills for
+the affected entries, check existing approval of projected wording, search the whole foundation,
+and run the applicable guards and panel. Keep unapproved wording as a proposal outside the binding
+files; if the necessary change lacks the human authority required by the foundation, prepare the
+blocked draft request. For invariant checks, use different agents for the sentence, check and
+deliberate break under WAY-69, withhold the check and its inputs from the break author, and record
+their identities and inputs for human assessment. Establish the required acceptance before the
+dependent code proceeds; accepted invariant tests are read-only during implementation. If later
+work needs one changed, return to this foundation step before continuing that work.
+
 9. Use Superpowers `subagent-driven-development`: fresh implementer and reviewer contexts for
    each meaningful plan task, followed by a whole-branch review. Its boundary is the final review
    and fixes: it returns before workspace cleanup and `finishing-a-development-branch`. Copy its
@@ -117,11 +129,15 @@ points, not the borrowed method's work within each stage.
     uncovered behavior, environment facts, terms and part-map changes; compare touched parts of
     the foundation with code. Prepare each required foundation proposal in the working record.
     Write a binding foundation change only where prior human approval authorizes its content;
-    otherwise carry the proposal to the request. If the foundation or an invariant test changes,
-    run its format guards and the the-way panel on the final change. Give the assessors only the
-    assessed code/foundation commit's diff and files, never the working cycle record, agent
-    reports, prompts or author reasoning. Keep spec, plan and chronology out of that commit;
-    commit the chronology only after the panel. If a panel fix changes code, rerun affected checks
+    otherwise keep it proposed. Send return-step proposals to the panel as foundation changes
+    even when no binding foundation file has changed (WAY-11), then carry the proposal and panel
+    result to the request. Prepare a separate proposed foundation diff against a named commit,
+    explicitly marked unapproved, plus the relevant code evidence; exclude the working record.
+    For actual foundation or invariant-test changes, run their guards and the panel on the final
+    change. Filter the assessment diff and supplied file set to code, foundation and proposed
+    entries: exclude spec, plan, frozen task, chronology, reports, prompts and author reasoning,
+    including those in earlier commits or later reassessments. Record the assessed range and file
+    list; commit the chronology only after the panel. If a panel fix changes code, rerun affected checks
     and code review. Do not invent `Approved by` for a decision awaiting the human. A
     contradiction with a current decision follows WAY-30; a collision without recorded
     precedence follows WAY-25.
@@ -130,7 +146,11 @@ points, not the borrowed method's work within each stage.
 ## Request and handoff
 
 12. Recheck the branch against the current target branch, rerun checks affected by that update,
-    and inspect the final diff. Copy the sanitized working record and full reports to
+    and inspect the final diff. If reconciliation changes the assessed code, foundation or its
+    applicable sources, invalidate the affected reviews: repeat the foundation collision search,
+    affected code review and panel before proceeding. Record the final assessed commits and file
+    sets so the request never presents an assessment of superseded work as current.
+    Copy the sanitized working record and full reports to
     `docs/task-cycles/<task-slug>/` on the task branch, rewrite their links to the committed
     copies, and commit them after the assessed change;
     the panel record lives there under the task cycle, as `elements/common/panel.md` specifies.

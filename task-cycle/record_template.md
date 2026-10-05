@@ -6,6 +6,7 @@
 - Process pin: <commit>
 - Target branch and base: <branch and commit>
 - Task branch: <branch>
+- Foundation route: <unchanged | entry or invariant-test change; affected entries and prior approval>
 - Status: running | blocked | request open | complete
 
 ## Sharpness at start and after the final diff

@@ -3542,7 +3542,14 @@ requires a reviewed change to the-way before use.
 
 - **Change:** new decision
 - **Scope:** task-cycle
-- **Based on:** installed Superpowers 6.4.1 skills `brainstorming`, `writing-plans`, `subagent-driven-development`, `test-driven-development`, `requesting-code-review` and `finishing-a-development-branch`, read 2026-10-05
+- **Based on:** installed Superpowers 6.4.1, read 2026-10-05, source root
+  `C:/Users/Mariusz/.claude/plugins/cache/claude-plugins-official/superpowers/6.4.1/skills/`:
+  `brainstorming/SKILL.md` — "Help turn ideas into fully formed designs and specs through natural collaborative dialogue."
+  `writing-plans/SKILL.md` — "Write comprehensive implementation plans assuming the engineer has zero context for our codebase and questionable taste."
+  `test-driven-development/SKILL.md` — "Write the test first. Watch it fail. Write minimal code to pass."
+  `subagent-driven-development/SKILL.md` — "Fresh subagent per task + task review (spec + quality) + broad final review = high quality, fast iteration"
+  `requesting-code-review/SKILL.md` — "The reviewer gets precisely crafted context for evaluation — never your session's history."
+  `finishing-a-development-branch/SKILL.md` — "Verify tests → Detect environment → Present options → Execute choice → Clean up."
 - **Relations:** derives from WAY-100@e7a74a18
 - **Verification:** level 2 — an agent compares a cycle with the decision:
   - complies: agents use the named methods at version 6.4.1, return between stages, and show provisional choices in the request without claiming human approval;
