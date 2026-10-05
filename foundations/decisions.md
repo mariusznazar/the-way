@@ -3542,7 +3542,9 @@ requires a reviewed change to the-way before use.
 
 - **Change:** new decision
 - **Scope:** task-cycle
-- **Based on:** installed Superpowers 6.4.1, read 2026-10-05, source root
+- **Based on:** observation of installed Superpowers 6.4.1 on 2026-10-05 using
+  `Get-Content -Raw -Encoding utf8 '<source-root>/<skill>/SKILL.md'` for each skill below;
+  Windows PowerShell 5.1.26100.9444 on Microsoft Windows NT 10.0.26300.0; source root
   `C:/Users/Mariusz/.claude/plugins/cache/claude-plugins-official/superpowers/6.4.1/skills/`:
   `brainstorming/SKILL.md` — "Help turn ideas into fully formed designs and specs through natural collaborative dialogue."
   `writing-plans/SKILL.md` — "Write comprehensive implementation plans assuming the engineer has zero context for our codebase and questionable taste."
