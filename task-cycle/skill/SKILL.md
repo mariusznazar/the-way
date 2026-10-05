@@ -168,20 +168,21 @@ before continuing that work.
 12. Recheck the branch against the current target branch, rerun checks affected by that update,
     and inspect the final diff. If reconciliation changes the assessed code, foundation or its
     applicable sources, invalidate the affected reviews: repeat the foundation collision search,
-    affected code review and independent assessment before proceeding. Record the final assessed commits and file
-    sets so the request never presents an assessment of superseded work as current.
-    Copy the sanitized working record and full reports to
-    `docs/task-cycles/<task-slug>/` on the task branch, rewrite their links to the committed
-    copies, commit them after the assessed change and commit their removal immediately after, so
-    the request's changed files show only the change and the target branch's files never hold
-    the record; the assessment record lives there under `reports/`. Link the record by the SHA of the commit that adds it, never by branch name. Ask in
-    the request for a merge that keeps its commits, since the link survives only then; where the
-    product's rules squash or rebase on merge, name that as a limitation in the request.
-    Use Superpowers `finishing-a-development-branch` for verification and request preparation,
-    then take the pull or merge request route already chosen by the user, without presenting its
-    integration menu. Do not merge. Keep the worktree for review changes. After the request is opened, replace
-    `<request link>` in the *Approved by* of the entries this cycle wrote with the request's URL,
-    commit that before the record's pair of commits, and push.
+    affected code review and independent assessment before proceeding. Record the final assessed
+    commits and file sets so the request never presents an assessment of superseded work as
+    current. Run the verification, then open the request as a draft by the pull or merge request
+    route already chosen by the user, without presenting the integration menu of Superpowers
+    `finishing-a-development-branch`. Replace `<request link>` in the *Approved by* of the entries
+    this cycle wrote with the request's URL, commit and push; this is a placeholder swap that
+    changes no other text, so it reopens neither the independent assessment nor the code reviews.
+    Then copy the sanitized working record and full reports to `docs/task-cycles/<task-slug>/` on
+    the task branch, rewrite their links to the committed copies, commit them, commit their removal
+    immediately after, and push, so the request's changed files show only the change and the target
+    branch's files never hold the record; the assessment record lives there under `reports/`. Then
+    update the request's description with links to the record by the SHA of the commit that adds it,
+    never by branch name. Ask in the request for a merge that keeps its commits, since the link
+    survives only then; where the product's rules squash or rebase on merge, name that as a
+    limitation in the request. Do not merge. Keep the worktree for review changes.
 13. The request contains: task goal and relation, source versions, design and plan links, what
     changed and why, test and review evidence with every check that did not run named, and *What
     this request settles*: each foundation entry the change writes or changes, as its identifier and

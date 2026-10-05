@@ -3610,8 +3610,8 @@ code — and writes a new entry only for a rule none of them states.
 *Rationale:* a projected entry is wording a human already settled at the gate, and the task
 whose code first makes it true is the one that can show it holds; entering with that code keeps
 the foundation describing the present product and keeps one entry per rule. Writing it in the
-foundation step keeps the order every foundation change has: the entry, and an invariant's
-test, are accepted before the code that follows. A part of an entry is wording the gate did not
+foundation step keeps the order a foundation change has: the entry, and an invariant's test, are
+written before the code that follows. A part of an entry is wording the gate did not
 approve in that form, so its meaning reaches the human at the merge.
 *Rejected:* holding a projected entry back for the task the plan assigns — the foundation would
 lag behind the code it describes; a return step that searches only the current foundation — a
