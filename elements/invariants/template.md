@@ -225,10 +225,10 @@ naming its identifier and its current version, with `searched: <…>` in *Search
   invariant is about would otherwise compute either; only the side it compares against comes from
   the run (WAY-69). Which files a test names, so that a fixture or a builder of its input cannot be
   changed underneath it, is not settled.
-- An invariant's sentence and a check that cites it come from separate acts by different agents,
-  and the break the check is accepted on is written from the sentence by an agent other than the
-  check's author, with that check and the files it reads out of its input (WAY-69). This binds the
-  act of writing a check, not the history of the file it joins.
+- An invariant's sentence, the check that cites it and the code it covers come from three different
+  agents, and the deliberate break the check is accepted on is written from the sentence by the
+  reviewer of that code, who did not write the check (WAY-69). This binds the act of writing a
+  check, not the history of the file it joins.
 
 ## Recovered
 

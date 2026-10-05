@@ -64,10 +64,11 @@ invariant adds to each.
 - Step 4.4: what follows from this entry is a decision whose level 1 verification gains, loses or
   renames it, through `record-decision`; and a flow or a failure mode that names it, or names an
   identifier this change retires, through `update-part-map`.
-- After step 4.4, where the method is a command, hand the human two instructions for two other
-  agents: for the check — the entry, its method, and the checks citing an identifier this change
-  retires or a version it raises; for the deliberate break — the sentence, without the check and
-  the files it reads (WAY-69). Where it is not a command, there is nothing to hand on.
+- After step 4.4, where the method is a command, hand the human (or, in the task cycle, the
+  orchestrator) one instruction, for the check, to an agent that wrote neither the sentence nor the
+  code it covers: the entry, its method, and the checks citing an identifier this change retires or
+  a version it raises. The deliberate break is written from the sentence by the reviewer of that
+  code, without the check's author (WAY-69). Where it is not a command, there is nothing to hand on.
 
 ## Projected mode
 

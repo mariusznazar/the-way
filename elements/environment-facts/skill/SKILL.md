@@ -44,9 +44,8 @@ environment fact adds to each.
 - The search of the foundation also looks for an obligation raising a part's criticality, which
   goes through `update-part-map` (WAY-46).
 - A case needing a pending line to fill a field stops the entry, for the human and
-  `record-decision`, before it is written; one about the check alone — the method, or the
-  deliberate break — travels as an open question in the instruction handed on after step 4.4
-  instead.
+  `record-decision`, before it is written; one about the check alone — the method — travels
+  as an open question in the instruction handed on after step 4.4 instead.
 
 ## 3. Draft
 

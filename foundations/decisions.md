@@ -1903,10 +1903,9 @@ the hour; deletion once the date passes (GitLab) — the check is weakened.
 
 ### WAY-69/1 — Who writes an invariant's sentence, its check and its deliberate break, and what may the check compute for itself?
 
-An invariant's sentence and a check that cites it come from separate acts by different agents, and
-the deliberate break the check is accepted on is written from the sentence by an agent other than
-the check's author, with that check and the files it reads out of its input. A check that cites an
-invariant takes the input it asserts on and the value it expects written out, wherever the code its
+An invariant's sentence, the check that cites it and the code it covers come from three different
+agents, and the deliberate break the check is accepted on is written from the sentence by the
+reviewer of that code, who did not write the check. A check that cites an invariant takes the input it asserts on and the value it expects written out, wherever the code its
 invariant is about would otherwise compute either; only the side it compares against comes from the
 run.
 
@@ -1914,8 +1913,8 @@ run.
 - **Scope:** invariants, decisions, part-map, gate, task-cycle, relation-model
 - **Based on:** visible-scoring-reward-hacking@39a85ced · oracle-in-loop-building@d13c8e26
 - **Relations:** derives from WAY-08@2343e09f
-- **Verification:** level 3 for who writes what — the human deciding the foundation change assesses
-  how the work was handed out, and the record of that decision names who and when. Level 2 for what
+- **Verification:** level 3 for who writes what — the human accepting the change at the merge
+  assesses how the work was handed out, from the record that names who wrote what. Level 2 for what
   a check computes — an agent compares the change with the decision:
   - complies: a guard's test carries its expected wording and fingerprint as literals, so a longer
     fingerprint fails it;
@@ -1925,16 +1924,18 @@ run.
 - **Review when:** no model in the range of fact oracle-in-loop-building is Active in Anthropic's
   table of models · check by: 2026-10-02
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-29
+- **Approved by:** Mariusz, 2026-10-06
 
 *Rationale:* a break chosen by a check's author aims at what the check does, not what the sentence
-says, and a check by the sentence's author inherits its reading; two sides computed by one code move
-together, and the test stays green unseen. This takes the visible-scoring finding across publishers
-(WAY-85).
+says, a check by the sentence's author inherits its reading, and a check by the code's author is
+fitted to the code; two sides computed by one code move together, and the test stays green unseen.
+The reviewer already reads the check without having written it, so the break needs no agent of its
+own. This takes the visible-scoring finding across publishers (WAY-85).
 *Rejected:* hiding checks from the executor — it costs honest work; one agent writing all three under
 a written rule — prose stops nothing; a field naming the writers — nothing reads it; the expected
 value alone written out — the input still moves with the code; a `data:` line naming each file a
-verdict leans on — every tracked file turns read-only.
+verdict leans on — every tracked file turns read-only; a separate agent for the deliberate break —
+the code review already stands apart from the check.
 
 ### WAY-71/1 — Does every field of a foundation entry appear in every entry, and what may it hold?
 
