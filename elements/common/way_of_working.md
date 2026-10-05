@@ -143,7 +143,7 @@ differences, and each element's skill adds its own
   sentence with the entry beside it and approves the meaning (WAY-114).
 - Step 4.3: write the entry under "Projected foundation changes" of the definition, in the
   subsection of its kind and with the heading `project-level/definition_template.md` gives,
-  followed by its translation; write nothing into `foundations/`. Run no format guard, and tell
+  followed by its meaning sentence; write nothing into `foundations/`. Run no format guard, and tell
   the human that no script checked the entry's form: the guard checks it in the task that writes
   the entry into the foundation.
 - Step 4.4: what follows from the entry is another projected entry, or, where it cannot be written

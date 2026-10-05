@@ -102,7 +102,7 @@ A section is never left empty
 | Open questions | only questions for later, each with its place of resolution |
 | Touched parts and decisions | what the foundation says of the project: the parts it touches, the decisions whose *Scope* names them, the invariants it may break |
 | Technology | the technology choices the project needs, each with the entry that settles it; the skill `settle-technology` writes it, and it reads `TODO` until that step begins |
-| Projected foundation changes | what the definition settles about the product, as projected entries of the foundation, each with its translation, below the line that records the step finding them |
+| Projected foundation changes | what the definition settles about the product, as projected entries of the foundation, each with one sentence of its meaning, below the line that records the step finding them |
 | Gate record | who approved the gate and when, the commit of the foundation searched, the fingerprint |
 
 WAY-108.
@@ -236,13 +236,13 @@ Candidates: 3 shown, 2 accepted — 2026-01-01
 
 <the entry, its *Approved by* reading `on acceptance` until the gate>
 
-> **Translation (pl):** <the same entry in Polish>
+> **Meaning (pl):** <one sentence of the entry's meaning in the definition's language>
 
 #### (new) — Where are documents and their owners stored?
 
 <the entry>
 
-> **Translation (pl):** <the same entry in Polish>
+> **Meaning (pl):** <one sentence of the entry's meaning in the definition's language>
 
 ### Invariants
 
@@ -250,7 +250,7 @@ Candidates: 3 shown, 2 accepted — 2026-01-01
 
 <the entry>
 
-> **Translation (pl):** <the same entry in Polish>
+> **Meaning (pl):** <one sentence of the entry's meaning in the definition's language>
 ```
 
 - The line `Candidates: <rows shown> shown, <rows accepted> accepted — YYYY-MM-DD` stands first;
@@ -275,8 +275,8 @@ Candidates: 3 shown, 2 accepted — 2026-01-01
   identifier and version in the heading: the entry is edited in place when written (WAY-07).
 - A new projected decision needs no number and no prefix: the task that writes it into the
   foundation gives them. Other projected headings keep the identifier their element requires.
-- Below each entry stands its translation into the language of the definition, every line
-  beginning with `>`; it helps the human weigh the wording and is not approved.
+- Below each entry stands one sentence of its meaning in the language of the definition, a line
+  beginning with `>`; the human approves the meaning at the gate, not the wording.
 - At the gate a projected entry holds whole what only the human gives at the project level: its
   binding sentence or definition and, for a decision, its *Change*, *Rationale* and *Rejected*
   (`none considered` being the human's statement). *Review when* holds a condition and date, or
@@ -284,7 +284,7 @@ Candidates: 3 shown, 2 accepted — 2026-01-01
   the review timing depends on later work, and an item under "Open questions" names the
   breakdown or task that resolves it. A field that waits for the code or the world — a source, a
   verification, a method, the parts, the links, each a line `- **<Field>:** …` with the indented
-  lines that continue it — may read `TODO`, as may a translation; *Approved by* reads
+  lines that continue it — may read `TODO`, as may a meaning sentence; *Approved by* reads
   `on acceptance` until the gate, never `TODO`. The format guard of the element checks those
   deferred fields in the task that writes the entry. `TODO` anywhere else in the section is a gap
   (WAY-118, WAY-119).

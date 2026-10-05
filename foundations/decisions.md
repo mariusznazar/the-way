@@ -3246,8 +3246,8 @@ look complete while naming a structure that does not exist.
 ### WAY-117/1 — How does a foundation entry stand in a project definition before it is written?
 
 The skill of each entry's kind writes its whole proposal under the definition's `Projected
-foundation changes`, in that kind's subsection with the template's projected heading and a
-translation, without writing the product's foundation or running the entry's format guard. A
+foundation changes`, in that kind's subsection with the template's projected heading and one
+sentence of its meaning, without writing the product's foundation or running the entry's format guard. A
 new projected decision uses `(new)` without a number or prefix, while versions and other kinds
 use the identifiers their templates give; an entry following from it remains projected or becomes
 an open question when its fields await the code.
@@ -3264,7 +3264,7 @@ an open question when its fields await the code.
     revised version loses its identifier in the definition.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-10-04
+- **Approved by:** Mariusz, 2026-10-06
 
 *Rationale:* the project's definition keeps a future rule visible without claiming it already
 holds. Code-dependent evidence can be completed when the task writes the entry.
