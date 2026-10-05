@@ -182,7 +182,8 @@ before continuing that work.
     update the request's description with links to the record by the SHA of the commit that adds it,
     never by branch name. Ask in the request for a merge that keeps its commits, since the link
     survives only then; where the product's rules squash or rebase on merge, name that as a
-    limitation in the request. Do not merge. Keep the worktree for review changes.
+    limitation in the request. Then mark the request ready for review, except a request the cycle
+    marks `blocked`, which stays a draft. Do not merge. Keep the worktree for review changes.
 13. The request contains: task goal and relation, source versions, design and plan links, what
     changed and why, test and review evidence with every check that did not run named, and *What
     this request settles*: each foundation entry the change writes or changes, as its identifier and
