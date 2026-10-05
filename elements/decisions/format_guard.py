@@ -81,6 +81,7 @@ NO_COMMIT_REASON = shared.NO_COMMIT_REASON
 
 DATE = r"\d{4}-\d{2}-\d{2}"
 MERGE = r"merge of https?://\S+"
+MERGE_PLACEHOLDER = r"merge of <request link>"  # what an entry holds until its request exists
 NUMBER_WORDS = {"one": 1, "two": 2, "three": 3, "four": 4, "five": 5}
 
 
@@ -331,6 +332,12 @@ def bare(value):
 def is_todo(value):
     value = bare(value)
     return value == "TODO" or value.startswith("TODO ")
+
+
+def is_merge_placeholder(value):
+    """`<who>, merge of <request link>`: the form with the request not yet named, which a merge
+    onto the main branch does not take (as with `TODO`)."""
+    return re.match(r"^[^,]+, %s$" % MERGE_PLACEHOLDER, bare(value)) is not None
 
 
 def valid_date(value):
@@ -644,8 +651,10 @@ def check_approval(entries, prefix, report):
             report.fail(entry.line, "field *Approved by* is missing", check, (record,))
         elif is_todo(value):
             report.fail(line, "*Approved by* is `TODO`", check, (record,))
+        elif is_merge_placeholder(value):
+            report.warning(line, "*Approved by* is the placeholder `%s`" % MERGE_PLACEHOLDER)
         else:
-            if re.match(r"^.+, %s$" % MERGE, value):
+            if re.match(r"^[^,]+, %s$" % MERGE, value):
                 continue
             match = re.match(r"^.+, (%s)$" % DATE, value)
             if not match or not valid_date(match.group(1)):
@@ -666,7 +675,7 @@ def check_approver(entries, approver, prefix, report):
         if is_todo(value):
             report.fail(line, "*Approved by* is `TODO`", check, (named,))
             continue
-        match = re.match(r"^(.+), (?:%s|%s)$" % (DATE, MERGE), value)
+        match = re.match(r"^(.+), %s$" % DATE, value) or             re.match(r"^([^,]+), (?:%s|%s)$" % (MERGE, MERGE_PLACEHOLDER), value)
         who = match.group(1) if match else value
         if who != approver:
             report.error(line, "%s: *Approved by* names %s, not %s"
@@ -909,6 +918,10 @@ def check_merge_todo(entries, prefix, report, no_commit=None):
                 report.error(line, "%s: *%s* is `TODO`, which a merge onto the main branch does "
                                    "not take" % (label_of(entry, prefix), name),
                              check, (merge_todo,))
+            elif name == "Approved by" and is_merge_placeholder(value):
+                report.error(line, "%s: *Approved by* is the placeholder `%s`, which a merge onto "
+                                   "the main branch does not take"
+                             % (label_of(entry, prefix), MERGE_PLACEHOLDER), check, (merge_todo,))
 
 
 def check_fingerprints(latest, rules, prefix, report, no_commit=None):
