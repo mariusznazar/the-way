@@ -123,9 +123,16 @@ uses its settlements as a source, or stands on its own.
 The part answers for the steps a task runs through and for how sharply a change is checked along
 them.
 
-- **Files:** none
-- **Depends on:** none
-- **Failure modes:** none
+- **Files:** task-cycle/**
+- **Depends on:** decisions · invariants · glossary · part-map · environment-facts ·
+  elements-common · project-level · gate · relation-model
+- **Failure modes:**
+  - the orchestrator stops for an implementation choice it can settle from the task and foundation
+    — an implementable task waits for the human before its request — high — not detected
+  - the orchestrator omits a micro decision or its cost from the cycle record and request — the
+    human cannot assess what the agents chose — high — not detected
+  - an agent presents a provisional foundation change as approved — code follows a rule the human
+    has not accepted — high — not detected
 - **Trust boundary:** none
 
 ## gate
