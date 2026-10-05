@@ -78,15 +78,17 @@ glossary entry adds to each.
   object — and lists each use whose meaning moves, the sentence before and after. A moved use in
   an entry on the main branch sends the draft back to step 3, as that section says. An entry new
   on this branch has no main-branch uses to preserve; review its uses in the current tree before
-  changing its definition.
+  changing its definition. In a task cycle the orchestrator dispatches that review itself instead of
+  handing the human an instruction.
 - Step 4.2: show the entry with its list of uses; for a changed entry, the definition the review
-  started from beside the new one, with the moved uses.
+  started from beside the new one, with the moved uses. In a task cycle the orchestrator writes the
+  entry and the human accepts its meaning at the merge (WAY-114).
 - After step 4.3, for a word put into *Avoid*, make the search the template's "Avoid" asks for, and
   give each hit to the human as a change to that file.
 - Step 4.4: what follows, wherever the text may still be edited, is a sentence that said what the
   word is, or spelt out its definition, rewritten to use the term (WAY-95, WAY-97); every use of a
   meaning that moved to another word, rewritten to that word; and a use a changed definition moved,
-  rewritten or accepted by the human in step 4.2. Each goes through the skill of the element its
+  rewritten or accepted by the human in step 4.2 (in a task cycle, accepted at the merge). Each goes through the skill of the element its
   entry belongs to; a sentence of an element's template or of `elements/common/` is rewritten
   there, as a fix to a rule is.
 

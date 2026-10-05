@@ -28,7 +28,7 @@ that element's template (WAY-35).
   term defines uses the term, never a paraphrase of its definition, so that the list of the term's
   uses finds it (WAY-97).
 - A term whose definition holds a word an invariant's sentence may not hold (WAY-60) enters such a
-  sentence only where the human deciding the change accepts it (WAY-97).
+  sentence only where the request names it for the human who accepts the change at the merge (WAY-97).
 
 ## Where the value of a field comes from
 

@@ -777,8 +777,9 @@ happens to touch them.
 
 A decision recovered from an existing product records in *Origin* what was searched and what was
 found, and its rationale and rejected options are quoted from that source, given by a human who
-knows them, or written as `unknown`. A rationale an agent proposes goes to a human as a question,
-never into the entry.
+knows them, or written as `unknown`. A rationale an agent proposes for a human's decision goes to
+the human as a question, never into the entry; the rationale of a decision an agent takes in a task
+is the agent's to write.
 
 - **Change:** new decision
 - **Scope:** decisions
@@ -792,7 +793,7 @@ never into the entry.
     lists in *Rejected* the options it infers were weighed.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-10-01
+- **Approved by:** Mariusz, 2026-10-06
 
 *Rationale:* a reason an agent writes looks exactly like a recorded one, and later readers take it
 for the reason the decision was made; a human who knows it is a source, a guess is not. The cited
@@ -1241,8 +1242,8 @@ environment fact of that obligation. The criticality of a part is computed rathe
 hand: the highest of its own failure modes, of the critical flows it lies on, and of the parts that
 depend on it, unless the dependency records that the two are separated and a failure of one does
 not damage the other. A part with no failure modes recorded counts as the highest criticality;
-raising a part's criticality needs no reason, and lowering it is accepted by the human deciding the
-change, with the lowered criticality in front of them.
+raising a part's criticality needs no reason, and lowering it is accepted by the human accepting the
+change at the merge, with the lowered criticality in front of them.
 
 - **Change:** new decision
 - **Scope:** part-map, task-cycle, environment-facts, invariants
@@ -1259,7 +1260,7 @@ change, with the lowered criticality in front of them.
 - **Review when:** a product that pins the-way holds data under an obligation from a law or a
   contract on one of its parts · check by: 2026-12-31
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-10-01
+- **Approved by:** Mariusz, 2026-10-06
 
 *Rationale:* criticality sets how sharply a task is checked (WAY-13); hand-written, it goes stale.
 Silence about a part raises checks instead of removing them; lowering, the convenient move, waits
@@ -1602,8 +1603,8 @@ behaviour or calls for a different one, or reads `nothing`; a place that only ci
 followed to the place it cites, marked when that source is superseded, and *found* never states a
 reason itself, nor one an agent infers. When an entry's binding part enters the foundation, the
 gate reports whether its method passes on the commit the task branch left the main branch from and
-fails there on a deliberate break, and the human deciding the change sets the row with that report
-in front of them.
+fails there on a deliberate break, and the human accepting the change at the merge sets the row with
+that report in front of them.
 
 - **Change:** new decision
 - **Scope:** invariants, gate
@@ -1611,8 +1612,8 @@ in front of them.
 - **Relations:** derives from WAY-28@94d8ef12 · derives from WAY-22@dcf291ea ·
   derives from WAY-17@b1e26133
 - **Verification:** level 1 — invariants: invariant-recovered-form · invariant-recovered-derived ·
-  gate-fork-point-evidence. Level 3 for the row — the human deciding the change sets it with the
-  gate's report in front of them, and the record of that decision names who and when.
+  gate-fork-point-evidence. Level 3 for the row — the human accepting the change at the merge sets it with
+  the gate's report in front of them, and the record of that decision names who and when.
   Level 2 for what counts as already done and what *found* holds — an agent compares the change with
   the decision:
   - complies: from a game's save module a human chooses "a save of another version is rejected
@@ -1624,7 +1625,7 @@ in front of them.
     is marked recovered because its check cannot fail on the older commit.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-28
+- **Approved by:** Mariusz, 2026-10-06
 
 *Rationale:* WAY-28 lets a recovered invariant bind before anyone knows why it holds; without the
 row it reads like a chosen rule, hiding that its reason was never settled. *found* points to
@@ -2552,8 +2553,8 @@ are computed; a field for a definition's source or the decision that set it — 
 A word takes a glossary entry when it stands in the binding part of an entry of the foundation or in
 the rules of an element's template or of the part the elements share, and at least one of its uses in
 the files of `foundations/`, the elements' templates and the part the elements share carries a
-meaning a reader who knows the product's field would not give it; an agent finds the candidates and
-a human chooses. A word's definition stands in the glossary alone, and a closed list of values a
+meaning a reader who knows the product's field would not give it; an agent finds the candidates and writes the entries, and a human
+accepts their meaning (WAY-114). A word's definition stands in the glossary alone, and a closed list of values a
 guard reads stays in its template with what each value means. The glossary of the-way holds the
 words of the process, and a product's glossary holds the words of its domain; a product takes the
 words of the process from the-way at the commit it pins and defines none of them again, and in the-way,
@@ -2583,7 +2584,7 @@ whose product is the process, the two are one file.
     as the game uses it.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-29
+- **Approved by:** Mariusz, 2026-10-06
 
 *Rationale:* a glossary of every relevant word grows without bound, kept by memory, while a word used
 as the field uses it needs no entry. A definition stands once because copies drift,
@@ -2632,11 +2633,11 @@ repeats what the thing does; a field naming neighbouring terms — the definitio
 
 A sentence of a foundation entry that speaks of what a glossary term defines uses the term, never a
 paraphrase of its definition, and a term whose definition holds a word an invariant's sentence may
-not hold enters such a sentence only where the human deciding the change accepts it. A glossary
+not hold enters such a sentence only where the request names it for the human who accepts the change at the merge. A glossary
 entry carries no version and is edited in place, and every change to a definition goes, in the same
 change, through a review in which an agent puts the new definition in place of the word in every use
 the guard lists and every other form it finds, and reports each use whose meaning moves to the human
-deciding the change. A term used by an entry on the main branch keeps its meaning, and a new meaning
+accepting the change at the merge. A term used by an entry on the main branch keeps its meaning, and a new meaning
 takes a new word.
 
 - **Change:** new decision
@@ -2653,7 +2654,7 @@ takes a new word.
     gate, runs checks apart from any change exits non-zero when …", spelling out "clock".
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-29
+- **Approved by:** Mariusz, 2026-10-06
 
 *Rationale:* a sentence relies on a term by its word, which the review searches for, so a paraphrase
 hides a dependant, and a term can hide from an invariant's guard a word its sentence may not hold.
@@ -2845,7 +2846,7 @@ its interface and talk about the product use the word of the domain unchanged.
 - **Change:** new decision
 - **Scope:** glossary, decisions, invariants, part-map, environment-facts
 - **Based on:** none
-- **Relations:** derives from WAY-95@1cc58b42 · derives from WAY-98@94371030 ·
+- **Relations:** derives from WAY-95@455377de · derives from WAY-98@94371030 ·
   narrows WAY-99@7d44dfd7
 - **Verification:** level 1 — invariants: glossary-process-terms. Level 2 for how the sentences of
   a product's foundation, its code and its interface write the word — an agent compares the change
@@ -3155,12 +3156,13 @@ would add no later protection; a challenge to every choice entering a binding en
 taken as offered whose weak point the question named — it asks again what the choice already
 weighed.
 
-### WAY-114/1 — What does a human see and accept before an entry is written?
+### WAY-114/1 — What does a human accept of an entry, and when?
 
-An agent shows a foundation entry whole, including permitted unresolved fields, and places a
-translation beside it when the human uses another language; the translation never enters the
-foundation. The agent writes an ordinary entry only after the human accepts its wording, while a
-projected entry goes into the definition with approval recorded at the readiness gate.
+A human accepts the meaning of a foundation entry, shown as one sentence in the human's language with
+the entry beside it, while its wording is the agent's: an agent writes the entry and the human accepts
+it at the merge of the change that holds it, or, for a projected entry, at the readiness gate. Before
+that, a question goes to the human only where the agent has no recommendation or the entry would
+change the meaning of an approved decision; a translation never enters the foundation.
 
 - **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common,
@@ -3168,18 +3170,20 @@ projected entry goes into the definition with approval recorded at the readiness
 - **Based on:** none
 - **Relations:** none
 - **Verification:** level 2 — an agent compares the work with the decision:
-  - complies: the human sees every field of the proposed entry with a Polish translation before
-    accepting its wording, and only the English entry is written into the foundation;
-  - violates: the agent shows a summary but writes an unseen field into the foundation, or treats
-    selection of a candidate row as approval of its projected entry's final wording.
+  - complies: the request lists each entry it writes with one sentence of its meaning in Polish, and
+    the human reads the entries before merging;
+  - violates: an agent asks the human to confirm a choice it already recommends; a translation is
+    written into the foundation; an entry changes the meaning of an approved decision without a
+    question.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-10-04
+- **Approved by:** Mariusz, 2026-10-06
 
-*Rationale:* the human can judge the exact wording that later work treats as binding; a
-translation makes it possible to review English entries in the conversation's language.
-*Rejected:* a short summary for acceptance — unseen fields could change the meaning; storing a
-translation in the foundation — two binding wordings could drift apart.
+*Rationale:* the human judges what an entry settles; its wording rarely changes that, and the human
+who merges reads what the change holds and answers for it.
+*Rejected:* acceptance of the whole wording before an entry is written — attention goes to wording
+while the meaning rarely moves, and each acceptance costs a round; storing a translation in the
+foundation — two binding wordings could drift apart.
 
 ### WAY-115/1 — How are foundation entries found in a project's source?
 
@@ -3586,7 +3590,7 @@ proposes a new entry only for a rule none of them states.
   part-map
 - **Based on:** none
 - **Relations:** derives from WAY-01@60960941 · derives from WAY-11@2dde69a7 · derives from
-  WAY-114@9f296365 · derives from WAY-118@5af868b3 · narrows WAY-106@63eddf70
+  WAY-114@04b4f599 · derives from WAY-118@5af868b3 · narrows WAY-106@63eddf70
 - **Verification:** level 2 — an agent compares the change with the decision:
   - complies: a source-only task whose code adds the store a projected decision chooses writes
     that decision whole in its foundation step, *Approved by* copied from the gate record, and

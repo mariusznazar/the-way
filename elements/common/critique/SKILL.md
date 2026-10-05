@@ -15,8 +15,7 @@ An agent or the human may invoke an independent critique of any proposal. Invoke
 when the author has finished a set of proposals that the human will review collectively. In either
 case use one fresh agent as a second reader. For a set, start after it is complete, including
 proposals added as consequences of earlier ones, and before presenting it to the human.
-One critic reads the whole set, not one proposal at a time. When the human reviews entries one by
-one, that review supplies the second reader; do not add a fresh agent by default.
+One critic reads the whole set, not one proposal at a time.
 For a change to an invariant test or to the foundation, this critique is the change's independent
 assessment (WAY-10). Run it on a model other than the author's where one is available. Give it the
 diff and the files of the assessed commit — never the task's chronicle or the author's reasoning —
@@ -27,8 +26,7 @@ the change.
 
 If a fresh agent cannot be started without the author's conversation context, say so and perform
 the same checks yourself as interim work. Do not describe that as an independent review. A set
-intended for collective human review must then wait for an independent critic or switch to
-one-by-one human review before approval.
+intended for collective human review must then wait for an independent critic.
 
 ## Give the critic the material
 

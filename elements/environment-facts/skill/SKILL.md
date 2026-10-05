@@ -68,8 +68,9 @@ environment fact adds to each.
 - Step 4.4: what follows is each invariant this fact serves, or whose fingerprint in *Rests on* it
   moves, through `record-invariant`; and each decision naming it, through `record-decision`. A fact
   left with nothing naming it goes as WAY-73 and the template's "Withdrawn identifiers" say.
-- After step 4.4, where the method is a command, hand the human an instruction for another agent:
-  the entry, its method, the checks citing a retired identifier or raised version, and any open
+- After step 4.4, where the method is a command, hand the human an instruction for another agent
+  (in a task cycle the orchestrator dispatches that agent itself and the human accepts the entry's
+  meaning at the merge, WAY-114): the entry, its method, the checks citing a retired identifier or raised version, and any open
   question about the check — never the conversation itself; a withdrawal hands on the checks
   still citing the withdrawn identifier. Where the method is a path, the human re-reads the
   source; write their verdict into `foundations/human_verdicts.md` in the row

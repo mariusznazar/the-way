@@ -191,8 +191,8 @@ outside it (WAY-42). What its fingerprint covers answers to the invariant `map-f
 - An obligation from a law or a contract that raises the criticality of a part enters the map as
   a failure mode of that part, whose detection names an invariant resting on the environment fact
   of that obligation (WAY-46).
-- Raising a part's criticality needs no reason; lowering it is accepted by the human deciding the
-  change, with the lowered criticality in front of them: the format guard, given the commit the
+- Raising a part's criticality needs no reason; lowering it is accepted by the human accepting the
+  change at the merge, with the lowered criticality in front of them: the format guard, given the commit the
   task branch left the main branch from, reports every part whose computed criticality is lower
   than there (`criticality-lowering-report`) (WAY-46).
 - A separation carries its reason in the dependency that records it: why a failure of that part

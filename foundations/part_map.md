@@ -132,8 +132,8 @@ them.
     — an implementable task waits for the human before its request — high — not detected
   - the orchestrator omits a micro decision or its cost from the cycle record and request — the
     human cannot assess what the agents chose — high — not detected
-  - an agent presents a provisional foundation change as approved — code follows a rule the human
-    has not accepted — high — not detected
+  - an agent writes an entry the request does not list with its meaning — the human merges a rule
+    they were never shown — high — not detected
 - **Trust boundary:** none
 
 ## gate

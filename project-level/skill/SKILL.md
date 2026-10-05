@@ -129,18 +129,15 @@ The project level reads the product's foundation and writes nothing in it
    (an edit in place before main, otherwise a new version), or the definition brought into line
    with it. Note the commit of the product's foundation you searched, as `git rev-parse HEAD` in
    the product prints it.
-3. Offer the human a review of the projected entries one by one or as a complete set, with the
-   cost of each way. Candidate selection chose which entries to project; their wording has not yet
-   been approved (WAY-114, WAY-115). For a complete set, first run `critique` once on all finished
-   entries, the definition and its sources. Verify its observations, correct proposals through the
-   skills of their elements and bring any conflict with a human settlement back to the human. If
-   an independent critic cannot run, stop the collective route and offer one-by-one human review
-   or wait; the author's self-check does not meet this condition. After the critique, show all
-   projected entries whole, with their translations, for collective approval. For review one by
-   one, show each entry whole with its translation and ask whether its wording is approved; the
-   human supplies the critical second reading. A wording the human changes goes through the skill
-   of its element in projected mode again; where it changes the question of a decision an item of
-   "Technology" names, the item takes the new question.
+3. Run `critique` once on all finished projected entries, the definition and its sources
+   (WAY-120). Verify its observations, correct proposals through the skills of their elements and
+   bring any conflict with a human settlement back to the human. If an independent critic cannot
+   run, say so and wait; the author's self-check does not meet this condition. Then show the
+   projected entries as a list, each as its identifier and one sentence of its meaning in the
+   human's language, with the whole entries in the definition for the human to read (WAY-114). The
+   human approves their meaning, and may strike an entry or change its meaning; a changed meaning
+   goes through the skill of its element in projected mode again, and where it changes the
+   question of a decision an item of "Technology" names, the item takes the new question.
 4. After the final review changes, run the check of 7.1 again; a finding goes where 7.1 sends it.
    Then, for each projected decision whose *Review when* reads `TODO`,
    confirm that the human expressly deferred it and that a related item under "Open questions"

@@ -480,7 +480,7 @@ Every inherited decision in the decision log has *Origin* in the form `inherited
 
 - **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-29@306edf37
+- **Derives from:** WAY-29@d4c8835a
 - **Part:** decisions
 - **Correction:** none
 
@@ -490,7 +490,7 @@ The *Rationale* of every inherited decision in the decision log is `unknown`, a 
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-29@306edf37
+- **Derives from:** WAY-29@d4c8835a
 - **Part:** decisions
 - **Correction:** none
 
@@ -760,7 +760,7 @@ Every failure mode recorded in the part map names its severity.
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-46@fae61ea8
+- **Derives from:** WAY-46@a5f43e40
 - **Part:** part-map
 - **Correction:** none
 
@@ -770,7 +770,7 @@ Every failure mode recorded in the part map names an invariant that detects it b
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-46@fae61ea8
+- **Derives from:** WAY-46@a5f43e40
 - **Part:** part-map
 - **Correction:** none
 
@@ -780,7 +780,7 @@ No part of the part map carries a criticality written by hand.
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-46@fae61ea8
+- **Derives from:** WAY-46@a5f43e40
 - **Part:** part-map
 - **Correction:** none
 
@@ -790,7 +790,7 @@ The map guard computes the highest criticality of the map's scale for a part wit
 
 - **Method:** `python -B gate/run_tests.py elements/part-map --record .runs/part-map-tests.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-46@fae61ea8
+- **Derives from:** WAY-46@a5f43e40
 - **Part:** part-map
 - **Correction:** none
 
@@ -800,7 +800,7 @@ The map guard computes the criticality of a part that has failure modes recorded
 
 - **Method:** `python -B gate/run_tests.py elements/part-map --record .runs/part-map-tests.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-46@fae61ea8
+- **Derives from:** WAY-46@a5f43e40
 - **Part:** part-map
 - **Correction:** none
 
@@ -810,7 +810,7 @@ The map guard, given "{fork-point}", reports every part whose computed criticali
 
 - **Method:** `python -B gate/run_tests.py elements/part-map --record .runs/part-map-tests.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-46@fae61ea8
+- **Derives from:** WAY-46@a5f43e40
 - **Part:** part-map
 - **Correction:** none
 
@@ -1090,7 +1090,7 @@ Every row of the list of recovered invariants in `foundations/invariants.md` nam
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-58@9cad9f54
+- **Derives from:** WAY-58@952ded5c
 - **Part:** invariants
 - **Correction:** none
 
@@ -1100,7 +1100,7 @@ No entry of `foundations/invariants.md` that stands on the list of recovered inv
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-58@9cad9f54
+- **Derives from:** WAY-58@952ded5c
 - **Part:** invariants
 - **Correction:** none
 
@@ -1110,7 +1110,7 @@ For every invariant entry whose sentence a change adds or alters against "{fork-
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-58@9cad9f54
+- **Derives from:** WAY-58@952ded5c
 - **Part:** gate
 - **Correction:** none
 
@@ -1852,7 +1852,7 @@ last word of one, or whose *Avoid* lists, in any of its forms, such a term or la
 
 - **Method:** `python -B gate/run_tests.py elements/glossary --record .runs/glossary-tests.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-95@1cc58b42 · WAY-104@b1f1850d
+- **Derives from:** WAY-95@455377de · WAY-104@b1f1850d
 - **Part:** glossary · installation
 - **Correction:** none
 
@@ -1882,7 +1882,7 @@ Where {merge-onto} exists, every term of `foundations/glossary.md` has a use out
 
 - **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --merge-onto {merge-onto} --record .runs/glossary-merge-onto.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-95@1cc58b42
+- **Derives from:** WAY-95@455377de
 - **Part:** glossary · decisions · invariants · part-map · environment-facts · elements-common
 - **Correction:** none
 
@@ -1912,7 +1912,7 @@ No entry of `foundations/glossary.md` carries a version.
 
 - **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-97@822734ed
+- **Derives from:** WAY-97@cf7b62ff
 - **Part:** glossary
 - **Correction:** none
 
@@ -1922,7 +1922,7 @@ For every entry of `foundations/glossary.md` whose definition differs from its d
 
 - **Method:** `python -B gate/run_tests.py elements/glossary --record .runs/glossary-tests.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-97@822734ed
+- **Derives from:** WAY-97@cf7b62ff
 - **Part:** glossary
 - **Correction:** none
 

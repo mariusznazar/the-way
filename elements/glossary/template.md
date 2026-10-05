@@ -96,8 +96,8 @@ particular to a glossary entry (WAY-35).
 - Where a binding sentence says what a term is, the entry takes that, and the sentence keeps what is
   required of the thing, using the term. The change that writes the entry rewrites the sentence: an
   edit before the main branch, a new version after it (WAY-95, WAY-97, WAY-19).
-- An agent finds the candidate words, and the human deciding the change decides which become entries
-  and accepts each entry (WAY-95, WAY-10).
+- An agent finds the candidate words and writes the entries, and the human accepting the change at
+  the merge accepts the meaning of each entry (WAY-95, WAY-114).
 - On the main branch every term has a use outside the glossary (WAY-95); on a task branch an entry
   with no such use is a warning, since a word may enter before its uses
   (`TODO — decision pending: which decision lets a task branch hold a term with no use`).
@@ -209,8 +209,8 @@ entry among it, stands in `elements/common/rules.md` (WAY-71).
   for the term are written as the whole term (WAY-99).
 - A change to a definition goes, in the same change, through a review of the term's uses: an agent
   puts the new definition in place of the word in every use the guard lists and in every other form
-  of it the agent finds, and reports each use whose meaning then moves to the human deciding the
-  change (WAY-97).
+  of it the agent finds, and reports each use whose meaning then moves to the human accepting the
+  change at the merge (WAY-97).
 - A term used by an entry on the main branch keeps its meaning: a new meaning takes a new word and a
   new entry, and whatever should carry it is rewritten (WAY-97).
 
