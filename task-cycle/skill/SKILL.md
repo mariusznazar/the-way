@@ -35,8 +35,8 @@ choice approved or changed the rule.
 3. Require subagents and Superpowers version 6.4.1 with `brainstorming`, `writing-plans`,
    `subagent-driven-development`, `test-driven-development`, `requesting-code-review`, and
    `finishing-a-development-branch`. Verify the installed version before dispatching. Read each
-   skill and its linked files when its stage begins. The adoption decision in the foundation
-   names the borrowed methods and the the-way adapter's stage boundaries; those boundaries govern
+   skill and its linked files when its stage begins. WAY-125 names the borrowed methods and the
+   the-way adapter's stage boundaries; those boundaries govern
    handoffs and human contact. Do not silently use another version or substitute another method.
    If this version or a subagent capability is unavailable, this cycle cannot run in that harness.
 

@@ -3526,3 +3526,30 @@ assignment or dependency from the plan.
 relationship applies so the next agent does not import work or dependencies the task never took on.
 *Rejected:* requiring every task to belong to a project plan — it excludes independent tasks and
 gives source-only tasks assignments they do not have.
+
+### WAY-125/1 — Which Superpowers methods does the autonomous task cycle adopt?
+
+The the-way task cycle adopts Superpowers 6.4.1 methods for brainstorming a design and written
+spec, writing an implementation plan, test-first implementation, subagent execution with
+independent task and final code reviews, and preparing a pull or merge request; they apply only to
+a ready task run through `implement-task`. The orchestrator answers workflow questions and gives
+provisional stage go-aheads under the task owner's delegation, never records these as human
+approval, controls the return between stages, keeps agent reports before a borrowed skill cleans
+its workspace, runs its foundation panel and return step, and brings the request to the human for
+review. Decisions reserved to a human by the foundation remain reserved; when required code cannot
+proceed without one, the cycle opens a blocked draft request; a different Superpowers version
+requires a reviewed change to the-way before use.
+
+- **Change:** new decision
+- **Scope:** task-cycle
+- **Based on:** installed Superpowers 6.4.1 skills `brainstorming`, `writing-plans`, `subagent-driven-development`, `test-driven-development`, `requesting-code-review` and `finishing-a-development-branch`, read 2026-10-05
+- **Relations:** derives from WAY-100@e7a74a18
+- **Verification:** level 2 — an agent compares a cycle with the decision:
+  - complies: agents use the named methods at version 6.4.1, return between stages, and show provisional choices in the request without claiming human approval;
+  - violates: an agent treats its own spec approval as the owner's approval, skips the request review, or silently runs a different Superpowers version.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, 2026-10-05
+
+*Rationale:* the borrowed skills provide design, planning, test and review methods, while the-way must keep control of task sources, binding foundation approvals and the single human review point. Naming the version makes the dependency visible when the process is pinned in a product.
+*Rejected:* adopting the complete Superpowers workflow with its intermediate human gates — it would interrupt the delegated cycle; copying the skill bodies into the orchestrator — it would create a second implementation of those methods.
