@@ -3526,3 +3526,39 @@ assignment or dependency from the plan.
 relationship applies so the next agent does not import work or dependencies the task never took on.
 *Rejected:* requiring every task to belong to a project plan — it excludes independent tasks and
 gives source-only tasks assignments they do not have.
+
+### WAY-125/1 — Which Superpowers methods does the autonomous task cycle adopt?
+
+The the-way task cycle adopts Superpowers 6.4.1 methods for brainstorming a design and written
+spec, writing an implementation plan, test-first implementation, subagent execution with
+independent task and final code reviews, and preparing a pull or merge request; they apply only to
+a ready task run through `implement-task`. The orchestrator answers workflow questions and gives
+provisional stage go-aheads under the task owner's delegation, never records these as human
+approval, controls the return between stages, keeps agent reports before a borrowed skill cleans
+its workspace, runs its foundation panel and return step, and brings the request to the human for
+review. Decisions reserved to a human by the foundation remain reserved; when required code cannot
+proceed without one, the cycle opens a blocked draft request; a different Superpowers version
+requires a reviewed change to the-way before use.
+
+- **Change:** new decision
+- **Scope:** task-cycle
+- **Based on:** observation of installed Superpowers 6.4.1 on 2026-10-05 using
+  `Get-Content -Raw -Encoding utf8 '<source-root>/<skill>/SKILL.md'` for each skill below;
+  Windows PowerShell 5.1.26100.9444 on Microsoft Windows NT 10.0.26300.0; source root
+  `C:/Users/Mariusz/.claude/plugins/cache/claude-plugins-official/superpowers/6.4.1/skills/`:
+  `brainstorming/SKILL.md` — "Help turn ideas into fully formed designs and specs through natural collaborative dialogue."
+  `writing-plans/SKILL.md` — "Write comprehensive implementation plans assuming the engineer has zero context for our codebase and questionable taste."
+  `test-driven-development/SKILL.md` — "Write the test first. Watch it fail. Write minimal code to pass."
+  `subagent-driven-development/SKILL.md` — "Fresh subagent per task + task review (spec + quality) + broad final review = high quality, fast iteration"
+  `requesting-code-review/SKILL.md` — "The reviewer gets precisely crafted context for evaluation — never your session's history."
+  `finishing-a-development-branch/SKILL.md` — "Verify tests → Detect environment → Present options → Execute choice → Clean up."
+- **Relations:** derives from WAY-100@e7a74a18
+- **Verification:** level 2 — an agent compares a cycle with the decision:
+  - complies: agents use the named methods at version 6.4.1, return between stages, and show provisional choices in the request without claiming human approval;
+  - violates: an agent treats its own spec approval as the owner's approval, skips the request review, or silently runs a different Superpowers version.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, 2026-10-05
+
+*Rationale:* the borrowed skills provide design, planning, test and review methods, while the-way must keep control of task sources, binding foundation approvals and the single human review point. Naming the version makes the dependency visible when the process is pinned in a product.
+*Rejected:* adopting the complete Superpowers workflow with its intermediate human gates — it would interrupt the delegated cycle; copying the skill bodies into the orchestrator — it would create a second implementation of those methods.

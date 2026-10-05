@@ -2,8 +2,8 @@
 
 This guide applies to work on the-way as the top-level repository while it has no `main` branch.
 It does not govern a product that contains the-way as a `.the-way` submodule. `foundations` is the
-integration branch. It is not a release of the process, and the task cycle and full gate do not yet
-exist.
+integration branch. It is not a release of the process. The task-cycle skill is available for
+product pilots; the full gate does not yet exist. Changes to the-way itself follow this guide.
 When `main` is created, replace this guide with the task-cycle instructions before integrating
 another change.
 

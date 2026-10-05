@@ -69,12 +69,15 @@ instead of the rule being weakened.
   `installation/README.md`.
 - `project-level/` — defines a project, settles its technology, and refines its tasks before their
   implementation cycles.
+- `task-cycle/` — orchestrates one ready task through design, implementation, checks, reviews and
+  a request for human review; it keeps the cycle record on the task branch.
 - `agent-instructions/`, with `AGENTS.md` and `CLAUDE.md` at the root — instructions for agents
   working on the-way itself.
 
 ## Using the skills
 
-Each element's `skill/` directory and the project level's skill directories hold one skill, named
+Each element's `skill/` directory, the project level's skill directories and `task-cycle/skill/`
+hold one skill, named
 in its `SKILL.md`. An agent tool that reads skills from a directory uses one once that directory
 is linked there under the skill's name.
 For work on the-way itself with Claude Code on Windows:

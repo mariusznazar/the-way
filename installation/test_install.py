@@ -25,6 +25,7 @@ NAMES = (("elements/decisions/skill/SKILL.md", "record-decision"),
          ("project-level/skill/SKILL.md", "define-project"),
          ("project-level/technology/SKILL.md", "settle-technology"),
          ("project-level/task/skill/SKILL.md", "refine-task"),
+         ("task-cycle/skill/SKILL.md", "implement-task"),
          ("elements/common/critique/SKILL.md", "critique"))
 BLOCK = install.agents_block()
 
