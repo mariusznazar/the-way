@@ -78,8 +78,10 @@ skill named here is the product skill with the `the-way-` prefix.
 - Search the current foundation for decisions the task touches, including an unlinked
   collision; quote their current wording and version. If a project definition is a source,
   bring in its relevant approved projected wording. For a project member, use the plan to
-  identify which entries it is assigned to realize or write. For source-only use, do not claim
-  that assignment merely because the wording informs the task.
+  identify which entries it is assigned to realize or write. A source-only task takes no plan
+  assignment, but it carries a projected entry its code will make true: name that entry under
+  *Decisions in play* with the part made true now, also when the plan assigns it to another task
+  (WAY-106, WAY-124).
 - For a project member, compare the numbered work, dependencies and projected entries with its
   plan item. A mismatch returns to the plan, not an unrecorded change in this document.
 - If the task would contradict a current decision or a projected entry, show the conflict and

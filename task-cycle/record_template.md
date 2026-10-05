@@ -25,29 +25,37 @@ the request; preparing reversible code for it does not authorize executing it.
 
 Append one row for every dispatch, handoff, failed attempt, rerun, review and fix. During work this
 file and full sanitized prompts and reports live under the ignored `.runs/task-cycles/` directory.
-After assessment, copy them to `docs/task-cycles/` and link the reports from these rows.
+After assessment, copy them to `docs/task-cycles/`, link the reports from these rows, commit the
+copy and commit its removal immediately after; the request links the record by the SHA of the
+commit that adds it. A correction after review repeats this pair.
 
 ## Questions and autonomous choices
 
-| ID | Question and source | Answer or choice | Evidence | Alternative rejected | Cost if wrong | Used by | Review status |
-|---|---|---|---|---|---|---|---|
+| ID | Question and source | Answer or choice | Evidence | Alternative rejected | Cost if wrong | Reaches beyond the request | Used by | Review status |
+|---|---|---|---|---|---|---|---|---|
 
 Include questions that were answered by a binding source as well as new micro decisions. Mark
-choices requiring a human foundation decision as proposed, never approved.
+choices requiring a human foundation decision as proposed, never approved. A choice whose cost of
+being wrong reaches beyond the request becomes a proposed foundation entry.
 
 ## Artifacts
 
 | Kind | Path or commit | Author or agent | Review result |
 |---|---|---|---|
 
-Include the frozen task, spec, plan, code commits, tests and full agent reports.
+Include the frozen task, `spec.md`, `plan.md`, code commits, tests and full agent reports. Name
+commits and commit ranges instead of copying diffs or files that git holds. A foundation proposal
+has one current version and one wording in the task document's language for the human; the
+manifest records the assessed range by commit hashes, plus a diff only of changes made after the
+panel.
 
 ## Verification
 
 | Command or manual check | Commit and environment | Result | Failed or unchecked details |
 |---|---|---|---|
 
-Record the baseline separately from post-change runs. An unrun check is unchecked.
+Record the baseline separately from post-change runs. A check's result is one line. An unrun
+check is unchecked.
 
 ## Return step
 
@@ -69,6 +77,8 @@ Record the baseline separately from post-change runs. An unrun check is unchecke
 ## Request handoff
 
 - Request URL and status: <URL and draft/ready/blocked>
-- Choices for human review: <IDs from the questions table>
+- Proposed foundation entries from choices: <IDs from the questions table, or none>
+- Choices within the request: <count and link to the questions table>
+- Writes to the task's backlog entry: <request link and state, or none>
 - Remaining limitations: <list or none>
 - Process improvements to consider next time: <observed friction and evidence, or none>
