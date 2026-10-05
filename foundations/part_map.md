@@ -89,7 +89,7 @@ foundation.
 - **Failure modes:**
   - the entry finder omits a settlement that a later task must guess — a project can pass its gate
     with an incomplete projected foundation — high — not detected
-  - a critique presents a source mismatch as an accepted correction — the human approves wording
+  - a critique presents a source mismatch as an accepted correction — the human approves a meaning
     they did not settle — high — not detected
 - **Trust boundary:** none
 
@@ -107,7 +107,7 @@ uses its settlements as a source, or stands on its own.
     gap as project scope or a future foundation rule — high — detected by project-readiness-gate
   - an agent fills a missing human answer with a plausible settlement — tasks inherit an invented
     scope or rule — high — not detected
-  - the gate approves wording that was not searched against the current foundation — a conflict
+  - the gate approves a meaning that was not searched against the current foundation — a conflict
     enters the project plan — high — not detected
   - a definition reaches the breakdown with a listed technology choice still open or naming no
     entry — the first task chooses the store of data — high — detected by project-technology-record
