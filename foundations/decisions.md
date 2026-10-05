@@ -2940,7 +2940,8 @@ word an option takes is read as the script.
 The project level reads a product's foundation and records prospective changes in the project
 definition; it writes no foundation entries. The definition holds the project's settled scope and
 projected foundation entries, while the project plan holds phases, task order and which task
-realizes or writes each projected entry.
+realizes or writes each projected entry; a task outside the plan whose code makes a projected
+entry true carries it first, and the task the plan assigns finds the entry in the foundation.
 
 - **Change:** new decision
 - **Scope:** project-level, task-cycle
@@ -2948,18 +2949,22 @@ realizes or writes each projected entry.
 - **Relations:** derives from WAY-01@60960941
 - **Verification:** level 2 — an agent compares the change with the decision:
   - complies: a definition projects a new decision and the plan later assigns a task to write it;
+    a task outside the plan whose code makes that decision true writes it, and the assigned task
+    finds it in the foundation;
   - violates: the definition writes the future decision into the product's foundation, or assigns
     projected entries to tasks before the breakdown has made those tasks.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-10-04
+- **Approved by:** Mariusz, 2026-10-05
 
 *Rationale:* the foundation describes what the product holds today; a project first settles what
 the product is to become. The task assignment follows the breakdown and changes with it, while
-the definition remains the source of what was settled.
+the definition remains the source of what was settled. A projected entry enters the foundation
+with the code that makes it true, whichever task that code comes from.
 *Rejected:* putting projected entries into the foundation at the readiness gate — it would describe
 a future product as current; keeping the task assignment in the definition — it would duplicate
-the plan and change as the plan changes.
+the plan and change as the plan changes; holding a projected entry back for the task the plan
+assigns — the foundation would lag behind the code it describes.
 
 ### WAY-107/1 — Where does a product tell the project level where its backlog stands?
 
@@ -3375,7 +3380,7 @@ already holds every such choice, the step records the decision that holds each a
 - **Change:** new decision
 - **Scope:** project-level, decisions
 - **Based on:** none
-- **Relations:** derives from WAY-106@63eddf70 · derives from WAY-116@afbcd2fa
+- **Relations:** derives from WAY-106@e24bfc73 · derives from WAY-116@afbcd2fa
 - **Verification:** level 1 — invariants: project-technology-record. Level 2 for what the step
   lists and settles — an agent compares the work with the decision:
   - complies: a project that adds an account server lists its store of data and its way of
@@ -3505,27 +3510,33 @@ task's scope, temporary exclusions, relevant current foundation decisions and an
 projected wording it uses. It is ready when its required outcome is stated, every known question
 blocking that outcome is answered, and implementation questions carried into the cycle are named.
 A project member also matches its plan item's scope, dependencies and assigned entries; any task
-using an approved definition checks that its approval still holds, while source-only use takes no
-assignment or dependency from the plan.
+using an approved definition checks that its approval still holds and names each projected entry,
+or the part of it, that its code makes true, which the task carries into the foundation, while
+source-only use takes no other assignment or dependency from the plan.
 
 - **Change:** new decision
 - **Scope:** project-level, task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-106@63eddf70 · derives from WAY-118@5af868b3
+- **Relations:** derives from WAY-106@e24bfc73 · derives from WAY-118@5af868b3
 - **Verification:** level 2 — an agent compares the task document with its stated sources:
   - complies: an independent task is ready without a project plan, a source-only task uses
-    approved project wording without taking its plan's assignments, and a project member matches
-    its plan item;
-  - violates: a source-only task is blocked for lack of a plan item, or a project member is ready
-    despite a mismatch with its assigned work.
+    approved project wording without taking its plan's assignments yet names a projected entry its
+    code makes true with the part made true, and a project member matches its plan item;
+  - violates: a source-only task is blocked for lack of a plan item, a project member is ready
+    despite a mismatch with its assigned work, or a task leaves out a projected entry its code
+    makes true, so its cycle proposes a second entry for the same rule.
 - **Review when:** none
 - **Origin:** none
 - **Approved by:** Mariusz, 2026-10-05
 
 *Rationale:* a project can inform a task without owning it; the handoff must show which
 relationship applies so the next agent does not import work or dependencies the task never took on.
+A projected entry is wording already settled, and the task whose code first makes it true is the
+one that can show it holds; naming it before the cycle keeps one entry per rule.
 *Rejected:* requiring every task to belong to a project plan — it excludes independent tasks and
-gives source-only tasks assignments they do not have.
+gives source-only tasks assignments they do not have; carrying only the entries a plan assigns — a
+source-only task's code would hold a rule the foundation lacks, and its return step would write a
+second entry for it.
 
 ### WAY-125/1 — Which Superpowers methods does the autonomous task cycle adopt?
 
@@ -3536,9 +3547,12 @@ a ready task run through `implement-task`. The orchestrator answers workflow que
 provisional stage go-aheads under the task owner's delegation, never records these as human
 approval, controls the return between stages, keeps agent reports before a borrowed skill cleans
 its workspace, runs its foundation panel and return step, and brings the request to the human for
-review. Decisions reserved to a human by the foundation remain reserved; when required code cannot
-proceed without one, the cycle opens a blocked draft request; a different Superpowers version
-requires a reviewed change to the-way before use.
+review; the return step carries into the foundation each projected entry of the task's sources,
+or the part of it, that the code makes true, in its approved wording, which it may shorten but not
+reword, and proposes new entries only for what those entries lack. Decisions reserved to a human
+by the foundation remain reserved; when required code cannot proceed without one, the cycle opens
+a blocked draft request; a different Superpowers version requires a reviewed change to the-way
+before use.
 
 - **Change:** new decision
 - **Scope:** task-cycle
@@ -3554,11 +3568,11 @@ requires a reviewed change to the-way before use.
   `finishing-a-development-branch/SKILL.md` — "Verify tests → Detect environment → Present options → Execute choice → Clean up."
 - **Relations:** derives from WAY-100@e7a74a18
 - **Verification:** level 2 — an agent compares a cycle with the decision:
-  - complies: agents use the named methods at version 6.4.1, return between stages, and show provisional choices in the request without claiming human approval;
-  - violates: an agent treats its own spec approval as the owner's approval, skips the request review, or silently runs a different Superpowers version.
+  - complies: agents use the named methods at version 6.4.1, return between stages, and show provisional choices in the request without claiming human approval; the return step carries a rule a projected entry of the task's source states, leaving projected the sentence about what later work adds;
+  - violates: an agent treats its own spec approval as the owner's approval, skips the request review, or silently runs a different Superpowers version; the return step proposes a new entry for a rule a projected entry of the task's source already states, or carries a reworded projected entry as approved.
 - **Review when:** none
 - **Origin:** none
 - **Approved by:** Mariusz, 2026-10-05
 
-*Rationale:* the borrowed skills provide design, planning, test and review methods, while the-way must keep control of task sources, binding foundation approvals and the single human review point. Naming the version makes the dependency visible when the process is pinned in a product.
-*Rejected:* adopting the complete Superpowers workflow with its intermediate human gates — it would interrupt the delegated cycle; copying the skill bodies into the orchestrator — it would create a second implementation of those methods.
+*Rationale:* the borrowed skills provide design, planning, test and review methods, while the-way must keep control of task sources, binding foundation approvals and the single human review point. Naming the version makes the dependency visible when the process is pinned in a product. A projected entry the code makes true is wording a human already settled; carrying it keeps one entry per rule, and shortening it to what holds now keeps the foundation describing the present product.
+*Rejected:* adopting the complete Superpowers workflow with its intermediate human gates — it would interrupt the delegated cycle; copying the skill bodies into the orchestrator — it would create a second implementation of those methods; a return step that searches only the current foundation — a rule settled in a project definition comes back as a second entry under another name.
