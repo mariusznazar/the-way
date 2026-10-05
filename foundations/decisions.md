@@ -84,7 +84,7 @@ test changed goes back to the foundation step.
 - **Review when:** no model in the range of fact impossiblebench-test-modification is Active in
   Anthropic's table of models · check by: 2026-10-02
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-10-06
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/4
 
 *Rationale:* an agent that a test stands in the way of adjusts the test to the code: the build
 turns green, and the foundation lies. Keeping invariant tests out of the implementer's reach
@@ -273,7 +273,7 @@ their elements.
     reaches the main branch before the design of the task cycle sets what it holds.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-10-06
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/4
 
 *Rationale:* anything brought in on the side makes the repository a store of material; directories
 follow the parts, so a change's files name its part and decisions (WAY-21); an incomplete directory
@@ -309,7 +309,7 @@ accepts the change, with the assessment and its settlement, when merging it.
     recording why; a change merges with no assessment record.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-10-06
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/4
 
 *Rationale:* the problem is a single executor that checks itself: agents on one model with one input
 share its blind spots, so independence comes from another model and from not seeing the author's
@@ -341,7 +341,7 @@ review of the foundation runs apart from tasks.
     invariant covers.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-10-06
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/4
 
 *Rationale:* some of the foundation is learned only in implementation and in use, and a task that
 missed the foundation does not report it; an end step goes missing, so the merge waits for its
@@ -427,7 +427,7 @@ Mariusz.
 - **Review when:** the-way decides which of its elements a team may adapt, and with it who approves
   decisions for which parts · check by: 2026-12-31
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-10-06
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/4
 
 *Rationale:* the record of who approved, and when or by which merge, is what a human considering a
 change reads, and what WAY-07 needs when an entry has to be accepted again.
@@ -796,7 +796,7 @@ is the agent's to write.
     lists in *Rejected* the options it infers were weighed.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-10-06
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/4
 
 *Rationale:* a reason an agent writes looks exactly like a recorded one, and later readers take it
 for the reason the decision was made; a human who knows it is a source, a guess is not. The cited
@@ -1263,7 +1263,7 @@ change at the merge, with the lowered criticality in front of them.
 - **Review when:** a product that pins the-way holds data under an obligation from a law or a
   contract on one of its parts · check by: 2026-12-31
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-10-06
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/4
 
 *Rationale:* criticality sets how sharply a task is checked (WAY-13); hand-written, it goes stale.
 Silence about a part raises checks instead of removing them; lowering, the convenient move, waits
@@ -1582,7 +1582,7 @@ is historical and never flagged, as WAY-02 has it.
     moves every citation to a new version, nobody checking the tests.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-10-06
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/4
 
 *Rationale:* a read-only test cited by fingerprint would move with every typo, and by bare
 identifier never, checking a meaning gone; a version moves with meaning; the human who accepts the
@@ -1628,7 +1628,7 @@ that report in front of them.
     is marked recovered because its check cannot fail on the older commit.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-10-06
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/4
 
 *Rationale:* WAY-28 lets a recovered invariant bind before anyone knows why it holds; without the
 row it reads like a chosen rule, hiding that its reason was never settled. *found* points to
@@ -1928,7 +1928,7 @@ otherwise compute either; only the side it compares against comes from the run.
 - **Review when:** no model in the range of fact oracle-in-loop-building is Active in Anthropic's
   table of models · check by: 2026-10-02
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-10-06
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/4
 
 *Rationale:* a break chosen by a check's author aims at what the check does, not what the sentence
 says, a check by the sentence's author inherits its reading, and a check by the code's author is
@@ -2587,7 +2587,7 @@ defines none of them again, and in the-way, whose product is the process, the tw
     defines "level" as the game uses it.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-10-06
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/4
 
 *Rationale:* a glossary of every relevant word grows without bound, kept by memory, while a word
 used as the field uses it needs no entry. A definition stands once because copies drift, between
@@ -2656,7 +2656,7 @@ main branch keeps its meaning, and a new meaning takes a new word.
     unlike the gate, runs checks apart from any change exits non-zero when …", spelling out "clock".
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-10-06
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/4
 
 *Rationale:* a sentence relies on a term by its word, which the review searches for, so a paraphrase
 hides a dependant, and a term can hide from an invariant's guard a word its sentence may not hold.
@@ -3179,7 +3179,7 @@ change the meaning of an approved decision; a translation never enters the found
     question.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-10-06
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/4
 
 *Rationale:* the human judges what an entry settles; its wording rarely changes that, and the human
 who merges reads what the change holds and answers for it.
@@ -3266,7 +3266,7 @@ an open question when its fields await the code.
     revised version loses its identifier in the definition.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-10-06
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/4
 
 *Rationale:* the project's definition keeps a future rule visible without claiming it already
 holds. Code-dependent evidence can be completed when the task writes the entry.
@@ -3357,7 +3357,7 @@ contradictions across entries before presentation.
     or two critics are run on one change.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-10-06
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/4
 
 *Rationale:* the author is attached to its own fluent proposal, and an independent reading can
 find a mismatch with its source or another entry before the human spends attention on the set.
@@ -3574,7 +3574,7 @@ version requires a reviewed change to the-way before use.
     review, or silently runs a different Superpowers version.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-10-06
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/4
 
 *Rationale:* the borrowed skills provide design, planning, test and review methods, while the-way
 must keep control of task sources, binding foundation approvals and the single human review point.
@@ -3615,7 +3615,7 @@ code — and writes a new entry only for a rule none of them states.
     the code a late-found projected invariant covers is set aside and rewritten.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-10-06
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/4
 
 *Rationale:* a projected entry is wording a human already settled at the gate, and the task
 whose code first makes it true is the one that can show it holds; entering with that code keeps
