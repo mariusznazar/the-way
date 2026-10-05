@@ -1570,7 +1570,7 @@ reference to an invariant's version is historical and never flagged, as WAY-02 h
   invariant-version-changed · invariant-version-unchanged · invariant-earlier-wording ·
   invariant-citation-version · invariant-correction-confirmation. Level 2 for what counts as a
   correction — an agent compares the change with the decision:
-  - complies: a typo fixed under a declaration the deciding human confirms, with no test citation
+  - complies: a typo fixed under a declaration the accepting human confirms, with no test citation
     changed; "at most three" becoming "at most four" raises the version, and the old citation
     fails until the test is rechecked;
   - violates: "must" becomes "may" under a confirmed correction; a heading's code literal fixed
@@ -1581,8 +1581,8 @@ reference to an invariant's version is historical and never flagged, as WAY-02 h
 - **Approved by:** Mariusz, 2026-10-06
 
 *Rationale:* a read-only test cited by fingerprint would move with every typo, and by bare
-identifier never, checking a meaning gone; a version moves with meaning; the human already deciding
-the change confirms a correction, so no author-named kind silences anything; a forgotten raise
+identifier never, checking a meaning gone; a version moves with meaning; the human who accepts the change
+at the merge confirms a correction, so no author-named kind silences anything; a forgotten raise
 drifts silently, a needless one fails loudly.
 *Rejected:* no version, as in the part map — typo flags or silent drift; earlier wordings kept in
 the entry — they bind nothing, and readers have to pick; a hand-written version nothing compares — a

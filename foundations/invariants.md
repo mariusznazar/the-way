@@ -1076,7 +1076,7 @@ Every `invariant:` line in a check that names an entry of `foundations/invariant
 
 ## invariant-correction-confirmation/1
 
-Every correction an entry of `foundations/invariants.md` declares is confirmed by the human deciding the change, with the old and the new binding part in front of them.
+Every correction an entry of `foundations/invariants.md` declares is confirmed by the human who accepts the change at the merge, with the old and the new binding part in front of them.
 
 - **Method:** `TODO`
 - **Rests on:** none

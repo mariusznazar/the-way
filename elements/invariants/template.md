@@ -196,8 +196,8 @@ naming its identifier and its current version, with `searched: <…>` in *Search
 
 - The version of an entry follows `elements/common/rules.md`, with one exception: an entry whose
   fingerprint differs from its fingerprint on the commit the task branch left the main branch from
-  keeps its version where *Correction* names both fingerprints and the human who decides the change
-  confirms, with the old and the new binding part in front of them, that the meaning is unchanged
+  keeps its version where *Correction* names both fingerprints and the human who accepts the change
+  at the merge confirms, with the old and the new binding part in front of them, that the meaning is unchanged
   (WAY-57).
 - A change after which some test citing the entry would need a different expected value is a
   raise, never a correction (WAY-57).
@@ -291,7 +291,6 @@ WAY-64).
   records (WAY-68).
 - A quarantine row names the entry's identifier, its current version and an end date, and
   stands on the list of quarantined invariants (WAY-68).
-- A rerun set anywhere but the method's command is no change of an invariant test's mechanics.
 
 ## Violated invariants
 
