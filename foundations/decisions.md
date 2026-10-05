@@ -3505,27 +3505,34 @@ task's scope, temporary exclusions, relevant current foundation decisions and an
 projected wording it uses. It is ready when its required outcome is stated, every known question
 blocking that outcome is answered, and implementation questions carried into the cycle are named.
 A project member also matches its plan item's scope, dependencies and assigned entries; any task
-using an approved definition checks that its approval still holds, while source-only use takes no
-assignment or dependency from the plan.
+using an approved definition checks that its approval still holds and names each projected entry,
+or the part of it, that its code makes true, while source-only use takes no other assignment or
+dependency from the plan.
 
 - **Change:** new decision
 - **Scope:** project-level, task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-106@63eddf70 · derives from WAY-118@5af868b3
+- **Relations:** derives from WAY-106@63eddf70 · derives from WAY-118@5af868b3 · derives from
+  WAY-126@76c2e951
 - **Verification:** level 2 — an agent compares the task document with its stated sources:
   - complies: an independent task is ready without a project plan, a source-only task uses
-    approved project wording without taking its plan's assignments, and a project member matches
-    its plan item;
-  - violates: a source-only task is blocked for lack of a plan item, or a project member is ready
-    despite a mismatch with its assigned work.
+    approved project wording without taking its plan's assignments yet names a projected entry its
+    code makes true with the part made true, and a project member matches its plan item;
+  - violates: a source-only task is blocked for lack of a plan item, a project member is ready
+    despite a mismatch with its assigned work, or a task leaves out a projected entry its code
+    makes true, so its cycle proposes a second entry for the same rule.
 - **Review when:** none
 - **Origin:** none
 - **Approved by:** Mariusz, 2026-10-05
 
 *Rationale:* a project can inform a task without owning it; the handoff must show which
 relationship applies so the next agent does not import work or dependencies the task never took on.
+A projected entry is wording already settled, and the task whose code first makes it true is the
+one that can show it holds; naming it before the cycle keeps one entry per rule.
 *Rejected:* requiring every task to belong to a project plan — it excludes independent tasks and
-gives source-only tasks assignments they do not have.
+gives source-only tasks assignments they do not have; carrying only the entries a plan assigns — a
+source-only task's code would hold a rule the foundation lacks, and its return step would write a
+second entry for it.
 
 ### WAY-125/1 — Which Superpowers methods does the autonomous task cycle adopt?
 
@@ -3562,3 +3569,48 @@ requires a reviewed change to the-way before use.
 
 *Rationale:* the borrowed skills provide design, planning, test and review methods, while the-way must keep control of task sources, binding foundation approvals and the single human review point. Naming the version makes the dependency visible when the process is pinned in a product.
 *Rejected:* adopting the complete Superpowers workflow with its intermediate human gates — it would interrupt the delegated cycle; copying the skill bodies into the orchestrator — it would create a second implementation of those methods.
+
+### WAY-126/1 — How does a projected entry enter the foundation?
+
+A projected entry of an approved project definition enters the product's foundation in the
+foundation step of the first task whose code makes it true — the task the plan assigns, or a task
+that uses the definition as a source only, even where the plan assigns the entry to another task —
+whole, in the wording the readiness gate approved, with *Approved by* transcribed from the gate
+record and with the projected terms and environment facts it uses or rests on; where the code
+makes only part of it true, that part enters as a proposal a human accepts. The task the plan
+assigns writes what of the entry the foundation does not yet hold, and a projected entry no code
+makes true. The return step reads the projected entries of the task's sources as well as the
+foundation, sends a task whose code makes one of them true back to its foundation step, and
+proposes a new entry only for a rule none of them states.
+
+- **Change:** new decision
+- **Scope:** project-level, task-cycle, decisions, invariants, glossary, environment-facts,
+  part-map
+- **Based on:** none
+- **Relations:** derives from WAY-01@60960941 · derives from WAY-11@2dde69a7 · derives from
+  WAY-114@9f296365 · derives from WAY-118@5af868b3 · narrows WAY-106@63eddf70
+- **Verification:** level 2 — an agent compares the change with the decision:
+  - complies: a source-only task whose code adds the store a projected decision chooses writes
+    that decision whole in its foundation step, *Approved by* copied from the gate record, and
+    the task the plan assigns later finds it and writes nothing; a task whose code makes one of
+    a projected decision's two sentences true brings that sentence to the human as a proposal;
+    a plan member whose code would make another item's entry true returns to the plan first;
+  - violates: the return step proposes a new decision for a rule a projected entry of the
+    task's source states; a shortened projected entry is written with the gate's *Approved by*;
+    a projected invariant is written after the code it covers.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, 2026-10-05
+
+*Rationale:* a projected entry is wording a human already settled at the gate, and the task
+whose code first makes it true is the one that can show it holds; entering with that code keeps
+the foundation describing the present product and keeps one entry per rule. Writing it in the
+foundation step keeps the order every foundation change has: the entry, and an invariant's
+test, are accepted before the code that follows. A part of an entry is wording no human has
+approved in that form.
+*Rejected:* holding a projected entry back for the task the plan assigns — the foundation would
+lag behind the code it describes; a return step that searches only the current foundation — a
+rule settled in a definition comes back as a second entry under another name; carrying a
+shortened entry as approved — the foundation would gain binding sentences no human approved in
+that form; carrying in the return step — a projected invariant's test would be written after the
+code it checks.

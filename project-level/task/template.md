@@ -1,7 +1,7 @@
 # The task document
 
 A task document states what one task must change and why. It is written before the task cycle and
-copied onto the task branch at the cycle's start. A task may belong to a project, use a project's
+copied into the cycle's record at the cycle's start. A task may belong to a project, use a project's
 approved settlements without belonging to its plan, or stand on its own. The document carries
 the sources and scope needed for this task; the cycle's record holds the implementation plan and
 results.
@@ -81,8 +81,10 @@ definition without plan membership never acquires that plan's assignments or dep
 - **Decisions in play:** name and quote current foundation decisions this task touches with their
   identifiers and versions. If the task uses an approved project definition, copy the relevant
   projected wording and identify its heading there. A project plan determines which entries a
-  member task is assigned to realize or write; source-only use does not assign that work. `none`
-  means the search found no applicable entry; it is not a substitute for the search.
+  member task is assigned to realize or write; a source-only task takes no assignment, and marks,
+  among the projected wording it copies, each entry, or the part of one, that its code makes true,
+  so that its cycle writes it (WAY-124, WAY-126). `none` means the search found no applicable
+  entry; it is not a substitute for the search.
 - **Out of scope:** only task-bound exclusions. A lasting exclusion belongs in a projected or
   current decision, not here.
 

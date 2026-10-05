@@ -78,8 +78,10 @@ skill named here is the product skill with the `the-way-` prefix.
 - Search the current foundation for decisions the task touches, including an unlinked
   collision; quote their current wording and version. If a project definition is a source,
   bring in its relevant approved projected wording. For a project member, use the plan to
-  identify which entries it is assigned to realize or write. For source-only use, do not claim
-  that assignment merely because the wording informs the task.
+  identify which entries it is assigned to realize or write. A source-only task takes no plan
+  assignment, but its cycle writes a projected entry its code will make true: mark that entry
+  under *Decisions in play* with the part made true now, also when the plan assigns it to another
+  task (WAY-124, WAY-126).
 - For a project member, compare the numbered work, dependencies and projected entries with its
   plan item. A mismatch returns to the plan, not an unrecorded change in this document.
 - If the task would contradict a current decision or a projected entry, show the conflict and
@@ -95,8 +97,9 @@ skill named here is the product skill with the `the-way-` prefix.
 - Check that every blocking question has an answer, the numbered work is executable, the
   questions brought into this task are accounted for, and the decisions in play are present or
   explicitly `none` after a search. For a project member, also check its plan item and
-  assignments; for any task using approved project settlements, check the definition's approval.
+  assignments; for any task using approved project settlements, check the definition's approval
+  and that every projected entry its code makes true is marked with the part made true.
   Mark `Status: ready for cycle` only when its applicable checks pass; report an obstacle instead
   of declaring readiness.
 - The task document carries what and why. Do not insert a separate implementation spec, test
-  plan, or execution log here. The task cycle records those on the task branch.
+  plan, or execution log here. The task cycle records those in its cycle record.
