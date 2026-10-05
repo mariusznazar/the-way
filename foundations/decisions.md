@@ -323,8 +323,9 @@ the author assessing its own change — it checks itself.
 A task ends with its return step before its branch is merged: an agent lists from the diff and the
 task's log new rules and decisions, code behaviour with no invariant over it, environment facts the
 change rests on that the foundation does not yet hold and words whose use the glossary does not yet
-settle, proposes them to the panel as a foundation change, and compares the foundation with the code
-in the parts the task touched. A periodic review of the foundation runs apart from tasks.
+settle, writes them into the foundation in the same change, which its independent assessment covers
+(WAY-10), and compares the foundation with the code in the parts the task touched. A periodic
+review of the foundation runs apart from tasks.
 
 - **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, task-cycle
@@ -332,13 +333,13 @@ in the parts the task touched. A periodic review of the foundation runs apart fr
 - **Relations:** derives from WAY-01@60960941
 - **Verification:** level 1 — invariants: return-step-record. Level 2 for what the return step finds
   — an agent compares the change with the decision:
-  - complies: an edge-case rule the implementer wrote into the code comes back as a proposed
-    invariant before the merge;
+  - complies: an edge-case rule the implementer wrote into the code comes back as an
+    invariant written before the merge;
   - violates: the return step reports nothing to add, while the diff brings in behaviour that no
     invariant covers.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-26
+- **Approved by:** Mariusz, 2026-10-06
 
 *Rationale:* some of the foundation is learned only in implementation and in use, and a task that
 missed the foundation does not report it; an end step goes missing, so the merge waits for its
@@ -3515,14 +3516,14 @@ dependency from the plan.
 - **Scope:** project-level, task-cycle
 - **Based on:** none
 - **Relations:** derives from WAY-106@63eddf70 · derives from WAY-118@5af868b3 · derives from
-  WAY-126@76c2e951
+  WAY-126@35accf8b
 - **Verification:** level 2 — an agent compares the task document with its stated sources:
   - complies: an independent task is ready without a project plan, a source-only task uses
     approved project wording without taking its plan's assignments yet names a projected entry its
     code makes true with the part made true, and a project member matches its plan item;
   - violates: a source-only task is blocked for lack of a plan item, a project member is ready
     despite a mismatch with its assigned work, or a task leaves out a projected entry its code
-    makes true, so its cycle proposes a second entry for the same rule.
+    makes true, so its cycle writes a second entry for the same rule.
 - **Review when:** none
 - **Origin:** none
 - **Approved by:** Mariusz, 2026-10-05
@@ -3544,7 +3545,7 @@ independent task and final code reviews, and preparing a pull or merge request; 
 a ready task run through `implement-task`. The orchestrator answers workflow questions and gives
 provisional stage go-aheads under the task owner's delegation, never records these as human
 approval, controls the return between stages, keeps agent reports before a borrowed skill cleans
-its workspace, runs its foundation panel and return step, and brings the request to the human for
+its workspace, runs the independent assessment of its foundation change and its return step, and brings the request to the human for
 review. Decisions reserved to a human by the foundation remain reserved; when required code cannot
 proceed without one, the cycle opens a blocked draft request; a different Superpowers version
 requires a reviewed change to the-way before use.
@@ -3567,7 +3568,7 @@ requires a reviewed change to the-way before use.
   - violates: an agent treats its own spec approval as the owner's approval, skips the request review, or silently runs a different Superpowers version.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-10-05
+- **Approved by:** Mariusz, 2026-10-06
 
 *Rationale:* the borrowed skills provide design, planning, test and review methods, while the-way must keep control of task sources, binding foundation approvals and the single human review point. Naming the version makes the dependency visible when the process is pinned in a product.
 *Rejected:* adopting the complete Superpowers workflow with its intermediate human gates — it would interrupt the delegated cycle; copying the skill bodies into the orchestrator — it would create a second implementation of those methods.
@@ -3579,40 +3580,42 @@ foundation step of the first task whose code makes it true — the task the plan
 that uses the definition as a source only, even where the plan assigns the entry to another task —
 whole, in the wording the readiness gate approved, with *Approved by* transcribed from the gate
 record and with the projected terms and environment facts it uses or rests on; where the code
-makes only part of it true, that part enters as a proposal a human accepts. The task the plan
-assigns writes what of the entry the foundation does not yet hold, and a projected entry no code
-makes true. The return step reads the projected entries of the task's sources as well as the
-foundation, sends a task whose code makes one of them true back to its foundation step, and
-proposes a new entry only for a rule none of them states.
+makes only part of it true, the agent writes that part and the human accepts its meaning at the
+merge (WAY-114). The task the plan assigns writes what of the entry the foundation does not yet
+hold, and a projected entry no code makes true. The return step reads the projected entries of the
+task's sources as well as the foundation, writes one the code makes true that the foundation step
+missed — an invariant with a check by an agent that did not write the code it covers, run on that
+code — and writes a new entry only for a rule none of them states.
 
 - **Change:** new decision
 - **Scope:** project-level, task-cycle, decisions, invariants, glossary, environment-facts,
   part-map
 - **Based on:** none
-- **Relations:** derives from WAY-01@60960941 · derives from WAY-11@2dde69a7 · derives from
+- **Relations:** derives from WAY-01@60960941 · derives from WAY-11@16d55adb · derives from
   WAY-114@04b4f599 · derives from WAY-118@5af868b3 · narrows WAY-106@63eddf70
 - **Verification:** level 2 — an agent compares the change with the decision:
   - complies: a source-only task whose code adds the store a projected decision chooses writes
     that decision whole in its foundation step, *Approved by* copied from the gate record, and
     the task the plan assigns later finds it and writes nothing; a task whose code makes one of
-    a projected decision's two sentences true brings that sentence to the human as a proposal;
+    a projected decision's two sentences true writes that sentence and lists its meaning in the
+    request;
     a plan member whose code would make another item's entry true returns to the plan first;
-  - violates: the return step proposes a new decision for a rule a projected entry of the
+  - violates: the return step writes a new decision for a rule a projected entry of the
     task's source states; a shortened projected entry is written with the gate's *Approved by*;
-    a projected invariant is written after the code it covers.
+    the code a late-found projected invariant covers is set aside and rewritten.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-10-05
+- **Approved by:** Mariusz, 2026-10-06
 
 *Rationale:* a projected entry is wording a human already settled at the gate, and the task
 whose code first makes it true is the one that can show it holds; entering with that code keeps
 the foundation describing the present product and keeps one entry per rule. Writing it in the
 foundation step keeps the order every foundation change has: the entry, and an invariant's
-test, are accepted before the code that follows. A part of an entry is wording no human has
-approved in that form.
+test, are accepted before the code that follows. A part of an entry is wording the gate did not
+approve in that form, so its meaning reaches the human at the merge.
 *Rejected:* holding a projected entry back for the task the plan assigns — the foundation would
 lag behind the code it describes; a return step that searches only the current foundation — a
 rule settled in a definition comes back as a second entry under another name; carrying a
 shortened entry as approved — the foundation would gain binding sentences no human approved in
-that form; carrying in the return step — a projected invariant's test would be written after the
-code it checks.
+that form; rewriting the code a late-found projected invariant covers — a check by an agent that
+did not write the code guards it without a second implementation.
