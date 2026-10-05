@@ -59,6 +59,10 @@ installer allows Git's file protocol only when the URL is a local path or a `fil
 | `AGENTS.md` | The same guidance for Codex, between `<!-- the-way:begin -->` and `<!-- the-way:end -->`. |
 | `.gitignore` | The line `.runs/`. The invariants format guard requires the record of a run that a command names to be ignored by Git. |
 
+The `implement-task` entry point requires Superpowers 6.4.1 and a harness that can dispatch
+subagents. The installer creates its wrapper but does not install Superpowers; the skill checks
+these prerequisites before starting a task cycle.
+
 The product commits the gitlink, `.gitmodules`, the foundation files, the `.claude` and `.agents`
 files, `AGENTS.md` and `.gitignore` as one product change. The installer stages only the two submodule paths; review and stage the other
 files in the product's normal workflow. A later process version enters the product through a

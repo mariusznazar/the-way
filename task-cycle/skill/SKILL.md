@@ -32,37 +32,56 @@ choice approved or changed the rule.
    pinned the-way checkout matches the product's gitlink. Follow product-specific git and test
    rules. Search the current foundation for additional applicable entries or collisions; the
    task document is a starting map, not proof that nothing else applies.
-3. Verify that subagents and these installed Superpowers skills are available in this harness:
-   `brainstorming`, `writing-plans`, `subagent-driven-development` or `executing-plans`,
-   `test-driven-development`, `requesting-code-review`, and
-   `finishing-a-development-branch`. Read each skill when its stage begins, including files it
-   points to. Use the installed version; this skill does not vendor or override their methods.
-   If a required capability is unavailable, first seek an equivalent installed route that
-   preserves its required result and independent review; record the substitution. If none exists,
-   the cycle cannot start.
+3. Require subagents and Superpowers version 6.4.1 with `brainstorming`, `writing-plans`,
+   `subagent-driven-development`, `test-driven-development`, `requesting-code-review`, and
+   `finishing-a-development-branch`. Verify the installed version before dispatching. Read each
+   skill and its linked files when its stage begins. The adoption decision in the foundation
+   names the borrowed methods and the the-way adapter's stage boundaries; those boundaries govern
+   handoffs and human contact. Do not silently use another version or substitute another method.
+   If this version or a subagent capability is unavailable, this cycle cannot run in that harness.
 
 ## Start and record
 
-4. Take a branch from the product's current main branch and an isolated worktree when the
-   product's instructions and tools allow it. Never overwrite another worker's changes or let
-   two writing agents edit the same worktree concurrently. Record
-   the base commit and any failing checks already present. Keep a frozen copy of the task
+4. Calculate and record the three WAY-13 sharpness inputs: criticality from the touched parts
+   (unknown failure modes count as highest), whether touched files are trust boundaries, and
+   whether any operation cannot be undone. Use the full subagent review loop even for low
+   criticality. For a trust boundary, add adversarial input checks under WAY-48. Stage but do not
+   execute an irreversible operation before the human decides on it at the request. Treat a
+   security-sensitive or external side effect the same way when the product's rules reserve its
+   authorization to a human; prepare what can be reviewed and mark the request blocked if that
+   action is necessary to finish the task. Select the task branch under the product's git rules;
+   use an isolated worktree when its instructions and tools allow it. Never overwrite another
+   worker's changes or let two writing agents edit the same worktree concurrently. Record the
+   base commit and any failing checks already present. Keep a frozen copy of the task
    document on the task branch, with its original path and source commit or approval date.
-5. Create `docs/task-cycles/<task-slug>/cycle.md` using `task-cycle/record_template.md` from the
-   pinned the-way checkout. Put full agent handoffs and reports beside it in `reports/`, with
-   secrets and personal data removed. Append each event before the next dependent dispatch so
-   another session can resume from files and commits. Record the actor and model, inputs, skill,
-   output path, result, command and exit code where relevant, time and cost when available.
+5. Create an ignored working record at `.runs/task-cycles/<task-slug>/cycle.md` using
+   `task-cycle/record_template.md` from the pinned the-way checkout. Put full agent handoffs,
+   prompts, reports and ledgers beside it in `reports/`, with secrets and personal data removed.
+   Append each event before the next dependent dispatch so another session can resume from the
+   worktree and commits. Record the actor and model, inputs, skill, output path, result, command
+   and exit code where relevant, time and cost when available.
    Record every question, answer, micro decision, rejected option and its cost if wrong. Link
    to the code, test, spec, plan or review finding that used the decision. Do not record hidden
-   reasoning or raw secret-bearing output.
+   reasoning or raw secret-bearing output. Keep this record and its reports out of commits and
+   assessment packages until the panel and independent code reviews finish.
+
+For every dispatch, pass the user's delegation to the orchestrator, the applicable binding
+sources, the agent's exact stage boundary, and the path for its full report. The agent sends
+questions back to you and returns at that boundary, without invoking the next Superpowers skill
+or seeking direct human approval. Answer workflow approval prompts provisionally with evidence;
+only a human can approve a binding foundation entry. This adapter changes the handoff and approval
+points, not the borrowed method's work within each stage.
 
 ## Design and plan
 
-6. Dispatch a fresh design agent with the frozen task, applicable source paths and the pinned
-   foundation. Ask it to use Superpowers `brainstorming`. It returns questions to you and writes
-   its design and spec under the product's `docs/superpowers/specs/` convention. Answer each
-   question from an approved source where possible. Otherwise choose the smallest reversible
+6. Dispatch a fresh design agent with the frozen task, applicable source paths, the pinned
+   foundation and the dispatch contract above. Ask it to use Superpowers `brainstorming`. It
+   classifies the task using that skill, then follows its architectural path because this cycle
+   requires a written spec and plan for every ready task. Record the classification and this
+   cycle-specific choice. The agent returns questions to you and writes its design and spec under
+   the product's `docs/superpowers/specs/` convention. Its boundary is the reviewed spec: it
+   returns before invoking `writing-plans`. Answer each question from an approved source where
+   possible. Otherwise choose the smallest reversible
    interpretation that fulfills the task, note alternatives and the price of being wrong, and
    mark it as an autonomous choice for the request review. Do not silently expand task scope.
    Where the skill expects a human design or spec approval, give an explicitly provisional
@@ -71,39 +90,53 @@ choice approved or changed the rule.
    foundation. Resolve missing requirements, invented behavior and contradictions before moving
    on. A spec may describe a proposed foundation change, but a decision or invariant that
    requires human approval remains proposed until the request is reviewed.
-8. Dispatch a fresh planner to use Superpowers `writing-plans` on the reviewed spec. Answer its
-   questions in the same way. Review the plan for full task coverage, source fidelity, dependency
-   order, tests and commands that can actually run. Record a provisional go-ahead for execution.
+8. Dispatch a fresh planner to use Superpowers `writing-plans` on the reviewed spec. Its boundary
+   is the finished plan: it returns before execution. Answer its questions in the same way. Review
+   the plan for full task coverage, source fidelity, dependency order, tests and commands that can
+   actually run. Record a provisional go-ahead for execution.
    Keep the spec and plan as separate artifacts so later iterations can compare them with results.
 
 ## Execute, verify and review
 
-9. Prefer Superpowers `subagent-driven-development`: fresh implementer and reviewer contexts for
-   each meaningful plan task, followed by a whole-branch review. Use `executing-plans` only if
-   subagent-driven execution cannot fit the plan and the reason is recorded; retain an independent
-   final reviewer. Have implementers use `test-driven-development` for behavior changes. An
-   implementation agent never approves its own review. Questions from any agent return to you,
+9. Use Superpowers `subagent-driven-development`: fresh implementer and reviewer contexts for
+   each meaningful plan task, followed by a whole-branch review. Its boundary is the final review
+   and fixes: it returns before workspace cleanup and `finishing-a-development-branch`. Copy its
+   ledger and full reports into the working cycle record before allowing cleanup. Have implementers
+   use `test-driven-development` for behavior changes. An implementation agent never approves its
+   own review. Questions from any agent return to you,
    with their answers entered in the cycle record before work continues.
 10. After each implementation unit, run its focused checks, review its diff and resolve findings.
-    Run the product's full required gate on the completed change. For visible behavior, verify it
-    in the running product as well. Use Superpowers `requesting-code-review` for a fresh final
-    review, or the final review already required by the selected execution skill; do not dispatch
-    a duplicate reviewer for the same range. If the foundation or an invariant test changes, run
-    the the-way panel and format guards required by the current foundation. Record failed and
-    unchecked results by name; never call an unrun check passed.
+    Recalculate the WAY-13 sharpness inputs from the completed diff; if they grew, add the
+    resulting checks before review, never reduce those already run. Run the product's full
+    required gate on the completed change. For visible behavior, verify it in the running
+    product as well. Use Superpowers `requesting-code-review` for a fresh final review, or the
+    final review already required by the selected execution skill; do not dispatch a duplicate
+    reviewer for the same range. Record failed and unchecked results by name; never call an unrun
+    check passed.
 11. Perform the return step of WAY-11 on the real diff: identify newly learned decisions, rules,
     uncovered behavior, environment facts, terms and part-map changes; compare touched parts of
-    the foundation with code. Prepare each required foundation proposal and panel record on the
-    branch. Do not invent `Approved by` for a decision awaiting the human. A contradiction with a
-    current decision follows WAY-30; a collision without recorded precedence follows WAY-25.
+    the foundation with code. Prepare each required foundation proposal in the working record.
+    Write a binding foundation change only where prior human approval authorizes its content;
+    otherwise carry the proposal to the request. If the foundation or an invariant test changes,
+    run its format guards and the the-way panel on the final change. Give the assessors only the
+    assessed code/foundation commit's diff and files, never the working cycle record, agent
+    reports, prompts or author reasoning. Keep spec, plan and chronology out of that commit;
+    commit the chronology only after the panel. If a panel fix changes code, rerun affected checks
+    and code review. Do not invent `Approved by` for a decision awaiting the human. A
+    contradiction with a current decision follows WAY-30; a collision without recorded
+    precedence follows WAY-25.
     If those rules prevent the required code, report the task as blocked in a draft request.
 
 ## Request and handoff
 
 12. Recheck the branch against the current target branch, rerun checks affected by that update,
-    and inspect the final diff. Use Superpowers `finishing-a-development-branch` for its
-    verification and request preparation, then take the pull or merge request route already
-    chosen by the user. Do not merge. Keep the worktree for review changes.
+    and inspect the final diff. Copy the sanitized working record and full reports to
+    `docs/task-cycles/<task-slug>/` on the task branch, rewrite their links to the committed
+    copies, and commit them after the assessed change;
+    the panel record lives there under the task cycle, as `elements/common/panel.md` specifies.
+    Use Superpowers `finishing-a-development-branch` for verification and request preparation,
+    then take the pull or merge request route already chosen by the user, without presenting its
+    integration menu. Do not merge. Keep the worktree for review changes.
 13. The request contains: task goal and relation, source versions, design and plan links, what
     changed and why, test and review evidence, every autonomous choice with its cost if wrong,
     foundation proposals awaiting approval, known limitations, and the exact questions on which

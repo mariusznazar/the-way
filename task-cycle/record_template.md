@@ -8,13 +8,23 @@
 - Task branch: <branch>
 - Status: running | blocked | request open | complete
 
+## Sharpness at start and after the final diff
+
+| When | Criticality and touched parts | Trust-boundary files | Reversibility | Consequent checks |
+|---|---|---|---|---|
+
+Unknown failure modes count as the highest criticality. Record the reason for each assessment,
+then recalculate from the final diff. An irreversible operation waits for the human's decision at
+the request; preparing reversible code for it does not authorize executing it.
+
 ## Events
 
 | Time | Stage | Actor and model | Skill and input | Output or report | Result and next step |
 |---|---|---|---|---|---|
 
-Append one row for every dispatch, handoff, failed attempt, rerun, review and fix. Keep full
-sanitized prompts and reports in `reports/` and link them from the rows.
+Append one row for every dispatch, handoff, failed attempt, rerun, review and fix. During work this
+file and full sanitized prompts and reports live under the ignored `.runs/task-cycles/` directory.
+After assessment, copy them to `docs/task-cycles/` and link the reports from these rows.
 
 ## Questions and autonomous choices
 
@@ -46,6 +56,14 @@ Record the baseline separately from post-change runs. An unrun check is unchecke
 - Environment facts and glossary terms: <links or none after search>
 - Part-map changes: <links or none after search>
 - Panel and foundation comparison: <reports or not applicable>
+
+## Panel
+
+- Assessed commit or range and its files: <commit or range and paths>
+- Independent assessments: <links to full reports>
+- Settlement, first order: <link to full report and concise call>
+- Settlement, swapped order: <link to full report and concise call>
+- Fixes and re-assessment: <links or none>
 
 ## Request handoff
 

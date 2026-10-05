@@ -20,9 +20,11 @@ place for the record are the way panels have been run, and no decision sets them
    agree, that is, give the same call with the same fixes; any other change, and one on which the
    two settlements differ, goes to a human with the diff, its effects, the two settlements and a
    recommendation (WAY-10).
-5. Until the task cycle sets where the panel's record lives, the record — both assessments and the
-   two settlements, one for each order, in short — goes into the message of the commit that carries
-   the assessed change.
+5. For a change run by the task cycle, full assessments and both settlements go in the task's
+   `docs/task-cycles/<task-slug>/reports/`, with their calls and links in `cycle.md`. The record
+   is copied from the ignored working area and committed after the assessed change, so assessors
+   receive no task chronicle. Outside the task cycle, both assessments and the two settlements,
+   one for each order, go in short in the message of the commit that carries the assessed change.
 
 A pair of perspectives that has served changes to the foundation: *the agent that will work under
 the change* applies it to real entries — twenty or more where the foundation holds that many — and
