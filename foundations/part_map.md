@@ -80,15 +80,16 @@ The part answers for a product's environment facts.
 ## elements-common
 
 The part answers for rules of form and the way of working shared by foundation-entry skills, the
-code shared by their format guards, the skill that finds entries in a source, the critique skill,
-and the panel procedure.
+code shared by their format guards, the skill that finds entries in a source, and the critique
+skill, which is also the independent assessor of a change to an invariant test or to the
+foundation.
 
 - **Files:** elements/common/**
 - **Depends on:** project-level · decisions · invariants · glossary · part-map · environment-facts
 - **Failure modes:**
   - the entry finder omits a settlement that a later task must guess — a project can pass its gate
     with an incomplete projected foundation — high — not detected
-  - a critique presents a source mismatch as an accepted correction — the human approves wording
+  - a critique presents a source mismatch as an accepted correction — the human approves a meaning
     they did not settle — high — not detected
 - **Trust boundary:** none
 
@@ -106,7 +107,7 @@ uses its settlements as a source, or stands on its own.
     gap as project scope or a future foundation rule — high — detected by project-readiness-gate
   - an agent fills a missing human answer with a plausible settlement — tasks inherit an invented
     scope or rule — high — not detected
-  - the gate approves wording that was not searched against the current foundation — a conflict
+  - the gate approves a meaning that was not searched against the current foundation — a conflict
     enters the project plan — high — not detected
   - a definition reaches the breakdown with a listed technology choice still open or naming no
     entry — the first task chooses the store of data — high — detected by project-technology-record
@@ -131,8 +132,8 @@ them.
     — an implementable task waits for the human before its request — high — not detected
   - the orchestrator omits a micro decision or its cost from the cycle record and request — the
     human cannot assess what the agents chose — high — not detected
-  - an agent presents a provisional foundation change as approved — code follows a rule the human
-    has not accepted — high — not detected
+  - an agent writes an entry the request does not list with its meaning — the human merges a rule
+    they were never shown — high — not detected
 - **Trust boundary:** none
 
 ## gate

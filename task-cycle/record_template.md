@@ -6,7 +6,7 @@
 - Process pin: <commit>
 - Target branch and base: <branch and commit>
 - Task branch: <branch>
-- Foundation route: <unchanged | entry or invariant-test change; affected entries and prior approval>
+- Foundation route: <unchanged | entry or invariant-test change; affected entries>
 - Status: running | blocked | request open | complete
 
 ## Sharpness at start and after the final diff
@@ -31,13 +31,12 @@ commit that adds it. A correction after review repeats this pair.
 
 ## Questions and autonomous choices
 
-| ID | Question and source | Answer or choice | Evidence | Alternative rejected | Cost if wrong | Reaches beyond the request | Used by | Review status |
-|---|---|---|---|---|---|---|---|---|
+| ID | Question and source | Answer or choice | Evidence | Alternative rejected | Cost if wrong | Used by |
+|---|---|---|---|---|---|---|
 
-Include questions that were answered by a binding source as well as new micro decisions. Mark
-choices requiring a human foundation decision as proposed, never approved. A choice whose cost of
-being wrong reaches beyond the request becomes a proposed foundation entry when it still binds
-after the merge (WAY-36), and a question under *To decide* in the request otherwise.
+Include questions answered by a binding source as well as new micro decisions. A choice that binds
+after the merge is written into the foundation (WAY-36); every other choice is its row here and
+nothing else.
 
 ## Artifacts
 
@@ -45,9 +44,8 @@ after the merge (WAY-36), and a question under *To decide* in the request otherw
 |---|---|---|---|
 
 Include the frozen task, `spec.md`, `plan.md`, code commits, tests and full agent reports. Name
-commits and commit ranges instead of copying diffs or files that git holds. A foundation proposal
-has one current version, with its translation beside it in the task document's language for the
-human (WAY-114).
+commits and commit ranges instead of copying diffs or files that git holds. A foundation entry
+the cycle writes lives in its commits; the record keeps its meaning sentence for the request.
 
 ## Verification
 
@@ -59,29 +57,29 @@ check is unchecked.
 
 ## Return step
 
-- New decisions or changed decisions proposed: <links or none after search>
-- New invariants or changes proposed: <links or none after search>
+- Decisions written or changed: <links or none after search>
+- Invariants written or changed: <links or none after search>
 - Behavior with no invariant: <finding or none after search>
 - Environment facts and glossary terms: <links or none after search>
 - Part-map changes: <links or none after search>
-- Projected entries written whole or proposed in part: <links or none after search>
-- Panel and foundation comparison: <reports or not applicable>
+- Foundation compared with code in touched parts: <finding or none>
+- Projected entries written whole or in part: <links or none after search>
 
-## Panel
+## Independent assessment
 
-- Manifest — assessed range and its files: <commit hashes and paths, plus a diff only of changes
-  made after the panel>
-- Independent assessments: <links to full reports>
-- Settlement, first order: <link to full report and concise call>
-- Settlement, swapped order: <link to full report and concise call>
-- Fixes and re-assessment: <links or none>
+- Assessed range and its files: <commit hashes and paths>
+- Assessment: <link to the full report and its call>
+- Settlement: <each remark, how it was settled, and the commit that applied it, or none>
 
 ## Request handoff
 
 - Request URL and status: <URL and draft/ready/blocked>
-- *To decide* — proposed entries and questions from choices: <IDs from the questions table, or
-  none>
+- What this request settles: <identifier and meaning sentence for each entry>
+- What the foundation puts in front of the human at the merge: <an invariant kept at its version
+  under a correction, with its old and new sentence; a part whose computed criticality fell; a
+  recovered row, with the gate's report; a moved use of a changed definition; a term WAY-97 asks the
+  request to name; or none>
+- Questions: <only those the foundation step allows, or none>
 - Choices within the request: <count and link to the questions table>
 - Writes to the task's backlog entry: <request link and state, or none>
-- Remaining limitations: <list or none>
-- Process improvements to consider next time: <observed friction and evidence, or none>
+- Process remarks on the-way: <observed friction and evidence, or none>

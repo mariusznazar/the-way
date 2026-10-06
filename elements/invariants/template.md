@@ -196,8 +196,8 @@ naming its identifier and its current version, with `searched: <…>` in *Search
 
 - The version of an entry follows `elements/common/rules.md`, with one exception: an entry whose
   fingerprint differs from its fingerprint on the commit the task branch left the main branch from
-  keeps its version where *Correction* names both fingerprints and the human who decides the change
-  confirms, with the old and the new binding part in front of them, that the meaning is unchanged
+  keeps its version where *Correction* names both fingerprints and the human who accepts the change
+  at the merge confirms, with the old and the new binding part in front of them, that the meaning is unchanged
   (WAY-57).
 - A change after which some test citing the entry would need a different expected value is a
   raise, never a correction (WAY-57).
@@ -225,10 +225,10 @@ naming its identifier and its current version, with `searched: <…>` in *Search
   invariant is about would otherwise compute either; only the side it compares against comes from
   the run (WAY-69). Which files a test names, so that a fixture or a builder of its input cannot be
   changed underneath it, is not settled.
-- An invariant's sentence and a check that cites it come from separate acts by different agents,
-  and the break the check is accepted on is written from the sentence by an agent other than the
-  check's author, with that check and the files it reads out of its input (WAY-69). This binds the
-  act of writing a check, not the history of the file it joins.
+- An invariant's sentence, the check that cites it and the code it covers come from three different
+  agents, and the deliberate break the check is accepted on is written from the sentence by the
+  reviewer of that code, who did not write the check (WAY-69). This binds the act of writing a
+  check, not the history of the file it joins.
 
 ## Recovered
 
@@ -242,13 +242,13 @@ from a product's own requirements, which the product does not meet yet, is not r
 requirements, which the product does not meet yet, is recorded`).
 
 *Found* names the place of each source the search found that gives a reason for keeping the
-behaviour or calls for a different one, or reads `found: nothing`. A place that only cites another is
-followed to the place it cites, and is marked where that source is superseded. *Found* never states
-a reason itself, nor one an agent infers (WAY-58). The row rests on a judgment: the human deciding
-the change sets it with the gate's report in front of them, which answers to the invariant
-`gate-fork-point-evidence` (WAY-58). An entry whose binding part changes — by a raised version, by
-a correction, or by a split or a merge — enters again, and its row is set again (WAY-57, WAY-58,
-WAY-64).
+behaviour or calls for a different one, or reads `found: nothing`. A place that only cites another
+is followed to the place it cites, and is marked where that source is superseded. *Found* never
+states a reason itself, nor one an agent infers (WAY-58). The row rests on a judgment: the human
+accepting the change at the merge sets it with the gate's report in front of them, which answers to
+the invariant `gate-fork-point-evidence` (WAY-58). An entry whose binding part changes — by a raised
+version, by a correction, or by a split or a merge — enters again, and its row is set again (WAY-57,
+WAY-58, WAY-64).
 
 ## Result, report and debt
 
@@ -291,8 +291,6 @@ WAY-64).
   records (WAY-68).
 - A quarantine row names the entry's identifier, its current version and an end date, and
   stands on the list of quarantined invariants (WAY-68).
-- A rerun set anywhere but the method's command is no change of an invariant test's mechanics, so a
-  human decides it (WAY-10).
 
 ## Violated invariants
 

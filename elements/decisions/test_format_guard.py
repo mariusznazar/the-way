@@ -198,7 +198,38 @@ class Fields(GuardTestCase):
     def test_approved_by_without_date(self):
         self.assertFails(log(version(1, approved="Anna")), "*Approved by* is not")
         self.assertRecords(line("check_approval", "fail", "decision-approval-record/1",
-                                "line 18: ABC-01/1: *Approved by* is not `<who>, YYYY-MM-DD`"))
+                                "line 18: ABC-01/1: *Approved by* is not `<who>, YYYY-MM-DD` "
+                                "or `<who>, merge of <request URL>`"))
+
+    def test_approved_by_a_merge(self):
+        self.assertPasses(log(version(1, approved="Anna, merge of https://github.com/o/r/pull/5")))
+        self.assertRecords(line("check_approval", "pass", "decision-approval-record/1"))
+
+    def test_approved_by_a_merge_without_its_request(self):
+        self.assertFails(log(version(1, approved="Anna, merge of")), "*Approved by* is not")
+
+    PLACEHOLDER = "Mariusz, merge of <request link>"
+
+    def test_the_merge_placeholder_is_a_warning_without_a_commit_to_merge_onto(self):
+        code, output = self.guard(log(version(1, approved=self.PLACEHOLDER)))
+        self.assertEqual(code, 0, output)
+        self.assertIn("warning: *Approved by* is the placeholder", output)
+        self.assertEqual([item for item in self.lines if item["verdict"] != "pass"], [])
+
+    def test_the_approver_is_read_from_the_placeholder(self):
+        self.assertPasses_ignoring_warnings(log(version(1, approved=self.PLACEHOLDER)),
+                                            approver="Mariusz")
+        self.assertFails(log(version(1, approved=self.PLACEHOLDER)),
+                         "*Approved by* names Mariusz, not Anna", approver="Anna")
+
+    def test_a_date_before_a_merge_is_not_a_form(self):
+        self.assertFails(log(version(1, approved="Anna, 2026-01-01, merge of https://x/1")),
+                         "*Approved by* is not")
+
+    def assertPasses_ignoring_warnings(self, text, **options):
+        code, output = self.guard(text, **options)
+        self.assertEqual(code, 0, output)
+        self.assertIn("0 error(s)", output)
 
     def test_rationale_for_change_in_later_versions(self):
         self.assertFails(log(version(1), version(1, ver=2, rationale="Rationale")),
@@ -355,6 +386,14 @@ class Approver(GuardTestCase):
                          approver="Mariusz")
         self.assertRecords(line("check_approver", "fail", "decision-approver/1",
                                 "line 18: ABC-01/1: *Approved by* names Anna, not Mariusz"))
+
+    def test_the_approver_of_a_merge(self):
+        self.assertPasses(log(version(1, approved="Anna, merge of https://github.com/o/r/pull/5")),
+                          approver="Anna")
+
+    def test_another_approver_of_a_merge(self):
+        self.assertFails(log(version(1, approved="Bea, merge of https://github.com/o/r/pull/5")),
+                         "*Approved by* names Bea, not Anna", approver="Anna")
 
     def test_not_checked_outside_the_way_s_own_log(self):
         code, output = self.guard(log(version(1)))
@@ -1265,6 +1304,18 @@ class MergeTodo(InGit):
                 self.guard(text)
                 self.assertNotIn("log-entry-merge-todo/1",
                                  [item["invariant"] for item in self.lines])
+
+    def test_the_merge_placeholder_fails_given_a_commit_to_merge_onto(self):
+        code, output = self.guard(log(version(1, approved="Mariusz, merge of <request link>")),
+                                  merge_onto="main")
+        self.assertEqual(code, 1, output)
+        self.assertIn("decisions.md:18: error: ABC-01/1: *Approved by* is the placeholder "
+                      "`merge of <request link>`, which a merge onto the main branch does not "
+                      "take", output)
+        self.assertRecords(line("check_merge_todo", "fail", "log-entry-merge-todo/1",
+                                "line 18: ABC-01/1: *Approved by* is the placeholder "
+                                "`merge of <request link>`, which a merge onto the main branch "
+                                "does not take"))
 
     def test_a_log_without_todo_passes(self):
         self.assertPasses(log(version(1), version(2)), merge_onto="main")

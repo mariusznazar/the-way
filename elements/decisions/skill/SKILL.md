@@ -45,10 +45,14 @@ decision adds to each.
   Each invariant level 1 names is written through `record-invariant` in step 4.4.
 - `none considered` in *Rejected* is the human's statement.
 - *Approved by* reads `on acceptance` in the draft.
+- *Approved by* reads `<approver>, merge of <request link>` for an entry written on a branch,
+  where the human accepts its meaning by merging the request; it reads `<who>, YYYY-MM-DD` only
+  where the readiness gate records it.
 
 ## 4. Ask, show, write
 
-- Step 4.2: on acceptance, write who accepted and the date in *Approved by*.
+- Step 4.2: write *Approved by* as the draft gives it; never a date for an entry written on a
+  branch.
 - Step 4.4: what follows from this entry is a version or an edit of a neighbour found in step 2;
   every invariant this entry's level 1 verification names that the invariants file does not hold
   yet, through `record-invariant`; and, when this entry changes a decision's binding sentences,

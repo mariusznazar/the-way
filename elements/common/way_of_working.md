@@ -13,10 +13,9 @@ skill reaches by resolving its own directory (WAY-34).
 
 When an agent has finished a set of proposals that the human will review together, one fresh
 agent critiques the complete set before it is shown. This includes entries added as consequences
-of earlier proposals. When the human reviews entries one by one, that review supplies the second
-reader. The agent follows `elements/common/critique/SKILL.md` for the same critical mechanism in
-either case and for an independently requested critique
-(WAY-120).
+of earlier proposals. The agent follows `elements/common/critique/SKILL.md` for the critique and for
+an independently requested critique (WAY-120). A change to an invariant test
+or to the foundation is assessed by the same skill (WAY-10, WAY-120).
 
 ## How a skill asks
 
@@ -104,11 +103,10 @@ looks for in its element.
    reason for it
    (`TODO — decision pending: which decision sets that the questions of one entry are asked in one
    round, each with a proposed answer`).
-2. Show the whole entry, with what the skill adds beside it. Where the human writes in a language
-   other than English, show beside the entry its translation into that language; the translation
-   is never written into the foundation
-   (WAY-114). Apply the fixes, and write nothing before the human accepts the entry
-   (WAY-114).
+2. Show the whole entry with what the skill adds beside it, and one sentence of its meaning in the
+   human's language. Write it on your recommendation; ask before writing only where you have no
+   recommendation or the entry would change the meaning of an approved decision. The human accepts
+   the meaning at the merge, or at the readiness gate for a projected entry (WAY-114).
 3. Write the entry in its place in the file and run the element's format guard (WAY-09) from the
    product's repository root, `python -B <the element's directory>/format_guard.py`, with the
    arguments its `--help` gives for this file and for the commit the task branch left the main
@@ -138,13 +136,13 @@ differences, and each element's skill adds its own
 
 - Step 1: read the product's file of the element's entries where it exists; ask about no file to
   start and write no part map first — nothing is written into `foundations/`.
-- Step 4.2: prepare the whole entry and its translation, but do not ask for wording acceptance
+- Step 4.2: prepare the whole entry and one sentence of its meaning, but do not ask for acceptance
   before writing the proposal into the definition. Candidate selection accepts what is worth
-  projecting, not the proposal's final wording. The readiness gate shows the projected entries
-  whole and approves their wording, one by one or as a complete set.
+  projecting, not the proposal's meaning. The readiness gate shows each projected entry's meaning
+  sentence with the entry beside it and approves the meaning (WAY-114).
 - Step 4.3: write the entry under "Projected foundation changes" of the definition, in the
   subsection of its kind and with the heading `project-level/definition_template.md` gives,
-  followed by its translation; write nothing into `foundations/`. Run no format guard, and tell
+  followed by its meaning sentence; write nothing into `foundations/`. Run no format guard, and tell
   the human that no script checked the entry's form: the guard checks it in the task that writes
   the entry into the foundation.
 - Step 4.4: what follows from the entry is another projected entry, or, where it cannot be written

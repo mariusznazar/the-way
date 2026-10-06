@@ -44,9 +44,8 @@ environment fact adds to each.
 - The search of the foundation also looks for an obligation raising a part's criticality, which
   goes through `update-part-map` (WAY-46).
 - A case needing a pending line to fill a field stops the entry, for the human and
-  `record-decision`, before it is written; one about the check alone — the method, or the
-  deliberate break — travels as an open question in the instruction handed on after step 4.4
-  instead.
+  `record-decision`, before it is written; one about the check alone — the method — travels
+  as an open question in the instruction handed on after step 4.4 instead.
 
 ## 3. Draft
 
@@ -69,10 +68,11 @@ environment fact adds to each.
 - Step 4.4: what follows is each invariant this fact serves, or whose fingerprint in *Rests on* it
   moves, through `record-invariant`; and each decision naming it, through `record-decision`. A fact
   left with nothing naming it goes as WAY-73 and the template's "Withdrawn identifiers" say.
-- After step 4.4, where the method is a command, hand the human an instruction for another agent:
-  the entry, its method, the checks citing a retired identifier or raised version, and any open
-  question about the check — never the conversation itself; a withdrawal hands on the checks
-  still citing the withdrawn identifier. Where the method is a path, the human re-reads the
+- After step 4.4, where the method is a command, hand the human an instruction for another agent
+  (in a task cycle the orchestrator dispatches that agent itself): the entry, its method, the
+  checks citing a retired identifier or raised version, and any open question about the check —
+  never the conversation itself; a withdrawal hands on the checks still citing the withdrawn
+  identifier. Where the method is a path, the human re-reads the
   source; write their verdict into `foundations/human_verdicts.md` in the row
   `elements/common/rules.md` gives, the first row giving that file to a part through
   `update-part-map`. `TODO` hands on nothing.

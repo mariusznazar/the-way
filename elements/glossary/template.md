@@ -2,12 +2,12 @@
 
 This file defines how a glossary entry is written. A glossary entry gives one word of the foundation
 one meaning, so that the same word does not mean one thing in a decision, another in an invariant
-(WAY-94, WAY-99) and a third in the code (`TODO — decision pending: which decision sets that a
-term of a product's glossary keeps its meaning in the product's code`); a word the glossary of
-the-way holds keeps its domain meaning in a product's code (WAY-104). A mechanism keeps the words,
-never their meaning: a script finds where a word stands and whether a word to avoid came back, while
-whether a word is used in its meaning is judged by an agent, by the panel and by the search of
-WAY-33 (WAY-97, WAY-98, WAY-10, WAY-33).
+(WAY-94, WAY-99) and a third in the code (`TODO — decision pending: which decision sets that a term
+of a product's glossary keeps its meaning in the product's code`); a word the glossary of the-way
+holds keeps its domain meaning in a product's code (WAY-104). A mechanism keeps the words, never
+their meaning: a script finds where a word stands and whether a word to avoid came back, while
+whether a word is used in its meaning is judged by an agent, by the independent assessment and by
+the search of WAY-33 (WAY-97, WAY-98, WAY-10, WAY-33).
 
 The rules of form the elements share — the language of an entry, every field and the words `none`
 and `TODO`, a sentence using a term rather than a paraphrase of its definition, and the marks of
@@ -42,12 +42,12 @@ particular to a glossary entry (WAY-35).
   singular, a verb bare (`TODO — decision pending: which decision sets the letter case and the form
   of a term`). The term identifies the entry, and no other entry of the file holds it (WAY-93).
 - Terms are a space of their own, apart from the identifiers of the part map, the invariants and the
-  environment facts, which share one space (WAY-64, WAY-93). A change that makes a term read
-  like such an identifier, by adding or renaming either, is a warning for the panel: where both name
-  the same thing the entry stays, and where they do not, one side is renamed (WAY-93, WAY-10). A
-  term and an identifier read alike when they match with the hyphens of both read as spaces
-  (`TODO — decision pending: which decision sets that hyphens read as spaces when a term is compared
-  with an identifier or a carrier`).
+  environment facts, which share one space (WAY-64, WAY-93). A change that makes a term read like
+  such an identifier, by adding or renaming either, is a warning for the independent assessment:
+  where both name the same thing the entry stays, and where they do not, one side is renamed
+  (WAY-93, WAY-10). A term and an identifier read alike when they match with the hyphens of both
+  read as spaces (`TODO — decision pending: which decision sets that hyphens read as spaces when a
+  term is compared with an identifier or a carrier`).
 - Nothing cites a term by an identifier or a fingerprint: a sentence depends on a term by using its
   word (WAY-94), and an entry carries no version and is edited in place (WAY-97); the file keeps no
   list of withdrawn terms (`TODO — decision pending: which decision sets that the glossary keeps no
@@ -96,8 +96,8 @@ particular to a glossary entry (WAY-35).
 - Where a binding sentence says what a term is, the entry takes that, and the sentence keeps what is
   required of the thing, using the term. The change that writes the entry rewrites the sentence: an
   edit before the main branch, a new version after it (WAY-95, WAY-97, WAY-19).
-- An agent finds the candidate words, and the human deciding the change decides which become entries
-  and accepts each entry (WAY-95, WAY-10).
+- An agent finds the candidate words and writes the entries, and the human accepting the change at
+  the merge accepts the meaning of each entry (WAY-95, WAY-114).
 - On the main branch every term has a use outside the glossary (WAY-95); on a task branch an entry
   with no such use is a warning, since a word may enter before its uses
   (`TODO — decision pending: which decision lets a task branch hold a term with no use`).
@@ -209,8 +209,8 @@ entry among it, stands in `elements/common/rules.md` (WAY-71).
   for the term are written as the whole term (WAY-99).
 - A change to a definition goes, in the same change, through a review of the term's uses: an agent
   puts the new definition in place of the word in every use the guard lists and in every other form
-  of it the agent finds, and reports each use whose meaning then moves to the human deciding the
-  change (WAY-97).
+  of it the agent finds, and reports each use whose meaning then moves to the human accepting the
+  change at the merge (WAY-97).
 - A term used by an entry on the main branch keeps its meaning: a new meaning takes a new word and a
   new entry, and whatever should carry it is rewritten (WAY-97).
 
@@ -225,7 +225,7 @@ read`). Each field carries the mark of where its value comes from (`elements/com
 | term (heading) | whoever writes a sentence of any element, which depends on the term by using its word; the format guard (`glossary-term-holder`, `glossary-term-collision`, `glossary-term-use`, `glossary-process-terms`) | judgment |
 | definition | the agent reviewing the uses when it changes; whoever writes a sentence using the term; the format guard (`glossary-definition-count`, `glossary-definition-words`, `glossary-definition-uses`) | judgment |
 | Avoid | whoever writes a sentence; the format guard (`glossary-avoid-growth`, `glossary-avoid-single`, `glossary-avoid-term`, `glossary-avoid-carrier`, `glossary-process-terms`) | judgment for the word; read off, from the list of uses, for whether it may stand there |
-| Not | the panel judging a change, which sees the foundation; the search of WAY-33; the format guard (`glossary-not-target`, `glossary-not-quoted-word`, `glossary-entry-merge-todo`) | judgment for the meaning and the word chosen; read off for whether it exists |
+| Not | the independent assessment judging a change, which sees the foundation; the search of WAY-33; the format guard (`glossary-not-target`, `glossary-not-quoted-word`, `glossary-entry-merge-todo`) | judgment for the meaning and the word chosen; read off for whether it exists |
 
 ## Examples
 

@@ -27,9 +27,10 @@ the unfinished pre-`main` history.
 
 Run tests for each changed part with `python -B gate/run_tests.py <directory>`. Run the existing
 critical-flow tests for every change (WAY-45): they are the tests holding a `flow: <identifier>`
-line, and today `python -B gate/run_tests.py gate` runs them. For changed foundation files, run their element
-format guards; use `--base none` and, where available, `--merge-onto none` because there is no
-`main` commit to compare with. Read the reports, including warnings and `unchecked` results.
+line, and today `python -B gate/run_tests.py gate` runs them. For changed foundation files, run
+their element format guards; use `--base none` and, where available, `--merge-onto none` because
+there is no `main` commit to compare with. Read the reports, including warnings and `unchecked`
+results.
 
 The available tests and guards are partial checks. Record what ran, what failed and what remained
 unchecked in the review material. Never report them as a pass of the full gate. A missing method or
@@ -39,9 +40,9 @@ command stays visible as debt rather than being treated as agreement.
 
 Before integration, compare the task branch with the current `foundations` tip. For a foundation
 change, search the whole foundation again against that tip (WAY-33), update affected entries and
-rerun the checks. A foundation change or a change to an invariant test goes through the panel in
-`elements/common/panel.md` (WAY-10); its record goes where that procedure says. Mariusz decides
-changes the panel cannot decide and accepts changes to the meaning of a decision.
+rerun the checks. A foundation change or a change to an invariant test is assessed once by an
+independent agent following `elements/common/critique/SKILL.md` (WAY-10); its record goes in the
+message of the commit that carries the change. Mariusz accepts the change at the merge.
 
 Show the diff, test results, warnings and unchecked work before asking Mariusz to accept the merge.
 Merge into `foundations` only after that review. Creating `main` is a separate release decision

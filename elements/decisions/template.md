@@ -272,9 +272,12 @@ A decision recovered from the existing state of a product (WAY-29):
 
 ## Approval
 
-- Every version carries *Approved by*: who approved it and when, as `<who>, YYYY-MM-DD`. A version
-  is approved by a human, never by an agent; a version nobody has approved yet has nothing to
-  record there, so *Approved by* never holds `TODO` (WAY-14).
+- Every version carries *Approved by*: who approved it and when, as `<who>, YYYY-MM-DD`, or who
+  approved it by merging the request that carries it, as `<who>, merge of <request URL>`. The second
+  form is for an entry an agent writes before the merge that accepts it: it names the approver and
+  that merge, because the approver's act is the merge; the agent never writes a date for it. A
+  version is approved by a human, never by an agent; a version nobody has approved yet has nothing
+  to record there, so *Approved by* never holds `TODO` (WAY-14).
 - In the-way, the approver is Mariusz (WAY-14).
 
 ## Examples

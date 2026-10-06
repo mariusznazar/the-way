@@ -1290,7 +1290,7 @@ def check_identifier_persistence(entries, sections, rules, base_text, base, repo
 
 def report_lowering(entries, sections, rules, base_text, base, relative, report):
     """Warns of every part whose computed criticality is lower than on the base, so that the human
-    deciding the change has the lowered criticality in front of them (WAY-46)."""
+    accepting the change at the merge has the lowered criticality in front of them (WAY-46)."""
     if base_text is None:
         report.notes.append("%s has no %s, so no part's computed criticality is compared with it"
                             % (base, relative))
