@@ -307,21 +307,19 @@ when merging it.
   compares the change with the decision:
   - complies: one assessor on another model reads the diff without the author's reasoning, and the
     author records how each remark was settled before the merge; a settlement that rewrites an
-    assessed invariant test goes to its checks and code review and reaches the human with the
-    first assessment;
+    assessed invariant test is recorded beside the one assessment;
   - violates: the assessor receives the author's reasoning; the author drops a remark without
     recording why; a change merges with no assessment record; the edits of a settlement are sent
     to a second assessment.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/4
+- **Approved by:** Mariusz, merge of <request link>
 
 *Rationale:* the problem is a single executor that checks itself: agents on one model with one input
 share its blind spots, so independence comes from another model and from not seeing the author's
 reasoning; one such reader finds what a reader can, and the human who accepts at the merge reads the
 change with the assessment beside it. The finding it cites measured models of other publishers only,
-and this decision takes it across publishers (WAY-85). A settlement is the author's answer to the
-assessment, and the human reads both together at the merge.
+and this decision takes it across publishers (WAY-85).
 *Rejected:* a panel of two assessors and a settler reading both orders — its cost per change
 outweighs what one independent reader misses, and its uncertainty becomes questions for the human;
 the author assessing its own change — it checks itself; assessing again every settlement that
