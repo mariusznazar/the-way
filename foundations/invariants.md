@@ -209,7 +209,7 @@ Where {merge-onto} exists, no change alters, against {fork-point}, an invariant 
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-10@2bdd69c7 · WAY-03@7c2d4ca1
+- **Derives from:** WAY-10@db68de1c · WAY-03@7c2d4ca1
 - **Part:** every
 - **Correction:** none
 

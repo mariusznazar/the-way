@@ -293,8 +293,10 @@ failures lose their own parts.
 A change to an invariant test or to the foundation is assessed by one independent agent, on a model
 other than its author's where one is available, which sees the diff and the files of the commit it
 assesses without the task's chronicle or the author's reasoning and names what of the change can be
-cut, or that nothing can. The author settles each of its remarks and records how, and a human
-accepts the change, with the assessment and its settlement, when merging it.
+cut, or that nothing can. The author settles each of its remarks and records how, and a settlement
+that changes the assessed foundation entries or invariant tests is part of the assessed change and
+does not reopen its assessment. A human accepts the change, with the assessment and its settlement,
+when merging it.
 
 - **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common,
@@ -304,12 +306,14 @@ accepts the change, with the assessment and its settlement, when merging it.
 - **Verification:** level 1 — invariants: foundation-change-assessment-record. Level 2 — an agent
   compares the change with the decision:
   - complies: one assessor on another model reads the diff without the author's reasoning, and the
-    author records how each remark was settled before the merge;
+    author records how each remark was settled before the merge; a settlement that rewrites an
+    assessed invariant test is recorded beside the one assessment;
   - violates: the assessor receives the author's reasoning; the author drops a remark without
-    recording why; a change merges with no assessment record.
+    recording why; a change merges with no assessment record; the edits of a settlement are sent
+    to a second assessment.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/4
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/5
 
 *Rationale:* the problem is a single executor that checks itself: agents on one model with one input
 share its blind spots, so independence comes from another model and from not seeing the author's
@@ -318,7 +322,9 @@ change with the assessment beside it. The finding it cites measured models of ot
 and this decision takes it across publishers (WAY-85).
 *Rejected:* a panel of two assessors and a settler reading both orders — its cost per change
 outweighs what one independent reader misses, and its uncertainty becomes questions for the human;
-the author assessing its own change — it checks itself.
+the author assessing its own change — it checks itself; assessing again every settlement that
+changes the assessed entries or tests — each correction draws new remarks, and the change reaches
+the human only after a chain of assessments.
 
 ### WAY-11/1 — How does a task end?
 
@@ -1568,7 +1574,7 @@ is historical and never flagged, as WAY-02 has it.
 - **Change:** new decision
 - **Scope:** invariants, relation-model, gate, task-cycle, part-map, elements-common
 - **Based on:** none
-- **Relations:** derives from WAY-03@7c2d4ca1 · derives from WAY-10@2bdd69c7 ·
+- **Relations:** derives from WAY-03@7c2d4ca1 · derives from WAY-10@db68de1c ·
   narrows WAY-02@3ffcbd46
 - **Verification:** level 1 — invariants: invariant-version-number · invariant-version-new ·
   invariant-version-changed · invariant-version-unchanged · invariant-earlier-wording ·
@@ -3349,7 +3355,7 @@ contradictions across entries before presentation.
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common,
   project-level, relation-model, gate, installation, agent-instructions, repository, task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-10@2bdd69c7
+- **Relations:** derives from WAY-10@db68de1c
 - **Verification:** level 2 — an agent compares the review with the decision:
   - complies: one fresh critic receives a finished set and its sources, reports evidence for each
     concern, and the author verifies it before presenting corrected proposals and open questions;
