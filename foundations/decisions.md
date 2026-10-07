@@ -313,7 +313,7 @@ when merging it.
     to a second assessment.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/5
 
 *Rationale:* the problem is a single executor that checks itself: agents on one model with one input
 share its blind spots, so independence comes from another model and from not seeing the author's
