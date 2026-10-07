@@ -165,7 +165,11 @@ before continuing that work.
     invariant tests — never spec, plan, frozen task, chronology, reports, prompts or author
     reasoning. Settle each remark yourself and record how; a remark reaches the human only as the
     foundation step allows a question. If a settlement changes code, rerun the affected checks and
-    code review. Record the assessed range by commit hashes and its file list. A contradiction with
+    code review. A settlement that changes the assessed foundation entries or invariant tests does
+    not reopen the independent assessment: rerun the affected checks and the code review, whose
+    reviewer writes the deliberate break again. A remark that cannot be settled without changing
+    the meaning the task requires goes to the human as the foundation step allows a question.
+    Record the assessed range by commit hashes and its file list. A contradiction with
     a current decision follows WAY-30; a collision without recorded precedence follows WAY-25. If
     those rules prevent the required code, report the task as blocked in a draft request.
 
