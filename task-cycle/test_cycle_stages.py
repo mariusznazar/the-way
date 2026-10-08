@@ -185,6 +185,33 @@ class CodexTest(unittest.TestCase):
         counted = sum(row.subagent.total + row.orchestrator.total for row in rows)
         self.assertEqual(counted, 1100 + 2200 + 3300 + 5500 + 110 + 220 + 330 + 440)
 
+    def test_transcripts_read_as_written_give_no_warning(self) -> None:
+        session = cycle_stages.read_session(self.orchestrator, self.home)
+        self.assertEqual(cycle_stages.find_warnings([session]), [])
+
+    def test_a_subagent_turn_without_its_end_is_reported(self) -> None:
+        rollout(self.home, "stuck", [
+            meta("stuck", "10:13:00", "orch", "/root/stuck"),
+            started("10:13:00", "s1"),
+            context("10:13:00", "s1", "model-s"),
+            tokens("10:14:00", "stuck", "s1", 10, 0, 1),
+        ])
+        session = cycle_stages.read_session(self.orchestrator, self.home)
+        self.assertEqual(cycle_stages.find_warnings([session]), [
+            "Codex session `orch`, /root/stuck: 1 turn(s) without `task_complete`, each ending "
+            "at its last entry"])
+
+    def test_a_transcript_whose_lines_are_not_recognised_is_reported(self) -> None:
+        # Lines of a layout the reader does not know: no turn and no usage is found.
+        rollout(self.home, "renamed", [
+            meta("renamed", "10:13:00", "orch", "/root/renamed"),
+            {"timestamp": at("10:14:00"), "type": "usage", "payload": {"thread_id": "renamed"}},
+        ])
+        session = cycle_stages.read_session(self.orchestrator, self.home)
+        self.assertEqual(cycle_stages.find_warnings([session]), [
+            "Codex session `orch`, /root/renamed: no turn found",
+            "Codex session `orch`, /root/renamed: no token usage found"])
+
     def test_a_session_is_found_by_its_id(self) -> None:
         path = cycle_stages.resolve("orch", self.home, Path(self.folder.name) / "claude")
         self.assertEqual(path, self.orchestrator)
@@ -308,6 +335,27 @@ class ClaudeCodeTest(unittest.TestCase):
         self.assertIn("| haiku | 784 |", text)
         self.assertIn("- Claude Code session `sess`: 2 subagents — `sess.jsonl`", text)
 
+    def test_a_subagent_without_its_meta_file_is_reported(self) -> None:
+        (self.home / "projects" / "C--repo" / "sess" / "subagents" / "agent-a2.meta.json").unlink()
+        path = cycle_stages.resolve("sess", Path(self.folder.name) / "codex", self.home)
+        session = cycle_stages.read_session(path, Path(self.folder.name) / "codex")
+        self.assertEqual(cycle_stages.find_warnings([session]), [
+            "Claude Code session `sess`, a2: no `agent-a2.meta.json`, so it is named by its id"])
+
+    def test_warnings_stand_in_the_report_and_on_stderr(self) -> None:
+        write_lines(self.home / "projects" / "C--repo" / "sess" / "subagents"
+                    / "agent-a3.jsonl", [prompt("09:30:00", "idle")])
+        output = Path(self.folder.name) / "out" / "warned.md"
+        stderr = io.StringIO()
+        with redirect_stderr(stderr):
+            code = cycle_stages.main(["sess", "--claude-home", str(self.home),
+                                      "--codex-home", str(Path(self.folder.name) / "codex"),
+                                      "--output", str(output)])
+        self.assertEqual(code, 0)
+        warning = "Claude Code session `sess`, a3: no turn found"
+        self.assertIn(f"Warning: {warning}", stderr.getvalue())
+        self.assertIn(f"Warnings:\n- {warning}\n", output.read_text(encoding="utf-8"))
+
     def test_a_session_named_twice_counts_once(self) -> None:
         output = Path(self.folder.name) / "out" / "twice.md"
         transcript = self.home / "projects" / "C--repo" / "sess.jsonl"
@@ -327,17 +375,28 @@ class CommandTest(unittest.TestCase):
         self.assertEqual(code, 1)
         self.assertIn("Error: no transcript of session 'nope'", stderr.getvalue())
 
-    def test_without_a_session_and_without_the_variable_it_fails(self) -> None:
-        saved = os.environ.pop("CLAUDE_CODE_SESSION_ID", None)
+    def current(self, **variables: str) -> str:
+        saved = {name: os.environ.pop(name, None) for name in cycle_stages.SESSION_VARIABLES}
         try:
-            stderr = io.StringIO()
-            with redirect_stderr(stderr):
-                code = cycle_stages.main([])
+            os.environ.update(variables)
+            return cycle_stages.current_session()
         finally:
-            if saved is not None:
-                os.environ["CLAUDE_CODE_SESSION_ID"] = saved
-        self.assertEqual(code, 1)
-        self.assertIn("name a session", stderr.getvalue())
+            for name, value in saved.items():
+                os.environ.pop(name, None)
+                if value is not None:
+                    os.environ[name] = value
+
+    def test_without_a_session_the_running_one_is_taken(self) -> None:
+        self.assertEqual(self.current(CODEX_SESSION_ID="codex-id"), "codex-id")
+        self.assertEqual(self.current(CLAUDE_CODE_SESSION_ID="claude-id"), "claude-id")
+
+    def test_without_a_session_and_without_a_variable_it_fails(self) -> None:
+        with self.assertRaisesRegex(cycle_stages.CycleStagesError, "name a session; neither"):
+            self.current()
+
+    def test_without_a_session_and_with_both_variables_it_fails(self) -> None:
+        with self.assertRaisesRegex(cycle_stages.CycleStagesError, "name a session; both"):
+            self.current(CODEX_SESSION_ID="codex-id", CLAUDE_CODE_SESSION_ID="claude-id")
 
 
 if __name__ == "__main__":

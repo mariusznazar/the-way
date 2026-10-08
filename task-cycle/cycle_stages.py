@@ -10,7 +10,9 @@ SESSION names one session of the cycle's orchestrator: the path of its transcrip
 Codex id is looked up as `<codex home>/sessions/**/rollout-*-<id>.jsonl`, a Claude Code id as
 `<claude home>/projects/*/<id>.jsonl`. The homes default to the environment variables CODEX_HOME
 and CLAUDE_CONFIG_DIR, and otherwise to `~/.codex` and `~/.claude`. Name every session of the run,
-in any order; without SESSION, the Claude Code session named by CLAUDE_CODE_SESSION_ID is taken.
+in any order. Without SESSION, the session running the command is taken: Claude Code names it in
+CLAUDE_CODE_SESSION_ID and Codex in CODEX_SESSION_ID; where both are set, as in one tool started
+from the other's terminal, SESSION has to be named.
 
 The subagents of a session are found where each tool keeps them. A Codex subagent is a rollout of
 its own whose first line, `session_meta`, names the orchestrator's id as `parent_thread_id`; a
@@ -31,8 +33,12 @@ Tokens are counted as each tool reports them per model response: input with the 
 cache, and output with reasoning. Claude Code writes one response over several lines that repeat
 its usage; each response counts once.
 
-The report is Markdown, written to PATH or printed. Exit code: 0 on success; 1 with
-`Error: <message>` on stderr otherwise.
+The report is Markdown, written to PATH or printed. It lists, and prints on stderr as `Warning:`
+lines, what suggests that a transcript was not read as its tool writes it — a session or a
+subagent with no turn or no token usage, a response naming no model, a Codex subagent turn with no
+`task_complete`, a Claude Code subagent with no `.meta.json` — since a line the reader no longer
+recognises is skipped and its tokens go uncounted. Exit code: 0 on success, warnings included; 1
+with `Error: <message>` on stderr otherwise.
 
 Standard library only.
 """
@@ -82,6 +88,7 @@ class Agent:
     parent: str | None
     turns: list[tuple[datetime, datetime]] = field(default_factory=list)
     records: list[Record] = field(default_factory=list)
+    notes: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -180,6 +187,10 @@ def read_codex_agent(path: Path, parent: str | None) -> Agent:
     for turn in own_turns:
         start = starts.get(turn) or first_seen[turn]
         agent.turns.append((start, ends.get(turn) or last_seen[turn]))
+    open_turns = len(own_turns - ends.keys())
+    if open_turns and parent is not None:
+        agent.notes.append(f"{open_turns} turn(s) without `task_complete`, each ending at its "
+                           "last entry")
     agent.turns.sort()
     for at, turn, usage in raw:
         agent.records.append(Record(at, Usage(
@@ -291,7 +302,10 @@ def read_claude_session(path: Path) -> Session:
             agent_id = transcript.stem.removeprefix("agent-")
             meta_path = transcript.with_name(f"{transcript.stem}.meta.json")
             meta: dict = {}
-            if meta_path.is_file():
+            notes = []
+            if not meta_path.is_file():
+                notes.append(f"no `{meta_path.name}`, so it is named by its id")
+            else:
                 try:
                     meta = json.loads(meta_path.read_text(encoding="utf-8"))
                 except (OSError, json.JSONDecodeError) as error:
@@ -299,8 +313,10 @@ def read_claude_session(path: Path) -> Session:
             description = meta.get("description") or agent_id
             kind = meta.get("agentType")
             name = f"{description} ({kind})" if kind else description
-            subagents.append(read_claude_agent(
-                transcript, agent_id, name, meta.get("parentAgentId") or session_id))
+            subagent = read_claude_agent(
+                transcript, agent_id, name, meta.get("parentAgentId") or session_id)
+            subagent.notes.extend(notes)
+            subagents.append(subagent)
     known = {agent.key for agent in subagents}
     for agent in subagents:
         if agent.parent not in known:
@@ -450,6 +466,31 @@ def stretch_start(start: datetime | None, end: datetime | None,
 # Report
 
 
+def find_warnings(sessions: list[Session]) -> list[str]:
+    """What suggests that a transcript was not read as its tool writes it: the counts beside such
+    a warning may be short, since a reader that no longer recognises a line skips it."""
+    found = []
+    for session in sessions:
+        orchestrator = session.orchestrator
+        where = f"{session.tool} session `{session.id}`"
+        if not orchestrator.turns:
+            found.append(f"{where}: the orchestrator's transcript holds no turn")
+        if not orchestrator.records:
+            found.append(f"{where}: the orchestrator's transcript holds no token usage")
+        for agent in [orchestrator, *session.subagents]:
+            label = f"{where}, {'the orchestrator' if agent is orchestrator else agent.name}"
+            if agent is not orchestrator:
+                if not agent.turns:
+                    found.append(f"{label}: no turn found")
+                if not agent.records:
+                    found.append(f"{label}: no token usage found")
+            unnamed = sum(1 for record in agent.records if not record.model)
+            if unnamed:
+                found.append(f"{label}: {unnamed} response(s) name no model")
+            found.extend(f"{label}: {note}" for note in agent.notes)
+    return found
+
+
 def duration_text(value: timedelta | None) -> str:
     if value is None:
         return "—"
@@ -463,11 +504,13 @@ def number(value: int) -> str:
     return f"{value:,}"
 
 
-def report(sessions: list[Session], rows: list[Row]) -> str:
+def report(sessions: list[Session], rows: list[Row], warnings: list[str]) -> str:
     lines = ["# Stages of the cycle run", ""]
     for session in sessions:
         lines.append(f"- {session.tool} session `{session.id}`: {len(session.subagents)} "
                      f"subagents — `{session.path.name}`")
+    lines += ["", "Warnings:" if warnings else "Warnings: none."]
+    lines += [f"- {warning}" for warning in warnings]
     lines += [
         "",
         "A stage is one turn of a subagent the orchestrator started, from its prompt to its "
@@ -516,9 +559,25 @@ def report(sessions: list[Session], rows: list[Row]) -> str:
     return "\n".join(lines) + "\n"
 
 
+SESSION_VARIABLES = ("CLAUDE_CODE_SESSION_ID", "CODEX_SESSION_ID")
+
+
 def default_home(variable: str, folder: str) -> Path:
     value = os.environ.get(variable)
     return Path(value) if value else Path.home() / folder
+
+
+def current_session() -> str:
+    """The id of the session running this command, from the variable its tool sets."""
+    found = {name: os.environ[name] for name in SESSION_VARIABLES if os.environ.get(name)}
+    if len(found) == 1:
+        return next(iter(found.values()))
+    if not found:
+        raise CycleStagesError("name a session; neither " + " nor ".join(SESSION_VARIABLES)
+                               + " is set")
+    # A tool started from the other's terminal inherits its variable.
+    raise CycleStagesError("name a session; both " + " and ".join(SESSION_VARIABLES)
+                           + " are set")
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -529,18 +588,18 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--claude-home", type=Path,
                         default=default_home("CLAUDE_CONFIG_DIR", ".claude"))
     args = parser.parse_args(argv)
-    names = args.sessions or ([os.environ["CLAUDE_CODE_SESSION_ID"]]
-                              if os.environ.get("CLAUDE_CODE_SESSION_ID") else [])
     try:
-        if not names:
-            raise CycleStagesError("name a session; CLAUDE_CODE_SESSION_ID is not set either")
+        names = args.sessions or [current_session()]
         paths = dict.fromkeys(resolve(name, args.codex_home, args.claude_home).resolve()
                               for name in names)
         sessions = [read_session(path, args.codex_home) for path in paths]
-        text = report(sessions, build_rows(sessions))
+        warnings = find_warnings(sessions)
+        text = report(sessions, build_rows(sessions), warnings)
     except CycleStagesError as error:
         print(f"Error: {error}", file=sys.stderr)
         return 1
+    for warning in warnings:
+        print(f"Warning: {warning}", file=sys.stderr)
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)
         args.output.write_text(text, encoding="utf-8", newline="\n")
