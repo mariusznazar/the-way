@@ -368,19 +368,42 @@ def segments(token):
     return [part for part in parts if part not in ("", ".")]
 
 
+def names_something(path):
+    """True when PATH, a path that is not a network path, exists, without following a link. On
+    Windows its parts are looked at one by one with `lstat`, and a link or junction on the way
+    ends the walk: what the path names through it counts as existing and is not looked up."""
+    try:
+        if WINDOWS:
+            drive, root, tail = os.path.splitroot(path)
+            current = drive + root
+            for part in tail.split(os.sep):
+                if not part:
+                    continue
+                current = os.path.join(current, part)
+                info = os.lstat(current)
+                if (stat.S_ISLNK(info.st_mode)
+                        or getattr(info, "st_file_attributes", 0) & stat.FILE_ATTRIBUTE_REPARSE_POINT):
+                    return True
+            return True
+        return os.path.lexists(path)
+    except (OSError, ValueError):
+        return False
+
+
 def resolve(token, bases):
     """True when TOKEN, a path that is not a network path, names something that exists: an
     absolute path as it stands, a relative one from any of BASES. A network path is never looked
-    up, whatever the caller checked."""
+    up, whatever the caller checked, and no link on the way is followed."""
     if is_network(token):
         return False
     path = bare_path(token)
     if is_network(path):
         return False
     if os.path.isabs(path) or re.match(r"^[A-Za-z]:", path):
-        return os.path.exists(path)
+        return names_something(path)
     candidates = [os.path.join(base, path) for base in bases if base]
-    return any(os.path.exists(candidate) for candidate in candidates if not is_network(candidate))
+    return any(names_something(candidate) for candidate in candidates
+               if not is_network(candidate))
 
 
 def check_file(path, shown_as, root, findings, in_repo=True, agents_beside=False):
@@ -469,11 +492,23 @@ def check_cursor_rule(rel, text, findings):
                                 "a Cursor rule without a YAML header is never attached"))
 
 
+def excluded(base, rel):
+    """True when the path REL, relative to BASE, lies in a skipped directory or in a nested
+    repository. A `.git` entry of any kind, a link too, marks a nested repository and is not
+    followed."""
+    parts = rel.split("/")
+    if any(part in SKIP_DIRS for part in parts[:-1]):
+        return True
+    return any(os.path.lexists(os.path.join(base, *parts[:depth], ".git"))
+               for depth in range(1, len(parts)))
+
+
 def pointed_files(root, texts, files):
     """The Markdown files the root AGENTS.md or CLAUDE.md names in backticks, as (real path, path
     from ROOT): each a regular file that leads to a path inside ROOT, outside the skipped
     directories and nested repositories, that is not already an instruction file; each once, one
     level deep. A network path is never looked up, and a link is judged by `leads_out`."""
+    real_root = os.path.realpath(root)
     known = {os.path.realpath(os.path.join(root, *rel.split("/"))) for rel in files}
     found = []
     for main in ("AGENTS.md", "CLAUDE.md"):
@@ -485,25 +520,23 @@ def pointed_files(root, texts, files):
                 token = LINE_SUFFIX.sub("", match.group(1).strip())
                 if not token.lower().endswith(POINTED_SUFFIXES) or is_network(token):
                     continue
-                if not looks_like_path(token):
+                if "\x00" in token or not looks_like_path(token):
                     continue
                 path = os.path.normpath(os.path.join(root, os.path.expanduser(token)))
                 if network_shaped(path) or leads_out(path, root) or path == root:
                     continue
                 rel = os.path.relpath(path, root).replace(os.sep, "/")
-                parts = rel.split("/")
-                if any(part in SKIP_DIRS for part in parts[:-1]):
-                    continue
-                if any(os.path.exists(os.path.join(root, *parts[:depth], ".git"))
-                       for depth in range(1, len(parts))):
+                if excluded(root, rel):
                     continue
                 real = os.path.realpath(path)
-                if real in known:
+                if real in known or not inside(real, real_root):
+                    continue
+                if excluded(real_root, os.path.relpath(real, real_root).replace(os.sep, "/")):
                     continue
                 try:
                     if not stat.S_ISREG(os.stat(path).st_mode):
                         continue
-                except OSError:
+                except (OSError, ValueError):
                     continue
                 known.add(real)
                 found.append((real, rel))

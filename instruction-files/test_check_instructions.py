@@ -427,6 +427,38 @@ class PointedFiles(CheckTestCase):
         })
         self.assertEqual([f.file for f in repo.findings() if f.file != "AGENTS.md"], [])
 
+    def test_a_git_link_counts_as_a_nested_repository_without_being_followed(self):
+        repo = self.repo({"AGENTS.md": "Read `dir/a.md`.\n", "dir/a.md": DEFECTS})
+        make_bait_link(self, repo.base, os.path.join(repo.root, "dir", ".git"))
+        real = os.path.exists
+
+        def exists(path):
+            if str(path).endswith(".git"):
+                self.fail("exists was called on a .git entry")
+            return real(path)
+
+        self.enterContext(mock.patch.object(check_instructions.os.path, "exists", exists))
+        self.assertEqual([f.file for f in repo.findings() if f.file != "AGENTS.md"], [])
+
+    def test_a_path_with_a_nul_is_skipped_without_a_traceback(self):
+        repo = self.repo({"AGENTS.md": "Read `guide/a\x00.md`.\n", "guide/a.md": DEFECTS})
+        code, out, err = run_main([repo.root])
+        self.assertEqual((code, err), (0, ""))
+        self.assertNotIn("guide/a.md:", out)
+
+    def test_a_file_that_is_a_link_into_a_skipped_directory_is_not_read(self):
+        repo = self.repo({"AGENTS.md": "Read `inside.md`.\n", "node_modules/pkg/a.md": DEFECTS})
+        make_file_link(self, os.path.join(repo.root, "node_modules", "pkg", "a.md"),
+                       os.path.join(repo.root, "inside.md"))
+        self.assertEqual([f for f in repo.findings() if f.file != "AGENTS.md"], [])
+
+    def test_a_file_that_is_a_link_into_a_nested_repository_is_not_read(self):
+        repo = self.repo({"AGENTS.md": "Read `inside.md`.\n", "sub/.git": "gitdir: x\n",
+                          "sub/a.md": DEFECTS})
+        make_file_link(self, os.path.join(repo.root, "sub", "a.md"),
+                       os.path.join(repo.root, "inside.md"))
+        self.assertEqual([f for f in repo.findings() if f.file != "AGENTS.md"], [])
+
     @WINDOWS_ONLY
     def test_a_pointed_network_path_is_noted_and_never_looked_up(self):
         repo = self.repo({"AGENTS.md": f"Read `{NETWORK}` and `{NETWORK.replace(chr(92), '/')}`.\n"})
@@ -444,6 +476,42 @@ class PointedFiles(CheckTestCase):
         pretend_target(self, link, NETWORK)
         guard_network_paths(self)
         self.assertEqual([f for f in repo.findings() if f.file != "AGENTS.md"], [])
+
+
+class NamesThroughLinks(CheckTestCase):
+    def forbid_exists_under(self, *links):
+        real = os.path.exists
+        prefixes = tuple(os.path.normcase(os.path.normpath(link)) for link in links)
+
+        def exists(path):
+            if os.path.normcase(os.path.normpath(str(path))).startswith(prefixes):
+                self.fail("exists followed a link")
+            return real(path)
+
+        self.enterContext(mock.patch.object(check_instructions.os.path, "exists", exists))
+
+    @WINDOWS_ONLY
+    def test_a_token_naming_a_link_to_a_network_path_is_not_looked_up(self):
+        repo = self.repo({"AGENTS.md": "Read `linknet.md`.\n"})
+        link = os.path.join(repo.root, "linknet.md")
+        make_bait_link(self, repo.base, link)
+        pretend_target(self, link, NETWORK)
+        guard_network_paths(self)
+        self.forbid_exists_under(link)
+        self.assertEqual(dead(repo.findings()), [])
+
+    def test_a_token_through_a_directory_link_is_not_looked_up_through_it(self):
+        repo = self.repo({"AGENTS.md": "Read `via/x.md`.\n"})
+        target = os.path.join(repo.base, "elsewhere")
+        write(repo.base, "elsewhere/x.md", "Text.\n")
+        link = os.path.join(repo.root, "via")
+        make_directory_link(self, target, link)
+        self.forbid_exists_under(link)
+        self.assertEqual(dead(repo.findings()), [])
+
+    def test_a_token_naming_nothing_is_still_a_dead_path(self):
+        repo = self.repo({"AGENTS.md": "Read `gone/x.md`.\n"})
+        self.assertEqual([f.level for f in dead(repo.findings())], ["warn"])
 
 
 class Emphasis(CheckTestCase):
