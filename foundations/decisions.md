@@ -414,7 +414,7 @@ a human decides on every change that cannot be undone.
     one that returns knowledge instead of a change without a human setting it so.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/7
 
 *Rationale:* size misleads both ways about what can go wrong: a rename across many files is easy to
 undo, a one-line change to a stored format can destroy every user's data, so what a task touches,
@@ -3605,7 +3605,7 @@ use.
     without a final code review; a spec and a plan are written around an outgrown attempt's code.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/7
 
 *Rationale:* the borrowed skills provide design, planning, test and review methods, while the-way
 must keep control of task sources, binding foundation approvals and the single human review point.
