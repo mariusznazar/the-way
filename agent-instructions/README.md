@@ -10,8 +10,7 @@ another change.
 ## Start a change
 
 Start new work on a short task branch from a current, clean `foundations` commit. Keep unrelated
-working-tree changes out of that branch and out of its commits. Work already in progress on
-`foundations` can be finished there; this rule does not require moving it after the fact.
+working-tree changes out of that branch and out of its commits.
 
 Before editing, use `foundations/part_map.md` to identify the parts touched and read the decisions
 whose *Scope* names those parts. Read the affected invariants and the relevant element templates
@@ -41,8 +40,9 @@ command stays visible as debt rather than being treated as agreement.
 Before integration, compare the task branch with the current `foundations` tip. For a foundation
 change, search the whole foundation again against that tip (WAY-33), update affected entries and
 rerun the checks. A foundation change or a change to an invariant test is assessed once by an
-independent agent following `elements/common/critique/SKILL.md` (WAY-10); its record goes in the
-message of the commit that carries the change. Mariusz accepts the change at the merge.
+independent agent following `elements/common/critique/SKILL.md` (WAY-10). Its record, and the
+record of both foundation searches — what each searched and what it found — go in the message of
+the commit that carries the change. Mariusz accepts the change at the merge.
 
 Show the diff, test results, warnings and unchecked work before asking Mariusz to accept the merge.
 Merge into `foundations` only after that review. Creating `main` is a separate release decision
