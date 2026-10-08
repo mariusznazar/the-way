@@ -125,7 +125,7 @@ def skill_wrapper(path: str, name: str, commit: str) -> str:
             "If initialization fails or either commit differs, stop.\n\n"
             f"Read `{SUBMODULE}/{path}` in full and follow it. "
             f"Read the files it references inside `{SUBMODULE}`. "
-            "Its paragraph about resolving a global skill link applies only to a global install; "
+            "Where it says where the-way lies, the product's case applies: "
             f"here the process root is `{SUBMODULE}`. Do not substitute a global skill.\n\n"
             f"Where this skill or a file it reads names another the-way skill — {sibling_names()} "
             "— use this product's project skill of the same name with the `the-way-` prefix, "

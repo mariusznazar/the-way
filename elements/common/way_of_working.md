@@ -6,8 +6,8 @@ the way of working particular to its element, and adds it to the steps below at 
 names (WAY-35). A fix to a rule goes to the template or to `rules.md`, with the decision that sets
 it; in the decisions element, a rule changes only with a decision in the log (WAY-35, WAY-05).
 
-Paths under `elements/` below are those of the-way at the commit the product pins, which the
-skill reaches by resolving its own directory (WAY-34).
+Paths under `elements/` below are those of the-way at the commit the product pins (WAY-34); in
+the-way itself, those of the checkout or worktree the session works in.
 
 ## Critique before collective review
 

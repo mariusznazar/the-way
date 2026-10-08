@@ -107,6 +107,15 @@ class InstallTest(unittest.TestCase):
                 for path in self.product.rglob("*") if path.is_file() and
                 not {".git", ".the-way"} & set(path.relative_to(self.product).parts)}
 
+    def test_wrapper_sends_the_skill_to_the_product_case_of_where_the_way_lies(self) -> None:
+        for path, name in NAMES:
+            with self.subTest(name):
+                text = install.skill_wrapper(path, name, self.commit)
+                self.assertIn("Where it says where the-way lies, the product's case applies: "
+                              "here the process root is `.the-way`.", text)
+                self.assertNotIn("global install", text)
+                self.assertIn("Do not substitute a global skill.", text)
+
     def test_guidance_names_no_commit_and_covers_the_product_rules(self) -> None:
         guidance = install.product_guidance()
         self.assertIsNone(re.search(r"\b[0-9a-f]{7,40}\b", guidance), guidance)

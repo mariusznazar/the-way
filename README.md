@@ -71,17 +71,24 @@ instead of the rule being weakened.
   implementation cycles.
 - `task-cycle/` — orchestrates one ready task through design, implementation, checks, reviews and
   a request for human review; it keeps the cycle record on the task branch.
-- `agent-instructions/`, with `AGENTS.md` and `CLAUDE.md` at the root — instructions for agents
-  working on the-way itself.
+- `agent-instructions/`, with `AGENTS.md` and `CLAUDE.md` at the root and the skill entry points in
+  `.claude/skills/` and `.agents/skills/` — instructions for agents working on the-way itself, and
+  the script that generates those entry points.
 
 ## Using the skills
 
-Each element's `skill/` directory, the project level's skill directories and `task-cycle/skill/`
-hold one skill, named
-in its `SKILL.md`. An agent tool that reads skills from a directory uses one once that directory
-is linked there under the skill's name.
-For work on the-way itself with Claude Code on Windows:
+Each element's `skill/` directory, `elements/common/skill/` and `elements/common/critique/`, the
+project level's skill directories and `task-cycle/skill/` hold one skill, named in its `SKILL.md`.
 
-```powershell
-New-Item -ItemType Junction -Path "$HOME\.claude\skills\<skill>" -Target "<the-way>\elements\<element>\skill"
+A Claude Code or Codex session working in a checkout or worktree of the-way finds each of them as
+the project skill `the-way-<name>`: `.claude/skills/` holds the entry points Claude Code reads and
+`.agents/skills/` the identical ones Codex reads, and each entry point reads its skill from the
+checkout or worktree the session works in. They are generated; after adding, renaming or
+moving a skill, or changing its description, run:
+
+```bash
+python -B agent-instructions/skill_entry_points.py --write
 ```
+
+and commit what it writes. A product gets the same skills, pointing to its pinned `.the-way`, from
+the installer; see `installation/README.md`.

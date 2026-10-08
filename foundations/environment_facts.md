@@ -163,6 +163,38 @@ The Python Developer's Guide says the bugfix phase builds and releases new binar
 - **Source:** https://raw.githubusercontent.com/python/devguide/999633216399256b6ce5376c9287f07efd6c9a65/versions.rst § Status key, bugfix — "New binaries are built and released roughly every two months." · § Status key, security — "After two years (18 months for versions before 3.13), only security fixes are accepted and no more binaries are released."; read 2026-09-30
 - **Method:** `python -B gate/run_tests.py probes/python-release-binaries --record .runs/fact-python-release-binaries.jsonl`
 
+## claude-code-project-skills/1
+
+Claude Code loads project skills from `.claude/skills/` in the directory where it starts and in each parent directory up to the repository root, only up to the worktree root in a session running in a linked git worktree, and, on v2.1.277 or later, the main checkout's project skills instead when the worktree checkout has no `.claude/skills` directory at its root; on v2.1.246 or later, when a session is moved with `/cd`, it adds the new directory's project skills.
+
+- **Holds for:** Claude Code, whose documentation code.claude.com publishes for its current release without versions
+- **Source:** https://code.claude.com/docs/en/skills (archived: http://web.archive.org/web/20261006214359/https://code.claude.com/docs/en/skills, 2026-10-06) § Load skills in monorepos and subdirectories — "Claude Code loads project skills from .claude/skills/ in the directory where you start it and in every parent directory up to the repository root, so starting in packages/frontend/ still picks up skills defined at the root." · § Load skills in monorepos and subdirectories — "When you move the session with /cd on v2.1.246 or later, Claude Code adds the new directory’s project skills." · § Load skills in monorepos and subdirectories — "In a session running in a linked git worktree, Claude Code searches parent directories only up to the worktree root." · § Load skills in monorepos and subdirectories — "On Claude Code v2.1.277 or later, when the worktree checkout has no .claude/skills directory at its root, Claude Code loads the main checkout’s project skills instead."; read 2026-10-08
+- **Method:** `python -B gate/run_tests.py probes/claude-code-project-skills --record .runs/fact-claude-code-project-skills.jsonl`
+
+## claude-code-nested-skills/1
+
+Claude Code loads the skills of a `.claude/skills/` directory below the directory where it starts the first time it reads or edits a file in that subdirectory, keeps both skills available when such a nested skill's directory name matches another skill's name, and lists the directory-qualified variants with an instruction to invoke the one whose directory holds the files it is working on.
+
+- **Holds for:** Claude Code, whose documentation code.claude.com publishes for its current release without versions
+- **Source:** https://code.claude.com/docs/en/skills (archived: http://web.archive.org/web/20261006214359/https://code.claude.com/docs/en/skills, 2026-10-06) § Load skills in monorepos and subdirectories — "Skills in a .claude/skills/ directory below where you started don’t load at startup." · § Load skills in monorepos and subdirectories — "They load the first time Claude reads or edits a file in that subdirectory and stay available for the rest of the session." · § Load skills in monorepos and subdirectories — "When a nested skill’s directory name matches another skill’s name, both stay available." · § Load skills in monorepos and subdirectories — "Claude Code also lists the directory-qualified variants for Claude, with an instruction to invoke the one whose directory holds the files it’s working on, so the nested skill still applies to work in apps/web/."; read 2026-10-08
+- **Method:** `python -B gate/run_tests.py probes/claude-code-nested-skills --record .runs/fact-claude-code-nested-skills.jsonl`
+
+## codex-repository-skills/1
+
+In a repository, Codex scans `.agents/skills` in every directory from its current working directory up to the repository root.
+
+- **Holds for:** Codex, whose documentation learn.chatgpt.com publishes for its current release without versions
+- **Source:** https://learn.chatgpt.com/docs/build-skills (archived: http://web.archive.org/web/20261002133901/https://learn.chatgpt.com/docs/build-skills, 2026-10-02) § Where Codex loads local skills — "For repositories, Codex scans .agents/skills in every directory from your current working directory up to the repository root."; read 2026-10-08
+- **Method:** `python -B gate/run_tests.py probes/codex-repository-skills --record .runs/fact-codex-repository-skills.jsonl`
+
+## codex-skill-paths/1
+
+Codex's initial list of skills includes each skill's file path.
+
+- **Holds for:** Codex, whose documentation learn.chatgpt.com publishes for its current release without versions
+- **Source:** https://learn.chatgpt.com/docs/build-skills (archived: http://web.archive.org/web/20261002133901/https://learn.chatgpt.com/docs/build-skills, 2026-10-02) § Build skills — "In Codex, the initial list also includes each skill’s file path." · § Build skills — "This budget applies only to the initial skills list."; read 2026-10-08
+- **Method:** `python -B gate/run_tests.py probes/codex-skill-paths --record .runs/fact-codex-skill-paths.jsonl`
+
 ## Withdrawn identifiers
 
 | Identifier | Why | Successors |

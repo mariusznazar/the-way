@@ -149,7 +149,7 @@ Where {merge-onto} exists, every file git tracks lies in `foundations/` or in a 
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-09@b829b86a
+- **Derives from:** WAY-09@16b8026b
 - **Part:** every
 - **Correction:** none
 
@@ -159,7 +159,7 @@ Where {merge-onto} exists, every element directory holds a template, examples or
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-09@b829b86a
+- **Derives from:** WAY-09@16b8026b
 - **Part:** decisions · part-map · invariants · glossary · environment-facts
 - **Correction:** none
 
@@ -169,7 +169,7 @@ Where {merge-onto} exists, `relation-model/` holds the script that computes fing
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-09@b829b86a
+- **Derives from:** WAY-09@16b8026b
 - **Part:** relation-model
 - **Correction:** none
 
@@ -179,7 +179,7 @@ Every identifier `elements/invariants/examples.md` names is the identifier of an
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-09@b829b86a
+- **Derives from:** WAY-09@16b8026b
 - **Part:** invariants
 - **Correction:** none
 
@@ -189,7 +189,7 @@ Every identifier `elements/part-map/examples.md` names is the identifier of an e
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-09@b829b86a
+- **Derives from:** WAY-09@16b8026b
 - **Part:** part-map
 - **Correction:** none
 
@@ -199,7 +199,7 @@ Every term `elements/glossary/examples.md` names is the term of an entry of `fou
 
 - **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-09@b829b86a
+- **Derives from:** WAY-09@16b8026b
 - **Part:** glossary
 - **Correction:** none
 
@@ -466,11 +466,11 @@ No two decisions in the decision log name each other as `narrows` in their lates
 
 ## outbound-link-reach/1
 
-No file git tracks contains a link into a private note collection, or into a repository that a reader not signed in to its host cannot open.
+No file git tracks contains a link into a repository that a reader not signed in to its host cannot open, or into a private note collection, other than a link in the `## Backlog` section of the root `AGENTS.md` to the place of the repository's tasks.
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-27@770078ba
+- **Derives from:** WAY-27@fb27e458
 - **Part:** every
 - **Correction:** none
 
@@ -981,7 +981,7 @@ No file generated for an agent holds an overview of the repository's directories
 - **Method:** `TODO`
 - **Rests on:** none
 - **Derives from:** WAY-52@93101108
-- **Part:** part-map
+- **Part:** part-map · agent-instructions
 - **Correction:** none
 
 ## flow-test-location/1
@@ -2026,6 +2026,16 @@ Before approval, the project readiness check rejects a definition whose Technolo
 - **Rests on:** none
 - **Derives from:** WAY-121@740c254e
 - **Part:** project-level
+- **Correction:** none
+
+## skill-entry-points/1
+
+Every file named `SKILL.md` that git tracks, or that stands untracked and not ignored by git, outside the `.claude/` and `.agents/` directories at the repository's root, with `<name>` the name its frontmatter gives, has a file `.claude/skills/the-way-<name>/SKILL.md` and a byte-identical file `.agents/skills/the-way-<name>/SKILL.md`, whose frontmatter names `the-way-<name>` and gives a description starting with the description the frontmatter of that `SKILL.md` gives, whose text contains, in backticks, the path of that `SKILL.md` from the repository's root, and contains `--show-superproject-working-tree`, `git ls-files --stage -- ':/.the-way'`, `git rev-parse --show-toplevel` and the words "If the skill tells you to resolve a link to find the-way, skip that", and whose text holds a sentence that names, each in backticks, the name of every such `SKILL.md` and holds the words "with the `the-way-` prefix, never an unprefixed one"; and every directory in `.claude/skills/` or `.agents/skills/` whose name begins with `the-way-` is named `the-way-<name>` for the `<name>` of such a `SKILL.md`.
+
+- **Method:** `python -B gate/run_tests.py gate --record .runs/gate-tests.jsonl`
+- **Rests on:** none
+- **Derives from:** WAY-127@4439a64a
+- **Part:** every
 - **Correction:** none
 
 ## Withdrawn identifiers

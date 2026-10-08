@@ -13,11 +13,11 @@ of a project, the return step of a task (WAY-11) and the entry of the process in
 product (WAY-28) will call it too, each adding what it needs
 (WAY-115).
 
-This skill lives in `elements/common/skill/` of the-way. Installed globally, its base directory is
-a link, so resolve it first: `realpath <base>` in Bash, `(Get-Item <base>).Target` in PowerShell.
-`elements/common/` is the parent of the resolved directory, and the-way the directory two above
-that. In a product, the-way is the product's pinned `.the-way`, and each skill named below is the
-product's skill of that name with the `the-way-` prefix.
+This skill lives in `elements/common/skill/` of the-way. In the-way itself, the-way is the
+checkout or worktree the session works in, the directory `git rev-parse --show-toplevel`
+prints in the session's working directory; in a product, it is the product's pinned `.the-way`.
+`elements/common/` is there, and each skill named below is the project skill of that name with the
+`the-way-` prefix.
 
 ## What the caller gives
 
