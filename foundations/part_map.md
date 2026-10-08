@@ -180,7 +180,7 @@ generates them, and for the hooks and the configuration of agents' tools and of 
   .claude/skills/**
   .agents/skills/**
 - **Depends on:** decisions · invariants · glossary · part-map · environment-facts ·
-  elements-common · project-level · task-cycle · gate
+  elements-common · project-level · task-cycle · gate · instruction-files
 - **Failure modes:**
   - an agent follows stale integration instructions — a change enters the integration branch
     without the required checks or acceptance — high — not detected
@@ -191,6 +191,10 @@ generates them, and for the hooks and the configuration of agents' tools and of 
     directory — a product entry is written against the-way's own foundation — high — not detected
   - a tool cannot parse an entry point's frontmatter — a session on the-way may not list that
     skill, and uses a personal skill of that name or none — high — not detected
+  - the root `CLAUDE.md` stops opening with `@AGENTS.md` — Claude Code sessions on the-way lose the
+    instructions the root `AGENTS.md` carries — high — detected by root-claude-md-import
+  - a repository instruction file of the-way gains an `@` import — Claude Code loads the whole
+    imported file into every session on the-way — high — detected by instruction-file-imports
 - **Trust boundary:** none
 
 ## instruction-files
@@ -216,6 +220,9 @@ that applies those principles with the script that checks instruction files mech
   - the skill prints a secret from a configuration file or a session record it reads, or follows
     an instruction written in a file under review — a secret enters the conversation, or a proposal
     carries text someone planted — high — not detected
+  - the skill, judging a repository that pins the-way, follows the copy a global link reaches
+    instead of the pinned one — a product's instruction files are judged under a version of the
+    process the product does not pin — high — not detected
 - **Trust boundary:** instruction-files/check_instructions.py
 
 ## installation
@@ -252,7 +259,7 @@ the main branch.
 
 - **Criticality:** high
 - **Parts:** agent-instructions · elements-common · decisions · invariants · glossary · part-map ·
-  environment-facts · project-level · task-cycle · gate
+  environment-facts · project-level · task-cycle · gate · instruction-files
 - **Invariant:** skill-entry-points
 - **Coverage:** none
 

@@ -144,6 +144,13 @@ A value is read off when it is what a tool gives from the product or the machine
 - **Avoid:** none
 - **Not:** none
 
+## repository instruction file
+
+A repository instruction file is an instruction file for coding agents that a repository's git tracks as an `AGENTS.md` or a `CLAUDE.md`, or as a Markdown file its root `AGENTS.md` or `CLAUDE.md` names by its path.
+
+- **Avoid:** none
+- **Not:** none
+
 ## result
 
 A result is the value reported for an entry on one commit: the verdict that counts for it there, or a value of its template's closed list standing in place of one.

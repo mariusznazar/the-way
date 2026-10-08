@@ -195,6 +195,54 @@ Codex's initial list of skills includes each skill's file path.
 - **Source:** https://learn.chatgpt.com/docs/build-skills (archived: http://web.archive.org/web/20261002133901/https://learn.chatgpt.com/docs/build-skills, 2026-10-02) § Build skills — "In Codex, the initial list also includes each skill’s file path." · § Build skills — "This budget applies only to the initial skills list."; read 2026-10-08
 - **Method:** `python -B gate/run_tests.py probes/codex-skill-paths --record .runs/fact-codex-skill-paths.jsonl`
 
+## claude-code-imports/1
+
+Claude Code expands a file that a `CLAUDE.md` imports with `@path/to/import` syntax and loads it into context at launch alongside that `CLAUDE.md`, and skips Markdown code spans and fenced code blocks when it parses imports.
+
+- **Holds for:** Claude Code, whose documentation code.claude.com publishes for its current release without versions
+- **Source:** https://code.claude.com/docs/en/memory (archived: http://web.archive.org/web/20261007150822/https://code.claude.com/docs/en/memory, 2026-10-07) § Import additional files — "CLAUDE.md files can import additional files using @path/to/import syntax." · § Import additional files — "Imported files are expanded and loaded into context at launch alongside the CLAUDE.md that references them." · § Import additional files — "Import parsing skips Markdown code spans and fenced code blocks."; read 2026-10-08
+- **Method:** `python -B gate/run_tests.py probes/claude-code-imports --record .runs/fact-claude-code-imports.jsonl`
+
+## claude-code-agents-md/1
+
+By default, Claude Code reads `AGENTS.md` as a repository's project instructions, on v2.1.277 or later, only when no `CLAUDE.md`, `.claude/CLAUDE.md` or `CLAUDE.local.md` stands in its working directory or any directory above it.
+
+- **Holds for:** Claude Code, whose documentation code.claude.com publishes for its current release without versions
+- **Source:** https://code.claude.com/docs/en/memory (archived: http://web.archive.org/web/20261007150822/https://code.claude.com/docs/en/memory, 2026-10-07) § AGENTS.md — "Claude Code can read AGENTS.md as your project instructions, so a repository already set up for other coding agents works without adding a CLAUDE.md, an import, or a setting." · § AGENTS.md — "Reading AGENTS.md directly requires Claude Code v2.1.277 or later." · § When Claude Code reads AGENTS.md — "By default, Claude reads AGENTS.md only when you have no CLAUDE.md in your working directory or above it." · § When Claude Code reads AGENTS.md — "Count, so Claude reads them instead of AGENTS.md: a CLAUDE.md, .claude/CLAUDE.md, or CLAUDE.local.md in your working directory or any directory above it"; read 2026-10-08
+- **Method:** `python -B gate/run_tests.py probes/claude-code-agents-md --record .runs/fact-claude-code-agents-md.jsonl`
+
+## codex-agents-md/1
+
+When it starts, Codex builds an instruction chain from the `AGENTS.override.md`, or else the `AGENTS.md`, of its home directory and, walking from the project root down to its current working directory, from at most one file in each directory, and stops searching once it reaches its current directory.
+
+- **Holds for:** Codex, whose documentation learn.chatgpt.com publishes for its current release without versions
+- **Source:** https://learn.chatgpt.com/docs/agent-configuration/agents-md (archived: http://web.archive.org/web/20260930155336/https://learn.chatgpt.com/docs/agent-configuration/agents-md, 2026-09-30) § How Codex discovers guidance — "Codex builds an instruction chain when it starts (once per run; in the TUI this usually means once per launched session)." · § How Codex discovers guidance — "Global scope: In your Codex home directory (defaults to ~/.codex, unless you set CODEX_HOME), Codex reads AGENTS.override.md if it exists." · § How Codex discovers guidance — "Otherwise, Codex reads AGENTS.md." · § How Codex discovers guidance — "Project scope: Starting at the project root (typically the Git root), Codex walks down to your current working directory." · § How Codex discovers guidance — "Codex includes at most one file per directory." · § Layer project instructions — "Codex stops searching once it reaches your current directory, so place overrides as close to specialized work as possible."; read 2026-10-08
+- **Method:** `python -B gate/run_tests.py probes/codex-agents-md --record .runs/fact-codex-agents-md.jsonl`
+
+## cursor-agents-md/1
+
+Cursor CLI reads `AGENTS.md` and `CLAUDE.md` at the project root, where they are present, and applies them as rules alongside `.cursor/rules`.
+
+- **Holds for:** Cursor CLI, whose documentation cursor.com publishes for its current release without versions
+- **Source:** https://cursor.com/docs/cli/using (archived: http://web.archive.org/web/20260930152214/https://cursor.com/docs/cli/using, 2026-09-30) § Rules — "The CLI also reads AGENTS.md and CLAUDE.md at the project root (if present) and applies them as rules alongside .cursor/rules."; read 2026-10-08
+- **Method:** `python -B gate/run_tests.py probes/cursor-agents-md --record .runs/fact-cursor-agents-md.jsonl`
+
+## single-rule-compliance/1
+
+In McMillan's factorial study of compliance with a trivial target annotation across Claude Code CLI sessions, none of four structural variables of the configuration files — file size, instruction position, file architecture and contradictions in adjacent files — produces a detectable contrast after multiple-testing correction, while each additional function the agent generates within a session is associated with approximately 5.6% lower odds of compliance per step in the session lengths tested, though the relationship is non-monotonic.
+
+- **Holds for:** arXiv:2605.10039v1, measuring Sonnet 4.6, Opus 4.6 and Opus 4.7
+- **Source:** https://arxiv.org/abs/2605.10039v1 § Abstract — "Practitioners assume that structural choices (file size, instruction position, file architecture, contradictions in adjacent files) measurably affect adherence." · § Abstract — "We report a systematic factorial study of these choices using four manipulated variables, measuring compliance with a trivial target annotation across 1,650 Claude Code CLI sessions (16,050 function-level observations) on two TypeScript codebases, three frontier models (primarily Sonnet 4.6, with Opus 4.6 as a CLI-matched cross-model check and Opus 4.7 reported descriptively under a CLI-version confound), and five coding tasks." · § Abstract — "None of the four structural variables or three two-way interactions produces a detectable contrast after multiple-testing correction." · § Abstract — "The largest effect we measured is within-session: each additional function the agent generates is associated with approximately 5.6% lower odds of compliance per step (OR = 0.944) within the session-length range we tested, though the relationship is non-monotonic rather than a constant per-step effect."; read 2026-10-08
+- **Method:** `python -B gate/run_tests.py probes/single-rule-compliance --record .runs/fact-single-rule-compliance.jsonl`
+
+## agent-run-variance/1
+
+On SWE-Bench-Verified, single-run pass@1 estimates of the agents Bjarnason et al. ran vary by 2.2 to 6.0 percentage points depending on which run is selected, with standard deviations exceeding 1.5 percentage points even at temperature 0.
+
+- **Holds for:** arXiv:2602.07150v3, measuring Qwen/Qwen3-32B, agentica-org/DeepSWE-preview and mistralai/Devstral-2-123B-Instruct-2512, each with the nano-agent and R2E-Gym scaffolds
+- **Source:** https://arxiv.org/html/2602.07150v3 § Abstract — "We test this assumption by collecting 60,000 agentic trajectories on SWE-Bench-Verified, spanning three models and two scaffolds." · § Abstract — "We find substantial variance: single-run pass@1 estimates vary by 2.2 to 6.0 percentage points depending on which run is selected, with standard deviations exceeding 1.5 percentage points even at temperature 0." · § 2.1 — "We exhaustively evaluate six different agents, where an agent is defined as a model-scaffold pairs." · § 2.1 — "Qwen/Qwen3-32B" · § 2.1 — "agentica-org/DeepSWE-preview" · § 2.1 — "mistralai/Devstral-2-123B-Instruct-2512" · § 2.1 — "nano-agent is our own minimal scaffold for agentic coding experiments" · § 2.1 — "R2E-Gym is a code agent scaffold"; read 2026-10-08
+- **Method:** `python -B gate/run_tests.py probes/agent-run-variance --record .runs/fact-agent-run-variance.jsonl`
+
 ## Withdrawn identifiers
 
 | Identifier | Why | Successors |

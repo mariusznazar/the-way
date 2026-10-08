@@ -149,7 +149,7 @@ Where {merge-onto} exists, every file git tracks lies in `foundations/` or in a 
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-09@16b8026b
+- **Derives from:** WAY-09@e360ca30
 - **Part:** every
 - **Correction:** none
 
@@ -159,7 +159,7 @@ Where {merge-onto} exists, every element directory holds a template, examples or
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-09@16b8026b
+- **Derives from:** WAY-09@e360ca30
 - **Part:** decisions · part-map · invariants · glossary · environment-facts
 - **Correction:** none
 
@@ -169,7 +169,7 @@ Where {merge-onto} exists, `relation-model/` holds the script that computes fing
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-09@16b8026b
+- **Derives from:** WAY-09@e360ca30
 - **Part:** relation-model
 - **Correction:** none
 
@@ -179,7 +179,7 @@ Every identifier `elements/invariants/examples.md` names is the identifier of an
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-09@16b8026b
+- **Derives from:** WAY-09@e360ca30
 - **Part:** invariants
 - **Correction:** none
 
@@ -189,7 +189,7 @@ Every identifier `elements/part-map/examples.md` names is the identifier of an e
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-09@16b8026b
+- **Derives from:** WAY-09@e360ca30
 - **Part:** part-map
 - **Correction:** none
 
@@ -199,7 +199,7 @@ Every term `elements/glossary/examples.md` names is the term of an entry of `fou
 
 - **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-09@16b8026b
+- **Derives from:** WAY-09@e360ca30
 - **Part:** glossary
 - **Correction:** none
 
@@ -2034,8 +2034,28 @@ Every file named `SKILL.md` that git tracks, or that stands untracked and not ig
 
 - **Method:** `python -B gate/run_tests.py gate --record .runs/gate-tests.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-127@4439a64a
+- **Derives from:** WAY-127@69651fc7
 - **Part:** every
+- **Correction:** none
+
+## instruction-file-imports/1
+
+No repository instruction file of the-way holds, outside code spans and fenced code blocks, an `@` that stands at the start of a line or right after whitespace, `(`, `[`, `{`, `"`, `'`, `“`, `‘` or `„` and is followed, before the next whitespace, by a `.` or a `/`, except the first line of the root `CLAUDE.md` when it reads `@AGENTS.md` and nothing else; the root `AGENTS.md` or `CLAUDE.md` names by its path a Markdown file that git tracks, one whose name ends in `.md` or `.markdown`, when that file's path from the repository's root, written with `/` or with `\` between directories, stands anywhere in its text with no ASCII letter or digit and none of `.`, `-`, `_`, `/` and `\` right before it, a code span runs from a run of backticks to the next run of as many backticks on the same line, and a fenced code block runs from a line whose first characters other than spaces are three backticks or three tildes to the next such line.
+
+- **Method:** `python -B gate/run_tests.py agent-instructions --record .runs/agent-instructions-tests.jsonl`
+- **Rests on:** none
+- **Derives from:** WAY-129@1336c32b
+- **Part:** every
+- **Correction:** none
+
+## root-claude-md-import/1
+
+Where git tracks a `CLAUDE.md` at the repository's root, its text begins with `@AGENTS.md` followed directly by a line break, `\n` or `\r\n`, or by the end of the text.
+
+- **Method:** `python -B gate/run_tests.py agent-instructions --record .runs/agent-instructions-tests.jsonl`
+- **Rests on:** none
+- **Derives from:** WAY-132@1242ac75
+- **Part:** agent-instructions
 - **Correction:** none
 
 ## Withdrawn identifiers
