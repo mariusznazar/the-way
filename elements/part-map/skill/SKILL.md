@@ -10,11 +10,12 @@ stands in this element's `template.md` and in `elements/common/rules.md`, and th
 the skills share stands in `elements/common/way_of_working.md`; this skill holds only what is
 particular to the part map (WAY-35).
 
-This skill lives in `elements/part-map/skill/` of the-way. Installed globally, its base directory
-is a link, so resolve it first: `realpath <base>` in Bash, `(Get-Item <base>).Target` in
-PowerShell. The element's directory is the parent of the resolved one, and the-way the directory
-three above it. Follow the steps of `elements/common/way_of_working.md` there; below is what the
-part map adds to each.
+This skill lives in `elements/part-map/skill/` of the-way. In the-way itself, the-way is the
+checkout or worktree the session works in, the directory `git rev-parse --show-toplevel`
+prints in the session's working directory; in a product, it is the product's pinned `.the-way`. The
+element's directory is `elements/part-map/` there, and each the-way skill named below is the
+project skill of that name with the `the-way-` prefix. Follow the steps of
+`elements/common/way_of_working.md` there; below is what the part map adds to each.
 
 ## 1. Read
 
