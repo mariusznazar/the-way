@@ -2,8 +2,9 @@
 
 How to write, judge and maintain the files from which an agent takes its rules of work —
 `CLAUDE.md`, `AGENTS.md`, `.claude/rules/`, `.cursor/rules/*.mdc`, skills and hooks — in Claude
-Code, Codex and Cursor at once. The skill in `skill/` applies these principles; the sources they
-rest on are listed at the end.
+Code, Codex and Cursor at once. The skill in `SKILL.md` beside this file applies these principles;
+the sources they rest on are listed at the end. Where the-way has adopted a principle by a
+decision, the principle names that decision in brackets.
 
 ## 1. Ways in and routes
 
@@ -35,7 +36,7 @@ What follows from this:
   Codex does not carry over to the next turn unless it is named again — a file survives each of
   these.
 - **Loaded is not yet carried out.** A rule present in context is not always followed. What must
-  happen every time goes into a hook, a linter or a CI check. When a step ends with an output — a
+  happen every time goes into a CI check, a linter or a check of a step's output, and into a local hook only against slips (WAY-133). When a step ends with an output — a
   document, code — the output is checked against what it was meant to contain, and if something is
   missing the work goes back one step. Checking the output catches both a rule that never arrived
   and a rule that arrived but was not followed.
@@ -51,7 +52,7 @@ several tools uses the shared layout (section 4).
 The main file is the file the tool adds to every session: `CLAUDE.md`, `AGENTS.md`, a Cursor rule
 with `alwaysApply: true`, the user's global file. Each of its lines costs context in every session
 and — when it is a requirement — extra steps of the agent, because agents carry out instructions.
-A line stays when it meets three conditions at once:
+A line stays when it meets three conditions at once (WAY-128):
 
 1. **it is needed in every session** — or it points to a way in that would not be found otherwise;
 2. **the agent cannot read it** from the repository or from general knowledge;
@@ -67,7 +68,7 @@ The main file holds three kinds of content:
   descriptions of a repository do not shorten the agent's way to the right files.
 - **Pointers to ways in.** "Before X, read `path`" or "X is done by the skill `name`" — for
   activities whose way in the agent will not recognise from the request alone. The condition must
-  be recognisable at the moment X happens, and the target is given as a path in backticks.
+  be recognisable at the moment X happens, and the target is given as a path in backticks (WAY-129).
   `@path` in Claude Code is not a pointer; it loads the file into every session (section 4).
 - **Rules that always apply**, short and not derivable from the repository: a convention absent
   from the tools' configuration, a command the agent will not guess, a pitfall it trips on.
@@ -93,7 +94,7 @@ of cost, and the signal for review is a file that grows while what it covers doe
 ## 3. Where a rule lives
 
 A rule's place is set by what should trigger it — not by how many rules an area has or how long
-they are. Rules with the same trigger live together; rules with different triggers do not share a
+they are (WAY-128). Rules with the same trigger live together; rules with different triggers do not share a
 file.
 
 | The rule applies… | It lives | Notes |
@@ -101,7 +102,7 @@ file.
 | in every session | in the main file | the conditions of section 2 |
 | when working with certain files | in an instruction file in a subdirectory or in a rule pinned to paths | carriers: section 4 |
 | during an activity — starting the environment, committing, reviewing, releasing | on the route of that activity: in the skill that leads it, or in a file that skill tells the agent to read | when the activity has no obvious way in, the main file points to it in one sentence |
-| every time, without exception | in a hook, a linter, a CI check or a check of a step's output | an instruction may explain what the check is for, but does not replace it |
+| every time, without exception | in a CI check, a linter or a check of a step's output; in a local git hook only against slips | an instruction may explain what the check is for, but does not replace it (WAY-133) |
 | as knowledge needed sometimes (documentation, patterns, data) | in a file pointed to from a step of a route or from the main file | one level deep; a model file is pointed to, not pasted |
 
 **Splitting a file makes sense only when it changes the trigger.** Moving a rule into a file that
@@ -127,21 +128,24 @@ each file, with versions and the method of checking it: `tool_loading.md`.
 
 | Layer | Shared carrier | Why it reaches every tool | Addition of a single tool |
 |---|---|---|---|
-| main file | `AGENTS.md` at the root | Codex and Cursor always read it; Claude Code when the repository has no `CLAUDE.md` | `CLAUDE.md` only for additions meant for Claude Code alone; its first line is `@AGENTS.md` on its own |
+| main file | `AGENTS.md` at the root | Codex and Cursor always read it; Claude Code when the repository has no `CLAUDE.md` | `CLAUDE.md` only for additions meant for Claude Code alone; its first line is `@AGENTS.md` on its own (WAY-132) |
 | ways in and steps of routes | a pointer as a path in backticks: "Before X, read `path`" | it is an instruction, not a loading mechanism — every tool carries it out the same way | — |
-| procedures of activities | a skill in `.claude/skills/`; for Codex, a pointer to its `SKILL.md` by path from `AGENTS.md` | Claude Code and Cursor discover this directory themselves; Codex does not read it, so it gets there through the pointer | — |
+| procedures of activities | a skill in `.claude/skills/`; for Codex, a pointer to its `SKILL.md` by path from `AGENTS.md`, or a copy in `.agents/skills/` | Claude Code and Cursor discover this directory themselves; Codex does not read it, so it gets there through the pointer, or reads the copy in `.agents/skills/` (fact `codex-repository-skills`) | — |
 | rules for parts of the code | `AGENTS.md` in a subdirectory and a line in the main file: "When working in `x/`, read `x/AGENTS.md`" | Claude Code and Cursor load it on access to a file there; Codex only when the session starts in that directory — the line in the main file closes this gap | a rule with `paths` (Claude Code), a rule with `globs` (Cursor) |
-| what must happen every time | a git hook, a linter, CI, a check of a step's output | they work outside the agent | a Claude Code hook (text injected when a command is run) |
+| what must happen every time | CI, a linter, a check of a step's output; a git hook against slips | they work outside the agent (WAY-133) | a Claude Code hook (text injected when a command is run), against slips |
 | global file | — (each tool has its own) | — | one copy per tool, kept in step by a check that reports drift between them |
 
 Pitfalls:
 
-- **`@path` only as `@AGENTS.md` in `CLAUDE.md`, on a line of its own.** Nowhere else does it serve
+- **`@path` only as `@AGENTS.md` alone on the first line of `CLAUDE.md`** (WAY-129, WAY-132). Nowhere else does it serve
   as a pointer: in Claude Code it loads the file into every session, and a punctuation mark right
   after it switches the loading off without a warning; in Codex it is plain text.
 - **`CLAUDE.local.md` stops Claude Code from reading `AGENTS.md`.**
 - **No symbolic links on Windows** — without `core.symlinks` enabled, git checks a link out as a
   one-line text file.
+- **A local git hook keeps a rule against slips, not against an agent that can turn it off.** One
+  switch skips it; a rule an agent must not be able to skip is kept by CI or by the check of a
+  step's output (WAY-133).
 - **A `.mdc` rule and a rule in `.claude/rules/` work only in their own tool.** A rule that must
   apply everywhere does not live only there.
 
@@ -178,24 +182,29 @@ repository's file, rules, a skill), because a contradiction between layers canno
 file is read alone.
 
 - **Every line of the main file meets the three conditions of section 2.**
+- **A verdict to add, reword or move a rule rests on a mistake found more than once in records of
+  the work, or on a stated cost**; where no such mistake was found, the review says what it
+  searched (WAY-130).
 - **Typical defects:**
   - a file swollen with content most sessions do not need;
   - a procedure or specialist knowledge in the main file instead of on a route;
   - a repetition of what a linter or the configuration enforces;
   - a pointer without a condition — it is unclear when to reach for it;
   - a file generated at the start of a project and never changed, though the code changed;
-  - two instructions that contradict each other.
+  - two instructions that contradict each other;
+  - a rule that has to hold every time, kept only by a hook an agent can switch off.
 - **Mechanical checks**, settled without reading the content:
   - every path, skill and command pointed to exists;
-  - `@path` appears only as `@AGENTS.md` on a line of its own;
+  - `@path` appears only as `@AGENTS.md` alone on the first line of `CLAUDE.md`;
   - every `.mdc` rule has a YAML header;
   - a repository relying on `AGENTS.md` has no `CLAUDE.local.md`;
   - every `AGENTS.md` in a subdirectory has a pointing line in the main file;
-  - a skill needed in Codex has a pointer in `AGENTS.md`.
+  - a skill needed in Codex has a pointer in `AGENTS.md` or a copy in `.agents/skills/`;
+  - the Markdown files the root `AGENTS.md` or `CLAUDE.md` names pass the same checks.
 
 ### In operation — fresh sessions with the rule and without it
 
-Judging in operation is three separate questions, each with a different cost:
+Judging in operation is three separate questions, each with a different cost (WAY-131):
 
 | Question | How to settle it | How many sessions |
 |---|---|---|
@@ -218,9 +227,10 @@ Judging in operation is three separate questions, each with a different cost:
 
 - **The signal is repetition, not a single event:** the agent makes the same mistake a second
   time, a review catches something the agent should have known, a human types the same correction
-  again. The threshold of "twice" is a convention, not a measurement — the size of an insertion
-  follows how often the mistake happens: for one occurrence the smallest possible, for none a
-  decision first whether to add anything at all.
+  again. A rule enters only for a mistake found more than once in records of the work; a mistake
+  seen once is watched, not ruled (WAY-130). The exception: a rule that carries a decision the
+  repository records, or a step of an activity in the file that leads that activity, needs no
+  repeated mistake — its reason and its way out are that decision or that work.
 - **Rules come from reviewing sessions, not from memory.** A scan of session records reports
   matters, a human verifies and settles them; the rule is written after that critique, when it is
   known which mistake it fixes and why. An incident recalled from memory days later gives no
@@ -228,17 +238,19 @@ Judging in operation is three separate questions, each with a different cost:
 - **Before adding:** the place by its trigger (section 3), the form by section 5, and a check
   whether a rule on the same thing already stands elsewhere — then that one is replaced instead of a
   second one being added.
-- **Every rule has a named mistake that it removes.** A rule for which none can be named does not
-  go in; the named mistake is later its way out.
+- **Every rule added against a mistake names that mistake** (WAY-130). A rule for which none can
+  be named does not go in; the named mistake is later its way out.
 
 ### When to remove a rule
 
-- the agent does it right without the rule — settled by a removal test: the rule goes, and watching
+- the agent does it right without the rule (a rule added for a mistake) — settled by a removal test: the rule goes, and watching
   the work shows whether the mistake comes back;
 - a tool enforces it (a linter, a hook, CI) — the rule goes or turns into a check;
 - it can be read from the repository;
 - it points to a path, skill or command that does not exist;
-- its mistake can no longer be named.
+- it was added for a mistake that can no longer be named — it is proposed for removal; when the
+  mistake is named but may no longer happen, it is proposed as a removal test. A rule that carries
+  a decision or a step of an activity goes with that decision or that step, not by this test.
 
 A long absence of the mistake does not prove the rule is unnecessary — it may mean the rule works.
 A removal test settles it, not the calendar.
@@ -265,25 +277,32 @@ A removal test settles it, not the calendar.
 
 ## Sources
 
-Read on 2026-10-07. Tool behaviour holds for Claude Code 2.1.293, Codex CLI 0.157.0 and Cursor CLI
-2026.10.01; "measured" marks behaviour checked on that date in fresh headless sessions, with a
-marker phrase in each file under test and a positive control.
+Tool behaviour rests on an environment fact of the-way where one exists, named by its identifier;
+the fact's entry in `foundations/environment_facts.md` holds the passage and its address.
+Otherwise it rests on the tool's documentation, by address. What was measured is described in
+`tool_loading.md`, where each measurement stands.
 
+- Environment facts of tool behaviour: `claude-code-imports`, `claude-code-agents-md`,
+  `claude-code-path-rules`, `claude-code-project-skills`, `codex-agents-md`,
+  `codex-repository-skills`, `cursor-agents-md`.
 - Tool documentation: https://code.claude.com/docs/en/memory, https://code.claude.com/docs/en/skills,
   https://code.claude.com/docs/en/hooks, https://code.claude.com/docs/en/best-practices,
   https://learn.chatgpt.com/docs/agent-configuration/agents-md,
   https://learn.chatgpt.com/docs/build-skills, https://learn.chatgpt.com/guides/best-practices,
   https://cursor.com/docs/rules, https://cursor.com/docs/skills.
-- Studies: arXiv:2602.11988 v3 (context files: cost up about 20%, instructions followed,
-  repository overviews do not help); arXiv:2605.10039 (no effect of file length or of a rule's
-  position on compliance with a single rule); arXiv:2507.11538 (accuracy falls as the number of
-  instructions grows); arXiv:2602.07150 (run-to-run variance and the number of runs needed);
-  arXiv:2511.12884 (files grow by small additions, deletions negligible); arXiv:2606.15828 (six
-  typical defects, found in 91 of 100 popular files).
-- Measured: `@path` followed by a punctuation mark does not load; `AGENTS.md` alone loads in Claude
-  Code; a subdirectory `CLAUDE.md` and a `paths` rule load on read, on write without a read and on
-  `cat` in Bash; Claude Code does not read `.agents/skills/` and Codex does not read
-  `.claude/skills/`; a Codex session started at the root did not follow a subdirectory's
-  `AGENTS.md` in any of four runs, and followed it in both runs started in that subdirectory;
-  Cursor loads a glob rule and a subdirectory `AGENTS.md` on read but not on a write without a
-  read, does not paste a file referenced with `@` in a rule, and ignores `.claude/rules/`.
+- Studies:
+  - https://arxiv.org/abs/2602.11988v3 — context files raise the cost of a task by over 20% on
+    average, their instructions are followed, and repository overviews in them do not help (fact
+    `context-file-effect`);
+  - https://arxiv.org/abs/2605.10039v1 — file size, instruction position, file architecture and
+    contradictions in adjacent files produce no detectable contrast in compliance with a single
+    trivial rule, and each additional function generated within a session goes with about 5.6%
+    lower odds of compliance (fact `single-rule-compliance`);
+  - https://arxiv.org/abs/2507.11538v1 — accuracy falls as the number of instructions grows (fact
+    `instruction-density-accuracy`);
+  - https://arxiv.org/abs/2602.07150v3 — identical runs of one agent configuration differ by
+    several percentage points (fact `agent-run-variance`);
+  - https://arxiv.org/abs/2511.12884v2 — instruction files grow by frequent small additions;
+  - https://arxiv.org/abs/2606.15828v5 — a catalogue of six configuration smells of instruction
+    files, drawn from a review of grey literature and from mining, and measured on 100 popular
+    open-source repositories.
