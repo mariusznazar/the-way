@@ -8,6 +8,7 @@ one, so no file of this repository or of the machine takes part.
 Run from the root of the-way: python -B gate/run_tests.py instruction-files
 """
 
+import builtins
 import contextlib
 import io
 import os
@@ -85,6 +86,26 @@ def make_directory_link(test, target, link):
             os.symlink(target, link, target_is_directory=True)
     except (OSError, NotImplementedError) as error:
         test.skipTest(f"a directory link cannot be made here: {error}")
+
+
+NETWORK = "\\\\192.0.2.1\\share\\x.md"  # the network path \\192.0.2.1\share\x.md
+
+
+def guard_network_paths(test):
+    """Fails the test when a file-system call of the script receives a network path."""
+    def guard(name, real):
+        def checked(path, *args, **kwargs):
+            if isinstance(path, str) and path.replace("/", "\\").startswith(("\\\\", "\\??\\")):
+                test.fail(f"{name} received a network path")
+            return real(path, *args, **kwargs)
+        return checked
+
+    for owner, attribute in ((os, "stat"), (os, "lstat"), (os, "scandir"), (os, "readlink"),
+                             (os.path, "realpath"), (os.path, "exists"), (os.path, "lexists"),
+                             (os.path, "isdir"), (os.path, "isfile"), (os.path, "islink"),
+                             (os.path, "isjunction"), (builtins, "open")):
+        test.enterContext(mock.patch.object(owner, attribute,
+                                            guard(attribute, getattr(owner, attribute))))
 
 
 class CheckTestCase(unittest.TestCase):
@@ -301,6 +322,60 @@ class Links(CheckTestCase):
         self.assertIn("emphasis", checks(check_instructions.check(None, [link]), "warn"))
 
 
+class NetworkPaths(CheckTestCase):
+    def test_a_link_to_a_network_path_is_never_looked_up(self):
+        repo = self.repo({"CLAUDE.md": "Rules.\n"})
+        make_file_link(self, NETWORK, os.path.join(repo.root, "AGENTS.md"))
+        make_file_link(self, NETWORK, os.path.join(repo.root, "notes.txt"))
+        guard_network_paths(self)
+        code, _, _ = run_main([repo.root])
+        self.assertEqual(code, 0)
+        found = [(f.level, f.check, f.file, f.message) for f in repo.findings()]
+        self.assertIn(("info", "read", "AGENTS.md", "a link out of the repository, not read"), found)
+        self.assertNotIn("notes.txt", [file for _, _, file, _ in found])
+
+    def test_a_chain_that_reaches_a_network_path_through_a_link_is_not_followed(self):
+        repo = self.repo({"CLAUDE.md": "Rules.\n"})
+        make_file_link(self, NETWORK, os.path.join(repo.root, "mid.md"))
+        make_file_link(self, "mid.md", os.path.join(repo.root, "AGENTS.md"))
+        guard_network_paths(self)
+        found = [(f.level, f.check, f.file) for f in repo.findings()]
+        self.assertIn(("info", "read", "AGENTS.md"), found)
+
+    def test_a_nested_repository_whose_git_is_a_link_is_skipped_without_a_lookup(self):
+        repo = self.repo({"AGENTS.md": "Rules.\n", "sub/AGENTS.md": "IMPORTANT: a.\nIMPORTANT: b.\n"})
+        make_file_link(self, NETWORK, os.path.join(repo.root, "sub", ".git"))
+        guard_network_paths(self)
+        found = repo.findings()
+        self.assertEqual([f.file for f in found if f.check == "size"], ["AGENTS.md"])
+        self.assertNotIn("emphasis", checks(found))
+
+    def test_a_chain_of_two_links_that_leaves_the_repository_is_not_read(self):
+        repo = self.repo({}, outside={"secret.md": "Read `MARKER-SECRET-9/x.md`.\n"})
+        make_file_link(self, os.path.join(repo.base, "secret.md"), os.path.join(repo.root, "mid.md"))
+        make_file_link(self, "mid.md", os.path.join(repo.root, "AGENTS.md"))
+        self.assertEqual([(f.level, f.check, f.file, f.message) for f in repo.findings()],
+                         [("info", "read", "AGENTS.md", "a link out of the repository, not read")])
+        code, out, _ = run_main([repo.root])
+        self.assertEqual(code, 0)
+        self.assertNotIn("MARKER-SECRET-9", out)
+
+    def test_a_chain_longer_than_the_hop_limit_is_not_read(self):
+        names = [f"h{number}.md" for number in range(1, check_instructions.LINK_HOPS + 1)]
+        repo = self.repo({"target.md": "Rules.\n"})
+        make_file_link(self, names[0], os.path.join(repo.root, "AGENTS.md"))
+        for here, there in zip(names, names[1:] + ["target.md"]):
+            make_file_link(self, there, os.path.join(repo.root, here))
+        self.assertEqual([(f.level, f.check, f.file, f.message) for f in repo.findings()],
+                         [("info", "read", "AGENTS.md", "a link out of the repository, not read")])
+
+    def test_a_chain_that_ends_inside_the_repository_is_read(self):
+        repo = self.repo({"target.md": "IMPORTANT: a.\nIMPORTANT: b.\n"})
+        make_file_link(self, "target.md", os.path.join(repo.root, "mid.md"))
+        make_file_link(self, "mid.md", os.path.join(repo.root, "AGENTS.md"))
+        self.assertIn("emphasis", checks(repo.findings(), "warn"))
+
+
 class LargeAndOddFiles(CheckTestCase):
     def test_only_the_first_mebibyte_is_read(self):
         repo = self.repo({"AGENTS.md": "word\n" * (check_instructions.MAX_BYTES // 5 + 100)})
@@ -338,8 +413,8 @@ class LargeAndOddFiles(CheckTestCase):
         self.assertIn(("warn", "read", "AGENTS.md"), [(f.level, f.check, f.file) for f in found])
 
     def test_a_utf8_byte_order_mark_is_stripped_before_every_check(self):
-        repo = self.repo({".cursor/rules/a.mdc": "﻿---\nalwaysApply: true\n---\nRule.\n",
-                          "CLAUDE.md": "﻿@AGENTS.md\n", "AGENTS.md": "Rules.\n"})
+        repo = self.repo({".cursor/rules/a.mdc": "\N{ZERO WIDTH NO-BREAK SPACE}---\nalwaysApply: true\n---\nRule.\n",
+                          "CLAUDE.md": "\N{ZERO WIDTH NO-BREAK SPACE}@AGENTS.md\n", "AGENTS.md": "Rules.\n"})
         self.assertEqual(checks(repo.findings(), "error") + checks(repo.findings(), "warn"), [])
 
     def test_a_character_cut_at_the_limit_does_not_make_the_text_invalid(self):
@@ -348,6 +423,12 @@ class LargeAndOddFiles(CheckTestCase):
         found = [(f.level, f.check, f.message) for f in repo.findings()]
         self.assertIn(("info", "read", "only the first 1048576 bytes were checked"), found)
         self.assertNotIn(("warn", "read", "not UTF-8 text; its content was not checked"), found)
+
+    def test_an_invalid_byte_near_the_limit_is_not_taken_for_a_split_character(self):
+        data = b"a" * (check_instructions.MAX_BYTES - 2) + b"\xff\n" + b"tail\n"
+        repo = self.repo({"AGENTS.md": data})
+        found = [(f.level, f.check, f.message) for f in repo.findings()]
+        self.assertIn(("warn", "read", "not UTF-8 text; its content was not checked"), found)
 
     def test_text_that_is_not_utf8_is_reported_and_its_content_not_checked(self):
         text = "Read `gone/x.md`. IMPORTANT: a.\nIMPORTANT: b.\n"
@@ -362,13 +443,13 @@ class LargeAndOddFiles(CheckTestCase):
 
 class PrintedValues(CheckTestCase):
     def test_control_and_bidirectional_characters_are_escaped_and_long_values_cut(self):
-        token = "gone‮\x07/x.md"
+        token = "gone\N{RIGHT-TO-LEFT OVERRIDE}\x07/x.md"
         long_token = "a/" * 150 + "x.md"
         repo = self.repo({"AGENTS.md": f"Read `{token}` and `{long_token}`.\n",
-                          "odd‮dir/AGENTS.md": "Rules.\n"})
+                          "odd\N{RIGHT-TO-LEFT OVERRIDE}dir/AGENTS.md": "Rules.\n"})
         code, out, _ = run_main([repo.root])
         self.assertEqual(code, 0)
-        self.assertNotIn("‮", out)
+        self.assertNotIn("\N{RIGHT-TO-LEFT OVERRIDE}", out)
         self.assertNotIn("\x07", out)
         self.assertIn("gone\\u202e\\x07/x.md", out)
         self.assertIn("odd\\u202edir/AGENTS.md", out)
@@ -432,6 +513,14 @@ class CommandLine(CheckTestCase):
         code, out, err = run_main([os.path.join(repo.root, "AGENTS.md")])
         self.assertEqual((code, out), (2, ""))
         self.assertIn("ROOT is not a directory", err)
+
+    def test_a_network_path_given_as_root_or_file_exits_with_2_without_a_lookup(self):
+        guard_network_paths(self)
+        for arguments in ([NETWORK], ["--file", NETWORK]):
+            with self.subTest(arguments=arguments):
+                code, out, err = run_main(arguments)
+                self.assertEqual((code, out), (2, ""))
+                self.assertIn("network path", err)
 
     def test_a_file_that_is_not_a_readable_regular_file_exits_with_2(self):
         repo = self.repo({"AGENTS.md": "Rules.\n"})

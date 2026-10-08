@@ -13,7 +13,7 @@ Usage, from anywhere:
 ROOT defaults to the current directory. --file adds an instruction file outside the repository,
 such as the user's global file. Each finding is printed as `LEVEL check file:line message`; the
 last line counts the findings by level. The exit code is 1 when there is an error, 2 when ROOT is
-not a directory or a --file is not a readable regular file, else 0.
+not a directory, a --file is not a readable regular file, or either names a network path, else 0.
 
 The files it reads are not the-way's, so it trusts none of them: it reads at most 1048576 bytes of
 a file, opens only regular files, reads no file through a link that leads out of ROOT, follows no
@@ -44,6 +44,9 @@ EXTENSIONS = ("md", "mdc", "json", "jsonl", "js", "mjs", "cjs", "ts", "tsx", "js
               "go", "rs", "java", "kt", "rb", "lock", "ini", "cfg", "env", "xml", "csv")
 FILE_LIKE = re.compile(r"\.(" + "|".join(EXTENSIONS) + r")$", re.IGNORECASE)
 LINE_SUFFIX = re.compile(r":\d+(:\d+)?$")
+LINK_HOPS = 8  # the most links a chain may have before it is taken as leading out
+NETWORK_START = ("\\\\", "\\??\\")  # the start of a network share, a device or a NT path
+LOCAL_EXTENDED = re.compile(r"^(\\\\\?|\\\?\?)\\(?=[A-Za-z]:\\)")  # \\?\C:\ or \??\C:\, a local drive
 BOMS_NOT_UTF8 = (codecs.BOM_UTF32_LE, codecs.BOM_UTF32_BE, codecs.BOM_UTF16_LE,
                  codecs.BOM_UTF16_BE)
 
@@ -97,50 +100,102 @@ def is_instruction_name(rel, name):
     return name == "SKILL.md" and any(("/" + d + "/") in "/" + rel for d in SKILL_DIRS)
 
 
+def local_form(path):
+    """PATH with `/` read as a backslash and the extended prefix of a local drive taken off."""
+    return LOCAL_EXTENDED.sub("", str(path).replace("/", "\\"))
+
+
+def network_shaped(path):
+    """True when PATH names a network share or a device. Such a path is never passed to the file
+    system."""
+    return local_form(path).startswith(NETWORK_START)
+
+
+def leads_out(path, root, hops=LINK_HOPS):
+    """True when the file at PATH does not lead to a path inside ROOT: a link on the way points to
+    a network path or outside ROOT, the chain of links is longer than LINK_HOPS, or a link cannot
+    be followed here. Only the parts of PATH that lie in ROOT are looked at, each one only after
+    the parts before it were checked, so no link target is ever followed."""
+    path = os.path.normpath(path)
+    if not inside(path, root):
+        return True
+    rel = os.path.relpath(path, root)
+    parts = [] if rel == os.curdir else rel.split(os.sep)
+    current = root
+    for index, part in enumerate(parts):
+        current = os.path.join(current, part)
+        if os.path.isjunction(current):
+            return True
+        if not os.path.islink(current):
+            continue
+        if hops == 0:
+            return True
+        target = os.readlink(current)
+        if network_shaped(target):
+            return True
+        target = local_form(target)
+        if os.path.isabs(target) or re.match(r"^[A-Za-z]:", target):
+            following = os.path.normpath(target)
+        else:
+            following = os.path.normpath(os.path.join(os.path.dirname(current), target))
+        return leads_out(os.path.join(following, *parts[index + 1:]), root, hops - 1)
+    return False
+
+
+def directory_link(entry, root):
+    """True when the link ENTRY leads to a directory. On Windows the link itself says so. Otherwise
+    the target is looked at only when the link stays inside ROOT; a link that leads out of ROOT is
+    never followed and counts as no directory."""
+    attributes = getattr(entry.stat(follow_symlinks=False), "st_file_attributes", 0)
+    if attributes & stat.FILE_ATTRIBUTE_DIRECTORY:
+        return True
+    if leads_out(entry.path, root):
+        return False
+    return entry.is_dir()
+
+
 def instruction_files(root, findings):
     """Every file under ROOT that an agent tool reads as instructions, as paths relative to ROOT.
-    A link to a directory is not followed, a file reached through a link that leads out of ROOT
-    is not listed, and a directory that cannot be listed is reported."""
-    real_root = os.path.realpath(root)
+    The walk follows no link: a link to a directory or a junction is reported and not entered, a
+    file link is read only when it leads inside ROOT, and a directory that cannot be listed is
+    reported."""
     found = []
 
-    def relative(path):
-        rel = os.path.relpath(path, root).replace(os.sep, "/")
-        return "" if rel == "." else rel
-
-    def cannot_list(error):
-        findings.append(Finding("info", "walk", relative(error.filename or root) or ".", 0,
-                                f"a directory that cannot be listed: {reason(error)}"))
-
-    for current, dirs, files in os.walk(root, onerror=cannot_list):
-        rel_dir = relative(current)
-        rel_dir = rel_dir + "/" if rel_dir else ""
-        kept = []
-        for name in sorted(dirs):
-            full = os.path.join(current, name)
+    def visit(rel_dir):
+        current = os.path.join(root, *rel_dir.split("/")) if rel_dir else root
+        try:
+            with os.scandir(current) as listing:
+                entries = sorted(listing, key=lambda entry: entry.name)
+        except OSError as error:
+            findings.append(Finding("info", "walk", rel_dir or ".", 0,
+                                    f"a directory that cannot be listed: {reason(error)}"))
+            return
+        for entry in entries:
+            name = entry.name
             if name in SKIP_DIRS:
                 continue
-            if os.path.islink(full) or os.path.isjunction(full):
-                findings.append(Finding("info", "walk", rel_dir + name, 0,
-                                        "a link to a directory, not followed"))
-                continue
-            if os.path.exists(os.path.join(full, ".git")):
-                continue
-            if name in MAIN_NAMES:
-                findings.append(Finding("warn", "read", rel_dir + name, 0,
-                                        "cannot be read: it is a directory"))
-            kept.append(name)
-        dirs[:] = kept
-        for name in sorted(files):
-            rel = rel_dir + name
-            if not is_instruction_name(rel, name):
-                continue
-            full = os.path.join(current, name)
-            if os.path.islink(full) and not inside(os.path.realpath(full), real_root):
-                findings.append(Finding("info", "read", rel, 0,
-                                        "a link out of the repository, not read"))
-                continue
-            found.append(rel)
+            rel = f"{rel_dir}/{name}" if rel_dir else name
+            try:
+                if entry.is_junction() or (entry.is_symlink() and directory_link(entry, root)):
+                    findings.append(Finding("info", "walk", rel, 0,
+                                            "a link to a directory, not followed"))
+                elif entry.is_dir(follow_symlinks=False):
+                    if os.path.lexists(os.path.join(entry.path, ".git")):
+                        continue
+                    if name in MAIN_NAMES:
+                        findings.append(Finding("warn", "read", rel, 0,
+                                                "cannot be read: it is a directory"))
+                    visit(rel)
+                elif is_instruction_name(rel, name):
+                    if entry.is_symlink() and leads_out(entry.path, root):
+                        findings.append(Finding("info", "read", rel, 0,
+                                                "a link out of the repository, not read"))
+                    else:
+                        found.append(rel)
+            except OSError as error:
+                findings.append(Finding("warn", "read", rel, 0, f"cannot be read: {reason(error)}"))
+
+    visit("")
     return found
 
 
@@ -179,7 +234,7 @@ def read_text(path, shown_as, findings):
     try:
         return data.decode("utf-8")
     except UnicodeDecodeError as error:
-        if cut and error.start >= len(data) - 3:
+        if cut and error.reason == "unexpected end of data" and error.start >= len(data) - 3:
             return data[:error.start].decode("utf-8")
         findings.append(Finding("warn", "read", shown_as, 0,
                                 "not UTF-8 text; its content was not checked"))
@@ -365,9 +420,13 @@ def main(argv=None):
                         help="an instruction file outside the repository")
     args = parser.parse_args(argv)
     root = args.root or (None if args.file else ".")
+    if root is not None and network_shaped(root):
+        return usage_error(f"ROOT is a network path: {root}")
     if root is not None and not os.path.isdir(root):
         return usage_error(f"ROOT is not a directory: {root}")
     for path in args.file:
+        if network_shaped(path):
+            return usage_error(f"--file is a network path: {path}")
         try:
             if not stat.S_ISREG(os.stat(path).st_mode):
                 return usage_error(f"--file is not a regular file: {path}")
