@@ -39,6 +39,7 @@ PREFIX = "the-way-"
 SUFFIX = " Use this checkout's own the-way."
 NAME = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*")
 BLOCK_SCALAR = re.compile(r"[|>][-+0-9]*")
+UNSAFE_START = "-?:,[]{}#&*!|>'\"%@`"
 FIELD = re.compile(r"(name|description):(.*)")
 
 
@@ -113,6 +114,10 @@ def read_skill(root: Path, path: str) -> Skill:
             raise GeneratorError(f"{path}: frontmatter has no '{field}:' with a value")
         if BLOCK_SCALAR.fullmatch(value):
             raise GeneratorError(f"{path}: {field} is not on one line")
+    description = fields["description"]
+    if (description[0] in UNSAFE_START or ": " in description or " #" in description
+            or description.endswith(":")):
+        raise GeneratorError(f"{path}: description is not a safe plain YAML scalar")
     name = fields["name"]
     if not NAME.fullmatch(name):
         raise GeneratorError(f"{path}: name '{name}' is not lowercase words joined by hyphens")
@@ -168,8 +173,9 @@ def entry_point_text(skill: Skill, skills: list[Skill]) -> str:
         "directory the session was started in, or the one it was last moved to (Claude Code's "
         "`/cd`) — not in the shell's current directory, which moves with `cd`. "
         f"Read `{skill.path}` there in full and follow it, and read the files it names under the "
-        "same root, never a copy in another checkout or worktree. If the skill tells you to "
-        "resolve a link to find the-way, skip that: the root is the one above. Do not substitute "
+        "same root, never a copy in another checkout or worktree. "
+        f"If `{skill.path}` is absent there, stop and say so. "
+        "If the skill tells you to resolve a link to find the-way, skip that: the root is the one above. Do not substitute "
         "a global skill.\n"
         "\n"
         "Where this skill or a file it reads names another the-way skill — "

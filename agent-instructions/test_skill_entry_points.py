@@ -51,7 +51,8 @@ DECISION_ENTRY = (
     "— not in the shell's current directory, which moves with `cd`. "
     "Read `elements/decisions/skill/SKILL.md` there in "
     "full and follow it, and read the files it names under the same root, never a copy in "
-    "another checkout or worktree. If the skill tells you to resolve a link to find the-way, skip "
+    "another checkout or worktree. If `elements/decisions/skill/SKILL.md` is absent there, stop "
+    "and say so. If the skill tells you to resolve a link to find the-way, skip "
     "that: the root is the one above. Do not substitute a global skill.\n"
     "\n"
     "Where this skill or a file it reads names another the-way skill — `critique` or "
@@ -157,6 +158,18 @@ class FrontmatterErrors(unittest.TestCase):
          "Error: a/SKILL.md: name 'Record_Decision' is not lowercase words joined by hyphens\n"),
         ("name with the prefix", "---\nname: the-way-alpha\ndescription: Use for it.\n---\n",
          "Error: a/SKILL.md: name 'the-way-alpha' already starts with 'the-way-'\n"),
+        ("double-quoted description", '---\nname: alpha\ndescription: "Use for alpha."\n---\n',
+         "Error: a/SKILL.md: description is not a safe plain YAML scalar\n"),
+        ("single-quoted description", "---\nname: alpha\ndescription: 'Use for alpha.'\n---\n",
+         "Error: a/SKILL.md: description is not a safe plain YAML scalar\n"),
+        ("colon and space inside", "---\nname: alpha\ndescription: Use for alpha: always.\n---\n",
+         "Error: a/SKILL.md: description is not a safe plain YAML scalar\n"),
+        ("space and hash inside", "---\nname: alpha\ndescription: Use for alpha #1.\n---\n",
+         "Error: a/SKILL.md: description is not a safe plain YAML scalar\n"),
+        ("ending with a colon", "---\nname: alpha\ndescription: Use for alpha:\n---\n",
+         "Error: a/SKILL.md: description is not a safe plain YAML scalar\n"),
+        ("starting with a backtick", "---\nname: alpha\ndescription: `alpha` is used.\n---\n",
+         "Error: a/SKILL.md: description is not a safe plain YAML scalar\n"),
     )
 
     def test_each_error_stops_with_its_message_and_writes_nothing(self) -> None:
@@ -168,6 +181,12 @@ class FrontmatterErrors(unittest.TestCase):
                 before = repository.files()
                 self.assertEqual(repository.run("--write"), (1, "", message))
                 self.assertEqual(repository.files(), before)
+
+    def test_a_colon_not_followed_by_a_space_is_accepted(self) -> None:
+        repository = Repository(self)
+        repository.write("a/SKILL.md", "---\nname: alpha\ndescription: Use at 10:30.\n---\n")
+        self.assertEqual(generator.discover(repository.root),
+                         [generator.Skill("a/SKILL.md", "alpha", "Use at 10:30.")])
 
     def test_a_name_two_skills_hold_stops_and_writes_nothing(self) -> None:
         repository = Repository(self)
