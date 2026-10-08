@@ -1,4 +1,0 @@
-foundations/invariants.md:262: error: foundation-change-path/1: `WAY-13@c6b33aa9` — the current fingerprint of WAY-13 after the merge is 97b17d59
-unchecked: identifiers, versions, corrections and the list of violated invariants — --base none: there is no commit the branch left the main branch from
-note: there is no human_verdicts.md; no human verdict is given
-1 error(s), 0 warning(s), 1 unchecked

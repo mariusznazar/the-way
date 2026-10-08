@@ -1,8 +1,0 @@
-feat(task-cycle): Record the cycle choice, a foundation touch and a switch in the cycle record
-
-The record template gains a Cycle header line and a Cycle section: the choice at start with the
-reason for each finding assessed, a foundation touch on the light cycle with its ruling, and a
-switch to the full cycle with the executor's report, the discarded attempt's last commit (a
-historical name, reachable only until the reflog expires) and the files it changed. The
-foundation route can record the time a touch changed it, the artifacts list spec and plan only on
-the full cycle, and the request handoff carries the cycle and its reasons.
