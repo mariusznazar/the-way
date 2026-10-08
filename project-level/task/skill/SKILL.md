@@ -9,9 +9,9 @@ Turn one proposed task into a document another agent can take through the task c
 document's form and each section's rule stand in `project-level/task/template.md`; the way to
 ask the human stands in `elements/common/way_of_working.md`. This skill holds the order of work.
 
-This skill lives in `project-level/task/skill/` of the-way. When installed globally, resolve the
-link to find the process root. In a product, read the pinned `.the-way` commit; another the-way
-skill named here is the product skill with the `the-way-` prefix.
+This skill lives in `project-level/task/skill/` of the-way. In the-way itself, read it in the
+checkout or worktree the session works in; in a product, at the pinned `.the-way` commit.
+Another the-way skill named here is the project skill with the `the-way-` prefix.
 
 ## 1. Read the sources
 

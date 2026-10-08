@@ -13,11 +13,11 @@ guess as little as they can. The form of a definition and the rule of each secti
 `definition_template.md`; how a skill asks stands in `elements/common/way_of_working.md`; this
 skill holds the order of the work. The decisions that set its rules are cited below.
 
-This skill lives in `project-level/skill/` of the-way. Installed globally, its base directory is a
-link, so resolve it first: `realpath <base>` in Bash, `(Get-Item <base>).Target` in PowerShell. The
-project level's directory is the parent of the resolved one, and the-way the directory above that.
-In a product, the-way is the product's pinned `.the-way`, and each skill named below is the
-product's skill of that name with the `the-way-` prefix.
+This skill lives in `project-level/skill/` of the-way. In the-way itself, the-way is the checkout
+or worktree the session works in, the directory `git rev-parse --show-toplevel` prints in
+the session's working directory; in a product, it is the product's pinned `.the-way`. The project
+level's directory, `project-level/`, is there, and each skill named below is the project skill of
+that name with the `the-way-` prefix.
 
 The project level reads the product's foundation and writes nothing in it
 (WAY-106).

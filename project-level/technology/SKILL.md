@@ -15,11 +15,11 @@ weighing of options — stand in `definition_template.md`; how a skill asks stan
 `elements/common/way_of_working.md`; the critique stands in `elements/common/critique/SKILL.md`;
 this skill holds the order of the work.
 
-This skill lives in `project-level/technology/` of the-way. Installed globally, its base directory
-is a link, so resolve it first: `realpath <base>` in Bash, `(Get-Item <base>).Target` in
-PowerShell. The project level's directory is the parent of the resolved one, and the-way the
-directory above that. In a product, the-way is the product's pinned `.the-way`, and each skill
-named below is the product's skill of that name with the `the-way-` prefix.
+This skill lives in `project-level/technology/` of the-way. In the-way itself, the-way is the
+checkout or worktree the session works in, the directory `git rev-parse --show-toplevel`
+prints in the session's working directory; in a product, it is the product's pinned `.the-way`. The
+project level's directory, `project-level/`, is there, and each skill named below is the project
+skill of that name with the `the-way-` prefix.
 
 The step writes into the definition only, never into the product's foundation
 (WAY-106).
