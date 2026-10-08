@@ -12,6 +12,7 @@ import builtins
 import contextlib
 import io
 import os
+import re
 import stat
 import sys
 import tempfile
@@ -24,6 +25,17 @@ import check_instructions  # noqa: E402
 
 SKILL = "---\nname: x\ndescription: Use for x.\n---\n"
 DEFECTS = "Read `docs/gone.md`.\n\nIMPORTANT: a.\nIMPORTANT: b.\n"
+NETWORK_SPELLINGS = (
+    "\\\\host\\share\\x.md",
+    "//host/share/x.md",
+    "/\\host\\share\\x.md",
+    "\\/host/share/x.md",
+    "\\\\?\\UNC\\host\\share\\x.md",
+    "\\\\.\\pipe\\x.md",
+    "\\??\\UNC\\host\\share\\x.md",
+)
+# What a network spelling becomes on its way to the file system, however it was joined or turned.
+NETWORK_TRACE = re.compile(r"host[\\/]share|[\\/]pipe[\\/]")
 
 
 def write(base, rel, content):
@@ -179,10 +191,76 @@ class DeadPath(CheckTestCase):
         repo = self.repo({"AGENTS.md": "See `docs/a.md:3`.\n", "docs/a.md": "x\n"})
         self.assertNotIn("dead-path", checks(repo.findings()))
 
-    def test_relative_path_in_a_file_outside_the_repository_is_only_noted(self):
-        repo = self.repo({"AGENTS.md": "Rules.\n", "global/x.md": "Read `scripts/a.json`.\n"})
-        found = [f for f in repo.findings(extra=["global/x.md"]) if f.check == "dead-path"]
-        self.assertEqual([f.level for f in found], ["info"])
+
+class SentenceSaysNotLoaded(CheckTestCase):
+    def test_a_file_path_in_a_sentence_wrapped_over_two_lines_is_only_noted(self):
+        repo = self.repo({"AGENTS.md": "The old guide `docs/old-guide.md` is\nnot read by any tool.\n"})
+        found = dead(repo.findings())
+        self.assertEqual([(f.level, f.line) for f in found], [("info", 1)])
+        self.assertIn("named in a sentence saying it does not load or exist", found[0].message)
+
+    def test_the_memory_sentence_is_only_noted(self):
+        text = ("Który katalog pamięci sesja faktycznie widzi (globalny `~\\.claude\\memory\\` nie\n"
+                "ładuje się do żadnej), co płaci się indeksem w każdej sesji.\n")
+        repo = self.repo({"AGENTS.md": text}, outside={"global/CLAUDE.md": text})
+        found = dead(repo.findings(extra=[os.path.join(repo.base, "global", "CLAUDE.md")]))
+        self.assertEqual(sorted((f.level, f.line) for f in found), [("info", 1), ("info", 1)])
+
+    def test_dead_paths_in_sentences_without_the_phrases_stay_warnings(self):
+        repo = self.repo({"AGENTS.md": "Read `docs/gone.md` and the notes in `notes/gone/`.\n"
+                                       "They load in every session. The cache does not load.\n"})
+        self.assertEqual([f.level for f in dead(repo.findings())], ["warn", "warn"])
+
+    def test_a_sentence_in_one_list_item_does_not_reach_the_next(self):
+        repo = self.repo({"AGENTS.md": "- The cache does not load\n- Read `docs/gone.md`\n"})
+        self.assertEqual([f.level for f in dead(repo.findings())], ["warn"])
+
+    def test_crlf_line_ends_still_join_a_wrapped_sentence(self):
+        repo = self.repo({"AGENTS.md": b"The old guide `docs/old-guide.md` is\r\nnot read by any tool.\r\n"})
+        self.assertEqual([f.level for f in dead(repo.findings())], ["info"])
+
+    def test_each_sentence_is_tested_once_whatever_the_number_of_paths(self):
+        sentences = 300
+        lines = []
+        for index in range(0, sentences, 2):
+            lines.append(" ".join(
+                "See " + " ".join(f"`d{number}/p{path}.md`" for path in range(10)) + "."
+                for number in (index, index + 1)))
+        repo = self.repo({"AGENTS.md": "\n".join(lines) + "\n"})
+        with mock.patch.object(check_instructions, "negates_loading",
+                               wraps=check_instructions.negates_loading) as tested:
+            found = dead(repo.findings())
+        self.assertEqual(len(found), sentences * 10)
+        self.assertEqual(tested.call_count, sentences)
+
+
+class OutsideRepository(CheckTestCase):
+    def outside_findings(self, text, files=None):
+        repo = self.repo(files or {"AGENTS.md": "Rules.\n"}, outside={"global/CLAUDE.md": text})
+        return dead(repo.findings(extra=[os.path.join(repo.base, "global", "CLAUDE.md")]))
+
+    def test_a_dead_path_of_two_segments_is_a_warning(self):
+        found = self.outside_findings("Repositories are listed in `scripts/locations.json`.\n")
+        self.assertEqual([f.level for f in found], ["warn"])
+
+    def test_a_name_of_one_segment_is_only_noted(self):
+        found = self.outside_findings("Copy `full_template.md` with `references\\` into `.cursor/`.\n")
+        self.assertEqual([f.level for f in found], ["info", "info", "info"])
+
+    def test_a_path_that_exists_from_the_home_directory_or_the_root_is_sound(self):
+        write(self.home, "scripts/locations.json", "{}\n")
+        found = self.outside_findings("Read `scripts/locations.json` and `docs/a.md`.\n",
+                                      {"AGENTS.md": "Rules.\n", "docs/a.md": "x\n"})
+        self.assertEqual(found, [])
+
+    def test_a_windows_path_of_two_segments_is_a_warning(self):
+        found = self.outside_findings("Decisions stand in `docs\\adr\\`.\n")
+        self.assertEqual([f.level for f in found], ["warn"])
+
+    def test_files_alone_are_checked_from_the_home_directory_too(self):
+        repo = self.repo({}, outside={"g/CLAUDE.md": "Read `scripts/locations.json`.\n"})
+        found = check_instructions.check(None, [os.path.join(repo.base, "g", "CLAUDE.md")])
+        self.assertEqual([f.level for f in dead(found)], ["warn"])
 
 
 class CursorRules(CheckTestCase):
@@ -211,6 +289,14 @@ class RootLayout(CheckTestCase):
     def test_claude_md_importing_agents_md_is_sound(self):
         repo = self.repo({"CLAUDE.md": "@AGENTS.md\n", "AGENTS.md": "Rules.\n"})
         self.assertNotIn("root-layout", checks(repo.findings()))
+
+    def test_agents_import_with_no_agents_md_beside_it_is_a_warning_on_any_line(self):
+        for text, line in (("@AGENTS.md\n", 1), ("# Claude\n\nRules.\n@AGENTS.md\n", 4)):
+            with self.subTest(line=line):
+                repo = self.repo({"CLAUDE.md": text})
+                found = [f for f in repo.findings() if f.check == "at-import"]
+                self.assertEqual([(f.level, f.line) for f in found], [("warn", line)])
+                self.assertIn("imports a file that is not there", found[0].message)
 
 
 class NestedAgents(CheckTestCase):
@@ -293,6 +379,42 @@ class Discovery(CheckTestCase):
         repo = self.repo({"AGENTS.md": "IMPORTANT: a.\nIMPORTANT: b.\n", "g/CLAUDE.md": "x\n"})
         found = check_instructions.check(None, [os.path.join(repo.root, "g/CLAUDE.md")])
         self.assertEqual([f.check for f in found], ["size"])
+
+
+@unittest.skipUnless(os.name == "nt", "network paths are looked up only on Windows")
+class NetworkTokens(CheckTestCase):
+    """A network path in a file under review never reaches the file system: on Windows a lookup of
+    one reaches the network."""
+
+    FILE_SYSTEM_CALLS = ("os.stat", "os.lstat", "os.scandir", "os.path.exists", "os.path.isfile",
+                         "os.path.isdir", "os.path.islink", "os.path.isjunction",
+                         "os.path.realpath", "builtins.open")
+
+    def no_network_lookup(self):
+        stack = contextlib.ExitStack()
+        for name in self.FILE_SYSTEM_CALLS:
+            module, attribute = name.rsplit(".", 1)
+            real = getattr({"os": os, "os.path": os.path, "builtins": builtins}[module], attribute)
+
+            def guarded(*args, _real=real, _name=name, **kwargs):
+                if args and isinstance(args[0], (str, os.PathLike)):
+                    if NETWORK_TRACE.search(os.fspath(args[0])):
+                        self.fail(f"{_name} was given {os.fspath(args[0])!r}")
+                return _real(*args, **kwargs)
+
+            stack.enter_context(mock.patch(name, guarded))
+        return stack
+
+    def test_no_spelling_of_a_network_path_reaches_the_file_system(self):
+        text = "".join(f"Read `{token}`.\n\nSee @{token} now\n\n" for token in NETWORK_SPELLINGS)
+        repo = self.repo({"AGENTS.md": text, "CLAUDE.md": "@AGENTS.md\n" + text},
+                         outside={"global.md": text})
+        with self.no_network_lookup():
+            found = repo.findings(extra=[os.path.join(repo.base, "global.md")])
+        noted = [f for f in found if f.level == "info" and "network path, not checked" in f.message]
+        self.assertEqual(len(noted), len(NETWORK_SPELLINGS) * 2 * 3)
+        self.assertEqual([f for f in found if f.check in ("dead-path", "at-import")
+                          and f.level != "info"], [])
 
 
 class Links(CheckTestCase):

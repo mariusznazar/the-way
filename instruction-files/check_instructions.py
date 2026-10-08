@@ -17,11 +17,12 @@ not a directory, a --file is not a readable regular file, or either names a netw
 
 The files it reads are not the-way's, so it trusts none of them: it reads at most 1048576 bytes of
 a file, opens only regular files, reads no file through a link that leads out of ROOT, follows no
-link to a directory, and prints every value escaped and cut to 200 characters. It writes nothing
-and starts no program.
+link to a directory, never looks a network path up, and prints every value escaped and cut to 200
+characters. It writes nothing and starts no program.
 """
 
 import argparse
+import bisect
 import codecs
 import os
 import re
@@ -36,14 +37,28 @@ MAX_BYTES = 1048576
 MAX_SHOWN = 200
 EMPHASIS = re.compile(r"\b(IMPORTANT|YOU MUST|CRITICAL|MUST NOT|NEVER EVER)\b")
 FENCE = re.compile(r"^\s*(```|~~~)")
+BLOCK_START = re.compile(r"^\s*([-*+]\s|\d+[.)]\s|#|\|)")
 CODE_SPAN = re.compile(r"`([^`\n]+)`")
 AT_IMPORT = re.compile(r"(?<![\w.@/\\])@([^\s`<>\"']+)")
+SENTENCE_END = re.compile(r"(?<=[.!?])\s+")
 TRAILING = ".,;:)!?]}"
 EXTENSIONS = ("md", "mdc", "json", "jsonl", "js", "mjs", "cjs", "ts", "tsx", "jsx", "py", "toml",
               "yaml", "yml", "txt", "sh", "ps1", "bat", "cmd", "sql", "html", "css", "vue", "php",
               "go", "rs", "java", "kt", "rb", "lock", "ini", "cfg", "env", "xml", "csv")
 FILE_LIKE = re.compile(r"\.(" + "|".join(EXTENSIONS) + r")$", re.IGNORECASE)
 LINE_SUFFIX = re.compile(r":\d+(:\d+)?$")
+# Phrases saying that the thing a sentence names does not load, is not read or does not exist,
+# in the languages of the instruction files met so far. A file in another language keeps the
+# level a dead path has anywhere else.
+NOT_LOADED_PHRASES = (
+    "does not load", "doesn't load", "is not loaded", "never loads", "is not read",
+    "does not read", "does not exist", "doesn't exist",
+    "nie ładuje", "nie wczytuje", "nie jest wczytywan", "nie czyta", "nie istnieje",
+)
+NOT_LOADED = re.compile(
+    "|".join(r"\b" + r"\s+".join(re.escape(word) for word in phrase.split())
+             for phrase in NOT_LOADED_PHRASES),
+    re.IGNORECASE)
 WINDOWS = os.name == "nt"  # network paths are a lookup problem of Windows; elsewhere a share is mounted
 LINK_HOPS = 8  # the most links a chain may have before it is taken as leading out (Windows)
 NETWORK_START = ("\\\\", "\\??\\")  # the start of a network share, a device or a NT path
@@ -110,6 +125,12 @@ def network_shaped(path):
     """True when PATH names a network share or a device. Such a path is never passed to the file
     system. Only Windows looks a network path up; elsewhere nothing is network-shaped."""
     return WINDOWS and local_form(path).startswith(NETWORK_START)
+
+
+def is_network(token):
+    """True for a path taken from text that a lookup would send over the network. It is the rule
+    of `network_shaped`, so a token and a link target are judged the same way."""
+    return network_shaped(token)
 
 
 def leads_out(path, root, hops=LINK_HOPS):
@@ -266,6 +287,55 @@ def prose_lines(text):
             yield number, line
 
 
+def paragraphs(text):
+    """Lists of (line number, line), one list per paragraph of prose: consecutive lines outside
+    fenced code blocks, broken at a blank line, a fence, a heading, a list item or a table row."""
+    current = []
+    last = None
+    for number, line in prose_lines(text):
+        if not line.strip() or (last is not None and number != last + 1) or BLOCK_START.match(line):
+            if current:
+                yield current
+            current = [(number, line)] if line.strip() else []
+        else:
+            current.append((number, line))
+        last = number
+    if current:
+        yield current
+
+
+def negates_loading(sentence):
+    """True when SENTENCE says that what it names does not load, is not read or does not exist."""
+    return NOT_LOADED.search(sentence) is not None
+
+
+def says_not_loaded(paragraph):
+    """A function of a line number and a column giving whether the sentence there says that what
+    it names does not load or exist. The paragraph is joined once, with code spans masked, split
+    once into sentences, and each sentence is tested once."""
+    starts, joined = [], []
+    offset = 0
+    for _, line in paragraph:
+        starts.append(offset)
+        joined.append(CODE_SPAN.sub(lambda match: "x" * len(match.group(0)), line))
+        offset += len(line) + 1
+    text = " ".join(joined)
+    bounds, verdicts = [], []
+    position = 0
+    for match in SENTENCE_END.finditer(text):
+        bounds.append(position)
+        verdicts.append(negates_loading(text[position:match.start()]))
+        position = match.end()
+    bounds.append(position)
+    verdicts.append(negates_loading(text[position:]))
+    line_start = {number: starts[index] for index, (number, _) in enumerate(paragraph)}
+
+    def lookup(number, column):
+        return verdicts[bisect.bisect_right(bounds, line_start[number] + column) - 1]
+
+    return lookup
+
+
 def looks_like_path(token):
     if not token or token.startswith(("-", "http://", "https://", "$")):
         return False
@@ -283,18 +353,35 @@ def looks_like_path(token):
     return "/" in token or "\\" in token or bool(FILE_LIKE.search(token))
 
 
+def bare_path(token):
+    return os.path.expanduser(LINE_SUFFIX.sub("", token).rstrip("/\\"))
+
+
 def is_relative(token):
     return not (token.startswith(("~", "/", "\\")) or re.match(r"^[A-Za-z]:", token))
 
 
-def resolve(token, file_dir, root):
-    token = os.path.expanduser(LINE_SUFFIX.sub("", token).rstrip("/\\"))
-    if os.path.isabs(token) or re.match(r"^[A-Za-z]:", token):
-        return os.path.exists(token)
-    return any(os.path.exists(os.path.join(base, token)) for base in (file_dir, root) if base)
+def segments(token):
+    parts = re.split(r"[\\/]", LINE_SUFFIX.sub("", token))
+    return [part for part in parts if part not in ("", ".")]
 
 
-def check_file(path, shown_as, root, findings, in_repo=True):
+def resolve(token, bases):
+    """True when TOKEN, a path that is not a network path, names something that exists: an
+    absolute path as it stands, a relative one from any of BASES. A network path is never looked
+    up, whatever the caller checked."""
+    if is_network(token):
+        return False
+    path = bare_path(token)
+    if is_network(path):
+        return False
+    if os.path.isabs(path) or re.match(r"^[A-Za-z]:", path):
+        return os.path.exists(path)
+    candidates = [os.path.join(base, path) for base in bases if base]
+    return any(os.path.exists(candidate) for candidate in candidates if not is_network(candidate))
+
+
+def check_file(path, shown_as, root, findings, in_repo=True, agents_beside=False):
     """The per-file checks of one instruction file; returns its text, or None when it was not
     read."""
     text = read_text(path, shown_as, findings)
@@ -302,23 +389,41 @@ def check_file(path, shown_as, root, findings, in_repo=True):
         return None
     name = os.path.basename(path)
     file_dir = os.path.dirname(path)
-    emphasised = []
-    for number, line in prose_lines(text):
-        for span in CODE_SPAN.findall(line):
-            token = span.strip()
-            if looks_like_path(token) and not resolve(token, file_dir, root):
-                if not in_repo and is_relative(token):
+    bases = [file_dir, root] if in_repo else [file_dir, root, os.path.expanduser("~")]
+    for paragraph in paragraphs(text):
+        not_loaded = None
+        for number, line in paragraph:
+            for match in CODE_SPAN.finditer(line):
+                token = match.group(1).strip()
+                if not looks_like_path(token):
+                    continue
+                if is_network(token):
+                    findings.append(Finding("info", "dead-path", shown_as, number,
+                                            f"`{shown(token)}` is a network path, not checked"))
+                    continue
+                if resolve(token, bases):
+                    continue
+                if not_loaded is None:
+                    not_loaded = says_not_loaded(paragraph)
+                if not_loaded(number, match.start()):
                     findings.append(Finding(
                         "info", "dead-path", shown_as, number,
-                        f"`{shown(token)}` is relative in a file outside the repository and does "
-                        "not resolve from here"))
+                        f"`{shown(token)}` is named in a sentence saying it does not load or "
+                        "exist"))
+                elif not in_repo and is_relative(token) and len(segments(token)) == 1:
+                    findings.append(Finding(
+                        "info", "dead-path", shown_as, number,
+                        f"`{shown(token)}` is a name relative to a place the sentence gives, and "
+                        "does not resolve from the file, the repository or the home directory"))
                 else:
                     findings.append(Finding("warn", "dead-path", shown_as, number,
                                             f"`{shown(token)}` does not exist"))
+    emphasised = []
+    for number, line in prose_lines(text):
         bare = CODE_SPAN.sub("", line)
         for match in AT_IMPORT.finditer(bare):
             token = match.group(1)
-            if line.strip() == "@AGENTS.md" and name == "CLAUDE.md":
+            if name == "CLAUDE.md" and agents_beside and line.strip() == "@AGENTS.md":
                 continue
             if not ("." in token or "/" in token):
                 continue
@@ -327,6 +432,12 @@ def check_file(path, shown_as, root, findings, in_repo=True):
                     "error", "at-import", shown_as, number,
                     f"@{shown(token)} — a punctuation mark right after the path stops Claude Code "
                     "from loading it, without a warning"))
+            elif is_network(token):
+                findings.append(Finding("info", "at-import", shown_as, number,
+                                        f"@{shown(token)} is a network path, not checked"))
+            elif not resolve(token, [file_dir]):
+                findings.append(Finding("warn", "at-import", shown_as, number,
+                                        f"@{shown(token)} imports a file that is not there"))
             else:
                 findings.append(Finding(
                     "warn", "at-import", shown_as, number,
@@ -405,12 +516,15 @@ def check(root, extra=()):
         return findings
     root = os.path.abspath(root)
     files = instruction_files(root, findings)
+    present = set(files)
     texts = {}
     seen = set()
     for rel in files:
         path = os.path.join(root, *rel.split("/"))
         seen.add(os.path.realpath(path))
-        texts[rel] = check_file(path, rel, root, findings)
+        folder = rel[: -len(os.path.basename(rel))]
+        texts[rel] = check_file(path, rel, root, findings,
+                                agents_beside=folder + "AGENTS.md" in present)
         if rel.startswith(".cursor/rules/") or "/.cursor/rules/" in rel:
             check_cursor_rule(rel, texts[rel], findings)
     for path in extra:
