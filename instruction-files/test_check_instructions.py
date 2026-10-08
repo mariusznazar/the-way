@@ -340,38 +340,46 @@ WINDOWS_ONLY = unittest.skipUnless(os.name == "nt", "network paths are looked up
 POSIX_ONLY = unittest.skipUnless(os.name == "posix", "needs the real path of a link, as on POSIX")
 
 
+def make_bait_link(test, base, link):
+    """Makes LINK a file link to a local path in BASE, and only then a directory at that path. The
+    link is a file link that points to a directory: a script that follows it, even only to
+    classify it, sees a directory and reports "a link to a directory"."""
+    target = os.path.join(base, "bait-" + str(len(os.listdir(base))))
+    make_file_link(test, target, link)
+    os.mkdir(target)
+
+
 @WINDOWS_ONLY
 class NetworkPaths(CheckTestCase):
     def test_a_link_to_a_network_path_is_never_looked_up(self):
-        repo = self.repo({"CLAUDE.md": "Rules.\n"}, outside={"bait.md": "Read `MARKER-BAIT-7/x.md`.\n"})
+        repo = self.repo({"CLAUDE.md": "Rules.\n"})
         for name in ("AGENTS.md", "notes.txt"):
             link = os.path.join(repo.root, name)
-            make_file_link(self, os.path.join(repo.base, "bait.md"), link)
+            make_bait_link(self, repo.base, link)
             pretend_target(self, link, NETWORK)
         guard_network_paths(self)
         code, out, _ = run_main([repo.root])
         self.assertEqual(code, 0)
-        self.assertNotIn("MARKER-BAIT-7", out)
+        self.assertNotIn("a link to a directory", out)
         found = [(f.level, f.check, f.file, f.message) for f in repo.findings()]
         self.assertIn(("info", "read", "AGENTS.md", "a link out of the repository, not read"), found)
         self.assertNotIn("notes.txt", [file for _, _, file, _ in found])
 
     def test_a_chain_that_reaches_a_network_path_through_a_link_is_not_followed(self):
-        repo = self.repo({"CLAUDE.md": "Rules.\n", "bait.md": "Read `MARKER-BAIT-7/x.md`.\n"})
+        repo = self.repo({"CLAUDE.md": "Rules.\n"})
         mid = os.path.join(repo.root, "mid.md")
-        make_file_link(self, "bait.md", mid)
+        make_bait_link(self, repo.base, mid)
         pretend_target(self, mid, NETWORK)
         make_file_link(self, "mid.md", os.path.join(repo.root, "AGENTS.md"))
         guard_network_paths(self)
         found = [(f.level, f.check, f.file, f.message) for f in repo.findings()]
         self.assertIn(("info", "read", "AGENTS.md", "a link out of the repository, not read"), found)
-        self.assertEqual(dead(repo.findings()), [])
+        self.assertNotIn("walk", checks(repo.findings()))
 
     def test_a_nested_repository_whose_git_is_a_link_is_skipped_without_a_lookup(self):
-        repo = self.repo({"AGENTS.md": "Rules.\n", "sub/AGENTS.md": "IMPORTANT: a.\nIMPORTANT: b.\n",
-                          "bait.md": "x\n"})
+        repo = self.repo({"AGENTS.md": "Rules.\n", "sub/AGENTS.md": "IMPORTANT: a.\nIMPORTANT: b.\n"})
         link = os.path.join(repo.root, "sub", ".git")
-        make_file_link(self, os.path.join(repo.root, "bait.md"), link)
+        make_bait_link(self, repo.base, link)
         pretend_target(self, link, NETWORK)
         guard_network_paths(self)
         found = repo.findings()
@@ -430,6 +438,15 @@ class LinkChains(CheckTestCase):
                          [("info", "read", "AGENTS.md")])
 
     @POSIX_ONLY
+    def test_a_link_loop_is_reported_as_unreadable_and_the_run_goes_on(self):
+        repo = self.repo({"CLAUDE.md": "Rules.\n"})
+        make_file_link(self, "AGENTS.md", os.path.join(repo.root, "AGENTS.md"))
+        found = [(f.level, f.check, f.file, f.message) for f in repo.findings()]
+        self.assertTrue(any(f[:3] == ("warn", "read", "AGENTS.md") and f[3].startswith("cannot be read: ")
+                            for f in found))
+        self.assertIn(("info", "size", "CLAUDE.md", "1 lines, 1 words"), found)
+
+    @POSIX_ONLY
     def test_every_directory_link_is_reported_wherever_it_points(self):
         repo = self.repo({"inner/x.txt": "x\n"}, outside={"elsewhere/x.txt": "x\n"})
         make_directory_link(self, os.path.join(repo.base, "elsewhere"), os.path.join(repo.root, "out"))
@@ -441,7 +458,9 @@ class LinkChains(CheckTestCase):
 
 class DeepTree(CheckTestCase):
     def test_a_tree_deeper_than_the_recursion_limit_does_not_stop_the_run(self):
-        depth = sys.getrecursionlimit() + 100
+        self.addCleanup(sys.setrecursionlimit, sys.getrecursionlimit())
+        sys.setrecursionlimit(200)  # low enough that a few hundred levels are deeper than it
+        depth = 300
         repo = self.repo({"AGENTS.md": "Rules.\n"})
         self.addCleanup(os.chdir, os.getcwd())
         os.chdir(repo.root)

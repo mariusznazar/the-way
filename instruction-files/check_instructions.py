@@ -148,7 +148,7 @@ def leads_out(path, root, hops=LINK_HOPS):
 
 def directory_link(entry, root):
     """True when the link ENTRY leads to a directory, wherever it points. Elsewhere than Windows the
-    system follows the link, which cannot reach a network there. On Windows the link itself says
+    system follows the link, and reaches only what the system has mounted. On Windows the link itself says
     so; otherwise the target is looked at only when the link stays inside ROOT, and a link that
     leads out of ROOT is never followed and counts as no directory."""
     if not WINDOWS:
