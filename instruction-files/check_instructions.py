@@ -368,24 +368,60 @@ def segments(token):
     return [part for part in parts if part not in ("", ".")]
 
 
-def names_something(path):
-    """True when PATH, a path that is not a network path, exists, without following a link. On
-    Windows its parts are looked at one by one with `lstat`, and a link or junction on the way
-    ends the walk: what the path names through it counts as existing and is not looked up."""
-    try:
-        if WINDOWS:
-            drive, root, tail = os.path.splitroot(path)
-            current = drive + root
-            for part in tail.split(os.sep):
-                if not part:
-                    continue
-                current = os.path.join(current, part)
-                info = os.lstat(current)
-                if (stat.S_ISLNK(info.st_mode)
-                        or getattr(info, "st_file_attributes", 0) & stat.FILE_ATTRIBUTE_REPARSE_POINT):
-                    return True
+def is_link_like(info):
+    """True when the `lstat` result INFO is a link, a junction or another reparse point."""
+    return bool(stat.S_ISLNK(info.st_mode)
+                or getattr(info, "st_file_attributes", 0) & stat.FILE_ATTRIBUTE_REPARSE_POINT)
+
+
+def walk_exists(start, parts, follow, hops=LINK_HOPS):
+    """Windows. True when the PARTS below the directory START all exist, looked at one by one with
+    `lstat`. A link on the way ends the walk with True and nothing is looked up through it, unless
+    FOLLOW: then a link with a local target is followed with `os.readlink` only, up to HOPS links,
+    and one with a network-shaped target, an unreadable one or too many links ends it with True."""
+    current = start
+    for index, part in enumerate(parts):
+        current = os.path.join(current, part)
+        if not is_link_like(os.lstat(current)):
+            continue
+        if not follow or hops == 0:
             return True
-        return os.path.lexists(path)
+        try:
+            target = os.readlink(current)
+        except OSError:
+            return True
+        if network_shaped(target):
+            return True
+        target = local_form(target)
+        if os.path.isabs(target) or re.match(r"^[A-Za-z]:", target):
+            following = os.path.normpath(target)
+        else:
+            following = os.path.normpath(os.path.join(os.path.dirname(current), target))
+        drive, root, tail = os.path.splitroot(following)
+        rest = [piece for piece in tail.split(os.sep) if piece] + list(parts[index + 1:])
+        return walk_exists(drive + root, rest, True, hops - 1)
+    return True
+
+
+def names_something(path, base=None):
+    """True when PATH, a path that is not a network path, exists, without a lookup through a link.
+    PATH is normalised first, so `/` and `\\` are told apart as parts. On Windows a relative PATH
+    below BASE (the directory it was joined onto, which is not judged) is walked from BASE with
+    `lstat`, and a link on the way ends the walk: what the path names through it counts as
+    existing. Any other path, absolute or climbing above BASE, is walked from its root, links
+    followed by `os.readlink` only. Elsewhere `lexists` cannot reach a network."""
+    try:
+        path = os.path.normpath(path)
+        if not WINDOWS:
+            return os.path.lexists(path)
+        if base is not None:
+            base = os.path.abspath(base)
+            path = os.path.abspath(path)
+            if path != base and inside(path, base):
+                rel = os.path.relpath(path, base)
+                return walk_exists(base, rel.split(os.sep), False)
+        drive, root, tail = os.path.splitroot(os.path.abspath(path))
+        return walk_exists(drive + root, [piece for piece in tail.split(os.sep) if piece], True)
     except (OSError, ValueError):
         return False
 
@@ -401,9 +437,8 @@ def resolve(token, bases):
         return False
     if os.path.isabs(path) or re.match(r"^[A-Za-z]:", path):
         return names_something(path)
-    candidates = [os.path.join(base, path) for base in bases if base]
-    return any(names_something(candidate) for candidate in candidates
-               if not is_network(candidate))
+    return any(names_something(os.path.join(base, path), base) for base in bases
+               if base and not is_network(os.path.join(base, path)))
 
 
 def check_file(path, shown_as, root, findings, in_repo=True, agents_beside=False):

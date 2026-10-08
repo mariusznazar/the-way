@@ -509,6 +509,49 @@ class NamesThroughLinks(CheckTestCase):
         self.forbid_exists_under(link)
         self.assertEqual(dead(repo.findings()), [])
 
+    @WINDOWS_ONLY
+    def test_no_spelling_of_a_path_through_a_link_to_a_network_path_is_looked_up(self):
+        repo = self.repo({})
+        link = os.path.join(repo.root, "via")
+        make_bait_link(self, repo.base, link)
+        pretend_target(self, link, NETWORK)
+        absolute = os.path.join(repo.root, "via", "x.md").replace("\\", "/")
+        write(repo.root, "AGENTS.md", f"Read `via/x.md`, `via\\x.md` and `{absolute}`.\n")
+        prefix = os.path.normcase(link) + os.sep
+        for name in ("lstat", "stat"):
+            real = getattr(os, name)
+
+            def spy(path, *args, _real=real, _name=name, **kwargs):
+                if os.path.normcase(os.path.normpath(str(path))).startswith(prefix):
+                    self.fail(f"{_name} continued past a link")
+                return _real(path, *args, **kwargs)
+
+            self.enterContext(mock.patch.object(os, name, spy))
+        self.forbid_exists_under(link)
+        self.assertEqual(dead(repo.findings()), [])
+
+    def reached_through_a_link(self, repo, rel):
+        """The path of REL (inside `real/` of the repository's temporary directory) as seen through
+        the directory link `jn` that points to `real`."""
+        make_directory_link(self, os.path.join(repo.base, "real"), os.path.join(repo.base, "jn"))
+        return os.path.join(repo.base, "jn", *rel.split("/"))
+
+    def test_a_repository_reached_through_a_link_above_its_root_is_still_checked(self):
+        repo = self.repo({})
+        write(repo.base, "real/repo/AGENTS.md", "Read `docs/gone.md`.\n\n@missing.md\n")
+        root = os.path.dirname(self.reached_through_a_link(repo, "repo/AGENTS.md"))
+        found = [(f.check, f.level, f.line) for f in check_instructions.check(root)
+                 if f.check in ("dead-path", "at-import")]
+        self.assertEqual(sorted(found), [("at-import", "warn", 3), ("dead-path", "warn", 1)])
+
+    def test_a_file_given_with_file_through_a_link_above_it_is_still_checked(self):
+        repo = self.repo({})
+        write(repo.base, "real/global.md", "Read `docs/gone.md`.\n")
+        path = self.reached_through_a_link(repo, "global.md")
+        found = [(f.check, f.level) for f in check_instructions.check(None, [path])
+                 if f.check == "dead-path"]
+        self.assertEqual(found, [("dead-path", "warn")])
+
     def test_a_token_naming_nothing_is_still_a_dead_path(self):
         repo = self.repo({"AGENTS.md": "Read `gone/x.md`.\n"})
         self.assertEqual([f.level for f in dead(repo.findings())], ["warn"])
