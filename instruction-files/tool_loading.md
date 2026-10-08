@@ -1,68 +1,167 @@
 # How each tool loads instruction files
 
-State checked on 2026-10-07 for Claude Code 2.1.293, Codex CLI 0.157.0 and Cursor CLI 2026.10.01.
-"Measured" marks behaviour checked that day in fresh headless sessions, with a marker phrase in
-each file under test and a positive control; the rest comes from the tools' documentation or, for
-Cursor, from answers of Cursor's staff on its forum. Loading changes between versions without
-notice: before a rule relies on it, check it in the version in use — the method is at the end.
+Each statement below carries its source: `fact <identifier>`, an environment fact of the-way whose
+entry in `foundations/environment_facts.md` holds the passage it rests on; the address of the
+documentation or the public source it was read at; or *measured*, with what was measured
+described where it stands. A statement no source supports says "not established". Loading changes
+between versions without notice: before a rule relies on it, check it in the version in use — the
+method is at the end.
 
 ## Claude Code
 
-- **At session start:** `~/.claude/CLAUDE.md`, `~/.claude/rules/`, `CLAUDE.md` and
-  `CLAUDE.local.md` from the working directory and the directories above it, rules in
-  `.claude/rules/` without `paths`, files imported with `@`. `AGENTS.md` only when there is no
-  `CLAUDE.md`, `.claude/CLAUDE.md` or `CLAUDE.local.md` (measured; since 2.1.277).
-- **On access to a file:** a `CLAUDE.md` in a subdirectory and a rule with `paths` — on a read, on a
-  write without an earlier read and on `cat` in Bash (measured). A subdirectory `AGENTS.md` loads on
-  a read when that directory has no `CLAUDE.md`. After compaction they are summarised and come back
-  on the next access; the main file is read again from disk.
-- **`@path`** loads the whole file at the start of every session. It works only when a space or the
-  end of the line follows the path — a full stop, comma, bracket or colon right after the path
-  switches the loading off without a warning (measured). It does not work in backticks or code
-  blocks. At most four levels deep; relative paths count from the importing file.
-- **A `PreToolUse` hook** with an `if` field (for example `"Bash(git commit *)"`) injects text
-  (`additionalContext`) at the moment a command is run.
-- **Skills:** only `.claude/skills/` (measured: `.agents/skills/` is not read); the description in
-  every session unless `disable-model-invocation: true`, the body once invoked; it stays in context
-  until the session ends.
+- **At session start:** `~/.claude/CLAUDE.md`, `~/.claude/rules/`, and `CLAUDE.md` and
+  `CLAUDE.local.md` from the working directory and every directory above it, concatenated from the
+  filesystem root down to the working directory
+  (https://code.claude.com/docs/en/memory § How CLAUDE.md files load).
+- **Rules without `paths`:** a rule in `.claude/rules/` without `paths` frontmatter loads at launch
+  with the same priority as `.claude/CLAUDE.md`
+  (https://code.claude.com/docs/en/memory § Organize rules with .claude/rules/).
+- **`AGENTS.md` at the start:** read as the project instructions, on v2.1.277 or later, only when
+  no `CLAUDE.md`, `.claude/CLAUDE.md` or `CLAUDE.local.md` stands in the working directory or any
+  directory above it (fact `claude-code-agents-md`).
+- **`AGENTS.md` in a subdirectory:** read when Claude opens a file there with the Read tool and
+  that subdirectory has none of the three `CLAUDE.md` files of its own
+  (https://code.claude.com/docs/en/memory § When Claude Code reads AGENTS.md).
+- **Not read:** `AGENTS.local.md`, `AGENTS.override.md`, or anything under a `.agents/` directory
+  (https://code.claude.com/docs/en/memory § When Claude Code reads AGENTS.md).
+- **On access to a file:** a `CLAUDE.md` or `CLAUDE.local.md` in a subdirectory loads when Claude
+  uses the Read, Write or Edit tool on a file in that subdirectory
+  (https://code.claude.com/docs/en/memory § How CLAUDE.md files load).
+- **Path rules:** a rule whose frontmatter gives `paths` applies only when Claude works with files
+  matching those patterns (fact `claude-code-path-rules`).
+- **On a write without an earlier read, and on `cat` in Bash,** a subdirectory `CLAUDE.md` and a
+  rule with `paths` loaded too (measured, see below).
+- **After compaction:** the project-root `CLAUDE.md` is read again from disk; nested `CLAUDE.md`
+  files and rules with `paths` load again on demand
+  (https://code.claude.com/docs/en/memory § Instructions seem lost after /compact).
+- **`@path`** expands the imported file and loads it into context at launch, alongside the
+  `CLAUDE.md` that references it; Markdown code spans and fenced code blocks are skipped 
+  (fact `claude-code-imports`).
+- **`@path` depth and paths:** imports may nest to a depth of four hops, and a relative path
+  resolves from the file that holds the import
+  (https://code.claude.com/docs/en/memory § Import additional files).
+- **`@path` followed at once by a full stop, comma, bracket or colon** did not load, without a
+  warning, while a space or the end of the line after it loaded (measured, see below).
+- **A `PreToolUse` hook** with an `if` field (for example `"Bash(git commit *)"`) runs only when
+  the tool call matches, and its `additionalContext` is inserted into the conversation next to the
+  tool result (https://code.claude.com/docs/en/hooks).
+- **Skills:** project skills load from `.claude/skills/` in the starting directory and every
+  parent directory up to the repository root (fact `claude-code-project-skills`), and those below
+  the starting directory when a file there is first read or edited 
+  (fact `claude-code-nested-skills`).
+- **Skills in context:** the description is in context in every session unless
+  `disable-model-invocation: true`; the body enters when the skill is invoked and stays across
+  later turns (https://code.claude.com/docs/en/skills).
+- **`.agents/skills/`** was not read (measured, see below).
 - **How to check what loaded:** the `InstructionsLoaded` hook records each loaded file with its
-  reason (`session_start`, `nested_traversal`, `path_glob_match`, `include`); it does not record an
-  `AGENTS.md` read directly.
+  `load_reason` (`session_start`, `nested_traversal`, `path_glob_match`, `include`, `compact`); it
+  does not fire when Claude reads `AGENTS.md` directly through the Project instructions setting
+  (https://code.claude.com/docs/en/hooks § InstructionsLoaded).
+
+### Settings that change loading
+
+- **Project instructions** (`/config`): `claude-md-or-agents-md` by default, also
+  `claude-md-and-agents-md`, `claude-md` and `managed-only`. In a settings file it is the option
+  `instructionFiles` under `pluginConfigs` → `cc-plugin-agents-md@builtin`, read from
+  `~/.claude/settings.json`, a `--settings` file or managed settings and ignored in project and
+  local settings (https://code.claude.com/docs/en/memory § Choose which instruction files load).
+- **`claudeMdExcludes`:** glob patterns, matched against absolute paths, of `CLAUDE.md` files to
+  skip; configurable at any settings layer (https://code.claude.com/docs/en/memory § Exclude
+  specific CLAUDE.md files).
 
 ## Codex
 
-- **At session start:** `~/.codex/AGENTS.md` (or `AGENTS.override.md`) and the chain of `AGENTS.md`
-  files from the repository root to the directory where the session started — at most one file per
-  directory; the nearer one comes later and wins a conflict. A limit of 32 KiB
-  (`project_doc_max_bytes`; the documentation contradicts itself on whether it is a total or per
-  file). In an untrusted project only the global file.
+- **At session start:** the instruction chain is built once per run: `AGENTS.override.md`, or else
+  `AGENTS.md`, of the Codex home directory, then, walking from the project root down to the
+  current working directory, at most one file per directory; the search stops at the current
+  directory (fact `codex-agents-md`).
+- **Order and conflicts:** the files are concatenated root first, so the one nearer the working
+  directory comes later and wins a conflict
+  (https://learn.chatgpt.com/docs/agent-configuration/agents-md § Layer project instructions).
+- **Size:** Codex stops adding files once their combined size reaches `project_doc_max_bytes`
+  (32 KiB by default); another page of the documentation words the same key as the amount read
+  from each `AGENTS.md` file
+  (https://learn.chatgpt.com/docs/agent-configuration/agents-md § How Codex discovers guidance;
+  https://learn.chatgpt.com/docs/config-file/config-advanced § Project instructions discovery).
 - **A file in a subdirectory off that chain does not arrive:** an agent creating a file in such a
   subdirectory did not open its `AGENTS.md` in any of four sessions started at the root, and
-  followed the same rule in both sessions started in that subdirectory (measured).
-- **`@path`** is plain text. `CLAUDE.md` only when added to `project_doc_fallback_filenames`, and
-  only in a directory without `AGENTS.md`.
-- **Skills:** `.agents/skills` from the starting directory upwards and `~/.agents/skills`
-  (measured: `.claude/skills/` is not read); the description in every session, the body once
-  chosen; manual invocation only with `allow_implicit_invocation: false`. A skill does not carry
-  over to the next turn unless it is named again (read in the source code).
-- **How to check:** `codex exec "Summarize the current instructions."`.
+  followed the same rule in both sessions started in that subdirectory (measured, see below).
+- **In an untrusted project** only the global file loads 
+  (https://github.com/openai/codex/blob/main/codex-rs/core/src/agents_md.rs, the public source of
+  Codex, `config.active_project.is_untrusted()`).
+- **`@path`** is plain text; the page names no `@` syntax
+  (https://learn.chatgpt.com/docs/agent-configuration/agents-md).
+- **`CLAUDE.md`** is read only when added to `project_doc_fallback_filenames`, and then only in a
+  directory without `AGENTS.md` (https://learn.chatgpt.com/docs/agent-configuration/agents-md §
+  Customize fallback filenames).
+- **Skills:** `.agents/skills` in every directory from the current working directory up to the
+  repository root (fact `codex-repository-skills`), and `$HOME/.agents/skills`
+  (https://learn.chatgpt.com/docs/build-skills).
+- **Skills in context:** the initial list holds each skill's name, description and file path 
+  (fact `codex-skill-paths`); the full `SKILL.md` is read when Codex chooses the skill, and a skill
+  with `allow_implicit_invocation: false` is invoked only by an explicit `$skill`
+  (https://learn.chatgpt.com/docs/build-skills).
+- **A skill does not carry over to the next turn unless it is named again** (https://github.com/openai/codex/blob/main/codex-rs/ext/skills/src/catalog_prompt.rs, the public
+  source of Codex).
+- **`.claude/skills/`** was not read (measured, see below).
+- **How to check:** `codex exec "Summarize the current instructions."` — not established by a
+  documentation page; it is the method of the closing section.
+
+### Settings that change loading
+
+- **`project_doc_max_bytes`:** 32 KiB by default; the AGENTS.md page says "combined" and the
+  advanced-configuration page says "each" (https://learn.chatgpt.com/docs/agent-configuration/agents-md;
+  https://learn.chatgpt.com/docs/config-file/config-advanced).
+- **`project_doc_fallback_filenames`:** filenames tried in each directory after `AGENTS.override.md`
+  and `AGENTS.md`; names not on the list are ignored
+  (https://learn.chatgpt.com/docs/agent-configuration/agents-md § Customize fallback filenames).
+- **`AGENTS.override.md`:** takes the place of `AGENTS.md` in the directory, or in the Codex home
+  directory, where it stands (https://learn.chatgpt.com/docs/agent-configuration/agents-md).
+- **`CODEX_HOME`:** the environment variable that moves the Codex home directory, `~/.codex` by
+  default (https://learn.chatgpt.com/docs/agent-configuration/agents-md).
 
 ## Cursor
 
-- **At session start:** `AGENTS.md` and `CLAUDE.md` from the root, rules with
-  `alwaysApply: true` (measured in the CLI). With a full `CLAUDE.md` beside `AGENTS.md`, both load.
-- **On a read of a file:** a rule with `globs` and a subdirectory `AGENTS.md` — when the agent reads
-  a matching file; not on a write without an earlier read (measured in the CLI), and not for a file
-  that is only open in an editor tab.
-- **A rule with only a description:** the agent sees the description and decides whether to load
-  the rule.
-- **`@file` in a rule** is not pasted in (measured) — the agent reads the file when it thinks it
-  needs to.
-- **A rule must be a `.mdc` file with a YAML header;** a `.md` file in `.cursor/rules/` is ignored,
-  and so is `.claude/rules/` (measured). A rule added during a conversation works from the next
-  chat.
-- **Skills:** `.cursor/skills`, `.claude/skills`, `.codex/skills`, `.agents/skills`.
-- **Bugbot** reads only `.cursor/BUGBOT.md`; project rules do not reach it.
+- **At session start:** `AGENTS.md` and `CLAUDE.md` at the project root, where present, applied as
+  rules alongside `.cursor/rules` (fact `cursor-agents-md`).
+- **A rule with `alwaysApply: true`** is always included (https://cursor.com/docs/rules § Rule
+  anatomy).
+- **An `AGENTS.md` in a subdirectory** applies when the agent works with files in that directory
+  or its children, combined with those of the parent directories (https://cursor.com/docs/rules §
+  AGENTS.md).
+- **On a read of a file:** a rule with `globs` and a subdirectory `AGENTS.md` loaded when the
+  agent read a matching file, and a glob rule did not load on a write without an earlier read
+  (measured, see below).
+- **A file that is only open in an editor tab** does not trigger a glob rule — an answer of
+  Cursor's staff, and a user's measurement, on its forum
+  (https://forum.cursor.com/t/glob-scoped-rules-should-trigger-on-ai-file-access-not-just-editor-tabs-plus-mcp-cli-tool-triggers/156553).
+- **A rule with only a description:** the agent reads the description and pulls the rule in when
+  relevant (https://cursor.com/docs/rules § Rule anatomy).
+- **`@file` in a rule:** the file's contents are not inlined into the prompt, in the editor, the
+  CLI and Cloud Agents; the agent reads the file when it needs it (https://cursor.com/docs/rules §
+  Referencing files from a rule).
+- **A rule must be a `.mdc` file with a YAML header;** a plain `.md` file in `.cursor/rules` is
+  ignored (https://cursor.com/docs/rules § Rule file structure).
+- **`.claude/rules/`** was not loaded (measured, see below); the rules page does not name it
+  (https://cursor.com/docs/rules).
+- **Skills:** `.agents/skills/` and `.cursor/skills/`, and for compatibility `.claude/skills/`,
+  `.codex/skills/` and their `~/` equivalents (https://cursor.com/docs/skills).
+- **Bugbot** reads `.cursor/BUGBOT.md` files; project rules in `.cursor/rules` do not apply to its
+  runs, and the page does not name `AGENTS.md` (https://cursor.com/docs/bugbot).
+- **An `AGENTS.md` above the directory it works in:** loaded in a session started at a
+  repository's root when it stands one directory above, outside git (Cursor CLI 2026.10.01,
+  2026-10-08, 1 of 1 session), and in a session started in a subdirectory (1 of 1); loaded when the
+  directory above is itself a git repository (1 of 1); loaded when the file above is a symbolic
+  link to a file elsewhere (1 of 1). Whether the file two directories above, a link to a user's
+  global file, reaches Cursor is not established: that session stopped on workspace trust and was
+  not run. Method: one fresh `cursor-agent -p --mode ask` session per variant, a marker phrase per
+  file, the repository's own `AGENTS.md` as the positive control (it appeared in every session);
+  the sandbox flag was not available on Windows and was not used (measured).
+
+### Settings that change loading
+
+- No setting that changes which instruction files load is found in Cursor's documentation
+  (https://cursor.com/docs/rules, https://cursor.com/docs/cli/using).
 
 ## Method of checking
 
@@ -71,5 +170,38 @@ One fresh headless session per variant, each in its own directory: `claude -p`, 
 markers it can see, after the tool action whose effect is under test (a read, a write without a
 read, a command). One file in every variant must load — the positive control; without it an empty
 list proves nothing. In Claude Code the `InstructionsLoaded` hook, passed with `--settings`, gives
-evidence independent of the model's answer. Where loading cannot be listed, the behaviour is the
-evidence: the rule asks for a visible trace, such as the first line of a file the agent creates.
+evidence independent of the model's answer
+(https://code.claude.com/docs/en/hooks § InstructionsLoaded). Where loading cannot be listed, the
+behaviour is the evidence: the rule asks for a visible trace, such as the first line of a file the
+agent creates.
+
+## Measurements
+
+- **Claude Code 2.1.293 (`claude -p`), 2026-10-07:** one fresh headless session per variant in its
+  own directory, a marker phrase in each file under test, a file that must load as the positive
+  control, and the `InstructionsLoaded` hook's log. `@path` followed at once by `.`, `,`, `)` or
+  `:` did not load, without a warning, while a space or the end of the line after it loaded; the
+  same `@path` in backticks did not load; a subdirectory `CLAUDE.md` and a rule with `paths` did
+  not load at the start and loaded on a read, on a write without an earlier read and on `cat` in
+  Bash; a rule without `paths` loaded at the start; `AGENTS.md` alone, without `CLAUDE.md`, put
+  its marker in the context (the hook does not record it, as the documentation says);
+  `.agents/skills/` was not read (measured).
+- **Codex CLI 0.157.0 (`codex exec`), 2026-10-07:** one fresh headless session per variant in a
+  repository whose root `AGENTS.md` and `pkg/AGENTS.md` each held a rule; the task was to create
+  `pkg/hello.js`. The root's rule held in 4 of 4 sessions started at the root; the rule in
+  `pkg/AGENTS.md` was followed in 0 of 4 sessions started at the root and in 2 of 2 sessions
+  started in `pkg/`; `.claude/skills/` was not read (measured).
+- **Cursor CLI 2026.10.01 (`cursor-agent -p`), 2026-10-07:** one fresh headless session per
+  variant, a marker phrase in each file under test. At the start `AGENTS.md`, `CLAUDE.md` and a
+  rule with `alwaysApply: true` loaded, while a file named with `@` in a rule, a rule with only a
+  description, `.claude/rules/`, a subdirectory `AGENTS.md` and glob rules did not; on a read a
+  subdirectory `AGENTS.md` and a glob rule loaded; on a write without a read the glob rule did not
+  (measured, 1 session per variant).
+- **Cursor CLI 2026.10.01 (`cursor-agent -p --mode ask`), 2026-10-08:** four fresh sessions, each
+  in its own scratch directory, a marker phrase in each file; the repository's own `AGENTS.md`
+  (the positive control) appeared in all four. The outer `AGENTS.md` also appeared when the
+  session started at the repository's root with the file one directory above outside git, when it
+  started in a subdirectory, when the directory above was itself a git repository, and when the
+  file above was a symbolic link to a file elsewhere (measured, 1 session per variant). A fifth
+  session, in a directory two levels below a link to a user's global file, stopped on workspace
+  trust and was not run, so the negative control was not needed.
