@@ -47,6 +47,8 @@ method is at the end.
   (https://code.claude.com/docs/en/memory § Import additional files).
 - **`@path` followed at once by a full stop, comma, bracket or colon** did not load, without a
   warning, while a space or the end of the line after it loaded (measured, see below).
+- **`@path` right after a hyphen** (for example `-@x.md`): whether Claude Code imports it is not
+  established.
 - **A `PreToolUse` hook** with an `if` field (for example `"Bash(git commit *)"`) runs only when
   the tool call matches, and its `additionalContext` is inserted into the conversation next to the
   tool result (https://code.claude.com/docs/en/hooks).

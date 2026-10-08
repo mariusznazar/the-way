@@ -539,10 +539,24 @@ class NetworkShapesOffWindows(CheckTestCase):
         self.platform("linux")
         self.assert_network("//host/share/x.md")
 
+    def stub_lookup(self):
+        """Replaces `lexists` with a stub that records its argument and finds nothing."""
+        calls = []
+
+        def lexists(path):
+            calls.append(str(path))
+            return False
+
+        self.enterContext(mock.patch.object(os.path, "lexists", lexists))
+        return calls
+
     def test_three_leading_slashes_or_one_are_not(self):
         self.platform("linux")
-        for token in ("///host/x.md", "/host/x.md"):
+        calls = self.stub_lookup()
+        for token, trace in (("///host/x.md", "host"), ("/host/x.md", "host")):
+            calls.clear()
             self.assertEqual([level for level, _ in self.levels(token)], ["warn"], token)
+            self.assertTrue(any(trace in call and "x.md" in call for call in calls), token)
 
     def test_cygwin_and_msys_are_judged_like_windows(self):
         for name in ("cygwin", "msys"):
@@ -567,7 +581,9 @@ class NetworkShapesOffWindows(CheckTestCase):
 
     def test_a_mapped_drive_letter_is_looked_up(self):
         self.platform("linux")
+        calls = self.stub_lookup()
         self.assertEqual([level for level, _ in self.levels("Z:/share/x.md")], ["warn"])
+        self.assertTrue(any("share" in call and "x.md" in call for call in calls))
 
 
 class NamesThroughLinks(CheckTestCase):
