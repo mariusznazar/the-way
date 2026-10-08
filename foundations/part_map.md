@@ -188,10 +188,7 @@ generates them, and for the hooks and the configuration of agents' tools and of 
     skill of that name or none — high — detected by skill-entry-points
   - the-way's own entry point, loaded from a product's `.the-way`, is followed instead of the
     product's, where the agent knows neither the entry point's path nor the session's working
-    directory (Claude Code's documentation names `${CLAUDE_SKILL_DIR}` as a way a skill's text
-    receives the directory of its `SKILL.md`, and no entry point holds it; Codex gives no file
-    path for a skill it leaves out of its initial list) — a product entry is written against
-    the-way's own foundation — high — not detected
+    directory — a product entry is written against the-way's own foundation — high — not detected
   - a tool cannot parse an entry point's frontmatter — a session on the-way may not list that
     skill, and uses a personal skill of that name or none — high — not detected
 - **Trust boundary:** none

@@ -743,9 +743,8 @@ entry instead of being pointed to. The one exception is the place of its tasks, 
   - complies: a decision quotes a public study with its address; a pattern seen in a product
     outside the repository is described in the rationale, without a pointer to it; the-way's root
     `AGENTS.md` names, in `## Backlog`, the private note where its tasks are kept;
-  - violates: *Origin* points to a private note; an entry's *Origin* points to a task's
-    description in the private notes; a rationale rests on "as in our other product" without
-    saying what was seen.
+  - violates: *Origin* points to a private note; a rationale rests on "as in our other product"
+    without saying what was seen.
 - **Review when:** none
 - **Origin:** none
 - **Approved by:** Mariusz, merge of <request link>
@@ -3679,7 +3678,9 @@ in the part of their generator (WAY-44). The checkout or worktree the session wo
 copy is read, because a tool may offer one checkout's entry points to a session in another
 worktree, and a session moved to another directory gains that directory's entry points beside
 the ones it started with; stopping in a product keeps a session there on its pinned the-way
-(WAY-34). The prefix keeps a personal skill of the same name from standing in for one of the-way's.
+(WAY-34); the entry point's own directory, which Codex lists with each skill, lets the first product
+check find a product's submodule. The prefix keeps a personal skill of the same name from standing in
+for one of the-way's.
 *Rejected:* a mode of the installer without a pin writing the same entry points into the-way — its
 generated files would belong to `installation`, outside that part's directory, and its trust
 boundary would grow; entry points written per checkout and ignored by git — a fresh worktree or
