@@ -1,8 +1,0 @@
-STALE foundations/invariants.md:152 WAY-09@b829b86a now 16b8026b
-STALE foundations/invariants.md:162 WAY-09@b829b86a now 16b8026b
-STALE foundations/invariants.md:172 WAY-09@b829b86a now 16b8026b
-STALE foundations/invariants.md:182 WAY-09@b829b86a now 16b8026b
-STALE foundations/invariants.md:192 WAY-09@b829b86a now 16b8026b
-STALE foundations/invariants.md:202 WAY-09@b829b86a now 16b8026b
-STALE foundations/invariants.md:473 WAY-27@770078ba now 0b40467e
-references checked 377, stale 7
