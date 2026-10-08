@@ -276,7 +276,7 @@ their elements.
     reaches the main branch before the design of the task cycle sets what it holds.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/8
 
 *Rationale:* anything brought in on the side makes the repository a store of material; directories
 follow the parts, so a change's files name its part and decisions (WAY-21); an incomplete directory
@@ -758,7 +758,7 @@ entry instead of being pointed to. The one exception is the place of its tasks, 
     without saying what was seen.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/8
 
 *Rationale:* a pointer to a source the reader cannot open is a dead end, leaving a claim nobody
 can check; what was seen there, written down, can at least be judged, and WAY-17 still has a fact
@@ -3700,7 +3700,7 @@ reaches a skill of the-way, and the-way is not installed in itself.
     hands its work to `critique` without the prefix.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/8
 
 *Rationale:* a session on the-way tries a change to a skill with the skill of its own branch, so a
 skill it reads from another checkout tests nothing it changed. Entry points tracked in the
