@@ -1,0 +1,14 @@
+foundations/decisions.md:388: error: WAY-13/1 differs from its copy on c64a607; the log after the merge holds this copy
+foundations/decisions.md:417: error: WAY-13/1: *Approved by* is the placeholder `merge of <request link>`, which a merge onto the main branch does not take
+foundations/decisions.md:3558: error: WAY-125/1 differs from its copy on c64a607; the log after the merge holds this copy
+foundations/decisions.md:3606: error: WAY-125/1: *Approved by* is the placeholder `merge of <request link>`, which a merge onto the main branch does not take
+foundations/decisions.md:71: warning: WAY-03: check-by date 2026-10-02 has passed without a review record
+foundations/decisions.md:417: warning: *Approved by* is the placeholder `merge of <request link>`
+foundations/decisions.md:597: warning: WAY-21: check-by date 2026-10-02 has passed without a review record
+foundations/decisions.md:1429: warning: WAY-52: check-by date 2026-10-02 has passed without a review record
+foundations/decisions.md:1511: warning: WAY-55: check-by date 2026-10-02 has passed without a review record
+foundations/decisions.md:1925: warning: WAY-69: check-by date 2026-10-02 has passed without a review record
+foundations/decisions.md:3606: warning: *Approved by* is the placeholder `merge of <request link>`
+unchecked: the lines the log holds on the main branch, and the versions it gains per number — --base none: there is no commit the branch left the main branch from
+unchecked: a change to the template without a new version in the log — --base none: there is no commit the branch left the main branch from
+4 error(s), 7 warning(s), 2 unchecked

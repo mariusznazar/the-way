@@ -1,0 +1,19 @@
+
+The the-way task cycle adopts Superpowers 6.4.1 methods for brainstorming a design and written spec,
+writing an implementation plan, test-first implementation, subagent execution with independent task
+and final code reviews, and preparing a pull or merge request, only for a ready task run through
+`implement-task`, which uses them all unless the orchestrator's analysis at its start finds it
+leaving the foundation unchanged and small enough for one agent to make from the task alone: that
+agent then makes it, test-first where it changes behaviour, and one final code review covers the
+whole change, while a change that proves too large for that agent, or whose touch of the foundation
+needs a choice the task leaves open, changes the meaning of an approved decision, contradicts a
+current entry or writes or changes an invariant or an invariant test, is discarded and starts again
+from a fresh design given the agent's report without its code. The orchestrator answers workflow
+questions and gives provisional stage go-aheads under the task owner's delegation, never records
+these as human approval, controls the return between stages, keeps agent reports before a borrowed
+skill cleans its workspace, runs the independent assessment of its foundation change and its return
+step, and brings the request to the human for review. Decisions reserved to a human by the
+foundation remain reserved; when required code cannot proceed without one, the cycle opens a
+blocked draft request; a different Superpowers version requires a reviewed change to the-way before
+use.
+
