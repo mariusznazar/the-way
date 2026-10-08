@@ -1,0 +1,314 @@
+....EEF..............EsFFEFFFF.F..F........EFFEE
+======================================================================
+ERROR: test_a_file_that_is_not_a_readable_regular_file_exits_with_2 (test_check_instructions.CommandLine.test_a_file_that_is_not_a_readable_regular_file_exits_with_2) (path='C:\\Users\\Mariusz\\AppData\\Local\\Temp\\tmpamf67bc7\\repo')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-instruction-files-part\instruction-files\test_check_instructions.py", line 440, in test_a_file_that_is_not_a_readable_regular_file_exits_with_2
+    code, out, err = run_main(["--file", path])
+                     ~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-instruction-files-part\instruction-files\test_check_instructions.py", line 68, in run_main
+    code = check_instructions.main(arguments)
+  File "C:\Storage\repos\the-way-instruction-files-part\instruction-files\check_instructions.py", line 238, in main
+    findings = check(root, args.file)
+  File "C:\Storage\repos\the-way-instruction-files-part\instruction-files\check_instructions.py", line 198, in check
+    check_file(path, path, None, findings, in_repo=False)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-instruction-files-part\instruction-files\check_instructions.py", line 109, in check_file
+    with open(path, encoding="utf-8", errors="replace") as handle:
+         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 13] Permission denied: 'C:\\Users\\Mariusz\\AppData\\Local\\Temp\\tmpamf67bc7\\repo'
+
+======================================================================
+ERROR: test_a_file_that_is_not_a_readable_regular_file_exits_with_2 (test_check_instructions.CommandLine.test_a_file_that_is_not_a_readable_regular_file_exits_with_2) (path='C:\\Users\\Mariusz\\AppData\\Local\\Temp\\tmpamf67bc7\\repo\\missing.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-instruction-files-part\instruction-files\test_check_instructions.py", line 440, in test_a_file_that_is_not_a_readable_regular_file_exits_with_2
+    code, out, err = run_main(["--file", path])
+                     ~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-instruction-files-part\instruction-files\test_check_instructions.py", line 68, in run_main
+    code = check_instructions.main(arguments)
+  File "C:\Storage\repos\the-way-instruction-files-part\instruction-files\check_instructions.py", line 238, in main
+    findings = check(root, args.file)
+  File "C:\Storage\repos\the-way-instruction-files-part\instruction-files\check_instructions.py", line 198, in check
+    check_file(path, path, None, findings, in_repo=False)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-instruction-files-part\instruction-files\check_instructions.py", line 109, in check_file
+    with open(path, encoding="utf-8", errors="replace") as handle:
+         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Mariusz\\AppData\\Local\\Temp\\tmpamf67bc7\\repo\\missing.md'
+
+======================================================================
+ERROR: test_a_character_cut_at_the_limit_does_not_make_the_text_invalid (test_check_instructions.LargeAndOddFiles.test_a_character_cut_at_the_limit_does_not_make_the_text_invalid)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-instruction-files-part\instruction-files\test_check_instructions.py", line 346, in test_a_character_cut_at_the_limit_does_not_make_the_text_invalid
+    data = b"a" * (check_instructions.MAX_BYTES - 1) + "¿\n".encode("utf-8")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'check_instructions' has no attribute 'MAX_BYTES'
+
+======================================================================
+ERROR: test_only_the_first_mebibyte_is_read (test_check_instructions.LargeAndOddFiles.test_only_the_first_mebibyte_is_read)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-instruction-files-part\instruction-files\test_check_instructions.py", line 306, in test_only_the_first_mebibyte_is_read
+    repo = self.repo({"AGENTS.md": "word\n" * (check_instructions.MAX_BYTES // 5 + 100)})
+                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'check_instructions' has no attribute 'MAX_BYTES'
+
+======================================================================
+ERROR: test_a_broken_link_is_reported (test_check_instructions.UnreadableFiles.test_a_broken_link_is_reported)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-instruction-files-part\instruction-files\test_check_instructions.py", line 389, in test_a_broken_link_is_reported
+    found = [(f.level, f.check, f.file) for f in repo.findings()]
+                                                 ~~~~~~~~~~~~~^^
+  File "C:\Storage\repos\the-way-instruction-files-part\instruction-files\test_check_instructions.py", line 51, in findings
+    return check_instructions.check(self.root, [os.path.join(self.root, e) for e in extra])
+           ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-instruction-files-part\instruction-files\check_instructions.py", line 209, in check
+    texts[rel] = check_file(path, rel, root, findings)
+                 ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-instruction-files-part\instruction-files\check_instructions.py", line 109, in check_file
+    with open(path, encoding="utf-8", errors="replace") as handle:
+         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Mariusz\\AppData\\Local\\Temp\\tmpvv__pzyr\\repo\\AGENTS.md'
+
+======================================================================
+ERROR: test_a_file_gone_mid_run_is_reported_and_the_run_goes_on (test_check_instructions.UnreadableFiles.test_a_file_gone_mid_run_is_reported_and_the_run_goes_on)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-instruction-files-part\instruction-files\test_check_instructions.py", line 410, in test_a_file_gone_mid_run_is_reported_and_the_run_goes_on
+    found = [(f.level, f.check, f.file) for f in repo.findings()]
+                                                 ~~~~~~~~~~~~~^^
+  File "C:\Storage\repos\the-way-instruction-files-part\instruction-files\test_check_instructions.py", line 51, in findings
+    return check_instructions.check(self.root, [os.path.join(self.root, e) for e in extra])
+           ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-instruction-files-part\instruction-files\check_instructions.py", line 209, in check
+    texts[rel] = check_file(path, rel, root, findings)
+                 ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-instruction-files-part\instruction-files\check_instructions.py", line 109, in check_file
+    with open(path, encoding="utf-8", errors="replace") as handle:
+         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Mariusz\\AppData\\Local\\Temp\\tmpa88m5sdz\\repo\\gone\\AGENTS.md'
+
+======================================================================
+ERROR: test_a_file_without_permission_is_reported (test_check_instructions.UnreadableFiles.test_a_file_without_permission_is_reported)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-instruction-files-part\instruction-files\test_check_instructions.py", line 403, in test_a_file_without_permission_is_reported
+    found = [(f.level, f.check, f.file, f.message) for f in repo.findings()]
+                                                            ~~~~~~~~~~~~~^^
+  File "C:\Storage\repos\the-way-instruction-files-part\instruction-files\test_check_instructions.py", line 51, in findings
+    return check_instructions.check(self.root, [os.path.join(self.root, e) for e in extra])
+           ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-instruction-files-part\instruction-files\check_instructions.py", line 209, in check
+    texts[rel] = check_file(path, rel, root, findings)
+                 ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-instruction-files-part\instruction-files\check_instructions.py", line 109, in check_file
+    with open(path, encoding="utf-8", errors="replace") as handle:
+         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-instruction-files-part\instruction-files\test_check_instructions.py", line 399, in refuse
+    raise PermissionError(13, "Permission denied", target)
+PermissionError: [Errno 13] Permission denied: 'C:\\Users\\Mariusz\\AppData\\Local\\Temp\\tmpg25lev0w\\repo\\AGENTS.md'
+
+======================================================================
+FAIL: test_a_root_that_is_not_a_directory_exits_with_2 (test_check_instructions.CommandLine.test_a_root_that_is_not_a_directory_exits_with_2)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-instruction-files-part\instruction-files\test_check_instructions.py", line 433, in test_a_root_that_is_not_a_directory_exits_with_2
+    self.assertEqual((code, out), (2, ""))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (0, '0 error, 0 warn, 0 info\n') != (2, '')
+
+First differing element 0:
+0
+2
+
+- (0, '0 error, 0 warn, 0 info\n')
++ (2, '')
+
+======================================================================
+FAIL: test_a_file_that_is_not_regular_is_not_opened (test_check_instructions.LargeAndOddFiles.test_a_file_that_is_not_regular_is_not_opened)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-instruction-files-part\instruction-files\test_check_instructions.py", line 329, in test_a_file_that_is_not_regular_is_not_opened
+    found = repo.findings()
+  File "C:\Storage\repos\the-way-instruction-files-part\instruction-files\test_check_instructions.py", line 51, in findings
+    return check_instructions.check(self.root, [os.path.join(self.root, e) for e in extra])
+           ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-instruction-files-part\instruction-files\check_instructions.py", line 209, in check
+    texts[rel] = check_file(path, rel, root, findings)
+                 ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-instruction-files-part\instruction-files\check_instructions.py", line 109, in check_file
+    with open(path, encoding="utf-8", errors="replace") as handle:
+         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-instruction-files-part\instruction-files\test_check_instructions.py", line 325, in no_open
+    self.fail("a file that is not regular was opened")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: a file that is not regular was opened
+
+======================================================================
+FAIL: test_a_utf8_byte_order_mark_is_stripped_before_every_check (test_check_instructions.LargeAndOddFiles.test_a_utf8_byte_order_mark_is_stripped_before_every_check)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-instruction-files-part\instruction-files\test_check_instructions.py", line 343, in test_a_utf8_byte_order_mark_is_stripped_before_every_check
+    self.assertEqual(checks(repo.findings(), "error") + checks(repo.findings(), "warn"), [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['cursor-rule', 'at-import', 'root-layout'] != []
+
+First list contains 3 additional elements.
+First extra element 0:
+'cursor-rule'
+
+- ['cursor-rule', 'at-import', 'root-layout']
++ []
+
+======================================================================
+FAIL: test_text_that_is_not_utf8_is_reported_and_its_content_not_checked (test_check_instructions.LargeAndOddFiles.test_text_that_is_not_utf8_is_reported_and_its_content_not_checked) [utf-16]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-instruction-files-part\instruction-files\test_check_instructions.py", line 359, in test_text_that_is_not_utf8_is_reported_and_its_content_not_checked
+    self.assertEqual([(f.level, f.check, f.message) for f in found],
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                     [("warn", "read", "not UTF-8 text; its content was not checked")])
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [('warn', 'dead-path', '`\x00g\x00o\x00n\x00e\x00/\x[74 chars]ds')] != [('warn', 'read', 'not UTF-8 text; its content was not checked')]
+
+First differing element 0:
+('warn', 'dead-path', '`\x00g\x00o\x00n\x00e\x00/\x[35 chars]ist')
+('warn', 'read', 'not UTF-8 text; its content was not checked')
+
+First list contains 1 additional elements.
+First extra element 1:
+('info', 'size', '3 lines, 7 words')
+
++ [('warn', 'read', 'not UTF-8 text; its content was not checked')]
+- [('warn',
+-   'dead-path',
+-   '`\x00g\x00o\x00n\x00e\x00/\x00x\x00.\x00m\x00d\x00` does not exist'),
+-  ('info', 'size', '3 lines, 7 words')]
+
+======================================================================
+FAIL: test_text_that_is_not_utf8_is_reported_and_its_content_not_checked (test_check_instructions.LargeAndOddFiles.test_text_that_is_not_utf8_is_reported_and_its_content_not_checked) [utf-32]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-instruction-files-part\instruction-files\test_check_instructions.py", line 359, in test_text_that_is_not_utf8_is_reported_and_its_content_not_checked
+    self.assertEqual([(f.level, f.check, f.message) for f in found],
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                     [("warn", "read", "not UTF-8 text; its content was not checked")])
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [('warn', 'dead-path', '`\x00\x00\x00g\x00\x00\x00o\[154 chars]ds')] != [('warn', 'read', 'not UTF-8 text; its content was not checked')]
+
+First differing element 0:
+('warn', 'dead-path', '`\x00\x00\x00g\x00\x00\x00o\[115 chars]ist')
+('warn', 'read', 'not UTF-8 text; its content was not checked')
+
+First list contains 1 additional elements.
+First extra element 1:
+('info', 'size', '3 lines, 7 words')
+
++ [('warn', 'read', 'not UTF-8 text; its content was not checked')]
+- [('warn',
+-   'dead-path',
+-   '`\x00\x00\x00g\x00\x00\x00o\x00\x00\x00n\x00\x00\x00e\x00\x00\x00/\x00\x00\x00x\x00\x00\x00.\x00\x00\x00m\x00\x00\x00d\x00\x00\x00` '
+-   'does not exist'),
+-  ('info', 'size', '3 lines, 7 words')]
+
+======================================================================
+FAIL: test_text_that_is_not_utf8_is_reported_and_its_content_not_checked (test_check_instructions.LargeAndOddFiles.test_text_that_is_not_utf8_is_reported_and_its_content_not_checked) [invalid]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-instruction-files-part\instruction-files\test_check_instructions.py", line 359, in test_text_that_is_not_utf8_is_reported_and_its_content_not_checked
+    self.assertEqual([(f.level, f.check, f.message) for f in found],
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                     [("warn", "read", "not UTF-8 text; its content was not checked")])
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [('warn', 'dead-path', '`gone/x.md` does not exist')[34 chars]ds')] != [('warn', 'read', 'not UTF-8 text; its content was not checked')]
+
+First differing element 0:
+('warn', 'dead-path', '`gone/x.md` does not exist')
+('warn', 'read', 'not UTF-8 text; its content was not checked')
+
+First list contains 1 additional elements.
+First extra element 1:
+('info', 'size', '1 lines, 3 words')
+
++ [('warn', 'read', 'not UTF-8 text; its content was not checked')]
+- [('warn', 'dead-path', '`gone/x.md` does not exist'),
+-  ('info', 'size', '1 lines, 3 words')]
+
+======================================================================
+FAIL: test_a_directory_link_or_junction_is_not_followed (test_check_instructions.Links.test_a_directory_link_or_junction_is_not_followed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-instruction-files-part\instruction-files\test_check_instructions.py", line 285, in test_a_directory_link_or_junction_is_not_followed
+    self.assertEqual(found, [("info", "walk", "linked", "a link to a directory, not followed"),
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                             ("info", "walk", "loop", "a link to a directory, not followed")])
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [('info', 'size', 'linked/AGENTS.md', '4 lines, 6 wo[116934 chars]ry')] != [('info', 'walk', 'linked', 'a link to a directory, [75 chars]ed')]
+
+First differing element 0:
+('info', 'size', 'linked/AGENTS.md', '4 lines, 6 words')
+('info', 'walk', 'linked', 'a link to a directory, not followed')
+
+First list contains 376 additional elements.
+First extra element 2:
+('info', 'size', 'loop/linked/AGENTS.md', '4 lines, 6 words')
+
+Diff is 124368 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_a_file_link_out_of_the_repository_is_neither_read_nor_listed (test_check_instructions.Links.test_a_file_link_out_of_the_repository_is_neither_read_nor_listed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-instruction-files-part\instruction-files\test_check_instructions.py", line 291, in test_a_file_link_out_of_the_repository_is_neither_read_nor_listed
+    self.assertEqual([(f.level, f.check, f.file, f.message) for f in repo.findings()],
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                     [("info", "read", "AGENTS.md", "a link out of the repository, not read")])
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [('warn', 'dead-path', 'AGENTS.md', '`MARKER[79 chars]ds')] != [('info', 'read', 'AGENTS.md', 'a link out o[24 chars]ad')]
+
+First differing element 0:
+('warn', 'dead-path', 'AGENTS.md', '`MARKER-SECRET-9/x.md` does not exist')
+('info', 'read', 'AGENTS.md', 'a link out of the repository, not read')
+
+First list contains 1 additional elements.
+First extra element 1:
+('info', 'size', 'AGENTS.md', '1 lines, 2 words')
+
++ [('info', 'read', 'AGENTS.md', 'a link out of the repository, not read')]
+- [('warn', 'dead-path', 'AGENTS.md', '`MARKER-SECRET-9/x.md` does not exist'),
+-  ('info', 'size', 'AGENTS.md', '1 lines, 2 words')]
+
+======================================================================
+FAIL: test_control_and_bidirectional_characters_are_escaped_and_long_values_cut (test_check_instructions.PrintedValues.test_control_and_bidirectional_characters_are_escaped_and_long_values_cut)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-instruction-files-part\instruction-files\test_check_instructions.py", line 371, in test_control_and_bidirectional_characters_are_escaped_and_long_values_cut
+    self.assertNotIn("\u202e", out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^
+AssertionError: '\u202e' unexpectedly found in 'WARN  dead-path AGENTS.md:1 `gone\u202e\x07/x.md` does not exist\nWARN  dead-path AGENTS.md:1 `a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/x.md` does not exist\nWARN  nested-pointer odd\u202edir/AGENTS.md:0 no line of the root AGENTS.md points to odd\u202edir/AGENTS.md; Codex reads it only when a session starts in its directory\nINFO  size AGENTS.md:0 1 lines, 4 words\nINFO  size odd\u202edir/AGENTS.md:0 1 lines, 1 words\n0 error, 3 warn, 2 info\n'
+
+======================================================================
+FAIL: test_a_directory_named_agents_md_is_reported_and_the_run_goes_on (test_check_instructions.UnreadableFiles.test_a_directory_named_agents_md_is_reported_and_the_run_goes_on)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-instruction-files-part\instruction-files\test_check_instructions.py", line 383, in test_a_directory_named_agents_md_is_reported_and_the_run_goes_on
+    self.assertIn(("warn", "read", "AGENTS.md", "cannot be read: it is a directory"), found)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('warn', 'read', 'AGENTS.md', 'cannot be read: it is a directory') not found in [('info', 'size', 'CLAUDE.md', '1 lines, 1 words')]
+
+======================================================================
+FAIL: test_a_directory_that_cannot_be_listed_is_reported (test_check_instructions.UnreadableFiles.test_a_directory_that_cannot_be_listed_is_reported)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-instruction-files-part\instruction-files\test_check_instructions.py", line 425, in test_a_directory_that_cannot_be_listed_is_reported
+    self.assertIn(("info", "walk", "locked"), found)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('info', 'walk', 'locked') not found in [('info', 'size', 'AGENTS.md')]
+
+----------------------------------------------------------------------
+Ran 45 tests in 0.626s
+
+FAILED (failures=11, errors=7, skipped=1)

@@ -1,0 +1,28 @@
+..............F...
+======================================================================
+FAIL: test_the_tracked_entry_points_are_what_the_generator_produces (test_skill_entry_points.TrackedEntryPoints.test_the_tracked_entry_points_are_what_the_generator_produces)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-instruction-files-part\agent-instructions\test_skill_entry_points.py", line 256, in test_the_tracked_entry_points_are_what_the_generator_produces
+    self.assertEqual(tracked, sorted(produced),
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                     "run python -B agent-instructions/skill_entry_points.py --write and "
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                     "commit what it writes")
+                     ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['.ag[218 chars]-way-record-decision/SKILL.md', '.agents/skill[870 chars].md'] != ['.ag[218 chars]-way-maintain-instruction-files/SKILL.md', '.a[994 chars].md']
+
+First differing element 4:
+'.agents/skills/the-way-record-decision/SKILL.md'
+'.agents/skills/the-way-maintain-instruction-files/SKILL.md'
+
+Second list contains 2 additional elements.
+First extra element 22:
+'.claude/skills/the-way-settle-technology/SKILL.md'
+
+Diff is 1340 characters long. Set self.maxDiff to None to see it. : run python -B agent-instructions/skill_entry_points.py --write and commit what it writes
+
+----------------------------------------------------------------------
+Ran 18 tests in 3.639s
+
+FAILED (failures=1)

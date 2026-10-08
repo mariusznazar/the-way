@@ -1,0 +1,8 @@
+STALE foundations/invariants.md:152 WAY-09@16b8026b now e360ca30
+STALE foundations/invariants.md:162 WAY-09@16b8026b now e360ca30
+STALE foundations/invariants.md:172 WAY-09@16b8026b now e360ca30
+STALE foundations/invariants.md:182 WAY-09@16b8026b now e360ca30
+STALE foundations/invariants.md:192 WAY-09@16b8026b now e360ca30
+STALE foundations/invariants.md:202 WAY-09@16b8026b now e360ca30
+STALE foundations/invariants.md:2037 WAY-127@4439a64a now 69651fc7
+references checked 395, stale 7
