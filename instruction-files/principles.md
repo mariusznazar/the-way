@@ -129,7 +129,7 @@ each file, with versions and the method of checking it: `tool_loading.md`.
 
 | Layer | Shared carrier | Why it reaches every tool | Addition of a single tool |
 |---|---|---|---|
-| main file | `AGENTS.md` at the root | Codex and Cursor always read it; Claude Code when the repository has no `CLAUDE.md` | `CLAUDE.md` only for additions meant for Claude Code alone; its first line is `@AGENTS.md` on its own (WAY-132) |
+| main file | `AGENTS.md` at the root | Codex and Cursor read it in a trusted project; Claude Code when the repository has no `CLAUDE.md` | `CLAUDE.md` only for additions meant for Claude Code alone; its first line is `@AGENTS.md` on its own (WAY-132) |
 | ways in and steps of routes | a pointer as a path in backticks: "Before X, read `path`" | it is an instruction, not a loading mechanism — every tool carries it out the same way | — |
 | procedures of activities | a skill in `.claude/skills/`; for Codex, a pointer to its `SKILL.md` by path from `AGENTS.md`, or a copy in `.agents/skills/` | Claude Code and Cursor discover this directory themselves; Codex does not read it, so it gets there through the pointer, or reads the copy in `.agents/skills/` (fact `codex-repository-skills`) | — |
 | rules for parts of the code | `AGENTS.md` in a subdirectory and a line in the main file: "When working in `x/`, read `x/AGENTS.md`" | Claude Code and Cursor load it on access to a file there; Codex only when the session starts in that directory — the line in the main file closes this gap | a rule with `paths` (Claude Code), a rule with `globs` (Cursor) |
@@ -202,7 +202,9 @@ file is read alone.
   - a repository relying on `AGENTS.md` has no `CLAUDE.local.md`;
   - every `AGENTS.md` in a subdirectory has a pointing line in the main file;
   - a skill needed in Codex has a pointer in `AGENTS.md` or a copy in `.agents/skills/`;
-  - the Markdown files the root `AGENTS.md` or `CLAUDE.md` names pass the same checks.
+  - the Markdown files the root `AGENTS.md` or `CLAUDE.md` names in backticks pass the same checks
+    (the script follows only those; the glossary term and the invariant count a file named by its
+    path anywhere in the text).
 
 ### In operation — fresh sessions with the rule and without it
 
@@ -210,7 +212,7 @@ Judging in operation is three separate questions, each with a different cost (WA
 
 | Question | How to settle it | How many sessions |
 |---|---|---|
-| **did the rule load** | a marker in the file and evidence from the tool: the `InstructionsLoaded` hook in Claude Code, `codex exec "Summarize the current instructions."`, a list of markers in Cursor — always with a positive control, a file that must load | one per variant |
+| **did the rule load** | a marker in the file and evidence from the tool: the `InstructionsLoaded` hook in Claude Code, `codex --ask-for-approval never "Summarize the current instructions."`, a list of markers in Cursor — always with a positive control, a file that must load | one per variant |
 | **did the agent follow it** | the trace of behaviour from section 5 | a few, when without the rule the behaviour never happens; dozens to over a hundred, when it happens sometimes and the rule should only make it more frequent |
 | **did it help** | whether the mistake the rule was meant to remove stopped coming back | not from test sessions — from watching the work over time (section 7) |
 
@@ -247,7 +249,7 @@ Judging in operation is three separate questions, each with a different cost (WA
 
 - the agent does it right without the rule (a rule added for a mistake) — settled by a removal
   test: the rule goes, and watching the work shows whether the mistake comes back;
-- a tool enforces it (a linter, a hook, CI) — the rule goes or turns into a check;
+- a tool enforces it (a linter, CI, or a local hook only against slips) — the rule goes or turns into a check;
 - it can be read from the repository;
 - it points to a path, skill or command that does not exist;
 - it was added for a mistake that can no longer be named — it is proposed for removal; when the

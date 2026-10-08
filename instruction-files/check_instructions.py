@@ -5,7 +5,9 @@ next to this script: paths that do not exist, `@path` imports that Claude Code l
 session or silently skips, Cursor rules that Cursor ignores, a root layout that hides `AGENTS.md`
 from Claude Code, subdirectory `AGENTS.md` files Codex will not reach, skills one of the tools
 cannot discover, emphasis spread over several rules, and the size of every file. The Markdown
-files that the root `AGENTS.md` or `CLAUDE.md` names in backticks are checked as well.
+files that the root `AGENTS.md` or `CLAUDE.md` names in backticks are checked as well; a file
+named by its path elsewhere in the text is not followed, though the glossary term and the invariant
+count it.
 
 Usage, from anywhere:
 
@@ -20,12 +22,18 @@ The files it reads are not the-way's, so it trusts none of them: it reads at mos
 a file, opens only regular files, reads no file through a link that leads out of ROOT, follows no
 link to a directory, never looks a network path up, and prints every value escaped and cut to 200
 characters. It writes nothing and starts no program.
+
+A network path is one that begins `\\\\host`, `//host` or a device prefix on Windows, Cygwin and
+MSYS2; exactly two leading slashes on any other POSIX system; and, on macOS, `/net/` or
+`/Network/`. It does not guard a drive letter or a mount point that the user mapped to a share:
+that is looked up, since the user chose that server.
 """
 
 import argparse
 import bisect
 import codecs
 import os
+import posixpath
 import re
 import stat
 import sys
@@ -57,11 +65,14 @@ NOT_LOADED_PHRASES = (
     "does not read", "does not exist", "doesn't exist",
     "nie ładuje", "nie wczytuje", "nie jest wczytywan", "nie czyta", "nie istnieje",
 )
+PREFIX_PHRASES = ("nie jest wczytywan",)  # a word start: every ending of the verb counts
 NOT_LOADED = re.compile(
     "|".join(r"\b" + r"\s+".join(re.escape(word) for word in phrase.split())
+             + ("" if phrase in PREFIX_PHRASES else r"\b")
              for phrase in NOT_LOADED_PHRASES),
     re.IGNORECASE)
-WINDOWS = os.name == "nt"  # network paths are a lookup problem of Windows; elsewhere a share is mounted
+WINDOWS = os.name == "nt"  # the link walk and the file-system lookups differ on Windows
+PLATFORM = sys.platform  # the platform decision for network shapes; tests patch it with WINDOWS
 LINK_HOPS = 8  # the most links a chain may have before it is taken as leading out (Windows)
 NETWORK_START = ("\\\\", "\\??\\")  # the start of a network share, a device or a NT path
 LOCAL_EXTENDED = re.compile(r"^(\\\\\?|\\\?\?)\\(?=[A-Za-z]:\\)")  # \\?\C:\ or \??\C:\, a local drive
@@ -125,8 +136,16 @@ def local_form(path):
 
 def network_shaped(path):
     """True when PATH names a network share or a device. Such a path is never passed to the file
-    system. Only Windows looks a network path up; elsewhere nothing is network-shaped."""
-    return WINDOWS and local_form(path).startswith(NETWORK_START)
+    system. Windows, Cygwin and MSYS2 read `\\\\host`, `//host` and the device prefixes as network
+    paths. Any other POSIX system reads exactly two leading slashes as one, and macOS also the
+    automounter's `/net/` and `/Network/`. A drive letter or a mount point that the user mapped to
+    a share is looked up: the user chose that server."""
+    if WINDOWS or PLATFORM in ("cygwin", "msys"):
+        return local_form(path).startswith(NETWORK_START)
+    text = posixpath.normpath(str(path)) if str(path) else ""
+    if text.startswith("//") and not text.startswith("///"):
+        return True
+    return PLATFORM == "darwin" and text.startswith(("/net/", "/Network/"))
 
 
 def is_network(token):
@@ -617,7 +636,7 @@ def check_layout(root, files, texts, findings):
             twin = skill_dir.replace(".agents/skills", ".claude/skills") + "/SKILL.md"
             if twin not in present:
                 findings.append(Finding("warn", "skill-dir", rel, 0,
-                                        "Claude Code does not read .agents/skills"))
+                                        "not documented as read by Claude Code; give it a copy in .claude/skills"))
         elif rel.startswith(".claude/skills/") and skill_dir not in main:
             if ".agents/skills/" + rel[len(".claude/skills/"):] not in present:
                 unpointed.append(skill_dir)

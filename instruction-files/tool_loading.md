@@ -9,11 +9,14 @@ method is at the end.
 
 ## Claude Code
 
-- **At session start:** `~/.claude/CLAUDE.md`, and `CLAUDE.md` and
-  `CLAUDE.local.md` from the working directory and every directory above it, concatenated from the
-  filesystem root down to the working directory
+- **At session start:** `CLAUDE.md` and `CLAUDE.local.md` from the working directory and every
+  directory above it, concatenated from the filesystem root down to the working directory
   (https://code.claude.com/docs/en/memory § How CLAUDE.md files load).
-- **User-level rules:** `~/.claude/rules/` loads at launch
+- **User instructions:** `~/.claude/CLAUDE.md` holds personal preferences for all projects and sits
+  before the project files in load order
+  (https://code.claude.com/docs/en/memory § Choose where to put CLAUDE.md files). That it loads at
+  session start is not established by the section that names it.
+- **User-level rules:** `~/.claude/rules/` applies to every project and loads before project rules
   (https://code.claude.com/docs/en/memory § User-level rules).
 - **Rules without `paths`:** a rule in `.claude/rules/` without `paths` frontmatter loads at launch
   with the same priority as `.claude/CLAUDE.md`
@@ -24,7 +27,7 @@ method is at the end.
 - **`AGENTS.md` in a subdirectory:** read when Claude opens a file there with the Read tool and
   that subdirectory has none of the three `CLAUDE.md` files of its own
   (https://code.claude.com/docs/en/memory § When Claude Code reads AGENTS.md).
-- **Not read:** `AGENTS.local.md`, `AGENTS.override.md`, or anything under a `.agents/` directory
+- **Not read as project instructions:** `AGENTS.local.md`, `AGENTS.override.md`, or anything under a `.agents/` directory
   (https://code.claude.com/docs/en/memory § When Claude Code reads AGENTS.md).
 - **On access to a file:** a `CLAUDE.md` or `CLAUDE.local.md` in a subdirectory loads when Claude
   uses the Read, Write or Edit tool on a file in that subdirectory

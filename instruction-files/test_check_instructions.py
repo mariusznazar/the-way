@@ -216,6 +216,19 @@ class SentenceSaysNotLoaded(CheckTestCase):
         repo = self.repo({"AGENTS.md": "- The cache does not load\n- Read `docs/gone.md`\n"})
         self.assertEqual([f.level for f in dead(repo.findings())], ["warn"])
 
+    def test_a_near_miss_of_a_phrase_keeps_a_dead_path_a_warning(self):
+        for sentence in ("The page `docs/gone.md` is not ready.",
+                         "The page `docs/gone.md` is not readable.",
+                         "The page `docs/gone.md` does not readily open.",
+                         "Nie czytaj tego pliku, otwórz `docs/zasady/styl.md`."):
+            with self.subTest(sentence=sentence):
+                repo = self.repo({"AGENTS.md": sentence + "\n"})
+                self.assertEqual([f.level for f in dead(repo.findings())], ["warn"])
+
+    def test_the_prefix_phrase_still_matches_every_ending(self):
+        repo = self.repo({"AGENTS.md": "Plik `docs/stary.md` nie jest wczytywany.\n"})
+        self.assertEqual([f.level for f in dead(repo.findings())], ["info"])
+
     def test_crlf_line_ends_still_join_a_wrapped_sentence(self):
         repo = self.repo({"AGENTS.md": b"The old guide `docs/old-guide.md` is\r\nnot read by any tool.\r\n"})
         self.assertEqual([f.level for f in dead(repo.findings())], ["info"])
@@ -330,6 +343,12 @@ class Skills(CheckTestCase):
     def test_skill_only_in_agents_skills_is_invisible_to_claude_code(self):
         repo = self.repo({".agents/skills/x/SKILL.md": SKILL})
         self.assertIn("skill-dir", checks(repo.findings(), "warn"))
+
+    def test_the_agents_skills_warning_says_the_tool_does_not_document_it(self):
+        repo = self.repo({".agents/skills/x/SKILL.md": SKILL})
+        found = [f for f in repo.findings() if f.check == "skill-dir" and f.level == "warn"]
+        self.assertIn("not documented as read by Claude Code", found[0].message)
+        self.assertIn("a copy in .claude/skills", found[0].message)
 
     def test_skills_in_claude_skills_without_pointer_get_one_note_for_codex(self):
         repo = self.repo({
@@ -476,6 +495,79 @@ class PointedFiles(CheckTestCase):
         pretend_target(self, link, NETWORK)
         guard_network_paths(self)
         self.assertEqual([f for f in repo.findings() if f.file != "AGENTS.md"], [])
+
+
+class NetworkShapesOffWindows(CheckTestCase):
+    """The platform decision is two module values, patched here; no lookup reaches a network-shaped
+    path."""
+
+    def platform(self, name):
+        self.enterContext(mock.patch.object(check_instructions, "WINDOWS", False))
+        self.enterContext(mock.patch.object(check_instructions, "PLATFORM", name))
+        self.guard()
+
+    def guard(self):
+        def shaped(path):
+            text = str(path).replace("\\", "/")
+            return (text.startswith("//") and not text.startswith("///")) or \
+                text.startswith(("/net/", "/Network/"))
+
+        def guarded(name, real):
+            def checked(path, *args, **kwargs):
+                if isinstance(path, str) and shaped(path):
+                    self.fail(f"{name} received a network-shaped path")
+                return real(path, *args, **kwargs)
+            return checked
+
+        for owner, attribute in ((os, "stat"), (os, "lstat"), (os, "scandir"), (os, "readlink"),
+                                 (os.path, "realpath"), (os.path, "exists"), (os.path, "lexists"),
+                                 (os.path, "isdir"), (os.path, "isfile"), (os.path, "islink"),
+                                 (builtins, "open")):
+            self.enterContext(mock.patch.object(owner, attribute,
+                                                guarded(attribute, getattr(owner, attribute))))
+
+    def levels(self, token):
+        repo = self.repo({"AGENTS.md": f"Read `{token}`.\n"})
+        return [(f.level, f.message) for f in dead(repo.findings())]
+
+    def assert_network(self, token):
+        found = self.levels(token)
+        self.assertEqual([level for level, _ in found], ["info"], token)
+        self.assertIn("network path, not checked", found[0][1])
+
+    def test_two_leading_slashes_are_a_network_path_on_linux(self):
+        self.platform("linux")
+        self.assert_network("//host/share/x.md")
+
+    def test_three_leading_slashes_or_one_are_not(self):
+        self.platform("linux")
+        for token in ("///host/x.md", "/host/x.md"):
+            self.assertEqual([level for level, _ in self.levels(token)], ["warn"], token)
+
+    def test_cygwin_and_msys_are_judged_like_windows(self):
+        for name in ("cygwin", "msys"):
+            self.platform(name)
+            for token in ("\\\\host\\share\\x.md", "//host/share/x.md"):
+                self.assert_network(token)
+
+    def test_net_and_network_are_mount_points_of_macos_only(self):
+        self.platform("darwin")
+        self.assert_network("/net/host/x.md")
+        self.assert_network("/Network/Servers/x.md")
+        self.platform("linux")
+        self.assertEqual([level for level, _ in self.levels("/net/host/x.md")], ["warn"])
+
+    def test_a_network_shaped_root_or_file_is_a_usage_error(self):
+        for name, token in (("linux", "//host/share"), ("cygwin", "\\\\host\\share"),
+                            ("darwin", "/Network/x")):
+            with self.subTest(platform=name):
+                self.platform(name)
+                self.assertEqual(run_main([token])[0], 2)
+                self.assertEqual(run_main(["--file", token])[0], 2)
+
+    def test_a_mapped_drive_letter_is_looked_up(self):
+        self.platform("linux")
+        self.assertEqual([level for level, _ in self.levels("Z:/share/x.md")], ["warn"])
 
 
 class NamesThroughLinks(CheckTestCase):
