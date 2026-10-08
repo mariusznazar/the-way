@@ -233,7 +233,12 @@ before continuing that work.
     `finishing-a-development-branch`. Replace `<request link>` in the *Approved by* of the entries
     this cycle wrote with the request's URL, commit and push; this is a placeholder swap that
     changes no other text, so it reopens neither the independent assessment nor the code reviews.
-    Then copy the sanitized working record and full reports to `docs/task-cycles/<task-slug>/` on
+    Then write how long each stage of the cycle took, which models did it and how many tokens it
+    used: run `task-cycle/cycle_stages.py` of the pinned the-way checkout with `--output
+    .runs/task-cycles/<task-slug>/stages.md`, naming every session of this cycle's orchestrator,
+    a correction's included, by its transcript path or id; Claude Code holds the current
+    session's id in `CLAUDE_CODE_SESSION_ID` and Codex in `CODEX_SESSION_ID`. Then copy the
+    sanitized working record, `stages.md` and full reports to `docs/task-cycles/<task-slug>/` on
     the task branch, rewrite their links to the committed copies, commit them, commit their removal
     immediately after, and push, so the request's changed files show only the change and the target
     branch's files never hold the record; the assessment record lives there under `reports/`. Then
