@@ -44,7 +44,8 @@ EXTENSIONS = ("md", "mdc", "json", "jsonl", "js", "mjs", "cjs", "ts", "tsx", "js
               "go", "rs", "java", "kt", "rb", "lock", "ini", "cfg", "env", "xml", "csv")
 FILE_LIKE = re.compile(r"\.(" + "|".join(EXTENSIONS) + r")$", re.IGNORECASE)
 LINE_SUFFIX = re.compile(r":\d+(:\d+)?$")
-LINK_HOPS = 8  # the most links a chain may have before it is taken as leading out
+WINDOWS = os.name == "nt"  # network paths are a lookup problem of Windows; elsewhere a share is mounted
+LINK_HOPS = 8  # the most links a chain may have before it is taken as leading out (Windows)
 NETWORK_START = ("\\\\", "\\??\\")  # the start of a network share, a device or a NT path
 LOCAL_EXTENDED = re.compile(r"^(\\\\\?|\\\?\?)\\(?=[A-Za-z]:\\)")  # \\?\C:\ or \??\C:\, a local drive
 BOMS_NOT_UTF8 = (codecs.BOM_UTF32_LE, codecs.BOM_UTF32_BE, codecs.BOM_UTF16_LE,
@@ -107,15 +108,18 @@ def local_form(path):
 
 def network_shaped(path):
     """True when PATH names a network share or a device. Such a path is never passed to the file
-    system."""
-    return local_form(path).startswith(NETWORK_START)
+    system. Only Windows looks a network path up; elsewhere nothing is network-shaped."""
+    return WINDOWS and local_form(path).startswith(NETWORK_START)
 
 
 def leads_out(path, root, hops=LINK_HOPS):
-    """True when the file at PATH does not lead to a path inside ROOT: a link on the way points to
-    a network path or outside ROOT, the chain of links is longer than LINK_HOPS, or a link cannot
-    be followed here. Only the parts of PATH that lie in ROOT are looked at, each one only after
-    the parts before it were checked, so no link target is ever followed."""
+    """True when the file at PATH does not lead to a path inside ROOT. Elsewhere than Windows the
+    real path decides. On Windows a link on the way points to a network path or outside ROOT, the
+    chain of links is longer than LINK_HOPS, or a link cannot be followed here: only the parts of
+    PATH that lie in ROOT are looked at, each one only after the parts before it were checked, so
+    no link target is ever followed."""
+    if not WINDOWS:
+        return not inside(os.path.realpath(path), os.path.realpath(root))
     path = os.path.normpath(path)
     if not inside(path, root):
         return True
@@ -143,9 +147,12 @@ def leads_out(path, root, hops=LINK_HOPS):
 
 
 def directory_link(entry, root):
-    """True when the link ENTRY leads to a directory. On Windows the link itself says so. Otherwise
-    the target is looked at only when the link stays inside ROOT; a link that leads out of ROOT is
-    never followed and counts as no directory."""
+    """True when the link ENTRY leads to a directory, wherever it points. Elsewhere than Windows the
+    system follows the link, which cannot reach a network there. On Windows the link itself says
+    so; otherwise the target is looked at only when the link stays inside ROOT, and a link that
+    leads out of ROOT is never followed and counts as no directory."""
+    if not WINDOWS:
+        return entry.is_dir()
     attributes = getattr(entry.stat(follow_symlinks=False), "st_file_attributes", 0)
     if attributes & stat.FILE_ATTRIBUTE_DIRECTORY:
         return True
@@ -158,10 +165,11 @@ def instruction_files(root, findings):
     """Every file under ROOT that an agent tool reads as instructions, as paths relative to ROOT.
     The walk follows no link: a link to a directory or a junction is reported and not entered, a
     file link is read only when it leads inside ROOT, and a directory that cannot be listed is
-    reported."""
+    reported. It keeps its own stack, so a tree of any depth is walked."""
     found = []
+    stack = []
 
-    def visit(rel_dir):
+    def enter(rel_dir):
         current = os.path.join(root, *rel_dir.split("/")) if rel_dir else root
         try:
             with os.scandir(current) as listing:
@@ -170,32 +178,38 @@ def instruction_files(root, findings):
             findings.append(Finding("info", "walk", rel_dir or ".", 0,
                                     f"a directory that cannot be listed: {reason(error)}"))
             return
-        for entry in entries:
-            name = entry.name
-            if name in SKIP_DIRS:
-                continue
-            rel = f"{rel_dir}/{name}" if rel_dir else name
-            try:
-                if entry.is_junction() or (entry.is_symlink() and directory_link(entry, root)):
-                    findings.append(Finding("info", "walk", rel, 0,
-                                            "a link to a directory, not followed"))
-                elif entry.is_dir(follow_symlinks=False):
-                    if os.path.lexists(os.path.join(entry.path, ".git")):
-                        continue
-                    if name in MAIN_NAMES:
-                        findings.append(Finding("warn", "read", rel, 0,
-                                                "cannot be read: it is a directory"))
-                    visit(rel)
-                elif is_instruction_name(rel, name):
-                    if entry.is_symlink() and leads_out(entry.path, root):
-                        findings.append(Finding("info", "read", rel, 0,
-                                                "a link out of the repository, not read"))
-                    else:
-                        found.append(rel)
-            except OSError as error:
-                findings.append(Finding("warn", "read", rel, 0, f"cannot be read: {reason(error)}"))
+        stack.append((rel_dir, iter(entries)))
 
-    visit("")
+    enter("")
+    while stack:
+        rel_dir, remaining = stack[-1]
+        entry = next(remaining, None)
+        if entry is None:
+            stack.pop()
+            continue
+        name = entry.name
+        if name in SKIP_DIRS:
+            continue
+        rel = f"{rel_dir}/{name}" if rel_dir else name
+        try:
+            if entry.is_junction() or (entry.is_symlink() and directory_link(entry, root)):
+                findings.append(Finding("info", "walk", rel, 0,
+                                        "a link to a directory, not followed"))
+            elif entry.is_dir(follow_symlinks=False):
+                if os.path.lexists(os.path.join(entry.path, ".git")):
+                    continue
+                if name in MAIN_NAMES:
+                    findings.append(Finding("warn", "read", rel, 0,
+                                            "cannot be read: it is a directory"))
+                enter(rel)
+            elif is_instruction_name(rel, name):
+                if entry.is_symlink() and leads_out(entry.path, root):
+                    findings.append(Finding("info", "read", rel, 0,
+                                            "a link out of the repository, not read"))
+                else:
+                    found.append(rel)
+        except OSError as error:
+            findings.append(Finding("warn", "read", rel, 0, f"cannot be read: {reason(error)}"))
     return found
 
 

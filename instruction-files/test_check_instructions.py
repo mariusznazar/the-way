@@ -322,34 +322,72 @@ class Links(CheckTestCase):
         self.assertIn("emphasis", checks(check_instructions.check(None, [link]), "warn"))
 
 
+def pretend_target(test, link, target):
+    """Makes os.readlink report TARGET for LINK, whatever the link really points to. The tests of
+    network paths use it: the link points to a local file, so nothing here reaches a network, and a
+    script that followed the link would read that file."""
+    real = os.readlink
+
+    def readlink(path, *args, **kwargs):
+        if os.fspath(path) == link:
+            return target
+        return real(path, *args, **kwargs)
+
+    test.enterContext(mock.patch.object(check_instructions.os, "readlink", readlink))
+
+
+WINDOWS_ONLY = unittest.skipUnless(os.name == "nt", "network paths are looked up only on Windows")
+POSIX_ONLY = unittest.skipUnless(os.name == "posix", "needs the real path of a link, as on POSIX")
+
+
+@WINDOWS_ONLY
 class NetworkPaths(CheckTestCase):
     def test_a_link_to_a_network_path_is_never_looked_up(self):
-        repo = self.repo({"CLAUDE.md": "Rules.\n"})
-        make_file_link(self, NETWORK, os.path.join(repo.root, "AGENTS.md"))
-        make_file_link(self, NETWORK, os.path.join(repo.root, "notes.txt"))
+        repo = self.repo({"CLAUDE.md": "Rules.\n"}, outside={"bait.md": "Read `MARKER-BAIT-7/x.md`.\n"})
+        for name in ("AGENTS.md", "notes.txt"):
+            link = os.path.join(repo.root, name)
+            make_file_link(self, os.path.join(repo.base, "bait.md"), link)
+            pretend_target(self, link, NETWORK)
         guard_network_paths(self)
-        code, _, _ = run_main([repo.root])
+        code, out, _ = run_main([repo.root])
         self.assertEqual(code, 0)
+        self.assertNotIn("MARKER-BAIT-7", out)
         found = [(f.level, f.check, f.file, f.message) for f in repo.findings()]
         self.assertIn(("info", "read", "AGENTS.md", "a link out of the repository, not read"), found)
         self.assertNotIn("notes.txt", [file for _, _, file, _ in found])
 
     def test_a_chain_that_reaches_a_network_path_through_a_link_is_not_followed(self):
-        repo = self.repo({"CLAUDE.md": "Rules.\n"})
-        make_file_link(self, NETWORK, os.path.join(repo.root, "mid.md"))
+        repo = self.repo({"CLAUDE.md": "Rules.\n", "bait.md": "Read `MARKER-BAIT-7/x.md`.\n"})
+        mid = os.path.join(repo.root, "mid.md")
+        make_file_link(self, "bait.md", mid)
+        pretend_target(self, mid, NETWORK)
         make_file_link(self, "mid.md", os.path.join(repo.root, "AGENTS.md"))
         guard_network_paths(self)
-        found = [(f.level, f.check, f.file) for f in repo.findings()]
-        self.assertIn(("info", "read", "AGENTS.md"), found)
+        found = [(f.level, f.check, f.file, f.message) for f in repo.findings()]
+        self.assertIn(("info", "read", "AGENTS.md", "a link out of the repository, not read"), found)
+        self.assertEqual(dead(repo.findings()), [])
 
     def test_a_nested_repository_whose_git_is_a_link_is_skipped_without_a_lookup(self):
-        repo = self.repo({"AGENTS.md": "Rules.\n", "sub/AGENTS.md": "IMPORTANT: a.\nIMPORTANT: b.\n"})
-        make_file_link(self, NETWORK, os.path.join(repo.root, "sub", ".git"))
+        repo = self.repo({"AGENTS.md": "Rules.\n", "sub/AGENTS.md": "IMPORTANT: a.\nIMPORTANT: b.\n",
+                          "bait.md": "x\n"})
+        link = os.path.join(repo.root, "sub", ".git")
+        make_file_link(self, os.path.join(repo.root, "bait.md"), link)
+        pretend_target(self, link, NETWORK)
         guard_network_paths(self)
         found = repo.findings()
         self.assertEqual([f.file for f in found if f.check == "size"], ["AGENTS.md"])
         self.assertNotIn("emphasis", checks(found))
 
+    def test_a_network_path_given_as_root_or_file_exits_with_2_without_a_lookup(self):
+        guard_network_paths(self)
+        for arguments in ([NETWORK], ["--file", NETWORK]):
+            with self.subTest(arguments=arguments):
+                code, out, err = run_main(arguments)
+                self.assertEqual((code, out), (2, ""))
+                self.assertIn("network path", err)
+
+
+class LinkChains(CheckTestCase):
     def test_a_chain_of_two_links_that_leaves_the_repository_is_not_read(self):
         repo = self.repo({}, outside={"secret.md": "Read `MARKER-SECRET-9/x.md`.\n"})
         make_file_link(self, os.path.join(repo.base, "secret.md"), os.path.join(repo.root, "mid.md"))
@@ -360,6 +398,7 @@ class NetworkPaths(CheckTestCase):
         self.assertEqual(code, 0)
         self.assertNotIn("MARKER-SECRET-9", out)
 
+    @WINDOWS_ONLY
     def test_a_chain_longer_than_the_hop_limit_is_not_read(self):
         names = [f"h{number}.md" for number in range(1, check_instructions.LINK_HOPS + 1)]
         repo = self.repo({"target.md": "Rules.\n"})
@@ -374,6 +413,52 @@ class NetworkPaths(CheckTestCase):
         make_file_link(self, "target.md", os.path.join(repo.root, "mid.md"))
         make_file_link(self, "mid.md", os.path.join(repo.root, "AGENTS.md"))
         self.assertIn("emphasis", checks(repo.findings(), "warn"))
+
+    @POSIX_ONLY
+    def test_a_dot_dot_after_a_directory_link_is_resolved_as_the_system_does(self):
+        repo = self.repo({}, outside={"a/b/keep.txt": "x\n", "a/secret.md": "Read `MARKER-SECRET-9/x.md`.\n"})
+        make_directory_link(self, os.path.join(repo.base, "a", "b"), os.path.join(repo.root, "d"))
+        make_file_link(self, "d/../secret.md", os.path.join(repo.root, "AGENTS.md"))
+        found = [(f.level, f.check, f.file, f.message) for f in repo.findings() if f.file != "d"]
+        self.assertEqual(found, [("info", "read", "AGENTS.md", "a link out of the repository, not read")])
+
+    @POSIX_ONLY
+    def test_an_absolute_link_out_of_the_repository_is_not_read(self):
+        repo = self.repo({}, outside={"secret.md": "Read `MARKER-SECRET-9/x.md`.\n"})
+        make_file_link(self, os.path.join(repo.base, "secret.md"), os.path.join(repo.root, "AGENTS.md"))
+        self.assertEqual([(f.level, f.check, f.file) for f in repo.findings()],
+                         [("info", "read", "AGENTS.md")])
+
+    @POSIX_ONLY
+    def test_every_directory_link_is_reported_wherever_it_points(self):
+        repo = self.repo({"inner/x.txt": "x\n"}, outside={"elsewhere/x.txt": "x\n"})
+        make_directory_link(self, os.path.join(repo.base, "elsewhere"), os.path.join(repo.root, "out"))
+        make_directory_link(self, os.path.join(repo.root, "inner"), os.path.join(repo.root, "in"))
+        found = sorted((f.level, f.check, f.file, f.message) for f in repo.findings())
+        self.assertEqual(found, [("info", "walk", "in", "a link to a directory, not followed"),
+                                 ("info", "walk", "out", "a link to a directory, not followed")])
+
+
+class DeepTree(CheckTestCase):
+    def test_a_tree_deeper_than_the_recursion_limit_does_not_stop_the_run(self):
+        depth = sys.getrecursionlimit() + 100
+        repo = self.repo({"AGENTS.md": "Rules.\n"})
+        self.addCleanup(os.chdir, os.getcwd())
+        os.chdir(repo.root)
+        try:
+            for _ in range(depth):
+                os.mkdir("d")
+                os.chdir("d")
+            with open("AGENTS.md", "w") as handle:
+                handle.write("Deep.\n")
+        except OSError as error:
+            self.skipTest(f"a tree this deep cannot be built here: {error}")
+        finally:
+            os.chdir(repo.base)
+        deepest = "/".join(["d"] * depth + ["AGENTS.md"])
+        self.assertIn(deepest, check_instructions.instruction_files(repo.root, []))
+        code, _, _ = run_main([repo.root])
+        self.assertEqual(code, 0)
 
 
 class LargeAndOddFiles(CheckTestCase):
