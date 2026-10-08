@@ -4,7 +4,8 @@ Settles, without reading what the rules say, the checks of section 6 of principl
 next to this script: paths that do not exist, `@path` imports that Claude Code loads into every
 session or silently skips, Cursor rules that Cursor ignores, a root layout that hides `AGENTS.md`
 from Claude Code, subdirectory `AGENTS.md` files Codex will not reach, skills one of the tools
-cannot discover, emphasis spread over several rules, and the size of every file.
+cannot discover, emphasis spread over several rules, and the size of every file. The Markdown
+files that the root `AGENTS.md` or `CLAUDE.md` names in backticks are checked as well.
 
 Usage, from anywhere:
 
@@ -33,6 +34,7 @@ from dataclasses import dataclass
 SKIP_DIRS = {".git", "node_modules", ".venv", "venv", "__pycache__", "dist", "build", ".runs"}
 MAIN_NAMES = {"AGENTS.md", "CLAUDE.md", "CLAUDE.local.md", "AGENTS.override.md"}
 SKILL_DIRS = (".claude/skills", ".agents/skills", ".cursor/skills", ".codex/skills")
+POINTED_SUFFIXES = (".md", ".mdc")
 MAX_BYTES = 1048576
 MAX_SHOWN = 200
 EMPHASIS = re.compile(r"\b(IMPORTANT|YOU MUST|CRITICAL|MUST NOT|NEVER EVER)\b")
@@ -467,18 +469,70 @@ def check_cursor_rule(rel, text, findings):
                                 "a Cursor rule without a YAML header is never attached"))
 
 
+def pointed_files(root, texts, files):
+    """The Markdown files the root AGENTS.md or CLAUDE.md names in backticks, as (real path, path
+    from ROOT): each a regular file that leads to a path inside ROOT, outside the skipped
+    directories and nested repositories, that is not already an instruction file; each once, one
+    level deep. A network path is never looked up, and a link is judged by `leads_out`."""
+    known = {os.path.realpath(os.path.join(root, *rel.split("/"))) for rel in files}
+    found = []
+    for main in ("AGENTS.md", "CLAUDE.md"):
+        text = texts.get(main)
+        if not text:
+            continue
+        for _, line in prose_lines(text):
+            for match in CODE_SPAN.finditer(line):
+                token = LINE_SUFFIX.sub("", match.group(1).strip())
+                if not token.lower().endswith(POINTED_SUFFIXES) or is_network(token):
+                    continue
+                if not looks_like_path(token):
+                    continue
+                path = os.path.normpath(os.path.join(root, os.path.expanduser(token)))
+                if network_shaped(path) or leads_out(path, root) or path == root:
+                    continue
+                rel = os.path.relpath(path, root).replace(os.sep, "/")
+                parts = rel.split("/")
+                if any(part in SKIP_DIRS for part in parts[:-1]):
+                    continue
+                if any(os.path.exists(os.path.join(root, *parts[:depth], ".git"))
+                       for depth in range(1, len(parts))):
+                    continue
+                real = os.path.realpath(path)
+                if real in known:
+                    continue
+                try:
+                    if not stat.S_ISREG(os.stat(path).st_mode):
+                        continue
+                except OSError:
+                    continue
+                known.add(real)
+                found.append((real, rel))
+    return found
+
+
 def check_layout(root, files, texts, findings):
     present = set(files)
-    if "AGENTS.md" in present:
-        claude = texts.get("CLAUDE.md")
-        if claude is not None and "@AGENTS.md" not in [l.strip() for l in claude.splitlines()]:
+    for rel in files:
+        if rel != "CLAUDE.md" and not rel.endswith("/CLAUDE.md"):
+            continue
+        folder = rel[: -len("CLAUDE.md")]
+        if folder + "AGENTS.md" not in present or rel.endswith(".claude/CLAUDE.md"):
+            continue
+        claude = texts.get(rel)
+        if claude is None:
+            continue
+        lines = [line.strip() for line in claude.splitlines()]
+        if "@AGENTS.md" not in lines:
             findings.append(Finding(
-                "warn", "root-layout", "CLAUDE.md", 0,
+                "warn", "root-layout", rel, 0,
                 "CLAUDE.md stands beside AGENTS.md without an `@AGENTS.md` line, so Claude Code "
                 "does not read AGENTS.md"))
-        if "CLAUDE.local.md" in present:
-            findings.append(Finding("warn", "root-layout", "CLAUDE.local.md", 0,
-                                    "CLAUDE.local.md stops Claude Code from reading AGENTS.md"))
+        elif lines[0] != "@AGENTS.md":
+            findings.append(Finding("warn", "root-layout", rel, lines.index("@AGENTS.md") + 1,
+                                    "`@AGENTS.md` alone is not its first line"))
+    if "AGENTS.md" in present and "CLAUDE.local.md" in present:
+        findings.append(Finding("warn", "root-layout", "CLAUDE.local.md", 0,
+                                "CLAUDE.local.md stops Claude Code from reading AGENTS.md"))
     main = texts.get("AGENTS.md") or ""
     for rel in files:
         if rel != "AGENTS.md" and rel.endswith("/AGENTS.md") and rel not in main:
@@ -497,13 +551,14 @@ def check_layout(root, files, texts, findings):
                 findings.append(Finding("warn", "skill-dir", rel, 0,
                                         "Claude Code does not read .agents/skills"))
         elif rel.startswith(".claude/skills/") and skill_dir not in main:
-            unpointed.append(skill_dir)
+            if ".agents/skills/" + rel[len(".claude/skills/"):] not in present:
+                unpointed.append(skill_dir)
     if unpointed:
         findings.append(Finding(
             "info", "skill-dir", ".claude/skills", 0,
-            f"{len(unpointed)} skills in .claude/skills have no pointer in AGENTS.md; Codex does "
-            "not read .claude/skills, so point to the SKILL.md of each one Codex needs"))
-
+            f"{len(unpointed)} skills in .claude/skills have no pointer in AGENTS.md and no copy "
+            "in .agents/skills; Codex does not read .claude/skills, so point to the SKILL.md of "
+            "each one Codex needs"))
 
 
 def check(root, extra=()):
@@ -527,6 +582,9 @@ def check(root, extra=()):
                                 agents_beside=folder + "AGENTS.md" in present)
         if rel.startswith(".cursor/rules/") or "/.cursor/rules/" in rel:
             check_cursor_rule(rel, texts[rel], findings)
+    for real, rel in pointed_files(root, texts, files):
+        seen.add(real)
+        check_file(real, rel, root, findings)
     for path in extra:
         if os.path.realpath(path) in seen:
             continue

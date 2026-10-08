@@ -100,6 +100,7 @@ def make_directory_link(test, target, link):
         test.skipTest(f"a directory link cannot be made here: {error}")
 
 
+WINDOWS_ONLY = unittest.skipUnless(os.name == "nt", "network paths are looked up only on Windows")
 NETWORK = "\\\\192.0.2.1\\share\\x.md"  # the network path \\192.0.2.1\share\x.md
 
 
@@ -290,6 +291,17 @@ class RootLayout(CheckTestCase):
         repo = self.repo({"CLAUDE.md": "@AGENTS.md\n", "AGENTS.md": "Rules.\n"})
         self.assertNotIn("root-layout", checks(repo.findings()))
 
+    def test_crlf_line_ends_keep_the_first_line_sound(self):
+        repo = self.repo({"CLAUDE.md": b"@AGENTS.md\r\nNotes.\r\n", "AGENTS.md": "Rules.\n"})
+        self.assertEqual([f for f in repo.findings() if f.check in ("root-layout", "at-import")], [])
+
+    def test_agents_import_under_a_heading_is_one_warning_of_the_layout(self):
+        repo = self.repo({"CLAUDE.md": "# Claude\n@AGENTS.md\n", "AGENTS.md": "Rules.\n"})
+        found = [(f.check, f.level, f.line, f.message) for f in repo.findings()
+                 if f.file == "CLAUDE.md" and f.check != "size"]
+        self.assertEqual(found, [("root-layout", "warn", 2,
+                                  "`@AGENTS.md` alone is not its first line")])
+
     def test_agents_import_with_no_agents_md_beside_it_is_a_warning_on_any_line(self):
         for text, line in (("@AGENTS.md\n", 1), ("# Claude\n\nRules.\n@AGENTS.md\n", 4)):
             with self.subTest(line=line):
@@ -335,6 +347,103 @@ class Skills(CheckTestCase):
             ".claude/skills/x/SKILL.md": SKILL,
         })
         self.assertNotIn("skill-dir", checks(repo.findings()))
+
+    def test_a_skill_with_its_copy_in_agents_skills_needs_no_pointer(self):
+        repo = self.repo({
+            "AGENTS.md": "Rules.\n",
+            ".claude/skills/x/SKILL.md": SKILL,
+            ".agents/skills/x/SKILL.md": SKILL,
+        })
+        self.assertNotIn("skill-dir", checks(repo.findings()))
+
+    def test_a_copy_without_skill_md_or_under_another_name_leaves_the_skill_unpointed(self):
+        repo = self.repo({
+            "AGENTS.md": "Rules.\n",
+            ".claude/skills/x/SKILL.md": SKILL,
+            ".agents/skills/x/README.md": "Not a skill.\n",
+            ".claude/skills/y/SKILL.md": SKILL,
+            ".agents/skills/z/SKILL.md": SKILL,
+        })
+        found = [f for f in repo.findings() if f.check == "skill-dir"]
+        self.assertEqual(sorted((f.level, f.file) for f in found),
+                         [("info", ".claude/skills"), ("warn", ".agents/skills/z/SKILL.md")])
+        self.assertIn("2 skills", [f for f in found if f.level == "info"][0].message)
+
+
+class PointedFiles(CheckTestCase):
+    def files_of(self, findings, rel):
+        return sorted((f.check, f.level) for f in findings if f.file == rel)
+
+    def test_a_markdown_file_the_root_agents_md_names_is_checked(self):
+        repo = self.repo({"AGENTS.md": "Before you start, read `guide/README.md`.\n",
+                          "guide/README.md": DEFECTS})
+        self.assertEqual(self.files_of(repo.findings(), "guide/README.md"),
+                         [("dead-path", "warn"), ("emphasis", "warn"), ("size", "info")])
+
+    def test_a_file_named_by_both_root_files_is_checked_once(self):
+        repo = self.repo({"AGENTS.md": "Read `a.md`.\n", "CLAUDE.md": "@AGENTS.md\nRead `a.md` too.\n",
+                          "a.md": DEFECTS})
+        self.assertEqual(self.files_of(repo.findings(), "a.md"),
+                         [("dead-path", "warn"), ("emphasis", "warn"), ("size", "info")])
+
+    def test_an_instruction_file_it_names_is_checked_once(self):
+        repo = self.repo({"AGENTS.md": "When in `src/`, read `src/AGENTS.md`.\n",
+                          "src/AGENTS.md": "Rules.\n"})
+        self.assertEqual(self.files_of(repo.findings(), "src/AGENTS.md"), [("size", "info")])
+
+    def test_files_outside_the_root_are_not_read(self):
+        repo = self.repo({}, outside={"outside.md": DEFECTS})
+        absolute = os.path.join(repo.base, "outside.md")
+        write(repo.root, "AGENTS.md", f"Read `../outside.md` and `{absolute}`.\n")
+        found = repo.findings()
+        self.assertEqual([f for f in found if "outside" in f.file], [])
+        self.assertEqual(dead(found), [])
+
+    def test_a_link_out_of_the_root_is_not_read(self):
+        repo = self.repo({"AGENTS.md": "Read `inside.md`.\n"}, outside={"outside.md": DEFECTS})
+        make_file_link(self, os.path.join(repo.base, "outside.md"), os.path.join(repo.root, "inside.md"))
+        self.assertEqual([f for f in repo.findings() if f.file != "AGENTS.md"], [])
+
+    def test_a_file_named_by_a_pointed_file_is_not_followed(self):
+        repo = self.repo({"AGENTS.md": "Read `a.md`.\n", "a.md": "Then read `b.md`.\n",
+                          "b.md": DEFECTS})
+        self.assertEqual(self.files_of(repo.findings(), "b.md"), [])
+
+    def test_a_pointed_path_with_a_line_number_or_an_upper_case_suffix_is_checked(self):
+        repo = self.repo({"AGENTS.md": "See `guide/A.MD:12` and `guide/b.md:3`.\n",
+                          "guide/A.MD": DEFECTS, "guide/b.md": DEFECTS})
+        found = repo.findings()
+        for rel in ("guide/A.MD", "guide/b.md"):
+            self.assertEqual(self.files_of(found, rel),
+                             [("dead-path", "warn"), ("emphasis", "warn"), ("size", "info")])
+
+    def test_files_that_are_not_markdown_or_lie_in_nested_repositories_are_not_read(self):
+        repo = self.repo({
+            "AGENTS.md": "Read `notes.txt`, `sub/a.md` and `node_modules/pkg/a.md`.\n",
+            "notes.txt": DEFECTS,
+            "sub/.git": "gitdir: ../.git/modules/sub\n",
+            "sub/a.md": DEFECTS,
+            "node_modules/pkg/a.md": DEFECTS,
+        })
+        self.assertEqual([f.file for f in repo.findings() if f.file != "AGENTS.md"], [])
+
+    @WINDOWS_ONLY
+    def test_a_pointed_network_path_is_noted_and_never_looked_up(self):
+        repo = self.repo({"AGENTS.md": f"Read `{NETWORK}` and `{NETWORK.replace(chr(92), '/')}`.\n"})
+        guard_network_paths(self)
+        found = repo.findings()
+        self.assertEqual([f.file for f in found if f.file != "AGENTS.md"], [])
+        self.assertEqual([(f.level, f.line) for f in dead(found)], [("info", 1), ("info", 1)])
+        self.assertTrue(all("network path, not checked" in f.message for f in dead(found)))
+
+    @WINDOWS_ONLY
+    def test_a_pointed_file_that_is_a_link_to_a_network_path_is_not_followed(self):
+        repo = self.repo({"AGENTS.md": "Read `inside.md`.\n"})
+        link = os.path.join(repo.root, "inside.md")
+        make_bait_link(self, repo.base, link)
+        pretend_target(self, link, NETWORK)
+        guard_network_paths(self)
+        self.assertEqual([f for f in repo.findings() if f.file != "AGENTS.md"], [])
 
 
 class Emphasis(CheckTestCase):
@@ -458,7 +567,6 @@ def pretend_target(test, link, target):
     test.enterContext(mock.patch.object(check_instructions.os, "readlink", readlink))
 
 
-WINDOWS_ONLY = unittest.skipUnless(os.name == "nt", "network paths are looked up only on Windows")
 POSIX_ONLY = unittest.skipUnless(os.name == "posix", "needs the real path of a link, as on POSIX")
 
 
