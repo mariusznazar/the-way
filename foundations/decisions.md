@@ -3648,20 +3648,20 @@ A session working on the-way itself reaches each skill of the-way as the project
 `the-way-<name>` through two identical tracked entry points, `.claude/skills/the-way-<name>/SKILL.md`
 and `.agents/skills/the-way-<name>/SKILL.md`, which a script of `agent-instructions` generates from
 the skill's `SKILL.md`. An entry point reads its skill and the files it names from the checkout or
-worktree the session was started in, stops itself in a product, and hands another the-way skill on
-under the `the-way-` prefix. No global link reaches a skill of the-way, and the-way is not
-installed in itself.
+worktree the session works in — where it was started, or where it was last moved — stops itself
+in a product, and hands another the-way skill on under the `the-way-` prefix. No global link
+reaches a skill of the-way, and the-way is not installed in itself.
 
 - **Change:** new decision
 - **Scope:** agent-instructions, elements-common, project-level, task-cycle, decisions, invariants,
   glossary, part-map, environment-facts, installation
-- **Based on:** claude-code-project-skills@a06eaca7 · claude-code-nested-skills@4dd3d448 ·
+- **Based on:** claude-code-project-skills@d58fb91f · claude-code-nested-skills@4dd3d448 ·
   codex-repository-skills@7db28f98 · codex-skill-paths@5b5b6c79
 - **Relations:** derives from WAY-44@2f2b6227
 - **Verification:** level 1 — invariants: skill-entry-points. Level 2 for the paragraphs of the
   skills that say where the-way lies — an agent compares the change with the decision:
   - complies: a skill's paragraph names, as the place of the-way, the checkout or worktree the
-    session was started in for the-way itself and the pinned `.the-way` for a product, and names
+    session works in for the-way itself and the pinned `.the-way` for a product, and names
     another the-way skill it hands to as the project skill with the `the-way-` prefix;
   - violates: a skill tells an agent to resolve a global link to find the-way; a skill run in the-way
     hands its work to `critique` without the prefix.
@@ -3673,10 +3673,11 @@ installed in itself.
 skill it reads from another checkout tests nothing it changed. Entry points tracked in the
 repository reach every checkout, worktree and cloud session with no step to set them up, and
 generating them from the skills keeps no list of skills by hand and puts them, as generated files,
-in the part of their generator (WAY-44). The directory the session was started in sets which copy
-is read, because a tool may offer one checkout's entry points to a session in another worktree;
-stopping in a product keeps a session there on its pinned the-way (WAY-34). The prefix keeps a
-personal skill of the same name from standing in for one of the-way's.
+in the part of their generator (WAY-44). The checkout or worktree the session works in sets which
+copy is read, because a tool may offer one checkout's entry points to a session in another
+worktree, and a session moved to another directory gains that directory's entry points beside
+the ones it started with; stopping in a product keeps a session there on its pinned the-way
+(WAY-34). The prefix keeps a personal skill of the same name from standing in for one of the-way's.
 *Rejected:* a mode of the installer without a pin writing the same entry points into the-way — its
 generated files would belong to `installation`, outside that part's directory, and its trust
 boundary would grow; entry points written per checkout and ignored by git — a fresh worktree or

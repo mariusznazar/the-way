@@ -1,7 +1,8 @@
 """Watch of the fact `claude-code-project-skills`: Claude Code loads project skills from
 `.claude/skills/` in the directory where it starts and in each parent directory up to the repository
 root, only up to the worktree root in a linked git worktree, and, on v2.1.277 or later, the main
-checkout's project skills when the worktree checkout has no `.claude/skills` directory at its root.
+checkout's project skills when the worktree checkout has no `.claude/skills` directory at its root;
+on v2.1.246 or later, when a session is moved with `/cd`, it adds the new directory's project skills.
 
 code.claude.com publishes the documentation of Claude Code for its current release without versions,
 so there is no state to read: the watch reads the passages of the fact's *Source* at its address,
