@@ -3612,9 +3612,7 @@ must keep control of task sources, binding foundation approvals and the single h
 Naming the version makes the dependency visible when the process is pinned in a product. A small
 change that leaves the foundation unchanged gains nothing from a design, a spec and a plan, so one
 agent makes it from the task, while the checks on the finished change and the final review stay
-(WAY-13); a change that outgrows that finding starts again rather than having a spec and a plan
-written around partial code, and the agent's report passes on what it learned without the shape of
-its code.
+(WAY-13).
 *Rejected:* adopting the complete Superpowers workflow with its intermediate human gates — it would
 interrupt the delegated cycle; copying the skill bodies into the orchestrator — it would create a
 second implementation of those methods; a separate skill for small tasks — two skills would hold the

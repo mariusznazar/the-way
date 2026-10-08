@@ -6,8 +6,7 @@
 - Process pin: <commit>
 - Target branch and base: <branch and commit>
 - Task branch: <branch>
-- Foundation route: <unchanged | entry or invariant-test change; affected entries; on the light
-  cycle, the time a touch changed it>
+- Foundation route: <unchanged | entry or invariant-test change; affected entries>
 - Cycle: <light | full | full after a switch from light>
 - Status: running | blocked | request open | complete
 
