@@ -239,8 +239,9 @@ foundation element, `elements/common/` for what the elements share, `relation-mo
 `installation/`, `agent-instructions/`, `project-level/` and `task-cycle/` — with `probes/` as a
 second directory of the environment facts part, for the checks of the-way's own facts, the files
 that configure the whole repository, which its part map gives to the `repository` part (WAY-44), the
-root agent instruction files, which the map gives to `agent-instructions` (WAY-44), and a
-`README.md` that describes the repository. A directory reaches the main branch only once it holds
+root agent instruction files and the project skill entry points under `.claude/skills/` and
+`.agents/skills/`, which the map gives to `agent-instructions` (WAY-44), and a `README.md` that
+describes the repository. A directory reaches the main branch only once it holds
 what its part requires: an element its template and rules, examples or a pointer to entries of
 the-way that serve as its examples, a skill that writes its entries and a format guard;
 `elements/common/` the rules of form and the way of working the elements' templates and skills
@@ -268,12 +269,14 @@ their elements.
     there; a new file of entries in `foundations/` comes with the format guard of its element; the
     installer, its tests and instructions stand together in `installation/`; the definition, the
     skills that write it and its readiness check stand in `project-level/`; the agent instructions
-    have their own part and root entry points;
+    have their own part and root entry points; the project skill entry points under
+    `.claude/skills/` and `.agents/skills/` stand at the root as files of `agent-instructions`, and
+    the script that generates them stands with its test in `agent-instructions/`;
   - violates: a `tools/` directory for shared scripts reaches the main branch; `task-cycle/`
     reaches the main branch before the design of the task cycle sets what it holds.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/4
+- **Approved by:** Mariusz, merge of <request link>
 
 *Rationale:* anything brought in on the side makes the repository a store of material; directories
 follow the parts, so a change's files name its part and decisions (WAY-21); an incomplete directory
@@ -725,9 +728,10 @@ precedence can be recorded between them.
 
 ### WAY-27/1 — Where may this repository point for its reasoning?
 
-Nothing in this repository points to a source outside it that its readers cannot reach: every
-entry carries its whole reasoning, and what is seen only in such a source is described in the
-entry instead of being pointed to.
+Nothing in this repository points to a source outside it that its readers cannot reach, except the
+place of its tasks that the `## Backlog` section of its root `AGENTS.md` names: every entry carries
+its whole reasoning, and what is seen only in such a source is described in the entry instead of
+being pointed to.
 
 - **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, relation-model,
@@ -737,16 +741,18 @@ entry instead of being pointed to.
 - **Verification:** level 1 — invariants: outbound-link-reach. Level 2 for the reasoning in the
   entry — an agent compares the change with the decision:
   - complies: a decision quotes a public study with its address; a pattern seen in a product
-    outside the repository is described in the rationale, without a pointer to it;
+    outside the repository is described in the rationale, without a pointer to it; the-way's root
+    `AGENTS.md` names, in `## Backlog`, the private note where its tasks are kept;
   - violates: *Origin* points to a private note; a rationale rests on "as in our other product"
     without saying what was seen.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-16
+- **Approved by:** Mariusz, merge of <request link>
 
 *Rationale:* a pointer to a source the reader cannot open is a dead end, leaving a claim nobody
 can check; what was seen there, written down, can at least be judged, and WAY-17 still has a fact
-to name.
+to name. A backlog place is where work is kept, not reasoning an entry rests on, and WAY-107 sends
+an agent there.
 *Rejected:* *Origin* pointing to the notes where the reasoning was worked out — no reader can open
 them.
 
@@ -3635,3 +3641,46 @@ rule settled in a definition comes back as a second entry under another name; ca
 shortened entry as approved — the foundation would gain binding sentences no human approved in
 that form; rewriting the code a late-found projected invariant covers — a check by an agent that
 did not write the code guards it without a second implementation.
+
+### WAY-127/1 — How does a session working on the-way itself reach the-way's skills?
+
+A session working on the-way itself reaches each skill of the-way as the project skill
+`the-way-<name>` through two identical tracked entry points, `.claude/skills/the-way-<name>/SKILL.md`
+and `.agents/skills/the-way-<name>/SKILL.md`, which a script of `agent-instructions` generates from
+the skill's `SKILL.md`. An entry point reads its skill and the files it names from the checkout or
+worktree the session was started in, stops itself in a product, and hands another the-way skill on
+under the `the-way-` prefix. No global link reaches a skill of the-way, and the-way is not
+installed in itself.
+
+- **Change:** new decision
+- **Scope:** agent-instructions, elements-common, project-level, task-cycle, decisions, invariants,
+  glossary, part-map, environment-facts, installation
+- **Based on:** claude-code-project-skills@a06eaca7 · claude-code-nested-skills@4dd3d448 ·
+  codex-repository-skills@7db28f98 · codex-skill-paths@5b5b6c79
+- **Relations:** derives from WAY-44@2f2b6227
+- **Verification:** level 1 — invariants: skill-entry-points. Level 2 for the paragraphs of the
+  skills that say where the-way lies — an agent compares the change with the decision:
+  - complies: a skill's paragraph names, as the place of the-way, the checkout or worktree the
+    session was started in for the-way itself and the pinned `.the-way` for a product, and names
+    another the-way skill it hands to as the project skill with the `the-way-` prefix;
+  - violates: a skill tells an agent to resolve a global link to find the-way; a skill run in the-way
+    hands its work to `critique` without the prefix.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of <request link>
+
+*Rationale:* a session on the-way tries a change to a skill with the skill of its own branch, so a
+skill it reads from another checkout tests nothing it changed. Entry points tracked in the
+repository reach every checkout, worktree and cloud session with no step to set them up, and
+generating them from the skills keeps no list of skills by hand and puts them, as generated files,
+in the part of their generator (WAY-44). The directory the session was started in sets which copy
+is read, because a tool may offer one checkout's entry points to a session in another worktree;
+stopping in a product keeps a session there on its pinned the-way (WAY-34). The prefix keeps a
+personal skill of the same name from standing in for one of the-way's.
+*Rejected:* a mode of the installer without a pin writing the same entry points into the-way — its
+generated files would belong to `installation`, outside that part's directory, and its trust
+boundary would grow; entry points written per checkout and ignored by git — a fresh worktree or
+cloud session has none until someone writes them; global links, one per worktree, or links tracked
+by git — a global link reads one checkout whatever branch the session works on, and tracked links
+need a git setting and extra rights on Windows; names without the prefix — in Claude Code a personal
+skill wins over a project skill of the same name.

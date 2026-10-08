@@ -170,17 +170,27 @@ The part answers for the files that configure the repository itself rather than 
 
 ## agent-instructions
 
-The part answers for the instructions agents read when they work on this repository, and for the
-hooks and the configuration of agents' tools and of CI that direct them.
+The part answers for the instructions agents read when they work on this repository, for the
+project skill entry points that make the-way's skills visible to sessions on it and the script that
+generates them, and for the hooks and the configuration of agents' tools and of CI that direct them.
 
 - **Files:** /AGENTS.md
   /CLAUDE.md
   agent-instructions/**
+  .claude/skills/**
+  .agents/skills/**
 - **Depends on:** decisions · invariants · glossary · part-map · environment-facts ·
-  elements-common · gate
+  elements-common · project-level · task-cycle · gate
 - **Failure modes:**
   - an agent follows stale integration instructions — a change enters the integration branch
     without the required checks or acceptance — high — not detected
+  - a skill of the-way has no entry point, or a stale one — a session on the-way uses a personal
+    skill of that name or none — high — detected by skill-entry-points
+  - the-way's own entry point, loaded from a product's `.the-way`, is followed instead of the
+    product's, where the agent knows neither the entry point's path nor the session's start
+    directory (Claude Code's documentation states neither is given to the agent, and Codex gives
+    no file path for a skill it leaves out of its initial list) — a product entry is written
+    against the-way's own foundation — high — not detected
 - **Trust boundary:** none
 
 ## installation
@@ -207,6 +217,18 @@ carrying its old fingerprint is reported before the change reaches the main bran
 - **Criticality:** high
 - **Parts:** relation-model · decisions · gate
 - **Invariant:** decision-guard-stale-reference
+- **Coverage:** none
+
+## skills-reach-the-way-sessions
+
+Someone adds, renames or moves a skill of the-way, or changes its description, and a skill that a
+session on the-way would not find under its `the-way-` name is reported before the change reaches
+the main branch.
+
+- **Criticality:** high
+- **Parts:** agent-instructions · elements-common · decisions · invariants · glossary · part-map ·
+  environment-facts · project-level · task-cycle · gate
+- **Invariant:** skill-entry-points
 - **Coverage:** none
 
 ## entry-format
