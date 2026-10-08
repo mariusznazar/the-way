@@ -36,10 +36,11 @@ What follows from this:
   Codex does not carry over to the next turn unless it is named again — a file survives each of
   these.
 - **Loaded is not yet carried out.** A rule present in context is not always followed. What must
-  happen every time goes into a CI check, a linter or a check of a step's output, and into a local hook only against slips (WAY-133). When a step ends with an output — a
-  document, code — the output is checked against what it was meant to contain, and if something is
-  missing the work goes back one step. Checking the output catches both a rule that never arrived
-  and a rule that arrived but was not followed.
+  happen every time goes into a CI check, a linter or a check of a step's output, and into a local
+  hook only against slips (WAY-133). When a step ends with an output — a document, code — the
+  output is checked against what it was meant to contain, and if something is missing the work goes
+  back one step. Checking the output catches both a rule that never arrived and a rule that arrived
+  but was not followed.
 
 The same line can travel a different way in each of the three tools: `@path` in Claude Code loads
 the file at session start, in Cursor it is a hint to the model, in Codex it is plain text; Claude
@@ -94,8 +95,8 @@ of cost, and the signal for review is a file that grows while what it covers doe
 ## 3. Where a rule lives
 
 A rule's place is set by what should trigger it — not by how many rules an area has or how long
-they are (WAY-128). Rules with the same trigger live together; rules with different triggers do not share a
-file.
+they are (WAY-128). Rules with the same trigger live together; rules with different triggers do not
+share a file.
 
 | The rule applies… | It lives | Notes |
 |---|---|---|
@@ -137,9 +138,10 @@ each file, with versions and the method of checking it: `tool_loading.md`.
 
 Pitfalls:
 
-- **`@path` only as `@AGENTS.md` alone on the first line of `CLAUDE.md`** (WAY-129, WAY-132). Nowhere else does it serve
-  as a pointer: in Claude Code it loads the file into every session, and a punctuation mark right
-  after it switches the loading off without a warning; in Codex it is plain text.
+- **`@path` only as `@AGENTS.md` alone on the first line of `CLAUDE.md`** (WAY-129, WAY-132).
+  Nowhere else does it serve as a pointer: in Claude Code it loads the file into every session, and
+  a punctuation mark right after it switches the loading off without a warning; in Codex it is
+  plain text.
 - **`CLAUDE.local.md` stops Claude Code from reading `AGENTS.md`.**
 - **No symbolic links on Windows** — without `core.symlinks` enabled, git checks a link out as a
   one-line text file.
@@ -182,9 +184,9 @@ repository's file, rules, a skill), because a contradiction between layers canno
 file is read alone.
 
 - **Every line of the main file meets the three conditions of section 2.**
-- **A verdict to add, reword or move a rule rests on a mistake found more than once in records of
-  the work, or on a stated cost**; where no such mistake was found, the review says what it
-  searched (WAY-130).
+- **A verdict to add or reword a rule rests on a mistake found more than once in records of the
+  work, or on a decision or step it carries; a verdict to keep, move or remove one may rest on a
+  stated cost**; where no such mistake was found, the review says what it searched (WAY-130).
 - **Typical defects:**
   - a file swollen with content most sessions do not need;
   - a procedure or specialist knowledge in the main file instead of on a route;
@@ -213,8 +215,8 @@ Judging in operation is three separate questions, each with a different cost (WA
 | **did it help** | whether the mistake the rule was meant to remove stopped coming back | not from test sessions — from watching the work over time (section 7) |
 
 - **A rule that loaded but was not followed is a different defect from a rule that did not load.**
-  The first needs a change of wording or a move into enforcement (a hook, CI, a check of the
-  output); the second, a change of carrier.
+  The first needs a change of wording or a move into enforcement (CI or a check of the
+  output; a hook only against slips); the second, a change of carrier.
 - **Comparing three sessions with the rule and three without it settles only the first case of the
   second question.** When the behaviour happens without the rule too, such a sample cannot tell the
   rule's effect from the ordinary variation between runs.
@@ -243,8 +245,8 @@ Judging in operation is three separate questions, each with a different cost (WA
 
 ### When to remove a rule
 
-- the agent does it right without the rule (a rule added for a mistake) — settled by a removal test: the rule goes, and watching
-  the work shows whether the mistake comes back;
+- the agent does it right without the rule (a rule added for a mistake) — settled by a removal
+  test: the rule goes, and watching the work shows whether the mistake comes back;
 - a tool enforces it (a linter, a hook, CI) — the rule goes or turns into a check;
 - it can be read from the repository;
 - it points to a path, skill or command that does not exist;
@@ -291,18 +293,19 @@ Otherwise it rests on the tool's documentation, by address. What was measured is
   https://learn.chatgpt.com/docs/build-skills, https://learn.chatgpt.com/guides/best-practices,
   https://cursor.com/docs/rules, https://cursor.com/docs/skills.
 - Studies:
-  - https://arxiv.org/abs/2602.11988v3 — context files raise the cost of a task by over 20% on
+  - https://arxiv.org/abs/2602.11988v3 — context files raise inference cost by over 20% on
     average, their instructions are followed, and repository overviews in them do not help (fact
     `context-file-effect`);
   - https://arxiv.org/abs/2605.10039v1 — file size, instruction position, file architecture and
     contradictions in adjacent files produce no detectable contrast in compliance with a single
-    trivial rule, and each additional function generated within a session goes with about 5.6%
-    lower odds of compliance (fact `single-rule-compliance`);
+    trivial rule after multiple-testing correction, and each additional function generated within
+    a session goes with about 5.6% lower odds of compliance per step, though not as a constant
+    effect (fact `single-rule-compliance`);
   - https://arxiv.org/abs/2507.11538v1 — accuracy falls as the number of instructions grows (fact
     `instruction-density-accuracy`);
   - https://arxiv.org/abs/2602.07150v3 — identical runs of one agent configuration differ by
-    several percentage points (fact `agent-run-variance`);
-  - https://arxiv.org/abs/2511.12884v2 — instruction files grow by frequent small additions;
+    2.2 to 6.0 percentage points in a single run's score (fact `agent-run-variance`);
+  - https://arxiv.org/abs/2511.12884v2 — instruction files evolve through frequent small additions;
   - https://arxiv.org/abs/2606.15828v5 — a catalogue of six configuration smells of instruction
     files, drawn from a review of grey literature and from mining, and measured on 100 popular
     open-source repositories.
