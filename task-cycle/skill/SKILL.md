@@ -1,6 +1,6 @@
 ---
 name: implement-task
-description: Use to take one ready the-way task through autonomous design, planning, implementation, testing, review and a pull or merge request, or to apply review corrections to its open request. Requires subagents and the Superpowers skills named by this process. The human reviews the request, not intermediate steps.
+description: Use to take one ready the-way task to a reviewable pull or merge request — through autonomous design, planning, implementation, testing and review, or, for a small task that leaves the foundation unchanged, through one agent's implementation, the same checks and one review — or to apply review corrections to its open request. Requires subagents and the Superpowers skills named by this process. The human reviews the request, not intermediate steps.
 ---
 
 # Implement one task
@@ -49,10 +49,13 @@ state.
 ## Start and record
 
 4. Determine and record whether the task changes the foundation (WAY-13), which selects its
-   foundation route before implementation. Calculate the three sharpness inputs: criticality from
-   the touched parts (unknown failure modes count as highest), whether touched files are trust
-   boundaries, and whether any operation cannot be undone. Use the full subagent review loop even
-   for low criticality. For a trust boundary, add adversarial input checks under WAY-48. Stage but
+   foundation route before implementation. In the same analysis, choose the light or the full
+   cycle as "Light cycle" below gives it, and record the choice with the reason for each finding
+   you assessed; once one finding fails, the rest may be recorded as not assessed. Calculate the
+   three sharpness inputs: criticality from the touched parts (unknown failure modes count as
+   highest), whether touched files are trust boundaries, and whether any operation cannot be
+   undone. On the full cycle, use the full subagent review loop even for low criticality. For a
+   trust boundary, add adversarial input checks under WAY-48. Stage but
    do not execute an irreversible operation before the human decides on it at the request. Treat a
    security-sensitive or external side effect the same way when the product's rules reserve its
    authorization to a human; prepare what can be reviewed and mark the request blocked if that
@@ -83,12 +86,56 @@ the request (WAY-114). This adapter changes the handoff and approval points, not
 method's work within each stage, except that the code review also writes the deliberate break of
 an invariant's check (WAY-69).
 
+## Light cycle
+
+A task takes the light cycle when the analysis of step 4 finds all three: the task leaves the
+foundation unchanged, so the foundation step below would not run for it; one agent can implement
+it in about ten minutes; and its implementation needs neither very large files nor very many files
+read into context. Every other task takes the full cycle — steps 6 to 9 — exactly as written. The
+two cycles differ in how a change is prepared and made, never in the outcome the task has to reach
+or the checks run on the finished change (WAY-13, WAY-125); both run inside the foundation route
+of step 4. On the light cycle:
+
+- Dispatch one fresh executor with the frozen task, the applicable source paths, the pinned
+  foundation and the dispatch contract above. It makes the whole change from the task, without a
+  spec or a plan, using Superpowers `test-driven-development` for behavior changes, and commits it.
+  Its boundary is the committed change with its focused checks run; it returns before any review.
+  It also returns, with its work committed, when the change touches the foundation and when the
+  change outgrows a finding of step 4.
+- When the change touches the foundation, rule on the touch and record the ruling. The touch is
+  simple and obvious when the entry's change follows from the task's required outcome with no
+  choice the task leaves open, changes the meaning of no approved decision, contradicts no current
+  entry, and writes or changes no invariant or invariant test. On that ruling, record the
+  foundation route as changed; the executor then writes the entry through its element's skill, as
+  the foundation step below gives an entry the cycle writes, before it continues the code that
+  depends on it, and the entry joins the one independent assessment of step 11. Any other touch
+  switches the task to the full cycle.
+- When the change is made, run step 10 in full. The whole change is its one implementation unit,
+  and one Superpowers `requesting-code-review` of the whole change, with the frozen task as its
+  requirements, is both that unit's review and the final review: the executor fixes its findings,
+  the affected checks run again, and the same reviewer reviews the fix range once. Then continue
+  with steps 11 to 14 as written. Where the harness cannot resume the executor after a ruling or
+  for fixes, a fresh executor on the same branch, given the task and the ruling or the findings,
+  continues in its place.
+
+Switch to the full cycle when the executor, or you from its work, find while the change is being
+made or its review findings fixed that it outgrows a finding of step 4 or touches the foundation in
+a way that is not simple and obvious. The executor returns a report without code and without a
+diff: why the change grew, which files and obstacles it found, and what proved not obvious. Check
+that the report holds no code, keep it in `reports/`, and record the attempt's last commit, as a
+historical name rather than a link to follow, and the names of the files it changed. Then discard
+the attempt, its foundation entries included, by resetting the task branch to the recorded base
+commit, record the switch with its reason, and continue at step 6, whose fresh design agent
+receives the executor's report beside the frozen task.
+
 ## Design and plan
 
 6. Dispatch a fresh design agent with the frozen task, applicable source paths, the pinned
-   foundation and the dispatch contract above. Ask it to use Superpowers `brainstorming`. It
-   classifies the task using that skill, then follows its architectural path because this cycle
-   requires a written spec and plan for every ready task. Record the classification and this
+   foundation and the dispatch contract above. After a switch from the light cycle, also give it
+   the executor's report, as the findings of a discarded attempt. Ask it to use Superpowers
+   `brainstorming`. It classifies the task using that skill, then follows its architectural path
+   because the full cycle requires a written spec and plan for every task it runs. Record the
+   classification and this
    cycle-specific choice. The agent returns questions to you and writes its design and spec as
    `spec.md` in the working cycle record, in place of the skill's default location; the spec
    leaves with the record (step 12). Its boundary is the reviewed spec: it
@@ -129,8 +176,9 @@ sentence and its method, never the code's reasoning. Invariant tests written in 
 read-only during implementation; if later work needs one changed, return to this foundation step
 before continuing that work.
 
-9. Use Superpowers `subagent-driven-development`: fresh implementer and reviewer contexts for
-   each meaningful plan task, followed by a whole-branch review. Its boundary is the final review
+9. On the full cycle, use Superpowers `subagent-driven-development`: fresh implementer and
+   reviewer contexts for each meaningful plan task, followed by a whole-branch review. Its
+   boundary is the final review
    and fixes: it returns before workspace cleanup and `finishing-a-development-branch`. Copy its
    ledger and full reports into the working cycle record before allowing cleanup, recording
    review ranges as commit ranges rather than copies of their diffs. Have implementers use
@@ -194,8 +242,10 @@ before continuing that work.
     survives only then; where the product's rules squash or rebase on merge, name that as a
     limitation in the request. Then mark the request ready for review, except a request the cycle
     marks `blocked`, which stays a draft. Do not merge. Keep the worktree for review changes.
-13. The request contains: task goal and relation, source versions, design and plan links, what
-    changed and why, test and review evidence with every check that did not run named, and *What
+13. The request contains: task goal and relation, source versions, the cycle taken and its
+    reasons — after a switch, its reason and a link to the executor's report — design and plan
+    links on the full cycle, what changed and why, test and review evidence with every check that
+    did not run named, and *What
     this request settles*: each foundation entry the change writes or changes, as its identifier and
     one sentence of its meaning in the task document's language, projected entries apart from new
     ones. Beside them, what the foundation puts in front of the human at the merge: an invariant

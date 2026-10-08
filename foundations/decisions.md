@@ -387,14 +387,17 @@ unchecked.
 
 ### WAY-13/1 — What sets the weight of a task's process?
 
-What a task touches, never its size, sets its process: an agent's analysis at the start of the task
-settles whether it changes the foundation, which chooses among the paths that merge a change, while
-three things set how sharply it is checked — the criticality of the parts it touches, as the part
-map computes it, whether it touches the files of a trust boundary, and whether the change can be
-undone. Paths that merge a change differ in their steps, never in the outcome a task has to reach,
-and only a human sets a task to return knowledge instead of a change, which merges nothing. A task's
-size serves only as a signal to split it, an agent may check a change more sharply than the map
-computes, never less, and a human decides on every change that cannot be undone.
+What a task touches, never its size, sets the path that merges its change and how sharply that
+change is checked: an agent's analysis at the start of the task settles whether it changes the
+foundation, which chooses among the paths that merge a change, while three things set how sharply
+it is checked — the criticality of the parts it touches, as the part map computes it, whether it
+touches the files of a trust boundary, and whether the change can be undone. Paths that merge a
+change differ in their steps, never in the outcome a task has to reach, and only a human sets a
+task to return knowledge instead of a change, which merges nothing. A task's size may lighten how
+its change is prepared and made — its spec and plan and the number of agents making it — never the
+outcome it has to reach or the checks run on the finished change, and otherwise serves only as a
+signal to split it; an agent may check a change more sharply than the map computes, never less, and
+a human decides on every change that cannot be undone.
 
 - **Change:** new decision
 - **Scope:** task-cycle
@@ -403,21 +406,29 @@ computes, never less, and a human decides on every change that cannot be undone.
 - **Verification:** level 1 — invariants: foundation-change-path. Level 2 for the rest — an agent
   compares the change with the decision:
   - complies: a one-line format change that breaks users' saved data gets the sharpest checks and
-    a human's decision;
-  - violates: a task gets the heavier path because of the number of lines it changes; a change
-    that cannot be undone reaches the main branch without a human's decision; an agent turns a task
-    into one that returns knowledge instead of a change without a human setting it so.
+    a human's decision; a copy change that touches no foundation entry is made by one agent without
+    a spec or a plan and runs the same checks as any change to the parts it touches;
+  - violates: a task takes the path for changes that leave the foundation unchanged because it
+    changes few lines; a small task skips a check that the parts it touches call for; a change that
+    cannot be undone reaches the main branch without a human's decision; an agent turns a task into
+    one that returns knowledge instead of a change without a human setting it so.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-30
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/7
 
-*Rationale:* size misleads both ways: a rename across many files is easy to undo, a one-line
-change to a stored format can destroy every user's data. Paths differ only in steps, because a
-weaker outcome would bypass the process; returning knowledge alters what a task delivers, so a
-human sets it.
+*Rationale:* size misleads both ways about what can go wrong: a rename across many files is easy to
+undo, a one-line change to a stored format can destroy every user's data, so what a task touches,
+never its size, sets its path and its checks. Size does tell how much preparation a change needs: a
+spec and a plan written ahead of a small change cost more than the change, while the checks on the
+finished change stay whole and a human still decides on what cannot be undone. Paths differ only in
+steps, because a weaker outcome would bypass the process; returning knowledge alters what a task
+delivers, so a human sets it.
 *Rejected:* one cycle for all tasks — how much process a task needs depends on what can go wrong;
 the path chosen by size — size misleads; a human approving every diff (DORA) — no fewer failed
-changes, and attention spent where it adds nothing.
+changes, and attention spent where it adds nothing; keeping a change that cannot be undone, or one
+touching a trust boundary's files, from the lighter preparation — it would take the lighter
+preparation from small tasks it suits, while a human's decision and checks kept whole already
+stop such a change.
 
 ### WAY-14/1 — Who approves a version of a decision?
 
@@ -3548,14 +3559,22 @@ second entry for it.
 
 The the-way task cycle adopts Superpowers 6.4.1 methods for brainstorming a design and written spec,
 writing an implementation plan, test-first implementation, subagent execution with independent task
-and final code reviews, and preparing a pull or merge request; they apply only to a ready task run
-through `implement-task`. The orchestrator answers workflow questions and gives provisional stage
-go-aheads under the task owner's delegation, never records these as human approval, controls the
-return between stages, keeps agent reports before a borrowed skill cleans its workspace, runs the
-independent assessment of its foundation change and its return step, and brings the request to the
-human for review. Decisions reserved to a human by the foundation remain reserved; when required
-code cannot proceed without one, the cycle opens a blocked draft request; a different Superpowers
-version requires a reviewed change to the-way before use.
+and final code reviews, and preparing a pull or merge request, only for a ready task run through
+`implement-task`, which uses them all unless the orchestrator's analysis at its start finds it
+leaving the foundation unchanged and small enough for one agent to make from the task alone: that
+agent then makes it, test-first where it changes behaviour, and one final code review covers the
+whole change, while a change that proves too large for that agent, or whose touch of the foundation
+while that agent makes it needs a choice the task leaves open, changes the meaning of an approved
+decision, contradicts a
+current entry or writes or changes an invariant or an invariant test, is discarded and starts again
+from a fresh design given the agent's report without its code. The orchestrator answers workflow
+questions and gives provisional stage go-aheads under the task owner's delegation, never records
+these as human approval, controls the return between stages, keeps agent reports before a borrowed
+skill cleans its workspace, runs the independent assessment of its foundation change and its return
+step, and brings the request to the human for review. Decisions reserved to a human by the
+foundation remain reserved; when required code cannot proceed without one, the cycle opens a
+blocked draft request; a different Superpowers version requires a reviewed change to the-way before
+use.
 
 - **Change:** new decision
 - **Scope:** task-cycle
@@ -3572,22 +3591,35 @@ version requires a reviewed change to the-way before use.
   "The reviewer gets precisely crafted context for evaluation — never your session's history."
   `finishing-a-development-branch/SKILL.md` — "Verify tests → Detect environment → Present options →
   Execute choice → Clean up."
-- **Relations:** derives from WAY-100@e7a74a18
+- **Relations:** derives from WAY-100@e7a74a18 · derives from WAY-13@97b17d59
 - **Verification:** level 2 — an agent compares a cycle with the decision:
   - complies: agents use the named methods at version 6.4.1, return between stages, and show
-    provisional choices in the request without claiming human approval;
+    provisional choices in the request without claiming human approval; a task found small at its
+    start, leaving the foundation unchanged, is made by one agent from the task, test-first where it
+    changes behaviour, and its whole change gets one final code review; an attempt that grows too
+    large, or whose touch of the foundation while the agent makes it writes an invariant, is
+    discarded and the task starts
+    again from a fresh design that reads the agent's report;
   - violates: an agent treats its own spec approval as the owner's approval, skips the request
-    review, or silently runs a different Superpowers version.
+    review, or silently runs a different Superpowers version; a task found small at its start merges
+    without a final code review; a spec and a plan are written around an outgrown attempt's code.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/4
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/7
 
 *Rationale:* the borrowed skills provide design, planning, test and review methods, while the-way
 must keep control of task sources, binding foundation approvals and the single human review point.
-Naming the version makes the dependency visible when the process is pinned in a product.
+Naming the version makes the dependency visible when the process is pinned in a product. A small
+change that leaves the foundation unchanged gains nothing from a design, a spec and a plan, so one
+agent makes it from the task, while the checks on the finished change and the final review stay
+(WAY-13).
 *Rejected:* adopting the complete Superpowers workflow with its intermediate human gates — it would
 interrupt the delegated cycle; copying the skill bodies into the orchestrator — it would create a
-second implementation of those methods.
+second implementation of those methods; a separate skill for small tasks — two skills would hold the
+same rules of the record, the request and the return step, while size only lightens one process
+(WAY-13); an outgrown attempt kept and completed — a spec and a plan would be written around
+partial code; the agent of an outgrown attempt writing the spec and the plan — the spec would carry
+the shape of the abandoned code.
 
 ### WAY-126/1 — How does a projected entry enter the foundation?
 
