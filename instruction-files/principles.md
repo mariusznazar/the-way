@@ -6,8 +6,8 @@ Code, Codex and Cursor at once. The skill in `SKILL.md` beside this file applies
 the sources they rest on are listed at the end. Where the-way has adopted a principle by a
 decision, the principle names that decision in brackets.
 
-Sections that name no decision are the skill's own method, offered as proposals, not rules that bind
-a repository; the sections that cite WAY-128 to WAY-133 are what the-way adopted.
+Principles that name no decision are the skill's own method, offered as proposals, not rules that
+bind a repository; those that cite one are what the-way adopted.
 
 ## 1. Ways in and routes
 

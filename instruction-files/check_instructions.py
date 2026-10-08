@@ -20,8 +20,8 @@ not a directory, a --file is not a readable regular file, or either names a netw
 
 The files it reads are not the-way's, so it trusts none of them: it reads at most 1048576 bytes of
 a file, opens only regular files, reads no file through a link that leads out of ROOT, follows no
-link to a directory, looks up no network path it has recognised, and prints every value escaped and cut to 200
-characters. It writes nothing and starts no program.
+link to a directory, looks up no network path it has recognised, and prints every value escaped
+and cut to 200 characters. It writes nothing and starts no program.
 
 A network path is one that begins `\\\\host`, `//host` or a device prefix on Windows, Cygwin and
 MSYS2; exactly two leading slashes on any other POSIX system; and, on macOS, `/net/` or
@@ -32,9 +32,9 @@ A link target is judged without following the link on Windows only. On Cygwin, M
 target of a symbolic link is followed when the link is checked, so a link to a network location
 there is not guarded.
 
-An `@` import is reported only when the word after the `@` holds a `.` or `/`: a bare `@name` in another
-repository is often a mention. The invariant `instruction-file-imports` of the-way counts every `@`
-that starts a word and is followed by a non-whitespace character, which is stricter.
+An `@` import is reported only when the word after the `@` holds a `.` or `/`: a bare `@name` in
+another repository is often a mention. The invariant `instruction-file-imports` of the-way counts
+every `@` that starts a word and is followed by a non-whitespace character, which is stricter.
 """
 
 import argparse
