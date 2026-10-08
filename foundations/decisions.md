@@ -236,7 +236,8 @@ test that always passes.
 On the main branch, this repository holds `foundations/` with the entries of the-way itself, a
 directory for each part of the process other than `repository` — `elements/<element>/` for each
 foundation element, `elements/common/` for what the elements share, `relation-model/`, `gate/`,
-`installation/`, `agent-instructions/`, `project-level/` and `task-cycle/` — with `probes/` as a
+`installation/`, `agent-instructions/`, `instruction-files/`, `project-level/` and `task-cycle/` —
+with `probes/` as a
 second directory of the environment facts part, for the checks of the-way's own facts, the files
 that configure the whole repository, which its part map gives to the `repository` part (WAY-44), the
 root agent instruction files and the project skill entry points under `.claude/skills/` and
@@ -251,45 +252,53 @@ definition, the readiness check and its tests; `relation-model/` the script that
 fingerprints; `gate/` the test of every critical flow in the part map; `installation/` the
 installer, its tests and a README explaining how a product uses the pinned version;
 `agent-instructions/` the instructions for agents working on this repository, led to from the root
-agent instruction files; `task-cycle/` what the design of the task cycle sets, and until then it
+agent instruction files; `instruction-files/` the principles of instruction files for coding agents,
+the account of how the tools load them, the skill that applies them, and the script that checks
+instruction files with its tests; `task-cycle/` what the design of the task cycle sets, and until then it
 does not reach the main branch. The entries in `foundations/` are checked by the format guards of
 their elements.
 
 - **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common,
-  relation-model, gate, installation, agent-instructions, repository, project-level, task-cycle
+  relation-model, gate, installation, agent-instructions, instruction-files, repository,
+  project-level, task-cycle
 - **Based on:** none
 - **Relations:** none
 - **Verification:** level 1 — invariants: repository-file-location · element-directory-contents ·
   relation-model-directory-contents · invariant-example-target · map-example-target ·
   glossary-example-target. Level 2 for what `elements/common/`, `installation/`,
-  `agent-instructions/`, `project-level/` and `task-cycle/` hold and for the format guards checking
-  `foundations/` — an agent compares the change with the decision:
+  `agent-instructions/`, `instruction-files/`, `project-level/` and `task-cycle/` hold and for the
+  format guards checking `foundations/` — an agent compares the change with the decision:
   - complies: code two format guards share moves into `elements/common/`, and both load it from
     there; a new file of entries in `foundations/` comes with the format guard of its element; the
     installer, its tests and instructions stand together in `installation/`; the definition, the
     skills that write it and its readiness check stand in `project-level/`; the agent instructions
     have their own part and root entry points; the project skill entry points under
     `.claude/skills/` and `.agents/skills/` stand at the root as files of `agent-instructions`, and
-    the script that generates them stands with its test in `agent-instructions/`;
+    the script that generates them stands with its test in `agent-instructions/`; the principles,
+    the loading account, the skill and the check script of instruction files stand together in
+    `instruction-files/`;
   - violates: a `tools/` directory for shared scripts reaches the main branch; `task-cycle/`
     reaches the main branch before the design of the task cycle sets what it holds.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/8
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/11
 
 *Rationale:* anything brought in on the side makes the repository a store of material; directories
 follow the parts, so a change's files name its part and decisions (WAY-21); an incomplete directory
 is work in progress, kept on a branch (WAY-01); probes stand apart, so an element's tests run no
 fact's method; product installation and agent instructions have different failures from repository
-configuration; the project definition and task cycle answer different questions.
+configuration; the project definition and task cycle answer different questions; the principles of
+instruction files serve any repository, so they stand apart from this repository's own agent
+instructions.
 *Rejected:* material merged as soon as it is written — a store from the first day; an element whose
 only tool is a skill — the form holds only while someone remembers to run it; one `tools/`
 directory for everything shared — it matches no part and grows into a store; one set of template,
 skill and script for every directory — a script that only reads has nothing for a skill to write;
 the files serving the whole repository left out of the map on purpose — they lose their part and
 its failure mode; installation or agent instructions folded into repository configuration — their
-failures lose their own parts.
+failures lose their own parts; the principles of instruction files folded into this repository's
+own agent instructions — that part answers for the-way's own instructions, and its failures differ.
 
 ### WAY-10/1 — Who assesses a change to an invariant test or to the foundation?
 
@@ -746,7 +755,7 @@ entry instead of being pointed to. The one exception is the place of its tasks, 
 
 - **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, relation-model,
-  installation, agent-instructions, task-cycle
+  installation, agent-instructions, instruction-files, task-cycle
 - **Based on:** none
 - **Relations:** none
 - **Verification:** level 1 — invariants: outbound-link-reach. Level 2 for the reasoning in the
@@ -962,7 +971,7 @@ version of the process enters a product only through a task in the product that 
 
 - **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, relation-model,
-  installation, task-cycle
+  installation, instruction-files, task-cycle
 - **Based on:** none
 - **Relations:** none
 - **Verification:** level 2 — an agent compares the change with the decision; the invariants of
@@ -1081,7 +1090,7 @@ what it could not check, never agreement.
 
 - **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, relation-model,
-  installation, task-cycle
+  installation, instruction-files, task-cycle
 - **Based on:** none
 - **Relations:** none
 - **Verification:** level 1 — invariants: script-language · script-imports · script-subprocesses ·
@@ -2453,7 +2462,7 @@ version comes out.
 
 - **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, relation-model, gate,
-  installation, repository, task-cycle
+  installation, instruction-files, repository, task-cycle
 - **Based on:** python-314-bugfix-status@cb6aa573 · python-release-binaries@6d2c12f8 ·
   https://raw.githubusercontent.com/python/peps/b53285d29f16cc743a7a6339c947c49ccf70c525/peps/pep-0745.rst
   § Bugfix releases — "3.14.14: Tuesday, 2027-10-05 (Final regular bugfix release with binary installers)";
@@ -3371,7 +3380,8 @@ contradictions across entries before presentation.
 
 - **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common,
-  project-level, relation-model, gate, installation, agent-instructions, repository, task-cycle
+  project-level, relation-model, gate, installation, agent-instructions, instruction-files,
+  repository, task-cycle
 - **Based on:** none
 - **Relations:** derives from WAY-10@db68de1c
 - **Verification:** level 2 — an agent compares the review with the decision:
@@ -3683,11 +3693,13 @@ and `.agents/skills/the-way-<name>/SKILL.md`, which a script of `agent-instructi
 the skill's `SKILL.md`. An entry point reads its skill and the files it names from the checkout or
 worktree the session works in — where it was started, or where it was last moved — stops itself
 in a product, and hands another the-way skill on under the `the-way-` prefix. No global link
-reaches a skill of the-way, and the-way is not installed in itself.
+reaches a skill of the-way other than one to `instruction-files/`, whose skill, judging a repository
+that pins the-way, follows that repository's pinned copy instead, and the-way is not installed in
+itself.
 
 - **Change:** new decision
 - **Scope:** agent-instructions, elements-common, project-level, task-cycle, decisions, invariants,
-  glossary, part-map, environment-facts, installation
+  glossary, part-map, environment-facts, installation, instruction-files
 - **Based on:** claude-code-project-skills@d58fb91f · claude-code-nested-skills@4dd3d448 ·
   codex-repository-skills@7db28f98 · codex-skill-paths@5b5b6c79
 - **Relations:** derives from WAY-44@2f2b6227
@@ -3698,9 +3710,16 @@ reaches a skill of the-way, and the-way is not installed in itself.
     another the-way skill it hands to as the project skill with the `the-way-` prefix;
   - violates: a skill tells an agent to resolve a global link to find the-way; a skill run in the-way
     hands its work to `critique` without the prefix.
+  Level 2 for the global link and the skill of `instruction-files/` — an agent compares the change
+  with the decision:
+  - complies: a global link leads to `instruction-files/` of a worktree kept at the merged tip, and
+    the skill judging a product that pins the-way follows that product's
+    `.the-way/instruction-files/SKILL.md`;
+  - violates: a global link leads to another skill of the-way; the skill judges a product that pins
+    the-way with the copy its global link reaches.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/8
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/11
 
 *Rationale:* a session on the-way tries a change to a skill with the skill of its own branch, so a
 skill it reads from another checkout tests nothing it changed. Entry points tracked in the
@@ -3712,7 +3731,11 @@ worktree, and a session moved to another directory gains that directory's entry 
 the ones it started with; stopping in a product keeps a session there on its pinned the-way
 (WAY-34); the entry point's own directory, which Codex lists with each skill, lets the first product
 check find a product's submodule. The prefix keeps a personal skill of the same name from standing in
-for one of the-way's.
+for one of the-way's. The skill of instruction files serves repositories outside the-way and its
+products too, where no entry point exists and the copy a global link reads is the one wanted; in a
+product the pinned copy governs (WAY-34), so the skill follows it there; a session on the-way still
+reaches its branch's copy through its entry point, and the-way's repository instruction files keep
+it to the prefixed skill.
 *Rejected:* a mode of the installer without a pin writing the same entry points into the-way — its
 generated files would belong to `installation`, outside that part's directory, and its trust
 boundary would grow; entry points written per checkout and ignored by git — a fresh worktree or
@@ -3720,3 +3743,216 @@ cloud session has none until someone writes them; global links, one per worktree
 by git — a global link reads one checkout whatever branch the session works on, and tracked links
 need a git setting and extra rights on Windows; names without the prefix — which skill a session
 gets would rest on how Claude Code and Codex settle two skills of one name.
+
+### WAY-128/1 — What may a line of an instruction file that a tool loads into every session hold, and where does any other rule stand?
+
+A line for a file that an agent's tool loads into every session — one the skill of
+`instruction-files` proposes, or one a change to the-way's repository instruction files adds or
+rewords — is one that every session needs or that points to work an agent would not otherwise find,
+that an agent could not read from the repository or from general knowledge, and without which an
+agent would go wrong. Any other rule the skill proposes or such a change adds stands where what
+calls for it reaches the agent: a rule for some files in a file the tools load with those files, a
+rule for an activity in the steps of the skill that carries out that activity or in the file that
+leads it, and knowledge needed now and then in a file such a step or line points to.
+
+- **Change:** new decision
+- **Scope:** instruction-files, agent-instructions
+- **Based on:** context-file-effect@c44e5ef0 · claude-code-path-rules@ac99f128 ·
+  codex-agents-md@6dc13475
+- **Relations:** derives from WAY-100@e7a74a18
+- **Verification:** level 2 — an agent compares the change with the decision:
+  - complies: a change adds to the-way's root `AGENTS.md` a line pointing, with its condition, to a
+    guide no session would find otherwise; the skill proposes to move a rule for one directory's
+    files into a file loaded with them;
+  - violates: the skill proposes a line describing a repository's directories and stack; a change
+    adds to the-way's root `AGENTS.md` the test command its guide already gives.
+- **Review when:** no model in the range of fact context-file-effect is Active in Anthropic's table
+  of models · check by: 2027-01-08
+- **Origin:** none
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/11
+
+*Rationale:* a line loaded into every session costs context in each, and agents carry out what it
+asks, so it earns its place only when each session needs it; descriptions of a repository have not
+helped agents, while the instructions they are given are followed; a rule loaded with the files or
+the activity that call for it costs nothing elsewhere; one tool reads a subdirectory's file only in
+sessions started at or below it, so such a file needs a line that points to it. The decision binds
+what a change adds or rewords from then on; lines that stand unchanged are not bound by it, as the
+process enters an existing product (WAY-28). Process skills and their entry points answer to their
+own decisions (WAY-35, WAY-127), not to this one.
+*Rejected:* a fixed count of lines as the measure of a file — a count says nothing of whether a
+given line is needed, even where a shorter file saves context in every session; a file of pointers
+alone — it leaves reading each rule to the agent's choice; a file of its own for every area with
+rules of its own — a split changes nothing unless it changes when the rule loads; rules drawn from
+the repository's code — the agent reads the code itself; binding the lines that stand today — every
+unchanged line would become a breach on the day of the merge.
+
+### WAY-129/1 — How does an instruction file point an agent to another file?
+
+The-way's repository instruction files hold no `@` import other than the line `@AGENTS.md` alone at
+the top of the root `CLAUDE.md`, and the skill of `instruction-files` proposes none other. A pointer
+the skill proposes, or a change to the-way's repository instruction files adds, names the file to
+read by its path in backticks with the condition under which to read it.
+
+- **Change:** new decision
+- **Scope:** instruction-files, agent-instructions
+- **Based on:** claude-code-imports@5b9359fd
+- **Relations:** derives from WAY-100@e7a74a18
+- **Verification:** level 1 — invariants: instruction-file-imports. Level 2 for the condition beside
+  a path — an agent compares the change with the decision:
+  - complies: a pointer reads "Before you change the-way, read `agent-instructions/README.md`";
+  - violates: a pointer reads "See @docs/style.md for the style"; a list of paths with no word on
+    when to read them.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/11
+
+*Rationale:* an import loads the whole file it names into every session, so a file meant for
+occasional reading costs its full length in each; a path with its condition costs one line and is
+read when the condition comes.
+*Rejected:* `@` as a light pointer — it loads, it does not point; the text of the file pasted in — a
+second copy that drifts.
+
+### WAY-130/1 — When does a rule enter an instruction file, and when does it leave?
+
+The skill of `instruction-files` proposes a rule, and a change to the-way's repository instruction
+files adds one, only to remove a mistake agents made more than once, found in records of their
+work, and names that mistake where it proposes or adds the rule, unless the rule carries a decision
+the repository records or a step of an activity in the file that leads that activity. The skill
+proposes to take out a rule added for a mistake once that mistake can no longer be named, or once
+agents working without it show that it is not needed.
+
+- **Change:** new decision
+- **Scope:** instruction-files, agent-instructions
+- **Based on:** https://arxiv.org/html/2511.12884v2 § 4.2.3 — "The evolution of Agent context files
+  is driven by small, incremental additions, while deletions are minimal." · § 4.2.3 — "this
+  suggests that the increase in line counts is not simply due to uneven edit sizes, but instead
+  reflects a meaningful tendency to add new instructions rather than remove existing ones."; read
+  2026-10-08
+- **Relations:** derives from WAY-100@e7a74a18
+- **Verification:** level 2 — an agent compares the change with the decision:
+  - complies: a change adding a rule to the-way's root `AGENTS.md` names in its request the mistake
+    it removes and the records where agents made it twice or more; a change adds to the guide that
+    leads the-way's integration the step a new decision sets, with that decision as its reason; the
+    skill proposes no rule for a mistake it found once or not at all;
+  - violates: a rule added "just in case" after one slip recalled from memory; the skill proposes a
+    rule whose mistake it did not look for; a rule against one slip is added to the guide as a step
+    of the work.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/11
+
+*Rationale:* files grow by small additions and are rarely cut, so a rule needs a way out from the
+day it enters, and the mistake it removes is that way out. A repeated mistake is the signal; a
+single one is watched, and a mistake recalled days later gives no material for a rule. A rule that
+carries a decision, or a step of the work a file leads, has its reason and its way out in that
+decision or that work.
+*Rejected:* rules added ahead of any mistake — nobody can test them; a rule for a mistake seen once
+— one slip says nothing of the next session; a register of lessons written from memory — the mistake
+is lost before the rule is written; removal by the calendar — a long absence of a mistake may be the
+rule working; one test for the rules against mistakes and for the steps of a guide or the rules a
+decision sets — a guide could gain no step of new work until agents had gone wrong without it.
+
+### WAY-131/1 — How is it settled whether a rule of an instruction file works?
+
+Where the skill of `instruction-files` says whether a rule works, and where the request of a change
+to the-way's repository instruction files says so, it is settled as three separate questions:
+whether the tool loaded it, by one fresh session per variant with a file that has to load as a
+control; whether agents followed it, by as many fresh sessions with and without it, on one model
+and tool release, as its effect needs to stand out from the variation between runs; and whether it
+helped, by whether its mistake stops coming back in agents' work over time, never by test sessions
+alone.
+
+- **Change:** new decision
+- **Scope:** instruction-files, agent-instructions
+- **Based on:** agent-run-variance@538af710
+- **Relations:** derives from WAY-100@e7a74a18
+- **Verification:** level 2 — an agent compares the change with the decision:
+  - complies: a rule whose behaviour never happens without it is shown working by a few sessions
+    with and without it; a rule meant to make a behaviour more frequent is judged over many sessions
+    or by watching its mistake;
+  - violates: a few sessions with and without are taken as proof that a rule raised a behaviour
+    that also happens without it; a rule is called useless because one session did not load it.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/11
+
+*Rationale:* loading, following and helping fail apart and are fixed apart — another carrier, other
+wording or a mechanism, or nothing; runs of one agent on one task differ, so a small effect drowns
+in a few sessions. The finding on that variation measured models of other publishers only, and this
+decision takes it across publishers (WAY-85).
+*Rejected:* the same small number of sessions with and without for every rule — it settles only a
+behaviour absent without the rule; one question "does it work" — it mixes defects with different
+fixes.
+
+### WAY-132/1 — Which file carries the instructions Claude Code, Codex and Cursor share?
+
+The skill of `instruction-files` proposes for a repository whose agents use more than one of Claude
+Code, Codex and Cursor, and the-way keeps for itself, a root `AGENTS.md` that carries the
+instructions those tools share and a root `CLAUDE.md`, where there is one, whose first line is
+`@AGENTS.md` alone and which holds only what Claude Code alone needs. The skill leaves out of this
+proposal the files and the marked block the-way's installer writes in a product.
+
+- **Change:** new decision
+- **Scope:** instruction-files, agent-instructions
+- **Based on:** claude-code-agents-md@e4007cb8 · codex-agents-md@6dc13475 · cursor-agents-md@aaa19b03 ·
+  claude-code-imports@5b9359fd
+- **Relations:** derives from WAY-100@e7a74a18
+- **Verification:** level 1 — invariants: root-claude-md-import. Level 2 for what `CLAUDE.md` holds
+  and for the installer's files — an agent compares the change with the decision:
+  - complies: the-way's `CLAUDE.md` is the one line `@AGENTS.md`; the skill proposes, after the
+    import, a note for Claude Code alone; in a product, the skill reports that
+    `.claude/rules/the-way.md` repeats the installer's block of `AGENTS.md` as a note on the
+    installer;
+  - violates: the skill proposes a `CLAUDE.md` restating the rules of `AGENTS.md`; the skill
+    proposes to delete `.claude/rules/the-way.md` or edit the block between the installer's markers.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/11
+
+*Rationale:* the tools read a shared instructions file at the root, while Claude Code reads it by
+itself only where no file of its own stands; a file of its own that opens by importing the shared
+one keeps one copy for them all and still lets Claude Code take additions of its own, which Cursor's
+command-line agent reads too, since it reads that file as well; a rule kept in two files drifts.
+What the installer writes in a product answers to the installer's own surface and stays outside
+this decision.
+*Rejected:* a full file for Claude Code beside the shared one — two copies that drift; relying on
+Claude Code reading the shared file by itself — a file of its own, added later by hand or by a tool,
+turns that reading off, and some sessions cannot read the shared file at all, for which Claude
+Code's documentation advises importing it from a file of its own; a file of its own that is a link
+to the shared one — Claude Code's documentation advises the import instead wherever someone who
+clones the repository works on Windows.
+
+### WAY-133/1 — How is a rule of an instruction file kept when it has to hold every time?
+
+Where a rule of an instruction file has to hold every time, the skill of `instruction-files`
+proposes a mechanism that keeps it without the agent choosing to — a CI check, a linter, a check of
+a step's output, or a local git hook where the rule guards against slips rather than against an
+agent that can turn the hook off — and a change to the-way's repository instruction files adds such
+a rule only with its mechanism. The instruction file then says what the mechanism is for, or
+carries what the mechanism cannot check.
+
+- **Change:** new decision
+- **Scope:** instruction-files, agent-instructions
+- **Based on:** single-rule-compliance@cf537693
+- **Relations:** derives from WAY-100@e7a74a18
+- **Verification:** level 2 — an agent compares the change with the decision:
+  - complies: the skill proposes a CI check for a rule it found broken in commits, and an
+    instruction only for what the check cannot read; a change adds to the-way's guide a rule that
+    every commit names its task, together with a CI check that fails a request whose commits name
+    none;
+  - violates: a change adds a rule that has to hold on every commit only as a line of `AGENTS.md`;
+    the skill proposes a hook of one agent tool, or a local git hook, as what keeps a rule against
+    an agent that can switch it off.
+- **Review when:** no model in the range of fact single-rule-compliance is Active in Anthropic's
+  table of models · check by: 2027-01-08
+- **Origin:** none
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/11
+
+*Rationale:* a loaded rule is still not always followed, so what has to hold every time needs a
+mechanism that does not depend on the agent; the instruction beside it explains, so the agent meets
+the rule at the first try. A local hook — of an agent tool or of git — is skipped by one switch, as
+WAY-03 weighed, so it keeps a rule against slips, never against an agent that can turn it off; a
+hook of one agent tool also reaches only that tool's sessions.
+*Rejected:* an instruction alone, worded more strongly — a stronger wording is still a loaded rule,
+which is not followed every time; a mechanism with no word to the agent — the agent learns of it
+only by failing it; a local hook as the keeper of every rule — one switch skips it.

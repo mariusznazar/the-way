@@ -180,7 +180,7 @@ generates them, and for the hooks and the configuration of agents' tools and of 
   .claude/skills/**
   .agents/skills/**
 - **Depends on:** decisions · invariants · glossary · part-map · environment-facts ·
-  elements-common · project-level · task-cycle · gate
+  elements-common · project-level · task-cycle · gate · instruction-files
 - **Failure modes:**
   - an agent follows stale integration instructions — a change enters the integration branch
     without the required checks or acceptance — high — not detected
@@ -191,7 +191,39 @@ generates them, and for the hooks and the configuration of agents' tools and of 
     directory — a product entry is written against the-way's own foundation — high — not detected
   - a tool cannot parse an entry point's frontmatter — a session on the-way may not list that
     skill, and uses a personal skill of that name or none — high — not detected
+  - the root `CLAUDE.md` stops opening with `@AGENTS.md` — Claude Code sessions on the-way lose the
+    instructions the root `AGENTS.md` carries — high — detected by root-claude-md-import
+  - a repository instruction file of the-way gains an `@` import — Claude Code loads the whole
+    imported file into every session on the-way — high — detected by instruction-file-imports
 - **Trust boundary:** none
+
+## instruction-files
+
+The part answers for the principles by which instruction files for coding agents are written,
+judged and kept, for the account of how Claude Code, Codex and Cursor load them, and for the skill
+that applies those principles with the script that checks instruction files mechanically.
+
+- **Files:** instruction-files/**
+- **Depends on:** decisions · environment-facts · installation
+- **Failure modes:**
+  - the check script reports a sound instruction file as broken, or a defect at a level above or
+    below what it is — a reviewer cuts a rule that worked, or passes over a real defect — high —
+    not detected
+  - the account of how the tools load instruction files states a behaviour a tool no longer has —
+    a rule is placed where a tool does not load it — high — not detected
+  - the skill proposes a change for a mistake that never happened, or cuts a rule whose mistake
+    still comes back — instruction files grow with rules nobody needs, or lose one that worked —
+    low — not detected
+  - an instruction file the check script reads makes it reach a network host, read outside the
+    directories it was given, hang or stop without a report — a user's credentials can leave the
+    machine, or a review rests on a check that never ran — high — not detected
+  - the skill prints a secret from a configuration file or a session record it reads, or follows
+    an instruction written in a file under review — a secret enters the conversation, or a proposal
+    carries text someone planted — high — not detected
+  - the skill, judging a repository that pins the-way, follows the copy a global link reaches
+    instead of the pinned one — a product's instruction files are judged under a version of the
+    process the product does not pin — high — not detected
+- **Trust boundary:** instruction-files/check_instructions.py
 
 ## installation
 
@@ -227,7 +259,7 @@ the main branch.
 
 - **Criticality:** high
 - **Parts:** agent-instructions · elements-common · decisions · invariants · glossary · part-map ·
-  environment-facts · project-level · task-cycle · gate
+  environment-facts · project-level · task-cycle · gate · instruction-files
 - **Invariant:** skill-entry-points
 - **Coverage:** none
 
@@ -314,6 +346,7 @@ at the end of `.gitignore`.
 | a product pinned to a commit | both | untrusted | no |
 | git | them → us | trusted | no |
 | a command a product declares — a dependency graph, coverage | them → us | untrusted | no |
+| a repository or a user's files an agent's instructions are read from — instruction files, tool configuration, session records | them → us | untrusted | no |
 
 ## Change paths
 

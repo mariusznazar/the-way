@@ -75,11 +75,15 @@ instead of the rule being weakened.
 - `agent-instructions/`, with `AGENTS.md` and `CLAUDE.md` at the root and the skill entry points in
   `.claude/skills/` and `.agents/skills/` — instructions for agents working on the-way itself, and
   the script that generates those entry points.
+- `instruction-files/` — the principles by which instruction files for coding agents are written,
+  judged and kept, how Claude Code, Codex and Cursor load them, the skill that applies them, and
+  the script that checks instruction files.
 
 ## Using the skills
 
 Each element's `skill/` directory, `elements/common/skill/` and `elements/common/critique/`, the
-project level's skill directories and `task-cycle/skill/` hold one skill, named in its `SKILL.md`.
+project level's skill directories, `task-cycle/skill/` and `instruction-files/` hold one skill,
+named in its `SKILL.md`.
 
 A Claude Code or Codex session working in a checkout or worktree of the-way finds each of them as
 the project skill `the-way-<name>`: `.claude/skills/` holds the entry points Claude Code reads and
