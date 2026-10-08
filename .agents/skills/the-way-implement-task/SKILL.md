@@ -1,6 +1,6 @@
 ---
 name: the-way-implement-task
-description: Use to take one ready the-way task through autonomous design, planning, implementation, testing, review and a pull or merge request, or to apply review corrections to its open request. Requires subagents and the Superpowers skills named by this process. The human reviews the request, not intermediate steps. Use this checkout's own the-way.
+description: Use to take one ready the-way task to a reviewable pull or merge request — through autonomous design, planning, implementation, testing and review, or, for a small task that leaves the foundation unchanged, through one agent's implementation, the same checks and one review — or to apply review corrections to its open request. Requires subagents and the Superpowers skills named by this process. The human reviews the request, not intermediate steps. Use this checkout's own the-way.
 ---
 
 # the-way-implement-task
