@@ -728,10 +728,10 @@ precedence can be recorded between them.
 
 ### WAY-27/1 — Where may this repository point for its reasoning?
 
-Nothing in this repository points to a source outside it that its readers cannot reach, except the
-place of its tasks that the `## Backlog` section of its root `AGENTS.md` names: every entry carries
-its whole reasoning, and what is seen only in such a source is described in the entry instead of
-being pointed to.
+Nothing in this repository points to a source outside it that its readers cannot reach: every
+entry carries its whole reasoning, and what is seen only in such a source is described in the
+entry instead of being pointed to. The one exception is the place of its tasks, named in the
+`## Backlog` section of its root `AGENTS.md` and nowhere else.
 
 - **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, relation-model,
@@ -743,8 +743,9 @@ being pointed to.
   - complies: a decision quotes a public study with its address; a pattern seen in a product
     outside the repository is described in the rationale, without a pointer to it; the-way's root
     `AGENTS.md` names, in `## Backlog`, the private note where its tasks are kept;
-  - violates: *Origin* points to a private note; a rationale rests on "as in our other product"
-    without saying what was seen.
+  - violates: *Origin* points to a private note; an entry's *Origin* points to a task's
+    description in the private notes; a rationale rests on "as in our other product" without
+    saying what was seen.
 - **Review when:** none
 - **Origin:** none
 - **Approved by:** Mariusz, merge of <request link>
@@ -752,7 +753,8 @@ being pointed to.
 *Rationale:* a pointer to a source the reader cannot open is a dead end, leaving a claim nobody
 can check; what was seen there, written down, can at least be judged, and WAY-17 still has a fact
 to name. A backlog place is where work is kept, not reasoning an entry rests on, and WAY-107 sends
-an agent there.
+an agent there; named in that one section, it stays a place to find work and never becomes a
+source an entry points to.
 *Rejected:* *Origin* pointing to the notes where the reasoning was worked out — no reader can open
 them.
 
@@ -3683,5 +3685,5 @@ generated files would belong to `installation`, outside that part's directory, a
 boundary would grow; entry points written per checkout and ignored by git — a fresh worktree or
 cloud session has none until someone writes them; global links, one per worktree, or links tracked
 by git — a global link reads one checkout whatever branch the session works on, and tracked links
-need a git setting and extra rights on Windows; names without the prefix — in Claude Code a personal
-skill wins over a project skill of the same name.
+need a git setting and extra rights on Windows; names without the prefix — which skill a session
+gets would rest on how Claude Code and Codex settle two skills of one name.

@@ -466,11 +466,11 @@ No two decisions in the decision log name each other as `narrows` in their lates
 
 ## outbound-link-reach/1
 
-No file git tracks contains a link into a repository that a reader not signed in to its host cannot open, or into a private note collection other than to the place of tasks that the `## Backlog` section of the root `AGENTS.md` names.
+No file git tracks contains a link into a repository that a reader not signed in to its host cannot open, or into a private note collection, other than a link in the `## Backlog` section of the root `AGENTS.md` to the place of the repository's tasks.
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-27@0b40467e
+- **Derives from:** WAY-27@fb27e458
 - **Part:** every
 - **Correction:** none
 
