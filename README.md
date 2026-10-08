@@ -70,7 +70,8 @@ instead of the rule being weakened.
 - `project-level/` — defines a project, settles its technology, and refines its tasks before their
   implementation cycles.
 - `task-cycle/` — orchestrates one ready task through design, implementation, checks, reviews and
-  a request for human review; it keeps the cycle record on the task branch.
+  a request for human review; it keeps the cycle record on the task branch, with the time, models
+  and tokens of each stage counted from the agents' session transcripts.
 - `agent-instructions/`, with `AGENTS.md` and `CLAUDE.md` at the root and the skill entry points in
   `.claude/skills/` and `.agents/skills/` — instructions for agents working on the-way itself, and
   the script that generates those entry points.
