@@ -225,5 +225,20 @@ class Writing(unittest.TestCase):
                          b"old\n")
 
 
+class TrackedEntryPoints(unittest.TestCase):
+    def test_the_tracked_entry_points_are_what_the_generator_produces(self) -> None:
+        skills = generator.discover(ROOT)
+        produced = generator.produce(skills)
+        listed = subprocess.run(["git", "-C", str(ROOT), "ls-files", "-z", "--", ".claude/skills",
+                                 ".agents/skills"], check=True, capture_output=True).stdout
+        tracked = sorted(path for path in listed.decode("utf-8").split("\0") if path)
+        self.assertEqual(tracked, sorted(produced),
+                         "run python -B agent-instructions/skill_entry_points.py --write and "
+                         "commit what it writes")
+        for path, text in produced.items():
+            self.assertEqual((ROOT / path).read_bytes(), text.encode("utf-8"), path)
+        self.assertEqual(generator.orphans(ROOT, skills), [])
+
+
 if __name__ == "__main__":
     unittest.main()
