@@ -146,7 +146,7 @@ A value is read off when it is what a tool gives from the product or the machine
 
 ## repository instruction file
 
-A repository instruction file is an instruction file for coding agents that a repository's git tracks as an `AGENTS.md` or a `CLAUDE.md`, or as a Markdown file its root `AGENTS.md` or `CLAUDE.md` names by its path.
+A repository instruction file is an instruction file for coding agents that a repository's git tracks under the name `AGENTS.md`, `CLAUDE.md` or `CLAUDE.local.md` in any of its directories, `.claude/` among them, or as a Markdown file its root `AGENTS.md` or `CLAUDE.md` names by its path.
 
 - **Avoid:** none
 - **Not:** none

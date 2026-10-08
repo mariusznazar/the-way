@@ -204,13 +204,13 @@ judged and kept, for the account of how Claude Code, Codex and Cursor load them,
 that applies those principles with the script that checks instruction files mechanically.
 
 - **Files:** instruction-files/**
-- **Depends on:** decisions · environment-facts
+- **Depends on:** decisions · environment-facts · installation
 - **Failure modes:**
   - the check script reports a sound instruction file as broken, or a defect at a level above or
-    below what it is — a reviewer cuts a rule that worked, or passes over a real defect — low —
+    below what it is — a reviewer cuts a rule that worked, or passes over a real defect — high —
     not detected
   - the account of how the tools load instruction files states a behaviour a tool no longer has —
-    a rule is placed where a tool does not load it — low — not detected
+    a rule is placed where a tool does not load it — high — not detected
   - the skill proposes a change for a mistake that never happened, or cuts a rule whose mistake
     still comes back — instruction files grow with rules nobody needs, or lose one that worked —
     low — not detected

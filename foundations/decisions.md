@@ -3917,8 +3917,10 @@ What the installer writes in a product answers to the installer's own surface an
 this decision.
 *Rejected:* a full file for Claude Code beside the shared one — two copies that drift; relying on
 Claude Code reading the shared file by itself — a file of its own, added later by hand or by a tool,
-turns that reading off, and the only sign, the notice an interactive session gives that it read the
-shared file, stops appearing without a word.
+turns that reading off, and some sessions cannot read the shared file at all, for which Claude
+Code's documentation advises importing it from a file of its own; a file of its own that is a link
+to the shared one — Claude Code's documentation advises the import instead wherever someone who
+clones the repository works on Windows.
 
 ### WAY-133/1 — How is a rule of an instruction file kept when it has to hold every time?
 
