@@ -1,5 +1,0 @@
-INFO  size C:/Users/Mariusz/.claude/CLAUDE.md:0 220 lines, 3824 words
-INFO  dead-path C:/Users/Mariusz/.claude/CLAUDE.md:46 `references\` is a name relative to a place the sentence gives, and does not resolve from the file, the repository or the home directory
-INFO  dead-path C:/Users/Mariusz/.claude/CLAUDE.md:46 `full_template.md` is a name relative to a place the sentence gives, and does not resolve from the file, the repository or the home directory
-INFO  dead-path C:/Users/Mariusz/.claude/CLAUDE.md:46 `mini_template.md` is a name relative to a place the sentence gives, and does not resolve from the file, the repository or the home directory
-0 error, 0 warn, 4 info

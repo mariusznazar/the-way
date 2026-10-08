@@ -1,4 +1,0 @@
-MK-ROOT-7000
-MK-OUTER-7001
-# Repository file
-# Outer file

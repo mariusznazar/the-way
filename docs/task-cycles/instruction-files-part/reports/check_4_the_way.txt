@@ -1,5 +1,0 @@
-WARN  dead-path AGENTS.md:20 `_zadania\` does not exist
-INFO  skill-dir .claude/skills:0 12 skills in .claude/skills have no pointer in AGENTS.md; Codex does not read .claude/skills, so point to the SKILL.md of each one Codex needs
-INFO  size AGENTS.md:0 21 lines, 187 words
-INFO  size CLAUDE.md:0 1 lines, 1 words
-0 error, 1 warn, 3 info
