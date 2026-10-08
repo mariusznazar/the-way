@@ -1,31 +1,51 @@
 """Tests of the mechanical checks of instruction files: each check fires on a repository broken on
-purpose and stays silent on a sound one.
+purpose and stays silent on a sound one, and crafted input neither reaches past the files given
+nor stops the run.
 
-Run from the root of the-way:
-    python -B -m unittest discover -s instruction-files -p "test_*.py"
+Every fixture is built in a temporary directory, and the home directory is an empty temporary
+one, so no file of this repository or of the machine takes part.
+
+Run from the root of the-way: python -B gate/run_tests.py instruction-files
 """
 
+import contextlib
+import io
 import os
+import stat
 import sys
 import tempfile
 import unittest
+from unittest import mock
 
 sys.dont_write_bytecode = True
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import check_instructions  # noqa: E402
 
+SKILL = "---\nname: x\ndescription: Use for x.\n---\n"
+DEFECTS = "Read `docs/gone.md`.\n\nIMPORTANT: a.\nIMPORTANT: b.\n"
+
+
+def write(base, rel, content):
+    path = os.path.join(base, *rel.split("/"))
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    data = content if isinstance(content, bytes) else content.encode("utf-8")
+    with open(path, "wb") as handle:
+        handle.write(data)
+
 
 class Repo:
-    """A temporary repository whose files are given as {relative path: text}."""
+    """A temporary repository at `<temporary directory>/repo`, its files given as {relative path:
+    text or bytes}; the OUTSIDE files are written beside it, in the temporary directory."""
 
-    def __init__(self, files):
+    def __init__(self, files, outside=None):
         self._dir = tempfile.TemporaryDirectory()
-        self.root = self._dir.name
-        for rel, text in files.items():
-            path = os.path.join(self.root, *rel.split("/"))
-            os.makedirs(os.path.dirname(path), exist_ok=True)
-            with open(path, "w", encoding="utf-8", newline="\n") as handle:
-                handle.write(text)
+        self.base = self._dir.name
+        self.root = os.path.join(self.base, "repo")
+        os.makedirs(self.root)
+        for rel, content in files.items():
+            write(self.root, rel, content)
+        for rel, content in (outside or {}).items():
+            write(self.base, rel, content)
 
     def findings(self, extra=()):
         return check_instructions.check(self.root, [os.path.join(self.root, e) for e in extra])
@@ -38,9 +58,46 @@ def checks(findings, level=None):
     return sorted({f.check for f in findings if level is None or f.level == level})
 
 
+def dead(findings):
+    return [f for f in findings if f.check == "dead-path"]
+
+
+def run_main(arguments):
+    out, err = io.StringIO(), io.StringIO()
+    with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
+        code = check_instructions.main(arguments)
+    return code, out.getvalue(), err.getvalue()
+
+
+def make_file_link(test, target, link):
+    try:
+        os.symlink(target, link)
+    except (OSError, NotImplementedError) as error:
+        test.skipTest(f"a file link cannot be made here: {error}")
+
+
+def make_directory_link(test, target, link):
+    try:
+        if sys.platform == "win32":
+            import _winapi
+            _winapi.CreateJunction(target, link)
+        else:
+            os.symlink(target, link, target_is_directory=True)
+    except (OSError, NotImplementedError) as error:
+        test.skipTest(f"a directory link cannot be made here: {error}")
+
+
 class CheckTestCase(unittest.TestCase):
-    def repo(self, files):
-        repo = Repo(files)
+    def setUp(self):
+        home = tempfile.TemporaryDirectory()
+        self.addCleanup(home.cleanup)
+        self.home = home.name
+        patcher = mock.patch.dict(os.environ, {"HOME": self.home, "USERPROFILE": self.home})
+        patcher.start()
+        self.addCleanup(patcher.stop)
+
+    def repo(self, files, outside=None):
+        repo = Repo(files, outside)
         self.addCleanup(repo.close)
         return repo
 
@@ -70,7 +127,7 @@ class AtImport(CheckTestCase):
 class DeadPath(CheckTestCase):
     def test_missing_path_in_backticks_is_reported(self):
         repo = self.repo({"AGENTS.md": "Before releasing, read `docs/release.md`.\n"})
-        found = [f for f in repo.findings() if f.check == "dead-path"]
+        found = dead(repo.findings())
         self.assertEqual(len(found), 1)
         self.assertIn("docs/release.md", found[0].message)
 
@@ -152,14 +209,14 @@ class NestedAgents(CheckTestCase):
 
 class Skills(CheckTestCase):
     def test_skill_only_in_agents_skills_is_invisible_to_claude_code(self):
-        repo = self.repo({".agents/skills/x/SKILL.md": "---\nname: x\n---\n"})
+        repo = self.repo({".agents/skills/x/SKILL.md": SKILL})
         self.assertIn("skill-dir", checks(repo.findings(), "warn"))
 
     def test_skills_in_claude_skills_without_pointer_get_one_note_for_codex(self):
         repo = self.repo({
             "AGENTS.md": "Rules.\n",
-            ".claude/skills/x/SKILL.md": "---\nname: x\n---\n",
-            ".claude/skills/y/SKILL.md": "---\nname: y\n---\n",
+            ".claude/skills/x/SKILL.md": SKILL,
+            ".claude/skills/y/SKILL.md": SKILL,
         })
         found = [f for f in repo.findings() if f.check == "skill-dir"]
         self.assertEqual([f.level for f in found], ["info"])
@@ -168,7 +225,7 @@ class Skills(CheckTestCase):
     def test_skill_pointed_to_from_agents_md_is_sound(self):
         repo = self.repo({
             "AGENTS.md": "Releases follow `.claude/skills/x/SKILL.md`.\n",
-            ".claude/skills/x/SKILL.md": "---\nname: x\n---\n",
+            ".claude/skills/x/SKILL.md": SKILL,
         })
         self.assertNotIn("skill-dir", checks(repo.findings()))
 
@@ -215,6 +272,174 @@ class Discovery(CheckTestCase):
         repo = self.repo({"AGENTS.md": "IMPORTANT: a.\nIMPORTANT: b.\n", "g/CLAUDE.md": "x\n"})
         found = check_instructions.check(None, [os.path.join(repo.root, "g/CLAUDE.md")])
         self.assertEqual([f.check for f in found], ["size"])
+
+
+class Links(CheckTestCase):
+    def test_a_directory_link_or_junction_is_not_followed(self):
+        repo = self.repo({"AGENTS.md": "Rules.\n"}, outside={"elsewhere/AGENTS.md": DEFECTS})
+        make_directory_link(self, os.path.join(repo.base, "elsewhere"),
+                            os.path.join(repo.root, "linked"))
+        make_directory_link(self, repo.root, os.path.join(repo.root, "loop"))
+        found = sorted((f.level, f.check, f.file, f.message) for f in repo.findings()
+                       if f.file != "AGENTS.md")
+        self.assertEqual(found, [("info", "walk", "linked", "a link to a directory, not followed"),
+                                 ("info", "walk", "loop", "a link to a directory, not followed")])
+
+    def test_a_file_link_out_of_the_repository_is_neither_read_nor_listed(self):
+        repo = self.repo({}, outside={"secret.md": "Read `MARKER-SECRET-9/x.md`.\n"})
+        make_file_link(self, os.path.join(repo.base, "secret.md"), os.path.join(repo.root, "AGENTS.md"))
+        self.assertEqual([(f.level, f.check, f.file, f.message) for f in repo.findings()],
+                         [("info", "read", "AGENTS.md", "a link out of the repository, not read")])
+        code, out, _ = run_main([repo.root])
+        self.assertEqual(code, 0)
+        self.assertNotIn("MARKER-SECRET-9", out)
+
+    def test_a_file_given_with_file_is_read_through_its_link(self):
+        repo = self.repo({}, outside={"global.md": "IMPORTANT: a.\nIMPORTANT: b.\n"})
+        link = os.path.join(repo.base, "link.md")
+        make_file_link(self, os.path.join(repo.base, "global.md"), link)
+        self.assertIn("emphasis", checks(check_instructions.check(None, [link]), "warn"))
+
+
+class LargeAndOddFiles(CheckTestCase):
+    def test_only_the_first_mebibyte_is_read(self):
+        repo = self.repo({"AGENTS.md": "word\n" * (check_instructions.MAX_BYTES // 5 + 100)})
+        found = repo.findings()
+        self.assertIn(("info", "read", "only the first 1048576 bytes were checked"),
+                      [(f.level, f.check, f.message) for f in found])
+        lines = check_instructions.MAX_BYTES // 5 + 1
+        self.assertIn(f"{lines} lines, {lines} words", [f.message for f in found if f.check == "size"])
+
+    def test_a_file_that_is_not_regular_is_not_opened(self):
+        repo = self.repo({"AGENTS.md": "Rules.\n", "CLAUDE.md": "@AGENTS.md\n"})
+        target = os.path.join(repo.root, "AGENTS.md")
+        real_stat, real_open = os.stat, open
+
+        def device_stat(path, *args, **kwargs):
+            if os.fspath(path) == target:
+                return os.stat_result((stat.S_IFCHR | 0o644,) + (0,) * 9)
+            return real_stat(path, *args, **kwargs)
+
+        def no_open(path, *args, **kwargs):
+            if os.fspath(path) == target:
+                self.fail("a file that is not regular was opened")
+            return real_open(path, *args, **kwargs)
+
+        with mock.patch("os.stat", device_stat), mock.patch("builtins.open", no_open):
+            found = repo.findings()
+        self.assertIn(("warn", "read", "AGENTS.md", "cannot be read: it is not a regular file"),
+                      [(f.level, f.check, f.file, f.message) for f in found])
+
+    @unittest.skipUnless(hasattr(os, "mkfifo"), "no FIFO on this platform")
+    def test_a_fifo_named_like_an_instruction_file_does_not_stop_the_run(self):
+        repo = self.repo({"CLAUDE.md": "@AGENTS.md\n"})
+        os.mkfifo(os.path.join(repo.root, "AGENTS.md"))
+        found = repo.findings()
+        self.assertIn(("warn", "read", "AGENTS.md"), [(f.level, f.check, f.file) for f in found])
+
+    def test_a_utf8_byte_order_mark_is_stripped_before_every_check(self):
+        repo = self.repo({".cursor/rules/a.mdc": "﻿---\nalwaysApply: true\n---\nRule.\n",
+                          "CLAUDE.md": "﻿@AGENTS.md\n", "AGENTS.md": "Rules.\n"})
+        self.assertEqual(checks(repo.findings(), "error") + checks(repo.findings(), "warn"), [])
+
+    def test_a_character_cut_at_the_limit_does_not_make_the_text_invalid(self):
+        data = b"a" * (check_instructions.MAX_BYTES - 1) + "ż\n".encode("utf-8")
+        repo = self.repo({"AGENTS.md": data})
+        found = [(f.level, f.check, f.message) for f in repo.findings()]
+        self.assertIn(("info", "read", "only the first 1048576 bytes were checked"), found)
+        self.assertNotIn(("warn", "read", "not UTF-8 text; its content was not checked"), found)
+
+    def test_text_that_is_not_utf8_is_reported_and_its_content_not_checked(self):
+        text = "Read `gone/x.md`. IMPORTANT: a.\nIMPORTANT: b.\n"
+        for label, data in (("utf-16", text.encode("utf-16")), ("utf-32", text.encode("utf-32")),
+                            ("invalid", b"Read \xc3\x28 `gone/x.md`.\n")):
+            with self.subTest(label):
+                repo = self.repo({"CLAUDE.md": data})
+                found = repo.findings()
+                self.assertEqual([(f.level, f.check, f.message) for f in found],
+                                 [("warn", "read", "not UTF-8 text; its content was not checked")])
+
+
+class PrintedValues(CheckTestCase):
+    def test_control_and_bidirectional_characters_are_escaped_and_long_values_cut(self):
+        token = "gone‮\x07/x.md"
+        long_token = "a/" * 150 + "x.md"
+        repo = self.repo({"AGENTS.md": f"Read `{token}` and `{long_token}`.\n",
+                          "odd‮dir/AGENTS.md": "Rules.\n"})
+        code, out, _ = run_main([repo.root])
+        self.assertEqual(code, 0)
+        self.assertNotIn("‮", out)
+        self.assertNotIn("\x07", out)
+        self.assertIn("gone\\u202e\\x07/x.md", out)
+        self.assertIn("odd\\u202edir/AGENTS.md", out)
+        self.assertIn(long_token[:199] + "…", out)
+        self.assertNotIn(long_token, out)
+
+
+class UnreadableFiles(CheckTestCase):
+    def test_a_directory_named_agents_md_is_reported_and_the_run_goes_on(self):
+        repo = self.repo({"CLAUDE.md": "Rules.\n", "AGENTS.md/x.txt": "x\n"})
+        found = [(f.level, f.check, f.file, f.message) for f in repo.findings()]
+        self.assertIn(("warn", "read", "AGENTS.md", "cannot be read: it is a directory"), found)
+        self.assertIn(("info", "size", "CLAUDE.md", "1 lines, 1 words"), found)
+
+    def test_a_broken_link_is_reported(self):
+        repo = self.repo({"CLAUDE.md": "Rules.\n"})
+        make_file_link(self, os.path.join(repo.root, "missing.md"), os.path.join(repo.root, "AGENTS.md"))
+        found = [(f.level, f.check, f.file) for f in repo.findings()]
+        self.assertIn(("warn", "read", "AGENTS.md"), found)
+
+    def test_a_file_without_permission_is_reported(self):
+        repo = self.repo({"AGENTS.md": "Rules.\n", "CLAUDE.md": "@AGENTS.md\n"})
+        target = os.path.join(repo.root, "AGENTS.md")
+        real_open = open
+
+        def refuse(path, *args, **kwargs):
+            if os.fspath(path) == target:
+                raise PermissionError(13, "Permission denied", target)
+            return real_open(path, *args, **kwargs)
+
+        with mock.patch("builtins.open", refuse):
+            found = [(f.level, f.check, f.file, f.message) for f in repo.findings()]
+        self.assertIn(("warn", "read", "AGENTS.md", "cannot be read: Permission denied"), found)
+
+    def test_a_file_gone_mid_run_is_reported_and_the_run_goes_on(self):
+        repo = self.repo({"AGENTS.md": "Rules.\n"})
+        with mock.patch.object(check_instructions, "instruction_files",
+                               return_value=["AGENTS.md", "gone/AGENTS.md"]):
+            found = [(f.level, f.check, f.file) for f in repo.findings()]
+        self.assertIn(("warn", "read", "gone/AGENTS.md"), found)
+        self.assertIn(("info", "size", "AGENTS.md"), found)
+
+    def test_a_directory_that_cannot_be_listed_is_reported(self):
+        repo = self.repo({"AGENTS.md": "Rules.\n", "locked/AGENTS.md": "x\n"})
+        real_scandir = os.scandir
+
+        def refuse(path="."):
+            if os.path.basename(os.fspath(path)) == "locked":
+                raise PermissionError(13, "Permission denied", os.fspath(path))
+            return real_scandir(path)
+
+        with mock.patch("os.scandir", refuse):
+            found = [(f.level, f.check, f.file) for f in repo.findings()]
+        self.assertIn(("info", "walk", "locked"), found)
+        self.assertNotIn("locked/AGENTS.md", [file for _, _, file in found])
+
+
+class CommandLine(CheckTestCase):
+    def test_a_root_that_is_not_a_directory_exits_with_2(self):
+        repo = self.repo({"AGENTS.md": "Rules.\n"})
+        code, out, err = run_main([os.path.join(repo.root, "AGENTS.md")])
+        self.assertEqual((code, out), (2, ""))
+        self.assertIn("ROOT is not a directory", err)
+
+    def test_a_file_that_is_not_a_readable_regular_file_exits_with_2(self):
+        repo = self.repo({"AGENTS.md": "Rules.\n"})
+        for path in (repo.root, os.path.join(repo.root, "missing.md")):
+            with self.subTest(path=path):
+                code, out, err = run_main(["--file", path])
+                self.assertEqual((code, out), (2, ""))
+                self.assertTrue(err.startswith("Error: --file"))
 
 
 if __name__ == "__main__":
