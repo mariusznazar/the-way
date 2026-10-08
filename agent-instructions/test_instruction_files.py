@@ -1,10 +1,10 @@
 """Tests of the invariants `instruction-file-imports` and `root-claude-md-import`.
 
 A session that opens a repository of the-way reads its repository instruction files: every
-`AGENTS.md` and `CLAUDE.md` git tracks, and the Markdown files the root `AGENTS.md` or `CLAUDE.md`
-names by its path. None of them may hold an `@` a tool would take for an import of another file,
-save the one line that makes the root `CLAUDE.md` load the root `AGENTS.md`; and where git tracks a
-root `CLAUDE.md`, its text begins with that line.
+`AGENTS.md`, `CLAUDE.md` and `CLAUDE.local.md` git tracks, in whatever directory, and the Markdown
+files the root `AGENTS.md` or `CLAUDE.md` names by its path. None of them may hold an `@` a tool
+would take for an import of another file, save the one line that makes the root `CLAUDE.md` load
+the root `AGENTS.md`; and where git tracks a root `CLAUDE.md`, its text begins with that line.
 
 Every value the tests expect is written out below, taken from the sentences of the two invariants.
 The file imports nothing from `instruction-files/` and nothing from
@@ -30,13 +30,13 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # The values the sentence of `instruction-file-imports/1` and the glossary entry
 # `repository instruction file` name.
-INSTRUCTION_NAMES = ("AGENTS.md", "CLAUDE.md")
+INSTRUCTION_NAMES = ("AGENTS.md", "CLAUDE.md", "CLAUDE.local.md")
+# The root files whose text names further instruction files.
+NAMING_FILES = ("AGENTS.md", "CLAUDE.md")
 MARKDOWN_ENDINGS = (".md", ".markdown")
 # The characters, besides the start of a line and whitespace, that may stand right before a
-# counted `@`.
+# counted `@`; a counted `@` is followed by a character other than whitespace.
 BEFORE_AT = ("(", "[", "{", '"', "'", "“", "‘", "„")
-# What must follow a counted `@` somewhere before the next whitespace.
-AFTER_AT = (".", "/")
 # The characters, besides an ASCII letter or digit, that keep a path from naming its file when
 # they stand right before it.
 NOT_BEFORE_PATH = (".", "-", "_", "/", "\\")
@@ -81,13 +81,13 @@ def names(text, path):
 
 
 def population(root):
-    """The repository instruction files of the repository at `root`: every tracked `AGENTS.md`
-    and `CLAUDE.md`, and every tracked Markdown file the root `AGENTS.md` or `CLAUDE.md` names by
-    its path."""
+    """The repository instruction files of the repository at `root`: every tracked `AGENTS.md`,
+    `CLAUDE.md` and `CLAUDE.local.md` in any directory, and every tracked Markdown file the root
+    `AGENTS.md` or `CLAUDE.md` names by its path."""
     files = tracked(root)
     found = {path for path in files if path.split("/")[-1] in INSTRUCTION_NAMES}
     texts = []
-    for root_file in INSTRUCTION_NAMES:
+    for root_file in NAMING_FILES:
         if root_file in files:
             try:
                 texts.append(read(root, root_file).decode("utf-8", errors="replace"))
@@ -134,7 +134,8 @@ def fenced_lines(lines):
 def counted_ats(line):
     """The columns, from 0, of each `@` of `line` that the sentence counts, ignoring code spans
     and fences: one at the start of the line or right after whitespace or one of `BEFORE_AT`,
-    followed, before the next whitespace, by a `.` or a `/`."""
+    followed by a character other than whitespace. `line` holds no line break, so an `@` at its
+    end is followed by none."""
     masked = code_span_mask(line)
     columns = []
     for column, character in enumerate(line):
@@ -142,8 +143,7 @@ def counted_ats(line):
             continue
         if column > 0 and not (line[column - 1].isspace() or line[column - 1] in BEFORE_AT):
             continue
-        word = re.match(r"\S*", line[column + 1:]).group(0)
-        if any(mark in word for mark in AFTER_AT):
+        if column + 1 < len(line) and not line[column + 1].isspace():
             columns.append(column)
     return columns
 
@@ -219,35 +219,37 @@ def located(found):
 ROOT_AGENTS = "\n".join([
     "# Agents",                                                        # 1
     "See @docs/rules.md for the rules.",                               # 2 counted
-    "Mail a@example.com or ping @someone today.",                      # 3
-    "Inline `@docs/rules.md` and ``a ` @b.md`` stay quiet.",           # 4
+    "Mail a@example.com, x@letter -@dash _@under .@dot <@angle :@colon",  # 3
+    "Inline `@docs/rules.md` and ``a ` @b`` stay quiet.",              # 4
     "```",                                                             # 5
-    "@fenced.md",                                                      # 6
+    "@fenced",                                                         # 6
     "```",                                                             # 7
     "  ~~~",                                                           # 8
-    "@tilde.md",                                                       # 9
+    "@tilde",                                                          # 9
     "~~~",                                                             # 10
-    "(@p.md) [@b.md] {@c.md} \"@d.md\" '@e.md' “@f.md” ‘@g.md’ „@h.md",
-    "x@letter.md -@dash.md @@twice @nothing here",                     # 12
-    "@./relative",                                                     # 13 counted
-    "Unclosed ` @open.md here",                                        # 14 counted
-    "Across ``lines @split.md",                                        # 15 counted
-    "end`` of it.",                                                    # 16
-    "\t```",                                                           # 17 no fence
-    "@tabbed.md",                                                      # 18 counted
-    "\t```",                                                           # 19
-    "    ```",                                                         # 20
-    "@deep.md",                                                        # 21
-    "```",                                                             # 22
-    "```",                                                             # 23
-    "@mixed.md",                                                       # 24
-    "~~~",                                                             # 25
-    "@after.md",                                                       # 26 counted
-    "@AGENTS.md",                                                      # 27 counted
-    "Rules: [linked](docs/linked.md), docs/untracked.md, docs/notes.txt.",
+    "(@p) [@b] {@c} \"@d\" '@e' “@f” ‘@g’ „@h",  # 11 eight counted
+    "Ping @someone today.",                                            # 12 counted
+    "@@twice",                                                         # 13 one counted
+    "A line ending in @",                                              # 14
+    "An @ alone, a (@ before a space and an @\tbefore a tab",          # 15
+    "Unclosed ` @open here",                                           # 16 counted
+    "Across ``lines @split",                                           # 17 counted
+    "end`` of it.",                                                    # 18
+    "\t```",                                                           # 19 no fence
+    "@tabbed",                                                         # 20 counted
+    "\t```",                                                           # 21
+    "    ```",                                                         # 22
+    "@deep",                                                           # 23
+    "```",                                                             # 24
+    "```",                                                             # 25
+    "@mixed",                                                          # 26
+    "~~~",                                                             # 27
+    "@after",                                                          # 28 counted
+    "@AGENTS.md",                                                      # 29 counted
+    "Rules: [linked](docs/linked.md), docs/untracked.md, docs/notes.txt.",  # 30
     "Not named: xdocs/l1.md 9docs/l2.md .docs/l3.md -docs/l4.md _docs/l5.md /docs/l6.md "
-    "\\docs\\l7.md",
-    "Named: łdocs/accent.md",                                     # 30
+    "\\docs\\l7.md",                                                   # 31
+    "Named: łdocs/accent.md",                                     # 32
     "",
 ])
 
@@ -256,40 +258,47 @@ ROOT_CLAUDE_TEXT = "@AGENTS.md\n@AGENTS.md\nAlso docs\\other.markdown, docs/unna
 IMPORT_FIXTURE = {
     "AGENTS.md": ROOT_AGENTS,
     "CLAUDE.md": ROOT_CLAUDE_TEXT,
-    "docs/rules.md": "Rule one.\n@named.md\n",
-    "docs/linked.md": "(@linked.md)\n",
-    "docs/other.markdown": "Text @other.md\n",
-    "docs/accent.md": "@accent.md\n",
-    "docs/l1.md": "@l.md\n",
-    "docs/l2.md": "@l.md\n",
-    "docs/l3.md": "@l.md\n",
-    "docs/l4.md": "@l.md\n",
-    "docs/l5.md": "@l.md\n",
-    "docs/l6.md": "@l.md\n",
-    "docs/l7.md": "@l.md\n",
-    "docs/unnamed.md": "@unnamed.md\n",
-    "docs/notes.txt": "@notes.md\n",
-    "docs/nested.md": "@nested.md\n",
+    "CLAUDE.local.md": "@AGENTS.md\nSee docs/localnamed.md.\n",
+    ".claude/CLAUDE.md": "Text.\n@dotclaude\n",
+    "sub/CLAUDE.local.md": "Text.\n[@sublocal]\n",
+    "docs/rules.md": "Rule one.\n@named\n",
+    "docs/linked.md": "(@linked)\nThe last line ends in @",
+    "docs/other.markdown": "Text @other\n",
+    "docs/accent.md": "@accent\n",
+    "docs/l1.md": "@l\n",
+    "docs/l2.md": "@l\n",
+    "docs/l3.md": "@l\n",
+    "docs/l4.md": "@l\n",
+    "docs/l5.md": "@l\n",
+    "docs/l6.md": "@l\n",
+    "docs/l7.md": "@l\n",
+    "docs/unnamed.md": "@unnamed\n",
+    "docs/localnamed.md": "@localnamed\n",
+    "docs/notes.txt": "@notes\n",
+    "docs/nested.md": "@nested\n",
     "sub/CLAUDE.md": "@AGENTS.md\n",
-    "pkg/AGENTS.md": "Read docs/nested.md first.\nThen @x/y and `@z.md`.\n",
+    "pkg/AGENTS.md": "Read docs/nested.md first.\nThen @x and `@z`.\n",
 }
 
 IMPORT_UNTRACKED = {
-    "docs/untracked.md": "@untracked.md\n",
-    "extra/AGENTS.md": "@extra.md\n",
+    "docs/untracked.md": "@untracked\n",
+    "extra/AGENTS.md": "@extra\n",
+    "extra/CLAUDE.local.md": "@extralocal\n",
 }
 
 IMPORT_POPULATION = [
-    "AGENTS.md", "CLAUDE.md", "docs/accent.md", "docs/linked.md", "docs/other.markdown",
-    "docs/rules.md", "pkg/AGENTS.md", "sub/CLAUDE.md",
+    ".claude/CLAUDE.md", "AGENTS.md", "CLAUDE.local.md", "CLAUDE.md", "docs/accent.md",
+    "docs/linked.md", "docs/other.markdown", "docs/rules.md", "pkg/AGENTS.md",
+    "sub/CLAUDE.local.md", "sub/CLAUDE.md",
 ]
 
 IMPORT_EXPECTED = Counter({
-    ("AGENTS.md", 2): 1, ("AGENTS.md", 11): 8, ("AGENTS.md", 13): 1, ("AGENTS.md", 14): 1,
-    ("AGENTS.md", 15): 1, ("AGENTS.md", 18): 1, ("AGENTS.md", 26): 1, ("AGENTS.md", 27): 1,
-    ("CLAUDE.md", 2): 1, ("docs/rules.md", 2): 1, ("docs/linked.md", 1): 1,
-    ("docs/other.markdown", 1): 1, ("docs/accent.md", 1): 1, ("sub/CLAUDE.md", 1): 1,
-    ("pkg/AGENTS.md", 2): 1,
+    ("AGENTS.md", 2): 1, ("AGENTS.md", 11): 8, ("AGENTS.md", 12): 1, ("AGENTS.md", 13): 1,
+    ("AGENTS.md", 16): 1, ("AGENTS.md", 17): 1, ("AGENTS.md", 20): 1, ("AGENTS.md", 28): 1,
+    ("AGENTS.md", 29): 1, ("CLAUDE.md", 2): 1, ("CLAUDE.local.md", 1): 1,
+    (".claude/CLAUDE.md", 2): 1, ("sub/CLAUDE.local.md", 2): 1, ("docs/rules.md", 2): 1,
+    ("docs/linked.md", 1): 1, ("docs/other.markdown", 1): 1, ("docs/accent.md", 1): 1,
+    ("sub/CLAUDE.md", 1): 1, ("pkg/AGENTS.md", 2): 1,
 })
 
 
@@ -305,10 +314,6 @@ class InstructionFiles(unittest.TestCase):
 
     def test_the_root_claude_md_begins_with_the_import_of_agents_md(self):
         # invariant: root-claude-md-import/1
-        found_population = population(ROOT)
-        for path in CONTROL:
-            self.assertIn(path, found_population)
-        self.assertIn(ROOT_CLAUDE, tracked(ROOT))
         found = root_import_problems(ROOT)
         self.assertEqual(found, [], "the root `CLAUDE.md` of the-way does not begin with the "
                          "import of `AGENTS.md`:\n" + "\n".join(found))
@@ -318,7 +323,7 @@ class InstructionFiles(unittest.TestCase):
         kind it lets pass, and name, or fail to name, the files beside them."""
         with tempfile.TemporaryDirectory() as directory, clean_environment():
             build(directory, IMPORT_FIXTURE, IMPORT_UNTRACKED)
-            self.assertEqual(population(directory), IMPORT_POPULATION)
+            self.assertEqual(population(directory), sorted(IMPORT_POPULATION))
             found = import_problems(directory)
         report = "\n".join(found)
         self.assertEqual(len(found), sum(located(found).values()), report)
@@ -333,6 +338,7 @@ class InstructionFiles(unittest.TestCase):
             ("@AGENTS.md \nText.\n", [("CLAUDE.md", 1)]),
             ("@AGENTS.md and more\n", [("CLAUDE.md", 1)]),
             ("Text.\n@AGENTS.md\n", [("CLAUDE.md", 2)]),
+            ("@AGENTS.md\n@\n", []),
         )
         for text, expected in cases:
             with self.subTest(text=text), tempfile.TemporaryDirectory() as directory, \
@@ -361,6 +367,7 @@ class InstructionFiles(unittest.TestCase):
                 self.assertTrue(found[0].startswith("CLAUDE.md:"), found[0])
         nothing_required = (
             ({"AGENTS.md": "# Agents\n", "sub/CLAUDE.md": "Text.\n"}, {}),
+            ({"AGENTS.md": "# Agents\n", "CLAUDE.local.md": "Text.\n"}, {}),
             ({"AGENTS.md": "# Agents\n"}, {"CLAUDE.md": "Text.\n"}),
             ({}, {}),
         )
