@@ -3564,7 +3564,8 @@ and final code reviews, and preparing a pull or merge request, only for a ready 
 leaving the foundation unchanged and small enough for one agent to make from the task alone: that
 agent then makes it, test-first where it changes behaviour, and one final code review covers the
 whole change, while a change that proves too large for that agent, or whose touch of the foundation
-needs a choice the task leaves open, changes the meaning of an approved decision, contradicts a
+while that agent makes it needs a choice the task leaves open, changes the meaning of an approved
+decision, contradicts a
 current entry or writes or changes an invariant or an invariant test, is discarded and starts again
 from a fresh design given the agent's report without its code. The orchestrator answers workflow
 questions and gives provisional stage go-aheads under the task owner's delegation, never records
@@ -3596,7 +3597,8 @@ use.
     provisional choices in the request without claiming human approval; a task found small at its
     start, leaving the foundation unchanged, is made by one agent from the task, test-first where it
     changes behaviour, and its whole change gets one final code review; an attempt that grows too
-    large, or whose touch of the foundation writes an invariant, is discarded and the task starts
+    large, or whose touch of the foundation while the agent makes it writes an invariant, is
+    discarded and the task starts
     again from a fresh design that reads the agent's report;
   - violates: an agent treats its own spec approval as the owner's approval, skips the request
     review, or silently runs a different Superpowers version; a task found small at its start merges
