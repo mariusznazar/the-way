@@ -73,7 +73,9 @@ wrappers in `.claude/skills/the-way-*/SKILL.md` and `.agents/skills/the-way-*/SK
 `--apply`. It recreates the twenty-two wrappers and rule for the new commit and leaves the foundation files as
 they are. The block in `AGENTS.md` stays as it is unless the guidance text changed between the two
 commits; then the installer stops on the block, and the task removes it, markers included, before
-running the installer again.
+running the installer again. After the installer, run the format guard of every foundation file
+and the product's tests with the new pin, and name the result in the request; a pin move that
+changes no foundation file still changes the guards that judge them.
 
 ## Existing files and incomplete setup
 
