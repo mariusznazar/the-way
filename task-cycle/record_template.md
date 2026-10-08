@@ -7,6 +7,7 @@
 - Target branch and base: <branch and commit>
 - Task branch: <branch>
 - Foundation route: <unchanged | entry or invariant-test change; affected entries>
+- Cycle: <light | full | full after a switch from light>
 - Status: running | blocked | request open | complete
 
 ## Sharpness at start and after the final diff
@@ -17,6 +18,21 @@
 Unknown failure modes count as the highest criticality. Record the reason for each assessment,
 then recalculate from the final diff. An irreversible operation waits for the human's decision at
 the request; preparing reversible code for it does not authorize executing it.
+
+## Cycle
+
+- Choice at start: <light | full> — foundation: <unchanged | changed>; one agent's time to
+  implement: <estimate and reason | not assessed>; files read into context: <which, and their
+  size | not assessed>
+- Foundation touched on the light cycle: <entry, the ruling on whether the touch is simple and
+  obvious, and its reason | none>
+- Switch to the full cycle: <time, why the change outgrew the light cycle, the executor's report,
+  the discarded attempt's last commit and the files it changed | none>
+
+Record the reason for each finding assessed; once one finding fails, the rest may read `not
+assessed`. The last commit of a discarded attempt is a historical name, not a link to follow: the
+commit is reachable only until the reflog expires. A choice or ruling of a discarded attempt keeps
+its row in the questions table, with *Used by* naming the discarded attempt.
 
 ## Events
 
@@ -43,7 +59,8 @@ nothing else.
 | Kind | Path or commit | Author or agent | Review result |
 |---|---|---|---|
 
-Include the frozen task, `spec.md`, `plan.md`, code commits, tests and full agent reports. Name
+Include the frozen task, `spec.md` and `plan.md` on the full cycle, code commits, tests and full
+agent reports, the report of a discarded light-cycle attempt among them. Name
 commits and commit ranges instead of copying diffs or files that git holds. A foundation entry
 the cycle writes lives in its commits; the record keeps its meaning sentence for the request.
 
@@ -74,6 +91,7 @@ check is unchecked.
 ## Request handoff
 
 - Request URL and status: <URL and draft/ready/blocked>
+- Cycle and its reasons: <as the request states them>
 - What this request settles: <identifier and meaning sentence for each entry>
 - What the foundation puts in front of the human at the merge: <an invariant kept at its version
   under a correction, with its old and new sentence; a part whose computed criticality fell; a
