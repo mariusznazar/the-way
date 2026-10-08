@@ -282,7 +282,7 @@ their elements.
     reaches the main branch before the design of the task cycle sets what it holds.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/11
 
 *Rationale:* anything brought in on the side makes the repository a store of material; directories
 follow the parts, so a change's files name its part and decisions (WAY-21); an incomplete directory
@@ -3719,7 +3719,7 @@ itself.
     the-way with the copy its global link reaches.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/11
 
 *Rationale:* a session on the-way tries a change to a skill with the skill of its own branch, so a
 skill it reads from another checkout tests nothing it changed. Entry points tracked in the
@@ -3769,7 +3769,7 @@ leads it, and knowledge needed now and then in a file such a step or line points
 - **Review when:** no model in the range of fact context-file-effect is Active in Anthropic's table
   of models · check by: 2027-01-08
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/11
 
 *Rationale:* a line loaded into every session costs context in each, and agents carry out what it
 asks, so it earns its place only when each session needs it; descriptions of a repository have not
@@ -3804,7 +3804,7 @@ read by its path in backticks with the condition under which to read it.
     when to read them.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/11
 
 *Rationale:* an import loads the whole file it names into every session, so a file meant for
 occasional reading costs its full length in each; a path with its condition costs one line and is
@@ -3839,7 +3839,7 @@ agents working without it show that it is not needed.
     of the work.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/11
 
 *Rationale:* files grow by small additions and are rarely cut, so a rule needs a way out from the
 day it enters, and the mistake it removes is that way out. A repeated mistake is the signal; a
@@ -3874,7 +3874,7 @@ alone.
     that also happens without it; a rule is called useless because one session did not load it.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/11
 
 *Rationale:* loading, following and helping fail apart and are fixed apart — another carrier, other
 wording or a mechanism, or nothing; runs of one agent on one task differ, so a small effect drowns
@@ -3907,7 +3907,7 @@ proposal the files and the marked block the-way's installer writes in a product.
     proposes to delete `.claude/rules/the-way.md` or edit the block between the installer's markers.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/11
 
 *Rationale:* the tools read a shared instructions file at the root, while Claude Code reads it by
 itself only where no file of its own stands; a file of its own that opens by importing the shared
@@ -3946,7 +3946,7 @@ carries what the mechanism cannot check.
 - **Review when:** no model in the range of fact single-rule-compliance is Active in Anthropic's
   table of models · check by: 2027-01-08
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/11
 
 *Rationale:* a loaded rule is still not always followed, so what has to hold every time needs a
 mechanism that does not depend on the agent; the instruction beside it explains, so the agent meets
