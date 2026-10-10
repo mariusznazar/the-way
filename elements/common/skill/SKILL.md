@@ -5,13 +5,13 @@ description: Use when a source has to be searched for what should become entries
 
 # Find foundation entries
 
-Finds in a source what should become entries of a product's foundation, puts it before the human
-as a table of candidates, and hands every accepted one to the skill of its element. It writes no
-entry itself. The rules of each entry stand in its element's template; how a skill asks stands in
-`elements/common/way_of_working.md`. This skill serves a project definition and the refinement of
-a task for now; the breakdown of a project, the return step of a task (WAY-11) and the entry of the
-process into an existing product (WAY-28) will call it too, each adding what it needs
-(WAY-115, WAY-134).
+Finds in a source what should become entries of a product's foundation, puts it before the human as
+a table of candidates, and hands every accepted one to the skill of its element, or, for a task,
+keeps it as a row of the task document. It writes no entry itself. The rules of each entry stand in
+its element's template; how a skill asks stands in `elements/common/way_of_working.md`. This skill
+serves a project definition and the refinement of a task for now; the breakdown of a project, the
+return step of a task (WAY-11) and the entry of the process into an existing product (WAY-28) will
+call it too, each adding what it needs (WAY-115, WAY-134).
 
 This skill lives in `elements/common/skill/` of the-way. In the-way itself, the-way is the
 checkout or worktree the session works in, the directory `git rev-parse --show-toplevel`
@@ -39,8 +39,9 @@ When the section already holds a working table, resume from the first row whose 
 ## 1. Read
 
 - Read `elements/common/way_of_working.md` in full, and in `project-level/definition_template.md`
-  the section "Projected foundation changes" in full; for a task, in `project-level/task/template.md`
-  the section "Settlements to record" and its rule under "What each section carries" in full.
+  the section "Projected foundation changes" in full; for a task, in
+  `project-level/task/template.md` the section "Settlements to record" and its rule under "What each
+  section carries" in full.
 - Read the source in full.
 - Read the product's `foundations/`, so that no candidate repeats an entry that stands there, and a
   candidate that collides with one is shown beside it.
@@ -84,7 +85,11 @@ working table as soon as it is given.
 ## 4. Row by row
 
 For a task, this step does not run: an accepted row stays a row, and the task's cycle writes its
-entry (WAY-134). For a project definition, for each accepted row, in the table's order:
+entry (WAY-134). In its place, a row that carries a choice the human made in the task's
+refinement, which the cycle will bring into a binding part without asking, gets the question
+against the answer that "How a skill asks" in `way_of_working.md` gives, unless an exception there
+covers it, at most three questions at a time; write each answer into the row before the next
+question (WAY-113). For a project definition, for each accepted row, in the table's order:
 
 1. Ask what the entry needs and the source does not give, as `way_of_working.md` gives the asking.
    A question that challenges the settlement stands only where both hold: its anchor can be quoted
@@ -111,11 +116,11 @@ entry (WAY-134). For a project definition, for each accepted row, in the table's
 
 ## 5. Close
 
-- Once every row is `rejected` or `written`, take the working table out and write as the section's
-  first line `Candidates: <rows shown> shown, <rows accepted> accepted — YYYY-MM-DD`, as the
-  template gives it; the rows shown are every row the table held, the rows step 4 added
-  included. With no row accepted, `none` stands below the line.
-- Tell the caller how many entries of each kind were written.
+- For a project definition, once every row is `rejected` or `written`, take the working table out
+  and write as the section's first line `Candidates: <rows shown> shown, <rows accepted> accepted —
+  YYYY-MM-DD`, as the template gives it; the rows shown are every row the table held, the rows step
+  4 added included. With no row accepted, `none` stands below the line.
+- For a project definition, tell the caller how many entries of each kind were written.
 - For a task, once no row is `waiting`, take out the rejected rows and the column *State*, and write
   above the table the line `Candidates: <rows shown> shown, <rows accepted> accepted — YYYY-MM-DD`,
   as `project-level/task/template.md` gives it, renumbering the rows that stay; with no row

@@ -100,10 +100,6 @@ Another the-way skill named here is the project skill with the `the-way-` prefix
   they carry.
 - A candidate that collides with a current decision or a projected entry goes back to step 4 as a
   conflict; one that changes the task's scope goes back to step 3.
-- A kept row enters the binding part of an entry through the task's cycle, which shows it to the
-  human only at the merge. Where the row carries a choice the human made in this refinement and that choice got no
-  question against the answer, ask it before the row is kept, unless an exception of "How a skill
-  asks" covers it (WAY-113).
 
 ## 6. Review and hand off
 

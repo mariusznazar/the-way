@@ -3553,12 +3553,11 @@ dependency from the plan.
 - **Scope:** project-level, task-cycle
 - **Based on:** none
 - **Relations:** derives from WAY-106@63eddf70 · derives from WAY-118@5af868b3 · derives from
-  WAY-126@35accf8b
+  WAY-126@35accf8b · derives from WAY-134@b858b34f
 - **Verification:** level 2 — an agent compares the task document with its stated sources:
   - complies: an independent task is ready without a project plan, a source-only task uses
     approved project wording without taking its plan's assignments yet names a projected entry its
-    code makes true with the part made true, a project member matches its plan item, and a task
-    whose refinement found no settlement records that its candidates were shown and none accepted;
+    code makes true with the part made true, and a project member matches its plan item;
   - violates: a source-only task is blocked for lack of a plan item, a project member is ready
     despite a mismatch with its assigned work, a task leaves out a projected entry its code
     makes true, so its cycle writes a second entry for the same rule, or a task is ready while a
@@ -3570,9 +3569,7 @@ dependency from the plan.
 *Rationale:* a project can inform a task without owning it; the handoff must show which
 relationship applies so the next agent does not import work or dependencies the task never took on.
 A projected entry is wording already settled, and the task whose code first makes it true is the
-one that can show it holds; naming it before the cycle keeps one entry per rule. A settlement the
-human makes while the task is refined reaches the cycle only if the human has cut its candidates
-before the task is taken.
+one that can show it holds; naming it before the cycle keeps one entry per rule.
 *Rejected:* requiring every task to belong to a project plan — it excludes independent tasks and
 gives source-only tasks assignments they do not have; carrying only the entries a plan assigns — a
 source-only task's code would hold a rule the foundation lacks, and its return step would write a
@@ -3965,23 +3962,23 @@ only by failing it; a local hook as the keeper of every rule — one switch skip
 
 ### WAY-134/1 — How does a task carry what its refinement settles for the foundation?
 
-Before a task is ready for its cycle, the agent refining it shows the human a table of candidate
-settlements found in the task document and the conversation that refined it — each a settlement in
-one sentence in the human's words, its kind, its source and what the task's cycle would otherwise
-have to guess — and the task document keeps the rows the human accepts, under a line counting the
-rows shown and accepted. A candidate is a decision, an invariant, a glossary term, or an
-environment fact a candidate decision or invariant rests on, and a settlement that a current entry,
-or a projected entry the task carries, already states is no candidate. The task's cycle writes
-each kept settlement whole into the foundation in its foundation step, one that no code makes true
-included, keeping its meaning and choosing its wording; where that meaning cannot hold, the cycle
-asks the human through a blocked draft request rather than write another, and otherwise the human
+Before a task is ready for its cycle, the agent refining it shows the human a table of candidates
+found in the task document and the conversation that refined it, in the form WAY-115 gives with
+each settlement in the human's words, and the task document keeps the rows the human accepts. A
+candidate is a decision, an invariant, a glossary term, or an environment fact a candidate decision
+or invariant rests on, and a settlement that a current entry, or a projected entry the task
+carries, already states is no candidate. The task's cycle writes each kept row whole into the
+foundation in its foundation step, or in its return step where the foundation step missed it, one
+that no code makes true included, keeping its meaning and choosing its wording; where that meaning
+cannot hold, or the entry needs a value neither the row nor the cycle's work gives, the cycle asks
+the human through a blocked draft request rather than write another entry, and otherwise the human
 accepts the entry's meaning at the merge (WAY-114).
 
 - **Change:** new decision
-- **Scope:** project-level, task-cycle, elements-common
+- **Scope:** project-level, task-cycle, elements-common, decisions, invariants, glossary,
+  environment-facts
 - **Based on:** none
-- **Relations:** derives from WAY-115@292bd21b · derives from WAY-124@f1687673 · narrows
-  WAY-114@04b4f599
+- **Relations:** derives from WAY-115@292bd21b · narrows WAY-114@04b4f599
 - **Verification:** level 2 — an agent compares the task document, or the cycle, with the decision:
   - complies: a task whose human settled in refinement that an exported record keeps its owner
     carries that row, and its cycle writes a decision with that meaning in its foundation step,

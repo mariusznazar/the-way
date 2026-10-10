@@ -108,6 +108,8 @@ definition without plan membership never acquires that plan's assignments or dep
 - **Out of scope:** only task-bound exclusions. A lasting exclusion belongs in a projected or
   current decision, or in a row of *Settlements to record*, not here.
 
-The title is one descriptive line without a final period. Each fact has one home
-in the document. Keep each sentence of Description and Context in a separate list item. If the
-project source leaves a value open, ask or keep `TODO`; do not fill it from general knowledge.
+The title is one descriptive line without a final period. Each fact has one home in the document; a
+row of *Settlements to record* restates in one sentence what its *Source* names, since the cycle
+writes its entry from the row. Keep each sentence of Description and Context in a separate list
+item. If the project source leaves a value open, ask or keep `TODO`; do not fill it from general
+knowledge.
