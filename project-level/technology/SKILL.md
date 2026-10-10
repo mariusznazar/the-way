@@ -124,7 +124,9 @@ waits, so that a resumed step finds it.
    option whose weak point the table did not name, an answer in the human's own words, one that
    adds a reason or a condition — gets one question against it, anchored in those words or the
    material, the question `way_of_working.md` asks after a choice, asked here and not again
-   (WAY-113). A choice the human leaves unanswered goes into the next table.
+   (WAY-113). A choice the human leaves unanswered goes into the next table with the risks
+   already shown beside its option recommended, and is not tested again unless that option
+   changes, when the new one is tested (WAY-138).
 7. **Write.** Hand each choice to `record-decision` in projected mode, naming the definition, with
    the consequences that decided it, the other options with theirs, the source of each claimed
    difference for its *Based on*, the lacks of a chosen option and the risks taken with it for its
