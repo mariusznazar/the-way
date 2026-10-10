@@ -121,8 +121,8 @@ Another the-way skill named here is the project skill with the `the-way-` prefix
   explicitly `none` after a search, and *Settlements to record* opens with its `Candidates:` line,
   no row awaiting the human, and *Human actions* reads `none` or has every action placed and every
   action before the cycle done (WAY-124, WAY-140). For a project member, also check its plan
-  item and assignments; for any task using approved project settlements, check the definition's approval
-  and that every projected entry its code makes true is marked with the part made true.
+  item and assignments; for any task using approved project settlements, check the definition's
+  approval and that every projected entry its code makes true is marked with the part made true.
   Mark `Status: ready for cycle` only when its applicable checks pass; report an obstacle instead
   of declaring readiness.
 - The task document carries what and why. Do not insert a separate implementation spec, test
