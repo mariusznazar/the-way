@@ -1,7 +1,0 @@
-The independent foundation assessment of the complete change made one accepted code wording observation. Work in C:/Storage/repos/the-way-wt/installer-claude-md, current task/installer-claude-md branch. Do not spawn subagents. Do not read or edit foundation or the independent invariant test.
-
-Observation: installation/install.py's warning says Claude Code "will miss" the shared instructions when root CLAUDE.md has no effective literal @AGENTS.md import. The documented loading settings can read both files, so the consequence is too certain. Replace the complete warning text's "will miss" with "may miss"; retain the missing-import condition, warning before confirmation, actionable manual edit, and everything else. The complete independent assessment is in .runs/task-cycles/installer-claude-md/reports/foundation-assessment.md, observation 7, and settlement in foundation-assessment-settlement.md.
-
-Stage and commit only installation/install.py, in an English message. Run the focused relevant warning test in installation/test_install.py, then python -B gate/run_tests.py installation --record .runs/installation-tests.jsonl and python -B gate/run_tests.py gate. Check git diff --check and self-review. No push.
-
-Append a full fix report with commands, outputs and self-review to .superpowers/sdd/sdd-plan/task-1-report.md. Return status, commit SHA/subject, concise test results, concerns and report path. Boundary is committed fix before final whole-branch review.
