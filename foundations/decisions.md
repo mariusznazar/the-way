@@ -3554,7 +3554,7 @@ dependency from the plan.
 - **Scope:** project-level, task-cycle
 - **Based on:** none
 - **Relations:** derives from WAY-106@63eddf70 · derives from WAY-118@5af868b3 · derives from
-  WAY-126@35accf8b · derives from WAY-134@b858b34f · derives from WAY-140@a9310508
+  WAY-126@35accf8b · derives from WAY-134@b858b34f · derives from WAY-140@6e564611
 - **Verification:** level 2 — an agent compares the task document with its stated sources:
   - complies: an independent task is ready without a project plan, a source-only task uses
     approved project wording without taking its plan's assignments yet names a projected entry its
@@ -4219,16 +4219,17 @@ unread; the list in a template alone — nothing binds the refinement to check i
 ### WAY-140/1 — How does a task change something outside the product's repository?
 
 A task's effect outside the product's repository — on a server, in DNS, on keys or on an external
-account — is a human action, which the task document names and places before the cycle or in it,
-while reading outside the repository stays with the agent and the cycle's record of the request and
-of the task's state in the backlog entry the product names (WAY-107) is no effect of the task. For
-the human actions placed in the cycle, the cycle does what the repository allows and opens a blocked
-draft request listing them, and the human performs them at the request; an effect the cycle finds
-that the task document does not name joins that list for the human to place, and the request opens
-as a blocked draft where the document places no human action in the cycle. The human places each
-human action while the task is refined, on the agent's proposal: before the cycle when the cycle's
-code needs its effect, such as an account, a key or a database, and in the cycle when it uses code
-the cycle writes, such as a deployment or a DNS record pointing to a new address.
+account — is made only by a human, through a human action the task document names and places before
+the cycle or in it, while reading outside the repository stays with the agent and the cycle's record
+of the request and of the task's state in the backlog entry the product names (WAY-107) is no effect
+of the task. For the human actions placed in the cycle, the cycle does what the repository allows
+and opens a blocked draft request listing them, and the human performs them at the request; a human
+action the cycle finds that the task document does not name joins that list for the human to place,
+and the request opens as a blocked draft listing it even where the document places no human action
+in the cycle. The human places each human action the task document names while the task is refined,
+on the agent's proposal: before the cycle when the cycle's code needs its effect, such as an
+account, a key or a database, and in the cycle when it uses code the cycle writes, such as a
+deployment or a DNS record pointing to a new address.
 
 - **Change:** new decision
 - **Scope:** project-level, task-cycle
@@ -4256,12 +4257,13 @@ the cycle writes, such as a deployment or a DNS record pointing to a new address
 in the diff the human reviews, so the human who makes it sees what it changes; named in the task
 document, each human action is known before the cycle rather than found when the work stops on it.
 The request is the cycle's single point of human review (WAY-125), so a human action that uses the
-cycle's code waits for the request. An effect the cycle finds goes to the human like a named one,
-because the cycle may not make it, and the request is where the human meets it. A human action whose
-effect the code needs has to come first, and one that uses the code can only come after it; the
-human places each, because the human performs it. A read changes nothing outside the repository and
-the agent needs it to work, so it stays with the agent. The backlog record is the cycle's own
-account of its request, not something the task's outcome needs, so it stays with the cycle.
+cycle's code waits for the request. A human action the cycle finds goes to the human like a named
+one, because the cycle may not perform it, and the request is where the human meets it. A human
+action whose effect the code needs has to come first, and one that uses the code can only come after
+it; the human places each, because the human performs it. A read changes nothing outside the
+repository and the agent needs it to work, so it stays with the agent. The backlog record is the
+cycle's own account of its request, not something the task's outcome needs, so it stays with the
+cycle.
 *Rejected:* the cycle making the effect itself — a reset would not undo it and the diff would not
 show it; the cycle pausing midway for the human — the human would be called between stages for each
 human action; every human action before the cycle — one that uses the cycle's code cannot come

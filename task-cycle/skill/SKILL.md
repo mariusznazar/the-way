@@ -68,12 +68,12 @@ request link and set the task's state.
    do not execute an irreversible operation before the human decides on it at the request. Treat a
    security-sensitive action the same way when the product's rules reserve its authorization to a
    human; prepare what can be reviewed and mark the request blocked if that action is necessary to
-   finish the task. An effect outside the product repository is a human action (WAY-140): for the
-   actions the task document places in the cycle, prepare what the repository allows and open the
-   request as a blocked draft listing them. An effect outside the repository that the cycle finds
-   and the task document does not name joins that list, for the human to place; where the task
-   document places no action in the cycle, the request opens as a blocked draft listing that
-   effect. Create a new task
+   finish the task. An effect outside the product repository is made only by a human, through a
+   human action (WAY-140): for the actions the task document places in the cycle, prepare what
+   the repository allows and open the request as a blocked draft listing them. An effect outside
+   the repository that the cycle finds and the task document does not name joins that list, for
+   the human to place; where the task document places no action in the cycle, the request opens
+   as a blocked draft listing that effect. Create a new task
    branch from the current target branch, never reuse a branch already checked out except in a
    correction after review, and name it under the product's git rules; use an isolated worktree
    when its instructions and tools allow it. Never overwrite another worker's changes or let two

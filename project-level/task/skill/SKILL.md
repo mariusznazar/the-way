@@ -72,10 +72,10 @@ Another the-way skill named here is the project skill with the `the-way-` prefix
   absorbing the project's other work. Answer a question that determines required product
   behavior in this document; reproduce an implementation question under `Questions carried to
   cycle`. Do not let a question in the task's scope disappear.
-- Name each effect the task has outside the product's repository as a human action under
-  *Human actions*; a read outside the repository stays with the agent (WAY-140). For each action,
-  propose its placement by that section's rule in the template, and have the human place it,
-  asked as "How a skill asks" says (WAY-140). An action placed before the cycle and not yet done
+- Name under *Human actions* the human action through which a human makes each effect the task
+  has outside the product's repository; a read outside the repository stays with the agent
+  (WAY-140). For each action, propose its placement by that section's rule in the template, and
+  have the human place it, asked as "How a skill asks" says (WAY-140). An action placed before the cycle and not yet done
   keeps `Status: waiting for human`; mark it `done` once the human has performed it (WAY-124).
 - When the task's outcome deploys the product or changes how or where it runs, check that the
   product has a deployment skill covering every item of the list WAY-139 holds, in
