@@ -3564,7 +3564,7 @@ dependency from the plan.
     candidate settlement of its refinement awaits the human.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/12
 
 *Rationale:* a project can inform a task without owning it; the handoff must show which
 relationship applies so the next agent does not import work or dependencies the task never took on.
@@ -3989,7 +3989,7 @@ accepts the entry's meaning at the merge (WAY-114).
     kept row repeats a rule a current decision states.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/12
 
 *Rationale:* a settlement the human makes while a task is refined binds after the merge as much as
 one a project settles, yet with no place in the task document it reaches the cycle as an answer to
