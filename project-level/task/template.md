@@ -44,7 +44,7 @@ Project relation: independent | plan item: <project and item> | source only: <pr
 
 ## Human actions
 
-- <action outside the repository> — before the cycle, done | before the cycle, not done | in the cycle
+- <action outside the repository, or none> — before the cycle, <done|not done> | in the cycle | TODO
 
 ## Decisions in play
 

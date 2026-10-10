@@ -109,7 +109,9 @@ waits, so that a resumed step finds it.
    of the definition settles included, with the definition and the comparisons, and ask it to run
    on each a devil's advocate, a pre-mortem and a search for unknown unknowns: what choosing that
    option could break. A choice the list names `held by` is never tested, nor a decision already
-   written (WAY-138). Then give one fresh agent, following `critique`, the whole table with the
+   written (WAY-138). Write the risks the tests give into the choice's report,
+   `.runs/technology/<choice>.md`, so that a resumed step finds them, as step 6 needs.
+   Then give one fresh agent, following `critique`, the whole table with the
    risks and the definition, telling it that the risks are hypotheses with no source rather than
    differences claimed between options, so it does not strike them, and ask it for what one choice
    of the table contradicts in another; verify each observation (WAY-120, WAY-138). Then show the

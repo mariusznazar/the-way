@@ -4154,8 +4154,7 @@ its *Rationale*, beside the lacks of the option chosen, marked as a hypothesis.
     written before the project and adds risks to it; a risk taken reaches the decision's *Based on*
     as a fact.
 - **Review when:** the tests run on choices other than a place to run give no risk that the
-  comparison of their choice did not already show, and the tests then narrow to a place to run ·
-  check by: 2026-12-31
+  comparison of their choice did not already show · check by: 2026-12-31
 - **Origin:** none
 - **Approved by:** Mariusz, merge of <request link>
 

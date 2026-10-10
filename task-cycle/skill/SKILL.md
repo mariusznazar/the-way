@@ -49,8 +49,9 @@ blocked draft request, and the human performs it at the request (WAY-140).
 The cycle writes only in the task's worktree and changes nothing outside the product repository;
 reading outside the repository stays with the agent (WAY-140). A remark about the-way, the user's
 agent instructions or another repository goes into the cycle record's process remarks, never into
-the request. The one exception: in the task's source entry in the backlog the product names
-(WAY-107), the cycle may add the request link and set the task's state.
+the request. The one exception, the cycle's own record and not an effect of the task (WAY-140):
+in the task's source entry in the backlog the product names (WAY-107), the cycle may add the
+request link and set the task's state.
 
 ## Start and record
 
@@ -72,7 +73,9 @@ the request. The one exception: in the task's source entry in the backlog the pr
    finish the task. An effect outside the product repository is a human action (WAY-140): for the
    actions the task document places in the cycle, prepare what the repository allows and open the
    request as a blocked draft listing them. An effect outside the repository that the cycle finds
-   and the task document does not name joins that list, for the human to place. Create a new task
+   and the task document does not name joins that list, for the human to place; where the task
+   document places no action in the cycle, the request opens as a blocked draft listing that
+   effect. Create a new task
    branch from the current target branch, never reuse a branch already checked out except in a
    correction after review, and name it under the product's git rules; use an isolated worktree
    when its instructions and tools allow it. Never overwrite another worker's changes or let two
@@ -261,8 +264,8 @@ continuing that work.
     never by branch name. Ask in the request for a merge that keeps its commits, since the link
     survives only then; where the product's rules squash or rebase on merge, name that as a
     limitation in the request. Then mark the request ready for review, except a request the cycle
-    marks `blocked`, one that waits for human actions in the cycle (step 4) among them, which stays
-    a draft. Do not merge. Keep the worktree for review changes.
+    marks `blocked`, one waiting for human actions in the cycle (step 4) included, which stays a
+    draft. Do not merge. Keep the worktree for review changes.
 13. The request contains: task goal and relation, source versions, whether a spec was written
     and why — after a discarded attempt, its reason and a link to the agent's report — the plan's
     slices, the spec and plan links, what changed and why, test and review evidence with every

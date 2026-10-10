@@ -78,10 +78,10 @@ Another the-way skill named here is the project skill with the `the-way-` prefix
   asked as "How a skill asks" says (WAY-140). An action placed before the cycle and not yet done
   keeps `Status: waiting for human`; mark it `done` once the human has performed it (WAY-124).
 - When the task's outcome deploys the product or changes how or where it runs, check that the
-  product has a deployment skill covering every item of the list WAY-139 holds. Where it has
-  none or an item is missing, add an item to *To do* for that work, or offer the human to split
-  that work into a task of its own, which step 1 then handles (WAY-139). A task with no such
-  outcome takes no check.
+  product has a deployment skill covering every item of the list WAY-139 holds, in
+  `<the-way>/foundations/decisions.md`. Where it has none or an item is missing, add an item to
+  *To do* for that work and offer the human to split it into a task of its own, which step 1
+  then handles (WAY-139). A task with no such outcome takes no check.
 
 ## 4. Carry the foundation decisions
 
