@@ -1,0 +1,5 @@
+# Whole-foundation recheck against current target
+
+Fetched origin/foundations and confirmed its tip remains b8ff05bf139fc394f3f0df351e5da6c0bc0b0995, the task branch base. Searched every file in foundations/ with `rg -l -i 'CLAUDE\.md|CLAUDE\.local\.md|AGENTS\.md|the-way\.md|installation|Claude Code' foundations` and searched cross-references with `rg -n 'WAY-141|installation-claude-guidance|WAY-132|the-way\.md' foundations`.
+
+Five of six foundation files contain a broad-term hit; violated_invariants.md has none. The narrow search found WAY-141 in decisions.md, the new invariant and its decision derivation in invariants.md, the part-map detection link, and WAY-132 plus its existing invariant relation. The only remaining `.claude/rules/the-way.md` statements in the foundation are prohibitions in WAY-141 and the invariant. The WAY-132 binding sentence and fingerprint remain unchanged. No newly moved target entry, unlinked effect or contradiction was found. The first whole-foundation search and its detailed findings are in foundation-author-report.md; the target tip has not moved since that search.
