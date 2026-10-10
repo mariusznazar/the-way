@@ -385,7 +385,7 @@ def warnings_for(target: Path, files: dict[Path, str],
                         ", ".join(ignored))
     if shared[target / CLAUDE][0] == "KEEP" and not has_agents_import(
             read_text_file(target / CLAUDE, CLAUDE)):
-        warnings.append(f"{CLAUDE} has no effective @AGENTS.md import; Claude Code will miss "
+        warnings.append(f"{CLAUDE} has no effective @AGENTS.md import; Claude Code may miss "
                         f"the shared instructions in {AGENTS}. Add @AGENTS.md by hand")
     if os.path.lexists(target / CODEX_OVERRIDE):
         warnings.append(f"{CODEX_OVERRIDE} exists; Codex reads it instead of {AGENTS}, so it will "
