@@ -2058,6 +2058,16 @@ Where git tracks a `CLAUDE.md` at the repository's root, its text begins with `@
 - **Part:** agent-instructions
 - **Correction:** none
 
+## installation-claude-guidance/1
+
+For a product with no root `CLAUDE.md`, the installation command creates that file with `@AGENTS.md` as its sole line; for a product with an existing root `CLAUDE.md`, it preserves the file byte for byte and warns in the installation plan before confirmation when the file has no effective `@AGENTS.md` import; in neither case does it write `.claude/rules/the-way.md`.
+
+- **Method:** `python -B gate/run_tests.py installation --record .runs/installation-tests.jsonl`
+- **Rests on:** claude-code-imports@5b9359fd
+- **Derives from:** WAY-141@5d0990a0
+- **Part:** installation
+- **Correction:** none
+
 ## Withdrawn identifiers
 
 | Identifier | Why | Successors |
