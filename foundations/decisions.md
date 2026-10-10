@@ -4286,7 +4286,7 @@ installation plan warns about the missing import, and the installer leaves every
 - **Verification:** level 1 — invariants: installation-claude-guidance.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/15
 
 *Rationale:* importing the shared instructions gives Claude Code the product's backlog location
 as well as the installer's guidance through one route. An existing file may hold product guidance,
