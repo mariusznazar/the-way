@@ -4233,18 +4233,21 @@ the cycle writes, such as a deployment or a DNS record pointing to a new address
 - **Change:** new decision
 - **Scope:** project-level, task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-100@e7a74a18 · derives from WAY-125@441e3a6a
+- **Relations:** derives from WAY-100@e7a74a18 · derives from WAY-107@0ffcebe1 · derives from
+  WAY-125@441e3a6a
 - **Verification:** level 2 — an agent compares the task document, or the cycle, with the
   decision:
   - complies: a task that sends mail through an outside service names opening the account and
-    creating its key as human actions before the cycle, and it is not ready until both exist; a task
-    that moves the product to a new address names pointing its DNS record there as a human action in
-    the cycle, and the cycle, its code done, opens a blocked draft request listing it; the agent
-    reads a server's free disk space while it makes the change;
+    creating its key as human actions before the cycle; a task that moves the product to a new
+    address names pointing its DNS record there as a human action in the cycle, and the cycle, its
+    code done, opens a blocked draft request listing it; the agent reads a server's free disk space
+    while it makes the change; the cycle itself adds the request link to the task's entry in the
+    product's backlog;
   - violates: the cycle runs the deployment against the server itself; the cycle stops halfway and
     waits for the human to rotate a key; a task whose outcome needs a new key on an external account
     is ready with no human action named for it; the agent alone decides that a human action goes in
-    the cycle.
+    the cycle; the cycle finds that its change needs a key the task document does not name and
+    creates the key itself.
 - **Review when:** none
 - **Origin:** none
 - **Approved by:** Mariusz, merge of <request link>
@@ -4253,10 +4256,12 @@ the cycle writes, such as a deployment or a DNS record pointing to a new address
 in the diff the human reviews, so the human who makes it sees what it changes; named in the task
 document, each human action is known before the cycle rather than found when the work stops on it.
 The request is the cycle's single point of human review (WAY-125), so a human action that uses the
-cycle's code waits for the request. A human action whose effect the code needs has to come first,
-and one that uses the code can only come after it; the human places each, because the human performs
-it. A read changes nothing outside the repository and the agent needs it to work, so it stays with
-the agent.
+cycle's code waits for the request. An effect the cycle finds goes to the human like a named one,
+because the cycle may not make it, and the request is where the human meets it. A human action whose
+effect the code needs has to come first, and one that uses the code can only come after it; the
+human places each, because the human performs it. A read changes nothing outside the repository and
+the agent needs it to work, so it stays with the agent. The backlog record is the cycle's own
+account of its request, not something the task's outcome needs, so it stays with the cycle.
 *Rejected:* the cycle making the effect itself — a reset would not undo it and the diff would not
 show it; the cycle pausing midway for the human — the human would be called between stages for each
 human action; every human action before the cycle — one that uses the cycle's code cannot come
