@@ -25,8 +25,9 @@ choice approved or changed the rule.
 1. Read the task document in full. Require `Status: ready for cycle`. Its `Project relation:`
    controls the sources: independent tasks need no project; plan members require the exact approved
    plan item, dependencies and assignments; source-only tasks use relevant approved project
-   settlements without importing plan work. Recheck approval and current foundation versions before
-   starting. If a source changed, reconcile the task against it and record the effect; stop only
+   settlements without importing plan work. Every task's *Settlements to record* lists what its
+   refinement settled for the foundation (WAY-134). Recheck approval and current foundation
+   versions before starting. If a source changed, reconcile the task against it and record the effect; stop only
    when its required outcome can no longer be established.
 2. Read the product's `AGENTS.md`, process pin, foundation and relevant code. Verify that the
    pinned the-way checkout matches the product's gitlink. Follow product-specific git and test
@@ -160,17 +161,21 @@ receives the executor's report beside the frozen task.
 
 Before dependent implementation, run the foundation step required by WAY-01 and WAY-03 whenever the
 task changes a foundation entry or an invariant test, or its plan item assigns, or its code makes
-true, a projected entry of its sources (WAY-126). Invoke the pinned element skills for the affected
+true, a projected entry of its sources (WAY-126), or its *Settlements to record* holds a row
+(WAY-134). Invoke the pinned element skills for the affected
 entries and write each entry into `foundations/` on the task branch without waiting for the human;
 keep, for the request, one sentence of its meaning in the task document's language (WAY-114). Write
 a projected entry the task marks or its plan item assigns whole, with *Approved by* transcribed from
 the definition's gate record; write a part of a projected entry, and every other new or changed
 decision, with *Approved by* `<approver>, merge of <request link>` (WAY-14) — never a date, which
-only the human's merge sets. A plan member writes only the entries its plan item assigns; one
-assigned to another item returns to the plan through a blocked draft request. Set every *Review
-when* yourself. Ask the human before the request only where you have no recommendation or an entry
-would change the meaning of an approved decision, through a blocked draft request holding the
-question. Search the whole foundation and run the applicable guards. An invariant's sentence, its
+only the human's merge sets. Write each row of *Settlements to record* whole, as an entry of its
+kind, one that no code makes true included: its wording is yours, its meaning the row's (WAY-134).
+Of the projected entries, a plan member writes only those its plan item assigns; one assigned to
+another item returns to the plan through a blocked draft request. Set every *Review when*
+yourself. Ask the human before the request only where you have no recommendation, an entry would
+change the meaning of an approved decision, or a row's meaning cannot hold — the code shows an
+exception the row does not allow, or the row collides with a current entry — through a blocked
+draft request holding the question; never write a row with another meaning. Search the whole foundation and run the applicable guards. An invariant's sentence, its
 check and the code it covers come from three different agents (WAY-69): give the check's author the
 sentence and its method, never the code's reasoning. Invariant tests written in this step are
 read-only during implementation; if later work needs one changed, return to this foundation step
@@ -200,8 +205,9 @@ before continuing that work.
     compare touched parts of the foundation with code. Write every one that binds after the merge
     (WAY-36) into the foundation as the foundation step writes; every other choice stays one line in
     the choice table. Nothing is deferred: what this request does not write is neither proposed nor
-    listed for later. Read the projected entries of the task's sources: write one the code makes
-    true that the foundation step missed (WAY-126) — for an invariant, its check comes from an agent
+    listed for later. Read the projected entries of the task's sources and the rows of its
+    *Settlements to record*: write a row the foundation step missed (WAY-134), and a projected entry
+    the code makes true that the foundation step missed (WAY-126) — for an invariant, its check comes from an agent
     that did not write the code it covers and runs on that code; an entry assigned to another plan
     item returns to the plan. A check the return step writes then goes to a code reviewer that did
     not write it, which writes its deliberate break from the sentence, runs the check on it and
@@ -252,8 +258,8 @@ before continuing that work.
     links on the full cycle, what changed and why, test and review evidence with every check that
     did not run named, and *What
     this request settles*: each foundation entry the change writes or changes, as its identifier and
-    one sentence of its meaning in the task document's language, projected entries apart from new
-    ones. Beside them, what the foundation puts in front of the human at the merge: an invariant
+    one sentence of its meaning in the task document's language, projected entries and the entries
+    written from rows of *Settlements to record* apart from new ones. Beside them, what the foundation puts in front of the human at the merge: an invariant
     kept at its version under a correction, with its old and new sentence (WAY-57); a part whose
     computed criticality fell (WAY-46); a recovered row, with the gate's report (WAY-58); a moved
     use of a changed definition and a term WAY-97 asks the request to name. Under *Questions*, only
