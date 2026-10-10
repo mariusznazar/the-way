@@ -1,5 +1,0 @@
-style(project-level): Use the whole term human action in refine-task
-
-Rewrap the line on placing human actions to the file's column, and write "human action" where
-"action" alone stood for it, in that bullet and in the readiness check. Checks: the
-project-level tests pass and the skill entry points are current.
