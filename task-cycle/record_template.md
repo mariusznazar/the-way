@@ -98,6 +98,8 @@ check is unchecked.
   under a correction, with its old and new sentence; a part whose computed criticality fell; a
   recovered row, with the gate's report; a moved use of a changed definition; a term WAY-97 asks the
   request to name; or none>
+- Human actions the request waits for: <each action the task document places in the cycle, and
+  each effect outside the repository the cycle found that the document does not name, or none>
 - Questions: <only those the foundation step allows, or none>
 - Choices within the request: <count and link to the questions table>
 - Writes to the task's backlog entry: <request link and state, or none>
