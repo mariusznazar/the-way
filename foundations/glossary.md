@@ -97,7 +97,7 @@ The gate is the program that runs the checks a change calls for.
 
 ## human action
 
-A human action is a step of a task outside the product's repository that a human performs.
+A human action is an act outside the product's repository that a task needs and a human performs.
 
 - **Avoid:** none
 - **Not:** none
