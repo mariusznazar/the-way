@@ -74,9 +74,10 @@ Another the-way skill named here is the project skill with the `the-way-` prefix
   cycle`. Do not let a question in the task's scope disappear.
 - Name under *Human actions* the human action through which a human makes each effect the task
   has outside the product's repository; a read outside the repository stays with the agent
-  (WAY-140). For each action, propose its placement by that section's rule in the template, and
-  have the human place it, asked as "How a skill asks" says (WAY-140). An action placed before the cycle and not yet done
-  keeps `Status: waiting for human`; mark it `done` once the human has performed it (WAY-124).
+  (WAY-140). For each human action, propose its placement by that section's rule in the template,
+  and have the human place it, asked as "How a skill asks" says (WAY-140). A human action placed
+  before the cycle and not yet done keeps `Status: waiting for human`; mark it `done` once the
+  human has performed it (WAY-124).
 - When the task's outcome deploys the product or changes how or where it runs, check that the
   product has a deployment skill covering every item of the list WAY-139 holds, in
   `<the-way>/foundations/decisions.md`. Where it has none or an item is missing, add an item to
@@ -119,11 +120,11 @@ Another the-way skill named here is the project skill with the `the-way-` prefix
 - Check that every blocking question has an answer, the numbered work is executable, the
   questions brought into this task are accounted for, the decisions in play are present or
   explicitly `none` after a search, and *Settlements to record* opens with its `Candidates:` line,
-  no row awaiting the human, and *Human actions* reads `none` or has every action placed and every
-  action before the cycle done (WAY-124, WAY-140). For a project member, also check its plan
-  item and assignments; for any task using approved project settlements, check the definition's
-  approval and that every projected entry its code makes true is marked with the part made true.
-  Mark `Status: ready for cycle` only when its applicable checks pass; report an obstacle instead
-  of declaring readiness.
+  no row awaiting the human, and *Human actions* reads `none` or has every human action placed
+  and every human action before the cycle done (WAY-124, WAY-140). For a project member, also
+  check its plan item and assignments; for any task using approved project settlements, check
+  the definition's approval and that every projected entry its code makes true is marked with the
+  part made true. Mark `Status: ready for cycle` only when its applicable checks pass; report an
+  obstacle instead of declaring readiness.
 - The task document carries what and why. Do not insert a separate implementation spec, test
   plan, or execution log here. The task cycle records those in its cycle record.
