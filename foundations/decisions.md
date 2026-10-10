@@ -3554,7 +3554,7 @@ dependency from the plan.
 - **Scope:** project-level, task-cycle
 - **Based on:** none
 - **Relations:** derives from WAY-106@63eddf70 · derives from WAY-118@5af868b3 · derives from
-  WAY-126@35accf8b · derives from WAY-134@b858b34f · derives from WAY-140@d02ede05
+  WAY-126@35accf8b · derives from WAY-134@b858b34f · derives from WAY-140@a9310508
 - **Verification:** level 2 — an agent compares the task document with its stated sources:
   - complies: an independent task is ready without a project plan, a source-only task uses
     approved project wording without taking its plan's assignments yet names a projected entry its
@@ -3570,11 +3570,11 @@ dependency from the plan.
 - **Origin:** none
 - **Approved by:** Mariusz, merge of <request link>
 
-*Rationale:* a project can inform a task without owning it; the handoff must show which
-relationship applies so the next agent does not import work or dependencies the task never took on.
-A projected entry is wording already settled, and the task whose code first makes it true is the
-one that can show it holds; naming it before the cycle keeps one entry per rule. An action placed
-before the cycle gives the cycle's code what it needs, so a cycle started before the action is done
+*Rationale:* a project can inform a task without owning it; the handoff must show which relationship
+applies so the next agent does not import work or dependencies the task never took on. A projected
+entry is wording already settled, and the task whose code first makes it true is the one that can
+show it holds; naming it before the cycle keeps one entry per rule. A human action placed before the
+cycle gives the cycle's code what it needs, so a cycle started before the human action is done
 cannot finish its work.
 *Rejected:* requiring every task to belong to a project plan — it excludes independent tasks and
 gives source-only tasks assignments they do not have; carrying only the entries a plan assigns — a
@@ -4102,9 +4102,9 @@ consequence for the product.
 - **Relations:** derives from WAY-100@e7a74a18 · narrows WAY-123@f3b45293
 - **Verification:** level 2 — an agent compares the work with the decision:
   - complies: two hosts that cost the same and take the same upkeep remain after the simplest and
-    cheapest rule, and the one with a command-line tool and a deployment script is recommended,
-    with that given as the reason; a host with no command-line tool stays in the comparison and is
-    recommended where it costs less than the others;
+    cheapest rule, and the one with a command-line tool and a deployment script is recommended; a
+    host with no command-line tool stays in the comparison and is recommended where it costs less
+    than the others;
   - violates: a host whose deployment cannot be scripted is left out of the comparison for that
     reason; a host is recommended over a cheaper one because an agent can operate it from a
     terminal; the table of consequences scores how well an agent works with each host beside its
@@ -4144,11 +4144,11 @@ its *Rationale*, beside the lacks of the option chosen, marked as a hypothesis.
 - **Relations:** derives from WAY-100@e7a74a18 · derives from WAY-122@b343277a · derives from
   WAY-123@f3b45293
 - **Verification:** level 2 — an agent compares the work with the decision:
-  - complies: a project settles its store of data and its place to run, the table shows beside
-    each option recommended the risks the three tests gave, each marked as having no source, and
-    the human who takes the recommended host finds those risks in the *Rationale* of its decision
-    beside its lacks; a framework the definition names as a constraint is tested; a language a
-    decision of the foundation holds is not;
+  - complies: a project settles its store of data and its place to run, the table shows beside each
+    option recommended the risks the three tests gave, each marked as a hypothesis, and the human
+    who takes the recommended host finds those risks in the *Rationale* of its decision beside its
+    lacks; a framework the definition names as a constraint is tested; a language a decision of the
+    foundation holds is not;
   - violates: the critique strikes a risk from the table for want of a source; the risks are shown
     only after the human has chosen; every option of a choice is tested; an agent tests a decision
     written before the project and adds risks to it; a risk taken reaches the decision's *Based on*
@@ -4180,12 +4180,12 @@ foundation hold — they reopen what was settled.
 ### WAY-139/1 — What does the-way hold for the skill that deploys a product, and which step checks that a product has one?
 
 The-way holds no skill of a product, only the list of what a product's deployment skill covers: a
-preview of deployments; where the secrets lie and how they are rotated; rollback, with how many
-steps it takes and what happens to the data; what the agent does and what the human does; and how
-to read the logs. When a task's outcome deploys the product or changes how or where it runs,
-the-way's skill `refine-task` checks, while it refines the task, that the product has a deployment
-skill covering every item of the list, and where it has none or an item is missing, the task gains
-an item of its To do for that work or the human splits that work into a task of its own.
+preview of deployments; where the secrets lie and how they are rotated; rollback, with its number of
+steps and what happens to the data; what the agent does and what the human does; and how to read the
+logs. When a task's outcome deploys the product or changes how or where it runs, the-way's skill
+`refine-task` checks, while it refines the task, that the product has a deployment skill covering
+every item of the list, and where it has none or an item is missing, the task gains an item of its
+To do for that work or the human splits that work into a task of its own.
 
 - **Change:** new decision
 - **Scope:** project-level
@@ -4209,9 +4209,9 @@ an item of its To do for that work or the human splits that work into a task of 
 from product to product, so a skill of the-way would fit none of them; what such a skill has to
 answer is the same for every product, and a list in a binding sentence gives the refinement a thing
 to check. Knowledge of operating a product written in a document no step reads goes unread however
-concrete it is, while a skill of the product reaches the agent when it deploys. The check comes when
-a task first needs that knowledge, so the first task that deploys a product grows by its deployment
-skill, unless the human splits that work off.
+concrete it is, while a skill of the product reaches the agent when it prepares a deployment. The
+check comes when a task first needs that knowledge, so the first task that deploys a product grows
+by its deployment skill, unless the human splits that work off.
 *Rejected:* a deployment skill carried by the-way — what to run and where differs for every
 product; a document of operations kept beside the product — no step reads it, so it goes stale
 unread; the list in a template alone — nothing binds the refinement to check it.
@@ -4219,14 +4219,16 @@ unread; the list in a template alone — nothing binds the refinement to check i
 ### WAY-140/1 — How does a task change something outside the product's repository?
 
 A task's effect outside the product's repository — on a server, in DNS, on keys or on an external
-account — is made only by a human, as an action the task document names and places before the
-cycle or in it, while reading outside the repository stays with the agent. An action placed before
-the cycle is done before the task is ready (WAY-124); for the actions placed in the cycle, the cycle
-does what the repository allows and opens a blocked draft request listing them, and the human
-performs them at the request. The human places each action while the task is refined, on the
-agent's proposal: before the cycle when the cycle's code needs the action's effect, such as an
-account, a key or a database, and in the cycle when the action uses code the cycle writes, such as
-a deployment or a DNS record pointing to a new address.
+account — is a human action, which the task document names and places before the cycle or in it,
+while reading outside the repository stays with the agent and the cycle's record of the request and
+of the task's state in the backlog entry the product names (WAY-107) is no effect of the task. For
+the human actions placed in the cycle, the cycle does what the repository allows and opens a blocked
+draft request listing them, and the human performs them at the request; an effect the cycle finds
+that the task document does not name joins that list for the human to place, and the request opens
+as a blocked draft where the document places no human action in the cycle. The human places each
+human action while the task is refined, on the agent's proposal: before the cycle when the cycle's
+code needs its effect, such as an account, a key or a database, and in the cycle when it uses code
+the cycle writes, such as a deployment or a DNS record pointing to a new address.
 
 - **Change:** new decision
 - **Scope:** project-level, task-cycle
@@ -4235,13 +4237,13 @@ a deployment or a DNS record pointing to a new address.
 - **Verification:** level 2 — an agent compares the task document, or the cycle, with the
   decision:
   - complies: a task that sends mail through an outside service names opening the account and
-    creating its key as the human's actions before the cycle, and it is not ready until both exist;
-    a task that moves the product to a new address names pointing its DNS record there as an action
-    in the cycle, and the cycle, its code done, opens a blocked draft request listing it; the agent
+    creating its key as human actions before the cycle, and it is not ready until both exist; a task
+    that moves the product to a new address names pointing its DNS record there as a human action in
+    the cycle, and the cycle, its code done, opens a blocked draft request listing it; the agent
     reads a server's free disk space while it makes the change;
   - violates: the cycle runs the deployment against the server itself; the cycle stops halfway and
-    waits for the human to rotate a key; a task whose outcome needs a new key on an external
-    account is ready with no action named for it; the agent alone decides that an action goes in
+    waits for the human to rotate a key; a task whose outcome needs a new key on an external account
+    is ready with no human action named for it; the agent alone decides that a human action goes in
     the cycle.
 - **Review when:** none
 - **Origin:** none
@@ -4249,15 +4251,15 @@ a deployment or a DNS record pointing to a new address.
 
 *Rationale:* an effect outside the repository is not undone by resetting a branch and does not show
 in the diff the human reviews, so the human who makes it sees what it changes; named in the task
-document, each action is known before the cycle rather than found when the work stops on it. The
-request is the cycle's single point of human review (WAY-125), so an action that uses the cycle's
-code waits for the request, and checking the code after the action falls to the round of
-corrections after it. An action whose effect the code needs has to come first, and one that uses
-the code can only come after it; the human places each, because the human performs it. A read
-changes nothing outside the repository and the agent needs it to work, so it stays with the agent.
+document, each human action is known before the cycle rather than found when the work stops on it.
+The request is the cycle's single point of human review (WAY-125), so a human action that uses the
+cycle's code waits for the request. A human action whose effect the code needs has to come first,
+and one that uses the code can only come after it; the human places each, because the human performs
+it. A read changes nothing outside the repository and the agent needs it to work, so it stays with
+the agent.
 *Rejected:* the cycle making the effect itself — a reset would not undo it and the diff would not
 show it; the cycle pausing midway for the human — the human would be called between stages for each
-action; every action before the cycle — an action that uses the cycle's code cannot come first; the
-agent placing each action alone — the human performs the action and is the one to fit it into the
-work; actions listed only when someone asks for them — a step the human has to take comes to light
-after the work that needed it.
+human action; every human action before the cycle — one that uses the cycle's code cannot come
+first; the agent placing each human action alone — the human performs it and is the one to fit it
+into the work; human actions listed only when someone asks for them — a step the human has to take
+comes to light after the work that needed it.

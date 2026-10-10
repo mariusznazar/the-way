@@ -18,9 +18,7 @@ be implemented under the available evidence, capabilities and binding rules. A s
 failed test, a reviewer finding or an ambiguous implementation method is work to resolve, not a
 reason to ask the human. If a binding rule reserves a decision to a human and code cannot proceed
 without it, prepare a blocked draft request with the evidence and stop; do not pretend that your
-choice approved or changed the rule. A human action the task document places in the cycle does not
-stop the cycle midway either: the cycle does what the repository allows and lists the action in a
-blocked draft request, and the human performs it at the request (WAY-140).
+choice approved or changed the rule.
 
 ## Inputs and authority
 
@@ -49,8 +47,8 @@ blocked draft request, and the human performs it at the request (WAY-140).
 The cycle writes only in the task's worktree and changes nothing outside the product repository;
 reading outside the repository stays with the agent (WAY-140). A remark about the-way, the user's
 agent instructions or another repository goes into the cycle record's process remarks, never into
-the request. The one exception, the cycle's own record and not an effect of the task (WAY-140):
-in the task's source entry in the backlog the product names (WAY-107), the cycle may add the
+the request. The one exception is the cycle's own record, which WAY-140 names no effect of the
+task: in the task's source entry in the backlog the product names (WAY-107), the cycle may add the
 request link and set the task's state.
 
 ## Start and record

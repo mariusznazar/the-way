@@ -104,20 +104,20 @@ waits, so that a resumed step finds it.
    source of the comparison. A difference with no consequence for the product decides nothing;
    where none remains, recommend the simplest and cheapest option (WAY-123). For a place to run,
    where more than one option is the simplest and cheapest, recommend of those the one an agent
-   works with best, by the template's rule, and give that as the reason (WAY-137). Then give one
+   works with best, by the template's rule (WAY-137). Then give one
    fresh agent for the wave the option recommended for every choice of the wave, one a constraint
    of the definition settles included, with the definition and the comparisons, and ask it to run
    on each a devil's advocate, a pre-mortem and a search for unknown unknowns: what choosing that
-   option could break. A choice the list names `held by` is never tested, nor a decision already
-   written (WAY-138). Write the risks the tests give into the choice's report,
-   `.runs/technology/<choice>.md`, so that a resumed step finds them, as step 6 needs.
+   option could break. A choice the list names `held by` is never tested (WAY-138). Write the
+   risks the tests give into the choice's report, `.runs/technology/<choice>.md`, so that a
+   resumed step finds them, as step 6 needs.
    Then give one fresh agent, following `critique`, the whole table with the
    risks and the definition, telling it that the risks are hypotheses with no source rather than
    differences claimed between options, so it does not strike them, and ask it for what one choice
    of the table contradicts in another; verify each observation (WAY-120, WAY-138). Then show the
    wave together, in one table: for each choice, the options by their consequences, the lines of
    the options left out, a recommendation, the weak point of the option recommended, and beside
-   that option the risks the tests gave, each marked as a hypothesis with no source
+   that option the risks the tests gave, each marked as a hypothesis
    (WAY-123, WAY-138, WAY-113).
 6. **Choose.** The human chooses each; never choose alone (WAY-123). The human who chooses the
    option recommended takes the risks shown beside it (WAY-138). A human who answers "you

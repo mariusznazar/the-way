@@ -52,6 +52,9 @@ In version 2 and later, *Rationale* becomes *Rationale for change* (WAY-19).
   quotes a source, names no file, script or count, nor what the process's own tools do or lack
   today, and does not tell how the decision was reached (WAY-05, WAY-29). What a decision forces on
   later work stands in a binding sentence or a field, never in prose (WAY-05).
+- In the decision of a technology choice a project settles, the lacks of the option chosen and the
+  risks the human took with it stand in *Rationale*, each risk marked as a hypothesis, never in
+  *Based on* (WAY-138).
 
 ### Which fields take `none` and `TODO`
 
