@@ -199,7 +199,22 @@ that settles it (WAY-121). The skill `settle-technology` writes it before the re
   them; where no difference with a consequence remains, the step recommends the simplest and
   cheapest option. The choices whose research started together reach the human together, in one
   table, once every one of their comparisons has passed the critique, each with its recommendation
-  and the weak point of the option recommended (WAY-123). `settle-technology` leads that.
+  and the weak point of the option recommended (WAY-123).
+- Where the options of a place to run differ in no consequence for the product and more than one
+  of them is the simplest and cheapest, the step recommends, of those, the one an agent works with
+  best: operated from a terminal, deployed by a script and documented in pages an agent can read.
+  For a place to run, how well an agent works with an option decides nothing else: it leaves no
+  option out of the comparison and is weighed against no consequence for the product
+  (WAY-137).
+- The option recommended for each choice the step settles, one a constraint of the definition
+  settles included, is tested with a devil's advocate, a pre-mortem and a search for unknown
+  unknowns; no choice a decision of the foundation holds is tested, and no decision already
+  written is tested afterwards. The risks these tests give are hypotheses with no source, not
+  differences claimed between options, so the critique of the comparison does not strike them,
+  and they stand in the table beside the option recommended before the human chooses. The human
+  who chooses that option takes its risks, and each risk taken reaches the decision of that choice
+  in its *Rationale*, beside the lacks of the option chosen, marked as a hypothesis
+  (WAY-138). `settle-technology` leads that.
 
 ## Projected foundation changes
 
