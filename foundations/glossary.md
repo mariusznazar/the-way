@@ -118,7 +118,7 @@ Mechanics is the way a test reaches the product under test, as against what the 
 
 ## open design choice
 
-An open design choice is a choice a task's document leaves open that either sets a foundation entry the document does not carry or takes a way that is costly to turn back once code is written on it, as against a choice of how to make what is already settled.
+An open design choice is a choice that neither a task's document nor a spec written for the task settles and that either sets a foundation entry or takes a way that is costly to turn back once code is written on it, as against a choice of how to make what is already settled.
 
 - **Avoid:** none
 - **Not:** none

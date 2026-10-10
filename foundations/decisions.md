@@ -405,8 +405,8 @@ foundation, which chooses among the paths that merge a change, while three thing
 it is checked — the criticality of the parts it touches, as the part map computes it, whether it
 touches the files of a trust boundary, and whether the change can be undone. Paths that merge a
 change differ in their steps, never in the outcome a task has to reach, and only a human sets a
-task to return knowledge instead of a change, which merges nothing. A task's size may lighten how
-its change is prepared and made — its spec and plan and the number of agents making it — never the
+task to return knowledge instead of a change, which merges nothing. A task's size may lighten
+how its change is prepared and made — its plan and the number of agents making it — never the
 outcome it has to reach or the checks run on the finished change, and otherwise serves only as a
 signal to split it; an agent may check a change more sharply than the map computes, never less, and
 a human decides on every change that cannot be undone.
@@ -426,13 +426,13 @@ a human decides on every change that cannot be undone.
     one that returns knowledge instead of a change without a human setting it so.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/7
+- **Approved by:** Mariusz, merge of <request link>
 
 *Rationale:* size misleads both ways about what can go wrong: a rename across many files is easy to
 undo, a one-line change to a stored format can destroy every user's data, so what a task touches,
 never its size, sets its path and its checks. Size does tell how much preparation a change needs: a
-spec, and a plan that writes out its code, cost more ahead of a small change than the change, while
-the checks on the finished change stay whole and a human still decides on what cannot be undone.
+small change is planned as one piece made by one agent, while the checks on the finished change stay
+whole and a human still decides on what cannot be undone.
 Paths differ only in steps, because a weaker outcome would bypass the process; returning knowledge
 alters what a task delivers, so a human sets it.
 *Rejected:* one cycle for all tasks — how much process a task needs depends on what can go wrong;
@@ -3601,13 +3601,12 @@ reviewed change to the-way before use.
   `requesting-code-review/SKILL.md` — "The reviewer gets precisely crafted context for evaluation —
   never your session's history." `finishing-a-development-branch/SKILL.md` — "Verify tests → Detect
   environment → Present options → Execute choice → Clean up."
-- **Relations:** derives from WAY-100@e7a74a18 · derives from WAY-13@97b17d59
+- **Relations:** derives from WAY-100@e7a74a18 · derives from WAY-13@e6c830b7
 - **Verification:** level 2 — an agent compares a cycle with the decision:
   - complies: agents use the named methods at version 6.4.1, return between stages, and show
     provisional choices in the request without claiming human approval;
   - violates: an agent treats its own spec approval as the owner's approval, skips the request
-    review, or silently runs a different Superpowers version; a planner writes the plan with a
-    Superpowers method.
+    review, or silently runs a different Superpowers version.
 - **Review when:** none
 - **Origin:** none
 - **Approved by:** Mariusz, merge of <request link>
@@ -3990,18 +3989,17 @@ meaning the human settled would be defined by the cycle.
 
 ### WAY-135/1 — When does a task's cycle write a spec?
 
-A task's cycle writes a spec, reviewed by an agent other than its author, only where the task leaves
-an open design choice, and an invariant whose sentence a row of the task's *Settlements to record*
-or a projected entry of its sources gives is none. An agent that meets an open design choice while
-it makes the change returns a report that holds no code, the attempt is discarded with the
-foundation entries it wrote, and a fresh agent given the report writes the spec, from which the
-plan is written again. A choice of how to make what the task and the foundation settle is the
-making agent's, and the cycle record keeps it.
+A task's cycle writes a spec, reviewed by an agent other than its author, before its plan where the
+task leaves an open design choice and nowhere else, and an invariant whose sentence a row of the
+task's *Settlements to record* or a projected entry of its sources gives leaves none. An agent that
+meets an open design choice while it makes the change returns a report that holds no code, the
+attempt is discarded with the foundation entries the cycle wrote for it, and a fresh agent given
+the report writes the spec, from which the plan is written again.
 
 - **Change:** new decision
 - **Scope:** task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-13@97b17d59 · derives from WAY-69@7051f884 · derives from
+- **Relations:** derives from WAY-13@e6c830b7 · derives from WAY-69@7051f884 · derives from
   WAY-126@35accf8b · derives from WAY-134@b858b34f
 - **Verification:** level 2 — an agent compares a cycle with the decision:
   - complies: a task whose rows of *Settlements to record* carry its two decisions and its invariant
@@ -4012,24 +4010,23 @@ making agent's, and the cycle record keeps it.
     the spec;
   - violates: a spec is written for a task whose document carries every entry it writes and that
     leaves no other way open; an agent designs a decision the task does not carry and goes on with
-    the code; a spec is written around the code of an attempt that met an open design choice; an
-    agent stops the cycle to ask how to make what the task settles.
+    the code; a spec is written around the code of an attempt that met an open design choice.
 - **Review when:** five cycles of `implement-task` have run under this decision, or a cycle has
-  found a new foundation entry contradicting a current one only after its code was written, has
-  returned more than one slice in three of its plan as too large, or has used no clearly fewer
-  tokens than the 363.7 million that the cycle of https://github.com/mariusznazar/the-way/pull/11
-  used, for a task of like size · check by: 2026-11-30
+  found a new foundation entry contradicting a current one only after its code was written, or has
+  used, as `task-cycle/cycle_stages.py` counts them, no clearly fewer tokens than the 363.7 million
+  that the cycle of https://github.com/mariusznazar/the-way/pull/11 used, for a task of like size ·
+  check by: 2026-11-30
 - **Origin:** none
 - **Approved by:** Mariusz, merge of <request link>
 
-*Rationale:* a spec and its review earn their cost where an agent designs a foundation entry
-itself, whose agreement with the current entries has to be checked before code is written on it;
-where the task's document carries every entry, a spec restates what the human already settled and
-its review finds nothing the reviews of the code would miss. An invariant the document carries is
-kept from fitting the code by the separate authors of its sentence, its check and the code
-(WAY-69), not by a spec. A choice found while the
-code is made cannot be weighed apart from that code, so the attempt goes and a fresh agent designs
-from the task and the report.
+*Rationale:* a spec and its review earn their cost where an agent designs a foundation entry itself,
+whose agreement with the current entries has to be checked before code is written on it; where the
+task's document carries every entry, a spec restates what the human already settled and its review
+finds nothing the reviews of the code would miss. An invariant the document carries is kept from
+fitting the code by the separate authors of its sentence, its check and the code (WAY-69), not by a
+spec. A choice found while the code is made cannot be weighed apart from that code, so the attempt
+goes, its slices already made among them, since the spec may change what they made, and a fresh
+agent designs from the task and the report.
 *Rejected:* a spec for every task that changes the foundation — almost every task changes it, and
 the spec would restate entries the human settled at a large share of the cycle's cost; no spec for
 any task — an entry an agent designs would reach the code unchecked against the current entries;
@@ -4054,7 +4051,7 @@ large for the agent making it is discarded with its code and goes back to the pl
   `writing-plans/SKILL.md` — "Each step is one action (2-5 minutes)" and, under "No
   Placeholders", "Steps that describe what to do without showing how (code blocks required for
   code steps)"
-- **Relations:** derives from WAY-13@97b17d59
+- **Relations:** derives from WAY-13@e6c830b7
 - **Verification:** level 2 — an agent compares a cycle with the decision:
   - complies: a one-line fix is made from a plan of one slice by one agent, and the review of that
     slice, given the task as its requirements, is the change's only code review; a change of four
@@ -4064,10 +4061,10 @@ large for the agent making it is discarded with its code and goes back to the pl
     Superpowers `writing-plans`; the agent that made a slice reviews it; a change of one slice gets
     a second review of the same range; the code of an outgrown slice is kept and completed.
 - **Review when:** five cycles of `implement-task` have run under this decision, or a cycle has
-  found a new foundation entry contradicting a current one only after its code was written, has
-  returned more than one slice in three of its plan as too large, or has used no clearly fewer
-  tokens than the 363.7 million that the cycle of https://github.com/mariusznazar/the-way/pull/11
-  used, for a task of like size · check by: 2026-11-30
+  returned more than one slice in three of its plan as too large, or has used, as
+  `task-cycle/cycle_stages.py` counts them, no clearly fewer tokens than the 363.7 million that
+  the cycle of https://github.com/mariusznazar/the-way/pull/11 used, for a task of like size ·
+  check by: 2026-11-30
 - **Origin:** none
 - **Approved by:** Mariusz, merge of <request link>
 

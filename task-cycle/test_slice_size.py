@@ -115,6 +115,32 @@ class SliceSizeTest(unittest.TestCase):
         self.assertEqual(self.row(output, "1")[4:6], [
             "unchecked", "`short.md:2-5` goes beyond the file's 2 lines"])
 
+    def test_slice_with_neither_field_is_unchecked(self) -> None:
+        code, output, _ = self.run_plan("### Slice 1 — Think\n- **Goal:** none\n")
+        self.assertEqual(code, 1)
+        self.assertEqual(self.row(output, "1")[4:6], [
+            "unchecked", "the slice has neither *Change* nor *Read*"])
+
+    def test_none_in_backticks_names_no_file(self) -> None:
+        code, output, _ = self.run_plan("### Slice 1\n- **Change:** `none`\n- **Read:** `none`\n")
+        self.assertEqual(code, 0)
+        self.assertEqual(self.row(output, "1")[1:5], ["0", "0", "0", "fits"])
+
+    def test_range_in_change_leaves_the_slice_unchecked(self) -> None:
+        self.file("a.py", "x\n")
+        code, output, _ = self.run_plan("### Slice 1\n- **Change:** `a.py:1-1`\n")
+        self.assertEqual(code, 1)
+        self.assertEqual(self.row(output, "1")[4:6], [
+            "unchecked", "`a.py:1-1` in *Change* names a range, not a file"])
+
+    def test_slice_heading_in_another_form_is_an_error(self) -> None:
+        code, output, error = self.run_plan(
+            "### Slice 1 — fine\n- **Read:** none\n\n### Slice 2 - hyphen\n- **Read:** none\n")
+        self.assertEqual(code, 2)
+        self.assertEqual(output, "")
+        self.assertEqual(error, "Error: a slice heading is not `### Slice <id> — <goal>`: "
+                                "### Slice 2 - hyphen\n")
+
     def test_plan_without_a_slice_is_an_error(self) -> None:
         code, output, error = self.run_plan("# Plan\n\n- **Change:** `a.py`\n")
         self.assertEqual(code, 2)

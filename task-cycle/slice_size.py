@@ -10,17 +10,19 @@ PLAN is a plan in the form `task-cycle/plan/SKILL.md` gives: each slice under a 
 creates and a field `- **Read:**` naming the files its agent reads, each path in backticks, the
 fields' lines continued on lines indented below them, and `none` for an empty field. A path in
 *Read* may end in `:<first>-<last>` to count only those lines of the file. Paths are relative to
-DIR, the repository the plan is for, which defaults to the current directory.
+DIR, the repository the plan is for, which defaults to the current directory. A path of *Change*
+that names nothing under DIR is a file the slice creates, with nothing to read.
 
 A slice reads every file of *Read* and every file of *Change* that exists, each counted once: a
 whole file where either field names it whole, otherwise the lines its ranges name. Its size to read
 is the number of characters of that text, and its tokens are estimated from them as the source
 below gives, never counted by a tokenizer: the estimate is rough, and how many steps an agent takes
 is not in it. A slice is too large when its estimated tokens exceed READ_LIMIT_TOKENS or it changes
-more than CHANGE_LIMIT files. A slice whose path does not name a file under DIR, or whose range
-goes beyond its file, is unchecked: its size is not known.
+more than CHANGE_LIMIT files. A slice with neither field, a path that leaves DIR or names something
+other than a file there — in *Read*, anything but an existing file — a range in *Change*, or a
+range beyond its file leaves the slice unchecked: its size is not known.
 
-The limits start with a wide margin and are corrected as cycles bring data (WAY-136):
+The limits start with a wide margin and are corrected as cycles bring data:
 
 - CONTEXT_WINDOW_TOKENS and CHARACTERS_PER_TOKEN come from
   https://platform.claude.com/docs/en/about-claude/models/overview.md, read on 2026-10-10: its
@@ -34,7 +36,8 @@ The limits start with a wide margin and are corrected as cycles bring data (WAY-
 The report is Markdown, printed: a row for each slice with the files it changes, the characters
 and estimated tokens it reads, its verdict — `fits`, `too large` or `unchecked` — and why. Exit
 code: 0 when every slice fits; 1 when a slice is too large or unchecked; 2 with `Error: <message>`
-on stderr when the plan cannot be read or holds no slice.
+on stderr when the plan cannot be read, holds no slice, names two slices alike, or holds a heading
+`### Slice` in another form.
 
 Standard library only.
 """
@@ -54,6 +57,7 @@ READ_LIMIT_TOKENS = CONTEXT_WINDOW_TOKENS // 4
 CHANGE_LIMIT = 10
 
 SLICE_HEADING = re.compile(r"### Slice (\S+?)(?:\s+—.*)?\s*")
+SLICE_START = re.compile(r"###\s+Slice\b")
 FIELD = re.compile(r"- \*\*(Change|Read):\*\*(.*)")
 OTHER_FIELD = re.compile(r"- \*\*[^*]+:\*\*")
 PATH = re.compile(r"`([^`]+)`")
@@ -69,6 +73,7 @@ class Slice:
     ident: str
     change: list[str] = field(default_factory=list)
     read: list[str] = field(default_factory=list)
+    fields: set[str] = field(default_factory=set)
 
 
 @dataclass
@@ -109,6 +114,8 @@ def parse_plan(text: str) -> list[Slice]:
             slices.append(current)
             target = None
             continue
+        if SLICE_START.match(line):
+            raise SliceSizeError(f"a slice heading is not `### Slice <id> — <goal>`: {line}")
         if line.startswith("#"):
             current = target = None
             continue
@@ -117,9 +124,10 @@ def parse_plan(text: str) -> list[Slice]:
         found = FIELD.fullmatch(line)
         if found:
             target = current.change if found.group(1) == "Change" else current.read
-            target.extend(PATH.findall(found.group(2)))
+            current.fields.add(found.group(1))
+            target.extend(paths(found.group(2)))
         elif target is not None and line.startswith("  ") and not OTHER_FIELD.match(line.strip()):
-            target.extend(PATH.findall(line))
+            target.extend(paths(line))
         else:
             target = None
     if not slices:
@@ -132,6 +140,10 @@ def parse_plan(text: str) -> list[Slice]:
     return slices
 
 
+def paths(text: str) -> list[str]:
+    return [path for path in PATH.findall(text) if path != "none"]
+
+
 def locate(root: Path, written: str) -> Path | None:
     """The file a path of the plan names under the root, or None where it names none there."""
     candidate = (root / written).resolve()
@@ -142,12 +154,16 @@ def locate(root: Path, written: str) -> Path | None:
 
 def measure(item: Slice, root: Path) -> Size:
     problems: list[str] = []
+    if not item.fields:
+        problems.append("the slice has neither *Change* nor *Read*")
     whole: dict[Path, str] = {}
     ranges: dict[Path, list[tuple[int, int, str]]] = {}
     changed = dict.fromkeys(item.change)
     for written in changed:
         found = locate(root, written)
-        if found is not None:
+        if RANGE.fullmatch(written):
+            problems.append(f"`{written}` in *Change* names a range, not a file")
+        elif found is not None:
             whole[found] = written
         elif (root / written).resolve().is_relative_to(root) and not (root / written).exists():
             continue  # a file the slice creates has nothing to read

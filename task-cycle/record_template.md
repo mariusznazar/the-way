@@ -7,8 +7,6 @@
 - Target branch and base: <branch and commit>
 - Task branch: <branch>
 - Foundation route: <unchanged | entry or invariant-test change; affected entries>
-- Spec: <written — the open design choice | none — no open design choice | written after a
-  discarded attempt>
 - Status: running | blocked | request open | complete
 
 ## Sharpness at start and after the final diff

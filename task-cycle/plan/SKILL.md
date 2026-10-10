@@ -37,9 +37,9 @@ asks the human.
 
 ## 2. Find an open design choice
 
-Before cutting, look for an open design choice the task and its spec leave (WAY-135): a foundation
-entry the change needs that neither a row of *Settlements to record*, a projected entry the task
-carries nor the spec gives, or another way that is costly to turn back once code is written on it.
+Before cutting, look for an open design choice (WAY-135), which reading the code may show where
+the task alone did not: an entry the change needs beyond the rows of *Settlements to record*, the
+projected entries the task carries and the spec, or a way the code makes costly to turn back.
 Where one stands, write no plan: return to the orchestrator a report of the choice, where it shows
 and the ways open, so that a spec is written first. A choice of how to make what the task and the
 foundation settle is no such choice: make it in the plan and list it under *Choices*.
@@ -96,7 +96,7 @@ Write the plan in this form; the script reads the slice headings and the fields 
 - *Change* names every file the slice changes or creates. *Read* names what its agent has to read
   to make it besides those files: a file whole, or `<path>:<first>-<last>` where a range is enough,
   such as the entries of a long log the slice rests on. Paths are relative to the repository root;
-  `none` stands for an empty field.
+  none, written without backticks, stands for an empty field.
 - *Checks* are commands that can actually run in the product, named with their arguments, and the
   checks the parts touched call for (WAY-13). A slice that changes behaviour names the test it
   starts from.

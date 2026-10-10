@@ -53,13 +53,12 @@ state.
 
 4. Determine and record whether the task changes the foundation (WAY-13), which selects its
    foundation route before implementation. In the same analysis, settle whether the task leaves
-   an open design choice (WAY-135): a choice of a foundation entry the change needs that the task
-   does not carry as a row of *Settlements to record* or a projected entry, or of another way that
-   is costly to turn back once code is written on it. An entry that follows from the change with no
-   way left open, such as a part-map line for a file the change adds, leaves no such choice, and an
-   invariant whose sentence the task carries is none (WAY-69). Where one stands, the
-   cycle writes a spec (step 6); otherwise it goes from this step to the plan (step 8). Record the
-   finding with the entries and ways you weighed and the reason for each. Calculate the
+   an open design choice (WAY-135). A row of *Settlements to record* or a projected entry the task
+   carries settles its entry, an invariant's included; an entry that follows from the change with no
+   way left open, such as a part-map line for a file the change adds, is no choice at all. Where an
+   open design choice stands, the cycle writes a spec (step 6); otherwise it goes from this step to
+   the plan (step 8). Record the finding with the entries and ways you weighed and the reason for
+   each. Calculate the
    three sharpness inputs: criticality from the touched parts (unknown failure modes count as
    highest), whether touched files are trust boundaries, and whether any operation cannot be
    undone. Every slice gets its own review even for low criticality. For a
