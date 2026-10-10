@@ -103,8 +103,8 @@ leads. A rule added for a mistake that can no longer be named is proposed for re
 whose mistake is named but may no longer happen is proposed as a removal test (section 7 of the
 principles).
 
-In a product that uses the-way, the proposals leave out `.claude/rules/the-way.md`, the block of
-`AGENTS.md` between `<!-- the-way:begin -->` and `<!-- the-way:end -->`, and the entry points
+In a product that uses the-way, the proposals leave out the root `CLAUDE.md` the installer creates,
+the block of `AGENTS.md` between `<!-- the-way:begin -->` and `<!-- the-way:end -->`, and the entry points
 `.claude/skills/the-way-*` and `.agents/skills/the-way-*` that the-way's installer writes. Where
 they differ from the layout of section 4, the output says so in a note on the installer after the
 table, never as a row to apply.
