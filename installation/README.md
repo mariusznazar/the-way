@@ -16,8 +16,8 @@ run. It does not write product entries or start the product's task cycle. The `i
   `.gitmodules`, so it must work on every machine and cloud session that uses the product. While
   the-way is private, each of them needs read access to it.
 - Claude Code or Codex as the agent. Claude Code reads the project skills from `.claude/skills/`
-  and the guidance from `.claude/rules/the-way.md`; Codex reads the same skills from
-  `.agents/skills/` and the same guidance from the product's root `AGENTS.md`.
+  and imports the product's root `AGENTS.md` through root `CLAUDE.md`; Codex reads the same
+  skills from `.agents/skills/` and the shared guidance from root `AGENTS.md`.
 
 The installer uses Python's standard library and Git. It calls no shell and installs no package.
 Its paths and subprocess arguments do not depend on PowerShell, Bash, or a particular operating
@@ -55,8 +55,8 @@ installer allows Git's file protocol only when the URL is a local path or a `fil
 | `foundations/environment_facts.md` | Empty fact file with its required withdrawn identifiers table. |
 | `.claude/skills/the-way-*/SKILL.md` | Twelve project skill entry points for Claude Code: the five foundation entry skills, `find-foundation-entries`, `define-project`, `settle-technology`, `refine-task`, `implement-task`, `plan-task`, and `critique`. Each reads its source skill and referenced files from `.the-way` at the pinned commit, and sends work that skill hands to another the-way skill to the `the-way-` project skill of that name. |
 | `.agents/skills/the-way-*/SKILL.md` | The same twelve entry points for Codex, byte for byte. |
-| `.claude/rules/the-way.md` | The product guidance for Claude Code: initializing the submodule, using only the `the-way-*` skills, running the-way's scripts as `.the-way/<path>` on the product's files, the `--base` and `--merge-onto` commits, the empty part map's reports, and running the checks before a merge. It names no commit, so it changes only when the guidance changes. |
-| `AGENTS.md` | The same guidance for Codex, between `<!-- the-way:begin -->` and `<!-- the-way:end -->`. |
+| `AGENTS.md` | The shared product guidance for Claude Code and Codex, between `<!-- the-way:begin -->` and `<!-- the-way:end -->`: initializing the submodule, using only the `the-way-*` skills, running the-way's scripts as `.the-way/<path>` on the product's files, the `--base` and `--merge-onto` commits, the empty part map's reports, and running the checks before a merge. It names no commit, so it changes only when the guidance changes. |
+| `CLAUDE.md` | Created at the product root with the sole line `@AGENTS.md` when absent, so Claude Code receives the shared guidance and the product's other instructions in `AGENTS.md`. An existing file is preserved byte for byte. |
 | `.gitignore` | The line `.runs/`. The invariants format guard requires the record of a run that a command names to be ignored by Git. |
 
 The `implement-task` entry point requires Superpowers 6.4.1 and a harness that can dispatch
@@ -64,23 +64,25 @@ subagents. The installer creates its wrapper but does not install Superpowers; t
 these prerequisites before starting a task cycle.
 
 The product commits the gitlink, `.gitmodules`, the foundation files, the `.claude` and `.agents`
-files, `AGENTS.md` and `.gitignore` as one product change. The installer stages only the two submodule paths; review and stage the other
-files in the product's normal workflow. A later process version enters the product through a
+files, `AGENTS.md`, `CLAUDE.md` and `.gitignore` as one product change. The installer stages only
+the two submodule paths; review and stage the other files in the product's normal workflow. A later process version enters the product through a
 separate product task that moves the gitlink and updates its project skill entry points (WAY-34).
 In that task, move the gitlink and the `.the-way` checkout to the new commit, delete the installed
-wrappers in `.claude/skills/the-way-*/SKILL.md` and `.agents/skills/the-way-*/SKILL.md` and
-`.claude/rules/the-way.md`, then run the installer from a the-way checkout at the new commit with
-`--apply`. It recreates the twenty-two wrappers and rule for the new commit and leaves the foundation files as
-they are. The block in `AGENTS.md` stays as it is unless the guidance text changed between the two
-commits; then the installer stops on the block, and the task removes it, markers included, before
+wrappers in `.claude/skills/the-way-*/SKILL.md` and `.agents/skills/the-way-*/SKILL.md`, then
+run the installer from a the-way checkout at the new commit with `--apply`. It recreates the
+twenty-four wrappers for the new commit and leaves the foundation files as they are. Only when
+migrating from an older pin that installed `.claude/rules/the-way.md`, remove that old rule in the
+product task; the current installer neither writes nor deletes it. The installer creates root
+`CLAUDE.md` if absent and preserves it if present. The block in `AGENTS.md` stays as it is unless
+the guidance text changed between the two commits; then the installer stops on the block, and the task removes it, markers included, before
 running the installer again. After the installer, run the format guard of every foundation file
 and the product's tests with the new pin, and name the result in the request; a pin move that
 changes no foundation file still changes the guards that judge them.
 
 ## Existing files and incomplete setup
 
-An existing foundation file is preserved byte for byte. An existing project skill or rule at a
-path the installer owns is accepted only if its content matches; a different one stops the run.
+An existing foundation file is preserved byte for byte. An existing project skill at a path
+the installer owns is accepted only if its content matches; a different one stops the run.
 An existing `AGENTS.md` without the markers gets the block appended after a blank line, and an
 existing `.gitignore` without the exact line `.runs/` gets that line appended on a line of its own;
 the existing content of both stays byte for byte, and the added lines use the file's own line
@@ -93,7 +95,11 @@ anything is written. The plan, shown both in the preview and before the `--apply
 ignores a path the installer writes — through `.gitignore` or any other ignore source Git applies —
 since such a file cannot be committed and other clones and cloud sessions never get it; it warns
 when an `AGENTS.override.md` at the root would hide `AGENTS.md` from Codex, and when `AGENTS.md`
-would exceed the 32 KiB Codex reads. A warning does not stop the run.
+would exceed the 32 KiB Codex reads. It also warns when an existing root `CLAUDE.md` has no
+effective `@AGENTS.md` import: add the import by hand so Claude Code receives the shared
+instructions. A mention inside a Markdown code span or fenced code block does not count as an
+import, nor does an import followed immediately by punctuation. A warning does not stop the run.
+An existing `CLAUDE.md` must be a regular UTF-8 file; otherwise the run stops before writing.
 An existing `.the-way` pin to another commit also stops the run. The installer never changes an
 existing product entry to make it fit a template. Before adding a new submodule, an existing
 `.gitmodules` must be tracked and clean; Git then adds the new section without replacing its
@@ -120,7 +126,8 @@ run, preservation of existing files, a conflicting wrapper in either skill direc
 without a commit or a branch name and its commands on a main branch not called `main`, each case of
 `AGENTS.md` and `.gitignore` above — created, appended with the lines the preview shows, kept, or
 refused as a directory, as non-UTF-8 text or for its markers — the refusal of an ignored
-`.the-way`, the three warnings, empty file form,
+`.the-way`, the four warnings, creation and preservation of root `CLAUDE.md`, effective import detection,
+the absence of a generated Claude rule, empty file form,
 the invariants guard accepting a record under `.runs/`, and initialization in a fresh checkout.
 A symlinked `AGENTS.md` or `.gitignore` is refused by the same check as a directory but is not
 tested, since creating a symlink needs extra rights on Windows. They

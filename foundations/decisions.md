@@ -3886,13 +3886,13 @@ proposal the files and the marked block the-way's installer writes in a product.
   claude-code-imports@5b9359fd
 - **Relations:** derives from WAY-100@e7a74a18
 - **Verification:** level 1 — invariants: root-claude-md-import. Level 2 for what `CLAUDE.md` holds
-  and for the installer's files — an agent compares the change with the decision:
+  and for respecting the installer's files — an agent compares the change with the decision:
   - complies: the-way's `CLAUDE.md` is the one line `@AGENTS.md`; the skill proposes, after the
-    import, a note for Claude Code alone; in a product, the skill reports that
-    `.claude/rules/the-way.md` repeats the installer's block of `AGENTS.md` as a note on the
-    installer;
+    import, a note for Claude Code alone; in a product, the skill leaves the installer's root
+    `CLAUDE.md` and marked block of `AGENTS.md` to the installer;
   - violates: the skill proposes a `CLAUDE.md` restating the rules of `AGENTS.md`; the skill
-    proposes to delete `.claude/rules/the-way.md` or edit the block between the installer's markers.
+    proposes to delete the installer's root `CLAUDE.md` or edit the block between the installer's
+    markers.
 - **Review when:** none
 - **Origin:** none
 - **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/11
@@ -4270,3 +4270,27 @@ human action; every human action before the cycle — one that uses the cycle's 
 first; the agent placing each human action alone — the human performs it and is the one to fit it
 into the work; human actions listed only when someone asks for them — a step the human has to take
 comes to light after the work that needed it.
+
+### WAY-141/1 — How does the installer give Claude Code the guidance in a product's root AGENTS.md?
+
+When a product has no root `CLAUDE.md`, the installer creates one whose sole line is `@AGENTS.md`,
+so Claude Code receives the installer's block and the product's other instructions from root
+`AGENTS.md`. When a root `CLAUDE.md` already exists without an effective `@AGENTS.md` import, the
+installation plan warns about the missing import, and the installer leaves every existing root
+`CLAUDE.md` untouched. The installer writes no `.claude/rules/the-way.md`.
+
+- **Change:** new decision
+- **Scope:** installation
+- **Based on:** claude-code-imports@5b9359fd · claude-code-agents-md@e4007cb8
+- **Relations:** none
+- **Verification:** level 1 — invariants: installation-claude-guidance.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/15
+
+*Rationale:* importing the shared instructions gives Claude Code the product's backlog location
+as well as the installer's guidance through one route. An existing file may hold product guidance,
+so the installer reports a missing import before confirmation and leaves the file to its owner.
+*Rejected:* a generated rule repeating the installer's block — it duplicates guidance without
+carrying the product's other instructions; adding the import to an existing file — it changes
+product-owned guidance without its owner's choice.

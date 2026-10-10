@@ -37,7 +37,8 @@ SKILLS.update({
 })
 # Claude Code reads project skills from .claude/skills, Codex from .agents/skills.
 SKILL_DIRECTORIES = (".claude", ".agents")
-RULE = Path(".claude") / "rules" / "the-way.md"
+CLAUDE = "CLAUDE.md"
+CLAUDE_IMPORT = "@AGENTS.md\n"
 AGENTS = "AGENTS.md"
 BEGIN = "<!-- the-way:begin -->"
 END = "<!-- the-way:end -->"
@@ -185,6 +186,34 @@ def read_text_file(path: Path, name: str) -> str:
         raise RuntimeError(f"Existing {name} is not UTF-8 text") from error
 
 
+def has_agents_import(text: str) -> bool:
+    """Recognize the root import outside Markdown fenced blocks and code spans."""
+    prose = []
+    fence = None
+    for line in text.splitlines(keepends=True):
+        if fence:
+            if re.fullmatch(r" {0,3}" + re.escape(fence[0]) +
+                            "{" + str(len(fence)) + r",}[ \t]*(?:\r?\n)?", line):
+                fence = None
+            prose.append("\n")
+            continue
+        opening = re.match(r" {0,3}(`{3,}|~{3,})(.*)", line)
+        if opening and (opening[1][0] != "`" or "`" not in opening[2]):
+            fence = opening[1]
+            prose.append("\n")
+        else:
+            prose.append(line)
+    outside_code = re.sub(r"(?<!`)(`+)(?!`)[\s\S]*?(?<!`)\1(?!`)", " ", "".join(prose))
+    return re.search(r"(?<!\S)@AGENTS\.md(?=\s|$)", outside_code) is not None
+
+
+def claude_change(path: Path) -> tuple[str, str]:
+    if not os.path.lexists(path):
+        return "CREATE", CLAUDE_IMPORT
+    read_text_file(path, CLAUDE)
+    return "KEEP", ""
+
+
 def appended(text: str, addition: str, blank_line: bool) -> str:
     """What to append to an existing text so that `addition` starts on its own line, after a
     blank line when asked, in the file's own line ending."""
@@ -274,9 +303,9 @@ def plan(target: Path, commit: str,
         wrapper = skill_wrapper(path, name, commit)
         for directory in SKILL_DIRECTORIES:
             files[target / directory / "skills" / f"the-way-{name}" / "SKILL.md"] = wrapper
-    files[target / RULE] = product_guidance()
     shared = {target / AGENTS: agents_change(target / AGENTS),
-              target / IGNORE: ignore_change(target / IGNORE)}
+              target / IGNORE: ignore_change(target / IGNORE),
+              target / CLAUDE: claude_change(target / CLAUDE)}
 
     pin = existing_pin(target)
     submodule_path = target / SUBMODULE
@@ -354,6 +383,10 @@ def warnings_for(target: Path, files: dict[Path, str],
         warnings.append("git ignores these paths in this repository, so they cannot be committed "
                         "and other clones and cloud sessions will not get them: " +
                         ", ".join(ignored))
+    if shared[target / CLAUDE][0] == "KEEP" and not has_agents_import(
+            read_text_file(target / CLAUDE, CLAUDE)):
+        warnings.append(f"{CLAUDE} has no effective @AGENTS.md import; Claude Code may miss "
+                        f"the shared instructions in {AGENTS}. Add @AGENTS.md by hand")
     if os.path.lexists(target / CODEX_OVERRIDE):
         warnings.append(f"{CODEX_OVERRIDE} exists; Codex reads it instead of {AGENTS}, so it will "
                         f"not see the the-way block unless {CODEX_OVERRIDE} carries the same text")

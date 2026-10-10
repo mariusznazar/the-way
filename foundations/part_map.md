@@ -237,6 +237,9 @@ The part answers for preparing a product repository to use one pinned commit of 
     the additions `installation-command` names — a product starts with the wrong process, or loses
     what its own files held: its foundation, its instructions to agents, its ignore rules or its
     other submodules — high — not detected
+  - the installer omits the root Claude import or its warning, or writes a second rule file —
+    Claude Code misses the product's instructions or receives duplicate guidance — high — detected
+    by installation-claude-guidance
   - a project skill resolves to another process version — a product entry is written under the
     wrong rules — high — not detected
 - **Trust boundary:** installation/install.py

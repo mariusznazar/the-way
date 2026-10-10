@@ -61,6 +61,9 @@ class InstallTest(unittest.TestCase):
 
         preview = self.install()
         self.assertEqual(preview.returncode, 0, preview.stderr)
+        self.assertIn("CREATE CLAUDE.md", preview.stdout)
+        self.assertIn("+@AGENTS.md", preview.stdout)
+        self.assertFalse((self.product / "CLAUDE.md").exists())
         self.assertIn("CREATE foundations/invariants.md", preview.stdout)
         self.assertIn("KEEP foundations/decisions.md", preview.stdout)
         self.assertNotIn("WARNING", preview.stdout)
@@ -90,8 +93,9 @@ class InstallTest(unittest.TestCase):
                           "`the-way-` prefix, never an unprefixed one", text)
             for _, sibling in NAMES:
                 self.assertIn(f"`{sibling}`", text)
-        rule = (self.product / ".claude/rules/the-way.md").read_text(encoding="utf-8")
-        self.assertEqual(rule, install.product_guidance())
+        # invariant: installation-claude-guidance/1
+        self.assertFalse((self.product / ".claude/rules/the-way.md").exists())
+        self.assertEqual((self.product / "CLAUDE.md").read_bytes(), b"@AGENTS.md\n")
         self.assertEqual((self.product / "AGENTS.md").read_text(encoding="utf-8"), BLOCK)
         self.assertEqual((self.product / ".gitignore").read_bytes(), b".runs/\n")
         before = self.product_files()
@@ -306,7 +310,7 @@ class InstallTest(unittest.TestCase):
         for _, name in NAMES:
             self.assertIn(f".claude/skills/the-way-{name}/SKILL.md", warning[0])
             self.assertIn(f".agents/skills/the-way-{name}/SKILL.md", warning[0])
-        self.assertIn(".claude/rules/the-way.md", warning[0])
+        self.assertNotIn(".claude/rules/the-way.md", warning[0])
         self.assertNotIn("AGENTS.md", warning[0])
         self.assertNotIn("foundations/", warning[0])
         # A warning, not a refusal: the run goes on and shows it before asking.
@@ -372,6 +376,92 @@ class InstallTest(unittest.TestCase):
         self.assertFalse((self.product / "foundations").exists())
         self.assertFalse((self.product / "AGENTS.md").exists())
         self.assertFalse((self.product / ".gitignore").exists())
+
+    def test_existing_claude_import_detection_and_cancel_preserve_bytes(self) -> None:
+        # invariant: installation-claude-guidance/1
+        claude = self.product / "CLAUDE.md"
+        cases = (
+            (b"@AGENTS.md\r\n# Guidance\r\n", False),
+            (b"Read @AGENTS.md for shared guidance.\n", False),
+            (b"`@AGENTS.md`\n", True),
+            (b"``@AGENTS.md``\n", True),
+            (b"``example ` @AGENTS.md `\n", True),
+            (b"~~~markdown\n@AGENTS.md\n~~~\n", True),
+            (b"```markdown\n@AGENTS.md\n````\n", True),
+            (b"```\nexample\n```\n@AGENTS.md\n", False),
+            (b"@AGENTS.md.backup\n", True),
+            (b"@AGENTS.md,\n", True),
+            (b"# Local instructions only\r\n", True),
+        )
+        for original, warns in cases:
+            with self.subTest(original=original):
+                claude.write_bytes(original)
+                before = self.product_files()
+                preview = self.install()
+                cancelled = self.install("--apply", input_text="n\n")
+                for result in (preview, cancelled):
+                    self.assertEqual(result.returncode, 0, result.stderr)
+                    self.assertIn("KEEP CLAUDE.md", result.stdout)
+                    self.assertEqual("WARNING:" in result.stdout, warns, result.stdout)
+                    if warns:
+                        self.assertIn("@AGENTS.md", result.stdout)
+                self.assertIn("Cancelled; no changes", cancelled.stdout)
+                if warns:
+                    self.assertLess(cancelled.stdout.index("WARNING:"),
+                                    cancelled.stdout.index("Apply these changes?"))
+                self.assertEqual(before, self.product_files())
+                self.assertEqual(claude.read_bytes(), original)
+
+    def test_warns_for_ignored_new_claude_import(self) -> None:
+        # invariant: installation-claude-guidance/1
+        (self.product / ".gitignore").write_bytes(b"CLAUDE.md\n")
+        preview = self.install()
+        self.assertEqual(preview.returncode, 0, preview.stderr)
+        self.assertIn("WARNING: git ignores these paths", preview.stdout)
+        self.assertIn("CLAUDE.md", preview.stdout.split("WARNING:")[1])
+        applied = self.install("--apply", input_text="y\n")
+        self.assertEqual(applied.returncode, 0, applied.stderr)
+        self.assertLess(applied.stdout.index("WARNING:"), applied.stdout.index("Apply these changes?"))
+        self.assertEqual((self.product / "CLAUDE.md").read_bytes(), b"@AGENTS.md\n")
+
+    def test_rejects_claude_directory_before_writing(self) -> None:
+        # invariant: installation-claude-guidance/1
+        claude = self.product / "CLAUDE.md"
+        claude.mkdir()
+        for args in ((), ("--apply",)):
+            result = self.install(*args, input_text="y\n")
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("Existing CLAUDE.md is not a regular file", result.stderr)
+        self.assertEqual(list(claude.iterdir()), [])
+        self.assertEqual(sorted(path.name for path in self.product.iterdir()), [".git", "CLAUDE.md"])
+
+    def test_rejects_claude_invalid_utf8_before_writing(self) -> None:
+        # invariant: installation-claude-guidance/1
+        claude = self.product / "CLAUDE.md"
+        claude.write_bytes(b"\xff\xfe rules")
+        for args in ((), ("--apply",)):
+            result = self.install(*args, input_text="y\n")
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("Existing CLAUDE.md is not UTF-8 text", result.stderr)
+        self.assertEqual(claude.read_bytes(), b"\xff\xfe rules")
+        self.assertEqual(sorted(path.name for path in self.product.iterdir()), [".git", "CLAUDE.md"])
+
+    def test_rejects_symlink_at_claude_without_touching_target(self) -> None:
+        # invariant: installation-claude-guidance/1
+        outside = Path(self.temporary.name) / "outside.md"
+        outside.write_bytes(b"@AGENTS.md\n")
+        claude = self.product / "CLAUDE.md"
+        try:
+            claude.symlink_to(outside)
+        except OSError as error:
+            self.skipTest(f"Symlinks unavailable: {error}")
+        for args in ((), ("--apply",)):
+            result = self.install(*args, input_text="y\n")
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("Existing CLAUDE.md is not a regular file", result.stderr)
+        self.assertTrue(claude.is_symlink())
+        self.assertEqual(outside.read_bytes(), b"@AGENTS.md\n")
+        self.assertEqual(sorted(path.name for path in self.product.iterdir()), [".git", "CLAUDE.md"])
 
     def test_empty_foundations_have_valid_form(self) -> None:
         applied = self.install("--apply", input_text="y\n")
