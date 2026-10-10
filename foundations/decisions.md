@@ -426,7 +426,7 @@ a human decides on every change that cannot be undone.
     one that returns knowledge instead of a change without a human setting it so.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/13
 
 *Rationale:* size misleads both ways about what can go wrong: a rename across many files is easy to
 undo, a one-line change to a stored format can destroy every user's data, so what a task touches,
@@ -3609,7 +3609,7 @@ reviewed change to the-way before use.
     review, or silently runs a different Superpowers version.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/13
 
 *Rationale:* the borrowed skills provide design, test and review methods, while the-way must keep
 control of task sources, binding foundation approvals and the single human review point. Naming
@@ -4017,7 +4017,7 @@ the report writes the spec, from which the plan is written again.
   that the cycle of https://github.com/mariusznazar/the-way/pull/11 used, for a task of like size ·
   check by: 2026-11-30
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/13
 
 *Rationale:* a spec and its review earn their cost where an agent designs a foundation entry itself,
 whose agreement with the current entries has to be checked before code is written on it; where the
@@ -4066,7 +4066,7 @@ large for the agent making it is discarded with its code and goes back to the pl
   the cycle of https://github.com/mariusznazar/the-way/pull/11 used, for a task of like size ·
   check by: 2026-11-30
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/13
 
 *Rationale:* a plan earns its cost by dividing the change, so that a narrow agent makes each slice
 and a narrow reviewer reads it, which is where reviews catch the errors that matter; code written
