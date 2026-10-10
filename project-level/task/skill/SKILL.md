@@ -72,6 +72,16 @@ Another the-way skill named here is the project skill with the `the-way-` prefix
   absorbing the project's other work. Answer a question that determines required product
   behavior in this document; reproduce an implementation question under `Questions carried to
   cycle`. Do not let a question in the task's scope disappear.
+- Name each effect the task has outside the product's repository as a human action under
+  *Human actions*; a read outside the repository stays with the agent (WAY-140). For each action,
+  propose its placement by that section's rule in the template, and have the human place it,
+  asked as "How a skill asks" says (WAY-140). An action placed before the cycle and not yet done
+  keeps `Status: waiting for human`; mark it `done` once the human has performed it (WAY-124).
+- When the task's outcome deploys the product or changes how or where it runs, check that the
+  product has a deployment skill covering every item of the list WAY-139 holds. Where it has
+  none or an item is missing, add an item to *To do* for that work, or offer the human to split
+  that work into a task of its own, which step 1 then handles (WAY-139). A task with no such
+  outcome takes no check.
 
 ## 4. Carry the foundation decisions
 
@@ -109,8 +119,9 @@ Another the-way skill named here is the project skill with the `the-way-` prefix
 - Check that every blocking question has an answer, the numbered work is executable, the
   questions brought into this task are accounted for, the decisions in play are present or
   explicitly `none` after a search, and *Settlements to record* opens with its `Candidates:` line,
-  no row awaiting the human. For a project member, also check its plan item and
-  assignments; for any task using approved project settlements, check the definition's approval
+  no row awaiting the human, and *Human actions* reads `none` or has every action placed and every
+  action before the cycle done (WAY-124, WAY-140). For a project member, also check its plan
+  item and assignments; for any task using approved project settlements, check the definition's approval
   and that every projected entry its code makes true is marked with the part made true.
   Mark `Status: ready for cycle` only when its applicable checks pass; report an obstacle instead
   of declaring readiness.
