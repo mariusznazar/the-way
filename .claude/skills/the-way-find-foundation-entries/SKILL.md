@@ -1,6 +1,6 @@
 ---
 name: the-way-find-foundation-entries
-description: Use when a source has to be searched for what should become entries of a product's foundation — decisions, invariants, glossary terms, environment facts, changes to the part map — before any is written; for now, a project definition whose settlements are to be projected before the project is broken into tasks. Use this checkout's own the-way.
+description: Use when a source has to be searched for what should become entries of a product's foundation — decisions, invariants, glossary terms, environment facts, changes to the part map — before any is written; for now, a project definition whose settlements are to be projected before the project is broken into tasks, or a task whose refinement's settlements are to be kept for its cycle. Use this checkout's own the-way.
 ---
 
 # the-way-find-foundation-entries

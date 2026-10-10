@@ -3539,9 +3539,11 @@ tables come one choice at a time.
 
 A task document records whether the task is independent, belongs to an item of a project's plan,
 or uses an approved project definition as a source without belonging to its plan; it carries the
-task's scope, temporary exclusions, relevant current foundation decisions and any approved
-projected wording it uses. It is ready when its required outcome is stated, every known question
-blocking that outcome is answered, and implementation questions carried into the cycle are named.
+task's scope, temporary exclusions, relevant current foundation decisions, any approved projected
+wording it uses and the settlements its refinement keeps for the foundation (WAY-134). It is ready
+when its required outcome is stated, every known question blocking that outcome is answered, the
+human has accepted or rejected every candidate settlement its refinement found, and implementation
+questions carried into the cycle are named.
 A project member also matches its plan item's scope, dependencies and assigned entries; any task
 using an approved definition checks that its approval still holds and names each projected entry,
 or the part of it, that its code makes true, while source-only use takes no other assignment or
@@ -3551,17 +3553,18 @@ dependency from the plan.
 - **Scope:** project-level, task-cycle
 - **Based on:** none
 - **Relations:** derives from WAY-106@63eddf70 · derives from WAY-118@5af868b3 · derives from
-  WAY-126@35accf8b
+  WAY-126@35accf8b · derives from WAY-134@b858b34f
 - **Verification:** level 2 — an agent compares the task document with its stated sources:
   - complies: an independent task is ready without a project plan, a source-only task uses
     approved project wording without taking its plan's assignments yet names a projected entry its
     code makes true with the part made true, and a project member matches its plan item;
   - violates: a source-only task is blocked for lack of a plan item, a project member is ready
-    despite a mismatch with its assigned work, or a task leaves out a projected entry its code
-    makes true, so its cycle writes a second entry for the same rule.
+    despite a mismatch with its assigned work, a task leaves out a projected entry its code
+    makes true, so its cycle writes a second entry for the same rule, or a task is ready while a
+    candidate settlement of its refinement awaits the human.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-10-05
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/12
 
 *Rationale:* a project can inform a task without owning it; the handoff must show which
 relationship applies so the next agent does not import work or dependencies the task never took on.
@@ -3956,3 +3959,51 @@ hook of one agent tool also reaches only that tool's sessions.
 *Rejected:* an instruction alone, worded more strongly — a stronger wording is still a loaded rule,
 which is not followed every time; a mechanism with no word to the agent — the agent learns of it
 only by failing it; a local hook as the keeper of every rule — one switch skips it.
+
+### WAY-134/1 — How does a task carry what its refinement settles for the foundation?
+
+Before a task is ready for its cycle, the agent refining it shows the human a table of candidates
+found in the task document and the conversation that refined it, in the form WAY-115 gives with
+each settlement in the human's words, and the task document keeps the rows the human accepts. A
+candidate is a decision, an invariant, a glossary term, or an environment fact a candidate decision
+or invariant rests on, and a settlement that a current entry, or a projected entry the task
+carries, already states is no candidate. The task's cycle writes each kept row whole into the
+foundation in its foundation step, or in its return step where the foundation step missed it, one
+that no code makes true included, keeping its meaning and choosing its wording; where that meaning
+cannot hold, or the entry needs a value neither the row nor the cycle's work gives, the cycle asks
+the human through a blocked draft request rather than write another entry, and otherwise the human
+accepts the entry's meaning at the merge (WAY-114).
+
+- **Change:** new decision
+- **Scope:** project-level, task-cycle, elements-common, decisions, invariants, glossary,
+  environment-facts
+- **Based on:** none
+- **Relations:** derives from WAY-115@292bd21b · narrows WAY-114@04b4f599
+- **Verification:** level 2 — an agent compares the task document, or the cycle, with the decision:
+  - complies: a task whose human settled in refinement that an exported record keeps its owner
+    carries that row, and its cycle writes a decision with that meaning in its foundation step,
+    before the code, and names it in the request; a task whose refinement found nothing carries the
+    counting line with none below it;
+  - violates: the cycle writes the entry with another meaning, or leaves out a kept settlement
+    because no code makes it true; the refinement writes whole entries into the task document; a
+    kept row repeats a rule a current decision states.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/12
+
+*Rationale:* a settlement the human makes while a task is refined binds after the merge as much as
+one a project settles, yet with no place in the task document it reaches the cycle as an answer to
+a question, where it reads as one more choice the cycle may make otherwise. A row in the human's
+words carries the meaning into the cycle without a second point of acceptance: the wording stays
+the agent's, as for every entry a cycle writes, and the human judges the meaning at the merge. A
+table read from the whole document finds a settlement said in passing, and its column of what the
+cycle would guess drops one no reader would miss. A meaning that cannot hold goes back to the human
+before the request because the human settled it, and finding the change only at the merge would
+leave code already written for another meaning.
+*Rejected:* whole entries written while the task is refined, as a project definition projects
+them — a task has no gate to approve their wording, and refining a task would weigh as much as
+defining a project; noting a settlement only when the human states one — a settlement said in
+passing in the request is missed, and the agent alone decides what binds; letting the cycle change
+or drop a settlement and show the difference in the request — the human's settlement could be
+reversed and seen only once the code is written; decisions and invariants alone — a word whose
+meaning the human settled would be defined by the cycle.

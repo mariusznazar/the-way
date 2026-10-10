@@ -81,6 +81,7 @@ check is unchecked.
 - Part-map changes: <links or none after search>
 - Foundation compared with code in touched parts: <finding or none>
 - Projected entries written whole or in part: <links or none after search>
+- Rows of *Settlements to record* written: <row number and link for each row, or none>
 
 ## Independent assessment
 

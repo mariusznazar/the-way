@@ -89,14 +89,27 @@ Another the-way skill named here is the project skill with the `the-way-` prefix
   settlement. Do not replace approved wording with the agent's paraphrase.
 - An exclusion that survives this task is a decision candidate, not an item under `Out of scope`.
 
-## 5. Review and hand off
+## 5. Find what the refinement settles
+
+- Once the gaps are resolved and the decisions in play carried, find what the refinement settled
+  that binds after the task's merge, through `find-foundation-entries` with the task as its caller:
+  the source is the task document, the conversation that refined it and the material the task
+  started from; the next reader is the task's cycle; the mode is rows of the document's section
+  *Settlements to record* (WAY-134). This runs for every task, whatever its project relation: a
+  project member and a source-only task add their own settlements beside the projected entries
+  they carry.
+- A candidate that collides with a current decision or a projected entry goes back to step 4 as a
+  conflict; one that changes the task's scope goes back to step 3.
+
+## 6. Review and hand off
 
 - When the draft is complete, show it whole. Propose any block to move from Description to
   Context or remove, with a short reason for each; apply the moves the human accepts. If there
   is nothing worth moving, say so and continue.
 - Check that every blocking question has an answer, the numbered work is executable, the
-  questions brought into this task are accounted for, and the decisions in play are present or
-  explicitly `none` after a search. For a project member, also check its plan item and
+  questions brought into this task are accounted for, the decisions in play are present or
+  explicitly `none` after a search, and *Settlements to record* opens with its `Candidates:` line,
+  no row awaiting the human. For a project member, also check its plan item and
   assignments; for any task using approved project settlements, check the definition's approval
   and that every projected entry its code makes true is marked with the part made true.
   Mark `Status: ready for cycle` only when its applicable checks pass; report an obstacle instead

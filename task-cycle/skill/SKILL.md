@@ -25,9 +25,11 @@ choice approved or changed the rule.
 1. Read the task document in full. Require `Status: ready for cycle`. Its `Project relation:`
    controls the sources: independent tasks need no project; plan members require the exact approved
    plan item, dependencies and assignments; source-only tasks use relevant approved project
-   settlements without importing plan work. Recheck approval and current foundation versions before
-   starting. If a source changed, reconcile the task against it and record the effect; stop only
-   when its required outcome can no longer be established.
+   settlements without importing plan work. A task's *Settlements to record* lists what its
+   refinement settled for the foundation (WAY-134); a task document written before that section
+   existed carries no row. Recheck approval and current foundation versions before starting. If a
+   source changed, reconcile the task against it and record the effect; stop only when its required
+   outcome can no longer be established.
 2. Read the product's `AGENTS.md`, process pin, foundation and relevant code. Verify that the
    pinned the-way checkout matches the product's gitlink. Follow product-specific git and test
    rules. Search the current foundation for additional applicable entries or collisions; the
@@ -160,21 +162,26 @@ receives the executor's report beside the frozen task.
 
 Before dependent implementation, run the foundation step required by WAY-01 and WAY-03 whenever the
 task changes a foundation entry or an invariant test, or its plan item assigns, or its code makes
-true, a projected entry of its sources (WAY-126). Invoke the pinned element skills for the affected
-entries and write each entry into `foundations/` on the task branch without waiting for the human;
-keep, for the request, one sentence of its meaning in the task document's language (WAY-114). Write
-a projected entry the task marks or its plan item assigns whole, with *Approved by* transcribed from
-the definition's gate record; write a part of a projected entry, and every other new or changed
-decision, with *Approved by* `<approver>, merge of <request link>` (WAY-14) — never a date, which
-only the human's merge sets. A plan member writes only the entries its plan item assigns; one
-assigned to another item returns to the plan through a blocked draft request. Set every *Review
-when* yourself. Ask the human before the request only where you have no recommendation or an entry
-would change the meaning of an approved decision, through a blocked draft request holding the
-question. Search the whole foundation and run the applicable guards. An invariant's sentence, its
-check and the code it covers come from three different agents (WAY-69): give the check's author the
-sentence and its method, never the code's reasoning. Invariant tests written in this step are
-read-only during implementation; if later work needs one changed, return to this foundation step
-before continuing that work.
+true, a projected entry of its sources (WAY-126), or its *Settlements to record* holds a row
+(WAY-134). Invoke the pinned element skills for the affected entries and write each entry into
+`foundations/` on the task branch without waiting for the human; keep, for the request, one sentence
+of its meaning in the task document's language (WAY-114). Write a projected entry the task marks or
+its plan item assigns whole, with *Approved by* transcribed from the definition's gate record; write
+a part of a projected entry, and every other new or changed decision, with *Approved by*
+`<approver>, merge of <request link>` (WAY-14) — never a date, which only the human's merge sets.
+Write each row of *Settlements to record* whole, as an entry of its kind, one that no code makes
+true included: its wording is yours, its meaning the row's (WAY-134). Of the projected entries, a
+plan member writes only those its plan item assigns; one assigned to another item returns to the
+plan through a blocked draft request. Set every *Review when* yourself. Ask the human before the
+request only where you have no recommendation, an entry would change the meaning of an approved
+decision, a row's meaning cannot hold — the code shows an exception the row does not allow, or the
+row collides with a current entry — or a row's entry needs a value neither the row nor your work
+gives, through a blocked draft request holding the question; never write a row with another meaning.
+Search the whole foundation and run the applicable guards. An invariant's sentence, its check and
+the code it covers come from three different agents (WAY-69): give the check's author the sentence
+and its method, never the code's reasoning. Invariant tests written in this step are read-only
+during implementation; if later work needs one changed, return to this foundation step before
+continuing that work.
 
 9. On the full cycle, use Superpowers `subagent-driven-development`: fresh implementer and
    reviewer contexts for each meaningful plan task, followed by a whole-branch review. Its
@@ -200,25 +207,25 @@ before continuing that work.
     compare touched parts of the foundation with code. Write every one that binds after the merge
     (WAY-36) into the foundation as the foundation step writes; every other choice stays one line in
     the choice table. Nothing is deferred: what this request does not write is neither proposed nor
-    listed for later. Read the projected entries of the task's sources: write one the code makes
-    true that the foundation step missed (WAY-126) — for an invariant, its check comes from an agent
-    that did not write the code it covers and runs on that code; an entry assigned to another plan
-    item returns to the plan. A check the return step writes then goes to a code reviewer that did
-    not write it, which writes its deliberate break from the sentence, runs the check on it and
-    reports whether it fails (WAY-69, WAY-08). Write a new entry only for a rule none of them
-    states. Then have the
-    change's foundation entries and invariant tests assessed once, following
-    `elements/common/critique/SKILL.md` (WAY-10): one agent on a model other than the author's where
-    available, given the diff and the files of the assessed commit filtered to code, foundation and
-    invariant tests — never spec, plan, frozen task, chronology, reports, prompts or author
-    reasoning. Settle each remark yourself and record how; a remark reaches the human only as the
-    foundation step allows a question. If a settlement changes code, rerun the affected checks and
-    code review. A settlement that changes the assessed foundation entries or invariant tests does
-    not reopen the independent assessment: rerun the affected checks and the code review, whose
-    reviewer writes the deliberate break again. A remark that cannot be settled without changing
-    the meaning the task requires goes to the human as the foundation step allows a question.
-    Record the assessed range by commit hashes and its file list. A contradiction with
-    a current decision follows WAY-30; a collision without recorded precedence follows WAY-25. If
+    listed for later. Read the projected entries of the task's sources and the rows of its
+    *Settlements to record*: write a row the foundation step missed (WAY-134), and a projected entry
+    the code makes true that the foundation step missed (WAY-126) — for an invariant, its check
+    comes from an agent that did not write the code it covers and runs on that code; an entry
+    assigned to another plan item returns to the plan. A check the return step writes then goes to a
+    code reviewer that did not write it, which writes its deliberate break from the sentence, runs
+    the check on it and reports whether it fails (WAY-69, WAY-08). Write a new entry only for a rule
+    none of them states. Then have the change's foundation entries and invariant tests assessed
+    once, following `elements/common/critique/SKILL.md` (WAY-10): one agent on a model other than
+    the author's where available, given the diff and the files of the assessed commit filtered to
+    code, foundation and invariant tests — never spec, plan, frozen task, chronology, reports,
+    prompts or author reasoning. Settle each remark yourself and record how; a remark reaches the
+    human only as the foundation step allows a question. If a settlement changes code, rerun the
+    affected checks and code review. A settlement that changes the assessed foundation entries or
+    invariant tests does not reopen the independent assessment: rerun the affected checks and the
+    code review, whose reviewer writes the deliberate break again. A remark that cannot be settled
+    without changing the meaning the task requires goes to the human as the foundation step allows a
+    question. Record the assessed range by commit hashes and its file list. A contradiction with a
+    current decision follows WAY-30; a collision without recorded precedence follows WAY-25. If
     those rules prevent the required code, report the task as blocked in a draft request.
 
 ## Request and handoff
@@ -252,16 +259,17 @@ before continuing that work.
     links on the full cycle, what changed and why, test and review evidence with every check that
     did not run named, and *What
     this request settles*: each foundation entry the change writes or changes, as its identifier and
-    one sentence of its meaning in the task document's language, projected entries apart from new
-    ones. Beside them, what the foundation puts in front of the human at the merge: an invariant
-    kept at its version under a correction, with its old and new sentence (WAY-57); a part whose
-    computed criticality fell (WAY-46); a recovered row, with the gate's report (WAY-58); a moved
-    use of a changed definition and a term WAY-97 asks the request to name. Under *Questions*, only
-    the questions the foundation step allows, each with its options and a recommendation where one
-    exists; where there are none, say so. Give the number of other choices and a link to the choice
-    log. Link the cycle record and full reports by the SHA of the
-    record commit. If the task was impossible, mark the request `blocked`, show the smallest missing
-    fact or authorization and the attempted alternatives; do not present partial work as complete.
+    one sentence of its meaning in the task document's language, projected entries and the entries
+    written from rows of *Settlements to record* apart from new ones. Beside them, what the
+    foundation puts in front of the human at the merge: an invariant kept at its version under a
+    correction, with its old and new sentence (WAY-57); a part whose computed criticality fell
+    (WAY-46); a recovered row, with the gate's report (WAY-58); a moved use of a changed definition
+    and a term WAY-97 asks the request to name. Under *Questions*, only the questions the foundation
+    step allows, each with its options and a recommendation where one exists; where there are none,
+    say so. Give the number of other choices and a link to the choice log. Link the cycle record and
+    full reports by the SHA of the record commit. If the task was impossible, mark the request
+    `blocked`, show the smallest missing fact or authorization and the attempted alternatives; do
+    not present partial work as complete.
 14. Before reporting completion, confirm the record lists all dispatches, choices, rulings,
     checks, fixes and skipped stages. The final report lists any write to the task's backlog
     entry. The request is the human's first decision point.

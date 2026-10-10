@@ -3,8 +3,8 @@
 A task document states what one task must change and why. It is written before the task cycle and
 copied into the cycle's record at the cycle's start. A task may belong to a project, use a project's
 approved settlements without belonging to its plan, or stand on its own. The document carries
-the sources and scope needed for this task; the cycle's record holds the implementation plan and
-results.
+the sources and scope needed for this task, and what its refinement settles for the foundation; the
+cycle's record holds the implementation plan and results.
 
 Write the title and content in the language in which the human opened the task. Keep the headings,
 status values and `none` / `TODO` markers in English so an agent can resume the document.
@@ -46,6 +46,14 @@ Project relation: independent | plan item: <project and item> | source only: <pr
 
 <current foundation decisions the task touches and relevant approved project settlements, or none>
 
+## Settlements to record
+
+Candidates: <rows shown> shown, <rows accepted> accepted — YYYY-MM-DD
+
+| # | Settlement | Kind | Source | What the cycle would otherwise guess |
+|---|---|---|---|---|
+| 1 | <one sentence, in the human's words> | decision | <the human's answer or a line of this document> | <a concrete choice the cycle would make> |
+
 ## Out of scope
 
 <exclusions that end with this task, or none>
@@ -85,9 +93,23 @@ definition without plan membership never acquires that plan's assignments or dep
   among the projected wording it copies, each entry, or the part of one, that its code makes true,
   so that its cycle writes it (WAY-124, WAY-126). `none` means the search found no applicable
   entry; it is not a substitute for the search.
+- **Settlements to record:** what the human settled while the task was refined and what still binds
+  after the task's merge, kept for its cycle to write into the foundation (WAY-134). The skill
+  `find-foundation-entries` builds the candidates and the human cuts them; only accepted rows stay.
+  *Settlement* is one sentence in the human's words, in the document's language. *Kind* reads
+  `decision`, `invariant`, `glossary term` or `environment fact`; an environment fact stands only
+  where a kept decision or invariant rests on it, and a change of the part map is never a row.
+  *Source* names the human's answer, or the line of this document, that carries the settlement.
+  The last column names a concrete thing the cycle would do or choose without the row. A settlement
+  that an entry of the current foundation or a projected entry under *Decisions in play* already
+  states is no row. The cycle writes each row whole, keeping its meaning and choosing its wording,
+  and asks the human before the request where that meaning cannot hold (WAY-134). Until the
+  candidates are cut, the section reads `TODO`; with no row accepted, `none` stands below the line.
 - **Out of scope:** only task-bound exclusions. A lasting exclusion belongs in a projected or
-  current decision, not here.
+  current decision, or in a row of *Settlements to record*, not here.
 
-The title is one descriptive line without a final period. Each fact has one home
-in the document. Keep each sentence of Description and Context in a separate list item. If the
-project source leaves a value open, ask or keep `TODO`; do not fill it from general knowledge.
+The title is one descriptive line without a final period. Each fact has one home in the document; a
+row of *Settlements to record* restates in one sentence what its *Source* names, since the cycle
+writes its entry from the row. Keep each sentence of Description and Context in a separate list
+item. If the project source leaves a value open, ask or keep `TODO`; do not fill it from general
+knowledge.
