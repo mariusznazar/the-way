@@ -3568,7 +3568,7 @@ dependency from the plan.
     action its document places before the cycle is not yet done.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/14
 
 *Rationale:* a project can inform a task without owning it; the handoff must show which relationship
 applies so the next agent does not import work or dependencies the task never took on. A projected
@@ -4111,7 +4111,7 @@ consequence for the product.
     cost.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/14
 
 *Rationale:* an agent writes the deployment for a place to run and reads what it reports, yet a
 place to run has no types and no language family (WAY-122), so nothing in its comparison says how
@@ -4156,7 +4156,7 @@ its *Rationale*, beside the lacks of the option chosen, marked as a hypothesis.
 - **Review when:** the tests run on choices other than a place to run give no risk that the
   comparison of their choice did not already show · check by: 2026-12-31
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/14
 
 *Rationale:* the critique checks that a comparison is true, not what choosing an option sets off; a
 risk of the option recommended — a plan with no backup of the data, a framework whose next major
@@ -4203,7 +4203,7 @@ To do for that work or the human splits that work into a task of its own.
     points to it.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/14
 
 *Rationale:* how a product is deployed and operated depends on where and how it runs, which differs
 from product to product, so a skill of the-way would fit none of them; what such a skill has to
@@ -4251,7 +4251,7 @@ deployment or a DNS record pointing to a new address.
     creates the key itself.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/14
 
 *Rationale:* an effect outside the repository is not undone by resetting a branch and does not show
 in the diff the human reviews, so the human who makes it sees what it changes; named in the task
