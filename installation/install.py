@@ -32,6 +32,7 @@ SKILLS.update({
     "settle-technology": "project-level/technology/SKILL.md",
     "refine-task": "project-level/task/skill/SKILL.md",
     "implement-task": "task-cycle/skill/SKILL.md",
+    "plan-task": "task-cycle/plan/SKILL.md",
     "critique": "elements/common/critique/SKILL.md",
 })
 # Claude Code reads project skills from .claude/skills, Codex from .agents/skills.
