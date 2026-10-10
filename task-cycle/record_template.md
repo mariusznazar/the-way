@@ -7,7 +7,8 @@
 - Target branch and base: <branch and commit>
 - Task branch: <branch>
 - Foundation route: <unchanged | entry or invariant-test change; affected entries>
-- Cycle: <light | full | full after a switch from light>
+- Spec: <written — the open design choice | none — no open design choice | written after a
+  discarded attempt>
 - Status: running | blocked | request open | complete
 
 ## Sharpness at start and after the final diff
@@ -19,20 +20,20 @@ Unknown failure modes count as the highest criticality. Record the reason for ea
 then recalculate from the final diff. An irreversible operation waits for the human's decision at
 the request; preparing reversible code for it does not authorize executing it.
 
-## Cycle
+## Spec and plan
 
-- Choice at start: <light | full> — foundation: <unchanged | changed>; one agent's time to
-  implement: <estimate and reason | not assessed>; files read into context: <which, and their
-  size | not assessed>
-- Foundation touched on the light cycle: <entry, the ruling on whether the touch is simple and
-  obvious, and its reason | none>
-- Switch to the full cycle: <time, why the change outgrew the light cycle, the executor's report,
-  the discarded attempt's last commit and the files it changed | none>
+- Open design choice at start: <none — the entries and ways weighed and why each is settled |
+  the choice, where it shows and the ways open>
+- Plan: <number of slices; the size report's verdicts>
+- Discarded attempt: <time, the open design choice the agent met, its report, the attempt's last
+  commit and the files it changed | none>
+- Slices returned too large: <for each, the slice, its agent's report, its last commit and files,
+  and the slices it was split into | none>
 
-Record the reason for each finding assessed; once one finding fails, the rest may read `not
-assessed`. The last commit of a discarded attempt is a historical name, not a link to follow: the
-commit is reachable only until the reflog expires. A choice or ruling of a discarded attempt keeps
-its row in the questions table, with *Used by* naming the discarded attempt.
+The last commit of a discarded attempt or of a slice returned too large is a historical name, not
+a link to follow: the commit is reachable only until the reflog expires. A choice or ruling of a
+discarded attempt keeps its row in the questions table, with *Used by* naming the discarded
+attempt.
 
 ## Events
 
@@ -59,8 +60,9 @@ nothing else.
 | Kind | Path or commit | Author or agent | Review result |
 |---|---|---|---|
 
-Include the frozen task, `spec.md` and `plan.md` on the full cycle, code commits, tests and full
-agent reports, the report of a discarded light-cycle attempt among them. Name
+Include the frozen task, `spec.md` where one was written, `plan.md` and `plan-size.md`, code
+commits, tests and full agent reports, the report of a discarded attempt or of a slice returned too
+large among them. Name
 commits and commit ranges instead of copying diffs or files that git holds. A foundation entry
 the cycle writes lives in its commits; the record keeps its meaning sentence for the request.
 

@@ -418,8 +418,8 @@ a human decides on every change that cannot be undone.
 - **Verification:** level 1 — invariants: foundation-change-path. Level 2 for the rest — an agent
   compares the change with the decision:
   - complies: a one-line format change that breaks users' saved data gets the sharpest checks and
-    a human's decision; a copy change that touches no foundation entry is made by one agent without
-    a spec or a plan and runs the same checks as any change to the parts it touches;
+    a human's decision; a copy change that touches no foundation entry is made by one agent from a
+    plan of one slice and runs the same checks as any change to the parts it touches;
   - violates: a task takes the path for changes that leave the foundation unchanged because it
     changes few lines; a small task skips a check that the parts it touches call for; a change that
     cannot be undone reaches the main branch without a human's decision; an agent turns a task into
@@ -431,10 +431,10 @@ a human decides on every change that cannot be undone.
 *Rationale:* size misleads both ways about what can go wrong: a rename across many files is easy to
 undo, a one-line change to a stored format can destroy every user's data, so what a task touches,
 never its size, sets its path and its checks. Size does tell how much preparation a change needs: a
-spec and a plan written ahead of a small change cost more than the change, while the checks on the
-finished change stay whole and a human still decides on what cannot be undone. Paths differ only in
-steps, because a weaker outcome would bypass the process; returning knowledge alters what a task
-delivers, so a human sets it.
+spec, and a plan that writes out its code, cost more ahead of a small change than the change, while
+the checks on the finished change stay whole and a human still decides on what cannot be undone.
+Paths differ only in steps, because a weaker outcome would bypass the process; returning knowledge
+alters what a task delivers, so a human sets it.
 *Rejected:* one cycle for all tasks — how much process a task needs depends on what can go wrong;
 the path chosen by size — size misleads; a human approving every diff (DORA) — no fewer failed
 changes, and attention spent where it adds nothing; keeping a change that cannot be undone, or one
@@ -3578,23 +3578,15 @@ second entry for it.
 ### WAY-125/1 — Which Superpowers methods does the autonomous task cycle adopt?
 
 The the-way task cycle adopts Superpowers 6.4.1 methods for brainstorming a design and written spec,
-writing an implementation plan, test-first implementation, subagent execution with independent task
-and final code reviews, and preparing a pull or merge request, only for a ready task run through
-`implement-task`, which uses them all unless the orchestrator's analysis at its start finds it
-leaving the foundation unchanged and small enough for one agent to make from the task alone: that
-agent then makes it, test-first where it changes behaviour, and one final code review covers the
-whole change, while a change that proves too large for that agent, or whose touch of the foundation
-while that agent makes it needs a choice the task leaves open, changes the meaning of an approved
-decision, contradicts a
-current entry or writes or changes an invariant or an invariant test, is discarded and starts again
-from a fresh design given the agent's report without its code. The orchestrator answers workflow
-questions and gives provisional stage go-aheads under the task owner's delegation, never records
-these as human approval, controls the return between stages, keeps agent reports before a borrowed
-skill cleans its workspace, runs the independent assessment of its foundation change and its return
-step, and brings the request to the human for review. Decisions reserved to a human by the
-foundation remain reserved; when required code cannot proceed without one, the cycle opens a
-blocked draft request; a different Superpowers version requires a reviewed change to the-way before
-use.
+test-first implementation, subagent execution with independent task and final code reviews, and
+preparing a pull or merge request, only for a ready task run through `implement-task`. The
+orchestrator answers workflow questions and gives provisional stage go-aheads under the task
+owner's delegation, never records these as human approval, controls the return between stages,
+keeps agent reports before a borrowed skill cleans its workspace, runs the independent assessment
+of its foundation change and its return step, and brings the request to the human for review.
+Decisions reserved to a human by the foundation remain reserved; when required code cannot proceed
+without one, the cycle opens a blocked draft request; a different Superpowers version requires a
+reviewed change to the-way before use.
 
 - **Change:** new decision
 - **Scope:** task-cycle
@@ -3603,43 +3595,31 @@ use.
   5.1.26100.9444 on Microsoft Windows NT 10.0.26300.0; source root
   `C:/Users/Mariusz/.claude/plugins/cache/claude-plugins-official/superpowers/6.4.1/skills/`:
   `brainstorming/SKILL.md` — "Help turn ideas into fully formed designs and specs through natural
-  collaborative dialogue." `writing-plans/SKILL.md` — "Write comprehensive implementation plans
-  assuming the engineer has zero context for our codebase and questionable taste."
-  `test-driven-development/SKILL.md` — "Write the test first. Watch it fail. Write minimal code to
-  pass." `subagent-driven-development/SKILL.md` — "Fresh subagent per task + task review (spec +
-  quality) + broad final review = high quality, fast iteration" `requesting-code-review/SKILL.md` —
-  "The reviewer gets precisely crafted context for evaluation — never your session's history."
-  `finishing-a-development-branch/SKILL.md` — "Verify tests → Detect environment → Present options →
-  Execute choice → Clean up."
+  collaborative dialogue." `test-driven-development/SKILL.md` — "Write the test first. Watch it
+  fail. Write minimal code to pass." `subagent-driven-development/SKILL.md` — "Fresh subagent per
+  task + task review (spec + quality) + broad final review = high quality, fast iteration"
+  `requesting-code-review/SKILL.md` — "The reviewer gets precisely crafted context for evaluation —
+  never your session's history." `finishing-a-development-branch/SKILL.md` — "Verify tests → Detect
+  environment → Present options → Execute choice → Clean up."
 - **Relations:** derives from WAY-100@e7a74a18 · derives from WAY-13@97b17d59
 - **Verification:** level 2 — an agent compares a cycle with the decision:
   - complies: agents use the named methods at version 6.4.1, return between stages, and show
-    provisional choices in the request without claiming human approval; a task found small at its
-    start, leaving the foundation unchanged, is made by one agent from the task, test-first where it
-    changes behaviour, and its whole change gets one final code review; an attempt that grows too
-    large, or whose touch of the foundation while the agent makes it writes an invariant, is
-    discarded and the task starts
-    again from a fresh design that reads the agent's report;
+    provisional choices in the request without claiming human approval;
   - violates: an agent treats its own spec approval as the owner's approval, skips the request
-    review, or silently runs a different Superpowers version; a task found small at its start merges
-    without a final code review; a spec and a plan are written around an outgrown attempt's code.
+    review, or silently runs a different Superpowers version; a planner writes the plan with a
+    Superpowers method.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/7
+- **Approved by:** Mariusz, merge of <request link>
 
-*Rationale:* the borrowed skills provide design, planning, test and review methods, while the-way
-must keep control of task sources, binding foundation approvals and the single human review point.
-Naming the version makes the dependency visible when the process is pinned in a product. A small
-change that leaves the foundation unchanged gains nothing from a design, a spec and a plan, so one
-agent makes it from the task, while the checks on the finished change and the final review stay
-(WAY-13).
+*Rationale:* the borrowed skills provide design, test and review methods, while the-way must keep
+control of task sources, binding foundation approvals and the single human review point. Naming
+the version makes the dependency visible when the process is pinned in a product. When a spec is
+written and how a plan is written are the-way's own (WAY-135, WAY-136), so the methods adopted here
+are those a cycle uses whenever its stage comes.
 *Rejected:* adopting the complete Superpowers workflow with its intermediate human gates — it would
 interrupt the delegated cycle; copying the skill bodies into the orchestrator — it would create a
-second implementation of those methods; a separate skill for small tasks — two skills would hold the
-same rules of the record, the request and the return step, while size only lightens one process
-(WAY-13); an outgrown attempt kept and completed — a spec and a plan would be written around
-partial code; the agent of an outgrown attempt writing the spec and the plan — the spec would carry
-the shape of the abandoned code.
+second implementation of those methods.
 
 ### WAY-126/1 — How does a projected entry enter the foundation?
 
@@ -4007,3 +3987,99 @@ passing in the request is missed, and the agent alone decides what binds; lettin
 or drop a settlement and show the difference in the request — the human's settlement could be
 reversed and seen only once the code is written; decisions and invariants alone — a word whose
 meaning the human settled would be defined by the cycle.
+
+### WAY-135/1 — When does a task's cycle write a spec?
+
+A task's cycle writes a spec, reviewed by an agent other than its author, only where the task leaves
+an open design choice, and an invariant whose sentence a row of the task's *Settlements to record*
+or a projected entry of its sources gives is none. An agent that meets an open design choice while
+it makes the change returns a report that holds no code, the attempt is discarded with the
+foundation entries it wrote, and a fresh agent given the report writes the spec, from which the
+plan is written again. A choice of how to make what the task and the foundation settle is the
+making agent's, and the cycle record keeps it.
+
+- **Change:** new decision
+- **Scope:** task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-13@97b17d59 · derives from WAY-69@7051f884 · derives from
+  WAY-126@35accf8b · derives from WAY-134@b858b34f
+- **Verification:** level 2 — an agent compares a cycle with the decision:
+  - complies: a task whose rows of *Settlements to record* carry its two decisions and its invariant
+    is planned without a spec, and the invariant's check comes from an agent given only the sentence
+    and its method; a task whose part-map change follows from the file it adds, with no other way
+    open, is planned without a spec; an agent that finds the task needs a decision the task does not
+    carry returns a report without code, the branch goes back to its base, and a fresh agent writes
+    the spec;
+  - violates: a spec is written for a task whose document carries every entry it writes and that
+    leaves no other way open; an agent designs a decision the task does not carry and goes on with
+    the code; a spec is written around the code of an attempt that met an open design choice; an
+    agent stops the cycle to ask how to make what the task settles.
+- **Review when:** five cycles of `implement-task` have run under this decision, or a cycle has
+  found a new foundation entry contradicting a current one only after its code was written, has
+  returned more than one slice in three of its plan as too large, or has used no clearly fewer
+  tokens than the 363.7 million that the cycle of https://github.com/mariusznazar/the-way/pull/11
+  used, for a task of like size · check by: 2026-11-30
+- **Origin:** none
+- **Approved by:** Mariusz, merge of <request link>
+
+*Rationale:* a spec and its review earn their cost where an agent designs a foundation entry
+itself, whose agreement with the current entries has to be checked before code is written on it;
+where the task's document carries every entry, a spec restates what the human already settled and
+its review finds nothing the reviews of the code would miss. An invariant the document carries is
+kept from fitting the code by the separate authors of its sentence, its check and the code
+(WAY-69), not by a spec. A choice found while the
+code is made cannot be weighed apart from that code, so the attempt goes and a fresh agent designs
+from the task and the report.
+*Rejected:* a spec for every task that changes the foundation — almost every task changes it, and
+the spec would restate entries the human settled at a large share of the cycle's cost; no spec for
+any task — an entry an agent designs would reach the code unchecked against the current entries;
+an attempt that met an open design choice kept and completed — a spec would be written around
+partial code; the agent of that attempt writing the spec — the spec would carry the shape of the
+abandoned code; a spec for every task that writes an invariant — its separate authors already keep
+its check apart from the code.
+
+### WAY-136/1 — What plan does a task's cycle write, and who makes and reviews its slices?
+
+Every task's cycle writes a plan with the-way's skill `plan-task`, which divides the change into
+slices and holds no code. Each slice is made by an agent of its own and then reviewed by an agent
+that did not make it, and a change of more than one slice then gets one review of the whole change,
+while the review of a plan's only slice is the review of the whole change. A slice that proves too
+large for the agent making it is discarded with its code and goes back to the planner to be split.
+
+- **Change:** new decision
+- **Scope:** task-cycle
+- **Based on:** observation of installed Superpowers 6.4.1 on 2026-10-10 using `sed -n` and
+  `grep -n` in Git Bash on Microsoft Windows NT 10.0.26300.0; source root
+  `C:/Users/Mariusz/.claude/plugins/cache/claude-plugins-official/superpowers/6.4.1/skills/`:
+  `writing-plans/SKILL.md` — "Each step is one action (2-5 minutes)" and, under "No
+  Placeholders", "Steps that describe what to do without showing how (code blocks required for
+  code steps)"
+- **Relations:** derives from WAY-13@97b17d59
+- **Verification:** level 2 — an agent compares a cycle with the decision:
+  - complies: a one-line fix is made from a plan of one slice by one agent, and the review of that
+    slice, given the task as its requirements, is the change's only code review; a change of four
+    slices gets four slice reviews and one review of the whole change; a slice that outgrows its
+    agent is reset and split in two by the planner;
+  - violates: a task's change is made without a plan; a plan holds code or is written with
+    Superpowers `writing-plans`; the agent that made a slice reviews it; a change of one slice gets
+    a second review of the same range; the code of an outgrown slice is kept and completed.
+- **Review when:** five cycles of `implement-task` have run under this decision, or a cycle has
+  found a new foundation entry contradicting a current one only after its code was written, has
+  returned more than one slice in three of its plan as too large, or has used no clearly fewer
+  tokens than the 363.7 million that the cycle of https://github.com/mariusznazar/the-way/pull/11
+  used, for a task of like size · check by: 2026-11-30
+- **Origin:** none
+- **Approved by:** Mariusz, merge of <request link>
+
+*Rationale:* a plan earns its cost by dividing the change, so that a narrow agent makes each slice
+and a narrow reviewer reads it, which is where reviews catch the errors that matter; code written
+out ahead in the plan is most of a plan's cost and catches nothing a review of the code does not. A
+plan without code costs little, so every task gets one, and its form can change in its own skill
+apart from the cycle. A small change is a plan of one slice, so one path holds every task, and its
+one review reads the whole change.
+*Rejected:* Superpowers `writing-plans` — each step carries its code, so the plan costs a large
+share of the change and still needs the review of that code; a separate path for small tasks
+without a plan — two paths would hold the same rules of the record, the request and the return
+step, while size only lightens one process (WAY-13); a review of the whole change after the review
+of a plan's only slice — it reads the same range twice; an outgrown slice's code kept and completed
+— its split would be written around partial code.

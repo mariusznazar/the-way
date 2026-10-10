@@ -116,6 +116,13 @@ Mechanics is the way a test reaches the product under test, as against what the 
 - **Avoid:** none
 - **Not:** none
 
+## open design choice
+
+An open design choice is a choice a task's document leaves open that either sets a foundation entry the document does not carry or takes a way that is costly to turn back once code is written on it, as against a choice of how to make what is already settled.
+
+- **Avoid:** none
+- **Not:** none
+
 ## part
 
 A part is a piece of a product with a responsibility of its own.
@@ -161,6 +168,13 @@ A result is the value reported for an entry on one commit: the verdict that coun
 ## return step
 
 The return step is the step of a task that carries back to the foundation what the task's change holds and the foundation does not yet say.
+
+- **Avoid:** none
+- **Not:** none
+
+## slice
+
+A slice is a piece of a task's change that the task's plan sets apart with its own files, goal, material to read and checks.
 
 - **Avoid:** none
 - **Not:** none
