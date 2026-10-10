@@ -1,0 +1,16 @@
+foundations\decisions.md:71: warning: WAY-03: check-by date 2026-10-02 has passed without a review record
+foundations\decisions.md:609: warning: WAY-21: check-by date 2026-10-02 has passed without a review record
+foundations\decisions.md:1445: warning: WAY-52: check-by date 2026-10-02 has passed without a review record
+foundations\decisions.md:1527: warning: WAY-55: check-by date 2026-10-02 has passed without a review record
+foundations\decisions.md:1941: warning: WAY-69: check-by date 2026-10-02 has passed without a review record
+foundations\decisions.md:3571: warning: *Approved by* is the placeholder `merge of <request link>`
+foundations\decisions.md:4114: warning: *Approved by* is the placeholder `merge of <request link>`
+foundations\decisions.md:4159: warning: *Approved by* is the placeholder `merge of <request link>`
+foundations\decisions.md:4206: warning: *Approved by* is the placeholder `merge of <request link>`
+foundations\decisions.md:4254: warning: *Approved by* is the placeholder `merge of <request link>`
+unchecked: the lines the log holds on the main branch, and the versions it gains per number — --base none: there is no commit the branch left the main branch from
+unchecked: a change to the template without a new version in the log — --base none: there is no commit the branch left the main branch from
+unchecked: `TODO` in the log — --merge-onto none: there is no commit to merge onto
+unchecked: the copies of a version both logs hold — --merge-onto none: there is no commit to merge onto
+unchecked: the fingerprints relations carry — --merge-onto none: there is no commit to merge onto
+0 error(s), 10 warning(s), 5 unchecked

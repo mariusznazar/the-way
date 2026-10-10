@@ -1,0 +1,61 @@
+## Independent assessment (WAY-10)
+
+One agent on a model other than the author's (fable; author opus) read the diff 7335b5f..d0f6e5b
+and the files of d0f6e5b only. It made 24 observations and proposed five cuts. Settlement:
+- 1, 7, 8, 10, 17, 18, 21, 24: no concern.
+- 2: no change. The clause saying the risks are hypotheses that the critique does not strike is
+  the author's reconciliation with WAY-122, and the request names it.
+- 3a: rejected. The decision template already binds *Rationale* to name no count, and
+  record-decision reads that template. 3b: no change.
+- 4 accepted in part: "preview of deployments" is kept, because the source pairs "podgląd
+  wdrożenia" with CLI/MCP and reports a host with "brak podglądu". The rollback item now reads "its
+  number of steps", which keeps the Polish ambiguity.
+- 5: rejected. The placement examples come from the task document's To do 4.
+- 6: accepted. WAY-140 states that the cycle's record in the backlog entry the product names
+  (WAY-107) is no effect of the task, and it derives from WAY-107.
+- 9: accepted. WAY-139's rationale reads "when it prepares a deployment".
+- 11 (cut 1): accepted. Readiness stands in WAY-124 alone, which carries WAY-140's new
+  fingerprint (WAY-31).
+- 12 (cut 4): accepted. The sentence on a correction round leaves WAY-140's rationale, and the
+  request names it as the weak point the human accepted.
+- 13: accepted. The glossary term "human action" is a step of a task outside the product's
+  repository that a human performs. WAY-124, WAY-140 and the task template use it.
+- 14: accepted. "Marked as a hypothesis" is the one wording.
+- 15: accepted. Where a chosen option's lacks and accepted risks stand is now in the decision
+  template, cited to WAY-138, and the skill points to it.
+- 16: rejected. The check in refine-task is the entry's enforcement.
+- 19: accepted. WAY-140 states that an effect the cycle finds joins the request's list, and the
+  request opens as a blocked draft listing it.
+- 20 (cut 5): accepted. "Give that as the reason" leaves the skill and WAY-137's example.
+- 22: no change. The template copies follow every edit.
+- 23: accepted. The task template shows a list of human actions, or `none`.
+- Cuts 2 and 3: accepted.
+
+A code review of the settlement range d0f6e5b..a683701 asked for five fixes, all applied in this
+commit: the term defined as a step rather than an effect; WAY-140's first sentence carrying "only
+a human"; the found-effect clause unambiguous; placement at refinement limited to the actions the
+document names; and the term used whole in the task template.
+
+## Foundation search (WAY-33)
+
+**First search.** It covered:
+- a reading of WAY-04, 24, 100, 107, 113, 114, 120 to 126, and 134 to 136;
+- the part map;
+- the whole foundation, for "outside the", "external", "deploy", "place to run", "tie", "risk",
+  "hypothes", "human action", "blocked", "secret", "rollback", "irreversib" and "lack".
+
+It found:
+- WAY-121 to 125, which the task carries;
+- WAY-04, which rejects assumptions as a kind of entry. WAY-138's risks stay inside a decision's
+  Rationale;
+- WAY-24, under which WAY-138's review condition takes a check-by date (2026-12-31);
+- WAY-109 and WAY-113, which hold.
+
+No entry ruled on effects outside the repository, a deployment skill, or a tie between places to
+run. No relation outside WAY-124 itself carried WAY-123, WAY-124 or WAY-125, and after the edits
+no relation is stale.
+
+**Second search,** against the foundations tip 7335b5f. The tip is this branch's base, so its
+foundation equals the one searched. It also ran a grep of the changed foundation for "human
+action", "outside the product's repository", "deployment skill" and "place to run". Every use of
+the new term stands in WAY-124 or WAY-140.

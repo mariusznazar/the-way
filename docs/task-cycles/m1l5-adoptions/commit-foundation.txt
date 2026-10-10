@@ -1,0 +1,26 @@
+feat(foundations): Adopt a tie-breaker for a place to run, "what will this break" tests, a deployment skill's list and human actions outside the repository
+
+Foundation step of the task m1l5-adoptions, from rows 1-5 of its
+Settlements to record. Each new decision derives from WAY-100 and names
+what it adopts, where it applies and why.
+
+- WAY-137 (row 1, narrows WAY-123, which stays unchanged): where options
+  of a place to run still tie after the simplest and cheapest rule, the
+  one an agent works with best is recommended; never a filter or a weight.
+- WAY-138 (row 2): devil's advocate, pre-mortem and unknown unknowns test
+  the recommended option of every choice the project settles, never a
+  choice a decision already holds; the risks are hypotheses the critique
+  does not strike, shown before the choice and carried into the chosen
+  option's Rationale; review when tests outside a place to run find
+  nothing new, check by 2026-12-31.
+- WAY-139 (row 3): the-way holds only the list of what a product's
+  deployment skill covers; refine-task checks it for a task that deploys
+  the product or changes how or where it runs.
+- WAY-140 (rows 4-5): an effect outside the product's repository is a
+  human action the task document names, before the cycle or at a blocked
+  draft request; reads stay with the agent; the human places each action
+  on the agent's proposal.
+- WAY-124 edited in place: a task is ready only once every human action
+  placed before the cycle is done (WAY-140); its meaning changes, so its
+  Approved by goes back to the merge for renewed acceptance (WAY-07). No
+  entry carries WAY-124's fingerprint.
