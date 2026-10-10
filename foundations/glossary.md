@@ -95,6 +95,13 @@ The gate is the program that runs the checks a change calls for.
 - **Avoid:** quality gate — same thing
 - **Not:** none
 
+## human action
+
+A human action is an act outside the product's repository that a task needs and a human performs.
+
+- **Avoid:** none
+- **Not:** none
+
 ## invariant
 
 An invariant is a sentence about the product that is true or false on every commit.

@@ -74,6 +74,9 @@ decision (WAY-117):
   reads `on acceptance` until `define-project` writes it at the readiness gate.
 - Step 3: before a product has a main branch, a projected edit of an existing decision keeps its
   current identifier and version (WAY-07).
+- Step 3: for a technology choice `settle-technology` hands over, the lacks of the option chosen
+  and the risks the human took with it stand where the template's "Decision version" puts them,
+  beside its rule for *Rationale*.
 - Step 3: if *Review when* depends on later work, ask whether the human wants to defer it and add
   a related open question with its place of resolution. Leave `TODO` only on that explicit answer;
   never infer `none` from silence. `define-project` checks the connection at the gate.

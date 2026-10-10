@@ -42,6 +42,12 @@ Project relation: independent | plan item: <project and item> | source only: <pr
 
 <implementation questions carried from the task's sources, or none>
 
+## Human actions
+
+- <human action outside the repository> — before the cycle, <done|not done> | in the cycle | TODO
+
+<or, in place of the list, the word none>
+
 ## Decisions in play
 
 <current foundation decisions the task touches and relevant approved project settlements, or none>
@@ -86,6 +92,18 @@ definition without plan membership never acquires that plan's assignments or dep
   For a task using a project as a source only, include only the questions the task explicitly
   takes on. `none` means none is carried. A known question about required product behavior is
   answered before readiness rather than left as an unspecified implementation choice.
+- **Human actions:** each effect the task has outside the product's repository — on a server, in
+  DNS, on keys or on an external account — is made only by a human, through a human action this
+  section names (WAY-140). Reading outside the repository is no human action; it stays with the
+  agent. Each human action states its placement, which the human sets while the task is refined, on
+  the agent's proposal: `before the cycle` when the cycle's code needs its effect, such as an
+  account, a key or a database, with `done` or `not done`; `in the cycle` when it uses code the
+  cycle writes, such as a deployment or a DNS record pointing to a new address (WAY-140). Until the
+  human places a human action, its placement reads `TODO`. The task is ready only when every human
+  action before the cycle is done (WAY-124); the cycle opens a blocked draft request listing the
+  human actions in the cycle, and the human performs them at the request (WAY-140). `none` means the
+  task has no effect outside the repository. A task document written before this section existed
+  names no human action.
 - **Decisions in play:** name and quote current foundation decisions this task touches with their
   identifiers and versions. If the task uses an approved project definition, copy the relevant
   projected wording and identify its heading there. A project plan determines which entries a

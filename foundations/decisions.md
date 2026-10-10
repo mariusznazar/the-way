@@ -3542,8 +3542,9 @@ or uses an approved project definition as a source without belonging to its plan
 task's scope, temporary exclusions, relevant current foundation decisions, any approved projected
 wording it uses and the settlements its refinement keeps for the foundation (WAY-134). It is ready
 when its required outcome is stated, every known question blocking that outcome is answered, the
-human has accepted or rejected every candidate settlement its refinement found, and implementation
-questions carried into the cycle are named.
+human has accepted or rejected every candidate settlement its refinement found, every human action
+it places before the cycle is done (WAY-140), and implementation questions carried into the cycle
+are named.
 A project member also matches its plan item's scope, dependencies and assigned entries; any task
 using an approved definition checks that its approval still holds and names each projected entry,
 or the part of it, that its code makes true, while source-only use takes no other assignment or
@@ -3553,23 +3554,28 @@ dependency from the plan.
 - **Scope:** project-level, task-cycle
 - **Based on:** none
 - **Relations:** derives from WAY-106@63eddf70 · derives from WAY-118@5af868b3 · derives from
-  WAY-126@35accf8b · derives from WAY-134@b858b34f
+  WAY-126@35accf8b · derives from WAY-134@b858b34f · derives from WAY-140@6e564611
 - **Verification:** level 2 — an agent compares the task document with its stated sources:
   - complies: an independent task is ready without a project plan, a source-only task uses
     approved project wording without taking its plan's assignments yet names a projected entry its
-    code makes true with the part made true, and a project member matches its plan item;
+    code makes true with the part made true, a project member matches its plan item, and a task
+    whose document places opening an external account before the cycle becomes ready once the
+    human has opened it;
   - violates: a source-only task is blocked for lack of a plan item, a project member is ready
     despite a mismatch with its assigned work, a task leaves out a projected entry its code
-    makes true, so its cycle writes a second entry for the same rule, or a task is ready while a
-    candidate settlement of its refinement awaits the human.
+    makes true, so its cycle writes a second entry for the same rule, a task is ready while a
+    candidate settlement of its refinement awaits the human, or a task is ready while a human
+    action its document places before the cycle is not yet done.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/12
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/14
 
-*Rationale:* a project can inform a task without owning it; the handoff must show which
-relationship applies so the next agent does not import work or dependencies the task never took on.
-A projected entry is wording already settled, and the task whose code first makes it true is the
-one that can show it holds; naming it before the cycle keeps one entry per rule.
+*Rationale:* a project can inform a task without owning it; the handoff must show which relationship
+applies so the next agent does not import work or dependencies the task never took on. A projected
+entry is wording already settled, and the task whose code first makes it true is the one that can
+show it holds; naming it before the cycle keeps one entry per rule. A human action placed before the
+cycle gives the cycle's code what it needs, so a cycle started before the human action is done
+cannot finish its work.
 *Rejected:* requiring every task to belong to a project plan — it excludes independent tasks and
 gives source-only tasks assignments they do not have; carrying only the entries a plan assigns — a
 source-only task's code would hold a rule the foundation lacks, and its return step would write a
@@ -4080,3 +4086,187 @@ without a plan — two paths would hold the same rules of the record, the reques
 step, while size only lightens one process (WAY-13); a review of the whole change after the review
 of a plan's only slice — it reads the same range twice; an outgrown slice's code kept and completed
 — its split would be written around partial code.
+
+### WAY-137/1 — What decides between places to run that the simplest and cheapest option leaves tied?
+
+Where the options of a place to run differ in no consequence for the product and more than one of
+them is the simplest and cheapest, the step that settles a project's technology recommends, of
+those, the one an agent works with best: operated from a terminal, deployed by a script and
+documented in pages an agent can read. For a place to run, how well an agent works with an option
+decides nothing else: it leaves no option out of the comparison and is weighed against no
+consequence for the product.
+
+- **Change:** new decision
+- **Scope:** project-level, decisions
+- **Based on:** none
+- **Relations:** derives from WAY-100@e7a74a18 · narrows WAY-123@f3b45293
+- **Verification:** level 2 — an agent compares the work with the decision:
+  - complies: two hosts that cost the same and take the same upkeep remain after the simplest and
+    cheapest rule, and the one with a command-line tool and a deployment script is recommended; a
+    host with no command-line tool stays in the comparison and is recommended where it costs less
+    than the others;
+  - violates: a host whose deployment cannot be scripted is left out of the comparison for that
+    reason; a host is recommended over a cheaper one because an agent can operate it from a
+    terminal; the table of consequences scores how well an agent works with each host beside its
+    cost.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/14
+
+*Rationale:* an agent writes the deployment for a place to run and reads what it reports, yet a
+place to run has no types and no language family (WAY-122), so nothing in its comparison says how
+well an agent works with it. Placed after every consequence for the product and after cost and
+simplicity, the property chooses only between options the product does not tell apart, so it never
+carries a choice against what the product needs. It seldom decides, since options rarely tie on
+cost and simplicity; written down in that place, it keeps the property from entering higher, as a
+filter or a weight, where an option that suits the agent would beat one that suits the product.
+*Rejected:* how well an agent works with an option as a filter — a place to run the project's stack
+needs could be left out for a missing command-line tool; as a weight beside the consequences — a
+property the product does not feel could outweigh a cost it does; no rule for the tie — the tie
+falls to the agent's taste, and the property can enter higher unseen; the same tie-break for every
+choice — a language, a framework or a store of data already counts how well an agent works with it
+through the properties WAY-122 weighs.
+
+### WAY-138/1 — Which option of a technology choice is tested for what choosing it could break, and where do the risks found go?
+
+The step that settles a project's technology tests the option it recommends for each choice it
+settles, one a constraint of the definition settles included, with a devil's advocate, a pre-mortem
+and a search for unknown unknowns; it tests no choice a decision of the foundation holds, and no
+decision already written is tested afterwards. The risks these tests give are hypotheses with no
+source, not differences claimed between options, so the critique of the comparison does not strike
+them, and they stand in the table beside the option recommended before the human chooses. The human
+who chooses that option takes its risks, and each risk taken reaches the decision of that choice in
+its *Rationale*, beside the lacks of the option chosen, marked as a hypothesis.
+
+- **Change:** new decision
+- **Scope:** project-level, decisions
+- **Based on:** none
+- **Relations:** derives from WAY-100@e7a74a18 · derives from WAY-122@b343277a · derives from
+  WAY-123@f3b45293
+- **Verification:** level 2 — an agent compares the work with the decision:
+  - complies: a project settles its store of data and its place to run, the table shows beside each
+    option recommended the risks the three tests gave, each marked as a hypothesis, and the human
+    who takes the recommended host finds those risks in the *Rationale* of its decision beside its
+    lacks; a framework the definition names as a constraint is tested; a language a decision of the
+    foundation holds is not;
+  - violates: the critique strikes a risk from the table for want of a source; the risks are shown
+    only after the human has chosen; every option of a choice is tested; an agent tests a decision
+    written before the project and adds risks to it; a risk taken reaches the decision's *Based on*
+    as a fact.
+- **Review when:** the tests run on choices other than a place to run give no risk that the
+  comparison of their choice did not already show · check by: 2026-12-31
+- **Origin:** none
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/14
+
+*Rationale:* the critique checks that a comparison is true, not what choosing an option sets off; a
+risk of the option recommended — a plan with no backup of the data, a framework whose next major
+version drops the driver of the store of data chosen, a service whose free tier ends below the
+traffic the project expects — comes to light only when someone asks what the choice could break.
+Such a risk has no source yet, so the human weighs it as a hypothesis and takes it knowingly,
+instead of the critique striking it as an unsupported claim or the agent dropping it. Shown before
+the choice, a risk can still change it; carried into the decision as a hypothesis, it tells a later
+reader what was accepted without passing for a sourced fact. The tests run on the option
+recommended, the one the human most often takes, and only where this project chooses: a choice a
+decision already holds has been made, and testing it again would reopen it with no reason in the
+project. Every choice the project settles is tested until the tests show they find nothing outside
+a place to run.
+*Rejected:* tests on every option of a choice — their cost grows with options the human mostly does
+not take; the risks shown after the choice — the human takes them unseen; the risks put through the
+critique as claims — with no source, every one would be struck; the risks in *Based on* — it names
+facts with sources, and a risk read there passes for one; an entry of its own for each risk —
+assumptions as a kind of entry escape checking (WAY-04); tests on choices decisions of the
+foundation hold — they reopen what was settled.
+
+### WAY-139/1 — What does the-way hold for the skill that deploys a product, and which step checks that a product has one?
+
+The-way holds no skill of a product, only the list of what a product's deployment skill covers: a
+preview of deployments; where the secrets lie and how they are rotated; rollback, with its number of
+steps and what happens to the data; what the agent does and what the human does; and how to read the
+logs. When a task's outcome deploys the product or changes how or where it runs, the-way's skill
+`refine-task` checks, while it refines the task, that the product has a deployment skill covering
+every item of the list, and where it has none or an item is missing, the task gains an item of its
+To do for that work or the human splits that work into a task of its own.
+
+- **Change:** new decision
+- **Scope:** project-level
+- **Based on:** none
+- **Relations:** derives from WAY-100@e7a74a18
+- **Verification:** level 2 — an agent compares the work with the decision:
+  - complies: refining a task that moves the product to another host finds that the product's
+    deployment skill says nothing of rollback, and the task gains an item of its To do that adds
+    it; a task that sets up the product's first deployment finds no deployment skill, and the human
+    splits writing one into a task of its own; a task that changes the text of a page is refined
+    without the check;
+  - violates: the-way carries a deployment skill for one kind of host; a task that changes where
+    the product runs reaches its cycle with a deployment skill that does not say where the secrets
+    lie, and with no item or task for it; the list stands only in a template, and the decision
+    points to it.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/14
+
+*Rationale:* how a product is deployed and operated depends on where and how it runs, which differs
+from product to product, so a skill of the-way would fit none of them; what such a skill has to
+answer is the same for every product, and a list in a binding sentence gives the refinement a thing
+to check. Knowledge of operating a product written in a document no step reads goes unread however
+concrete it is, while a skill of the product reaches the agent when it prepares a deployment. The
+check comes when a task first needs that knowledge, so the first task that deploys a product grows
+by its deployment skill, unless the human splits that work off.
+*Rejected:* a deployment skill carried by the-way — what to run and where differs for every
+product; a document of operations kept beside the product — no step reads it, so it goes stale
+unread; the list in a template alone — nothing binds the refinement to check it.
+
+### WAY-140/1 — How does a task change something outside the product's repository?
+
+A task's effect outside the product's repository — on a server, in DNS, on keys or on an external
+account — is made only by a human, through a human action the task document names and places before
+the cycle or in it, while reading outside the repository stays with the agent and the cycle's record
+of the request and of the task's state in the backlog entry the product names (WAY-107) is no effect
+of the task. For the human actions placed in the cycle, the cycle does what the repository allows
+and opens a blocked draft request listing them, and the human performs them at the request; a human
+action the cycle finds that the task document does not name joins that list for the human to place,
+and the request opens as a blocked draft listing it even where the document places no human action
+in the cycle. The human places each human action the task document names while the task is refined,
+on the agent's proposal: before the cycle when the cycle's code needs its effect, such as an
+account, a key or a database, and in the cycle when it uses code the cycle writes, such as a
+deployment or a DNS record pointing to a new address.
+
+- **Change:** new decision
+- **Scope:** project-level, task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-100@e7a74a18 · derives from WAY-107@0ffcebe1 · derives from
+  WAY-125@441e3a6a
+- **Verification:** level 2 — an agent compares the task document, or the cycle, with the
+  decision:
+  - complies: a task that sends mail through an outside service names opening the account and
+    creating its key as human actions before the cycle; a task that moves the product to a new
+    address names pointing its DNS record there as a human action in the cycle, and the cycle, its
+    code done, opens a blocked draft request listing it; the agent reads a server's free disk space
+    while it makes the change; the cycle itself adds the request link to the task's entry in the
+    product's backlog;
+  - violates: the cycle runs the deployment against the server itself; the cycle stops halfway and
+    waits for the human to rotate a key; a task whose outcome needs a new key on an external account
+    is ready with no human action named for it; the agent alone decides that a human action goes in
+    the cycle; the cycle finds that its change needs a key the task document does not name and
+    creates the key itself.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/14
+
+*Rationale:* an effect outside the repository is not undone by resetting a branch and does not show
+in the diff the human reviews, so the human who makes it sees what it changes; named in the task
+document, each human action is known before the cycle rather than found when the work stops on it.
+The request is the cycle's single point of human review (WAY-125), so a human action that uses the
+cycle's code waits for the request. A human action the cycle finds goes to the human like a named
+one, because the cycle may not perform it, and the request is where the human meets it. A human
+action whose effect the code needs has to come first, and one that uses the code can only come after
+it; the human places each, because the human performs it. A read changes nothing outside the
+repository and the agent needs it to work, so it stays with the agent. The backlog record is the
+cycle's own account of its request, not something the task's outcome needs, so it stays with the
+cycle.
+*Rejected:* the cycle making the effect itself — a reset would not undo it and the diff would not
+show it; the cycle pausing midway for the human — the human would be called between stages for each
+human action; every human action before the cycle — one that uses the cycle's code cannot come
+first; the agent placing each human action alone — the human performs it and is the one to fit it
+into the work; human actions listed only when someone asks for them — a step the human has to take
+comes to light after the work that needed it.

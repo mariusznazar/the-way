@@ -11,7 +11,7 @@ the choices the project needs, finds the entry that already settles each, and se
 one with the human as a projected decision. The human weighs consequences for the product, not
 technologies
 (WAY-123). The form and rules of the Technology section — which choices it lists, its markers, the
-weighing of options — stand in `definition_template.md`; how a skill asks stands in
+weighing and the tests of options — stand in `definition_template.md`; how a skill asks stands in
 `elements/common/way_of_working.md`; the critique stands in `elements/common/critique/SKILL.md`;
 this skill holds the order of the work.
 
@@ -99,24 +99,40 @@ waits, so that a resumed step finds it.
    comparison by the verdicts, then end the report with the line `critique: passed`. Where no fresh
    agent can run, neither the research nor the comparison goes on: stop and say so (WAY-122,
    WAY-120).
-5. **Show.** Once every comparison of the wave reads `critique: passed`, give one fresh agent,
-   following `critique`, the whole table with the definition, and ask it for what one choice of
-   the table contradicts in another; verify each observation (WAY-120). Then show the wave
-   together, in one table: for each choice, the options by their consequences, the lines of the
-   options left out, a recommendation and the weak point of the option recommended, anchored in the
-   definition or a source of the comparison. A difference with no consequence for the product
-   decides nothing; where none remains, recommend the simplest and cheapest option
-   (WAY-123, WAY-113).
-6. **Choose.** The human chooses each; never choose alone (WAY-123). A human who answers "you
+5. **Show.** Once every comparison of the wave reads `critique: passed`, form the recommendation
+   of each choice and the weak point of the option recommended, anchored in the definition or a
+   source of the comparison. A difference with no consequence for the product decides nothing;
+   where none remains, recommend the simplest and cheapest option (WAY-123). For a place to run,
+   where more than one option is the simplest and cheapest, recommend of those the one an agent
+   works with best, by the template's rule (WAY-137). Then give one
+   fresh agent for the wave the option recommended for every choice of the wave, one a constraint
+   of the definition settles included, with the definition and the comparisons, and ask it to run
+   on each a devil's advocate, a pre-mortem and a search for unknown unknowns: what choosing that
+   option could break. A choice the list names `held by` is never tested (WAY-138). Write the
+   risks the tests give into the choice's report, `.runs/technology/<choice>.md`, so that a
+   resumed step finds them, as step 6 needs.
+   Then give one fresh agent, following `critique`, the whole table with the
+   risks and the definition, telling it that the risks are hypotheses with no source rather than
+   differences claimed between options, so it does not strike them, and ask it for what one choice
+   of the table contradicts in another; verify each observation (WAY-120, WAY-138). Then show the
+   wave together, in one table: for each choice, the options by their consequences, the lines of
+   the options left out, a recommendation, the weak point of the option recommended, and beside
+   that option the risks the tests gave, each marked as a hypothesis
+   (WAY-123, WAY-138, WAY-113).
+6. **Choose.** The human chooses each; never choose alone (WAY-123). The human who chooses the
+   option recommended takes the risks shown beside it (WAY-138). A human who answers "you
    choose" or "I do not know" takes the recommendation; write it as the human's choice. The
    recommended option taken as offered passes without a further question; any other answer — an
    option whose weak point the table did not name, an answer in the human's own words, one that
    adds a reason or a condition — gets one question against it, anchored in those words or the
    material, the question `way_of_working.md` asks after a choice, asked here and not again
-   (WAY-113). A choice the human leaves unanswered goes into the next table.
+   (WAY-113). A choice the human leaves unanswered goes into the next table with the risks
+   already shown beside its option recommended, and is not tested again unless that option
+   changes, when the new one is tested (WAY-138).
 7. **Write.** Hand each choice to `record-decision` in projected mode, naming the definition, with
    the consequences that decided it, the other options with theirs, the source of each claimed
-   difference for its *Based on*, the lacks of a chosen option, and whether a question was asked
+   difference for its *Based on*, the lacks of a chosen option and the risks taken with it for its
+   *Rationale*, each risk marked as a hypothesis (WAY-138), and whether a question was asked
    against it; what its step 4.1 would still ask goes into the next table rather than a round of
    its own. The `Candidates:` line stays as it is. Then end the item with
    `— projected: <the decision's question>`, narrow under "Open questions" the question the choice

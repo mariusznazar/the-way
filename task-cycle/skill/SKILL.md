@@ -22,14 +22,15 @@ choice approved or changed the rule.
 
 ## Inputs and authority
 
-1. Read the task document in full. Require `Status: ready for cycle`. Its `Project relation:`
-   controls the sources: independent tasks need no project; plan members require the exact approved
-   plan item, dependencies and assignments; source-only tasks use relevant approved project
-   settlements without importing plan work. A task's *Settlements to record* lists what its
-   refinement settled for the foundation (WAY-134); a task document written before that section
-   existed carries no row. Recheck approval and current foundation versions before starting. If a
-   source changed, reconcile the task against it and record the effect; stop only when its required
-   outcome can no longer be established.
+1. Read the task document in full. Require `Status: ready for cycle` and every human action its
+   *Human actions* places before the cycle done (WAY-124); read the actions it places in the cycle,
+   which step 4 takes up. Its `Project relation:` controls the sources: independent tasks need no
+   project; plan members require the exact approved plan item, dependencies and assignments;
+   source-only tasks use relevant approved project settlements without importing plan work. A
+   task's *Settlements to record* lists what its refinement settled for the foundation (WAY-134); a
+   task document written before that section existed carries no row. Recheck approval and current
+   foundation versions before starting. If a source changed, reconcile the task against it and
+   record the effect; stop only when its required outcome can no longer be established.
 2. Read the product's `AGENTS.md`, process pin, foundation and relevant code. Verify that the
    pinned the-way checkout matches the product's gitlink. Follow product-specific git and test
    rules. Search the current foundation for additional applicable entries or collisions; the
@@ -43,11 +44,12 @@ choice approved or changed the rule.
    handoffs and human contact. Do not silently use another version or substitute another method.
    If this version or a subagent capability is unavailable, this cycle cannot run in that harness.
 
-The cycle writes only in the task's worktree and changes nothing outside the product repository. A
-remark about the-way, the user's agent instructions or another repository goes into the cycle
-record's process remarks, never into the request. The one exception: in the task's source entry in
-the backlog the product names (WAY-107), the cycle may add the request link and set the task's
-state.
+The cycle writes only in the task's worktree and changes nothing outside the product repository;
+reading outside the repository stays with the agent (WAY-140). A remark about the-way, the user's
+agent instructions or another repository goes into the cycle record's process remarks, never into
+the request. The one exception is the cycle's own record, which WAY-140 names no effect of the
+task: in the task's source entry in the backlog the product names (WAY-107), the cycle may add the
+request link and set the task's state.
 
 ## Start and record
 
@@ -64,12 +66,18 @@ state.
    undone. Every slice gets its own review even for low criticality. For a
    trust boundary, add adversarial input checks under WAY-48. Stage but
    do not execute an irreversible operation before the human decides on it at the request. Treat a
-   security-sensitive or external side effect the same way when the product's rules reserve its
-   authorization to a human; prepare what can be reviewed and mark the request blocked if that
-   action is necessary to finish the task. Create a new task branch from the current target branch,
-   never reuse a branch already checked out except in a correction after review, and name it under
-   the product's git rules; use an isolated worktree when its instructions and tools allow it. Never
-   overwrite another worker's changes or let two writing agents edit the same worktree concurrently.
+   security-sensitive action the same way when the product's rules reserve its authorization to a
+   human; prepare what can be reviewed and mark the request blocked if that action is necessary to
+   finish the task. An effect outside the product repository is made only by a human, through a
+   human action (WAY-140): for the actions the task document places in the cycle, prepare what
+   the repository allows and open the request as a blocked draft listing them. An effect outside
+   the repository that the cycle finds and the task document does not name joins that list, for
+   the human to place; where the task document places no action in the cycle, the request opens
+   as a blocked draft listing that effect. Create a new task
+   branch from the current target branch, never reuse a branch already checked out except in a
+   correction after review, and name it under the product's git rules; use an isolated worktree
+   when its instructions and tools allow it. Never overwrite another worker's changes or let two
+   writing agents edit the same worktree concurrently.
    Record the base commit and any failing checks already present. Keep a frozen copy of the task
    document in the cycle record, with its original path and source commit or approval date.
 5. Create an ignored working record at `.runs/task-cycles/<task-slug>/cycle.md` using
@@ -254,7 +262,8 @@ continuing that work.
     never by branch name. Ask in the request for a merge that keeps its commits, since the link
     survives only then; where the product's rules squash or rebase on merge, name that as a
     limitation in the request. Then mark the request ready for review, except a request the cycle
-    marks `blocked`, which stays a draft. Do not merge. Keep the worktree for review changes.
+    marks `blocked`, one waiting for human actions in the cycle (step 4) included, which stays a
+    draft. Do not merge. Keep the worktree for review changes.
 13. The request contains: task goal and relation, source versions, whether a spec was written
     and why — after a discarded attempt, its reason and a link to the agent's report — the plan's
     slices, the spec and plan links, what changed and why, test and review evidence with every
@@ -267,9 +276,11 @@ continuing that work.
     and a term WAY-97 asks the request to name. Under *Questions*, only the questions the foundation
     step allows, each with its options and a recommendation where one exists; where there are none,
     say so. Give the number of other choices and a link to the choice log. Link the cycle record and
-    full reports by the SHA of the record commit. If the task was impossible, mark the request
-    `blocked`, show the smallest missing fact or authorization and the attempted alternatives; do
-    not present partial work as complete.
+    full reports by the SHA of the record commit. Where the request waits for human actions in the
+    cycle, list them for the human to perform, each as the task document names it, with each effect
+    outside the repository the cycle found that the document does not name, for the human to place
+    (WAY-140). If the task was impossible, mark the request `blocked`, show the smallest missing
+    fact or authorization and the attempted alternatives; do not present partial work as complete.
 14. Before reporting completion, confirm the record lists all dispatches, choices, rulings,
     checks, fixes and skipped stages. The final report lists any write to the task's backlog
     entry. The request is the human's first decision point.
