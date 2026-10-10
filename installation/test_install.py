@@ -385,6 +385,7 @@ class InstallTest(unittest.TestCase):
             (b"Read @AGENTS.md for shared guidance.\n", False),
             (b"`@AGENTS.md`\n", True),
             (b"``@AGENTS.md``\n", True),
+            (b"``example ` @AGENTS.md `\n", True),
             (b"~~~markdown\n@AGENTS.md\n~~~\n", True),
             (b"```markdown\n@AGENTS.md\n````\n", True),
             (b"```\nexample\n```\n@AGENTS.md\n", False),

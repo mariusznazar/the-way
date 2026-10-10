@@ -203,7 +203,7 @@ def has_agents_import(text: str) -> bool:
             prose.append("\n")
         else:
             prose.append(line)
-    outside_code = re.sub(r"(`+)(?!`)[\s\S]*?(?<!`)\1(?!`)", " ", "".join(prose))
+    outside_code = re.sub(r"(?<!`)(`+)(?!`)[\s\S]*?(?<!`)\1(?!`)", " ", "".join(prose))
     return re.search(r"(?<!\S)@AGENTS\.md(?=\s|$)", outside_code) is not None
 
 
