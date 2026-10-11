@@ -149,7 +149,7 @@ Where {merge-onto} exists, every file git tracks lies in `foundations/` or in a 
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-09@e360ca30
+- **Derives from:** WAY-09@60c8a936
 - **Part:** every
 - **Correction:** none
 
@@ -159,7 +159,7 @@ Where {merge-onto} exists, every element directory holds a template, examples or
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-09@e360ca30
+- **Derives from:** WAY-09@60c8a936
 - **Part:** decisions · part-map · invariants · glossary · environment-facts
 - **Correction:** none
 
@@ -169,7 +169,7 @@ Where {merge-onto} exists, `relation-model/` holds the script that computes fing
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-09@e360ca30
+- **Derives from:** WAY-09@60c8a936
 - **Part:** relation-model
 - **Correction:** none
 
@@ -179,7 +179,7 @@ Every identifier `elements/invariants/examples.md` names is the identifier of an
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-09@e360ca30
+- **Derives from:** WAY-09@60c8a936
 - **Part:** invariants
 - **Correction:** none
 
@@ -189,7 +189,7 @@ Every identifier `elements/part-map/examples.md` names is the identifier of an e
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-09@e360ca30
+- **Derives from:** WAY-09@60c8a936
 - **Part:** part-map
 - **Correction:** none
 
@@ -199,7 +199,7 @@ Every term `elements/glossary/examples.md` names is the term of an entry of `fou
 
 - **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-09@e360ca30
+- **Derives from:** WAY-09@60c8a936
 - **Part:** glossary
 - **Correction:** none
 
@@ -2025,6 +2025,40 @@ Before approval, the project readiness check rejects a definition whose Technolo
 - **Method:** `python -B gate/run_tests.py project-level --record .runs/project-level-tests.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-121@740c254e
+- **Part:** project-level
+- **Correction:** none
+
+## project-plan-form/1
+
+The project plan check rejects a plan with no valid `Status:` line, a header that names no
+definition it can read or a fingerprint other than the one that definition's gate record holds and
+its text gives, a definition whose In scope is not `none` and holds no top-level list item, a
+second-level section that is missing, repeated, out of order, empty, without the table the template
+puts in it or not one of the template's, a change log with no dated item, a table with no row or
+whose header row, separator row or any cell differs from the form the plan template gives, a number
+or a name held by two tasks, or a task whose state the template's list does not hold or names the
+task itself.
+
+- **Method:** `python -B gate/run_tests.py project-level --record .runs/project-level-tests.jsonl`
+- **Rests on:** none
+- **Derives from:** WAY-142@e53cd0ac · WAY-144@6cdf8d49 · WAY-146@7677c3cd · WAY-147@8cfe543f
+- **Part:** project-level
+- **Correction:** none
+
+## project-plan-check/1
+
+The project plan check rejects a plan in which a projected entry of its definition has no task
+realizing it, not exactly one of those tasks writing it into the foundation, or more than one row;
+an item of the definition's In scope has no task; a task depends on itself, directly or through
+other tasks; a preparatory task has no task depending on it; an open question of the definition
+does not stand in the plan exactly once, word for word with the place its definition gives it, with
+a task of the plan or an answer; or a cell or an item
+names a task, a projected entry, an In scope item or an open question that the plan or its
+definition does not hold.
+
+- **Method:** `python -B gate/run_tests.py project-level --record .runs/project-level-tests.jsonl`
+- **Rests on:** none
+- **Derives from:** WAY-143@9ae691ca · WAY-145@4312fd6b · WAY-146@7677c3cd
 - **Part:** project-level
 - **Correction:** none
 

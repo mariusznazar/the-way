@@ -29,6 +29,7 @@ SKILLS = {
 SKILLS.update({
     "find-foundation-entries": "elements/common/skill/SKILL.md",
     "define-project": "project-level/skill/SKILL.md",
+    "plan-project": "project-level/plan/skill/SKILL.md",
     "settle-technology": "project-level/technology/SKILL.md",
     "refine-task": "project-level/task/skill/SKILL.md",
     "implement-task": "task-cycle/skill/SKILL.md",

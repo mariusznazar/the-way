@@ -13,7 +13,7 @@ status values and `none` / `TODO` markers in English so an agent can resume the 
 # <task title>
 
 Status: refining
-Project relation: independent | plan item: <project and item> | source only: <project definition>
+Project relation: independent | plan item: <project plan> — <the task's name in the plan> | source only: <project definition>
 
 ## Description
 

@@ -80,7 +80,9 @@ request link and set the task's state.
    writing agents edit the same worktree concurrently.
    Record the base commit and any failing checks already present. Keep a frozen copy of the task
    document in the cycle record, with its original path and source commit or approval date.
-5. Create an ignored working record at `.runs/task-cycles/<task-slug>/cycle.md` using
+5. Name the task by `<task-slug>`: for a task of a project plan, its name in the plan (WAY-147);
+   for any other task, the name the cycle gives it.
+   Create an ignored working record at `.runs/task-cycles/<task-slug>/cycle.md` using
    `task-cycle/record_template.md` from the pinned the-way checkout. Put full agent handoffs,
    prompts, reports and ledgers beside it in `reports/`, with secrets and personal data removed.
    Never copy diffs or files that git holds; name the commits instead.

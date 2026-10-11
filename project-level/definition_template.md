@@ -11,8 +11,8 @@ decisions that set the rules below are cited beside them.
   enters the foundation with the first task whose code makes it true, or, where no code does,
   with the task the plan assigns (WAY-01; WAY-106; WAY-126).
 - It holds no plan: phases, the order of work, the tasks and which task carries which decision
-  stand in the plan of the project (WAY-36;
-  WAY-106).
+  stand in the plan of the project, whose form `plan/template.md` gives (WAY-36; WAY-106;
+  WAY-142).
 
 ## Where it stands, and in what language
 
@@ -93,7 +93,7 @@ A section is never left empty
 |---|---|
 | Goal | one sentence: what the project is to achieve and why that matters |
 | Background | what the people the project serves do today without it and where that hurts; for a revised definition, which premise broke |
-| In scope | what the project delivers; the plan breaks the project into tasks from it, and the step that finds foundation entries takes the rules its lines carry |
+| In scope | what the project delivers, as a list whose top-level items the plan numbers in order and breaks the project into tasks from (WAY-146); the step that finds foundation entries takes the rules its lines carry |
 | Out of scope | only exclusions that end with the project; an exclusion for good is a candidate projected decision (WAY-26) |
 | Inputs and constraints | what the project starts from — documents, code, systems, decisions — and what its surroundings impose on it; a constraint that outlives the project is a candidate projected decision or environment fact |
 | Deliverables | the concrete results |
@@ -140,6 +140,10 @@ project, or one task of it, named:
 ```
 
 A section without questions reads `none`.
+
+The place a question names is its first assignment: once the definition has passed its readiness
+gate, the project plan decides where each question is resolved, and moving a question to another
+task changes the plan, not the definition (WAY-145).
 
 ## Technology
 

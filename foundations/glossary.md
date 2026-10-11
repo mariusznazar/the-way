@@ -144,6 +144,13 @@ The part map is the element of a product's foundation that sets out the product'
 - **Avoid:** none
 - **Not:** none
 
+## preparatory task
+
+A preparatory task is a task of a project plan whose end shows nothing in the running product.
+
+- **Avoid:** none
+- **Not:** none
+
 ## probe
 
 A probe is a check of an environment fact that tries out the behaviour the fact states.

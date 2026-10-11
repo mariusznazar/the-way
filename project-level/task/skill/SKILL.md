@@ -20,9 +20,12 @@ Another the-way skill named here is the project skill with the `the-way-` prefix
   task. Determine from the request whether it is independent, belongs to a project plan, or uses
   a project's settlements without plan membership. Record that relationship; do not infer
   membership merely because a project definition is a source.
-- If the task belongs to a project, read its approved definition and plan. Identify the exact
-  plan item, dependencies and assigned projected entries. A proposed split or scope change goes
-  back to the project plan before either resulting task can be ready.
+- If the task belongs to a project, read its approved definition and its plan, whose form
+  `project-level/plan/template.md` gives, and run
+  `python -B <the-way>/project-level/plan_check.py <plan>`; a finding returns to `plan-project`.
+  Identify the plan item by its name, its dependencies, the projected entries it realizes or
+  writes and the open questions the plan places in it (WAY-142, WAY-145, WAY-147). A proposed
+  split or scope change goes back to the project plan before either resulting task can be ready.
 - If the task uses a project's settlements without belonging to its plan, read that definition
   in full but take no plan assignment or dependency from it. Select the goal, scope, technology,
   projected entries and open questions relevant to the stated task. An independent task requires
@@ -67,7 +70,7 @@ Another the-way skill named here is the project skill with the `the-way-` prefix
   implementation method stays with the cycle's plan. An unanswered question that blocks taking
   the task keeps `Status: waiting for human`; never turn it into an apparently executable `To do`
   item. A new choice discovered during the cycle belongs in its decision record for the PR.
-- For a project member, reconcile every open question whose resolver names its plan item. For a
+- For a project member, reconcile every open question the plan places in its item. For a
   source-only task, reconcile the project questions explicitly brought into this task, without
   absorbing the project's other work. Answer a question that determines required product
   behavior in this document; reproduce an implementation question under `Questions carried to
