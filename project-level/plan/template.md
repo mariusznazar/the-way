@@ -82,7 +82,7 @@ order:
 | `Task` | the task's name: lower-case words joined by hyphens, unique in the plan, kept while the plan changes; the task enters its cycle under it, and the cycle names its record by it (WAY-147) |
 | `Goal` | one sentence: what can be checked in the running product once the task is done, never a layer put in place; for a preparatory task, what it puts in place (WAY-143) |
 | `Depends on` | the numbers of the tasks this one needs done first, separated by commas, or `—`; which tasks can be worked on side by side follows from this column alone (WAY-144) |
-| `In scope` | the numbers of the items of the definition's In scope the task delivers — the first item of that section's list is 1 — or `—` |
+| `In scope` | the numbers of the items of the definition's In scope the task delivers — its top-level list items in order, the first being 1 — or `—` |
 | `Preparatory` | `yes` for a preparatory task, `no` for any other; a preparatory task stands in the plan only where a task depends on it, and a technical element enters with the first task that uses it or with a preparatory task that task depends on (WAY-143) |
 | `State` | one state of the list below |
 | `Document` | a link to the task's document, or `—` until its refinement writes one |
