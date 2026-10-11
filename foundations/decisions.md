@@ -4326,7 +4326,7 @@ written in the language of the definition under headings, states and markers kep
 - **Review when:** every task of the first plan this step writes reads `done` or `dropped —
   approved by human` · check by: 2027-01-31
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/16
 
 *Rationale:* a plan changes with every move of a task, a definition rarely and only through its
 gate, so the two stand apart, and the fingerprint in the plan's header shows when the definition
@@ -4372,7 +4372,7 @@ first task that uses it, or with a preparatory task that task depends on.
 - **Review when:** every task of the first plan this step writes reads `done` or `dropped —
   approved by human` · check by: 2027-01-31
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/16
 
 *Rationale:* a task that ends with a layer in place cannot be checked by anyone using the product,
 and its mistakes show only when a later task uses the layer; a task that ends in the running product
@@ -4406,7 +4406,7 @@ the dependencies.
     ordered by a goal picked in an interview against their dependencies.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/16
 
 *Rationale:* the dependencies already say which tasks can go together; a second field derived from
 them is a copy that drifts as soon as one dependency changes, and its lists grow long enough that
@@ -4446,7 +4446,7 @@ the human before the plan is handed over.
     unknown.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/16
 
 *Rationale:* the place a definition gives a question is set before the tasks exist, so the
 breakdown is the first to see where the question meets the work; moving it changes the way to the
@@ -4490,7 +4490,7 @@ question. A check a script can make is never left to the critique.
     judges its own tasks.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/16
 
 *Rationale:* a rule a script can decide holds every time the script runs, while an agent asked the
 same thing answers well most of the time and costs a reading of the whole plan; what a script
@@ -4522,7 +4522,7 @@ enters its cycle under that name, and the cycle names its record by it.
     tracker.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/16
 
 *Rationale:* a task's cycle record and its entry in the product's backlog meet its row in the plan
 through its name, so a name that changes leads a reader to the wrong work; words, because a number
