@@ -95,7 +95,8 @@ foundation.
 
 ## project-level
 
-The part answers for the form and writing of a project definition, its readiness gate, and the
+The part answers for the form and writing of a project definition, its readiness gate, the
+breakdown of an approved definition into a project plan and the check of that plan, and the
 refinement of a task before its implementation cycle, whether the task belongs to a project,
 uses its settlements as a source, or stands on its own.
 
@@ -117,7 +118,15 @@ uses its settlements as a source, or stands on its own.
     chooses on an invented consequence — high — not detected
   - a task using a project definition only as a source inherits work or dependencies from that
     project's plan — the cycle delivers a different task — high — not detected
+  - the plan check accepts a plan in which a projected entry has no task writing it, or two — the
+    entry never reaches the foundation, or reaches it twice — high — detected by
+    project-plan-check
+  - the breakdown places an open question in another task than the definition names with no line
+    in the plan's log — a task settles a question where nobody expects it — high — not detected
+  - a task of a plan ends with a layer of the product in place — its mistakes show only when a
+    later task uses that layer — high — not detected
 - **Trust boundary:** project-level/readiness_check.py
+  project-level/plan/plan_check.py
 
 ## task-cycle
 

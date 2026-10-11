@@ -247,8 +247,9 @@ what its part requires: an element its template and rules, examples or a pointer
 the-way that serve as its examples, a skill that writes its entries and a format guard;
 `elements/common/` the rules of form and the way of working the elements' templates and skills
 share, the code their format guards share and the skills that find entries and that critique
-proposals and assess changes; `project-level/` the definition template, the skills that write a
-definition, the readiness check and its tests; `relation-model/` the script that computes
+proposals and assess changes; `project-level/` the templates of a project definition, a project
+plan and a task document, the skills that write them, the readiness check, the plan check and their
+tests; `relation-model/` the script that computes
 fingerprints; `gate/` the test of every critical flow in the part map; `installation/` the
 installer, its tests and a README explaining how a product uses the pinned version;
 `agent-instructions/` the instructions for agents working on this repository, led to from the root
@@ -271,8 +272,9 @@ their elements.
   format guards checking `foundations/` — an agent compares the change with the decision:
   - complies: code two format guards share moves into `elements/common/`, and both load it from
     there; a new file of entries in `foundations/` comes with the format guard of its element; the
-    installer, its tests and instructions stand together in `installation/`; the definition, the
-    skills that write it and its readiness check stand in `project-level/`; the agent instructions
+    installer, its tests and instructions stand together in `installation/`; the templates of a
+    definition, a plan and a task document, the skills that write them and the checks of a
+    definition and a plan stand in `project-level/`; the agent instructions
     have their own part and root entry points; the project skill entry points under
     `.claude/skills/` and `.agents/skills/` stand at the root as files of `agent-instructions`, and
     the script that generates them stands with its test in `agent-instructions/`; the principles,
@@ -4294,3 +4296,231 @@ so the installer reports a missing import before confirmation and leaves the fil
 *Rejected:* a generated rule repeating the installer's block — it duplicates guidance without
 carrying the product's other instructions; adding the import to an existing file — it changes
 product-owned guidance without its owner's choice.
+
+### WAY-142/1 — What does the breakdown of a project write, and in what form?
+
+The breakdown of a project writes its plan as one document beside the approved definition, whose
+header names the definition and the fingerprint the definition's gate record holds, and whose
+`Status:` line says whether the plan is still a draft or has been handed to the human. Each task
+stands in one row of one table of tasks, with the columns and states the plan template gives, while
+the tasks that realize each projected entry and the one task that writes it into the foundation
+stand in a table of their own, a row for each entry under the heading the definition gives it. The
+plan also holds each open question of the definition, word for word, with where it is resolved, its
+phases with what closes each where it has any, and a log of its changes, each with its reason,
+written in the language of the definition under headings, states and markers kept in English.
+
+- **Change:** new decision
+- **Scope:** project-level
+- **Based on:** none
+- **Relations:** derives from WAY-106@63eddf70 · derives from WAY-118@5af868b3 · derives from
+  WAY-100@e7a74a18
+- **Verification:** level 1 — invariants: project-plan-form. Level 2 for what the plan holds beyond
+  its form — an agent compares the plan with the decision:
+  - complies: the plan of a Polish definition gives each task's goal in Polish under English
+    headings, its header carries the fingerprint the gate recorded, and the projected decision
+    `(new) — Who owns a document?` stands in the table of entries with tasks 3 and 5 realizing it
+    and task 5 writing it;
+  - violates: a task's projected entries are listed in its row of the table of tasks; a task stands
+    in the table and again in a section of its own repeating its fields; an open question stands in
+    the plan reworded.
+- **Review when:** the first project broken down by this step has reached its closing step ·
+  check by: 2027-01-31
+- **Origin:** none
+- **Approved by:** Mariusz, merge of <request link>
+
+*Rationale:* a plan changes with every move of a task, a definition rarely and only through its
+gate, so the two stand apart, and the fingerprint in the plan's header shows when the definition
+beneath it has changed. One row per task keeps each fact about a task in one place, where no copy
+can drift from it. A definition can project many entries, its decisions named only by their
+question; listed in the row of every task that realizes them, they would fill a cell no one reads
+and need short keys made up for them, while a row per entry under its own heading is matched to the
+definition word for word and shows in one cell the single task that writes it. The columns and the
+states stand in the template, so that a change to them needs no new version of this decision.
+*Rejected:* the realizing and the writing tasks as two columns of the table of tasks — a cell grows
+to many long headings and needs keys made up for them; each task described again in a section of
+its own beside an index table and a table for a tracker — three copies of one task drift apart; the
+plan inside the definition — every move of a task would change approved sections and send the
+definition through its gate (WAY-118); a stage of the project opened and closed inside the plan —
+the project already opens with its definition and closes with its closing step; the external
+deadline repeated in the plan — the definition holds it (WAY-110); the columns named in this
+decision — each change of a column would take a new version.
+
+### WAY-143/1 — What does a task of a project plan end with?
+
+A task of a project plan ends with something that can be checked in the running product, never with
+a layer of the product put in place; a preparatory task stands in the plan only where a task of the
+plan depends on it, the task it opens the way for. A technical element enters the plan with the
+first task that uses it, or with a preparatory task that task depends on.
+
+- **Change:** new decision
+- **Scope:** project-level
+- **Based on:** none
+- **Relations:** derives from WAY-100@e7a74a18
+- **Verification:** level 1 — invariants: project-plan-check. Level 2 for what a task ends with and
+  where a technical element enters — an agent compares the plan with the decision:
+  - complies: a task "the player opens the forest and sees it on a grid of hexagons" also brings in
+    the first data files of the game; a preparatory task puts the empty application on the test
+    server, and the task of player accounts depends on it; in the-way, a task ends with
+    a skill a session runs on a real definition;
+  - violates: a task "the database schema" ends with tables no screen reads; a preparatory task
+    sets up logging for the whole product for later use and no task depends on it; the store of data enters
+    in a task before the first task that saves anything.
+- **Review when:** the first project broken down by this step has reached its closing step ·
+  check by: 2027-01-31
+- **Origin:** none
+- **Approved by:** Mariusz, merge of <request link>
+
+*Rationale:* a task that ends with a layer in place cannot be checked by anyone using the product,
+and its mistakes show only when a later task uses the layer; a task that ends in the running product
+shows at its merge whether the project moves. Some work has to come first, such as a server for the
+product to run on, and it earns a task of its own only by naming what it opens the way for, so a
+later reader sees why it stands there; a technical element brought in early for later use is work
+nobody checks until it is needed, and is often built for a need that changes.
+*Rejected:* tasks cut by layers of the product — nothing can be checked until the last layer lands;
+preparatory work no task depends on — it grows into a layer of its own; a field of the preparatory
+task naming the task it opens the way for — it repeats a dependency the plan already holds; the word
+slice for a task of the plan — the word already names a piece of a task's change.
+
+### WAY-144/1 — How does a project plan show which tasks can be worked on side by side?
+
+Which tasks of a project plan can be worked on side by side follows from the tasks each depends on
+alone: two tasks of which neither depends on the other, directly or through other tasks, can. The
+plan holds no field naming the tasks a task can be worked on beside, and its order of work follows
+the dependencies.
+
+- **Change:** new decision
+- **Scope:** project-level
+- **Based on:** none
+- **Relations:** derives from WAY-100@e7a74a18
+- **Verification:** level 1 — invariants: project-plan-form. Level 2 for the order of work — an
+  agent compares the plan, or the work on it, with the decision:
+  - complies: work on the plan takes up two tasks at once because neither depends on the other; a
+    task that needs a saved state lists the task that adds saving among those it depends on;
+  - violates: a task carries a field naming a dozen tasks it can be worked on beside; tasks are
+    ordered by a goal picked in an interview against their dependencies.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of <request link>
+
+*Rationale:* the dependencies already say which tasks can go together; a second field derived from
+them is a copy that drifts as soon as one dependency changes, and its lists grow long enough that
+nobody reads them.
+*Rejected:* a field naming the tasks a task can be worked on beside — a copy of the dependencies
+that grows past reading; the order tilted by a goal the human picks in an interview before the plan
+— the definition already states the goal and its risks, and the human corrects the finished plan.
+
+### WAY-145/1 — Who sets where an open question of an approved project definition is resolved?
+
+Once a project definition has passed its readiness gate, the place of resolution it gives an open
+question is the question's first assignment, and the plan decides from then on where the question
+is resolved: in a task of the plan, or by an answer the human gives or the plan quotes, with its
+place, from the definition or the foundation. Work on the plan may move a question to another task,
+with an entry in the plan's log of changes giving the reason and without taking the definition
+through its readiness gate again, while a move that changes which task writes a projected entry
+into the foundation is the human's to decide. A question that arises only in the breakdown goes to
+the human before the plan is handed over.
+
+- **Change:** new decision
+- **Scope:** project-level
+- **Based on:** none
+- **Relations:** derives from WAY-106@63eddf70 · derives from WAY-118@5af868b3 · derives from
+  WAY-126@35accf8b
+- **Verification:** level 1 — invariants: project-plan-check. Level 2 for moves, answers and new
+  questions — an agent compares the plan with the decision:
+  - complies: the breakdown moves the question on a session's secret from the task of the test
+    server to the task of accounts, where sessions first exist, and writes why in the log of
+    changes; the breakdown finds that nothing says whether the test server is public from the first
+    account and asks the human before handing the plan over;
+  - violates: a question lands in another task than the definition names with no entry in the log;
+    the definition is edited and gated again to move a question; a move that hands the writing of a
+    projected decision to another task is made without the human; the breakdown answers a question
+    from its own reading of the code; a question found in the breakdown waits in a task as an
+    unknown.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of <request link>
+
+*Rationale:* the place a definition gives a question is set before the tasks exist, so the
+breakdown is the first to see where the question meets the work; moving it changes the way to the
+approved scope, not the scope the human settled at the gate. A move left unwritten looks like the
+plan's own reading of the definition, so the log makes it visible. Which task writes a projected
+entry sets when the foundation comes to hold it, so a move that shifts it reaches the human. A
+question the breakdown raises was settled by nobody, and the human answers it while the plan can
+still change. An answer the definition or the foundation already gives needs no human to restate
+it, and quoted with its place it can be checked against its source.
+*Rejected:* a move taken through the gate again — the definition would be approved again for a
+change of route alone; a flag marking a task blocked by its unknowns, beside a list of deferred
+work — the states of a task already hold waiting for the human, and the list repeats the
+definition's exclusions; a question moved without a word — a reader takes it for the definition's
+own placement; only the human answering a question the breakdown resolves — the human would restate
+what the foundation already holds.
+
+### WAY-146/1 — What checks a project plan before it is handed over?
+
+Before a project plan is handed over, a script checks the form it reads the plan by and what the
+plan's structure decides: each projected entry of the definition has tasks that realize it, exactly
+one of them writing it into the foundation; each item of In scope has a task; no task depends on
+itself through others; some task depends on each preparatory task; and each open question of the
+definition stands in the plan word for word, with a task of the plan or an answer. The plan's
+independent critique then judges, against the definition, what no script tells apart: whether each
+task that is not preparatory ends with something checkable in the running product, whether each
+technical element enters with the first task that uses it, whether each question stands where the
+definition puts it or the log of changes gives its move, and whether a quoted answer settles its
+question. A check a script can make is never left to the critique.
+
+- **Change:** new decision
+- **Scope:** project-level
+- **Based on:** none
+- **Relations:** derives from WAY-100@e7a74a18 · derives from WAY-120@81f84997
+- **Verification:** level 1 — invariants: project-plan-form · project-plan-check. Level 2 for the
+  critique — an agent compares the work with the decision:
+  - complies: the critique finds a task ending with tables no screen reads and a question placed in
+    another task than the definition names with no line in the log, while the script reports a
+    projected decision no task writes;
+  - violates: the critique is asked whether every item of In scope has a task; the plan reaches the
+    human with a question the script would have found unplaced; the agent that wrote the plan
+    judges its own tasks.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of <request link>
+
+*Rationale:* a rule a script can decide holds every time the script runs, while an agent asked the
+same thing answers well most of the time and costs a reading of the whole plan; what a script
+cannot tell — whether an end can be checked, whether an element came early, whether a question was
+moved or answered in full — needs a reader who did not write the plan, since its writer applied the
+rules it would be checking. The script checks the plan's form only as far as it has to read the
+plan, since a heading or a column it cannot find would leave it counting nothing.
+*Rejected:* the author checking its own plan against the rules before writing it — the same agent
+applies and judges them; checks of a plan's form across several copies of each task — a plan holding
+each task once has no copies to compare; an agent checking what a script decides — it costs more
+and sometimes misses.
+
+### WAY-147/1 — How is a task of a project plan named, and what does its cycle take from the name?
+
+A project plan gives each of its tasks a name of lower-case words joined by hyphens, which no other
+task of the plan holds and which stays with the task while the plan changes. A task of the plan
+enters its cycle under that name, and the cycle names its record by it.
+
+- **Change:** new decision
+- **Scope:** project-level, task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-100@e7a74a18
+- **Verification:** level 1 — invariants: project-plan-form. Level 2 for the cycle — an agent
+  compares the cycle with the decision:
+  - complies: the task `forest-on-hex-grid` of a plan keeps its cycle record under
+    `docs/task-cycles/forest-on-hex-grid/`;
+  - violates: the cycle of a task of a plan names its record by a name it makes up; a task's name
+    changes when its goal is reworded; a plan carries a second table of its tasks with titles for a
+    tracker.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of <request link>
+
+*Rationale:* a task's document, its cycle record and its row in the plan meet only through its name,
+so a name that changes leads a reader to the wrong work; words, because a number says nothing where
+it is read. Where the product keeps its backlog is its own choice (WAY-107), and a task's entry
+there links its document, so the plan needs no table of its tasks written for a tracker.
+*Rejected:* the cycle naming its record when it starts — the plan and the record name one task
+differently; the plan's number as the name — it says nothing where it is read; a table of the
+plan's tasks with titles for a tracker — a second copy of the tasks, which the product's backlog
+already holds.
