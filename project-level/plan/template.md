@@ -105,9 +105,11 @@ One row for each projected entry of the definition, under its heading as the def
 "Projected foundation changes" gives it after `#### `, word for word (WAY-142):
 
 - *Realized by* names the numbers of the tasks whose work makes the entry true, at least one.
-- *Written by* names exactly one of them: the task after whose merge the product meets the entry,
-  usually the last of them, or for an entry no code makes true, the task that writes it
-  (WAY-126). The others carry the entry as projected in their documents' *Decisions in play*.
+- *Written by* names exactly one of them: the task the plan assigns to write the entry (WAY-146).
+  The first task whose code makes the entry true writes it, or the part of it its code makes true,
+  and the task the plan assigns writes what of the entry the foundation does not yet hold, and an
+  entry no code makes true (WAY-126). Each realizing task carries the entry as projected in its
+  document's *Decisions in play*.
 - A move that changes which task writes an entry is the human's to decide (WAY-145).
 
 ## Open questions
@@ -120,9 +122,8 @@ One row for each projected entry of the definition, under its heading as the def
     `human, YYYY-MM-DD`, or the plan quotes the answer from the definition or the foundation, the
     source naming the file and the section or entry it is quoted from (WAY-145).
 - The place the definition gives a question is its first assignment, and the plan decides from
-  then on (WAY-145). A question resolved in another task than the one the definition names, or a
-  question the definition sends to the breakdown and the plan sends to a task, has a line in the
-  change log giving the reason (WAY-145).
+  then on (WAY-145). A question resolved in another task than the one the definition names has a
+  line in the change log giving the reason (WAY-145).
 - A question that arises only in the breakdown goes to the human before the plan is handed over,
   and stands with `— definition: none` and the human's answer or the task the human places it in
   (WAY-145).

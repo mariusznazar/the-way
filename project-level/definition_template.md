@@ -93,7 +93,7 @@ A section is never left empty
 |---|---|
 | Goal | one sentence: what the project is to achieve and why that matters |
 | Background | what the people the project serves do today without it and where that hurts; for a revised definition, which premise broke |
-| In scope | what the project delivers; the plan breaks the project into tasks from it, and the step that finds foundation entries takes the rules its lines carry |
+| In scope | what the project delivers, as a list whose top-level items the plan numbers in order and breaks the project into tasks from (WAY-146); the step that finds foundation entries takes the rules its lines carry |
 | Out of scope | only exclusions that end with the project; an exclusion for good is a candidate projected decision (WAY-26) |
 | Inputs and constraints | what the project starts from — documents, code, systems, decisions — and what its surroundings impose on it; a constraint that outlives the project is a candidate projected decision or environment fact |
 | Deliverables | the concrete results |

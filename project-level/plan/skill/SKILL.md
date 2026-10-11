@@ -36,10 +36,9 @@ The breakdown reads the product's foundation and the definition and writes nothi
 
 - Read the definition whole, and run `python -B <the-way>/project-level/readiness_check.py
   <definition>`; it must report nothing. A finding returns the definition to `define-project`, and
-  the breakdown waits.
-- Read the product's `foundations/part_map.md`: *Depends on* tells which work has to come first,
-  and a task that would touch a part of the highest criticality together with others is a candidate
-  to split. Read the decisions the definition's "Touched parts and decisions" names.
+  the breakdown waits; so does an In scope that holds no list of items for the plan to number.
+- Read the product's `foundations/part_map.md`: *Depends on* tells which work has to come first.
+  Read the decisions the definition's "Touched parts and decisions" names.
 - Read the product's files only as far as the cut needs: what is already there, so that no task
   puts in place what exists.
 
@@ -53,8 +52,8 @@ The breakdown reads the product's foundation and the definition and writes nothi
 - Give each task its number, its name and its goal in the definition's language, the tasks it
   depends on and the items of In scope it delivers, as the template gives them (WAY-147, WAY-144).
   Every task of a new plan reads `to refine`.
-- Never write a task the definition's In scope does not ask for. Something the definition leaves
-  out that the cut seems to need is a question for the human in step 5.
+- Something the definition leaves out that the cut seems to need is a question for the human in
+  step 5 (WAY-145).
 
 ## 3. Assign the projected entries
 
@@ -70,8 +69,8 @@ The breakdown reads the product's foundation and the definition and writes nothi
   - a question the definition sends to a task goes to the task of the plan the definition's words
     name; where the cut puts it in another task, write a line in the change log giving the reason;
   - a question the definition sends to the breakdown is answered here, by the human or by a quote
-    from the definition or the foundation naming where it stands, or goes to a task with a line in
-    the change log giving the reason; never answer it from your own reading of the code.
+    from the definition or the foundation naming where it stands, or goes to a task; never answer
+    it from your own reading of the code.
 - A move that changes which task writes a projected entry is a question for the human in step 5
   (WAY-145).
 - A question that arises only in the breakdown is a question for the human in step 5, and stands

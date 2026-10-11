@@ -2031,10 +2031,13 @@ Before approval, the project readiness check rejects a definition whose Technolo
 ## project-plan-form/1
 
 The project plan check rejects a plan with no valid `Status:` line, a header that names no
-definition or a fingerprint other than the one that definition's gate record holds and its text
-gives, a missing, repeated or unexpected required second-level section, a table of tasks whose
-columns differ from those the plan template gives, a task whose state the template's list does not
-hold, or a task whose name is not lower-case words joined by hyphens or is held by another task.
+definition it can read or a fingerprint other than the one that definition's gate record holds and
+its text gives, a definition whose In scope is not `none` and holds no top-level list item, a
+second-level section that is missing, repeated, out of order, empty, without the table the template
+puts in it or not one of the template's, a change log with no dated item, a table with no row or
+whose header row, separator row or any cell differs from the form the plan template gives, a number
+or a name held by two tasks, or a task whose state the template's list does not hold or names the
+task itself.
 
 - **Method:** `python -B gate/run_tests.py project-level --record .runs/project-level-tests.jsonl`
 - **Rests on:** none
@@ -2045,10 +2048,13 @@ hold, or a task whose name is not lower-case words joined by hyphens or is held 
 ## project-plan-check/1
 
 The project plan check rejects a plan in which a projected entry of its definition has no task
-realizing it or not exactly one of those tasks writing it into the foundation, an item of the
-definition's In scope has no task, a task depends on a task the plan does not hold or on itself
-through other tasks, a preparatory task has no task depending on it, or an open question of the
-definition does not stand in the plan word for word with a task of the plan or an answer.
+realizing it, not exactly one of those tasks writing it into the foundation, or more than one row;
+an item of the definition's In scope has no task; a task depends on itself, directly or through
+other tasks; a preparatory task has no task depending on it; an open question of the definition
+does not stand in the plan exactly once, word for word with the place its definition gives it, with
+a task of the plan or an answer; or a cell or an item
+names a task, a projected entry, an In scope item or an open question that the plan or its
+definition does not hold.
 
 - **Method:** `python -B gate/run_tests.py project-level --record .runs/project-level-tests.jsonl`
 - **Rests on:** none

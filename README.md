@@ -67,8 +67,8 @@ instead of the rule being weakened.
 - `probes/` — scripts that check the environment facts again.
 - `installation/` — prepares a product repository to use one pinned commit of the-way; see
   `installation/README.md`.
-- `project-level/` — defines a project, settles its technology, and refines its tasks before their
-  implementation cycles.
+- `project-level/` — defines a project, settles its technology, breaks it into a plan of tasks, and
+  refines its tasks before their implementation cycles.
 - `task-cycle/` — orchestrates one ready task through design, implementation, checks, reviews and
   a request for human review; it keeps the cycle record on the task branch, with the time, models
   and tokens of each stage counted from the agents' session transcripts.

@@ -4320,11 +4320,11 @@ written in the language of the definition under headings, states and markers kep
     headings, its header carries the fingerprint the gate recorded, and the projected decision
     `(new) — Who owns a document?` stands in the table of entries with tasks 3 and 5 realizing it
     and task 5 writing it;
-  - violates: a task's projected entries are listed in its row of the table of tasks; a task stands
-    in the table and again in a section of its own repeating its fields; an open question stands in
-    the plan reworded.
-- **Review when:** the first project broken down by this step has reached its closing step ·
-  check by: 2027-01-31
+  - violates: a task stands in the table and again under a heading of its own repeating its
+    fields; the goals of a Polish definition's tasks stand in English; a phase names no condition
+    that closes it.
+- **Review when:** every task of the first plan this step writes reads `done` or `dropped —
+  approved by human` · check by: 2027-01-31
 - **Origin:** none
 - **Approved by:** Mariusz, merge of <request link>
 
@@ -4335,13 +4335,17 @@ can drift from it. A definition can project many entries, its decisions named on
 question; listed in the row of every task that realizes them, they would fill a cell no one reads
 and need short keys made up for them, while a row per entry under its own heading is matched to the
 definition word for word and shows in one cell the single task that writes it. The columns and the
-states stand in the template, so that a change to them needs no new version of this decision.
+states stand in the template, so that a change to them needs no new version of this decision. The
+step takes from the practice of a roadmap of vertical slices the breaking of a project into tasks
+before any task is planned, and leaves out its milestones, its estimates and its interview on the
+order of work.
 *Rejected:* the realizing and the writing tasks as two columns of the table of tasks — a cell grows
 to many long headings and needs keys made up for them; each task described again in a section of
 its own beside an index table and a table for a tracker — three copies of one task drift apart; the
 plan inside the definition — every move of a task would change approved sections and send the
 definition through its gate (WAY-118); a stage of the project opened and closed inside the plan —
-the project already opens with its definition and closes with its closing step; the external
+the project already opens with its definition and ends once each of its tasks has a final state;
+the external
 deadline repeated in the plan — the definition holds it (WAY-110); the columns named in this
 decision — each change of a column would take a new version.
 
@@ -4365,8 +4369,8 @@ first task that uses it, or with a preparatory task that task depends on.
   - violates: a task "the database schema" ends with tables no screen reads; a preparatory task
     sets up logging for the whole product for later use and no task depends on it; the store of data enters
     in a task before the first task that saves anything.
-- **Review when:** the first project broken down by this step has reached its closing step ·
-  check by: 2027-01-31
+- **Review when:** every task of the first plan this step writes reads `done` or `dropped —
+  approved by human` · check by: 2027-01-31
 - **Origin:** none
 - **Approved by:** Mariusz, merge of <request link>
 
@@ -4375,7 +4379,9 @@ and its mistakes show only when a later task uses the layer; a task that ends in
 shows at its merge whether the project moves. Some work has to come first, such as a server for the
 product to run on, and it earns a task of its own only by naming what it opens the way for, so a
 later reader sees why it stands there; a technical element brought in early for later use is work
-nobody checks until it is needed, and is often built for a need that changes.
+nobody checks until it is needed, and is often built for a need that changes. The rule takes from
+the practice of vertical slices the cut by what can be checked in the running product, and from its
+enabling work the rule that such work names what it opens the way for.
 *Rejected:* tasks cut by layers of the product — nothing can be checked until the last layer lands;
 preparatory work no task depends on — it grows into a layer of its own; a field of the preparatory
 task naming the task it opens the way for — it repeats a dependency the plan already holds; the word
@@ -4391,7 +4397,7 @@ the dependencies.
 - **Change:** new decision
 - **Scope:** project-level
 - **Based on:** none
-- **Relations:** derives from WAY-100@e7a74a18
+- **Relations:** derives from WAY-106@63eddf70 · derives from WAY-100@e7a74a18
 - **Verification:** level 1 — invariants: project-plan-form. Level 2 for the order of work — an
   agent compares the plan, or the work on it, with the decision:
   - complies: work on the plan takes up two tasks at once because neither depends on the other; a
@@ -4404,7 +4410,9 @@ the dependencies.
 
 *Rationale:* the dependencies already say which tasks can go together; a second field derived from
 them is a copy that drifts as soon as one dependency changes, and its lists grow long enough that
-nobody reads them.
+nobody reads them. The rule takes from the practice of a roadmap its graph of dependencies and the
+order that follows from it, and leaves out its field of work that can run alongside. The task
+order WAY-106 gives the plan is this order.
 *Rejected:* a field naming the tasks a task can be worked on beside — a copy of the dependencies
 that grows past reading; the order tilted by a goal the human picks in an interview before the plan
 — the definition already states the goal and its risks, and the human corrects the finished plan.
@@ -4488,8 +4496,8 @@ question. A check a script can make is never left to the critique.
 same thing answers well most of the time and costs a reading of the whole plan; what a script
 cannot tell — whether an end can be checked, whether an element came early, whether a question was
 moved or answered in full — needs a reader who did not write the plan, since its writer applied the
-rules it would be checking. The script checks the plan's form only as far as it has to read the
-plan, since a heading or a column it cannot find would leave it counting nothing.
+rules it would be checking. The rule takes from the practice of a roadmap its review of the plan
+before it is handed on, split between a script and a reader who did not write the plan.
 *Rejected:* the author checking its own plan against the rules before writing it — the same agent
 applies and judges them; checks of a plan's form across several copies of each task — a plan holding
 each task once has no copies to compare; an agent checking what a script decides — it costs more
@@ -4516,9 +4524,10 @@ enters its cycle under that name, and the cycle names its record by it.
 - **Origin:** none
 - **Approved by:** Mariusz, merge of <request link>
 
-*Rationale:* a task's document, its cycle record and its row in the plan meet only through its name,
-so a name that changes leads a reader to the wrong work; words, because a number says nothing where
-it is read. Where the product keeps its backlog is its own choice (WAY-107), and a task's entry
+*Rationale:* a task's cycle record and its entry in the product's backlog meet its row in the plan
+through its name, so a name that changes leads a reader to the wrong work; words, because a number
+that keeps the plan's own cells short says nothing in a record read apart from the plan. The rule
+takes from the practice of a roadmap the stable name each of its items carries into later work. Where the product keeps its backlog is its own choice (WAY-107), and a task's entry
 there links its document, so the plan needs no table of its tasks written for a tracker.
 *Rejected:* the cycle naming its record when it starts — the plan and the record name one task
 differently; the plan's number as the name — it says nothing where it is read; a table of the

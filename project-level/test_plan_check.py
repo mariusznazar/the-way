@@ -489,7 +489,7 @@ class TasksTable(unittest.TestCase):
                 self.assertIn("form", conditions(plan(tasks=tasks)))
 
     def test_a_goal_delivered_in_a_task_the_plan_does_not_hold_is_reported(self):
-        # invariant: project-plan-form/1
+        # invariant: project-plan-check/1
         tasks = changed(TASKS, 2, "State", "done — goal delivered in task 9")
         self.assertIn("form", conditions(plan(tasks=tasks)))
 
@@ -547,7 +547,6 @@ class TasksTable(unittest.TestCase):
         self.assertIn("form", conditions(plan(tasks=tasks)))
 
     def test_a_change_log_item_dated_in_arabic_indic_digits_is_reported(self):
-        # invariant: project-plan-form/1
         log = "- ٢٠٢٦-١٠-٠٥ — written"
         self.assertIn("form", conditions(plan(bodies={"Change log": log})))
 
@@ -582,6 +581,7 @@ class EntriesTable(unittest.TestCase):
 
     def test_realized_by_off_its_form_is_reported(self):
         # invariant: project-plan-form/1
+        # invariant: project-plan-check/1
         for value in ("2,3", "2 i 3", "", "—"):
             with self.subTest(value=value):
                 entries = changed(ENTRIES, 2, "Realized by", value, ENTRY_COLUMNS)
@@ -589,11 +589,13 @@ class EntriesTable(unittest.TestCase):
 
     def test_written_by_naming_two_tasks_is_reported(self):
         # invariant: project-plan-form/1
+        # invariant: project-plan-check/1
         entries = changed(ENTRIES, 2, "Written by", "2, 3", ENTRY_COLUMNS)
         self.assertIn("form", conditions(plan(entries=entries)))
 
     def test_written_by_empty_or_off_its_form_is_reported(self):
         # invariant: project-plan-form/1
+        # invariant: project-plan-check/1
         for value in ("", "—", "task 3"):
             with self.subTest(value=value):
                 entries = changed(ENTRIES, 2, "Written by", value, ENTRY_COLUMNS)
