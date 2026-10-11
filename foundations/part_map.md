@@ -126,7 +126,7 @@ uses its settlements as a source, or stands on its own.
   - a task of a plan ends with a layer of the product in place — its mistakes show only when a
     later task uses that layer — high — not detected
 - **Trust boundary:** project-level/readiness_check.py
-  project-level/plan/plan_check.py
+  project-level/plan_check.py
 
 ## task-cycle
 

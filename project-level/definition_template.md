@@ -11,8 +11,8 @@ decisions that set the rules below are cited beside them.
   enters the foundation with the first task whose code makes it true, or, where no code does,
   with the task the plan assigns (WAY-01; WAY-106; WAY-126).
 - It holds no plan: phases, the order of work, the tasks and which task carries which decision
-  stand in the plan of the project (WAY-36;
-  WAY-106).
+  stand in the plan of the project, whose form `plan/template.md` gives (WAY-36; WAY-106;
+  WAY-142).
 
 ## Where it stands, and in what language
 
@@ -140,6 +140,10 @@ project, or one task of it, named:
 ```
 
 A section without questions reads `none`.
+
+The place a question names is its first assignment: once the definition has passed its readiness
+gate, the project plan decides where each question is resolved, and moving a question to another
+task changes the plan, not the definition (WAY-145).
 
 ## Technology
 

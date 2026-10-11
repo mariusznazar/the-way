@@ -148,7 +148,9 @@ The project level reads the product's foundation and writes nothing in it
    `python -B <the-way>/project-level/readiness_check.py <definition> --fingerprint`, write the
    gate record, and set the status line to `approved YYYY-MM-DD`.
 5. Run the check with no option; it must report nothing found. Tell the human what it reported,
-   and that conditions b and c rest on the approval and on the search, which no script checks.
+   and that conditions b and c rest on the approval and on the search, which no script checks,
+   and that the breakdown of the approved definition into tasks follows through `plan-project`
+   (WAY-142).
 
 A change of the definition after the gate goes through the gate again
 (WAY-118).
