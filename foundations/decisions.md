@@ -342,32 +342,44 @@ the human only after a chain of assessments.
 
 ### WAY-11/1 — How does a task end?
 
-A task ends with its return step before its branch is merged: an agent lists from the diff and the
-task's log new rules and decisions, code behaviour with no invariant over it, environment facts the
-change rests on that the foundation does not yet hold and words whose use the glossary does not yet
-settle, writes them into the foundation in the same change, which its independent assessment covers
-(WAY-10), and compares the foundation with the code in the parts the task touched. A periodic
-review of the foundation runs apart from tasks.
+A task ends with its return step before its branch is merged: an agent searches the diff and the
+task's log for new rules and decisions, code behaviour with no invariant over it, environment
+facts the change rests on that the foundation does not yet hold and words whose use the glossary
+does not yet settle, writes the resulting foundation entries in the same change, which its
+independent assessment covers (WAY-10), and compares the foundation with the code in the parts
+the task touched. Uncovered code behaviour becomes an invariant when changing it in a later task
+would violate a requirement or a settled rule of the product; an implementation detail that can
+change without such a violation stays in ordinary tests and the description of the change, and
+this distinction leaves decision-derived invariants (WAY-12, WAY-22), accepted settlements
+(WAY-134) and the task's duties for projected entries (WAY-126) required. A periodic review of the
+foundation runs apart from tasks.
 
 - **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, task-cycle
 - **Based on:** none
 - **Relations:** derives from WAY-01@60960941
-- **Verification:** level 1 — invariants: return-step-record. Level 2 for what the return step finds
-  — an agent compares the change with the decision:
-  - complies: an edge-case rule the implementer wrote into the code comes back as an
-    invariant written before the merge;
-  - violates: the return step reports nothing to add, while the diff brings in behaviour that no
-    invariant covers.
+- **Verification:** level 1 — invariants: return-step-record. Level 2 for what the return step
+  finds and how it classifies uncovered behaviour — an agent compares the diff, the task's log
+  and sources with the decision:
+  - complies: a newly found rule that a later change would break becomes an invariant, with its
+    requirement or settlement named; a replaceable layout calculation stays in ordinary tests
+    and the change description, with the reason recorded; an invariant required by a decision
+    is written even when its check costs work; accepted settlements and applicable projected
+    entries are written;
+  - violates: a product rule is left only in ordinary tests; every replaceable detail becomes
+    a foundation invariant merely because the diff reveals it; a costly decision-derived
+    invariant or an applicable accepted or projected entry is omitted under the distinction.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/4
+- **Approved by:** Mariusz, merge of <request link>
 
 *Rationale:* some of the foundation is learned only in implementation and in use, and a task that
 missed the foundation does not report it; an end step goes missing, so the merge waits for its
 record. Facts and words are listed because, like rules, they are learned in code.
 *Rejected:* the foundation changed only at the foundation step — what implementation teaches stays
-in the code.
+in the code; every uncovered detail made an invariant — a replaceable implementation becomes a
+product rule; ordinary tests alone for product rules — later work can change a requirement without
+meeting a foundation check.
 
 ### WAY-12/1 — How is a decision checked?
 
@@ -3646,7 +3658,7 @@ code — and writes a new entry only for a rule none of them states.
 - **Scope:** project-level, task-cycle, decisions, invariants, glossary, environment-facts,
   part-map
 - **Based on:** none
-- **Relations:** derives from WAY-01@60960941 · derives from WAY-11@16d55adb · derives from
+- **Relations:** derives from WAY-01@60960941 · derives from WAY-11@e882a9df · derives from
   WAY-114@04b4f599 · derives from WAY-118@5af868b3 · narrows WAY-106@63eddf70
 - **Verification:** level 2 — an agent compares the change with the decision:
   - complies: a source-only task whose code adds the store a projected decision chooses writes
@@ -4046,10 +4058,14 @@ its check apart from the code.
 ### WAY-136/1 — What plan does a task's cycle write, and who makes and reviews its slices?
 
 Every task's cycle writes a plan with the-way's skill `plan-task`, which divides the change into
-slices and holds no code. Each slice is made by an agent of its own and then reviewed by an agent
-that did not make it, and a change of more than one slice then gets one review of the whole change,
-while the review of a plan's only slice is the review of the whole change. A slice that proves too
-large for the agent making it is discarded with its code and goes back to the planner to be split.
+slices and holds no code; the plan recommends useful slices that can be worked on and reviewed
+separately and identifies possible parallel work independently of the chosen execution skill,
+while the orchestrator records before execution whether that opportunity can be used, from
+dependencies, shared files or mutable state, separate review and the skill's restrictions. Each
+slice is made by an agent of its own and then reviewed by an agent that did not make it, and a
+change of more than one slice then gets one review of the whole change, while the review of a
+plan's only slice is the review of the whole change. A slice that proves too large for the agent
+making it is discarded with its code and goes back to the planner to be split.
 
 - **Change:** new decision
 - **Scope:** task-cycle
@@ -4060,34 +4076,41 @@ large for the agent making it is discarded with its code and goes back to the pl
   Placeholders", "Steps that describe what to do without showing how (code blocks required for
   code steps)"
 - **Relations:** derives from WAY-13@e6c830b7
-- **Verification:** level 2 — an agent compares a cycle with the decision:
-  - complies: a one-line fix is made from a plan of one slice by one agent, and the review of that
-    slice, given the task as its requirements, is the change's only code review; a change of four
-    slices gets four slice reviews and one review of the whole change; a slice that outgrows its
-    agent is reset and split in two by the planner;
-  - violates: a task's change is made without a plan; a plan holds code or is written with
-    Superpowers `writing-plans`; the agent that made a slice reviews it; a change of one slice gets
-    a second review of the same range; the code of an outgrown slice is kept and completed.
+- **Verification:** level 2 — an agent compares the plan and cycle with the decision:
+  - complies: a one-line fix has one useful slice and its review is the only whole-change code
+    review; a change of several slices has each slice reviewed and then one whole-change review;
+    an outgrown slice is discarded and split; a plan identifies independent slices although
+    the execution skill forbids parallel executors, and the orchestrator records sequential
+    execution with that restriction; shared mutable state prevents a proposed parallel run;
+  - violates: a task has no plan, or a plan holds code or uses Superpowers `writing-plans`; an
+    author reviews its own slice, a one-slice change gets a duplicate whole-change review, or
+    outgrown code is kept; the planner suppresses useful independent slices because of the
+    execution skill, or creates unnecessary slices to claim parallel work; the orchestrator
+    treats different files alone as proof of independence or overrides the skill's restriction.
 - **Review when:** five cycles of `implement-task` have run under this decision, or a cycle has
   returned more than one slice in three of its plan as too large, or has used, as
   `task-cycle/cycle_stages.py` counts them, no clearly fewer tokens than the 363.7 million that
   the cycle of https://github.com/mariusznazar/the-way/pull/11 used, for a task of like size ·
   check by: 2026-11-30
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/13
+- **Approved by:** Mariusz, merge of <request link>
 
 *Rationale:* a plan earns its cost by dividing the change, so that a narrow agent makes each slice
 and a narrow reviewer reads it, which is where reviews catch the errors that matter; code written
 out ahead in the plan is most of a plan's cost and catches nothing a review of the code does not. A
 plan without code costs little, so every task gets one, and its form can change in its own skill
 apart from the cycle. A small change is a plan of one slice, so one path holds every task, and its
-one review reads the whole change.
+one review reads the whole change. A useful division of work outlives the restrictions of one
+execution method, while the execution ruling keeps the recommendation from becoming permission
+for work whose dependencies or shared state make it unsafe.
 *Rejected:* Superpowers `writing-plans` — each step carries its code, so the plan costs a large
 share of the change and still needs the review of that code; a separate path for small tasks
 without a plan — two paths would hold the same rules of the record, the request and the return
 step, while size only lightens one process (WAY-13); a review of the whole change after the review
 of a plan's only slice — it reads the same range twice; an outgrown slice's code kept and completed
-— its split would be written around partial code.
+— its split would be written around partial code; a plan shaped only by the restrictions of
+one execution method — it hides useful independent work; parallel execution from different file
+names alone — shared state and dependencies can still join the work.
 
 ### WAY-137/1 — What decides between places to run that the simplest and cheapest option leaves tied?
 
@@ -4533,3 +4556,85 @@ there links its document, so the plan needs no table of its tasks written for a 
 differently; the plan's number as the name — it says nothing where it is read; a table of the
 plan's tasks with titles for a tracker — a second copy of the tasks, which the product's backlog
 already holds.
+
+### WAY-148/1 — How do task-cycle stages pass their work to the orchestrator?
+
+Every task-cycle stage passes its full handoff and report through files in the cycle's reports
+directory, while its messages carry routing, stage status, paths, commits, a concise check result
+and every unresolved concern affecting the next dispatch. The orchestrator records the event and
+relevant choices before dependent dispatch and reads authoritative sources and relevant report
+evidence before deciding a question, settling a finding, accepting a foundation meaning or
+verifying disputed or incomplete evidence; routine progression uses the short return, record,
+source paths and commits without requiring prior conversational history. A missing or incomplete
+report is repaired before dependent work proceeds, and this transfer contract preserves required
+whole-source reads, check and review duties and the independent assessor's filtered inputs
+(WAY-10), reusing a borrowed method's existing brief and report rather than duplicating them.
+
+- **Change:** new decision
+- **Scope:** task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-125@441e3a6a · derives from WAY-10@db68de1c
+- **Verification:** level 2 — an agent compares the stage handoff, return, report and
+  orchestrator's ruling with the decision:
+  - complies: a short return names its complete report, commit range and failed or unchecked
+    checks, and the record permits resumption from files; the orchestrator reads the evidence
+    of an unresolved question before deciding it; a missing report is repaired before the next
+    dependent dispatch; a required whole entry is read whole;
+  - violates: a full report exists only in conversation, a short return conceals a failed check,
+    dependent work proceeds on a missing report or mismatched commit range, or a question is
+    settled from the short return alone; a selective read replaces a mandatory whole-source
+    read; the independent assessor receives the operational handoff or author's reasoning.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of <request link>
+
+*Rationale:* full material kept outside routine coordination avoids repeated context while
+preserving evidence a ruling needs and a place from which work can resume. Short returns make
+the next action visible, but an omitted failure can hide behind brevity, so relevant evidence
+remains part of a decision and an incomplete report blocks dependent work.
+*Rejected:* full handoffs and reports repeated in messages — coordination accumulates material
+it need not reread; short summaries as the only record — lost evidence cannot be recovered on
+resumption; a second universal brief and report contract — duplicated obligations drift without
+proving completeness; automatic compaction — it does not choose the evidence a ruling needs.
+
+### WAY-149/1 — When does the deliberate break of a return-step check take place?
+
+For an invariant check added in a task's return step, its first acceptance deliberate break
+follows the one independent assessment of the change's foundation entries and invariant tests
+and the settlement of its remarks. Before that break, affected checks and code review run again
+for a settlement that changes code, assessed foundation entries or invariant tests, and the code
+reviewer who did not write the check reviews its final version, writes the break from the final
+invariant sentence and records the required failure (WAY-08, WAY-69); later corrections to the
+check or the behaviour its break covers repeat the affected verification before the final clean
+run. Checks written earlier in the cycle retain their existing acceptance and deliberate-break
+points, and settlement stays part of the one assessment (WAY-10), with an existing affected
+review reused where it covers the final check rather than adding a whole-change review of an
+unchanged range.
+
+- **Change:** new decision
+- **Scope:** task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-10@db68de1c · derives from WAY-08@2343e09f · derives from
+  WAY-69@7051f884
+- **Verification:** level 2 — an agent compares the cycle's check, assessment, settlement,
+  review and deliberate-break evidence with the decision:
+  - complies: a return-step check runs on the product, its assessment's remarks are settled,
+    affected checks and review run again, and the code reviewer reviews the final check and
+    records its failure on a break written from the final sentence; an earlier check keeps its
+    original acceptance point; a later correction repeats the affected evidence;
+  - violates: a return-step check is accepted on a break before assessment, or on a passing
+    product run alone; a changed final check uses a superseded break's evidence; assessment
+    replaces code review, settlement reopens assessment, or an earlier check's break is delayed
+    to the return step.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of <request link>
+
+*Rationale:* settling assessment remarks before the first acceptance break avoids repeating a
+break for a check the settlement changes. A final check still needs independent review and a
+real failure on the rule it protects; changing the order cannot turn a product pass or an
+assessment into that evidence. Earlier checks keep the failure evidence their own stage needs.
+*Rejected:* breaks both before and after assessment by default — the earlier run may check a
+version that is immediately replaced; delaying every check's break — earlier stages lose their
+own acceptance evidence; accepting a check after assessment alone — an approved check may still
+detect no break; a second whole-change review of unchanged work — it repeats an existing review.
