@@ -1,0 +1,22 @@
+chore(foundations): Name pull/17 as the approval of the cycle contracts
+
+Swap only the four Approved by request-link placeholders. Binding text,
+fingerprints, code-review scope and assessed behavior are unchanged.
+
+Initial whole-foundation search at d04c3fe: searched all six foundation files
+for handoffs/context, return classification, assessment and breaks, independent
+slices, waiting entries and vocabulary. WAY-126 and return-step-record needed
+WAY-11 fingerprint renewals; the remaining applicable duties and meanings stayed
+intact. No unresolved unlinked effect or precedence collision remained.
+
+Integration-tip whole-foundation search: origin/foundations is still d04c3fe.
+Repeated linked and unlinked concept search over all six files; no old WAY-11
+reference remains and no additional entry requires a relation, edit or question.
+
+Independent assessment: gpt-6-astra, d04c3fe..19c9cfe, filtered to decisions,
+invariants and the three task-cycle instruction/template files. No material
+concern. Optional A1 proposed dropping the fixed-version hint in the record;
+author retained its point-of-entry reminder, accepting small version duplication.
+No assessed file changed. Code review passed without findings; all nine semantic
+cases, parser compatibility and affected fingerprints were independently checked.
+Full reports and both search records are in the cycle archive linked by pull/17.

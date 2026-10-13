@@ -1,0 +1,41 @@
+feat(task-cycle): Record the shorter cycle contracts
+
+Add WAY-148 for file-based stage handoffs and reports and WAY-149 for
+acceptance breaks of return-step checks after assessment settlements.
+Narrow WAY-11's uncovered-behavior criterion and extend WAY-136's
+independent-slice recommendation while preserving execution restrictions.
+Recheck WAY-126 and return-step-record and renew their WAY-11 fingerprint.
+
+Initial whole-foundation search (WAY-33): searched all six foundations files
+at d04c3feb1a47e0ffc9a3b2354c23aacafe25c74b, before drafting. Read the
+decision log, invariants, part map and glossary whole, including affected
+entries' rationale and rejected options. Searched written WAY-11/WAY-136
+dependencies and return-step-record; handoff/report/resumption/context and
+dispatch; return-step behavior, requirements, settlements and projected
+entries; assessment/review/break/acceptance; slices, parallel work,
+dependencies and Superpowers; waiting TODOs and relevant glossary terms.
+Found WAY-126 and return-step-record as the only fingerprint dependants
+of WAY-11, and none of WAY-136. Their meanings still hold and links are
+renewed. WAY-10/12/69/125, projected/accepted-entry duties, separate authors,
+earlier checks, whole-source reads and the adopted skill restrictions remain
+unchanged. No further conflict, waiting mechanism, glossary meaning or
+part-map change follows. The task's game example is not a rule of the-way.
+
+F7 derivation: the new handoff, classification, ordering and planning rules
+govern adopting cycles' execution and semantic judgment. No new property
+fixed by a the-way commit was derived; keep level-2 example comparisons,
+and retain WAY-11's existing level-1 return-step-record with Method TODO.
+Unknown Method alone is not a reason to omit a derivable invariant.
+Phrase or heading assertions would not prove this agent conduct.
+
+Validation: 169 decision tests, 233 invariant tests and 98 gate tests pass.
+Decision guard: 0 errors, 9 warnings, 5 none-mode unchecked. Invariant guard:
+0 errors, 0 warnings, 3 none-mode unchecked. Warnings are five existing
+overdue reviews and four request-link placeholders. Direct computation
+with relation-model/fingerprint.py confirms all affected reference values.
+These are partial checks, not a pass of the full gate.
+
+The independent assessment and search against the integration tip remain
+required before merge. Human renewed meaning acceptance is at this
+request's merge; this foundation-stage commit claims neither acceptance
+nor completion of later cycle stages.

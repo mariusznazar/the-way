@@ -1,0 +1,3 @@
+Command: python -B gate/run_tests.py task-cycle
+Base: d04c3feb1a47e0ffc9a3b2354c23aacafe25c74b
+Result: Ran 41 tests in 0.402s; OK; exit 0. Captured tool output summarized here; suite writes progress to stderr.

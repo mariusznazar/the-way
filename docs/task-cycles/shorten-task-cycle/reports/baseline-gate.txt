@@ -1,0 +1,3 @@
+Command: python -B gate/run_tests.py gate
+Base: d04c3feb1a47e0ffc9a3b2354c23aacafe25c74b
+Result: Ran 98 tests in 19.872s; OK; exit 0. Includes existing critical-flow tests. Captured tool output summarized here; suite writes progress to stderr.

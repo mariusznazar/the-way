@@ -1,0 +1,5 @@
+# Spec review handoff
+Worktree: C:/Storage/repos/the-way-wt/shorten-task-cycle
+Cycle: .runs/task-cycles/shorten-task-cycle
+Read task.md and spec.md in full; compare against relevant current foundation, task-cycle/skill/SKILL.md and task-cycle/plan/SKILL.md. This is stage 7 of existing implement-task. User delegated intermediate decisions to root; no direct human questions or approval. Accepted four settlement rows bind meaning; spec wording does not override task. Current 6.4.1 sequential implementation remains; no new scheduler or compaction. Check source fidelity, missing requirements, invented behavior, contradictions and feasibility. The task/plan can be wrong: report conflict instead of forcing fit.
+Read-only for repository and spec; write only reports/spec-review.md. No subagents or next stage. Ask root if needed. Review all four directions and whether design needs any decision meaning beyond explicitly accepted rows. Full findings use file:line anchors and concrete failure/effect. Return concise verdict, findings and report path. No code review yet, no implementation or commits. Human review stays at PR.
