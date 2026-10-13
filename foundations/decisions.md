@@ -371,7 +371,7 @@ foundation runs apart from tasks.
     invariant or an applicable accepted or projected entry is omitted under the distinction.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/17
 
 *Rationale:* some of the foundation is learned only in implementation and in use, and a task that
 missed the foundation does not report it; an end step goes missing, so the merge waits for its
@@ -4093,7 +4093,7 @@ making it is discarded with its code and goes back to the planner to be split.
   the cycle of https://github.com/mariusznazar/the-way/pull/11 used, for a task of like size ·
   check by: 2026-11-30
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/17
 
 *Rationale:* a plan earns its cost by dividing the change, so that a narrow agent makes each slice
 and a narrow reviewer reads it, which is where reviews catch the errors that matter; code written
@@ -4586,7 +4586,7 @@ whole-source reads, check and review duties and the independent assessor's filte
     read; the independent assessor receives the operational handoff or author's reasoning.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/17
 
 *Rationale:* full material kept outside routine coordination avoids repeated context while
 preserving evidence a ruling needs and a place from which work can resume. Short returns make
@@ -4628,7 +4628,7 @@ unchanged range.
     to the return step.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/17
 
 *Rationale:* settling assessment remarks before the first acceptance break avoids repeating a
 break for a check the settlement changes. A final check still needs independent review and a
