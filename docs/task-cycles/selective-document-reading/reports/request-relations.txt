@@ -1,7 +1,0 @@
-relations_checked 151
-WAY-111 e2fd46dc
-WAY-115 eb7ba15c
-WAY-134 b858b34f
-WAY-150 3bd9e695
-WAY-151 739610de
-control_characters 0
