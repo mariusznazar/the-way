@@ -53,10 +53,9 @@ The project level reads the product's foundation and writes nothing in it
 
 ## 2. Read the foundation for the idea
 
-- Read the product's `foundations/`: in the part map *Files*, *Trust boundary* and *Surface*; in
-  the decisions the binding sentences, *Scope* and *Relations*; in the invariants the sentence and
-  *Part*; the glossary; the environment facts
-  (WAY-111).
+- Select and read the product's current foundation by "Reading the foundation" in
+  `elements/common/way_of_working.md`, starting from the idea's proposed responsibilities,
+  behaviour, flows and surfaces before a diff exists (WAY-111, WAY-150).
 - Bring what you find into the conversation as material: a decision the project would change, an
   invariant it may break, a trust boundary it crosses, a surface it changes. For a decision, ask
   whether the decision changes or the project fits it (WAY-30).

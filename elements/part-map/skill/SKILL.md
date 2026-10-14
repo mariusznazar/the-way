@@ -19,8 +19,8 @@ project skill of that name with the `the-way-` prefix. Follow the steps of
 
 ## 1. Read
 
-- Read the product's whole `foundations/part_map.md` — its three kinds of entry refer to one
-  another.
+- Follow "Reading the foundation" in `elements/common/way_of_working.md`, including the complete
+  product part map as the routing input — its three kinds of entry refer to one another.
 
 ## 2. Decide what the entry is
 

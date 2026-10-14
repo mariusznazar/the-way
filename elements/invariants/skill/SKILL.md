@@ -19,8 +19,9 @@ project skill of that name with the `the-way-` prefix. Follow the steps of
 
 ## 1. Read
 
-- Read the product's `foundations/invariants.md`, `foundations/part_map.md` and
-  `foundations/decisions.md` — an entry names parts of the map and decisions of the log.
+- Select and read invariant and decision entries by "Reading the foundation" in
+  `elements/common/way_of_working.md`, using the complete part map — an entry names parts of the
+  map and decisions of the log.
 
 ## 2. Decide what the entry is
 

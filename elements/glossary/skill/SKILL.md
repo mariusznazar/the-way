@@ -19,7 +19,8 @@ project skill of that name with the `the-way-` prefix. Follow the steps of
 
 ## 1. Read
 
-- Read the product's `foundations/glossary.md`. The other files of `foundations/`, the elements'
+- Select and read foundation context by "Reading the foundation" in
+  `elements/common/way_of_working.md`. The files of `foundations/`, the elements'
   templates and the Markdown files of `elements/common/` are where a term's uses and the carriers
   of *Not* stand, so search them rather than recall them.
 

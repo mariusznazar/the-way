@@ -43,8 +43,10 @@ When the section already holds a working table, resume from the first row whose 
   `project-level/task/template.md` the section "Settlements to record" and its rule under "What each
   section carries" in full.
 - Read the source in full.
-- Read the product's `foundations/`, so that no candidate repeats an entry that stands there, and a
-  candidate that collides with one is shown beside it.
+- Select and read the product's foundation by "Reading the foundation" in
+  `elements/common/way_of_working.md`; search all five elements for duplicates and collisions,
+  beyond selected parts and known links, so that no candidate repeats an entry that stands there,
+  and a candidate that collides with one is shown beside it.
 - Read in each element's template what makes something an entry of it: the plan test in the
   decisions' template (WAY-36, WAY-26); "Which words take an entry" in the glossary's; "Which facts
   are written" in the environment facts'; for an invariant, a sentence a commit can make false; for
