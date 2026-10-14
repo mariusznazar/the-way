@@ -115,9 +115,8 @@ or of the full gate. Keep the WAY-33 search record as separate evidence.
 
 Once the skill has settled what the entry is, search the whole foundation for entries it touches
 that no written link joins to it — not only those a link, a shared *Scope* or a shared *Part*
-leads to (WAY-33). Read each entry whole: a decision's *Rejected* holds an option already weighed
-and refused, and nowhere else says so
-(`TODO — decision pending: which decision sets that the search reads a decision's *Rejected*`).
+leads to (WAY-33). Read each entry selected or found by the search whole (WAY-150): a decision's
+*Rejected* holds an option already weighed and refused, and nowhere else says so.
 The search also asks:
 
 - whether the entry uses a glossary term in another meaning than its entry gives, or spells out a
