@@ -94,14 +94,44 @@ request link and set the task's state.
    reasoning or raw secret-bearing output. Keep this record and its reports out of commits and
    assessment packages until the independent assessment and the code reviews finish.
 
-For every dispatch, pass the user's delegation to the orchestrator, the applicable binding
-sources, the agent's exact stage boundary, the write boundary, and the path for its full report.
-The agent sends questions back to you and returns at that boundary, without invoking the next
-Superpowers skill or seeking direct human approval. Answer workflow approval prompts
-provisionally with evidence; a human accepts the foundation entries the cycle writes when merging
-the request (WAY-114). This adapter changes the handoff and approval points, not the borrowed
-method's work within each stage, except that the code review also writes the deliberate break of
-an invariant's check (WAY-69).
+For each operational dispatch, write the full handoff in the cycle's `reports/` directory;
+the message names that file and only the routing needed to start (WAY-148). The handoff gives the
+user's delegation, worktree, authoritative input paths and commits, applicable entries or ranges,
+skill, exact stage and write boundaries, expected outputs and full report path, and relevant
+rulings. Keep requirements and exact values in their authoritative files. A required whole entry
+or file must still be read whole. Reuse a borrowed method's existing brief and report instead of
+creating a second one. Apply this contract to design, planning, foundation work, implementation,
+reviews and the return step within their existing boundaries; the independent assessor receives
+only the filtered inputs in step 11, never this operational handoff.
+
+Each agent writes its complete sanitized report to the named file, preserving its stage's and
+borrowed skill's report requirements. Where applicable, include input versions, result and boundary
+reached, changed files and commits, questions and choices with evidence, rejected alternatives and
+their costs, check commands and exit codes, failures, unchecked work and unresolved concerns. Do not
+add fields irrelevant to the stage. Reference git-held sources and diffs by path and commit;
+keep transient review packages where the borrowed method requires them, but retain the review
+report and assessed range rather than another archived diff.
+
+The return message gives stage status, artifact/report paths, commits where any exist, a concise
+check result including failed or unchecked work, and every unresolved question or concern affecting
+the next dispatch. A blocking question names the concrete decision needed and its evidence path.
+The agent sends questions back to you and returns at its boundary without invoking the next skill
+or seeking human approval.
+
+Record the event and relevant choices before dependent dispatch. Read authoritative sources and
+relevant report evidence before deciding a question, settling a finding, accepting a foundation
+meaning or verifying disputed or incomplete evidence. Routine progression uses the short return,
+record, source paths and commits; it need not load every full report or prior conversational
+history. This does not reduce duties to read inputs, inspect diffs, run checks or review the
+finished change. Repair a missing or incomplete report before dependent work proceeds. Resolve
+stale paths or mismatched commit ranges against the actual worktree and record the correction;
+a summary is not proof of a missing check.
+
+Answer workflow approval prompts provisionally with evidence; a human accepts the foundation
+entries the cycle writes when merging the request (WAY-114). This adapter changes the handoff and
+approval points, not the borrowed method's work within each stage, except that the code reviewer
+also writes the deliberate break of an invariant's check (WAY-69), at step 11's point for checks
+added in the return step (WAY-149).
 
 ## Design and plan
 
@@ -138,8 +168,14 @@ step 4 and reach the same outcome and the same checks on the finished change (WA
    the task carries in its foundation entries, source fidelity, no code, dependency order — every
    entry before the slices whose code depends on it — tests and commands that can actually run,
    and a size report in which every slice fits. Copy its *Choices* into the questions table and
-   record a provisional go-ahead for execution. Keep the spec and plan as separate artifacts so
-   iterations can compare them with results.
+   record a provisional go-ahead for execution. Before execution, record your ruling on the plan's
+   *Independence and execution* recommendation: dependencies, shared files or mutable worktree/test
+   state, whether each review can judge its own range, and the selected skill's restrictions.
+   Different files alone do not prove independence. Superpowers 6.4.1
+   `subagent-driven-development` forbids parallel implementation subagents, so execution remains
+   sequential; record that restriction beside the opportunity rather than suppressing the
+   recommendation or overriding the skill. A one-slice plan has no parallel slice work. Keep the
+   spec and plan as separate artifacts so iterations can compare them with results.
 
 An agent that meets an open design choice while it makes a slice, or while it fixes review
 findings, returns a report without code and without a diff: the choice, where it shows, the ways
@@ -206,38 +242,57 @@ continuing that work.
 10. After each slice, run its focused checks, review its diff and resolve findings.
     Recalculate the WAY-13 sharpness inputs from the completed diff; if they grew, add the
     resulting checks before review, never reduce those already run. Run the product's full
-    required gate on the completed change. The review of a change holding an invariant check writes
-    the deliberate break from the invariant's sentence, runs the check on it and reports whether it
-    fails (WAY-69, WAY-08). For visible behavior, verify it in the running
-    product as well. Use Superpowers `requesting-code-review` for a fresh final review, or the
+    required gate on the completed change. Invariant checks written before the return step retain
+    their existing acceptance and deliberate-break points: the code reviewer writes the break from
+    the invariant's sentence, runs the check on it and reports whether it fails (WAY-69, WAY-08).
+    Checks added in the return step follow step 11's order. For visible behavior, verify it in the
+    running product as well. Use Superpowers `requesting-code-review` for a fresh final review, or the
     final review already required by the selected execution skill; do not dispatch a duplicate
     reviewer for the same range. Record failed and unchecked results by name; never call an unrun
     check passed.
 11. Perform the return step of WAY-11 on the real diff and the cycle's choice log: identify newly
     learned decisions, rules, uncovered behavior, environment facts, terms and part-map changes;
-    compare touched parts of the foundation with code. Write every one that binds after the merge
-    (WAY-36) into the foundation as the foundation step writes; every other choice stays one line in
-    the choice table. Nothing is deferred: what this request does not write is neither proposed nor
-    listed for later. Read the projected entries of the task's sources and the rows of its
-    *Settlements to record*: write a row the foundation step missed (WAY-134), and a projected entry
-    the code makes true that the foundation step missed (WAY-126) — for an invariant, its check
-    comes from an agent that did not write the code it covers and runs on that code; an entry
-    assigned to another plan item returns to the plan. A check the return step writes then goes to a
-    code reviewer that did not write it, which writes its deliberate break from the sentence, runs
-    the check on it and reports whether it fails (WAY-69, WAY-08). Write a new entry only for a rule
-    none of them states. Then have the change's foundation entries and invariant tests assessed
-    once, following `elements/common/critique/SKILL.md` (WAY-10): one agent on a model other than
-    the author's where available, given the diff and the files of the assessed commit filtered to
-    code, foundation and invariant tests — never spec, plan, frozen task, chronology, reports,
-    prompts or author reasoning. Settle each remark yourself and record how; a remark reaches the
-    human only as the foundation step allows a question. If a settlement changes code, rerun the
-    affected checks and code review. A settlement that changes the assessed foundation entries or
-    invariant tests does not reopen the independent assessment: rerun the affected checks and the
-    code review, whose reviewer writes the deliberate break again. A remark that cannot be settled
-    without changing the meaning the task requires goes to the human as the foundation step allows a
-    question. Record the assessed range by commit hashes and its file list. A contradiction with a
-    current decision follows WAY-30; a collision without recorded precedence follows WAY-25. If
-    those rules prevent the required code, report the task as blocked in a draft request.
+    compare touched parts of the foundation with code. For uncovered behavior ask: would changing
+    it in a later task violate a requirement or a settled rule of the product? If yes, preserve it
+    with an invariant; if no, keep the replaceable implementation detail in ordinary tests and the
+    description of the change. Record the candidates actually found with the supporting requirement
+    or settlement, or the reason for classifying a detail and its test/change-description paths;
+    do not inventory every function or unchanged behavior. This distinction cannot waive a
+    decision-derived invariant (WAY-12, WAY-22), remove an existing invariant or omit an accepted
+    settlement (WAY-134) or applicable projected entry (WAY-126).
+    Write the resulting entries that bind after the merge (WAY-36) as the foundation step writes;
+    every other choice stays one line in the choice table. Nothing is deferred: what this request
+    does not write is neither proposed nor listed for later. Read the projected entries of the task's sources
+    and the rows of its *Settlements to record*: write a row the foundation step missed (WAY-134),
+    and a projected entry the code makes true that the foundation step missed (WAY-126); an entry
+    assigned to another plan item returns to the plan. Write a new entry only for a rule none of
+    them states. Keep three different authors for an invariant's sentence, its check and covered
+    code (WAY-69). Run a check added here on the product and record its actual result, before its
+    first acceptance deliberate break.
+
+    Then have the change's foundation entries and invariant tests assessed once, following
+    `elements/common/critique/SKILL.md` (WAY-10): one agent on a model other than the author's where
+    available, given the diff and files of the assessed commit filtered to code, foundation and
+    invariant tests - never the operational handoff, spec, plan, frozen task, chronology, reports,
+    prompts or author reasoning. Record the assessed range by commit hashes and its file list.
+    Settle each remark yourself and record how; a remark reaches the human only as the foundation
+    step allows a question. If a settlement changes code, assessed foundation entries or invariant
+    tests, rerun the affected checks and code review. The settlement is part of the one assessment
+    and does not reopen it.
+
+    After those settlements, the code reviewer who did not write a return-step check reviews its
+    final version, writes its deliberate break from the final invariant sentence and runs the
+    check on it, recording the required failure before accepting it (WAY-149, WAY-69, WAY-08).
+    Reuse the affected review above where it covers that final check; do not add a whole-change
+    review of an unchanged range. Passing on the product or finishing assessment alone does not
+    accept a check. An undetected break is a finding to resolve. Remove or restore the deliberate
+    break before final clean verification. If a later correction changes the final check or the
+    behavior its break covers, repeat the affected verification; superseded evidence is not current.
+    Earlier checks keep their earlier acceptance and break points; assessment does not replace
+    code review. A remark that cannot be settled without changing the meaning the task requires
+    goes to the human as the foundation step allows a question. A contradiction with a current
+    decision follows WAY-30; a collision without recorded precedence follows WAY-25. If those rules
+    prevent the required code, report the task as blocked in a draft request.
 
 ## Request and handoff
 

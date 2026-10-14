@@ -72,6 +72,12 @@ Write the plan in this form; the script reads the slice headings and the fields 
   slice changes behaviour>
 - **Depends on:** none | Slice <id> · <entry>
 
+## Independence and execution
+
+<independent slices, why dependencies and write sets permit separate work, and possible parallel
+work; or no useful opportunity. Name the adopted method's restriction separately from the
+recommendation; the orchestrator rules on execution before it starts.>
+
 ## Coverage
 
 | What the task requires | Slices or entries |
@@ -91,8 +97,9 @@ Write the plan in this form; the script reads the slice headings and the fields 
   check too, which an agent writes from the sentence and its method alone (WAY-69). Write `none`
   under the table where the change writes no entry. The plan names entries; it never words them.
 - A slice is narrow: one goal, the files that goal changes, and checks that run when it is made. Cut
-  along what a reviewer can judge alone. A small change is one slice; never add a slice for its
-  own sake.
+  along what a reviewer can judge alone and recommend useful independent slices regardless of
+  the chosen execution skill. A small change is one slice; never add a slice for its own sake or
+  divide inseparable work merely to claim parallel execution.
 - *Change* names every file the slice changes or creates. *Read* names what its agent has to read
   to make it besides those files: a file whole, or `<path>:<first>-<last>` where a range is enough,
   such as the entries of a long log the slice rests on. Paths are relative to the repository root;
@@ -102,6 +109,14 @@ Write the plan in this form; the script reads the slice headings and the fields 
   starts from.
 - Order the slices so that each comes after what it depends on. Two slices change the same file only
   where one depends on the other.
+- *Independence and execution* is one short section derived from dependencies and write sets,
+  not a peer list repeated for every slice. Name the useful independent slices and why each can
+  be worked on and reviewed separately, or say there is no such opportunity. Identify possible
+  parallel work even when the execution skill must run it sequentially: adopted Superpowers 6.4.1
+  `subagent-driven-development` forbids parallel implementation subagents. A one-slice plan says
+  there is no parallel slice work. The recommendation is not permission to execute in parallel;
+  the cycle's orchestrator records its ruling on dependencies, shared files or mutable state,
+  separate review and skill restrictions before execution (WAY-136).
 - No code: no function body, no test body, no text a file will hold. Name what is to exist — a
   file, a function, a command, a field — and what it is to do, and leave the making to the slice's
   agent.
@@ -121,9 +136,11 @@ Keep the last report beside the plan as `plan-size.md`.
 
 ## 5. Return
 
-Return to the orchestrator with the plan's path, the script's last report and the questions still
-open, each with the answer you propose and its reason. The boundary is the finished plan: return
-before any slice is made.
+Write the full report to the dispatch's report path, including the final size-report path and
+any questions still open with proposed answers and evidence. Return under the cycle's file-transfer
+contract (WAY-148): status, plan/report paths, concise check result with failed or unchecked work,
+and every unresolved concern affecting the next dispatch. The boundary is the finished plan:
+return before any slice is made.
 
 ## Writing the plan again
 
