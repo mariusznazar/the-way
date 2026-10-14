@@ -4703,9 +4703,9 @@ whole semantic judgment under WAY-146, independently of the author's selection.
   - complies: resuming an unfinished plan inventories all tasks, assignments and exact questions,
     then reads a distant dependency and projected-entry writer that affect the resumed work;
     whole-original checks run and the critic reads the whole plan with all needed sources;
-  - violates: only nearby rows are inspected and a distant dependency is missed; the checker
-    receives a reduced copy; a new breakdown omits a scope item; the critic's review is bounded
-    by the author's excerpts or leaves some tasks and questions unjudged.
+  - violates: only nearby rows are inspected and a distant dependency is missed; a readiness or plan
+    check receives a reduced copy; a new breakdown omits a scope item; the critic's review is
+    bounded by the author's excerpts or leaves some tasks and questions unjudged.
 - **Review when:** none
 - **Origin:** none
 - **Approved by:** Mariusz, merge of <request link>
