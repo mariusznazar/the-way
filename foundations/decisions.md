@@ -3134,7 +3134,7 @@ whether the project changes an existing decision or fits it.
     already linked to the idea and misses an unlinked invariant or a boundary in the map.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/18
 
 *Rationale:* the current foundation gives a project its starting constraints before its design
 has files to point from. Reading from the proposed behaviour finds those constraints while leaving
@@ -3260,7 +3260,7 @@ rows were shown and accepted.
     them, or entries are written before the human has cut the table.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/18
 
 *Rationale:* the source distinguishes a human settlement from material offered for consideration;
 the concrete guess filters noise before it becomes a rule. A table with row states lets work
@@ -4671,7 +4671,7 @@ the work or foundation changes.
     foundation changes without checking for newly applicable decisions.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/18
 
 *Rationale:* a growing foundation contains more material than each piece of work needs, while
 unconditional loading spends attention on unrelated rules. Selection from responsibilities and
@@ -4708,7 +4708,7 @@ whole semantic judgment under WAY-146, independently of the author's selection.
     bounded by the author's excerpts or leaves some tasks and questions unjudged.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/18
 
 *Rationale:* large project documents hold context for many tasks, while resumed work usually
 changes only some of it. Complete inventories expose distant assignments and dependencies before
