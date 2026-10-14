@@ -3116,28 +3116,32 @@ deriving a deadline from background material — it mistakes context for a settl
 
 ### WAY-111/1 — What does the project level read in the current foundation?
 
-Before drafting, the agent reads the product's whole foundation: the part map's files, trust
-boundaries and surfaces; decisions' binding sentences, scope and relations; invariants' sentences
-and parts; the glossary; and environment facts. It brings a touched part, a decision the project
-may change, an invariant it may break or a boundary it crosses to the human as material and asks
+Before drafting, the agent selects and reads the current foundation under WAY-150, identifying
+touched parts from the proposed project's responsibilities, behaviour, flows and surfaces. It
+brings a touched part, a decision the project may change, an invariant it may break or a boundary
+it crosses to the human as material and asks
 whether the project changes an existing decision or fits it.
 
 - **Change:** new decision
 - **Scope:** project-level
 - **Based on:** none
-- **Relations:** none
+- **Relations:** derives from WAY-150@3bd9e695
 - **Verification:** level 2 — an agent compares the work with the decision:
-  - complies: the agent names an existing decision and boundary that the idea touches, and asks
-    whether the new project changes the decision or fits it;
-  - violates: the agent reads only decisions already linked to the idea and misses an unlinked
-    invariant or a boundary in the map.
+  - complies: before any diff exists, the agent maps the idea to affected responsibilities and
+    surfaces, reads every applicable Scope decision and expands to an unlinked invariant, then
+    shows the touched decision and boundary and asks whether the project changes or fits it;
+  - violates: the agent treats the absence of a diff as no touched parts, or reads only decisions
+    already linked to the idea and misses an unlinked invariant or a boundary in the map.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-10-04
+- **Approved by:** Mariusz, merge of <request link>
 
-*Rationale:* the current foundation gives the project its starting constraints; a whole reading
-finds relationships that no existing link can lead an agent to.
-*Rejected:* reading only entries with a matching scope — an unlinked conflict stays hidden.
+*Rationale:* the current foundation gives a project its starting constraints before its design
+has files to point from. Reading from the proposed behaviour finds those constraints while leaving
+room to follow an unexpected conflict; showing the conflict lets the human decide its meaning.
+*Rejected:* reading the whole foundation for every idea — context grows with unrelated rules;
+reading only entries with a matching scope or known link — an unlinked conflict stays hidden;
+waiting for changed files to choose context — the project is drafted before those files exist.
 
 ### WAY-112/1 — How does an agent develop and resume a project definition?
 
@@ -3236,8 +3240,9 @@ foundation — two binding wordings could drift apart.
 
 ### WAY-115/1 — How are foundation entries found in a project's source?
 
-The agent reads the project's sources and the product's whole foundation, then shows the human a
-complete candidate table with each proposed settlement, its kind, its source and the concrete
+The agent reads the project's sources in full and selects and reads the product's foundation under
+WAY-150, then shows the human a complete candidate table with each proposed settlement, its kind,
+its source and the concrete
 choice or action the next reader would otherwise have to guess; a row without such a consequence
 is shown as rejected. The human accepts or rejects rows before they are handed to the skills of
 their kinds, and each accepted row is recorded as it is worked through. The definition keeps the
@@ -3247,7 +3252,7 @@ rows were shown and accepted.
 - **Change:** new decision
 - **Scope:** elements-common, project-level
 - **Based on:** none
-- **Relations:** none
+- **Relations:** derives from WAY-150@3bd9e695
 - **Verification:** level 2 — an agent compares the work with the decision:
   - complies: the human sees every column of the candidate table, rejects an exclusion whose
     absence would make no task guess, and the completed definition carries the candidates line;
@@ -3255,7 +3260,7 @@ rows were shown and accepted.
     them, or entries are written before the human has cut the table.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-10-04
+- **Approved by:** Mariusz, merge of <request link>
 
 *Rationale:* the source distinguishes a human settlement from material offered for consideration;
 the concrete guess filters noise before it becomes a rule. A table with row states lets work
@@ -3977,7 +3982,7 @@ accepts the entry's meaning at the merge (WAY-114).
 - **Scope:** project-level, task-cycle, elements-common, decisions, invariants, glossary,
   environment-facts
 - **Based on:** none
-- **Relations:** derives from WAY-115@292bd21b · narrows WAY-114@04b4f599
+- **Relations:** derives from WAY-115@eb7ba15c · narrows WAY-114@04b4f599
 - **Verification:** level 2 — an agent compares the task document, or the cycle, with the decision:
   - complies: a task whose human settled in refinement that an exported record keeps its owner
     carries that row, and its cycle writes a decision with that meaning in its foundation step,
@@ -4638,3 +4643,78 @@ assessment into that evidence. Earlier checks keep the failure evidence their ow
 version that is immediately replaced; delaying every check's break — earlier stages lose their
 own acceptance evidence; accepting a check after assessment alone — an approved check may still
 detect no break; a second whole-change review of unchanged work — it repeats an existing review.
+
+### WAY-150/1 — How do the-way skills choose which product foundation material to read?
+
+The-way skills default to selective reading of the product's foundation: they use the complete
+part map and existing entry links to choose material for the work, read selected entries whole,
+and expand the reading whenever the work or an uncertain relevance needs more context.
+The selection includes every current decision whose Scope names a touched part, including parts
+identified from proposed work before a file diff exists, and decisions the work explicitly names.
+Required whole-foundation searches and mandatory whole-source, template and example reads retain
+their domain and timing; selection is checked against all current Scope fields and refreshed when
+the work or foundation changes.
+
+- **Change:** new decision
+- **Scope:** elements-common, decisions, invariants, glossary, part-map, environment-facts,
+  project-level, task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-21@586e4a38 · derives from WAY-33@65f8dda4
+- **Verification:** level 2 — an agent compares the reading and its selection record with the
+  work and current foundation:
+  - complies: a project with no diff uses the complete map to name affected parts, inspects all
+    current Scope fields including wrapped values, reads every matched decision whole, follows
+    an incoming dependent and a relevant invariant naming every part, and expands after a
+    whole-foundation search finds a conflict outside those parts;
+  - violates: only decisions already named by the task are read; a search hit replaces its whole
+    entry; a required source is reduced to selected excerpts; selection is reused after the
+    foundation changes without checking for newly applicable decisions.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of <request link>
+
+*Rationale:* a growing foundation contains more material than each piece of work needs, while
+unconditional loading spends attention on unrelated rules. Selection from responsibilities and
+links keeps the governing material visible, and expansion addresses relevance that no known link
+captures; the cost is judgment about context and evidence that the selection covers its domain.
+*Rejected:* unconditional whole-foundation loading — its context cost grows with unrelated work;
+selection only from known links or keywords — a governing decision or an unlinked conflict can
+remain unseen; a fixed reading limit — a difficult case loses needed context; a separate maintained
+index — a second account can drift without resolving semantic relevance.
+
+### WAY-151/1 — How much of large project definitions and existing plans does plan-project read?
+
+The-way's plan-project limits reading of large project definitions and existing plans to the
+material needed for the work, starting from complete inventories of scope items, projected entries,
+open questions and existing tasks and their dependencies and assignments, then reading complete
+source units and expanding whenever their meaning or dependencies reach further.
+A new breakdown covers every scope item, projected entry and open question, and a resumed change
+reads all units its dependencies or meaning reach, with the original whole documents remaining
+the inputs to the existing readiness and plan checks.
+The plan's one independent critique reads the complete plan and every source unit needed for its
+whole semantic judgment under WAY-146, independently of the author's selection.
+
+- **Change:** new decision
+- **Scope:** project-level
+- **Based on:** none
+- **Relations:** derives from WAY-146@7677c3cd
+- **Verification:** level 2 — an agent compares the reading, inventories and verification record
+  with the authoritative definition and plan:
+  - complies: resuming an unfinished plan inventories all tasks, assignments and exact questions,
+    then reads a distant dependency and projected-entry writer that affect the resumed work;
+    whole-original checks run and the critic reads the whole plan with all needed sources;
+  - violates: only nearby rows are inspected and a distant dependency is missed; the checker
+    receives a reduced copy; a new breakdown omits a scope item; the critic's review is bounded
+    by the author's excerpts or leaves some tasks and questions unjudged.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of <request link>
+
+*Rationale:* large project documents hold context for many tasks, while resumed work usually
+changes only some of it. Complete inventories expose distant assignments and dependencies before
+context is selected, and whole verification protects the complete project; the cost is careful
+expansion whenever meaning reaches beyond the initial selection.
+*Rejected:* reading every large source whole at every resumption — unrelated context is loaded
+repeatedly; reading only the unfinished section — distant dependencies and settlements disappear;
+checking reduced copies or limiting the critic to selected material — omissions can agree with
+the reduced input and pass unseen; maintaining a second plan for reading — copies drift.
