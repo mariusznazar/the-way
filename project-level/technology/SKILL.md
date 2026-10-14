@@ -30,8 +30,9 @@ The step writes into the definition only, never into the product's foundation
   `elements/common/way_of_working.md` and `elements/common/critique/SKILL.md`.
 - Where "Projected foundation changes" reads `TODO` or holds its working table, the step that finds
   entries has not ended: return to `define-project` step 5.
-- Read the product's `foundations/decisions.md` whole: the binding sentences, *Scope* and
-  *Relations*.
+- Select and read the product's current foundation by "Reading the foundation" in
+  `elements/common/way_of_working.md` (WAY-150). Include every current decision that holds or
+  constrains a listed technology choice; refresh the selection as the list takes shape.
 - Where "Technology" reads `TODO`, begin with step 1.
 - Where it holds an item ending `— open`, look first under "Projected foundation changes" for a
   decision written for that choice; where one stands, end the item `— projected: <its question>`.

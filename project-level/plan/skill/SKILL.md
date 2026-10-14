@@ -24,8 +24,9 @@ The breakdown reads the product's foundation and the definition and writes nothi
 
 - Read `project-level/plan/template.md` in full, and the section "How a skill asks" of
   `elements/common/way_of_working.md`.
-- When the human names an existing plan, read it whole and run
-  `python -B <the-way>/project-level/plan_check.py <plan>`. A plan whose status reads `draft` goes on
+- When the human names an existing plan, run
+  `python -B <the-way>/project-level/plan_check.py <plan>` on the original whole file and read it
+  by "Reading the definition and plan" below (WAY-151). A plan whose status reads `draft` goes on
   from the first step its sections leave unfinished; a plan handed over changes only as its
   change log records, and a finding that the definition's fingerprint no longer matches means the
   definition changed after its gate: it goes through `define-project` step 7 again, and the plan is
@@ -34,13 +35,44 @@ The breakdown reads the product's foundation and the definition and writes nothi
 
 ## 1. Read
 
-- Read the definition whole, and run `python -B <the-way>/project-level/readiness_check.py
-  <definition>`; it must report nothing. A finding returns the definition to `define-project`, and
+- Run `python -B <the-way>/project-level/readiness_check.py <definition>` on the original whole
+  definition; it must report nothing. A finding returns the definition to `define-project`, and
   the breakdown waits; so does an In scope that holds no list of items for the plan to number.
-- Read the product's `foundations/part_map.md`: *Depends on* tells which work has to come first.
-  Read the decisions the definition's "Touched parts and decisions" names.
+  Read the definition by "Reading the definition and plan" below (WAY-151).
+- Select and read the product's current foundation by "Reading the foundation" in
+  `elements/common/way_of_working.md` (WAY-150), including the decisions the definition names.
+  The complete part map's *Depends on* tells which work has to come first.
 - Read the product's files only as far as the cut needs: what is already there, so that no task
   puts in place what exists.
+
+## Reading the definition and plan
+
+The original definition and plan remain authoritative (WAY-151). Run every readiness, fingerprint
+and plan check on those whole files at their original paths, never on selected excerpts or a
+reduced copy. Selection is no reading cap; read a small file whole where useful.
+
+- Before choosing work at start or resume, inspect the complete heading structure, status and
+  header, gate record and document versions. Inventory every top-level In scope item in its
+  original order and numbering, every projected-entry heading, and every open question with its
+  exact wording and assigned place. For an existing plan, inventory every task's number, name,
+  state and dependencies, every projected-entry realizing and writing assignment, every question
+  with its placement or answer, and the locations of phases and change-log content.
+- Accumulate the complete inventories in manageable batches with ordinary file/search tools.
+  Read table rows and question items as complete units, including wrapped continuations. Keep
+  their source versions and locations in temporary working evidence; this is no second plan or
+  maintained product format. Refresh the inventories when either source changes.
+- Use status and unfinished sections to choose where to resume. For that work, read complete
+  scope items, task rows, projected entries and questions, with dependency and assignment context.
+  Read relevant Goal, Background, Out of scope, Inputs and constraints, Deliverables, Success,
+  Risks, Touched parts and decisions, and Technology content. Read a projected entry whole before
+  assigning what makes it true or writes it. Read a quoted answer at its original definition or
+  foundation source, with the context needed to judge its meaning; a summary cannot settle unseen
+  source meaning.
+- Expand whenever a choice, boundary, dependency, source reference or ambiguity may change the
+  cut or a question's interpretation. Before a resumed edit, read every other row, assignment and
+  question its dependency or meaning reaches, even far from the unfinished section. A new complete
+  breakdown processes every scope item, projected entry and exact question: batching brings in
+  context when needed and omits none of the project. Whole-plan checks run after a change.
 
 ## 2. Cut the tasks
 
@@ -90,10 +122,14 @@ The breakdown reads the product's foundation and the definition and writes nothi
 
 ## 6. The critique
 
-- Run `critique` once on the plan, with the definition and the product's part map as its sources
-  (WAY-120, WAY-146). Ask the critic to judge, besides what that skill checks, what no script tells
-  apart: whether each task that is not preparatory ends with something checkable in the running
-  product, whether each technical element enters with the first task that uses it, whether each
+- Run `critique` once on the exact authoritative plan, with the definition, the product's complete
+  part map, relevant foundation and applicable rules as its sources (WAY-120, WAY-146, WAY-151).
+  The critic reads the complete plan, in manageable batches if useful, and every source unit
+  needed for all tasks, technical elements, question moves and quoted answers. The author's
+  selection and inventories never limit the critic's inspection; complete the whole plan's
+  semantic judgment before reporting the critique complete. Ask it to judge, besides what that
+  skill checks, what no script tells apart: whether each task that is not preparatory ends with
+  something checkable in the running product, whether each technical element enters with the first task that uses it, whether each
   question stands where the definition puts it or the change log gives its move, and whether a
   quoted answer settles its question. Never ask it what `plan_check.py` decides.
 - Verify each observation, give each a verdict, and correct the plan; a correction that changes a

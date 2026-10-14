@@ -31,10 +31,10 @@ choice approved or changed the rule.
    task document written before that section existed carries no row. Recheck approval and current
    foundation versions before starting. If a source changed, reconcile the task against it and
    record the effect; stop only when its required outcome can no longer be established.
-2. Read the product's `AGENTS.md`, process pin, foundation and relevant code. Verify that the
-   pinned the-way checkout matches the product's gitlink. Follow product-specific git and test
-   rules. Search the current foundation for additional applicable entries or collisions; the
-   task document is a starting map, not proof that nothing else applies.
+2. Read the product's `AGENTS.md`, process pin and relevant code. Select and read the current
+   foundation by "Reading the foundation" in `elements/common/way_of_working.md` (WAY-150).
+   Verify that the pinned the-way checkout matches the product's gitlink. Follow product-specific
+   git and test rules. The task document is a starting map, not proof that nothing else applies.
 3. Require subagents and Superpowers version 6.4.1 with `brainstorming`,
    `subagent-driven-development`, `test-driven-development`, `requesting-code-review`, and
    `finishing-a-development-branch`, and the-way's `plan-task`, which writes every plan in place of
@@ -199,8 +199,10 @@ Before dependent implementation, run the foundation step required by WAY-01 and 
 task changes a foundation entry or an invariant test, or its plan item assigns, or its code makes
 true, a projected entry of its sources (WAY-126), or its *Settlements to record* holds a row
 (WAY-134). The plan's *Foundation entries* lists them; write each before the first slice whose code
-depends on it. Invoke the pinned element skills for the affected entries and write each entry into
-`foundations/` on the task branch without waiting for the human; keep, for the request, one sentence
+depends on it. Refresh the foundation selection by "Reading the foundation" against the entries
+and scope this step will change. Invoke the pinned element skills for the affected entries and
+write each entry into `foundations/` on the task branch without waiting for the human; keep, for
+the request, one sentence
 of its meaning in the task document's language (WAY-114). Write a projected entry the task marks or
 its plan item assigns whole, with *Approved by* transcribed from the definition's gate record; write
 a part of a projected entry, and every other new or changed decision, with *Approved by*
@@ -250,8 +252,9 @@ continuing that work.
     final review already required by the selected execution skill; do not dispatch a duplicate
     reviewer for the same range. Record failed and unchecked results by name; never call an unrun
     check passed.
-11. Perform the return step of WAY-11 on the real diff and the cycle's choice log: identify newly
-    learned decisions, rules, uncovered behavior, environment facts, terms and part-map changes;
+11. Refresh the foundation selection by "Reading the foundation" for the real diff and current
+    foundation. Perform the return step of WAY-11 on that diff and the cycle's choice log: identify
+    newly learned decisions, rules, uncovered behavior, environment facts, terms and part-map changes;
     compare touched parts of the foundation with code. For uncovered behavior ask: would changing
     it in a later task violate a requirement or a settled rule of the product? If yes, preserve it
     with an invariant; if no, keep the replaceable implementation detail in ordinary tests and the
@@ -296,8 +299,9 @@ continuing that work.
 
 ## Request and handoff
 
-12. Recheck the branch against the current target branch, rerun checks affected by that update,
-    and inspect the final diff. If reconciliation changes the assessed code, foundation or its
+12. Recheck the branch against the current target branch, refresh the foundation selection by
+    "Reading the foundation" for its current revision and the reconciled scope, rerun checks
+    affected by that update, and inspect the final diff. If reconciliation changes the assessed code, foundation or its
     applicable sources, invalidate the affected reviews: repeat the foundation collision search,
     affected code review and independent assessment before proceeding. Record the final assessed
     commits and file sets so the request never presents an assessment of superseded work as

@@ -16,8 +16,9 @@ Another the-way skill named here is the project skill with the `the-way-` prefix
 ## 1. Read the sources
 
 - Read the template in full, the "How a skill asks" section of
-  `elements/common/way_of_working.md`, the product foundation, and any existing wording of this
-  task. Determine from the request whether it is independent, belongs to a project plan, or uses
+  `elements/common/way_of_working.md`, and any existing wording of this task. Select and read the
+  product's current foundation by "Reading the foundation" in that shared file (WAY-150).
+  Determine from the request whether it is independent, belongs to a project plan, or uses
   a project's settlements without plan membership. Record that relationship; do not infer
   membership merely because a project definition is a source.
 - If the task belongs to a project, read its approved definition and its plan, whose form

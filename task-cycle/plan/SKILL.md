@@ -29,8 +29,8 @@ asks the human.
   binds where they differ.
 - The task's sources: the approved project definition's projected entries the task carries or its
   plan item assigns.
-- The product's foundation: the part map for the parts the change touches, the decisions whose
-  *Scope* names them, the invariants of those parts and the glossary.
+- The product's current foundation, selected and read by "Reading the foundation" in
+  `elements/common/way_of_working.md` (WAY-150).
 - The code and the tests the change touches, as far as is needed to name each slice's files. Read
   to cut slices, not to design the code.
 - After a slice proved too large, its agent's report and the plan it came from.
@@ -102,8 +102,11 @@ recommendation; the orchestrator rules on execution before it starts.>
   divide inseparable work merely to claim parallel execution.
 - *Change* names every file the slice changes or creates. *Read* names what its agent has to read
   to make it besides those files: a file whole, or `<path>:<first>-<last>` where a range is enough,
-  such as the entries of a long log the slice rests on. Paths are relative to the repository root;
-  none, written without backticks, stands for an empty field.
+  such as the entries of a long log the slice rests on. A range identifying a foundation entry
+  contains that complete entry, all fields, rationale and rejected options included; a search hit
+  or paragraph cannot stand for it. Each receiving agent checks and expands its selection by
+  "Reading the foundation". Paths are relative to the repository root; none, written without
+  backticks, stands for an empty field.
 - *Checks* are commands that can actually run in the product, named with their arguments, and the
   checks the parts touched call for (WAY-13). A slice that changes behaviour names the test it
   starts from.
