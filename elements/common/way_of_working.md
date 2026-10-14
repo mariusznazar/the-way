@@ -44,11 +44,8 @@ Every skill of the-way that asks the human asks this way
   product pins; where it holds entries itself, read them there. An element with no `examples.md`
   names in its template the entries of the-way that serve as its examples, and those are read
   (WAY-09, WAY-34).
-- Read the product's file of the element's entries in full, and the other files of `foundations/`
-  the skill names.
-- Before drafting, read in full the product's `foundations/glossary.md` where it exists and, in a
-  product other than the-way, the-way's `foundations/glossary.md` at the commit the product pins,
-  so that the draft uses each term in its meaning (WAY-95, WAY-97).
+- Select and read the product's foundation as "Reading the foundation" below gives it; the
+  element's skill adds the entries its operation needs (WAY-150).
 - Where the product has no file of the element's entries, ask whether it starts that file here; if
   not, stop
   (`TODO — decision pending: which decision sets that a product starts an element's file only on
@@ -59,6 +56,60 @@ Every skill of the-way that asks the human asks this way
   `update-part-map` writes the map first (WAY-28, for a product the process enters;
   `TODO — decision pending: which decision sets that the part map is written before another
   element's first file`).
+
+## Reading the foundation
+
+Use this method for the current foundation of the repository being worked on (WAY-150). Start
+from the task, source, proposed entry or project scope, and read the complete part map: its
+responsibilities, file assignments, dependencies, critical flows, surfaces, boundaries and the
+common rules and scales its entries use.
+
+1. Name the touched parts. For changed files, use the map's assignment rules; for a file
+   collecting entries about several parts, use the entries the work changes (WAY-44). Before a
+   diff exists, map proposed behaviour, responsibilities, integrations, flows and surfaces to
+   existing parts, including any responsibility or promise the work changes. Record a prospective
+   new part as such, not as an existing map entry. Uncertain ownership expands the candidate parts
+   and reading; an empty diff does not mean no affected parts.
+2. Inspect the complete decision log's current *Scope* fields, wrapped values included, using
+   the latest version of each decision and respecting repeals. Select every decision whose
+   *Scope* names any touched part, and every decision the work or its source explicitly names
+   (WAY-21). Read each selected entry whole, with all fields, rationale and *Rejected*: a search
+   hit or binding sentence locates an entry, never replaces it. Missing or malformed *Scope*
+   data is a finding to resolve, never a reason to silently omit an entry.
+3. Expand to whole linked entries needed to understand, apply or verify those rules: governing
+   *Relations*, *Based on* facts, *Verification* invariants, invariants' *Derives from* and
+   *Rests on*, and relevant map entries. Inspect current invariant *Part* fields across the
+   file, including `every`; select the invariants the work reaches under WAY-62, methods naming
+   a changed file and invariants of relevant critical flows. When changing an entry or deciding
+   its impact, search for incoming dependents: links stand at the dependent end (WAY-17,
+   WAY-31). Follow them as far as their meaning or validity affects the work; unrelated branches
+   need not all be loaded.
+4. Inspect the terms and *Avoid* spellings of the product's glossary where it exists and, in a
+   product other than the-way, of the-way's glossary at the pinned commit. Read whole entries for
+   terms used in the work and selected material, and meanings a draft may introduce or confuse
+   (WAY-95, WAY-97). Keep the mandatory whole templates, rules and examples of step 1, complete
+   entries named as examples included.
+5. Search all five foundation elements for the behaviour, rules, concepts and consequences the
+   work concerns, using alternative vocabulary as well as identifiers. A relevant topic,
+   candidate duplicate, unclear meaning, changed dependency, unknown owner or search finding
+   expands the selection. A required whole-foundation search keeps its entire domain and timing
+   under WAY-33, WAY-37 or the readiness gate, beyond known links and selected parts. Read every
+   finding whole and settle it as that search's rule requires.
+6. In the workflow's existing working record or handoff, keep the foundation revision, touched
+   parts, expected current *Scope* matches and selected decision identifiers with source
+   locations. Distinguish entries read from entries merely discovered. Compare the selected
+   identifiers with the expected matches from the complete current *Scope* inspection and
+   resolve every missing match before relying on the selection. Use existing scripts or an
+   exhaustive direct inspection; no new index is needed. Recheck when the work's scope or current
+   foundation changes. Uncertain relevance calls for additional reading, up to a whole file
+   where that is the smallest reliable way to resolve it.
+
+Selection is no token cap and does not forbid reading a small file whole. A handoff can name
+reading units, but each receiving stage checks its inputs and reads whole entries it relies on.
+The comparison records the declared set and evidence of reading; it proves neither understanding
+nor completeness of semantic collision discovery. `decisions-found-for-change` still has
+`Method: TODO`; Scope-name and fingerprint guards are partial checks, not a pass of that method
+or of the full gate. Keep the WAY-33 search record as separate evidence.
 
 ## 2. Search the foundation
 
@@ -78,7 +129,8 @@ The search also asks:
 
 Each finding becomes a link the element's template gives, a change to one of the entries, or a
 question in step 4, before the entry is accepted (WAY-33). The skill names what else the search
-looks for in its element.
+looks for in its element. Repeat the search against the current main branch before merging the
+task branch, and keep the records of both searches with the change (WAY-33).
 
 ## 3. Draft
 
@@ -134,8 +186,8 @@ the skill of its element in projected mode, naming the definition. The steps abo
 differences, and each element's skill adds its own
 (WAY-117):
 
-- Step 1: read the product's file of the element's entries where it exists; ask about no file to
-  start and write no part map first — nothing is written into `foundations/`.
+- Step 1: select and read the product's foundation where it exists by "Reading the foundation";
+  ask about no file to start and write no part map first — nothing is written into `foundations/`.
 - Step 4.2: prepare the whole entry and one sentence of its meaning, but do not ask for acceptance
   before writing the proposal into the definition. Candidate selection accepts what is worth
   projecting, not the proposal's meaning. The readiness gate shows each projected entry's meaning
