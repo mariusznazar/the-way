@@ -139,6 +139,56 @@ none
 none
 """
 
+CYCLE_RECORD = """# Cycle record — Download a report
+
+- Task source: {source} — approved 2026-10-01
+- Task relation: plan item
+- Product repository: {repository}
+- Process pin: 0123456789abcdef
+- Target branch and base: delivery, 0123456789abcdef
+- Task branch: task/report-download
+- Foundation route: unchanged
+- Status: complete
+
+## Sharpness at start and after the final diff
+
+none
+
+## Spec and plan
+
+none
+
+## Events
+
+none
+
+## Questions and autonomous choices
+
+none
+
+## Artifacts
+
+| Kind | Path or commit | Author or agent | Review result |
+|---|---|---|---|
+| frozen task | [{frozen}]({frozen}) | Fixture | accepted |
+
+## Verification
+
+none
+
+## Return step
+
+none
+
+## Independent assessment
+
+none
+
+## Request handoff
+
+none
+"""
+
 
 class PlanStateEvidence(unittest.TestCase):
     def setUp(self):
@@ -184,18 +234,51 @@ class PlanStateEvidence(unittest.TestCase):
     def set_state(self, state):
         self.write(self.plan, PLAN.format(fingerprint=FINGERPRINT, state=state))
 
-    def archive(self, slug="report-download"):
-        relative = "docs/task-cycles/" + slug + "/record.md"
-        self.write(self.repo / relative, "# Cycle record\n\nCompleted fixture change.\n")
+    def cycle(self, directory, source=None, frozen_text=TASK, basename="record.md"):
+        source = self.task if source is None else source
+        self.write(directory / basename, CYCLE_RECORD.format(
+            source=source, repository=self.repo, frozen="accepted-task.md"))
+        self.write(directory / "accepted-task.md", frozen_text)
+
+    def archive(self, slug="report-download", source=None, basename="record.md"):
+        relative = "docs/task-cycles/" + slug
+        self.cycle(self.repo / relative, source=source, basename=basename)
         self.git(self.repo, "add", relative)
         self.git(self.repo, "commit", "-m", "Record completed cycle")
         return self.git(self.repo, "rev-parse", "HEAD")
 
-    def worktree(self):
+    def worktree(self, source=None, provenance=True):
         path = self.root / "cycle worktree"
         self.git(self.repo, "worktree", "add", "--no-track", "-b", "task/report-download", str(path))
-        (path / ".runs/task-cycles/report-download").mkdir(parents=True)
+        directory = path / ".runs/task-cycles/report-download"
+        directory.mkdir(parents=True)
+        if provenance:
+            self.cycle(directory, source=source)
         return path
+
+    def other_plan(self):
+        directory = self.root / "another project"
+        self.write(directory / "plan.md", PLAN.format(fingerprint=FINGERPRINT, state="ready for cycle"))
+        self.write(directory / "definition.md", self.definition.read_text(encoding="utf-8"))
+        self.write(directory / "tasks/report-download.md", TASK)
+        return directory / "tasks/report-download.md"
+
+    def commit_archive_files(self):
+        self.git(self.repo, "add", "docs/task-cycles/report-download")
+        self.git(self.repo, "commit", "-m", "Record provenance fixture")
+        self.git(self.repo, "push", "origin", "delivery")
+
+    def task_unchecked(self):
+        rows = [line for line in self.output.splitlines()
+                if line.startswith("unchecked 1 report-download:")]
+        self.assertTrue(rows, self.output)
+        self.assertTrue(all(line.split(":", 1)[1].strip() for line in rows), self.output)
+
+    def task_conflict(self):
+        rows = [line for line in self.output.splitlines()
+                if line.startswith("conflict 1 report-download:")]
+        self.assertTrue(rows, self.output)
+        self.assertTrue(all(line.split(":", 1)[1].strip() for line in rows), self.output)
 
     def run_reader(self):
         before = {path: path.read_bytes() for path in (self.plan, self.definition, self.task)}
@@ -250,8 +333,8 @@ class PlanStateEvidence(unittest.TestCase):
         # Break caught: using stale local integration refs, or dropping the first transition.
         producer = self.root / "publisher"
         self.git(self.root, "clone", str(self.remote), str(producer))
-        self.write(producer / "docs/task-cycles/report-download/record.md", "# Cycle record\n")
-        self.git(producer, "add", "docs/task-cycles/report-download/record.md")
+        self.cycle(producer / "docs/task-cycles/report-download")
+        self.git(producer, "add", "docs/task-cycles/report-download")
         self.git(producer, "commit", "-m", "Record delivered cycle")
         commit = self.git(producer, "rev-parse", "HEAD")
         self.git(producer, "push", "origin", "delivery")
@@ -432,6 +515,95 @@ class PlanStateEvidence(unittest.TestCase):
         self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
         self.assertFalse(any(line.startswith("propose ") for line in result.stdout.splitlines()))
         self.assertEqual((self.plan.read_bytes(), self.task.read_bytes()), before)
+
+    def test_identity_bearing_archive_has_no_mandatory_record_basename(self):
+        # invariant: project-plan-state-evidence/1
+        # Break caught: rejecting valid provenance solely because its record has another basename.
+        commit = self.archive(basename="delivery-notes.md")
+        self.git(self.repo, "push", "origin", "delivery")
+        self.assertEqual(self.run_reader(), 0, self.output)
+        self.proposals_are("propose 1 report-download: ready for cycle -> in cycle",
+                           "propose 1 report-download: in cycle -> done")
+        self.evidence_has(commit, "docs/task-cycles/report-download/", "origin/delivery")
+
+    def test_other_plans_integrated_same_name_cannot_start_current_task(self):
+        # invariant: project-plan-state-evidence/1
+        # Break caught: treating a plan-local slug as globally identifying an integrated cycle.
+        other = self.other_plan()
+        self.archive(source=other)
+        self.git(self.repo, "push", "origin", "delivery")
+        self.assertEqual(self.run_reader(), 1, self.output)
+        self.proposals_are()
+        self.task_conflict()
+
+    def test_frozen_task_identity_does_not_require_current_content_equality(self):
+        # invariant: project-plan-state-evidence/1
+        # Break caught: discarding an owned historical cycle after a source-only editorial change.
+        commit = self.archive()
+        self.git(self.repo, "push", "origin", "delivery")
+        self.write(self.task, TASK.replace("Readers need a copy of their saved report.",
+                                           "Readers need a downloadable copy of their saved report."))
+        self.assertEqual(self.run_reader(), 0, self.output)
+        self.proposals_are("propose 1 report-download: ready for cycle -> in cycle",
+                           "propose 1 report-download: in cycle -> done")
+        self.evidence_has(commit, "origin/delivery")
+
+    def test_other_plans_integrated_same_name_cannot_complete_current_task(self):
+        # invariant: project-plan-state-evidence/1
+        # Break caught: borrowing completion and commit evidence from another same-named task.
+        other = self.other_plan()
+        self.archive(source=other)
+        self.git(self.repo, "push", "origin", "delivery")
+        self.set_state("in cycle")
+        self.assertEqual(self.run_reader(), 1, self.output)
+        self.proposals_are()
+        self.task_conflict()
+
+    def test_other_plans_live_same_name_cannot_start_current_task(self):
+        # invariant: project-plan-state-evidence/1
+        # Break caught: using a Git-listed live cycle whose recorded source belongs to another plan.
+        self.worktree(source=self.other_plan())
+        self.assertEqual(self.run_reader(), 1, self.output)
+        self.proposals_are()
+        self.task_conflict()
+
+    def test_live_directory_without_provenance_cannot_start_task(self):
+        # invariant: project-plan-state-evidence/1
+        # Break caught: using a bare same-named live directory as proof of task ownership.
+        self.worktree(provenance=False)
+        self.assertEqual(self.run_reader(), 0, self.output)
+        self.proposals_are()
+        self.task_unchecked()
+
+    def test_archived_header_alone_cannot_prove_task_ownership(self):
+        # invariant: project-plan-state-evidence/1
+        # Break caught: accepting a cycle title and task slug without recorded provenance.
+        self.write(self.repo / "docs/task-cycles/report-download/delivery-notes.md",
+                   "# Cycle record — Download a report\n\n- Status: complete\n")
+        self.commit_archive_files()
+        self.assertEqual(self.run_reader(), 0, self.output)
+        self.proposals_are()
+        self.task_unchecked()
+
+    def test_archived_content_without_provenance_cannot_complete_task(self):
+        # invariant: project-plan-state-evidence/1
+        # Break caught: treating any integrated file in the exact directory as an owned cycle.
+        self.write(self.repo / "docs/task-cycles/report-download/notes.txt", "Delivered report-download.\n")
+        self.commit_archive_files()
+        self.set_state("in cycle")
+        self.assertEqual(self.run_reader(), 0, self.output)
+        self.proposals_are()
+        self.task_unchecked()
+
+    def test_unanchored_same_basename_provenance_remains_unchecked(self):
+        # invariant: project-plan-state-evidence/1
+        # Break caught: resolving ambiguous task/plan basenames by choosing a same-named project.
+        self.other_plan()
+        self.cycle(self.repo / "docs/task-cycles/report-download", source="tasks/report-download.md")
+        self.commit_archive_files()
+        self.assertEqual(self.run_reader(), 0, self.output)
+        self.proposals_are()
+        self.task_unchecked()
 
 
 if __name__ == "__main__":
