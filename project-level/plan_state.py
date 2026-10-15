@@ -5,6 +5,7 @@ Usage: python -B <the-way>/project-level/plan_state.py PLAN PRODUCT_REPOSITORY
 Exit codes: 0 for a completed observation (unchecked evidence can remain), 1 for source
 findings or conflicting task states, 2 for invocation, source-read or Git operational errors.
 Only Git metadata is refreshed; proposals never apply changes to the plan or task documents.
+Command output is UTF-8, including redirected reports and diagnostics.
 """
 
 import argparse
@@ -252,6 +253,9 @@ def sources(plan_path):
 
 def main(argv=None):
     # surface: project-plan-state-command — pinned
+    # Redirected Windows streams can inherit ANSI, which cannot preserve path evidence.
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8", errors="strict")
     parser = argparse.ArgumentParser(description="Report Git evidence for project plan task states.")
     parser.add_argument("plan", help="original handed-over project plan")
     parser.add_argument("product_repository", help="product Git repository")

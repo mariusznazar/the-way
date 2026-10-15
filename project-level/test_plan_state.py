@@ -329,6 +329,35 @@ class Command(unittest.TestCase):
         self.assertIn(commit, output)
         self.assertIn(" -> done", output)
 
+    def test_ansi_stdout_preserves_non_ascii_paths_and_completion_evidence(self):
+        # Break caught: inherited ANSI stdout rejects valid Unicode evidence.
+        moved = self.root / "product zażółć & $(echo injected)"
+        self.repo.rename(moved)
+        self.repo = moved
+        commit = self.archive(filename="zażółć.md")
+        self.git(self.repo, "push", "origin", "release")
+        self.env["PYTHONIOENCODING"] = "cp1252"
+        output = self.run_reader()
+        self.assertIn("repository: " + str(moved), output)
+        self.assertIn("docs/task-cycles/reports/zażółć.md", output)
+        self.assertIn("integration: refs/remotes/origin/release " + commit, output)
+        self.assertIn("propose 1 reports: ready for cycle -> in cycle", output)
+        self.assertIn("propose 1 reports: in cycle -> done", output)
+
+    def test_ansi_stdout_preserves_non_ascii_source_diagnostic(self):
+        # Break caught: encoding failure hides the actual unreadable input path.
+        self.plan = self.root / "notes/nieistniejący-żółć.md"
+        self.env["PYTHONIOENCODING"] = "cp1252"
+        result = subprocess.run(
+            [sys.executable, "-B", str(Path(__file__).with_name("plan_state.py")),
+             str(self.plan), str(self.repo)], env=self.env, capture_output=True, timeout=60)
+        self.assertEqual(result.returncode, 2)
+        output = result.stdout.decode("utf-8")
+        self.assertIn("error:", output)
+        self.assertIn(str(self.plan), output)
+        self.assertNotIn("propose ", output)
+        self.assertEqual(result.stderr, b"")
+
     def test_only_git_subprocesses_are_bounded_and_no_shell_is_used(self):
         # Break caught: unbounded Git waits or accidental host/Python/shell subprocesses.
         import plan_state
