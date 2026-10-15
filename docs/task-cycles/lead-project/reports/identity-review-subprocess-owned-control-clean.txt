@@ -1,6 +1,0 @@
-test_successful_evidence_read_starts_only_git (__main__.OwnedControl.test_successful_evidence_read_starts_only_git) ... ok
-
-----------------------------------------------------------------------
-Ran 1 test in 2.656s
-
-OK

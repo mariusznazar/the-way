@@ -1,7 +1,0 @@
-# Archive record recognition ruling
-
-C13, root provisional implementation ruling. Read WAY-147/1 whole (foundations/decisions.md:4551), WAY-153/1, frozen task To do 5 and spec State-reader contract. The cycle record is the exact task archive directory and its retained files; neither the accepted task nor WAY-153 introduces a mandatory basename or record-content schema for this reader. An actual committed file within docs/task-cycles/<exact-slug>/ can therefore identify an archived record commit. Match the directory boundary, require actual archived content as completion evidence, and retain the exact commit/path. Do not infer evidence from messages, branch names, neighboring slugs or a path existing only in live worktrees. Do not use invariant fixtures as authority.
-
-A filter for record.md/cycle.md is rejected because those filenames are not the reader's evidence contract and would discard valid archived reports. Cost of the chosen directory contract: a product that commits unrelated helper content in this reserved archive can supply misleading evidence; the reader is a proposal tool, and the orchestration/host check resolves conflicting traces. This is an implementation interpretation of the accepted directory contract, not a change to the invariant or authorization to relax its freshness/reachability conditions. Reviewer must judge it independently.
-
-Add an ordinary test using a different archived filename, rerun real acceptance after the correction, and document both the failed initial acceptance and corrected evidence. No protected check edits.
