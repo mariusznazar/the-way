@@ -339,9 +339,11 @@ class PlanStateEvidence(unittest.TestCase):
         self.proposals_are()
         self.unresolved()
 
-    def test_two_distinct_remote_defaults_expose_ambiguity(self):
+    def test_another_remote_does_not_obscure_declared_origin_integration(self):
         # invariant: project-plan-state-evidence/1
-        # Break caught: choosing one of two product integration candidates without evidence.
+        # Break caught: losing valid origin completion evidence because another remote exists.
+        commit = self.archive()
+        self.git(self.repo, "push", "origin", "delivery")
         self.git(self.repo, "branch", "other-delivery")
         self.git(self.repo, "push", "origin", "other-delivery")
         other = self.root / "other.git"
@@ -354,8 +356,9 @@ class PlanStateEvidence(unittest.TestCase):
         self.git(self.repo, "config", "--unset", "branch.delivery.merge")
         self.set_state("in cycle")
         self.assertEqual(self.run_reader(), 0, self.output)
-        self.proposals_are()
-        self.unresolved()
+        self.proposals_are("propose 1 report-download: in cycle -> done")
+        self.evidence_has(commit, "origin/delivery")
+        self.assertIn("integration: refs/remotes/origin/delivery " + commit, self.output.splitlines())
 
     def test_unavailable_listed_worktree_is_visible(self):
         # invariant: project-plan-state-evidence/1
