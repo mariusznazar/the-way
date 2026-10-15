@@ -2104,17 +2104,19 @@ For a product with no root `CLAUDE.md`, the installation command creates that fi
 
 ## project-plan-state-evidence/1
 
-For each task of a valid handed-over plan with an approved definition, the plan-state reader
-proposes ready for cycle to in cycle only from a matching working-cycle directory in a Git-listed
-worktree or a commit touching that task's exact archived cycle directory, proposes in cycle to
-done only from a cycle-record commit reachable in freshly fetched product integration history,
-reports both transitions together when both proofs hold for a ready task, and exposes incomplete,
-failed or conflicting observations without unsupported progress or edits to the plan or task
-documents.
+For each task of a valid handed-over plan with an approved definition, the plan-state reader uses
+existing recorded task provenance to establish that cycle traces belong to the current plan's
+task before proposing ready for cycle to in cycle only from a matching working-cycle directory
+in a Git-listed worktree or a commit touching that task's exact archived cycle directory or in
+cycle to done only from a cycle-record commit reachable in freshly fetched product integration
+history, reports both transitions together when both proofs hold for a ready task, reports
+missing or ambiguous task provenance as unchecked and contradictory task provenance for human
+reconciliation without proposing progress from either, and exposes incomplete, failed or
+conflicting observations without unsupported progress or edits to the plan or task documents.
 
 - **Method:** `python -B gate/run_tests.py project-level --record .runs/project-plan-state-evidence.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-153@33b10f25
+- **Derives from:** WAY-153@9874911d
 - **Part:** project-level
 - **Correction:** none
 
@@ -2124,7 +2126,7 @@ Every subprocess the plan-state reader starts runs Git.
 
 - **Method:** `python -B gate/run_tests.py project-level --record .runs/project-plan-state-evidence.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-153@33b10f25
+- **Derives from:** WAY-153@9874911d
 - **Part:** project-level
 - **Correction:** none
 

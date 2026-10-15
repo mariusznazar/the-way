@@ -4769,13 +4769,16 @@ merge — repeated refinement can be invalidated again before implementation.
 
 ### WAY-153/1 — What evidence supports a task state in a project plan?
 
-At each leading session's start a Git-only state reader proposes, with exact evidence, ready for
-cycle to in cycle from a matching working cycle directory in a Git-listed worktree or a commit
-touching the task's exact archived cycle directory, and in cycle to done from a cycle-record
-commit reachable in the product's freshly fetched integration history, composing both
-transitions when the plan is still ready for cycle. The reader changes no plan or task document,
-establishes the product's integration ref without guessing, and exposes absent or incomplete
-evidence, operational failures and conflicting traces without inferring completion. The project
+At each leading session's start a Git-only state reader uses existing recorded task provenance
+to establish that cycle traces belong to the current plan's task and proposes, with exact
+evidence, ready for cycle to in cycle from such a matching working cycle directory in a
+Git-listed worktree or a commit touching that task's exact archived cycle directory, and in
+cycle to done from such a cycle-record commit reachable in the product's freshly fetched
+integration history, composing both transitions when the plan is still ready for cycle. The
+reader changes no plan or task document, establishes the product's integration ref without
+guessing, and exposes absent or incomplete evidence, operational failures and conflicting traces
+without unsupported progress; missing or ambiguous task provenance is unchecked and contradictory
+task provenance goes to human reconciliation, with neither supplying progress. The project
 orchestrator applies supported transitions with a reason and evidence in the plan's log,
 resolves outcomes Git cannot establish through the product's chosen PR tool or asks the human
 when that tool is absent, and brings a closed-unmerged PR or a trace conflicting with the plan
