@@ -13,7 +13,7 @@ import tempfile
 import unittest
 
 # Reuse literal inputs only; no old expected observations or test methods are used.
-from test_plan_state_invariant import DEFINITION_BODY, FINGERPRINT, PLAN, TASK
+from test_plan_state_invariant import CYCLE_RECORD, DEFINITION_BODY, FINGERPRINT, PLAN, TASK
 
 
 READER = Path(__file__).resolve().with_name("plan_state.py")
@@ -103,8 +103,15 @@ class PlanStateSubprocesses(unittest.TestCase):
         self.git(self.publisher, "push", "origin", "delivery")
         self.git(self.root, "clone", str(self.remote), str(self.repo))
         self.initial = self.git(self.repo, "rev-parse", "refs/remotes/origin/delivery")
-        self.write(self.publisher / "docs/task-cycles/report-download/record.md", "# Cycle record\n")
-        self.git(self.publisher, "add", "docs/task-cycles/report-download/record.md")
+        cycle = self.publisher / "docs/task-cycles/report-download"
+        record = CYCLE_RECORD.format(source=self.root / "notes/tasks/report-download.md",
+                                     repository=self.repo, frozen="accepted-task.md")
+        record = record.replace("## Request handoff\n\nnone",
+                                "## Request handoff\n\n- Request URL and status: "
+                                "https://example.invalid/pull/41 and ready")
+        self.write(cycle / "record.md", record)
+        self.write(cycle / "accepted-task.md", TASK)
+        self.git(self.publisher, "add", "docs/task-cycles/report-download")
         self.git(self.publisher, "commit", "-m", "Deliver report download")
         self.delivered = self.git(self.publisher, "rev-parse", "HEAD")
         self.git(self.publisher, "push", "origin", "delivery")
@@ -151,6 +158,15 @@ class PlanStateSubprocesses(unittest.TestCase):
         self.assertNotEqual(self.initial, self.delivered)
         result, rows = self.observe_reader()
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        proposals = [line for line in result.stdout.splitlines() if line.startswith("propose ")]
+        self.assertCountEqual(proposals, [
+            "propose 1 report-download: ready for cycle -> in cycle",
+            "propose 1 report-download: in cycle -> done",
+        ], result.stdout + result.stderr)
+        self.assertIn("https://example.invalid/pull/41", result.stdout)
+        self.assertIn("docs/task-cycles/report-download/", result.stdout)
+        self.assertIn("integration: refs/remotes/origin/delivery " + self.delivered,
+                      result.stdout.splitlines())
         self.assert_only_git(rows)
         # Real remote-ref movement proves these are actual starts, not simulated calls.
         self.assertEqual(self.git(self.repo, "rev-parse", "refs/remotes/origin/delivery"), self.delivered)
