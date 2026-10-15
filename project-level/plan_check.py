@@ -108,6 +108,8 @@ class Task:
     scope: list | None = None
     preparatory: bool | None = None
     delivered_in: int | None = None
+    state: str | None = None
+    document: str | None = None
 
 
 @dataclass
@@ -352,6 +354,8 @@ def read_tasks(section):
     for line, row in rows:
         values = dict(zip(TASK_COLUMNS, row))
         task = Task(line)
+        task.state = values["State"]
+        task.document = values["Document"]
 
         def off(column, form):
             findings.append(Finding("form", line, "`%s` reads `%s`, not %s"
