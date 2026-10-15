@@ -284,7 +284,7 @@ elements.
     reaches the main branch before the design of the task cycle sets what it holds.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/19
 
 *Rationale:* anything brought in on the side makes the repository a store of material; directories
 follow the parts, so a change's files name its part and decisions (WAY-21); an incomplete directory
@@ -3589,7 +3589,7 @@ assignment or dependency from the plan.
     after the human accepted its candidate rows but never saw and accepted the complete document.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/19
 
 *Rationale:* a project can inform a task without owning it; the handoff must show which relationship
 applies so the next agent does not import work or dependencies the task never took on. A projected
@@ -4002,7 +4002,7 @@ another entry, and otherwise the human accepts the entry's meaning at the merge 
     directly about candidates or substitutes its own acceptance.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/19
 
 *Rationale:* a settlement the human makes while a task is refined binds after the merge as much as
 one a project settles, yet with no place in the task document it reaches the cycle as an answer to
@@ -4450,7 +4450,7 @@ follows the dependencies.
     requiring those results.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/19
 
 *Rationale:* the dependencies already say which tasks can go together; a second field derived from
 them is a copy that drifts as soon as one dependency changes, and its lists grow long enough that
@@ -4758,7 +4758,7 @@ ready dependent task documents: the task cycle checks and adapts its sources at 
     task after a merge instead of leaving the cycle's source check to its start.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/19
 
 *Rationale:* the human needs one conversation that keeps a plan moving and its progress visible.
 Keeping task execution and closure separate bounds that conversation, while checking current
@@ -4800,7 +4800,7 @@ to the human without automatically correcting the plan.
     product's PR tool is absent instead of asking the human.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/19
 
 *Rationale:* evidence-backed progress prevents a stale plan from hiding delivered work without letting
 an uncertain observation claim delivery. Separating observation from the plan write keeps the
@@ -4838,7 +4838,7 @@ named prerequisite is done.
     an agent's readiness stands for human acceptance, or cleanup loses the only settled answer.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/19
 
 *Rationale:* a file-mediated exchange keeps the project orchestrator from becoming a content relay
 and lets another session resume. The retained task document carries the result that later work
@@ -4872,7 +4872,7 @@ conversations before fresh refiner turns.
     package, or two tasks ask the human the same choice separately.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/19
 
 *Rationale:* an answer grounded in a source saves the human from restating an existing settlement,
 while distinguishing observation from prescription prevents accidental behavior becoming a rule.
@@ -4907,7 +4907,7 @@ for cycle while that definition gate remains open.
     its gate itself, or a task becomes ready against a changed but unapproved definition.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/19
 
 *Rationale:* a project can change direction while refinement proceeds, but its approved definition
 is the basis of every task. Keeping the full gate and fresh plan check costs another review while
