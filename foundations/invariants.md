@@ -2118,6 +2118,16 @@ documents.
 - **Part:** project-level
 - **Correction:** none
 
+## project-plan-state-subprocesses/1
+
+Every subprocess the plan-state reader starts runs Git.
+
+- **Method:** `python -B gate/run_tests.py project-level --record .runs/project-plan-state-evidence.jsonl`
+- **Rests on:** none
+- **Derives from:** WAY-153@33b10f25
+- **Part:** project-level
+- **Correction:** none
+
 ## Withdrawn identifiers
 
 | Identifier | Why | Successors |

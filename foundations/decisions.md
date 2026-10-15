@@ -4786,12 +4786,15 @@ to the human without automatically correcting the plan.
 - **Based on:** none
 - **Relations:** derives from WAY-38@6e10c3fd · derives from WAY-142@e53cd0ac · derives from
   WAY-147@8cfe543f
-- **Verification:** level 1 — invariants: project-plan-state-evidence. Level 2 for the Git-only
-  execution policy, applying proposals and resolving PR outcomes — an agent compares the evidence and leading session with the decision:
-  - complies: a stale ready row has both supported transitions, an unchecked squash outcome is
-    checked through the product's PR route, and a closed-unmerged PR reaches the human;
-  - violates: a branch name proves progress, a failed fetch yields done, the reader calls a PR
-    executable, or the project orchestrator silently normalizes a conflicting trace.
+- **Verification:** level 1 — invariants: project-plan-state-evidence ·
+  project-plan-state-subprocesses. Level 2 for applying proposals and resolving PR outcomes —
+  an agent compares the evidence and leading session with the decision:
+  - complies: the project orchestrator applies supported transitions with a reason and evidence
+    in the plan's log, resolves an unchecked PR outcome through the product's chosen PR tool,
+    and shows a closed-unmerged PR to the human without automatic correction;
+  - violates: the project orchestrator treats an unchecked observation as completion without
+    resolving it, silently normalizes a conflicting trace, or guesses the PR outcome when the
+    product's PR tool is absent instead of asking the human.
 - **Review when:** none
 - **Origin:** none
 - **Approved by:** Mariusz, merge of <request link>
