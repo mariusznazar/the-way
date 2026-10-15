@@ -33,6 +33,7 @@ Project relation: independent | plan item: <project plan> — <the task's name i
 
 - <question whose answer is needed to take the task>
   - Answer: TODO
+  - Source: <document location and revision, code file:line and revision, or human/date/words>
 
 ## Context
 
@@ -71,6 +72,11 @@ sections always appear. `Status:` reads `refining`, `waiting for human`, or `rea
 project plan, or only uses an approved project definition as a source. A task that uses a
 definition without plan membership never acquires that plan's assignments or dependencies.
 `TODO` marks a missing answer; never use it to make an unfinished task look ready.
+`ready for approval` is a conversation turn result, never a value of `Status:`. Every task,
+including a manually refined one with no candidates, waits for the human to see and accept its
+complete final document before `ready for cycle` (WAY-124). Candidate selection and Human-action
+placement alone do not accept that document. In orchestrated refinement only the refiner edits
+the body; the project orchestrator changes only `Status:` after final acceptance (WAY-154).
 
 ## What each section carries
 
@@ -82,9 +88,16 @@ definition without plan membership never acquires that plan's assignments or dep
   steps unless the approved source makes one a constraint. The cycle's plan chooses how.
 - **Acceptance criteria:** an additional observable condition only when completing every `To do`
   item might still leave it false. Do not repeat the work list in other words.
-- **Questions to settle:** only gaps that prevent a task from being taken. Keep each answer under
+- **Questions to settle:** questions whose answers are or were needed to take the task. Keep each answer under
   its question. A product decision is settled by the human or by an already approved source;
-  an implementation choice belongs to the cycle's plan.
+  an implementation choice belongs to the cycle's plan. Keep settled questions and answers with
+  their original provenance here, including answers transferred from a refinement conversation:
+  exact document quotation and location/revision, factual code observation and `file:line`/revision,
+  or the human's words and date. Code answers only how the product currently is, never how it is
+  to be. A canonical answer shared by tasks is copied with its source into each affected task;
+  a link to an ignored conversation or another question alone is insufficient. A struck quotation
+  remains unresolved until answered again. This section also keeps a question/reason explicitly
+  waiting for another task's result; plan dependencies alone do not delay refinement.
 - **Context:** concise provenance, constraints, links and code entry points that a reader is
   likely to ask about. Never repeat Description or prove the writer's own inference here.
 - **Questions carried to cycle:** name implementation questions taken from the task's sources.
@@ -118,6 +131,10 @@ definition without plan membership never acquires that plan's assignments or dep
   `decision`, `invariant`, `glossary term` or `environment fact`; an environment fact stands only
   where a kept decision or invariant rests on it, and a change of the part map is never a row.
   *Source* names the human's answer, or the line of this document, that carries the settlement.
+  Keep enough of that answer and provenance in this document to survive removal of a temporary
+  conversation; no accepted row may rely only on a deleted file. In orchestrated mode the project
+  orchestrator presents the candidates and required questions against choices through the round
+  package; the refiner records the human's selection without making it itself (WAY-134).
   The last column names a concrete thing the cycle would do or choose without the row. A settlement
   that an entry of the current foundation or a projected entry under *Decisions in play* already
   states is no row. The cycle writes each row whole, keeping its meaning and choosing its wording,

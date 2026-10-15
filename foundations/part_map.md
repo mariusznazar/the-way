@@ -98,7 +98,8 @@ foundation.
 The part answers for the form and writing of a project definition, its readiness gate, the
 breakdown of an approved definition into a project plan and the check of that plan, and the
 refinement of a task before its implementation cycle, whether the task belongs to a project,
-uses its settlements as a source, or stands on its own.
+uses its settlements as a source, or stands on its own, and for leading a handed-over plan through
+refinement and evidence-backed upkeep of task states.
 
 - **Files:** project-level/**
 - **Depends on:** decisions · invariants · glossary · part-map · environment-facts ·
@@ -125,8 +126,12 @@ uses its settlements as a source, or stands on its own.
     in the plan's log — a task settles a question where nobody expects it — high — not detected
   - a task of a plan ends with a layer of the product in place — its mistakes show only when a
     later task uses that layer — high — not detected
+  - the state reader proposes progress without the required cycle evidence or after an incomplete
+    observation — the plan hides unfinished work as started or delivered — high — detected by
+    project-plan-state-evidence
 - **Trust boundary:** project-level/readiness_check.py
   project-level/plan_check.py
+  project-level/plan_state.py
 
 ## task-cycle
 
@@ -344,6 +349,14 @@ confirmation, replaces no existing file, and adds to an existing file of the wor
 at the end of `.gitignore`.
 
 - **Declared at:** installation/install.py · run
+
+## project-plan-state-command
+
+The command that reads a project's plan and product repository keeps its name, positional
+arguments, evidence-bearing proposals and unchecked observations, exit codes and preservation of
+plan and task documents.
+
+- **Declared at:** project-level/plan_state.py · main
 
 ## Criticality scale
 

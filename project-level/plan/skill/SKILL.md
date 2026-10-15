@@ -20,6 +20,31 @@ that name with the `the-way-` prefix.
 The breakdown reads the product's foundation and the definition and writes nothing in either
 (WAY-106). It writes no task document; each task is refined later through `refine-task`.
 
+## Delegated work while leading a plan
+
+When `lead-project` dispatches you through a refinement conversation path, read that file and
+`project-level/lead/conversation_template.md` first. Verify its product, plan and process pin,
+read all turns and the requested change, and follow this workflow with these routing differences
+(WAY-156):
+
+- Own the structural plan edit while your turn runs. The project orchestrator pauses its own
+  State/Document/log writes; refiners write only separate task documents/conversations. Edit no
+  task body, definition or foundation. Record each plan change with its reason and run the
+  existing whole-original checks; preserve stable task names and unaffected states.
+- Return every human question, scope choice, projected-entry writer reassignment and handover
+  request through the conversation with complete material, ways/costs/recommendation as applicable,
+  then return to the project orchestrator. Its recorded human answers authorize only the choices
+  they actually settle. Do not speak to the human, approve on their behalf or start child agents.
+- Request step 6's independent critique through the file, including the complete authoritative
+  plan and source paths. The project orchestrator dispatches it and records its report for you;
+  verify and settle its observations as step 6 requires. Missing critique remains a block.
+- After a definition's new gate, start at step 0 and recheck the plan from its complete inventories
+  against the newly approved definition, completing all affected steps and required critique and
+  human decisions. The old fingerprint mismatch shows the recheck needed; once the new gate is
+  verified, update the plan's fingerprint with its logged reason rather than demand another gate
+  for that same approved change. Return check results, source identities, changes and next action
+  through the conversation. No task gains readiness while the gate/recheck remains pending.
+
 ## 0. Start or resume
 
 - Read `project-level/plan/template.md` in full, and the section "How a skill asks" of
@@ -30,7 +55,8 @@ The breakdown reads the product's foundation and the definition and writes nothi
   from the first step its sections leave unfinished; a plan handed over changes only as its
   change log records, and a finding that the definition's fingerprint no longer matches means the
   definition changed after its gate: it goes through `define-project` step 7 again, and the plan is
-  checked against it from step 1.
+  checked against it from step 1. If the definition has already passed that new gate, verify its
+  approval and proceed with that recheck rather than reopen the same gate.
 - Otherwise begin with step 1.
 
 ## 1. Read
@@ -84,6 +110,10 @@ reduced copy. Selection is no reading cap; read a small file whole where useful.
 - Give each task its number, its name and its goal in the definition's language, the tasks it
   depends on and the items of In scope it delivers, as the template gives them (WAY-147, WAY-144).
   Every task of a new plan reads `to refine`.
+- `Depends on` constrains cycle starts, not refinement: a cycle starts only when its dependencies
+  are done, and cycles run beside one another only when neither depends on the other directly or
+  transitively. Dependent tasks may be refined together; a refinement waits only for a named
+  question needing another task's result (WAY-144).
 - Something the definition leaves out that the cut seems to need is a question for the human in
   step 5 (WAY-145).
 
@@ -144,5 +174,7 @@ reduced copy. Selection is no reading cap; read a small file whole where useful.
   rejected with why. The human corrects the plan; apply each correction, with its line in the change
   log, and run `plan_check.py` again.
 - On the human's word, set the status to `handed over YYYY-MM-DD` and add the line to the change
-  log. Tell the human that each task is refined next through `refine-task`, as a member of this
-  plan, and that a task enters its cycle under its name (WAY-147).
+  log. Point to `lead-project` as the next step: it proposes human-confirmed rounds, delegates
+  member-task refinement through `refine-task` and maintains evidenced plan states (WAY-152).
+  The human starts cycles separately, under each task's stable name (WAY-147); leading starts
+  none. In delegated mode return this handover material through the conversation.

@@ -149,7 +149,7 @@ Where {merge-onto} exists, every file git tracks lies in `foundations/` or in a 
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-09@60c8a936
+- **Derives from:** WAY-09@909e9c5c
 - **Part:** every
 - **Correction:** none
 
@@ -159,7 +159,7 @@ Where {merge-onto} exists, every element directory holds a template, examples or
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-09@60c8a936
+- **Derives from:** WAY-09@909e9c5c
 - **Part:** decisions · part-map · invariants · glossary · environment-facts
 - **Correction:** none
 
@@ -169,7 +169,7 @@ Where {merge-onto} exists, `relation-model/` holds the script that computes fing
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-09@60c8a936
+- **Derives from:** WAY-09@909e9c5c
 - **Part:** relation-model
 - **Correction:** none
 
@@ -179,7 +179,7 @@ Every identifier `elements/invariants/examples.md` names is the identifier of an
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-09@60c8a936
+- **Derives from:** WAY-09@909e9c5c
 - **Part:** invariants
 - **Correction:** none
 
@@ -189,7 +189,7 @@ Every identifier `elements/part-map/examples.md` names is the identifier of an e
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-09@60c8a936
+- **Derives from:** WAY-09@909e9c5c
 - **Part:** part-map
 - **Correction:** none
 
@@ -199,7 +199,7 @@ Every term `elements/glossary/examples.md` names is the term of an entry of `fou
 
 - **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-09@60c8a936
+- **Derives from:** WAY-09@909e9c5c
 - **Part:** glossary
 - **Correction:** none
 
@@ -2041,7 +2041,7 @@ task itself.
 
 - **Method:** `python -B gate/run_tests.py project-level --record .runs/project-level-tests.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-142@e53cd0ac · WAY-144@6cdf8d49 · WAY-146@7677c3cd · WAY-147@8cfe543f
+- **Derives from:** WAY-142@e53cd0ac · WAY-144@d5802c22 · WAY-146@7677c3cd · WAY-147@8cfe543f
 - **Part:** project-level
 - **Correction:** none
 
@@ -2100,6 +2100,34 @@ For a product with no root `CLAUDE.md`, the installation command creates that fi
 - **Rests on:** claude-code-imports@5b9359fd
 - **Derives from:** WAY-141@5d0990a0
 - **Part:** installation
+- **Correction:** none
+
+## project-plan-state-evidence/1
+
+For each task of a valid handed-over plan with an approved definition, the plan-state reader uses
+existing recorded task provenance to establish that cycle traces belong to the current plan's
+task before proposing ready for cycle to in cycle only from a matching working-cycle directory
+in a Git-listed worktree or a commit touching that task's exact archived cycle directory or in
+cycle to done only from a cycle-record commit reachable in freshly fetched product integration
+history, reports both transitions together when both proofs hold for a ready task, reports
+missing or ambiguous task provenance as unchecked and contradictory task provenance for human
+reconciliation without proposing progress from either, and exposes incomplete, failed or
+conflicting observations without unsupported progress or edits to the plan or task documents.
+
+- **Method:** `python -B gate/run_tests.py project-level --record .runs/project-plan-state-evidence.jsonl`
+- **Rests on:** none
+- **Derives from:** WAY-153@9874911d
+- **Part:** project-level
+- **Correction:** none
+
+## project-plan-state-subprocesses/1
+
+Every subprocess the plan-state reader starts runs Git.
+
+- **Method:** `python -B gate/run_tests.py project-level --record .runs/project-plan-state-evidence.jsonl`
+- **Rests on:** none
+- **Derives from:** WAY-153@9874911d
+- **Part:** project-level
 - **Correction:** none
 
 ## Withdrawn identifiers

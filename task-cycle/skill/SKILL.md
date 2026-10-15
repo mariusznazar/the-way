@@ -31,6 +31,17 @@ choice approved or changed the rule.
    task document written before that section existed carries no row. Recheck approval and current
    foundation versions before starting. If a source changed, reconcile the task against it and
    record the effect; stop only when its required outcome can no longer be established.
+   Before a plan member's cycle starts, verify the original plan and its definition's current
+   approval and establish that every task in its `Depends on` is done (WAY-144), using current
+   cycle/integration evidence and the product's PR route where needed. A ready document can wait
+   for an unfinished dependency without losing its human acceptance; do not start its cycle,
+   branch or implementation while that dependency remains unresolved. `done — goal delivered in
+   task <n>` supplies completion only through established delivery by the named task; follow that
+   relation to its completion evidence, never infer delivery from the label alone.
+   `dropped — approved by human` does not prove the dependency's goal was delivered: return the
+   mismatch to plan reconciliation before starting. If definition approval or its required fresh
+   plan recheck is pending, wait for the owning project workflow. These are pre-start source
+   obstacles, not a reason to revoke acceptance or re-refine every ready dependent after a merge.
 2. Read the product's `AGENTS.md`, process pin and relevant code. Select and read the current
    foundation by "Reading the foundation" in `elements/common/way_of_working.md` (WAY-150).
    Verify that the pinned the-way checkout matches the product's gitlink. Follow product-specific
