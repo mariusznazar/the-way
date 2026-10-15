@@ -1,0 +1,13 @@
+python : test_explicit_record_plan_disagreement_is_not_hidden_by_frozen_task (test_plan_state.Command.test_explicit_rec
+ord_plan_disagreement_is_not_hidden_by_frozen_task) ... ok
+At line:2 char:200
++ ... STEXITCODE; python -B -m unittest discover -s project-level -p test_p ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (test_explicit_r...en_task) ... ok:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+
+----------------------------------------------------------------------
+Ran 1 test in 1.654s
+
+OK

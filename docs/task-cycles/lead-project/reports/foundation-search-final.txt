@@ -1,0 +1,716 @@
+foundations/glossary.md:9:A binding part is the text of an entry that whatever relies on the entry, rather than only mentioning it, depends on.
+foundations/glossary.md:23:The clock is the command that, unlike the gate, runs checks apart from any change.
+foundations/glossary.md:91:## gate
+foundations/glossary.md:93:The gate is the program that runs the checks a change calls for.
+foundations/glossary.md:95:- **Avoid:** quality gate — same thing
+foundations/glossary.md:217:## project orchestrator
+foundations/glossary.md:219:A project orchestrator is the agent that leads a handed-over project plan in conversation with the human.
+foundations/part_map.md:3:What this repository is made of, and what joins it: which part may depend on which, and what it
+foundations/part_map.md:4:promises to the products pinned to its commits. The map says which dependencies are allowed; the
+foundations/part_map.md:5:product's dependency graph shows which dependencies the code actually holds. When no command
+foundations/part_map.md:15:- **Depends on:** relation-model · elements-common
+foundations/part_map.md:28:- **Depends on:** relation-model · elements-common
+foundations/part_map.md:40:- **Depends on:** none
+foundations/part_map.md:54:- **Depends on:** decisions · part-map · relation-model · environment-facts · elements-common
+foundations/part_map.md:65:- **Depends on:** decisions · part-map · invariants · environment-facts · elements-common
+foundations/part_map.md:76:- **Depends on:** decisions · part-map · invariants · relation-model · elements-common
+foundations/part_map.md:84:skill, which is also the independent assessor of a change to an invariant test or to the
+foundations/part_map.md:88:- **Depends on:** project-level · decisions · invariants · glossary · part-map · environment-facts
+foundations/part_map.md:90:  - the entry finder omits a settlement that a later task must guess — a project can pass its gate
+foundations/part_map.md:96:## project-level
+foundations/part_map.md:98:The part answers for the form and writing of a project definition, its readiness gate, the
+foundations/part_map.md:100:refinement of a task before its implementation cycle, whether the task belongs to a project,
+foundations/part_map.md:101:uses its settlements as a source, or stands on its own, and for leading a handed-over plan through
+foundations/part_map.md:102:refinement and evidence-backed upkeep of task states.
+foundations/part_map.md:104:- **Files:** project-level/**
+foundations/part_map.md:105:- **Depends on:** decisions · invariants · glossary · part-map · environment-facts ·
+foundations/part_map.md:108:  - the gate accepts an unresolved placeholder in a required section — tasks inherit an explicit
+foundations/part_map.md:109:    gap as project scope or a future foundation rule — high — detected by project-readiness-gate
+foundations/part_map.md:112:  - the gate approves a meaning that was not searched against the current foundation — a conflict
+foundations/part_map.md:120:  - a task using a project definition only as a source inherits work or dependencies from that
+foundations/part_map.md:122:  - the plan check accepts a plan in which a projected entry has no task writing it, or two — the
+foundations/part_map.md:131:    project-plan-state-evidence
+foundations/part_map.md:132:- **Trust boundary:** project-level/readiness_check.py
+foundations/part_map.md:133:  project-level/plan_check.py
+foundations/part_map.md:134:  project-level/plan_state.py
+foundations/part_map.md:142:- **Depends on:** decisions · invariants · glossary · part-map · environment-facts ·
+foundations/part_map.md:143:  elements-common · project-level · gate · relation-model
+foundations/part_map.md:145:  - the orchestrator stops for an implementation choice it can settle from the task and foundation
+foundations/part_map.md:146:    — an implementable task waits for the human before its request — high — not detected
+foundations/part_map.md:147:  - the orchestrator omits a micro decision or its cost from the cycle record and request — the
+foundations/part_map.md:153:## gate
+foundations/part_map.md:155:The part answers for the gate and the clock, and for the tests of critical flows.
+foundations/part_map.md:157:- **Files:** gate/**
+foundations/part_map.md:158:- **Depends on:** decisions · relation-model
+foundations/part_map.md:160:  - the gate reports a check as passed although it never ran — a change that breaks an invariant
+foundations/part_map.md:177:- **Depends on:** none
+foundations/part_map.md:196:- **Depends on:** decisions · invariants · glossary · part-map · environment-facts ·
+foundations/part_map.md:197:  elements-common · project-level · task-cycle · gate · instruction-files
+foundations/part_map.md:221:- **Depends on:** decisions · environment-facts · installation
+foundations/part_map.md:247:- **Depends on:** decisions · invariants · glossary · part-map · environment-facts ·
+foundations/part_map.md:248:  elements-common · project-level
+foundations/part_map.md:261:## wording-reaches-dependants
+foundations/part_map.md:267:- **Parts:** relation-model · decisions · gate
+foundations/part_map.md:279:  environment-facts · project-level · task-cycle · gate · instruction-files
+foundations/part_map.md:341:- **Declared at:** gate/run_tests.py · main
+foundations/part_map.md:353:## project-plan-state-command
+foundations/part_map.md:359:- **Declared at:** project-level/plan_state.py · main
+foundations/part_map.md:373:| a command a product declares — a dependency graph, coverage | them → us | untrusted | no |
+foundations/environment_facts.md:12:- **Method:** `python -B gate/run_tests.py probes/git-path-patterns --record .runs/fact-git-path-patterns.jsonl`
+foundations/environment_facts.md:20:- **Method:** `python -B gate/run_tests.py probes/gitignore-paths --record .runs/fact-gitignore-paths.jsonl`
+foundations/environment_facts.md:28:- **Method:** `python -B gate/run_tests.py probes/sha-256 --record .runs/fact-sha-256.jsonl`
+foundations/environment_facts.md:36:- **Method:** `python -B gate/run_tests.py probes/utf-8 --record .runs/fact-utf-8.jsonl`
+foundations/environment_facts.md:44:- **Method:** `python -B gate/run_tests.py probes/json-text --record .runs/fact-json-text.jsonl`
+foundations/environment_facts.md:52:- **Method:** `python -B gate/run_tests.py probes/json-lines --record .runs/fact-json-lines.jsonl`
+foundations/environment_facts.md:60:- **Method:** `python -B gate/run_tests.py probes/python-stdlib-modules --record .runs/fact-python-stdlib-modules.jsonl`
+foundations/environment_facts.md:67:- **Source:** https://arxiv.org/html/2510.20270v1 § 3.1 — "We perform our experiments on a suite of leading open-source and closed-source models: GPT-5, o3, o4-mini, GPT-4.1, Claude Opus 4.1, Claude Sonnet 4, Claude Sonnet 3.7, and Qwen3-Coder." · § 4.2 — "OpenAI models perform special-casing most of the time, while Claude models and Qwen3-Coder mostly modify the test cases" · § 5.2 — "Effect of hiding tests and making tests read-only on Impossible-SWEbench" · § 5.2 — "This approach is particularly effective against models like Opus-4.1, whose primary cheating strategy involves modifying test cases, but it does not eliminate other cheating methods such as special-casing or operator overloading"; read 2026-09-26
+foundations/environment_facts.md:68:- **Method:** `python -B gate/run_tests.py probes/impossiblebench-test-modification --record .runs/fact-impossiblebench-test-modification.jsonl`
+foundations/environment_facts.md:76:- **Method:** `python -B gate/run_tests.py probes/llm-self-preference --record .runs/fact-llm-self-preference.jsonl`
+foundations/environment_facts.md:84:- **Method:** `python -B gate/run_tests.py probes/llm-design-rationale-expert-overlap --record .runs/fact-llm-design-rationale-expert-overlap.jsonl`
+foundations/environment_facts.md:88:Language models detecting violations of architectural decisions reach substantial agreement and strong accuracy for explicit, code-inferable decisions, and fall short in accuracy for implicit or deployment-oriented decisions that depend on deployment configuration or organisational knowledge.
+foundations/environment_facts.md:91:- **Source:** https://arxiv.org/abs/2602.07609v1 § Abstract — "The models achieved substantial agreement and strong accuracy for explicit, code-inferable decisions. Accuracy falls short for implicit or deployment-oriented decisions that depend on deployment configuration or organizational knowledge."; read 2026-09-26 · https://arxiv.org/html/2602.07609v1 § Table II — "Marco-o1" · § Table II — "Mistral-NeMo-Instruct-2407" · § Table II — "Qwen3-14B-Base" · § Table II — "Llama-3.1-8B-Instruct"; read 2026-09-26
+foundations/environment_facts.md:92:- **Method:** `python -B gate/run_tests.py probes/llm-decision-violation-detection --record .runs/fact-llm-decision-violation-detection.jsonl`
+foundations/environment_facts.md:100:- **Method:** `python -B gate/run_tests.py probes/instruction-density-accuracy --record .runs/fact-instruction-density-accuracy.jsonl`
+foundations/environment_facts.md:108:- **Method:** `python -B gate/run_tests.py probes/context-file-effect --record .runs/fact-context-file-effect.jsonl`
+foundations/environment_facts.md:116:- **Method:** `python -B gate/run_tests.py probes/claude-code-path-rules --record .runs/fact-claude-code-path-rules.jsonl`
+foundations/environment_facts.md:124:- **Method:** `python -B gate/run_tests.py probes/visible-scoring-reward-hacking --record .runs/fact-visible-scoring-reward-hacking.jsonl`
+foundations/environment_facts.md:132:- **Method:** `python -B gate/run_tests.py probes/oracle-in-loop-building --record .runs/fact-oracle-in-loop-building.jsonl`
+foundations/environment_facts.md:140:- **Method:** `python -B gate/run_tests.py probes/github-private-repository-response --record .runs/fact-github-private-repository-response.jsonl`
+foundations/environment_facts.md:148:- **Method:** `python -B gate/run_tests.py probes/anthropic-model-states --record .runs/fact-anthropic-model-states.jsonl`
+foundations/environment_facts.md:156:- **Method:** `python -B gate/run_tests.py probes/python-314-bugfix-status --record .runs/fact-python-314-bugfix-status.jsonl`
+foundations/environment_facts.md:164:- **Method:** `python -B gate/run_tests.py probes/python-release-binaries --record .runs/fact-python-release-binaries.jsonl`
+foundations/environment_facts.md:172:- **Method:** `python -B gate/run_tests.py probes/claude-code-project-skills --record .runs/fact-claude-code-project-skills.jsonl`
+foundations/environment_facts.md:180:- **Method:** `python -B gate/run_tests.py probes/claude-code-nested-skills --record .runs/fact-claude-code-nested-skills.jsonl`
+foundations/environment_facts.md:188:- **Method:** `python -B gate/run_tests.py probes/codex-repository-skills --record .runs/fact-codex-repository-skills.jsonl`
+foundations/environment_facts.md:196:- **Method:** `python -B gate/run_tests.py probes/codex-skill-paths --record .runs/fact-codex-skill-paths.jsonl`
+foundations/environment_facts.md:204:- **Method:** `python -B gate/run_tests.py probes/claude-code-imports --record .runs/fact-claude-code-imports.jsonl`
+foundations/environment_facts.md:212:- **Method:** `python -B gate/run_tests.py probes/claude-code-agents-md --record .runs/fact-claude-code-agents-md.jsonl`
+foundations/environment_facts.md:220:- **Method:** `python -B gate/run_tests.py probes/codex-agents-md --record .runs/fact-codex-agents-md.jsonl`
+foundations/environment_facts.md:228:- **Method:** `python -B gate/run_tests.py probes/cursor-agents-md --record .runs/fact-cursor-agents-md.jsonl`
+foundations/environment_facts.md:236:- **Method:** `python -B gate/run_tests.py probes/single-rule-compliance --record .runs/fact-single-rule-compliance.jsonl`
+foundations/environment_facts.md:240:On SWE-Bench-Verified, single-run pass@1 estimates of the agents Bjarnason et al. ran vary by 2.2 to 6.0 percentage points depending on which run is selected, with standard deviations exceeding 1.5 percentage points even at temperature 0.
+foundations/environment_facts.md:243:- **Source:** https://arxiv.org/html/2602.07150v3 § Abstract — "We test this assumption by collecting 60,000 agentic trajectories on SWE-Bench-Verified, spanning three models and two scaffolds." · § Abstract — "We find substantial variance: single-run pass@1 estimates vary by 2.2 to 6.0 percentage points depending on which run is selected, with standard deviations exceeding 1.5 percentage points even at temperature 0." · § 2.1 — "We exhaustively evaluate six different agents, where an agent is defined as a model-scaffold pairs." · § 2.1 — "Qwen/Qwen3-32B" · § 2.1 — "agentica-org/DeepSWE-preview" · § 2.1 — "mistralai/Devstral-2-123B-Instruct-2512" · § 2.1 — "nano-agent is our own minimal scaffold for agentic coding experiments" · § 2.1 — "R2E-Gym is a code agent scaffold"; read 2026-10-08
+foundations/environment_facts.md:244:- **Method:** `python -B gate/run_tests.py probes/agent-run-variance --record .runs/fact-agent-run-variance.jsonl`
+foundations/invariants.md:10:- **Method:** `python -B gate/run_tests.py gate --record .runs/gate-tests.jsonl`
+foundations/invariants.md:20:- **Method:** `python -B gate/run_tests.py elements/decisions --record .runs/decisions-tests.jsonl`
+foundations/invariants.md:152:- **Derives from:** WAY-09@909e9c5c
+foundations/invariants.md:162:- **Derives from:** WAY-09@909e9c5c
+foundations/invariants.md:172:- **Derives from:** WAY-09@909e9c5c
+foundations/invariants.md:182:- **Derives from:** WAY-09@909e9c5c
+foundations/invariants.md:192:- **Derives from:** WAY-09@909e9c5c
+foundations/invariants.md:202:- **Derives from:** WAY-09@909e9c5c
+foundations/invariants.md:208:Where {merge-onto} exists, no change alters, against {fork-point}, an invariant test or a foundation entry without a record of its independent assessment, naming what of the change can be cut or that nothing can, and of how each remark was settled.
+foundations/invariants.md:309:No CI configuration git tracks runs a checking command other than the gate's command.
+foundations/invariants.md:317:## gate-check-source/1
+foundations/invariants.md:319:Every check the gate runs for an entry of the foundation comes from the method of checking written in that entry.
+foundations/invariants.md:431:- **Method:** `python -B gate/run_tests.py elements/decisions --record .runs/decisions-tests.jsonl`
+foundations/invariants.md:567:## script-subprocesses/1
+foundations/invariants.md:581:- **Method:** `python -B gate/run_tests.py elements/part-map --record .runs/part-map-tests.jsonl`
+foundations/invariants.md:591:- **Method:** `python -B gate/run_tests.py relation-model --record .runs/relation-model-tests.jsonl`
+foundations/invariants.md:729:Every part a critical flow of the part map lists, and every part a part's *Depends on* names, is a part of the map.
+foundations/invariants.md:744:- **Part:** part-map · gate
+foundations/invariants.md:791:- **Method:** `python -B gate/run_tests.py elements/part-map --record .runs/part-map-tests.jsonl`
+foundations/invariants.md:797:## map-guard-dependency-report/1
+foundations/invariants.md:799:The map guard computes the criticality of a part that has failure modes recorded as the highest of the severities of its own failure modes, of the criticalities of the critical flows it lies on, and of the computed criticalities of the parts that depend on it by a dependency recording no separation.
+foundations/invariants.md:801:- **Method:** `python -B gate/run_tests.py elements/part-map --record .runs/part-map-tests.jsonl`
+foundations/invariants.md:811:- **Method:** `python -B gate/run_tests.py elements/part-map --record .runs/part-map-tests.jsonl`
+foundations/invariants.md:831:- **Method:** `python -B gate/run_tests.py elements/part-map --record .runs/part-map-tests.jsonl`
+foundations/invariants.md:841:- **Method:** `python -B gate/run_tests.py elements/part-map --record .runs/part-map-tests.jsonl`
+foundations/invariants.md:857:## gate-boundary-change/1
+foundations/invariants.md:859:The gate runs the check for crafted input on every change that, against "{fork-point}", touches the files of a trust boundary.
+foundations/invariants.md:864:- **Part:** gate
+foundations/invariants.md:919:Every dependency the code holds that the part map does not allow stands on the list of known violations.
+foundations/invariants.md:939:Every row of the list of known violations names a dependency the code holds that the part map does not allow.
+foundations/invariants.md:989:Every test holding a line `flow: <identifier>` that names a critical flow of the part map lies under `gate/`.
+foundations/invariants.md:1107:## gate-fork-point-evidence/1
+foundations/invariants.md:1109:For every invariant entry whose sentence a change adds or alters against "{fork-point}", the gate's report states whether the entry's method passes on "{fork-point}" and fails there on a deliberate break, or that this could not be checked.
+foundations/invariants.md:1114:- **Part:** gate
+foundations/invariants.md:1121:- **Method:** `python -B gate/run_tests.py elements/invariants --record .runs/invariants-tests.jsonl`
+foundations/invariants.md:1137:## sentence-gate-values/1
+foundations/invariants.md:1139:Every value in braces that a sentence of `foundations/invariants.md` names outside quoted text stands on the gate's list, and is taken by its command unless its method is not a command.
+foundations/invariants.md:1147:## method-gate-values/1
+foundations/invariants.md:1149:Every value a command in `foundations/invariants.md` takes from the gate stands on the list in the invariants template.
+foundations/invariants.md:1157:## gate-verdict-per-entry/1
+foundations/invariants.md:1159:For every invariant whose command a run of the gate carried out, the gate's report shows the verdict that run recorded for the entry's identifier and current version, and `pass` only where every check of that run citing the entry recorded `pass`.
+foundations/invariants.md:1164:- **Part:** gate
+foundations/invariants.md:1167:## gate-pass-without-verdict/1
+foundations/invariants.md:1169:The gate reports no pass for an invariant for which neither a run of its command recorded a verdict nor a human verdict for it is in force.
+foundations/invariants.md:1174:- **Part:** gate
+foundations/invariants.md:1177:## gate-method-order/1
+foundations/invariants.md:1179:The gate runs a method whose run leaves what another method reads, where a decision places that reading, before the method that reads it.
+foundations/invariants.md:1184:- **Part:** gate
+foundations/invariants.md:1209:The invariants the gate finds a change against "{fork-point}" reaching include every entry naming `every` or a part the change touches, and every entry whose method names a file the change alters.
+foundations/invariants.md:1214:- **Part:** gate
+foundations/invariants.md:1217:## gate-result-values/1
+foundations/invariants.md:1219:Every result the gate reports for an invariant is `pass`, `fail`, `unchecked` or `error`.
+foundations/invariants.md:1224:- **Part:** gate
+foundations/invariants.md:1227:## gate-unchecked-reason/1
+foundations/invariants.md:1229:Every `unchecked` the gate reports names a reason on the list in the invariants template.
+foundations/invariants.md:1234:- **Part:** gate · invariants
+foundations/invariants.md:1237:## gate-missing-script/1
+foundations/invariants.md:1239:The gate reports an invariant whose command runs, under a Python interpreter, a script that does not exist on the commit being checked `unchecked` for want of a declared or produced command where that script does not exist on "{fork-point}" either, and `error` where it exists there.
+foundations/invariants.md:1244:- **Part:** gate
+foundations/invariants.md:1247:## gate-reported-set/1
+foundations/invariants.md:1249:The gate reports a result for every invariant a change against "{fork-point}" reaches, and for every invariant a critical flow names.
+foundations/invariants.md:1254:- **Part:** gate
+foundations/invariants.md:1259:The gate runs, on every change, every test holding a line `flow: <identifier>` that names a critical flow of the part map.
+foundations/invariants.md:1264:- **Part:** gate · part-map
+foundations/invariants.md:1267:## gate-exit-code/1
+foundations/invariants.md:1269:The gate's command exits non-zero when some result it reports is `error`, an invariant on the list of violated invariants results `pass`, an invariant off that list or an environment fact results `fail`, or a run records a failure for no entry, and zero otherwise.
+foundations/invariants.md:1274:- **Part:** gate
+foundations/invariants.md:1344:- **Part:** gate
+foundations/invariants.md:1407:## gate-quarantine-result/1
+foundations/invariants.md:1409:The gate reports a quarantined entry `unchecked` while the checked commit's committer date is no later than its end date, and `error` after.
+foundations/invariants.md:1414:- **Part:** gate
+foundations/invariants.md:1504:- **Part:** decisions · part-map · invariants · glossary · environment-facts · elements-common · gate
+foundations/invariants.md:1519:The gate reads, from the-way's own record of a run, only the lines the run it started for that command wrote.
+foundations/invariants.md:1524:- **Part:** gate
+foundations/invariants.md:1531:- **Method:** `python -B gate/run_tests.py gate --record .runs/gate-tests.jsonl`
+foundations/invariants.md:1534:- **Part:** gate
+foundations/invariants.md:1621:- **Method:** `python -B gate/run_tests.py elements/environment-facts --record .runs/environment-facts-tests.jsonl`
+foundations/invariants.md:1704:- **Part:** gate
+foundations/invariants.md:1727:## gate-fact-run/1
+foundations/invariants.md:1729:The gate runs the method of every environment fact whose entry a change enters or rewords against "{fork-point}", or whose command names a file that change alters.
+foundations/invariants.md:1734:- **Part:** gate
+foundations/invariants.md:1744:- **Part:** gate · environment-facts
+foundations/invariants.md:1767:## gate-human-verdict/1
+foundations/invariants.md:1769:The gate counts a human verdict for an entry only from the row naming its current version, for an invariant only while no change since the commit the row names reaches the entry, and for an environment fact only while the committer date of the commit being checked is no later than the row's *Until*.
+foundations/invariants.md:1774:- **Part:** gate
+foundations/invariants.md:1777:## fact-dependants/1
+foundations/invariants.md:1841:- **Method:** `python -B gate/run_tests.py elements/glossary --record .runs/glossary-tests.jsonl`
+foundations/invariants.md:1853:- **Method:** `python -B gate/run_tests.py elements/glossary --record .runs/glossary-tests.jsonl`
+foundations/invariants.md:1923:- **Method:** `python -B gate/run_tests.py elements/glossary --record .runs/glossary-tests.jsonl`
+foundations/invariants.md:2004:- **Method:** `python -B gate/run_tests.py project-level --record .runs/project-level-tests.jsonl`
+foundations/invariants.md:2007:- **Part:** project-level
+foundations/invariants.md:2010:## project-readiness-gate/1
+foundations/invariants.md:2015:- **Method:** `python -B gate/run_tests.py project-level --record .runs/project-level-tests.jsonl`
+foundations/invariants.md:2018:- **Part:** project-level
+foundations/invariants.md:2025:- **Method:** `python -B gate/run_tests.py project-level --record .runs/project-level-tests.jsonl`
+foundations/invariants.md:2028:- **Part:** project-level
+foundations/invariants.md:2033:The project plan check rejects a plan with no valid `Status:` line, a header that names no
+foundations/invariants.md:2034:definition it can read or a fingerprint other than the one that definition's gate record holds and
+foundations/invariants.md:2042:- **Method:** `python -B gate/run_tests.py project-level --record .runs/project-level-tests.jsonl`
+foundations/invariants.md:2044:- **Derives from:** WAY-142@e53cd0ac · WAY-144@d5802c22 · WAY-146@7677c3cd · WAY-147@8cfe543f
+foundations/invariants.md:2045:- **Part:** project-level
+foundations/invariants.md:2050:The project plan check rejects a plan in which a projected entry of its definition has no task
+foundations/invariants.md:2052:an item of the definition's In scope has no task; a task depends on itself, directly or through
+foundations/invariants.md:2053:other tasks; a preparatory task has no task depending on it; an open question of the definition
+foundations/invariants.md:2059:- **Method:** `python -B gate/run_tests.py project-level --record .runs/project-level-tests.jsonl`
+foundations/invariants.md:2062:- **Part:** project-level
+foundations/invariants.md:2069:- **Method:** `python -B gate/run_tests.py gate --record .runs/gate-tests.jsonl`
+foundations/invariants.md:2079:- **Method:** `python -B gate/run_tests.py agent-instructions --record .runs/agent-instructions-tests.jsonl`
+foundations/invariants.md:2089:- **Method:** `python -B gate/run_tests.py agent-instructions --record .runs/agent-instructions-tests.jsonl`
+foundations/invariants.md:2099:- **Method:** `python -B gate/run_tests.py installation --record .runs/installation-tests.jsonl`
+foundations/invariants.md:2105:## project-plan-state-evidence/1
+foundations/invariants.md:2107:For each task of a valid handed-over plan with an approved definition, the plan-state reader uses
+foundations/invariants.md:2108:existing recorded task provenance to establish that cycle traces belong to the current plan's
+foundations/invariants.md:2109:task before proposing ready for cycle to in cycle only from a matching working-cycle directory
+foundations/invariants.md:2111:cycle to done only from a cycle-record commit reachable in freshly fetched product integration
+foundations/invariants.md:2113:missing or ambiguous task provenance as unchecked and contradictory task provenance for human
+foundations/invariants.md:2117:- **Method:** `python -B gate/run_tests.py project-level --record .runs/project-plan-state-evidence.jsonl`
+foundations/invariants.md:2119:- **Derives from:** WAY-153@9874911d
+foundations/invariants.md:2120:- **Part:** project-level
+foundations/invariants.md:2123:## project-plan-state-subprocesses/1
+foundations/invariants.md:2125:Every subprocess the plan-state reader starts runs Git.
+foundations/invariants.md:2127:- **Method:** `python -B gate/run_tests.py project-level --record .runs/project-plan-state-evidence.jsonl`
+foundations/invariants.md:2129:- **Derives from:** WAY-153@9874911d
+foundations/invariants.md:2130:- **Part:** project-level
+foundations/invariants.md:2137:| invariant-test-change-acceptance | replaced: a change to an invariant test is covered by the one independent assessment of any change to an invariant test or to the foundation | foundation-change-assessment-record |
+foundations/invariants.md:2138:| foundation-change-panel-record | replaced: the record of a panel of two assessors and two settlements became the record of one independent assessment and of how each remark was settled | foundation-change-assessment-record |
+foundations/decisions.md:32:checked against the product at any time. An abandoned task's foundation change is dropped with its
+foundations/decisions.md:36:on the main branch — an abandoned task leaves it for good.
+foundations/decisions.md:38:### WAY-02/1 — How do dependents learn that an entry has changed?
+foundations/decisions.md:40:Every foundation entry has a permanent identifier, and everything that depends on it — other
+foundations/decisions.md:76:test that carries no record of its independent assessment (WAY-10). A task that needs an invariant
+foundations/decisions.md:114:    criticality is computed from them; existing dependencies between parts are read from the
+foundations/decisions.md:115:    product's own dependency graph and compared with the map's allowed ones;
+foundations/decisions.md:117:    list of the product's endpoints kept next to the code; the allowed dependencies in the part
+foundations/decisions.md:238:foundation element, `elements/common/` for what the elements share, `relation-model/`, `gate/`,
+foundations/decisions.md:239:`installation/`, `agent-instructions/`, `instruction-files/`, `project-level/` and `task-cycle/`
+foundations/decisions.md:249:and that critique proposals and assess changes; `project-level/` the templates of a project
+foundations/decisions.md:250:definition, a project plan and a task document, the skills that write them and lead a
+foundations/decisions.md:251:handed-over plan, the readiness check, the plan check, the reader of task-cycle evidence for plan
+foundations/decisions.md:252:states and their tests; `relation-model/` the script that computes fingerprints; `gate/` the
+foundations/decisions.md:264:  relation-model, gate, installation, agent-instructions, instruction-files, repository,
+foundations/decisions.md:265:  project-level, task-cycle
+foundations/decisions.md:271:  `agent-instructions/`, `instruction-files/`, `project-level/` and `task-cycle/` hold and for the
+foundations/decisions.md:277:    definition and a plan stand in `project-level/`; the agent instructions
+foundations/decisions.md:293:configuration; the project definition and task cycle answer different questions; the principles of
+foundations/decisions.md:307:A change to an invariant test or to the foundation is assessed by one independent agent, on a model
+foundations/decisions.md:333:share its blind spots, so independence comes from another model and from not seeing the author's
+foundations/decisions.md:338:outweighs what one independent reader misses, and its uncertainty becomes questions for the human;
+foundations/decisions.md:349:independent assessment covers (WAY-10), and compares the foundation with the code in the parts
+foundations/decisions.md:377:missed the foundation does not report it; an end step goes missing, so the merge waits for its
+foundations/decisions.md:409:organisation-dependent ones poorly, a finding this decision takes across publishers (WAY-85);
+foundations/decisions.md:420:touches the files of a trust boundary, and whether the change can be undone. Paths that merge a
+foundations/decisions.md:426:a human decides on every change that cannot be undone.
+foundations/decisions.md:439:    cannot be undone reaches the main branch without a human's decision; an agent turns a task into
+foundations/decisions.md:445:*Rationale:* size misleads both ways about what can go wrong: a rename across many files is easy to
+foundations/decisions.md:449:whole and a human still decides on what cannot be undone.
+foundations/decisions.md:452:*Rejected:* one cycle for all tasks — how much process a task needs depends on what can go wrong;
+foundations/decisions.md:453:the path chosen by size — size misleads; a human approving every diff (DORA) — no fewer failed
+foundations/decisions.md:454:changes, and attention spent where it adds nothing; keeping a change that cannot be undone, or one
+foundations/decisions.md:482:The gate takes its checks from the methods of checking written in the entries, never from a list
+foundations/decisions.md:491:- **Verification:** level 1 — invariants: ci-checking-commands · gate-check-source. Level 2 for the
+foundations/decisions.md:493:  - complies: the instructions for agents name the gate's command as the way to check a change;
+foundations/decisions.md:495:    tests run under a command of their own beside the gate's.
+foundations/decisions.md:503:*Rejected:* a gate written for each product — it drifts from that product's invariants; separate
+foundations/decisions.md:504:commands for an agent, a human and whatever runs the gate when a change is merged — three lists to
+foundations/decisions.md:509:Every link of the chain fact → decision → invariant → test is written in the entry that depends
+foundations/decisions.md:525:and an assumption no entry names escapes review; the link sits in the dependent entry, because
+foundations/decisions.md:527:*Rejected:* links written by the entry depended on — it cannot know its dependents; optional
+foundations/decisions.md:668:choice is made; a checkable rule left only in a decision's prose escapes the gate, and a choice
+foundations/decisions.md:670:*Rejected:* one kind of entry for both — either the gate reads prose or the reasons are lost;
+foundations/decisions.md:813:    task touches them; the critical flows and the parts they run through wait for a task like any
+foundations/decisions.md:863:main branch, by an edit before it — and the code that needs it waits for the decision's approver. An
+foundations/decisions.md:873:    the merge waits for its approver;
+foundations/decisions.md:906:    dependents and a new wording of one that fails; WAY-05's new wording carries its fingerprint
+foundations/decisions.md:918:reading the dependents — a step that goes missing; flags left open on the main branch — an entry in
+foundations/decisions.md:974:the search runs again before the merge, and the merge waits for its record, because a search is a
+foundations/decisions.md:1005:products lag behind the process, and moving a pin is work, like updating a dependency.
+foundations/decisions.md:1039:decision, the one place for its reason (WAY-04); steps and questions are no rule of an entry.
+foundations/decisions.md:1055:    the plan of building the foundation; "when what entries wait for arrives, they are fixed in
+foundations/decisions.md:1066:merged binds nothing there: from its first day it records work already done.
+foundations/decisions.md:1067:*Rejected:* plans written into the log and repealed once done — the log fills with history of
+foundations/decisions.md:1070:### WAY-37/1 — What happens to entries that wait for something when it arrives?
+foundations/decisions.md:1072:A change that brings what entries of the foundation wait for — an element's template, the part
+foundations/decisions.md:1073:map, a script — also fixes every entry that waits for it, in the same change: by a new version
+foundations/decisions.md:1092:nothing leads from what arrives to what waits for it. Whoever brings it knows what it is, while the
+foundations/decisions.md:1093:authors of the waiting entries may be gone; a fix left for later goes missing.
+foundations/decisions.md:1101:repository — a dependency graph, a detector of breaking changes, coverage — reading their output
+foundations/decisions.md:1110:- **Verification:** level 1 — invariants: script-language · script-imports · script-subprocesses ·
+foundations/decisions.md:1130:dependency is a field of the part it starts from, and the known violations of the map's allowed
+foundations/decisions.md:1131:dependencies are a derived file beside the map, so neither is an entry of its own. The whole map
+foundations/decisions.md:1146:A dependency has no identity beyond its pair of parts, and the map is read whole.
+foundations/decisions.md:1147:*Rejected:* a dependency as an entry with its own identifier — nothing refers to it alone;
+foundations/decisions.md:1182:patterns, allowed dependencies, failure modes and a flow's list of parts stay outside it.
+foundations/decisions.md:1231:matches; a file that no pattern matches, and a file that two parts claim, breaks the gate, unless
+foundations/decisions.md:1264:file the map leaves out, to the build configuration or to the dependencies lies on every flow. The
+foundations/decisions.md:1271:- **Verification:** level 1 — invariants: flow-part-names · flow-invariant-link · gate-reported-set
+foundations/decisions.md:1273:- **Review when:** a product holds more critical flows than its gate can run on every change ·
+foundations/decisions.md:1279:lies on it. Files left out, the build and dependencies can alter any flow, nothing saying
+foundations/decisions.md:1293:depend on it, unless the dependency records that the two are separated and a failure of one does
+foundations/decisions.md:1303:  part-criticality-field · map-guard-unrecorded-criticality · map-guard-dependency-report ·
+foundations/decisions.md:1316:Silence about a part raises checks instead of removing them; lowering, the convenient move, waits
+foundations/decisions.md:1317:for a human. Recorded detection shows which failures the gate misses, and lets a changed law reach
+foundations/decisions.md:1319:*Rejected:* criticality written by hand — a second copy of what flows and dependencies say; three
+foundations/decisions.md:1331:"list of parts unchecked", never as agreeing with the map. The coverage comes from the run the gate
+foundations/decisions.md:1367:  gate-boundary-change.
+foundations/decisions.md:1421:dependency — inside one repository it always holds.
+foundations/decisions.md:1423:### WAY-51/1 — What does the main branch hold where the product does not meet an invariant or the part map's allowed dependencies?
+foundations/decisions.md:1425:On the main branch the part map holds its allowed dependencies together with a listed debt:
+foundations/decisions.md:1426:every dependency the code holds that the map does not allow stands on a derived list of known
+foundations/decisions.md:1428:the derived list `foundations/violated_invariants.md`. A new violation of the map breaks the gate;
+foundations/decisions.md:1430:leaves the gate's command at zero, and a listed `pass` makes it fail until the same change drops
+foundations/decisions.md:1436:- **Scope:** part-map, invariants, gate, task-cycle
+foundations/decisions.md:1442:  gate-exit-code · violated-list-growth · violated-position-version.
+foundations/decisions.md:1462:part's responsibility, its allowed dependencies, and the binding sentences of the decisions whose
+foundations/decisions.md:1493:- **Scope:** decisions, part-map, invariants, gate
+foundations/decisions.md:1502:gate keeps carries the moment of the run, so only declared values are skipped. A list of debt
+foundations/decisions.md:1523:    never written at the part; a method names the command the gate runs, and its kind follows
+foundations/decisions.md:1526:  - violates: a template asks the author to name a method's kind, which the command the gate
+foundations/decisions.md:1541:### WAY-55/1 — Which part of the process holds the gate?
+foundations/decisions.md:1543:In this repository, the gate is a part of the process of its own, and its directory is
+foundations/decisions.md:1544:`gate/`: the gate's code and the test of every critical flow are files there. No other part's
+foundations/decisions.md:1545:directory holds that code or such a test, and a file under `gate/` that only calls a body kept in
+foundations/decisions.md:1546:another part's directory leaves the gate in that part. Which checks a change calls for, when the
+foundations/decisions.md:1547:gate runs and what follows from what it reports belong to the task cycle, not to this part.
+foundations/decisions.md:1550:- **Scope:** gate, decisions, invariants, glossary, part-map, environment-facts, relation-model,
+foundations/decisions.md:1556:  - complies: the gate's code and a critical flow's test live under `gate/`, while the task cycle
+foundations/decisions.md:1557:    decides when the gate runs and how to use its result;
+foundations/decisions.md:1558:  - violates: a file under `gate/` only calls the gate's body kept in an element, or `gate/`
+foundations/decisions.md:1560:- **Review when:** the gate runs as a program CI invokes, and the rule that picks its checks has a
+foundations/decisions.md:1565:*Rationale:* critical-flow tests span parts and need a single owner. The gate serves every
+foundations/decisions.md:1567:where its runner lives. As its own part, the gate carries its failures and criticality.
+foundations/decisions.md:1568:*Rejected:* gate inside the invariants element — shared work owned by one element; gate inside
+foundations/decisions.md:1569:task-cycle — code coupled to task steps; gate among repository configuration — its failures lose
+foundations/decisions.md:1612:gate when that version is not the current one, while elsewhere a reference to an invariant's version
+foundations/decisions.md:1616:- **Scope:** invariants, relation-model, gate, task-cycle, part-map, elements-common
+foundations/decisions.md:1655:gate reports whether its method passes on the commit the task branch left the main branch from and
+foundations/decisions.md:1660:- **Scope:** invariants, gate
+foundations/decisions.md:1665:  gate-fork-point-evidence. Level 3 for the row — the human accepting the change at the merge sets
+foundations/decisions.md:1666:  it with the gate's report in front of them, and the record of that decision names who and when.
+foundations/decisions.md:1667:  Level 2 for what counts as already done and what *found* holds — an agent compares the change with
+foundations/decisions.md:1686:being built would read as recovered; the mark set by the gate's run on the older commit — a rule new
+foundations/decisions.md:1702:- **Scope:** invariants, decisions, part-map, gate
+foundations/decisions.md:1705:- **Verification:** level 1 — invariants: sentence-branch-names · sentence-gate-values. Level 2 for
+foundations/decisions.md:1730:An invariant entry's method of checking is either a command the gate runs, which counts as a command
+foundations/decisions.md:1733:and names no commit, branch or revision itself, and the commits its sentence names are values the gate
+foundations/decisions.md:1737:and a method reads what another method's run left only where a decision places it, the gate then
+foundations/decisions.md:1744:- **Scope:** invariants, gate, decisions, part-map, elements-common
+foundations/decisions.md:1749:- **Verification:** level 1 — invariants: invariant-method-form · method-gate-values ·
+foundations/decisions.md:1750:  gate-verdict-per-entry · gate-pass-without-verdict · gate-method-order · test-runner-pass-line.
+foundations/decisions.md:1759:    of its invariants; an entry carries "runs as: script" beside its command; the gate gives every
+foundations/decisions.md:1763:  - complies: the map guard reads a flow test's coverage file, as WAY-47 places it, after the gate
+foundations/decisions.md:1771:*Rationale:* the gate runs a method or hands it to a person (WAY-16), so prose is none; one run
+foundations/decisions.md:1779:data — they show the check works, not that the data holds; a method in prose — the gate cannot run
+foundations/decisions.md:1791:- **Scope:** invariants, part-map, gate, task-cycle
+foundations/decisions.md:1797:  - complies: the invariant on the log's fields names `decisions`, and a decision scoped to `gate`
+foundations/decisions.md:1800:  - violates: that sentence names `part-map`, so a file added under `gate/` never reaches it; an
+foundations/decisions.md:1807:copy the map. A decision scoped to `gate` touches `gate`, not the log, so a method's files reach
+foundations/decisions.md:1813:### WAY-63/1 — What results does the gate report for invariants, and which make its command fail?
+foundations/decisions.md:1816:template's closed list, or `error` otherwise. The gate reports a result for at least every invariant
+foundations/decisions.md:1822:- **Scope:** invariants, gate, part-map, task-cycle, environment-facts
+foundations/decisions.md:1826:- **Verification:** level 1 — invariants: invariant-method-form · gate-result-values ·
+foundations/decisions.md:1827:  gate-unchecked-reason · gate-reported-set · gate-exit-code. Level 2 for the reasons — an agent
+foundations/decisions.md:1830:    needing a commit the gate filled in as not existing and the comparison of a product's glossary
+foundations/decisions.md:1848:the gate reads `error` there.
+foundations/decisions.md:1887:the other half; a fact shown false deleted — an older citation leads nowhere, and the fact can come
+foundations/decisions.md:1900:- **Scope:** invariants, gate, decisions, part-map, relation-model, task-cycle
+foundations/decisions.md:1905:  data-line-target · invariant-tests-of-change · test-runner-pass-line · gate-verdict-per-entry.
+foundations/decisions.md:1916:(WAY-03); a test names its data as the dependent end (WAY-17).
+foundations/decisions.md:1931:- **Scope:** invariants, gate, task-cycle
+foundations/decisions.md:1936:  gate-quarantine-result. Level 2 — an agent compares the change with the decision:
+foundations/decisions.md:1937:  - complies: a save-load test fails, then passes, on one commit; the independent assessment accepts
+foundations/decisions.md:1938:    waiting for the load signal;
+foundations/decisions.md:1939:  - violates: a failing test is called flaky with no `pass` recorded on that commit; a fixed-wait
+foundations/decisions.md:1964:- **Scope:** invariants, decisions, part-map, gate, task-cycle, relation-model
+foundations/decisions.md:2020:*Rationale:* an omitted field looks forgotten (WAY-58); an undefined value misleads. A missing
+foundations/decisions.md:2069:- **Verification:** level 1 — invariants: fact-dependants. Level 2 for which facts an invariant's
+foundations/decisions.md:2081:(WAY-31). A link is written at the dependent's end (WAY-17), so a fact nothing names is seen from
+foundations/decisions.md:2086:too — a fact written before its dependent would break the branch midway.
+foundations/decisions.md:2091:which git ignores and the gate clears before the run. It holds a line per verdict a check gives an
+foundations/decisions.md:2098:- **Scope:** invariants, gate, decisions, part-map, repository, environment-facts,
+foundations/decisions.md:2117:is a test case, not an invariant; a product's format — the gate reads it through an adapter
+foundations/decisions.md:2180:re-reading would flag its dependants for nothing.
+foundations/decisions.md:2201:*Rejected:* the source's text in the fingerprint — a rebuilt page flags every dependent (WAY-82);
+foundations/decisions.md:2210:there. A check citing a fact at a version other than the current one fails the gate.
+foundations/decisions.md:2213:- **Scope:** environment-facts, relation-model, gate, elements-common
+foundations/decisions.md:2283:- **Scope:** environment-facts, gate, invariants
+foundations/decisions.md:2323:- **Scope:** environment-facts, gate, task-cycle
+foundations/decisions.md:2326:- **Verification:** level 1 — invariants: gate-fact-run · fact-clock-exit · gate-exit-code. Level 2
+foundations/decisions.md:2331:  - violates: a change touching no fact fails the gate on a fact's `fail`; the clock exits zero
+foundations/decisions.md:2337:*Rationale:* the world changes with no commit, so in the gate of an unrelated change a fact's
+foundations/decisions.md:2340:*Rejected:* facts checked in every change's gate — the verdict follows the date; one review date
+foundations/decisions.md:2350:the date in *Until*, which the gate compares with the checked commit's committer date and the clock
+foundations/decisions.md:2354:- **Scope:** invariants, environment-facts, gate, elements-common
+foundations/decisions.md:2358:  gate-human-verdict. Level 2 for the clock — an agent compares the change with the decision:
+foundations/decisions.md:2367:differs; the gate's date follows the commit, the clock's the world.
+foundations/decisions.md:2369:fixed, often written by an agent; waiting until a first verdict is needed — the rule on dated
+foundations/decisions.md:2403:`origin` — its fidelity depends on who runs it.
+foundations/decisions.md:2421:    Claude models it measured; WAY-03's *Review when* waits for no model in that fact's range being
+foundations/decisions.md:2478:- **Scope:** decisions, invariants, glossary, part-map, environment-facts, relation-model, gate,
+foundations/decisions.md:2495:*Rejected:* the newest release, unnamed — the verdict depends on the date; "3.12 or later" with an
+foundations/decisions.md:2558:*Rationale:* a sentence depends on a term by its word (WAY-94), so the word as the text writes it
+foundations/decisions.md:2574:part, and a sentence depends on a term by using its word, carrying no fingerprint.
+foundations/decisions.md:2594:*Rejected:* *Avoid* and *Not* in the binding part — they change mechanically and no dependant reads
+foundations/decisions.md:2699:    reports that none moves; after the main branch, a second sense of "gate" takes a new word; "The
+foundations/decisions.md:2703:    unlike the gate, runs checks apart from any change exits non-zero when …", spelling out "clock".
+foundations/decisions.md:2709:hides a dependant, and a term can hide from an invariant's guard a word its sentence may not hold.
+foundations/decisions.md:2791:  elements-common, task-cycle, gate, repository
+foundations/decisions.md:2840:  elements-common, task-cycle, gate, repository
+foundations/decisions.md:2854:a route to its dependents.
+foundations/decisions.md:2878:*Rationale:* starting with the author gives the process a real first user; aiming at independent
+foundations/decisions.md:2940:The gate, when it runs an invariant's method whose program is a Python interpreter — `python`,
+foundations/decisions.md:2944:branch from; no format guard judges whether a command's script exists. The gate reads such a
+foundations/decisions.md:2947:value the gate fills in. A method whose program is declared or produced by the product but is no
+foundations/decisions.md:2951:- **Scope:** gate, invariants
+foundations/decisions.md:2955:- **Verification:** level 1 — invariants: gate-missing-script. Level 2 for what the format guard
+foundations/decisions.md:2959:    written before `tools/check_saves.py` exists, passes the format guard with no warning; the gate
+foundations/decisions.md:2963:  - violates: the format guard warns on that entry; the gate takes `error` as the script of
+foundations/decisions.md:2974:the template allows, each one reaching a human. The gate runs the method, so it meets a missing
+foundations/decisions.md:2977:is that a wrong path shows at the first run of the gate, not when the entry is written. A command
+foundations/decisions.md:2980:the interpreter's own options, known for Python alone, so the method of another program waits as
+foundations/decisions.md:2995:- **Scope:** project-level, task-cycle
+foundations/decisions.md:3009:*Rejected:* putting projected entries into the foundation at the readiness gate — it would describe
+foundations/decisions.md:3020:- **Scope:** project-level, installation
+foundations/decisions.md:3041:A project definition is one document with the ordered sections of the project-level template; its
+foundations/decisions.md:3045:records whether sections are open, the definition is ready for the gate, or it is approved; every
+foundations/decisions.md:3051:- **Scope:** project-level
+foundations/decisions.md:3073:the agent anchors questions and is not silently adopted as a settlement. Every success signal
+foundations/decisions.md:3077:- **Scope:** project-level
+foundations/decisions.md:3100:- **Scope:** project-level
+foundations/decisions.md:3126:- **Scope:** project-level
+foundations/decisions.md:3144:waiting for changed files to choose context — the project is drafted before those files exist.
+foundations/decisions.md:3157:- **Scope:** project-level
+foundations/decisions.md:3172:*Rejected:* waiting for a second permission after confirming the goal — it adds a stop without a
+foundations/decisions.md:3174:line by a fixed script — questions without a real anchor consume the person's attention.
+foundations/decisions.md:3187:  project-level
+foundations/decisions.md:3207:material; a challenge to every choice, including one that ends with the work — repeated questions
+foundations/decisions.md:3216:it at the merge of the change that holds it, or, for a projected entry, at the readiness gate. Before
+foundations/decisions.md:3222:  project-level
+foundations/decisions.md:3253:- **Scope:** elements-common, project-level
+foundations/decisions.md:3281:- **Scope:** project-level, decisions, invariants, glossary, environment-facts, part-map
+foundations/decisions.md:3288:    projected entry depending on it.
+foundations/decisions.md:3307:an open question when its fields await the code.
+foundations/decisions.md:3310:- **Scope:** project-level, elements-common, decisions, invariants, glossary, environment-facts,
+foundations/decisions.md:3324:holds. Code-dependent evidence can be completed when the task writes the entry.
+foundations/decisions.md:3329:### WAY-118/1 — What makes a project definition ready for breakdown?
+foundations/decisions.md:3331:The readiness gate blocks a definition with a missing section, unresolved content, an open
+foundations/decisions.md:3334:*Change*, rationale and rejected options; *Approved by* reads `on acceptance` until the gate,
+foundations/decisions.md:3335:and only projected fields awaiting code or the world, including an expressly deferred
+foundations/decisions.md:3338:human approves the whole projected entries with permitted `TODO`; the gate record then names the
+foundations/decisions.md:3341:the gate again before breakdown relies on it.
+foundations/decisions.md:3344:- **Scope:** project-level
+foundations/decisions.md:3347:- **Verification:** level 1 — invariants: project-readiness-gate. Level 2 for the foundation
+foundations/decisions.md:3352:    an edit to a fingerprinted section after approval keeps the old gate record.
+foundations/decisions.md:3363:### WAY-119/1 — When may a projected decision leave Review when unresolved at the gate?
+foundations/decisions.md:3365:At the readiness gate, a projected decision's *Review when* holds a review condition and date, or
+foundations/decisions.md:3367:the timing depends on later work, the human expressly accepts deferral, and a related open
+foundations/decisions.md:3371:- **Scope:** project-level, decisions
+foundations/decisions.md:3376:  - complies: a prediction's review date depends on the release, so the human accepts `TODO` and
+foundations/decisions.md:3378:  - violates: the gate passes a `Review when: TODO` with no related open question, or an agent
+foundations/decisions.md:3384:*Rationale:* the date for testing a prediction can depend on delivery that has not yet been
+foundations/decisions.md:3392:An agent may invoke critique for any proposal without waiting for the human to express doubt; a
+foundations/decisions.md:3394:foundation go through it, and for such a change the critique is its independent assessment
+foundations/decisions.md:3395:(WAY-10). An independent critique gives one fresh agent the full proposal or set, its sources and
+foundations/decisions.md:3402:  project-level, relation-model, gate, installation, agent-instructions, instruction-files,
+foundations/decisions.md:3408:    concern, and the author verifies it before presenting corrected proposals and open questions;
+foundations/decisions.md:3415:*Rationale:* the author is attached to its own fluent proposal, and an independent reading can
+foundations/decisions.md:3424:Before a project definition goes through its readiness gate, a step of its own lists the
+foundations/decisions.md:3433:- **Scope:** project-level, decisions
+foundations/decisions.md:3441:  - violates: the first task of the breakdown chooses the database; a definition reaches the gate
+foundations/decisions.md:3450:while its agent still knows the whole project. Settled before the gate, the choices are approved
+foundations/decisions.md:3454:technologies; the first tasks of the breakdown — the cut itself may depend on the choice; the step
+foundations/decisions.md:3455:after the readiness gate — each settled choice would change approved sections and send the
+foundations/decisions.md:3456:definition through the gate again (WAY-118); one step for every project with no exit — an empty
+foundations/decisions.md:3463:choice that depends on no unsettled choice starts once the list of choices is confirmed, each in a
+foundations/decisions.md:3477:- **Scope:** project-level, decisions
+foundations/decisions.md:3489:    choice that depends on no unsettled choice waits for another choice to be settled.
+foundations/decisions.md:3497:project needs. Research of independent choices run side by side and kept in reports lets the
+foundations/decisions.md:3505:A comparison the human cannot verify needs an independent reader that refutes what no source
+foundations/decisions.md:3515:used option with no gain for the product; research one choice at a time — the human waits for each
+foundations/decisions.md:3529:- **Scope:** project-level, decisions
+foundations/decisions.md:3547:cheapest keeps cost and upkeep lowest. Independent choices shown together are settled in one
+foundations/decisions.md:3553:every choice shown on its own, followed by a question against it — the human waits between choices,
+foundations/decisions.md:3557:### WAY-124/1 — When is a task ready for its cycle?
+foundations/decisions.md:3559:A task document records whether the task is independent, belongs to an item of a project's plan,
+foundations/decisions.md:3562:projected wording it uses and the settlements its refinement keeps for the foundation (WAY-134).
+foundations/decisions.md:3565:rejected every candidate settlement its refinement found, every human action it places before
+foundations/decisions.md:3566:the cycle is done (WAY-140), and implementation questions carried into the cycle are named. A
+foundations/decisions.md:3567:project member also matches its plan item's scope, dependencies and assigned entries; any task
+foundations/decisions.md:3570:assignment or dependency from the plan.
+foundations/decisions.md:3573:- **Scope:** project-level, task-cycle
+foundations/decisions.md:3576:  WAY-126@35accf8b · derives from WAY-134@2fc974a9 · derives from WAY-140@6e564611
+foundations/decisions.md:3578:  - complies: an independent task is ready without a project plan, a source-only task uses
+foundations/decisions.md:3582:    human has opened it and accepted the complete document; a manually refined task with no
+foundations/decisions.md:3583:    candidate settlements likewise waits for acceptance of its complete document;
+foundations/decisions.md:3587:    candidate settlement of its refinement awaits the human, or a task is ready while a human
+foundations/decisions.md:3588:    action its document places before the cycle is not yet done, or an agent marks a task ready
+foundations/decisions.md:3595:applies so the next agent does not import work or dependencies the task never took on. A projected
+foundations/decisions.md:3598:cycle gives the cycle's code what it needs, so a cycle started before the human action is done
+foundations/decisions.md:3600:enters the cycle, even when its refinement found no new foundation settlement.
+foundations/decisions.md:3601:*Rejected:* requiring every task to belong to a project plan — it excludes independent tasks and
+foundations/decisions.md:3604:second entry for it; readiness inferred from an agent's completed refinement or from acceptance of
+foundations/decisions.md:3610:test-first implementation, subagent execution with independent task and final code reviews, and
+foundations/decisions.md:3612:orchestrator answers workflow questions and gives provisional stage go-aheads under the task
+foundations/decisions.md:3614:keeps agent reports before a borrowed skill cleans its workspace, runs the independent assessment
+foundations/decisions.md:3644:control of task sources, binding foundation approvals and the single human review point. Naming
+foundations/decisions.md:3645:the version makes the dependency visible when the process is pinned in a product. When a spec is
+foundations/decisions.md:3648:*Rejected:* adopting the complete Superpowers workflow with its intermediate human gates — it would
+foundations/decisions.md:3649:interrupt the delegated cycle; copying the skill bodies into the orchestrator — it would create a
+foundations/decisions.md:3657:whole, in the wording the readiness gate approved, with *Approved by* transcribed from the gate
+foundations/decisions.md:3667:- **Scope:** project-level, task-cycle, decisions, invariants, glossary, environment-facts,
+foundations/decisions.md:3674:    that decision whole in its foundation step, *Approved by* copied from the gate record, and
+foundations/decisions.md:3680:    task's source states; a shortened projected entry is written with the gate's *Approved by*;
+foundations/decisions.md:3686:*Rationale:* a projected entry is wording a human already settled at the gate, and the task
+foundations/decisions.md:3690:written before the code that follows. A part of an entry is wording the gate did not
+foundations/decisions.md:3712:- **Scope:** agent-instructions, elements-common, project-level, task-cycle, decisions, invariants,
+foundations/decisions.md:3726:  - complies: a global link leads to `instruction-files/` of a worktree kept at the merged tip, and
+foundations/decisions.md:3729:  - violates: a global link leads to another skill of the-way; the skill judges a product that pins
+foundations/decisions.md:3767:leads it, and knowledge needed now and then in a file such a step or line points to.
+foundations/decisions.md:3831:the repository records or a step of an activity in the file that leads that activity. The skill
+foundations/decisions.md:3846:    leads the-way's integration the step a new decision sets, with that decision as its reason; the
+foundations/decisions.md:3858:carries a decision, or a step of the work a file leads, has its reason and its way out in that
+foundations/decisions.md:3869:to the-way's repository instruction files says so, it is settled as three separate questions:
+foundations/decisions.md:3963:mechanism that does not depend on the agent; the instruction beside it explains, so the agent meets
+foundations/decisions.md:3971:### WAY-134/1 — How does a task carry what its refinement settles for the foundation?
+foundations/decisions.md:3973:Before a task is ready for its cycle, the human sees a table of candidates found in the task
+foundations/decisions.md:3974:document and the conversation that refined it, in the form WAY-115 gives with each settlement in
+foundations/decisions.md:3975:the human's words, and the task document keeps the rows the human accepts; in manual refinement
+foundations/decisions.md:3976:the agent refining it presents the table, while in orchestrated refinement the project
+foundations/decisions.md:3977:orchestrator presents it and the questions against choices required by WAY-113 in the round
+foundations/decisions.md:3978:package, and the refiner returns that material through the conversation file instead of asking
+foundations/decisions.md:3989:- **Scope:** project-level, task-cycle, elements-common, decisions, invariants, glossary,
+foundations/decisions.md:3994:  - complies: a task whose human settled in refinement that an exported record keeps its owner
+foundations/decisions.md:3996:    before the code, and names it in the request; a task whose refinement found nothing carries the
+foundations/decisions.md:3997:    counting line with none below it; in an orchestrated round the project orchestrator shows the
+foundations/decisions.md:3998:    candidate table and required challenge questions while the refiner records the human's answers;
+foundations/decisions.md:4000:    because no code makes it true; the refinement writes whole entries into the task document; a
+foundations/decisions.md:4001:    kept row repeats a rule a current decision states; an orchestrated refiner asks the human
+foundations/decisions.md:4007:*Rationale:* a settlement the human makes while a task is refined binds after the merge as much as
+foundations/decisions.md:4015:leave code already written for another meaning. In an orchestrated round a single human-facing
+foundations/decisions.md:4016:agent keeps these choices together without making the refiner a second channel to the human.
+foundations/decisions.md:4017:*Rejected:* whole entries written while the task is refined, as a project definition projects
+foundations/decisions.md:4018:them — a task has no gate to approve their wording, and refining a task would weigh as much as
+foundations/decisions.md:4038:  WAY-126@35accf8b · derives from WAY-134@2fc974a9
+foundations/decisions.md:4070:abandoned code; a spec for every task that writes an invariant — its separate authors already keep
+foundations/decisions.md:4077:separately and identifies possible parallel work independently of the chosen execution skill,
+foundations/decisions.md:4078:while the orchestrator records before execution whether that opportunity can be used, from
+foundations/decisions.md:4079:dependencies, shared files or mutable state, separate review and the skill's restrictions. Each
+foundations/decisions.md:4097:    an outgrown slice is discarded and split; a plan identifies independent slices although
+foundations/decisions.md:4098:    the execution skill forbids parallel executors, and the orchestrator records sequential
+foundations/decisions.md:4102:    outgrown code is kept; the planner suppresses useful independent slices because of the
+foundations/decisions.md:4103:    execution skill, or creates unnecessary slices to claim parallel work; the orchestrator
+foundations/decisions.md:4104:    treats different files alone as proof of independence or overrides the skill's restriction.
+foundations/decisions.md:4120:for work whose dependencies or shared state make it unsafe.
+foundations/decisions.md:4127:one execution method — it hides useful independent work; parallel execution from different file
+foundations/decisions.md:4128:names alone — shared state and dependencies can still join the work.
+foundations/decisions.md:4140:- **Scope:** project-level, decisions
+foundations/decisions.md:4182:- **Scope:** project-level, decisions
+foundations/decisions.md:4226:`refine-task` checks, while it refines the task, that the product has a deployment skill covering
+foundations/decisions.md:4231:- **Scope:** project-level
+foundations/decisions.md:4235:  - complies: refining a task that moves the product to another host finds that the product's
+foundations/decisions.md:4238:    splits writing one into a task of its own; a task that changes the text of a page is refined
+foundations/decisions.md:4248:*Rationale:* how a product is deployed and operated depends on where and how it runs, which differs
+foundations/decisions.md:4250:answer is the same for every product, and a list in a binding sentence gives the refinement a thing
+foundations/decisions.md:4257:unread; the list in a template alone — nothing binds the refinement to check it.
+foundations/decisions.md:4269:in the cycle. The human places each human action the task document names while the task is refined,
+foundations/decisions.md:4275:- **Scope:** project-level, task-cycle
+foundations/decisions.md:4284:    code done, opens a blocked draft request listing it; the agent reads a server's free disk space
+foundations/decisions.md:4288:    waits for the human to rotate a key; a task whose outcome needs a new key on an external account
+foundations/decisions.md:4296:*Rationale:* an effect outside the repository is not undone by resetting a branch and does not show
+foundations/decisions.md:4300:cycle's code waits for the request. A human action the cycle finds goes to the human like a named
+foundations/decisions.md:4341:header names the definition and the fingerprint the definition's gate record holds, and whose
+foundations/decisions.md:4351:- **Scope:** project-level
+foundations/decisions.md:4358:    headings, its header carries the fingerprint the gate recorded, and the projected decision
+foundations/decisions.md:4364:- **Review when:** every task of the first plan this step writes reads `done` or `dropped —
+foundations/decisions.md:4370:gate, so the two stand apart, and the fingerprint in the plan's header shows when the definition
+foundations/decisions.md:4384:definition through its gate (WAY-118); a stage of the project opened and closed inside the plan —
+foundations/decisions.md:4394:plan depends on it, the task it opens the way for. A technical element enters the plan with the
+foundations/decisions.md:4395:first task that uses it, or with a preparatory task that task depends on.
+foundations/decisions.md:4398:- **Scope:** project-level
+foundations/decisions.md:4405:    server, and the task of player accounts depends on it; in the-way, a task ends with
+foundations/decisions.md:4408:    sets up logging for the whole product for later use and no task depends on it; the store of data enters
+foundations/decisions.md:4410:- **Review when:** every task of the first plan this step writes reads `done` or `dropped —
+foundations/decisions.md:4424:preparatory work no task depends on — it grows into a layer of its own; a field of the preparatory
+foundations/decisions.md:4425:task naming the task it opens the way for — it repeats a dependency the plan already holds; the word
+foundations/decisions.md:4430:The dependencies of a project plan constrain the start of a task's cycle, not its refinement: a
+foundations/decisions.md:4431:task starts its cycle only when the tasks it depends on are done, while refinement waits for
+foundations/decisions.md:4432:another task only where a question of that refinement needs its result. Two task cycles can run
+foundations/decisions.md:4433:side by side when neither task depends on the other, directly or through other tasks. The plan
+foundations/decisions.md:4435:follows the dependencies.
+foundations/decisions.md:4438:- **Scope:** project-level, task-cycle
+foundations/decisions.md:4441:- **Verification:** level 1 — invariants: project-plan-form. Level 2 for cycle starts and refinement waits — an
+foundations/decisions.md:4443:  - complies: two cycles start together because neither task depends on the other and their
+foundations/decisions.md:4444:    dependencies are done; two dependent tasks are refined together, with only a question needing
+foundations/decisions.md:4445:    an unfinished result waiting for its named task; a task needing a saved state lists the task
+foundations/decisions.md:4446:    that adds saving among those it depends on;
+foundations/decisions.md:4448:    ordered by a goal picked in an interview against their dependencies; a task starts its cycle
+foundations/decisions.md:4449:    before a dependency is done, or refinement waits for every dependency without a question
+foundations/decisions.md:4455:*Rationale:* the dependencies already say which tasks can go together; a second field derived from
+foundations/decisions.md:4456:them is a copy that drifts as soon as one dependency changes, and its lists grow long enough that
+foundations/decisions.md:4457:nobody reads them. The rule takes from the practice of a roadmap its graph of dependencies and the
+foundations/decisions.md:4459:order WAY-106 gives the plan is this order of cycle starts. Refinement can settle a dependent task
+foundations/decisions.md:4460:before its prerequisites are delivered; only a question needing their result earns a wait.
+foundations/decisions.md:4461:*Rejected:* a field naming the tasks a task can be worked on beside — a copy of the dependencies
+foundations/decisions.md:4467:Once a project definition has passed its readiness gate, the place of resolution it gives an open
+foundations/decisions.md:4472:through its readiness gate again, while a move that changes which task writes a projected entry
+foundations/decisions.md:4477:- **Scope:** project-level
+foundations/decisions.md:4482:  questions — an agent compares the plan with the decision:
+foundations/decisions.md:4488:    the definition is edited and gated again to move a question; a move that hands the writing of a
+foundations/decisions.md:4490:    from its own reading of the code; a question found in the breakdown waits in a task as an
+foundations/decisions.md:4498:approved scope, not the scope the human settled at the gate. A move left unwritten looks like the
+foundations/decisions.md:4504:*Rejected:* a move taken through the gate again — the definition would be approved again for a
+foundations/decisions.md:4506:work — the states of a task already hold waiting for the human, and the list repeats the
+foundations/decisions.md:4515:one of them writing it into the foundation; each item of In scope has a task; no task depends on
+foundations/decisions.md:4516:itself through others; some task depends on each preparatory task; and each open question of the
+foundations/decisions.md:4518:independent critique then judges, against the definition, what no script tells apart: whether each
+foundations/decisions.md:4525:- **Scope:** project-level
+foundations/decisions.md:4558:- **Scope:** project-level, task-cycle
+foundations/decisions.md:4573:through its name, so a name that changes leads a reader to the wrong work; words, because a number
+foundations/decisions.md:4582:### WAY-148/1 — How do task-cycle stages pass their work to the orchestrator?
+foundations/decisions.md:4586:and every unresolved concern affecting the next dispatch. The orchestrator records the event and
+foundations/decisions.md:4587:relevant choices before dependent dispatch and reads authoritative sources and relevant report
+foundations/decisions.md:4591:report is repaired before dependent work proceeds, and this transfer contract preserves required
+foundations/decisions.md:4592:whole-source reads, check and review duties and the independent assessor's filtered inputs
+foundations/decisions.md:4600:  orchestrator's ruling with the decision:
+foundations/decisions.md:4602:    checks, and the record permits resumption from files; the orchestrator reads the evidence
+foundations/decisions.md:4604:    dependent dispatch; a required whole entry is read whole;
+foundations/decisions.md:4606:    dependent work proceeds on a missing report or mismatched commit range, or a question is
+foundations/decisions.md:4608:    read; the independent assessor receives the operational handoff or author's reasoning.
+foundations/decisions.md:4616:remains part of a decision and an incomplete report blocks dependent work.
+foundations/decisions.md:4625:follows the one independent assessment of the change's foundation entries and invariant tests
+foundations/decisions.md:4656:break for a check the settlement changes. A final check still needs independent review and a
+foundations/decisions.md:4677:  project-level, task-cycle
+foundations/decisions.md:4684:    an incoming dependent and a relevant invariant naming every part, and expands after a
+foundations/decisions.md:4706:open questions and existing tasks and their dependencies and assignments, then reading complete
+foundations/decisions.md:4707:source units and expanding whenever their meaning or dependencies reach further.
+foundations/decisions.md:4709:reads all units its dependencies or meaning reach, with the original whole documents remaining
+foundations/decisions.md:4710:the inputs to the existing readiness and plan checks.
+foundations/decisions.md:4711:The plan's one independent critique reads the complete plan and every source unit needed for its
+foundations/decisions.md:4712:whole semantic judgment under WAY-146, independently of the author's selection.
+foundations/decisions.md:4715:- **Scope:** project-level
+foundations/decisions.md:4720:  - complies: resuming an unfinished plan inventories all tasks, assignments and exact questions,
+foundations/decisions.md:4721:    then reads a distant dependency and projected-entry writer that affect the resumed work;
+foundations/decisions.md:4723:  - violates: only nearby rows are inspected and a distant dependency is missed; a readiness or plan
+foundations/decisions.md:4725:    bounded by the author's excerpts or leaves some tasks and questions unjudged.
+foundations/decisions.md:4731:changes only some of it. Complete inventories expose distant assignments and dependencies before
+foundations/decisions.md:4735:repeatedly; reading only the unfinished section — distant dependencies and settlements disappear;
+foundations/decisions.md:4739:### WAY-152/1 — How does the project orchestrator lead a handed-over plan?
+foundations/decisions.md:4741:The project orchestrator leads a handed-over project plan from tasks to refine to human-accepted
+foundations/decisions.md:4742:tasks ready for their cycles and keeps the plan's states consistent with evidence, proposing a
+foundations/decisions.md:4743:round of refinement first from tasks on which the most other tasks depend for the human to
+foundations/decisions.md:4744:confirm or change. The human starts task cycles separately, and when the last task is done the
+foundations/decisions.md:4745:project orchestrator names project closure as the next step and says that no closure skill
+foundations/decisions.md:4746:exists, without performing either work. After a task merges, leading the plan does not recheck
+foundations/decisions.md:4747:ready dependent task documents: the task cycle checks and adapts its sources at its own start.
+foundations/decisions.md:4750:- **Scope:** project-level
+foundations/decisions.md:4752:- **Relations:** derives from WAY-106@63eddf70 · derives from WAY-124@4fbad55c · derives from
+foundations/decisions.md:4753:  WAY-144@d5802c22
+foundations/decisions.md:4754:- **Verification:** level 2 — an agent compares the leading session with the decision:
+foundations/decisions.md:4755:  - complies: the human changes a proposed round, the project orchestrator coordinates its refinement
+foundations/decisions.md:4757:  - violates: leading launches a cycle, closes the project, or re-refines every ready dependent
+foundations/decisions.md:4766:*Rejected:* leading that also executes cycles and closes the project — distinct work obscures the
+foundations/decisions.md:4767:point where the human starts implementation; automatically reopening ready dependants after each
+foundations/decisions.md:4768:merge — repeated refinement can be invalidated again before implementation.
+foundations/decisions.md:4772:At each leading session's start a Git-only state reader uses existing recorded task provenance
+foundations/decisions.md:4774:evidence, ready for cycle to in cycle from such a matching working cycle directory in a
+foundations/decisions.md:4776:cycle to done from such a cycle-record commit reachable in the product's freshly fetched
+foundations/decisions.md:4777:integration history, composing both transitions when the plan is still ready for cycle. The
+foundations/decisions.md:4780:without unsupported progress; missing or ambiguous task provenance is unchecked and contradictory
+foundations/decisions.md:4781:task provenance goes to human reconciliation, with neither supplying progress. The project
+foundations/decisions.md:4782:orchestrator applies supported transitions with a reason and evidence in the plan's log,
+foundations/decisions.md:4788:- **Scope:** project-level
+foundations/decisions.md:4792:- **Verification:** level 1 — invariants: project-plan-state-evidence ·
+foundations/decisions.md:4793:  project-plan-state-subprocesses. Level 2 for applying proposals and resolving PR outcomes —
+foundations/decisions.md:4794:  an agent compares the evidence and leading session with the decision:
+foundations/decisions.md:4795:  - complies: the project orchestrator applies supported transitions with a reason and evidence
+foundations/decisions.md:4798:  - violates: the project orchestrator treats an unchecked observation as completion without
+foundations/decisions.md:4809:executable; inferring completion from a local trace — unfinished or abandoned work looks delivered;
+foundations/decisions.md:4812:### WAY-154/1 — How do agents exchange a project task refinement and keep its result?
+foundations/decisions.md:4814:Project refinement resumes from the plan, task documents and one ignored conversation file per
+foundations/decisions.md:4815:task at `.runs/project-refinement/<task-name>.md`, through which fresh parallel refiners, the
+foundations/decisions.md:4816:answering agent and the project orchestrator take serialized turns on each file; the project
+foundations/decisions.md:4817:orchestrator hands agents only its path and routing, never relays its contents, and each refiner
+foundations/decisions.md:4818:ends its turn as `questions`, `waits for task <n>`, `ready for approval`, `plan change` or
+foundations/decisions.md:4819:`obstacle`. Only a refiner changes the task document's body and transfers settled answers with
+foundations/decisions.md:4820:their sources into Questions to settle; the project orchestrator records human answers in
+foundations/decisions.md:4823:turns, questions and explicit waits keep the plan task to refine, a presented human package or
+foundations/decisions.md:4824:ready for approval makes it waiting for human, and final acceptance makes both document and plan
+foundations/decisions.md:4825:ready for cycle and removes only that conversation after all settled answers and their sources
+foundations/decisions.md:4826:survive in the task document; an explicit wait is logged and its task is proposed again when the
+foundations/decisions.md:4827:named prerequisite is done.
+foundations/decisions.md:4830:- **Scope:** project-level
+foundations/decisions.md:4832:- **Relations:** derives from WAY-124@4fbad55c · derives from WAY-142@e53cd0ac · derives from
+foundations/decisions.md:4833:  WAY-144@d5802c22 · derives from WAY-147@8cfe543f
+foundations/decisions.md:4835:  - complies: parallel refiners write separate documents, a fresh refiner keeps each settled
+foundations/decisions.md:4837:  - violates: the project orchestrator rewrites a task body or carries questions in prompts,
+foundations/decisions.md:4843:*Rationale:* a file-mediated exchange keeps the project orchestrator from becoming a content relay
+foundations/decisions.md:4850:### WAY-155/1 — What may the answering agent settle during a refinement round?
+foundations/decisions.md:4852:The answering agent answers a refinement question only with a quotation and source from the
+foundations/decisions.md:4857:question to the human once while preserving its affected tasks. The project orchestrator
+foundations/decisions.md:4858:presents one round package of these questions, candidate settlements, placement of Human actions
+foundations/decisions.md:4861:conversations before fresh refiner turns.
+foundations/decisions.md:4864:- **Scope:** project-level
+foundations/decisions.md:4866:- **Relations:** derives from WAY-113@d3e5cbfa · derives from WAY-134@2fc974a9 · derives from
+foundations/decisions.md:4868:- **Verification:** level 2 — an agent compares questions, answers, sources and the human package:
+foundations/decisions.md:4883:answers until final approval — the human cannot inspect the basis of the refined tasks.
+foundations/decisions.md:4885:### WAY-156/1 — How does project leading route a plan or definition change?
+foundations/decisions.md:4887:An in-scope task split, new task, order or dependency change is delegated to a plan-project
+foundations/decisions.md:4889:projected entry go to the human. The project orchestrator changes definition text itself only
+foundations/decisions.md:4891:foundation; otherwise it delegates the edit, and a subagent always performs the definition's
+foundations/decisions.md:4892:readiness gate, with independent critique dispatched by the project orchestrator and its
+foundations/decisions.md:4893:findings returned to that subagent, and human approval given through the project orchestrator. A
+foundations/decisions.md:4895:for cycle while that definition gate remains open.
+foundations/decisions.md:4898:- **Scope:** project-level
+foundations/decisions.md:4902:- **Verification:** level 2 — an agent compares the edits, gate, critique and rechecked plan:
+foundations/decisions.md:4904:    full gate, the human approves through the project orchestrator, and a fresh agent checks
+foundations/decisions.md:4906:  - violates: a wider definition edit is made without delegation, the project orchestrator runs
+foundations/decisions.md:4907:    its gate itself, or a task becomes ready against a changed but unapproved definition.
+foundations/decisions.md:4912:*Rationale:* a project can change direction while refinement proceeds, but its approved definition
+foundations/decisions.md:4913:is the basis of every task. Keeping the full gate and fresh plan check costs another review while
+foundations/decisions.md:4915:for text already available without making leading responsible for wider execution.
+foundations/decisions.md:4916:*Rejected:* every definition edit performed by the project orchestrator — it takes on execution and
+foundations/decisions.md:4917:additional context; every local edit delegated — a transfer costs more than the already bounded
+foundations/decisions.md:4918:edit; bypassing the gate for a small change — size does not establish that its meaning stayed.

@@ -1,0 +1,7 @@
+test_failed_fetch_read_starts_only_git (test_plan_state_subprocesses_invariant.PlanStateSubprocesses.test_failed_fetch_read_starts_only_git) ... ok
+test_successful_evidence_read_starts_only_git (test_plan_state_subprocesses_invariant.PlanStateSubprocesses.test_successful_evidence_read_starts_only_git) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 3.312s
+
+OK

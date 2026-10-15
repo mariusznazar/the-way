@@ -1,0 +1,19 @@
+HEAD 84cdc87cc12ce43526cb24a61640e39cf00e950a
+Synthetic distinct plans with same legal task name. Archived record explicitly names FIRST task document and plan. SECOND plan has never had a cycle.
+First exit: 0
+repository: C:\Users\Mariusz\AppData\Local\Temp\plan evidence hn9v0p22\product repository
+integration: refs/remotes/origin/delivery f10b90e94cf11e066000862118c2c4799eefc60f
+task 1 report-download: ready for cycle
+evidence 1 report-download: archived cycle docs/task-cycles/report-download/ commit f10b90e94cf11e066000862118c2c4799eefc60f on refs/heads/delivery, refs/remotes/origin/HEAD, refs/remotes/origin/delivery
+evidence 1 report-download: cycle record docs/task-cycles/report-download/record.md commit f10b90e94cf11e066000862118c2c4799eefc60f reachable from refs/remotes/origin/delivery f10b90e94cf11e066000862118c2c4799eefc60f
+propose 1 report-download: ready for cycle -> in cycle
+propose 1 report-download: in cycle -> done
+
+Second exit: 0
+repository: C:\Users\Mariusz\AppData\Local\Temp\plan evidence hn9v0p22\product repository
+integration: refs/remotes/origin/delivery f10b90e94cf11e066000862118c2c4799eefc60f
+task 1 report-download: ready for cycle
+evidence 1 report-download: archived cycle docs/task-cycles/report-download/ commit f10b90e94cf11e066000862118c2c4799eefc60f on refs/heads/delivery, refs/remotes/origin/HEAD, refs/remotes/origin/delivery
+evidence 1 report-download: cycle record docs/task-cycles/report-download/record.md commit f10b90e94cf11e066000862118c2c4799eefc60f reachable from refs/remotes/origin/delivery f10b90e94cf11e066000862118c2c4799eefc60f
+propose 1 report-download: ready for cycle -> in cycle
+propose 1 report-download: in cycle -> done

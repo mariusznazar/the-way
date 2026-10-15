@@ -1,0 +1,26 @@
+FF
+======================================================================
+FAIL: test_ansi_stdout_preserves_non_ascii_paths_and_completion_evidence (test_plan_state.Command.test_ansi_stdout_preserves_non_ascii_paths_and_completion_evidence)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\lead-project\project-level\test_plan_state.py", line 340, in test_ansi_stdout_preserves_non_ascii_paths_and_completion_evidence
+    output = self.run_reader()
+  File "C:\Storage\repos\the-way-wt\lead-project\project-level\test_plan_state.py", line 151, in run_reader
+    self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : error: 'charmap' codec can't encode character '\u017c' in position 78: character maps to <undefined>
+
+
+======================================================================
+FAIL: test_ansi_stdout_preserves_non_ascii_source_diagnostic (test_plan_state.Command.test_ansi_stdout_preserves_non_ascii_source_diagnostic)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\lead-project\project-level\test_plan_state.py", line 357, in test_ansi_stdout_preserves_non_ascii_source_diagnostic
+    self.assertIn(str(self.plan), output)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'C:\\Users\\Mariusz\\AppData\\Local\\Temp\\plan state a81s_xrf\\notes\\nieistniejący-żółć.md' not found in "error: 'charmap' codec can't encode character '\\u0105' in position 87: character maps to <undefined>\r\n"
+
+----------------------------------------------------------------------
+Ran 2 tests in 2.132s
+
+FAILED (failures=2)

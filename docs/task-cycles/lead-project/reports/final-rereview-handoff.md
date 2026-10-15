@@ -1,0 +1,11 @@
+# One scoped final rereview
+
+Worktree C:/Storage/repos/the-way-wt/lead-project, branch task/lead-project. User delegated intermediate work to a reviewable PR; root resolves questions. No product/index/HEAD changes, child agents, push or next stage. Read global and worktree AGENTS.md and agent-instructions/README.md. Apply full Superpowers 6.4.1 subagent-driven-development/re-review-prompt.md at C:/Users/Mariusz/.claude/plugins/cache/claude-plugins-official/superpowers/6.4.1/skills/. Read the vault rulebook before the user code-review playbook and its delegated review-loop guidance.
+
+Task brief: .runs/task-cycles/lead-project/reports/final-fix-handoff.md; complete task/spec/plan beside its parent reports directory. Full author report: reports/final-fix.md. Previous final review: reports/final-review.md, exactly one Important finding R1, no others. Exact finding is preserved verbatim in the fix handoff.
+
+Fix base 2cadf14fd3d21a82f1adee322f1022002b194385; HEAD 84cdc87cc12ce43526cb24a61640e39cf00e950a. Read .superpowers/sdd/plan/review-2cadf14..84cdc87.diff once. Scope is R1 and this two-file fix, no whole-branch rereview. Verdict R1, inspect fix for new breakage, name out-of-scope observations separately. Do not rerun green suites; verify commands/output evidence and code. Only a specific uncovered concern warrants a focused test. Protected invariant tests remain read-only; first subprocess-invariant break awaits independent assessment and is assigned another reviewer later.
+
+Root read full final-fix report and 33-line diff: two cp1252 regressions show RED/GREEN, five suites pass (231/98/41/18/30), original-plan acceptance passes under cp1252, original sources and both protected hashes unchanged. Treat these as claims to verify, not a preferred verdict. UTF-8 consumers now have an explicit stream convention; judge exact evidence, diagnostics and in-process compatibility.
+
+Write full report .runs/task-cycles/lead-project/reports/final-rereview.md using the borrowed output fields: Finding Verdicts with anchors, New Breakage, Out-of-Scope Observations, Verdict. Include assessed range, commands actually run and unchecked limits. Return per-finding status, full report path, checks and every unresolved concern. This is the one scoped final fix-wave rereview, not independent foundation assessment.

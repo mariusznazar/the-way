@@ -1,0 +1,57 @@
+repository: C:\Storage\repos\the-way-wt\lead-project\.runs\task-cycles\lead-project\acceptance-loop2
+integration: refs/remotes/origin/main 2b290f878115e26bd5f7c3e4415222f94367ed8b
+task 1 app-skeleton: done
+conflict 1 app-skeleton: commit 4537daece8958fd68fb239de28ec08c6ceaa4a53: docs/task-cycles/app-skeleton/cycle.md: Task source c:\storage\the brain\the brain\notes\projects\(p) loop\szkielet_loop2.md; ready for cycle, answer approved 2026-10-05; sha-256 fb17a166ab164b8b8e17cc16d601408853eb71183d3ff783243add1784c96ef7 (frozen copy: task.md) differs from Document c:\storage\the brain\the brain\notes\projects\(p) loop\szkielet_loop2.md; human reconciliation required
+conflict 1 app-skeleton: commit 5928e7b5577b9b46a5899d0fbace4650a4d34763: docs/task-cycles/app-skeleton/cycle.md: Task source c:\storage\the brain\the brain\notes\projects\(p) loop\szkielet_loop2.md; ready for cycle, answer approved 2026-10-05; sha-256 fb17a166ab164b8b8e17cc16d601408853eb71183d3ff783243add1784c96ef7 (frozen copy: task.md) differs from Document c:\storage\the brain\the brain\notes\projects\(p) loop\szkielet_loop2.md; human reconciliation required
+conflict 1 app-skeleton: commit 83f61584e2192692ca9baa6058585451c7902515: docs/task-cycles/app-skeleton/cycle.md: Task source c:\storage\the brain\the brain\notes\projects\(p) loop\szkielet_loop2.md; ready for cycle, answer approved 2026-10-05 differs from Document c:\storage\the brain\the brain\notes\projects\(p) loop\szkielet_loop2.md; human reconciliation required
+conflict 1 app-skeleton: commit 3f9638a21ffe78eb3832bcc0f7dffaeb1148db31: docs/task-cycles/app-skeleton/cycle.md: Task source c:\storage\the brain\the brain\notes\projects\(p) loop\szkielet_loop2.md; ready for cycle, answer approved 2026-10-05 differs from Document c:\storage\the brain\the brain\notes\projects\(p) loop\szkielet_loop2.md; human reconciliation required
+conflict 1 app-skeleton: commit 3383663e29108d66ccd293b90335cb8a5f88dc48: docs/task-cycles/app-skeleton/cycle.md: Task source c:\storage\the brain\the brain\notes\projects\(p) loop\szkielet_loop2.md; ready for cycle, answer approved 2026-10-05 differs from Document c:\storage\the brain\the brain\notes\projects\(p) loop\szkielet_loop2.md; human reconciliation required
+task 2 serwer-testowy: done
+conflict 2 serwer-testowy: commit 4fce4f57bed794c050ee3a71949a6edd239572b3: docs/task-cycles/serwer-testowy/cycle.md: Task source c:\storage\the brain\the brain\notes\projects\(p) loop\serwer_testowy_loop2.md; settlements accepted 2026-10-13 differs from Document c:\storage\the brain\the brain\notes\projects\(p) loop\serwer_testowy_loop2.md; human reconciliation required
+conflict 2 serwer-testowy: commit d0882c8a525836ea5cea57d0e325300dcc5724ea: docs/task-cycles/serwer-testowy/cycle.md: Task source c:\storage\the brain\the brain\notes\projects\(p) loop\serwer_testowy_loop2.md; settlements accepted 2026-10-13 differs from Document c:\storage\the brain\the brain\notes\projects\(p) loop\serwer_testowy_loop2.md; human reconciliation required
+task 3 mag-w-lesie: ready for cycle
+evidence 3 mag-w-lesie: archived cycle docs/task-cycles/mag-w-lesie/ commit 0ae1664b38d89488e30819227e6adb536e96601d on refs/heads/main, refs/remotes/origin/HEAD, refs/remotes/origin/main, refs/remotes/origin/task/mag-w-lesie, refs/remotes/origin/task/update-the-way-db77ba5
+evidence 3 mag-w-lesie: PR pointer from 0ae1664b38d89488e30819227e6adb536e96601d:docs/task-cycles/mag-w-lesie/cycle.md: https://github.com/mariusznazar/loop2/pull/12
+evidence 3 mag-w-lesie: PR pointer from 0ae1664b38d89488e30819227e6adb536e96601d:docs/task-cycles/mag-w-lesie/cycle.md: https://github.com/mariusznazar/loop2/pull/12#issuecomment-6153600219
+evidence 3 mag-w-lesie: archived cycle docs/task-cycles/mag-w-lesie/ commit c9644b21ec1d8124937d7e7ac7c8f6c49c6a79d9 on refs/heads/main, refs/remotes/origin/HEAD, refs/remotes/origin/main, refs/remotes/origin/task/mag-w-lesie, refs/remotes/origin/task/update-the-way-db77ba5
+evidence 3 mag-w-lesie: PR pointer from c9644b21ec1d8124937d7e7ac7c8f6c49c6a79d9:docs/task-cycles/mag-w-lesie/cycle.md: https://github.com/mariusznazar/loop2/pull/12
+evidence 3 mag-w-lesie: cycle record docs/task-cycles/mag-w-lesie/cycle.md commit 0ae1664b38d89488e30819227e6adb536e96601d reachable from refs/remotes/origin/main 2b290f878115e26bd5f7c3e4415222f94367ed8b
+evidence 3 mag-w-lesie: cycle record docs/task-cycles/mag-w-lesie/cycle.md commit c9644b21ec1d8124937d7e7ac7c8f6c49c6a79d9 reachable from refs/remotes/origin/main 2b290f878115e26bd5f7c3e4415222f94367ed8b
+propose 3 mag-w-lesie: ready for cycle -> in cycle
+propose 3 mag-w-lesie: in cycle -> done
+task 4 ognisko-i-jedzenie: to refine
+unchecked 4 ognisko-i-jedzenie: no sufficient cycle trace; no progress inferred
+task 5 grupy-regul-i-liczniki: to refine
+unchecked 5 grupy-regul-i-liczniki: no sufficient cycle trace; no progress inferred
+task 6 odkrywanie: to refine
+unchecked 6 odkrywanie: no sufficient cycle trace; no progress inferred
+task 7 rozwiazanie-lasu: to refine
+unchecked 7 rozwiazanie-lasu: no sufficient cycle trace; no progress inferred
+task 8 walka-w-glebi-lasu: to refine
+unchecked 8 walka-w-glebi-lasu: no sufficient cycle trace; no progress inferred
+task 9 plomyk: to refine
+unchecked 9 plomyk: no sufficient cycle trace; no progress inferred
+task 10 wprawa-i-drzewa: to refine
+unchecked 10 wprawa-i-drzewa: no sufficient cycle trace; no progress inferred
+task 11 siedziba-i-druzyna: to refine
+unchecked 11 siedziba-i-druzyna: no sufficient cycle trace; no progress inferred
+task 12 programy-gracza: to refine
+unchecked 12 programy-gracza: no sufficient cycle trace; no progress inferred
+task 13 plan-wyprawy: to refine
+unchecked 13 plan-wyprawy: no sufficient cycle trace; no progress inferred
+task 14 rozliczenie-przejsc: to refine
+unchecked 14 rozliczenie-przejsc: no sufficient cycle trace; no progress inferred
+task 15 konta-graczy-i-logowanie: to refine
+unchecked 15 konta-graczy-i-logowanie: no sufficient cycle trace; no progress inferred
+task 16 zapis-stanu-na-serwerze: to refine
+unchecked 16 zapis-stanu-na-serwerze: no sufficient cycle trace; no progress inferred
+task 17 kopia-bazy: to refine
+unchecked 17 kopia-bazy: no sufficient cycle trace; no progress inferred
+task 18 petla-zarobkowa: to refine
+unchecked 18 petla-zarobkowa: no sufficient cycle trace; no progress inferred
+task 19 blokada-konta: to refine
+unchecked 19 blokada-konta: no sufficient cycle trace; no progress inferred
+task 20 potwierdzenie-adresu: to refine
+unchecked 20 potwierdzenie-adresu: no sufficient cycle trace; no progress inferred
+task 21 reset-hasla: to refine
+unchecked 21 reset-hasla: no sufficient cycle trace; no progress inferred

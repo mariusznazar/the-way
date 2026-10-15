@@ -1,0 +1,33 @@
+python : test_explicit_record_plan_disagreement_is_not_hidden_by_frozen_task (test_plan_state.Command.test_explicit_rec
+ord_plan_disagreement_is_not_hidden_by_frozen_task) ... FAIL
+At line:2 char:1
++ python -B -m unittest discover -s project-level -p test_plan_state.py ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (test_explicit_r..._task) ... FAIL:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+
+======================================================================
+FAIL: test_explicit_record_plan_disagreement_is_not_hidden_by_frozen_task (test_plan_state.Command.test_explicit_record
+_plan_disagreement_is_not_hidden_by_frozen_task)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\lead-project\project-level\test_plan_state.py", line 431, in test_explicit_record_p
+lan_disagreement_is_not_hidden_by_frozen_task
+    output = self.run_reader(1)
+  File "C:\Storage\repos\the-way-wt\lead-project\project-level\test_plan_state.py", line 163, in run_reader
+    self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : repository: C:\Users\Mariusz\AppData\Local\Temp\plan state b64d0bus\product
+integration: refs/remotes/origin/release 1c3bbbd54262a1c27913c91b643d649b43ed1171
+task 1 reports: ready for cycle
+evidence 1 reports: working cycle C:\Users\Mariusz\AppData\Local\Temp\plan state b64d0bus\product\.runs\task-cycles\rep
+orts
+propose 1 reports: ready for cycle -> in cycle
+unchecked 1 reports: PR outcome unchecked; cycle evidence is outside established fresh integration history
+
+
+----------------------------------------------------------------------
+Ran 1 test in 1.219s
+
+FAILED (failures=1)

@@ -1,0 +1,18 @@
+test_successful_evidence_read_starts_only_git (__main__.OwnedControl.test_successful_evidence_read_starts_only_git) ... FAIL
+
+======================================================================
+FAIL: test_successful_evidence_read_starts_only_git (__main__.OwnedControl.test_successful_evidence_read_starts_only_git)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\lead-project\.runs\task-cycles\lead-project\identity-review-source-breaks\project-level\test_plan_state_subprocesses_invariant.py", line 154, in test_successful_evidence_read_starts_only_git
+    self.assert_only_git(rows)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Storage\repos\the-way-wt\lead-project\.runs\task-cycles\lead-project\identity-review-source-breaks\project-level\test_plan_state_subprocesses_invariant.py", line 146, in assert_only_git
+    self.assertIn(executable, ("git", "git.exe"), "Non-Git reader subprocess: " + repr(row))
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'python.exe' not found in ('git', 'git.exe') : Non-Git reader subprocess: {'event': 'subprocess.Popen', 'program': 'C:\\Users\\Mariusz\\AppData\\Local\\Programs\\Python\\Python314\\python.exe', 'arguments': ['C:\\Users\\Mariusz\\AppData\\Local\\Programs\\Python\\Python314\\python.exe', '-c', 'pass']}
+
+----------------------------------------------------------------------
+Ran 1 test in 3.055s
+
+FAILED (failures=1)

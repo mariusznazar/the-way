@@ -1,0 +1,15 @@
+elements/common/critique/SKILL.md
+elements/common/skill/SKILL.md
+elements/decisions/skill/SKILL.md
+elements/environment-facts/skill/SKILL.md
+elements/glossary/skill/SKILL.md
+elements/invariants/skill/SKILL.md
+elements/part-map/skill/SKILL.md
+instruction-files/SKILL.md
+project-level/lead/skill/SKILL.md
+project-level/plan/skill/SKILL.md
+project-level/skill/SKILL.md
+project-level/task/skill/SKILL.md
+project-level/technology/SKILL.md
+task-cycle/plan/SKILL.md
+task-cycle/skill/SKILL.md

@@ -1,0 +1,13 @@
+python : test_source_path_delimiters_inside_a_directory_remain_literal (test_plan_state.Command.test_source_path_delimi
+ters_inside_a_directory_remain_literal) ... ok
+At line:2 char:1
++ python -B -m unittest discover -s project-level -p test_plan_state.py ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (test_source_pat...literal) ... ok:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+
+----------------------------------------------------------------------
+Ran 1 test in 2.106s
+
+OK

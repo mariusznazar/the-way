@@ -1,0 +1,13 @@
+python : test_stable_task_name_survives_plan_renumbering (test_plan_state.Command.test_stable_task_name_survives_plan_r
+enumbering) ... ok
+At line:2 char:1
++ python -B -m unittest discover -s project-level -p test_plan_state.py ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (test_stable_tas...mbering) ... ok:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+
+----------------------------------------------------------------------
+Ran 1 test in 1.779s
+
+OK

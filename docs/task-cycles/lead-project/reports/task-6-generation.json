@@ -1,0 +1,53 @@
+{
+  "base": "6b23e0b37a050d5fec45e948b047953d7a50baf8",
+  "skills": [
+    "elements/common/critique/SKILL.md",
+    "elements/common/skill/SKILL.md",
+    "elements/decisions/skill/SKILL.md",
+    "elements/environment-facts/skill/SKILL.md",
+    "elements/glossary/skill/SKILL.md",
+    "elements/invariants/skill/SKILL.md",
+    "elements/part-map/skill/SKILL.md",
+    "instruction-files/SKILL.md",
+    "project-level/lead/skill/SKILL.md",
+    "project-level/plan/skill/SKILL.md",
+    "project-level/skill/SKILL.md",
+    "project-level/task/skill/SKILL.md",
+    "project-level/technology/SKILL.md",
+    "task-cycle/plan/SKILL.md",
+    "task-cycle/skill/SKILL.md"
+  ],
+  "outputs": 30,
+  "before_stale": {
+    ".claude/skills/the-way-critique/SKILL.md": true,
+    ".agents/skills/the-way-critique/SKILL.md": true,
+    ".claude/skills/the-way-find-foundation-entries/SKILL.md": true,
+    ".agents/skills/the-way-find-foundation-entries/SKILL.md": true,
+    ".claude/skills/the-way-maintain-instruction-files/SKILL.md": true,
+    ".agents/skills/the-way-maintain-instruction-files/SKILL.md": true,
+    ".claude/skills/the-way-implement-task/SKILL.md": true,
+    ".agents/skills/the-way-implement-task/SKILL.md": true,
+    ".claude/skills/the-way-plan-task/SKILL.md": true,
+    ".agents/skills/the-way-plan-task/SKILL.md": true
+  },
+  "after_equal": [
+    ".claude/skills/the-way-critique/SKILL.md",
+    ".agents/skills/the-way-critique/SKILL.md",
+    ".claude/skills/the-way-find-foundation-entries/SKILL.md",
+    ".agents/skills/the-way-find-foundation-entries/SKILL.md",
+    ".claude/skills/the-way-maintain-instruction-files/SKILL.md",
+    ".agents/skills/the-way-maintain-instruction-files/SKILL.md",
+    ".claude/skills/the-way-implement-task/SKILL.md",
+    ".agents/skills/the-way-implement-task/SKILL.md",
+    ".claude/skills/the-way-plan-task/SKILL.md",
+    ".agents/skills/the-way-plan-task/SKILL.md"
+  ],
+  "pairs_equal": [
+    "critique",
+    "find-foundation-entries",
+    "maintain-instruction-files",
+    "implement-task",
+    "plan-task"
+  ],
+  "outside_batch_unchanged": true
+}

@@ -1,0 +1,236 @@
+................................................................................................................FFFFFFFFFFFFFFFFFF.................................................................................
+======================================================================
+FAIL: test_another_remote_does_not_obscure_declared_origin_integration (test_plan_state_invariant.PlanStateEvidence.test_another_remote_does_not_obscure_declared_origin_integration)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\lead-project\project-level\test_plan_state_invariant.py", line 358, in test_another_remote_does_not_obscure_declared_origin_integration
+    self.assertEqual(self.run_reader(), 0, self.output)
+                     ~~~~~~~~~~~~~~~^^
+  File "C:\Storage\repos\the-way-wt\lead-project\project-level\test_plan_state_invariant.py", line 208, in run_reader
+    self.assertNotIn("can't open file", self.output, "Missing reader: " + self.output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "can't open file" unexpectedly found in "C:\\Users\\Mariusz\\AppData\\Local\\Programs\\Python\\Python314\\python.exe: can't open file 'C:\\\\Storage\\\\repos\\\\the-way-wt\\\\lead-project\\\\project-level\\\\plan_state.py': [Errno 2] No such file or directory\n" : Missing reader: C:\Users\Mariusz\AppData\Local\Programs\Python\Python314\python.exe: can't open file 'C:\\Storage\\repos\\the-way-wt\\lead-project\\project-level\\plan_state.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_branch_name_and_message_do_not_prove_start (test_plan_state_invariant.PlanStateEvidence.test_branch_name_and_message_do_not_prove_start)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\lead-project\project-level\test_plan_state_invariant.py", line 296, in test_branch_name_and_message_do_not_prove_start
+    self.assertEqual(self.run_reader(), 0, self.output)
+                     ~~~~~~~~~~~~~~~^^
+  File "C:\Storage\repos\the-way-wt\lead-project\project-level\test_plan_state_invariant.py", line 208, in run_reader
+    self.assertNotIn("can't open file", self.output, "Missing reader: " + self.output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "can't open file" unexpectedly found in "C:\\Users\\Mariusz\\AppData\\Local\\Programs\\Python\\Python314\\python.exe: can't open file 'C:\\\\Storage\\\\repos\\\\the-way-wt\\\\lead-project\\\\project-level\\\\plan_state.py': [Errno 2] No such file or directory\n" : Missing reader: C:\Users\Mariusz\AppData\Local\Programs\Python\Python314\python.exe: can't open file 'C:\\Storage\\repos\\the-way-wt\\lead-project\\project-level\\plan_state.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_branch_only_archive_proves_start_but_not_done (test_plan_state_invariant.PlanStateEvidence.test_branch_only_archive_proves_start_but_not_done)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\lead-project\project-level\test_plan_state_invariant.py", line 244, in test_branch_only_archive_proves_start_but_not_done
+    self.assertEqual(self.run_reader(), 0, self.output)
+                     ~~~~~~~~~~~~~~~^^
+  File "C:\Storage\repos\the-way-wt\lead-project\project-level\test_plan_state_invariant.py", line 208, in run_reader
+    self.assertNotIn("can't open file", self.output, "Missing reader: " + self.output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "can't open file" unexpectedly found in "C:\\Users\\Mariusz\\AppData\\Local\\Programs\\Python\\Python314\\python.exe: can't open file 'C:\\\\Storage\\\\repos\\\\the-way-wt\\\\lead-project\\\\project-level\\\\plan_state.py': [Errno 2] No such file or directory\n" : Missing reader: C:\Users\Mariusz\AppData\Local\Programs\Python\Python314\python.exe: can't open file 'C:\\Storage\\repos\\the-way-wt\\lead-project\\project-level\\plan_state.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_deleted_merged_branch_still_proves_done (test_plan_state_invariant.PlanStateEvidence.test_deleted_merged_branch_still_proves_done)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\lead-project\project-level\test_plan_state_invariant.py", line 275, in test_deleted_merged_branch_still_proves_done
+    self.assertEqual(self.run_reader(), 0, self.output)
+                     ~~~~~~~~~~~~~~~^^
+  File "C:\Storage\repos\the-way-wt\lead-project\project-level\test_plan_state_invariant.py", line 208, in run_reader
+    self.assertNotIn("can't open file", self.output, "Missing reader: " + self.output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "can't open file" unexpectedly found in "C:\\Users\\Mariusz\\AppData\\Local\\Programs\\Python\\Python314\\python.exe: can't open file 'C:\\\\Storage\\\\repos\\\\the-way-wt\\\\lead-project\\\\project-level\\\\plan_state.py': [Errno 2] No such file or directory\n" : Missing reader: C:\Users\Mariusz\AppData\Local\Programs\Python\Python314\python.exe: can't open file 'C:\\Storage\\repos\\the-way-wt\\lead-project\\project-level\\plan_state.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_done_row_with_live_cycle_is_reported_as_conflict (test_plan_state_invariant.PlanStateEvidence.test_done_row_with_live_cycle_is_reported_as_conflict)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\lead-project\project-level\test_plan_state_invariant.py", line 390, in test_done_row_with_live_cycle_is_reported_as_conflict
+    self.assertEqual(self.run_reader(), 1, self.output)
+                     ~~~~~~~~~~~~~~~^^
+  File "C:\Storage\repos\the-way-wt\lead-project\project-level\test_plan_state_invariant.py", line 208, in run_reader
+    self.assertNotIn("can't open file", self.output, "Missing reader: " + self.output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "can't open file" unexpectedly found in "C:\\Users\\Mariusz\\AppData\\Local\\Programs\\Python\\Python314\\python.exe: can't open file 'C:\\\\Storage\\\\repos\\\\the-way-wt\\\\lead-project\\\\project-level\\\\plan_state.py': [Errno 2] No such file or directory\n" : Missing reader: C:\Users\Mariusz\AppData\Local\Programs\Python\Python314\python.exe: can't open file 'C:\\Storage\\repos\\the-way-wt\\lead-project\\project-level\\plan_state.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_draft_plan_gives_no_progress_proposal (test_plan_state_invariant.PlanStateEvidence.test_draft_plan_gives_no_progress_proposal)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\lead-project\project-level\test_plan_state_invariant.py", line 401, in test_draft_plan_gives_no_progress_proposal
+    self.assertEqual(self.run_reader(), 1, self.output)
+                     ~~~~~~~~~~~~~~~^^
+  File "C:\Storage\repos\the-way-wt\lead-project\project-level\test_plan_state_invariant.py", line 208, in run_reader
+    self.assertNotIn("can't open file", self.output, "Missing reader: " + self.output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "can't open file" unexpectedly found in "C:\\Users\\Mariusz\\AppData\\Local\\Programs\\Python\\Python314\\python.exe: can't open file 'C:\\\\Storage\\\\repos\\\\the-way-wt\\\\lead-project\\\\project-level\\\\plan_state.py': [Errno 2] No such file or directory\n" : Missing reader: C:\Users\Mariusz\AppData\Local\Programs\Python\Python314\python.exe: can't open file 'C:\\Storage\\repos\\the-way-wt\\lead-project\\project-level\\plan_state.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_failed_fetch_never_yields_completion_from_cached_record (test_plan_state_invariant.PlanStateEvidence.test_failed_fetch_never_yields_completion_from_cached_record)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\lead-project\project-level\test_plan_state_invariant.py", line 315, in test_failed_fetch_never_yields_completion_from_cached_record
+    self.assertEqual(self.run_reader(), 2, self.output)
+                     ~~~~~~~~~~~~~~~^^
+  File "C:\Storage\repos\the-way-wt\lead-project\project-level\test_plan_state_invariant.py", line 208, in run_reader
+    self.assertNotIn("can't open file", self.output, "Missing reader: " + self.output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "can't open file" unexpectedly found in "C:\\Users\\Mariusz\\AppData\\Local\\Programs\\Python\\Python314\\python.exe: can't open file 'C:\\\\Storage\\\\repos\\\\the-way-wt\\\\lead-project\\\\project-level\\\\plan_state.py': [Errno 2] No such file or directory\n" : Missing reader: C:\Users\Mariusz\AppData\Local\Programs\Python\Python314\python.exe: can't open file 'C:\\Storage\\repos\\the-way-wt\\lead-project\\project-level\\plan_state.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_fresh_remote_record_composes_both_transitions (test_plan_state_invariant.PlanStateEvidence.test_fresh_remote_record_composes_both_transitions)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\lead-project\project-level\test_plan_state_invariant.py", line 259, in test_fresh_remote_record_composes_both_transitions
+    self.assertEqual(self.run_reader(), 0, self.output)
+                     ~~~~~~~~~~~~~~~^^
+  File "C:\Storage\repos\the-way-wt\lead-project\project-level\test_plan_state_invariant.py", line 208, in run_reader
+    self.assertNotIn("can't open file", self.output, "Missing reader: " + self.output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "can't open file" unexpectedly found in "C:\\Users\\Mariusz\\AppData\\Local\\Programs\\Python\\Python314\\python.exe: can't open file 'C:\\\\Storage\\\\repos\\\\the-way-wt\\\\lead-project\\\\project-level\\\\plan_state.py': [Errno 2] No such file or directory\n" : Missing reader: C:\Users\Mariusz\AppData\Local\Programs\Python\Python314\python.exe: can't open file 'C:\\Storage\\repos\\the-way-wt\\lead-project\\project-level\\plan_state.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_git_listed_worktree_proves_start_without_completion (test_plan_state_invariant.PlanStateEvidence.test_git_listed_worktree_proves_start_without_completion)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\lead-project\project-level\test_plan_state_invariant.py", line 234, in test_git_listed_worktree_proves_start_without_completion
+    self.assertEqual(self.run_reader(), 0, self.output)
+                     ~~~~~~~~~~~~~~~^^
+  File "C:\Storage\repos\the-way-wt\lead-project\project-level\test_plan_state_invariant.py", line 208, in run_reader
+    self.assertNotIn("can't open file", self.output, "Missing reader: " + self.output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "can't open file" unexpectedly found in "C:\\Users\\Mariusz\\AppData\\Local\\Programs\\Python\\Python314\\python.exe: can't open file 'C:\\\\Storage\\\\repos\\\\the-way-wt\\\\lead-project\\\\project-level\\\\plan_state.py': [Errno 2] No such file or directory\n" : Missing reader: C:\Users\Mariusz\AppData\Local\Programs\Python\Python314\python.exe: can't open file 'C:\\Storage\\repos\\the-way-wt\\lead-project\\project-level\\plan_state.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_invalid_plan_gives_no_progress_proposal (test_plan_state_invariant.PlanStateEvidence.test_invalid_plan_gives_no_progress_proposal)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\lead-project\project-level\test_plan_state_invariant.py", line 418, in test_invalid_plan_gives_no_progress_proposal
+    self.assertEqual(self.run_reader(), 1, self.output)
+                     ~~~~~~~~~~~~~~~^^
+  File "C:\Storage\repos\the-way-wt\lead-project\project-level\test_plan_state_invariant.py", line 208, in run_reader
+    self.assertNotIn("can't open file", self.output, "Missing reader: " + self.output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "can't open file" unexpectedly found in "C:\\Users\\Mariusz\\AppData\\Local\\Programs\\Python\\Python314\\python.exe: can't open file 'C:\\\\Storage\\\\repos\\\\the-way-wt\\\\lead-project\\\\project-level\\\\plan_state.py': [Errno 2] No such file or directory\n" : Missing reader: C:\Users\Mariusz\AppData\Local\Programs\Python\Python314\python.exe: can't open file 'C:\\Storage\\repos\\the-way-wt\\lead-project\\project-level\\plan_state.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_missing_remote_exposes_unestablished_integration (test_plan_state_invariant.PlanStateEvidence.test_missing_remote_exposes_unestablished_integration)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\lead-project\project-level\test_plan_state_invariant.py", line 325, in test_missing_remote_exposes_unestablished_integration
+    self.assertEqual(self.run_reader(), 0, self.output)
+                     ~~~~~~~~~~~~~~~^^
+  File "C:\Storage\repos\the-way-wt\lead-project\project-level\test_plan_state_invariant.py", line 208, in run_reader
+    self.assertNotIn("can't open file", self.output, "Missing reader: " + self.output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "can't open file" unexpectedly found in "C:\\Users\\Mariusz\\AppData\\Local\\Programs\\Python\\Python314\\python.exe: can't open file 'C:\\\\Storage\\\\repos\\\\the-way-wt\\\\lead-project\\\\project-level\\\\plan_state.py': [Errno 2] No such file or directory\n" : Missing reader: C:\Users\Mariusz\AppData\Local\Programs\Python\Python314\python.exe: can't open file 'C:\\Storage\\repos\\the-way-wt\\lead-project\\project-level\\plan_state.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_missing_remote_head_does_not_guess_delivery (test_plan_state_invariant.PlanStateEvidence.test_missing_remote_head_does_not_guess_delivery)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\lead-project\project-level\test_plan_state_invariant.py", line 338, in test_missing_remote_head_does_not_guess_delivery
+    self.assertEqual(self.run_reader(), 0, self.output)
+                     ~~~~~~~~~~~~~~~^^
+  File "C:\Storage\repos\the-way-wt\lead-project\project-level\test_plan_state_invariant.py", line 208, in run_reader
+    self.assertNotIn("can't open file", self.output, "Missing reader: " + self.output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "can't open file" unexpectedly found in "C:\\Users\\Mariusz\\AppData\\Local\\Programs\\Python\\Python314\\python.exe: can't open file 'C:\\\\Storage\\\\repos\\\\the-way-wt\\\\lead-project\\\\project-level\\\\plan_state.py': [Errno 2] No such file or directory\n" : Missing reader: C:\Users\Mariusz\AppData\Local\Programs\Python\Python314\python.exe: can't open file 'C:\\Storage\\repos\\the-way-wt\\lead-project\\project-level\\plan_state.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_neighbour_slug_does_not_prove_progress (test_plan_state_invariant.PlanStateEvidence.test_neighbour_slug_does_not_prove_progress)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\lead-project\project-level\test_plan_state_invariant.py", line 285, in test_neighbour_slug_does_not_prove_progress
+    self.assertEqual(self.run_reader(), 0, self.output)
+                     ~~~~~~~~~~~~~~~^^
+  File "C:\Storage\repos\the-way-wt\lead-project\project-level\test_plan_state_invariant.py", line 208, in run_reader
+    self.assertNotIn("can't open file", self.output, "Missing reader: " + self.output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "can't open file" unexpectedly found in "C:\\Users\\Mariusz\\AppData\\Local\\Programs\\Python\\Python314\\python.exe: can't open file 'C:\\\\Storage\\\\repos\\\\the-way-wt\\\\lead-project\\\\project-level\\\\plan_state.py': [Errno 2] No such file or directory\n" : Missing reader: C:\Users\Mariusz\AppData\Local\Programs\Python\Python314\python.exe: can't open file 'C:\\Storage\\repos\\the-way-wt\\lead-project\\project-level\\plan_state.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_shallow_history_cannot_prove_done (test_plan_state_invariant.PlanStateEvidence.test_shallow_history_cannot_prove_done)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\lead-project\project-level\test_plan_state_invariant.py", line 381, in test_shallow_history_cannot_prove_done
+    self.assertEqual(self.run_reader(), 0, self.output)
+                     ~~~~~~~~~~~~~~~^^
+  File "C:\Storage\repos\the-way-wt\lead-project\project-level\test_plan_state_invariant.py", line 208, in run_reader
+    self.assertNotIn("can't open file", self.output, "Missing reader: " + self.output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "can't open file" unexpectedly found in "C:\\Users\\Mariusz\\AppData\\Local\\Programs\\Python\\Python314\\python.exe: can't open file 'C:\\\\Storage\\\\repos\\\\the-way-wt\\\\lead-project\\\\project-level\\\\plan_state.py': [Errno 2] No such file or directory\n" : Missing reader: C:\Users\Mariusz\AppData\Local\Programs\Python\Python314\python.exe: can't open file 'C:\\Storage\\repos\\the-way-wt\\lead-project\\project-level\\plan_state.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_unapproved_definition_gives_no_progress_proposal (test_plan_state_invariant.PlanStateEvidence.test_unapproved_definition_gives_no_progress_proposal)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\lead-project\project-level\test_plan_state_invariant.py", line 410, in test_unapproved_definition_gives_no_progress_proposal
+    self.assertEqual(self.run_reader(), 1, self.output)
+                     ~~~~~~~~~~~~~~~^^
+  File "C:\Storage\repos\the-way-wt\lead-project\project-level\test_plan_state_invariant.py", line 208, in run_reader
+    self.assertNotIn("can't open file", self.output, "Missing reader: " + self.output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "can't open file" unexpectedly found in "C:\\Users\\Mariusz\\AppData\\Local\\Programs\\Python\\Python314\\python.exe: can't open file 'C:\\\\Storage\\\\repos\\\\the-way-wt\\\\lead-project\\\\project-level\\\\plan_state.py': [Errno 2] No such file or directory\n" : Missing reader: C:\Users\Mariusz\AppData\Local\Programs\Python\Python314\python.exe: can't open file 'C:\\Storage\\repos\\the-way-wt\\lead-project\\project-level\\plan_state.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_unavailable_listed_worktree_is_visible (test_plan_state_invariant.PlanStateEvidence.test_unavailable_listed_worktree_is_visible)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\lead-project\project-level\test_plan_state_invariant.py", line 368, in test_unavailable_listed_worktree_is_visible
+    self.assertEqual(self.run_reader(), 0, self.output)
+                     ~~~~~~~~~~~~~~~^^
+  File "C:\Storage\repos\the-way-wt\lead-project\project-level\test_plan_state_invariant.py", line 208, in run_reader
+    self.assertNotIn("can't open file", self.output, "Missing reader: " + self.output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "can't open file" unexpectedly found in "C:\\Users\\Mariusz\\AppData\\Local\\Programs\\Python\\Python314\\python.exe: can't open file 'C:\\\\Storage\\\\repos\\\\the-way-wt\\\\lead-project\\\\project-level\\\\plan_state.py': [Errno 2] No such file or directory\n" : Missing reader: C:\Users\Mariusz\AppData\Local\Programs\Python\Python314\python.exe: can't open file 'C:\\Storage\\repos\\the-way-wt\\lead-project\\project-level\\plan_state.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_unlisted_directory_cannot_prove_start (test_plan_state_invariant.PlanStateEvidence.test_unlisted_directory_cannot_prove_start)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\lead-project\project-level\test_plan_state_invariant.py", line 304, in test_unlisted_directory_cannot_prove_start
+    self.assertEqual(self.run_reader(), 0, self.output)
+                     ~~~~~~~~~~~~~~~^^
+  File "C:\Storage\repos\the-way-wt\lead-project\project-level\test_plan_state_invariant.py", line 208, in run_reader
+    self.assertNotIn("can't open file", self.output, "Missing reader: " + self.output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "can't open file" unexpectedly found in "C:\\Users\\Mariusz\\AppData\\Local\\Programs\\Python\\Python314\\python.exe: can't open file 'C:\\\\Storage\\\\repos\\\\the-way-wt\\\\lead-project\\\\project-level\\\\plan_state.py': [Errno 2] No such file or directory\n" : Missing reader: C:\Users\Mariusz\AppData\Local\Programs\Python\Python314\python.exe: can't open file 'C:\\Storage\\repos\\the-way-wt\\lead-project\\project-level\\plan_state.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_unreadable_definition_gives_no_progress_proposal (test_plan_state_invariant.PlanStateEvidence.test_unreadable_definition_gives_no_progress_proposal)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\lead-project\project-level\test_plan_state_invariant.py", line 431, in test_unreadable_definition_gives_no_progress_proposal
+    self.assertNotIn("can't open file", result.stderr, "Missing reader: " + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "can't open file" unexpectedly found in "C:\\Users\\Mariusz\\AppData\\Local\\Programs\\Python\\Python314\\python.exe: can't open file 'C:\\\\Storage\\\\repos\\\\the-way-wt\\\\lead-project\\\\project-level\\\\plan_state.py': [Errno 2] No such file or directory\n" : Missing reader: C:\Users\Mariusz\AppData\Local\Programs\Python\Python314\python.exe: can't open file 'C:\\Storage\\repos\\the-way-wt\\lead-project\\project-level\\plan_state.py': [Errno 2] No such file or directory
+
+
+----------------------------------------------------------------------
+Ran 211 tests in 13.002s
+
+FAILED (failures=18)

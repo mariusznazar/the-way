@@ -1,0 +1,50 @@
+{
+  "command": [
+    "C:\\Users\\Mariusz\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+    "-B",
+    "project-level/plan_state.py",
+    "C:\\Storage\\The Brain\\The Brain\\Notes\\Projects\\(P) Loop\\plan_mvp_loop2.md",
+    ".runs/task-cycles/lead-project/acceptance-loop2"
+  ],
+  "environment": "PYTHONIOENCODING=cp1252",
+  "exit": 0,
+  "before": {
+    "source_files": {
+      "C:\\Storage\\The Brain\\The Brain\\Notes\\Projects\\(P) Loop\\plan_mvp_loop2.md": "c96501e302e42b22f036b5e2c846d31b525f4aae2ccbc3129baff88825b53e14",
+      "C:\\Storage\\The Brain\\The Brain\\Notes\\Projects\\(P) Loop\\definicja_mvp_loop2.md": "e29ec0b1e1d58ef829bb3298328b2bf2f17dffba815477b8c7694b774dca1d5b"
+    },
+    "original_repository_head": "2b290f878115e26bd5f7c3e4415222f94367ed8b",
+    "original_repository_status": ""
+  },
+  "after": {
+    "source_files": {
+      "C:\\Storage\\The Brain\\The Brain\\Notes\\Projects\\(P) Loop\\plan_mvp_loop2.md": "c96501e302e42b22f036b5e2c846d31b525f4aae2ccbc3129baff88825b53e14",
+      "C:\\Storage\\The Brain\\The Brain\\Notes\\Projects\\(P) Loop\\definicja_mvp_loop2.md": "e29ec0b1e1d58ef829bb3298328b2bf2f17dffba815477b8c7694b774dca1d5b"
+    },
+    "original_repository_head": "2b290f878115e26bd5f7c3e4415222f94367ed8b",
+    "original_repository_status": ""
+  },
+  "unchanged_this_run": true,
+  "matches_original_baseline": true,
+  "composed_transitions": true,
+  "retained_provenance": {
+    "archive_commit": "c9644b21ec1d8124937d7e7ac7c8f6c49c6a79d9",
+    "task_source": "- Task source: C:\\Storage\\The Brain\\The Brain\\Notes\\Projects\\(P) Loop\\mag_w_lesie_loop2.md — Status: ready for cycle, approval 2026-10-13 (file untracked in the vault's git; sha256 prefix 8e62c79d7ab32ac8); frozen copy: task.md beside this record",
+    "task_relation": "- Task relation: plan item — plan_mvp_loop2.md (handed over 2026-10-13, sha256 prefix 79010263a250a54c), item 3 mag-w-lesie; definition definicja_mvp_loop2.md, status approved 2026-10-13, fingerprint 9e480247, gate record \"Foundation searched at: 170118680abec6760291df5d13f908c58409f867\" (sha256 prefix e29ec0b1e1d58ef8)",
+    "frozen_membership": "Project relation: plan item: plan_mvp_loop2.md — mag-w-lesie",
+    "plan_document_row": "| 3   | mag-w-lesie              | Gracz wysyła maga żywiołów na mapę Las ułożoną z ziarna przejścia i widzi w panelu terenu siatkę sześciokątnych kafelków, po której postać według programu reguł eksploruje i przechodzi na sąsiednie kafelki; restart przywraca ten sam układ mapy.                                     | 1          | 6, 7, 10, 21, 23 | no          | ready for cycle | [mag_w_lesie_loop2.md](mag_w_lesie_loop2.md) |",
+    "separate_pr_association": {
+      "baseRefName": "main",
+      "headRefName": "task/mag-w-lesie",
+      "mergeCommit": {
+        "oid": "668baa091a8d89caceeeb070342f3aa3f506e109"
+      },
+      "mergedAt": "2026-10-13T22:17:18Z",
+      "number": 12,
+      "state": "MERGED",
+      "url": "https://github.com/mariusznazar/loop2/pull/12"
+    },
+    "record_points_to_pr12": true,
+    "record_reachable_from_pr12_merge": true
+  }
+}

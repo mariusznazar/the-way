@@ -1,0 +1,9 @@
+test_other_plans_integrated_same_name_cannot_complete_current_task (test_plan_state_invariant.PlanStateEvidence.test_other_plans_integrated_same_name_cannot_complete_current_task) ... ok
+test_fresh_remote_record_composes_both_transitions (test_plan_state_invariant.PlanStateEvidence.test_fresh_remote_record_composes_both_transitions) ... ok
+test_failed_fetch_read_starts_only_git (test_plan_state_subprocesses_invariant.PlanStateSubprocesses.test_failed_fetch_read_starts_only_git) ... ok
+test_successful_evidence_read_starts_only_git (test_plan_state_subprocesses_invariant.PlanStateSubprocesses.test_successful_evidence_read_starts_only_git) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 7.109s
+
+OK

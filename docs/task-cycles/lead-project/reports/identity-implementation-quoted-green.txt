@@ -1,0 +1,13 @@
+python : test_quoted_provenance_is_not_a_record_header (test_plan_state.Command.test_quoted_provenance_is_not_a_record_
+header) ... ok
+At line:2 char:1
++ python -B -m unittest discover -s project-level -p test_plan_state.py ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (test_quoted_pro..._header) ... ok:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+
+----------------------------------------------------------------------
+Ran 1 test in 1.968s
+
+OK

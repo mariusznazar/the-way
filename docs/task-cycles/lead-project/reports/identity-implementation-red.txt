@@ -1,0 +1,228 @@
+python : test_another_remote_does_not_obscure_declared_origin_integration (test_plan_state_invariant.PlanStateEvidence.
+test_another_remote_does_not_obscure_declared_origin_integration) ... ok
+At line:2 char:365
++ ... ])<=135))"; python -B -m unittest discover -s project-level -p test_p ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (test_another_re...gration) ... ok:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+test_archived_content_without_provenance_cannot_complete_task (test_plan_state_invariant.PlanStateEvidence.test_archive
+d_content_without_provenance_cannot_complete_task) ... FAIL
+test_archived_header_alone_cannot_prove_task_ownership (test_plan_state_invariant.PlanStateEvidence.test_archived_heade
+r_alone_cannot_prove_task_ownership) ... FAIL
+test_branch_name_and_message_do_not_prove_start (test_plan_state_invariant.PlanStateEvidence.test_branch_name_and_messa
+ge_do_not_prove_start) ... ok
+test_branch_only_archive_proves_start_but_not_done (test_plan_state_invariant.PlanStateEvidence.test_branch_only_archiv
+e_proves_start_but_not_done) ... ok
+test_deleted_merged_branch_still_proves_done (test_plan_state_invariant.PlanStateEvidence.test_deleted_merged_branch_st
+ill_proves_done) ... ok
+test_done_row_with_live_cycle_is_reported_as_conflict (test_plan_state_invariant.PlanStateEvidence.test_done_row_with_l
+ive_cycle_is_reported_as_conflict) ... ok
+test_draft_plan_gives_no_progress_proposal (test_plan_state_invariant.PlanStateEvidence.test_draft_plan_gives_no_progre
+ss_proposal) ... ok
+test_failed_fetch_never_yields_completion_from_cached_record (test_plan_state_invariant.PlanStateEvidence.test_failed_f
+etch_never_yields_completion_from_cached_record) ... ok
+test_fresh_remote_record_composes_both_transitions (test_plan_state_invariant.PlanStateEvidence.test_fresh_remote_recor
+d_composes_both_transitions) ... ok
+test_frozen_task_identity_does_not_require_current_content_equality (test_plan_state_invariant.PlanStateEvidence.test_f
+rozen_task_identity_does_not_require_current_content_equality) ... ok
+test_git_listed_worktree_proves_start_without_completion (test_plan_state_invariant.PlanStateEvidence.test_git_listed_w
+orktree_proves_start_without_completion) ... ok
+test_identity_bearing_archive_has_no_mandatory_record_basename (test_plan_state_invariant.PlanStateEvidence.test_identi
+ty_bearing_archive_has_no_mandatory_record_basename) ... ok
+test_invalid_plan_gives_no_progress_proposal (test_plan_state_invariant.PlanStateEvidence.test_invalid_plan_gives_no_pr
+ogress_proposal) ... ok
+test_live_directory_without_provenance_cannot_start_task (test_plan_state_invariant.PlanStateEvidence.test_live_directo
+ry_without_provenance_cannot_start_task) ... FAIL
+test_missing_remote_exposes_unestablished_integration (test_plan_state_invariant.PlanStateEvidence.test_missing_remote_
+exposes_unestablished_integration) ... ok
+test_missing_remote_head_does_not_guess_delivery (test_plan_state_invariant.PlanStateEvidence.test_missing_remote_head_
+does_not_guess_delivery) ... ok
+test_neighbour_slug_does_not_prove_progress (test_plan_state_invariant.PlanStateEvidence.test_neighbour_slug_does_not_p
+rove_progress) ... ok
+test_other_plans_integrated_same_name_cannot_complete_current_task (test_plan_state_invariant.PlanStateEvidence.test_ot
+her_plans_integrated_same_name_cannot_complete_current_task) ... FAIL
+test_other_plans_integrated_same_name_cannot_start_current_task (test_plan_state_invariant.PlanStateEvidence.test_other
+_plans_integrated_same_name_cannot_start_current_task) ... FAIL
+test_other_plans_live_same_name_cannot_start_current_task (test_plan_state_invariant.PlanStateEvidence.test_other_plans
+_live_same_name_cannot_start_current_task) ... FAIL
+test_shallow_history_cannot_prove_done (test_plan_state_invariant.PlanStateEvidence.test_shallow_history_cannot_prove_d
+one) ... ok
+test_unanchored_same_basename_provenance_remains_unchecked (test_plan_state_invariant.PlanStateEvidence.test_unanchored
+_same_basename_provenance_remains_unchecked) ... FAIL
+test_unapproved_definition_gives_no_progress_proposal (test_plan_state_invariant.PlanStateEvidence.test_unapproved_defi
+nition_gives_no_progress_proposal) ... ok
+test_unavailable_listed_worktree_is_visible (test_plan_state_invariant.PlanStateEvidence.test_unavailable_listed_worktr
+ee_is_visible) ... ok
+test_unlisted_directory_cannot_prove_start (test_plan_state_invariant.PlanStateEvidence.test_unlisted_directory_cannot_
+prove_start) ... ok
+test_unreadable_definition_gives_no_progress_proposal (test_plan_state_invariant.PlanStateEvidence.test_unreadable_defi
+nition_gives_no_progress_proposal) ... ok
+
+======================================================================
+FAIL: test_archived_content_without_provenance_cannot_complete_task (test_plan_state_invariant.PlanStateEvidence.test_a
+rchived_content_without_provenance_cannot_complete_task)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\lead-project\project-level\test_plan_state_invariant.py", line 595, in test_archive
+d_content_without_provenance_cannot_complete_task
+    self.proposals_are()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Storage\repos\the-way-wt\lead-project\project-level\test_plan_state_invariant.py", line 296, in proposals_ar
+e
+    self.assertCountEqual(self.proposals, expected, self.output)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Element counts were not equal:
+First has 1, Second has 0:  'propose 1 report-download: in cycle -> done' : repository: C:\Users\Mariusz\AppData\Local\
+Temp\plan evidence 3n9tdtdj\product repository
+integration: refs/remotes/origin/delivery 83e939f95259b07e3fd9aed39104ebccd8c75e9c
+task 1 report-download: in cycle
+evidence 1 report-download: archived cycle docs/task-cycles/report-download/ commit 83e939f95259b07e3fd9aed39104ebccd8c
+75e9c on refs/heads/delivery, refs/remotes/origin/HEAD, refs/remotes/origin/delivery
+evidence 1 report-download: cycle record docs/task-cycles/report-download/notes.txt commit 83e939f95259b07e3fd9aed39104
+ebccd8c75e9c reachable from refs/remotes/origin/delivery 83e939f95259b07e3fd9aed39104ebccd8c75e9c
+propose 1 report-download: in cycle -> done
+
+
+======================================================================
+FAIL: test_archived_header_alone_cannot_prove_task_ownership (test_plan_state_invariant.PlanStateEvidence.test_archived
+_header_alone_cannot_prove_task_ownership)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\lead-project\project-level\test_plan_state_invariant.py", line 585, in test_archive
+d_header_alone_cannot_prove_task_ownership
+    self.proposals_are()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Storage\repos\the-way-wt\lead-project\project-level\test_plan_state_invariant.py", line 296, in proposals_ar
+e
+    self.assertCountEqual(self.proposals, expected, self.output)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Element counts were not equal:
+First has 1, Second has 0:  'propose 1 report-download: ready for cycle -> in cycle'
+First has 1, Second has 0:  'propose 1 report-download: in cycle -> done' : repository: C:\Users\Mariusz\AppData\Local\
+Temp\plan evidence fhldf4sv\product repository
+integration: refs/remotes/origin/delivery b627597cf197fcd640af6734c42d08bb98cad970
+task 1 report-download: ready for cycle
+evidence 1 report-download: archived cycle docs/task-cycles/report-download/ commit b627597cf197fcd640af6734c42d08bb98c
+ad970 on refs/heads/delivery, refs/remotes/origin/HEAD, refs/remotes/origin/delivery
+evidence 1 report-download: cycle record docs/task-cycles/report-download/delivery-notes.md commit b627597cf197fcd640af
+6734c42d08bb98cad970 reachable from refs/remotes/origin/delivery b627597cf197fcd640af6734c42d08bb98cad970
+propose 1 report-download: ready for cycle -> in cycle
+propose 1 report-download: in cycle -> done
+
+
+======================================================================
+FAIL: test_live_directory_without_provenance_cannot_start_task (test_plan_state_invariant.PlanStateEvidence.test_live_d
+irectory_without_provenance_cannot_start_task)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\lead-project\project-level\test_plan_state_invariant.py", line 575, in test_live_di
+rectory_without_provenance_cannot_start_task
+    self.proposals_are()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Storage\repos\the-way-wt\lead-project\project-level\test_plan_state_invariant.py", line 296, in proposals_ar
+e
+    self.assertCountEqual(self.proposals, expected, self.output)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Element counts were not equal:
+First has 1, Second has 0:  'propose 1 report-download: ready for cycle -> in cycle' : repository: C:\Users\Mariusz\App
+Data\Local\Temp\plan evidence y63i8ce2\product repository
+integration: refs/remotes/origin/delivery c09d97f60c7f03d091941f4c3165f29532694631
+task 1 report-download: ready for cycle
+evidence 1 report-download: working cycle C:\Users\Mariusz\AppData\Local\Temp\plan evidence y63i8ce2\cycle worktree\.ru
+ns\task-cycles\report-download
+propose 1 report-download: ready for cycle -> in cycle
+unchecked 1 report-download: PR outcome unchecked; cycle evidence is outside established fresh integration history
+
+
+======================================================================
+FAIL: test_other_plans_integrated_same_name_cannot_complete_current_task (test_plan_state_invariant.PlanStateEvidence.t
+est_other_plans_integrated_same_name_cannot_complete_current_task)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\lead-project\project-level\test_plan_state_invariant.py", line 558, in test_other_p
+lans_integrated_same_name_cannot_complete_current_task
+    self.assertEqual(self.run_reader(), 1, self.output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : repository: C:\Users\Mariusz\AppData\Local\Temp\plan evidence b3fqly33\product repository
+integration: refs/remotes/origin/delivery d0eb5c7c1373a47ccc6dd472ecee7be1d64fa6b7
+task 1 report-download: in cycle
+evidence 1 report-download: archived cycle docs/task-cycles/report-download/ commit d0eb5c7c1373a47ccc6dd472ecee7be1d64
+fa6b7 on refs/heads/delivery, refs/remotes/origin/HEAD, refs/remotes/origin/delivery
+evidence 1 report-download: cycle record docs/task-cycles/report-download/accepted-task.md, docs/task-cycles/report-dow
+nload/record.md commit d0eb5c7c1373a47ccc6dd472ecee7be1d64fa6b7 reachable from refs/remotes/origin/delivery d0eb5c7c137
+3a47ccc6dd472ecee7be1d64fa6b7
+propose 1 report-download: in cycle -> done
+
+
+======================================================================
+FAIL: test_other_plans_integrated_same_name_cannot_start_current_task (test_plan_state_invariant.PlanStateEvidence.test
+_other_plans_integrated_same_name_cannot_start_current_task)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\lead-project\project-level\test_plan_state_invariant.py", line 535, in test_other_p
+lans_integrated_same_name_cannot_start_current_task
+    self.assertEqual(self.run_reader(), 1, self.output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : repository: C:\Users\Mariusz\AppData\Local\Temp\plan evidence 07sudkdr\product repository
+integration: refs/remotes/origin/delivery 89bd11b097fc4547fd40970ba091852610eedb2f
+task 1 report-download: ready for cycle
+evidence 1 report-download: archived cycle docs/task-cycles/report-download/ commit 89bd11b097fc4547fd40970ba091852610e
+edb2f on refs/heads/delivery, refs/remotes/origin/HEAD, refs/remotes/origin/delivery
+evidence 1 report-download: cycle record docs/task-cycles/report-download/accepted-task.md, docs/task-cycles/report-dow
+nload/record.md commit 89bd11b097fc4547fd40970ba091852610eedb2f reachable from refs/remotes/origin/delivery 89bd11b097f
+c4547fd40970ba091852610eedb2f
+propose 1 report-download: ready for cycle -> in cycle
+propose 1 report-download: in cycle -> done
+
+
+======================================================================
+FAIL: test_other_plans_live_same_name_cannot_start_current_task (test_plan_state_invariant.PlanStateEvidence.test_other
+_plans_live_same_name_cannot_start_current_task)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\lead-project\project-level\test_plan_state_invariant.py", line 566, in test_other_p
+lans_live_same_name_cannot_start_current_task
+    self.assertEqual(self.run_reader(), 1, self.output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : repository: C:\Users\Mariusz\AppData\Local\Temp\plan evidence bfemm5h7\product repository
+integration: refs/remotes/origin/delivery c5eb707505021166dc68e705e5a24653a28a73bd
+task 1 report-download: ready for cycle
+evidence 1 report-download: working cycle C:\Users\Mariusz\AppData\Local\Temp\plan evidence bfemm5h7\cycle worktree\.ru
+ns\task-cycles\report-download
+propose 1 report-download: ready for cycle -> in cycle
+unchecked 1 report-download: PR outcome unchecked; cycle evidence is outside established fresh integration history
+
+
+======================================================================
+FAIL: test_unanchored_same_basename_provenance_remains_unchecked (test_plan_state_invariant.PlanStateEvidence.test_unan
+chored_same_basename_provenance_remains_unchecked)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\lead-project\project-level\test_plan_state_invariant.py", line 605, in test_unancho
+red_same_basename_provenance_remains_unchecked
+    self.proposals_are()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Storage\repos\the-way-wt\lead-project\project-level\test_plan_state_invariant.py", line 296, in proposals_ar
+e
+    self.assertCountEqual(self.proposals, expected, self.output)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Element counts were not equal:
+First has 1, Second has 0:  'propose 1 report-download: ready for cycle -> in cycle'
+First has 1, Second has 0:  'propose 1 report-download: in cycle -> done' : repository: C:\Users\Mariusz\AppData\Local\
+Temp\plan evidence ok9u6get\product repository
+integration: refs/remotes/origin/delivery 8326b7d26e920f66decfc367743434123216e809
+task 1 report-download: ready for cycle
+evidence 1 report-download: archived cycle docs/task-cycles/report-download/ commit 8326b7d26e920f66decfc36774343412321
+6e809 on refs/heads/delivery, refs/remotes/origin/HEAD, refs/remotes/origin/delivery
+evidence 1 report-download: cycle record docs/task-cycles/report-download/accepted-task.md, docs/task-cycles/report-dow
+nload/record.md commit 8326b7d26e920f66decfc367743434123216e809 reachable from refs/remotes/origin/delivery 8326b7d26e9
+20f66decfc367743434123216e809
+propose 1 report-download: ready for cycle -> in cycle
+propose 1 report-download: in cycle -> done
+
+
+----------------------------------------------------------------------
+Ran 27 tests in 42.549s
+
+FAILED (failures=7)

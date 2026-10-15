@@ -1,0 +1,7 @@
+Command: python -B gate/run_tests.py project-level --record .runs/project-plan-state-evidence.jsonl
+Exit: 0
+Final completion output (progress dots omitted):
+----------------------------------------------------------------------
+Ran 229 tests in 49.293s
+
+OK

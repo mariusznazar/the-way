@@ -1,0 +1,28 @@
+python : test_duplicate_record_source_does_not_choose_one_identity (test_plan_state.Command.test_duplicate_record_sourc
+e_does_not_choose_one_identity) ... FAIL
+At line:2 char:1
++ python -B -m unittest discover -s project-level -p test_plan_state.py ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (test_duplicate_...ntity) ... FAIL:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+
+======================================================================
+FAIL: test_duplicate_record_source_does_not_choose_one_identity (test_plan_state.Command.test_duplicate_record_source_d
+oes_not_choose_one_identity)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\lead-project\project-level\test_plan_state.py", line 413, in test_duplicate_record_
+source_does_not_choose_one_identity
+    self.assertNotIn("propose ", output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'propose ' unexpectedly found in 'repository: C:\\Users\\Mariusz\\AppData\\Local\\Temp\\plan state 5n4d
+lbzm\\product\nintegration: refs/remotes/origin/release a4c0f55feeb4ef2c11df61669fb89f65cefb5f3b\ntask 1 reports: ready
+ for cycle\nevidence 1 reports: working cycle C:\\Users\\Mariusz\\AppData\\Local\\Temp\\plan state 5n4dlbzm\\product\\.
+runs\\task-cycles\\reports\npropose 1 reports: ready for cycle -> in cycle\nunchecked 1 reports: PR outcome unchecked; 
+cycle evidence is outside established fresh integration history\n'
+
+----------------------------------------------------------------------
+Ran 1 test in 1.244s
+
+FAILED (failures=1)

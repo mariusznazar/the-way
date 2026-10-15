@@ -1,0 +1,13 @@
+python : test_record_source_commit_can_replace_approval_date (test_plan_state.Command.test_record_source_commit_can_rep
+lace_approval_date) ... ok
+At line:2 char:1
++ python -B -m unittest discover -s project-level -p test_plan_state.py ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (test_record_sou...al_date) ... ok:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+
+----------------------------------------------------------------------
+Ran 1 test in 1.963s
+
+OK

@@ -1,0 +1,488 @@
+python : FFFF
+At line:2 char:1
++ python -B -m unittest discover -s installation -p test_lead_installat ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (FFFF:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+======================================================================
+FAIL: test_clone_can_initialize_the_exact_lead_source (test_lead_installation.LeadInstallationTest.test_clone_can_initi
+alize_the_exact_lead_source)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\lead-project\installation\test_lead_installation.py", line 109, in test_clone_can_i
+nitialize_the_exact_lead_source
+    self.git("add", "--", ".gitmodules", ".the-way", *WRAPPERS)
+    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\lead-project\installation\test_lead_installation.py", line 38, in git
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 128 != 0 : fatal: pathspec '.claude/skills/the-way-lead-project/SKILL.md' did not match any files
+
+
+======================================================================
+FAIL: test_conflicting_lead_wrapper_refuses_before_writing (test_lead_installation.LeadInstallationTest.test_conflictin
+g_lead_wrapper_refuses_before_writing) (wrapper='.claude/skills/the-way-lead-project/SKILL.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\lead-project\installation\test_lead_installation.py", line 133, in test_conflicting
+_lead_wrapper_refuses_before_writing
+    self.assertNotEqual(refused.returncode, 0)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0
+
+======================================================================
+FAIL: test_conflicting_lead_wrapper_refuses_before_writing (test_lead_installation.LeadInstallationTest.test_conflictin
+g_lead_wrapper_refuses_before_writing) (wrapper='.agents/skills/the-way-lead-project/SKILL.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\lead-project\installation\test_lead_installation.py", line 133, in test_conflicting
+_lead_wrapper_refuses_before_writing
+    self.assertNotEqual(refused.returncode, 0)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0
+
+======================================================================
+FAIL: test_preview_apply_repeat_exposes_lead_and_preserves_product (test_lead_installation.LeadInstallationTest.test_pr
+eview_apply_repeat_exposes_lead_and_preserves_product)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\lead-project\installation\test_lead_installation.py", line 67, in test_preview_appl
+y_repeat_exposes_lead_and_preserves_product
+    self.assertIn(f"CREATE {name}", preview.stdout)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'CREATE .claude/skills/the-way-lead-project/SKILL.md' not found in 'Product: C:\\Users\\Mariusz\\AppDat
+a\\Local\\Temp\\the-way-lead-install-e8thj4gq\\product\nProcess commit: 74750b340769fe1c397adaff12ece77acc8350e7\nSubmo
+dule URL: C:\\Storage\\repos\\the-way-wt\\lead-project\nADD .the-way (gitlink at 74750b340769fe1c397adaff12ece77acc8350
+e7)\nUPDATE .gitmodules: add path=.the-way, url=C:\\Storage\\repos\\the-way-wt\\lead-project\n+[submodule ".the-way"]\n
++\tpath = .the-way\n+\turl = C:\\Storage\\repos\\the-way-wt\\lead-project\nSTAGE .gitmodules and .the-way (git submodul
+e add stages these paths)\nKEEP foundations/decisions.md\nCREATE foundations/invariants.md\n--- /dev/null\n+++ foundati
+ons/invariants.md\n@@ -0,0 +1,16 @@\n+# Invariants\n+\n+## Withdrawn identifiers\n+\n+| Identifier | Why | Successors |
+\n+|---|---|---|\n+\n+## Quarantined invariants\n+\n+| Identifier | Version | Until |\n+|---|---|---|\n+\n+## Recovered
+ invariants\n+\n+| Identifier | Version | Searched | Found |\n+|---|---|---|---|\nCREATE foundations/glossary.md\n--- /
+dev/null\n+++ foundations/glossary.md\n@@ -0,0 +1,3 @@\n+# Glossary\n+\n+Terms used by this product\'s foundation.\nCRE
+ATE foundations/part_map.md\n--- /dev/null\n+++ foundations/part_map.md\n@@ -0,0 +1,23 @@\n+# Part map\n+\n+## Critical
+ity scale\n+\n+## External context\n+\n+| Partner | Direction | What comes in | Updates with the product |\n+|---|---|-
+--|---|\n+\n+## Change paths\n+\n+| Promise level | What a change at this level may do | What it owes the consumer firs
+t |\n+|---|---|---|\n+\n+## Files left out on purpose\n+\n+| File | Why |\n+|---|---|\n+\n+## Withdrawn identifiers\n+\
+n+| Identifier | Why | Successors |\n+|---|---|---|\nCREATE foundations/environment_facts.md\n--- /dev/null\n+++ founda
+tions/environment_facts.md\n@@ -0,0 +1,6 @@\n+# Environment facts\n+\n+## Withdrawn identifiers\n+\n+| Identifier | Why
+ | Successors |\n+|---|---|---|\nCREATE .claude/skills/the-way-record-decision/SKILL.md\n--- /dev/null\n+++ .claude/ski
+lls/the-way-record-decision/SKILL.md\n@@ -0,0 +1,14 @@\n+---\n+name: the-way-record-decision\n+description: Use when a 
+decision has to be written into a product\'s decision log, foundations/decisions.md � a choice just settled in conversa
+tion that binds later work, a new answer to a question the log already holds, a decision recovered from existing code, 
+a due review of a decision whose review-when date has come, or a decision a project definition projects. Use this produ
+ct\'s pinned the-way commit.\n+---\n+\n+# the-way-record-decision\n+\n+The process for this repository is pinned as the
+ Git submodule `.the-way`. Its commit is `74750b340769fe1c397adaff12ece77acc8350e7`.\n+\n+If `.the-way/elements/decisio
+ns/skill/SKILL.md` is absent, run `git submodule update --init -- .the-way` from the product root. Check `git ls-files 
+--stage -- .the-way` and `git -C .the-way rev-parse HEAD`: both must show `74750b340769fe1c397adaff12ece77acc8350e7`. I
+f initialization fails or either commit differs, stop.\n+\n+Read `.the-way/elements/decisions/skill/SKILL.md` in full a
+nd follow it. Read the files it references inside `.the-way`. Where it says where the-way lies, the product\'s case app
+lies: here the process root is `.the-way`. Do not substitute a global skill.\n+\n+Where this skill or a file it reads n
+ames another the-way skill � `record-decision`, `record-invariant`, `record-glossary-term`, `update-part-map`, `record-
+environment-fact`, `find-foundation-entries`, `define-project`, `plan-project`, `settle-technology`, `refine-task`, `im
+plement-task`, `plan-task` or `critique` � use this product\'s project skill of the same name with the `the-way-` prefi
+x, never an unprefixed one.\nCREATE .agents/skills/the-way-record-decision/SKILL.md\n--- /dev/null\n+++ .agents/skills/
+the-way-record-decision/SKILL.md\n@@ -0,0 +1,14 @@\n+---\n+name: the-way-record-decision\n+description: Use when a deci
+sion has to be written into a product\'s decision log, foundations/decisions.md � a choice just settled in conversation
+ that binds later work, a new answer to a question the log already holds, a decision recovered from existing code, a du
+e review of a decision whose review-when date has come, or a decision a project definition projects. Use this product\'
+s pinned the-way commit.\n+---\n+\n+# the-way-record-decision\n+\n+The process for this repository is pinned as the Git
+ submodule `.the-way`. Its commit is `74750b340769fe1c397adaff12ece77acc8350e7`.\n+\n+If `.the-way/elements/decisions/s
+kill/SKILL.md` is absent, run `git submodule update --init -- .the-way` from the product root. Check `git ls-files --st
+age -- .the-way` and `git -C .the-way rev-parse HEAD`: both must show `74750b340769fe1c397adaff12ece77acc8350e7`. If in
+itialization fails or either commit differs, stop.\n+\n+Read `.the-way/elements/decisions/skill/SKILL.md` in full and f
+ollow it. Read the files it references inside `.the-way`. Where it says where the-way lies, the product\'s case applies
+: here the process root is `.the-way`. Do not substitute a global skill.\n+\n+Where this skill or a file it reads names
+ another the-way skill � `record-decision`, `record-invariant`, `record-glossary-term`, `update-part-map`, `record-envi
+ronment-fact`, `find-foundation-entries`, `define-project`, `plan-project`, `settle-technology`, `refine-task`, `implem
+ent-task`, `plan-task` or `critique` � use this product\'s project skill of the same name with the `the-way-` prefix, n
+ever an unprefixed one.\nCREATE .claude/skills/the-way-record-invariant/SKILL.md\n--- /dev/null\n+++ .claude/skills/the
+-way-record-invariant/SKILL.md\n@@ -0,0 +1,14 @@\n+---\n+name: the-way-record-invariant\n+description: Use when a produ
+ct\'s invariants file, foundations/invariants.md, has to gain or change an entry � a rule the product must keep, from c
+onversation, a task\'s return step, the behaviour of the critical flows and the parts they run through or an invariant 
+a decision\'s verification calls for; a changed, split, merged or withdrawn invariant; a row on the list of violated or
+ quarantined invariants; or an invariant a project definition projects. Use this product\'s pinned the-way commit.\n+--
+-\n+\n+# the-way-record-invariant\n+\n+The process for this repository is pinned as the Git submodule `.the-way`. Its c
+ommit is `74750b340769fe1c397adaff12ece77acc8350e7`.\n+\n+If `.the-way/elements/invariants/skill/SKILL.md` is absent, r
+un `git submodule update --init -- .the-way` from the product root. Check `git ls-files --stage -- .the-way` and `git -
+C .the-way rev-parse HEAD`: both must show `74750b340769fe1c397adaff12ece77acc8350e7`. If initialization fails or eithe
+r commit differs, stop.\n+\n+Read `.the-way/elements/invariants/skill/SKILL.md` in full and follow it. Read the files i
+t references inside `.the-way`. Where it says where the-way lies, the product\'s case applies: here the process root is
+ `.the-way`. Do not substitute a global skill.\n+\n+Where this skill or a file it reads names another the-way skill � `
+record-decision`, `record-invariant`, `record-glossary-term`, `update-part-map`, `record-environment-fact`, `find-found
+ation-entries`, `define-project`, `plan-project`, `settle-technology`, `refine-task`, `implement-task`, `plan-task` or 
+`critique` � use this product\'s project skill of the same name with the `the-way-` prefix, never an unprefixed one.\nC
+REATE .agents/skills/the-way-record-invariant/SKILL.md\n--- /dev/null\n+++ .agents/skills/the-way-record-invariant/SKIL
+L.md\n@@ -0,0 +1,14 @@\n+---\n+name: the-way-record-invariant\n+description: Use when a product\'s invariants file, fou
+ndations/invariants.md, has to gain or change an entry � a rule the product must keep, from conversation, a task\'s ret
+urn step, the behaviour of the critical flows and the parts they run through or an invariant a decision\'s verification
+ calls for; a changed, split, merged or withdrawn invariant; a row on the list of violated or quarantined invariants; o
+r an invariant a project definition projects. Use this product\'s pinned the-way commit.\n+---\n+\n+# the-way-record-in
+variant\n+\n+The process for this repository is pinned as the Git submodule `.the-way`. Its commit is `74750b340769fe1c
+397adaff12ece77acc8350e7`.\n+\n+If `.the-way/elements/invariants/skill/SKILL.md` is absent, run `git submodule update -
+-init -- .the-way` from the product root. Check `git ls-files --stage -- .the-way` and `git -C .the-way rev-parse HEAD`
+: both must show `74750b340769fe1c397adaff12ece77acc8350e7`. If initialization fails or either commit differs, stop.\n+
+\n+Read `.the-way/elements/invariants/skill/SKILL.md` in full and follow it. Read the files it references inside `.the-
+way`. Where it says where the-way lies, the product\'s case applies: here the process root is `.the-way`. Do not substi
+tute a global skill.\n+\n+Where this skill or a file it reads names another the-way skill � `record-decision`, `record-
+invariant`, `record-glossary-term`, `update-part-map`, `record-environment-fact`, `find-foundation-entries`, `define-pr
+oject`, `plan-project`, `settle-technology`, `refine-task`, `implement-task`, `plan-task` or `critique` � use this prod
+uct\'s project skill of the same name with the `the-way-` prefix, never an unprefixed one.\nCREATE .claude/skills/the-w
+ay-record-glossary-term/SKILL.md\n--- /dev/null\n+++ .claude/skills/the-way-record-glossary-term/SKILL.md\n@@ -0,0 +1,1
+4 @@\n+---\n+name: the-way-record-glossary-term\n+description: Use when a product\'s glossary, foundations/glossary.md,
+ has to gain or change an entry � a word a binding sentence or a template\'s rule uses in two meanings or in a meaning 
+a reader of the field would not give it, a word a task\'s return step or a search of the foundation found, a sentence t
+hat defines a word, a reworded definition, a renamed term, a second meaning moved to another word, a word added to Avoi
+d, or a term a project definition projects. Use this product\'s pinned the-way commit.\n+---\n+\n+# the-way-record-glos
+sary-term\n+\n+The process for this repository is pinned as the Git submodule `.the-way`. Its commit is `74750b340769fe
+1c397adaff12ece77acc8350e7`.\n+\n+If `.the-way/elements/glossary/skill/SKILL.md` is absent, run `git submodule update -
+-init -- .the-way` from the product root. Check `git ls-files --stage -- .the-way` and `git -C .the-way rev-parse HEAD`
+: both must show `74750b340769fe1c397adaff12ece77acc8350e7`. If initialization fails or either commit differs, stop.\n+
+\n+Read `.the-way/elements/glossary/skill/SKILL.md` in full and follow it. Read the files it references inside `.the-wa
+y`. Where it says where the-way lies, the product\'s case applies: here the process root is `.the-way`. Do not substitu
+te a global skill.\n+\n+Where this skill or a file it reads names another the-way skill � `record-decision`, `record-in
+variant`, `record-glossary-term`, `update-part-map`, `record-environment-fact`, `find-foundation-entries`, `define-proj
+ect`, `plan-project`, `settle-technology`, `refine-task`, `implement-task`, `plan-task` or `critique` � use this produc
+t\'s project skill of the same name with the `the-way-` prefix, never an unprefixed one.\nCREATE .agents/skills/the-way
+-record-glossary-term/SKILL.md\n--- /dev/null\n+++ .agents/skills/the-way-record-glossary-term/SKILL.md\n@@ -0,0 +1,14 
+@@\n+---\n+name: the-way-record-glossary-term\n+description: Use when a product\'s glossary, foundations/glossary.md, h
+as to gain or change an entry � a word a binding sentence or a template\'s rule uses in two meanings or in a meaning a 
+reader of the field would not give it, a word a task\'s return step or a search of the foundation found, a sentence tha
+t defines a word, a reworded definition, a renamed term, a second meaning moved to another word, a word added to Avoid,
+ or a term a project definition projects. Use this product\'s pinned the-way commit.\n+---\n+\n+# the-way-record-glossa
+ry-term\n+\n+The process for this repository is pinned as the Git submodule `.the-way`. Its commit is `74750b340769fe1c
+397adaff12ece77acc8350e7`.\n+\n+If `.the-way/elements/glossary/skill/SKILL.md` is absent, run `git submodule update --i
+nit -- .the-way` from the product root. Check `git ls-files --stage -- .the-way` and `git -C .the-way rev-parse HEAD`: 
+both must show `74750b340769fe1c397adaff12ece77acc8350e7`. If initialization fails or either commit differs, stop.\n+\n
++Read `.the-way/elements/glossary/skill/SKILL.md` in full and follow it. Read the files it references inside `.the-way`
+. Where it says where the-way lies, the product\'s case applies: here the process root is `.the-way`. Do not substitute
+ a global skill.\n+\n+Where this skill or a file it reads names another the-way skill � `record-decision`, `record-inva
+riant`, `record-glossary-term`, `update-part-map`, `record-environment-fact`, `find-foundation-entries`, `define-projec
+t`, `plan-project`, `settle-technology`, `refine-task`, `implement-task`, `plan-task` or `critique` � use this product\
+'s project skill of the same name with the `the-way-` prefix, never an unprefixed one.\nCREATE .claude/skills/the-way-u
+pdate-part-map/SKILL.md\n--- /dev/null\n+++ .claude/skills/the-way-update-part-map/SKILL.md\n@@ -0,0 +1,14 @@\n+---\n+n
+ame: the-way-update-part-map\n+description: Use when a product\'s part map, foundations/part_map.md, has to gain or cha
+nge an entry � a part whose responsibility or files change, a part split or merged, a new critical flow or a new surfac
+e, failure modes or a trust boundary recorded at a part, a file no part claims, the first map written for a product, or
+ a change a project definition projects. Use this product\'s pinned the-way commit.\n+---\n+\n+# the-way-update-part-ma
+p\n+\n+The process for this repository is pinned as the Git submodule `.the-way`. Its commit is `74750b340769fe1c397ada
+ff12ece77acc8350e7`.\n+\n+If `.the-way/elements/part-map/skill/SKILL.md` is absent, run `git submodule update --init --
+ .the-way` from the product root. Check `git ls-files --stage -- .the-way` and `git -C .the-way rev-parse HEAD`: both m
+ust show `74750b340769fe1c397adaff12ece77acc8350e7`. If initialization fails or either commit differs, stop.\n+\n+Read 
+`.the-way/elements/part-map/skill/SKILL.md` in full and follow it. Read the files it references inside `.the-way`. Wher
+e it says where the-way lies, the product\'s case applies: here the process root is `.the-way`. Do not substitute a glo
+bal skill.\n+\n+Where this skill or a file it reads names another the-way skill � `record-decision`, `record-invariant`
+, `record-glossary-term`, `update-part-map`, `record-environment-fact`, `find-foundation-entries`, `define-project`, `p
+lan-project`, `settle-technology`, `refine-task`, `implement-task`, `plan-task` or `critique` � use this product\'s pro
+ject skill of the same name with the `the-way-` prefix, never an unprefixed one.\nCREATE .agents/skills/the-way-update-
+part-map/SKILL.md\n--- /dev/null\n+++ .agents/skills/the-way-update-part-map/SKILL.md\n@@ -0,0 +1,14 @@\n+---\n+name: t
+he-way-update-part-map\n+description: Use when a product\'s part map, foundations/part_map.md, has to gain or change an
+ entry � a part whose responsibility or files change, a part split or merged, a new critical flow or a new surface, fai
+lure modes or a trust boundary recorded at a part, a file no part claims, the first map written for a product, or a cha
+nge a project definition projects. Use this product\'s pinned the-way commit.\n+---\n+\n+# the-way-update-part-map\n+\n
++The process for this repository is pinned as the Git submodule `.the-way`. Its commit is `74750b340769fe1c397adaff12ec
+e77acc8350e7`.\n+\n+If `.the-way/elements/part-map/skill/SKILL.md` is absent, run `git submodule update --init -- .the-
+way` from the product root. Check `git ls-files --stage -- .the-way` and `git -C .the-way rev-parse HEAD`: both must sh
+ow `74750b340769fe1c397adaff12ece77acc8350e7`. If initialization fails or either commit differs, stop.\n+\n+Read `.the-
+way/elements/part-map/skill/SKILL.md` in full and follow it. Read the files it references inside `.the-way`. Where it s
+ays where the-way lies, the product\'s case applies: here the process root is `.the-way`. Do not substitute a global sk
+ill.\n+\n+Where this skill or a file it reads names another the-way skill � `record-decision`, `record-invariant`, `rec
+ord-glossary-term`, `update-part-map`, `record-environment-fact`, `find-foundation-entries`, `define-project`, `plan-pr
+oject`, `settle-technology`, `refine-task`, `implement-task`, `plan-task` or `critique` � use this product\'s project s
+kill of the same name with the `the-way-` prefix, never an unprefixed one.\nCREATE .claude/skills/the-way-record-enviro
+nment-fact/SKILL.md\n--- /dev/null\n+++ .claude/skills/the-way-record-environment-fact/SKILL.md\n@@ -0,0 +1,14 @@\n+---
+\n+name: the-way-record-environment-fact\n+description: Use when a product\'s environment facts file, foundations/envir
+onment_facts.md, has to gain or change an entry � a fact an invariant\'s Rests on or a decision\'s Based on needs, a ci
+tation whose change would send its decision to review, a fact a task\'s return step found, a failed run of a fact\'s me
+thod, a fact shown false or left with nothing resting on it, or a fact a project definition projects. Use this product\
+'s pinned the-way commit.\n+---\n+\n+# the-way-record-environment-fact\n+\n+The process for this repository is pinned a
+s the Git submodule `.the-way`. Its commit is `74750b340769fe1c397adaff12ece77acc8350e7`.\n+\n+If `.the-way/elements/en
+vironment-facts/skill/SKILL.md` is absent, run `git submodule update --init -- .the-way` from the product root. Check `
+git ls-files --stage -- .the-way` and `git -C .the-way rev-parse HEAD`: both must show `74750b340769fe1c397adaff12ece77
+acc8350e7`. If initialization fails or either commit differs, stop.\n+\n+Read `.the-way/elements/environment-facts/skil
+l/SKILL.md` in full and follow it. Read the files it references inside `.the-way`. Where it says where the-way lies, th
+e product\'s case applies: here the process root is `.the-way`. Do not substitute a global skill.\n+\n+Where this skill
+ or a file it reads names another the-way skill � `record-decision`, `record-invariant`, `record-glossary-term`, `updat
+e-part-map`, `record-environment-fact`, `find-foundation-entries`, `define-project`, `plan-project`, `settle-technology
+`, `refine-task`, `implement-task`, `plan-task` or `critique` � use this product\'s project skill of the same name with
+ the `the-way-` prefix, never an unprefixed one.\nCREATE .agents/skills/the-way-record-environment-fact/SKILL.md\n--- /
+dev/null\n+++ .agents/skills/the-way-record-environment-fact/SKILL.md\n@@ -0,0 +1,14 @@\n+---\n+name: the-way-record-en
+vironment-fact\n+description: Use when a product\'s environment facts file, foundations/environment_facts.md, has to ga
+in or change an entry � a fact an invariant\'s Rests on or a decision\'s Based on needs, a citation whose change would 
+send its decision to review, a fact a task\'s return step found, a failed run of a fact\'s method, a fact shown false o
+r left with nothing resting on it, or a fact a project definition projects. Use this product\'s pinned the-way commit.\
+n+---\n+\n+# the-way-record-environment-fact\n+\n+The process for this repository is pinned as the Git submodule `.the-
+way`. Its commit is `74750b340769fe1c397adaff12ece77acc8350e7`.\n+\n+If `.the-way/elements/environment-facts/skill/SKIL
+L.md` is absent, run `git submodule update --init -- .the-way` from the product root. Check `git ls-files --stage -- .t
+he-way` and `git -C .the-way rev-parse HEAD`: both must show `74750b340769fe1c397adaff12ece77acc8350e7`. If initializat
+ion fails or either commit differs, stop.\n+\n+Read `.the-way/elements/environment-facts/skill/SKILL.md` in full and fo
+llow it. Read the files it references inside `.the-way`. Where it says where the-way lies, the product\'s case applies:
+ here the process root is `.the-way`. Do not substitute a global skill.\n+\n+Where this skill or a file it reads names 
+another the-way skill � `record-decision`, `record-invariant`, `record-glossary-term`, `update-part-map`, `record-envir
+onment-fact`, `find-foundation-entries`, `define-project`, `plan-project`, `settle-technology`, `refine-task`, `impleme
+nt-task`, `plan-task` or `critique` � use this product\'s project skill of the same name with the `the-way-` prefix, ne
+ver an unprefixed one.\nCREATE .claude/skills/the-way-find-foundation-entries/SKILL.md\n--- /dev/null\n+++ .claude/skil
+ls/the-way-find-foundation-entries/SKILL.md\n@@ -0,0 +1,14 @@\n+---\n+name: the-way-find-foundation-entries\n+descripti
+on: Use when a source has to be searched for what should become entries of a product\'s foundation � decisions, invaria
+nts, glossary terms, environment facts, changes to the part map � before any is written; for now, a project definition 
+whose settlements are to be projected before the project is broken into tasks, or a task whose refinement\'s settlement
+s are to be kept for its cycle. Use this product\'s pinned the-way commit.\n+---\n+\n+# the-way-find-foundation-entries
+\n+\n+The process for this repository is pinned as the Git submodule `.the-way`. Its commit is `74750b340769fe1c397adaf
+f12ece77acc8350e7`.\n+\n+If `.the-way/elements/common/skill/SKILL.md` is absent, run `git submodule update --init -- .t
+he-way` from the product root. Check `git ls-files --stage -- .the-way` and `git -C .the-way rev-parse HEAD`: both must
+ show `74750b340769fe1c397adaff12ece77acc8350e7`. If initialization fails or either commit differs, stop.\n+\n+Read `.t
+he-way/elements/common/skill/SKILL.md` in full and follow it. Read the files it references inside `.the-way`. Where it 
+says where the-way lies, the product\'s case applies: here the process root is `.the-way`. Do not substitute a global s
+kill.\n+\n+Where this skill or a file it reads names another the-way skill � `record-decision`, `record-invariant`, `re
+cord-glossary-term`, `update-part-map`, `record-environment-fact`, `find-foundation-entries`, `define-project`, `plan-p
+roject`, `settle-technology`, `refine-task`, `implement-task`, `plan-task` or `critique` � use this product\'s project 
+skill of the same name with the `the-way-` prefix, never an unprefixed one.\nCREATE .agents/skills/the-way-find-foundat
+ion-entries/SKILL.md\n--- /dev/null\n+++ .agents/skills/the-way-find-foundation-entries/SKILL.md\n@@ -0,0 +1,14 @@\n+--
+-\n+name: the-way-find-foundation-entries\n+description: Use when a source has to be searched for what should become en
+tries of a product\'s foundation � decisions, invariants, glossary terms, environment facts, changes to the part map � 
+before any is written; for now, a project definition whose settlements are to be projected before the project is broken
+ into tasks, or a task whose refinement\'s settlements are to be kept for its cycle. Use this product\'s pinned the-way
+ commit.\n+---\n+\n+# the-way-find-foundation-entries\n+\n+The process for this repository is pinned as the Git submodu
+le `.the-way`. Its commit is `74750b340769fe1c397adaff12ece77acc8350e7`.\n+\n+If `.the-way/elements/common/skill/SKILL.
+md` is absent, run `git submodule update --init -- .the-way` from the product root. Check `git ls-files --stage -- .the
+-way` and `git -C .the-way rev-parse HEAD`: both must show `74750b340769fe1c397adaff12ece77acc8350e7`. If initializatio
+n fails or either commit differs, stop.\n+\n+Read `.the-way/elements/common/skill/SKILL.md` in full and follow it. Read
+ the files it references inside `.the-way`. Where it says where the-way lies, the product\'s case applies: here the pro
+cess root is `.the-way`. Do not substitute a global skill.\n+\n+Where this skill or a file it reads names another the-w
+ay skill � `record-decision`, `record-invariant`, `record-glossary-term`, `update-part-map`, `record-environment-fact`,
+ `find-foundation-entries`, `define-project`, `plan-project`, `settle-technology`, `refine-task`, `implement-task`, `pl
+an-task` or `critique` � use this product\'s project skill of the same name with the `the-way-` prefix, never an unpref
+ixed one.\nCREATE .claude/skills/the-way-define-project/SKILL.md\n--- /dev/null\n+++ .claude/skills/the-way-define-proj
+ect/SKILL.md\n@@ -0,0 +1,14 @@\n+---\n+name: the-way-define-project\n+description: Use when a project of a product that
+ uses the-way has to be defined before it is broken into tasks � an idea, a concept or a note to turn into a project de
+finition, a definition to resume from its status line, or a definition to take through the readiness gate. Use this pro
+duct\'s pinned the-way commit.\n+---\n+\n+# the-way-define-project\n+\n+The process for this repository is pinned as th
+e Git submodule `.the-way`. Its commit is `74750b340769fe1c397adaff12ece77acc8350e7`.\n+\n+If `.the-way/project-level/s
+kill/SKILL.md` is absent, run `git submodule update --init -- .the-way` from the product root. Check `git ls-files --st
+age -- .the-way` and `git -C .the-way rev-parse HEAD`: both must show `74750b340769fe1c397adaff12ece77acc8350e7`. If in
+itialization fails or either commit differs, stop.\n+\n+Read `.the-way/project-level/skill/SKILL.md` in full and follow
+ it. Read the files it references inside `.the-way`. Where it says where the-way lies, the product\'s case applies: her
+e the process root is `.the-way`. Do not substitute a global skill.\n+\n+Where this skill or a file it reads names anot
+her the-way skill � `record-decision`, `record-invariant`, `record-glossary-term`, `update-part-map`, `record-environme
+nt-fact`, `find-foundation-entries`, `define-project`, `plan-project`, `settle-technology`, `refine-task`, `implement-t
+ask`, `plan-task` or `critique` � use this product\'s project skill of the same name with the `the-way-` prefix, never 
+an unprefixed one.\nCREATE .agents/skills/the-way-define-project/SKILL.md\n--- /dev/null\n+++ .agents/skills/the-way-de
+fine-project/SKILL.md\n@@ -0,0 +1,14 @@\n+---\n+name: the-way-define-project\n+description: Use when a project of a pro
+duct that uses the-way has to be defined before it is broken into tasks � an idea, a concept or a note to turn into a p
+roject definition, a definition to resume from its status line, or a definition to take through the readiness gate. Use
+ this product\'s pinned the-way commit.\n+---\n+\n+# the-way-define-project\n+\n+The process for this repository is pin
+ned as the Git submodule `.the-way`. Its commit is `74750b340769fe1c397adaff12ece77acc8350e7`.\n+\n+If `.the-way/projec
+t-level/skill/SKILL.md` is absent, run `git submodule update --init -- .the-way` from the product root. Check `git ls-f
+iles --stage -- .the-way` and `git -C .the-way rev-parse HEAD`: both must show `74750b340769fe1c397adaff12ece77acc8350e
+7`. If initialization fails or either commit differs, stop.\n+\n+Read `.the-way/project-level/skill/SKILL.md` in full a
+nd follow it. Read the files it references inside `.the-way`. Where it says where the-way lies, the product\'s case app
+lies: here the process root is `.the-way`. Do not substitute a global skill.\n+\n+Where this skill or a file it reads n
+ames another the-way skill � `record-decision`, `record-invariant`, `record-glossary-term`, `update-part-map`, `record-
+environment-fact`, `find-foundation-entries`, `define-project`, `plan-project`, `settle-technology`, `refine-task`, `im
+plement-task`, `plan-task` or `critique` � use this product\'s project skill of the same name with the `the-way-` prefi
+x, never an unprefixed one.\nCREATE .claude/skills/the-way-plan-project/SKILL.md\n--- /dev/null\n+++ .claude/skills/the
+-way-plan-project/SKILL.md\n@@ -0,0 +1,14 @@\n+---\n+name: the-way-plan-project\n+description: Use when an approved pro
+ject definition of a product that uses the-way has to be broken into tasks � the breakdown that writes the project plan
+, a plan to resume from its status line, or a plan to check again after its definition passed the readiness gate anew. 
+Not for a task\'s plan of slices, and never refines a task. Use this product\'s pinned the-way commit.\n+---\n+\n+# the
+-way-plan-project\n+\n+The process for this repository is pinned as the Git submodule `.the-way`. Its commit is `74750b
+340769fe1c397adaff12ece77acc8350e7`.\n+\n+If `.the-way/project-level/plan/skill/SKILL.md` is absent, run `git submodule
+ update --init -- .the-way` from the product root. Check `git ls-files --stage -- .the-way` and `git -C .the-way rev-pa
+rse HEAD`: both must show `74750b340769fe1c397adaff12ece77acc8350e7`. If initialization fails or either commit differs,
+ stop.\n+\n+Read `.the-way/project-level/plan/skill/SKILL.md` in full and follow it. Read the files it references insid
+e `.the-way`. Where it says where the-way lies, the product\'s case applies: here the process root is `.the-way`. Do no
+t substitute a global skill.\n+\n+Where this skill or a file it reads names another the-way skill � `record-decision`, 
+`record-invariant`, `record-glossary-term`, `update-part-map`, `record-environment-fact`, `find-foundation-entries`, `d
+efine-project`, `plan-project`, `settle-technology`, `refine-task`, `implement-task`, `plan-task` or `critique` � use t
+his product\'s project skill of the same name with the `the-way-` prefix, never an unprefixed one.\nCREATE .agents/skil
+ls/the-way-plan-project/SKILL.md\n--- /dev/null\n+++ .agents/skills/the-way-plan-project/SKILL.md\n@@ -0,0 +1,14 @@\n+-
+--\n+name: the-way-plan-project\n+description: Use when an approved project definition of a product that uses the-way h
+as to be broken into tasks � the breakdown that writes the project plan, a plan to resume from its status line, or a pl
+an to check again after its definition passed the readiness gate anew. Not for a task\'s plan of slices, and never refi
+nes a task. Use this product\'s pinned the-way commit.\n+---\n+\n+# the-way-plan-project\n+\n+The process for this repo
+sitory is pinned as the Git submodule `.the-way`. Its commit is `74750b340769fe1c397adaff12ece77acc8350e7`.\n+\n+If `.t
+he-way/project-level/plan/skill/SKILL.md` is absent, run `git submodule update --init -- .the-way` from the product roo
+t. Check `git ls-files --stage -- .the-way` and `git -C .the-way rev-parse HEAD`: both must show `74750b340769fe1c397ad
+aff12ece77acc8350e7`. If initialization fails or either commit differs, stop.\n+\n+Read `.the-way/project-level/plan/sk
+ill/SKILL.md` in full and follow it. Read the files it references inside `.the-way`. Where it says where the-way lies, 
+the product\'s case applies: here the process root is `.the-way`. Do not substitute a global skill.\n+\n+Where this ski
+ll or a file it reads names another the-way skill � `record-decision`, `record-invariant`, `record-glossary-term`, `upd
+ate-part-map`, `record-environment-fact`, `find-foundation-entries`, `define-project`, `plan-project`, `settle-technolo
+gy`, `refine-task`, `implement-task`, `plan-task` or `critique` � use this product\'s project skill of the same name wi
+th the `the-way-` prefix, never an unprefixed one.\nCREATE .claude/skills/the-way-settle-technology/SKILL.md\n--- /dev/
+null\n+++ .claude/skills/the-way-settle-technology/SKILL.md\n@@ -0,0 +1,14 @@\n+---\n+name: the-way-settle-technology\n
++description: Use when a project definition of a product that uses the-way has to settle the technology and architectur
+e choices its project needs before the readiness gate � a language, a framework, a library, a store of data, a way of l
+ogging in, a place to run � or to resume that step from the definition\'s Technology section. Use this product\'s pinne
+d the-way commit.\n+---\n+\n+# the-way-settle-technology\n+\n+The process for this repository is pinned as the Git subm
+odule `.the-way`. Its commit is `74750b340769fe1c397adaff12ece77acc8350e7`.\n+\n+If `.the-way/project-level/technology/
+SKILL.md` is absent, run `git submodule update --init -- .the-way` from the product root. Check `git ls-files --stage -
+- .the-way` and `git -C .the-way rev-parse HEAD`: both must show `74750b340769fe1c397adaff12ece77acc8350e7`. If initial
+ization fails or either commit differs, stop.\n+\n+Read `.the-way/project-level/technology/SKILL.md` in full and follow
+ it. Read the files it references inside `.the-way`. Where it says where the-way lies, the product\'s case applies: her
+e the process root is `.the-way`. Do not substitute a global skill.\n+\n+Where this skill or a file it reads names anot
+her the-way skill � `record-decision`, `record-invariant`, `record-glossary-term`, `update-part-map`, `record-environme
+nt-fact`, `find-foundation-entries`, `define-project`, `plan-project`, `settle-technology`, `refine-task`, `implement-t
+ask`, `plan-task` or `critique` � use this product\'s project skill of the same name with the `the-way-` prefix, never 
+an unprefixed one.\nCREATE .agents/skills/the-way-settle-technology/SKILL.md\n--- /dev/null\n+++ .agents/skills/the-way
+-settle-technology/SKILL.md\n@@ -0,0 +1,14 @@\n+---\n+name: the-way-settle-technology\n+description: Use when a project
+ definition of a product that uses the-way has to settle the technology and architecture choices its project needs befo
+re the readiness gate � a language, a framework, a library, a store of data, a way of logging in, a place to run � or t
+o resume that step from the definition\'s Technology section. Use this product\'s pinned the-way commit.\n+---\n+\n+# t
+he-way-settle-technology\n+\n+The process for this repository is pinned as the Git submodule `.the-way`. Its commit is 
+`74750b340769fe1c397adaff12ece77acc8350e7`.\n+\n+If `.the-way/project-level/technology/SKILL.md` is absent, run `git su
+bmodule update --init -- .the-way` from the product root. Check `git ls-files --stage -- .the-way` and `git -C .the-way
+ rev-parse HEAD`: both must show `74750b340769fe1c397adaff12ece77acc8350e7`. If initialization fails or either commit d
+iffers, stop.\n+\n+Read `.the-way/project-level/technology/SKILL.md` in full and follow it. Read the files it reference
+s inside `.the-way`. Where it says where the-way lies, the product\'s case applies: here the process root is `.the-way`
+. Do not substitute a global skill.\n+\n+Where this skill or a file it reads names another the-way skill � `record-deci
+sion`, `record-invariant`, `record-glossary-term`, `update-part-map`, `record-environment-fact`, `find-foundation-entri
+es`, `define-project`, `plan-project`, `settle-technology`, `refine-task`, `implement-task`, `plan-task` or `critique` 
+� use this product\'s project skill of the same name with the `the-way-` prefix, never an unprefixed one.\nCREATE .clau
+de/skills/the-way-refine-task/SKILL.md\n--- /dev/null\n+++ .claude/skills/the-way-refine-task/SKILL.md\n@@ -0,0 +1,14 @
+@\n+---\n+name: the-way-refine-task\n+description: Use to define or refine one product task before its the-way implemen
+tation cycle, whether independent, in a project plan, or based on a project\'s settlements without belonging to it. Not
+ for defining a project or writing the implementation plan. Use this product\'s pinned the-way commit.\n+---\n+\n+# the
+-way-refine-task\n+\n+The process for this repository is pinned as the Git submodule `.the-way`. Its commit is `74750b3
+40769fe1c397adaff12ece77acc8350e7`.\n+\n+If `.the-way/project-level/task/skill/SKILL.md` is absent, run `git submodule 
+update --init -- .the-way` from the product root. Check `git ls-files --stage -- .the-way` and `git -C .the-way rev-par
+se HEAD`: both must show `74750b340769fe1c397adaff12ece77acc8350e7`. If initialization fails or either commit differs, 
+stop.\n+\n+Read `.the-way/project-level/task/skill/SKILL.md` in full and follow it. Read the files it references inside
+ `.the-way`. Where it says where the-way lies, the product\'s case applies: here the process root is `.the-way`. Do not
+ substitute a global skill.\n+\n+Where this skill or a file it reads names another the-way skill � `record-decision`, `
+record-invariant`, `record-glossary-term`, `update-part-map`, `record-environment-fact`, `find-foundation-entries`, `de
+fine-project`, `plan-project`, `settle-technology`, `refine-task`, `implement-task`, `plan-task` or `critique` � use th
+is product\'s project skill of the same name with the `the-way-` prefix, never an unprefixed one.\nCREATE .agents/skill
+s/the-way-refine-task/SKILL.md\n--- /dev/null\n+++ .agents/skills/the-way-refine-task/SKILL.md\n@@ -0,0 +1,14 @@\n+---\
+n+name: the-way-refine-task\n+description: Use to define or refine one product task before its the-way implementation c
+ycle, whether independent, in a project plan, or based on a project\'s settlements without belonging to it. Not for def
+ining a project or writing the implementation plan. Use this product\'s pinned the-way commit.\n+---\n+\n+# the-way-ref
+ine-task\n+\n+The process for this repository is pinned as the Git submodule `.the-way`. Its commit is `74750b340769fe1
+c397adaff12ece77acc8350e7`.\n+\n+If `.the-way/project-level/task/skill/SKILL.md` is absent, run `git submodule update -
+-init -- .the-way` from the product root. Check `git ls-files --stage -- .the-way` and `git -C .the-way rev-parse HEAD`
+: both must show `74750b340769fe1c397adaff12ece77acc8350e7`. If initialization fails or either commit differs, stop.\n+
+\n+Read `.the-way/project-level/task/skill/SKILL.md` in full and follow it. Read the files it references inside `.the-w
+ay`. Where it says where the-way lies, the product\'s case applies: here the process root is `.the-way`. Do not substit
+ute a global skill.\n+\n+Where this skill or a file it reads names another the-way skill � `record-decision`, `record-i
+nvariant`, `record-glossary-term`, `update-part-map`, `record-environment-fact`, `find-foundation-entries`, `define-pro
+ject`, `plan-project`, `settle-technology`, `refine-task`, `implement-task`, `plan-task` or `critique` � use this produ
+ct\'s project skill of the same name with the `the-way-` prefix, never an unprefixed one.\nCREATE .claude/skills/the-wa
+y-implement-task/SKILL.md\n--- /dev/null\n+++ .claude/skills/the-way-implement-task/SKILL.md\n@@ -0,0 +1,14 @@\n+---\n+
+name: the-way-implement-task\n+description: Use to take one ready the-way task to a reviewable pull or merge request � 
+through a spec where the task leaves an open design choice, a plan of slices for every task, each slice made and review
+ed by agents of its own, testing and a final review � or to apply review corrections to its open request. Requires suba
+gents and the Superpowers skills named by this process. The human reviews the request, not intermediate steps. Use this
+ product\'s pinned the-way commit.\n+---\n+\n+# the-way-implement-task\n+\n+The process for this repository is pinned a
+s the Git submodule `.the-way`. Its commit is `74750b340769fe1c397adaff12ece77acc8350e7`.\n+\n+If `.the-way/task-cycle/
+skill/SKILL.md` is absent, run `git submodule update --init -- .the-way` from the product root. Check `git ls-files --s
+tage -- .the-way` and `git -C .the-way rev-parse HEAD`: both must show `74750b340769fe1c397adaff12ece77acc8350e7`. If i
+nitialization fails or either commit differs, stop.\n+\n+Read `.the-way/task-cycle/skill/SKILL.md` in full and follow i
+t. Read the files it references inside `.the-way`. Where it says where the-way lies, the product\'s case applies: here 
+the process root is `.the-way`. Do not substitute a global skill.\n+\n+Where this skill or a file it reads names anothe
+r the-way skill � `record-decision`, `record-invariant`, `record-glossary-term`, `update-part-map`, `record-environment
+-fact`, `find-foundation-entries`, `define-project`, `plan-project`, `settle-technology`, `refine-task`, `implement-tas
+k`, `plan-task` or `critique` � use this product\'s project skill of the same name with the `the-way-` prefix, never an
+ unprefixed one.\nCREATE .agents/skills/the-way-implement-task/SKILL.md\n--- /dev/null\n+++ .agents/skills/the-way-impl
+ement-task/SKILL.md\n@@ -0,0 +1,14 @@\n+---\n+name: the-way-implement-task\n+description: Use to take one ready the-way
+ task to a reviewable pull or merge request � through a spec where the task leaves an open design choice, a plan of sli
+ces for every task, each slice made and reviewed by agents of its own, testing and a final review � or to apply review 
+corrections to its open request. Requires subagents and the Superpowers skills named by this process. The human reviews
+ the request, not intermediate steps. Use this product\'s pinned the-way commit.\n+---\n+\n+# the-way-implement-task\n+
+\n+The process for this repository is pinned as the Git submodule `.the-way`. Its commit is `74750b340769fe1c397adaff12
+ece77acc8350e7`.\n+\n+If `.the-way/task-cycle/skill/SKILL.md` is absent, run `git submodule update --init -- .the-way` 
+from the product root. Check `git ls-files --stage -- .the-way` and `git -C .the-way rev-parse HEAD`: both must show `7
+4750b340769fe1c397adaff12ece77acc8350e7`. If initialization fails or either commit differs, stop.\n+\n+Read `.the-way/t
+ask-cycle/skill/SKILL.md` in full and follow it. Read the files it references inside `.the-way`. Where it says where th
+e-way lies, the product\'s case applies: here the process root is `.the-way`. Do not substitute a global skill.\n+\n+Wh
+ere this skill or a file it reads names another the-way skill � `record-decision`, `record-invariant`, `record-glossary
+-term`, `update-part-map`, `record-environment-fact`, `find-foundation-entries`, `define-project`, `plan-project`, `set
+tle-technology`, `refine-task`, `implement-task`, `plan-task` or `critique` � use this product\'s project skill of the 
+same name with the `the-way-` prefix, never an unprefixed one.\nCREATE .claude/skills/the-way-plan-task/SKILL.md\n--- /
+dev/null\n+++ .claude/skills/the-way-plan-task/SKILL.md\n@@ -0,0 +1,14 @@\n+---\n+name: the-way-plan-task\n+description
+: Use when a ready the-way task\'s change has to be divided into slices before it is made � the plan a task cycle write
+s for every task, from the frozen task, its spec where one exists, the foundation and the code, or writes again after a
+ spec or after a slice proved too large. Not for a project\'s plan of tasks, and never writes code. Use this product\'s
+ pinned the-way commit.\n+---\n+\n+# the-way-plan-task\n+\n+The process for this repository is pinned as the Git submod
+ule `.the-way`. Its commit is `74750b340769fe1c397adaff12ece77acc8350e7`.\n+\n+If `.the-way/task-cycle/plan/SKILL.md` i
+s absent, run `git submodule update --init -- .the-way` from the product root. Check `git ls-files --stage -- .the-way`
+ and `git -C .the-way rev-parse HEAD`: both must show `74750b340769fe1c397adaff12ece77acc8350e7`. If initialization fai
+ls or either commit differs, stop.\n+\n+Read `.the-way/task-cycle/plan/SKILL.md` in full and follow it. Read the files 
+it references inside `.the-way`. Where it says where the-way lies, the product\'s case applies: here the process root i
+s `.the-way`. Do not substitute a global skill.\n+\n+Where this skill or a file it reads names another the-way skill � 
+`record-decision`, `record-invariant`, `record-glossary-term`, `update-part-map`, `record-environment-fact`, `find-foun
+dation-entries`, `define-project`, `plan-project`, `settle-technology`, `refine-task`, `implement-task`, `plan-task` or
+ `critique` � use this product\'s project skill of the same name with the `the-way-` prefix, never an unprefixed one.\n
+CREATE .agents/skills/the-way-plan-task/SKILL.md\n--- /dev/null\n+++ .agents/skills/the-way-plan-task/SKILL.md\n@@ -0,0
+ +1,14 @@\n+---\n+name: the-way-plan-task\n+description: Use when a ready the-way task\'s change has to be divided into
+ slices before it is made � the plan a task cycle writes for every task, from the frozen task, its spec where one exist
+s, the foundation and the code, or writes again after a spec or after a slice proved too large. Not for a project\'s pl
+an of tasks, and never writes code. Use this product\'s pinned the-way commit.\n+---\n+\n+# the-way-plan-task\n+\n+The 
+process for this repository is pinned as the Git submodule `.the-way`. Its commit is `74750b340769fe1c397adaff12ece77ac
+c8350e7`.\n+\n+If `.the-way/task-cycle/plan/SKILL.md` is absent, run `git submodule update --init -- .the-way` from the
+ product root. Check `git ls-files --stage -- .the-way` and `git -C .the-way rev-parse HEAD`: both must show `74750b340
+769fe1c397adaff12ece77acc8350e7`. If initialization fails or either commit differs, stop.\n+\n+Read `.the-way/task-cycl
+e/plan/SKILL.md` in full and follow it. Read the files it references inside `.the-way`. Where it says where the-way lie
+s, the product\'s case applies: here the process root is `.the-way`. Do not substitute a global skill.\n+\n+Where this 
+skill or a file it reads names another the-way skill � `record-decision`, `record-invariant`, `record-glossary-term`, `
+update-part-map`, `record-environment-fact`, `find-foundation-entries`, `define-project`, `plan-project`, `settle-techn
+ology`, `refine-task`, `implement-task`, `plan-task` or `critique` � use this product\'s project skill of the same name
+ with the `the-way-` prefix, never an unprefixed one.\nCREATE .claude/skills/the-way-critique/SKILL.md\n--- /dev/null\n
++++ .claude/skills/the-way-critique/SKILL.md\n@@ -0,0 +1,14 @@\n+---\n+name: the-way-critique\n+description: Use when a
+n agent\'s proposal needs an independent critical reading, when a complete set of proposals will be reviewed together b
+y a human, or when a change to an invariant test or to the foundation needs its independent assessment. Checks purpose,
+ evidence, cost, source fidelity and contradictions before the author gives a verdict. Use this product\'s pinned the-w
+ay commit.\n+---\n+\n+# the-way-critique\n+\n+The process for this repository is pinned as the Git submodule `.the-way`
+. Its commit is `74750b340769fe1c397adaff12ece77acc8350e7`.\n+\n+If `.the-way/elements/common/critique/SKILL.md` is abs
+ent, run `git submodule update --init -- .the-way` from the product root. Check `git ls-files --stage -- .the-way` and 
+`git -C .the-way rev-parse HEAD`: both must show `74750b340769fe1c397adaff12ece77acc8350e7`. If initialization fails or
+ either commit differs, stop.\n+\n+Read `.the-way/elements/common/critique/SKILL.md` in full and follow it. Read the fi
+les it references inside `.the-way`. Where it says where the-way lies, the product\'s case applies: here the process ro
+ot is `.the-way`. Do not substitute a global skill.\n+\n+Where this skill or a file it reads names another the-way skil
+l � `record-decision`, `record-invariant`, `record-glossary-term`, `update-part-map`, `record-environment-fact`, `find-
+foundation-entries`, `define-project`, `plan-project`, `settle-technology`, `refine-task`, `implement-task`, `plan-task
+` or `critique` � use this product\'s project skill of the same name with the `the-way-` prefix, never an unprefixed on
+e.\nCREATE .agents/skills/the-way-critique/SKILL.md\n--- /dev/null\n+++ .agents/skills/the-way-critique/SKILL.md\n@@ -0
+,0 +1,14 @@\n+---\n+name: the-way-critique\n+description: Use when an agent\'s proposal needs an independent critical r
+eading, when a complete set of proposals will be reviewed together by a human, or when a change to an invariant test or
+ to the foundation needs its independent assessment. Checks purpose, evidence, cost, source fidelity and contradictions
+ before the author gives a verdict. Use this product\'s pinned the-way commit.\n+---\n+\n+# the-way-critique\n+\n+The p
+rocess for this repository is pinned as the Git submodule `.the-way`. Its commit is `74750b340769fe1c397adaff12ece77acc
+8350e7`.\n+\n+If `.the-way/elements/common/critique/SKILL.md` is absent, run `git submodule update --init -- .the-way` 
+from the product root. Check `git ls-files --stage -- .the-way` and `git -C .the-way rev-parse HEAD`: both must show `7
+4750b340769fe1c397adaff12ece77acc8350e7`. If initialization fails or either commit differs, stop.\n+\n+Read `.the-way/e
+lements/common/critique/SKILL.md` in full and follow it. Read the files it references inside `.the-way`. Where it says 
+where the-way lies, the product\'s case applies: here the process root is `.the-way`. Do not substitute a global skill.
+\n+\n+Where this skill or a file it reads names another the-way skill � `record-decision`, `record-invariant`, `record-
+glossary-term`, `update-part-map`, `record-environment-fact`, `find-foundation-entries`, `define-project`, `plan-projec
+t`, `settle-technology`, `refine-task`, `implement-task`, `plan-task` or `critique` � use this product\'s project skill
+ of the same name with the `the-way-` prefix, never an unprefixed one.\nAPPEND AGENTS.md\n(added at the end; the existi
+ng content stays byte for byte)\n+\n+<!-- the-way:begin -->\n+# Pinned the-way process\n+\n+This repository uses the-wa
+y, the process for its foundation, at the commit the gitlink of the Git submodule `.the-way` records. After a fresh clo
+ne run `git submodule update --init -- .the-way`; it needs read access to the Git URL in `.gitmodules`. Before use, `gi
+t -C .the-way rev-parse HEAD` must show the commit `git ls-files --stage -- .the-way` records. If initialization fails 
+or the commits differ, stop; never use another copy or version of the-way.\n+\n+Write foundation entries only through t
+he project skills `the-way-record-decision`, `the-way-record-invariant`, `the-way-record-glossary-term`, `the-way-updat
+e-part-map`, `the-way-record-environment-fact`. Use the project skills `the-way-find-foundation-entries`, `the-way-defi
+ne-project`, `the-way-plan-project`, `the-way-settle-technology`, `the-way-refine-task`, `the-way-implement-task`, `the
+-way-plan-task`, `the-way-critique` for their named work. Where a skill or a file it reads names one without the `the-w
+ay-` prefix, use the prefixed project skill, never a personal skill of that name.\n+\n+Run the-way\'s scripts from this
+ repository\'s root as `.the-way/<path>` and always name this repository\'s file or directory, e.g. `python -B .the-way
+/gate/run_tests.py <directory>` and `python -B .the-way/elements/<element>/format_guard.py foundations/<file>`. A guard
+ run inside `.the-way` without a file checks the-way\'s own files. Records of a run (`--record`) go under `.runs/`, whi
+ch `.gitignore` must keep ignored.\n+\n+The main branch is the branch task branches merge into. In a clone, `git symbol
+ic-ref --short refs/remotes/origin/HEAD` names it as `origin/<branch>`; otherwise ask the human. On a task branch pass 
+`--base` the commit `git merge-base HEAD <main branch>` prints and `--merge-onto` the commit of the main branch the mer
+ge goes onto (the part map\'s guard takes no `--merge-onto`). Pass `none` only while this repository has no main branch
+ at all; a command that cannot find the branch means a wrong name, not a missing branch. With `none` the checks that ne
+ed the commit stay unchecked.\n+\n+Until the part map has its first parts, its guard reports every tracked file as clai
+med by no part; that is expected, and it is not a pass.\n+\n+Nothing runs these checks automatically. Before a merge, r
+un the format guard of every changed foundation file and the tests of every changed part, and report what failed and wh
+at stayed unchecked. A check that did not run is never a pass.\n+<!-- the-way:end -->\nAPPEND .gitignore\n(added at the
+ end; the existing content stays byte for byte)\n+.runs/\nKEEP CLAUDE.md\nPreview only. Run again with --apply to confi
+rm and write.\n'
+
+----------------------------------------------------------------------
+Ran 3 tests in 5.848s
+
+FAILED (failures=4)

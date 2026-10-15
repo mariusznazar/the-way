@@ -1,0 +1,13 @@
+python : test_same_source_without_recorded_plan_membership_is_unchecked (test_plan_state.Command.test_same_source_witho
+ut_recorded_plan_membership_is_unchecked) ... ok
+At line:2 char:1
++ python -B -m unittest discover -s project-level -p test_plan_state.py ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (test_same_sourc...checked) ... ok:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+
+----------------------------------------------------------------------
+Ran 1 test in 2.681s
+
+OK

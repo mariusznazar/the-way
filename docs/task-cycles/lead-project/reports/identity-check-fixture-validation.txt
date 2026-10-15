@@ -1,0 +1,11 @@
+readiness_check.py C:\Users\Mariusz\AppData\Local\Temp\plan evidence 3ztdzlwq\project notes\definition.md EXIT=0
+readiness: nothing found
+
+plan_check.py C:\Users\Mariusz\AppData\Local\Temp\plan evidence 3ztdzlwq\project notes\plan.md EXIT=0
+plan: nothing found
+
+readiness_check.py C:\Users\Mariusz\AppData\Local\Temp\plan evidence 3ztdzlwq\another project\definition.md EXIT=0
+readiness: nothing found
+
+plan_check.py C:\Users\Mariusz\AppData\Local\Temp\plan evidence 3ztdzlwq\another project\plan.md EXIT=0
+plan: nothing found

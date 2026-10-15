@@ -1,0 +1,26 @@
+test_fresh_remote_record_composes_both_transitions (test_plan_state_invariant.PlanStateEvidence.test_fresh_remote_record_composes_both_transitions) ... FAIL
+
+======================================================================
+FAIL: test_fresh_remote_record_composes_both_transitions (test_plan_state_invariant.PlanStateEvidence.test_fresh_remote_record_composes_both_transitions)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\lead-project\.runs\task-cycles\lead-project\identity-review-source-breaks\project-level\test_plan_state_invariant.py", line 343, in test_fresh_remote_record_composes_both_transitions
+    self.proposals_are("propose 1 report-download: ready for cycle -> in cycle",
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                       "propose 1 report-download: in cycle -> done")
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\lead-project\.runs\task-cycles\lead-project\identity-review-source-breaks\project-level\test_plan_state_invariant.py", line 296, in proposals_are
+    self.assertCountEqual(self.proposals, expected, self.output)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Element counts were not equal:
+First has 0, Second has 1:  'propose 1 report-download: ready for cycle -> in cycle'
+First has 0, Second has 1:  'propose 1 report-download: in cycle -> done' : repository: C:\Users\Mariusz\AppData\Local\Temp\plan evidence sek8wql9\product repository
+integration: refs/remotes/origin/delivery 138ba9b6857a0e90f3e0df5b4b609e77f5d022c8
+task 1 report-download: ready for cycle
+unchecked 1 report-download: no sufficient cycle trace; PR outcome unchecked
+
+
+----------------------------------------------------------------------
+Ran 1 test in 1.606s
+
+FAILED (failures=1)

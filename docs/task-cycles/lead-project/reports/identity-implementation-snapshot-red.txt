@@ -1,0 +1,41 @@
+python : test_later_owned_snapshot_cannot_borrow_foreign_integration_or_pointer (test_plan_state.Command.test_later_own
+ed_snapshot_cannot_borrow_foreign_integration_or_pointer) ... FAIL
+At line:2 char:87
++ ... t -Last 85; python -B -m unittest discover -s project-level -p test_p ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (test_later_owne...inter) ... FAIL:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+
+======================================================================
+FAIL: test_later_owned_snapshot_cannot_borrow_foreign_integration_or_pointer (test_plan_state.Command.test_later_owned_
+snapshot_cannot_borrow_foreign_integration_or_pointer)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\lead-project\project-level\test_plan_state.py", line 435, in test_later_owned_snaps
+hot_cannot_borrow_foreign_integration_or_pointer
+    output = self.run_reader(1)
+  File "C:\Storage\repos\the-way-wt\lead-project\project-level\test_plan_state.py", line 163, in run_reader
+    self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : repository: C:\Users\Mariusz\AppData\Local\Temp\plan state uzkcaib7\product
+integration: refs/remotes/origin/release a546044df7179ca43f62000e276f3f0a25f753a7
+task 1 reports: ready for cycle
+evidence 1 reports: archived cycle docs/task-cycles/reports/ commit 97c838abb20b8f9080f54d5b2398994ef1316a5f on refs/he
+ads/feature
+evidence 1 reports: PR pointer from 97c838abb20b8f9080f54d5b2398994ef1316a5f:docs/task-cycles/reports/record.md: https:
+//example.invalid/org/app/pull/47
+evidence 1 reports: archived cycle docs/task-cycles/reports/ commit a546044df7179ca43f62000e276f3f0a25f753a7 on refs/he
+ads/feature, refs/heads/release, refs/remotes/origin/HEAD, refs/remotes/origin/release
+evidence 1 reports: PR pointer from a546044df7179ca43f62000e276f3f0a25f753a7:docs/task-cycles/reports/record.md: https:
+//example.invalid/org/app/pull/99
+evidence 1 reports: cycle record docs/task-cycles/reports/accepted.md, docs/task-cycles/reports/record.md commit a54604
+4df7179ca43f62000e276f3f0a25f753a7 reachable from refs/remotes/origin/release a546044df7179ca43f62000e276f3f0a25f753a7
+propose 1 reports: ready for cycle -> in cycle
+propose 1 reports: in cycle -> done
+
+
+----------------------------------------------------------------------
+Ran 1 test in 2.580s
+
+FAILED (failures=1)
