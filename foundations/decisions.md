@@ -237,8 +237,8 @@ On the main branch, this repository holds `foundations/` with the entries of the
 directory for each part of the process other than `repository` — `elements/<element>/` for each
 foundation element, `elements/common/` for what the elements share, `relation-model/`, `gate/`,
 `installation/`, `agent-instructions/`, `instruction-files/`, `project-level/` and `task-cycle/`
-— with `probes/` as a second directory of the environment facts part, for the checks of the-
-way's own facts, the files that configure the whole repository, which its part map gives to the
+— with `probes/` as a second directory of the environment facts part, for the checks of
+the-way's own facts, the files that configure the whole repository, which its part map gives to the
 `repository` part (WAY-44), the root agent instruction files and the project skill entry points
 under `.claude/skills/` and `.agents/skills/`, which the map gives to `agent-instructions`
 (WAY-44), and a `README.md` that describes the repository. A directory reaches the main branch
@@ -247,8 +247,8 @@ pointer to entries of the-way that serve as its examples, a skill that writes it
 format guard; `elements/common/` the rules of form and the way of working the elements'
 templates and skills share, the code their format guards share and the skills that find entries
 and that critique proposals and assess changes; `project-level/` the templates of a project
-definition, a project plan and a task document, the skills that write them and lead a handed-
-over plan, the readiness check, the plan check, the reader of task-cycle evidence for plan
+definition, a project plan and a task document, the skills that write them and lead a
+handed-over plan, the readiness check, the plan check, the reader of task-cycle evidence for plan
 states and their tests; `relation-model/` the script that computes fingerprints; `gate/` the
 test of every critical flow in the part map; `installation/` the installer, its tests and a
 README explaining how a product uses the pinned version; `agent-instructions/` the instructions
