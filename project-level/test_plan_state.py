@@ -119,7 +119,8 @@ class Command(unittest.TestCase):
         self.write(self.definition, "# Reports\n\nStatus: approved 2026-10-01\n\n" + BODY +
                    "## Gate record\n\n- Approved by: Fixture, 2026-10-01\n"
                    "- Foundation searched at: 1234567\n- Definition fingerprint: " + FINGERPRINT + "\n")
-        self.write(self.task, "# Reports\n\nStatus: ready for cycle\n")
+        self.write(self.task, "# Reports\n\nStatus: ready for cycle\n"
+                   "Project relation: plan item: plan.md — reports\n")
         self.state("ready for cycle")
 
     @staticmethod
@@ -138,10 +139,21 @@ class Command(unittest.TestCase):
 
     def archive(self, slug="reports", content="# Record\n", filename="record.md"):
         path = "docs/task-cycles/" + slug + "/" + filename
-        self.write(self.repo / path, content)
-        self.git(self.repo, "add", path)
+        self.cycle(self.repo / path, content)
+        self.git(self.repo, "add", "docs/task-cycles/" + slug)
         self.git(self.repo, "commit", "-m", "Archive cycle")
         return self.git(self.repo, "rev-parse", "HEAD")
+
+    def cycle(self, record, content="", source=None, relation=None):
+        self.write(record, "# Cycle record\n\n- Task source: " + str(source or self.task) +
+                   " — approved 2026-10-01\n- Task relation: plan item\n\n" +
+                   "## Artifacts\n\n| Kind | Path or commit | Author | Review |\n"
+                   "|---|---|---|---|\n| Frozen task | [accepted](accepted.md) | Fixture | accepted |\n\n"
+                   "## Verification\n\n" + content)
+        frozen = self.task.read_text(encoding="utf-8")
+        if relation is not None:
+            frozen = frozen.replace("plan.md — reports", relation)
+        self.write(record.with_name("accepted.md"), frozen)
 
     def run_reader(self, expected=0):
         before = {p: p.read_bytes() for p in (self.plan, self.definition, self.task)}
@@ -203,7 +215,7 @@ class Command(unittest.TestCase):
         self.assertNotIn("propose ", self.run_reader())
         worktree = self.root / "worktree"
         self.git(self.repo, "worktree", "add", "--no-track", "-b", "feature", str(worktree))
-        (worktree / ".runs/task-cycles/reports").mkdir(parents=True)
+        self.cycle(worktree / ".runs/task-cycles/reports/progress.md")
         output = self.run_reader()
         self.assertIn("propose 1 reports: ready for cycle -> in cycle", output)
         self.assertIn(str(worktree), output)
@@ -389,6 +401,125 @@ class Command(unittest.TestCase):
         with contextlib.redirect_stdout(output):
             self.assertEqual(plan_state.main([str(self.root / "absent.md"), str(self.repo)]), 2)
         self.assertIn("error:", output.getvalue())
+
+    def test_duplicate_record_source_does_not_choose_one_identity(self):
+        # Break caught: choosing the first of contradictory provenance fields advances a task.
+        record = self.repo / ".runs/task-cycles/reports/progress.md"
+        self.cycle(record)
+        self.write(record, record.read_text(encoding="utf-8").replace(
+            "- Task relation:", "- Task source: " + str(self.root / "other/task.md") +
+            " — approved 2026-10-01\n- Task relation:"))
+        output = self.run_reader()
+        self.assertNotIn("propose ", output)
+        self.assertIn("unchecked 1 reports:", output)
+
+    def test_frozen_membership_cannot_point_to_another_plan(self):
+        # Break caught: matching source path hides contradictory frozen plan membership.
+        self.cycle(self.repo / ".runs/task-cycles/reports/progress.md",
+                   relation="other-plan.md — reports")
+        output = self.run_reader(1)
+        self.assertIn("conflict 1 reports:", output)
+        self.assertNotIn("propose ", output)
+
+    def test_explicit_record_plan_disagreement_is_not_hidden_by_frozen_task(self):
+        # Break caught: discarding a record's explicit foreign plan while trusting its frozen task.
+        record = self.repo / ".runs/task-cycles/reports/progress.md"
+        self.cycle(record)
+        self.write(record, record.read_text(encoding="utf-8").replace(
+            "- Task relation: plan item", "- Task relation: plan item — other-plan.md "
+            "(handed over 2026-10-02), item 1 reports"))
+        output = self.run_reader(1)
+        self.assertIn("conflict 1 reports:", output)
+        self.assertNotIn("propose ", output)
+
+    def test_quoted_provenance_is_not_a_record_header(self):
+        # Break caught: a fenced example in an unrelated file impersonates current provenance.
+        record = self.repo / ".runs/task-cycles/reports/progress.md"
+        self.cycle(record)
+        self.write(record, "# Unrelated notes\n\n```markdown\n" +
+                   record.read_text(encoding="utf-8") + "\n```\n")
+        output = self.run_reader()
+        self.assertNotIn("propose ", output)
+        self.assertIn("unchecked 1 reports:", output)
+
+    def test_stable_task_name_survives_plan_renumbering(self):
+        # Break caught: treating an old item number as identity rejects the same named source task.
+        self.archive()
+        record = self.repo / "docs/task-cycles/reports/record.md"
+        self.write(record, record.read_text(encoding="utf-8").replace(
+            "- Task relation: plan item", "- Task relation: plan item — plan.md "
+            "(handed over 2026-10-02), item 1 reports"))
+        self.git(self.repo, "add", "docs/task-cycles/reports/record.md")
+        self.git(self.repo, "commit", "--amend", "--no-edit")
+        self.git(self.repo, "push", "origin", "release")
+        self.write(self.plan, self.plan.read_text(encoding="utf-8").replace("| 1 | reports", "| 2 | reports"))
+        output = self.run_reader()
+        self.assertIn("propose 2 reports: in cycle -> done", output)
+
+    def test_source_approval_annotation_can_be_separated_by_semicolon(self):
+        # Break caught: approval prose becomes part of a source filename and falsely conflicts.
+        self.archive()
+        record = self.repo / "docs/task-cycles/reports/record.md"
+        self.write(record, record.read_text(encoding="utf-8").replace(
+            " — approved 2026-10-01", "; ready for cycle, answer approved 2026-10-01"))
+        self.git(self.repo, "add", "docs/task-cycles/reports/record.md")
+        self.git(self.repo, "commit", "--amend", "--no-edit")
+        self.git(self.repo, "push", "origin", "release")
+        output = self.run_reader()
+        self.assertIn("propose 1 reports: in cycle -> done", output)
+
+    def test_record_source_commit_can_replace_approval_date(self):
+        # Break caught: the template's source-commit alternative is mistaken for a foreign filename.
+        self.archive()
+        record = self.repo / "docs/task-cycles/reports/record.md"
+        self.write(record, record.read_text(encoding="utf-8").replace(
+            " — approved 2026-10-01", " — source commit 0123456789abcdef"))
+        self.git(self.repo, "add", "docs/task-cycles/reports/record.md")
+        self.git(self.repo, "commit", "--amend", "--no-edit")
+        self.git(self.repo, "push", "origin", "release")
+        self.assertIn("propose 1 reports: in cycle -> done", self.run_reader())
+
+    def test_source_path_delimiters_inside_a_directory_remain_literal(self):
+        # Break caught: splitting metadata separators inside a valid source directory loses identity.
+        moved = self.root / "notes; literal — folder"
+        self.plan.parent.rename(moved)
+        self.plan = moved / "plan.md"
+        self.definition = moved / "definition.md"
+        self.task = moved / "task.md"
+        self.archive()
+        self.git(self.repo, "push", "origin", "release")
+        output = self.run_reader()
+        self.assertIn("propose 1 reports: in cycle -> done", output)
+
+    def test_same_source_without_recorded_plan_membership_is_unchecked(self):
+        # Break caught: missing historical plan membership is falsely called a foreign task.
+        record = self.repo / ".runs/task-cycles/reports/progress.md"
+        for relation in ("source only — definition.md", "independent", "legacy relation"):
+            with self.subTest(relation=relation):
+                self.cycle(record)
+                self.write(record, record.read_text(encoding="utf-8").replace(
+                    "- Task relation: plan item", "- Task relation: " + relation))
+                output = self.run_reader()
+                self.assertIn("unchecked 1 reports:", output)
+                self.assertNotIn("conflict 1 reports:", output)
+                self.assertNotIn("propose ", output)
+
+    def test_later_owned_snapshot_cannot_borrow_foreign_integration_or_pointer(self):
+        # Break caught: ownership at a local tip validates a foreign integrated snapshot.
+        self.archive(content="Request: https://example.invalid/org/app/pull/99\n")
+        record = self.repo / "docs/task-cycles/reports/record.md"
+        self.cycle(record, "Request: https://example.invalid/org/app/pull/99\n",
+                   source=self.root / "foreign/task.md", relation="plan.md — reports")
+        self.git(self.repo, "add", "docs/task-cycles/reports")
+        self.git(self.repo, "commit", "--amend", "--no-edit")
+        self.git(self.repo, "push", "origin", "release")
+        self.git(self.repo, "switch", "-c", "feature")
+        self.archive(content="Request: https://example.invalid/org/app/pull/47\n")
+        output = self.run_reader(1)
+        self.assertNotIn(" -> done", output)
+        self.assertNotIn("PR pointer from", "\n".join(
+            line for line in output.splitlines() if "/pull/99" in line))
+        self.assertIn("/pull/47", output)
 
 
 if __name__ == "__main__":

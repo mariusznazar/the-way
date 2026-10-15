@@ -11,6 +11,7 @@ Command output is UTF-8, including redirected reports and diagnostics.
 import argparse
 import os
 from pathlib import Path
+import posixpath
 import re
 import subprocess
 import sys
@@ -128,7 +129,7 @@ def commits_touching(git, refs, path):
 
 
 def archived_files(git, commit, archive):
-    """The archive directory is the record contract; basenames and prose are not a schema."""
+    """Inventory ordinary blobs without following symlinks or imposing record basenames."""
     raw = git.run("ls-tree", "-r", "-z", "--full-tree", commit, "--",
                   ":(literal)" + archive).stdout
     paths = []
@@ -141,11 +142,11 @@ def archived_files(git, commit, archive):
     return paths
 
 
-def record_pointers(git, commit, archive):
+def record_pointers(git, commit, paths):
     """Read pointer text as data, without executing or printing the archive's instructions."""
     result = git.run("grep", "-I", "-z", "-n", "-E",
                      r"https?://[^ ]+/(pull|merge_requests)/[0-9]+", commit, "--",
-                     ":(literal)" + archive, allowed=(0, 1))
+                     *(":(literal)" + path for path in paths), allowed=(0, 1))
     pointers = []
     for row in result.stdout.splitlines():
         parts = row.split(b"\0", 2)
@@ -156,11 +157,123 @@ def record_pointers(git, commit, archive):
     return sorted(set(pointers))
 
 
-def task_report(git, observation, task):
+def path_value(value):
+    """Read a literal path or a whole Markdown path link; never interpret it as a command."""
+    value = value.strip()
+    link = re.fullmatch(r"\[[^\]\n]*\]\((.+)\)", value)
+    if link:
+        value = link[1]
+    return value.strip("`<>")
+
+
+def source_path(value, parent=None):
+    value = path_value(value)
+    if not value or any(char in value for char in "\r\n\0") or "://" in value:
+        return None
+    path = Path(value)
+    if not path.is_absolute():
+        if parent is None:
+            return None
+        path = parent / path
+    # Lexical normalization keeps missing/moved sources unresolved rather than searching by name.
+    return os.path.normcase(os.path.abspath(path))
+
+
+def header_fields(text, label):
+    fields = []
+    for line in text.splitlines():
+        if line.startswith(("## ", "```", "~~~")):
+            break
+        match = re.fullmatch(r"(?:- )?" + re.escape(label) + r": (.+)", line)
+        if match:
+            fields.append(match[1])
+    return fields
+
+
+def provenance(paths, read, plan_path, task):
+    """Associate each record with its own retained task, anchored at its original source."""
+    document = source_path(task.document, Path(plan_path).parent)
+    owned, unresolved, foreign = [], [], []
+    for path in paths:
+        text = read(path)
+        sources = header_fields(text, "Task source")
+        relations = header_fields(text, "Task relation")
+        if not sources and not relations:
+            continue
+        if len(sources) != 1 or len(relations) != 1:
+            unresolved.append(path + ": missing or ambiguous task provenance fields")
+            continue
+        original = source_path(re.split(
+            r"(?: — |; )(?=approved [0-9]{4}-|source commit [0-9a-f]+|Status: |"
+            r"ready for cycle|settlements accepted [0-9]{4}-)",
+            sources[0], maxsplit=1)[0])
+        if original is None or document is None or task.document == "—":
+            unresolved.append(path + ": original Task source or Document cannot be anchored")
+            continue
+        if original != document:
+            foreign.append(path + ": Task source " + original + " differs from Document " + document)
+            continue
+        if not re.fullmatch(r"plan item(?: — .+)?", relations[0]):
+            unresolved.append(path + ": same-source Task relation does not establish this plan's membership")
+            continue
+        if relations[0] != "plan item":
+            # Existing expanded records retain plan path, source status and item identity.
+            relation = re.fullmatch(r"plan item — (.+?) \([^\n]+\), item ([1-9][0-9]*) "
+                                    r"([a-z0-9]+(?:-[a-z0-9]+)*)(?:; .+)?", relations[0])
+            if not relation:
+                unresolved.append(path + ": expanded Task relation cannot be read unambiguously")
+                continue
+            related_plan = source_path(relation[1], Path(original).parent)
+            if related_plan != source_path(plan_path) or relation[3] != task.name:
+                foreign.append(path + ": Task relation names plan " + str(related_plan) +
+                               " item " + relation[2] + " " + relation[3])
+                continue
+        artifacts = re.search(r"^## Artifacts\s*\n(.*?)(?=^## |\Z)", text,
+                              re.MULTILINE | re.DOTALL)
+        frozen = []
+        if artifacts:
+            for line in artifacts[1].splitlines():
+                cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
+                if len(cells) >= 2 and cells[0].lower() == "frozen task":
+                    frozen.append(path_value(cells[1]))
+        if len(frozen) != 1:
+            unresolved.append(path + ": missing or ambiguous frozen task artifact")
+            continue
+        target = posixpath.normpath(posixpath.join(posixpath.dirname(path),
+                                                 frozen[0].replace("\\", "/")))
+        # Frozen artifacts must belong to this snapshot, not today's external source or another cycle.
+        if target not in paths:
+            unresolved.append(path + ": frozen task artifact absent from this cycle snapshot")
+            continue
+        memberships = header_fields(read(target), "Project relation")
+        if len(memberships) != 1:
+            unresolved.append(path + ": missing or ambiguous frozen task membership")
+            continue
+        membership = re.fullmatch(r"plan item: (.+) — ([a-z0-9]+(?:-[a-z0-9]+)*)",
+                                  memberships[0])
+        if not membership:
+            unresolved.append(path + ": frozen task membership cannot be read")
+            continue
+        member_plan = source_path(membership[1], Path(original).parent)
+        if member_plan != source_path(plan_path) or membership[2] != task.name:
+            foreign.append(path + ": frozen task names plan " + str(member_plan) +
+                           " task " + membership[2] + ", not the supplied plan/task")
+            continue
+        owned.append(path)
+    if foreign:
+        return "foreign", owned, foreign
+    if unresolved:
+        return "unchecked", [], unresolved
+    if not owned:
+        return "unchecked", [], ["missing recorded task provenance in cycle snapshot"]
+    return "owned", owned, []
+
+
+def task_report(git, observation, task, plan_path):
     prefix = "%d %s" % (task.number, task.name)
     lines = ["task %s: %s" % (prefix, task.state)]
     active, archived, merged = [], [], []
-    unchecked, errors = [], []
+    unchecked, errors, contradictions = [], [], []
     working = ".runs/task-cycles/" + task.name
     archive = "docs/task-cycles/" + task.name + "/"
     try:
@@ -168,22 +281,50 @@ def task_report(git, observation, task):
             path = worktree / working
             try:
                 if path.is_dir():
-                    active.append(path)
+                    files = [file for file in path.rglob("*") if file.is_file() and
+                             not any(parent.is_symlink() for parent in (file, *file.parents))]
+                    paths = [file.relative_to(path).as_posix() for file in files]
+                    status, _, reasons = provenance(paths, lambda name: (path / name).read_text(
+                        encoding="utf-8", errors="replace"), plan_path, task)
+                    if status == "owned":
+                        active.append(path)
+                    else:
+                        destination = contradictions if status == "foreign" else unchecked
+                        destination.extend(str(path) + ": " + reason for reason in reasons)
             except OSError as error:
                 unchecked.append("cannot read working-cycle path %s: %s" % (path, error))
-        archived = commits_touching(git, observation.refs, archive)
-        for commit in archived:
+        candidates = commits_touching(git, observation.refs, archive)
+        snapshots = {}
+        for commit in candidates:
+            paths = archived_files(git, commit, archive)
+            if not paths:
+                continue  # Deletion alone cannot supply a record; earlier snapshots remain visible.
+            cache = {}
+
+            def read(name):
+                if name not in cache:
+                    cache[name] = git.run("show", commit + ":" + name).stdout.decode(
+                        "utf-8", errors="replace")
+                return cache[name]
+
+            status, records, reasons = provenance(paths, read, plan_path, task)
+            if status != "owned":
+                destination = contradictions if status == "foreign" else unchecked
+                destination.extend("commit " + commit + ": " + reason for reason in reasons)
+                continue
+            archived.append(commit)
+            snapshots[commit] = records
             refs = git.text("for-each-ref", "--contains=" + commit, "--format=%(refname)",
                             "refs/heads/", "refs/remotes/")
             lines.append("evidence %s: archived cycle %s commit %s on %s" %
                          (prefix, archive, commit, display(", ".join(refs.splitlines()))))
-            for source, link in record_pointers(git, commit, archive):
+            for source, link in record_pointers(git, commit, records):
                 lines.append("evidence %s: PR pointer from %s: %s" %
                              (prefix, display(source), display(link)))
         # A deletion is a cycle trace, but cannot stand for actual archived content.
         if observation.commit and observation.complete:
             for commit in commits_touching(git, [observation.commit], archive):
-                paths = archived_files(git, commit, archive)
+                paths = snapshots.get(commit, [])
                 if paths:
                     merged.append(commit)
                     lines.append("evidence %s: cycle record %s commit %s reachable from %s %s" %
@@ -195,8 +336,12 @@ def task_report(git, observation, task):
     for path in active:
         lines.append("evidence %s: working cycle %s" % (prefix, display(path)))
     trace = bool(active or archived or merged)
-    conflict = False
-    if task.state in ("ready for cycle", "in cycle"):
+    conflict = bool(contradictions)
+    for reason in contradictions:
+        lines.append("conflict %s: %s; human reconciliation required" % (prefix, display(reason)))
+    if conflict:
+        pass
+    elif task.state in ("ready for cycle", "in cycle"):
         if task.state == "ready for cycle" and trace:
             lines.append("propose %s: ready for cycle -> in cycle" % prefix)
         if merged and not errors:
@@ -279,7 +424,7 @@ def main(argv=None):
             print("error: " + display(error))
         conflicts, failures = False, bool(observation.errors)
         for task in tasks:
-            lines, conflict, failure = task_report(git, observation, task)
+            lines, conflict, failure = task_report(git, observation, task, plan_path)
             for line in lines:
                 print(line)
             conflicts |= conflict
