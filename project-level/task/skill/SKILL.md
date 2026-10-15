@@ -13,6 +13,51 @@ This skill lives in `project-level/task/skill/` of the-way. In the-way itself, r
 checkout or worktree the session works in; in a product, at the pinned `.the-way` commit.
 Another the-way skill named here is the project skill with the `the-way-` prefix.
 
+## Orchestrated mode
+
+When a project orchestrator dispatches you with a conversation-file path, use this same workflow
+with the routing below (WAY-134, WAY-154, WAY-155). Read the file and
+`project-level/lead/conversation_template.md` first; verify its product, plan, task identity and
+process pin. Resume from its recorded next actor and all turns, checking sources again. Consume
+recorded answers before proceeding; do not repeat a settled presentation/question unless its
+meaning or source has changed. A missing
+or mismatched file/source is an `obstacle`, not permission to guess or overwrite another task.
+
+- Every question or presentation this skill or a borrowed skill would otherwise address to the
+  human goes into your conversation turn, then you end the turn. This includes task location,
+  which task to refine, goal/scope/wording, conflicting decisions, deployment-work splits,
+  Human-action placement/completion, candidate acceptance/rejection, questions against choices
+  and final complete-document approval. Supply complete material, available ways, costs and a
+  recommendation where "How a skill asks" requires them. Never ask the human directly.
+- Use `find-foundation-entries` in task mode for its source search and candidate table, but return
+  its human-presentation steps and required critique/child-work requests through this file.
+  Start no child agent. The project orchestrator performs dispatches and presents the round
+  package, candidates and required WAY-113 questions; you approve nothing on its behalf.
+- Edit only your task document and your conversation turn. Do not write the shared plan,
+  definition or foundation, nor launch implementation. Record a mismatch requiring upstream work
+  as `plan change`, with evidence and the requested change. An unavailable source/capability or
+  conflict preventing a valid next step is `obstacle`, with what resolves it.
+- Transfer every resolved answer, including canonical answers shared across tasks, with its
+  original source into Questions to settle before relying on it. Preserve human words separately
+  from document quotations and factual code observations; code cannot prescribe required product
+  behavior. A human-struck quotation returns as a human question, never a settled requirement.
+- Carry human-accepted candidates whole; remove rejected rows only on the recorded human answer,
+  keeping the shown/accepted counts. Pending selection or a required unanswered challenge keeps
+  the task unfinished. Likewise, only the human places Human actions and confirms completion.
+- `Depends on` alone does not prevent refinement. Use `waits for task <n>` only for a named question
+  that needs the result of task n held by the plan; keep that question/reason in both documents.
+- Finish by recording evidence and one exact result: `questions`, `waits for task <n>`,
+  `ready for approval`, `plan change` or `obstacle`. The final nonempty line of the conversation
+  and your entire short return are the identical phrase, with the actual number for `<n>`.
+  `questions` routes remaining questions/material to the round answerer and project orchestrator;
+  `ready for approval` means all checks except final whole-document acceptance pass. It is a turn
+  result, never a task Status. Use `refining` or `waiting for human` as applicable; never write
+  `ready for cycle`. The project orchestrator alone changes that Status after the human accepts
+  the exact complete document, one at a time, and handles plan updates and safe cleanup.
+
+Manual refinement uses the direct conversation in the steps below. Both modes require final
+human acceptance of the complete task, even when refinement finds no candidate settlements.
+
 ## 1. Read the sources
 
 - Read the template in full, the "How a skill asks" section of
@@ -128,7 +173,14 @@ Another the-way skill named here is the project skill with the `the-way-` prefix
   and every human action before the cycle done (WAY-124, WAY-140). For a project member, also
   check its plan item and assignments; for any task using approved project settlements, check
   the definition's approval and that every projected entry its code makes true is marked with the
-  part made true. Mark `Status: ready for cycle` only when its applicable checks pass; report an
-  obstacle instead of declaring readiness.
+  part made true. Report an obstacle instead of declaring readiness when a check fails.
+- Once these checks pass, show the complete final document and explicitly ask the human to accept
+  that document, then wait. Acceptance of candidates, Human-action placement or an earlier draft
+  is not this acceptance. Keep `Status: waiting for human` until it is given, including a task
+  with no candidates. Apply requested changes and show the complete revised document again.
+  In manual mode mark `Status: ready for cycle` only after this acceptance and all applicable
+  checks pass (WAY-124). In orchestrated mode place the complete document and acceptance request
+  in the conversation, return `ready for approval`, and leave the final Status write to the
+  project orchestrator. No definition awaiting its gate permits readiness.
 - The task document carries what and why. Do not insert a separate implementation spec, test
   plan, or execution log here. The task cycle records those in its cycle record.
