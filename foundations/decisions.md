@@ -236,28 +236,28 @@ test that always passes.
 On the main branch, this repository holds `foundations/` with the entries of the-way itself, a
 directory for each part of the process other than `repository` — `elements/<element>/` for each
 foundation element, `elements/common/` for what the elements share, `relation-model/`, `gate/`,
-`installation/`, `agent-instructions/`, `instruction-files/`, `project-level/` and `task-cycle/` —
-with `probes/` as a
-second directory of the environment facts part, for the checks of the-way's own facts, the files
-that configure the whole repository, which its part map gives to the `repository` part (WAY-44), the
-root agent instruction files and the project skill entry points under `.claude/skills/` and
-`.agents/skills/`, which the map gives to `agent-instructions` (WAY-44), and a `README.md` that
-describes the repository. A directory reaches the main branch only once it holds
-what its part requires: an element its template and rules, examples or a pointer to entries of
-the-way that serve as its examples, a skill that writes its entries and a format guard;
-`elements/common/` the rules of form and the way of working the elements' templates and skills
-share, the code their format guards share and the skills that find entries and that critique
-proposals and assess changes; `project-level/` the templates of a project definition, a project
-plan and a task document, the skills that write them, the readiness check, the plan check and their
-tests; `relation-model/` the script that computes
-fingerprints; `gate/` the test of every critical flow in the part map; `installation/` the
-installer, its tests and a README explaining how a product uses the pinned version;
-`agent-instructions/` the instructions for agents working on this repository, led to from the root
-agent instruction files; `instruction-files/` the principles of instruction files for coding agents,
-the account of how the tools load them, the skill that applies them, and the script that checks
-instruction files with its tests; `task-cycle/` what the design of the task cycle sets, and until then it
-does not reach the main branch. The entries in `foundations/` are checked by the format guards of
-their elements.
+`installation/`, `agent-instructions/`, `instruction-files/`, `project-level/` and `task-cycle/`
+— with `probes/` as a second directory of the environment facts part, for the checks of the-
+way's own facts, the files that configure the whole repository, which its part map gives to the
+`repository` part (WAY-44), the root agent instruction files and the project skill entry points
+under `.claude/skills/` and `.agents/skills/`, which the map gives to `agent-instructions`
+(WAY-44), and a `README.md` that describes the repository. A directory reaches the main branch
+only once it holds what its part requires: an element its template and rules, examples or a
+pointer to entries of the-way that serve as its examples, a skill that writes its entries and a
+format guard; `elements/common/` the rules of form and the way of working the elements'
+templates and skills share, the code their format guards share and the skills that find entries
+and that critique proposals and assess changes; `project-level/` the templates of a project
+definition, a project plan and a task document, the skills that write them and lead a handed-
+over plan, the readiness check, the plan check, the reader of task-cycle evidence for plan
+states and their tests; `relation-model/` the script that computes fingerprints; `gate/` the
+test of every critical flow in the part map; `installation/` the installer, its tests and a
+README explaining how a product uses the pinned version; `agent-instructions/` the instructions
+for agents working on this repository, led to from the root agent instruction files;
+`instruction-files/` the principles of instruction files for coding agents, the account of how
+the tools load them, the skill that applies them, and the script that checks instruction files
+with its tests; `task-cycle/` what the design of the task cycle sets, and until then it does not
+reach the main branch. The entries in `foundations/` are checked by the format guards of their
+elements.
 
 - **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common,
@@ -284,7 +284,7 @@ their elements.
     reaches the main branch before the design of the task cycle sets what it holds.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/11
+- **Approved by:** Mariusz, merge of <request link>
 
 *Rationale:* anything brought in on the side makes the repository a store of material; directories
 follow the parts, so a change's files name its part and decisions (WAY-21); an incomplete directory
@@ -3558,47 +3558,51 @@ tables come one choice at a time.
 
 A task document records whether the task is independent, belongs to an item of a project's plan,
 or uses an approved project definition as a source without belonging to its plan; it carries the
-task's scope, temporary exclusions, relevant current foundation decisions, any approved projected
-wording it uses and the settlements its refinement keeps for the foundation (WAY-134). It is ready
-when its required outcome is stated, every known question blocking that outcome is answered, the
-human has accepted or rejected every candidate settlement its refinement found, every human action
-it places before the cycle is done (WAY-140), and implementation questions carried into the cycle
-are named.
-A project member also matches its plan item's scope, dependencies and assigned entries; any task
-using an approved definition checks that its approval still holds and names each projected entry,
-or the part of it, that its code makes true, while source-only use takes no other assignment or
-dependency from the plan.
+task's scope, temporary exclusions, relevant current foundation decisions, any approved
+projected wording it uses and the settlements its refinement keeps for the foundation (WAY-134).
+It is ready when the human has seen and accepted its complete document, its required outcome is
+stated, every known question blocking that outcome is answered, the human has accepted or
+rejected every candidate settlement its refinement found, every human action it places before
+the cycle is done (WAY-140), and implementation questions carried into the cycle are named. A
+project member also matches its plan item's scope, dependencies and assigned entries; any task
+using an approved definition checks that its approval still holds and names each projected
+entry, or the part of it, that its code makes true, while source-only use takes no other
+assignment or dependency from the plan.
 
 - **Change:** new decision
 - **Scope:** project-level, task-cycle
 - **Based on:** none
 - **Relations:** derives from WAY-106@63eddf70 · derives from WAY-118@5af868b3 · derives from
-  WAY-126@35accf8b · derives from WAY-134@b858b34f · derives from WAY-140@6e564611
+  WAY-126@35accf8b · derives from WAY-134@2fc974a9 · derives from WAY-140@6e564611
 - **Verification:** level 2 — an agent compares the task document with its stated sources:
   - complies: an independent task is ready without a project plan, a source-only task uses
     approved project wording without taking its plan's assignments yet names a projected entry its
     code makes true with the part made true, a project member matches its plan item, and a task
     whose document places opening an external account before the cycle becomes ready once the
-    human has opened it;
+    human has opened it and accepted the complete document; a manually refined task with no
+    candidate settlements likewise waits for acceptance of its complete document;
   - violates: a source-only task is blocked for lack of a plan item, a project member is ready
     despite a mismatch with its assigned work, a task leaves out a projected entry its code
     makes true, so its cycle writes a second entry for the same rule, a task is ready while a
     candidate settlement of its refinement awaits the human, or a task is ready while a human
-    action its document places before the cycle is not yet done.
+    action its document places before the cycle is not yet done, or an agent marks a task ready
+    after the human accepted its candidate rows but never saw and accepted the complete document.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/14
+- **Approved by:** Mariusz, merge of <request link>
 
 *Rationale:* a project can inform a task without owning it; the handoff must show which relationship
 applies so the next agent does not import work or dependencies the task never took on. A projected
 entry is wording already settled, and the task whose code first makes it true is the one that can
 show it holds; naming it before the cycle keeps one entry per rule. A human action placed before the
 cycle gives the cycle's code what it needs, so a cycle started before the human action is done
-cannot finish its work.
+cannot finish its work. Acceptance of the complete document makes the human judge the task that
+enters the cycle, even when its refinement found no new foundation settlement.
 *Rejected:* requiring every task to belong to a project plan — it excludes independent tasks and
 gives source-only tasks assignments they do not have; carrying only the entries a plan assigns — a
 source-only task's code would hold a rule the foundation lacks, and its return step would write a
-second entry for it.
+second entry for it; readiness inferred from an agent's completed refinement or from acceptance of
+candidate rows alone — neither accepts the complete task the cycle takes.
 
 ### WAY-125/1 — Which Superpowers methods does the autonomous task cycle adopt?
 
@@ -3966,17 +3970,20 @@ only by failing it; a local hook as the keeper of every rule — one switch skip
 
 ### WAY-134/1 — How does a task carry what its refinement settles for the foundation?
 
-Before a task is ready for its cycle, the agent refining it shows the human a table of candidates
-found in the task document and the conversation that refined it, in the form WAY-115 gives with
-each settlement in the human's words, and the task document keeps the rows the human accepts. A
-candidate is a decision, an invariant, a glossary term, or an environment fact a candidate decision
-or invariant rests on, and a settlement that a current entry, or a projected entry the task
-carries, already states is no candidate. The task's cycle writes each kept row whole into the
-foundation in its foundation step, or in its return step where the foundation step missed it, one
-that no code makes true included, keeping its meaning and choosing its wording; where that meaning
-cannot hold, or the entry needs a value neither the row nor the cycle's work gives, the cycle asks
-the human through a blocked draft request rather than write another entry, and otherwise the human
-accepts the entry's meaning at the merge (WAY-114).
+Before a task is ready for its cycle, the human sees a table of candidates found in the task
+document and the conversation that refined it, in the form WAY-115 gives with each settlement in
+the human's words, and the task document keeps the rows the human accepts; in manual refinement
+the agent refining it presents the table, while in orchestrated refinement the project
+orchestrator presents it and the questions against choices required by WAY-113 in the round
+package, and the refiner returns that material through the conversation file instead of asking
+the human. A candidate is a decision, an invariant, a glossary term, or an environment fact a
+candidate decision or invariant rests on, and a settlement that a current entry, or a projected
+entry the task carries, already states is no candidate. The task's cycle writes each kept row
+whole into the foundation in its foundation step, or in its return step where the foundation
+step missed it, one that no code makes true included, keeping its meaning and choosing its
+wording; where that meaning cannot hold, or the entry needs a value neither the row nor the
+cycle's work gives, the cycle asks the human through a blocked draft request rather than write
+another entry, and otherwise the human accepts the entry's meaning at the merge (WAY-114).
 
 - **Change:** new decision
 - **Scope:** project-level, task-cycle, elements-common, decisions, invariants, glossary,
@@ -3987,13 +3994,15 @@ accepts the entry's meaning at the merge (WAY-114).
   - complies: a task whose human settled in refinement that an exported record keeps its owner
     carries that row, and its cycle writes a decision with that meaning in its foundation step,
     before the code, and names it in the request; a task whose refinement found nothing carries the
-    counting line with none below it;
+    counting line with none below it; in an orchestrated round the project orchestrator shows the
+    candidate table and required challenge questions while the refiner records the human's answers;
   - violates: the cycle writes the entry with another meaning, or leaves out a kept settlement
     because no code makes it true; the refinement writes whole entries into the task document; a
-    kept row repeats a rule a current decision states.
+    kept row repeats a rule a current decision states; an orchestrated refiner asks the human
+    directly about candidates or substitutes its own acceptance.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/12
+- **Approved by:** Mariusz, merge of <request link>
 
 *Rationale:* a settlement the human makes while a task is refined binds after the merge as much as
 one a project settles, yet with no place in the task document it reaches the cycle as an answer to
@@ -4003,7 +4012,8 @@ the agent's, as for every entry a cycle writes, and the human judges the meaning
 table read from the whole document finds a settlement said in passing, and its column of what the
 cycle would guess drops one no reader would miss. A meaning that cannot hold goes back to the human
 before the request because the human settled it, and finding the change only at the merge would
-leave code already written for another meaning.
+leave code already written for another meaning. In an orchestrated round a single human-facing
+agent keeps these choices together without making the refiner a second channel to the human.
 *Rejected:* whole entries written while the task is refined, as a project definition projects
 them — a task has no gate to approve their wording, and refining a task would weigh as much as
 defining a project; noting a settlement only when the human states one — a settlement said in
@@ -4025,7 +4035,7 @@ the report writes the spec, from which the plan is written again.
 - **Scope:** task-cycle
 - **Based on:** none
 - **Relations:** derives from WAY-13@e6c830b7 · derives from WAY-69@7051f884 · derives from
-  WAY-126@35accf8b · derives from WAY-134@b858b34f
+  WAY-126@35accf8b · derives from WAY-134@2fc974a9
 - **Verification:** level 2 — an agent compares a cycle with the decision:
   - complies: a task whose rows of *Settlements to record* carry its two decisions and its invariant
     is planned without a spec, and the invariant's check comes from an agent given only the sentence
@@ -4417,30 +4427,37 @@ slice for a task of the plan — the word already names a piece of a task's chan
 
 ### WAY-144/1 — How does a project plan show which tasks can be worked on side by side?
 
-Which tasks of a project plan can be worked on side by side follows from the tasks each depends on
-alone: two tasks of which neither depends on the other, directly or through other tasks, can. The
-plan holds no field naming the tasks a task can be worked on beside, and its order of work follows
-the dependencies.
+The dependencies of a project plan constrain the start of a task's cycle, not its refinement: a
+task starts its cycle only when the tasks it depends on are done, while refinement waits for
+another task only where a question of that refinement needs its result. Two task cycles can run
+side by side when neither task depends on the other, directly or through other tasks. The plan
+holds no field naming the tasks a task can be worked on beside, and its order of cycle starts
+follows the dependencies.
 
 - **Change:** new decision
-- **Scope:** project-level
+- **Scope:** project-level, task-cycle
 - **Based on:** none
 - **Relations:** derives from WAY-106@63eddf70 · derives from WAY-100@e7a74a18
-- **Verification:** level 1 — invariants: project-plan-form. Level 2 for the order of work — an
+- **Verification:** level 1 — invariants: project-plan-form. Level 2 for cycle starts and refinement waits — an
   agent compares the plan, or the work on it, with the decision:
-  - complies: work on the plan takes up two tasks at once because neither depends on the other; a
-    task that needs a saved state lists the task that adds saving among those it depends on;
+  - complies: two cycles start together because neither task depends on the other and their
+    dependencies are done; two dependent tasks are refined together, with only a question needing
+    an unfinished result waiting for its named task; a task needing a saved state lists the task
+    that adds saving among those it depends on;
   - violates: a task carries a field naming a dozen tasks it can be worked on beside; tasks are
-    ordered by a goal picked in an interview against their dependencies.
+    ordered by a goal picked in an interview against their dependencies; a task starts its cycle
+    before a dependency is done, or refinement waits for every dependency without a question
+    requiring those results.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/16
+- **Approved by:** Mariusz, merge of <request link>
 
 *Rationale:* the dependencies already say which tasks can go together; a second field derived from
 them is a copy that drifts as soon as one dependency changes, and its lists grow long enough that
 nobody reads them. The rule takes from the practice of a roadmap its graph of dependencies and the
 order that follows from it, and leaves out its field of work that can run alongside. The task
-order WAY-106 gives the plan is this order.
+order WAY-106 gives the plan is this order of cycle starts. Refinement can settle a dependent task
+before its prerequisites are delivered; only a question needing their result earns a wait.
 *Rejected:* a field naming the tasks a task can be worked on beside — a copy of the dependencies
 that grows past reading; the order tilted by a goal the human picks in an interview before the plan
 — the definition already states the goal and its risks, and the human corrects the finished plan.
@@ -4718,3 +4735,178 @@ expansion whenever meaning reaches beyond the initial selection.
 repeatedly; reading only the unfinished section — distant dependencies and settlements disappear;
 checking reduced copies or limiting the critic to selected material — omissions can agree with
 the reduced input and pass unseen; maintaining a second plan for reading — copies drift.
+
+### WAY-152/1 — How does the project orchestrator lead a handed-over plan?
+
+The project orchestrator leads a handed-over project plan from tasks to refine to human-accepted
+tasks ready for their cycles and keeps the plan's states consistent with evidence, proposing a
+round of refinement first from tasks on which the most other tasks depend for the human to
+confirm or change. The human starts task cycles separately, and when the last task is done the
+project orchestrator names project closure as the next step and says that no closure skill
+exists, without performing either work. After a task merges, leading the plan does not recheck
+ready dependent task documents: the task cycle checks and adapts its sources at its own start.
+
+- **Change:** new decision
+- **Scope:** project-level
+- **Based on:** none
+- **Relations:** derives from WAY-106@63eddf70 · derives from WAY-124@4fbad55c · derives from
+  WAY-144@d5802c22
+- **Verification:** level 2 — an agent compares the leading session with the decision:
+  - complies: the human changes a proposed round, the project orchestrator coordinates its refinement
+    and maintains evidenced states, and the human starts a ready task's cycle separately;
+  - violates: leading launches a cycle, closes the project, or re-refines every ready dependent
+    task after a merge instead of leaving the cycle's source check to its start.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of <request link>
+
+*Rationale:* the human needs one conversation that keeps a plan moving and its progress visible.
+Keeping task execution and closure separate bounds that conversation, while checking current
+sources where implementation begins avoids repeating a check whose inputs can change again.
+*Rejected:* leading that also executes cycles and closes the project — distinct work obscures the
+point where the human starts implementation; automatically reopening ready dependants after each
+merge — repeated refinement can be invalidated again before implementation.
+
+### WAY-153/1 — What evidence supports a task state in a project plan?
+
+At each leading session's start a Git-only state reader proposes, with exact evidence, ready for
+cycle to in cycle from a matching working cycle directory in a Git-listed worktree or a commit
+touching the task's exact archived cycle directory, and in cycle to done from a cycle-record
+commit reachable in the product's freshly fetched integration history, composing both
+transitions when the plan is still ready for cycle. The reader changes no plan or task document,
+establishes the product's integration ref without guessing, and exposes absent or incomplete
+evidence, operational failures and conflicting traces without inferring completion. The project
+orchestrator applies supported transitions with a reason and evidence in the plan's log,
+resolves outcomes Git cannot establish through the product's chosen PR tool or asks the human
+when that tool is absent, and brings a closed-unmerged PR or a trace conflicting with the plan
+to the human without automatically correcting the plan.
+
+- **Change:** new decision
+- **Scope:** project-level
+- **Based on:** none
+- **Relations:** derives from WAY-38@6e10c3fd · derives from WAY-142@e53cd0ac · derives from
+  WAY-147@8cfe543f
+- **Verification:** level 1 — invariants: project-plan-state-evidence. Level 2 for the Git-only
+  execution policy, applying proposals and resolving PR outcomes — an agent compares the evidence and leading session with the decision:
+  - complies: a stale ready row has both supported transitions, an unchecked squash outcome is
+    checked through the product's PR route, and a closed-unmerged PR reaches the human;
+  - violates: a branch name proves progress, a failed fetch yields done, the reader calls a PR
+    executable, or the project orchestrator silently normalizes a conflicting trace.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of <request link>
+
+*Rationale:* evidence-backed progress prevents a stale plan from hiding delivered work without letting
+an uncertain observation claim delivery. Separating observation from the plan write keeps the
+human-facing judgment visible; unresolved host outcomes cost a lookup or a question.
+*Rejected:* a state reader that also queries the PR host — it couples observation to a host-specific
+executable; inferring completion from a local trace — unfinished or abandoned work looks delivered;
+automatically normalizing conflicts — a plausible state hides the discrepancy the human needs.
+
+### WAY-154/1 — How do agents exchange a project task refinement and keep its result?
+
+Project refinement resumes from the plan, task documents and one ignored conversation file per
+task at `.runs/project-refinement/<task-name>.md`, through which fresh parallel refiners, the
+answering agent and the project orchestrator take serialized turns on each file; the project
+orchestrator hands agents only its path and routing, never relays its contents, and each refiner
+ends its turn as `questions`, `waits for task <n>`, `ready for approval`, `plan change` or
+`obstacle`. Only a refiner changes the task document's body and transfers settled answers with
+their sources into Questions to settle; the project orchestrator records human answers in
+conversations, owns ordinary plan updates and their log, and changes only the task document's
+Status line after the human has accepted that complete document, one document at a time. Agent
+turns, questions and explicit waits keep the plan task to refine, a presented human package or
+ready for approval makes it waiting for human, and final acceptance makes both document and plan
+ready for cycle and removes only that conversation after all settled answers and their sources
+survive in the task document; an explicit wait is logged and its task is proposed again when the
+named prerequisite is done.
+
+- **Change:** new decision
+- **Scope:** project-level
+- **Based on:** none
+- **Relations:** derives from WAY-124@4fbad55c · derives from WAY-142@e53cd0ac · derives from
+  WAY-144@d5802c22 · derives from WAY-147@8cfe543f
+- **Verification:** level 2 — an agent compares the turns, task documents and plan with the decision:
+  - complies: parallel refiners write separate documents, a fresh refiner keeps each settled
+    answer and source, and interrupted acceptance resumes without guessing human agreement;
+  - violates: the project orchestrator rewrites a task body or carries questions in prompts,
+    an agent's readiness stands for human acceptance, or cleanup loses the only settled answer.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of <request link>
+
+*Rationale:* a file-mediated exchange keeps the project orchestrator from becoming a content relay
+and lets another session resume. The retained task document carries the result that later work
+needs; ownership and serialized turns cost explicit coordination but prevent competing edits.
+*Rejected:* conversation contents relayed in prompts — each transfer repeats context and can lose
+answers; retaining the temporary exchange as the task result — later work reconstructs settlements
+from discussion; deleting the exchange before durable transfer — provenance disappears.
+
+### WAY-155/1 — What may the answering agent settle during a refinement round?
+
+The answering agent answers a refinement question only with a quotation and source from the
+definition, plan, foundation or other task documents, or with a factual code observation naming
+file and line; a question about how the product is to be is answered only from a document, never
+from code or the agent's inference. It reads the round's conversations, makes an unanswered
+choice a question to the human with options, costs and a recommendation, and brings the same
+question to the human once while preserving its affected tasks. The project orchestrator
+presents one round package of these questions, candidate settlements, placement of Human actions
+and complete wording, together with every quotation answer as question, quotation and source; a
+quotation answer the human strikes becomes a question to the human, whose answers return to the
+conversations before fresh refiner turns.
+
+- **Change:** new decision
+- **Scope:** project-level
+- **Based on:** none
+- **Relations:** derives from WAY-113@d3e5cbfa · derives from WAY-134@2fc974a9 · derives from
+  WAY-140@6e564611
+- **Verification:** level 2 — an agent compares questions, answers, sources and the human package:
+  - complies: a code observation settles current behavior, a documented choice settles intended
+    behavior, and a rejected quotation returns once as a human question for all affected tasks;
+  - violates: code or an inference supplies a requirement, a quotation answer is hidden from the
+    package, or two tasks ask the human the same choice separately.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of <request link>
+
+*Rationale:* an answer grounded in a source saves the human from restating an existing settlement,
+while distinguishing observation from prescription prevents accidental behavior becoming a rule.
+Showing quotation answers costs attention but lets the human reject an answer that fails its
+question; one shared question avoids repeated decisions.
+*Rejected:* free inference by the answering agent — a plausible conclusion appears settled;
+code as authority for intended behavior — an accident becomes a requirement; hiding quotation
+answers until final approval — the human cannot inspect the basis of the refined tasks.
+
+### WAY-156/1 — How does project leading route a plan or definition change?
+
+An in-scope task split, new task, order or dependency change is delegated to a plan-project
+agent and logged with its reason, while a scope change and a reassignment of the task writing a
+projected entry go to the human. The project orchestrator changes definition text itself only
+when that text is already before it and needs no reading of other definition sections or the
+foundation; otherwise it delegates the edit, and a subagent always performs the definition's
+readiness gate, with independent critique dispatched by the project orchestrator and its
+findings returned to that subagent, and human approval given through the project orchestrator. A
+fresh subagent then checks the plan again through plan-project step 0, and no task gains ready
+for cycle while that definition gate remains open.
+
+- **Change:** new decision
+- **Scope:** project-level
+- **Based on:** none
+- **Relations:** derives from WAY-118@5af868b3 · derives from WAY-120@81f84997 · derives from
+  WAY-145@4312fd6b
+- **Verification:** level 2 — an agent compares the edits, gate, critique and rechecked plan:
+  - complies: a local text edit is made from material already read, a subagent completes the
+    full gate, the human approves through the project orchestrator, and a fresh agent checks
+    the plan before readiness resumes;
+  - violates: a wider definition edit is made without delegation, the project orchestrator runs
+    its gate itself, or a task becomes ready against a changed but unapproved definition.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of <request link>
+
+*Rationale:* a project can change direction while refinement proceeds, but its approved definition
+is the basis of every task. Keeping the full gate and fresh plan check costs another review while
+preventing readiness against an obsolete basis; a narrow edit exception avoids needless handoff
+for text already available without making leading responsible for wider execution.
+*Rejected:* every definition edit performed by the project orchestrator — it takes on execution and
+additional context; every local edit delegated — a transfer costs more than the already bounded
+edit; bypassing the gate for a small change — size does not establish that its meaning stayed.

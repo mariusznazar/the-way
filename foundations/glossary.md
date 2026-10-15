@@ -213,3 +213,10 @@ A watch is a check of an environment fact that, unlike a probe, reads what the f
 
 - **Avoid:** none
 - **Not:** none
+
+## project orchestrator
+
+A project orchestrator is the agent that leads a handed-over project plan in conversation with the human.
+
+- **Avoid:** none
+- **Not:** none
