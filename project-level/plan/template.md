@@ -81,7 +81,7 @@ order:
 | `#` | the task's number, unique in the plan; other cells name a task by it |
 | `Task` | the task's name: lower-case words joined by hyphens, unique in the plan, kept while the plan changes; the task enters its cycle under it, and the cycle names its record by it (WAY-147) |
 | `Goal` | one sentence: what can be checked in the running product once the task is done, never a layer put in place; for a preparatory task, what it puts in place (WAY-143) |
-| `Depends on` | the numbers of the tasks this one needs done first, separated by commas, or `—`; which tasks can be worked on side by side follows from this column alone (WAY-144) |
+| `Depends on` | the numbers of the tasks this one needs done before its cycle starts, separated by commas, or `—`; two cycles can run side by side only when neither task depends on the other directly or transitively. Dependencies do not block refinement (WAY-144) |
 | `In scope` | the numbers of the items of the definition's In scope the task delivers — its top-level list items in order, the first being 1 — or `—` |
 | `Preparatory` | `yes` for a preparatory task, `no` for any other; a preparatory task stands in the plan only where a task depends on it, and a technical element enters with the first task that uses it or with a preparatory task that task depends on (WAY-143) |
 | `State` | one state of the list below |
@@ -92,12 +92,24 @@ The states (WAY-142):
 | State | When |
 |---|---|
 | `to refine` | the task has no document ready for its cycle; every task of a new plan reads it |
-| `waiting for human` | the task's refinement waits for an answer only the human gives |
-| `ready for cycle` | the task's document is ready for its cycle |
+| `waiting for human` | the task's refinement waits for a human answer, a presented round package or acceptance of the complete document |
+| `ready for cycle` | the human has seen and accepted the complete ready task document; unfinished dependencies still block its cycle start |
 | `in cycle` | the task's cycle has started |
 | `done` | the task's change is merged |
 | `done — goal delivered in task <n>` | another task delivered this task's goal |
 | `dropped — approved by human` | the human gave the task up |
+
+During leading, agent turns, `questions` and question-specific `waits for task <n>` leave the row
+`to refine`; a presented human package or `ready for approval` makes it `waiting for human`.
+The latter is a conversation result, never a new task-document Status. A wait names the question
+needing task n's result, is logged with its reason, and is proposed again once n is done;
+`Depends on` alone never delays refinement (WAY-144, WAY-154).
+
+A `done — goal delivered in task <n>` dependency supplies completion only when delivery through
+the named task is established. `dropped — approved by human` does not establish delivery of its
+goal: reconcile the plan before treating it as a satisfied dependency. No task gains
+`ready for cycle` while a changed definition awaits its gate and subsequent plan recheck
+(WAY-156). Plan states record progress, not permission for the project orchestrator to start cycles.
 
 ## Projected entries
 
