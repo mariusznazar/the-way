@@ -38,7 +38,9 @@ the request; preparing reversible code for it does not authorize executing it.
   next route; after an open choice, spec review and renewed judgment; after size, planning | none>
 - Slices returned too large: <for each, the slice, its agent's report, its last commit and files,
   reset commit, earlier completed/reviewed slices retained, and slices it was split into | none>
-- Whole-change review: <reviewer other than author, range and report; on the no-plan route,
+- Agent waiting: <native completion notification or blocking tool; live-contract limit and any
+  smaller active-instruction limit; actual timeout/interruption if waiting had to resume>
+- Whole-change review: <reviewer other than author, full-diff range, verdict and report; on the no-plan route,
   coverage of every task item, settlement row and carried projected entry, source fidelity and
   evidence that entries preceded dependent code; on the planned route, plan-review evidence>
 
@@ -57,7 +59,9 @@ dispatch. Name handoff/report paths and input/output commits so work resumes fro
 without prior conversation. Keep the complete sanitized stage reports and reused borrowed-method
 briefs in `reports/`; short messages route work and expose failed/unchecked checks and unresolved
 concerns. Record evidence read for a ruling in the questions table. Repair an incomplete or missing
-report before dependent work; record corrections to stale paths or commit ranges. During work
+report before dependent work; record corrections to stale paths or commit ranges. Routine
+progression uses the short return and this record; record evidence read for a question or finding,
+rather than loading every stage's full report and sources again. During work
 this file and full sanitized handoffs and reports live under the ignored `.runs/task-cycles/` directory.
 After assessment, copy them to `docs/task-cycles/`, link the reports from these rows, commit the
 copy and commit its removal immediately after; the request links the record by the SHA of the
@@ -84,11 +88,18 @@ the cycle writes lives in its commits; the record keeps its meaning sentence for
 
 ## Verification
 
-| Command or manual check | Commit and environment | Result | Failed or unchecked details |
-|---|---|---|---|
+| Command or manual check | Actor, commit and environment | Exit code and result | Full-output path | Failed or unchecked details |
+|---|---|---|---|---|
 
-Record the baseline separately from post-change runs. A check's result is one line. An unrun
-check is unchecked. For an invariant check, link its final sentence/check commits, product result,
+Record the baseline separately from post-change runs. A check's result is one line. For an
+executed command, keep its complete sanitized stdout and stderr in `reports/`; a missing command,
+exit code or output returns to the reporting agent for repair. For a manual check, record its
+method, actor, observed result and evidence, with `not applicable` in the command-execution fields.
+Focused checks are not rerun merely to advance the cycle. Record the changed-file list and
+added/removed line counts beside the reviewer's verdict and commit range.
+For the orchestrator's full required gate, retain its exit code, summary, error/failure lines,
+warnings and every unchecked result here, with the full output linked. An unrun check is
+unchecked. For an invariant check, link its final sentence/check commits, product result,
 review, deliberate-break command and required failure, restoration and clean verification; mark
 superseded evidence and name the rerun after a correction.
 

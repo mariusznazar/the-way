@@ -49,10 +49,14 @@ choice approved or changed the rule.
 3. Require subagents and Superpowers version 6.4.1 with `brainstorming`,
    `subagent-driven-development`, `test-driven-development`, `requesting-code-review`, and
    `finishing-a-development-branch`, and the-way's `plan-task`, which writes every plan in place of
-   a Superpowers method (WAY-136). Verify the installed version before dispatching. Read each
-   skill and its linked files when its stage begins. WAY-125 names the borrowed methods and the
-   the-way adapter's stage boundaries; those boundaries govern
-   handoffs and human contact. Do not silently use another version or substitute another method.
+   a Superpowers method (WAY-136). Verify the installed version before dispatching. Read whole
+   only the methods you conduct: this cycle skill and, when their stage runs,
+   `subagent-driven-development` and `requesting-code-review`, with their linked files. The stage
+   agent reads its own method and linked files whole: `brainstorming`, `test-driven-development`,
+   `plan-task` or the element skills for foundation work. Use this cycle's boundaries for
+   delegated methods; their arrival is not a reason to load their bodies yourself (WAY-125).
+   The same ownership applies to any other method used in the cycle. Do not silently use
+   another version or substitute another method.
    If this version or a subagent capability is unavailable, this cycle cannot run in that harness.
 
 The cycle writes only in the task's worktree and changes nothing outside the product repository;
@@ -118,11 +122,28 @@ creating a second one. Apply this contract to design, planning, foundation work,
 reviews and the return step within their existing boundaries; the independent assessor receives
 only the filtered inputs in step 11, never this operational handoff.
 
+Wait for an agent through the harness's completion notification or one blocking wait at the
+longest duration its live tool contract and active instructions permit (WAY-157). In Codex, use
+`collaboration.wait_agent` where exposed, or the harness's equivalent, with that effective maximum.
+In Claude Code, a foreground `Agent` call blocks where the current mode allows it; a background
+or resumed agent reports by completion notification, so yield the turn when only that result
+remains and resume on its notification, without claiming the cycle complete. Use the current
+tool contract, not a remembered tool name or timeout. Renew a bounded wait only after an actual
+timeout or interruption leaves work pending; handle returned questions or new input first.
+Do not list agents, inspect status or output repeatedly, or sleep between checks to wait.
+Record the chosen mechanism and any effective limit in the cycle record.
+
 Each agent writes its complete sanitized report to the named file, preserving its stage's and
 borrowed skill's report requirements. Where applicable, include input versions, result and boundary
 reached, changed files and commits, questions and choices with evidence, rejected alternatives and
-their costs, check commands and exit codes, failures, unchecked work and unresolved concerns. Do not
-add fields irrelevant to the stage. Reference git-held sources and diffs by path and commit;
+their costs, check commands and exit codes with paths to their complete sanitized stdout and
+stderr in `reports/`, failures, unchecked work and unresolved concerns. A report of an executed
+check command missing its command, exit code or full output returns to its agent for repair
+(WAY-159); a manual check instead records its method, actor, observed result and evidence, with
+`not applicable` for command-execution fields. An author or executor also reports the changed-file
+list with added and removed line counts for its commit range and the sharpness inputs from its
+actual diff; a reviewer reports its verdict and range.
+Do not add fields irrelevant to the stage. Reference git-held sources and diffs by path and commit;
 keep transient review packages where the borrowed method requires them, but retain the review
 report and assessed range rather than another archived diff.
 
@@ -135,17 +156,19 @@ or seeking human approval.
 Record the event and relevant choices before dependent dispatch. Read authoritative sources and
 relevant report evidence before deciding a question, settling a finding, accepting a foundation
 meaning or verifying disputed or incomplete evidence. Routine progression uses the short return,
-record, source paths and commits; it need not load every full report or prior conversational
-history. This does not reduce duties to read inputs, inspect diffs, run checks or review the
-finished change. Repair a missing or incomplete report before dependent work proceeds. Resolve
-stale paths or mismatched commit ranges against the actual worktree and record the correction;
-a summary is not proof of a missing check.
+record, source paths and commits; do not load the stage agent's sources, full report or diff
+again merely to advance the cycle (WAY-148, WAY-158). The responsible agent still reads whole
+required inputs, and review and check duties keep their owners. Repair a missing or incomplete
+report before dependent work proceeds. Resolve stale paths or mismatched commit ranges against
+the actual worktree and record the correction. A claim that tests passed does not repair missing
+execution evidence; it calls for the agent to repair its report, not a routine rerun by you.
 
 Answer workflow approval prompts provisionally with evidence; a human accepts the foundation
-entries the cycle writes when merging the request (WAY-114). This adapter changes the handoff and
-approval points, not the borrowed method's work within each stage, except that the code reviewer
-also writes the deliberate break of an invariant's check (WAY-69), at step 11's point for checks
-added in the return step (WAY-149).
+entries the cycle writes when merging the request (WAY-114). This adapter sets handoff and
+approval points and the reading and verification owners above and in steps 9–12; borrowed
+methods do not add duplicate orchestrator reads or focused-check runs. Their work within each
+stage remains, and the code reviewer also writes the deliberate break of an invariant's check
+(WAY-69), at step 11's point for checks added in the return step (WAY-149).
 
 ## Design and execution choice
 
@@ -264,8 +287,11 @@ continuing that work.
    slices in the plan's order, each by a fresh executor given the frozen task, the plan and its
    slice, any spec, the pinned foundation and the dispatch contract. Each uses
    `test-driven-development` for behavior changes and commits its work; its boundary is the
-   committed change or slice with focused checks run, returning before review. No author reviews
-   its own work.
+   committed change or slice with focused checks run and their execution evidence recorded,
+   returning before review. No author reviews its own work. The independent reviewer reads the
+   full diff of its assigned range and checks the author's sharpness findings; you use the
+   changed-file list, added and removed line counts and reviewer's verdict for routine progression
+   (WAY-158), reading relevant evidence when a finding needs a ruling.
    - A plan of more than one slice runs through Superpowers `subagent-driven-development`, each
      slice one of its tasks, with the frozen task, and the spec where one exists, as the authority
      it reads the plan against: a fresh implementer and a fresh task reviewer for each slice,
@@ -285,11 +311,20 @@ continuing that work.
 
    Questions from any agent return to you, with their answers entered in the cycle record before
    work continues.
-10. After the one-author change or each planned slice, run focused checks, review its diff and
-    resolve findings.
-    Recalculate the WAY-13 sharpness inputs from the completed diff; if they grew, add the
-    resulting checks before review, never reduce those already run. Run the product's full
-    required gate on the completed change. Invariant checks written before the return step retain
+10. After the one-author change or each planned slice, use the author's or executor's recorded
+    focused-check command, exit code and full-output path without rerunning those checks for
+    routine progression (WAY-159), and resolve review findings from their evidence. Recalculate
+    the WAY-13 sharpness inputs using the changed-file list and the author's diff-based findings,
+    confirmed by the reviewer; if they grew, have the responsible agent add the resulting checks
+    before accepting review, never reduce those already run. Changes, failures or disputed
+    evidence still require affected verification; neither a short return nor a previous pass
+    excuses it.
+    Run the product's full required gate yourself on the completed change (WAY-160). Capture its
+    complete sanitized stdout and stderr directly into a file in `reports/`; bring only the
+    command's exit code, summary, error and failure lines, warnings and every `unchecked` result
+    into your context. Preserve the actual gate exit code when redirecting or filtering output,
+    and read relevant full-output sections when resolving a finding or incomplete evidence.
+    Invariant checks written before the return step retain
     their existing acceptance and deliberate-break points: the code reviewer writes the break from
     the invariant's sentence, runs the check on it and reports whether it fails (WAY-69, WAY-08).
     Checks added in the return step follow step 11's order. For visible behavior, verify it in the
@@ -326,8 +361,8 @@ continuing that work.
     prompts or author reasoning. Record the assessed range by commit hashes and its file list.
     Settle each remark yourself and record how; a remark reaches the human only as the foundation
     step allows a question. If a settlement changes code, assessed foundation entries or invariant
-    tests, rerun the affected checks and code review. The settlement is part of the one assessment
-    and does not reopen it.
+    tests, have the responsible agents rerun the affected checks and code review with current
+    evidence. The settlement is part of the one assessment and does not reopen it.
 
     After those settlements, the code reviewer who did not write a return-step check reviews its
     final version, writes its deliberate break from the final invariant sentence and runs the
@@ -346,12 +381,16 @@ continuing that work.
 ## Request and handoff
 
 12. Recheck the branch against the current target branch, refresh the foundation selection by
-    "Reading the foundation" for its current revision and the reconciled scope, rerun checks
-    affected by that update, and inspect the final diff. If reconciliation changes the assessed code, foundation or its
-    applicable sources, invalidate the affected reviews: repeat the foundation collision search,
+    "Reading the foundation" for its current revision and the reconciled scope, and have the
+    responsible agents run checks affected by that update. Confirm that the reviewer's full-diff
+    review covers the final range, using its verdict and the final changed-file and line-count
+    summary rather than rereading the full diff yourself. If reconciliation changes the assessed
+    code, foundation or its applicable sources, invalidate the affected reviews: repeat the foundation collision search,
     affected code review and independent assessment before proceeding. Record the final assessed
     commits and file sets so the request never presents an assessment of superseded work as
-    current. Run the verification, then open the request as a draft by the pull or merge request
+    current. If the final change differs from the completed change already checked, run its full
+    required gate yourself with the output handling of step 10; otherwise retain that current
+    evidence without a duplicate run. Then open the request as a draft by the pull or merge request
     route already chosen by the user, without presenting the integration menu of Superpowers
     `finishing-a-development-branch`. Replace `<request link>` in the *Approved by* of the entries
     this cycle wrote with the request's URL, commit and push; this is a placeholder swap that
