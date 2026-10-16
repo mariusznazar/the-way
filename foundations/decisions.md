@@ -432,21 +432,21 @@ a human decides on every change that cannot be undone.
 - **Verification:** level 1 — invariants: foundation-change-path. Level 2 for the rest — an agent
   compares the change with the decision:
   - complies: a one-line format change that breaks users' saved data gets the sharpest checks and
-    a human's decision; a copy change that touches no foundation entry is made by one agent from a
-    plan of one slice and runs the same checks as any change to the parts it touches;
+    a human's decision; a change one agent can hold, including its foundation entries, is made without a
+    plan and runs the same checks as any change to the parts it touches;
   - violates: a task takes the path for changes that leave the foundation unchanged because it
     changes few lines; a small task skips a check that the parts it touches call for; a change that
     cannot be undone reaches the main branch without a human's decision; an agent turns a task into
     one that returns knowledge instead of a change without a human setting it so.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/13
+- **Approved by:** Mariusz, merge of <request link>
 
 *Rationale:* size misleads both ways about what can go wrong: a rename across many files is easy to
 undo, a one-line change to a stored format can destroy every user's data, so what a task touches,
 never its size, sets its path and its checks. Size does tell how much preparation a change needs: a
-small change is planned as one piece made by one agent, while the checks on the finished change stay
-whole and a human still decides on what cannot be undone.
+small change can be made without a plan, while the checks on the finished change stay whole and a
+human still decides on what cannot be undone.
 Paths differ only in steps, because a weaker outcome would bypass the process; returning knowledge
 alters what a task delivers, so a human sets it.
 *Rejected:* one cycle for all tasks — how much process a task needs depends on what can go wrong;
@@ -856,13 +856,14 @@ options filled in as `none considered` — nobody knows what was considered.
 
 ### WAY-30/1 — What happens when a change contradicts a decision?
 
-A change to a decision that a task needs is written into the task's plan and approved with it by
-the decision's approver. When a contradiction shows only during implementation, the agent stops,
-quotes the decision by its number, and either brings the change into line, drops the change, or
+A change to a decision that a task needs is written into the task's plan, or into its task
+document where no plan is written, and approved with that plan or document by the decision's
+approver before the code that needs it is made. When a contradiction shows only during
+implementation, the agent stops, quotes the decision by its number, and either brings the change into line, drops the change, or
 proposes on the task branch a new wording or a narrowing of the decision — by a new version on the
 main branch, by an edit before it — and the code that needs it waits for the decision's approver. An
 exception written in advance into a decision's binding sentences is not a contradiction, and no
-exception lives only in a task's plan.
+exception lives only in a task document, plan or cycle record.
 
 - **Change:** new decision
 - **Scope:** decisions, task-cycle
@@ -870,14 +871,16 @@ exception lives only in a task's plan.
 - **Relations:** derives from WAY-01@60960941
 - **Verification:** level 2 — an agent compares the change with the decision:
   - complies: a task branch whose code goes against a decision carries a proposed narrowing, and
-    the merge waits for its approver;
+    the merge waits for its approver; a task without a plan carries the known decision revision
+    in its task document, accepted by the decision's approver before dependent code;
   - violates: a task branch whose code contradicts a decision that stays unchanged; a task's plan
-    that records a "justified violation" of a decision.
+    that records a "justified violation" of a decision; a task without a plan treats the
+    orchestrator's go-ahead as approval of a decision revision.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-30
+- **Approved by:** Mariusz, merge of <request link>
 
-*Rationale:* an exception kept only in a plan leaves the foundation describing what the code no
+*Rationale:* an exception kept only with the work leaves the foundation describing what the code no
 longer does (WAY-01); stopping shows the contradiction when it is found. Aligning or dropping the
 change leaves the decision intact, so the agent may do either; changing the decision is its
 approver's.
@@ -1044,7 +1047,8 @@ format guard and the skill hold entries to different rules.
 
 A rule enters the decision log only when it still binds once the change that brings it has been
 merged; a rule that ends with a piece of work — an order of steps, a first merge, a transition
-between two states — stays in the plan of that work.
+between two states — stays in the plan of that work, or in the choices of its cycle record
+where no plan is written.
 
 - **Change:** new decision
 - **Scope:** decisions, task-cycle
@@ -1053,13 +1057,14 @@ between two states — stays in the plan of that work.
 - **Verification:** level 2 — an agent compares the change with the decision:
   - complies: "the foundation reaches the main branch whole, once every element is ready" stays in
     the plan of building the foundation; "when what entries wait for arrives, they are fixed in
-    the same change" enters the log;
+    the same change" enters the log; an exclusion that ends with a task without a plan stays
+    in the choices of its cycle record;
   - violates: a decision on the order in which elements are built; a decision whose binding
     sentences say what happens until the first merge; an exclusion that ends with its task
     written into the log as a product non-goal.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-17
+- **Approved by:** Mariusz, merge of <request link>
 
 *Rationale:* a plan written in the present tense reads like a decision, and WAY-01 gives no way to
 recognise one. The log binds on the main branch (WAY-07), and a rule that ends when its change is
@@ -4024,12 +4029,14 @@ meaning the human settled would be defined by the cycle.
 
 ### WAY-135/1 — When does a task's cycle write a spec?
 
-A task's cycle writes a spec, reviewed by an agent other than its author, before its plan where the
-task leaves an open design choice and nowhere else, and an invariant whose sentence a row of the
-task's *Settlements to record* or a projected entry of its sources gives leaves none. An agent that
+A task's cycle writes a spec, reviewed by an agent other than its author, before implementation
+and any plan where the task leaves an open design choice and nowhere else, and an invariant whose
+sentence a row of the task's *Settlements to record* or a projected entry of its sources gives
+leaves none. An agent that
 meets an open design choice while it makes the change returns a report that holds no code, the
 attempt is discarded with the foundation entries the cycle wrote for it, and a fresh agent given
-the report writes the spec, from which the plan is written again.
+the report writes the spec, after whose review the orchestrator chooses again whether one author
+can hold the change or it needs a plan, using the same judgment as before implementation (WAY-136).
 
 - **Change:** new decision
 - **Scope:** task-cycle
@@ -4038,21 +4045,21 @@ the report writes the spec, from which the plan is written again.
   WAY-126@35accf8b · derives from WAY-134@2fc974a9
 - **Verification:** level 2 — an agent compares a cycle with the decision:
   - complies: a task whose rows of *Settlements to record* carry its two decisions and its invariant
-    is planned without a spec, and the invariant's check comes from an agent given only the sentence
+    proceeds without a spec, and the invariant's check comes from an agent given only the sentence
     and its method; a task whose part-map change follows from the file it adds, with no other way
-    open, is planned without a spec; an agent that finds the task needs a decision the task does not
+    open, proceeds without a spec; an agent that finds the task needs a decision the task does not
     carry returns a report without code, the branch goes back to its base, and a fresh agent writes
-    the spec;
+    the spec; a reviewed spec is followed by one author without a plan when the change still
+    fits one agent, or by a new plan when it needs division;
   - violates: a spec is written for a task whose document carries every entry it writes and that
     leaves no other way open; an agent designs a decision the task does not carry and goes on with
-    the code; a spec is written around the code of an attempt that met an open design choice.
+    the code; a spec is written around the code of an attempt that met an open design choice;
+    a plan is required merely because a spec was written.
 - **Review when:** five cycles of `implement-task` have run under this decision, or a cycle has
-  found a new foundation entry contradicting a current one only after its code was written, or has
-  used, as `task-cycle/cycle_stages.py` counts them, no clearly fewer tokens than the 363.7 million
-  that the cycle of https://github.com/mariusznazar/the-way/pull/11 used, for a task of like size ·
+  found a new foundation entry contradicting a current one only after its code was written ·
   check by: 2026-11-30
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/13
+- **Approved by:** Mariusz, merge of <request link>
 
 *Rationale:* a spec and its review earn their cost where an agent designs a foundation entry itself,
 whose agreement with the current entries has to be checked before code is written on it; where the
@@ -4061,7 +4068,8 @@ finds nothing the reviews of the code would miss. An invariant the document carr
 fitting the code by the separate authors of its sentence, its check and the code (WAY-69), not by a
 spec. A choice found while the code is made cannot be weighed apart from that code, so the attempt
 goes, its slices already made among them, since the spec may change what they made, and a fresh
-agent designs from the task and the report.
+agent designs from the task and the report. Settling the design does not itself create work to
+divide; the extent of the settled change decides whether a plan earns its cost.
 *Rejected:* a spec for every task that changes the foundation — almost every task changes it, and
 the spec would restate entries the human settled at a large share of the cycle's cost; no spec for
 any task — an entry an agent designs would reach the code unchecked against the current entries;
@@ -4070,17 +4078,25 @@ partial code; the agent of that attempt writing the spec — the spec would carr
 abandoned code; a spec for every task that writes an invariant — its separate authors already keep
 its check apart from the code.
 
-### WAY-136/1 — What plan does a task's cycle write, and who makes and reviews its slices?
+### WAY-136/1 — When does a task's change need a plan, and who makes and reviews it?
 
-Every task's cycle writes a plan with the-way's skill `plan-task`, which divides the change into
-slices and holds no code; the plan recommends useful slices that can be worked on and reviewed
-separately and identifies possible parallel work independently of the chosen execution skill,
-while the orchestrator records before execution whether that opportunity can be used, from
-dependencies, shared files or mutable state, separate review and the skill's restrictions. Each
-slice is made by an agent of its own and then reviewed by an agent that did not make it, and a
-change of more than one slice then gets one review of the whole change, while the review of a
-plan's only slice is the review of the whole change. A slice that proves too large for the agent
-making it is discarded with its code and goes back to the planner to be split.
+A change that, as the orchestrator judges from the task document in step 4 before implementation,
+one agent can hold is made without a plan by one author, who writes its foundation entries, its
+code and its return step, while an invariant's sentence and its check come from two other agents
+(WAY-69); the same judgment follows a reviewed spec, and an author that finds the change too large
+returns a report without code, its attempt is discarded with the foundation entries it wrote,
+and a planner divides the change. Every other change gets a plan written with the-way's skill
+`plan-task`, which divides it into slices and holds no code, recommends useful slices that can be
+worked on and reviewed separately and identifies possible parallel work independently of the
+chosen execution skill, while the orchestrator records before execution whether that opportunity
+can be used, from dependencies, shared files or mutable state, separate review and the skill's
+restrictions; each slice is made by an agent of its own, and a slice that proves too large for it
+is discarded with its code and goes back to the planner to be split. A one-author change and
+every slice are reviewed by an agent that did not make them, and a change of more than one slice
+then gets one review of the whole change, while the review of a one-author change or of a plan's
+only slice is the review of the whole change; the one-author review also checks coverage of the
+task, every row of its *Settlements to record* and every projected entry it carries, and that
+foundation entries precede the code that depends on them.
 
 - **Change:** new decision
 - **Scope:** task-cycle
@@ -4090,42 +4106,51 @@ making it is discarded with its code and goes back to the planner to be split.
   `writing-plans/SKILL.md` — "Each step is one action (2-5 minutes)" and, under "No
   Placeholders", "Steps that describe what to do without showing how (code blocks required for
   code steps)"
-- **Relations:** derives from WAY-13@e6c830b7
-- **Verification:** level 2 — an agent compares the plan and cycle with the decision:
-  - complies: a one-line fix has one useful slice and its review is the only whole-change code
-    review; a change of several slices has each slice reviewed and then one whole-change review;
-    an outgrown slice is discarded and split; a plan identifies independent slices although
-    the execution skill forbids parallel executors, and the orchestrator records sequential
-    execution with that restriction; shared mutable state prevents a proposed parallel run;
-  - violates: a task has no plan, or a plan holds code or uses Superpowers `writing-plans`; an
-    author reviews its own slice, a one-slice change gets a duplicate whole-change review, or
-    outgrown code is kept; the planner suppresses useful independent slices because of the
-    execution skill, or creates unnecessary slices to claim parallel work; the orchestrator
-    treats different files alone as proof of independence or overrides the skill's restriction.
-- **Review when:** five cycles of `implement-task` have run under this decision, or a cycle has
-  returned more than one slice in three of its plan as too large, or has used, as
-  `task-cycle/cycle_stages.py` counts them, no clearly fewer tokens than the 363.7 million that
-  the cycle of https://github.com/mariusznazar/the-way/pull/11 used, for a task of like size ·
-  check by: 2026-11-30
+- **Relations:** derives from WAY-13@e6c830b7 · derives from WAY-69@7051f884 · derives from
+  WAY-126@35accf8b · derives from WAY-134@2fc974a9
+- **Verification:** level 2 — an agent compares the cycle and any plan with the decision:
+  - complies: the orchestrator selects one author from a settled task, including its foundation
+    entries, without first writing a plan; the author does its return step and another agent's
+    whole-change review checks task, settlement and projected-entry coverage and foundation order;
+    an invariant's sentence, check and code have different authors; a reviewed spec is followed by
+    the same size judgment; an oversized author's attempt and its foundation entries are discarded
+    before planning; a change of several slices has each reviewed and then one whole-change review,
+    while a plan's only slice needs no duplicate review; an outgrown slice is discarded and split;
+    a plan identifies independent slices although the execution skill forbids parallel executors,
+    and the orchestrator records sequential execution with that restriction; shared mutable state
+    prevents a proposed parallel run;
+  - violates: a small task needs a plan merely because it writes foundation entries or follows a
+    spec; the orchestrator writes a plan to decide whether to omit it; the code author also writes
+    the invariant sentence or check; an author reviews its own work, or its whole-change review
+    omits the coverage and order checks because there was no plan; an oversized author's entries
+    survive its discarded attempt; a plan holds code or uses Superpowers `writing-plans`; outgrown
+    slice code is kept; the planner suppresses useful independent slices because of the execution
+    skill or creates unnecessary slices to claim parallel work; the orchestrator treats different
+    files alone as proof of independence or overrides the skill's restriction.
+- **Review when:** five cycles of `implement-task` have run under this decision, or a one-author
+  change has been returned as too large in two cycles out of three, or a cycle has returned more
+  than one slice in three of its plan as too large · check by: 2026-11-30
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/17
+- **Approved by:** Mariusz, merge of <request link>
 
-*Rationale:* a plan earns its cost by dividing the change, so that a narrow agent makes each slice
-and a narrow reviewer reads it, which is where reviews catch the errors that matter; code written
-out ahead in the plan is most of a plan's cost and catches nothing a review of the code does not. A
-plan without code costs little, so every task gets one, and its form can change in its own skill
-apart from the cycle. A small change is a plan of one slice, so one path holds every task, and its
-one review reads the whole change. A useful division of work outlives the restrictions of one
-execution method, while the execution ruling keeps the recommendation from becoming permission
-for work whose dependencies or shared state make it unsafe.
-*Rejected:* Superpowers `writing-plans` — each step carries its code, so the plan costs a large
-share of the change and still needs the review of that code; a separate path for small tasks
-without a plan — two paths would hold the same rules of the record, the request and the return
-step, while size only lightens one process (WAY-13); a review of the whole change after the review
-of a plan's only slice — it reads the same range twice; an outgrown slice's code kept and completed
-— its split would be written around partial code; a plan shaped only by the restrictions of
-one execution method — it hides useful independent work; parallel execution from different file
-names alone — shared state and dependencies can still join the work.
+*Rationale:* a plan earns its cost by dividing a change into work an agent can hold and a reviewer
+can read separately; where the change fits an author, repeated reading and handoffs add cost
+without adding a check of the finished change. The risk is that the author fits its foundation to
+its code; independent review and assessment, together with separate invariant authors, keep that
+choice open to challenge. An incorrect size judgment costs an abandoned attempt, and discarding
+its entries as well as its code keeps the later division from inheriting a failed shape. A useful
+division outlives the restrictions of an execution method, while the execution ruling prevents
+work whose dependencies or shared state make parallel execution unsafe.
+*Rejected:* a plan for every change, including a small plan used only to choose the route — it
+charges for division where none is needed; lighter preparation only for changes leaving the
+foundation unchanged — foundation work is common and does not itself require division; lighter
+review, assessment or gate for a small change — size does not establish that its meaning stayed;
+small work outside the task cycle — duplicate rules of the record, request and return step drift;
+Superpowers `writing-plans` — code written ahead still needs review; a whole-change review after
+the review of a plan's only slice — it reads the same range again; an outgrown attempt kept and
+completed — its division would be written around unfinished work; a plan shaped only by the
+execution method — it hides useful independent work; parallel execution from different file names
+alone — shared state and dependencies can still join the work.
 
 ### WAY-137/1 — What decides between places to run that the simplest and cheapest option leaves tied?
 
