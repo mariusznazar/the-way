@@ -1,5 +1,7 @@
 """The size of each slice of a task's plan — how much its agent has to read and how many files it
-changes — and which slices are too large for one agent (WAY-136).
+changes — and which slices are too large for one agent (WAY-136). It measures a plan after the
+cycle selects planning; it does not decide whether a change fits the one-author route. That
+judgment comes from the task document, also after a reviewed spec, without a preliminary plan.
 
 Usage:
 

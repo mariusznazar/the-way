@@ -29,8 +29,8 @@ project skill of that name with the `the-way-` prefix. Follow the steps of
 
 - Find what was decided and where it is said: the conversation, a document the human names, or
   existing code — then the template's section on inherited decisions applies.
-- Apply the template's plan test. When the rule belongs to a plan, stop and say so; no entry is
-  written.
+- Apply the template's plan test. When the rule ends with the work, stop and name its place:
+  the plan, or the choices of the cycle record where no plan is written; no entry is written.
 - Name the one question the binding sentences answer. When they answer two independent
   questions, propose two entries, or keep the question the rest serves.
 - Search the log for that question. What a question found there takes, and what a new one takes,

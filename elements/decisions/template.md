@@ -117,7 +117,8 @@ flag references (WAY-02).
 - **Test:** can you point to a commit on which the sentence is false? Yes — it is an invariant.
   It is about a choice or a direction — it is a decision (WAY-22).
 - **Plan test:** does the rule still bind once the change that brings it is merged? No — it
-  belongs to the plan of that work, not to the log (WAY-36).
+  belongs to the plan of that work, or to the choices of its cycle record where no plan is
+  written, not to the log (WAY-36).
 - Tests live only with invariants. A decision is verified through the invariants derived from
   it (WAY-12).
 
@@ -217,8 +218,8 @@ A decision checked at level 2 alone:
 - Precedence between principles is recorded pair by pair, as between any two decisions: the one
   that prevails names the other as `narrows`. There is no single ranked list (WAY-25).
 - A non-goal is an ordinary decision, one per non-goal: "The product does not do X", with the
-  reason (WAY-26). Non-goals live only at product level; a task's exclusions live in its plan
-  (WAY-36).
+  reason (WAY-26). Non-goals live only at product level; a task's exclusions live in its plan,
+  or in the choices of its cycle record where no plan is written (WAY-36).
   A non-goal that can be checked on a commit gets a derived invariant (WAY-22).
 
 ## Review

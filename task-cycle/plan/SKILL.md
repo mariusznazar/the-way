@@ -1,6 +1,6 @@
 ---
 name: plan-task
-description: Use when a ready the-way task's change has to be divided into slices before it is made — the plan a task cycle writes for every task, from the frozen task, its spec where one exists, the foundation and the code, or writes again after a spec or after a slice proved too large. Not for a project's plan of tasks, and never writes code.
+description: Use when a ready the-way task's change has to be divided into slices before it is made — after the cycle selects planning from the frozen task or a reviewed spec, or a one-author change or planned slice proves too large. Not for a project's plan of tasks, and never writes code.
 ---
 
 # Plan a task's change
@@ -16,7 +16,10 @@ session's working directory; in a product, it is the product's pinned `.the-way`
 `task-cycle/slice_size.py` is there, and each skill named below is the project skill of that name
 with the `the-way-` prefix.
 
-The planner is a fresh agent the orchestrator of `implement-task` dispatches. It writes only the
+The planner is a fresh agent the orchestrator of `implement-task` dispatches when the change
+needs division, including after a reviewed spec or an oversized one-author attempt (WAY-136).
+A change one agent can hold is made without this skill or a preliminary plan; the cycle's
+orchestrator makes that judgment from the task document. The planner writes only the
 plan file the dispatch names, normally `.runs/task-cycles/<task-slug>/plan.md`, and sends its
 questions back to the orchestrator; it never writes code, a test or a foundation entry, and never
 asks the human.
@@ -33,7 +36,9 @@ asks the human.
   `elements/common/way_of_working.md` (WAY-150).
 - The code and the tests the change touches, as far as is needed to name each slice's files. Read
   to cut slices, not to design the code.
-- After a slice proved too large, its agent's report and the plan it came from.
+- After a one-author attempt proved too large, its report; the whole attempt, foundation entries
+  included, has been discarded. After a planned slice proved too large, its report and plan;
+  the earlier completed and reviewed slices remain.
 
 ## 2. Find an open design choice
 
@@ -98,7 +103,8 @@ recommendation; the orchestrator rules on execution before it starts.>
   under the table where the change writes no entry. The plan names entries; it never words them.
 - A slice is narrow: one goal, the files that goal changes, and checks that run when it is made. Cut
   along what a reviewer can judge alone and recommend useful independent slices regardless of
-  the chosen execution skill. A small change is one slice; never add a slice for its own sake or
+  the chosen execution skill. If the selected planning route yields only one useful slice, keep
+  it as one; never add a slice for its own sake or
   divide inseparable work merely to claim parallel execution.
 - *Change* names every file the slice changes or creates. *Read* names what its agent has to read
   to make it besides those files: a file whole, or `<path>:<first>-<last>` where a range is enough,
@@ -147,7 +153,12 @@ return before any slice is made.
 
 ## Writing the plan again
 
-- After a spec: write a new plan from the spec and the task; nothing of the earlier plan binds.
+- After a reviewed spec, only if the orchestrator selects planning again: write a new plan from
+  the spec and task; nothing of an earlier plan binds. The same size judgment can instead send
+  the settled change to one author without a plan.
+- After a one-author attempt proved too large: its whole attempt, including its foundation
+  entries, is gone (WAY-136). Divide the change from the task, any reviewed spec and its report;
+  there is no completed slice to preserve from that attempt.
 - After a slice proved too large: its code is gone (WAY-136). Split that slice in the plan, keep
   the slices already made and reviewed, and run the script again; the report of the slice's agent
   says where the size lay.

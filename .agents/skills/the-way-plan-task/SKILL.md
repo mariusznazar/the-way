@@ -1,6 +1,6 @@
 ---
 name: the-way-plan-task
-description: Use when a ready the-way task's change has to be divided into slices before it is made — the plan a task cycle writes for every task, from the frozen task, its spec where one exists, the foundation and the code, or writes again after a spec or after a slice proved too large. Not for a project's plan of tasks, and never writes code. Use this checkout's own the-way.
+description: Use when a ready the-way task's change has to be divided into slices before it is made — after the cycle selects planning from the frozen task or a reviewed spec, or a one-author change or planned slice proves too large. Not for a project's plan of tasks, and never writes code. Use this checkout's own the-way.
 ---
 
 # the-way-plan-task
