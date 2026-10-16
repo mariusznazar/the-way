@@ -91,10 +91,12 @@ the cycle writes lives in its commits; the record keeps its meaning sentence for
 | Command or manual check | Actor, commit and environment | Exit code and result | Full-output path | Failed or unchecked details |
 |---|---|---|---|---|
 
-Record the baseline separately from post-change runs. A check's result is one line; its complete
-sanitized stdout and stderr stay in `reports/`. Missing command, exit code or output returns to
-the reporting agent for repair; focused checks are not rerun merely to advance the cycle. Record
-the changed-file list and added/removed line counts beside the reviewer's verdict and commit range.
+Record the baseline separately from post-change runs. A check's result is one line. For an
+executed command, keep its complete sanitized stdout and stderr in `reports/`; a missing command,
+exit code or output returns to the reporting agent for repair. For a manual check, record its
+method, actor, observed result and evidence, with `not applicable` in the command-execution fields.
+Focused checks are not rerun merely to advance the cycle. Record the changed-file list and
+added/removed line counts beside the reviewer's verdict and commit range.
 For the orchestrator's full required gate, retain its exit code, summary, error/failure lines,
 warnings and every unchecked result here, with the full output linked. An unrun check is
 unchecked. For an invariant check, link its final sentence/check commits, product result,

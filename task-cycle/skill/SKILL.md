@@ -137,10 +137,12 @@ Each agent writes its complete sanitized report to the named file, preserving it
 borrowed skill's report requirements. Where applicable, include input versions, result and boundary
 reached, changed files and commits, questions and choices with evidence, rejected alternatives and
 their costs, check commands and exit codes with paths to their complete sanitized stdout and
-stderr in `reports/`, failures, unchecked work and unresolved concerns. A check report missing
-its command, exit code or full output returns to its agent for repair (WAY-159). An author or
-executor also reports the changed-file list with added and removed line counts for its commit
-range and the sharpness inputs from its actual diff; a reviewer reports its verdict and range.
+stderr in `reports/`, failures, unchecked work and unresolved concerns. A report of an executed
+check command missing its command, exit code or full output returns to its agent for repair
+(WAY-159); a manual check instead records its method, actor, observed result and evidence, with
+`not applicable` for command-execution fields. An author or executor also reports the changed-file
+list with added and removed line counts for its commit range and the sharpness inputs from its
+actual diff; a reviewer reports its verdict and range.
 Do not add fields irrelevant to the stage. Reference git-held sources and diffs by path and commit;
 keep transient review packages where the borrowed method requires them, but retain the review
 report and assessed range rather than another archived diff.
