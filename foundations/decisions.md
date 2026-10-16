@@ -3613,7 +3613,9 @@ candidate rows alone — neither accepts the complete task the cycle takes.
 
 The the-way task cycle adopts Superpowers 6.4.1 methods for brainstorming a design and written spec,
 test-first implementation, subagent execution with independent task and final code reviews, and
-preparing a pull or merge request, only for a ready task run through `implement-task`. The
+preparing a pull or merge request, only for a ready task run through `implement-task`; each
+method and its linked material are read whole by the agent conducting it, while the orchestrator
+reads only the methods it conducts and takes the boundaries of delegated methods from the cycle. The
 orchestrator answers workflow questions and gives provisional stage go-aheads under the task
 owner's delegation, never records these as human approval, controls the return between stages,
 keeps agent reports before a borrowed skill cleans its workspace, runs the independent assessment
@@ -3638,21 +3640,27 @@ reviewed change to the-way before use.
 - **Relations:** derives from WAY-100@e7a74a18 · derives from WAY-13@e6c830b7
 - **Verification:** level 2 — an agent compares a cycle with the decision:
   - complies: agents use the named methods at version 6.4.1, return between stages, and show
-    provisional choices in the request without claiming human approval;
+    provisional choices in the request without claiming human approval; the orchestrator reads
+    the cycle, subagent execution and code-review methods it conducts, while the design agent,
+    code author, planner and foundation author read the methods of their own stages;
   - violates: an agent treats its own spec approval as the owner's approval, skips the request
-    review, or silently runs a different Superpowers version.
+    review, or silently runs a different Superpowers version; the orchestrator loads a delegated
+    method merely because its stage begins, or a stage agent works from its boundary alone
+    without reading that method.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/13
+- **Approved by:** Mariusz, merge of <request link>
 
 *Rationale:* the borrowed skills provide design, test and review methods, while the-way must keep
 control of task sources, binding foundation approvals and the single human review point. Naming
 the version makes the dependency visible when the process is pinned in a product. When a spec is
 written and how a plan is written are the-way's own (WAY-135, WAY-136), so the methods adopted here
-are those a cycle uses whenever its stage comes.
+are those a cycle uses whenever its stage comes. The agent doing the work needs the complete
+method, while loading it again for coordination spends attention without performing that work.
 *Rejected:* adopting the complete Superpowers workflow with its intermediate human gates — it would
 interrupt the delegated cycle; copying the skill bodies into the orchestrator — it would create a
-second implementation of those methods.
+second implementation of those methods; reading every delegated method in the orchestrator too
+— it repeats context already held by the agent that applies it.
 
 ### WAY-126/1 — How does a projected entry enter the foundation?
 
@@ -4300,7 +4308,7 @@ deployment or a DNS record pointing to a new address.
 - **Scope:** project-level, task-cycle
 - **Based on:** none
 - **Relations:** derives from WAY-100@e7a74a18 · derives from WAY-107@0ffcebe1 · derives from
-  WAY-125@441e3a6a
+  WAY-125@7362c7ab
 - **Verification:** level 2 — an agent compares the task document, or the cycle, with the
   decision:
   - complies: a task that sends mail through an outside service names opening the account and
@@ -4612,37 +4620,43 @@ and every unresolved concern affecting the next dispatch. The orchestrator recor
 relevant choices before dependent dispatch and reads authoritative sources and relevant report
 evidence before deciding a question, settling a finding, accepting a foundation meaning or
 verifying disputed or incomplete evidence; routine progression uses the short return, record,
-source paths and commits without requiring prior conversational history. A missing or incomplete
+source paths and commits, without loading the material the stage agent reads and checks or its
+full report again, and without requiring prior conversational history. A missing or incomplete
 report is repaired before dependent work proceeds, and this transfer contract preserves required
-whole-source reads, check and review duties and the independent assessor's filtered inputs
+whole-source reads by the agent performing the work, check and review duties with their assigned
+owners and the independent assessor's filtered inputs
 (WAY-10), reusing a borrowed method's existing brief and report rather than duplicating them.
 
 - **Change:** new decision
 - **Scope:** task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-125@441e3a6a · derives from WAY-10@db68de1c
+- **Relations:** derives from WAY-125@7362c7ab · derives from WAY-10@db68de1c
 - **Verification:** level 2 — an agent compares the stage handoff, return, report and
   orchestrator's ruling with the decision:
   - complies: a short return names its complete report, commit range and failed or unchecked
     checks, and the record permits resumption from files; the orchestrator reads the evidence
     of an unresolved question before deciding it; a missing report is repaired before the next
-    dependent dispatch; a required whole entry is read whole;
+    dependent dispatch; a required whole entry is read whole by the agent using it; routine
+    progression does not load the stage agent's sources and full report again;
   - violates: a full report exists only in conversation, a short return conceals a failed check,
     dependent work proceeds on a missing report or mismatched commit range, or a question is
     settled from the short return alone; a selective read replaces a mandatory whole-source
-    read; the independent assessor receives the operational handoff or author's reasoning.
+    read by the responsible agent; the independent assessor receives the operational handoff or
+    author's reasoning; the orchestrator reloads completed stage material for routine progression.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/17
+- **Approved by:** Mariusz, merge of <request link>
 
 *Rationale:* full material kept outside routine coordination avoids repeated context while
 preserving evidence a ruling needs and a place from which work can resume. Short returns make
 the next action visible, but an omitted failure can hide behind brevity, so relevant evidence
-remains part of a decision and an incomplete report blocks dependent work.
+remains part of a decision and an incomplete report blocks dependent work. Assigning complete
+reads to the agent that uses them keeps coordination from repeating the stage itself.
 *Rejected:* full handoffs and reports repeated in messages — coordination accumulates material
 it need not reread; short summaries as the only record — lost evidence cannot be recovered on
 resumption; a second universal brief and report contract — duplicated obligations drift without
-proving completeness; automatic compaction — it does not choose the evidence a ruling needs.
+proving completeness; rereading every stage's evidence during ordinary coordination — it pays
+again for work already delegated; automatic compaction — it does not choose the evidence a ruling needs.
 
 ### WAY-149/1 — When does the deliberate break of a return-step check take place?
 
@@ -4941,3 +4955,117 @@ for text already available without making leading responsible for wider executio
 *Rejected:* every definition edit performed by the project orchestrator — it takes on execution and
 additional context; every local edit delegated — a transfer costs more than the already bounded
 edit; bypassing the gate for a small change — size does not establish that its meaning stayed.
+
+### WAY-157/1 — How does the task-cycle orchestrator wait for an agent?
+
+The task-cycle orchestrator waits for an agent's completion with one blocking wait set to the
+longest duration the available tool and active instructions permit, without repeated status polls
+or sleeps between checks. It renews that wait only after a genuine timeout or an interruption
+leaves the agent's work pending, handling any returned question or new input before continuing.
+
+- **Change:** new decision
+- **Scope:** task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-125@7362c7ab
+- **Verification:** level 2 — an agent compares the waiting calls and their results with the
+  tool's contract and active instructions:
+  - complies: one blocking wait ends on completion; a wait that reaches its permitted limit is
+    renewed because the agent is still working; an early question is handled before waiting again;
+  - violates: the orchestrator checks status at short intervals, sleeps between polls, or treats
+    a timeout as completion; it exceeds an active instruction's wait limit to reach the tool's maximum.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of <request link>
+
+*Rationale:* repeated checks consume coordination steps without advancing the delegated work.
+Blocking until an event or the permitted limit keeps the next action tied to information; a finite
+limit still needs renewal when the work outlasts it.
+*Rejected:* short waits followed by status checks or sleeps — they spend attention without new
+evidence; an unlimited wait assumed for every tool — capabilities and active instructions can bound it.
+
+### WAY-158/1 — Who reads the full diff of a task-cycle change or slice?
+
+The independent code reviewer reads the full diff of a one-author change or planned slice, while
+the task-cycle orchestrator uses its changed-file list with added and removed line counts and the
+reviewer's verdict for routine progression. A question, finding or disputed or incomplete evidence
+still calls for the orchestrator's relevant source and report reading under WAY-148.
+
+- **Change:** new decision
+- **Scope:** task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-136@986ff0ac · derives from WAY-148@4c7fab3a
+- **Verification:** level 2 — an agent compares the review range and coordination record with
+  the change:
+  - complies: the independent reviewer reads the entire committed range and returns its verdict,
+    while the orchestrator uses that verdict and the range's file and line-count summary;
+  - violates: the reviewer sees only a summary, or the orchestrator reads the full diff again
+    for routine progression; an unresolved finding is settled without reading its evidence.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of <request link>
+
+*Rationale:* the independent reviewer already reads the change for correctness, so repeating that
+read in coordination costs attention. The trade-off is that coordination does not catch what the
+reviewer misses; independent foundation assessment where required and human review remain.
+*Rejected:* the orchestrator routinely reading the full diff beside the reviewer — duplicated
+reading dominates coordination; giving the reviewer only a summary — the actual change escapes review.
+
+### WAY-159/1 — When does the task-cycle orchestrator rely on focused-check evidence?
+
+The author or executor runs the focused checks of a one-author change or planned slice and records
+each command, exit code and full output in the cycle's reports directory; the orchestrator relies
+on that evidence instead of rerunning those checks for routine progression. A report missing the
+command, exit code or full output is incomplete and returns to its agent for repair before dependent
+work proceeds, while a change, failure or disputed evidence still calls for affected verification.
+
+- **Change:** new decision
+- **Scope:** task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-148@4c7fab3a · derives from WAY-13@e6c830b7
+- **Verification:** level 2 — an agent compares the executor's check evidence and subsequent
+  coordination with the committed range:
+  - complies: the executor records the command, exit code and full output, and the orchestrator
+    proceeds without another run; a missing exit code returns for repair; a correction runs its
+    affected checks again;
+  - violates: a bare claim that tests passed substitutes for an unrecorded check, the orchestrator
+    reruns a check solely because the executor returned, or a changed range uses stale evidence.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of <request link>
+
+*Rationale:* repeating a completed check for coordination spends time without checking another
+state. Recorded execution can be inspected when a result is uncertain; a changed state or an
+unresolved failure needs new evidence rather than reuse by habit.
+*Rejected:* rerunning focused checks after every return — repeated work delays the cycle; trusting
+a claim without execution evidence — a check that never ran can appear complete; never rerunning
+after a correction — the evidence would describe an earlier change.
+
+### WAY-160/1 — How does the task-cycle orchestrator run and read the completed change's gate?
+
+The task-cycle orchestrator itself runs the product's full required gate on the completed change
+and keeps its full output in a file in the cycle's reports directory. Its context receives the
+command's exit code, summary, error and failure lines, warnings and every `unchecked` result,
+while the full output remains available for a question, finding or disputed or incomplete evidence
+under WAY-148.
+
+- **Change:** new decision
+- **Scope:** task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-16@5c1d60d4 · derives from WAY-63@f16348c8 · derives from WAY-148@4c7fab3a
+- **Verification:** level 2 — an agent compares the gate invocation, retained output and the
+  material returned to the orchestrator's context:
+  - complies: the orchestrator runs the full required gate, retains its complete output and reads
+    its exit code and summary with all errors, failures, warnings and unchecked results;
+  - violates: the focused-check reports replace the completed change's gate, the full output is
+    lost, only a green summary is returned despite warnings, or the whole output is loaded for
+    routine progression.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of <request link>
+
+*Rationale:* the completed change needs verification across the work that made it, and the
+orchestrator owns that execution. Keeping the complete evidence while bringing its actionable
+results into coordination limits context without hiding failed or unchecked work.
+*Rejected:* full gate output routinely loaded into coordination — successful detail obscures what
+needs action; an exit code alone — warnings and unchecked work can remain despite success;
+executor checks in place of the completed change's gate — the combined result is never checked.
