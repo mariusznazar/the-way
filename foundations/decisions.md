@@ -440,7 +440,7 @@ a human decides on every change that cannot be undone.
     one that returns knowledge instead of a change without a human setting it so.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/20
 
 *Rationale:* size misleads both ways about what can go wrong: a rename across many files is easy to
 undo, a one-line change to a stored format can destroy every user's data, so what a task touches,
@@ -878,7 +878,7 @@ exception lives only in a task document, plan or cycle record.
     orchestrator's go-ahead as approval of a decision revision.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/20
 
 *Rationale:* an exception kept only with the work leaves the foundation describing what the code no
 longer does (WAY-01); stopping shows the contradiction when it is found. Aligning or dropping the
@@ -1064,7 +1064,7 @@ where no plan is written.
     written into the log as a product non-goal.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/20
 
 *Rationale:* a plan written in the present tense reads like a decision, and WAY-01 gives no way to
 recognise one. The log binds on the main branch (WAY-07), and a rule that ends when its change is
@@ -4059,7 +4059,7 @@ can hold the change or it needs a plan, using the same judgment as before implem
   found a new foundation entry contradicting a current one only after its code was written ·
   check by: 2026-11-30
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/20
 
 *Rationale:* a spec and its review earn their cost where an agent designs a foundation entry itself,
 whose agreement with the current entries has to be checked before code is written on it; where the
@@ -4131,7 +4131,7 @@ foundation entries precede the code that depends on them.
   change has been returned as too large in two cycles out of three, or a cycle has returned more
   than one slice in three of its plan as too large · check by: 2026-11-30
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/20
 
 *Rationale:* a plan earns its cost by dividing a change into work an agent can hold and a reviewer
 can read separately; where the change fits an author, repeated reading and handoffs add cost
