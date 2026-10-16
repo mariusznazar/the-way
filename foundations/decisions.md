@@ -4958,10 +4958,11 @@ edit; bypassing the gate for a small change — size does not establish that its
 
 ### WAY-157/1 — How does the task-cycle orchestrator wait for an agent?
 
-The task-cycle orchestrator waits for an agent's completion with one blocking wait set to the
-longest duration the available tool and active instructions permit, without repeated status polls
-or sleeps between checks. It renews that wait only after a genuine timeout or an interruption
-leaves the agent's work pending, handling any returned question or new input before continuing.
+The task-cycle orchestrator waits for an agent's completion through the harness's completion
+notification or one blocking wait set to the longest duration the available tool and active
+instructions permit, without repeated status polls or sleeps between checks. It renews a bounded
+wait only after a genuine timeout or an interruption leaves the agent's work pending, handling any
+returned question or new input before continuing.
 
 - **Change:** new decision
 - **Scope:** task-cycle
@@ -4969,7 +4970,8 @@ leaves the agent's work pending, handling any returned question or new input bef
 - **Relations:** derives from WAY-125@7362c7ab
 - **Verification:** level 2 — an agent compares the waiting calls and their results with the
   tool's contract and active instructions:
-  - complies: one blocking wait ends on completion; a wait that reaches its permitted limit is
+  - complies: a native completion notification resumes coordination without polling; one blocking
+    wait ends on completion; a wait that reaches its permitted limit is
     renewed because the agent is still working; an early question is handled before waiting again;
   - violates: the orchestrator checks status at short intervals, sleeps between polls, or treats
     a timeout as completion; it exceeds an active instruction's wait limit to reach the tool's maximum.
