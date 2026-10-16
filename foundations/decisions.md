@@ -3649,7 +3649,7 @@ reviewed change to the-way before use.
     without reading that method.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/21
 
 *Rationale:* the borrowed skills provide design, test and review methods, while the-way must keep
 control of task sources, binding foundation approvals and the single human review point. Naming
@@ -4645,7 +4645,7 @@ owners and the independent assessor's filtered inputs
     author's reasoning; the orchestrator reloads completed stage material for routine progression.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/21
 
 *Rationale:* full material kept outside routine coordination avoids repeated context while
 preserving evidence a ruling needs and a place from which work can resume. Short returns make
@@ -4977,7 +4977,7 @@ returned question or new input before continuing.
     a timeout as completion; it exceeds an active instruction's wait limit to reach the tool's maximum.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/21
 
 *Rationale:* repeated checks consume coordination steps without advancing the delegated work.
 Blocking until an event or the permitted limit keeps the next action tied to information; a finite
@@ -5004,7 +5004,7 @@ still calls for the orchestrator's relevant source and report reading under WAY-
     for routine progression; an unresolved finding is settled without reading its evidence.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/21
 
 *Rationale:* the independent reviewer already reads the change for correctness, so repeating that
 read in coordination costs attention. The trade-off is that coordination does not catch what the
@@ -5033,7 +5033,7 @@ work proceeds, while a change, failure or disputed evidence still calls for affe
     reruns a check solely because the executor returned, or a changed range uses stale evidence.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/21
 
 *Rationale:* repeating a completed check for coordination spends time without checking another
 state. Recorded execution can be inspected when a result is uncertain; a changed state or an
@@ -5063,7 +5063,7 @@ under WAY-148.
     routine progression.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/21
 
 *Rationale:* the completed change needs verification across the work that made it, and the
 orchestrator owns that execution. Keeping the complete evidence while bringing its actionable
