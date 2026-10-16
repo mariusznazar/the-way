@@ -1,0 +1,10 @@
+$ python -B agent-instructions/skill_entry_points.py --write
+exit: 0
+
+STDOUT
+changed .claude/skills/the-way-plan-task/SKILL.md
+changed .agents/skills/the-way-plan-task/SKILL.md
+changed .claude/skills/the-way-implement-task/SKILL.md
+changed .agents/skills/the-way-implement-task/SKILL.md
+
+STDERR

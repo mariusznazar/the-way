@@ -1,0 +1,13 @@
+$ python -B task-cycle/slice_size.py .runs/task-cycles/one-author-small-change/plan.md
+exit: 0
+
+STDOUT
+# Slice sizes
+
+Too large: more than 250000 estimated tokens to read, a quarter of a 1000000-token context window at 2.5 characters a token, or more than 10 files to change.
+
+| Slice | Files to change | Characters to read | Estimated tokens | Verdict | Why |
+|---|---|---|---|---|---|
+| 1 | 10 | 560781 | 224313 | fits | — |
+
+STDERR

@@ -1,0 +1,50 @@
+{
+  "base": "7513de82cb144f36e01b12eb8ef02970a382c2d9",
+  "write_set_exact": true,
+  "files": [
+    ".agents/skills/the-way-implement-task/SKILL.md",
+    ".agents/skills/the-way-plan-task/SKILL.md",
+    ".claude/skills/the-way-implement-task/SKILL.md",
+    ".claude/skills/the-way-plan-task/SKILL.md",
+    "elements/decisions/skill/SKILL.md",
+    "elements/decisions/template.md",
+    "task-cycle/plan/SKILL.md",
+    "task-cycle/record_template.md",
+    "task-cycle/skill/SKILL.md",
+    "task-cycle/slice_size.py"
+  ],
+  "sizing_executable_suffix_equal_after_git_line_normalization": true,
+  "commands": [
+    {
+      "name": "final-generator-check",
+      "command": [
+        "python",
+        "-B",
+        "agent-instructions/skill_entry_points.py"
+      ],
+      "exit": 0,
+      "report": "implementation-final-generator-check.txt"
+    },
+    {
+      "name": "final-diff-check",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit": 0,
+      "report": "implementation-final-diff-check.txt"
+    },
+    {
+      "name": "final-size",
+      "command": [
+        "python",
+        "-B",
+        "task-cycle/slice_size.py",
+        ".runs/task-cycles/one-author-small-change/plan.md"
+      ],
+      "exit": 0,
+      "report": "implementation-final-size.txt"
+    }
+  ]
+}

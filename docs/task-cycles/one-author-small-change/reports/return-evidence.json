@@ -1,0 +1,1005 @@
+{
+  "base": "dc433059ffc7f94f9aaa43588dfe94ac869fb635",
+  "head": "10e36ef9be8194471661265edeeacf728fe8dfb9",
+  "touched_parts": [
+    "decisions",
+    "task-cycle",
+    "agent-instructions"
+  ],
+  "selection": [
+    [
+      "WAY-01",
+      6
+    ],
+    [
+      "WAY-02",
+      38
+    ],
+    [
+      "WAY-03",
+      71
+    ],
+    [
+      "WAY-04",
+      95
+    ],
+    [
+      "WAY-05",
+      137
+    ],
+    [
+      "WAY-07",
+      176
+    ],
+    [
+      "WAY-09",
+      234
+    ],
+    [
+      "WAY-10",
+      305
+    ],
+    [
+      "WAY-11",
+      343
+    ],
+    [
+      "WAY-12",
+      384
+    ],
+    [
+      "WAY-13",
+      414
+    ],
+    [
+      "WAY-14",
+      459
+    ],
+    [
+      "WAY-16",
+      480
+    ],
+    [
+      "WAY-17",
+      507
+    ],
+    [
+      "WAY-18",
+      531
+    ],
+    [
+      "WAY-19",
+      563
+    ],
+    [
+      "WAY-20",
+      596
+    ],
+    [
+      "WAY-21",
+      623
+    ],
+    [
+      "WAY-22",
+      645
+    ],
+    [
+      "WAY-24",
+      673
+    ],
+    [
+      "WAY-25",
+      708
+    ],
+    [
+      "WAY-26",
+      737
+    ],
+    [
+      "WAY-27",
+      763
+    ],
+    [
+      "WAY-28",
+      794
+    ],
+    [
+      "WAY-29",
+      826
+    ],
+    [
+      "WAY-30",
+      857
+    ],
+    [
+      "WAY-31",
+      891
+    ],
+    [
+      "WAY-32",
+      926
+    ],
+    [
+      "WAY-33",
+      952
+    ],
+    [
+      "WAY-34",
+      983
+    ],
+    [
+      "WAY-35",
+      1012
+    ],
+    [
+      "WAY-36",
+      1046
+    ],
+    [
+      "WAY-37",
+      1075
+    ],
+    [
+      "WAY-38",
+      1102
+    ],
+    [
+      "WAY-44",
+      1233
+    ],
+    [
+      "WAY-45",
+      1264
+    ],
+    [
+      "WAY-46",
+      1290
+    ],
+    [
+      "WAY-47",
+      1331
+    ],
+    [
+      "WAY-48",
+      1358
+    ],
+    [
+      "WAY-51",
+      1428
+    ],
+    [
+      "WAY-52",
+      1464
+    ],
+    [
+      "WAY-53",
+      1490
+    ],
+    [
+      "WAY-54",
+      1513
+    ],
+    [
+      "WAY-55",
+      1546
+    ],
+    [
+      "WAY-57",
+      1607
+    ],
+    [
+      "WAY-60",
+      1697
+    ],
+    [
+      "WAY-61",
+      1733
+    ],
+    [
+      "WAY-62",
+      1787
+    ],
+    [
+      "WAY-63",
+      1818
+    ],
+    [
+      "WAY-65",
+      1895
+    ],
+    [
+      "WAY-68",
+      1926
+    ],
+    [
+      "WAY-69",
+      1960
+    ],
+    [
+      "WAY-71",
+      1996
+    ],
+    [
+      "WAY-72",
+      2034
+    ],
+    [
+      "WAY-73",
+      2060
+    ],
+    [
+      "WAY-74",
+      2093
+    ],
+    [
+      "WAY-82",
+      2320
+    ],
+    [
+      "WAY-84",
+      2377
+    ],
+    [
+      "WAY-85",
+      2410
+    ],
+    [
+      "WAY-86",
+      2442
+    ],
+    [
+      "WAY-89",
+      2476
+    ],
+    [
+      "WAY-90",
+      2505
+    ],
+    [
+      "WAY-95",
+      2606
+    ],
+    [
+      "WAY-97",
+      2686
+    ],
+    [
+      "WAY-98",
+      2722
+    ],
+    [
+      "WAY-99",
+      2756
+    ],
+    [
+      "WAY-100",
+      2788
+    ],
+    [
+      "WAY-101",
+      2814
+    ],
+    [
+      "WAY-102",
+      2837
+    ],
+    [
+      "WAY-103",
+      2864
+    ],
+    [
+      "WAY-104",
+      2889
+    ],
+    [
+      "WAY-106",
+      2992
+    ],
+    [
+      "WAY-113",
+      3181
+    ],
+    [
+      "WAY-114",
+      3217
+    ],
+    [
+      "WAY-116",
+      3277
+    ],
+    [
+      "WAY-117",
+      3305
+    ],
+    [
+      "WAY-119",
+      3368
+    ],
+    [
+      "WAY-120",
+      3395
+    ],
+    [
+      "WAY-121",
+      3427
+    ],
+    [
+      "WAY-122",
+      3464
+    ],
+    [
+      "WAY-123",
+      3523
+    ],
+    [
+      "WAY-124",
+      3562
+    ],
+    [
+      "WAY-125",
+      3612
+    ],
+    [
+      "WAY-126",
+      3657
+    ],
+    [
+      "WAY-127",
+      3704
+    ],
+    [
+      "WAY-128",
+      3763
+    ],
+    [
+      "WAY-129",
+      3805
+    ],
+    [
+      "WAY-130",
+      3831
+    ],
+    [
+      "WAY-131",
+      3871
+    ],
+    [
+      "WAY-132",
+      3903
+    ],
+    [
+      "WAY-133",
+      3941
+    ],
+    [
+      "WAY-134",
+      3976
+    ],
+    [
+      "WAY-135",
+      4030
+    ],
+    [
+      "WAY-136",
+      4081
+    ],
+    [
+      "WAY-137",
+      4155
+    ],
+    [
+      "WAY-138",
+      4195
+    ],
+    [
+      "WAY-140",
+      4284
+    ],
+    [
+      "WAY-144",
+      4453
+    ],
+    [
+      "WAY-147",
+      4576
+    ],
+    [
+      "WAY-148",
+      4607
+    ],
+    [
+      "WAY-149",
+      4647
+    ],
+    [
+      "WAY-150",
+      4689
+    ]
+  ],
+  "missing_scope_matches": [],
+  "patterns": {
+    "identifiers": "\\bWAY-(?:13|30|36|135|136)(?:\\b|@)",
+    "planning": "\\bplan(?:ning|ner)?\\b|\\bslices?\\b|\\bspec\\b",
+    "authors": "\\bauthor\\b|\\bagent\\b|orchestrat|independen|review",
+    "recovery": "too large|oversiz|discard|attempt|return step|foundation step",
+    "carriers": "temporary|exclusion|contradict|approval|approved|one.author|without a plan|prepar",
+    "new_arrival": "waits? for|until|not yet|no main|token|cost"
+  },
+  "target_search": {
+    "foundations/decisions.md": {
+      "identifiers": [
+        "### WAY-13/1 \u2014 What sets the weight of a task's process?",
+        "### WAY-30/1 \u2014 What happens when a change contradicts a decision?",
+        "### WAY-36/1 \u2014 Is a rule a decision or does it belong in a plan?",
+        "### WAY-46/1 \u2014 How does the criticality of a part arise?",
+        "### WAY-125/1 \u2014 Which Superpowers methods does the autonomous task cycle adopt?",
+        "### WAY-135/1 \u2014 When does a task's cycle write a spec?",
+        "### WAY-136/1 \u2014 What plan does a task's cycle write, and who makes and reviews its slices?"
+      ],
+      "planning": [
+        "### WAY-09/1 \u2014 What may enter the process repository?",
+        "### WAY-13/1 \u2014 What sets the weight of a task's process?",
+        "### WAY-30/1 \u2014 What happens when a change contradicts a decision?",
+        "### WAY-36/1 \u2014 Is a rule a decision or does it belong in a plan?",
+        "### WAY-100/1 \u2014 When does a method or practice borrowed from elsewhere bind a product?",
+        "### WAY-106/1 \u2014 What does the project level write before tasks exist?",
+        "### WAY-110/1 \u2014 When does a deadline enter a project definition?",
+        "### WAY-119/1 \u2014 When may a projected decision leave Review when unresolved at the gate?",
+        "### WAY-124/1 \u2014 When is a task ready for its cycle?",
+        "### WAY-125/1 \u2014 Which Superpowers methods does the autonomous task cycle adopt?",
+        "### WAY-126/1 \u2014 How does a projected entry enter the foundation?",
+        "### WAY-135/1 \u2014 When does a task's cycle write a spec?",
+        "### WAY-136/1 \u2014 What plan does a task's cycle write, and who makes and reviews its slices?",
+        "### WAY-138/1 \u2014 Which option of a technology choice is tested for what choosing it could break, and where do the risks found go?",
+        "### WAY-141/1 \u2014 How does the installer give Claude Code the guidance in a product's root AGENTS.md?",
+        "### WAY-142/1 \u2014 What does the breakdown of a project write, and in what form?",
+        "### WAY-143/1 \u2014 What does a task of a project plan end with?",
+        "### WAY-144/1 \u2014 How does a project plan show which tasks can be worked on side by side?",
+        "### WAY-145/1 \u2014 Who sets where an open question of an approved project definition is resolved?",
+        "### WAY-146/1 \u2014 What checks a project plan before it is handed over?",
+        "### WAY-147/1 \u2014 How is a task of a project plan named, and what does its cycle take from the name?",
+        "### WAY-151/1 \u2014 How much of large project definitions and existing plans does plan-project read?",
+        "### WAY-152/1 \u2014 How does the project orchestrator lead a handed-over plan?",
+        "### WAY-153/1 \u2014 What evidence supports a task state in a project plan?",
+        "### WAY-154/1 \u2014 How do agents exchange a project task refinement and keep its result?",
+        "### WAY-155/1 \u2014 What may the answering agent settle during a refinement round?",
+        "### WAY-156/1 \u2014 How does project leading route a plan or definition change?"
+      ],
+      "authors": [
+        "### WAY-01/1 \u2014 What state does the foundation describe?",
+        "### WAY-02/1 \u2014 How do dependents learn that an entry has changed?",
+        "### WAY-03/1 \u2014 Who may change an invariant test, and when?",
+        "### WAY-04/1 \u2014 What makes up a product's foundation, and what in it is derived rather than written by hand?",
+        "### WAY-05/1 \u2014 How is a decision entry written?",
+        "### WAY-07/1 \u2014 From when may a decision entry no longer be edited?",
+        "### WAY-08/1 \u2014 How is an invariant checked?",
+        "### WAY-09/1 \u2014 What may enter the process repository?",
+        "### WAY-10/1 \u2014 Who assesses a change to an invariant test or to the foundation?",
+        "### WAY-11/1 \u2014 How does a task end?",
+        "### WAY-12/1 \u2014 How is a decision checked?",
+        "### WAY-13/1 \u2014 What sets the weight of a task's process?",
+        "### WAY-14/1 \u2014 Who approves a version of a decision?",
+        "### WAY-16/1 \u2014 How are the checks of invariants run?",
+        "### WAY-17/1 \u2014 Which links between foundation entries are mandatory?",
+        "### WAY-18/1 \u2014 How is a product's decision log kept?",
+        "### WAY-19/1 \u2014 How are decisions numbered and versioned?",
+        "### WAY-20/1 \u2014 What kinds of change can a decision undergo?",
+        "### WAY-21/1 \u2014 What is a decision's scope?",
+        "### WAY-22/1 \u2014 Is a rule a decision or an invariant?",
+        "### WAY-24/1 \u2014 How is a decision that rests on a prediction reviewed?",
+        "### WAY-25/1 \u2014 What settles a collision between two decisions?",
+        "### WAY-26/1 \u2014 How are trade-off principles and non-goals written?",
+        "### WAY-27/1 \u2014 Where may this repository point for its reasoning?",
+        "### WAY-28/1 \u2014 How does the process enter a product that already exists?",
+        "### WAY-29/1 \u2014 How is a decision recovered from an existing product written?",
+        "### WAY-30/1 \u2014 What happens when a change contradicts a decision?",
+        "### WAY-31/1 \u2014 Which links between entries are flagged when the named entry changes?",
+        "### WAY-32/1 \u2014 What types of relation can a decision name?",
+        "### WAY-33/1 \u2014 What does the author of a foundation change search for?",
+        "### WAY-34/1 \u2014 Which version of the process does a product use?",
+        "### WAY-35/1 \u2014 What does an element's skill hold?",
+        "### WAY-36/1 \u2014 Is a rule a decision or does it belong in a plan?",
+        "### WAY-37/1 \u2014 What happens to entries that wait for something when it arrives?",
+        "### WAY-38/1 \u2014 In what are the scripts of the-way written?",
+        "### WAY-40/1 \u2014 What kinds of entry does the part map hold?",
+        "### WAY-41/1 \u2014 What identifies an entry of the part map?",
+        "### WAY-42/1 \u2014 What is the binding part of a part map entry?",
+        "### WAY-43/1 \u2014 Is an entry of the part map versioned?",
+        "### WAY-44/1 \u2014 What assigns a file to a part?",
+        "### WAY-45/1 \u2014 How does the part map record a critical flow, and when does a change lie on it?",
+        "### WAY-46/1 \u2014 How does the criticality of a part arise?",
+        "### WAY-47/1 \u2014 How is a critical flow's list of parts checked?",
+        "### WAY-48/1 \u2014 How is a trust boundary recorded?",
+        "### WAY-49/1 \u2014 How does a product declare a surface, and by what path may it change?",
+        "### WAY-51/1 \u2014 What does the main branch hold where the product does not meet an invariant or the part map's allowed dependencies?",
+        "### WAY-52/1 \u2014 What is generated from the part map for an agent?",
+        "### WAY-53/1 \u2014 How is a derived file compared with what its generator produces?",
+        "### WAY-54/1 \u2014 Where does the value of a field in a template come from?",
+        "### WAY-55/1 \u2014 Which part of the process holds the gate?",
+        "### WAY-56/1 \u2014 How much does one invariant entry hold, and what is its binding part?",
+        "### WAY-57/1 \u2014 Is an invariant entry versioned?",
+        "### WAY-58/1 \u2014 What does an invariant entry record when it was recovered from what a product does?",
+        "### WAY-60/1 \u2014 Where may a condition that decides an invariant stand?",
+        "### WAY-61/1 \u2014 How is an invariant's method of checking written, and how is its result read?",
+        "### WAY-62/1 \u2014 What does an invariant entry name in the part map?",
+        "### WAY-63/1 \u2014 What results does the gate report for invariants, and which make its command fail?",
+        "### WAY-64/1 \u2014 Where do invariant and environment fact entries stand, and what identifies one?",
+        "### WAY-65/1 \u2014 How does a check cite its invariant, and which files are invariant tests?",
+        "### WAY-68/1 \u2014 What happens to a check that gives different verdicts on one commit?",
+        "### WAY-69/1 \u2014 Who writes an invariant's sentence, its check and its deliberate break, and what may the check compute for itself?",
+        "### WAY-71/1 \u2014 Does every field of a foundation entry appear in every entry, and what may it hold?",
+        "### WAY-72/1 \u2014 In what language is a product's foundation written?",
+        "### WAY-73/1 \u2014 Which entries name an environment fact?",
+        "### WAY-74/1 \u2014 What form does the-way's own record of a run take?",
+        "### WAY-76/1 \u2014 How much does one environment fact entry hold?",
+        "### WAY-77/1 \u2014 What does an environment fact's *Holds for* name?",
+        "### WAY-78/1 \u2014 What is the binding part of an environment fact entry?",
+        "### WAY-79/1 \u2014 Is an environment fact entry versioned?",
+        "### WAY-80/1 \u2014 What is an environment fact's source?",
+        "### WAY-81/1 \u2014 How is an environment fact's method written, and on which release of its tool does a probe's verdict count?",
+        "### WAY-82/1 \u2014 When does an environment fact's method run, and what fails its watch?",
+        "### WAY-83/1 \u2014 Where does a human verdict stand, and how long is it in force?",
+        "### WAY-84/1 \u2014 How is a setting that people of the product change outside its repository written?",
+        "### WAY-85/1 \u2014 How is a finding of a study written as an environment fact?",
+        "### WAY-86/1 \u2014 How does a catalogue of requirements or a binding rule reach a product?",
+        "### WAY-89/1 \u2014 Which version of Python do the scripts of the-way run on, and when does it move?",
+        "### WAY-90/1 \u2014 Which citations of a decision's *Based on* become environment fact entries, and how are they named?",
+        "### WAY-93/1 \u2014 Where do glossary entries stand, and what identifies one?",
+        "### WAY-94/1 \u2014 What does a glossary entry hold, and what is its binding part?",
+        "### WAY-95/1 \u2014 Which words take a glossary entry, and in which glossary?",
+        "### WAY-96/1 \u2014 How is a glossary definition written?",
+        "### WAY-97/1 \u2014 How does a sentence rely on a glossary term, and what does a change to a definition go through?",
+        "### WAY-98/1 \u2014 Where is a word of a glossary entry's *Avoid* an error?",
+        "### WAY-99/1 \u2014 How does one word keep one meaning in the foundation?",
+        "### WAY-100/1 \u2014 When does a method or practice borrowed from elsewhere bind a product?",
+        "### WAY-101/1 \u2014 Who chooses the backlog tool used with the-way?",
+        "### WAY-102/1 \u2014 What is the-way for?",
+        "### WAY-103/1 \u2014 Who is the-way for?",
+        "### WAY-104/1 \u2014 How does a product write a word of its domain that the glossary of the-way holds?",
+        "### WAY-105/1 \u2014 Which check reports an invariant whose command runs a script that does not exist, and how is that script read?",
+        "### WAY-106/1 \u2014 What does the project level write before tasks exist?",
+        "### WAY-107/1 \u2014 Where does a product tell the project level where its backlog stands?",
+        "### WAY-108/1 \u2014 What form does a project definition take?",
+        "### WAY-109/1 \u2014 What may a project definition treat as settled without the human's answer?",
+        "### WAY-110/1 \u2014 When does a deadline enter a project definition?",
+        "### WAY-111/1 \u2014 What does the project level read in the current foundation?",
+        "### WAY-112/1 \u2014 How does an agent develop and resume a project definition?",
+        "### WAY-113/1 \u2014 How does an agent of the-way ask a human decision?",
+        "### WAY-114/1 \u2014 What does a human accept of an entry, and when?",
+        "### WAY-115/1 \u2014 How are foundation entries found in a project's source?",
+        "### WAY-116/1 \u2014 Which foundation entries may a project definition project?",
+        "### WAY-117/1 \u2014 How does a foundation entry stand in a project definition before it is written?",
+        "### WAY-118/1 \u2014 What makes a project definition ready for breakdown?",
+        "### WAY-119/1 \u2014 When may a projected decision leave Review when unresolved at the gate?",
+        "### WAY-120/1 \u2014 How does the-way critique an agent's proposal?",
+        "### WAY-121/1 \u2014 Where does a project settle the technology it needs?",
+        "### WAY-122/1 \u2014 How are the options of a technology choice found and checked before a human sees them?",
+        "### WAY-123/1 \u2014 How does a technology choice reach a human who cannot assess the technology?",
+        "### WAY-124/1 \u2014 When is a task ready for its cycle?",
+        "### WAY-125/1 \u2014 Which Superpowers methods does the autonomous task cycle adopt?",
+        "### WAY-126/1 \u2014 How does a projected entry enter the foundation?",
+        "### WAY-127/1 \u2014 How does a session working on the-way itself reach the-way's skills?",
+        "### WAY-128/1 \u2014 What may a line of an instruction file that a tool loads into every session hold, and where does any other rule stand?",
+        "### WAY-129/1 \u2014 How does an instruction file point an agent to another file?",
+        "### WAY-130/1 \u2014 When does a rule enter an instruction file, and when does it leave?",
+        "### WAY-131/1 \u2014 How is it settled whether a rule of an instruction file works?",
+        "### WAY-132/1 \u2014 Which file carries the instructions Claude Code, Codex and Cursor share?",
+        "### WAY-133/1 \u2014 How is a rule of an instruction file kept when it has to hold every time?",
+        "### WAY-134/1 \u2014 How does a task carry what its refinement settles for the foundation?",
+        "### WAY-135/1 \u2014 When does a task's cycle write a spec?",
+        "### WAY-136/1 \u2014 What plan does a task's cycle write, and who makes and reviews its slices?",
+        "### WAY-137/1 \u2014 What decides between places to run that the simplest and cheapest option leaves tied?",
+        "### WAY-138/1 \u2014 Which option of a technology choice is tested for what choosing it could break, and where do the risks found go?",
+        "### WAY-139/1 \u2014 What does the-way hold for the skill that deploys a product, and which step checks that a product has one?",
+        "### WAY-140/1 \u2014 How does a task change something outside the product's repository?",
+        "### WAY-141/1 \u2014 How does the installer give Claude Code the guidance in a product's root AGENTS.md?",
+        "### WAY-142/1 \u2014 What does the breakdown of a project write, and in what form?",
+        "### WAY-143/1 \u2014 What does a task of a project plan end with?",
+        "### WAY-144/1 \u2014 How does a project plan show which tasks can be worked on side by side?",
+        "### WAY-145/1 \u2014 Who sets where an open question of an approved project definition is resolved?",
+        "### WAY-146/1 \u2014 What checks a project plan before it is handed over?",
+        "### WAY-147/1 \u2014 How is a task of a project plan named, and what does its cycle take from the name?",
+        "### WAY-148/1 \u2014 How do task-cycle stages pass their work to the orchestrator?",
+        "### WAY-149/1 \u2014 When does the deliberate break of a return-step check take place?",
+        "### WAY-150/1 \u2014 How do the-way skills choose which product foundation material to read?",
+        "### WAY-151/1 \u2014 How much of large project definitions and existing plans does plan-project read?",
+        "### WAY-152/1 \u2014 How does the project orchestrator lead a handed-over plan?",
+        "### WAY-153/1 \u2014 What evidence supports a task state in a project plan?",
+        "### WAY-154/1 \u2014 How do agents exchange a project task refinement and keep its result?",
+        "### WAY-155/1 \u2014 What may the answering agent settle during a refinement round?",
+        "### WAY-156/1 \u2014 How does project leading route a plan or definition change?"
+      ],
+      "recovery": [
+        "### WAY-01/1 \u2014 What state does the foundation describe?",
+        "### WAY-03/1 \u2014 Who may change an invariant test, and when?",
+        "### WAY-04/1 \u2014 What makes up a product's foundation, and what in it is derived rather than written by hand?",
+        "### WAY-11/1 \u2014 How does a task end?",
+        "### WAY-28/1 \u2014 How does the process enter a product that already exists?",
+        "### WAY-124/1 \u2014 When is a task ready for its cycle?",
+        "### WAY-125/1 \u2014 Which Superpowers methods does the autonomous task cycle adopt?",
+        "### WAY-126/1 \u2014 How does a projected entry enter the foundation?",
+        "### WAY-134/1 \u2014 How does a task carry what its refinement settles for the foundation?",
+        "### WAY-135/1 \u2014 When does a task's cycle write a spec?",
+        "### WAY-136/1 \u2014 What plan does a task's cycle write, and who makes and reviews its slices?",
+        "### WAY-149/1 \u2014 When does the deliberate break of a return-step check take place?"
+      ],
+      "carriers": [
+        "### WAY-01/1 \u2014 What state does the foundation describe?",
+        "### WAY-02/1 \u2014 How do dependents learn that an entry has changed?",
+        "### WAY-03/1 \u2014 Who may change an invariant test, and when?",
+        "### WAY-04/1 \u2014 What makes up a product's foundation, and what in it is derived rather than written by hand?",
+        "### WAY-05/1 \u2014 How is a decision entry written?",
+        "### WAY-07/1 \u2014 From when may a decision entry no longer be edited?",
+        "### WAY-08/1 \u2014 How is an invariant checked?",
+        "### WAY-09/1 \u2014 What may enter the process repository?",
+        "### WAY-10/1 \u2014 Who assesses a change to an invariant test or to the foundation?",
+        "### WAY-11/1 \u2014 How does a task end?",
+        "### WAY-12/1 \u2014 How is a decision checked?",
+        "### WAY-13/1 \u2014 What sets the weight of a task's process?",
+        "### WAY-14/1 \u2014 Who approves a version of a decision?",
+        "### WAY-16/1 \u2014 How are the checks of invariants run?",
+        "### WAY-17/1 \u2014 Which links between foundation entries are mandatory?",
+        "### WAY-18/1 \u2014 How is a product's decision log kept?",
+        "### WAY-19/1 \u2014 How are decisions numbered and versioned?",
+        "### WAY-20/1 \u2014 What kinds of change can a decision undergo?",
+        "### WAY-21/1 \u2014 What is a decision's scope?",
+        "### WAY-22/1 \u2014 Is a rule a decision or an invariant?",
+        "### WAY-24/1 \u2014 How is a decision that rests on a prediction reviewed?",
+        "### WAY-25/1 \u2014 What settles a collision between two decisions?",
+        "### WAY-26/1 \u2014 How are trade-off principles and non-goals written?",
+        "### WAY-27/1 \u2014 Where may this repository point for its reasoning?",
+        "### WAY-28/1 \u2014 How does the process enter a product that already exists?",
+        "### WAY-29/1 \u2014 How is a decision recovered from an existing product written?",
+        "### WAY-30/1 \u2014 What happens when a change contradicts a decision?",
+        "### WAY-31/1 \u2014 Which links between entries are flagged when the named entry changes?",
+        "### WAY-32/1 \u2014 What types of relation can a decision name?",
+        "### WAY-33/1 \u2014 What does the author of a foundation change search for?",
+        "### WAY-34/1 \u2014 Which version of the process does a product use?",
+        "### WAY-35/1 \u2014 What does an element's skill hold?",
+        "### WAY-36/1 \u2014 Is a rule a decision or does it belong in a plan?",
+        "### WAY-37/1 \u2014 What happens to entries that wait for something when it arrives?",
+        "### WAY-38/1 \u2014 In what are the scripts of the-way written?",
+        "### WAY-40/1 \u2014 What kinds of entry does the part map hold?",
+        "### WAY-41/1 \u2014 What identifies an entry of the part map?",
+        "### WAY-42/1 \u2014 What is the binding part of a part map entry?",
+        "### WAY-43/1 \u2014 Is an entry of the part map versioned?",
+        "### WAY-44/1 \u2014 What assigns a file to a part?",
+        "### WAY-45/1 \u2014 How does the part map record a critical flow, and when does a change lie on it?",
+        "### WAY-46/1 \u2014 How does the criticality of a part arise?",
+        "### WAY-47/1 \u2014 How is a critical flow's list of parts checked?",
+        "### WAY-48/1 \u2014 How is a trust boundary recorded?",
+        "### WAY-49/1 \u2014 How does a product declare a surface, and by what path may it change?",
+        "### WAY-51/1 \u2014 What does the main branch hold where the product does not meet an invariant or the part map's allowed dependencies?",
+        "### WAY-52/1 \u2014 What is generated from the part map for an agent?",
+        "### WAY-53/1 \u2014 How is a derived file compared with what its generator produces?",
+        "### WAY-54/1 \u2014 Where does the value of a field in a template come from?",
+        "### WAY-55/1 \u2014 Which part of the process holds the gate?",
+        "### WAY-56/1 \u2014 How much does one invariant entry hold, and what is its binding part?",
+        "### WAY-57/1 \u2014 Is an invariant entry versioned?",
+        "### WAY-58/1 \u2014 What does an invariant entry record when it was recovered from what a product does?",
+        "### WAY-60/1 \u2014 Where may a condition that decides an invariant stand?",
+        "### WAY-61/1 \u2014 How is an invariant's method of checking written, and how is its result read?",
+        "### WAY-62/1 \u2014 What does an invariant entry name in the part map?",
+        "### WAY-63/1 \u2014 What results does the gate report for invariants, and which make its command fail?",
+        "### WAY-64/1 \u2014 Where do invariant and environment fact entries stand, and what identifies one?",
+        "### WAY-65/1 \u2014 How does a check cite its invariant, and which files are invariant tests?",
+        "### WAY-68/1 \u2014 What happens to a check that gives different verdicts on one commit?",
+        "### WAY-69/1 \u2014 Who writes an invariant's sentence, its check and its deliberate break, and what may the check compute for itself?",
+        "### WAY-71/1 \u2014 Does every field of a foundation entry appear in every entry, and what may it hold?",
+        "### WAY-72/1 \u2014 In what language is a product's foundation written?",
+        "### WAY-73/1 \u2014 Which entries name an environment fact?",
+        "### WAY-74/1 \u2014 What form does the-way's own record of a run take?",
+        "### WAY-76/1 \u2014 How much does one environment fact entry hold?",
+        "### WAY-77/1 \u2014 What does an environment fact's *Holds for* name?",
+        "### WAY-78/1 \u2014 What is the binding part of an environment fact entry?",
+        "### WAY-79/1 \u2014 Is an environment fact entry versioned?",
+        "### WAY-80/1 \u2014 What is an environment fact's source?",
+        "### WAY-81/1 \u2014 How is an environment fact's method written, and on which release of its tool does a probe's verdict count?",
+        "### WAY-82/1 \u2014 When does an environment fact's method run, and what fails its watch?",
+        "### WAY-83/1 \u2014 Where does a human verdict stand, and how long is it in force?",
+        "### WAY-84/1 \u2014 How is a setting that people of the product change outside its repository written?",
+        "### WAY-85/1 \u2014 How is a finding of a study written as an environment fact?",
+        "### WAY-86/1 \u2014 How does a catalogue of requirements or a binding rule reach a product?",
+        "### WAY-89/1 \u2014 Which version of Python do the scripts of the-way run on, and when does it move?",
+        "### WAY-90/1 \u2014 Which citations of a decision's *Based on* become environment fact entries, and how are they named?",
+        "### WAY-93/1 \u2014 Where do glossary entries stand, and what identifies one?",
+        "### WAY-94/1 \u2014 What does a glossary entry hold, and what is its binding part?",
+        "### WAY-95/1 \u2014 Which words take a glossary entry, and in which glossary?",
+        "### WAY-96/1 \u2014 How is a glossary definition written?",
+        "### WAY-97/1 \u2014 How does a sentence rely on a glossary term, and what does a change to a definition go through?",
+        "### WAY-98/1 \u2014 Where is a word of a glossary entry's *Avoid* an error?",
+        "### WAY-99/1 \u2014 How does one word keep one meaning in the foundation?",
+        "### WAY-100/1 \u2014 When does a method or practice borrowed from elsewhere bind a product?",
+        "### WAY-101/1 \u2014 Who chooses the backlog tool used with the-way?",
+        "### WAY-102/1 \u2014 What is the-way for?",
+        "### WAY-103/1 \u2014 Who is the-way for?",
+        "### WAY-104/1 \u2014 How does a product write a word of its domain that the glossary of the-way holds?",
+        "### WAY-105/1 \u2014 Which check reports an invariant whose command runs a script that does not exist, and how is that script read?",
+        "### WAY-106/1 \u2014 What does the project level write before tasks exist?",
+        "### WAY-107/1 \u2014 Where does a product tell the project level where its backlog stands?",
+        "### WAY-108/1 \u2014 What form does a project definition take?",
+        "### WAY-109/1 \u2014 What may a project definition treat as settled without the human's answer?",
+        "### WAY-110/1 \u2014 When does a deadline enter a project definition?",
+        "### WAY-111/1 \u2014 What does the project level read in the current foundation?",
+        "### WAY-112/1 \u2014 How does an agent develop and resume a project definition?",
+        "### WAY-113/1 \u2014 How does an agent of the-way ask a human decision?",
+        "### WAY-114/1 \u2014 What does a human accept of an entry, and when?",
+        "### WAY-115/1 \u2014 How are foundation entries found in a project's source?",
+        "### WAY-116/1 \u2014 Which foundation entries may a project definition project?",
+        "### WAY-117/1 \u2014 How does a foundation entry stand in a project definition before it is written?",
+        "### WAY-118/1 \u2014 What makes a project definition ready for breakdown?",
+        "### WAY-119/1 \u2014 When may a projected decision leave Review when unresolved at the gate?",
+        "### WAY-120/1 \u2014 How does the-way critique an agent's proposal?",
+        "### WAY-121/1 \u2014 Where does a project settle the technology it needs?",
+        "### WAY-122/1 \u2014 How are the options of a technology choice found and checked before a human sees them?",
+        "### WAY-123/1 \u2014 How does a technology choice reach a human who cannot assess the technology?",
+        "### WAY-124/1 \u2014 When is a task ready for its cycle?",
+        "### WAY-125/1 \u2014 Which Superpowers methods does the autonomous task cycle adopt?",
+        "### WAY-126/1 \u2014 How does a projected entry enter the foundation?",
+        "### WAY-127/1 \u2014 How does a session working on the-way itself reach the-way's skills?",
+        "### WAY-128/1 \u2014 What may a line of an instruction file that a tool loads into every session hold, and where does any other rule stand?",
+        "### WAY-129/1 \u2014 How does an instruction file point an agent to another file?",
+        "### WAY-130/1 \u2014 When does a rule enter an instruction file, and when does it leave?",
+        "### WAY-131/1 \u2014 How is it settled whether a rule of an instruction file works?",
+        "### WAY-132/1 \u2014 Which file carries the instructions Claude Code, Codex and Cursor share?",
+        "### WAY-133/1 \u2014 How is a rule of an instruction file kept when it has to hold every time?",
+        "### WAY-134/1 \u2014 How does a task carry what its refinement settles for the foundation?",
+        "### WAY-135/1 \u2014 When does a task's cycle write a spec?",
+        "### WAY-136/1 \u2014 What plan does a task's cycle write, and who makes and reviews its slices?",
+        "### WAY-137/1 \u2014 What decides between places to run that the simplest and cheapest option leaves tied?",
+        "### WAY-138/1 \u2014 Which option of a technology choice is tested for what choosing it could break, and where do the risks found go?",
+        "### WAY-139/1 \u2014 What does the-way hold for the skill that deploys a product, and which step checks that a product has one?",
+        "### WAY-140/1 \u2014 How does a task change something outside the product's repository?",
+        "### WAY-141/1 \u2014 How does the installer give Claude Code the guidance in a product's root AGENTS.md?",
+        "### WAY-142/1 \u2014 What does the breakdown of a project write, and in what form?",
+        "### WAY-143/1 \u2014 What does a task of a project plan end with?",
+        "### WAY-144/1 \u2014 How does a project plan show which tasks can be worked on side by side?",
+        "### WAY-145/1 \u2014 Who sets where an open question of an approved project definition is resolved?",
+        "### WAY-146/1 \u2014 What checks a project plan before it is handed over?",
+        "### WAY-147/1 \u2014 How is a task of a project plan named, and what does its cycle take from the name?",
+        "### WAY-148/1 \u2014 How do task-cycle stages pass their work to the orchestrator?",
+        "### WAY-149/1 \u2014 When does the deliberate break of a return-step check take place?",
+        "### WAY-150/1 \u2014 How do the-way skills choose which product foundation material to read?",
+        "### WAY-151/1 \u2014 How much of large project definitions and existing plans does plan-project read?",
+        "### WAY-152/1 \u2014 How does the project orchestrator lead a handed-over plan?",
+        "### WAY-153/1 \u2014 What evidence supports a task state in a project plan?",
+        "### WAY-154/1 \u2014 How do agents exchange a project task refinement and keep its result?",
+        "### WAY-155/1 \u2014 What may the answering agent settle during a refinement round?",
+        "### WAY-156/1 \u2014 How does project leading route a plan or definition change?"
+      ],
+      "new_arrival": [
+        "### WAY-01/1 \u2014 What state does the foundation describe?",
+        "### WAY-07/1 \u2014 From when may a decision entry no longer be edited?",
+        "### WAY-09/1 \u2014 What may enter the process repository?",
+        "### WAY-10/1 \u2014 Who assesses a change to an invariant test or to the foundation?",
+        "### WAY-11/1 \u2014 How does a task end?",
+        "### WAY-24/1 \u2014 How is a decision that rests on a prediction reviewed?",
+        "### WAY-28/1 \u2014 How does the process enter a product that already exists?",
+        "### WAY-30/1 \u2014 What happens when a change contradicts a decision?",
+        "### WAY-33/1 \u2014 What does the author of a foundation change search for?",
+        "### WAY-36/1 \u2014 Is a rule a decision or does it belong in a plan?",
+        "### WAY-37/1 \u2014 What happens to entries that wait for something when it arrives?",
+        "### WAY-45/1 \u2014 How does the part map record a critical flow, and when does a change lie on it?",
+        "### WAY-46/1 \u2014 How does the criticality of a part arise?",
+        "### WAY-47/1 \u2014 How is a critical flow's list of parts checked?",
+        "### WAY-51/1 \u2014 What does the main branch hold where the product does not meet an invariant or the part map's allowed dependencies?",
+        "### WAY-52/1 \u2014 What is generated from the part map for an agent?",
+        "### WAY-57/1 \u2014 Is an invariant entry versioned?",
+        "### WAY-60/1 \u2014 Where may a condition that decides an invariant stand?",
+        "### WAY-62/1 \u2014 What does an invariant entry name in the part map?",
+        "### WAY-68/1 \u2014 What happens to a check that gives different verdicts on one commit?",
+        "### WAY-69/1 \u2014 Who writes an invariant's sentence, its check and its deliberate break, and what may the check compute for itself?",
+        "### WAY-71/1 \u2014 Does every field of a foundation entry appear in every entry, and what may it hold?",
+        "### WAY-78/1 \u2014 What is the binding part of an environment fact entry?",
+        "### WAY-79/1 \u2014 Is an environment fact entry versioned?",
+        "### WAY-83/1 \u2014 Where does a human verdict stand, and how long is it in force?",
+        "### WAY-84/1 \u2014 How is a setting that people of the product change outside its repository written?",
+        "### WAY-85/1 \u2014 How is a finding of a study written as an environment fact?",
+        "### WAY-86/1 \u2014 How does a catalogue of requirements or a binding rule reach a product?",
+        "### WAY-99/1 \u2014 How does one word keep one meaning in the foundation?",
+        "### WAY-105/1 \u2014 Which check reports an invariant whose command runs a script that does not exist, and how is that script read?",
+        "### WAY-110/1 \u2014 When does a deadline enter a project definition?",
+        "### WAY-112/1 \u2014 How does an agent develop and resume a project definition?",
+        "### WAY-113/1 \u2014 How does an agent of the-way ask a human decision?",
+        "### WAY-114/1 \u2014 What does a human accept of an entry, and when?",
+        "### WAY-115/1 \u2014 How are foundation entries found in a project's source?",
+        "### WAY-117/1 \u2014 How does a foundation entry stand in a project definition before it is written?",
+        "### WAY-118/1 \u2014 What makes a project definition ready for breakdown?",
+        "### WAY-119/1 \u2014 When may a projected decision leave Review when unresolved at the gate?",
+        "### WAY-122/1 \u2014 How are the options of a technology choice found and checked before a human sees them?",
+        "### WAY-123/1 \u2014 How does a technology choice reach a human who cannot assess the technology?",
+        "### WAY-124/1 \u2014 When is a task ready for its cycle?",
+        "### WAY-126/1 \u2014 How does a projected entry enter the foundation?",
+        "### WAY-127/1 \u2014 How does a session working on the-way itself reach the-way's skills?",
+        "### WAY-128/1 \u2014 What may a line of an instruction file that a tool loads into every session hold, and where does any other rule stand?",
+        "### WAY-129/1 \u2014 How does an instruction file point an agent to another file?",
+        "### WAY-130/1 \u2014 When does a rule enter an instruction file, and when does it leave?",
+        "### WAY-135/1 \u2014 When does a task's cycle write a spec?",
+        "### WAY-136/1 \u2014 What plan does a task's cycle write, and who makes and reviews its slices?",
+        "### WAY-137/1 \u2014 What decides between places to run that the simplest and cheapest option leaves tied?",
+        "### WAY-138/1 \u2014 Which option of a technology choice is tested for what choosing it could break, and where do the risks found go?",
+        "### WAY-140/1 \u2014 How does a task change something outside the product's repository?",
+        "### WAY-143/1 \u2014 What does a task of a project plan end with?",
+        "### WAY-144/1 \u2014 How does a project plan show which tasks can be worked on side by side?",
+        "### WAY-146/1 \u2014 What checks a project plan before it is handed over?",
+        "### WAY-150/1 \u2014 How do the-way skills choose which product foundation material to read?",
+        "### WAY-151/1 \u2014 How much of large project definitions and existing plans does plan-project read?",
+        "### WAY-153/1 \u2014 What evidence supports a task state in a project plan?",
+        "### WAY-154/1 \u2014 How do agents exchange a project task refinement and keep its result?",
+        "### WAY-155/1 \u2014 What may the answering agent settle during a refinement round?",
+        "### WAY-156/1 \u2014 How does project leading route a plan or definition change?"
+      ]
+    },
+    "foundations/environment_facts.md": {
+      "identifiers": [],
+      "planning": [
+        "## oracle-in-loop-building/1"
+      ],
+      "authors": [
+        "## instruction-density-accuracy/1",
+        "## codex-agents-md/1",
+        "## single-rule-compliance/1",
+        "## agent-run-variance/1"
+      ],
+      "recovery": [],
+      "carriers": [
+        "## single-rule-compliance/1"
+      ],
+      "new_arrival": [
+        "## context-file-effect/1"
+      ]
+    },
+    "foundations/glossary.md": {
+      "identifiers": [],
+      "planning": [
+        "## open design choice",
+        "## preparatory task",
+        "## slice",
+        "## project orchestrator"
+      ],
+      "authors": [
+        "## project orchestrator"
+      ],
+      "recovery": [
+        "## foundation step",
+        "## return step"
+      ],
+      "carriers": [
+        "## preparatory task"
+      ],
+      "new_arrival": [
+        "## open design choice",
+        "## return step"
+      ]
+    },
+    "foundations/invariants.md": {
+      "identifiers": [
+        "## foundation-change-path/1"
+      ],
+      "planning": [
+        "## project-plan-form/1",
+        "## project-plan-check/1",
+        "## installation-claude-guidance/1",
+        "## project-plan-state-evidence/1",
+        "## project-plan-state-subprocesses/1"
+      ],
+      "authors": [
+        "## repository-file-location/1",
+        "## foundation-change-assessment-record/1",
+        "## review-when-form/1",
+        "## decision-guard-overdue-review/1",
+        "## review-next-check/1",
+        "## review-named-version/1",
+        "## generated-overview/1",
+        "## log-entry-field-presence/1",
+        "## log-entry-field-words/1",
+        "## log-entry-merge-todo/1",
+        "## instruction-file-imports/1",
+        "## root-claude-md-import/1",
+        "## Withdrawn identifiers"
+      ],
+      "recovery": [
+        "## return-step-record/1"
+      ],
+      "carriers": [
+        "## decision-approval-record/1",
+        "## decision-approver/1",
+        "## project-readiness-gate/1",
+        "## project-technology-record/1",
+        "## project-plan-check/1",
+        "## project-plan-state-evidence/1"
+      ],
+      "new_arrival": [
+        "## human-verdict-invariant-row/1",
+        "## human-verdict-fact-row/1",
+        "## gate-human-verdict/1",
+        "## Quarantined invariants"
+      ]
+    },
+    "foundations/part_map.md": {
+      "identifiers": [],
+      "planning": [
+        "## project-level",
+        "## project-plan-state-command"
+      ],
+      "authors": [
+        "## elements-common",
+        "## project-level",
+        "## task-cycle",
+        "## agent-instructions",
+        "## instruction-files",
+        "## skills-reach-the-way-sessions",
+        "## installation-command",
+        "## External context"
+      ],
+      "recovery": [],
+      "carriers": [
+        "## project-level",
+        "## installation"
+      ],
+      "new_arrival": [
+        "## task-cycle",
+        "## Criticality scale"
+      ]
+    },
+    "foundations/violated_invariants.md": {
+      "identifiers": [],
+      "planning": [],
+      "authors": [],
+      "recovery": [],
+      "carriers": [],
+      "new_arrival": []
+    }
+  },
+  "fingerprints": [
+    {
+      "id": "WAY-13",
+      "before": "e6c830b7",
+      "after": "e6c830b7",
+      "incoming": [
+        [
+          "foundations/decisions.md",
+          3638
+        ],
+        [
+          "foundations/decisions.md",
+          4044
+        ],
+        [
+          "foundations/decisions.md",
+          4109
+        ],
+        [
+          "foundations/invariants.md",
+          262
+        ]
+      ]
+    },
+    {
+      "id": "WAY-30",
+      "before": "ddabbed3",
+      "after": "6924312f",
+      "incoming": []
+    },
+    {
+      "id": "WAY-36",
+      "before": "9cd485f5",
+      "after": "3ee8e19c",
+      "incoming": []
+    },
+    {
+      "id": "WAY-135",
+      "before": "5ce9a6f9",
+      "after": "491a33dd",
+      "incoming": []
+    },
+    {
+      "id": "WAY-136",
+      "before": "e9ca5dac",
+      "after": "986ff0ac",
+      "incoming": []
+    }
+  ],
+  "unchanged_other_foundation_files": true,
+  "sizing_executable_ast_unchanged": true
+}

@@ -1,0 +1,49 @@
+[
+  {
+    "id": "WAY-13",
+    "old": "e6c830b7",
+    "new": "e6c830b7",
+    "incoming": [
+      [
+        "foundations/decisions.md",
+        3638
+      ],
+      [
+        "foundations/decisions.md",
+        4044
+      ],
+      [
+        "foundations/decisions.md",
+        4109
+      ],
+      [
+        "foundations/invariants.md",
+        262
+      ]
+    ]
+  },
+  {
+    "id": "WAY-30",
+    "old": "ddabbed3",
+    "new": "6924312f",
+    "incoming": []
+  },
+  {
+    "id": "WAY-36",
+    "old": "9cd485f5",
+    "new": "3ee8e19c",
+    "incoming": []
+  },
+  {
+    "id": "WAY-135",
+    "old": "5ce9a6f9",
+    "new": "491a33dd",
+    "incoming": []
+  },
+  {
+    "id": "WAY-136",
+    "old": "e9ca5dac",
+    "new": "986ff0ac",
+    "incoming": []
+  }
+]

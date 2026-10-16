@@ -1,0 +1,11 @@
+python : ..................
+At line:2 char:317
++ ... TEXITCODE"; python -B gate/run_tests.py agent-instructions > .runs/ta ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (..................:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+----------------------------------------------------------------------
+Ran 18 tests in 5.726s
+
+OK

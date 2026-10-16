@@ -1,0 +1,161 @@
+[
+  {
+    "name": "generator-write",
+    "command": [
+      "python",
+      "-B",
+      "agent-instructions/skill_entry_points.py",
+      "--write"
+    ],
+    "exit": 0,
+    "report": "implementation-generator-write.txt"
+  },
+  {
+    "name": "generator-check",
+    "command": [
+      "python",
+      "-B",
+      "agent-instructions/skill_entry_points.py"
+    ],
+    "exit": 0,
+    "report": "implementation-generator-check.txt"
+  },
+  {
+    "name": "task-cycle-tests",
+    "command": [
+      "python",
+      "-B",
+      "gate/run_tests.py",
+      "task-cycle"
+    ],
+    "exit": 0,
+    "report": "implementation-task-cycle-tests.txt"
+  },
+  {
+    "name": "agent-instructions-tests",
+    "command": [
+      "python",
+      "-B",
+      "gate/run_tests.py",
+      "agent-instructions"
+    ],
+    "exit": 0,
+    "report": "implementation-agent-instructions-tests.txt"
+  },
+  {
+    "name": "decision-tests",
+    "command": [
+      "python",
+      "-B",
+      "gate/run_tests.py",
+      "elements/decisions"
+    ],
+    "exit": 0,
+    "report": "implementation-decision-tests.txt"
+  },
+  {
+    "name": "gate-tests",
+    "command": [
+      "python",
+      "-B",
+      "gate/run_tests.py",
+      "gate"
+    ],
+    "exit": 0,
+    "report": "implementation-gate-tests.txt"
+  },
+  {
+    "name": "decisions",
+    "command": [
+      "python",
+      "-B",
+      "elements/decisions/format_guard.py",
+      "foundations/decisions.md",
+      "--base",
+      "none",
+      "--merge-onto",
+      "none"
+    ],
+    "exit": 0,
+    "report": "implementation-decisions.txt"
+  },
+  {
+    "name": "invariants",
+    "command": [
+      "python",
+      "-B",
+      "elements/invariants/format_guard.py",
+      "foundations/invariants.md",
+      "--base",
+      "none",
+      "--merge-onto",
+      "none"
+    ],
+    "exit": 0,
+    "report": "implementation-invariants.txt"
+  },
+  {
+    "name": "part-map",
+    "command": [
+      "python",
+      "-B",
+      "elements/part-map/format_guard.py",
+      "foundations/part_map.md",
+      "--base",
+      "none"
+    ],
+    "exit": 0,
+    "report": "implementation-part-map.txt"
+  },
+  {
+    "name": "environment-facts",
+    "command": [
+      "python",
+      "-B",
+      "elements/environment-facts/format_guard.py",
+      "foundations/environment_facts.md",
+      "--base",
+      "none",
+      "--merge-onto",
+      "none"
+    ],
+    "exit": 0,
+    "report": "implementation-environment-facts.txt"
+  },
+  {
+    "name": "glossary",
+    "command": [
+      "python",
+      "-B",
+      "elements/glossary/format_guard.py",
+      "foundations/glossary.md",
+      "--base",
+      "none",
+      "--merge-onto",
+      "none"
+    ],
+    "exit": 0,
+    "report": "implementation-glossary.txt"
+  },
+  {
+    "name": "diff-check",
+    "command": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "exit": 0,
+    "report": "implementation-diff-check.txt"
+  },
+  {
+    "name": "size",
+    "command": [
+      "python",
+      "-B",
+      "task-cycle/slice_size.py",
+      ".runs/task-cycles/one-author-small-change/plan.md"
+    ],
+    "exit": 0,
+    "report": "implementation-size.txt"
+  }
+]

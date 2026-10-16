@@ -1,0 +1,7 @@
+$ python -B agent-instructions/skill_entry_points.py
+exit: 0
+
+STDOUT
+entry points are current
+
+STDERR
