@@ -1,0 +1,11 @@
+# Return-step handoff
+
+Resume original author in C:/Storage/repos/the-way-lean-cycle-orchestrator at cf5f104 with base/target 41cfbe55c17981500490ffddd24fc1fe0ec1c6ef. User delegation and original task remain as earlier handoffs. Independent whole-change reviewer reports no unresolved findings, reports/review.md. Orchestrator final verification: reports/final-checks.json, all 308 tests and three guards exit 0; existing warnings/unchecked retained. No implementation correction needed.
+
+Perform step 11 return under WAY-11 from current real diff and cycle choices. Refresh foundation selection at current revision; read task sources/Settlements again to ensure every row and relevant projected entry is covered. Classify actual uncovered behavior vs implementation detail; write required entries only, using corresponding project skills. If invariant sentence/check needed, return before writing (distinct authors). Do not invent rules or deferred proposals. Complete foundation-to-instructions comparison.
+
+Also finish second WAY-33 whole-foundation semantic search against current target. Orchestrator fetched origin/foundations at 41cfbe55c17981500490ffddd24fc1fe0ec1c6ef and repeated domain-wide vocabulary plus incoming links; reports/final-foundation-search.json contains hits. Read any relevant finding whole, distinguish project orchestration from task-cycle; record domains, terms, entry dispositions, fingerprints, expected Scope matches and read set. Re-fetch/check target only if necessary to verify it still matches. Keep decisions 157?160 and current 125/148 in selected set.
+
+Do not duplicate tests of unchanged range. If return changes tracked material, commit explicit paths and run affected checks, and report need for affected review. No PR, merge, archive or vault writes. Do not spawn agents. Stop before independent assessment.
+
+Full report docs/task-cycles/lean-cycle-orchestrator/reports/author-return.md with return candidate results, five-row mapping, Polish meaning sentences, second foundation search, full selected reading evidence, checks if any/exit, new commits if any and every unresolved concern. Short return status+path+commits/checks/concerns. The independent assessment receives none of these operational reports.

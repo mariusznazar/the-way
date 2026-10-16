@@ -1,0 +1,122 @@
+foundations\glossary.md:217:## project orchestrator
+foundations\glossary.md:219:A project orchestrator is the agent that leads a handed-over project plan in conversation with the human.
+foundations\part_map.md:145:  - the orchestrator stops for an implementation choice it can settle from the task and foundation
+foundations\part_map.md:147:  - the orchestrator omits a micro decision or its cost from the cycle record and request — the
+foundations\decisions.md:813:    task touches them; the critical flows and the parts they run through wait for a task like any
+foundations\decisions.md:878:    orchestrator's go-ahead as approval of a decision revision.
+foundations\decisions.md:1059:    the plan of building the foundation; "when what entries wait for arrives, they are fixed in
+foundations\decisions.md:1075:### WAY-37/1 — What happens to entries that wait for something when it arrives?
+foundations\decisions.md:1077:A change that brings what entries of the foundation wait for — an element's template, the part
+foundations\decisions.md:1098:authors of the waiting entries may be gone; a fix left for later goes missing.
+foundations\decisions.md:1742:and a method reads what another method's run left only where a decision places it, the gate then
+foundations\decisions.md:1943:    waiting for the load signal;
+foundations\decisions.md:1945:    failure is quarantined instead of fixed as a change of mechanics; a green rerun is taken as the
+foundations\decisions.md:1952:(WAY-03), so "just flaky" needs evidence; a green rerun undoing a fail makes rerunning the answer;
+foundations\decisions.md:2269:source when anyone can rerun it; a recollection or a quoting text carries a paraphrase's drift.
+foundations\decisions.md:2374:fixed, often written by an agent; waiting until a first verdict is needed — the rule on dated
+foundations\decisions.md:3149:waiting for changed files to choose context — the project is drafted before those files exist.
+foundations\decisions.md:3177:*Rejected:* waiting for a second permission after confirming the goal — it adds a stop without a
+foundations\decisions.md:3340:and only projected fields awaiting code or the world, including an expressly deferred
+foundations\decisions.md:3397:An agent may invoke critique for any proposal without waiting for the human to express doubt; a
+foundations\decisions.md:3599:*Rationale:* a project can inform a task without owning it; the handoff must show which relationship
+foundations\decisions.md:3612:### WAY-125/1 — Which Superpowers methods does the autonomous task cycle adopt?
+foundations\decisions.md:3614:The the-way task cycle adopts Superpowers 6.4.1 methods for brainstorming a design and written spec,
+foundations\decisions.md:3617:method and its linked material are read whole by the agent conducting it, while the orchestrator
+foundations\decisions.md:3618:reads only the methods it conducts and takes the boundaries of delegated methods from the cycle. The
+foundations\decisions.md:3619:orchestrator answers workflow questions and gives provisional stage go-aheads under the task
+foundations\decisions.md:3624:without one, the cycle opens a blocked draft request; a different Superpowers version requires a
+foundations\decisions.md:3629:- **Based on:** observation of installed Superpowers 6.4.1 on 2026-10-05 using `Get-Content -Raw
+foundations\decisions.md:3632:  `C:/Users/Mariusz/.claude/plugins/cache/claude-plugins-official/superpowers/6.4.1/skills/`:
+foundations\decisions.md:3643:    provisional choices in the request without claiming human approval; the orchestrator reads
+foundations\decisions.md:3645:    code author, planner and foundation author read the methods of their own stages;
+foundations\decisions.md:3647:    review, or silently runs a different Superpowers version; the orchestrator loads a delegated
+foundations\decisions.md:3660:*Rejected:* adopting the complete Superpowers workflow with its intermediate human gates — it would
+foundations\decisions.md:3661:interrupt the delegated cycle; copying the skill bodies into the orchestrator — it would create a
+foundations\decisions.md:3662:second implementation of those methods; reading every delegated method in the orchestrator too
+foundations\decisions.md:3663:— it repeats context already held by the agent that applies it.
+foundations\decisions.md:3989:the agent refining it presents the table, while in orchestrated refinement the project
+foundations\decisions.md:3990:orchestrator presents it and the questions against choices required by WAY-113 in the round
+foundations\decisions.md:4010:    counting line with none below it; in an orchestrated round the project orchestrator shows the
+foundations\decisions.md:4014:    kept row repeats a rule a current decision states; an orchestrated refiner asks the human
+foundations\decisions.md:4028:leave code already written for another meaning. In an orchestrated round a single human-facing
+foundations\decisions.md:4046:the report writes the spec, after whose review the orchestrator chooses again whether one author
+foundations\decisions.md:4091:A change that, as the orchestrator judges from the task document in step 4 before implementation,
+foundations\decisions.md:4099:chosen execution skill, while the orchestrator records before execution whether that opportunity
+foundations\decisions.md:4111:- **Based on:** observation of installed Superpowers 6.4.1 on 2026-10-10 using `sed -n` and
+foundations\decisions.md:4113:  `C:/Users/Mariusz/.claude/plugins/cache/claude-plugins-official/superpowers/6.4.1/skills/`:
+foundations\decisions.md:4120:  - complies: the orchestrator selects one author from a settled task, including its foundation
+foundations\decisions.md:4128:    and the orchestrator records sequential execution with that restriction; shared mutable state
+foundations\decisions.md:4131:    spec; the orchestrator writes a plan to decide whether to omit it; the code author also writes
+foundations\decisions.md:4134:    survive its discarded attempt; a plan holds code or uses Superpowers `writing-plans`; outgrown
+foundations\decisions.md:4136:    skill or creates unnecessary slices to claim parallel work; the orchestrator treats different
+foundations\decisions.md:4145:can read separately; where the change fits an author, repeated reading and handoffs add cost
+foundations\decisions.md:4157:Superpowers `writing-plans` — code written ahead still needs review; a whole-change review after
+foundations\decisions.md:4458:task naming the task it opens the way for — it repeats a dependency the plan already holds; the word
+foundations\decisions.md:4478:    an unfinished result waiting for its named task; a task needing a saved state lists the task
+foundations\decisions.md:4539:work — the states of a task already hold waiting for the human, and the list repeats the
+foundations\decisions.md:4615:### WAY-148/1 — How do task-cycle stages pass their work to the orchestrator?
+foundations\decisions.md:4617:Every task-cycle stage passes its full handoff and report through files in the cycle's reports
+foundations\decisions.md:4619:and every unresolved concern affecting the next dispatch. The orchestrator records the event and
+foundations\decisions.md:4624:full report again, and without requiring prior conversational history. A missing or incomplete
+foundations\decisions.md:4634:- **Verification:** level 2 — an agent compares the stage handoff, return, report and
+foundations\decisions.md:4635:  orchestrator's ruling with the decision:
+foundations\decisions.md:4637:    checks, and the record permits resumption from files; the orchestrator reads the evidence
+foundations\decisions.md:4640:    progression does not load the stage agent's sources and full report again;
+foundations\decisions.md:4641:  - violates: a full report exists only in conversation, a short return conceals a failed check,
+foundations\decisions.md:4644:    read by the responsible agent; the independent assessor receives the operational handoff or
+foundations\decisions.md:4645:    author's reasoning; the orchestrator reloads completed stage material for routine progression.
+foundations\decisions.md:4655:*Rejected:* full handoffs and reports repeated in messages — coordination accumulates material
+foundations\decisions.md:4774:repeatedly; reading only the unfinished section — distant dependencies and settlements disappear;
+foundations\decisions.md:4778:### WAY-152/1 — How does the project orchestrator lead a handed-over plan?
+foundations\decisions.md:4780:The project orchestrator leads a handed-over project plan from tasks to refine to human-accepted
+foundations\decisions.md:4784:project orchestrator names project closure as the next step and says that no closure skill
+foundations\decisions.md:4794:  - complies: the human changes a proposed round, the project orchestrator coordinates its refinement
+foundations\decisions.md:4821:orchestrator applies supported transitions with a reason and evidence in the plan's log,
+foundations\decisions.md:4834:  - complies: the project orchestrator applies supported transitions with a reason and evidence
+foundations\decisions.md:4837:  - violates: the project orchestrator treats an unchecked observation as completion without
+foundations\decisions.md:4855:answering agent and the project orchestrator take serialized turns on each file; the project
+foundations\decisions.md:4856:orchestrator hands agents only its path and routing, never relays its contents, and each refiner
+foundations\decisions.md:4859:their sources into Questions to settle; the project orchestrator records human answers in
+foundations\decisions.md:4863:ready for approval makes it waiting for human, and final acceptance makes both document and plan
+foundations\decisions.md:4876:  - violates: the project orchestrator rewrites a task body or carries questions in prompts,
+foundations\decisions.md:4882:*Rationale:* a file-mediated exchange keeps the project orchestrator from becoming a content relay
+foundations\decisions.md:4896:question to the human once while preserving its affected tasks. The project orchestrator
+foundations\decisions.md:4928:projected entry go to the human. The project orchestrator changes definition text itself only
+foundations\decisions.md:4931:readiness gate, with independent critique dispatched by the project orchestrator and its
+foundations\decisions.md:4932:findings returned to that subagent, and human approval given through the project orchestrator. A
+foundations\decisions.md:4943:    full gate, the human approves through the project orchestrator, and a fresh agent checks
+foundations\decisions.md:4945:  - violates: a wider definition edit is made without delegation, the project orchestrator runs
+foundations\decisions.md:4953:preventing readiness against an obsolete basis; a narrow edit exception avoids needless handoff
+foundations\decisions.md:4955:*Rejected:* every definition edit performed by the project orchestrator — it takes on execution and
+foundations\decisions.md:4959:### WAY-157/1 — How does the task-cycle orchestrator wait for an agent?
+foundations\decisions.md:4961:The task-cycle orchestrator waits for an agent's completion through the harness's completion
+foundations\decisions.md:4963:instructions permit, without repeated status polls or sleeps between checks. It renews a bounded
+foundations\decisions.md:4971:- **Verification:** level 2 — an agent compares the waiting calls and their results with the
+foundations\decisions.md:4973:  - complies: a native completion notification resumes coordination without polling; one blocking
+foundations\decisions.md:4975:    renewed because the agent is still working; an early question is handled before waiting again;
+foundations\decisions.md:4976:  - violates: the orchestrator checks status at short intervals, sleeps between polls, or treats
+foundations\decisions.md:4988:### WAY-158/1 — Who reads the full diff of a task-cycle change or slice?
+foundations\decisions.md:4990:The independent code reviewer reads the full diff of a one-author change or planned slice, while
+foundations\decisions.md:4991:the task-cycle orchestrator uses its changed-file list with added and removed line counts and the
+foundations\decisions.md:4993:still calls for the orchestrator's relevant source and report reading under WAY-148.
+foundations\decisions.md:5002:    while the orchestrator uses that verdict and the range's file and line-count summary;
+foundations\decisions.md:5003:  - violates: the reviewer sees only a summary, or the orchestrator reads the full diff again
+foundations\decisions.md:5012:*Rejected:* the orchestrator routinely reading the full diff beside the reviewer — duplicated
+foundations\decisions.md:5015:### WAY-159/1 — When does the task-cycle orchestrator rely on focused-check evidence?
+foundations\decisions.md:5017:The author or executor runs the focused checks of a one-author change or planned slice and records
+foundations\decisions.md:5018:each command, exit code and full output in the cycle's reports directory; the orchestrator relies
+foundations\decisions.md:5019:on that evidence instead of rerunning those checks for routine progression. A report missing the
+foundations\decisions.md:5020:command, exit code or full output is incomplete and returns to its agent for repair before dependent
+foundations\decisions.md:5029:  - complies: the executor records the command, exit code and full output, and the orchestrator
+foundations\decisions.md:5032:  - violates: a bare claim that tests passed substitutes for an unrecorded check, the orchestrator
+foundations\decisions.md:5033:    reruns a check solely because the executor returned, or a changed range uses stale evidence.
+foundations\decisions.md:5041:*Rejected:* rerunning focused checks after every return — repeated work delays the cycle; trusting
+foundations\decisions.md:5042:a claim without execution evidence — a check that never ran can appear complete; never rerunning
+foundations\decisions.md:5045:### WAY-160/1 — How does the task-cycle orchestrator run and read the completed change's gate?
+foundations\decisions.md:5047:The task-cycle orchestrator itself runs the product's full required gate on the completed change
+foundations\decisions.md:5048:and keeps its full output in a file in the cycle's reports directory. Its context receives the
+foundations\decisions.md:5050:while the full output remains available for a question, finding or disputed or incomplete evidence
+foundations\decisions.md:5058:  material returned to the orchestrator's context:
+foundations\decisions.md:5059:  - complies: the orchestrator runs the full required gate, retains its complete output and reads
+foundations\decisions.md:5061:  - violates: the focused-check reports replace the completed change's gate, the full output is
+foundations\decisions.md:5069:orchestrator owns that execution. Keeping the complete evidence while bringing its actionable

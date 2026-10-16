@@ -1,0 +1,34 @@
+[
+  {
+    "command": [
+      "C:/Users/Mariusz/.local/bin/claude.exe",
+      "--version"
+    ],
+    "exit_code": 0,
+    "output": "docs/task-cycles/lean-cycle-orchestrator/reports/wait-claude-version.txt"
+  },
+  {
+    "command": [
+      "rg",
+      "-a",
+      "-o",
+      "-F",
+      "Execute autonomously and minimize interruptions. If the only work left is waiting for a background task or monitor you started, end your turn now: you will be notified when it finishes or fires. Do not poll, sleep, or re-read its output while you wait.",
+      "C:/Users/Mariusz/.local/bin/claude.exe"
+    ],
+    "exit_code": 0,
+    "output": "docs/task-cycles/lean-cycle-orchestrator/reports/wait-claude-notification.txt"
+  },
+  {
+    "command": [
+      "rg",
+      "-a",
+      "-o",
+      "-F",
+      "Deprecated: no longer has any effect (the TaskOutput tool was removed). Read a background task's output file with the Read tool instead.",
+      "C:/Users/Mariusz/.local/bin/claude.exe"
+    ],
+    "exit_code": 0,
+    "output": "docs/task-cycles/lean-cycle-orchestrator/reports/wait-claude-taskoutput.txt"
+  }
+]
