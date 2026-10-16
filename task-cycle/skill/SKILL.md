@@ -1,12 +1,12 @@
 ---
 name: implement-task
-description: Use to take one ready the-way task to a reviewable pull or merge request — through a spec where the task leaves an open design choice, a plan of slices for every task, each slice made and reviewed by agents of its own, testing and a final review — or to apply review corrections to its open request. Requires subagents and the Superpowers skills named by this process. The human reviews the request, not intermediate steps.
+description: Use to take one ready the-way task to a reviewable pull or merge request — through a spec where the task leaves an open design choice, one author without a plan where the change fits one agent or a plan of separately made slices, independent review and testing — or to apply review corrections to its open request. Requires subagents and the Superpowers skills named by this process. The human reviews the request, not intermediate steps.
 ---
 
 # Implement one task
 
 Drive one task from `ready for cycle` to a reviewable pull or merge request. You are the
-orchestrator: invoke the installed Superpowers skills and delegate their work to fresh agents;
+orchestrator: invoke the installed Superpowers skills and delegate work to the agents below;
 do not reproduce those skills here. Answer their workflow questions from the task, its stated
 sources, the product's current foundation and code. Keep every answer and its evidence in the
 cycle record. The person who requested this cycle has delegated intermediate choices to you;
@@ -69,12 +69,15 @@ request link and set the task's state.
    an open design choice (WAY-135). A row of *Settlements to record* or a projected entry the task
    carries settles its entry, an invariant's included; an entry that follows from the change with no
    way left open, such as a part-map line for a file the change adds, is no choice at all. Where an
-   open design choice stands, the cycle writes a spec (step 6); otherwise it goes from this step to
-   the plan (step 8). Record the finding with the entries and ways you weighed and the reason for
-   each. Calculate the
+   open design choice stands, the cycle writes a spec (step 6). Otherwise judge from the task
+   document whether one agent can hold the change (WAY-136): if so, select one author without a
+   plan; if it needs division, select planning (step 8). Record the route and reason, beside the
+   design finding and the entries and ways weighed. Do not write a preliminary plan or use the
+   slice-size script to make this judgment. Calculate the
    three sharpness inputs: criticality from the touched parts (unknown failure modes count as
    highest), whether touched files are trust boundaries, and whether any operation cannot be
-   undone. Every slice gets its own review even for low criticality. For a
+   undone. A one-author change and every planned slice get independent review even for low
+   criticality. For a
    trust boundary, add adversarial input checks under WAY-48. Stage but
    do not execute an irreversible operation before the human decides on it at the request. Treat a
    security-sensitive action the same way when the product's rules reserve its authorization to a
@@ -144,12 +147,13 @@ approval points, not the borrowed method's work within each stage, except that t
 also writes the deliberate break of an invariant's check (WAY-69), at step 11's point for checks
 added in the return step (WAY-149).
 
-## Design and plan
+## Design and execution choice
 
-Every task gets a plan; only a task that leaves an open design choice gets a spec first (WAY-135,
-WAY-136). A small change is a plan of one slice: there is no separate path for it, and the two
-differ only in how step 9 makes and reviews the slices. Both run inside the foundation route of
-step 4 and reach the same outcome and the same checks on the finished change (WAY-13).
+Only an open design choice calls for a spec (WAY-135). A change one agent can hold uses one
+author without a plan, including when it writes foundation entries or follows a reviewed spec;
+a change needing division gets a plan (WAY-136). Both use the shared foundation, verification,
+return, assessment and request steps below, within step 4's foundation route and with the same
+outcome and checks (WAY-13).
 
 6. Where step 4 found an open design choice, or an agent returned one (below), dispatch a fresh
    design agent with the frozen task, applicable source paths, the pinned foundation and the
@@ -168,11 +172,14 @@ step 4 and reach the same outcome and the same checks on the finished change (WA
    orchestrator go-ahead under the user's delegation; preserve the approval request for the PR.
 7. Have an agent other than the designer review the spec against the frozen task and current
    foundation. Resolve missing requirements, invented behavior and contradictions before moving
-   on. A spec may name the foundation entries the task will write; the foundation step or the return
-   step writes them.
-8. Dispatch a fresh planner to use the-way's `plan-task` on the frozen task, with the reviewed spec
-   where one exists. It writes the plan as `plan.md` and the size report of
-   `task-cycle/slice_size.py` as `plan-size.md` in the working cycle record. Its boundary is the
+   on. A spec may name the foundation entries the task will write; the foundation step or the
+   return step writes them. After the spec's review, use step 4's same judgment from the task
+   document in light of the settled spec: select one author without a plan if the change fits,
+   or planning if it needs division. Record the reason even when the spec spans several parts;
+   a spec alone does not require a plan. An earlier plan no longer binds.
+8. Only for the planning route, dispatch a fresh planner to use the-way's `plan-task` on the
+   frozen task, with the reviewed spec where one exists. It writes the plan as `plan.md` and the
+   size report of `task-cycle/slice_size.py` as `plan-size.md` in the working cycle record. Its boundary is the
    finished plan: it returns before any slice is made. Answer its questions in the same way. Where
    it returns an open design choice instead of a plan, continue at step 6 with its report. Review
    the plan for full task coverage, every row of *Settlements to record* and every projected entry
@@ -188,7 +195,7 @@ step 4 and reach the same outcome and the same checks on the finished change (WA
    recommendation or overriding the skill. A one-slice plan has no parallel slice work. Keep the
    spec and plan as separate artifacts so iterations can compare them with results.
 
-An agent that meets an open design choice while it makes a slice, or while it fixes review
+An agent that meets an open design choice while it makes the change, or while it fixes review
 findings, returns a report without code and without a diff: the choice, where it shows, the ways
 open and what it found. A choice of how to make what the task and the foundation settle is not
 one: the agent settles it, says so in its report, and you enter it in the questions table (WAY-135).
@@ -196,9 +203,18 @@ Check that the report holds no code, keep it in `reports/`, and record the attem
 a historical name rather than a link to follow, and the names of the files it changed. Then discard
 the attempt, its foundation entries included, by resetting the task branch to the recorded base
 commit, record the discard with its reason, and continue at step 6, whose fresh design agent
-receives the report beside the frozen task; the plan is then written again from the spec.
+receives the report beside the frozen task. After the spec review, choose the execution route
+again as step 7 gives it; write a new plan only if the change needs division.
 
-An agent that finds its slice too large for it — more to read or to change than it can hold, or a
+A one-author change that proves too large returns a report of where the size lies, without code
+or a diff. Keep the report, record the attempt's last commit and changed files as above, discard
+its whole attempt including every foundation entry written for it by resetting the task branch
+to its recorded base, and dispatch the planner at step 8 to divide the change (WAY-136). Record
+this as a one-author return for size, distinct from a new open design choice and from an oversized
+planned slice. The planner receives the frozen task, any reviewed spec and the report, not the
+abandoned code or entries.
+
+An agent that finds its planned slice too large for it — more to read or to change than it can hold, or a
 goal that splits — returns a report of where the size lies, without code. Keep the report, record
 the slice's last commit and files as above, reset the task branch to the commit the slice started
 from, and have the planner split that slice (WAY-136); the slices already made and reviewed stay.
@@ -206,11 +222,20 @@ Record the slice as returned too large: the count of such slices is a signal of 
 
 ## Execute, verify and review
 
+For the one-author route, dispatch one fresh author with the frozen task, any reviewed spec,
+selected current foundation and the dispatch contract. The same author performs the foundation
+step below, makes the code at step 9, and resumes for its return step at step 11. No plan or size
+report is required. Keep the stage boundaries and reports: returning between stages does not
+require a new author. Preserve that author's identity across foundation, code and return work.
+For a planned change, dispatch foundation work before the dependent slices and use step 9's
+executors. The following foundation requirements apply to both routes.
+
 Before dependent implementation, run the foundation step required by WAY-01 and WAY-03 whenever the
 task changes a foundation entry or an invariant test, or its plan item assigns, or its code makes
 true, a projected entry of its sources (WAY-126), or its *Settlements to record* holds a row
-(WAY-134). The plan's *Foundation entries* lists them; write each before the first slice whose code
-depends on it. Refresh the foundation selection by "Reading the foundation" against the entries
+(WAY-134). Take the entries from the frozen task, its sources and any reviewed spec, or from the
+plan's *Foundation entries* where a plan exists; write each before the code that depends on it.
+Refresh the foundation selection by "Reading the foundation" against the entries
 and scope this step will change. Invoke the pinned element skills for the affected entries and
 write each entry into `foundations/` on the task branch without waiting for the human; keep, for
 the request, one sentence
@@ -228,15 +253,19 @@ row collides with a current entry — or a row's entry needs a value neither the
 gives, through a blocked draft request holding the question; never write a row with another meaning.
 Search the whole foundation and run the applicable guards. An invariant's sentence, its check and
 the code it covers come from three different agents (WAY-69): give the check's author the sentence
-and its method, never the code's reasoning. Invariant tests written in this step are read-only
+and its method, never the code's reasoning. On the one-author route, pause the author for the
+orchestrator to dispatch two other agents, one for the invariant sentence and one for its check,
+then resume the author; do the same for an invariant found in the return step. Record who wrote
+the sentence, check and covered code. Invariant tests written in this step are read-only
 during implementation; if later work needs one changed, return to this foundation step before
 continuing that work.
 
-9. Make the slices in the plan's order, each by a fresh executor given the frozen task, the plan
-   and its slice, the spec where one exists, the pinned foundation and the dispatch contract above.
-   The executor uses `test-driven-development` for behavior changes and commits its slice; its
-   boundary is the committed slice with its focused checks run, and it returns before any review.
-   No agent reviews a slice it made.
+9. For a one-author change, resume its author to make the code. For a planned change, make the
+   slices in the plan's order, each by a fresh executor given the frozen task, the plan and its
+   slice, any spec, the pinned foundation and the dispatch contract. Each uses
+   `test-driven-development` for behavior changes and commits its work; its boundary is the
+   committed change or slice with focused checks run, returning before review. No author reviews
+   its own work.
    - A plan of more than one slice runs through Superpowers `subagent-driven-development`, each
      slice one of its tasks, with the frozen task, and the spec where one exists, as the authority
      it reads the plan against: a fresh implementer and a fresh task reviewer for each slice,
@@ -244,15 +273,20 @@ continuing that work.
      before workspace cleanup and `finishing-a-development-branch`. Copy its ledger and full
      reports into the working cycle record before allowing cleanup, recording review ranges as
      commit ranges rather than copies of their diffs.
-   - A plan of one slice gets one Superpowers `requesting-code-review` of the whole change, with
-     the frozen task as its requirements, which is both the slice's review and the final review
-     (WAY-136): the executor fixes its findings, the affected checks run again, and the same
-     reviewer reviews the fix range once. Where the harness cannot resume the executor for fixes, a
-     fresh executor on the same branch, given the task and the findings, continues in its place.
+   - A one-author change or a plan of one slice gets one Superpowers `requesting-code-review` of
+     the whole change by an agent that did not make it, with the frozen task as its requirements.
+     This is also the final review (WAY-136). On the no-plan route, the review takes over the
+     plan review's coverage and order checks: every task item, every row of *Settlements to
+     record*, every projected entry the task carries, source fidelity and foundation entries
+     before dependent code, checked against the commits. The planned route retains step 8's plan
+     review. The author or executor fixes findings, affected checks run again, and the same
+     reviewer reviews the fix range once. Where the harness cannot resume the executor for fixes,
+     a fresh executor on the same branch, given the task and findings, continues in its place.
 
    Questions from any agent return to you, with their answers entered in the cycle record before
    work continues.
-10. After each slice, run its focused checks, review its diff and resolve findings.
+10. After the one-author change or each planned slice, run focused checks, review its diff and
+    resolve findings.
     Recalculate the WAY-13 sharpness inputs from the completed diff; if they grew, add the
     resulting checks before review, never reduce those already run. Run the product's full
     required gate on the completed change. Invariant checks written before the return step retain
@@ -263,8 +297,9 @@ continuing that work.
     final review already required by the selected execution skill; do not dispatch a duplicate
     reviewer for the same range. Record failed and unchecked results by name; never call an unrun
     check passed.
-11. Refresh the foundation selection by "Reading the foundation" for the real diff and current
-    foundation. Perform the return step of WAY-11 on that diff and the cycle's choice log: identify
+11. Have the one-author change's author resume for the return step; for a planned change,
+    dispatch its return-step agent. Refresh the foundation selection by "Reading the foundation"
+    for the real diff and current foundation. Perform the return step of WAY-11 on that diff and the cycle's choice log: identify
     newly learned decisions, rules, uncovered behavior, environment facts, terms and part-map changes;
     compare touched parts of the foundation with code. For uncovered behavior ask: would changing
     it in a later task violate a requirement or a settled rule of the product? If yes, preserve it
@@ -337,8 +372,9 @@ continuing that work.
     marks `blocked`, one waiting for human actions in the cycle (step 4) included, which stays a
     draft. Do not merge. Keep the worktree for review changes.
 13. The request contains: task goal and relation, source versions, whether a spec was written
-    and why — after a discarded attempt, its reason and a link to the agent's report — the plan's
-    slices, the spec and plan links, what changed and why, test and review evidence with every
+    and why; the execution route and its reason; after a discarded attempt, its reason and a link
+    to the agent's report; the spec link where one exists and, only where a plan was written, its
+    slices and plan link; what changed and why, test and review evidence with every
     check that did not run named, and *What this request settles*: each foundation entry the change writes or changes, as its identifier and
     one sentence of its meaning in the task document's language, projected entries and the entries
     written from rows of *Settlements to record* apart from new ones. Beside them, what the
@@ -363,7 +399,10 @@ Take a link to the request, or to a comment holding review remarks, as the input
 request's branch and in its worktree; this is the one case in which the cycle does not create a new
 branch. First merge, never rebase, the current target branch, the the-way pin included, and verify
 that the pinned checkout matches the product's gitlink. Treat the remarks as binding input, recorded
-as new events in the working record. Repeat only the stages the remarks touch, with their reviews,
+as new events in the working record. Keep the recorded execution route for the affected work,
+resuming a one-author change's author where possible; a new open design choice or an oversized
+attempt follows the recovery above, with its reset base recorded for the correction. Repeat only
+the stages the remarks touch, with their reviews,
 checks and return step, and the independent assessment only where the correction changes the
 foundation or an invariant test, and then the record's pair of commits from step 12. A decision
 written in a correction takes the existing request's URL directly in its *Approved by*. Update the

@@ -18,18 +18,29 @@ Unknown failure modes count as the highest criticality. Record the reason for ea
 then recalculate from the final diff. An irreversible operation waits for the human's decision at
 the request; preparing reversible code for it does not authorize executing it.
 
-## Spec and plan
+## Spec and execution route
 
 - Open design choice at start: <none — the entries and ways weighed and why each is settled |
   the choice, where it shows and the ways open>
-- Plan: <number of slices; the size report's verdicts>
+- Execution route and reason: <one author without a plan | planned slices; orchestrator's
+  judgment from the task at step 4, and repeated after any reviewed spec>
+- Author: <agent and model for foundation, code and return step on the one-author route;
+  stage resumptions; any replacement during review fixes and reason; planned executors appear in Events>
+- Invariant authors: <sentence author, check author and covered-code author for each invariant;
+  pauses and resumptions of the one-author work, or none>
+- Plan: <none on the one-author route | number of slices and size-report verdicts>
 - Independence and execution: <plan recommendation and orchestrator's ruling before execution;
   dependencies, shared files or mutable worktree/test state, separate review and skill restrictions;
-  with Superpowers 6.4.1 subagent-driven-development, sequential execution despite any opportunity>
-- Discarded attempt: <time, the open design choice the agent met, its report, the attempt's last
-  commit and the files it changed | none>
+  with Superpowers 6.4.1 subagent-driven-development, sequential execution despite any opportunity;
+  not applicable for one author without a plan>
+- Discarded attempt: <time, open design choice or oversized one-author change, report, last
+  commit and changed files including foundation entries, reset base, discard confirmation and
+  next route; after an open choice, spec review and renewed judgment; after size, planning | none>
 - Slices returned too large: <for each, the slice, its agent's report, its last commit and files,
-  and the slices it was split into | none>
+  reset commit, earlier completed/reviewed slices retained, and slices it was split into | none>
+- Whole-change review: <reviewer other than author, range and report; on the no-plan route,
+  coverage of every task item, settlement row and carried projected entry, source fidelity and
+  evidence that entries preceded dependent code; on the planned route, plan-review evidence>
 
 The last commit of a discarded attempt or of a slice returned too large is a historical name, not
 a link to follow: the commit is reachable only until the reflog expires. A choice or ruling of a
@@ -66,10 +77,9 @@ nothing else.
 | Kind | Path or commit | Author or agent | Review result |
 |---|---|---|---|
 
-Include the frozen task, `spec.md` where one was written, `plan.md` and `plan-size.md`, code
-commits, tests and full agent reports, the report of a discarded attempt or of a slice returned too
-large among them. Name
-commits and commit ranges instead of copying diffs or files that git holds. A foundation entry
+Include the frozen task, `spec.md` where one was written, `plan.md` and `plan-size.md` only where
+planning ran, code commits, tests and full agent reports, the report of a discarded attempt or
+of a slice returned too large among them. Name commits and commit ranges instead of copying diffs or files that git holds. A foundation entry
 the cycle writes lives in its commits; the record keeps its meaning sentence for the request.
 
 ## Verification
