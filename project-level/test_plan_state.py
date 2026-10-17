@@ -57,6 +57,9 @@ none
 ## Technology
 
 - Application language — held by: APP-01/1
+- logs: Application logs on the server console — held by: APP-02/1
+- interface: A browser the agent drives itself — held by: APP-03/1
+- development data: Data set up from nothing before each test — held by: APP-04/1
 
 ## Projected foundation changes
 

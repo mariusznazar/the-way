@@ -9,6 +9,7 @@ under test, by the definition of WAY-02: SHA-256 of the UTF-8 text after every r
 line breaks becomes one space and both ends are trimmed, its first eight hexadecimal characters.
 """
 
+import collections
 import contextlib
 import hashlib
 import io
@@ -55,6 +56,31 @@ Every document belongs to exactly one workspace.
 
 CANDIDATES_LINE = "Candidates: 3 shown, 1 accepted — 2026-10-03"
 
+# The three choices of how an agent reaches the running product, each a valid choice item whose
+# text (after its `- ` list marker) begins with its mark.
+MARKS = {
+    "logs:": "- logs: Logi aplikacji w konsoli serwera — held by: ARC-03/1",
+    "interface:": "- interface: Przeglądarka, którą agent prowadzi sam — held by: ARC-04/1",
+    "development data:": "- development data: Dane zakładane od zera przed testem — held by: ARC-05/1",
+}
+MARKED = "\n".join(MARKS.values())
+BASE_CHOICE = "- Język i miejsce działania aplikacji — held by: ARC-01/1"
+
+
+def marked(body):
+    """A Technology section body followed by the three marked choice items."""
+    return "%s\n%s" % (body, MARKED)
+
+
+def lacking(mark):
+    """A Technology section body of valid choice items holding every mark but this one."""
+    return "\n".join([BASE_CHOICE] + [item for m, item in MARKS.items() if m != mark])
+
+
+def after_mark(mark):
+    """The text of the mark's item after the mark and its space."""
+    return MARKS[mark][len("- %s " % mark):]
+
 
 def projected(approval="Mariusz, 2026-10-03", entries=None, first=CANDIDATES_LINE):
     """The section of projected foundation changes: its candidates line, then its entries."""
@@ -75,7 +101,7 @@ BODIES = {
     "Open questions": "- Jak mierzymy postęp? — resolved in: breakdown\n"
                       "- Jakie narzędzia ma autor? — resolved in: task: edytor",
     "Touched parts and decisions": "none",
-    "Technology": "- Język i miejsce działania aplikacji — held by: ARC-01/1",
+    "Technology": marked(BASE_CHOICE),
     "Projected foundation changes": projected(),
 }
 
@@ -384,8 +410,9 @@ class Candidates(unittest.TestCase):
                          [("a", "`## Projected foundation changes` holds TODO")])
 
 
-TECHNOLOGY_PROJECTED = ("- Archiwum dokumentów — projected: What does the archive exclude for good?\n"
-                        "- Język i miejsce działania aplikacji — held by: ARC-01/1")
+TECHNOLOGY_PROJECTED = marked(
+    "- Archiwum dokumentów — projected: What does the archive exclude for good?\n"
+    "- Język i miejsce działania aplikacji — held by: ARC-01/1")
 NONE_MESSAGE = ("`## Technology` reads `none` — list the choices the project needs, each with the "
                 "entry that settles it")
 NO_MARKER_MESSAGE = ("the choice ends with none of `— held by: <decision>`, "
@@ -408,26 +435,26 @@ class Technology(unittest.TestCase):
 
     def test_none_is_reported(self):
         # invariant: project-technology-record/1
-        self.assertEqual(self.technology("none"), [("g", NONE_MESSAGE)])
+        self.assertIn(("g", NONE_MESSAGE), self.technology("none"))
 
     def test_a_choice_without_its_entry_is_reported(self):
         # invariant: project-technology-record/1
-        self.assertEqual(self.technology("- Magazyn danych"), [("g", NO_MARKER_MESSAGE)])
+        self.assertEqual(self.technology(marked("- Magazyn danych")), [("g", NO_MARKER_MESSAGE)])
 
     def test_an_open_choice_is_reported_before_approval(self):
         # invariant: project-technology-record/1
         text = definition(status="Status: ready for gate", gate="",
-                          bodies={"Technology": "- Magazyn danych — open"})
+                          bodies={"Technology": marked("- Magazyn danych — open")})
         self.assertEqual(conditions(text, before_approval=True), [("g", OPEN_MESSAGE)])
 
     def test_held_by_off_the_identifier_form_is_reported(self):
         # invariant: project-technology-record/1
-        self.assertEqual(self.technology("- Język — held by: decyzja o języku"),
+        self.assertEqual(self.technology(marked("- Język — held by: decyzja o języku")),
                          [("g", HELD_FORM_MESSAGE)])
 
     def test_a_projected_question_no_heading_holds_is_reported(self):
         # invariant: project-technology-record/1
-        self.assertEqual(self.technology("- Magazyn danych — projected: Where is data stored?"),
+        self.assertEqual(self.technology(marked("- Magazyn danych — projected: Where is data stored?")),
                          [("g", DANGLING_MESSAGE)])
 
     def test_projected_naming_an_invariant_heading_is_reported(self):
@@ -435,36 +462,36 @@ class Technology(unittest.TestCase):
         entries = "### Decisions\n\n%s\n\n### Invariants\n\n%s" % (
             DECISION.format(approval="Mariusz, 2026-10-03"), INVARIANT)
         text = definition(bodies={
-            "Technology": "- Dokumenty — projected: one-workspace-per-document/1",
+            "Technology": marked("- Dokumenty — projected: one-workspace-per-document/1"),
             "Projected foundation changes": projected(entries=entries)})
         self.assertEqual(conditions(text), [("g", DANGLING_MESSAGE)])
 
     def test_held_by_without_a_version_is_reported(self):
         # invariant: project-technology-record/1
-        self.assertEqual(self.technology("- Magazyn danych — held by: ARC-02"),
+        self.assertEqual(self.technology(marked("- Magazyn danych — held by: ARC-02")),
                          [("g", HELD_FORM_MESSAGE)])
 
     def test_a_choice_still_open_after_a_held_marker_is_reported(self):
         # invariant: project-technology-record/1
-        found = self.technology("- Magazyn danych — held by: ARC-02/1 — open")
+        found = self.technology(marked("- Magazyn danych — held by: ARC-02/1 — open"))
         self.assertEqual([c for c, _ in found], ["g"])
 
     def test_projected_with_no_decision_heading_in_the_section_is_reported(self):
         # invariant: project-technology-record/1
         text = definition(bodies={
-            "Technology": "- Magazyn danych — projected: Which database?",
+            "Technology": marked("- Magazyn danych — projected: Which database?"),
             "Projected foundation changes": projected(
                 first="Candidates: 0 shown, 0 accepted — 2026-10-03", entries="none")})
         self.assertEqual(conditions(text), [("g", DANGLING_MESSAGE)])
 
     def test_projected_matching_the_candidates_line_is_reported(self):
         # invariant: project-technology-record/1
-        self.assertEqual(self.technology("- Hosting — projected: 2026-10-03"),
+        self.assertEqual(self.technology(marked("- Hosting — projected: 2026-10-03")),
                          [("g", DANGLING_MESSAGE)])
 
     def test_projected_naming_part_of_a_heading_question_is_reported(self):
         # invariant: project-technology-record/1
-        self.assertEqual(self.technology("- Archiwum — projected: What does the archive"),
+        self.assertEqual(self.technology(marked("- Archiwum — projected: What does the archive")),
                          [("g", DANGLING_MESSAGE)])
 
     def test_a_decision_heading_outside_projected_changes_holds_no_question(self):
@@ -472,13 +499,13 @@ class Technology(unittest.TestCase):
         text = definition(bodies={
             "Background": "Gra istnieje tylko jako koncepcja.\n\n"
                           "#### (new) — Where is data stored?",
-            "Technology": "- Magazyn danych — projected: Where is data stored?"})
+            "Technology": marked("- Magazyn danych — projected: Where is data stored?")})
         self.assertEqual(conditions(text), [("g", DANGLING_MESSAGE)])
 
     def test_an_open_choice_after_a_settled_one_is_reported(self):
         # invariant: project-technology-record/1
         body = "- Język aplikacji — held by: ARC-01/1\n- Magazyn danych — open"
-        self.assertEqual(self.technology(body), [("g", OPEN_MESSAGE)])
+        self.assertEqual(self.technology(marked(body)), [("g", OPEN_MESSAGE)])
 
     def test_none_followed_by_choices_is_reported(self):
         # invariant: project-technology-record/1
@@ -488,12 +515,12 @@ class Technology(unittest.TestCase):
 
     def test_indented_prose_under_technology_is_reported(self):
         # invariant: project-technology-record/1
-        self.assertEqual(self.technology("  Zostajemy przy obecnym stacku."),
+        self.assertEqual(self.technology(marked("  Zostajemy przy obecnym stacku.")),
                          [("g", "a line under `## Technology` that is no choice item")])
 
     def test_prose_under_technology_is_reported(self):
         # invariant: project-technology-record/1
-        self.assertEqual(self.technology("Wszystko jest w fundamencie."),
+        self.assertEqual(self.technology(marked("Wszystko jest w fundamencie.")),
                          [("g", "a line under `## Technology` that is no choice item")])
 
     def test_choices_held_and_projected_pass(self):
@@ -502,17 +529,17 @@ class Technology(unittest.TestCase):
     def test_choices_all_held_by_the_foundation_pass(self):
         body = ("- Język i miejsce działania aplikacji — held by: ARC-01/1\n"
                 "- Magazyn kont i zapisów — held by: ARC-02/3")
-        self.assertEqual(self.technology(body), [])
+        self.assertEqual(self.technology(marked(body)), [])
 
     def test_a_choice_whose_name_holds_a_dash_reads_its_last_marker(self):
-        self.assertEqual(self.technology("- Serwer — konta i zapisy — held by: ARC-02/1"), [])
+        self.assertEqual(self.technology(marked("- Serwer — konta i zapisy — held by: ARC-02/1")), [])
 
     def test_a_choice_on_two_lines_counts(self):
-        self.assertEqual(self.technology("- Magazyn kont\n  i zapisów — held by: ARC-02/1"), [])
+        self.assertEqual(self.technology(marked("- Magazyn kont\n  i zapisów — held by: ARC-02/1")), [])
 
     def test_a_nested_detail_under_a_choice_is_no_finding(self):
         body = "- Magazyn kont — held by: ARC-02/1\n  - kontekst: konta graczy"
-        self.assertEqual(self.technology(body), [])
+        self.assertEqual(self.technology(marked(body)), [])
 
     def test_projected_naming_a_new_version_of_a_decision_passes(self):
         decision = DECISION.format(approval="Mariusz, 2026-10-03").replace(
@@ -528,6 +555,116 @@ class Technology(unittest.TestCase):
                           bodies={"Technology": "TODO"})
         self.assertEqual(conditions(text, before_approval=True),
                          [("a", "`## Technology` holds TODO")])
+
+
+class TechnologyMarks(unittest.TestCase):
+    """`## Technology` holds a choice item whose text begins with `logs:`, one whose text begins
+    with `interface:` and one whose text begins with `development data:`, approved or not.
+
+    Every case runs before approval and on a definition holding its gate record. The invariant
+    fixes no message, so a rejection for a missing mark is read as a finding the definition has
+    beyond those of the same definition with the mark's valid item added."""
+
+    RUNS = ("before approval", "with its gate record")
+
+    def findings(self, run, bodies):
+        if run == "before approval":
+            text = definition(status="Status: ready for gate", gate="", bodies=bodies)
+            return conditions(text, before_approval=True)
+        return conditions(definition(bodies=bodies))
+
+    def assert_rejected_for(self, mark, technology, other=None, clean=True):
+        """`clean`: the definition with the mark's item added has no finding at all, so the input
+        is otherwise valid and its rejection is the missing mark's."""
+        lacking_bodies = dict(other or {}, Technology=technology)
+        holding_bodies = dict(other or {}, Technology=technology + "\n" + MARKS[mark])
+        for run in self.RUNS:
+            with self.subTest(mark=mark, run=run, technology=technology):
+                lacking_found = self.findings(run, lacking_bodies)
+                holding_found = self.findings(run, holding_bodies)
+                if clean:
+                    self.assertEqual(holding_found, [])
+                missing = collections.Counter(lacking_found) - collections.Counter(holding_found)
+                self.assertTrue(missing, "no rejection for the missing `%s` item: %r"
+                                % (mark, lacking_found))
+
+    def test_a_definition_lacking_one_mark_is_rejected(self):
+        # invariant: project-technology-record/1
+        for mark in MARKS:
+            self.assert_rejected_for(mark, lacking(mark))
+
+    def test_a_definition_lacking_every_mark_is_rejected(self):
+        # invariant: project-technology-record/1
+        for run in self.RUNS:
+            with self.subTest(run=run):
+                self.assertEqual(self.findings(run, {"Technology": marked(BASE_CHOICE)}), [])
+                self.assertNotEqual(self.findings(run, {"Technology": BASE_CHOICE}), [])
+
+    def test_a_definition_holding_all_three_marks_is_not_rejected_for_them(self):
+        # invariant: project-technology-record/1
+        for body in (marked(BASE_CHOICE), MARKED, MARKED + "\n" + BASE_CHOICE,
+                     marked(BASE_CHOICE).replace("- logs: ", "- logs:")):
+            for run in self.RUNS:
+                with self.subTest(body=body, run=run):
+                    self.assertEqual(self.findings(run, {"Technology": body}), [])
+
+    def test_a_mark_in_another_case_is_no_mark(self):
+        # invariant: project-technology-record/1
+        for mark in MARKS:
+            for written in (mark.capitalize(), mark.upper()):
+                item = "- %s %s" % (written, after_mark(mark))
+                self.assert_rejected_for(mark, lacking(mark) + "\n" + item)
+
+    def test_a_mark_without_its_colon_is_no_mark(self):
+        # invariant: project-technology-record/1
+        for mark in MARKS:
+            item = "- %s %s" % (mark[:-1], after_mark(mark))
+            self.assert_rejected_for(mark, lacking(mark) + "\n" + item)
+
+    def test_a_mark_not_at_the_start_of_the_text_is_no_mark(self):
+        # invariant: project-technology-record/1
+        for mark in MARKS:
+            item = "- Dla agenta %s %s" % (mark, after_mark(mark))
+            self.assert_rejected_for(mark, lacking(mark) + "\n" + item)
+
+    def test_a_mark_on_the_continuation_line_of_a_choice_is_no_mark(self):
+        # invariant: project-technology-record/1
+        for mark in MARKS:
+            item = "- Dla agenta\n  %s %s" % (mark, after_mark(mark))
+            self.assert_rejected_for(mark, lacking(mark) + "\n" + item)
+
+    def test_a_mark_only_in_a_nested_item_is_no_mark(self):
+        # invariant: project-technology-record/1
+        for mark in MARKS:
+            item = ("- Jak agent widzi działający produkt — held by: ARC-06/1\n"
+                    "  - %s Logi, interfejs albo dane" % mark)
+            self.assert_rejected_for(mark, lacking(mark) + "\n" + item)
+
+    def test_a_mark_only_in_the_prose_of_the_section_is_no_mark(self):
+        # invariant: project-technology-record/1
+        for mark in MARKS:
+            line = "%s %s" % (mark, after_mark(mark))
+            self.assert_rejected_for(mark, lacking(mark) + "\n" + line, clean=False)
+
+    def test_a_mark_only_in_another_section_is_no_mark(self):
+        # invariant: project-technology-record/1
+        for mark in MARKS:
+            for other in ({"In scope": "- pierwsza mapa\n" + MARKS[mark]},
+                          {"Background": "%s %s" % (mark, after_mark(mark))}):
+                self.assert_rejected_for(mark, lacking(mark), other=other)
+
+    def test_one_item_carrying_two_marks_holds_only_the_first(self):
+        # invariant: project-technology-record/1
+        item = "- logs: interface: Logi i interfejs aplikacji — held by: ARC-03/1"
+        body = "\n".join([BASE_CHOICE, item, MARKS["development data:"]])
+        self.assert_rejected_for("interface:", body)
+
+    def test_an_open_choice_carrying_a_mark_is_rejected_only_as_open(self):
+        # invariant: project-technology-record/1
+        body = "\n".join([BASE_CHOICE, "- logs: Logi aplikacji — open",
+                          MARKS["interface:"], MARKS["development data:"]])
+        text = definition(status="Status: ready for gate", gate="", bodies={"Technology": body})
+        self.assertEqual(conditions(text, before_approval=True), [("g", OPEN_MESSAGE)])
 
 
 class Approvals(unittest.TestCase):
@@ -607,6 +744,16 @@ class Command(unittest.TestCase):
         with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
             code = readiness_check.main([os.path.join(tempfile.gettempdir(), "no-such-file.md")])
         self.assertEqual(code, 2)
+
+    def test_a_definition_lacking_a_mark_exits_one_approved_or_not(self):
+        # invariant: project-technology-record/1
+        bodies = {"Technology": lacking("development data:")}
+        for args, text in (((), definition(bodies=bodies)),
+                           (("--before-approval",),
+                            definition(status="Status: ready for gate", gate="", bodies=bodies))):
+            with self.subTest(args=args):
+                code, _, _ = self.run_main(text, *args)
+                self.assertEqual(code, 1)
 
     def test_a_crlf_definition_gives_the_fingerprint_of_its_lf_copy(self):
         text = definition()
