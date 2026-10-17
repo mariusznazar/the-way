@@ -3465,7 +3465,7 @@ nothing.
   way to the running product that none of them gives, or leaves behaviour a user sees unchecked in
   the running product for want of one · check by: 2027-01-31
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/23
 
 *Rationale:* whether a technology choice changes how the work is cut into tasks cannot be judged
 by someone who does not know the technologies, so the choice is settled before the cut; a step of
@@ -5385,7 +5385,7 @@ the choice of a place to run.
 - **Review when:** a task cycle under a definition whose three choices were settled by this
   decision finds that an agent cannot use the option chosen for one of them · check by: 2027-01-31
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/23
 
 *Rationale:* each choice asks for what an agent needs to check behaviour in the running product: a
 record of what the product did, a way to use it as its user does and see its answer, and data in
