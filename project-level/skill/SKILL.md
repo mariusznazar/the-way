@@ -66,12 +66,11 @@ neither this agent nor the project orchestrator starts task implementation.
   settles them, and then through step 7; once it is approved again, its plan is checked again
   through `plan-project` (WAY-121, WAY-118).
 - A definition with no `## Technology` section was written before the step that settles the
-  technology. Say so, and ask whether the project is reopened, with the cost of each way:
-  reopening settles the technology at step 6 and takes the definition through the gate again
-  (WAY-118); leaving it leaves the choices to the breakdown, and the check keeps reporting the
-  missing section. On reopening, add `## Technology` reading `TODO` before "Projected foundation
-  changes", set the status line to `definition — open: Technology`, and go on at step 6
-  (WAY-121).
+  technology, and goes back through it (WAY-121). Say so, and that until it is approved again no
+  task of its plan can be refined or broken down; add `## Technology` reading `TODO` before
+  "Projected foundation changes", set the status line to `definition — open: Technology`, go on
+  at step 6 and then through step 7 (WAY-118); once a definition that was approved is approved
+  again, its plan is checked again through `plan-project`.
 - Otherwise begin with step 1.
 
 ## 1. The idea
