@@ -3431,35 +3431,81 @@ technology and architecture choices the project needs — such as a language, a 
 of data or a place to run — and settles each one the foundation does not already hold as a
 projected decision of the definition. A choice belongs on the list when settling it later could
 change how the work is cut into tasks, or when it adds something the product has to run, pay for
-or back up; a choice one task can make and change alone stays with that task. When the foundation
-already holds every such choice, the step records the decision that holds each and settles nothing.
+or back up, and a choice one task can make and change alone stays with that task; whatever that
+rule says of them, every list also holds three choices of how an agent reaches the running
+product — its logs, its interface and its development data — each an item of its own named in
+the definition's language and marked in English by which of the three it is, each settled like
+any other choice, by a projected decision of its own unless the foundation already holds it, and
+each answered also where the product has no such thing, by what stands in its place. When the
+foundation already holds every such choice, the step records the decision that holds each and
+settles nothing; the readiness gate stops a definition whose list lacks one of the three, and a
+definition approved before the three were required goes back to the step and through the
+readiness gate again once its product moves the commit of the-way it pins and the readiness check
+first runs on it, as the refinement of a task of its plan runs it.
 
 - **Change:** new decision
 - **Scope:** project-level, decisions
 - **Based on:** none
-- **Relations:** derives from WAY-106@63eddf70 · derives from WAY-116@afbcd2fa
+- **Relations:** derives from WAY-106@63eddf70 · derives from WAY-116@afbcd2fa · derives from
+  WAY-118@5af868b3 · derives from WAY-100@e7a74a18
 - **Verification:** level 1 — invariants: project-technology-record. Level 2 for what the step
   lists and settles — an agent compares the work with the decision:
   - complies: a project that adds an account server lists its store of data and its way of
     logging in, and the definition projects a decision on each; a project that changes only how a
-    screen looks records that the foundation holds every choice it needs;
+    screen looks records that the foundation holds every choice it needs, its logs, its interface
+    and its development data among them; a command-line tool that keeps no data answers its
+    development data with sample input files kept in its repository, and its interface with the
+    program's output; a definition approved without its interface goes back to the step when the
+    first task of its plan is refined after its product moved its pin;
   - violates: the first task of the breakdown chooses the database; a definition reaches the gate
-    with a store of data in its scope and no choice of it projected or found in the foundation.
-- **Review when:** none
+    with a store of data in its scope and no choice of it projected or found in the foundation; a
+    single item settles the logs and the interface together; a product with no screen leaves its
+    interface off the list; a definition approved before the three were required is broken into
+    tasks after its product moved its pin, with its development data still missing.
+- **Review when:** a task cycle of a product whose definition holds the three choices improvises a
+  way to the running product that none of them gives, or leaves behaviour a user sees unchecked in
+  the running product for want of one · check by: 2027-01-31
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-10-04
+- **Approved by:** Mariusz, merge of <request link>
 
 *Rationale:* whether a technology choice changes how the work is cut into tasks cannot be judged
 by someone who does not know the technologies, so the choice is settled before the cut; a step of
 its own keeps the comparison of technologies out of the talk about the project's goal and scope,
 while its agent still knows the whole project. Settled before the gate, the choices are approved
 with the rest of the definition, and an exit for a project whose choices the foundation already
-holds keeps the step from being an empty run.
+holds keeps the step from being an empty run. The task cycle checks behaviour a user sees in the
+running product as well, and an agent with no settled way to the product's logs, its interface and
+its development data either leaves that check out or improvises a way to the product in the middle
+of a task; whether such a way adds anything to run, pay for or back up says nothing of whether the
+agent needs it, so the three stand on every list outside the rule of what belongs there. Three
+items keep three independent choices apart (WAY-122), and an answer for a thing the product lacks
+lets the readiness gate tell a choice forgotten from one with nothing to settle. Each item is named
+in the definition's language, so a mark in English lets the readiness gate find it, as the other
+markers it reads keep their English form (WAY-108). A definition approved earlier meets the rule
+too, because the agents of every task of its plan need the way, and the rule reaches a product when
+it moves its pin (WAY-34), so the definition goes back while its tasks are still being refined. The
+rule takes from the practice of autonomous product development that the lesson "Towards Autonomous
+Product Development" describes only its question of how an agent sees the running product — through
+its logs, its interface and its development data — and asks it in this step, so that the way is
+settled before any task needs it; the practice's hard limit on what an agent may touch, such as no
+production database and no root access, is not taken.
 *Rejected:* a round inside the conversation about goal and scope — no place to compare
 technologies; the first tasks of the breakdown — the cut itself may depend on the choice; the step
 after the readiness gate — each settled choice would change approved sections and send the
 definition through the gate again (WAY-118); one step for every project with no exit — an empty
-run wherever nothing changes.
+run wherever nothing changes; the agent's way to the running product as one item for all three —
+it binds three independent choices into one, and a later change of one reopens the others; one
+item split into as many choices as the product needs — whether one was left out rests on an
+agent's judgment, which the readiness gate cannot check; the way as a requirement of the step
+beside the list — a new place in the definition and a new condition of the readiness gate, while
+an answer on the list carries over to later projects as a decision the foundation holds; the way
+among what a product's deployment skill covers (WAY-139) — only a task that deploys the product is
+checked for it, so a product run on a developer's machine has no such guarantee; the three required
+only of definitions approved after them — an agent without a way until those projects end, and a
+second mode of the readiness gate to keep and later remove; the same, with the definitions approved
+before caught up by hand — a second mode as well, and a guarantee resting on someone's memory
+(WAY-102); the three named in English in place of the definition's language — the human reading
+the definition loses what the product needs each of them for.
 
 ### WAY-122/1 — How are the options of a technology choice found and checked before a human sees them?
 
@@ -3481,7 +3527,7 @@ every claimed difference between the options which no source supports.
 - **Change:** new decision
 - **Scope:** project-level, decisions
 - **Based on:** none
-- **Relations:** derives from WAY-121@740c254e · derives from WAY-120@81f84997
+- **Relations:** derives from WAY-121@d0b060e5 · derives from WAY-120@81f84997
 - **Verification:** level 2 — an agent compares the work with the decision:
   - complies: research for a store of data compares a file kept beside the application with a
     database server, each typed and documented, and the critique strikes a claimed difference in
@@ -3533,7 +3579,7 @@ the critique, each with its recommendation and the weak point of the option reco
 - **Change:** new decision
 - **Scope:** project-level, decisions
 - **Based on:** none
-- **Relations:** derives from WAY-121@740c254e · derives from WAY-113@d3e5cbfa
+- **Relations:** derives from WAY-121@d0b060e5 · derives from WAY-113@d3e5cbfa
 - **Verification:** level 2 — an agent compares the work with the decision:
   - complies: two stores of data are shown as "a file kept with the application and copied with
     it for a backup" against "a server to keep running in the container, with backups of its
@@ -5300,3 +5346,67 @@ the deliberate break the reviewer writes for an invariant's check, and it is nev
 which an agent other than the code's author writes (WAY-69).
 *Rejected:* the author of a one-author change alone — in a larger change made from a plan, no agent
 would attack its own work before review.
+
+### WAY-165/1 — What does each choice of how an agent reaches the running product ask, and what does an agent's use of an option weigh in it?
+
+Of the three choices of how an agent reaches the running product that every project's list of
+technology holds (WAY-121), the logs ask where the record of what the running product does goes
+and how an agent reads it, and the interface asks how an agent operates the product as its user
+does — through a screen in a browser, a call of an API or a command in a terminal — and how it sees
+what the product answers. The development data ask where the data come from on which an agent
+checks the product's behaviour outside production and how an agent brings those data to the state
+a check needs, leaving open whether they are set up from nothing or kept in a lasting environment
+dedicated to tests, both being options weighed by their consequences. In each of the three,
+whether an agent can use an option is a consequence for the product, even where the option is a
+place the product runs: an option an agent cannot use stays in the comparison with that lack said
+as "an agent does not check the running product this way", the recommendation passes over it, and
+the rule that settles a tie between places to run by how well an agent works with them stays with
+the choice of a place to run.
+
+- **Change:** new decision
+- **Scope:** project-level, decisions
+- **Based on:** none
+- **Relations:** derives from WAY-121@d0b060e5 · derives from WAY-123@f3b45293 · narrows
+  WAY-137@86b2a30d
+- **Verification:** level 2 — an agent compares the work with the decision:
+  - complies: the logs of a web game compare a log file on its server, which an agent reads from a
+    terminal, with a cheaper hosted service read only in a panel in a browser, the second staying
+    in the comparison with "an agent does not check the running product this way" and the
+    recommendation passing over it; the interface of a service offering an API is a call of that
+    API made as a client makes it, with what the service answers; the development data of a shop
+    with a large store of data compare data a script generates, a copy of production stripped of
+    personal data, whose taking is a human action (WAY-140), and a lasting environment dedicated
+    to tests, each by its consequences;
+  - violates: the interface is reading the product's store of data past the application; the
+    development data leave out a lasting environment dedicated to tests because its data are not
+    set up from nothing; a log service an agent cannot read is recommended because it costs less
+    and how well an agent works with an option decides only a tie; an option an agent cannot use is
+    left out of the comparison; a test server offered for the development data is weighed with no
+    word on whether an agent can use it, as a place to run would be.
+- **Review when:** a task cycle under a definition whose three choices were settled by this
+  decision finds that an agent cannot use the option chosen for one of them · check by: 2027-01-31
+- **Origin:** none
+- **Approved by:** Mariusz, merge of <request link>
+
+*Rationale:* each choice asks for what an agent needs to check behaviour in the running product: a
+record of what the product did, a way to use it as its user does and see its answer, and data in
+the state the check needs. An interface reached as the user reaches it checks what the user meets,
+while a way past the application, such as reading its store of data, checks something else. Data
+set up from nothing and a lasting environment dedicated to tests each have their cost — the second
+keeps a richer state between changes, at the price of keeping it running and of setting it up
+outside the repository, which a human does (WAY-140) — so the choice weighs them instead of ruling
+one out. In these three choices the agent's way to the product is what the choice is for, so an
+option the agent cannot use fails the product's need and counts as a consequence, not a
+convenience; it stays in the comparison so that the human sees it and can still take it, while the
+recommendation passes over it, since a way the agent cannot use gives the task cycle nothing. For a
+place to run the product's need is met whatever the agent can operate, so there how well an agent
+works with an option still only breaks a tie (WAY-137).
+*Rejected:* an interface named without "as its user does" — a way past the application, such as
+reading its store of data, could stand as the interface; development data required to be set up
+again from nothing — it rules out a lasting environment dedicated to tests, in many cases the better
+option; development data named with no word on reaching the state a check needs — the decision can
+leave that unsaid, and the cycle's agent improvises it; an agent's use of an option weighed like any
+other difference — a cheaper log service read only in a panel in a browser could be recommended as
+the simplest and cheapest, and the choice would pass the readiness gate with an answer that gives
+the agent nothing; what the product writes into its logs and in what form, settled with the logs —
+such a rule binds the writing of code and its review in the task cycle, not the project definition.
