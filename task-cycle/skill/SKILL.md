@@ -403,8 +403,9 @@ reviewer names, or a note that it names none. Never move a finding from one of t
 another. The handoff of the final whole-branch review asks the reviewer to grade, in its own report,
 each deferred-minor and parked line of the method's ledger, so that each is a finding of this
 review. The handoff of a review, or of the review of a fix, names no finding as wrong, as Minor or
-as outside the scope; it may carry the author's evidence on a contested finding. A review that
-leaves no blocking finding sends the change on without a fix.
+as outside the scope, apart from the ledger's lines passed as the method wrote them; it may carry
+the author's evidence on a contested finding. A review that leaves no blocking finding sends the
+change on without a fix.
 
 Blocking findings get one fix and one review of that fix (WAY-162); the orchestrator never overrules
 a blocking finding or skips its fix. The author or executor fixes them, runs the affected checks

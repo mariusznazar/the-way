@@ -5090,8 +5090,8 @@ has marked as outside the task's scope — a line of its list of what it decline
 finding it describes as going beyond the task — is not fixed, whatever its grade, nor is a Minor
 finding, and the request lists those findings in an item of their own and the Minor findings in
 another, each with the reviewer's words and its place in the code, while the human decides which
-findings outside the scope become new tasks and creates them. The orchestrator moves no finding from one of these kinds
-to another.
+findings outside the scope become new tasks and creates them. The orchestrator moves no finding
+from one of these kinds to another.
 
 - **Change:** new decision
 - **Scope:** task-cycle
@@ -5241,9 +5241,9 @@ human accepted despite the finding.
     despite the finding; a cycle blocked by the review of a settlement of the independent
     assessment names only what has not run on the code it holds;
   - violates: the return step runs on code its reviewer blocked; the target branch is merged and
-    its affected code review run before the blocked request; the blocked request opens without
-    a run of the gate on the change; a request whose code the human accepted despite the finding
-    is merged without its return step.
+    its affected code review run before a request blocked by an earlier review; the blocked request
+    opens without a run of the gate on the change; a request whose code the human accepted despite
+    the finding is merged without its return step.
 - **Review when:** none
 - **Origin:** none
 - **Approved by:** Mariusz, merge of <request link>
