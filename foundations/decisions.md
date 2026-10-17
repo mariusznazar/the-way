@@ -5214,10 +5214,11 @@ the remaining findings after all.
 
 Before the cycle opens a request that a remaining blocking finding blocks (WAY-162), it runs the
 product's full required gate on the change and writes its cycle record with its record of stages,
-while it runs neither the return step nor the independent assessment on code its review has not
-accepted, and the request names each of the two that has not run on that code. After the human's
-decision on the request, the work on its branch runs them on code that has passed review or that
-the human accepted despite the finding.
+while it runs neither the reconciliation with the target branch, nor the return step, nor the
+independent assessment on code its review has not accepted, and the request names each of these
+that has not run on that code. After the human's decision on the request, the work on its branch
+starts with that reconciliation and runs the others on code that has passed review or that the
+human accepted despite the finding.
 
 - **Change:** new decision
 - **Scope:** task-cycle
@@ -5226,11 +5227,13 @@ the human accepted despite the finding.
   WAY-10@db68de1c
 - **Verification:** level 2 — an agent compares the cycle and its request with the decision:
   - complies: a cycle blocked after the review of the final fix runs the full gate, writes its
-    record, opens the blocked request naming the return step and the independent assessment as not
-    run, and runs both once the human accepts the code despite the finding; a cycle blocked by the
+    record, opens the blocked request naming the reconciliation with the target branch, the return
+    step and the independent assessment as not run, and runs them once the human accepts the code
+    despite the finding; a cycle blocked by the
     review of a settlement of the independent assessment names only what has not run on the code it
     holds;
-  - violates: the return step runs on code its reviewer blocked; the blocked request opens without
+  - violates: the return step runs on code its reviewer blocked; the target branch is merged and
+    its affected code review run before the blocked request; the blocked request opens without
     a run of the gate on the change; a request whose code the human accepted despite the finding
     is merged without its return step.
 - **Review when:** none
@@ -5242,10 +5245,14 @@ human's decision calls for is made, while a run of the gate costs little and sho
 the code stands against the rest of the product's checks, and the cycle record holds the cost the
 request names. The return step and the independent assessment still come before any merge (WAY-11,
 WAY-10), so leaving them out before a blocked request moves them rather than drops them, even where
-the human's decision changes no code.
+the human's decision changes no code. The reconciliation with the target branch waits with them,
+because it would draw a code review and an assessment of its own on that code, and the work after
+the human's decision begins by merging the target branch in any case.
 *Rejected:* every step up to the request run before the blocked request — agents work on code the
 review did not accept and repeat that work after the fix; the cycle record and the cost alone — the
-human would not see where the code stands against the rest of the product's checks.
+human would not see where the code stands against the rest of the product's checks; the
+reconciliation with the target branch before the blocked request — its review and assessment would
+run on code the review did not accept, and the merge is made again after the fix.
 
 ### WAY-164/1 — What does the author of a change check of its own work before review?
 
