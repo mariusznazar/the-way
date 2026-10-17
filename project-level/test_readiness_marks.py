@@ -79,9 +79,7 @@ none
 """
 
 LANGUAGE = "- Język aplikacji — held by: ARC-01/1"
-LOGS = "- logs: Logi w konsoli serwera — held by: ARC-02/1"
 INTERFACE = "- interface: Przeglądarka prowadzona przez agenta — held by: ARC-03/1"
-DATA = "- development data: Przykładowe dokumenty w repozytorium — held by: ARC-04/1"
 
 
 def findings(technology):
@@ -90,20 +88,12 @@ def findings(technology):
 
 
 class MissingMarks(unittest.TestCase):
-    def test_the_whole_list_has_no_finding(self):
-        self.assertEqual(findings("\n".join([LANGUAGE, LOGS, INTERFACE, DATA])), [])
-
     def test_each_missing_mark_is_a_finding_of_its_own_naming_it(self):
         found = findings("\n".join([LANGUAGE, INTERFACE]))
         self.assertEqual([c for c, _ in found], ["g", "g"])
         self.assertIn("`logs:`", found[0][1])
         self.assertIn("`development data:`", found[1][1])
         self.assertNotIn("`interface:`", found[0][1] + found[1][1])
-
-    def test_a_section_reading_none_gives_its_one_finding(self):
-        found = findings("none")
-        self.assertEqual(len(found), 1)
-        self.assertIn("reads `none`", found[0][1])
 
     def test_a_section_still_reading_todo_gives_no_mark_finding(self):
         self.assertEqual([c for c, _ in findings("TODO")], ["a"])

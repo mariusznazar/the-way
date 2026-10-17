@@ -3436,12 +3436,11 @@ rule says of them, every list also holds three choices of how an agent reaches t
 product — its logs, its interface and its development data — each an item of its own named in
 the definition's language and marked in English by which of the three it is, each settled like
 any other choice, by a projected decision of its own unless the foundation already holds it, and
-each answered also where the product has no such thing, by what stands in its place. When the
-foundation already holds every such choice, the step records the decision that holds each and
-settles nothing; the readiness gate stops a definition whose list lacks one of the three, and a
-definition approved before the three were required goes back to the step and through the
-readiness gate again once its product moves the commit of the-way it pins and the readiness check
-first runs on it, as the refinement of a task of its plan runs it.
+each answered also where the product has no such thing, by what stands in its place. The
+readiness gate stops a definition whose list lacks one of the three, approved or not, and such a
+definition goes back to the step and through the readiness gate again; when the foundation already
+holds every choice the list needs, the step records the decision that holds each and settles
+nothing.
 
 - **Change:** new decision
 - **Scope:** project-level, decisions
@@ -3527,7 +3526,7 @@ every claimed difference between the options which no source supports.
 - **Change:** new decision
 - **Scope:** project-level, decisions
 - **Based on:** none
-- **Relations:** derives from WAY-121@d0b060e5 · derives from WAY-120@81f84997
+- **Relations:** derives from WAY-121@068d878b · derives from WAY-120@81f84997
 - **Verification:** level 2 — an agent compares the work with the decision:
   - complies: research for a store of data compares a file kept beside the application with a
     database server, each typed and documented, and the critique strikes a claimed difference in
@@ -3579,7 +3578,7 @@ the critique, each with its recommendation and the weak point of the option reco
 - **Change:** new decision
 - **Scope:** project-level, decisions
 - **Based on:** none
-- **Relations:** derives from WAY-121@d0b060e5 · derives from WAY-113@d3e5cbfa
+- **Relations:** derives from WAY-121@068d878b · derives from WAY-113@d3e5cbfa
 - **Verification:** level 2 — an agent compares the work with the decision:
   - complies: two stores of data are shown as "a file kept with the application and copied with
     it for a backup" against "a server to keep running in the container, with backups of its
@@ -5366,7 +5365,7 @@ the choice of a place to run.
 - **Change:** new decision
 - **Scope:** project-level, decisions
 - **Based on:** none
-- **Relations:** derives from WAY-121@d0b060e5 · derives from WAY-123@f3b45293 · narrows
+- **Relations:** derives from WAY-121@068d878b · derives from WAY-123@f3b45293 · narrows
   WAY-137@86b2a30d
 - **Verification:** level 2 — an agent compares the work with the decision:
   - complies: the logs of a web game compare a log file on its server, which an agent reads from a

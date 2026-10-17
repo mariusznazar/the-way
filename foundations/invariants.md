@@ -2024,7 +2024,7 @@ The project readiness check rejects, before approval, a definition whose Technol
 
 - **Method:** `python -B gate/run_tests.py project-level --record .runs/project-level-tests.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-121@d0b060e5
+- **Derives from:** WAY-121@068d878b
 - **Part:** project-level
 - **Correction:** none
 

@@ -63,10 +63,7 @@ read all turns and the requested change, and follow this workflow with these rou
 
 - Run `python -B <the-way>/project-level/readiness_check.py <definition>` on the original whole
   definition; it must report nothing. A finding returns the definition to `define-project`, and
-  the breakdown waits; so does an In scope that holds no list of items for the plan to number. A
-  finding that no choice item of its Technology section begins with `logs:`, `interface:` or
-  `development data:` marks a definition approved before those three choices were required: it
-  goes back through the step that settles the technology and the readiness gate (WAY-121).
+  the breakdown waits; so does an In scope that holds no list of items for the plan to number.
   Read the definition by "Reading the definition and plan" below (WAY-151).
 - Select and read the product's current foundation by "Reading the foundation" in
   `elements/common/way_of_working.md` (WAY-150), including the decisions the definition names.
