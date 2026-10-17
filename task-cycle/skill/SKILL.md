@@ -14,11 +14,12 @@ never label your answer as that person's approval.
 
 The cycle has one ordinary human contact: the pull or merge request. Do not pause for design,
 spec, plan, implementation or review questions. Stop early only when the required outcome cannot
-be implemented under the available evidence, capabilities and binding rules. A slow step, a
-failed test, a reviewer finding or an ambiguous implementation method is work to resolve, not a
-reason to ask the human. If a binding rule reserves a decision to a human and code cannot proceed
-without it, prepare a blocked draft request with the evidence and stop; do not pretend that your
-choice approved or changed the rule.
+be implemented under the available evidence, capabilities and binding rules, or when a blocking
+finding survives the one fix a code review allows ("The end of a code review", WAY-162). A slow
+step, a failed test, a reviewer finding before that fix or an ambiguous implementation method is
+work to resolve, not a reason to ask the human. If a binding rule reserves a decision to a human
+and code cannot proceed without it, prepare a blocked draft request with the evidence and stop; do
+not pretend that your choice approved or changed the rule.
 
 ## Inputs and authority
 
@@ -286,17 +287,23 @@ continuing that work.
 9. For a one-author change, resume its author to make the code. For a planned change, make the
    slices in the plan's order, each by a fresh executor given the frozen task, the plan and its
    slice, any spec, the pinned foundation and the dispatch contract. Each uses
-   `test-driven-development` for behavior changes and commits its work; its boundary is the
-   committed change or slice with focused checks run and their execution evidence recorded,
-   returning before review. No author reviews its own work. The independent reviewer reads the
-   full diff of its assigned range and checks the author's sharpness findings; you use the
+   `test-driven-development` for behavior changes and commits its work. Before it returns, the
+   author names the requirement of the task, and each executor the requirement of its slice read
+   against the task, that its work most likely does not meet, writes a check that would catch it,
+   runs it and states in its report which requirement, which check and what the check showed
+   (WAY-164). Its boundary is the committed change or slice with focused checks run and their
+   execution evidence recorded, returning before review. No author reviews its own work. The
+   independent reviewer receives that report, reads the full diff of its assigned range and checks
+   the author's sharpness findings and weakest-point check; you use the
    changed-file list, added and removed line counts and reviewer's verdict for routine progression
    (WAY-158), reading relevant evidence when a finding needs a ruling.
    - A plan of more than one slice runs through Superpowers `subagent-driven-development`, each
      slice one of its tasks, with the frozen task, and the spec where one exists, as the authority
      it reads the plan against: a fresh implementer and a fresh task reviewer for each slice,
-     followed by a whole-branch review. Its boundary is the final review and fixes: it returns
-     before workspace cleanup and `finishing-a-development-branch`. Copy its ledger and full
+     followed by a whole-branch review. Each slice's fix loop runs as the skill gives it; the
+     whole-branch review ends as "The end of a code review" gives. Its boundary is the final
+     review and its one fix: it returns before workspace cleanup and
+     `finishing-a-development-branch`. Copy its ledger and full
      reports into the working cycle record before allowing cleanup, recording review ranges as
      commit ranges rather than copies of their diffs.
    - A one-author change or a plan of one slice gets one Superpowers `requesting-code-review` of
@@ -305,15 +312,14 @@ continuing that work.
      plan review's coverage and order checks: every task item, every row of *Settlements to
      record*, every projected entry the task carries, source fidelity and foundation entries
      before dependent code, checked against the commits. The planned route retains step 8's plan
-     review. The author or executor fixes findings, affected checks run again, and the same
-     reviewer reviews the fix range once. Where the harness cannot resume the executor for fixes,
-     a fresh executor on the same branch, given the task and findings, continues in its place.
+     review. Its findings end as "The end of a code review" gives.
 
    Questions from any agent return to you, with their answers entered in the cycle record before
    work continues.
 10. After the one-author change or each planned slice, use the author's or executor's recorded
     focused-check command, exit code and full-output path without rerunning those checks for
-    routine progression (WAY-159), and resolve review findings from their evidence. Recalculate
+    routine progression (WAY-159), and resolve questions about review findings from their
+    evidence within "The end of a code review". Recalculate
     the WAY-13 sharpness inputs using the changed-file list and the author's diff-based findings,
     confirmed by the reviewer; if they grew, have the responsible agent add the resulting checks
     before accepting review, never reduce those already run. Changes, failures or disputed
@@ -331,7 +337,9 @@ continuing that work.
     running product as well. Use Superpowers `requesting-code-review` for a fresh final review, or the
     final review already required by the selected execution skill; do not dispatch a duplicate
     reviewer for the same range. Record failed and unchecked results by name; never call an unrun
-    check passed.
+    check passed. When a blocking finding survives the fix of the review of the whole change, this
+    gate still runs, and the cycle then skips step 11 for the blocked request ("The end of a code
+    review").
 11. Have the one-author change's author resume for the return step; for a planned change,
     dispatch its return-step agent. Refresh the foundation selection by "Reading the foundation"
     for the real diff and current foundation. Perform the return step of WAY-11 on that diff and the cycle's choice log: identify
@@ -345,9 +353,10 @@ continuing that work.
     decision-derived invariant (WAY-12, WAY-22), remove an existing invariant or omit an accepted
     settlement (WAY-134) or applicable projected entry (WAY-126).
     Write the resulting entries that bind after the merge (WAY-36) as the foundation step writes;
-    every other choice stays one line in the choice table. Nothing is deferred: what this request
-    does not write is neither proposed nor listed for later. Read the projected entries of the task's sources
-    and the rows of its *Settlements to record*: write a row the foundation step missed (WAY-134),
+    every other choice stays one line in the choice table. No foundation entry is deferred: an
+    entry this request does not write is neither proposed nor listed for later; the review findings
+    the request lists (step 13) are no foundation entries. Read the projected entries of the
+    task's sources and the rows of its *Settlements to record*: write a row the foundation step missed (WAY-134),
     and a projected entry the code makes true that the foundation step missed (WAY-126); an entry
     assigned to another plan item returns to the plan. Write a new entry only for a rule none of
     them states. Keep three different authors for an invariant's sentence, its check and covered
@@ -362,7 +371,9 @@ continuing that work.
     Settle each remark yourself and record how; a remark reaches the human only as the foundation
     step allows a question. If a settlement changes code, assessed foundation entries or invariant
     tests, have the responsible agents rerun the affected checks and code review with current
-    evidence. The settlement is part of the one assessment and does not reopen it.
+    evidence; that review ends as "The end of a code review" gives, and a blocking finding that
+    survives its fix blocks the request rather than joining these settlements. The settlement is
+    part of the one assessment and does not reopen it.
 
     After those settlements, the code reviewer who did not write a return-step check reviews its
     final version, writes its deliberate break from the final invariant sentence and runs the
@@ -378,17 +389,57 @@ continuing that work.
     decision follows WAY-30; a collision without recorded precedence follows WAY-25. If those rules
     prevent the required code, report the task as blocked in a draft request.
 
+## The end of a code review
+
+In the review of the whole change — the one-author review of step 9, or the final whole-branch
+review of a planned change — a finding blocks when the reviewer grades it Critical or Important
+and has not itself marked it as outside the task's scope: a line of its "Declined to judge" list,
+or a finding it describes as going beyond the task (WAY-161). A finding so marked is not fixed,
+whatever its grade, and neither is a Minor finding; keep each for the request's lists (step 13)
+with the reviewer's words and its place in the code — the place the reviewer names, or a note that
+it names none. Never move a finding from one of these kinds to another. A review that leaves no
+blocking finding sends the change on without a fix.
+
+Blocking findings get one fix and one review of that fix (WAY-162). The author or executor fixes
+them, runs the affected checks again and records their evidence; where the harness cannot resume
+the executor, a fresh executor on the same branch, given the task and the findings, fixes them in
+its place. The fix range is then reviewed once: by the same reviewer for a one-author change, by
+the scoped re-review of `subagent-driven-development` for a planned change. A new Critical or
+Important finding in the fix counts as one that remains. The same bound holds for every later code
+review — of a settlement of the independent assessment (step 11), of the reconciliation with the
+target branch (step 12) and of a change made for the human's remarks on the request (correction
+after review); there a finding blocks as above, while the review's other findings cause no fix and
+stay in its report, which the record links.
+
+When a blocking finding remains after the review of its fix, run no third round, and do not rule
+on the finding, park it or carry it into the settlements of step 11. Run the product's full
+required gate on the change as step 10 gives it, and run neither the return step nor the
+independent assessment on code its review has not accepted (WAY-163); the reconciliation of step
+12 waits too, since a correction after review starts with it. Then open the request, write
+`stages.md` and the record as step 12 gives them, and mark the request `blocked` with what step 13
+names for it. After the human's decision, the correction after review runs whichever of the
+return step and the assessment has not run on the code that passed review or that the human
+accepted despite the finding.
+
+This replaces, in the review of the whole change, the steps of Superpowers
+`subagent-driven-development` by which the final fix wave takes in deferred minor findings,
+residual findings are adjudicated and parked, and out-of-scope observations wait in its ledger, and
+the step of `requesting-code-review` by which the executor rules on each "Declined to judge" line
+(WAY-125). The fix loop of each single slice stays as `subagent-driven-development` gives it.
+
 ## Request and handoff
 
-12. Recheck the branch against the current target branch, refresh the foundation selection by
-    "Reading the foundation" for its current revision and the reconciled scope, and have the
-    responsible agents run checks affected by that update. Confirm that the reviewer's full-diff
+12. A request that a remaining blocking finding blocks skips the reconciliation below and starts
+    at opening the request ("The end of a code review"). Otherwise, recheck the branch against the
+    current target branch, refresh the foundation selection by "Reading the foundation" for its
+    current revision and the reconciled scope, and have the responsible agents run checks affected
+    by that update. Confirm that the reviewer's full-diff
     review covers the final range, using its verdict and the final changed-file and line-count
     summary rather than rereading the full diff yourself. If reconciliation changes the assessed
-    code, foundation or its applicable sources, invalidate the affected reviews: repeat the foundation collision search,
-    affected code review and independent assessment before proceeding. Record the final assessed
-    commits and file sets so the request never presents an assessment of superseded work as
-    current. If the final change differs from the completed change already checked, run its full
+    code, foundation or its applicable sources, invalidate the affected reviews: repeat the
+    foundation collision search, affected code review, which ends as "The end of a code review"
+    gives, and independent assessment before proceeding. Record the final assessed commits and file
+    sets so the request never presents an assessment of superseded work as current. If the final change differs from the completed change already checked, run its full
     required gate yourself with the output handling of step 10; otherwise retain that current
     evidence without a duplicate run. Then open the request as a draft by the pull or merge request
     route already chosen by the user, without presenting the integration menu of Superpowers
@@ -414,9 +465,14 @@ continuing that work.
     and why; the execution route and its reason; after a discarded attempt, its reason and a link
     to the agent's report; the spec link where one exists and, only where a plan was written, its
     slices and plan link; what changed and why, test and review evidence with every
-    check that did not run named, and *What this request settles*: each foundation entry the change writes or changes, as its identifier and
-    one sentence of its meaning in the task document's language, projected entries and the entries
-    written from rows of *Settlements to record* apart from new ones. Beside them, what the
+    check that did not run named, what each weakest-point check of step 9 showed (WAY-164), the
+    unfixed Minor findings of the review of the whole change in an item of their own and the
+    findings its reviewer marked outside the task's scope in another, for the human to choose which
+    become new tasks and to create them (WAY-161) — each with the reviewer's words and its place in
+    the code, or a note that the reviewer names none — and *What this request settles*: each
+    foundation entry the change writes or changes, as its identifier and one sentence of its
+    meaning in the task document's language, projected entries and the entries written from rows
+    of *Settlements to record* apart from new ones. Beside them, what the
     foundation puts in front of the human at the merge: an invariant kept at its version under a
     correction, with its old and new sentence (WAY-57); a part whose computed criticality fell
     (WAY-46); a recovered row, with the gate's report (WAY-58); a moved use of a changed definition
@@ -426,11 +482,16 @@ continuing that work.
     full reports by the SHA of the record commit. Where the request waits for human actions in the
     cycle, list them for the human to perform, each as the task document names it, with each effect
     outside the repository the cycle found that the document does not name, for the human to place
-    (WAY-140). If the task was impossible, mark the request `blocked`, show the smallest missing
-    fact or authorization and the attempted alternatives; do not present partial work as complete.
+    (WAY-140). Where a blocking finding survived the fix of a code review, mark the request
+    `blocked` and list each remaining blocking finding with its place in the code and its reason,
+    what the fix tried, the time, models and tokens of the cycle so far from `stages.md` with the
+    number of review rounds, and the return step and the independent assessment that have not run
+    on that code (WAY-162, WAY-163). If the task was impossible, mark the request `blocked`, show
+    the smallest missing fact or authorization and the attempted alternatives; do not present
+    partial work as complete.
 14. Before reporting completion, confirm the record lists all dispatches, choices, rulings,
-    checks, fixes and skipped stages. The final report lists any write to the task's backlog
-    entry. The request is the human's first decision point.
+    checks, fixes, review rounds and skipped stages. The final report lists any write to the
+    task's backlog entry. The request is the human's first decision point.
 
 ## Correction after review
 
@@ -443,6 +504,10 @@ resuming a one-author change's author where possible; a new open design choice o
 attempt follows the recovery above, with its reset base recorded for the correction. Repeat only
 the stages the remarks touch, with their reviews,
 checks and return step, and the independent assessment only where the correction changes the
-foundation or an invariant test, and then the record's pair of commits from step 12. A decision
+foundation or an invariant test, and then the record's pair of commits from step 12. Its code
+reviews end as "The end of a code review" gives. For a request a remaining blocking finding
+blocked, the human's decision is the input: make the fix it calls for, or keep the code the human
+accepted despite the finding, then run the return step and the independent assessment that have
+not run on that code, whatever the decision changes (WAY-163). A decision
 written in a correction takes the existing request's URL directly in its *Approved by*. Update the
 request's description, including its record links and *What this request settles*.
