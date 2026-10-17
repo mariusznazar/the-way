@@ -3622,10 +3622,10 @@ keeps agent reports before a borrowed skill cleans its workspace, runs the indep
 of its foundation change and its return step, and brings the request to the human for review.
 Decisions reserved to a human by the foundation remain reserved; when required code cannot proceed
 without one, the cycle opens a blocked draft request; in the review of the whole change, WAY-161
-and WAY-162 replace the steps of these methods by which the orchestrator rules on findings left
-after the fix, the fix takes in minor findings, findings outside the task wait in the method's
-ledger and the executor rules on what the reviewer declined to judge; a different Superpowers
-version requires a reviewed change to the-way before use.
+and WAY-162 replace the steps of these methods by which the orchestrator adjudicates and parks the
+findings left after the review of the final fix, the final fix takes in deferred minor findings,
+and the executor rules on each line the reviewer declined to judge; a different Superpowers version
+requires a reviewed change to the-way before use.
 
 - **Change:** new decision
 - **Scope:** task-cycle
@@ -4317,7 +4317,7 @@ deployment or a DNS record pointing to a new address.
 - **Scope:** project-level, task-cycle
 - **Based on:** none
 - **Relations:** derives from WAY-100@e7a74a18 · derives from WAY-107@0ffcebe1 · derives from
-  WAY-125@18d08c16
+  WAY-125@f3e6afcf
 - **Verification:** level 2 — an agent compares the task document, or the cycle, with the
   decision:
   - complies: a task that sends mail through an outside service names opening the account and
@@ -4639,7 +4639,7 @@ owners and the independent assessor's filtered inputs
 - **Change:** new decision
 - **Scope:** task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-125@18d08c16 · derives from WAY-10@db68de1c
+- **Relations:** derives from WAY-125@f3e6afcf · derives from WAY-10@db68de1c
 - **Verification:** level 2 — an agent compares the stage handoff, return, report and
   orchestrator's ruling with the decision:
   - complies: a short return names its complete report, commit range and failed or unchecked
@@ -4976,7 +4976,7 @@ returned question or new input before continuing.
 - **Change:** new decision
 - **Scope:** task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-125@18d08c16
+- **Relations:** derives from WAY-125@f3e6afcf
 - **Verification:** level 2 — an agent compares the waiting calls and their results with the
   tool's contract and active instructions:
   - complies: a native completion notification resumes coordination without polling; one blocking
@@ -5102,10 +5102,9 @@ to another.
   outside the plan or spec, one line each, with the reason. The executor rules on each line;
   nothing you set aside is dropped silently." · "Critical (Must Fix)" · "Important (Should Fix)" ·
   "Minor (Nice to Have)"; `requesting-code-review/SKILL.md` — "Note Minor issues for later";
-  `subagent-driven-development/SKILL.md` — "Out-of-scope observations go to the ledger as deferred
-  minors — they never extend the loop." · "Point it at the ledger's deferred-minor and parked lines
+  `subagent-driven-development/SKILL.md` — "Point it at the ledger's deferred-minor and parked lines
   so it can triage which must be fixed before merge."
-- **Relations:** derives from WAY-136@986ff0ac · derives from WAY-125@18d08c16 · derives from
+- **Relations:** derives from WAY-136@986ff0ac · derives from WAY-125@f3e6afcf · derives from
   WAY-140@6e564611 · derives from WAY-100@e7a74a18
 - **Verification:** level 2 — an agent compares the cycle and its request with the decision:
   - complies: the review of a one-author change returns only Minor findings, and the change goes
@@ -5171,7 +5170,7 @@ single slice of a plan stays as WAY-125 and WAY-136 adopt it.
   finishing-a-development-branch presents the options." · "New Critical/Important breakage in the
   fix diff joins the open findings list."
 - **Relations:** derives from WAY-161@d6d3137b · derives from WAY-136@986ff0ac · derives from
-  WAY-125@18d08c16 · derives from WAY-100@e7a74a18
+  WAY-125@f3e6afcf · derives from WAY-100@e7a74a18
 - **Verification:** level 2 — an agent compares the cycle and its request with the decision:
   - complies: after the review of the fix of a one-author change an Important finding stays open,
     and the cycle runs no further fix and opens a draft request marked `blocked` with that
