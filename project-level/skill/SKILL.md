@@ -60,7 +60,11 @@ neither this agent nor the project orchestrator starts task implementation.
   is checked first:
   `python -B <the-way>/project-level/readiness_check.py <definition>`. A finding that its
   fingerprint no longer matches means the definition changed after the gate, and it goes through
-  step 7 again.
+  step 7 again. A finding of condition g that no choice item of "Technology" begins with `logs:`,
+  `interface:` or `development data:` means the definition was approved before those three
+  choices were required: say so, go on at step 6, whose skill adds the missing choices and
+  settles them, and then through step 7; once it is approved again, its plan is checked again
+  through `plan-project` (WAY-121, WAY-118).
 - A definition with no `## Technology` section was written before the step that settles the
   technology. Say so, and ask whether the project is reopened, with the cost of each way:
   reopening settles the technology at step 6 and takes the definition through the gate again

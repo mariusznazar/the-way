@@ -101,7 +101,7 @@ A section is never left empty
 | Risks | the risks, and the assumptions whose failure would change the result |
 | Open questions | only questions for later, each with its place of resolution |
 | Touched parts and decisions | what the foundation says of the project: the parts it touches, the decisions whose *Scope* names them, the invariants it may break |
-| Technology | the technology choices the project needs, each with the entry that settles it; the skill `settle-technology` writes it, and it reads `TODO` until that step begins |
+| Technology | the technology choices the project needs, each with the entry that settles it, the three choices of how an agent reaches the running product always among them; the skill `settle-technology` writes it, and it reads `TODO` until that step begins |
 | Projected foundation changes | what the definition settles about the product, as projected entries of the foundation, each with one sentence of its meaning, below the line that records the step finding them |
 | Gate record | who approved the gate and when, the commit of the foundation searched, the fingerprint |
 
@@ -149,15 +149,19 @@ task changes the plan, not the definition (WAY-145).
 
 The section lists the technology and architecture choices the project needs — a language, a
 framework, a library, a store of data, a way of logging in, a place to run — each with the entry
-that settles it (WAY-121). The skill `settle-technology` writes it before the readiness gate
-(WAY-121), after the step that finds the definition's foundation entries; until then it reads
-`TODO`.
+that settles it, and always the three choices of how an agent reaches the running product: its
+logs, its interface and its development data (WAY-121). The skill `settle-technology` writes it
+before the readiness gate (WAY-121), after the step that finds the definition's foundation
+entries; until then it reads `TODO`.
 
 ```markdown
 ## Technology
 
 - Język i miejsce działania aplikacji — held by: DOC-02/1
 - Magazyn dokumentów i ich właścicieli — projected: Where are documents and their owners stored?
+- logs: Gdzie trafia zapis działania archiwum i jak agent go czyta — held by: DOC-03/1
+- interface: Jak agent obsługuje archiwum tak jak jego użytkownik — held by: DOC-04/1
+- development data: Skąd biorą się dokumenty, na których agent sprawdza archiwum — held by: DOC-05/1
 ```
 
 - A choice belongs on the list when settling it later could change how the work is cut into
@@ -174,8 +178,28 @@ that settles it (WAY-121). The skill `settle-technology` writes it before the re
   | `— projected: <question>` | a projected decision of this definition settles it; the question reads as in that decision's heading |
   | `— open` | the step is still settling it; the readiness gate stops it |
 
+- Whatever the rule above says of them, every list holds the three choices of how an agent
+  reaches the running product, each an item of its own, settled like any other choice — by a
+  projected decision of its own unless the foundation already holds it — even where it adds
+  nothing to run, pay for or back up (WAY-121). Each begins with its mark in English, in lower
+  case and with its colon, before its name in the language of the definition and its marker; the
+  marks and what each choice asks (WAY-121; WAY-165):
+
+  | Mark | What the choice asks |
+  |---|---|
+  | `logs:` | where the record of what the running product does goes, and how an agent reads it |
+  | `interface:` | how an agent operates the product as its user does — a screen in a browser, a call of an API, a command in a terminal — and how it sees what the product answers |
+  | `development data:` | where the data come from on which an agent checks the product's behaviour outside production, and how an agent brings them to the state a check needs; data set up from nothing and a lasting environment dedicated to tests are both options, weighed by their consequences |
+
+- A product that has no such thing still answers the choice, by what stands in its place: "the
+  interface is the program's output"; "the product keeps no data, and the sample input files in
+  its repository serve as its development data" (WAY-121).
+- The readiness gate stops a list lacking one of the three marks, an approved definition's too: a
+  definition approved before the three were required goes back to `settle-technology` and through
+  the readiness gate again before the work that runs the check on it relies on it (WAY-121,
+  WAY-118).
 - An item may hold nested items under it, such as the human's preference for the choice; they
-  are no choices of the list
+  are no choices of the list, and a mark in one of them marks nothing
   (WAY-112).
 - The section never reads `none`: it records the decision that holds each choice, and a project
   whose choices the foundation already holds lists each of them `held by`
@@ -210,6 +234,12 @@ that settles it (WAY-121). The skill `settle-technology` writes it before the re
   For a place to run, how well an agent works with an option decides nothing else: it leaves no
   option out of the comparison and is weighed against no consequence for the product
   (WAY-137).
+- In each of the three choices of how an agent reaches the running product, whether an agent can
+  use an option is a consequence for the product, even where the option is a place the product
+  runs: an option an agent cannot use stays in the comparison with that lack said as "an agent
+  does not check the running product this way", and the recommendation passes over it; the rule
+  of the tie above stays with the choice of a place to run
+  (WAY-165).
 - The option recommended for each choice the step settles, one a constraint of the definition
   settles included, is tested with a devil's advocate, a pre-mortem and a search for unknown
   unknowns; no choice a decision of the foundation holds is tested, and no decision already

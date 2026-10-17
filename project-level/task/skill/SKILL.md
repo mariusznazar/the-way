@@ -77,7 +77,12 @@ human acceptance of the complete task, even when refinement finds no candidate s
   projected entries and open questions relevant to the stated task. An independent task requires
   neither definition nor plan. Whenever an approved definition is used, run
   `python -B <the-way>/project-level/readiness_check.py <definition>` before relying on its
-  approval; a finding returns to `define-project`.
+  approval; a finding returns to `define-project`. A finding that no choice item of its
+  Technology section begins with `logs:`, `interface:` or `development data:` means the
+  definition was approved before those three choices were required: tell the human, and the
+  definition goes back through `define-project` to the step that settles the technology and
+  through the readiness gate again, and its plan is checked again, before this refinement goes on
+  (WAY-121).
 - Read the product root `AGENTS.md` section `## Backlog` to find the task system. Check whether
   it can hold the whole document. If it holds short task entries only, create a separate Markdown
   document in the product's task area and link it from that entry; do not paste the document into

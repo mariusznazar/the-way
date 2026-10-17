@@ -27,7 +27,10 @@ The definition follows `project-level/definition_template.md`. The check reports
 - g — "Technology" lists the choices the project needs, each item ending
   `— held by: <PREFIX>-<NN>/<version>` or `— projected: <question>`, whose question a heading
   `#### <identifier> — <question>` under "Projected foundation changes" holds; no item still
-  reads `— open`, and the section never reads `none`.
+  reads `— open`, and the section never reads `none`. Among its choice items, one begins with
+  `logs:`, one with `interface:` and one with `development data:` — the three choices of how an
+  agent reaches the running product (WAY-121); this holds for an approved definition as well, so
+  a definition approved before they were required goes back to the step that settles them.
 
 With --before-approval the check leaves out b and e and the gate record, since the human has not
 approved yet. --fingerprint prints the fingerprint the gate record is to carry, once the
@@ -64,6 +67,9 @@ RESOLVED = re.compile(r"— resolved in: (breakdown|task: \S.*)$")
 PENDING_APPROVAL = re.compile(r"^\s*- \*\*Approved by:\*\* on acceptance\s*$")
 CANDIDATES = re.compile(r"^Candidates: (\d+) shown, (\d+) accepted — \d{4}-\d{2}-\d{2}$")
 WORKING_TABLE = "### Candidates in progress"
+# The marks that open the three choices every Technology list holds (WAY-121), in English
+# whatever the language of the definition (WAY-108).
+AGENT_PATH_MARKS = ("logs:", "interface:", "development data:")
 TECHNOLOGY_ITEM = re.compile(r"^\S.*? — (?:held by: (?P<held>\S.*?)|projected: (?P<question>\S.*?)"
                              r"|(?P<open>open))\s*$")
 DECISION_IDENTIFIER = re.compile(r"^[A-Z][A-Z0-9]*-\d+/\d+$")
@@ -248,6 +254,13 @@ def check_technology(section, projected_section):
                         "needs, each with the entry that settles it" % TECHNOLOGY)]
     questions = projected_questions(projected_section)
     findings = []
+    texts = [text for _, text in items(section) if text is not None]
+    for mark in AGENT_PATH_MARKS:
+        if not any(text.startswith(mark) for text in texts):
+            findings.append(Finding("g", section.heading_line, "no choice item begins with `%s` — "
+                                    "the list holds the logs, the interface and the development "
+                                    "data through which an agent reaches the running product, "
+                                    "each settled like any other choice (WAY-121)" % mark))
     for number, text in items(section):
         if text is None:
             findings.append(Finding("g", number, "a line under `## %s` that is no choice item"

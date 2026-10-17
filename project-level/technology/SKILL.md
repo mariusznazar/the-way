@@ -34,6 +34,15 @@ The step writes into the definition only, never into the product's foundation
   `elements/common/way_of_working.md` (WAY-150). Include every current decision that holds or
   constrains a listed technology choice; refresh the selection as the list takes shape.
 - Where "Technology" reads `TODO`, begin with step 1.
+- Where it holds a list lacking an item that begins with one of the three marks of the template's
+  Technology section — `logs:`, `interface:`, `development data:` — the list was written before
+  the three were required (WAY-121). Add each missing one as an item of its own ending `— open`,
+  its mark first and then its name in the language of the definition by what the product needs it
+  for, keeping every other item and its marker as they stand. Where the status line reads
+  `approved`, the definition changes in sections its gate fingerprinted: set the status line to
+  `definition — open: Technology`, and tell the human that the definition goes through the
+  readiness gate again once the step ends, and its plan is checked again after it (WAY-118). Then
+  go on as for an open item below.
 - Where it holds an item ending `— open`, look first under "Projected foundation changes" for a
   decision written for that choice; where one stands, end the item `— projected: <its question>`.
   Then show the list, ask whether it still holds, and resume step 2 with the open items and the
@@ -48,6 +57,11 @@ The step writes into the definition only, never into the product's foundation
   template's Technology section: a choice whose later settling could change how the work is cut
   into tasks, or that adds something the product has to run, pay for or back up
   (WAY-121).
+- Whatever that rule says of them, the list always holds the three choices of how an agent
+  reaches the running product — its logs, its interface and its development data — each an item
+  of its own beginning with its mark, even where it adds nothing to run, pay for or back up. Each
+  asks what the template's table of marks gives (WAY-165); a product that has no such thing still
+  answers it, by what stands in its place — "the interface is the program's output" (WAY-121).
 - Name each choice in the language of the definition by what the product needs it for — "where
   the accounts and saved games are kept" — never by a technology. A way of logging in is listed as
   its method; the library that implements it, where the code needs one and the rule takes it, is a
@@ -79,8 +93,10 @@ waits, so that a resumed step finds it.
    binding sentences of every decision the Technology list names `held by`. Each finds the options
    in their documentation, starting from what the definition needs of the choice, never from a fixed
    list of stacks, not even as a hint, and gives each option its source: a page of its documentation
-   with its version (WAY-122). An option the human named enters the comparison. Where the definition
-   already settles the choice in the human's words — a constraint under "Inputs and constraints" —
+   with its version (WAY-122). An option the human named enters the comparison. For the logs,
+   the interface or the development data, the agent is also given what the choice asks
+   (WAY-165) and says of each option whether an agent can use it to check the running product.
+   Where the definition already settles the choice in the human's words — a constraint under "Inputs and constraints" —
    that settlement is the only option sought, and it is weighed like any other.
 2. **Weigh.** For each option the project's code is written in or against, the agent reads off
    its documentation and its public record of use the properties the template's Technology section
@@ -91,7 +107,10 @@ waits, so that a resumed step finds it.
    (WAY-122).
 3. **Consequences.** For each option kept, the agent says what it costs, where it runs, what
    keeping it running takes and what changing it later costs; every difference claimed between the
-   options cites its source (WAY-123). It writes the comparison to
+   options cites its source (WAY-123). In the logs, the interface and the development data,
+   whether an agent can use an option is one of its consequences, even where the option is a place
+   the product runs: an option an agent cannot use stays in the comparison with that lack said as
+   "an agent does not check the running product this way" (WAY-165). It writes the comparison to
    `.runs/technology/<choice>.md`, the choice's name in lower case with hyphens for spaces, which
    the product's Git ignores, and ends.
 4. **Critique.** Give one fresh agent, following `critique`, the whole comparison of a choice, its
@@ -105,7 +124,9 @@ waits, so that a resumed step finds it.
    source of the comparison. A difference with no consequence for the product decides nothing;
    where none remains, recommend the simplest and cheapest option (WAY-123). For a place to run,
    where more than one option is the simplest and cheapest, recommend of those the one an agent
-   works with best, by the template's rule (WAY-137). Then give one
+   works with best, by the template's rule (WAY-137). In the logs, the interface and the
+   development data, the recommendation passes over an option an agent cannot use, cheaper or not
+   (WAY-165). Then give one
    fresh agent for the wave the option recommended for every choice of the wave, one a constraint
    of the definition settles included, with the definition and the comparisons, and ask it to run
    on each a devil's advocate, a pre-mortem and a search for unknown unknowns: what choosing that
@@ -144,10 +165,13 @@ waits, so that a resumed step finds it.
 
 - No item of "Technology" ends `— open`.
 - Run `python -B <the-way>/project-level/readiness_check.py <definition> --before-approval`. A
-  finding of condition g on an item still open goes back to step 2, any other finding of
+  finding of condition g on an item still open goes back to step 2, a finding that no choice item
+  begins with one of the three marks to step 0's rule for a list lacking one, any other finding of
   condition g to step 1; any other finding goes back to `define-project`, which names where.
 - Return to `define-project`, which sets the status line to `ready for gate` and leads the gate.
 
 A definition approved before this step changes in the sections its fingerprint covers, and goes
 through the gate again
-(WAY-118).
+(WAY-118). So does a definition approved before the three choices of how an agent reaches the
+running product were required, once the step has added and settled them
+(WAY-121).

@@ -35,7 +35,11 @@ project skill with the `the-way-` prefix, never a personal copy.
   their reports. A draft, finding, unreadable source or failed command is an obstacle, never
   agreement. Verify the definition's approved Status and actual human gate record as well;
   fingerprint/check agreement alone does not establish approval. A changed definition follows
-  step 5 below; ordinary plan findings return to its
+  step 5 below; so does a definition the readiness check, or the state reader's `definition`
+  finding, reports as having no choice item of its Technology section beginning with `logs:`,
+  `interface:` or `development data:`: it was approved before those three choices were required,
+  and goes back through `define-project`'s technology step and gate, its plan rechecked after,
+  before any task of it becomes ready for cycle (WAY-121); ordinary plan findings return to its
   owning workflow, not a task-body repair.
 - Inspect existing `.runs/project-refinement/<task-name>.md` files for this plan. Verify each
   header's repository/plan/task identity before reuse; a same-named task from another plan must
