@@ -1,0 +1,8 @@
+$ python -B C:/Users/Mariusz/AppData/Local/Temp/claude/C--Storage-repos-the-way/0ec12b8b-dfcb-451f-8794-0fbf50a48b21/scratchpad/fp_check.py .   (run from worktree root at ac65ac3; recomputes every latest version's Relations fingerprints with relation-model/fingerprint.py and the decisions guard parser; prints fingerprint and binding sentence count of WAY-125, WAY-161..164)
+125 18d08c16 3
+161 d6d3137b 3
+162 ce2e41f0 3
+163 80d2e584 2
+164 898c9d56 2
+stale 0
+exit 0
