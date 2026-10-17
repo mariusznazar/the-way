@@ -1,0 +1,4 @@
+exit code the reader gives: 1
+definition fail: g — line 46: no choice item begins with `logs:` — the list holds the logs, the interface and the development data through which an agent reaches the running product, each settled like any other choice (WAY-121)
+definition fail: g — line 46: no choice item begins with `interface:` — the list holds the logs, the interface and the development data through which an agent reaches the running product, each settled like any other choice (WAY-121)
+definition fail: g — line 46: no choice item begins with `development data:` — the list holds the logs, the interface and the development data through which an agent reaches the running product, each settled like any other choice (WAY-121)

@@ -1,0 +1,26 @@
+$ python -B -I fp_links.py <temporary worktree at 4239271>
+decisions 151 invariants 210
+WAY-121 068d878b
+WAY-165 a179dbe4
+WAY-118 5af868b3
+WAY-100 e7a74a18
+WAY-106 63eddf70
+WAY-116 afbcd2fa
+WAY-123 f3b45293
+WAY-137 86b2a30d
+WAY-122 b343277a
+project-technology-record 7fb7ab2b
+STALE elements/glossary/test_format_guard.py:72 WAY-01@4dd7fb86 current 60960941
+STALE elements/invariants/test_format_guard.py:697 WAY-01@00000000 current 60960941
+STALE elements/invariants/test_format_guard.py:707 WAY-01@4dd7fb86 current 60960941
+STALE elements/invariants/test_format_guard.py:1388 WAY-01@00000000 current 60960941
+STALE elements/invariants/test_format_guard.py:1389 WAY-01@00000000 current 60960941
+STALE elements/invariants/test_format_guard.py:1397 WAY-01@4dd7fb86 current 60960941
+STALE elements/invariants/test_format_guard.py:1405 WAY-01@4b7b9b75 current 60960941
+STALE elements/invariants/test_format_guard.py:1411 WAY-01@00000000 current 60960941
+STALE elements/invariants/test_format_guard.py:1412 WAY-01@00000000 current 60960941
+links 460 stale 9
+exit code: 0
+
+$ git grep -n "d0b060e5" 4239271
+exit code: 1 (1 = no match)

@@ -1,0 +1,293 @@
+$ python -B gate/run_tests.py project-level --record <scratch>/project-level-tests-B2.jsonl   (temporary worktree of c657b2b with review-break-B2.patch)
+.........................................................................................................................................................................................................................................................FFFFFFFFFFFFFFFFFF.FFFFFF..FF............
+======================================================================
+FAIL: test_a_mark_not_at_the_start_of_the_text_is_no_mark (test_readiness_check.TechnologyMarks.test_a_mark_not_at_the_start_of_the_text_is_no_mark) (mark='logs:', run='before approval', technology='- Jêzyk i miejsce dzia³ania aplikacji — held by: ARC-01/1\n- interface: Przegl¹darka, któr¹ agent prowadzi sam — held by: ARC-04/1\n- development data: Dane zak³adane od zera przed testem — held by: ARC-05/1\n- Dla agenta logs: Logi aplikacji w konsoli serwera — held by: ARC-03/1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Mariusz\AppData\Local\Temp\claude\C--Storage-repos-the-way\48e1b1a6-9666-4b0d-8a29-8efacfa46bee\scratchpad\review\wt-break\project-level\test_readiness_check.py", line 588, in assert_rejected_for
+    self.assertTrue(missing, "no rejection for the missing `%s` item: %r"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (mark, lacking_found))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Counter() is not true : no rejection for the missing `logs:` item: []
+
+======================================================================
+FAIL: test_a_mark_not_at_the_start_of_the_text_is_no_mark (test_readiness_check.TechnologyMarks.test_a_mark_not_at_the_start_of_the_text_is_no_mark) (mark='logs:', run='with its gate record', technology='- Jêzyk i miejsce dzia³ania aplikacji — held by: ARC-01/1\n- interface: Przegl¹darka, któr¹ agent prowadzi sam — held by: ARC-04/1\n- development data: Dane zak³adane od zera przed testem — held by: ARC-05/1\n- Dla agenta logs: Logi aplikacji w konsoli serwera — held by: ARC-03/1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Mariusz\AppData\Local\Temp\claude\C--Storage-repos-the-way\48e1b1a6-9666-4b0d-8a29-8efacfa46bee\scratchpad\review\wt-break\project-level\test_readiness_check.py", line 588, in assert_rejected_for
+    self.assertTrue(missing, "no rejection for the missing `%s` item: %r"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (mark, lacking_found))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Counter() is not true : no rejection for the missing `logs:` item: []
+
+======================================================================
+FAIL: test_a_mark_not_at_the_start_of_the_text_is_no_mark (test_readiness_check.TechnologyMarks.test_a_mark_not_at_the_start_of_the_text_is_no_mark) (mark='interface:', run='before approval', technology='- Jêzyk i miejsce dzia³ania aplikacji — held by: ARC-01/1\n- logs: Logi aplikacji w konsoli serwera — held by: ARC-03/1\n- development data: Dane zak³adane od zera przed testem — held by: ARC-05/1\n- Dla agenta interface: Przegl¹darka, któr¹ agent prowadzi sam — held by: ARC-04/1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Mariusz\AppData\Local\Temp\claude\C--Storage-repos-the-way\48e1b1a6-9666-4b0d-8a29-8efacfa46bee\scratchpad\review\wt-break\project-level\test_readiness_check.py", line 588, in assert_rejected_for
+    self.assertTrue(missing, "no rejection for the missing `%s` item: %r"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (mark, lacking_found))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Counter() is not true : no rejection for the missing `interface:` item: []
+
+======================================================================
+FAIL: test_a_mark_not_at_the_start_of_the_text_is_no_mark (test_readiness_check.TechnologyMarks.test_a_mark_not_at_the_start_of_the_text_is_no_mark) (mark='interface:', run='with its gate record', technology='- Jêzyk i miejsce dzia³ania aplikacji — held by: ARC-01/1\n- logs: Logi aplikacji w konsoli serwera — held by: ARC-03/1\n- development data: Dane zak³adane od zera przed testem — held by: ARC-05/1\n- Dla agenta interface: Przegl¹darka, któr¹ agent prowadzi sam — held by: ARC-04/1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Mariusz\AppData\Local\Temp\claude\C--Storage-repos-the-way\48e1b1a6-9666-4b0d-8a29-8efacfa46bee\scratchpad\review\wt-break\project-level\test_readiness_check.py", line 588, in assert_rejected_for
+    self.assertTrue(missing, "no rejection for the missing `%s` item: %r"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (mark, lacking_found))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Counter() is not true : no rejection for the missing `interface:` item: []
+
+======================================================================
+FAIL: test_a_mark_not_at_the_start_of_the_text_is_no_mark (test_readiness_check.TechnologyMarks.test_a_mark_not_at_the_start_of_the_text_is_no_mark) (mark='development data:', run='before approval', technology='- Jêzyk i miejsce dzia³ania aplikacji — held by: ARC-01/1\n- logs: Logi aplikacji w konsoli serwera — held by: ARC-03/1\n- interface: Przegl¹darka, któr¹ agent prowadzi sam — held by: ARC-04/1\n- Dla agenta development data: Dane zak³adane od zera przed testem — held by: ARC-05/1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Mariusz\AppData\Local\Temp\claude\C--Storage-repos-the-way\48e1b1a6-9666-4b0d-8a29-8efacfa46bee\scratchpad\review\wt-break\project-level\test_readiness_check.py", line 588, in assert_rejected_for
+    self.assertTrue(missing, "no rejection for the missing `%s` item: %r"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (mark, lacking_found))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Counter() is not true : no rejection for the missing `development data:` item: []
+
+======================================================================
+FAIL: test_a_mark_not_at_the_start_of_the_text_is_no_mark (test_readiness_check.TechnologyMarks.test_a_mark_not_at_the_start_of_the_text_is_no_mark) (mark='development data:', run='with its gate record', technology='- Jêzyk i miejsce dzia³ania aplikacji — held by: ARC-01/1\n- logs: Logi aplikacji w konsoli serwera — held by: ARC-03/1\n- interface: Przegl¹darka, któr¹ agent prowadzi sam — held by: ARC-04/1\n- Dla agenta development data: Dane zak³adane od zera przed testem — held by: ARC-05/1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Mariusz\AppData\Local\Temp\claude\C--Storage-repos-the-way\48e1b1a6-9666-4b0d-8a29-8efacfa46bee\scratchpad\review\wt-break\project-level\test_readiness_check.py", line 588, in assert_rejected_for
+    self.assertTrue(missing, "no rejection for the missing `%s` item: %r"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (mark, lacking_found))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Counter() is not true : no rejection for the missing `development data:` item: []
+
+======================================================================
+FAIL: test_a_mark_on_the_continuation_line_of_a_choice_is_no_mark (test_readiness_check.TechnologyMarks.test_a_mark_on_the_continuation_line_of_a_choice_is_no_mark) (mark='logs:', run='before approval', technology='- Jêzyk i miejsce dzia³ania aplikacji — held by: ARC-01/1\n- interface: Przegl¹darka, któr¹ agent prowadzi sam — held by: ARC-04/1\n- development data: Dane zak³adane od zera przed testem — held by: ARC-05/1\n- Dla agenta\n  logs: Logi aplikacji w konsoli serwera — held by: ARC-03/1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Mariusz\AppData\Local\Temp\claude\C--Storage-repos-the-way\48e1b1a6-9666-4b0d-8a29-8efacfa46bee\scratchpad\review\wt-break\project-level\test_readiness_check.py", line 588, in assert_rejected_for
+    self.assertTrue(missing, "no rejection for the missing `%s` item: %r"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (mark, lacking_found))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Counter() is not true : no rejection for the missing `logs:` item: []
+
+======================================================================
+FAIL: test_a_mark_on_the_continuation_line_of_a_choice_is_no_mark (test_readiness_check.TechnologyMarks.test_a_mark_on_the_continuation_line_of_a_choice_is_no_mark) (mark='logs:', run='with its gate record', technology='- Jêzyk i miejsce dzia³ania aplikacji — held by: ARC-01/1\n- interface: Przegl¹darka, któr¹ agent prowadzi sam — held by: ARC-04/1\n- development data: Dane zak³adane od zera przed testem — held by: ARC-05/1\n- Dla agenta\n  logs: Logi aplikacji w konsoli serwera — held by: ARC-03/1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Mariusz\AppData\Local\Temp\claude\C--Storage-repos-the-way\48e1b1a6-9666-4b0d-8a29-8efacfa46bee\scratchpad\review\wt-break\project-level\test_readiness_check.py", line 588, in assert_rejected_for
+    self.assertTrue(missing, "no rejection for the missing `%s` item: %r"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (mark, lacking_found))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Counter() is not true : no rejection for the missing `logs:` item: []
+
+======================================================================
+FAIL: test_a_mark_on_the_continuation_line_of_a_choice_is_no_mark (test_readiness_check.TechnologyMarks.test_a_mark_on_the_continuation_line_of_a_choice_is_no_mark) (mark='interface:', run='before approval', technology='- Jêzyk i miejsce dzia³ania aplikacji — held by: ARC-01/1\n- logs: Logi aplikacji w konsoli serwera — held by: ARC-03/1\n- development data: Dane zak³adane od zera przed testem — held by: ARC-05/1\n- Dla agenta\n  interface: Przegl¹darka, któr¹ agent prowadzi sam — held by: ARC-04/1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Mariusz\AppData\Local\Temp\claude\C--Storage-repos-the-way\48e1b1a6-9666-4b0d-8a29-8efacfa46bee\scratchpad\review\wt-break\project-level\test_readiness_check.py", line 588, in assert_rejected_for
+    self.assertTrue(missing, "no rejection for the missing `%s` item: %r"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (mark, lacking_found))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Counter() is not true : no rejection for the missing `interface:` item: []
+
+======================================================================
+FAIL: test_a_mark_on_the_continuation_line_of_a_choice_is_no_mark (test_readiness_check.TechnologyMarks.test_a_mark_on_the_continuation_line_of_a_choice_is_no_mark) (mark='interface:', run='with its gate record', technology='- Jêzyk i miejsce dzia³ania aplikacji — held by: ARC-01/1\n- logs: Logi aplikacji w konsoli serwera — held by: ARC-03/1\n- development data: Dane zak³adane od zera przed testem — held by: ARC-05/1\n- Dla agenta\n  interface: Przegl¹darka, któr¹ agent prowadzi sam — held by: ARC-04/1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Mariusz\AppData\Local\Temp\claude\C--Storage-repos-the-way\48e1b1a6-9666-4b0d-8a29-8efacfa46bee\scratchpad\review\wt-break\project-level\test_readiness_check.py", line 588, in assert_rejected_for
+    self.assertTrue(missing, "no rejection for the missing `%s` item: %r"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (mark, lacking_found))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Counter() is not true : no rejection for the missing `interface:` item: []
+
+======================================================================
+FAIL: test_a_mark_on_the_continuation_line_of_a_choice_is_no_mark (test_readiness_check.TechnologyMarks.test_a_mark_on_the_continuation_line_of_a_choice_is_no_mark) (mark='development data:', run='before approval', technology='- Jêzyk i miejsce dzia³ania aplikacji — held by: ARC-01/1\n- logs: Logi aplikacji w konsoli serwera — held by: ARC-03/1\n- interface: Przegl¹darka, któr¹ agent prowadzi sam — held by: ARC-04/1\n- Dla agenta\n  development data: Dane zak³adane od zera przed testem — held by: ARC-05/1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Mariusz\AppData\Local\Temp\claude\C--Storage-repos-the-way\48e1b1a6-9666-4b0d-8a29-8efacfa46bee\scratchpad\review\wt-break\project-level\test_readiness_check.py", line 588, in assert_rejected_for
+    self.assertTrue(missing, "no rejection for the missing `%s` item: %r"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (mark, lacking_found))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Counter() is not true : no rejection for the missing `development data:` item: []
+
+======================================================================
+FAIL: test_a_mark_on_the_continuation_line_of_a_choice_is_no_mark (test_readiness_check.TechnologyMarks.test_a_mark_on_the_continuation_line_of_a_choice_is_no_mark) (mark='development data:', run='with its gate record', technology='- Jêzyk i miejsce dzia³ania aplikacji — held by: ARC-01/1\n- logs: Logi aplikacji w konsoli serwera — held by: ARC-03/1\n- interface: Przegl¹darka, któr¹ agent prowadzi sam — held by: ARC-04/1\n- Dla agenta\n  development data: Dane zak³adane od zera przed testem — held by: ARC-05/1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Mariusz\AppData\Local\Temp\claude\C--Storage-repos-the-way\48e1b1a6-9666-4b0d-8a29-8efacfa46bee\scratchpad\review\wt-break\project-level\test_readiness_check.py", line 588, in assert_rejected_for
+    self.assertTrue(missing, "no rejection for the missing `%s` item: %r"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (mark, lacking_found))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Counter() is not true : no rejection for the missing `development data:` item: []
+
+======================================================================
+FAIL: test_a_mark_only_in_a_nested_item_is_no_mark (test_readiness_check.TechnologyMarks.test_a_mark_only_in_a_nested_item_is_no_mark) (mark='logs:', run='before approval', technology='- Jêzyk i miejsce dzia³ania aplikacji — held by: ARC-01/1\n- interface: Przegl¹darka, któr¹ agent prowadzi sam — held by: ARC-04/1\n- development data: Dane zak³adane od zera przed testem — held by: ARC-05/1\n- Jak agent widzi dzia³aj¹cy produkt — held by: ARC-06/1\n  - logs: Logi, interfejs albo dane')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Mariusz\AppData\Local\Temp\claude\C--Storage-repos-the-way\48e1b1a6-9666-4b0d-8a29-8efacfa46bee\scratchpad\review\wt-break\project-level\test_readiness_check.py", line 588, in assert_rejected_for
+    self.assertTrue(missing, "no rejection for the missing `%s` item: %r"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (mark, lacking_found))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Counter() is not true : no rejection for the missing `logs:` item: []
+
+======================================================================
+FAIL: test_a_mark_only_in_a_nested_item_is_no_mark (test_readiness_check.TechnologyMarks.test_a_mark_only_in_a_nested_item_is_no_mark) (mark='logs:', run='with its gate record', technology='- Jêzyk i miejsce dzia³ania aplikacji — held by: ARC-01/1\n- interface: Przegl¹darka, któr¹ agent prowadzi sam — held by: ARC-04/1\n- development data: Dane zak³adane od zera przed testem — held by: ARC-05/1\n- Jak agent widzi dzia³aj¹cy produkt — held by: ARC-06/1\n  - logs: Logi, interfejs albo dane')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Mariusz\AppData\Local\Temp\claude\C--Storage-repos-the-way\48e1b1a6-9666-4b0d-8a29-8efacfa46bee\scratchpad\review\wt-break\project-level\test_readiness_check.py", line 588, in assert_rejected_for
+    self.assertTrue(missing, "no rejection for the missing `%s` item: %r"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (mark, lacking_found))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Counter() is not true : no rejection for the missing `logs:` item: []
+
+======================================================================
+FAIL: test_a_mark_only_in_a_nested_item_is_no_mark (test_readiness_check.TechnologyMarks.test_a_mark_only_in_a_nested_item_is_no_mark) (mark='interface:', run='before approval', technology='- Jêzyk i miejsce dzia³ania aplikacji — held by: ARC-01/1\n- logs: Logi aplikacji w konsoli serwera — held by: ARC-03/1\n- development data: Dane zak³adane od zera przed testem — held by: ARC-05/1\n- Jak agent widzi dzia³aj¹cy produkt — held by: ARC-06/1\n  - interface: Logi, interfejs albo dane')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Mariusz\AppData\Local\Temp\claude\C--Storage-repos-the-way\48e1b1a6-9666-4b0d-8a29-8efacfa46bee\scratchpad\review\wt-break\project-level\test_readiness_check.py", line 588, in assert_rejected_for
+    self.assertTrue(missing, "no rejection for the missing `%s` item: %r"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (mark, lacking_found))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Counter() is not true : no rejection for the missing `interface:` item: []
+
+======================================================================
+FAIL: test_a_mark_only_in_a_nested_item_is_no_mark (test_readiness_check.TechnologyMarks.test_a_mark_only_in_a_nested_item_is_no_mark) (mark='interface:', run='with its gate record', technology='- Jêzyk i miejsce dzia³ania aplikacji — held by: ARC-01/1\n- logs: Logi aplikacji w konsoli serwera — held by: ARC-03/1\n- development data: Dane zak³adane od zera przed testem — held by: ARC-05/1\n- Jak agent widzi dzia³aj¹cy produkt — held by: ARC-06/1\n  - interface: Logi, interfejs albo dane')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Mariusz\AppData\Local\Temp\claude\C--Storage-repos-the-way\48e1b1a6-9666-4b0d-8a29-8efacfa46bee\scratchpad\review\wt-break\project-level\test_readiness_check.py", line 588, in assert_rejected_for
+    self.assertTrue(missing, "no rejection for the missing `%s` item: %r"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (mark, lacking_found))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Counter() is not true : no rejection for the missing `interface:` item: []
+
+======================================================================
+FAIL: test_a_mark_only_in_a_nested_item_is_no_mark (test_readiness_check.TechnologyMarks.test_a_mark_only_in_a_nested_item_is_no_mark) (mark='development data:', run='before approval', technology='- Jêzyk i miejsce dzia³ania aplikacji — held by: ARC-01/1\n- logs: Logi aplikacji w konsoli serwera — held by: ARC-03/1\n- interface: Przegl¹darka, któr¹ agent prowadzi sam — held by: ARC-04/1\n- Jak agent widzi dzia³aj¹cy produkt — held by: ARC-06/1\n  - development data: Logi, interfejs albo dane')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Mariusz\AppData\Local\Temp\claude\C--Storage-repos-the-way\48e1b1a6-9666-4b0d-8a29-8efacfa46bee\scratchpad\review\wt-break\project-level\test_readiness_check.py", line 588, in assert_rejected_for
+    self.assertTrue(missing, "no rejection for the missing `%s` item: %r"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (mark, lacking_found))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Counter() is not true : no rejection for the missing `development data:` item: []
+
+======================================================================
+FAIL: test_a_mark_only_in_a_nested_item_is_no_mark (test_readiness_check.TechnologyMarks.test_a_mark_only_in_a_nested_item_is_no_mark) (mark='development data:', run='with its gate record', technology='- Jêzyk i miejsce dzia³ania aplikacji — held by: ARC-01/1\n- logs: Logi aplikacji w konsoli serwera — held by: ARC-03/1\n- interface: Przegl¹darka, któr¹ agent prowadzi sam — held by: ARC-04/1\n- Jak agent widzi dzia³aj¹cy produkt — held by: ARC-06/1\n  - development data: Logi, interfejs albo dane')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Mariusz\AppData\Local\Temp\claude\C--Storage-repos-the-way\48e1b1a6-9666-4b0d-8a29-8efacfa46bee\scratchpad\review\wt-break\project-level\test_readiness_check.py", line 588, in assert_rejected_for
+    self.assertTrue(missing, "no rejection for the missing `%s` item: %r"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (mark, lacking_found))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Counter() is not true : no rejection for the missing `development data:` item: []
+
+======================================================================
+FAIL: test_a_mark_only_in_the_prose_of_the_section_is_no_mark (test_readiness_check.TechnologyMarks.test_a_mark_only_in_the_prose_of_the_section_is_no_mark) (mark='logs:', run='before approval', technology='- Jêzyk i miejsce dzia³ania aplikacji — held by: ARC-01/1\n- interface: Przegl¹darka, któr¹ agent prowadzi sam — held by: ARC-04/1\n- development data: Dane zak³adane od zera przed testem — held by: ARC-05/1\nlogs: Logi aplikacji w konsoli serwera — held by: ARC-03/1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Mariusz\AppData\Local\Temp\claude\C--Storage-repos-the-way\48e1b1a6-9666-4b0d-8a29-8efacfa46bee\scratchpad\review\wt-break\project-level\test_readiness_check.py", line 588, in assert_rejected_for
+    self.assertTrue(missing, "no rejection for the missing `%s` item: %r"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (mark, lacking_found))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Counter() is not true : no rejection for the missing `logs:` item: [('g', 'a line under `## Technology` that is no choice item')]
+
+======================================================================
+FAIL: test_a_mark_only_in_the_prose_of_the_section_is_no_mark (test_readiness_check.TechnologyMarks.test_a_mark_only_in_the_prose_of_the_section_is_no_mark) (mark='logs:', run='with its gate record', technology='- Jêzyk i miejsce dzia³ania aplikacji — held by: ARC-01/1\n- interface: Przegl¹darka, któr¹ agent prowadzi sam — held by: ARC-04/1\n- development data: Dane zak³adane od zera przed testem — held by: ARC-05/1\nlogs: Logi aplikacji w konsoli serwera — held by: ARC-03/1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Mariusz\AppData\Local\Temp\claude\C--Storage-repos-the-way\48e1b1a6-9666-4b0d-8a29-8efacfa46bee\scratchpad\review\wt-break\project-level\test_readiness_check.py", line 588, in assert_rejected_for
+    self.assertTrue(missing, "no rejection for the missing `%s` item: %r"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (mark, lacking_found))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Counter() is not true : no rejection for the missing `logs:` item: [('g', 'a line under `## Technology` that is no choice item')]
+
+======================================================================
+FAIL: test_a_mark_only_in_the_prose_of_the_section_is_no_mark (test_readiness_check.TechnologyMarks.test_a_mark_only_in_the_prose_of_the_section_is_no_mark) (mark='interface:', run='before approval', technology='- Jêzyk i miejsce dzia³ania aplikacji — held by: ARC-01/1\n- logs: Logi aplikacji w konsoli serwera — held by: ARC-03/1\n- development data: Dane zak³adane od zera przed testem — held by: ARC-05/1\ninterface: Przegl¹darka, któr¹ agent prowadzi sam — held by: ARC-04/1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Mariusz\AppData\Local\Temp\claude\C--Storage-repos-the-way\48e1b1a6-9666-4b0d-8a29-8efacfa46bee\scratchpad\review\wt-break\project-level\test_readiness_check.py", line 588, in assert_rejected_for
+    self.assertTrue(missing, "no rejection for the missing `%s` item: %r"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (mark, lacking_found))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Counter() is not true : no rejection for the missing `interface:` item: [('g', 'a line under `## Technology` that is no choice item')]
+
+======================================================================
+FAIL: test_a_mark_only_in_the_prose_of_the_section_is_no_mark (test_readiness_check.TechnologyMarks.test_a_mark_only_in_the_prose_of_the_section_is_no_mark) (mark='interface:', run='with its gate record', technology='- Jêzyk i miejsce dzia³ania aplikacji — held by: ARC-01/1\n- logs: Logi aplikacji w konsoli serwera — held by: ARC-03/1\n- development data: Dane zak³adane od zera przed testem — held by: ARC-05/1\ninterface: Przegl¹darka, któr¹ agent prowadzi sam — held by: ARC-04/1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Mariusz\AppData\Local\Temp\claude\C--Storage-repos-the-way\48e1b1a6-9666-4b0d-8a29-8efacfa46bee\scratchpad\review\wt-break\project-level\test_readiness_check.py", line 588, in assert_rejected_for
+    self.assertTrue(missing, "no rejection for the missing `%s` item: %r"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (mark, lacking_found))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Counter() is not true : no rejection for the missing `interface:` item: [('g', 'a line under `## Technology` that is no choice item')]
+
+======================================================================
+FAIL: test_a_mark_only_in_the_prose_of_the_section_is_no_mark (test_readiness_check.TechnologyMarks.test_a_mark_only_in_the_prose_of_the_section_is_no_mark) (mark='development data:', run='before approval', technology='- Jêzyk i miejsce dzia³ania aplikacji — held by: ARC-01/1\n- logs: Logi aplikacji w konsoli serwera — held by: ARC-03/1\n- interface: Przegl¹darka, któr¹ agent prowadzi sam — held by: ARC-04/1\ndevelopment data: Dane zak³adane od zera przed testem — held by: ARC-05/1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Mariusz\AppData\Local\Temp\claude\C--Storage-repos-the-way\48e1b1a6-9666-4b0d-8a29-8efacfa46bee\scratchpad\review\wt-break\project-level\test_readiness_check.py", line 588, in assert_rejected_for
+    self.assertTrue(missing, "no rejection for the missing `%s` item: %r"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (mark, lacking_found))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Counter() is not true : no rejection for the missing `development data:` item: [('g', 'a line under `## Technology` that is no choice item')]
+
+======================================================================
+FAIL: test_a_mark_only_in_the_prose_of_the_section_is_no_mark (test_readiness_check.TechnologyMarks.test_a_mark_only_in_the_prose_of_the_section_is_no_mark) (mark='development data:', run='with its gate record', technology='- Jêzyk i miejsce dzia³ania aplikacji — held by: ARC-01/1\n- logs: Logi aplikacji w konsoli serwera — held by: ARC-03/1\n- interface: Przegl¹darka, któr¹ agent prowadzi sam — held by: ARC-04/1\ndevelopment data: Dane zak³adane od zera przed testem — held by: ARC-05/1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Mariusz\AppData\Local\Temp\claude\C--Storage-repos-the-way\48e1b1a6-9666-4b0d-8a29-8efacfa46bee\scratchpad\review\wt-break\project-level\test_readiness_check.py", line 588, in assert_rejected_for
+    self.assertTrue(missing, "no rejection for the missing `%s` item: %r"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (mark, lacking_found))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Counter() is not true : no rejection for the missing `development data:` item: [('g', 'a line under `## Technology` that is no choice item')]
+
+======================================================================
+FAIL: test_one_item_carrying_two_marks_holds_only_the_first (test_readiness_check.TechnologyMarks.test_one_item_carrying_two_marks_holds_only_the_first) (mark='interface:', run='before approval', technology='- Jêzyk i miejsce dzia³ania aplikacji — held by: ARC-01/1\n- logs: interface: Logi i interfejs aplikacji — held by: ARC-03/1\n- development data: Dane zak³adane od zera przed testem — held by: ARC-05/1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Mariusz\AppData\Local\Temp\claude\C--Storage-repos-the-way\48e1b1a6-9666-4b0d-8a29-8efacfa46bee\scratchpad\review\wt-break\project-level\test_readiness_check.py", line 588, in assert_rejected_for
+    self.assertTrue(missing, "no rejection for the missing `%s` item: %r"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (mark, lacking_found))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Counter() is not true : no rejection for the missing `interface:` item: []
+
+======================================================================
+FAIL: test_one_item_carrying_two_marks_holds_only_the_first (test_readiness_check.TechnologyMarks.test_one_item_carrying_two_marks_holds_only_the_first) (mark='interface:', run='with its gate record', technology='- Jêzyk i miejsce dzia³ania aplikacji — held by: ARC-01/1\n- logs: interface: Logi i interfejs aplikacji — held by: ARC-03/1\n- development data: Dane zak³adane od zera przed testem — held by: ARC-05/1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Mariusz\AppData\Local\Temp\claude\C--Storage-repos-the-way\48e1b1a6-9666-4b0d-8a29-8efacfa46bee\scratchpad\review\wt-break\project-level\test_readiness_check.py", line 588, in assert_rejected_for
+    self.assertTrue(missing, "no rejection for the missing `%s` item: %r"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (mark, lacking_found))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Counter() is not true : no rejection for the missing `interface:` item: []
+
+----------------------------------------------------------------------
+Ran 269 tests in 72.248s
+
+FAILED (failures=26)
+exit code: 1

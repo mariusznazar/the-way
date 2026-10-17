@@ -1,0 +1,6 @@
+1. readiness_check.py on an approved definition with no ## Technology: exit 1
+fail: structure — line 1: the section `## Technology` is missing
+readiness: 1 finding(s)
+2. after define-project step 0's edit (section TODO, status open), --before-approval: exit 1
+fail: a — line 48: `## Technology` holds TODO
+readiness: 1 finding(s) (approvals and gate record left out: --before-approval)

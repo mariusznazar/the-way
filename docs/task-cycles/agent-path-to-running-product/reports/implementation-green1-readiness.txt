@@ -1,0 +1,20 @@
+..........................................................................................F...
+======================================================================
+FAIL: test_the_technology_section_the_template_gives_passes_its_checks (project-level.test_readiness_check.Template.test_the_technology_section_the_template_gives_passes_its_checks)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\agent-path-to-running-product\project-level\test_readiness_check.py", line 162, in test_the_technology_section_the_template_gives_passes_its_checks
+    self.assertEqual(readiness_check.check_technology(sections[0], sections[1]), [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [Finding(condition='g', line=1, message='n[693 chars]1)')] != []
+
+First list contains 3 additional elements.
+First extra element 0:
+Finding(condition='g', line=1, message='no choice item begins with `logs:` — the list holds the logs, the interface and the development data through which an agent reaches the running product, each settled like any other choice (WAY-121)')
+
+Diff is 1018 characters long. Set self.maxDiff to None to see it.
+
+----------------------------------------------------------------------
+Ran 94 tests in 0.080s
+
+FAILED (failures=1)

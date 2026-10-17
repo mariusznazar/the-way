@@ -1,0 +1,7 @@
+$ git diff --numstat c657b2b..0c1dfd5
+5	6	project-level/skill/SKILL.md
+exit code: 0
+$ git grep -n "# invariant:" 0c1dfd5 -- project-level/skill/SKILL.md
+exit code: 1 (1 = no match)
+$ git diff --name-only c657b2b..0c1dfd5 -- foundations/ project-level/readiness_check.py "*test_*.py"
+exit code: 0 (empty = untouched)

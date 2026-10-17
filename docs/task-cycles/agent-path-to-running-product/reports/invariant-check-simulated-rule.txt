@@ -1,0 +1,31 @@
+............................................................F........................................................................................................................................................................................................
+======================================================================
+FAIL: test_a_section_still_reading_todo_is_one_gap_and_no_g (test_readiness_check.Technology.test_a_section_still_reading_todo_is_one_gap_and_no_g)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage/repos/the-way-wt/agent-path-to-running-product\project-level\test_readiness_check.py", line 556, in test_a_section_still_reading_todo_is_one_gap_and_no_g
+    self.assertEqual(conditions(text, before_approval=True),
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                     [("a", "`## Technology` holds TODO")])
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [('a'[26 chars]ODO'), ('g', 'no choice item begins with logs:[101 chars]a:')] != [('a'[26 chars]ODO')]
+
+First list contains 3 additional elements.
+First extra element 1:
+('g', 'no choice item begins with logs:')
+
+- [('a', '`## Technology` holds TODO'),
+?                                     ^
+
++ [('a', '`## Technology` holds TODO')]
+?                                     ^
+
+-  ('g', 'no choice item begins with logs:'),
+-  ('g', 'no choice item begins with interface:'),
+-  ('g', 'no choice item begins with development data:')]
+
+----------------------------------------------------------------------
+Ran 261 tests in 73.752s
+
+FAILED (failures=1)
+exit 1

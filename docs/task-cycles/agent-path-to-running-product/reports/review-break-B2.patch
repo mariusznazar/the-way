@@ -1,0 +1,13 @@
+diff --git a/project-level/readiness_check.py b/project-level/readiness_check.py
+index aff6289..7dc6af2 100644
+--- a/project-level/readiness_check.py
++++ b/project-level/readiness_check.py
+@@ -256,7 +256,7 @@ def check_technology(section, projected_section):
+     findings = []
+     texts = [text for _, text in items(section) if text is not None]
+     for mark in AGENT_PATH_MARKS:
+-        if not any(text.startswith(mark) for text in texts):
++        if not any(mark in line for _, line in content(section)):  # BREAK: any line
+             findings.append(Finding("g", section.heading_line, "no choice item begins with `%s` — "
+                                     "the list holds the logs, the interface and the development "
+                                     "data through which an agent reaches the running product, "

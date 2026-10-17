@@ -1,0 +1,24 @@
+baseline: all three                                before approval  PASS
+baseline: all three                                approved         PASS
+fence at column 0 holding logs                     before approval  [('g', 'a line under `## Technology` that is no choice item'), ('g', 'a line under `## Technology` that is no choice item')]
+fence at column 0 holding logs                     approved         [('g', 'a line under `## Technology` that is no choice item'), ('g', 'a line under `## Technology` that is no choice item')]
+fence indented after a nested item, holding logs   before approval  PASS
+fence indented after a nested item, holding logs   approved         PASS
+mark with no name                                  before approval  PASS
+mark with no name                                  approved         PASS
+mark with no space after colon                     before approval  PASS
+mark with no space after colon                     approved         PASS
+two spaces after the list dash                     before approval  PASS
+two spaces after the list dash                     approved         PASS
+asterisk list marker                               before approval  [('g', 'no choice item begins with `logs:` — the list holds the logs'), ('g', 'a line under `## Technology` that is no choice item')]
+asterisk list marker                               approved         [('g', 'no choice item begins with `logs:` — the list holds the logs'), ('g', 'a line under `## Technology` that is no choice item')]
+mark in backticks                                  before approval  [('g', 'no choice item begins with `logs:` — the list holds the logs')]
+mark in backticks                                  approved         [('g', 'no choice item begins with `logs:` — the list holds the logs')]
+fullwidth colon                                    before approval  [('g', 'no choice item begins with `logs:` — the list holds the logs')]
+fullwidth colon                                    approved         [('g', 'no choice item begins with `logs:` — the list holds the logs')]
+nbsp inside development data                       before approval  [('g', 'no choice item begins with `development data:` — the list ho')]
+nbsp inside development data                       approved         [('g', 'no choice item begins with `development data:` — the list ho')]
+two logs items                                     before approval  PASS
+two logs items                                     approved         PASS
+html comment holding logs                          before approval  [('g', 'a line under `## Technology` that is no choice item'), ('g', 'a line under `## Technology` that is no choice item')]
+html comment holding logs                          approved         [('g', 'a line under `## Technology` that is no choice item'), ('g', 'a line under `## Technology` that is no choice item')]

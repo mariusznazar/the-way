@@ -1,0 +1,3 @@
+$ python -B agent-instructions/skill_entry_points.py
+entry points are current
+exit code: 0
