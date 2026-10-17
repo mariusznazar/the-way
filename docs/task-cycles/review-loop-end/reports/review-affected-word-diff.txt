@@ -1,0 +1,53 @@
+$ python -B <scratchpad>/wd.py <78df576 file> <74cf160 file>  (token diff ignoring whitespace and line breaks; script = review-wd.py.txt) for SKILL.md, decisions.md, record_template.md
+== SKILL.md
+replace | - it, | + it — a test, or a manual check recorded as the report contract gives it —
+replace | - When a | + A
+insert | -  | + that
+replace | - the | + its
+replace | - of the review of the whole change, this gate still runs, and the cycle then skips step 11 for the blocked request ("The | + continues as "The
+replace | - review"). | + review" gives.
+insert | -  | + The handoff of the final whole-branch review asks the reviewer to grade, in its own report, each deferred-minor and parked line of the method's ledger, so that each is a finding of this review. The handoff of a review, or of the review of a fix, names no finding as wrong, as Minor or as outside the scope; it may carry the author's evidence on a contested finding.
+delete | - review's other | + 
+insert | -  | + that do not block
+replace | - stay in its report, which | + go to
+replace | - record links. | + request's lists as those of the review of the whole change do.
+insert | -  | + — which names the request as opened after it —
+replace | - skips the reconciliation below, writes `stages.md` and the record and commits their pair before it opens the request ("The | + follows "The
+replace | - review"). | + review" instead of the reconciliation below.
+delete | - unfixed | + 
+insert | -  | + and of every later code review
+replace | - its reviewer | + their reviewers
+replace | - links | + links, its lists of findings
+changed spans: 18
+exit: 0
+== decisions.md
+insert | -  | + nor is a Minor finding,
+delete | - unfixed | + 
+delete | - The rule takes from an agent harness's review practice the merge of a rejection whose findings are all non-blocking and the route of a finding that widens the work to a new task rather than a repair. | + 
+replace | - request. | + request; the orchestrator returning a line the reviewer declined to judge to the reviewer, with the requirement of the task that covers it — the orchestrator would choose which lines the reviewer looks at again, the lever left to the reviewer alone, while a behaviour the task requires that the reviewer set aside still reaches the human in the request's list, whose reading is the remedy.
+replace | - The | + In the code reviews after the review of the whole change, the findings that do not block go unfixed to the request's lists as WAY-161 gives them; the
+replace | - WAY-161@d6d3137b | + WAY-161@cddc297e
+insert | -  | + Minor finding of the review of the reconciliation with the target branch is listed in the request; a
+replace | - fixed. | + fixed; a Minor finding of a later code review stands only in that review's report.
+replace | - rule takes from an agent harness's review practice | + findings of those later reviews that do not block reach
+replace | - end of | + request as WAY-161's do, because a list
+replace | - loop after one repair and one re-review, the remainder and its cost named, with no further round bought. | + request only links to is a list nobody reads.
+replace | - all. | + all; the findings of those later reviews that do not block kept in their reports, which the record links — a list the request only links to is a list nobody reads; one more round for a finding the fix introduced — a fix could trade one blocking finding for another without end.
+insert | -  | + reconciliation with the target branch, nor the
+replace | - step | + step,
+replace | - the two | + these
+insert | -  | + starts with that reconciliation and
+replace | - them | + the others
+replace | - WAY-162@ce2e41f0 | + WAY-162@4c6feb35
+insert | -  | + reconciliation with the target branch, the
+replace | - both | + them
+insert | -  | + the target branch is merged and its affected code review run before the blocked request;
+insert | -  | + The reconciliation with the target branch waits with them, because it would draw a code review and an assessment of its own on that code, and the work after the human's decision begins by merging the target branch in any case.
+replace | - checks. | + checks; the reconciliation with the target branch before the blocked request — its review and assessment would run on code the review did not accept, and the merge is made again after the fix.
+delete | - The rule takes from an agent harness's practice for its workers the naming of the acceptance line most likely to be false and the check that would catch it. | + 
+changed spans: 24
+exit: 0
+== record_template.md
+replace | - change, | + change and every later code review,
+changed spans: 1
+exit: 0
