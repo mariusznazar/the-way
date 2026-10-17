@@ -1,4 +1,0 @@
-$ python -B fp_fixture.py <worktree>   (independent fingerprint of test_plan_state_invariant DEFINITION_BODY)
-DEFINITION_BODY dcb10529 has gate: False
-FINGERPRINT const dcb10529
-exit code: 0

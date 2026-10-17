@@ -1,8 +1,0 @@
-$ python -B gate/run_tests.py project-level --record <scratch>/project-level-tests-affected.jsonl
-...........................................................................................................................................................................................................................................................................
-----------------------------------------------------------------------
-Ran 267 tests in 74.126s
-
-OK
-exit code: 0
-record: {('project-plan-check/1', 'pass'): 32, ('project-plan-form/1', 'pass'): 49, ('project-plan-state-evidence/1', 'pass'): 27, ('project-plan-state-subprocesses/1', 'pass'): 2, ('project-readiness-gate/1', 'pass'): 8, ('project-definition-form/1', 'pass'): 6, ('project-technology-record/1', 'pass'): 30}
