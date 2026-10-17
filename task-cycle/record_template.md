@@ -43,6 +43,12 @@ the request; preparing reversible code for it does not authorize executing it.
 - Whole-change review: <reviewer other than author, full-diff range, verdict and report; on the no-plan route,
   coverage of every task item, settlement row and carried projected entry, source fidelity and
   evidence that entries preceded dependent code; on the planned route, plan-review evidence>
+- Review rounds: <for the review of the whole change and each later code review (step 11
+  settlement, step 12 reconciliation, correction): stage, reviewed range and report; blocking
+  findings, the fix range and the review of that fix; any blocking finding that survived it; or
+  none>
+- Weakest-point checks: <for the author and each executor: the requirement named, the check, what
+  it showed and the report that states it>
 
 The last commit of a discarded attempt or of a slice returned too large is a historical name, not
 a link to follow: the commit is reachable only until the reflog expires. A choice or ruling of a
@@ -142,6 +148,13 @@ the final return-step check; earlier checks keep their existing break/acceptance
 - Human actions the request waits for: <each action the task document places in the cycle, and
   each effect outside the repository the cycle found that the document does not name, or none>
 - Questions: <only those the foundation step allows, or none>
+- Review findings listed: <unfixed Minor findings and findings the reviewer marked outside the
+  task's scope, from the review of the whole change and every later code review, each with the
+  reviewer's words and its place in the code or a note that none is named, or none>
+- Blocked by review: <each blocking finding left after the review of its fix with its place and
+  reason, what the fix tried, the cycle's time, models and tokens from `stages.md` with the number
+  of review rounds, and the reconciliation, return step and independent assessment not run on that
+  code, or none>
 - Choices within the request: <count and link to the questions table>
 - Writes to the task's backlog entry: <request link and state, or none>
 - Process remarks on the-way: <observed friction and evidence, or none>

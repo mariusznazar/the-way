@@ -3621,8 +3621,11 @@ owner's delegation, never records these as human approval, controls the return b
 keeps agent reports before a borrowed skill cleans its workspace, runs the independent assessment
 of its foundation change and its return step, and brings the request to the human for review.
 Decisions reserved to a human by the foundation remain reserved; when required code cannot proceed
-without one, the cycle opens a blocked draft request; a different Superpowers version requires a
-reviewed change to the-way before use.
+without one, the cycle opens a blocked draft request; in the review of the whole change, WAY-161
+and WAY-162 replace the steps of these methods by which the orchestrator adjudicates and parks the
+findings left after the review of the final fix, the final fix takes in deferred minor findings,
+and the executor rules on each line the reviewer declined to judge; a different Superpowers version
+requires a reviewed change to the-way before use.
 
 - **Change:** new decision
 - **Scope:** task-cycle
@@ -3646,10 +3649,11 @@ reviewed change to the-way before use.
   - violates: an agent treats its own spec approval as the owner's approval, skips the request
     review, or silently runs a different Superpowers version; the orchestrator loads a delegated
     method merely because its stage begins, or a stage agent works from its boundary alone
-    without reading that method.
+    without reading that method; the orchestrator parks a finding left after the review of the
+    final fix, or rules on a line the reviewer declined to judge, as the borrowed methods give it.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/21
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/22
 
 *Rationale:* the borrowed skills provide design, test and review methods, while the-way must keep
 control of task sources, binding foundation approvals and the single human review point. Naming
@@ -3657,10 +3661,15 @@ the version makes the dependency visible when the process is pinned in a product
 written and how a plan is written are the-way's own (WAY-135, WAY-136), so the methods adopted here
 are those a cycle uses whenever its stage comes. The agent doing the work needs the complete
 method, while loading it again for coordination spends attention without performing that work.
+Where the-way sets itself how the review of the whole change ends and where its findings go, the
+steps of the borrowed methods that settle the same give way, so that no borrowed step rules alone
+on what the-way puts before the human.
 *Rejected:* adopting the complete Superpowers workflow with its intermediate human gates — it would
 interrupt the delegated cycle; copying the skill bodies into the orchestrator — it would create a
 second implementation of those methods; reading every delegated method in the orchestrator too
-— it repeats context already held by the agent that applies it.
+— it repeats context already held by the agent that applies it; every step of the borrowed review
+methods kept — the orchestrator would rule alone on findings the reviewer still holds against the
+change.
 
 ### WAY-126/1 — How does a projected entry enter the foundation?
 
@@ -4308,7 +4317,7 @@ deployment or a DNS record pointing to a new address.
 - **Scope:** project-level, task-cycle
 - **Based on:** none
 - **Relations:** derives from WAY-100@e7a74a18 · derives from WAY-107@0ffcebe1 · derives from
-  WAY-125@7362c7ab
+  WAY-125@f3e6afcf
 - **Verification:** level 2 — an agent compares the task document, or the cycle, with the
   decision:
   - complies: a task that sends mail through an outside service names opening the account and
@@ -4630,7 +4639,7 @@ owners and the independent assessor's filtered inputs
 - **Change:** new decision
 - **Scope:** task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-125@7362c7ab · derives from WAY-10@db68de1c
+- **Relations:** derives from WAY-125@f3e6afcf · derives from WAY-10@db68de1c
 - **Verification:** level 2 — an agent compares the stage handoff, return, report and
   orchestrator's ruling with the decision:
   - complies: a short return names its complete report, commit range and failed or unchecked
@@ -4967,7 +4976,7 @@ returned question or new input before continuing.
 - **Change:** new decision
 - **Scope:** task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-125@7362c7ab
+- **Relations:** derives from WAY-125@f3e6afcf
 - **Verification:** level 2 — an agent compares the waiting calls and their results with the
   tool's contract and active instructions:
   - complies: a native completion notification resumes coordination without polling; one blocking
@@ -5071,3 +5080,223 @@ results into coordination limits context without hiding failed or unchecked work
 *Rejected:* full gate output routinely loaded into coordination — successful detail obscures what
 needs action; an exit code alone — warnings and unchecked work can remain despite success;
 executor checks in place of the completed change's gate — the combined result is never checked.
+
+### WAY-161/1 — Which findings of the review of the whole change are fixed, and how does the request carry the rest?
+
+In the review of the whole change on either route, a finding blocks when the reviewer grades it
+Critical or Important and has not itself marked it as outside the task's scope, and a review that
+leaves no blocking finding sends the change to its request without a fix. A finding the reviewer
+has marked as outside the task's scope — a line of its list of what it declined to judge, or a
+finding it describes as going beyond the task — is not fixed, whatever its grade, nor is a Minor
+finding, and the request lists those findings in an item of their own and the Minor findings in
+another, each with the reviewer's words and its place in the code, while the human decides which
+findings outside the scope become new tasks and creates them. The orchestrator moves no finding
+from one of these kinds to another.
+
+- **Change:** new decision
+- **Scope:** task-cycle
+- **Based on:** observation of installed Superpowers 6.4.1 on 2026-10-17 using `cat -n` in Git Bash
+  (GNU bash 5.3.15) on MINGW64_NT-10.0-26300; source root
+  `C:/Users/Mariusz/.claude/plugins/cache/claude-plugins-official/superpowers/6.4.1/skills/`:
+  `requesting-code-review/code-reviewer.md` — "list every behavior you considered and set aside as
+  outside the plan or spec, one line each, with the reason. The executor rules on each line;
+  nothing you set aside is dropped silently." · "Critical (Must Fix)" · "Important (Should Fix)" ·
+  "Minor (Nice to Have)"; `requesting-code-review/SKILL.md` — "Note Minor issues for later";
+  `subagent-driven-development/SKILL.md` — "Point it at the ledger's deferred-minor and parked lines
+  so it can triage which must be fixed before merge."
+- **Relations:** derives from WAY-136@986ff0ac · derives from WAY-125@f3e6afcf · derives from
+  WAY-140@6e564611 · derives from WAY-100@e7a74a18
+- **Verification:** level 2 — an agent compares the cycle and its request with the decision:
+  - complies: the review of a one-author change returns only Minor findings, and the change goes
+    to its request without a fix, the request listing each of them with the reviewer's words and
+    its place in the code; the reviewer sets aside under "Declined to judge" a behaviour the task
+    does not ask for, the request lists it in an item of its own, and the human creates a task for
+    it; the final review of a planned change returns an Important finding within the task, and a
+    fix follows;
+  - violates: a fix runs for Minor findings alone; the fix after the final review of a planned
+    change takes in the deferred minor findings; the orchestrator rules on a line the reviewer
+    declined to judge, or moves an Important finding within the task to the list for new tasks;
+    the cycle adds a task to the product's backlog itself; the Minor findings stand only in the
+    cycle's reports the request links to.
+- **Review when:** a finding the reviewer graded Minor or marked outside the task's scope has, in a
+  merged change, left a requirement of its task unmet · check by: 2026-12-31
+- **Origin:** none
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/22
+
+*Rationale:* the grade a reviewer gives already says how much a finding matters, so taking it as
+the line between what blocks and what does not adds no second label to the borrowed review and
+leaves no finding without a place; a label given against the task would let a finding tied to no
+requirement of the task pass as non-blocking. A minor finding fixed in a round of its own spends
+that round on polish, while one listed in the request with the reviewer's words stays in front of
+the human who merges; a list the request only links to is a list nobody reads. A finding that
+widens the work is a new piece of work rather than a repair of this one, and the reviewer, who has
+no stake in closing the cycle, is the one to say which findings lie outside the task, since an
+orchestrator sorting them could move an inconvenient finding out of the way of the blocked request.
+The human creates the new task because each product keeps its backlog where it chooses (WAY-101),
+and where that is outside the repository, only a human makes an effect there (WAY-140).
+*Rejected:* a label of its own, blocking or not, that the reviewer gives each finding against the
+task — an addition to the borrowed review, and a finding tied to no requirement of the task would
+pass as non-blocking; the orchestrator ruling on each finding — the agent that wants the cycle
+closed decides to skip a repair; the Minor findings kept only in the cycle's reports the request
+links to — nobody reads them; the cycle adding the new task to the product's backlog itself — where
+the backlog lies outside the repository, that is an effect only a human makes; the orchestrator
+judging each finding against the frozen task — it could move an inconvenient Important finding to
+the new tasks and so get round the blocked request; the orchestrator returning a line the reviewer
+declined to judge to the reviewer, with the requirement of the task that covers it — the
+orchestrator would choose which lines the reviewer looks at again, the lever left to the reviewer
+alone, while a behaviour the task requires that the reviewer set aside still reaches the human in
+the request's list, whose reading is the remedy.
+
+### WAY-162/1 — How does a code review of a task's change end when its findings block?
+
+In the review of the whole change — of a one-author change, or the final review of a planned
+change's whole branch — and in each code review the cycle runs after it, for a settlement of the
+independent assessment, for the reconciliation with the target branch and for the human's remarks
+on the request, the findings that block, as WAY-161 grades them, get one fix and one review of that
+fix, and a new Critical or Important finding in the fix itself counts as one that remains. Where a
+blocking finding remains after that review of the fix, no third round runs, the orchestrator
+neither rules on it nor carries it into the settlements of the independent assessment, and the
+cycle opens a draft request marked `blocked` that lists each remaining blocking finding with its
+place in the code and its reason, what the fix tried, and the time, models and tokens the cycle has
+used so far, from its record of stages, with the number of review rounds. In the code reviews
+after the review of the whole change, the findings that do not block go unfixed to the request's
+lists as WAY-161 gives them; the fix loop of each single slice of a plan stays as WAY-125 and
+WAY-136 adopt it.
+
+- **Change:** new decision
+- **Scope:** task-cycle
+- **Based on:** observation of installed Superpowers 6.4.1 on 2026-10-17 using `cat -n` in Git Bash
+  (GNU bash 5.3.15) on MINGW64_NT-10.0-26300; source root
+  `C:/Users/Mariusz/.claude/plugins/cache/claude-plugins-official/superpowers/6.4.1/skills/`:
+  `subagent-driven-development/SKILL.md` — "Adjudicate any residual findings as in the task loop's
+  breaker: park with rulings, or rule on the load-bearing ones and ledger what you decided." ·
+  "There is no second fix wave — residual load-bearing findings surface to your human partner when
+  finishing-a-development-branch presents the options." · "New Critical/Important breakage in the
+  fix diff joins the open findings list."
+- **Relations:** derives from WAY-161@cddc297e · derives from WAY-136@986ff0ac · derives from
+  WAY-125@f3e6afcf · derives from WAY-100@e7a74a18
+- **Verification:** level 2 — an agent compares the cycle and its request with the decision:
+  - complies: after the review of the fix of a one-author change an Important finding stays open,
+    and the cycle runs no further fix and opens a draft request marked `blocked` with that
+    finding's place and reason, what the fix tried and the cycle's cost so far; the review of a
+    settlement of the independent assessment ends the same way after one fix; a Minor finding of
+    the review of the reconciliation with the target branch is listed in the request; a slice's fix
+    loop runs its rounds as the borrowed method gives them;
+  - violates: the orchestrator parks a finding left after the review of the final fix and marks
+    the request ready; a third round of fixes runs; a finding left after the review of the fix is
+    moved into the settlements of the independent assessment; a new Important finding in the fix
+    is left out of the blocked request because the findings it set out to fix were fixed; a Minor
+    finding of a later code review stands only in that review's report.
+- **Review when:** two of the first five cycles of `implement-task` run under this decision open a
+  request blocked by a finding left after the review of a fix · check by: 2026-12-31
+- **Origin:** none
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/22
+
+*Rationale:* one fix and one review of it settle an ordinary task; a finding that survives the
+review of its fix shows a loop that further rounds do not close, and each further round costs as
+much as the one before it. The orchestrator wants the cycle closed, so a ruling of its own on what
+the reviewer still blocks would let a change the reviewer did not accept reach the request as
+ready; the blocked request puts that call before the human, with what the fix tried and what the
+cycle has cost, so the human weighs going on against its price. A new Critical or Important finding
+in the fix is one the fix made, and counting it as remaining keeps a fix from trading one blocking
+finding for another. The same end holds for every code review after the review of the whole
+change, so that no later review becomes a way round it, while the fix loop of a single slice keeps
+the borrowed method's own end, because the review of the whole change still reads that slice and a
+stop at the human over findings in one slice would halt the whole cycle. The findings of those
+later reviews that do not block reach the request as WAY-161's do, because a list the request only
+links to is a list nobody reads.
+*Rejected:* the orchestrator ruling on the findings left after the review of the final fix, as the
+borrowed method does — a change the reviewer did not accept reaches the request as ready; this end
+on the one-author route alone — on the planned route the orchestrator would still rule on the
+remaining findings itself; the same end for the fix loop of every slice — it replaces the borrowed
+method's rounds and stops the cycle at the human over findings in one slice; a report of the
+remaining findings without a request, in conversation or in the cycle record — the request is the
+one place where the human judges the cycle's work, and a report in conversation is lost with the
+session; a remaining finding carried into the settlements of the independent assessment, and no
+bound for the code reviews after the review of the whole change — the orchestrator would rule on
+the remaining findings after all; the findings of those later reviews that do not block kept in
+their reports, which the record links — a list the request only links to is a list nobody reads;
+one more round for a finding the fix introduced — a fix could trade one blocking finding for
+another without end.
+
+### WAY-163/1 — What does the cycle run before it opens a request its code review blocked?
+
+Before the cycle opens a request that a remaining blocking finding blocks (WAY-162), it runs the
+product's full required gate on the change and writes its cycle record with its record of stages,
+while it runs neither the reconciliation with the target branch, nor the return step, nor the
+independent assessment on code its review has not accepted, and the request names each of these
+that has not run on that code. After the human's decision on the request, the work on its branch
+starts with that reconciliation and runs the others on code that has passed review or that the
+human accepted despite the finding.
+
+- **Change:** new decision
+- **Scope:** task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-162@4c6feb35 · derives from WAY-11@e882a9df · derives from
+  WAY-10@db68de1c
+- **Verification:** level 2 — an agent compares the cycle and its request with the decision:
+  - complies: a cycle blocked after the review of the final fix runs the full gate, writes its
+    record, opens the blocked request naming the reconciliation with the target branch, the return
+    step and the independent assessment as not run, and runs them once the human accepts the code
+    despite the finding; a cycle blocked by the review of a settlement of the independent
+    assessment names only what has not run on the code it holds;
+  - violates: the return step runs on code its reviewer blocked; the target branch is merged and
+    its affected code review run before a request blocked by an earlier review; the blocked request
+    opens without a run of the gate on the change; a request whose code the human accepted despite
+    the finding is merged without its return step.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/22
+
+*Rationale:* work an agent does on code its review has not accepted is done again once the fix the
+human's decision calls for is made, while a run of the gate costs little and shows the human where
+the code stands against the rest of the product's checks, and the cycle record holds the cost the
+request names. The return step and the independent assessment still come before any merge (WAY-11,
+WAY-10), so leaving them out before a blocked request moves them rather than drops them, even where
+the human's decision changes no code. The reconciliation with the target branch waits with them,
+because it would draw a code review and an assessment of its own on that code, and the work after
+the human's decision begins by merging the target branch in any case.
+*Rejected:* every step up to the request run before the blocked request — agents work on code the
+review did not accept and repeat that work after the fix; the cycle record and the cost alone — the
+human would not see where the code stands against the rest of the product's checks; the
+reconciliation with the target branch before the blocked request — its review and assessment would
+run on code the review did not accept, and the merge is made again after the fix.
+
+### WAY-164/1 — What does the author of a change check of its own work before review?
+
+Before its work goes to review, the author of a one-author change names the requirement of the
+task, and the executor of each slice the requirement of its slice read against the task, that its
+work most likely does not meet, writes a check that would catch that, and states in its report
+which requirement, which check and what the check showed. The reviewer reads that report, and the
+request lists what each such check showed among its test evidence.
+
+- **Change:** new decision
+- **Scope:** task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-136@986ff0ac · derives from WAY-148@4c7fab3a · derives from
+  WAY-100@e7a74a18
+- **Verification:** level 2 — an agent compares the author's or executor's report, the review and
+  the request with the decision:
+  - complies: the author of a one-author change names the requirement its work most likely misses,
+    writes a test for it, and reports that the test failed and what it changed before review; the
+    executor of each slice reports the same for its slice; the reviewer is given those reports, and
+    the request lists each check among its test evidence;
+  - violates: an author reports only that its suite passes; the executor of a slice reports no such
+    check; the request leaves out what the checks showed; the author's check stands in for the
+    deliberate break of an invariant's check.
+- **Review when:** five cycles of `implement-task` have run under this decision and no check written
+  for the requirement a work most likely does not meet has failed on that work · check by:
+  2026-12-31
+- **Origin:** none
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/22
+
+*Rationale:* a suite its author writes passes because it tests what the author meant, so a passing
+suite is no evidence that the work meets the task; turning to the requirement the work most likely
+misses finds what the author can still catch before a reviewer spends a round on it. The executor
+of each slice does the same against its slice, so that a larger change does not reach review with
+no agent having attacked its own work. The report is the reviewer's material, and the request
+shows the human what the attack found beside the other test evidence. The check does not replace
+the deliberate break the reviewer writes for an invariant's check, and it is never that check,
+which an agent other than the code's author writes (WAY-69).
+*Rejected:* the author of a one-author change alone — in a larger change made from a plan, no agent
+would attack its own work before review.
