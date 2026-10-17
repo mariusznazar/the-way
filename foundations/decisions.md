@@ -3653,7 +3653,7 @@ requires a reviewed change to the-way before use.
     final fix, or rules on a line the reviewer declined to judge, as the borrowed methods give it.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/22
 
 *Rationale:* the borrowed skills provide design, test and review methods, while the-way must keep
 control of task sources, binding foundation approvals and the single human review point. Naming
@@ -5121,7 +5121,7 @@ from one of these kinds to another.
 - **Review when:** a finding the reviewer graded Minor or marked outside the task's scope has, in a
   merged change, left a requirement of its task unmet · check by: 2026-12-31
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/22
 
 *Rationale:* the grade a reviewer gives already says how much a finding matters, so taking it as
 the line between what blocks and what does not adds no second label to the borrowed review and
@@ -5190,7 +5190,7 @@ WAY-136 adopt it.
 - **Review when:** two of the first five cycles of `implement-task` run under this decision open a
   request blocked by a finding left after the review of a fix · check by: 2026-12-31
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/22
 
 *Rationale:* one fix and one review of it settle an ordinary task; a finding that survives the
 review of its fix shows a loop that further rounds do not close, and each further round costs as
@@ -5246,7 +5246,7 @@ human accepted despite the finding.
     the finding is merged without its return step.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/22
 
 *Rationale:* work an agent does on code its review has not accepted is done again once the fix the
 human's decision calls for is made, while a run of the gate costs little and shows the human where
@@ -5288,7 +5288,7 @@ request lists what each such check showed among its test evidence.
   for the requirement a work most likely does not meet has failed on that work · check by:
   2026-12-31
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/22
 
 *Rationale:* a suite its author writes passes because it tests what the author meant, so a passing
 suite is no evidence that the work meets the task; turning to the requirement the work most likely
