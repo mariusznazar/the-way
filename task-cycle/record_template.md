@@ -153,7 +153,8 @@ the final return-step check; earlier checks keep their existing break/acceptance
   in the code or a note that none is named, or none>
 - Blocked by review: <each blocking finding left after the review of its fix with its place and
   reason, what the fix tried, the cycle's time, models and tokens from `stages.md` with the number
-  of review rounds, and the return step and independent assessment not run on that code, or none>
+  of review rounds, and the reconciliation, return step and independent assessment not run on that
+  code, or none>
 - Choices within the request: <count and link to the questions table>
 - Writes to the task's backlog entry: <request link and state, or none>
 - Process remarks on the-way: <observed friction and evidence, or none>
