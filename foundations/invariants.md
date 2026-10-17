@@ -2020,11 +2020,11 @@ required section, an open question with no place of resolution, or an unfinished
 
 ## project-technology-record/1
 
-Before approval, the project readiness check rejects a definition whose Technology section is missing or reads `none`, or holds a line that is no choice item, a choice still open, or a choice that names neither a decision as `<PREFIX>-<NN>/<version>` nor a question a heading of a projected decision holds.
+The project readiness check rejects, before approval, a definition whose Technology section is missing or reads `none`, or holds a line that is no choice item, a choice still open, or a choice that names neither a decision as `<PREFIX>-<NN>/<version>` nor a question a heading of a projected decision holds, and rejects a definition, approved or not, whose Technology section holds no choice item whose text begins with `logs:`, none whose text begins with `interface:`, or none whose text begins with `development data:`.
 
 - **Method:** `python -B gate/run_tests.py project-level --record .runs/project-level-tests.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-121@740c254e
+- **Derives from:** WAY-121@d0b060e5
 - **Part:** project-level
 - **Correction:** none
 
