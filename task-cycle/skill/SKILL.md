@@ -290,15 +290,16 @@ continuing that work.
    slice, any spec, the pinned foundation and the dispatch contract. Each uses
    `test-driven-development` for behavior changes and commits its work. Before it returns, the
    author names the requirement of the task, and each executor the requirement of its slice read
-   against the task, that its work most likely does not meet, writes a check that would catch it,
-   runs it and states in its report which requirement, which check and what the check showed
-   (WAY-164). Its boundary is the committed change or slice with focused checks run and their
-   execution evidence recorded, returning before review. No author reviews its own work. The
-   independent reviewer receives that report, reads the full diff of its assigned range and checks
-   the author's sharpness findings and weakest-point check; you use the changed-file list, added and
-   removed line counts and reviewer's verdict for routine progression (WAY-158), reading relevant
-   evidence when a question about a finding needs a ruling, which never overrules the reviewer's
-   grade or scope marking ("The end of a code review").
+   against the task, that its work most likely does not meet, writes a check that would catch it — a
+   test, or a manual check recorded as the report contract gives it — runs it and states in its
+   report which requirement, which check and what the check showed (WAY-164). Its boundary is the
+   committed change or slice with focused checks run and their execution evidence recorded,
+   returning before review. No author reviews its own work. The independent reviewer receives that
+   report, reads the full diff of its assigned range and checks the author's sharpness findings and
+   weakest-point check; you use the changed-file list, added and removed line counts and reviewer's
+   verdict for routine progression (WAY-158), reading relevant evidence when a question about a
+   finding needs a ruling, which never overrules the reviewer's grade or scope marking ("The end of
+   a code review").
    - A plan of more than one slice runs through Superpowers `subagent-driven-development`, each
      slice one of its tasks, with the frozen task, and the spec where one exists, as the authority
      it reads the plan against: a fresh implementer and a fresh task reviewer for each slice,
@@ -339,9 +340,8 @@ continuing that work.
     running product as well. Use Superpowers `requesting-code-review` for a fresh final review, or the
     final review already required by the selected execution skill; do not dispatch a duplicate
     reviewer for the same range. Record failed and unchecked results by name; never call an unrun
-    check passed. When a blocking finding survives the fix of the review of the whole change, this
-    gate still runs, and the cycle then skips step 11 for the blocked request ("The end of a code
-    review").
+    check passed. A blocking finding that survives its fix continues as "The end of a code review"
+    gives.
 11. Have the one-author change's author resume for the return step; for a planned change, dispatch
     its return-step agent. Refresh the foundation selection by "Reading the foundation" for the real
     diff and current foundation. Perform the return step of WAY-11 on that diff and the cycle's
@@ -400,7 +400,11 @@ line of its "Declined to judge" list, or a finding it describes as going beyond 
 A finding so marked is not fixed, whatever its grade, and neither is a Minor finding; keep each for
 the request's lists (step 13) with the reviewer's words and its place in the code — the place the
 reviewer names, or a note that it names none. Never move a finding from one of these kinds to
-another. A review that leaves no blocking finding sends the change on without a fix.
+another. The handoff of the final whole-branch review asks the reviewer to grade, in its own report,
+each deferred-minor and parked line of the method's ledger, so that each is a finding of this
+review. The handoff of a review, or of the review of a fix, names no finding as wrong, as Minor or
+as outside the scope; it may carry the author's evidence on a contested finding. A review that
+leaves no blocking finding sends the change on without a fix.
 
 Blocking findings get one fix and one review of that fix (WAY-162); the orchestrator never overrules
 a blocking finding or skips its fix. The author or executor fixes them, runs the affected checks
@@ -416,20 +420,20 @@ outside the fix diff stays what that method makes it, a deferred minor finding, 
 request's list of Minor findings. The same bound holds for every later code review — of a settlement
 of the independent assessment (step 11), of the reconciliation with the target branch (step 12) and
 of a change made for the human's remarks on the request (correction after review); there a finding
-blocks as above, while the review's other findings cause no fix and stay in its report, which the
-record links.
+blocks as above, while the findings that do not block cause no fix and go to the request's lists as
+those of the review of the whole change do.
 
 When a blocking finding remains after the review of its fix, run no third round, and do not rule on
 the finding, park it or carry it into the settlements of step 11. Run the product's full required
 gate on the change as step 10 gives it, and run neither the return step nor the independent
 assessment on code its review has not accepted (WAY-163); the reconciliation with the target branch
 of step 12 waits too, since a correction after review starts with it. Before opening the request,
-run `task-cycle/cycle_stages.py` for `stages.md`, write the cycle record and commit its copy and its
-removal as step 12 gives them; then open the request as a draft, swap `<request link>` as step 12
-gives it, link the record by the SHA of the commit that adds it, and mark the request `blocked` with
-what step 13 names for it. After the human's decision, the correction after review runs whichever of
-the return step and the assessment has not run on the code that passed review or that the human
-accepted despite the finding.
+run `task-cycle/cycle_stages.py` for `stages.md`, write the cycle record — which names the request
+as opened after it — and commit its copy and its removal as step 12 gives them; then open the
+request as a draft, swap `<request link>` as step 12 gives it, link the record by the SHA of the
+commit that adds it, and mark the request `blocked` with what step 13 names for it. After the
+human's decision, the correction after review runs whichever of the return step and the assessment
+has not run on the code that passed review or that the human accepted despite the finding.
 
 This replaces, in the review of the whole change, the steps of Superpowers
 `subagent-driven-development` by which the orchestrator adjudicates and parks the findings left
@@ -439,66 +443,66 @@ step of `requesting-code-review` by which the executor rules on each "Declined t
 
 ## Request and handoff
 
-12. A request that a remaining blocking finding blocks skips the reconciliation below, writes
-    `stages.md` and the record and commits their pair before it opens the request ("The end of a
-    code review"). Otherwise, recheck the branch against the current target branch, refresh the
-    foundation selection by "Reading the foundation" for its current revision and the reconciled
-    scope, and have the responsible agents run checks affected by that update. Confirm that the
-    reviewer's full-diff review covers the final range, using its verdict and the final changed-file
-    and line-count summary rather than rereading the full diff yourself. If reconciliation changes
-    the assessed code, foundation or its applicable sources, invalidate the affected reviews: repeat
-    the foundation collision search, affected code review, which ends as "The end of a code review"
-    gives, and independent assessment before proceeding. Record the final assessed commits and file
-    sets so the request never presents an assessment of superseded work as current. If the final
-    change differs from the completed change already checked, run its full required gate yourself
-    with the output handling of step 10; otherwise retain that current evidence without a duplicate
-    run. Then open the request as a draft by the pull or merge request route already chosen by the
-    user, without presenting the integration menu of Superpowers `finishing-a-development-branch`.
-    Replace `<request link>` in the *Approved by* of the entries this cycle wrote with the request's
-    URL, commit and push; this is a placeholder swap that changes no other text, so it reopens
-    neither the independent assessment nor the code reviews. Then write how long each stage of the
-    cycle took, which models did it and how many tokens it used: run `task-cycle/cycle_stages.py` of
-    the pinned the-way checkout with `--output .runs/task-cycles/<task-slug>/stages.md`, naming
-    every session of this cycle's orchestrator, a correction's included, by its transcript path or
-    id; Claude Code holds the current session's id in `CLAUDE_CODE_SESSION_ID` and Codex in
-    `CODEX_SESSION_ID`. Then copy the sanitized working record, `stages.md` and full reports to
-    `docs/task-cycles/<task-slug>/` on the task branch, rewrite their links to the committed copies,
-    commit them, commit their removal immediately after, and push, so the request's changed files
-    show only the change and the target branch's files never hold the record; the assessment record
-    lives there under `reports/`. Then update the request's description with links to the record by
-    the SHA of the commit that adds it, never by branch name. Ask in the request for a merge that
-    keeps its commits, since the link survives only then; where the product's rules squash or rebase
-    on merge, name that as a limitation in the request. Then mark the request ready for review,
-    except a request the cycle marks `blocked`, one waiting for human actions in the cycle (step 4)
-    included, which stays a draft. Do not merge. Keep the worktree for review changes.
+12. A request that a remaining blocking finding blocks follows "The end of a code review" instead of
+    the reconciliation below. Otherwise, recheck the branch against the current target branch,
+    refresh the foundation selection by "Reading the foundation" for its current revision and the
+    reconciled scope, and have the responsible agents run checks affected by that update. Confirm
+    that the reviewer's full-diff review covers the final range, using its verdict and the final
+    changed-file and line-count summary rather than rereading the full diff yourself. If
+    reconciliation changes the assessed code, foundation or its applicable sources, invalidate the
+    affected reviews: repeat the foundation collision search, affected code review, which ends as
+    "The end of a code review" gives, and independent assessment before proceeding. Record the final
+    assessed commits and file sets so the request never presents an assessment of superseded work as
+    current. If the final change differs from the completed change already checked, run its full
+    required gate yourself with the output handling of step 10; otherwise retain that current
+    evidence without a duplicate run. Then open the request as a draft by the pull or merge request
+    route already chosen by the user, without presenting the integration menu of Superpowers
+    `finishing-a-development-branch`. Replace `<request link>` in the *Approved by* of the entries
+    this cycle wrote with the request's URL, commit and push; this is a placeholder swap that
+    changes no other text, so it reopens neither the independent assessment nor the code reviews.
+    Then write how long each stage of the cycle took, which models did it and how many tokens it
+    used: run `task-cycle/cycle_stages.py` of the pinned the-way checkout with `--output
+    .runs/task-cycles/<task-slug>/stages.md`, naming every session of this cycle's orchestrator, a
+    correction's included, by its transcript path or id; Claude Code holds the current session's id
+    in `CLAUDE_CODE_SESSION_ID` and Codex in `CODEX_SESSION_ID`. Then copy the sanitized working
+    record, `stages.md` and full reports to `docs/task-cycles/<task-slug>/` on the task branch,
+    rewrite their links to the committed copies, commit them, commit their removal immediately
+    after, and push, so the request's changed files show only the change and the target branch's
+    files never hold the record; the assessment record lives there under `reports/`. Then update the
+    request's description with links to the record by the SHA of the commit that adds it, never by
+    branch name. Ask in the request for a merge that keeps its commits, since the link survives only
+    then; where the product's rules squash or rebase on merge, name that as a limitation in the
+    request. Then mark the request ready for review, except a request the cycle marks `blocked`, one
+    waiting for human actions in the cycle (step 4) included, which stays a draft. Do not merge.
+    Keep the worktree for review changes.
 13. The request contains: task goal and relation, source versions, whether a spec was written and
     why; the execution route and its reason; after a discarded attempt, its reason and a link to the
     agent's report; the spec link where one exists and, only where a plan was written, its slices
     and plan link; what changed and why, test and review evidence with every check that did not run
-    named, what each weakest-point check of step 9 showed (WAY-164), the unfixed Minor findings of
-    the review of the whole change in an item of their own and the findings its reviewer marked
-    outside the task's scope in another, for the human to choose which become new tasks and to
-    create them (WAY-161) — each with the reviewer's words and its place in the code, or a note that
-    the reviewer names none — and *What this request settles*: each foundation entry the change
-    writes or changes, as its identifier and one sentence of its meaning in the task document's
-    language, projected entries and the entries written from rows of *Settlements to record* apart
-    from new ones. Beside them, what the foundation puts in front of the human at the merge: an
-    invariant kept at its version under a correction, with its old and new sentence (WAY-57); a part
-    whose computed criticality fell (WAY-46); a recovered row, with the gate's report (WAY-58); a
-    moved use of a changed definition and a term WAY-97 asks the request to name. Under *Questions*,
-    only the questions the foundation step allows, each with its options and a recommendation where
-    one exists; where there are none, say so. Give the number of other choices and a link to the
-    choice log. Link the cycle record and full reports by the SHA of the record commit. Where the
-    request waits for human actions in the cycle, list them for the human to perform, each as the
-    task document names it, with each effect outside the repository the cycle found that the
-    document does not name, for the human to place (WAY-140). Where a blocking finding survived the
-    fix of a code review, mark the request `blocked` and list each remaining blocking finding with
-    its place in the code and its reason, what the fix tried, the time, models and tokens of the
-    cycle so far from `stages.md` with the number of review rounds, and the reconciliation with the
-    target branch, the return step and the independent assessment that have not run on that code
-    (WAY-162, WAY-163). If the task was impossible, mark the request `blocked`, show the smallest
-    missing fact or authorization and the attempted alternatives; do not present partial work as
-    complete.
+    named, what each weakest-point check of step 9 showed (WAY-164), the Minor findings of the
+    review of the whole change and of every later code review in an item of their own and the
+    findings their reviewers marked outside the task's scope in another, for the human to choose
+    which become new tasks and to create them (WAY-161) — each with the reviewer's words and its
+    place in the code, or a note that the reviewer names none — and *What this request settles*:
+    each foundation entry the change writes or changes, as its identifier and one sentence of its
+    meaning in the task document's language, projected entries and the entries written from rows of
+    *Settlements to record* apart from new ones. Beside them, what the foundation puts in front of
+    the human at the merge: an invariant kept at its version under a correction, with its old and
+    new sentence (WAY-57); a part whose computed criticality fell (WAY-46); a recovered row, with
+    the gate's report (WAY-58); a moved use of a changed definition and a term WAY-97 asks the
+    request to name. Under *Questions*, only the questions the foundation step allows, each with its
+    options and a recommendation where one exists; where there are none, say so. Give the number of
+    other choices and a link to the choice log. Link the cycle record and full reports by the SHA of
+    the record commit. Where the request waits for human actions in the cycle, list them for the
+    human to perform, each as the task document names it, with each effect outside the repository
+    the cycle found that the document does not name, for the human to place (WAY-140). Where a
+    blocking finding survived the fix of a code review, mark the request `blocked` and list each
+    remaining blocking finding with its place in the code and its reason, what the fix tried, the
+    time, models and tokens of the cycle so far from `stages.md` with the number of review rounds,
+    and the reconciliation with the target branch, the return step and the independent assessment
+    that have not run on that code (WAY-162, WAY-163). If the task was impossible, mark the request
+    `blocked`, show the smallest missing fact or authorization and the attempted alternatives; do
+    not present partial work as complete.
 14. Before reporting completion, confirm the record lists all dispatches, choices, rulings,
     checks, fixes, review rounds and skipped stages. The final report lists any write to the
     task's backlog entry. The request is the human's first decision point.
@@ -511,13 +515,13 @@ branch. First merge, never rebase, the current target branch, the the-way pin in
 that the pinned checkout matches the product's gitlink. Treat the remarks as binding input, recorded
 as new events in the working record. Keep the recorded execution route for the affected work,
 resuming a one-author change's author where possible; a new open design choice or an oversized
-attempt follows the recovery above, with its reset base recorded for the correction. Repeat only
-the stages the remarks touch, with their reviews,
-checks and return step, and the independent assessment only where the correction changes the
-foundation or an invariant test, and then the record's pair of commits from step 12. Its code
-reviews end as "The end of a code review" gives. For a request a remaining blocking finding
-blocked, the human's decision is the input: make the fix it calls for, or keep the code the human
-accepted despite the finding, then run the return step and the independent assessment that have
-not run on that code, whatever the decision changes (WAY-163). A decision
+attempt follows the recovery above, with its reset base recorded for the correction. Repeat only the
+stages the remarks touch, with their reviews, checks and return step, and the independent assessment
+only where the correction changes the foundation or an invariant test, and then the record's pair of
+commits from step 12. Its code reviews end as "The end of a code review" gives. For a request a
+remaining blocking finding blocked, the human's decision is the input: make the fix it calls for, or
+keep the code the human accepted despite the finding, then run the return step and the independent
+assessment that have not run on that code, whatever the decision changes (WAY-163). A decision
 written in a correction takes the existing request's URL directly in its *Approved by*. Update the
-request's description, including its record links and *What this request settles*.
+request's description, including its record links, its lists of findings and *What this request
+settles*.

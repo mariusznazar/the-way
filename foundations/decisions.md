@@ -5087,10 +5087,10 @@ In the review of the whole change on either route, a finding blocks when the rev
 Critical or Important and has not itself marked it as outside the task's scope, and a review that
 leaves no blocking finding sends the change to its request without a fix. A finding the reviewer
 has marked as outside the task's scope — a line of its list of what it declined to judge, or a
-finding it describes as going beyond the task — is not fixed, whatever its grade, and the request
-lists those findings in an item of their own and the unfixed Minor findings in another, each with
-the reviewer's words and its place in the code, while the human decides which findings outside the
-scope become new tasks and creates them. The orchestrator moves no finding from one of these kinds
+finding it describes as going beyond the task — is not fixed, whatever its grade, nor is a Minor
+finding, and the request lists those findings in an item of their own and the Minor findings in
+another, each with the reviewer's words and its place in the code, while the human decides which
+findings outside the scope become new tasks and creates them. The orchestrator moves no finding from one of these kinds
 to another.
 
 - **Change:** new decision
@@ -5133,9 +5133,7 @@ widens the work is a new piece of work rather than a repair of this one, and the
 no stake in closing the cycle, is the one to say which findings lie outside the task, since an
 orchestrator sorting them could move an inconvenient finding out of the way of the blocked request.
 The human creates the new task because each product keeps its backlog where it chooses (WAY-101),
-and where that is outside the repository, only a human makes an effect there (WAY-140). The rule
-takes from an agent harness's review practice the merge of a rejection whose findings are all
-non-blocking and the route of a finding that widens the work to a new task rather than a repair.
+and where that is outside the repository, only a human makes an effect there (WAY-140).
 *Rejected:* a label of its own, blocking or not, that the reviewer gives each finding against the
 task — an addition to the borrowed review, and a finding tied to no requirement of the task would
 pass as non-blocking; the orchestrator ruling on each finding — the agent that wants the cycle
@@ -5143,7 +5141,11 @@ closed decides to skip a repair; the Minor findings kept only in the cycle's rep
 links to — nobody reads them; the cycle adding the new task to the product's backlog itself — where
 the backlog lies outside the repository, that is an effect only a human makes; the orchestrator
 judging each finding against the frozen task — it could move an inconvenient Important finding to
-the new tasks and so get round the blocked request.
+the new tasks and so get round the blocked request; the orchestrator returning a line the reviewer
+declined to judge to the reviewer, with the requirement of the task that covers it — the
+orchestrator would choose which lines the reviewer looks at again, the lever left to the reviewer
+alone, while a behaviour the task requires that the reviewer set aside still reaches the human in
+the request's list, whose reading is the remedy.
 
 ### WAY-162/1 — How does a code review of a task's change end when its findings block?
 
@@ -5156,8 +5158,10 @@ blocking finding remains after that review of the fix, no third round runs, the 
 neither rules on it nor carries it into the settlements of the independent assessment, and the
 cycle opens a draft request marked `blocked` that lists each remaining blocking finding with its
 place in the code and its reason, what the fix tried, and the time, models and tokens the cycle has
-used so far, from its record of stages, with the number of review rounds. The fix loop of each
-single slice of a plan stays as WAY-125 and WAY-136 adopt it.
+used so far, from its record of stages, with the number of review rounds. In the code reviews
+after the review of the whole change, the findings that do not block go unfixed to the request's
+lists as WAY-161 gives them; the fix loop of each single slice of a plan stays as WAY-125 and
+WAY-136 adopt it.
 
 - **Change:** new decision
 - **Scope:** task-cycle
@@ -5169,18 +5173,20 @@ single slice of a plan stays as WAY-125 and WAY-136 adopt it.
   "There is no second fix wave — residual load-bearing findings surface to your human partner when
   finishing-a-development-branch presents the options." · "New Critical/Important breakage in the
   fix diff joins the open findings list."
-- **Relations:** derives from WAY-161@d6d3137b · derives from WAY-136@986ff0ac · derives from
+- **Relations:** derives from WAY-161@cddc297e · derives from WAY-136@986ff0ac · derives from
   WAY-125@f3e6afcf · derives from WAY-100@e7a74a18
 - **Verification:** level 2 — an agent compares the cycle and its request with the decision:
   - complies: after the review of the fix of a one-author change an Important finding stays open,
     and the cycle runs no further fix and opens a draft request marked `blocked` with that
     finding's place and reason, what the fix tried and the cycle's cost so far; the review of a
-    settlement of the independent assessment ends the same way after one fix; a slice's fix loop
-    runs its rounds as the borrowed method gives them;
+    settlement of the independent assessment ends the same way after one fix; a Minor finding of
+    the review of the reconciliation with the target branch is listed in the request; a slice's fix
+    loop runs its rounds as the borrowed method gives them;
   - violates: the orchestrator parks a finding left after the review of the final fix and marks
     the request ready; a third round of fixes runs; a finding left after the review of the fix is
     moved into the settlements of the independent assessment; a new Important finding in the fix
-    is left out of the blocked request because the findings it set out to fix were fixed.
+    is left out of the blocked request because the findings it set out to fix were fixed; a Minor
+    finding of a later code review stands only in that review's report.
 - **Review when:** two of the first five cycles of `implement-task` run under this decision open a
   request blocked by a finding left after the review of a fix · check by: 2026-12-31
 - **Origin:** none
@@ -5196,9 +5202,9 @@ in the fix is one the fix made, and counting it as remaining keeps a fix from tr
 finding for another. The same end holds for every code review after the review of the whole
 change, so that no later review becomes a way round it, while the fix loop of a single slice keeps
 the borrowed method's own end, because the review of the whole change still reads that slice and a
-stop at the human over findings in one slice would halt the whole cycle. The rule takes from an
-agent harness's review practice the end of the loop after one repair and one re-review, the
-remainder and its cost named, with no further round bought.
+stop at the human over findings in one slice would halt the whole cycle. The findings of those
+later reviews that do not block reach the request as WAY-161's do, because a list the request only
+links to is a list nobody reads.
 *Rejected:* the orchestrator ruling on the findings left after the review of the final fix, as the
 borrowed method does — a change the reviewer did not accept reaches the request as ready; this end
 on the one-author route alone — on the planned route the orchestrator would still rule on the
@@ -5208,7 +5214,10 @@ remaining findings without a request, in conversation or in the cycle record —
 one place where the human judges the cycle's work, and a report in conversation is lost with the
 session; a remaining finding carried into the settlements of the independent assessment, and no
 bound for the code reviews after the review of the whole change — the orchestrator would rule on
-the remaining findings after all.
+the remaining findings after all; the findings of those later reviews that do not block kept in
+their reports, which the record links — a list the request only links to is a list nobody reads;
+one more round for a finding the fix introduced — a fix could trade one blocking finding for
+another without end.
 
 ### WAY-163/1 — What does the cycle run before it opens a request its code review blocked?
 
@@ -5223,15 +5232,14 @@ human accepted despite the finding.
 - **Change:** new decision
 - **Scope:** task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-162@ce2e41f0 · derives from WAY-11@e882a9df · derives from
+- **Relations:** derives from WAY-162@4c6feb35 · derives from WAY-11@e882a9df · derives from
   WAY-10@db68de1c
 - **Verification:** level 2 — an agent compares the cycle and its request with the decision:
   - complies: a cycle blocked after the review of the final fix runs the full gate, writes its
     record, opens the blocked request naming the reconciliation with the target branch, the return
     step and the independent assessment as not run, and runs them once the human accepts the code
-    despite the finding; a cycle blocked by the
-    review of a settlement of the independent assessment names only what has not run on the code it
-    holds;
+    despite the finding; a cycle blocked by the review of a settlement of the independent
+    assessment names only what has not run on the code it holds;
   - violates: the return step runs on code its reviewer blocked; the target branch is merged and
     its affected code review run before the blocked request; the blocked request opens without
     a run of the gate on the change; a request whose code the human accepted despite the finding
@@ -5289,8 +5297,6 @@ of each slice does the same against its slice, so that a larger change does not 
 no agent having attacked its own work. The report is the reviewer's material, and the request
 shows the human what the attack found beside the other test evidence. The check does not replace
 the deliberate break the reviewer writes for an invariant's check, and it is never that check,
-which an agent other than the code's author writes (WAY-69). The rule takes from an agent harness's
-practice for its workers the naming of the acceptance line most likely to be false and the check
-that would catch it.
+which an agent other than the code's author writes (WAY-69).
 *Rejected:* the author of a one-author change alone — in a larger change made from a plan, no agent
 would attack its own work before review.

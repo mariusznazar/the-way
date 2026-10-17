@@ -149,8 +149,8 @@ the final return-step check; earlier checks keep their existing break/acceptance
   each effect outside the repository the cycle found that the document does not name, or none>
 - Questions: <only those the foundation step allows, or none>
 - Review findings listed: <unfixed Minor findings and findings the reviewer marked outside the
-  task's scope, from the review of the whole change, each with the reviewer's words and its place
-  in the code or a note that none is named, or none>
+  task's scope, from the review of the whole change and every later code review, each with the
+  reviewer's words and its place in the code or a note that none is named, or none>
 - Blocked by review: <each blocking finding left after the review of its fix with its place and
   reason, what the fix tried, the cycle's time, models and tokens from `stages.md` with the number
   of review rounds, and the reconciliation, return step and independent assessment not run on that
