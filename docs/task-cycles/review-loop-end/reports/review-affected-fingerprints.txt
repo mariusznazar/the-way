@@ -1,8 +1,0 @@
-$ python -B <scratchpad>/fp_check.py .  (script kept as review-fp_check.py.txt)
-125 f3e6afcf 3
-161 cddc297e 3
-162 4c6feb35 3
-163 1e64fe3b 2
-164 898c9d56 2
-stale 0
-exit: 0
