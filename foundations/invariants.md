@@ -2156,17 +2156,17 @@ The form check of guidelines, `product-guidelines/form_check.py`, reports as an 
 
 - **Method:** `python -B gate/run_tests.py product-guidelines --record .runs/product-guidelines-tests.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-170@175a4fb6 · WAY-171@2bc38c05
+- **Derives from:** WAY-170@175a4fb6 · WAY-171@2bc38c05 · WAY-202@e0fb6a51
 - **Part:** product-guidelines · decisions · invariants · part-map · elements-common · relation-model
 - **Correction:** none
 
 ## guidelines-check-carrier/1
 
-The form check of guidelines, `product-guidelines/form_check.py`, reports as an error every rule under `## Rules` of a file `guidelines/<name>.md` whose *Decision* holds no decision number with the log's prefix followed by `@`, every such rule of a styleguide whose *Invariant* holds no identifier of the invariants file followed by `@`, and every decision the table of roles of a styleguide names that the rule `### Each role in its meaning` does not name, unless that rule is dropped.
+The form check of guidelines, `product-guidelines/form_check.py`, reports as an error every rule under `## Rules` of a file `guidelines/<name>.md` whose *Decision* holds no decision number with the log's prefix followed by `@`, every such rule whose *Invariant* holds no identifier of the invariants file followed by `@` in a file whose discipline's template requires an invariant in every rule, and every decision the table of roles of a styleguide names that the rule `### Each role in its meaning` does not name, unless that rule is dropped.
 
 - **Method:** `python -B gate/run_tests.py product-guidelines --record .runs/product-guidelines-tests.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-168@47d9d53e · WAY-188@73da8ecb · WAY-189@a76a39fb
+- **Derives from:** WAY-168@dc4a98a1 · WAY-188@73da8ecb · WAY-189@a76a39fb · WAY-196@0e714a05
 - **Part:** product-guidelines · decisions · invariants · part-map · elements-common · relation-model
 - **Correction:** none
 
@@ -2208,6 +2208,46 @@ The form check of guidelines, `product-guidelines/form_check.py`, reports as an 
 - **Rests on:** none
 - **Derives from:** WAY-170@175a4fb6
 - **Part:** product-guidelines · decisions · invariants · part-map · elements-common · relation-model
+- **Correction:** none
+
+## guidelines-check-kind-index/1
+
+The form check of guidelines, `product-guidelines/form_check.py`, reports as an error every file `guidelines/coding-<kind>.md` git lists that no row of the table under `## Kinds of code` in `guidelines/coding.md` names by its path in *File*, every row of that table whose *File* names no file git lists, whose *Kind* is not the `<kind>` of the file its *File* names or whose *When to read* is empty, and every file `guidelines/coding-<kind>.md` git lists where git lists no `guidelines/coding.md`.
+
+- **Method:** `python -B gate/run_tests.py product-guidelines --record .runs/product-guidelines-tests.jsonl`
+- **Rests on:** none
+- **Derives from:** WAY-167@052adf27 · WAY-212@116bffdf
+- **Part:** product-guidelines · decisions · invariants · part-map · elements-common · relation-model
+- **Correction:** none
+
+## guidelines-check-exemplar/1
+
+The form check of guidelines, `product-guidelines/form_check.py`, reports as an error every file `guidelines/coding-<kind>.md` whose table under `## Files of this kind` holds no row, or more than one, whose *Status* is `exemplar`, every row of that table whose *Status* is not `exemplar`, `copy` or `do not copy`, whose *File* is absolute, holds a `..` segment, a drive or a UNC prefix or names nothing git tracks, or which is not the `exemplar` row and whose *Decision* is not `—`, and every `exemplar` row whose *Decision* names no decision the log holds and has not repealed, or names one whose binding sentences, their whitespace collapsed, lack its *File* in backticks or the file's `<kind>` in backticks.
+
+- **Method:** `python -B gate/run_tests.py product-guidelines --record .runs/product-guidelines-tests.jsonl`
+- **Rests on:** none
+- **Derives from:** WAY-198@4dca82c6 · WAY-199@9d0c758c
+- **Part:** product-guidelines · decisions · invariants · part-map · elements-common · relation-model
+- **Correction:** none
+
+## guidelines-check-example-files/1
+
+The form check of guidelines, `product-guidelines/form_check.py`, reports as an error every rule under `## Rules` of a file `guidelines/<name>.md` whose *Invariant* names an invariant other than `guidelines-form` and whose text after its fields does not hold, for each such invariant, exactly one fenced block whose opening line's info string reads `good <identifier> <path>` and exactly one whose info string reads `bad <identifier> <path>`, `<identifier>` being that invariant's, and, in such a rule, every such block whose `<identifier>` its *Invariant* does not name or whose `<path>` is absolute, holds a `..` segment, a drive or a UNC prefix, every line inside such a block that would open a fence, every other fenced block, and every such block left open to the end of the file.
+
+- **Method:** `python -B gate/run_tests.py product-guidelines --record .runs/product-guidelines-tests.jsonl`
+- **Rests on:** none
+- **Derives from:** WAY-168@dc4a98a1
+- **Part:** product-guidelines · decisions · invariants · part-map · elements-common · relation-model
+- **Correction:** none
+
+## gate-guidelines-example-evidence/1
+
+For every invariant entry that a rule of a file `guidelines/<name>.md` names with a file for the use that follows the rule and one for the use that breaks it, and whose sentence a change adds or alters against "{fork-point}" or one of whose two files the change alters, the gate's report states whether the entry's method, run on the commit checked with each file put in place at its path, passes with the first and fails with the second — for an entry on the list of violated invariants, whether the first adds no failure the commit does not already have and the second adds one — or that this could not be checked.
+
+- **Method:** `TODO`
+- **Rests on:** none
+- **Derives from:** WAY-168@dc4a98a1
+- **Part:** gate · product-guidelines
 - **Correction:** none
 
 ## Withdrawn identifiers
