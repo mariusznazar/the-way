@@ -1,0 +1,246 @@
+[
+  {
+    "name": "tests-gate",
+    "command": "python -B gate/run_tests.py gate",
+    "exit": 0,
+    "output": "slice-8-final-tests-gate.txt",
+    "lines": [
+      "Ran 98 tests in 14.506s",
+      "OK"
+    ]
+  },
+  {
+    "name": "tests-elements-decisions",
+    "command": "python -B gate/run_tests.py elements/decisions",
+    "exit": 0,
+    "output": "slice-8-final-tests-elements-decisions.txt",
+    "lines": [
+      "Ran 169 tests in 14.862s",
+      "OK"
+    ]
+  },
+  {
+    "name": "tests-elements-invariants",
+    "command": "python -B gate/run_tests.py elements/invariants",
+    "exit": 0,
+    "output": "slice-8-final-tests-elements-invariants.txt",
+    "lines": [
+      "Ran 233 tests in 52.262s",
+      "OK"
+    ]
+  },
+  {
+    "name": "tests-elements-glossary",
+    "command": "python -B gate/run_tests.py elements/glossary",
+    "exit": 0,
+    "output": "slice-8-final-tests-elements-glossary.txt",
+    "lines": [
+      "Ran 204 tests in 135.507s",
+      "OK"
+    ]
+  },
+  {
+    "name": "tests-elements-part-map",
+    "command": "python -B gate/run_tests.py elements/part-map",
+    "exit": 0,
+    "output": "slice-8-final-tests-elements-part-map.txt",
+    "lines": [
+      "Ran 162 tests in 34.233s",
+      "OK"
+    ]
+  },
+  {
+    "name": "tests-elements-environment-facts",
+    "command": "python -B gate/run_tests.py elements/environment-facts",
+    "exit": 0,
+    "output": "slice-8-final-tests-elements-environment-facts.txt",
+    "lines": [
+      "Ran 165 tests in 34.637s",
+      "OK"
+    ]
+  },
+  {
+    "name": "tests-relation-model",
+    "command": "python -B gate/run_tests.py relation-model",
+    "exit": 0,
+    "output": "slice-8-final-tests-relation-model.txt",
+    "lines": [
+      "Ran 19 tests in 0.003s",
+      "OK"
+    ]
+  },
+  {
+    "name": "tests-agent-instructions",
+    "command": "python -B gate/run_tests.py agent-instructions",
+    "exit": 0,
+    "output": "slice-8-final-tests-agent-instructions.txt",
+    "lines": [
+      "Ran 18 tests in 4.283s",
+      "OK"
+    ]
+  },
+  {
+    "name": "tests-installation",
+    "command": "python -B gate/run_tests.py installation",
+    "exit": 0,
+    "output": "slice-8-final-tests-installation.txt",
+    "lines": [
+      "Ran 33 tests in 107.460s",
+      "OK"
+    ]
+  },
+  {
+    "name": "tests-instruction-files",
+    "command": "python -B gate/run_tests.py instruction-files",
+    "exit": 0,
+    "output": "slice-8-final-tests-instruction-files.txt",
+    "lines": [
+      "Ran 104 tests in 2.873s",
+      "OK (skipped=5)"
+    ]
+  },
+  {
+    "name": "tests-task-cycle",
+    "command": "python -B gate/run_tests.py task-cycle",
+    "exit": 0,
+    "output": "slice-8-final-tests-task-cycle.txt",
+    "lines": [
+      "Ran 41 tests in 0.891s",
+      "OK"
+    ]
+  },
+  {
+    "name": "tests-project-level",
+    "command": "python -B gate/run_tests.py project-level",
+    "exit": 0,
+    "output": "slice-8-final-tests-project-level.txt",
+    "lines": [
+      "Ran 250 tests in 72.270s",
+      "OK"
+    ]
+  },
+  {
+    "name": "tests-product-guidelines",
+    "command": "python -B gate/run_tests.py product-guidelines",
+    "exit": 0,
+    "output": "slice-8-final-tests-product-guidelines.txt",
+    "lines": [
+      "Ran 60 tests in 126.663s",
+      "OK"
+    ]
+  },
+  {
+    "name": "decision-guard",
+    "command": "python -B elements/decisions/format_guard.py foundations/decisions.md --base none --merge-onto none",
+    "exit": 0,
+    "output": "slice-8-final-decision-guard.txt",
+    "lines": [
+      "foundations/decisions.md:71: warning: WAY-03: check-by date 2026-10-02 has passed without a review record",
+      "foundations/decisions.md:293: warning: *Approved by* is the placeholder `merge of <request link>`",
+      "foundations/decisions.md:635: warning: WAY-21: check-by date 2026-10-02 has passed without a review record",
+      "foundations/decisions.md:1476: warning: WAY-52: check-by date 2026-10-02 has passed without a review record",
+      "foundations/decisions.md:1558: warning: WAY-55: check-by date 2026-10-02 has passed without a review record",
+      "foundations/decisions.md:1972: warning: WAY-69: check-by date 2026-10-02 has passed without a review record",
+      "foundations/decisions.md:5464: warning: *Approved by* is the placeholder `merge of <request link>`",
+      "foundations/decisions.md:5510: warning: *Approved by* is the placeholder `merge of <request link>`",
+      "foundations/decisions.md:5555: warning: *Approved by* is the placeholder `merge of <request link>`",
+      "foundations/decisions.md:5593: warning: *Approved by* is the placeholder `merge of <request link>`",
+      "foundations/decisions.md:5635: warning: *Approved by* is the placeholder `merge of <request link>`",
+      "foundations/decisions.md:5686: warning: *Approved by* is the placeholder `merge of <request link>`",
+      "foundations/decisions.md:5723: warning: *Approved by* is the placeholder `merge of <request link>`",
+      "foundations/decisions.md:5758: warning: *Approved by* is the placeholder `merge of <request link>`",
+      "foundations/decisions.md:5815: warning: *Approved by* is the placeholder `merge of <request link>`",
+      "foundations/decisions.md:5861: warning: *Approved by* is the placeholder `merge of <request link>`",
+      "foundations/decisions.md:5894: warning: *Approved by* is the placeholder `merge of <request link>`",
+      "foundations/decisions.md:5922: warning: *Approved by* is the placeholder `merge of <request link>`",
+      "foundations/decisions.md:5947: warning: *Approved by* is the placeholder `merge of <request link>`",
+      "foundations/decisions.md:5973: warning: *Approved by* is the placeholder `merge of <request link>`",
+      "foundations/decisions.md:5999: warning: *Approved by* is the placeholder `merge of <request link>`",
+      "foundations/decisions.md:6025: warning: *Approved by* is the placeholder `merge of <request link>`",
+      "foundations/decisions.md:6051: warning: *Approved by* is the placeholder `merge of <request link>`",
+      "foundations/decisions.md:6077: warning: *Approved by* is the placeholder `merge of <request link>`",
+      "foundations/decisions.md:6109: warning: *Approved by* is the placeholder `merge of <request link>`",
+      "foundations/decisions.md:6143: warning: *Approved by* is the placeholder `merge of <request link>`",
+      "foundations/decisions.md:6183: warning: *Approved by* is the placeholder `merge of <request link>`",
+      "foundations/decisions.md:6217: warning: *Approved by* is the placeholder `merge of <request link>`",
+      "foundations/decisions.md:6251: warning: *Approved by* is the placeholder `merge of <request link>`",
+      "foundations/decisions.md:6285: warning: *Approved by* is the placeholder `merge of <request link>`",
+      "foundations/decisions.md:6322: warning: *Approved by* is the placeholder `merge of <request link>`",
+      "foundations/decisions.md:6356: warning: *Approved by* is the placeholder `merge of <request link>`",
+      "unchecked: the lines the log holds on the main branch, and the versions it gains per number — --base none: there is no commit the branch left the main branch from",
+      "unchecked: a change to the template without a new version in the log — --base none: there is no commit the branch left the main branch from",
+      "unchecked: `TODO` in the log — --merge-onto none: there is no commit to merge onto",
+      "unchecked: the copies of a version both logs hold — --merge-onto none: there is no commit to merge onto",
+      "unchecked: the fingerprints relations carry — --merge-onto none: there is no commit to merge onto",
+      "0 error(s), 32 warning(s), 5 unchecked"
+    ]
+  },
+  {
+    "name": "invariant-guard",
+    "command": "python -B elements/invariants/format_guard.py foundations/invariants.md --base none --merge-onto none",
+    "exit": 0,
+    "output": "slice-8-final-invariant-guard.txt",
+    "lines": [
+      "unchecked: identifiers, versions, corrections and the list of violated invariants — --base none: there is no commit the branch left the main branch from",
+      "unchecked: `TODO` in the entries — --merge-onto none: there is no commit to merge onto",
+      "unchecked: the fingerprints the links of the entries carry — --merge-onto none: there is no commit to merge onto",
+      "0 error(s), 0 warning(s), 3 unchecked"
+    ]
+  },
+  {
+    "name": "glossary-guard",
+    "command": "python -B elements/glossary/format_guard.py foundations/glossary.md --base none --merge-onto none",
+    "exit": 0,
+    "output": "slice-8-final-glossary-guard.txt",
+    "lines": [
+      "unchecked: the count of the words of *Avoid* — --base none: there is no commit the branch left the main branch from",
+      "unchecked: terms and identifiers that came to read alike — --base none: there is no commit the branch left the main branch from",
+      "unchecked: the uses of every term whose definition changed — --base none: there is no commit the branch left the main branch from",
+      "unchecked: `TODO` in the entries — --merge-onto none: there is no commit to merge onto",
+      "unchecked: the terms with no use after the merge — --merge-onto none: there is no commit to merge onto",
+      "0 error(s), 0 warning(s), 5 unchecked"
+    ]
+  },
+  {
+    "name": "part-map-guard",
+    "command": "python -B elements/part-map/format_guard.py foundations/part_map.md --base none",
+    "exit": 0,
+    "output": "slice-8-final-part-map-guard.txt",
+    "lines": [
+      "unchecked: the list of parts of `wording-reaches-dependants` — its test leaves no coverage file",
+      "unchecked: the list of parts of `skills-reach-the-way-sessions` — its test leaves no coverage file",
+      "unchecked: the change path of every promise level in use — the levels sit at the declarations, and no command of the product reports them",
+      "unchecked: the dependencies between parts, and new or stale violations — no command of the product reports the dependency graph",
+      "unchecked: the list of known violations — --base none: there is no commit the branch left the main branch from",
+      "unchecked: the identifiers of the map — --base none: there is no commit the branch left the main branch from",
+      "unchecked: the lowering of a part's computed criticality — --base none: there is no commit the branch left the main branch from",
+      "0 error(s), 0 warning(s), 7 unchecked"
+    ]
+  },
+  {
+    "name": "environment-facts-guard",
+    "command": "python -B elements/environment-facts/format_guard.py foundations/environment_facts.md --base none --merge-onto none",
+    "exit": 0,
+    "output": "slice-8-final-environment-facts-guard.txt",
+    "lines": [
+      "unchecked: identifiers and versions — --base none: there is no commit the branch left the main branch from",
+      "unchecked: the fingerprints decisions carry for facts — --merge-onto none: there is no commit to merge onto",
+      "unchecked: the facts nothing names after the merge — --merge-onto none: there is no commit to merge onto",
+      "0 error(s), 0 warning(s), 3 unchecked"
+    ]
+  },
+  {
+    "name": "skill-entry-points",
+    "command": "python -B agent-instructions/skill_entry_points.py",
+    "exit": 0,
+    "output": "slice-8-final-skill-entry-points.txt",
+    "lines": []
+  },
+  {
+    "name": "diff-check",
+    "command": "git diff --check 96623ed..HEAD",
+    "exit": 0,
+    "output": "slice-8-final-diff-check.txt",
+    "lines": []
+  }
+]

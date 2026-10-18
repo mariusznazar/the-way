@@ -1,0 +1,22 @@
+$ form_check.py  -> exit 0
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+$ form_check.py --merge-onto none -> exit 0
+unchecked: the references in the foundation a merge leaves — --merge-onto none: there is no commit to merge onto
+0 error(s), 0 warning(s), 1 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+$ form_check.py --merge-onto none -> exit 1
+unchecked: the references in the foundation a merge leaves — --merge-onto none: there is no commit to merge onto
+0 error(s), 0 warning(s), 1 unchecked
+guidelines/styleguide-web.md:14: error: `DEC-01@28b1c96c` carries a fingerprint other than the current one: on the commit checked, the current fingerprint of DEC-01 is 74319a6f, set by DEC-01/2
+guidelines/styleguide-web.md:15: error: `DEC-01@28b1c96c` carries a fingerprint other than the current one: on the commit checked, the current fingerprint of DEC-01 is 74319a6f, set by DEC-01/2
+guidelines/styleguide-web.md:21: error: `DEC-01@28b1c96c` carries a fingerprint other than the current one: on the commit checked, the current fingerprint of DEC-01 is 74319a6f, set by DEC-01/2
+guidelines/styleguide-web.md:30: error: `DEC-01@28b1c96c` carries a fingerprint other than the current one: on the commit checked, the current fingerprint of DEC-01 is 74319a6f, set by DEC-01/2
+guidelines/styleguide-web.md:69: error: `DEC-01@28b1c96c` carries a fingerprint other than the current one: on the commit checked, the current fingerprint of DEC-01 is 74319a6f, set by DEC-01/2
+5 error(s), 0 warning(s), 0 unchecked
+
+old fingerprint 28b1c96c new fingerprint 74319a6f
+RESULT before: (0, 0), after: 1

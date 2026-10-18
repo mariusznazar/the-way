@@ -1,0 +1,4 @@
+note: the repository holds no guidelines/: no file of guidelines to check
+0 error(s), 0 warning(s), 0 unchecked
+form check exit 0
+{"check": "product-guidelines/form_check.py::read_guidelines", "verdict": "pass", "invariant": "guidelines-form/1"}

@@ -1,0 +1,20 @@
+$ python -B elements/invariants/format_guard.py foundations/invariants.md --base none --merge-onto none
+foundations/invariants.md:0: error: decisions.md:5499: WAY-168 is in force and verified at level 1, but no entry of the file derives from it
+foundations/invariants.md:0: error: decisions.md:5499: the level 1 verification of WAY-168/1 names `guidelines-check-carrier`, which is not an entry of the file
+foundations/invariants.md:0: error: decisions.md:5544: WAY-169 is in force and verified at level 1, but no entry of the file derives from it
+foundations/invariants.md:0: error: decisions.md:5544: the level 1 verification of WAY-169/1 names `guidelines-reference-current`, which is not an entry of the file
+foundations/invariants.md:0: error: decisions.md:5544: the level 1 verification of WAY-169/1 names `guidelines-check-reference-target`, which is not an entry of the file
+foundations/invariants.md:0: error: decisions.md:5544: the level 1 verification of WAY-169/1 names `guidelines-check-stale-reference`, which is not an entry of the file
+foundations/invariants.md:0: error: decisions.md:5584: WAY-170 is in force and verified at level 1, but no entry of the file derives from it
+foundations/invariants.md:0: error: decisions.md:5584: the level 1 verification of WAY-170/1 names `guidelines-form`, which is not an entry of the file
+foundations/invariants.md:0: error: decisions.md:5584: the level 1 verification of WAY-170/1 names `guidelines-check-form`, which is not an entry of the file
+foundations/invariants.md:0: error: decisions.md:5584: the level 1 verification of WAY-170/1 names `guidelines-check-code-path`, which is not an entry of the file
+foundations/invariants.md:0: error: decisions.md:5623: WAY-171 is in force and verified at level 1, but no entry of the file derives from it
+foundations/invariants.md:0: error: decisions.md:5623: the level 1 verification of WAY-171/1 names `guidelines-form`, which is not an entry of the file
+foundations/invariants.md:0: error: decisions.md:5623: the level 1 verification of WAY-171/1 names `guidelines-check-form`, which is not an entry of the file
+unchecked: identifiers, versions, corrections and the list of violated invariants — --base none: there is no commit the branch left the main branch from
+unchecked: `TODO` in the entries — --merge-onto none: there is no commit to merge onto
+unchecked: the fingerprints the links of the entries carry — --merge-onto none: there is no commit to merge onto
+note: there is no human_verdicts.md; no human verdict is given
+13 error(s), 0 warning(s), 3 unchecked
+exit code: 1

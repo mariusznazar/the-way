@@ -1,0 +1,25 @@
+# Focused check of the slice 2 review: the per-part reading switched off
+# In product-guidelines/form_check.py: 'form.per_part = ("`guidelines/%s-<part>.md`" % name) in text' -> 'form.per_part = ("`guidelines/%s-<part>.md` (reworded)" % name) in text'
+# Command (cwd C:/Storage/repos/the-way-wt/pg-review-s2/product-guidelines): python -B -m unittest test_form_check_invariants.Form.test_a_file_whose_name_and_discipline_disagree_is_reported
+# Exit code: 1
+# form_check.py restored byte for byte: True
+# --- complete output ---
+F
+======================================================================
+FAIL: test_a_file_whose_name_and_discipline_disagree_is_reported (test_form_check_invariants.Form.test_a_file_whose_name_and_discipline_disagree_is_reported) [guidelines/styleguide.md]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2\product-guidelines\test_form_check_invariants.py", line 481, in test_a_file_whose_name_and_discipline_disagree_is_reported
+    self.assert_reported(self.check({path: text}, ()), path)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2\product-guidelines\test_form_check_invariants.py", line 303, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+----------------------------------------------------------------------
+Ran 1 test in 2.087s
+
+FAILED (failures=1)

@@ -1,0 +1,60 @@
+# Deliberate break of guidelines-form/1 (slice 2 review)
+# Sentence part broken: the file holds the sections the template requires, in their order (fenced code counts for nothing, C28 (4)).
+# Crafted input: guidelines/testing.md of a temporary product opens a fence of four tildes in ## When to read and writes a fence of three tildes after it; by CommonMark the fence never closes, so ## Rules, ## Examples and ## Where in code stand in fenced code. A check closing a fence on a shorter one would pass the file.
+# Product built by: python -B C:/Users/Mariusz/AppData/Local/Temp/claude/C--Storage-repos-the-way/3c9695bb-97dd-4f98-b7ec-dff4bae7e82e/scratchpad/s2/make_form_break.py C:/Users/Mariusz/AppData/Local/Temp/claude/C--Storage-repos-the-way/3c9695bb-97dd-4f98-b7ec-dff4bae7e82e/scratchpad/s2/product-form-break
+# --- guidelines/testing.md ---
+# Testing guidelines — the tests of the web interface
+
+- **Discipline:** testing
+- **Applies to:** web
+
+## When to read
+
+Before writing a test of the web interface.
+
+~~~~text
+sample
+~~~
+
+## Rules
+
+### Test data through fixtures
+
+- **Decision:** ABC-05@016b5b2a
+- **Invariant:** none
+- **Good:** a test sets up its player through the fixtures.
+- **Bad:** a test writes rows straight into the store of data.
+
+Set up each test's data through the product's fixtures.
+
+## Examples
+
+### Branch names
+
+The team names its branches after their tasks.
+
+## Where in code
+
+- `tests/fixtures.py`
+# --- command (cwd C:/Users/Mariusz/AppData/Local/Temp/claude/C--Storage-repos-the-way/3c9695bb-97dd-4f98-b7ec-dff4bae7e82e/scratchpad/s2/product-form-break) ---
+python -B C:/Storage/repos/the-way-wt/pg-review-s2/product-guidelines/form_check.py C:/Users/Mariusz/AppData/Local/Temp/claude/C--Storage-repos-the-way/3c9695bb-97dd-4f98-b7ec-dff4bae7e82e/scratchpad/s2/product-form-break --record C:/Users/Mariusz/AppData/Local/Temp/claude/C--Storage-repos-the-way/3c9695bb-97dd-4f98-b7ec-dff4bae7e82e/scratchpad/s2/form-break.jsonl
+# --- output ---
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/testing.md:0: error: the section `## Rules` is missing
+guidelines/testing.md:0: error: the section `## Examples` is missing
+guidelines/testing.md:0: error: the section `## Where in code` is missing
+3 error(s), 0 warning(s), 0 unchecked
+# exit code: 1
+# --- record ---
+{"check": "product-guidelines/form_check.py::read_guidelines", "verdict": "pass", "invariant": "guidelines-form/1"}
+{"check": "product-guidelines/form_check.py::check_parts", "verdict": "pass", "invariant": "guidelines-form/1"}
+{"check": "product-guidelines/form_check.py::read_guidelines", "verdict": "pass", "invariant": "guidelines-form/1"}
+{"check": "product-guidelines/form_check.py::check_header", "verdict": "pass", "invariant": "guidelines-form/1"}
+{"check": "product-guidelines/form_check.py::check_sections", "verdict": "fail", "invariant": "guidelines-form/1", "description": "the section `## Rules` is missing"}
+{"check": "product-guidelines/form_check.py::check_sections", "verdict": "fail", "invariant": "guidelines-form/1", "description": "the section `## Examples` is missing"}
+{"check": "product-guidelines/form_check.py::check_sections", "verdict": "fail", "invariant": "guidelines-form/1", "description": "the section `## Where in code` is missing"}
+{"check": "product-guidelines/form_check.py::check_rules", "verdict": "pass", "invariant": "guidelines-form/1"}
+{"check": "product-guidelines/form_check.py::check_roles", "verdict": "pass", "invariant": "guidelines-form/1"}
+{"check": "product-guidelines/form_check.py::check_parts", "verdict": "pass", "invariant": "guidelines-form/1"}
+{"check": "product-guidelines/form_check.py::check_paths", "verdict": "pass", "invariant": "guidelines-form/1"}
+# detected: yes (exit 1, three check_sections fail lines for guidelines-form/1)

@@ -1,0 +1,22 @@
+## product-guidelines/template.md: 1 runs of >= 7 words
+- map whose files direct whoever carries out its tasks
+## product-guidelines/styleguide/template.md: 6 runs of >= 7 words
+- its screens an admin panel added to
+- a meaning the task did not settle
+- for each role the value and its source as the human settled them or the exact address of the source and the entry in it the value is read from
+- the part of the map whose files
+- the part of the map whose files draw
+- value written in place of a design token visible focus
+## elements/common/way_of_working.md: 2 runs of >= 7 words
+- the checkout or worktree the session works
+- - select and read the product's foundation
+## project-level/task/skill/SKILL.md: 1 runs of >= 7 words
+- the checkout or worktree the session works in
+## project-level/task/template.md: 1 runs of >= 7 words
+- a change of the part map is never a
+## elements/common/skill/SKILL.md: 3 runs of >= 7 words
+- of the-way. in the-way itself the-way is the checkout or worktree the session works in the directory `git rev-parse --show-toplevel` prints in the session's working directory in a product it is the product's pinned `.the-way`.
+- there and each skill named below is the project skill of that name with the `the-way-` prefix.
+- - select and read the product's foundation by reading the foundation in `elements/common/way_of_working.md`
+## elements/common/critique/SKILL.md: 0 runs of >= 7 words
+## instruction-files/SKILL.md: 0 runs of >= 7 words

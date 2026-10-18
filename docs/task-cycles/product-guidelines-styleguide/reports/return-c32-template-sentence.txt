@@ -1,0 +1,6 @@
+byte comparison: foundations/invariants.md:2135 vs product-guidelines/template.md:150
+equal: True lengths 645 645
+reference sentence equal: False
+reference sentence (invariants.md:2145) found verbatim at template.md line(s): [162]
+form sentence (invariants.md:2135) found verbatim at template.md line(s): [150]
+note: the 'reference sentence equal: False' line compared template.md:160, a wrong line; the search above finds the reference sentence verbatim at template.md:162 (unchanged by this step)

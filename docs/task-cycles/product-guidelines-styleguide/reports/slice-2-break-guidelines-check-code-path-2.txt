@@ -1,0 +1,1557 @@
+# Deliberate break of guidelines-check-code-path/1 repeated (re-review of fix round 1, worktree C:/Storage/repos/the-way-wt/pg-review-s2r at d79f692)
+# Break: refused: the guard refusing an absolute path removed (the same removal as slice-2-break-guidelines-check-code-path.txt)
+# In product-guidelines/form_check.py, removed (exactly once): '    if path.startswith("/"):\n        return "is absolute or a UNC prefix"\n'
+# Command (cwd C:/Storage/repos/the-way-wt/pg-review-s2r): python -B gate/run_tests.py product-guidelines --record C:/Users/Mariusz/AppData/Local/Temp/claude/C--Storage-repos-the-way/3c9695bb-97dd-4f98-b7ec-dff4bae7e82e/scratchpad/s2/break2.jsonl
+# Baseline at d79f692, unbroken: exit 1; guidelines-check-code-path/1 verdicts {'fail': 1, 'pass': 3}; summary FAILED (failures=93)
+# After the break: exit 1; guidelines-check-code-path/1 verdicts {'fail': 2, 'pass': 2}
+# Tests failing after the break and not in the baseline run: ['test_a_path_out_of_the_repository_is_reported_though_its_remainder_is_tracked (test_form_check_invariants.CodePath.test_a_path_out_of_the_repository_is_reported_though_its_remainder_is_tracked)', 'test_a_path_refused_for_its_form_whose_remainder_git_tracks_is_an_error (test_form_check.Paths.test_a_path_refused_for_its_form_whose_remainder_git_tracks_is_an_error)']
+# Detected: yes
+# form_check.py restored byte for byte: True
+# --- complete output of the run with the break ---
+.....F.....................FFF...FF.........FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+======================================================================
+FAIL: test_a_path_refused_for_its_form_whose_remainder_git_tracks_is_an_error (test_form_check.Paths.test_a_path_refused_for_its_form_whose_remainder_git_tracks_is_an_error) (path='/tests/fixtures.py')
+Break caught: the guard against an absolute path, or a `..` segment, dropped, so
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check.py", line 278, in test_a_path_refused_for_its_form_whose_remainder_git_tracks_is_an_error
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_path_out_of_the_repository_is_reported_though_its_remainder_is_tracked (test_form_check_invariants.CodePath.test_a_path_out_of_the_repository_is_reported_though_its_remainder_is_tracked) (path='/src/tokens.css')
+An absolute path, a path with a `..` segment, a drive or a UNC prefix is reported for
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 741, in test_a_path_out_of_the_repository_is_reported_though_its_remainder_is_tracked
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}, ()), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=78, fragments=fragments)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_path_out_of_the_repository_is_reported_though_its_remainder_is_tracked (test_form_check_invariants.CodePath.test_a_path_out_of_the_repository_is_reported_though_its_remainder_is_tracked) (path='/tests/fixtures.py')
+An absolute path, a path with a `..` segment, a drive or a UNC prefix is reported for
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 741, in test_a_path_out_of_the_repository_is_reported_though_its_remainder_is_tracked
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}, ()), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=78, fragments=fragments)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_path_out_of_the_repository_is_reported_though_its_remainder_is_tracked (test_form_check_invariants.CodePath.test_a_path_out_of_the_repository_is_reported_though_its_remainder_is_tracked) (path='/src/components')
+An absolute path, a path with a `..` segment, a drive or a UNC prefix is reported for
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 741, in test_a_path_out_of_the_repository_is_reported_though_its_remainder_is_tracked
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}, ()), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=78, fragments=fragments)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_the_valid_fixtures_pass (test_form_check_invariants.Fixtures.test_the_valid_fixtures_pass) (options=('--merge-onto', 'none'))
+The styleguide and the guidelines of a discipline with no template, as written above,
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 348, in test_the_valid_fixtures_pass
+    self.assert_clean(self.check(files, options))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 330, in assert_clean
+    self.assertIn("pass", [entry.get("verdict") for entry in lines
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                           if entry.get("invariant") == recorded], lines)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'pass' not found in [] : []
+
+======================================================================
+FAIL: test_the_valid_fixtures_pass (test_form_check_invariants.Fixtures.test_the_valid_fixtures_pass)
+The styleguide and the guidelines of a discipline with no template, as written above,
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 349, in test_the_valid_fixtures_pass
+    self.assert_clean(self.check(files, ("--merge-onto", "onto"),
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                                 onto={"src/other.css": "a {}\n"}))
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 330, in assert_clean
+    self.assertIn("pass", [entry.get("verdict") for entry in lines
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                           if entry.get("invariant") == recorded], lines)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'pass' not found in [] : []
+
+======================================================================
+FAIL: test_a_reference_in_fenced_code_is_ignored (test_form_check_invariants.ReferenceTarget.test_a_reference_in_fenced_code_is_ignored) (fence='```')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 641, in test_a_reference_in_fenced_code_is_ignored
+    self.assert_clean(self.check({STYLEGUIDE_FILE: text}))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 330, in assert_clean
+    self.assertIn("pass", [entry.get("verdict") for entry in lines
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                           if entry.get("invariant") == recorded], lines)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'pass' not found in [] : []
+
+======================================================================
+FAIL: test_a_reference_in_fenced_code_is_ignored (test_form_check_invariants.ReferenceTarget.test_a_reference_in_fenced_code_is_ignored) (fence='~~~')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 641, in test_a_reference_in_fenced_code_is_ignored
+    self.assert_clean(self.check({STYLEGUIDE_FILE: text}))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 330, in assert_clean
+    self.assertIn("pass", [entry.get("verdict") for entry in lines
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                           if entry.get("invariant") == recorded], lines)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'pass' not found in [] : []
+
+======================================================================
+FAIL: test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands (test_form_check_invariants.ReferenceTarget.test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands) (where='a Decision field', target='a decision the log does not hold')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 603, in test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands (test_form_check_invariants.ReferenceTarget.test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands) (where='a Decision field', target='a repealed decision')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 603, in test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands (test_form_check_invariants.ReferenceTarget.test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands) (where='a Decision field', target='an invariant the file does not hold')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 603, in test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands (test_form_check_invariants.ReferenceTarget.test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands) (where='a Decision field', target='a withdrawn invariant')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 603, in test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands (test_form_check_invariants.ReferenceTarget.test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands) (where='an Invariant field', target='a decision the log does not hold')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 603, in test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands (test_form_check_invariants.ReferenceTarget.test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands) (where='an Invariant field', target='a repealed decision')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 603, in test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands (test_form_check_invariants.ReferenceTarget.test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands) (where='an Invariant field', target='an invariant the file does not hold')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 603, in test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands (test_form_check_invariants.ReferenceTarget.test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands) (where='an Invariant field', target='a withdrawn invariant')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 603, in test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands (test_form_check_invariants.ReferenceTarget.test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands) (where='a row of Roles', target='a decision the log does not hold')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 603, in test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands (test_form_check_invariants.ReferenceTarget.test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands) (where='a row of Roles', target='a repealed decision')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 603, in test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands (test_form_check_invariants.ReferenceTarget.test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands) (where='a row of Roles', target='an invariant the file does not hold')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 603, in test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands (test_form_check_invariants.ReferenceTarget.test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands) (where='a row of Roles', target='a withdrawn invariant')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 603, in test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands (test_form_check_invariants.ReferenceTarget.test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands) (where="a rule's prose", target='a decision the log does not hold')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 603, in test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands (test_form_check_invariants.ReferenceTarget.test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands) (where="a rule's prose", target='a repealed decision')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 603, in test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands (test_form_check_invariants.ReferenceTarget.test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands) (where="a rule's prose", target='an invariant the file does not hold')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 603, in test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands (test_form_check_invariants.ReferenceTarget.test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands) (where="a rule's prose", target='a withdrawn invariant')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 603, in test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands (test_form_check_invariants.ReferenceTarget.test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands) (where="inline code in a rule's prose", target='a decision the log does not hold')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 603, in test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands (test_form_check_invariants.ReferenceTarget.test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands) (where="inline code in a rule's prose", target='a repealed decision')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 603, in test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands (test_form_check_invariants.ReferenceTarget.test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands) (where="inline code in a rule's prose", target='an invariant the file does not hold')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 603, in test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands (test_form_check_invariants.ReferenceTarget.test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands) (where="inline code in a rule's prose", target='a withdrawn invariant')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 603, in test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands (test_form_check_invariants.ReferenceTarget.test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands) (where='an example', target='a decision the log does not hold')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 603, in test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands (test_form_check_invariants.ReferenceTarget.test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands) (where='an example', target='a repealed decision')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 603, in test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands (test_form_check_invariants.ReferenceTarget.test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands) (where='an example', target='an invariant the file does not hold')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 603, in test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands (test_form_check_invariants.ReferenceTarget.test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands) (where='an example', target='a withdrawn invariant')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 603, in test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands (test_form_check_invariants.ReferenceTarget.test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands) (where='a departure', target='a decision the log does not hold')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 603, in test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands (test_form_check_invariants.ReferenceTarget.test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands) (where='a departure', target='a repealed decision')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 603, in test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands (test_form_check_invariants.ReferenceTarget.test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands) (where='a departure', target='an invariant the file does not hold')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 603, in test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 318, in assert_reported
+    self.assertIn("fail", [entry.get("verdict") for entry in lines
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                           if entry.get("invariant") == record], lines)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'fail' not found in [] : []
+
+======================================================================
+FAIL: test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands (test_form_check_invariants.ReferenceTarget.test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands) (where='a departure', target='a withdrawn invariant')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 603, in test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 318, in assert_reported
+    self.assertIn("fail", [entry.get("verdict") for entry in lines
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                           if entry.get("invariant") == record], lines)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'fail' not found in [] : []
+
+======================================================================
+FAIL: test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported (test_form_check_invariants.ReferenceTarget.test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported) (where='a Decision field', reference='ABC-01@daa9')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 614, in test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported (test_form_check_invariants.ReferenceTarget.test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported) (where='a Decision field', reference='ABC-01@DAA9CF8D')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 614, in test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported (test_form_check_invariants.ReferenceTarget.test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported) (where='a Decision field', reference='ABC-01@daa9cf8d0')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 614, in test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported (test_form_check_invariants.ReferenceTarget.test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported) (where='a Decision field', reference='ABC-01@zz')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 614, in test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported (test_form_check_invariants.ReferenceTarget.test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported) (where='a Decision field', reference='role-meaning@v2')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 614, in test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported (test_form_check_invariants.ReferenceTarget.test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported) (where='a Decision field', reference='old-pair@x')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 614, in test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported (test_form_check_invariants.ReferenceTarget.test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported) (where='an Invariant field', reference='ABC-01@daa9')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 614, in test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported (test_form_check_invariants.ReferenceTarget.test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported) (where='an Invariant field', reference='ABC-01@DAA9CF8D')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 614, in test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported (test_form_check_invariants.ReferenceTarget.test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported) (where='an Invariant field', reference='ABC-01@daa9cf8d0')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 614, in test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported (test_form_check_invariants.ReferenceTarget.test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported) (where='an Invariant field', reference='ABC-01@zz')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 614, in test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported (test_form_check_invariants.ReferenceTarget.test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported) (where='an Invariant field', reference='role-meaning@v2')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 614, in test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported (test_form_check_invariants.ReferenceTarget.test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported) (where='an Invariant field', reference='old-pair@x')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 614, in test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported (test_form_check_invariants.ReferenceTarget.test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported) (where='a row of Roles', reference='ABC-01@daa9')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 614, in test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported (test_form_check_invariants.ReferenceTarget.test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported) (where='a row of Roles', reference='ABC-01@DAA9CF8D')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 614, in test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported (test_form_check_invariants.ReferenceTarget.test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported) (where='a row of Roles', reference='ABC-01@daa9cf8d0')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 614, in test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported (test_form_check_invariants.ReferenceTarget.test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported) (where='a row of Roles', reference='ABC-01@zz')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 614, in test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported (test_form_check_invariants.ReferenceTarget.test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported) (where='a row of Roles', reference='role-meaning@v2')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 614, in test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported (test_form_check_invariants.ReferenceTarget.test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported) (where='a row of Roles', reference='old-pair@x')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 614, in test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported (test_form_check_invariants.ReferenceTarget.test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported) (where="a rule's prose", reference='ABC-01@daa9')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 614, in test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported (test_form_check_invariants.ReferenceTarget.test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported) (where="a rule's prose", reference='ABC-01@DAA9CF8D')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 614, in test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported (test_form_check_invariants.ReferenceTarget.test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported) (where="a rule's prose", reference='ABC-01@daa9cf8d0')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 614, in test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported (test_form_check_invariants.ReferenceTarget.test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported) (where="a rule's prose", reference='ABC-01@zz')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 614, in test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported (test_form_check_invariants.ReferenceTarget.test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported) (where="a rule's prose", reference='role-meaning@v2')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 614, in test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported (test_form_check_invariants.ReferenceTarget.test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported) (where="a rule's prose", reference='old-pair@x')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 614, in test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported (test_form_check_invariants.ReferenceTarget.test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported) (where="inline code in a rule's prose", reference='ABC-01@daa9')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 614, in test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported (test_form_check_invariants.ReferenceTarget.test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported) (where="inline code in a rule's prose", reference='ABC-01@DAA9CF8D')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 614, in test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported (test_form_check_invariants.ReferenceTarget.test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported) (where="inline code in a rule's prose", reference='ABC-01@daa9cf8d0')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 614, in test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported (test_form_check_invariants.ReferenceTarget.test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported) (where="inline code in a rule's prose", reference='ABC-01@zz')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 614, in test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported (test_form_check_invariants.ReferenceTarget.test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported) (where="inline code in a rule's prose", reference='role-meaning@v2')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 614, in test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported (test_form_check_invariants.ReferenceTarget.test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported) (where="inline code in a rule's prose", reference='old-pair@x')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 614, in test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported (test_form_check_invariants.ReferenceTarget.test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported) (where='an example', reference='ABC-01@daa9')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 614, in test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported (test_form_check_invariants.ReferenceTarget.test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported) (where='an example', reference='ABC-01@DAA9CF8D')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 614, in test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported (test_form_check_invariants.ReferenceTarget.test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported) (where='an example', reference='ABC-01@daa9cf8d0')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 614, in test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported (test_form_check_invariants.ReferenceTarget.test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported) (where='an example', reference='ABC-01@zz')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 614, in test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported (test_form_check_invariants.ReferenceTarget.test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported) (where='an example', reference='role-meaning@v2')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 614, in test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported (test_form_check_invariants.ReferenceTarget.test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported) (where='an example', reference='old-pair@x')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 614, in test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported (test_form_check_invariants.ReferenceTarget.test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported) (where='a departure', reference='ABC-01@daa9')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 614, in test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 318, in assert_reported
+    self.assertIn("fail", [entry.get("verdict") for entry in lines
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                           if entry.get("invariant") == record], lines)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'fail' not found in [] : []
+
+======================================================================
+FAIL: test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported (test_form_check_invariants.ReferenceTarget.test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported) (where='a departure', reference='ABC-01@DAA9CF8D')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 614, in test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 318, in assert_reported
+    self.assertIn("fail", [entry.get("verdict") for entry in lines
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                           if entry.get("invariant") == record], lines)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'fail' not found in [] : []
+
+======================================================================
+FAIL: test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported (test_form_check_invariants.ReferenceTarget.test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported) (where='a departure', reference='ABC-01@daa9cf8d0')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 614, in test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 318, in assert_reported
+    self.assertIn("fail", [entry.get("verdict") for entry in lines
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                           if entry.get("invariant") == record], lines)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'fail' not found in [] : []
+
+======================================================================
+FAIL: test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported (test_form_check_invariants.ReferenceTarget.test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported) (where='a departure', reference='ABC-01@zz')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 614, in test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 318, in assert_reported
+    self.assertIn("fail", [entry.get("verdict") for entry in lines
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                           if entry.get("invariant") == record], lines)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'fail' not found in [] : []
+
+======================================================================
+FAIL: test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported (test_form_check_invariants.ReferenceTarget.test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported) (where='a departure', reference='role-meaning@v2')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 614, in test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 318, in assert_reported
+    self.assertIn("fail", [entry.get("verdict") for entry in lines
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                           if entry.get("invariant") == record], lines)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'fail' not found in [] : []
+
+======================================================================
+FAIL: test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported (test_form_check_invariants.ReferenceTarget.test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported) (where='a departure', reference='old-pair@x')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 614, in test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(reference,), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 318, in assert_reported
+    self.assertIn("fail", [entry.get("verdict") for entry in lines
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                           if entry.get("invariant") == record], lines)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'fail' not found in [] : []
+
+======================================================================
+FAIL: test_a_versioned_package_name_or_a_bare_identifier_is_no_reference (test_form_check_invariants.ReferenceTarget.test_a_versioned_package_name_or_a_bare_identifier_is_no_reference) (mention='`react@18`')
+`react@18`, `tailwindcss@4` and `lucide-react@0` fit neither form of a reference, and
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 626, in test_a_versioned_package_name_or_a_bare_identifier_is_no_reference
+    self.assert_clean(self.check({STYLEGUIDE_FILE: text}))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 330, in assert_clean
+    self.assertIn("pass", [entry.get("verdict") for entry in lines
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                           if entry.get("invariant") == recorded], lines)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'pass' not found in [] : []
+
+======================================================================
+FAIL: test_a_versioned_package_name_or_a_bare_identifier_is_no_reference (test_form_check_invariants.ReferenceTarget.test_a_versioned_package_name_or_a_bare_identifier_is_no_reference) (mention='react@18')
+`react@18`, `tailwindcss@4` and `lucide-react@0` fit neither form of a reference, and
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 626, in test_a_versioned_package_name_or_a_bare_identifier_is_no_reference
+    self.assert_clean(self.check({STYLEGUIDE_FILE: text}))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 330, in assert_clean
+    self.assertIn("pass", [entry.get("verdict") for entry in lines
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                           if entry.get("invariant") == recorded], lines)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'pass' not found in [] : []
+
+======================================================================
+FAIL: test_a_versioned_package_name_or_a_bare_identifier_is_no_reference (test_form_check_invariants.ReferenceTarget.test_a_versioned_package_name_or_a_bare_identifier_is_no_reference) (mention='`tailwindcss@4`')
+`react@18`, `tailwindcss@4` and `lucide-react@0` fit neither form of a reference, and
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 626, in test_a_versioned_package_name_or_a_bare_identifier_is_no_reference
+    self.assert_clean(self.check({STYLEGUIDE_FILE: text}))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 330, in assert_clean
+    self.assertIn("pass", [entry.get("verdict") for entry in lines
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                           if entry.get("invariant") == recorded], lines)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'pass' not found in [] : []
+
+======================================================================
+FAIL: test_a_versioned_package_name_or_a_bare_identifier_is_no_reference (test_form_check_invariants.ReferenceTarget.test_a_versioned_package_name_or_a_bare_identifier_is_no_reference) (mention='lucide-react@0')
+`react@18`, `tailwindcss@4` and `lucide-react@0` fit neither form of a reference, and
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 626, in test_a_versioned_package_name_or_a_bare_identifier_is_no_reference
+    self.assert_clean(self.check({STYLEGUIDE_FILE: text}))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 330, in assert_clean
+    self.assertIn("pass", [entry.get("verdict") for entry in lines
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                           if entry.get("invariant") == recorded], lines)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'pass' not found in [] : []
+
+======================================================================
+FAIL: test_a_versioned_package_name_or_a_bare_identifier_is_no_reference (test_form_check_invariants.ReferenceTarget.test_a_versioned_package_name_or_a_bare_identifier_is_no_reference) (mention='ABC-01')
+`react@18`, `tailwindcss@4` and `lucide-react@0` fit neither form of a reference, and
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 626, in test_a_versioned_package_name_or_a_bare_identifier_is_no_reference
+    self.assert_clean(self.check({STYLEGUIDE_FILE: text}))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 330, in assert_clean
+    self.assertIn("pass", [entry.get("verdict") for entry in lines
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                           if entry.get("invariant") == recorded], lines)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'pass' not found in [] : []
+
+======================================================================
+FAIL: test_a_versioned_package_name_or_a_bare_identifier_is_no_reference (test_form_check_invariants.ReferenceTarget.test_a_versioned_package_name_or_a_bare_identifier_is_no_reference) (mention='ABC-01/1')
+`react@18`, `tailwindcss@4` and `lucide-react@0` fit neither form of a reference, and
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 626, in test_a_versioned_package_name_or_a_bare_identifier_is_no_reference
+    self.assert_clean(self.check({STYLEGUIDE_FILE: text}))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 330, in assert_clean
+    self.assertIn("pass", [entry.get("verdict") for entry in lines
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                           if entry.get("invariant") == recorded], lines)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'pass' not found in [] : []
+
+======================================================================
+FAIL: test_a_versioned_package_name_or_a_bare_identifier_is_no_reference (test_form_check_invariants.ReferenceTarget.test_a_versioned_package_name_or_a_bare_identifier_is_no_reference) (mention='role-meaning')
+`react@18`, `tailwindcss@4` and `lucide-react@0` fit neither form of a reference, and
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 626, in test_a_versioned_package_name_or_a_bare_identifier_is_no_reference
+    self.assert_clean(self.check({STYLEGUIDE_FILE: text}))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 330, in assert_clean
+    self.assertIn("pass", [entry.get("verdict") for entry in lines
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                           if entry.get("invariant") == recorded], lines)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'pass' not found in [] : []
+
+======================================================================
+FAIL: test_a_versioned_package_name_or_a_bare_identifier_is_no_reference (test_form_check_invariants.ReferenceTarget.test_a_versioned_package_name_or_a_bare_identifier_is_no_reference) (mention='old-pair')
+`react@18`, `tailwindcss@4` and `lucide-react@0` fit neither form of a reference, and
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 626, in test_a_versioned_package_name_or_a_bare_identifier_is_no_reference
+    self.assert_clean(self.check({STYLEGUIDE_FILE: text}))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 330, in assert_clean
+    self.assertIn("pass", [entry.get("verdict") for entry in lines
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                           if entry.get("invariant") == recorded], lines)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'pass' not found in [] : []
+
+======================================================================
+FAIL: test_a_versioned_package_name_or_a_bare_identifier_is_no_reference (test_form_check_invariants.ReferenceTarget.test_a_versioned_package_name_or_a_bare_identifier_is_no_reference) (mention='ABC-09')
+`react@18`, `tailwindcss@4` and `lucide-react@0` fit neither form of a reference, and
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 626, in test_a_versioned_package_name_or_a_bare_identifier_is_no_reference
+    self.assert_clean(self.check({STYLEGUIDE_FILE: text}))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 330, in assert_clean
+    self.assertIn("pass", [entry.get("verdict") for entry in lines
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                           if entry.get("invariant") == recorded], lines)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'pass' not found in [] : []
+
+======================================================================
+FAIL: test_a_reference_a_merge_leaves_stale_is_current_on_the_commit_checked (test_form_check_invariants.StaleReference.test_a_reference_a_merge_leaves_stale_is_current_on_the_commit_checked) (onto=['foundations/decisions.md'])
+The control of the test above: the same branch, checked with no commit to merge onto,
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 699, in test_a_reference_a_merge_leaves_stale_is_current_on_the_commit_checked
+    self.assert_clean(self.check({STYLEGUIDE_FILE: STYLEGUIDE}, onto=onto))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 330, in assert_clean
+    self.assertIn("pass", [entry.get("verdict") for entry in lines
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                           if entry.get("invariant") == recorded], lines)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'pass' not found in [] : []
+
+======================================================================
+FAIL: test_a_reference_a_merge_leaves_stale_is_current_on_the_commit_checked (test_form_check_invariants.StaleReference.test_a_reference_a_merge_leaves_stale_is_current_on_the_commit_checked) (onto=['foundations/invariants.md'])
+The control of the test above: the same branch, checked with no commit to merge onto,
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 699, in test_a_reference_a_merge_leaves_stale_is_current_on_the_commit_checked
+    self.assert_clean(self.check({STYLEGUIDE_FILE: STYLEGUIDE}, onto=onto))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 330, in assert_clean
+    self.assertIn("pass", [entry.get("verdict") for entry in lines
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                           if entry.get("invariant") == recorded], lines)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'pass' not found in [] : []
+
+======================================================================
+FAIL: test_a_reference_a_merge_leaves_stale_is_reported (test_form_check_invariants.StaleReference.test_a_reference_a_merge_leaves_stale_is_reported) [a decision reworded on the commit merged onto]
+The commit merged onto rewords a decision, or an invariant, that the branch never
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 688, in test_a_reference_a_merge_leaves_stale_is_reported
+    self.assert_reported(
+    ~~~~~~~~~~~~~~~~~~~~^
+        self.check({STYLEGUIDE_FILE: STYLEGUIDE}, ("--merge-onto", "onto"), onto=onto),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        STYLEGUIDE_FILE, line=line, fragments=(entry, current), record=REFERENCES)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_a_merge_leaves_stale_is_reported (test_form_check_invariants.StaleReference.test_a_reference_a_merge_leaves_stale_is_reported) [an invariant reworded on the commit merged onto]
+The commit merged onto rewords a decision, or an invariant, that the branch never
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 688, in test_a_reference_a_merge_leaves_stale_is_reported
+    self.assert_reported(
+    ~~~~~~~~~~~~~~~~~~~~^
+        self.check({STYLEGUIDE_FILE: STYLEGUIDE}, ("--merge-onto", "onto"), onto=onto),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        STYLEGUIDE_FILE, line=line, fragments=(entry, current), record=REFERENCES)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_stale_reference_on_the_commit_checked_is_reported_wherever_it_stands (test_form_check_invariants.StaleReference.test_a_stale_reference_on_the_commit_checked_is_reported_wherever_it_stands) [a Decision field]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 671, in test_a_stale_reference_on_the_commit_checked_is_reported_wherever_it_stands
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(entry, current), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_stale_reference_on_the_commit_checked_is_reported_wherever_it_stands (test_form_check_invariants.StaleReference.test_a_stale_reference_on_the_commit_checked_is_reported_wherever_it_stands) [an Invariant field]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 671, in test_a_stale_reference_on_the_commit_checked_is_reported_wherever_it_stands
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(entry, current), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_stale_reference_on_the_commit_checked_is_reported_wherever_it_stands (test_form_check_invariants.StaleReference.test_a_stale_reference_on_the_commit_checked_is_reported_wherever_it_stands) [a row of Roles]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 671, in test_a_stale_reference_on_the_commit_checked_is_reported_wherever_it_stands
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(entry, current), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_stale_reference_on_the_commit_checked_is_reported_wherever_it_stands (test_form_check_invariants.StaleReference.test_a_stale_reference_on_the_commit_checked_is_reported_wherever_it_stands) [a rule's prose]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 671, in test_a_stale_reference_on_the_commit_checked_is_reported_wherever_it_stands
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(entry, current), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_stale_reference_on_the_commit_checked_is_reported_wherever_it_stands (test_form_check_invariants.StaleReference.test_a_stale_reference_on_the_commit_checked_is_reported_wherever_it_stands) [an example]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 671, in test_a_stale_reference_on_the_commit_checked_is_reported_wherever_it_stands
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(entry, current), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_stale_reference_on_the_commit_checked_is_reported_wherever_it_stands (test_form_check_invariants.StaleReference.test_a_stale_reference_on_the_commit_checked_is_reported_wherever_it_stands) [a departure]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 671, in test_a_stale_reference_on_the_commit_checked_is_reported_wherever_it_stands
+    self.assert_reported(self.check({STYLEGUIDE_FILE: text}), STYLEGUIDE_FILE,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line, fragments=(entry, current), record=REFERENCES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s2r\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+----------------------------------------------------------------------
+Ran 48 tests in 103.030s
+
+FAILED (failures=97)

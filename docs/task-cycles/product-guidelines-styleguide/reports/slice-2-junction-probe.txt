@@ -1,0 +1,12 @@
+mklink: 0 Junction created for C:\Users\Mariusz\AppData\Local\Temp\tmp82pay62k\product\guidelines <<===>> C:\Users\Mariusz\AppData\Local\Temp\tmp82pay62k\outside
+== junction as guidelines/
+exit 1
+guidelines:0: error: `guidelines` is a symbolic link or another reparse point; nothing is read through it
+1 error(s), 0 warning(s), 0 unchecked
+
+== junction named guidelines/inner.md (mklink 0)
+exit 1
+guidelines:0: warning: `guidelines/inner.md/testing.md` is not read: guidelines stand in files `guidelines/<name>.md`, one level deep, with a lower-case `.md`
+0 error(s), 1 warning(s), 0 unchecked
+guidelines/inner.md:0: error: `guidelines/inner.md` is a symbolic link or another reparse point; nothing is read through it
+1 error(s), 0 warning(s), 0 unchecked

@@ -1,0 +1,22 @@
+# Probes of the slice 2 review (products built by C:/Users/Mariusz/AppData/Local/Temp/claude/C--Storage-repos-the-way/3c9695bb-97dd-4f98-b7ec-dff4bae7e82e/scratchpad/s2/make_probe.py; the-way copies in C:/Users/Mariusz/AppData/Local/Temp/claude/C--Storage-repos-the-way/3c9695bb-97dd-4f98-b7ec-dff4bae7e82e/scratchpad/s2/tw-copy*)
+# 1. guidelines/styleguide-web.md with Discipline styleguide-web, common form only
+# Command (cwd C:/Users/Mariusz/AppData/Local/Temp/claude/C--Storage-repos-the-way/3c9695bb-97dd-4f98-b7ec-dff4bae7e82e/scratchpad/s2/probe-discipline): python -B C:/Users/Mariusz/AppData/Local/Temp/claude/C--Storage-repos-the-way/3c9695bb-97dd-4f98-b7ec-dff4bae7e82e/scratchpad/s2/tw-copy3/product-guidelines/form_check.py C:/Users/Mariusz/AppData/Local/Temp/claude/C--Storage-repos-the-way/3c9695bb-97dd-4f98-b7ec-dff4bae7e82e/scratchpad/s2/probe-discipline --record C:/Users/Mariusz/AppData/Local/Temp/claude/C--Storage-repos-the-way/3c9695bb-97dd-4f98-b7ec-dff4bae7e82e/scratchpad/s2/probe-discipline.jsonl
+0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+# Exit code: 0
+
+# 2. a copy of the-way whose elements/part-map/template.md lost its field lines (C:/Users/Mariusz/AppData/Local/Temp/claude/C--Storage-repos-the-way/3c9695bb-97dd-4f98-b7ec-dff4bae7e82e/scratchpad/s2/tw-copy)
+# Command (cwd C:/Users/Mariusz/AppData/Local/Temp/claude/C--Storage-repos-the-way/3c9695bb-97dd-4f98-b7ec-dff4bae7e82e/scratchpad/s2/probe-discipline): python -B C:/Users/Mariusz/AppData/Local/Temp/claude/C--Storage-repos-the-way/3c9695bb-97dd-4f98-b7ec-dff4bae7e82e/scratchpad/s2/tw-copy/product-guidelines/form_check.py --record C:/Users/Mariusz/AppData/Local/Temp/claude/C--Storage-repos-the-way/3c9695bb-97dd-4f98-b7ec-dff4bae7e82e/scratchpad/s2/tpl.jsonl
+Traceback (most recent call last):
+  File "C:\Users\Mariusz\AppData\Local\Temp\claude\C--Storage-repos-the-way\3c9695bb-97dd-4f98-b7ec-dff4bae7e82e\scratchpad\s2\tw-copy\product-guidelines\form_check.py", line 859, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "C:\Users\Mariusz\AppData\Local\Temp\claude\C--Storage-repos-the-way\3c9695bb-97dd-4f98-b7ec-dff4bae7e82e\scratchpad\s2\tw-copy\product-guidelines\form_check.py", line 855, in main
+    return run(arguments.root, arguments.merge_onto, arguments.record)
+  File "C:\Users\Mariusz\AppData\Local\Temp\claude\C--Storage-repos-the-way\3c9695bb-97dd-4f98-b7ec-dff4bae7e82e\scratchpad\s2\tw-copy\product-guidelines\form_check.py", line 802, in run
+    map_rules = part_map.read_rules()
+  File "C:\Users\Mariusz\AppData\Local\Temp\claude\C--Storage-repos-the-way\3c9695bb-97dd-4f98-b7ec-dff4bae7e82e\scratchpad\s2\tw-copy\elements\part-map\format_guard.py", line 212, in read_rules
+    raise TemplateError('no fields in the form of "%s"' % title)
+elements_common_guard_shared.TemplateError: no fields in the form of "Part"
+# Exit code: 1
+# Record bytes: 0

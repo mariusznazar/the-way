@@ -1,0 +1,70 @@
+# Deliberate break of the naming guard (affected review), worktree C:/Storage/repos/the-way-wt/pg-affected-review at e549363
+# Break applied (git diff):
+diff --git a/product-guidelines/form_check.py b/product-guidelines/form_check.py
+index 6a05701..086cfe1 100644
+--- a/product-guidelines/form_check.py
++++ b/product-guidelines/form_check.py
+@@ -870,7 +870,7 @@ def check_parts(fields, name, discipline, form, disciplines, parts, report):
+                 report.error(None, "the file's name names the part `%s`, which is no part of the "
+                                    "map" % shown(part), check, (FORM,))
+             return
+-    elif stem == discipline:
++    elif stem == discipline or stem.startswith(discipline + "-"):
+         return
+     given = "`guidelines/%s-<part>.md`" if form.per_part else "`guidelines/%s.md`"
+     report.error(None, "the file's name does not agree with its *Discipline* `%s`: guidelines of "
+# Command: python -B gate/run_tests.py product-guidelines --record .runs/product-guidelines-tests.jsonl
+....F..........................................FF.............
+======================================================================
+FAIL: test_a_part_in_the_name_of_guidelines_other_than_a_styleguide_is_an_error (test_form_check.Names.test_a_part_in_the_name_of_guidelines_other_than_a_styleguide_is_an_error)
+Break caught: guidelines of a discipline other than the styleguide accepted under a
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-affected-review\product-guidelines\test_form_check.py", line 328, in test_a_part_in_the_name_of_guidelines_other_than_a_styleguide_is_an_error
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_file_whose_name_and_discipline_disagree_is_reported (test_form_check_invariants.Form.test_a_file_whose_name_and_discipline_disagree_is_reported) (path='guidelines/testing-web.md', discipline='testing')
+A styleguide stands in `guidelines/styleguide-<part>.md`, and guidelines of any other
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-affected-review\product-guidelines\test_form_check_invariants.py", line 494, in test_a_file_whose_name_and_discipline_disagree_is_reported
+    self.assert_reported(self.check({path: text}, ()), path)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-affected-review\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_file_whose_name_and_discipline_disagree_is_reported (test_form_check_invariants.Form.test_a_file_whose_name_and_discipline_disagree_is_reported) (path='guidelines/testing-mobile.md', discipline='testing')
+A styleguide stands in `guidelines/styleguide-<part>.md`, and guidelines of any other
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-affected-review\product-guidelines\test_form_check_invariants.py", line 494, in test_a_file_whose_name_and_discipline_disagree_is_reported
+    self.assert_reported(self.check({path: text}, ()), path)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-affected-review\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+----------------------------------------------------------------------
+Ran 61 tests in 117.770s
+
+FAILED (failures=3)
+# Exit code: 1
+# Record lines with verdict fail:
+{"check": "product-guidelines/test_form_check.py::Names.test_a_part_in_the_name_of_guidelines_other_than_a_styleguide_is_an_error", "verdict": "fail", "invariant": null, "description": "failed: AssertionError: 0 != 1 : note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line"}
+{"check": "product-guidelines/test_form_check_invariants.py::Form.test_a_file_whose_name_and_discipline_disagree_is_reported", "verdict": "fail", "invariant": "guidelines-check-form/1", "description": "failed in (path='guidelines/testing-web.md', discipline='testing'): AssertionError: 0 != 1 : note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line"}

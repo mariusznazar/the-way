@@ -1,0 +1,8 @@
+test_block_of_an_earlier_pin_without_the_sentence_is_refused_before_writing (installation.test_styleguide_installation.StyleguideInstallationTest.test_block_of_an_earlier_pin_without_the_sentence_is_refused_before_writing) ... ok
+test_guidance_names_both_form_check_commands_and_they_run_in_the_product (installation.test_styleguide_installation.StyleguideInstallationTest.test_guidance_names_both_form_check_commands_and_they_run_in_the_product) ... ok
+test_preview_apply_repeat_exposes_the_styleguide_skill_and_preserves_product (installation.test_styleguide_installation.StyleguideInstallationTest.test_preview_apply_repeat_exposes_the_styleguide_skill_and_preserves_product) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 10.105s
+
+OK

@@ -1,0 +1,3 @@
+unchecked: the references in the foundation a merge leaves — --merge-onto none: there is no commit to merge onto
+note: the repository holds no guidelines/: no file of guidelines to check
+0 error(s), 0 warning(s), 1 unchecked

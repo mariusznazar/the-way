@@ -1,0 +1,26 @@
+$ python -B gate/run_tests.py elements/part-map
+.............................................................................................................F....................................................
+======================================================================
+FAIL: test_the_way_map_holds_no_error (test_format_guard.OwnMap.test_the_way_map_holds_no_error)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\product-guidelines-styleguide\elements\part-map\test_format_guard.py", line 1987, in test_the_way_map_holds_no_error
+    self.assertEqual(code, 0, output.getvalue())
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : C:\Storage\repos\the-way-wt\product-guidelines-styleguide\elements\part-map\..\..\foundations\part_map.md:266: error: pattern `product-guidelines/**` of `product-guidelines` matches no file git tracks
+C:\Storage\repos\the-way-wt\product-guidelines-styleguide\elements\part-map\..\..\foundations\part_map.md:279: error: trust boundary `product-guidelines/form_check.py` of `product-guidelines` matches no file git tracks
+C:\Storage\repos\the-way-wt\product-guidelines-styleguide\elements\part-map\..\..\foundations\part_map.md:360: error: guidelines-form-check-command: declaration `product-guidelines/form_check.py` of `guidelines-form-check-command` does not exist
+unchecked: the list of parts of `wording-reaches-dependants` — its test leaves no coverage file
+unchecked: the list of parts of `skills-reach-the-way-sessions` — its test leaves no coverage file
+unchecked: the change path of every promise level in use — the levels sit at the declarations, and no command of the product reports them
+unchecked: the dependencies between parts, and new or stale violations — no command of the product reports the dependency graph
+note: no --base given: the list of known violations is not compared with the main branch; that check is not run, and is not counted in the last line
+note: no --base given: the computed criticality of the parts is not compared with the main branch, so no lowering is reported; that check is not run, and is not counted in the last line
+3 error(s), 0 warning(s), 4 unchecked
+
+
+----------------------------------------------------------------------
+Ran 162 tests in 34.532s
+
+FAILED (failures=1)
+exit code: 1

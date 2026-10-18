@@ -1,0 +1,40 @@
+$ python -B elements/decisions/format_guard.py foundations/decisions.md --base none --merge-onto none
+foundations/decisions.md:71: warning: WAY-03: check-by date 2026-10-02 has passed without a review record
+foundations/decisions.md:293: warning: *Approved by* is the placeholder `merge of <request link>`
+foundations/decisions.md:635: warning: WAY-21: check-by date 2026-10-02 has passed without a review record
+foundations/decisions.md:1476: warning: WAY-52: check-by date 2026-10-02 has passed without a review record
+foundations/decisions.md:1558: warning: WAY-55: check-by date 2026-10-02 has passed without a review record
+foundations/decisions.md:1972: warning: WAY-69: check-by date 2026-10-02 has passed without a review record
+foundations/decisions.md:5464: warning: *Approved by* is the placeholder `merge of <request link>`
+foundations/decisions.md:5510: warning: *Approved by* is the placeholder `merge of <request link>`
+foundations/decisions.md:5555: warning: *Approved by* is the placeholder `merge of <request link>`
+foundations/decisions.md:5593: warning: *Approved by* is the placeholder `merge of <request link>`
+foundations/decisions.md:5635: warning: *Approved by* is the placeholder `merge of <request link>`
+foundations/decisions.md:5686: warning: *Approved by* is the placeholder `merge of <request link>`
+foundations/decisions.md:5723: warning: *Approved by* is the placeholder `merge of <request link>`
+foundations/decisions.md:5758: warning: *Approved by* is the placeholder `merge of <request link>`
+foundations/decisions.md:5815: warning: *Approved by* is the placeholder `merge of <request link>`
+foundations/decisions.md:5861: warning: *Approved by* is the placeholder `merge of <request link>`
+foundations/decisions.md:5894: warning: *Approved by* is the placeholder `merge of <request link>`
+foundations/decisions.md:5922: warning: *Approved by* is the placeholder `merge of <request link>`
+foundations/decisions.md:5947: warning: *Approved by* is the placeholder `merge of <request link>`
+foundations/decisions.md:5973: warning: *Approved by* is the placeholder `merge of <request link>`
+foundations/decisions.md:5999: warning: *Approved by* is the placeholder `merge of <request link>`
+foundations/decisions.md:6025: warning: *Approved by* is the placeholder `merge of <request link>`
+foundations/decisions.md:6051: warning: *Approved by* is the placeholder `merge of <request link>`
+foundations/decisions.md:6077: warning: *Approved by* is the placeholder `merge of <request link>`
+foundations/decisions.md:6109: warning: *Approved by* is the placeholder `merge of <request link>`
+foundations/decisions.md:6143: warning: *Approved by* is the placeholder `merge of <request link>`
+foundations/decisions.md:6183: warning: *Approved by* is the placeholder `merge of <request link>`
+foundations/decisions.md:6217: warning: *Approved by* is the placeholder `merge of <request link>`
+foundations/decisions.md:6251: warning: *Approved by* is the placeholder `merge of <request link>`
+foundations/decisions.md:6285: warning: *Approved by* is the placeholder `merge of <request link>`
+foundations/decisions.md:6322: warning: *Approved by* is the placeholder `merge of <request link>`
+foundations/decisions.md:6356: warning: *Approved by* is the placeholder `merge of <request link>`
+unchecked: the lines the log holds on the main branch, and the versions it gains per number — --base none: there is no commit the branch left the main branch from
+unchecked: a change to the template without a new version in the log — --base none: there is no commit the branch left the main branch from
+unchecked: `TODO` in the log — --merge-onto none: there is no commit to merge onto
+unchecked: the copies of a version both logs hold — --merge-onto none: there is no commit to merge onto
+unchecked: the fingerprints relations carry — --merge-onto none: there is no commit to merge onto
+0 error(s), 32 warning(s), 5 unchecked
+exit code: 0

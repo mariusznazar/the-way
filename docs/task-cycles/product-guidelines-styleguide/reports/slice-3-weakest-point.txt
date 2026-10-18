@@ -1,0 +1,9 @@
+test_a_decision_the_commit_merged_onto_repeals_is_not_in_force_after_the_merge (test_form_check.References.test_a_decision_the_commit_merged_onto_repeals_is_not_in_force_after_the_merge)
+Break caught: the log after the merge read for fingerprints alone, so a decision the ... ok
+test_an_invariant_after_a_merge_is_the_branch_s_where_its_sentence_changed_there (test_form_check.References.test_an_invariant_after_a_merge_is_the_branch_s_where_its_sentence_changed_there)
+Breaks caught: an invariant after the merge read from one side only — the branch's ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 3.911s
+
+OK

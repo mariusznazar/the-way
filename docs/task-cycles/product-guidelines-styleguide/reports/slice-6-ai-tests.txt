@@ -1,0 +1,14 @@
+..............F...
+======================================================================
+FAIL: test_the_tracked_entry_points_are_what_the_generator_produces (test_skill_entry_points.TrackedEntryPoints.test_the_tracked_entry_points_are_what_the_generator_produces)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\product-guidelines-styleguide\agent-instructions\test_skill_entry_points.py", line 260, in test_the_tracked_entry_points_are_what_the_generator_produces
+    self.assertEqual((ROOT / path).read_bytes(), text.encode("utf-8"), path)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: b"---[2058 chars]s`, `lead-project`, `plan-project`, `define-pr[192 chars]e.\n" != b"---[2058 chars]s`, `maintain-styleguide`, `lead-project`, `pl[215 chars]e.\n" : .claude/skills/the-way-record-glossary-term/SKILL.md
+
+----------------------------------------------------------------------
+Ran 18 tests in 16.912s
+
+FAILED (failures=1)

@@ -1,0 +1,195 @@
+Deliberate break of guidelines-check-stale-reference/1 (reviewer, slice 3)
+Worktree C:/Storage/repos/the-way-wt/pg-review-s3 at 10b5f4a, with this change to product-guidelines/form_check.py:
+diff --git a/product-guidelines/form_check.py b/product-guidelines/form_check.py
+index 17e7204..355c178 100644
+--- a/product-guidelines/form_check.py
++++ b/product-guidelines/form_check.py
+@@ -965,7 +965,7 @@ def check_merged_references(current, merged, onto, report):
+         if value is None:
+             report.error(line, "`%s` names %s, which is not in force %s: %s"
+                          % (shown(token), what, after, setter), check, (REFERENCES,))
+-        elif value != carried:
++        elif value != carried and False:  # REVIEWER BREAK: no stale reference after the merge is reported
+             report.error(line, "`%s` carries a fingerprint other than the current one: %s, the "
+                                "current fingerprint of %s is %s, set by %s"
+                          % (shown(token), after, what, value, setter), check, (REFERENCES,))
+
+$ python -B gate/run_tests.py product-guidelines --record C:/Users/Mariusz/AppData/Local/Temp/claude/C--Storage-repos-the-way/3c9695bb-97dd-4f98-b7ec-dff4bae7e82e/scratchpad/s3review/break3.jsonl
+...............F..........................................FF.
+======================================================================
+FAIL: test_an_invariant_after_a_merge_is_the_branch_s_where_its_sentence_changed_there (test_form_check.References.test_an_invariant_after_a_merge_is_the_branch_s_where_its_sentence_changed_there) [reworded on the commit merged onto alone]
+Breaks caught: an invariant after the merge read from one side only — the branch's
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s3\product-guidelines\test_form_check.py", line 489, in test_an_invariant_after_a_merge_is_the_branch_s_where_its_sentence_changed_there
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_a_merge_leaves_stale_is_reported (test_form_check_invariants.StaleReference.test_a_reference_a_merge_leaves_stale_is_reported) [a decision reworded on the commit merged onto]
+The commit merged onto rewords a decision, or an invariant, that the branch never
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s3\product-guidelines\test_form_check_invariants.py", line 688, in test_a_reference_a_merge_leaves_stale_is_reported
+    self.assert_reported(
+    ~~~~~~~~~~~~~~~~~~~~^
+        self.check({STYLEGUIDE_FILE: STYLEGUIDE}, ("--merge-onto", "onto"), onto=onto),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        STYLEGUIDE_FILE, line=line, fragments=(entry, current), record=REFERENCES)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s3\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_a_merge_leaves_stale_is_reported (test_form_check_invariants.StaleReference.test_a_reference_a_merge_leaves_stale_is_reported) [an invariant reworded on the commit merged onto]
+The commit merged onto rewords a decision, or an invariant, that the branch never
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s3\product-guidelines\test_form_check_invariants.py", line 688, in test_a_reference_a_merge_leaves_stale_is_reported
+    self.assert_reported(
+    ~~~~~~~~~~~~~~~~~~~~^
+        self.check({STYLEGUIDE_FILE: STYLEGUIDE}, ("--merge-onto", "onto"), onto=onto),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        STYLEGUIDE_FILE, line=line, fragments=(entry, current), record=REFERENCES)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s3\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+----------------------------------------------------------------------
+Ran 60 tests in 114.247s
+
+FAILED (failures=3)
+exit code: 1
+
+record lines for guidelines-check-stale-reference/1:
+{"check": "product-guidelines/test_form_check_invariants.py::StaleReference.test_a_reference_a_merge_leaves_stale_is_reported", "verdict": "fail", "invariant": "guidelines-check-stale-reference/1", "description": "failed in [a decision reworded on the commit merged onto]: AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked"}
+{"check": "product-guidelines/test_form_check_invariants.py::Fixtures.test_the_valid_fixtures_pass", "verdict": "pass", "invariant": "guidelines-check-stale-reference/1"}
+{"check": "product-guidelines/test_form_check_invariants.py::ReferenceTarget.test_a_reference_in_fenced_code_is_ignored", "verdict": "pass", "invariant": "guidelines-check-stale-reference/1"}
+{"check": "product-guidelines/test_form_check_invariants.py::StaleReference.test_a_reference_a_merge_leaves_stale_is_current_on_the_commit_checked", "verdict": "pass", "invariant": "guidelines-check-stale-reference/1"}
+{"check": "product-guidelines/test_form_check_invariants.py::StaleReference.test_a_stale_reference_on_the_commit_checked_is_reported_wherever_it_stands", "verdict": "pass", "invariant": "guidelines-check-stale-reference/1"}
+
+=== Additional break (version rule of spec 5.2 / brief): merged_invariants reads every invariant from the 'onto' side ===
+diff --git a/product-guidelines/form_check.py b/product-guidelines/form_check.py
+index 17e7204..a5b41dc 100644
+--- a/product-guidelines/form_check.py
++++ b/product-guidelines/form_check.py
+@@ -650,7 +650,7 @@ def merged_invariants(branch, fork, onto, borrowed):
+ 
+     entries, withdrawn = {}, set()
+     for identifier in set().union(*(set(side[0]) | side[1] for side in (branch, fork, onto))):
+-        side = branch if sentence(branch, identifier) != sentence(fork, identifier) else onto
++        side = onto  # REVIEWER BREAK: version rule after the merge reads one side only
+         if identifier in side[1]:
+             withdrawn.add(identifier)
+         elif identifier in side[0]:
+$ cd product-guidelines && python -B -m unittest test_form_check.References test_form_check_invariants.StaleReference test_form_check_invariants.Fixtures
+.........F.....
+======================================================================
+FAIL: test_an_invariant_after_a_merge_is_the_branch_s_where_its_sentence_changed_there (test_form_check.References.test_an_invariant_after_a_merge_is_the_branch_s_where_its_sentence_changed_there) [reworded on both sides]
+Breaks caught: an invariant after the merge read from one side only — the branch's
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s3\product-guidelines\test_form_check.py", line 487, in test_an_invariant_after_a_merge_is_the_branch_s_where_its_sentence_changed_there
+    self.assert_clean(code, output)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s3\product-guidelines\test_form_check.py", line 337, in assert_clean
+    self.assertEqual(code, 0, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : 0 error(s), 0 warning(s), 0 unchecked
+guidelines/testing.md:15: error: `fixture-named@dbcd43ec` carries a fingerprint other than the current one: after a merge onto onto, the current fingerprint of the invariant `fixture-named` is 85090d30, set by fixture-named/2
+1 error(s), 0 warning(s), 0 unchecked
+
+
+----------------------------------------------------------------------
+Ran 15 tests in 22.170s
+
+FAILED (failures=1)
+exit code: 1
+
+=== Additional break (version rule of spec 5.2 / brief): merged_invariants reads every invariant from the 'branch' side ===
+diff --git a/product-guidelines/form_check.py b/product-guidelines/form_check.py
+index 17e7204..b171092 100644
+--- a/product-guidelines/form_check.py
++++ b/product-guidelines/form_check.py
+@@ -650,7 +650,7 @@ def merged_invariants(branch, fork, onto, borrowed):
+ 
+     entries, withdrawn = {}, set()
+     for identifier in set().union(*(set(side[0]) | side[1] for side in (branch, fork, onto))):
+-        side = branch if sentence(branch, identifier) != sentence(fork, identifier) else onto
++        side = branch  # REVIEWER BREAK: version rule after the merge reads one side only
+         if identifier in side[1]:
+             withdrawn.add(identifier)
+         elif identifier in side[0]:
+$ cd product-guidelines && python -B -m unittest test_form_check.References test_form_check_invariants.StaleReference test_form_check_invariants.Fixtures
+.........FFF..F..
+======================================================================
+FAIL: test_an_invariant_after_a_merge_is_the_branch_s_where_its_sentence_changed_there (test_form_check.References.test_an_invariant_after_a_merge_is_the_branch_s_where_its_sentence_changed_there) [withdrawn on the commit merged onto]
+Breaks caught: an invariant after the merge read from one side only — the branch's
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s3\product-guidelines\test_form_check.py", line 489, in test_an_invariant_after_a_merge_is_the_branch_s_where_its_sentence_changed_there
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_an_invariant_after_a_merge_is_the_branch_s_where_its_sentence_changed_there (test_form_check.References.test_an_invariant_after_a_merge_is_the_branch_s_where_its_sentence_changed_there) [removed on the commit merged onto]
+Breaks caught: an invariant after the merge read from one side only — the branch's
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s3\product-guidelines\test_form_check.py", line 489, in test_an_invariant_after_a_merge_is_the_branch_s_where_its_sentence_changed_there
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_an_invariant_after_a_merge_is_the_branch_s_where_its_sentence_changed_there (test_form_check.References.test_an_invariant_after_a_merge_is_the_branch_s_where_its_sentence_changed_there) [reworded on the commit merged onto alone]
+Breaks caught: an invariant after the merge read from one side only — the branch's
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s3\product-guidelines\test_form_check.py", line 489, in test_an_invariant_after_a_merge_is_the_branch_s_where_its_sentence_changed_there
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_reference_a_merge_leaves_stale_is_reported (test_form_check_invariants.StaleReference.test_a_reference_a_merge_leaves_stale_is_reported) [an invariant reworded on the commit merged onto]
+The commit merged onto rewords a decision, or an invariant, that the branch never
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way-wt\pg-review-s3\product-guidelines\test_form_check_invariants.py", line 688, in test_a_reference_a_merge_leaves_stale_is_reported
+    self.assert_reported(
+    ~~~~~~~~~~~~~~~~~~~~^
+        self.check({STYLEGUIDE_FILE: STYLEGUIDE}, ("--merge-onto", "onto"), onto=onto),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        STYLEGUIDE_FILE, line=line, fragments=(entry, current), record=REFERENCES)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Storage\repos\the-way-wt\pg-review-s3\product-guidelines\test_form_check_invariants.py", line 309, in assert_reported
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+----------------------------------------------------------------------
+Ran 15 tests in 26.810s
+
+FAILED (failures=4)
+exit code: 1
