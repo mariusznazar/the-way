@@ -1,13 +1,13 @@
 """Ordinary tests of the form check of guidelines, `product-guidelines/form_check.py`.
 
 They cover what no invariant's sentence holds: what a run records and prints, which paths it does
-not read, how it treats a product's files as untrusted input (WAY-48), and when it cannot run. The
-checks of the invariants of guidelines stand in `test_form_check_invariants.py`, written by another
-agent (WAY-03, WAY-69).
+not read, how it treats a product's files as untrusted input (WAY-48), how the foundation after a
+merge is read, and when it cannot run. The checks of the invariants of guidelines stand in
+`test_form_check_invariants.py`, written by another agent (WAY-03, WAY-69).
 
 Each test builds a product in a temporary git repository and runs the command on it, as a
 subprocess or, where a test watches what the script calls, in this process. Expected values are
-written out as literals; the one fingerprint below was computed once, by hand, with
+written out as literals; each fingerprint below was computed once, by hand, with
 `relation-model/fingerprint.py` from the sentence beside it.
 
 Run from the root of the-way:
@@ -33,6 +33,10 @@ sys.dont_write_bytecode = True
 THE_WAY = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SCRIPT = os.path.join(THE_WAY, "product-guidelines", "form_check.py")
 FORM = "guidelines-form/1"
+REFERENCES = "guidelines-reference-current/1"
+# The reason a check needing a commit given as `none` records, word for word as the invariants
+# template lists it.
+NO_COMMIT_REASON = "the method takes a commit the gate filled in as not existing"
 LIMIT = 1048576
 
 FIXTURES_DECISION = "Each test of the product sets up its data through the product's fixtures."
@@ -55,6 +59,29 @@ LOG = "\n".join([
 INVARIANTS = ("# Invariants\n\n"
               "## Withdrawn identifiers\n\n| Identifier | Why | Successors |\n|---|---|---|\n\n"
               "## Quarantined invariants\n\n| Identifier | Version | Until |\n|---|---|---|\n")
+
+# An invariant `fixture-named` in three wordings, for the reading of the foundation after a merge.
+NAMED = "Every test of the product names the fixture it sets up its data through."
+NAMED_FP = "f60b0650"
+NAMED_ON_BRANCH = "Every test of the product names each fixture it sets up its data through."
+NAMED_ON_BRANCH_FP = "dbcd43ec"
+NAMED_ON_ONTO = "Every test of the product names the one fixture it sets up its data through."
+NAMED_ON_ONTO_FP = "85090d30"
+
+
+def invariants_with(sentence=None, version=1, withdrawn=False):
+    """An invariants file holding `fixture-named` at the version and with the sentence given, or
+    listing it as withdrawn, or holding neither."""
+    entry = ""
+    if sentence is not None:
+        entry = ("## fixture-named/%d\n\n%s\n\n- **Method:** `python -B tests/check_named.py`\n"
+                 "- **Rests on:** none\n- **Derives from:** ABC-05@%s\n- **Part:** web\n"
+                 "- **Correction:** none\n\n" % (version, sentence, FIXTURES_FP))
+    row = "| fixture-named | merged with another entry | none |\n" if withdrawn else ""
+    return ("# Invariants\n\n" + entry
+            + "## Withdrawn identifiers\n\n| Identifier | Why | Successors |\n|---|---|---|\n"
+            + row + "\n## Quarantined invariants\n\n| Identifier | Version | Until |\n"
+            "|---|---|---|\n")
 
 PART_MAP = """# Part map
 
@@ -106,6 +133,9 @@ The team names its branches after their tasks.
 
 - `tests/fixtures.py`
 """
+WHEN_LINE = 8        # "Before writing a test of the web interface."
+DECISION_LINE = 14   # "- **Decision:** ABC-05@016b5b2a"
+INVARIANT_LINE = 15  # "- **Invariant:** none"
 PROSE_LINE = 19      # "Set up each test's data through the product's fixtures."
 WHERE_LINE = 29      # "- `tests/fixtures.py`"
 
@@ -162,6 +192,24 @@ class Case(unittest.TestCase):
             self.git("commit", "-q", "-m", "guidelines")
         if untracked:
             self.write(untracked)
+        return self.root
+
+    def product_onto(self, guidelines, onto, branch=None, base=None):
+        """A product whose base commit holds FOUNDATION, with the files `base` changed; a branch
+        `onto` leaves it with the files `onto` changed, and the main branch then gains a commit
+        holding `guidelines` and the files `branch` changes."""
+        self.git("init", "-q", "-b", "main")
+        self.write(dict(FOUNDATION, **(base or {})))
+        self.git("add", "-A")
+        self.git("commit", "-q", "-m", "foundation")
+        self.git("checkout", "-q", "-b", "onto")
+        self.write(onto)
+        self.git("add", "-A")
+        self.git("commit", "-q", "-m", "onto")
+        self.git("checkout", "-q", "main")
+        self.write(dict(branch or {}, **guidelines))
+        self.git("add", "-A")
+        self.git("commit", "-q", "-m", "guidelines")
         return self.root
 
     def records(self):
@@ -279,6 +327,205 @@ class Paths(Case):
                 self.assertEqual([WHERE_LINE], [line for line, message in
                                                 self.errors(output, "guidelines/testing.md")
                                                 if path in message and why in message], output)
+
+
+class References(Case):
+    """What a run records and prints of the checks of references, and how it reads what a
+    reference names, beyond what the invariants of guidelines assert (spec §§3.2, 5.1, 5.2)."""
+
+    def assert_clean(self, code, output):
+        self.assertEqual(code, 0, output)
+        self.assertNotIn(": error:", output)
+
+    def test_a_run_with_merge_onto_records_lines_of_guidelines_reference_current_alone(self):
+        """Breaks caught: a run given `--merge-onto` recording the checks of form, or no check of
+        references; `none` given and the check after the merge recorded as anything but
+        `unchecked` with the shared reason, or the check on the commit itself left out."""
+        self.product({"guidelines/testing.md": TESTING, "guidelines/testing-web.md": NO_GOOD})
+        code, output, lines = self.run_check("--merge-onto", "none")
+        self.assertEqual(code, 1, output)   # the form error of NO_GOOD prints, unrecorded
+        self.assertTrue(lines, output)
+        self.assertEqual({REFERENCES}, {line["invariant"] for line in lines}, lines)
+        self.assertEqual({"pass", "unchecked"}, {line["verdict"] for line in lines}, lines)
+        unchecked = [line for line in lines if line["verdict"] == "unchecked"]
+        self.assertEqual(1, len(unchecked), lines)
+        self.assertEqual(NO_COMMIT_REASON, unchecked[0]["reason"])
+        self.assertTrue(unchecked[0]["description"].startswith("--merge-onto none"), unchecked)
+        self.assertRegex(output, r"(?m)^unchecked: ")
+
+    def test_a_repository_with_no_guidelines_records_the_checks_of_references(self):
+        """Break caught: no file of guidelines taken as nothing to record, so the method of
+        guidelines-reference-current gives no verdict in the-way itself."""
+        self.product({})
+        code, output, lines = self.run_check("--merge-onto", "none")
+        self.assertEqual(code, 0, output)
+        self.assertEqual({("pass", REFERENCES), ("unchecked", REFERENCES)},
+                         {(line["verdict"], line["invariant"]) for line in lines}, lines)
+
+    def test_a_run_with_no_option_prints_a_reference_error_and_records_no_reference_check(self):
+        """Breaks caught: a no-option run that skips the checks of references, passes on a
+        reference error, or records them (spec §5.1: every check runs and prints in every run;
+        ruling C28 (5))."""
+        self.product({"guidelines/testing.md": with_line(
+            TESTING, PROSE_LINE, "Set up each test's data as ABC-09@0123abcd has it.")})
+        code, output, lines = self.run_check()
+        self.assertEqual(code, 1, output)
+        self.assertIn(PROSE_LINE, [line for line, message in
+                                   self.errors(output, "guidelines/testing.md")
+                                   if "ABC-09@0123abcd" in message], output)
+        self.assertEqual({FORM}, {line["invariant"] for line in lines}, lines)
+        self.assertNotIn("fail", [line["verdict"] for line in lines], lines)
+
+    def test_a_run_with_no_option_says_in_a_note_that_the_merge_is_not_checked(self):
+        """Break caught: the check after the merge left out in silence."""
+        self.product({"guidelines/testing.md": TESTING})
+        code, output, _ = self.run_check()
+        self.assertEqual(code, 0, output)
+        self.assertRegex(output, r"(?m)^note: .*--merge-onto")
+
+    def test_a_package_name_a_bare_identifier_or_another_log_s_number_is_no_reference(self):
+        """Breaks caught: a versioned package name, an address, a bare identifier, or a decision
+        number with another log's prefix taken for a reference (spec §3.2). The control at the
+        same line shows the check of references reads it."""
+        line = "Set up each test's data through the product's fixtures, as %s has it."
+        for mention in ("`react@18`", "tailwindcss@4", "lucide-react@0", "left-pad@1.3.0",
+                        "anna@example.com", "ABC-05", "ABC-05/1", "fixture-named",
+                        "WAY-169@e2fb088c", "`WAY-169@e2fb088c`"):
+            with self.subTest(mention=mention):
+                self.setUp()
+                self.product({"guidelines/testing.md": with_line(TESTING, PROSE_LINE,
+                                                                 line % mention)})
+                self.assert_clean(*self.run_check("--merge-onto", "none")[:2])
+        self.setUp()
+        self.product({"guidelines/testing.md": with_line(TESTING, PROSE_LINE,
+                                                         line % "ABC-09@0123abcd")})
+        code, output, _ = self.run_check("--merge-onto", "none")
+        self.assertEqual(code, 1, output)
+        self.assertIn(PROSE_LINE, [at for at, _ in self.errors(output, "guidelines/testing.md")])
+
+    def test_a_reference_in_fenced_code_of_any_fence_is_ignored(self):
+        """Breaks caught: a longer fence, a fence indented by up to three spaces, or a fence of
+        one character holding the other read as prose, so a sample in it is reported. The
+        control shows the same tokens outside the fence reported."""
+        tokens = "ABC-09@0123abcd · ABC-05@016b5b2b · fixture-named@0123abcd · left-pad@0123abcd"
+        for fence, inside, closing in (("~~~~", ["```", tokens, "```"], "~~~~~"),
+                                       ("   ```text", [tokens, "~~~"], "```"),
+                                       ("~~~", [tokens], "~~~")):
+            with self.subTest(fence=fence):
+                self.setUp()
+                block = "\n".join(["Set up each test's data through the product's fixtures.",
+                                   "", fence] + inside + [closing])
+                self.product({"guidelines/testing.md": with_line(TESTING, PROSE_LINE, block)})
+                self.assert_clean(*self.run_check("--merge-onto", "none")[:2])
+        self.setUp()
+        self.product({"guidelines/testing.md": with_line(TESTING, PROSE_LINE, tokens)})
+        code, output, _ = self.run_check("--merge-onto", "none")
+        self.assertEqual(code, 1, output)
+        self.assertEqual(4, len(self.errors(output, "guidelines/testing.md")), output)
+
+    def test_a_decision_number_of_another_log_names_no_decision_of_the_log(self):
+        """Breaks caught: a rule's *Decision*, or a dropped section, taken to name a decision of
+        the log by the shape of a number alone, though its prefix is another log's."""
+        cases = (
+            ("a rule's Decision", DECISION_LINE, "- **Decision:** WAY-169@e2fb088c"),
+            ("a dropped section", WHEN_LINE, "none — WAY-169@e2fb088c"),
+        )
+        for name, number, line in cases:
+            with self.subTest(name):
+                self.setUp()
+                self.product({"guidelines/testing.md": with_line(TESTING, number, line)})
+                code, output, lines = self.run_check()
+                self.assertEqual(code, 1, output)
+                self.assertIn(number, [at for at, _ in
+                                       self.errors(output, "guidelines/testing.md")], output)
+                self.assertIn("fail", [entry["verdict"] for entry in lines])
+
+    def test_log_copies_that_differ_on_the_commit_merged_onto_give_no_finding_of_the_log(self):
+        """Break caught: the decisions guard's report of the merged log carried over, so the
+        form check fails on a rule of the log (`log-merge-copies`) and not of guidelines
+        (spec §5.1, finding 15)."""
+        rationale = "*Rationale:* one way of setting up data."
+        self.product_onto({"guidelines/testing.md": TESTING},
+                          {"foundations/decisions.md": LOG.replace(
+                              rationale, rationale[:-1] + ", kept on the main branch.")},
+                          {"foundations/decisions.md": LOG.replace(
+                              rationale, rationale[:-1] + ", kept on the branch.")})
+        code, output, lines = self.run_check("--merge-onto", "onto")
+        self.assert_clean(code, output)
+        self.assertNotIn("log-merge-copies", output + json.dumps(lines))
+        self.assertNotIn("differs from its copy", output)
+        self.assertEqual({"pass"}, {line["verdict"] for line in lines}, lines)
+
+    def test_an_invariant_after_a_merge_is_the_branch_s_where_its_sentence_changed_there(self):
+        """Breaks caught: an invariant after the merge read from one side only — the branch's
+        own rewording lost to the commit merged onto, or a withdrawal or removal there taken for
+        no change (spec §5.2)."""
+        cited = "- **Invariant:** fixture-named@%s"
+        cases = (
+            ("withdrawn on the commit merged onto", NAMED_FP,
+             {"foundations/invariants.md": invariants_with(withdrawn=True)}, None,
+             ("not in force after a merge onto onto", "withdrawn")),
+            ("removed on the commit merged onto", NAMED_FP,
+             {"foundations/invariants.md": invariants_with()}, None,
+             ("not in force after a merge onto onto", "does not hold")),
+            ("reworded on both sides", NAMED_ON_BRANCH_FP,
+             {"foundations/invariants.md": invariants_with(NAMED_ON_ONTO, 2)},
+             {"foundations/invariants.md": invariants_with(NAMED_ON_BRANCH, 2)}, None),
+            ("reworded on the commit merged onto alone", NAMED_FP,
+             {"foundations/invariants.md": invariants_with(NAMED_ON_ONTO, 2)}, None,
+             ("after a merge onto onto, the current fingerprint", NAMED_ON_ONTO_FP)),
+        )
+        for name, carried, onto, branch, expected in cases:
+            with self.subTest(name):
+                self.setUp()
+                self.product_onto({"guidelines/testing.md": with_line(
+                    TESTING, INVARIANT_LINE, cited % carried)}, onto, branch,
+                    base={"foundations/invariants.md": invariants_with(NAMED)})
+                code, output, lines = self.run_check("--merge-onto", "onto")
+                errors = self.errors(output, "guidelines/testing.md")
+                if expected is None:
+                    self.assert_clean(code, output)
+                    continue
+                self.assertEqual(code, 1, output)
+                self.assertTrue([message for at, message in errors if at == INVARIANT_LINE
+                                 and "fixture-named" in message
+                                 and all(fragment in message for fragment in expected)], output)
+                self.assertIn("fail", [line["verdict"] for line in lines
+                                       if line["invariant"] == REFERENCES])
+
+    def test_a_decision_the_commit_merged_onto_repeals_is_not_in_force_after_the_merge(self):
+        """Break caught: the log after the merge read for fingerprints alone, so a decision the
+        main branch repealed, which a branch's guidelines still name, passes the merge."""
+        repeal = "\n".join([
+            "### ABC-05/2 — How does a test set up its data?", "",
+            "- **Change:** repeal", "- **Scope:** web", "- **Based on:** none",
+            "- **Relations:** none",
+            "- **Verification:** level 2 — an agent compares the change with the decision:",
+            "  - complies: a test sets up its data as it needs;",
+            "  - violates: a test is held to the fixtures.",
+            "- **Review when:** none", "- **Origin:** none",
+            "- **Approved by:** Anna, 2026-09-02", "",
+            "*Rationale for change:* the question no longer needs an answer.",
+            "*Rejected:* none considered", ""])
+        self.product_onto({"guidelines/testing.md": TESTING},
+                          {"foundations/decisions.md": LOG + "\n" + repeal})
+        code, output, lines = self.run_check("--merge-onto", "onto")
+        self.assertEqual(code, 1, output)
+        self.assertTrue([message for at, message in self.errors(output, "guidelines/testing.md")
+                         if at == DECISION_LINE and "ABC-05@016b5b2a" in message
+                         and "not in force after a merge onto onto" in message
+                         and "ABC-05/2" in message], output)
+        self.assertIn("fail", [line["verdict"] for line in lines
+                               if line["invariant"] == REFERENCES])
+
+    def test_a_commit_to_merge_onto_that_does_not_exist_is_an_error(self):
+        """Break caught: a mistyped commit taken as no commit to merge onto, so the check after
+        the merge passes unrun."""
+        self.product({"guidelines/testing.md": TESTING})
+        code, output, lines = self.run_check("--merge-onto", "nowhere")
+        self.assertEqual(code, 1, output)
+        self.assertRegex(output, r"(?m)^guidelines:\d+: error: .*nowhere")
+        self.assertIn("fail", [line["verdict"] for line in lines])
 
 
 class NotRead(Case):
@@ -403,6 +650,27 @@ class TrustBoundary(Case):
                 self.product({"guidelines/testing.md": data})
                 started = time.monotonic()
                 code, output, _ = self.run_check(timeout=120)
+                elapsed = time.monotonic() - started
+                self.assertIn(code, (0, 1), output[-2000:])
+                self.assertLess(elapsed, 30, "the run took %.1f s" % elapsed)
+                self.assertEqual(2, len(self.count_lines(output)), output[-2000:])
+
+    def test_a_line_of_words_and_at_signs_just_under_one_mebibyte_finishes_within_a_bound(self):
+        """Break caught: a pattern of references that tries every shorter name before each `@`
+        from every place in a long word, so one line of a crafted file takes quadratic time.
+        The line is one word of letters, digits and hyphens ending in `@` and a backtick, or
+        many names each followed by `@` and no letter or digit."""
+        for name, unit, tail in (("one word", "a0-" * 7, "@`"), ("many names", "ab-c9@`", "")):
+            with self.subTest(name):
+                self.setUp()
+                head = with_line(TESTING, PROSE_LINE, "\0").encode("utf-8")
+                room = LIMIT - 16 - (len(head) - 1) - len(tail)
+                line = (unit * (room // len(unit) + 1))[:room] + tail
+                data = head.replace(b"\0", line.encode("ascii"))
+                self.assertLess(len(data), LIMIT)
+                self.product({"guidelines/testing.md": data})
+                started = time.monotonic()
+                code, output, _ = self.run_check("--merge-onto", "none", timeout=120)
                 elapsed = time.monotonic() - started
                 self.assertIn(code, (0, 1), output[-2000:])
                 self.assertLess(elapsed, 30, "the run took %.1f s" % elapsed)

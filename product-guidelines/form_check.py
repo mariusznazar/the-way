@@ -17,12 +17,17 @@ there. --merge-onto names the commit of the main branch a merge goes onto, `none
 none (WAY-61); it selects the checks of references for the record, so a run given it records no
 check of form. --record names a JSON Lines file, its path ending in `.jsonl`, created or
 overwritten, which receives the-way's own record of the run (WAY-74): a verdict for each invariant
-cited by a check the run's options select — the checks of form with no option — and every failure
-of the run itself. Every check runs and prints in every run.
+cited by a check the run's options select — the checks of form with no option, the checks of
+references with --merge-onto — and every failure of the run itself. Every check runs and prints in
+every run, so a run given no option that meets a reference error prints it and exits 1, its record
+holding the checks of form alone. The check of references after a merge runs only with a commit
+given to --merge-onto: given `none`, it is recorded `unchecked` with the reason the guards share;
+given no option, a note says it does not run.
 
-The run prints one report for itself — the guidelines it lists, the part map it reads — under the
-path `guidelines`, and one for each file of guidelines under that file's path; each report ends
-with its count line. A run finding no `guidelines/` says so in a note and records `pass`.
+The run prints one report for itself — the guidelines it lists, the part map, decision log and
+invariants file it reads, the commit it merges onto — under the path `guidelines`, and one for each
+file of guidelines under that file's path; each report ends with its count line. A run finding no
+`guidelines/` says so in a note and records `pass`.
 
 What it reports, each finding an error of `guidelines-form` (spec §5.3, items 1–6 and 5a): a header
 line, section, required rule or rule field missing or out of order; a rule naming no decision, and
@@ -32,17 +37,34 @@ decision, and a decision of the table that the rule of each role's meaning does 
 rule is dropped; a dropped section or rule holding anything but `none — <PREFIX-NN>@<fingerprint>`;
 a part named in *Applies to* or in the file's name that the map does not hold; a file whose name and
 *Discipline* disagree; a path of `## Where in code` that is absolute, holds a `..` segment, a drive,
-a UNC prefix, a backslash or a `:`, or names nothing git tracks. A path git lists under
-`guidelines/` that is not `guidelines/<name>.md`, one level deep with a lower-case `.md`, gets a
-warning and is not read.
+a UNC prefix, a backslash or a `:`, or names nothing git tracks. A decision is named by a number
+with the prefix of the product's log, an invariant by an identifier its invariants file holds as an
+entry or a withdrawn identifier. A path git lists under `guidelines/` that is not
+`guidelines/<name>.md`, one level deep with a lower-case `.md`, gets a warning and is not read.
+
+What it reports as an error of `guidelines-reference-current` (spec §5.3, item 7): a reference
+anywhere outside fenced code — a decision number of the log or an identifier of the invariants file
+followed by `@` and a run of letters and digits, or any identifier followed by `@` and eight
+lower-case hexadecimal characters (spec §3.2) — whose part after `@` is no fingerprint, that names a
+decision the log does not hold or holds with no binding sentences, or an invariant the file does not
+hold or has withdrawn, or whose fingerprint is not the entry's current one on the commit checked
+and, given a commit to merge onto, after the merge: the decisions as the decisions guard merges the
+log, an invariant as on the branch where its sentence differs from the fork point and as on that
+commit otherwise. Every fingerprint is computed by `relation-model/fingerprint.py`; a message names
+the reference, the entry and its current fingerprint, and never offers to renew one (WAY-31). The
+parsers of the decisions and invariants guards are borrowed with reports of this script's own,
+discarded after the call: only a failure of git carries over, never a finding of the log's own
+rules.
 
 The files it reads are the product's, so it trusts none of them (WAY-48): it reads a file only
 through components that are no link or other reparse point, only a regular file of at most 1048576
 bytes, only UTF-8 text, and nothing through a link; a path named in a file is never opened and
 never given to git, which is asked once for every path it tracks; it calls no program but git,
 opens no socket, writes nothing but the record, and prints every value taken from a file escaped
-and cut to 200 characters. Its regular expressions are anchored or bounded by a look-behind, with
-no nested repetition, so a long line cannot make matching run away.
+and cut to 200 characters. It reads the decision log and the invariants file of the working tree
+as it reads guidelines, and their copies on other commits from git by their fixed paths. Its
+regular expressions are anchored or bounded by a look-behind, with no nested repetition, so a long
+line cannot make matching run away.
 
 Exit code: 0 without errors, 1 with errors, 2 when it cannot run — ROOT is not the top of a git
 repository, a template of the-way or the code it borrows cannot be read, or the record path does not
@@ -56,6 +78,7 @@ import os
 import re
 import stat
 import sys
+import types
 from dataclasses import dataclass, field
 
 sys.dont_write_bytecode = True
@@ -66,14 +89,23 @@ TEMPLATE = os.path.join(HERE, "template.md")
 
 # The name a record gives this program, and each of its checks as PROGRAM::<function>.
 PROGRAM = "product-guidelines/form_check.py"
-# The invariant the checks of form give a verdict for, at the version this script checks.
+# The invariants the checks give a verdict for, at the versions this script checks.
 FORM = "guidelines-form/1"
+REFERENCES = "guidelines-reference-current/1"
+# The checks of references, on the commit checked and after the merge.
+SAME_COMMIT, AFTER_MERGE = "check_references", "check_merged_references"
 # The checks each option selects for the record; every other check is recorded only by a run given
 # no option (WAY-74). The checks of form are selected by none.
-SELECTED_BY = {}
+SELECTED_BY = {SAME_COMMIT: "--merge-onto", AFTER_MERGE: "--merge-onto"}
 
 GUIDELINES = "guidelines"
 PART_MAP = "foundations/part_map.md"
+DECISION_LOG = "foundations/decisions.md"
+INVARIANTS = "foundations/invariants.md"
+# Why `read_untrusted` reads no file where none stands at the path.
+ABSENT = "does not exist"
+# What the parsers borrowed from the guards may raise on a file a product wrote.
+PARSE_ERRORS = (ValueError, IndexError, KeyError, AttributeError, TypeError)
 MAX_BYTES = 1048576
 MAX_SHOWN = 200
 
@@ -92,13 +124,17 @@ ROLE_MEANING_RULE = "Each role in its meaning"
 FIELD_LINE = re.compile(r"^- \*\*(.+?):\*\*(?: (.*))?$")
 OPEN_FENCE = re.compile(r"^ {0,3}(`{3,}|~{3,})(.*)$")
 CODE_SPAN = re.compile(r"`([^`\n]*)`")
-# A decision number followed by `@` and a letter or digit, and an identifier's run followed by the
-# same; the look-behind keeps each from starting inside a longer word, so a scan stays linear.
-DECISION_TOKEN = re.compile(r"(?<![A-Za-z0-9-])([A-Z][A-Z0-9]*-[0-9]+)@[A-Za-z0-9]")
-IDENTIFIER_TOKEN = re.compile(r"(?<![A-Za-z0-9-])([a-z0-9][a-z0-9-]*)@[A-Za-z0-9]")
+# A word of letters, digits and hyphens followed by `@` and a run of letters and digits: what may
+# be a reference, the word read afterwards as a decision number or an identifier. The look-behind
+# keeps a match from starting inside a longer word, so from each place a scan starts at most once
+# and stays linear on a long line; neither repetition is nested.
+REFERENCE_TOKEN = re.compile(r"(?<![A-Za-z0-9-])([A-Za-z0-9][A-Za-z0-9-]*)@([A-Za-z0-9]+)")
+# A decision number, its digits bounded so that no crafted run of digits reaches int().
+DECISION_NUMBER = re.compile(r"([A-Z][A-Z0-9]*)-([0-9]{1,9})")
 IDENTIFIER = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*")
+FINGERPRINT = re.compile(r"[0-9a-f]{8}")
 DROPPED = re.compile(r"^none(?:\s*$|\s*[—–-])")
-DROP_LINE = re.compile(r"^none — [A-Z][A-Z0-9]*-[0-9]+@[0-9a-f]{8}$")
+DROP_LINE = re.compile(r"^none — ([A-Z][A-Z0-9]*-[0-9]+)@[0-9a-f]{8}$")
 SEPARATOR_CELL = re.compile(r"^:?-+:?$")
 
 
@@ -117,15 +153,21 @@ def _load(name, path):
 
 
 def borrow():
-    """(the code the format guards share, the part-map guard), or the reason they cannot load."""
+    """(the code the format guards share, the part-map, decisions and invariants guards and the
+    relation model's fingerprint, by name), or (None, the reason they cannot load)."""
+    paths = {"shared": ("elements", "common", "guard_shared.py"),
+             "part_map": ("elements", "part-map", "format_guard.py"),
+             "decisions": ("elements", "decisions", "format_guard.py"),
+             "invariants": ("elements", "invariants", "format_guard.py"),
+             "fingerprint": ("relation-model", "fingerprint.py")}
+    loaded = {}
     try:
-        shared = _load("elements_common_guard_shared",
-                       os.path.join(THE_WAY, "elements", "common", "guard_shared.py"))
-        part_map = _load("product_guidelines_part_map_guard",
-                         os.path.join(THE_WAY, "elements", "part-map", "format_guard.py"))
+        for name, path in paths.items():
+            loaded[name] = _load("product_guidelines_borrowed_%s" % name,
+                                 os.path.join(THE_WAY, *path))
     except (OSError, ImportError, SyntaxError, AttributeError) as problem:
-        return None, None, "cannot load the code the form check borrows: %s" % problem
-    return shared, part_map, None
+        return None, "cannot load the code the form check borrows: %s" % problem
+    return types.SimpleNamespace(**loaded), None
 
 
 # --- values taken from a product's files ----------------------------------------------------
@@ -165,7 +207,7 @@ def read_untrusted(root, relative):
         try:
             info = os.lstat(current)
         except FileNotFoundError:
-            return None, "does not exist"
+            return None, ABSENT
         except OSError as problem:
             return None, "cannot be read: %s" % (problem.strerror or problem)
         last = index == len(parts) - 1
@@ -382,6 +424,240 @@ def is_dropped(lines):
     return bool(lines) and bool(DROPPED.match(lines[0][1]))
 
 
+# --- what references name -------------------------------------------------------------------
+
+
+TO_DECISION, TO_INVARIANT = "decision", "invariant"
+
+
+@dataclass
+class Foundation:
+    """The decisions and invariants a reference may name, as one commit, or a merge, holds them."""
+    prefix: str = None                               # the log's prefix; None for a log of no entry
+    decisions: dict = field(default_factory=dict)    # "ABC-01" -> (fingerprint, label) or
+    #                                                  (None, label of a version binding nothing)
+    invariants: dict = field(default_factory=dict)   # identifier -> (fingerprint, label)
+    withdrawn: set = field(default_factory=set)      # identifiers the invariants file withdrew
+    known: bool = True                               # False where the log or file is unread
+    log_entries: list = field(default_factory=list)  # the log's entries, for the merged log
+    entries: dict = field(default_factory=dict)      # identifier -> the invariant's entry
+
+    def decision(self, word):
+        """The decision number a word is, as the log writes it, or None: a number with the log's
+        prefix; with any prefix where the log could not be read."""
+        match = DECISION_NUMBER.fullmatch(word)
+        if not match or (self.known and match.group(1) != self.prefix):
+            return None
+        return "%s-%02d" % (match.group(1), int(match.group(2)))
+
+    def invariant(self, word):
+        """Whether a word is an identifier the invariants file holds, as an entry or withdrawn;
+        any identifier where the file could not be read."""
+        if not self.known:
+            return bool(IDENTIFIER.fullmatch(word))
+        return word in self.invariants or word in self.withdrawn
+
+    def current(self, kind, key):
+        """(the entry's current fingerprint, the version that set it), or (None, why the entry is
+        not in force)."""
+        if kind == TO_DECISION:
+            if key not in self.decisions:
+                return None, "the decision log does not hold it"
+            value, label = self.decisions[key]
+            return (value, label) if value else (
+                None, "its latest version, %s, holds no binding sentences" % label)
+        if key in self.withdrawn:
+            return None, "the invariants file has withdrawn it"
+        if key not in self.invariants:
+            return None, "the invariants file does not hold it"
+        return self.invariants[key]
+
+
+def decisions_named(value, foundation):
+    """The decisions of the log a value names with a `@`, in their order."""
+    return [key for key in (foundation.decision(match.group(1))
+                            for match in REFERENCE_TOKEN.finditer(value)) if key]
+
+
+def names_invariant(value, foundation):
+    return any(foundation.invariant(match.group(1)) for match in REFERENCE_TOKEN.finditer(value))
+
+
+def references(document, foundation):
+    """(line, reference, kind, entry, its part after `@`) of every reference outside fenced code,
+    in the two forms of spec §3.2: a decision number of the log or an identifier of the
+    invariants file followed by `@` and a run of letters and digits, or any identifier followed by
+    `@` and eight lower-case hexadecimal characters."""
+    found = []
+    for index, line in enumerate(document.lines):
+        if document.code[index] or "@" not in line:
+            continue
+        for match in REFERENCE_TOKEN.finditer(line):
+            word, after = match.groups()
+            key = foundation.decision(word)
+            if key is not None:
+                found.append((index + 1, match.group(0), TO_DECISION, key, after))
+            elif foundation.invariant(word) or (IDENTIFIER.fullmatch(word)
+                                                and FINGERPRINT.fullmatch(after)):
+                found.append((index + 1, match.group(0), TO_INVARIANT, word, after))
+    return found
+
+
+def entry_name(kind, key):
+    return key if kind == TO_DECISION else "the invariant `%s`" % key
+
+
+def latest_decisions(versions, same_binding):
+    """number -> (its latest version, the version that set its current fingerprint: the first of
+    the run of versions ending there with the same binding sentences), as the decisions guard
+    reads the merged log."""
+    latest = {}
+    for entry in sorted(versions, key=lambda entry: (entry.number, entry.version)):
+        previous = latest.get(entry.number)
+        setter = (previous[1] if previous and same_binding(previous[0].binding, entry.binding)
+                  else entry)
+        latest[entry.number] = (entry, setter)
+    return latest
+
+
+def decision_fingerprints(latest, prefix, borrowed):
+    """"<PREFIX-NN>" -> (current fingerprint, label of the version that set it), or (None, label of
+    a latest version holding no binding sentences), of {number: (latest version, setter)}."""
+    label, digest = borrowed.decisions.label_of, borrowed.fingerprint.fingerprint
+    return {"%s-%02d" % (prefix, number): ((digest(entry.binding), label(setter, prefix))
+                                           if entry.binding is not None
+                                           else (None, label(entry, prefix)))
+            for number, (entry, setter) in latest.items()}
+
+
+def invariant_state(text, rules, borrowed):
+    """({identifier: its entry of the highest version}, {withdrawn identifiers}) of an invariants
+    file, read with the invariants guard's parser."""
+    guard = borrowed.invariants
+    entries, withdrawn, title = {}, set(), rules.lists[0][0]
+    for item in guard.parse_file(text, rules):
+        if isinstance(item, guard.Entry):
+            if item.identifier not in entries or entries[item.identifier].version < item.version:
+                entries[item.identifier] = item
+        elif isinstance(item, guard.Table) and item.title == title:
+            withdrawn.update(bare(cells[0]) for cells, _ in item.rows if cells and bare(cells[0]))
+    return entries, withdrawn
+
+
+def invariant_fingerprints(entries, borrowed):
+    return {identifier: (borrowed.fingerprint.fingerprint(entry.sentence or ""),
+                         borrowed.invariants.label_of(entry))
+            for identifier, entry in entries.items()}
+
+
+def read_foundation(top, report, borrowed, invariant_rules):
+    """What references name on the commit checked, read from the working tree as a product's
+    untrusted files; a Foundation not known, once the report says why, where the log or the
+    invariants file cannot be read. A file absent is no failure: it holds no entry."""
+    # invariant: guidelines-reference-current/1
+    check = SAME_COMMIT
+    texts = []
+    for path, what in ((DECISION_LOG, "decision"), (INVARIANTS, "invariant")):
+        text, why = read_untrusted(top, path)
+        if text is None and why == ABSENT:
+            report.notes.append("the repository holds no %s: no %s is in force" % (path, what))
+            text = ""
+        elif text is None:
+            report.error(None, "%s %s, so no reference a file of guidelines makes can be checked"
+                         % (path, why), check, (REFERENCES,))
+            return Foundation(known=False)
+        texts.append(text)
+    guard = borrowed.decisions
+    try:
+        prefix = guard.detect_prefix(texts[0])
+        log_entries = guard.parse_log(texts[0], prefix) if prefix else []
+        latest = latest_decisions(guard.versions_of(log_entries), guard.same_binding)
+        entries, withdrawn = invariant_state(texts[1], invariant_rules, borrowed)
+    except PARSE_ERRORS as problem:
+        report.error(None, "the decision log or the invariants file cannot be parsed, so no "
+                           "reference can be checked: %s" % problem, check, (REFERENCES,))
+        return Foundation(known=False)
+    return Foundation(prefix, decision_fingerprints(latest, prefix, borrowed),
+                      invariant_fingerprints(entries, borrowed), withdrawn,
+                      log_entries=log_entries, entries=entries)
+
+
+def merged_foundation(top, onto, foundation, borrowed, invariant_rules, report):
+    """What references name in the foundation a merge onto `onto` leaves, or None once the report
+    says why git cannot read it: the decisions as the decisions guard merges the log, given a
+    report of this script's own that is discarded but for the failures of git it holds; each
+    invariant as on the branch where its sentence differs from the fork point, as on `onto`
+    otherwise."""
+    # invariant: guidelines-reference-current/1
+    def failed(message):
+        report.error(None, message, AFTER_MERGE, (REFERENCES,))
+
+    try:
+        return merged_entries(top, onto, foundation, borrowed, invariant_rules, failed)
+    except PARSE_ERRORS as problem:
+        return failed("the foundation after a merge onto %s cannot be parsed: %s"
+                      % (shown(onto), problem))
+
+
+def merged_entries(top, onto, foundation, borrowed, invariant_rules, failed):
+    """The work of merged_foundation, each failure given to `failed`, which returns None."""
+    shared, guard = borrowed.shared, borrowed.decisions
+    prefix = foundation.prefix
+    if prefix is None:
+        text, failure = shared.file_at(onto, DECISION_LOG, top)
+        if failure:
+            return failed(failure)
+        prefix = guard.detect_prefix(text or "")
+    decisions = {}
+    if prefix is not None:
+        discarded = shared.Report(DECISION_LOG)
+        merged = guard.merged_log(os.path.join(top, *DECISION_LOG.split("/")),
+                                  foundation.log_entries, onto, prefix, top, discarded)
+        for owner, description in discarded.unowned:
+            if owner is None:
+                failed("the decision log after a merge onto %s cannot be read: %s"
+                       % (shown(onto), description))
+        if merged is None:
+            return None
+        decisions = decision_fingerprints({number: (entry, setter) for number, (entry, _, setter)
+                                           in merged.items()}, prefix, borrowed)
+    code, answer, message = shared.call_git(["merge-base", "HEAD", onto], top)
+    if code != 0 and (code != 1 or message):
+        return failed("git cannot find the merge base of HEAD and %s: %s"
+                      % (shown(onto), message or "git merge-base exited with %d" % code))
+    sides = []
+    for commit in (answer.strip() if code == 0 else None, onto):
+        text, failure = shared.file_at(commit, INVARIANTS, top) if commit else (None, None)
+        if failure:
+            return failed(failure)
+        sides.append(invariant_state(text or "", invariant_rules, borrowed))
+    branch = (foundation.entries, foundation.withdrawn)
+    entries, withdrawn = merged_invariants(branch, sides[0], sides[1], borrowed)
+    return Foundation(prefix, decisions, invariant_fingerprints(entries, borrowed), withdrawn)
+
+
+def merged_invariants(branch, fork, onto, borrowed):
+    """(entries, withdrawn identifiers) after a merge: each identifier as the branch holds it
+    where its sentence differs from the fork point — added, reworded, withdrawn or removed there —
+    and as the commit merged onto holds it otherwise; each side is (entries, withdrawn)."""
+    digest = borrowed.fingerprint.fingerprint
+
+    def sentence(side, identifier):
+        entry = side[0].get(identifier)
+        if entry is None or identifier in side[1]:
+            return None
+        return digest(entry.sentence or "")
+
+    entries, withdrawn = {}, set()
+    for identifier in set().union(*(set(side[0]) | side[1] for side in (branch, fork, onto))):
+        side = branch if sentence(branch, identifier) != sentence(fork, identifier) else onto
+        if identifier in side[1]:
+            withdrawn.add(identifier)
+        elif identifier in side[0]:
+            entries[identifier] = side[0][identifier]
+    return entries, withdrawn
+
+
 # --- checks of one file ---------------------------------------------------------------------
 
 
@@ -410,9 +686,9 @@ def check_header(document, form, report, shared):
     return fields
 
 
-def check_sections(document, form, report):
+def check_sections(document, form, report, foundation):
     """The sections the template gives, in its order, each once; a dropped one holding only
-    `none —` with its decision."""
+    `none —` with a decision of the log."""
     # invariant: guidelines-form/1
     check = "check_sections"
     report.ran(check, FORM)
@@ -431,21 +707,22 @@ def check_sections(document, form, report):
     for title, block in sections.items():
         lines = document.text_lines(block)
         if is_dropped(lines):
-            check_drop(lines, "the section `## %s`" % title, report, check)
+            check_drop(lines, "the section `## %s`" % title, report, check, foundation)
         else:
             kept[title] = block
     return kept
 
 
-def check_drop(lines, what, report, check):
-    if len(lines) != 1 or not DROP_LINE.match(lines[0][1]):
+def check_drop(lines, what, report, check, foundation):
+    drop = DROP_LINE.match(lines[0][1]) if len(lines) == 1 else None
+    if drop is None or foundation.decision(drop.group(1)) is None:
         report.error(lines[0][0], "%s is dropped, so it holds only `none — <PREFIX-NN>@"
                                   "<fingerprint>`, naming the product's decision that departs "
                                   "from the template, and nothing else; it holds `%s`"
                      % (what, shown(lines[0][1])), check, (FORM,))
 
 
-def check_rules(document, sections, form, report, shared):
+def check_rules(document, sections, form, report, shared, foundation):
     """The required rules in the template's order; each rule kept with its fields in order, a
     decision in *Decision* and, where the discipline requires it, an invariant in *Invariant*;
     each dropped rule holding only `none —` with its decision. Returns {rule: its fields} of the
@@ -470,18 +747,19 @@ def check_rules(document, sections, form, report, shared):
         name = "`### %s`" % shown(rule.title)
         lines = document.text_lines(rule)
         if is_dropped(lines):
-            check_drop(lines, "the rule %s" % name, report, check)
+            check_drop(lines, "the rule %s" % name, report, check, foundation)
             continue
         fields = shared.parse_fields(document.prose(rule.start, rule.end), rule.start + 1)
         check_order({key: fields[key][1] for key in fields}, form.fields,
                     lambda key, name=name: "the field *%s* of the rule %s" % (key, name),
                     report, check, rule.line)
         decision = fields.get(DECISION)
-        if decision and not DECISION_TOKEN.search(decision[0]):
+        if decision and not decisions_named(decision[0], foundation):
             report.error(decision[1], "the rule %s names no decision of the log in *Decision*, "
                                       "as `<PREFIX-NN>@<fingerprint>`" % name, check, (FORM,))
         invariant = fields.get(INVARIANT)
-        if form.requires_invariant and invariant and not names_invariant(invariant[0]):
+        if form.requires_invariant and invariant and not names_invariant(invariant[0],
+                                                                         foundation):
             report.error(invariant[1], "the rule %s names no invariant in *Invariant*, as "
                                        "`<identifier>@<fingerprint>`; every rule of this "
                                        "discipline names one" % name, check, (FORM,))
@@ -489,16 +767,11 @@ def check_rules(document, sections, form, report, shared):
     return kept
 
 
-def names_invariant(value):
-    return any(IDENTIFIER.fullmatch(match.group(1))
-               for match in IDENTIFIER_TOKEN.finditer(value))
-
-
 def table_cells(line):
     return [cell.strip() for cell in line.strip().strip("|").split("|")]
 
 
-def check_roles(document, sections, rules, form, report):
+def check_roles(document, sections, rules, form, report, foundation):
     """Each row of a table of roles: a *Kind* of the closed list, a background's *Text on it*
     naming a text role of the table, a decision; and each decision of the table named by the rule
     of each role's meaning, unless that rule is dropped."""
@@ -543,7 +816,7 @@ def check_roles(document, sections, rules, form, report):
                     report.error(line, "the background role `%s` names in *Text on it* `%s`, "
                                        "which is no role of the kind `%s` in the table"
                                  % (role, shown(text_on_it), TEXT), check, (FORM,))
-            named = DECISION_TOKEN.findall(row[DECISION])
+            named = decisions_named(row[DECISION], foundation)
             if not named:
                 report.error(line, "the role `%s` names no decision of the log in *Decision*, "
                                    "as `<PREFIX-NN>@<fingerprint>`" % role, check, (FORM,))
@@ -553,7 +826,7 @@ def check_roles(document, sections, rules, form, report):
         if meaning is None or DECISION not in meaning:
             continue
         value, at = meaning[DECISION]
-        covered = set(DECISION_TOKEN.findall(value))
+        covered = set(decisions_named(value, foundation))
         for number, line in decisions.items():
             if number not in covered:
                 report.error(at, "`%s`, which the table of `## %s` names at line %d, is not "
@@ -650,19 +923,85 @@ def check_paths(document, sections, tracked, report):
                              % shown(path), check, (FORM,))
 
 
+def check_references(document, foundation, report):
+    """Each reference outside fenced code carries eight lower-case hexadecimal characters after
+    its `@`, names an entry in force and carries its current fingerprint on the commit checked.
+    Returns the references found current there, as (line, reference, kind, entry, fingerprint),
+    for the check after the merge."""
+    # invariant: guidelines-reference-current/1
+    check = SAME_COMMIT
+    report.ran(check, REFERENCES)
+    current = []
+    for line, token, kind, key, carried in references(document, foundation):
+        what = entry_name(kind, key)
+        if not FINGERPRINT.fullmatch(carried):
+            report.error(line, "`%s` names %s, but `%s` after its `@` is no fingerprint: a "
+                               "fingerprint is eight lower-case hexadecimal characters"
+                         % (shown(token), what, shown(carried)), check, (REFERENCES,))
+            continue
+        value, setter = foundation.current(kind, key)
+        if value is None:
+            report.error(line, "`%s` names %s, which is not in force on the commit checked: %s"
+                         % (shown(token), what, setter), check, (REFERENCES,))
+        elif value != carried:
+            report.error(line, "`%s` carries a fingerprint other than the current one: on the "
+                               "commit checked, the current fingerprint of %s is %s, set by %s"
+                         % (shown(token), what, value, setter), check, (REFERENCES,))
+        else:
+            current.append((line, token, kind, key, carried))
+    return current
+
+
+def check_merged_references(current, merged, onto, report):
+    """Each reference current on the commit checked names an entry in force, and carries its
+    current fingerprint, in the foundation a merge onto `onto` leaves."""
+    # invariant: guidelines-reference-current/1
+    check = AFTER_MERGE
+    report.ran(check, REFERENCES)
+    after = "after a merge onto %s" % shown(onto)
+    for line, token, kind, key, carried in current:
+        what = entry_name(kind, key)
+        value, setter = merged.current(kind, key)
+        if value is None:
+            report.error(line, "`%s` names %s, which is not in force %s: %s"
+                         % (shown(token), what, after, setter), check, (REFERENCES,))
+        elif value != carried:
+            report.error(line, "`%s` carries a fingerprint other than the current one: %s, the "
+                               "current fingerprint of %s is %s, set by %s"
+                         % (shown(token), after, what, value, setter), check, (REFERENCES,))
+
+
+@dataclass
+class Context:
+    """What the checks of every file share."""
+    shared: object
+    common: Form
+    disciplines: dict
+    parts: object            # the parts of the map, or None where it cannot be read
+    tracked: object          # the function giving what git tracks
+    foundation: Foundation   # what references name on the commit checked
+    merged: object = None    # what they name after the merge, or None where it is not checked
+    onto: str = None
+
+
 def check_file(name, text, context, report):
     """Every check of one file of guidelines, against the form of its *Discipline*: the
-    discipline's template where the-way gives one, the form of guidelines otherwise."""
+    discipline's template where the-way gives one, the form of guidelines otherwise; then its
+    references, where the log and the invariants file could be read."""
     document = Document(text)
-    shared, common, disciplines, parts, tracked = context
-    fields = check_header(document, common, report, shared)
+    shared, foundation = context.shared, context.foundation
+    fields = check_header(document, context.common, report, shared)
     discipline = bare(fields[DISCIPLINE][0]) if DISCIPLINE in fields else None
-    form = disciplines.get(discipline, common)
-    sections = check_sections(document, form, report)
-    rules = check_rules(document, sections, form, report, shared)
-    check_roles(document, sections, rules, form, report)
-    check_parts(fields, name, discipline, form, disciplines, parts, report)
-    check_paths(document, sections, tracked, report)
+    form = context.disciplines.get(discipline, context.common)
+    sections = check_sections(document, form, report, foundation)
+    rules = check_rules(document, sections, form, report, shared, foundation)
+    check_roles(document, sections, rules, form, report, foundation)
+    check_parts(fields, name, discipline, form, context.disciplines, context.parts, report)
+    check_paths(document, sections, context.tracked, report)
+    if foundation.known:
+        current = check_references(document, foundation, report)
+        if context.merged is not None:
+            check_merged_references(current, context.merged, context.onto, report)
 
 
 # --- the run --------------------------------------------------------------------------------
@@ -779,6 +1118,29 @@ def write_lines(path, lines):
             handle.write(json.dumps(line, ensure_ascii=False) + "\n")
 
 
+def merge_check(top, merge_onto, report, shared):
+    """The commit whose merge the references are checked against, or None. Given no option, a
+    note says that check does not run; given `none`, it is recorded `unchecked` with the reason the
+    guards share; a commit that does not exist is an error of the run. The check on the commit
+    itself runs in every run, with no file of guidelines too."""
+    # invariant: guidelines-reference-current/1
+    report.ran(SAME_COMMIT, REFERENCES)
+    if merge_onto is None:
+        report.notes.append("no --merge-onto given: the references are not compared with the "
+                            "foundation a merge leaves; that check is not run, and is not "
+                            "counted in the last line")
+        return None
+    if merge_onto == shared.NO_COMMIT:
+        report.unchecked(AFTER_MERGE, shared.NO_COMMIT_REASON, shared.NO_MERGE_ONTO, REFERENCES)
+        report.cannot_check("the references in the foundation a merge leaves",
+                            shared.NO_MERGE_ONTO)
+        return None
+    if not shared.find_commit(top, "--merge-onto", merge_onto, report):
+        return None
+    report.ran(AFTER_MERGE, REFERENCES)
+    return merge_onto
+
+
 def run(root=".", merge_onto=None, record=None, stream=None):
     stream = stream or sys.stdout
     if record is not None:
@@ -803,14 +1165,21 @@ def run(root=".", merge_onto=None, record=None, stream=None):
         common, disciplines = read_templates()
     except (OSError, UnicodeDecodeError, TemplateError) as problem:
         return stop("cannot read the templates of guidelines: %s" % problem)
-    shared, part_map, failure = borrow()
+    borrowed, failure = borrow()
     if failure:
         return stop(failure)
+    shared, part_map = borrowed.shared, borrowed.part_map
     try:
         map_rules = part_map.read_rules()
-    except (OSError, UnicodeDecodeError, shared.TemplateError, AttributeError,
+    except (OSError, UnicodeDecodeError, part_map.TemplateError, AttributeError,
             IndexError) as problem:
         return stop("cannot read the rules of the part map from its template: %s" % problem)
+    try:
+        invariant_rules = borrowed.invariants.read_rules()
+    except (OSError, UnicodeDecodeError, borrowed.invariants.TemplateError, AttributeError,
+            IndexError) as problem:
+        return stop("cannot read the rules of the invariants file from its template: %s"
+                    % problem)
     code, top, message = shared.call_git(["rev-parse", "--show-toplevel"], root)
     try:
         at_top = code == 0 and os.path.samefile(top.strip(), root)
@@ -823,10 +1192,19 @@ def run(root=".", merge_onto=None, record=None, stream=None):
 
     options = ["--merge-onto"] if merge_onto is not None else []
     reports = [shared.Report(GUIDELINES, options, program=PROGRAM, selected_by=SELECTED_BY)]
-    names = list_guidelines(top, reports[0], shared) or []
+    onto = merge_check(top, merge_onto, reports[0], shared)
+    names = list_guidelines(top, reports[0], shared)
+    if names is None:
+        # what cannot be listed cannot be checked for references either
+        reports[0].fail(None, "the files of %s/ cannot be listed" % GUIDELINES, SAME_COMMIT,
+                        (REFERENCES,))
     if names:
-        context = (shared, common, disciplines, read_parts(top, reports[0], part_map, map_rules),
-                   tracked_paths(top, shared))
+        foundation = read_foundation(top, reports[0], borrowed, invariant_rules)
+        merged = (merged_foundation(top, onto, foundation, borrowed, invariant_rules, reports[0])
+                  if onto is not None and foundation.known else None)
+        context = Context(shared, common, disciplines,
+                          read_parts(top, reports[0], part_map, map_rules),
+                          tracked_paths(top, shared), foundation, merged, onto)
         for name in names:
             path = "%s/%s" % (GUIDELINES, name)
             report = shared.Report(shown(path), options, program=PROGRAM,
@@ -836,6 +1214,8 @@ def run(root=".", merge_onto=None, record=None, stream=None):
             text, why = read_untrusted(top, path)
             if text is None:
                 report.error(None, "`%s` %s" % (shown(path), why), "read_guidelines", (FORM,))
+                report.fail(None, "`%s` %s, so its references cannot be checked"
+                            % (shown(path), why), SAME_COMMIT, (REFERENCES,))
                 continue
             check_file(name, text, context, report)
 
