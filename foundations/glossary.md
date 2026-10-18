@@ -102,6 +102,13 @@ The gate is the program that runs the checks a change calls for.
 - **Avoid:** quality gate — same thing
 - **Not:** none
 
+## guidelines
+
+Guidelines are text a product keeps outside its foundation that tells agents what to do and how in a discipline of work on the product.
+
+- **Avoid:** none
+- **Not:** none
+
 ## human action
 
 A human action is an act outside the product's repository that a task needs and a human performs.

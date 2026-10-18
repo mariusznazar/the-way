@@ -149,7 +149,7 @@ Where {merge-onto} exists, every file git tracks lies in `foundations/` or in a 
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-09@909e9c5c
+- **Derives from:** WAY-09@ce6bd9c0
 - **Part:** every
 - **Correction:** none
 
@@ -159,7 +159,7 @@ Where {merge-onto} exists, every element directory holds a template, examples or
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-09@909e9c5c
+- **Derives from:** WAY-09@ce6bd9c0
 - **Part:** decisions · part-map · invariants · glossary · environment-facts
 - **Correction:** none
 
@@ -169,7 +169,7 @@ Where {merge-onto} exists, `relation-model/` holds the script that computes fing
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-09@909e9c5c
+- **Derives from:** WAY-09@ce6bd9c0
 - **Part:** relation-model
 - **Correction:** none
 
@@ -179,7 +179,7 @@ Every identifier `elements/invariants/examples.md` names is the identifier of an
 
 - **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-09@909e9c5c
+- **Derives from:** WAY-09@ce6bd9c0
 - **Part:** invariants
 - **Correction:** none
 
@@ -189,7 +189,7 @@ Every identifier `elements/part-map/examples.md` names is the identifier of an e
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-09@909e9c5c
+- **Derives from:** WAY-09@ce6bd9c0
 - **Part:** part-map
 - **Correction:** none
 
@@ -199,7 +199,7 @@ Every term `elements/glossary/examples.md` names is the term of an entry of `fou
 
 - **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-09@909e9c5c
+- **Derives from:** WAY-09@ce6bd9c0
 - **Part:** glossary
 - **Correction:** none
 
@@ -2128,6 +2128,86 @@ Every subprocess the plan-state reader starts runs Git.
 - **Rests on:** none
 - **Derives from:** WAY-153@9874911d
 - **Part:** project-level
+- **Correction:** none
+
+## guidelines-form/1
+
+Every file `guidelines/<name>.md` holds, in their order, the header lines, sections, rules and rule fields that the template of guidelines and the template of its discipline require at the commit of the-way the repository uses — the commit checked, in the-way itself, and the pinned commit, in a product — with a name that agrees with its *Discipline*, each section or rule it drops reading `none —` with a decision of the log and that decision's fingerprint, each part it names being a part of the map, and each path under `## Where in code` naming something git tracks.
+
+- **Method:** `python -B product-guidelines/form_check.py --record .runs/guidelines-form.jsonl`
+- **Rests on:** none
+- **Derives from:** WAY-170@c1b230d2 · WAY-171@2bc38c05
+- **Part:** every
+- **Correction:** none
+
+## guidelines-reference-current/1
+
+Every reference outside fenced code in a file `guidelines/<name>.md` — a decision number of the log or an identifier of the invariants file followed by `@` and a run of letters and digits, or any identifier followed by `@` and eight lower-case hexadecimal characters — names a decision of the log that is not repealed or an invariant of the file that is not withdrawn, and carries the fingerprint of that entry's binding part in the foundation of the same commit and, where {merge-onto} exists, in the foundation a merge onto {merge-onto} leaves.
+
+- **Method:** `python -B product-guidelines/form_check.py --merge-onto {merge-onto} --record .runs/guidelines-reference.jsonl`
+- **Rests on:** none
+- **Derives from:** WAY-169@e2fb088c
+- **Part:** product-guidelines · decisions · invariants
+- **Correction:** none
+
+## guidelines-check-form/1
+
+The form check of guidelines, `product-guidelines/form_check.py`, reports as an error every header line, section, rule or rule field that the template of guidelines or the template of a file's discipline requires and a file `guidelines/<name>.md` lacks or holds out of order, every section or rule dropped with a text other than `none —` followed by a decision of the log and a fingerprint, every part named in *Applies to* or in a file's name that the part map does not hold, and every file whose name and *Discipline* disagree.
+
+- **Method:** `python -B gate/run_tests.py product-guidelines --record .runs/product-guidelines-tests.jsonl`
+- **Rests on:** none
+- **Derives from:** WAY-170@c1b230d2 · WAY-171@2bc38c05
+- **Part:** product-guidelines · decisions · invariants · part-map · elements-common · relation-model
+- **Correction:** none
+
+## guidelines-check-carrier/1
+
+The form check of guidelines, `product-guidelines/form_check.py`, reports as an error every rule under `## Rules` of a file `guidelines/<name>.md` that names no decision of the log, every such rule of a styleguide that names no invariant, and every decision the table of roles of a styleguide names that the rule `### Each role in its meaning` does not name, unless that rule is dropped.
+
+- **Method:** `python -B gate/run_tests.py product-guidelines --record .runs/product-guidelines-tests.jsonl`
+- **Rests on:** none
+- **Derives from:** WAY-168@47d9d53e · WAY-188@73da8ecb · WAY-189@a76a39fb
+- **Part:** product-guidelines · decisions · invariants · part-map · elements-common · relation-model
+- **Correction:** none
+
+## guidelines-check-colour-pair/1
+
+The form check of guidelines, `product-guidelines/form_check.py`, reports as an error every role of the kind `background` in the table of roles of a styleguide whose *Text on it* is empty or names no role of the kind `text` in that table.
+
+- **Method:** `python -B gate/run_tests.py product-guidelines --record .runs/product-guidelines-tests.jsonl`
+- **Rests on:** none
+- **Derives from:** WAY-176@e8801ae5
+- **Part:** product-guidelines · decisions · invariants · part-map · elements-common · relation-model
+- **Correction:** none
+
+## guidelines-check-reference-target/1
+
+The form check of guidelines, `product-guidelines/form_check.py`, reports as an error every reference outside fenced code in a file `guidelines/<name>.md` — a decision number of the log or an identifier of the invariants file followed by `@` and a run of letters and digits, or any identifier followed by `@` and eight lower-case hexadecimal characters — that names a decision the log does not hold or has repealed, or an invariant the file does not hold or has withdrawn, and every such reference after a decision number or an invariant's identifier whose part after `@` is not eight lower-case hexadecimal characters.
+
+- **Method:** `python -B gate/run_tests.py product-guidelines --record .runs/product-guidelines-tests.jsonl`
+- **Rests on:** none
+- **Derives from:** WAY-169@e2fb088c
+- **Part:** product-guidelines · decisions · invariants · part-map · elements-common · relation-model
+- **Correction:** none
+
+## guidelines-check-stale-reference/1
+
+The form check of guidelines, `product-guidelines/form_check.py`, reports as an error every reference outside fenced code in a file `guidelines/<name>.md` to a decision of the log or an invariant of the file whose fingerprint differs from that entry's current fingerprint on the commit checked and, given "{merge-onto}", every one whose fingerprint differs from that entry's current fingerprint in the foundation a merge onto that commit leaves.
+
+- **Method:** `python -B gate/run_tests.py product-guidelines --record .runs/product-guidelines-tests.jsonl`
+- **Rests on:** none
+- **Derives from:** WAY-169@e2fb088c
+- **Part:** product-guidelines · decisions · invariants · part-map · elements-common · relation-model
+- **Correction:** none
+
+## guidelines-check-code-path/1
+
+The form check of guidelines, `product-guidelines/form_check.py`, reports as an error every path under `## Where in code` of a file `guidelines/<name>.md` that is absolute, holds a `..` segment, a drive or a UNC prefix, or names nothing git tracks.
+
+- **Method:** `python -B gate/run_tests.py product-guidelines --record .runs/product-guidelines-tests.jsonl`
+- **Rests on:** none
+- **Derives from:** WAY-170@c1b230d2
+- **Part:** product-guidelines · decisions · invariants · part-map · elements-common · relation-model
 - **Correction:** none
 
 ## Withdrawn identifiers

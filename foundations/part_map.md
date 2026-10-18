@@ -194,7 +194,7 @@ generates them, and for the hooks and the configuration of agents' tools and of 
   .claude/skills/**
   .agents/skills/**
 - **Depends on:** decisions · invariants · glossary · part-map · environment-facts ·
-  elements-common · project-level · task-cycle · gate · instruction-files
+  elements-common · project-level · task-cycle · gate · instruction-files · product-guidelines
 - **Failure modes:**
   - an agent follows stale integration instructions — a change enters the integration branch
     without the required checks or acceptance — high — not detected
@@ -245,7 +245,7 @@ The part answers for preparing a product repository to use one pinned commit of 
 
 - **Files:** installation/**
 - **Depends on:** decisions · invariants · glossary · part-map · environment-facts ·
-  elements-common · project-level
+  elements-common · project-level · product-guidelines
 - **Failure modes:**
   - the installer pins the wrong commit, or replaces an existing product file or changes it beyond
     the additions `installation-command` names — a product starts with the wrong process, or loses
@@ -257,6 +257,26 @@ The part answers for preparing a product repository to use one pinned commit of 
   - a project skill resolves to another process version — a product entry is written under the
     wrong rules — high — not detected
 - **Trust boundary:** installation/install.py
+
+## product-guidelines
+
+The part answers for the form every product's guidelines share, for the template of each discipline
+of guidelines with the skill that leads the work on them, and for the form check of guidelines.
+
+- **Files:** product-guidelines/**
+- **Depends on:** decisions · invariants · glossary · part-map · environment-facts ·
+  elements-common · relation-model · project-level · instruction-files · task-cycle
+- **Failure modes:**
+  - the form check passes a reference whose entry changed its wording — a styleguide tells agents
+    an old rule — high — detected by guidelines-check-stale-reference
+  - the skill settles a meaning the human did not accept — the cycle builds screens on it — high —
+    not detected
+  - the research shows a difference between options that no source supports — the human chooses
+    on an invented consequence — high — not detected
+  - the form check, reading a crafted file of guidelines, reads outside the repository, reaches a
+    network host or stops without a report — a user's files can leave the machine, or a merge
+    rests on a check that never ran — high — not detected
+- **Trust boundary:** product-guidelines/form_check.py
 
 ## wording-reaches-dependants
 
@@ -276,7 +296,7 @@ the main branch.
 
 - **Criticality:** high
 - **Parts:** agent-instructions · elements-common · decisions · invariants · glossary · part-map ·
-  environment-facts · project-level · task-cycle · gate · instruction-files
+  environment-facts · project-level · task-cycle · gate · instruction-files · product-guidelines
 - **Invariant:** skill-entry-points
 - **Coverage:** none
 
@@ -331,6 +351,13 @@ The command that runs the guard of a product's glossary keeps its name, its argu
 codes.
 
 - **Declared at:** elements/glossary/format_guard.py · main
+
+## guidelines-form-check-command
+
+The command that runs the form check of a product's guidelines keeps its name, its arguments and its
+exit codes.
+
+- **Declared at:** product-guidelines/form_check.py · main
 
 ## test-runner-command
 
