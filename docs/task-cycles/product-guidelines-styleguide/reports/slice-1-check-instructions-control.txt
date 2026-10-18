@@ -1,7 +1,0 @@
-control: a backticked class holding / and an @ word holding . appended to the styleguide
-WARN  dead-path guidelines/styleguide-web.md:125 `bg-primary/90` does not exist
-WARN  at-import guidelines/styleguide-web.md:125 @src/tokens.css imports a file that is not there
-INFO  size AGENTS.md:0 3 lines, 11 words
-INFO  size guidelines/styleguide-web.md:0 125 lines, 599 words
-0 error, 2 warn, 2 info
-exit 0

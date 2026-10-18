@@ -1,6 +1,0 @@
-unchecked: the count of the words of *Avoid* — --base none: there is no commit the branch left the main branch from
-unchecked: terms and identifiers that came to read alike — --base none: there is no commit the branch left the main branch from
-unchecked: the uses of every term whose definition changed — --base none: there is no commit the branch left the main branch from
-note: the-way's own glossary is no product's: its terms are not compared with the glossary of the-way
-note: no --merge-onto given: `TODO` in *Not* and a term with no use are only warnings; the checks of a merge are not run, and are not counted in the last line
-0 error(s), 0 warning(s), 3 unchecked

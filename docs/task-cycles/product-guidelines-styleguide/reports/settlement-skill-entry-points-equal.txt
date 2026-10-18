@@ -1,3 +1,0 @@
-.claude/skills/the-way-maintain-styleguide/SKILL.md True
-.agents/skills/the-way-maintain-styleguide/SKILL.md True
-exit=0

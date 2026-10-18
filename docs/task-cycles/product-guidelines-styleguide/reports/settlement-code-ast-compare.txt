@@ -1,2 +1,0 @@
-product-guidelines/form_check.py code without docstrings identical: True
-product-guidelines/test_form_check.py code without docstrings identical: True

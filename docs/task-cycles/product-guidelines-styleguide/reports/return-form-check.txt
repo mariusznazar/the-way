@@ -1,5 +1,0 @@
-$ python -B product-guidelines/form_check.py --record .runs/guidelines-form.jsonl
-note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
-note: the repository holds no guidelines/: no file of guidelines to check
-0 error(s), 0 warning(s), 0 unchecked
-exit code: 0

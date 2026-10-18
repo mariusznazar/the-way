@@ -1,4 +1,0 @@
-## guidelines-form/1 foundations/invariants.md:2135 byte-equal at template.md line(s): [150]
-## guidelines-reference-current/1 foundations/invariants.md:2145 byte-equal at template.md line(s): [162]
-the-way Part: - **Part:** product-guidelines · decisions · invariants · agent-instructions · relation-model
-template names it: True
