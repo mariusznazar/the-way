@@ -102,6 +102,13 @@ The gate is the program that runs the checks a change calls for.
 - **Avoid:** quality gate — same thing
 - **Not:** none
 
+## guidelines
+
+Guidelines are text a product keeps outside its foundation that tells agents what to do and how in a discipline of work on the product.
+
+- **Avoid:** none
+- **Not:** none
+
 ## human action
 
 A human action is an act outside the product's repository that a task needs and a human performs.
@@ -203,6 +210,13 @@ A slice is a piece of a task's change that the task's plan sets apart with its o
 ## surface
 
 A surface is something of a product that someone outside the product relies on and that the product promises to keep.
+
+- **Avoid:** none
+- **Not:** none
+
+## user interface
+
+A user interface is a set of screens that a product draws and through which a person uses it.
 
 - **Avoid:** none
 - **Not:** none
