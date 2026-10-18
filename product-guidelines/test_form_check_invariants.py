@@ -468,29 +468,35 @@ class Form(FormCheckTestCase):
             self.check({TESTING_FILE: replaced(TESTING, "- **Applies to:** web",
                                                "- **Applies to:** mobile")}, ()),
             TESTING_FILE, line=4, fragments=("mobile",))
-        for path, text in (("guidelines/styleguide-mobile.md", STYLEGUIDE),
-                           ("guidelines/testing-mobile.md", TESTING)):
-            with self.subTest(path):
-                self.assert_reported(self.check({path: text}, ()), path, fragments=("mobile",))
+        # Only a styleguide names a part in its file's name (WAY-167); a file of another
+        # discipline named after a part is a name that disagrees with its Discipline, below.
+        path = "guidelines/styleguide-mobile.md"
+        with self.subTest(path):
+            self.assert_reported(self.check({path: STYLEGUIDE}, ()), path, fragments=("mobile",))
 
     def test_a_file_whose_name_and_discipline_disagree_is_reported(self):
+        """A styleguide stands in `guidelines/styleguide-<part>.md`, and guidelines of any other
+        discipline in `guidelines/<discipline>.md` alone, never under a part's name (WAY-167)."""
         # invariant: guidelines-check-form/1
         cases = (
             ("guidelines/styleguide-web.md", TESTING),
             ("guidelines/web.md", TESTING),
+            ("guidelines/testing-web.md", TESTING),
+            ("guidelines/testing-mobile.md", TESTING),
             ("guidelines/look-web.md", STYLEGUIDE),
             ("guidelines/styleguide.md", STYLEGUIDE),
             ("guidelines/testing-web.md", STYLEGUIDE),
+            ("guidelines/testing.md", STYLEGUIDE),
         )
         for path, text in cases:
-            with self.subTest(path):
+            with self.subTest(path=path, discipline="testing" if text is TESTING
+                              else "styleguide"):
                 self.assert_reported(self.check({path: text}, ()), path)
 
     def test_a_file_whose_name_follows_its_discipline_passes(self):
         """The control of the test above: the same texts under names that agree with them."""
         # invariant: guidelines-check-form/1
         for path, text in (("guidelines/testing.md", TESTING),
-                           ("guidelines/testing-web.md", TESTING),
                            ("guidelines/styleguide-web.md", STYLEGUIDE)):
             with self.subTest(path):
                 self.assert_clean(self.check({path: text}, ()))
