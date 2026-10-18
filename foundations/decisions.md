@@ -5583,7 +5583,7 @@ merge, beside the format guards it names there.
 - **Change:** new decision
 - **Scope:** product-guidelines
 - **Based on:** none
-- **Relations:** derives from WAY-04@29a75d2c · derives from WAY-16@5c1d60d4
+- **Relations:** derives from WAY-04@29a75d2c · narrows WAY-16@5c1d60d4
 - **Verification:** level 1 — invariants: guidelines-form · guidelines-check-form ·
   guidelines-check-code-path. Level 2 for the invariants a product holds — an agent compares the
   change with the decision:
