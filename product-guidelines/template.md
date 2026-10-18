@@ -106,22 +106,28 @@ sections and required rules to it at the places it names (WAY-171).
   identifier of the invariants file, or its version is eight hexadecimal characters. Text that would
   read as a reference but is none — an address, a sample, such a package name — stands in fenced
   code (WAY-169).
-- **Code in backticks or in fenced code.** Once a product's root `AGENTS.md` names a file of
-  guidelines by its path, the file is a repository instruction file, and
-  `instruction-files/check_instructions.py` reads it as one (WAY-129, WAY-192). That script takes
-  text in backticks holding a `/` for a path and reports it as a dead path when nothing lies there,
-  and takes an `@` followed by a word holding `.` or `/` outside code for an import. So the names of
-  code, at-rules and selectors stand in backticks, while a class name or a value holding a `/` — a
-  fraction, or a role with an opacity after a slash — stands in fenced code, and no `@` import of a
-  file stands outside code (WAY-129).
-- **No emphasis words.** Words written in capitals for emphasis stand on one rule of a file at
-  most, as the principles of instruction files give it, `instruction-files/principles.md`
-  (WAY-192).
 - **Language.** The headings of the required form, the header lines, the field names, the values of
   closed lists, the headings of required rules and the marker `none —` stay in English, because the
   form check reads them; the rest of the text is in the language the product writes its guidelines
   in, which the-way does not set (WAY-171). Its price: a product may write one file of guidelines in
   one language and another in another.
+
+## Note: a file of guidelines read as an instruction file
+
+This note is no rule of the template and cites no decision as setting it. It says how two files of
+the-way read a file of guidelines once a product's root `AGENTS.md` or `CLAUDE.md` names it by its
+path: the file is then a repository instruction file, as the glossary of the-way defines that term,
+and these files read it as one.
+
+- `instruction-files/check_instructions.py` follows such a file and checks it as an instruction
+  file. It takes text in backticks holding a `/` for a path, and reports it as a dead path when
+  nothing lies there; and it takes an `@` followed by a word holding `.` or `/`, outside code, for an
+  import. A file of guidelines that keeps that script quiet writes the names of code, at-rules and
+  selectors in backticks, a class name or a value holding a `/` — a fraction, or a role with an
+  opacity after a slash — in fenced code, and no `@` import of a file outside code.
+- `instruction-files/principles.md` puts emphasis — words written in capitals to make a rule stand
+  out — on one rule per file at most, and `instruction-files/check_instructions.py` warns where more
+  than one line of a file carries such words.
 
 ## The invariants of guidelines
 
