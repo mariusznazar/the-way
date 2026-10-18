@@ -36,6 +36,7 @@ SKILLS.update({
     "implement-task": "task-cycle/skill/SKILL.md",
     "plan-task": "task-cycle/plan/SKILL.md",
     "critique": "elements/common/critique/SKILL.md",
+    "maintain-styleguide": "product-guidelines/styleguide/SKILL.md",
 })
 # Claude Code reads project skills from .claude/skills, Codex from .agents/skills.
 SKILL_DIRECTORIES = (".claude", ".agents")
@@ -172,7 +173,11 @@ def product_guidance() -> str:
             "claimed by no part; that is expected, and it is not a pass.\n\n"
             "Nothing runs these checks automatically. Before a merge, run the format guard of "
             "every changed foundation file and the tests of every changed part, and report what "
-            "failed and what stayed unchecked. A check that did not run is never a pass.\n")
+            "failed and what stayed unchecked. Where this repository holds `guidelines/`, run "
+            f"`python -B {SUBMODULE}/product-guidelines/form_check.py` and "
+            f"`python -B {SUBMODULE}/product-guidelines/form_check.py --merge-onto <main commit>` "
+            "before a merge in which a file of `guidelines/` or of `foundations/` changed. "
+            "A check that did not run is never a pass.\n")
 
 
 def agents_block() -> str:
