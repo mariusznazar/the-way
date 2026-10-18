@@ -2132,7 +2132,7 @@ Every subprocess the plan-state reader starts runs Git.
 
 ## guidelines-form/1
 
-Every file `guidelines/<name>.md` holds, in their order, the header lines, sections, rules and rule fields that the template of guidelines and the template of its discipline require at the commit of the-way the repository uses — the commit checked, in the-way itself, and the pinned commit, in a product — with a name that agrees with its *Discipline*, each section or rule it drops reading `none —` with a decision of the log and that decision's fingerprint, each part it names being a part of the map, and each path under `## Where in code` naming something git tracks.
+Every file `guidelines/<name>.md` holds, in their order, the header lines, sections, rules, rule fields and tables that the template of guidelines and the template of its discipline require at the commit of the-way the repository uses — the commit checked, in the-way itself, and the pinned commit, in a product — each with the values and the links those templates give it, with a name that agrees with its *Discipline*, each section or rule it drops reading `none —` with a decision of the log and that decision's fingerprint, each part it names being a part of the map, and each path under `## Where in code` naming something git tracks.
 
 - **Method:** `python -B product-guidelines/form_check.py --record .runs/guidelines-form.jsonl`
 - **Rests on:** none

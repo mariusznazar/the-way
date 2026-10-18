@@ -5439,11 +5439,12 @@ tie, and the choice would pass with an answer that gives the agent nothing.
 ### WAY-167/1 — Where do a product's guidelines stand, and what are their files named?
 
 A product's guidelines are written by hand and stand outside its foundation, in the directory
-`guidelines/` at the root of its repository: a file `guidelines/<discipline>.md` for each discipline
-of work on the product it keeps guidelines of, save the styleguide discipline, whose guidelines
-stand in a file `guidelines/styleguide-<part>.md` for each user interface of the product, `<part>`
-being the identifier of the part of the product's map whose files draw that user interface. The
-directory `guidelines/` belongs to the part of the product's map whose files direct whoever carries
+`guidelines/` at the root of its repository: for each discipline of work on the product it keeps
+guidelines of, a file `guidelines/<discipline>.md`, or a file `guidelines/<discipline>-<part>.md`
+for each part of the product's map whose guidelines of that discipline differ, save the styleguide
+discipline, whose guidelines always stand in a file `guidelines/styleguide-<part>.md` for each user
+interface of the product, `<part>` being there the identifier of the part of the product's map whose
+files draw that user interface. The directory `guidelines/` belongs to the part of the product's map whose files direct whoever carries
 out its tasks, as its instruction files and skills do.
 
 - **Change:** new decision
@@ -5454,9 +5455,12 @@ out its tasks, as its instruction files and skills do.
   - complies: a product with screens in a browser and an admin panel added to its backend keeps
     `guidelines/styleguide-web.md` and `guidelines/styleguide-admin.md`, named after the parts
     `web` and `admin` of its map, beside `guidelines/testing.md`, and the pattern `guidelines/**`
-    stands among the files of the part that holds its `AGENTS.md` and its skills;
+    stands among the files of the part that holds its `AGENTS.md` and its skills; a product whose
+    API and screens are tested in different ways keeps `guidelines/testing-api.md` and
+    `guidelines/testing-web.md`;
   - violates: a product's styleguide stands in `docs/` or in `foundations/`; a product with one
-    user interface names its styleguide `guidelines/styleguide.md`; a styleguide is composed by a
+    user interface names its styleguide `guidelines/styleguide.md`; a file
+    `guidelines/testing-backend.md` names no part of the map; a styleguide is composed by a
     script from the product's decisions; a product's guidelines become entries of an element of its
     foundation.
 - **Review when:** none
@@ -5471,7 +5475,8 @@ files and skills, so they belong to that part, whose files change every later ta
 instruction file leads to them as to knowledge needed now and then (WAY-128). One directory with
 fixed names lets a check find them in every product; a product whose screens and admin panel are
 drawn by two parts keeps a styleguide for each, and the part's identifier in the name ties a
-styleguide to the files it governs, so that a renamed part shows.
+styleguide to the files it governs, so that a renamed part shows. Another discipline whose rules
+differ between parts takes a file per part on the same terms, and one file where they do not.
 *Rejected:* guidelines as a sixth element of the foundation — what binds in them is already carried
 and checked by decisions and invariants, and the list of elements would no longer be closed; an
 extract a script composes from the foundation's entries, as rules for agents are generated from the
@@ -5481,7 +5486,8 @@ carries out tasks, whose files WAY-44 gives a part of their own, yet a change to
 against the part whose code it describes; meanings kept in the spec of a screen — the spec ends
 with its task, and the next screen gives the same colour another meaning; guidelines in the own
 directory of the part that directs agents — its path differs from product to product, and no check
-could find them; one styleguide for every user interface of a product — an admin panel and the
+could find them; one file for each discipline whatever its parts — rules that differ from one part
+to another would stand mixed in one file; one styleguide for every user interface of a product — an admin panel and the
 product's screens are drawn by different parts.
 
 ### WAY-168/1 — What does a rule of a product's guidelines hold beside the foundation entries that carry it?
@@ -6117,9 +6123,9 @@ side by side; the skill choosing a new library itself — a dependency the human
 
 ### WAY-186/1 — Where do a styleguide's starting rules come from?
 
-The skill `maintain-styleguide` takes a styleguide's starting rules from the human's preferences for
-the technology of the user interface that the product's foundation settles, and, where the human has
-none, from research of the basic rules of a styleguide for that technology, each source named with
+The skill `maintain-styleguide` takes the starting rules of a styleguide written before the first
+screen of its user interface from the human's preferences for the technology of that user interface
+that the product's foundation settles, and, where the human has none, from research of the basic rules of a styleguide for that technology, each source named with
 its page and version and every difference no source supports refuted by a critique before the human
 sees the rules, as the options of a technology choice are checked (WAY-122). It adds the meanings of
 the screens the product announces — in its definition, plan, specs and mockups — proposes what the
@@ -6134,7 +6140,8 @@ extended.
   - complies: the human has no preferences for a browser game's styling, research names the pages
     and versions of its library's documentation, a fresh critic strikes a claimed difference no page
     gives, and the starting set adds roles for the states the game's plan announces; a year later an
-    extension runs the research again;
+    extension runs the research again; a product that has screens and no styleguide starts from the
+    audit of its code, with no research until its styleguide is refreshed or extended;
   - violates: the starting rules come from the agent's memory; a fixed list of roles from one course
     is used for every product; research reaches the human uncritiqued; an extension reuses the
     first research.
@@ -6147,7 +6154,8 @@ research with sources and a critique keeps the second, while preferences of the 
 because the product is theirs. A fixed list in the-way would need keeping and would fit no
 technology well, as the roles of one library and the palette of another differ; without the
 product's own meanings one colour comes back in several meanings. Recommendations move, so a
-refreshed styleguide is set against them again.
+refreshed styleguide is set against them again. A product that already has screens starts from what
+its code holds, which the audit reads (WAY-187), so its first styleguide needs no starting set.
 *Rejected:* a fixed starting list in the-way's template — a list to keep, unfitted to the technology;
 preferences and research without the product's meanings — one colour in several meanings again;
 research once for each product — later extensions miss current recommendations; a source named with
