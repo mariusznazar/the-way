@@ -176,7 +176,7 @@ def product_guidance() -> str:
             "failed and what stayed unchecked. Where this repository holds `guidelines/`, run "
             f"`python -B {SUBMODULE}/product-guidelines/form_check.py` and "
             f"`python -B {SUBMODULE}/product-guidelines/form_check.py --merge-onto <main commit>` "
-            "before a merge in which a file of `guidelines/` or of `foundations/` changed. "
+            "before every merge. "
             "A check that did not run is never a pass.\n")
 
 

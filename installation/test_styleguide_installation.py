@@ -15,8 +15,10 @@ WRAPPERS = (".claude/skills/the-way-maintain-styleguide/SKILL.md",
             ".agents/skills/the-way-maintain-styleguide/SKILL.md")
 FORM = "python -B .the-way/product-guidelines/form_check.py"
 REFERENCES = "python -B .the-way/product-guidelines/form_check.py --merge-onto <main commit>"
-SENTENCE = (f"Where this repository holds `guidelines/`, run `{FORM}` and `{REFERENCES}` before a "
-            "merge in which a file of `guidelines/` or of `foundations/` changed.")
+# Before every merge: a renamed file `## Where in code` names, or a moved pin, breaks guidelines
+# whatever files the change touches (product-guidelines/template.md, the invariants' *Part*).
+SENTENCE = (f"Where this repository holds `guidelines/`, run `{FORM}` and `{REFERENCES}` before "
+            "every merge.")
 
 
 def command(*args: str, cwd: Path, input_text: str | None = None):
