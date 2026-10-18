@@ -29,6 +29,9 @@ sys.dont_write_bytecode = True
 THE_WAY = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SCRIPT = os.path.join(THE_WAY, "product-guidelines", "form_check.py")
 
+# Stands, in the text of guidelines a test writes, for the product's root as an absolute path.
+PRODUCT_ROOT = "{product-root}"
+
 FORM = "guidelines-form/1"
 REFERENCES = "guidelines-reference-current/1"
 
@@ -246,6 +249,8 @@ class FormCheckTestCase(unittest.TestCase):
         branch then gains a commit holding `guidelines` ({path: text}). Given `onto` ({path:
         text}), a branch `onto` leaves the base commit with those files changed, so that a merge
         onto it takes them. `untracked` files are written into the working tree and never added.
+        PRODUCT_ROOT in the text of guidelines stands for the product's root, an absolute path
+        with forward slashes, the repository standing in a folder named `product`.
         Returns the exit code, the output, the record's lines and the options given."""
         with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as directory, \
                 tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as outside:
@@ -274,7 +279,8 @@ class FormCheckTestCase(unittest.TestCase):
                 git("add", "-A")
                 git("commit", "-q", "-m", "onto")
                 git("checkout", "-q", "main")
-            write(guidelines)
+            write({path: text.replace(PRODUCT_ROOT, root.replace(os.sep, "/"))
+                   for path, text in guidelines.items()})
             git("add", "-A")
             git("commit", "-q", "-m", "guidelines")
             if untracked:
@@ -708,6 +714,32 @@ class CodePath(FormCheckTestCase):
                     self.check({STYLEGUIDE_FILE: text}, (),
                                untracked={"src/draft.css": ":root {}\n"}),
                     STYLEGUIDE_FILE, line=78, fragments=fragments)
+
+    def test_a_path_out_of_the_repository_is_reported_though_its_remainder_is_tracked(self):
+        """An absolute path, a path with a `..` segment, a drive or a UNC prefix is reported for
+        its form, not only for naming nothing git tracks: each path below would name a tracked
+        file of the product were its prefix or its `..` stripped, or resolved against the
+        product's root. The remainders themselves pass first, so the error is the prefix's."""
+        # invariant: guidelines-check-code-path/1
+        line = "- `src/tokens.css`"
+        for remainder in ("src/tokens.css", "tests/fixtures.py", "src/components"):
+            with self.subTest(remainder=remainder):
+                self.assert_clean(self.check(
+                    {STYLEGUIDE_FILE: with_line(STYLEGUIDE, 78, line, "- `%s`" % remainder)}, ()))
+        paths = ("/src/tokens.css", "/tests/fixtures.py", "/src/components",
+                 PRODUCT_ROOT + "/src/tokens.css",
+                 "C:/src/tokens.css", r"C:\src\tokens.css", "C:src/tokens.css",
+                 "c:/tests/fixtures.py",
+                 r"\src\tokens.css", r"\\host\share\src\tokens.css", "//host/share/src/tokens.css",
+                 r"\\?\C:\src\tokens.css", "//?/C:/src/tokens.css",
+                 "../product/src/tokens.css", "src/components/../tokens.css",
+                 "./src/../src/tokens.css", r"src\..\src\tokens.css")
+        for path in paths:
+            with self.subTest(path=path):
+                text = with_line(STYLEGUIDE, 78, line, "- `%s`" % path)
+                fragments = () if "\\" in path or PRODUCT_ROOT in path else (path,)
+                self.assert_reported(self.check({STYLEGUIDE_FILE: text}, ()), STYLEGUIDE_FILE,
+                                     line=78, fragments=fragments)
 
     def test_a_tracked_file_or_directory_passes(self):
         """The control of the test above: STYLEGUIDE names a tracked file and a directory whose
