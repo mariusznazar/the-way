@@ -236,10 +236,11 @@ test that always passes.
 On the main branch, this repository holds `foundations/` with the entries of the-way itself, a
 directory for each part of the process other than `repository` — `elements/<element>/` for each
 foundation element, `elements/common/` for what the elements share, `relation-model/`, `gate/`,
-`installation/`, `agent-instructions/`, `instruction-files/`, `project-level/` and `task-cycle/`
-— with `probes/` as a second directory of the environment facts part, for the checks of
-the-way's own facts, the files that configure the whole repository, which its part map gives to the
-`repository` part (WAY-44), the root agent instruction files and the project skill entry points
+`installation/`, `agent-instructions/`, `instruction-files/`, `project-level/`,
+`product-guidelines/` and `task-cycle/` — with `probes/` as a second directory of the environment
+facts part, for the checks of the-way's own facts, the files that configure the whole repository,
+which its part map gives to the `repository` part (WAY-44), the root agent instruction files and
+the project skill entry points
 under `.claude/skills/` and `.agents/skills/`, which the map gives to `agent-instructions`
 (WAY-44), and a `README.md` that describes the repository. A directory reaches the main branch
 only once it holds what its part requires: an element its template and rules, examples or a
@@ -255,21 +256,24 @@ README explaining how a product uses the pinned version; `agent-instructions/` t
 for agents working on this repository, led to from the root agent instruction files;
 `instruction-files/` the principles of instruction files for coding agents, the account of how
 the tools load them, the skill that applies them, and the script that checks instruction files
-with its tests; `task-cycle/` what the design of the task cycle sets, and until then it does not
-reach the main branch. The entries in `foundations/` are checked by the format guards of their
-elements.
+with its tests; `product-guidelines/` the template that the guidelines of every product share, for
+each discipline of work whose guidelines the-way gives a template of, that template with the skill
+that leads the work on them, and the script that checks the form of guidelines, with its tests;
+`task-cycle/` what the design of the task cycle sets, and until then it does not reach the
+main branch. The entries in `foundations/` are checked by the format guards of their elements.
 
 - **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common,
   relation-model, gate, installation, agent-instructions, instruction-files, repository,
-  project-level, task-cycle
+  project-level, product-guidelines, task-cycle
 - **Based on:** none
 - **Relations:** none
 - **Verification:** level 1 — invariants: repository-file-location · element-directory-contents ·
   relation-model-directory-contents · invariant-example-target · map-example-target ·
   glossary-example-target. Level 2 for what `elements/common/`, `installation/`,
-  `agent-instructions/`, `instruction-files/`, `project-level/` and `task-cycle/` hold and for the
-  format guards checking `foundations/` — an agent compares the change with the decision:
+  `agent-instructions/`, `instruction-files/`, `project-level/`, `product-guidelines/` and
+  `task-cycle/` hold and for the format guards checking `foundations/` — an agent compares the
+  change with the decision:
   - complies: code two format guards share moves into `elements/common/`, and both load it from
     there; a new file of entries in `foundations/` comes with the format guard of its element; the
     installer, its tests and instructions stand together in `installation/`; the templates of a
@@ -279,12 +283,14 @@ elements.
     `.claude/skills/` and `.agents/skills/` stand at the root as files of `agent-instructions`, and
     the script that generates them stands with its test in `agent-instructions/`; the principles,
     the loading account, the skill and the check script of instruction files stand together in
-    `instruction-files/`;
+    `instruction-files/`; the template of guidelines, the template and the skill of the styleguide
+    discipline, and the script that checks the form of guidelines with its tests stand together in
+    `product-guidelines/`;
   - violates: a `tools/` directory for shared scripts reaches the main branch; `task-cycle/`
     reaches the main branch before the design of the task cycle sets what it holds.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/19
+- **Approved by:** Mariusz, merge of <request link>
 
 *Rationale:* anything brought in on the side makes the repository a store of material; directories
 follow the parts, so a change's files name its part and decisions (WAY-21); an incomplete directory
@@ -292,7 +298,10 @@ is work in progress, kept on a branch (WAY-01); probes stand apart, so an elemen
 fact's method; product installation and agent instructions have different failures from repository
 configuration; the project definition and task cycle answer different questions; the principles of
 instruction files serve any repository, so they stand apart from this repository's own agent
-instructions.
+instructions; a product's guidelines stand outside its foundation and answer to no element, so their
+templates and their check stand apart from the elements, and their failures — a product's screens
+built on a meaning nobody approved, guidelines telling agents an old rule — are not those of
+instruction files.
 *Rejected:* material merged as soon as it is written — a store from the first day; an element whose
 only tool is a skill — the form holds only while someone remembers to run it; one `tools/`
 directory for everything shared — it matches no part and grows into a store; one set of template,
@@ -300,7 +309,10 @@ skill and script for every directory — a script that only reads has nothing fo
 the files serving the whole repository left out of the map on purpose — they lose their part and
 its failure mode; installation or agent instructions folded into repository configuration — their
 failures lose their own parts; the principles of instruction files folded into this repository's
-own agent instructions — that part answers for the-way's own instructions, and its failures differ.
+own agent instructions — that part answers for the-way's own instructions, and its failures differ;
+the templates of guidelines and their check under `elements/` — guidelines are no element of the
+foundation (WAY-04); the same folded into `instruction-files/` — that part answers for instruction
+files of any repository, and its failures differ.
 
 ### WAY-10/1 — Who assesses a change to an invariant test or to the foundation?
 
@@ -769,7 +781,7 @@ entry instead of being pointed to. The one exception is the place of its tasks, 
 
 - **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, relation-model,
-  installation, agent-instructions, instruction-files, task-cycle
+  installation, agent-instructions, instruction-files, product-guidelines, task-cycle
 - **Based on:** none
 - **Relations:** none
 - **Verification:** level 1 — invariants: outbound-link-reach. Level 2 for the reasoning in the
@@ -1109,7 +1121,7 @@ what it could not check, never agreement.
 
 - **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, relation-model,
-  installation, instruction-files, task-cycle
+  installation, instruction-files, product-guidelines, task-cycle
 - **Based on:** none
 - **Relations:** none
 - **Verification:** level 1 — invariants: script-language · script-imports · script-subprocesses ·
@@ -5423,3 +5435,399 @@ product needs from the choice, while here the agent's use of an option is what t
 *Rejected:* nothing added to the usual weighing of consequences — the step could recommend a
 cheaper service an agent cannot use, since how well an agent works with an option decides only a
 tie, and the choice would pass with an answer that gives the agent nothing.
+
+### WAY-167/1 — Where do a product's guidelines stand, and what are their files named?
+
+A product's guidelines are written by hand and stand outside its foundation, in the directory
+`guidelines/` at the root of its repository: a file `guidelines/<discipline>.md` for each discipline
+of work on the product it keeps guidelines of, save the styleguide discipline, whose guidelines
+stand in a file `guidelines/styleguide-<part>.md` for each user interface of the product, `<part>`
+being the identifier of the part of the product's map whose files draw that user interface. The
+directory `guidelines/` belongs to the part of the product's map whose files direct whoever carries
+out its tasks, as its instruction files and skills do.
+
+- **Change:** new decision
+- **Scope:** product-guidelines, installation
+- **Based on:** none
+- **Relations:** derives from WAY-44@2f2b6227 · derives from WAY-04@29a75d2c
+- **Verification:** level 2 — an agent compares the change with the decision:
+  - complies: a product with screens in a browser and an admin panel added to its backend keeps
+    `guidelines/styleguide-web.md` and `guidelines/styleguide-admin.md`, named after the parts
+    `web` and `admin` of its map, beside `guidelines/testing.md`, and the pattern `guidelines/**`
+    stands among the files of the part that holds its `AGENTS.md` and its skills;
+  - violates: a product's styleguide stands in `docs/` or in `foundations/`; a product with one
+    user interface names its styleguide `guidelines/styleguide.md`; a styleguide is composed by a
+    script from the product's decisions; a product's guidelines become entries of an element of its
+    foundation.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of <request link>
+
+*Rationale:* a spec lives as long as its task and holds only what entered it, while guidelines are
+shared by the whole product and outlast every task that uses them. They stand outside the foundation
+because they hold no rule of their own, only how to apply rules the foundation's entries carry, so
+the five elements stay as WAY-04 closes them. They direct whoever carries out tasks, like instruction
+files and skills, so they belong to that part, whose files change every later task (WAY-44), and an
+instruction file leads to them as to knowledge needed now and then (WAY-128). One directory with
+fixed names lets a check find them in every product; a product whose screens and admin panel are
+drawn by two parts keeps a styleguide for each, and the part's identifier in the name ties a
+styleguide to the files it governs, so that a renamed part shows.
+*Rejected:* guidelines as a sixth element of the foundation — what binds in them is already carried
+and checked by decisions and invariants, and the list of elements would no longer be closed; an
+extract a script composes from the foundation's entries, as rules for agents are generated from the
+part map (WAY-52) — it holds what the entries say, never how to apply a rule or a use that follows
+it and one that breaks it; a styleguide in documentation beside the code — it directs whoever
+carries out tasks, whose files WAY-44 gives a part of their own, yet a change to it would count
+against the part whose code it describes; meanings kept in the spec of a screen — the spec ends
+with its task, and the next screen gives the same colour another meaning; guidelines in the own
+directory of the part that directs agents — its path differs from product to product, and no check
+could find them; one styleguide for every user interface of a product — an admin panel and the
+product's screens are drawn by different parts.
+
+### WAY-168/1 — What does a rule of a product's guidelines hold beside the foundation entries that carry it?
+
+A binding rule of a product's guidelines names by identifier the decision of the product's log that
+carries its choice and each invariant that checks it, and says what to do and how, with a use that
+follows the rule and a use that breaks it, while its reasons and rejected options stand in that
+decision alone. What a product's guidelines hold that names neither such a decision nor an
+invariant is an example, not a rule.
+
+- **Change:** new decision
+- **Scope:** product-guidelines, decisions, invariants
+- **Based on:** none
+- **Relations:** derives from WAY-22@dcf291ea · derives from WAY-18@8c477ea2
+- **Verification:** level 1 — invariants: guidelines-check-carrier. Level 2 for what a rule says
+  and what stands as an example — an agent compares the change with the decision:
+  - complies: a rule of a product's testing guidelines names the decision choosing the product's
+    fixtures for test data and says to set up each test's data through them, showing a test that
+    does and one that writes rows straight into the store of data; a sentence on how one team likes
+    to name its branches, which no decision carries, stands among the examples;
+  - violates: a rule of a styleguide repeats its decision's rationale and rejected options; an agent
+    holds a change to a rule that names no decision; a rule says what to do with no use that
+    follows it and none that breaks it.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of <request link>
+
+*Rationale:* guidelines do not replace the foundation's elements but bring what they hold to the
+work of one discipline: an agent changing a product's screens needs what to do and how, not an
+account of why. A choice that binds is a decision (WAY-22), and a product keeps every decision in
+one log (WAY-18), where a collision with the product's other choices can be found and the search of
+the whole foundation sees it (WAY-33); named by its identifier, the decision carries its reasons
+once, and its fingerprint shows when the ground of the rule has moved (WAY-169). A rule naming no
+decision would bind with a choice nobody approved, so it is an example; a use that follows a rule
+and one that breaks it mark its line, as a pair of examples marks a decision's (WAY-12). A rule of
+guidelines that an instruction file leads to thus carries a decision the product records, the case
+in which WAY-130 lets a rule stand with no mistake behind it.
+*Rejected:* guidelines keeping their choices with reasons and rejected options in a log of their
+own, narrowing WAY-18 and WAY-22 — a second log, whose collisions with the product's decisions no
+search of the whole foundation sees, and approval, the assessment of changes and the check of form
+built again for it; guidelines with no reasons anywhere — the meanings read from the options a
+choice rejected are lost; the reasons repeated in the rule beside its decision — two copies drift
+apart.
+
+### WAY-169/1 — What happens to a reference of guidelines when the entry it names changes?
+
+Every reference that a product's guidelines make with a fingerprint to a decision of the product's
+log or to an invariant of its foundation, wherever it stands in their text outside fenced code,
+names a decision the log holds and has not repealed or an invariant the foundation holds and has not
+withdrawn, and carries that entry's current fingerprint on the commit checked and, where a main
+branch exists, after the merge onto it. A change that leaves such a reference with another
+fingerprint reaches the main branch only once the same change has brought the guidelines in line
+with the entry's new binding part and given the reference its fingerprint, as WAY-31 has it for a
+relation.
+
+- **Change:** new decision
+- **Scope:** product-guidelines, relation-model
+- **Based on:** none
+- **Relations:** derives from WAY-02@3ffcbd46 · derives from WAY-31@a14c616c
+- **Verification:** level 1 — invariants: guidelines-reference-current ·
+  guidelines-check-reference-target · guidelines-check-stale-reference. Level 2 for bringing the
+  guidelines in line — an agent compares the change with the decision:
+  - complies: a product rewords the decision that gives its `destructive` role its meaning, and the
+    same change rewrites that role's meaning in its styleguide's table and carries the decision's
+    new fingerprint there;
+  - violates: a script gives every reference of a styleguide its new fingerprint with no one reading
+    the rules that carry them; a change rewording a decision merges, and the styleguide that
+    restates it is left for a later task.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of <request link>
+
+*Rationale:* without a fingerprint a changed decision goes through while the guidelines go on
+telling agents the old rule, with no sign anywhere, and guidelines that say in silence other than
+their decision are worse than weak ones. A flag that only asks for review is cleared unread or left
+for later, so the reference stops the merge, as a relation does (WAY-31), and the change that moved
+the entry is the one whose author knows what moved. The check runs after the merge as well, because
+a parallel task can reword a decision the guidelines name without touching them (WAY-33). Every
+reference outside fenced code counts, in a rule's prose, an example or a table as much as in a
+field, since an agent reads them all alike.
+*Rejected:* a flag for review that lets the merge go on, as WAY-02 alone gives it — the guidelines
+keep the old rule; references with no fingerprint — a reworded decision reaches no rule of the
+guidelines; only the fields of a rule checked — a reference in a rule's prose or in an example drifts
+unseen; a fingerprint on every mention of an entry — a bare mention relies on nothing and would be
+flagged for nothing (WAY-02).
+
+### WAY-170/1 — What checks the form of a product's guidelines?
+
+A script of the-way, the form check of guidelines, checks before a merge every file of a product's
+guidelines against the template every product's guidelines share and, where the-way gives one, the
+template of the file's discipline, at the commit of the-way the repository uses, together with the
+references the guidelines make as WAY-169 gives them. A product that keeps guidelines holds the
+invariants of guidelines that the-way's template of guidelines gives, whose methods run that script,
+so the gate runs it with the other checks a change calls for.
+
+- **Change:** new decision
+- **Scope:** product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-04@29a75d2c · derives from WAY-16@5c1d60d4
+- **Verification:** level 1 — invariants: guidelines-form · guidelines-check-form ·
+  guidelines-check-code-path. Level 2 for the invariants a product holds — an agent compares the
+  change with the decision:
+  - complies: the task that writes a product's first styleguide writes the two invariants of
+    guidelines the template gives, whose methods run the script from the product's pinned the-way;
+  - violates: a product writes its styleguide and no invariant of its foundation runs the script; a
+    product's instruction file names a command of its own for checking guidelines, beside the gate.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of <request link>
+
+*Rationale:* a rule of form kept by memory holds only while someone remembers it (WAY-04), while a
+script checks every file each time and costs no agent a reading. The templates come from the commit
+the repository uses, so a product's guidelines change their form only when it moves its pin
+(WAY-34). Run through the methods of invariants, the script runs under the one command that checks
+a change (WAY-16), and a product keeps no command of its own for it.
+*Rejected:* only the references checked, the form left to readers — a rule with no decision would
+pass as binding; a check each product writes for itself — it drifts from the template; a command
+named in the product's instructions beside the gate — of two commands an agent runs one (WAY-16);
+the form judged by an agent — a script decides it every time.
+
+### WAY-171/1 — What form does a file of a product's guidelines take?
+
+Every file of a product's guidelines holds, in this order, the header lines *Discipline* and
+*Applies to*, the latter naming parts of the product's map, and the sections `## When to read`,
+`## Rules`, `## Examples` and `## Where in code`, with what the template of its discipline adds at
+the places that template names, and each rule of `## Rules` stands under a heading of its own with
+the fields *Decision*, *Invariant*, *Good* and *Bad*. `## Where in code` names by their paths the
+files and directories of the product the guidelines point to and copies no value from them, and a
+section or a rule that a template of the-way requires and the product drops holds only `none —`
+followed by the product's decision that departs from it, with its fingerprint. The headings, header
+lines, field names, values of closed lists and the marker `none —` stay in English while the rest of
+the text is in the language the product writes its guidelines in, and a rule of the-way's templates
+of guidelines changes only with a decision of the-way and cites its number.
+
+- **Change:** new decision
+- **Scope:** product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-168@47d9d53e
+- **Verification:** level 1 — invariants: guidelines-form · guidelines-check-form. Level 2 for the
+  language of the text and the rules of the templates — an agent compares the change with the
+  decision:
+  - complies: a product whose team writes in Polish writes the rules and examples of its styleguide
+    in Polish under the English headings and fields; a rule added to the template of the styleguide
+    discipline cites the decision of the-way that sets it;
+  - violates: a product translates the headings of its guidelines, and they can no longer be read
+    mechanically; a styleguide copies the values of its colours under `## Where in code`; a rule
+    enters a template of guidelines with no decision of the-way.
+- **Review when:** the first product that writes the text of its guidelines in a language other than
+  English has merged a change to a decision its guidelines restate · check by: 2027-03-31
+- **Origin:** none
+- **Approved by:** Mariusz, merge of <request link>
+
+*Rationale:* one form lets one script read the guidelines of every discipline, and a discipline's
+template only adds to it, so guidelines of a discipline the-way gives no template of are still
+checked; the fields carry what a rule holds beside its entries (WAY-168). A copy of a value the code
+holds goes stale, so the guidelines point to it (WAY-04). A part a template requires is dropped only
+by a decision, so a departure is the product's own approved choice, visible where the part would
+stand. The structural words stay in English because they are read mechanically, as a project
+definition keeps its headings in English while its content follows the human's language (WAY-108);
+the rest follows the product, whose agents and people read it, and binding it to English would bind
+every product's text for no reader of the-way's. The price: where that text is in another language
+than the decisions, a meaning it restates is a translation, and a translation that drifts while its
+decision stands is caught by no fingerprint, only by a reader; the guidelines stand outside the
+foundation, so this is not the translation WAY-114 keeps out of it, and the decision stays the one
+binding wording. A template's rule cites its decision, so that the templates follow the decisions,
+as the elements' templates do (WAY-35).
+*Rejected:* every file of guidelines wholly in English — it binds the text every product's own agents
+and people read; the language of the conversation that wrote each part — a document that lives
+across tasks would change language from one session to the next; guidelines only of the disciplines
+the-way gives templates of — a product could not write guidelines of a discipline of its own; a
+required part left out with no word — a departure would look like an omission.
+
+### WAY-172/1 — How is a new or changed meaning of a product's guidelines approved?
+
+A new or changed meaning of a product's guidelines is a decision of the product's log, new or
+changed, and the code that uses it is made only once that decision's approver has approved it, in
+the document of the task that needs it, as WAY-30 has a change to a decision approved, or, where
+that document does not settle it, at a blocked draft request on whose branch the cycle proposes the
+decision. Using a meaning that a decision of the product's log already carries takes no approval,
+and neither does changing a value that keeps its meaning. In the area of new and changed meanings
+of a product's guidelines this decision prevails over WAY-114, under which an agent writes such an
+entry on its own recommendation for the human to accept at the merge.
+
+- **Change:** new decision
+- **Scope:** product-guidelines, decisions, project-level, task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-30@6924312f · derives from WAY-125@f3e6afcf · narrows
+  WAY-114@04b4f599
+- **Verification:** level 2 — an agent compares the work with the decision:
+  - complies: a styleguide task's document carries the meaning "red marks only what deletes", the
+    human accepts the document, and its cycle writes the product's decision and then the screens
+    that use it; a cycle whose screen needs a role the task did not settle proposes the role's
+    decision on the task branch, opens a blocked draft request, and makes the screen only once the
+    human has approved it; a cycle darkens the value of the role of the button that saves to reach
+    the contrast its decision asks for, its meaning kept, and asks no one;
+  - violates: a cycle writes a new role's decision on its own recommendation and leaves it to the
+    merge; the orchestrator's go-ahead stands for the approval of a new meaning; a screen that uses
+    an existing role waits for the human.
+- **Review when:** a merged change of a product that pins the-way uses, on a screen, a meaning that
+  no decision of the product's log carries · check by: 2026-12-31
+- **Origin:** none
+- **Approved by:** Mariusz, merge of <request link>
+
+*Rationale:* a meaning of guidelines binds every later screen, and code built on one the human never
+saw is reworked when the human turns it down at the merge, so the approval comes before the code,
+where WAY-30 already puts a change to a decision; the task's document is where the human sees what
+the cycle is to build on (WAY-124), and a blocked draft request is where the human meets a decision
+the cycle cannot make alone (WAY-125). A meaning a decision already carries was approved with it,
+and a value changed with its meaning kept changes no rule, since the rule is the meaning and the
+value stands in the code (WAY-04), so neither waits. Without the precedence, a cycle meeting such a
+meaning would face this decision and WAY-114 with nothing to choose between them (WAY-25).
+*Rejected:* a new meaning written by the cycle and shown at the merge, as WAY-114 gives it — code is
+built on a meaning the human has not seen, and turning it down reworks the screens; approval with
+the plan — in a cycle the human sees the request, not the plan (WAY-125, WAY-136); approval of every
+use of a meaning — every screen would wait for the human.
+
+### WAY-173/1 — Does what the-way's template of the styleguide carries bind a product directly?
+
+The rules the-way's template of the styleguide discipline carries and what the-way's skill
+`maintain-styleguide` proposes bind a product only through a decision of the product's log adopting
+them, and the product departs from any of them only by a decision of its log that gives the reason.
+A decision of the-way on what that template carries or what that skill proposes binds the template
+and the skill, never a product's screens directly.
+
+- **Change:** new decision
+- **Scope:** product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-168@47d9d53e · derives from WAY-100@e7a74a18
+- **Verification:** level 2 — an agent compares the work with the decision:
+  - complies: a product's styleguide names, at each rule the template requires, the product's
+    decision adopting it; a simple admin panel's styleguide drops the page showing its components in
+    every state by a decision of the product that gives its reason, the rule reading `none —` with
+    that decision; a cycle holds a product's screens to the product's decisions;
+  - violates: a cycle holds a product's screens to a rule of the template the product never adopted;
+    a product leaves out a rule the template requires with no decision of its own; the-way's template
+    is edited to fit one product's departure.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of <request link>
+
+*Rationale:* a rule of the template binding every product directly would be as rigid for a simple
+admin panel as for a product's main screens, and it would bind from outside the product's log, where
+every binding choice of guidelines stands (WAY-168). Adopted by a decision of the product, each rule
+meets the product's other choices where collisions are found, and a departure, written with its
+reason and approved, then holds in every later task alike, so it is no freedom to do otherwise from
+one task to the next. Its weak point: a product can knowingly drop a rule that would have protected
+it. The-way's decisions bind a product's work through its pin (WAY-34); these bind what the-way
+offers, and the product takes it as a practice from outside is taken (WAY-100).
+*Rejected:* the template's rules binding every product directly — rigid even for a simple admin
+panel, and a binding choice standing outside the product's log.
+
+### WAY-174/1 — How does the-way's styleguide skill ask the human?
+
+The-way's skill `maintain-styleguide` puts to the human every choice it settles for a styleguide, a
+choice it recommends included, and shows each by what someone using the product sees on the
+screen, never by the names or values of design tokens, saying in plain words what a term of the
+field means before it first uses it. In the area of the questions that skill asks this decision
+prevails over WAY-114, under which a question goes to the human only where the agent has no
+recommendation.
+
+- **Change:** new decision
+- **Scope:** product-guidelines, decisions
+- **Based on:** none
+- **Relations:** derives from WAY-113@d3e5cbfa · narrows WAY-114@04b4f599
+- **Verification:** level 2 — an agent compares the conversation with the decision:
+  - complies: the skill shows "the button that saves stands out, and the one that deletes is red
+    with white text on it", with the ways open, their cost and its recommendation; it asks whether
+    to adopt WCAG though it recommends adopting it, after saying in plain words what contrast is;
+  - violates: the skill asks the human to choose between two hexadecimal values of a design token;
+    it writes into the task a role it recommends without asking; it speaks of focus rings before
+    saying what focus is.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of <request link>
+
+*Rationale:* the human who approves a styleguide's meanings is no specialist of user interfaces, so
+a choice shown by the names or values of design tokens is one the human cannot weigh, while what a
+user sees can be weighed, as a technology choice reaches a human who cannot assess the technology
+through its consequences (WAY-123). A meaning binds every later screen, and no decision enters
+without the human's acceptance, so a recommendation the human never heard would be a choice no
+human made. The price is a longer conversation in each styleguide task.
+*Rejected:* the skill writing what it recommends and asking only where it has no recommendation, as
+WAY-114 gives it — screens are built on meanings the human never saw, and turning one down at the
+merge reworks them; questions about the names and values of design tokens — the human cannot weigh
+them.
+
+### WAY-175/1 — What does the-way take from the outside skills its styleguide learned from, and what does it leave?
+
+From a course's lesson on building a user interface with an agent and its skill `10x-ui`, the-way's
+template of the styleguide discipline and its skill `maintain-styleguide` take: design tokens named
+by their role, never by a colour, kept in one source, with the shared components kept in the
+repository; a background always paired with the text on it; an audit in both directions, from the
+source of values to the screens and from each value on a screen to the design token or component
+meant to carry it, ending in three to five charges, each with its file and line and one sentence
+of its effect on the user, a charge not taken up kept as deferred with its reason; the standing
+question of what someone sees without data, straight from a link, after a refresh; recognising what
+a product already has and extending it; every value kept with where it comes from; the search for
+values written in place of design tokens, as the method of an invariant; the states default, hover,
+visible focus, disabled, error, empty and loading of each shared control, each shown or marked as
+not applying with its reason; a page showing the components in every state; the order of a plan for
+a change to a user interface, as an example; a fault of one screen fixed in its component; and an
+instruction file that points to the styleguide and forbids values written in place of design
+tokens. They leave out that skill's commands and folders of changes, the lists of tools and presets
+values are taken from, the moment it picks for its work, after the first screen shows real data,
+and its refusal to work on a screen that does not exist yet, one screen for each change, the routing
+of work between models, the comparison of screenshots, the files of a design tool and their links to
+code, and the role name `surface`. From the skills `om-ux-setup` and `om-ux-shape` of the Open
+Mercato collection they take reading what a repository's design already holds and saying plainly
+when it holds nothing, a palette read from the code as a proposal and never a rule until the product
+declares it, asking what only the team can know, describing each screen a product announces by what
+the user sees, the components it is built from and its states with the messages the user reads, and
+writing for a reader who was not in the conversation, and they leave out those skills' extractor
+with its files, their guidance on features that use artificial intelligence and their scoring
+rubric.
+
+- **Change:** new decision
+- **Scope:** product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-100@e7a74a18
+- **Verification:** level 2 — an agent compares the change with the decision:
+  - complies: the template of the styleguide carries the pair of a background and its text and the
+    page of every state, and names no library of components; the skill describes the audit's charges
+    in its own words, naming neither the course's skill nor a path into it;
+  - violates: the skill tells an agent to run the course skill's commands or to take values from a
+    named generator of themes; the template's example roles include `surface`; a step of the
+    course's skill not named here enters the skill.
+- **Review when:** a product that pins the-way has settled how an agent sees its screens and keeps a
+  page showing its components in every state, so that the comparison of screenshots left out can be
+  weighed · check by: 2026-12-31
+- **Origin:** none
+- **Approved by:** Mariusz, merge of <request link>
+
+*Rationale:* those skills and their lesson carry steps a styleguide needs beside steps bound to their
+own commands, tools and kind of product; taken whole, their tools and commands would become
+obligations, and naming each piece taken lets later work tell an adopted step from a resemblance
+(WAY-100). A source of values tied to named tools fits only the products that use them, so the skill
+picks the source; the moment after the first screen would leave that screen with no rules, so the
+styleguide comes before it; how a change is cut is the task cycle's (WAY-13); what a model costs is
+the harness's business, and the-way's one rule about models guards the independence of an assessment
+(WAY-10); a comparison of screenshots needs an agent's way to see the screens and reference shots
+nobody updates blindly, which no product has yet; no product of the-way works from a design tool;
+`surface` is a word of the-way's glossary in another meaning (WAY-104). The platform's extractor
+brings a tool and files of its own, its guidance on artificial intelligence concerns features no
+styleguide decides, and its scoring rubric judges a document of another kind. What was seen in those
+skills is described here rather than pointed to (WAY-27).
+*Rejected:* the course's skill adopted whole — its commands, folders and lists of tools would bind
+every product; its steps followed with no decision naming them — an adopted step and a resemblance
+could not be told apart (WAY-100); pointers to the skills in place of a description — no reader can
+open them (WAY-27).
