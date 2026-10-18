@@ -309,7 +309,7 @@ class Names(Case):
     def test_a_name_of_a_discipline_with_a_template_under_another_discipline_is_an_error(self):
         """Break caught: `guidelines/styleguide-web.md` whose *Discipline* reads
         `styleguide-web` accepted as a discipline of its own and held to the common form, so
-        none of the styleguide's template is checked (spec §5.3, 5a)."""
+        none of the styleguide's template is checked (WAY-167, WAY-170)."""
         self.product({"guidelines/styleguide-web.md": TESTING.replace(
             "- **Discipline:** testing", "- **Discipline:** styleguide-web")})
         code, output, _ = self.run_check()
@@ -351,7 +351,7 @@ class Paths(Case):
 
 class References(Case):
     """What a run records and prints of the checks of references, and how it reads what a
-    reference names, beyond what the invariants of guidelines assert (spec §§3.2, 5.1, 5.2)."""
+    reference names, beyond what the invariants of guidelines assert (WAY-169, WAY-74)."""
 
     def assert_clean(self, code, output):
         self.assertEqual(code, 0, output)
@@ -384,8 +384,8 @@ class References(Case):
 
     def test_a_run_with_no_option_prints_a_reference_error_and_records_no_reference_check(self):
         """Breaks caught: a no-option run that skips the checks of references, passes on a
-        reference error, or records them (spec §5.1: every check runs and prints in every run;
-        ruling C28 (5))."""
+        reference error, or records them: every check runs and prints in every run, and the
+        record holds the checks the run's options select."""
         self.product({"guidelines/testing.md": with_line(
             TESTING, PROSE_LINE, "Set up each test's data as ABC-09@0123abcd has it.")})
         code, output, lines = self.run_check()
@@ -405,7 +405,8 @@ class References(Case):
 
     def test_a_package_name_a_bare_identifier_or_another_log_s_number_is_no_reference(self):
         """Breaks caught: a versioned package name, an address, a bare identifier, or a decision
-        number with another log's prefix taken for a reference (spec §3.2). The control at the
+        number with another log's prefix taken for a reference (the forms the sentence of
+        `guidelines-reference-current` gives). The control at the
         same line shows the check of references reads it."""
         line = "Set up each test's data through the product's fixtures, as %s has it."
         for mention in ("`react@18`", "tailwindcss@4", "lucide-react@0", "left-pad@1.3.0",
@@ -462,8 +463,7 @@ class References(Case):
 
     def test_log_copies_that_differ_on_the_commit_merged_onto_give_no_finding_of_the_log(self):
         """Break caught: the decisions guard's report of the merged log carried over, so the
-        form check fails on a rule of the log (`log-merge-copies`) and not of guidelines
-        (spec §5.1, finding 15)."""
+        form check fails on a rule of the log (`log-merge-copies`) and not of guidelines."""
         rationale = "*Rationale:* one way of setting up data."
         self.product_onto({"guidelines/testing.md": TESTING},
                           {"foundations/decisions.md": LOG.replace(
@@ -479,7 +479,7 @@ class References(Case):
     def test_an_invariant_after_a_merge_is_the_branch_s_where_its_sentence_changed_there(self):
         """Breaks caught: an invariant after the merge read from one side only — the branch's
         own rewording lost to the commit merged onto, or a withdrawal or removal there taken for
-        no change (spec §5.2)."""
+        no change (WAY-169)."""
         cited = "- **Invariant:** fixture-named@%s"
         cases = (
             ("withdrawn on the commit merged onto", NAMED_FP,
@@ -562,7 +562,7 @@ class NotRead(Case):
 
 
 class TrustBoundary(Case):
-    """A product's files are untrusted input (WAY-48, spec §5.4)."""
+    """A product's files are untrusted input (WAY-48)."""
 
     def outside(self, name, text):
         path = os.path.join(self.base, name)

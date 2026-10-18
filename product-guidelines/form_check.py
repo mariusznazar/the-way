@@ -29,7 +29,7 @@ invariants file it reads, the commit it merges onto — under the path `guidelin
 file of guidelines under that file's path; each report ends with its count line. A run finding no
 `guidelines/` says so in a note and records `pass`.
 
-What it reports, each finding an error of `guidelines-form` (spec §5.3, items 1–6 and 5a): a header
+What it reports, each finding an error of `guidelines-form` (WAY-167, WAY-170, WAY-171): a header
 line, section, required rule or rule field missing or out of order; a rule naming no decision, and
 in a discipline whose template requires it, no invariant; in a table of roles, a *Kind* outside its
 list, a background role whose *Text on it* names no text role of the table, a row naming no
@@ -42,19 +42,19 @@ with the prefix of the product's log, an invariant by an identifier its invarian
 entry or a withdrawn identifier. A path git lists under `guidelines/` that is not
 `guidelines/<name>.md`, one level deep with a lower-case `.md`, gets a warning and is not read.
 
-What it reports as an error of `guidelines-reference-current` (spec §5.3, item 7): a reference
-anywhere outside fenced code — a decision number of the log or an identifier of the invariants file
-followed by `@` and a run of letters and digits, or any identifier followed by `@` and eight
-lower-case hexadecimal characters (spec §3.2) — whose part after `@` is no fingerprint, that names a
-decision the log does not hold or holds with no binding sentences, or an invariant the file does not
-hold or has withdrawn, or whose fingerprint is not the entry's current one on the commit checked
-and, given a commit to merge onto, after the merge: the decisions as the decisions guard merges the
-log, an invariant as on the branch where its sentence differs from the fork point and as on that
-commit otherwise. Every fingerprint is computed by `relation-model/fingerprint.py`; a message names
-the reference, the entry and its current fingerprint, and never offers to renew one (WAY-31). The
-parsers of the decisions and invariants guards are borrowed with reports of this script's own,
-discarded after the call: only a failure of git carries over, never a finding of the log's own
-rules.
+What it reports as an error of `guidelines-reference-current` (WAY-169): a reference anywhere
+outside fenced code — a decision number of the log or an identifier of the invariants file followed
+by `@` and a run of letters and digits, or any identifier followed by `@` and eight lower-case
+hexadecimal characters, as that invariant's sentence gives them — whose part after `@` is no
+fingerprint, that names a decision the log does not hold or holds with no binding sentences, or an
+invariant the file does not hold or has withdrawn, or whose fingerprint is not the entry's current
+one on the commit checked and, given a commit to merge onto, after the merge: the decisions as the
+decisions guard merges the log, an invariant as on the branch where its sentence differs from the
+fork point and as on that commit otherwise. Every fingerprint is computed by
+`relation-model/fingerprint.py`; a message names the reference, the entry and its current
+fingerprint, and never offers to renew one (WAY-31). The parsers of the decisions and invariants
+guards are borrowed with reports of this script's own, discarded after the call: only a failure of
+git carries over, never a finding of the log's own rules.
 
 The files it reads are the product's, so it trusts none of them (WAY-48): it reads a file only
 through components that are no link or other reparse point, only a regular file of at most 1048576
@@ -485,9 +485,9 @@ def names_invariant(value, foundation):
 
 def references(document, foundation):
     """(line, reference, kind, entry, its part after `@`) of every reference outside fenced code,
-    in the two forms of spec §3.2: a decision number of the log or an identifier of the
-    invariants file followed by `@` and a run of letters and digits, or any identifier followed by
-    `@` and eight lower-case hexadecimal characters."""
+    in the two forms the sentence of `guidelines-reference-current` gives: a decision number
+    of the log or an identifier of the invariants file followed by `@` and a run of letters and
+    digits, or any identifier followed by `@` and eight lower-case hexadecimal characters."""
     found = []
     for index, line in enumerate(document.lines):
         if document.code[index] or "@" not in line:
