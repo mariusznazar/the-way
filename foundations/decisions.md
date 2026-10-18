@@ -290,7 +290,7 @@ main branch. The entries in `foundations/` are checked by the format guards of t
     reaches the main branch before the design of the task cycle sets what it holds.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/25
 
 *Rationale:* anything brought in on the side makes the repository a store of material; directories
 follow the parts, so a change's files name its part and decisions (WAY-21); an incomplete directory
@@ -5461,7 +5461,7 @@ out its tasks, as its instruction files and skills do.
     foundation.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/25
 
 *Rationale:* a spec lives as long as its task and holds only what entered it, while guidelines are
 shared by the whole product and outlast every task that uses them. They stand outside the foundation
@@ -5507,7 +5507,7 @@ invariant is an example, not a rule.
     follows it and none that breaks it.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/25
 
 *Rationale:* guidelines do not replace the foundation's elements but bring what they hold to the
 work of one discipline: an agent changing a product's screens needs what to do and how, not an
@@ -5552,7 +5552,7 @@ relation.
     restates it is left for a later task.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/25
 
 *Rationale:* without a fingerprint a changed decision goes through while the guidelines go on
 telling agents the old rule, with no sign anywhere, and guidelines that say in silence other than
@@ -5596,7 +5596,7 @@ merge, beside the format guards it names there.
 - **Review when:** a gate of the-way runs the methods of a product's invariants on the product's
   changes · check by: 2027-03-31
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/25
 
 *Rationale:* a rule of form kept by memory holds only while someone remembers it (WAY-04), while a
 script checks every file each time and costs no agent a reading. The templates come from the commit
@@ -5641,7 +5641,7 @@ of guidelines changes only with a decision of the-way and cites its number.
 - **Review when:** the first product that writes the text of its guidelines in a language other than
   English has merged a change to a decision its guidelines restate · check by: 2027-03-31
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/25
 
 *Rationale:* one form lets one script read the guidelines of every discipline, and a discipline's
 template only adds to it, so guidelines of a discipline the-way gives no template of are still
@@ -5691,7 +5691,7 @@ entry on its own recommendation for the human to accept at the merge.
     an existing role waits for the human.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/25
 
 *Rationale:* a meaning of guidelines binds every later screen, and code built on one the human never
 saw is reworked when the human turns it down at the merge, so the approval comes before the code,
@@ -5728,7 +5728,7 @@ and the skill, never a product's screens directly.
     is edited to fit one product's departure.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/25
 
 *Rationale:* a rule of the template binding every product directly would be as rigid for a simple
 admin panel as for a product's main screens, and it would bind from outside the product's log, where
@@ -5763,7 +5763,7 @@ recommendation.
     saying what focus is.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/25
 
 *Rationale:* the human who approves a styleguide's meanings is no specialist of user interfaces, so
 a choice shown by the names or values of design tokens is one the human cannot weigh, while what a
@@ -5847,7 +5847,7 @@ guidance on features that use artificial intelligence and their scoring rubric.
   page showing its components in every state, so that the comparison of screenshots left out can be
   weighed · check by: 2026-12-31
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/25
 
 *Rationale:* those skills and their lesson carry steps a styleguide needs beside steps bound to their
 own commands, tools and kind of product; taken whole, their tools and commands would become
@@ -5895,7 +5895,7 @@ foundation then writes with a qualifier (WAY-104).
     and "the game is won"; the table copies the colours' values.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/25
 
 *Rationale:* a name after a shade cannot catch one colour carrying two meanings, while a name after
 a role makes a second meaning visible as a role that does not fit; the sentence of what the user
@@ -5928,7 +5928,7 @@ the list of states, and never copies the list of components the code holds.
     component of the product with its file.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/25
 
 *Rationale:* the states other than the default are the ones that drift first and that a screenshot
 of a screen with data never shows, so the styleguide names them for every shared control; a state a
@@ -5956,7 +5956,7 @@ token takes what WAY-172 gives a change of a meaning and a change of a value.
     screen changes with it; a change of what `primary` means is made as a fix of one screen.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/25
 
 *Rationale:* a global design token is read by every screen, so changing it for one screen changes
 what all the others show, unseen by the task that made the change; a fix in the component stays where
@@ -5981,7 +5981,7 @@ product's guidelines and its values from the file of design tokens.
     carries the sentence on mockups as a rule with a decision and an invariant.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/25
 
 *Rationale:* a mockup draws one screen at one moment, so meanings taken from it differ from screen to
 screen, while the styleguide and the file of design tokens hold one meaning and one value for the
@@ -6007,7 +6007,7 @@ alone and never in production. The page is code of the product, not part of the 
     place of a page of the product.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/25
 
 *Rationale:* the page is the visual half of the styleguide: it shows in one place what the text says
 of every state, for an agent checking its work and for a reviewer, while a screen with data shows
@@ -6033,7 +6033,7 @@ their source, then one screen, then its states.
     rejected because it puts the states before the values.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/25
 
 *Rationale:* an order of steps ends with the piece of work it orders, so it binds no later work and
 stays out of the log as a rule (WAY-36); no test can check a plan's order on a commit. As an example
@@ -6059,7 +6059,7 @@ and the-way holds no list of tools values are taken from.
     generator every product takes its values from.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/25
 
 *Rationale:* values that live only in a conversation are values the next session invents again, so
 each keeps its source where it stands. Which source fits depends on the product's technology and on
@@ -6085,7 +6085,7 @@ through an API or a terminal has no user interface and gets no styleguide.
   - violates: the skill passes over an admin panel because it is small or used by the team alone.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/25
 
 *Rationale:* an agent left free does something different in every task, and that is what guidelines
 are for; even guidelines of modest quality are consistent, and a product with them does not grow
@@ -6111,7 +6111,7 @@ task that uses it needs.
 - **Review when:** the first product whose styleguide was written before its first screen has merged
   the task that brought that screen · check by: 2027-03-31
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/25
 
 *Rationale:* a first screen built with no rules is the screen every later one copies, and a rule that
 blocks a change to a screen until a styleguide exists would need an exception for it. Rules wider
@@ -6143,7 +6143,7 @@ styling is a choice the skill leaves to the human as a question of the task, nev
     the skill chooses a styling technology itself.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/25
 
 *Rationale:* an existing system, even a worse one, beats a better one brought in, since the screens
 already read it and a second one splits them in two. What the product has decides how the skill
@@ -6178,7 +6178,7 @@ extended.
     first research.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/25
 
 *Rationale:* the value of a styleguide has two layers, consistency and the quality of its rules, and
 research with sources and a critique keeps the second, while preferences of the human come first
@@ -6219,7 +6219,7 @@ running product.
     visible.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/25
 
 *Rationale:* without an audit a styleguide writes down an idea of the product, not its code; each
 direction finds what the other misses — a file of design tokens nothing reads, and a value no token
@@ -6253,7 +6253,7 @@ decision binds with no invariant.
     it; a rule a script could decide is left to an agent.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/25
 
 *Rationale:* a styleguide is there to keep agents' screens consistent without anyone's memory, and a
 rule only a decision carries is kept by the memory of the agent reading it. A script costs nothing
@@ -6287,7 +6287,7 @@ uses a role in a meaning other than the one its decision gives.
     out because the browser draws a default outline; no invariant guards the meanings of roles.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/25
 
 *Rationale:* values written in place of design tokens, controls with no visible focus and text that
 cannot be read on its background are the faults a styleguide meets first, and each can be decided by
@@ -6321,7 +6321,7 @@ clean-up of every screen the skill proposes none.
     screen in one task gets the second invariant.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/25
 
 *Rationale:* a violated invariant stands whole on the list of violated invariants (WAY-51), so until
 the last file is clean it cannot see values come back into a file already cleaned; the second
@@ -6358,7 +6358,7 @@ stands as an environment fact the invariant rests on.
     adopting.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/25
 
 *Rationale:* a threshold written into an invariant with no adopted catalogue is a number from WCAG
 without its source, and a new edition would prompt no review; adopted by a decision naming edition,
@@ -6392,7 +6392,7 @@ it; both are written as that skill gives them.
     the rule names a lint command of its own; the rule stands in `AGENTS.md` for every session.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/25
 
 *Rationale:* a styleguide no instruction leads to is not found by an agent in a new session; a path
 with its condition costs one line and is read when the condition comes (WAY-129), and the pointer
