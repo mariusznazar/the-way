@@ -34,11 +34,10 @@ The step writes into the definition only, never into the product's foundation
   `elements/common/way_of_working.md` (WAY-150). Include every current decision that holds or
   constrains a listed technology choice; refresh the selection as the list takes shape.
 - Where "Technology" reads `TODO`, begin with step 1.
-- Where it holds a list, the list may have been written before the step looked at an agent's way
-  to the running product: first take the look step 1 gives at the logs, the interface and the
+- Where it holds a list, first take the look step 1 gives at the logs, the interface and the
   development data, add each matter it finds missing as an item ending `— open`, and, where it adds
   one, show the list again as step 1 does before going on (WAY-121). A definition the gate has
-  approved does not come back to this step for these matters; its list stays as approved.
+  approved does not come back to this step for these matters.
 - Where it holds an item ending `— open`, look first under "Projected foundation changes" for a
   decision written for that choice; where one stands, end the item `— projected: <its question>`.
   Then show the list, ask whether it still holds, and resume step 2 with the open items and the
@@ -121,7 +120,7 @@ waits, so that a resumed step finds it.
    source of the comparison. A difference with no consequence for the product decides nothing;
    where none remains, recommend the simplest and cheapest option (WAY-123). For a place to run,
    where more than one option is the simplest and cheapest, recommend of those the one an agent
-   works with best, by the template's rule (WAY-137); that tie rule serves a place to run alone. In a
+   works with best, by the template's rule (WAY-137). In a
    choice of an agent's way to the running product, the recommendation passes over an option an
    agent cannot use (WAY-166). Then give one
    fresh agent for the wave the option recommended for every choice of the wave, one a constraint

@@ -3462,10 +3462,9 @@ agent uses in its place.
     browser on a local address adds nothing to run; the logs, the interface and the development
     data stand on the list as one choice; a product that keeps no data leaves its development data
     off the list for that reason.
-- **Review when:** a project lists a matter of an agent's way to the running product that a
-  decision of the foundation already settles for the behaviour the project brings, or a task cycle
-  finds no way to check behaviour a user sees in the running product although decisions on those
-  matters stand · check by: 2027-03-31
+- **Review when:** a task cycle finds no way to check behaviour a user sees in the running product
+  although decisions on the matters of an agent's way to the running product stand · check by:
+  2027-03-31
 - **Origin:** none
 - **Approved by:** Mariusz, merge of <request link>
 
@@ -5400,7 +5399,8 @@ it.
 - **Change:** new decision
 - **Scope:** project-level, decisions
 - **Based on:** none
-- **Relations:** derives from WAY-121@ed19d693 · narrows WAY-123@f3b45293
+- **Relations:** derives from WAY-121@ed19d693 · narrows WAY-123@f3b45293 · narrows
+  WAY-137@86b2a30d
 - **Verification:** level 2 — an agent compares the work with the decision:
   - complies: a log service cheaper than the others, whose logs only a human can read, in a panel
     behind the human's login, stays in the comparison of the logs with the lack "an agent does not
