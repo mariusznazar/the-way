@@ -561,9 +561,10 @@ def check_roles(document, sections, rules, form, report):
                              % (number, title, line, ROLE_MEANING_RULE), check, (FORM,))
 
 
-def check_parts(fields, name, discipline, form, parts, report):
+def check_parts(fields, name, discipline, form, disciplines, parts, report):
     """Each part *Applies to* names, and the part a file's name holds, is a part of the map; the
-    file's name agrees with its *Discipline*."""
+    file's name agrees with its *Discipline*, and no file carries the name of a discipline the-way
+    gives a template of under another *Discipline*, which would hold it to the wrong form."""
     # invariant: guidelines-form/1
     check = "check_parts"
     report.ran(check, FORM)
@@ -579,6 +580,13 @@ def check_parts(fields, name, discipline, form, parts, report):
     if discipline is None:
         return
     stem = name[:-len(".md")]
+    for other in sorted(disciplines):
+        if other != discipline and (stem == other or stem.startswith(other + "-")):
+            report.error(None, "the file's name is one of guidelines of the discipline `%s`, "
+                               "whose template the-way gives, but its *Discipline* reads `%s`; "
+                               "it would be held to the wrong form"
+                         % (other, shown(discipline)), check, (FORM,))
+            return
     part = stem[len(discipline) + 1:] if stem.startswith(discipline + "-") else ""
     if (stem == discipline and not form.per_part) or part:
         if part and parts is not None and part not in parts:
@@ -653,7 +661,7 @@ def check_file(name, text, context, report):
     sections = check_sections(document, form, report)
     rules = check_rules(document, sections, form, report, shared)
     check_roles(document, sections, rules, form, report)
-    check_parts(fields, name, discipline, form, parts, report)
+    check_parts(fields, name, discipline, form, disciplines, parts, report)
     check_paths(document, sections, tracked, report)
 
 

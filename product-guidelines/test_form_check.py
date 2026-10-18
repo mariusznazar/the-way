@@ -250,6 +250,37 @@ class Runs(Case):
         self.assertIn("pass", [line["verdict"] for line in lines])
 
 
+class Names(Case):
+    def test_a_name_of_a_discipline_with_a_template_under_another_discipline_is_an_error(self):
+        """Break caught: `guidelines/styleguide-web.md` whose *Discipline* reads
+        `styleguide-web` accepted as a discipline of its own and held to the common form, so
+        none of the styleguide's template is checked (spec §5.3, 5a)."""
+        self.product({"guidelines/styleguide-web.md": TESTING.replace(
+            "- **Discipline:** testing", "- **Discipline:** styleguide-web")})
+        code, output, _ = self.run_check()
+        self.assertEqual(code, 1, output)
+        self.assertTrue([message for _, message in
+                         self.errors(output, "guidelines/styleguide-web.md")
+                         if "styleguide-web" in message and "Discipline" in message], output)
+
+
+class Paths(Case):
+    def test_a_path_refused_for_its_form_whose_remainder_git_tracks_is_an_error(self):
+        """Break caught: the guard against an absolute path, or a `..` segment, dropped, so
+        `/tests/fixtures.py` or `./../tests/fixtures.py` passes once its slash, `.` and `..` are
+        set aside, as `tests/fixtures.py` is a tracked file."""
+        for path, why in (("/tests/fixtures.py", "absolute"), ("./../tests/fixtures.py", "`..` segment")):
+            with self.subTest(path=path):
+                self.setUp()
+                self.product({"guidelines/testing.md": with_line(TESTING, WHERE_LINE,
+                                                                 "- `%s`" % path)})
+                code, output, _ = self.run_check()
+                self.assertEqual(code, 1, output)
+                self.assertEqual([WHERE_LINE], [line for line, message in
+                                                self.errors(output, "guidelines/testing.md")
+                                                if path in message and why in message], output)
+
+
 class NotRead(Case):
     def test_a_path_that_is_not_guidelines_name_md_gets_a_warning(self):
         """Breaks caught: a file one level deeper, or with an upper-case extension, read as
