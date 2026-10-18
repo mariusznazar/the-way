@@ -698,16 +698,26 @@ def list_guidelines(top, report, shared):
             continue
         seen.add(path)
         name = path[len(GUIDELINES) + 1:] if path.startswith(GUIDELINES + "/") else ""
-        if name.endswith(".md") and len(name) > len(".md") and "/" not in name:
-            names.append(name)
-        else:
-            report.warning(None, "`%s` is not read: guidelines stand in files `%s/<name>.md`, "
-                                 "one level deep, with a lower-case `.md`"
-                           % (shown(path), GUIDELINES))
+        if is_guidelines_name(name):
+            if name not in names:
+                names.append(name)
+            continue
+        report.warning(None, "`%s` is not read: guidelines stand in files `%s/<name>.md`, one "
+                             "level deep, with a lower-case `.md`" % (shown(path), GUIDELINES))
+        # A directory, or a link to one, named like a file of guidelines: git lists only what
+        # lies below it, and the read of its own name reports what it is.
+        first = name.split("/")[0]
+        if "/" in name and is_guidelines_name(first) and first not in names:
+            names.append(first)
     if not names:
         report.notes.append("%s/ holds no file `%s/<name>.md`: no file of guidelines to check"
                             % (GUIDELINES, GUIDELINES))
     return sorted(names)
+
+
+def is_guidelines_name(name):
+    """Whether a name below `guidelines/` is one of a file of guidelines, `<name>.md`."""
+    return name.endswith(".md") and len(name) > len(".md") and "/" not in name
 
 
 def read_parts(top, report, part_map, map_rules):

@@ -317,6 +317,17 @@ class TrustBoundary(Case):
         self.assertTrue([message for _, message in errors if "directory" in message], output)
         self.assertIn("fail", [line["verdict"] for line in lines])
 
+    def test_an_untracked_directory_named_like_a_guidelines_file_is_an_error(self):
+        """Break caught: a directory `y.md` that git lists only through the files below it,
+        warned of as a deeper path and never reported as the directory it is."""
+        self.product({"guidelines/testing.md": TESTING},
+                     untracked={"guidelines/y.md/inner.md": TESTING})
+        code, output, _ = self.run_check()
+        self.assertEqual(code, 1, output)
+        errors = self.errors(output, "guidelines/y.md")
+        self.assertTrue([message for _, message in errors if "directory" in message], output)
+        self.assertEqual([], self.errors(output, "guidelines/y.md/inner.md"), output)
+
     def test_guidelines_that_is_a_file_is_an_error(self):
         """Break caught: a file `guidelines` taken for a repository with no guidelines."""
         self.product({"guidelines": "not a directory\n"})
