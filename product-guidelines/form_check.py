@@ -5,7 +5,13 @@ guidelines share, `product-guidelines/template.md`, and, where the-way gives one
 the file's discipline, `product-guidelines/<discipline>/template.md`. Both are read from the
 checkout of the-way this script lies in: in a product, its pinned `.the-way`; in the-way itself, the
 repository checked (WAY-170). The form is read from the fenced block of each template's section
-`## Required form`, so the rules of form live in the templates alone (WAY-171).
+`## Required form`, so the rules of form live in the templates alone (WAY-171). A discipline whose
+template also gives a section `## Required form of a kind` keeps its general file in the first form,
+`guidelines/<discipline>.md`, and a file `guidelines/<discipline>-<kind>.md` for each kind in the
+second, `<kind>` being words of lower-case letters and digits joined by single hyphens; the coding
+discipline's template gives one (WAY-167). The words of the form its checks act on — the sections,
+the columns of each table, the closed lists of *Kind* and of *Status* — are read back from the
+templates, and a template lacking one cannot be run against.
 
 Usage, from the root of the repository:
 
@@ -31,13 +37,19 @@ file of guidelines under that file's path; each report ends with its count line.
 
 What it reports, each finding an error of `guidelines-form` (WAY-167, WAY-170, WAY-171): a header
 line, section, required rule or rule field missing or out of order; a rule naming no decision, and
-in a discipline whose template requires it, no invariant; in a table of roles, a *Kind* outside its
+in a form whose template section requires it, no invariant — each form of a discipline read for
+that demand on its own; in every table the template gives, a section holding no table, a header
+whose cells are not the template's columns, a header with no separator row right under it, a
+separator row anywhere else, and a row whose number of cells — a bar in backticks splitting a cell,
+as Markdown reads a row — is not that of the columns; in a table of roles, a *Kind* outside its
 list, a background role whose *Text on it* names no text role of the table, a row naming no
 decision, and a decision of the table that the rule of each role's meaning does not name unless that
 rule is dropped; a dropped section or rule holding anything but `none — <PREFIX-NN>@<fingerprint>`;
 a part named in *Applies to* or in the file's name that the map does not hold; a file whose name and
-*Discipline* disagree; a path of `## Where in code` that is absolute, holds a `..` segment, a drive,
-a UNC prefix, a backslash or a `:`, or names nothing git tracks. A decision is named by a number
+*Discipline* disagree, a file `<discipline>-<kind>.md` whose `<kind>` is not words of lower-case
+letters and digits joined by single hyphens among them; a path of `## Where in code` that is
+absolute, holds a `..` segment, a drive, a UNC prefix, a backslash or a `:`, or names nothing git
+tracks. A decision is named by a number
 with the prefix of the product's log, an invariant by an identifier its invariants file holds as an
 entry or a withdrawn identifier. A path git lists under `guidelines/` that is not
 `guidelines/<name>.md`, one level deep with a lower-case `.md`, gets a warning and is not read.
@@ -67,8 +79,8 @@ regular expressions are anchored or bounded by a look-behind, with no nested rep
 line cannot make matching run away.
 
 Exit code: 0 without errors, 1 with errors, 2 when it cannot run — ROOT is not the top of a git
-repository, a template of the-way or the code it borrows cannot be read, or the record path does not
-end in `.jsonl` or cannot be written.
+repository, a template of the-way or the code it borrows cannot be read, a template lacks a word of
+the form the checks act on, or the record path does not end in `.jsonl` or cannot be written.
 """
 
 import argparse
@@ -111,6 +123,7 @@ MAX_SHOWN = 200
 
 # The structural words of the form the checks below act on, each read back from the templates.
 FORM_SECTION = "Required form"
+FORM_OF_A_KIND = "Required form of a kind"
 RULES = "Rules"
 WHERE = "Where in code"
 DISCIPLINE = "Discipline"
@@ -120,6 +133,11 @@ INVARIANT = "Invariant"
 ROLE, KIND, TEXT_ON_IT = "Role", "Kind", "Text on it"
 BACKGROUND, TEXT = "background", "text"
 ROLE_MEANING_RULE = "Each role in its meaning"
+# The discipline whose general file indexes its files of a kind, with the tables of its two forms.
+CODING = "coding"
+KINDS_OF_CODE, FILES_OF_A_KIND = "Kinds of code", "Files of this kind"
+FILE, WHEN_TO_READ, STATUS = "File", "When to read", "Status"
+STATUSES = ("exemplar", "copy", "do not copy")
 
 FIELD_LINE = re.compile(r"^- \*\*(.+?):\*\*(?: (.*))?$")
 OPEN_FENCE = re.compile(r"^ {0,3}(`{3,}|~{3,})(.*)$")
@@ -268,10 +286,14 @@ class Form:
     requires_invariant: bool = False               # every rule names an invariant
     per_part: bool = False                         # files are named <discipline>-<part>.md alone
     kinds: list = field(default_factory=list)      # the closed list of a role's *Kind*
+    role_tables: list = field(default_factory=list)  # the titles of the tables of roles
+    of_a_kind: object = None                       # the form of <discipline>-<kind>.md, if any
+    statuses: list = field(default_factory=list)   # the closed list of a file's *Status*
 
 
-def template_section(text, title):
-    """The text under `## title` of a template, up to the next `## ` outside a code block."""
+def template_section(text, title, required=True):
+    """The text under `## title` of a template, up to the next `## ` outside a code block; None
+    where a section that is not required is missing."""
     found, fenced, lines = None, False, []
     for line in text.split("\n"):
         if line.startswith("```"):
@@ -284,16 +306,18 @@ def template_section(text, title):
         if found:
             lines.append(line)
     if not found:
+        if not required:
+            return None
         raise TemplateError('section "%s" not found' % title)
     return "\n".join(lines)
 
 
-def parse_form(text, where):
-    """The form a template's section `## Required form` gives in its fenced block."""
-    section = template_section(text, FORM_SECTION)
+def parse_form(text, where, title=FORM_SECTION):
+    """The form a template's section `## title` gives in its fenced block, and the section."""
+    section = template_section(text, title)
     block = re.search(r"```markdown\n(.*?)```", section, re.S)
     if not block:
-        raise TemplateError("%s holds no form in its section %s" % (where, FORM_SECTION))
+        raise TemplateError("%s holds no form in its section %s" % (where, title))
     header, sections, required, tables, fields = [], [], {}, {}, []
     current = None
     for line in block.group(1).split("\n"):
@@ -309,12 +333,13 @@ def parse_form(text, where):
             name = FIELD_LINE.match(line).group(1)
             (header if current is None else fields).append(name)
         elif line.startswith("|") and current is not None and current not in tables:
-            tables[current] = [cell.strip() for cell in line.strip().strip("|").split("|")]
+            tables[current] = table_cells(line)
     return Form(header, sections, required, tables, fields), section
 
 
 def read_templates(here=HERE):
-    """(the form every file of guidelines shares, {discipline: its merged form})."""
+    """(the form every file of guidelines shares, {discipline: its merged form}); a discipline's
+    form holds in `of_a_kind` the form of its files of a kind, where its template gives one."""
     with open(os.path.join(here, "template.md"), encoding="utf-8") as handle:
         common, _ = parse_form(handle.read(), "product-guidelines/template.md")
     for needed in (DISCIPLINE, APPLIES_TO):
@@ -334,33 +359,80 @@ def read_templates(here=HERE):
         where = "product-guidelines/%s/template.md" % name
         with open(path, encoding="utf-8") as handle:
             text = handle.read()
-        form, section = parse_form(text, where)
-        if form.header != common.header:
-            raise TemplateError("%s gives header lines other than the form of guidelines" % where)
-        positions = [form.sections.index(title) for title in common.sections
-                     if title in form.sections]
-        if len(positions) != len(common.sections) or positions != sorted(positions):
-            raise TemplateError("%s does not hold the sections of the form of guidelines in "
-                                "their order" % where)
-        form.fields = list(common.fields)
-        form.requires_invariant = bool(re.search(r"its \*Invariant\* names at least one "
-                                                 r"invariant", " ".join(section.split())))
+        form = discipline_form(text, FORM_SECTION, common, where)
         form.per_part = ("`guidelines/%s-<part>.md`" % name) in text
-        if form.tables:
-            for title, columns in form.tables.items():
-                for needed in (ROLE, KIND, TEXT_ON_IT, DECISION):
-                    if needed not in columns:
-                        raise TemplateError("the table of %s in %s has no column %s"
-                                            % (title, where, needed))
-            kinds = re.search(r"\*Kind\*: one of (.*?);", " ".join(text.split()))
-            form.kinds = re.findall(r"`([^`]+)`", kinds.group(1)) if kinds else []
-            if BACKGROUND not in form.kinds or TEXT not in form.kinds:
-                raise TemplateError("%s gives no list of kinds holding %s and %s"
-                                    % (where, BACKGROUND, TEXT))
-            if ROLE_MEANING_RULE not in form.required.get(RULES, []):
-                raise TemplateError("%s requires no rule %s" % (where, ROLE_MEANING_RULE))
+        if template_section(text, FORM_OF_A_KIND, required=False) is not None:
+            form.of_a_kind = discipline_form(text, FORM_OF_A_KIND, common, where)
+        for each in (form, form.of_a_kind):
+            if each is not None:
+                read_roles(each, text, where)
+        if name == CODING:
+            read_coding_words(form, text, where)
         disciplines[name] = form
     return common, disciplines
+
+
+def discipline_form(text, title, common, where):
+    """The merged form the section `## title` of a discipline's template gives: the header lines
+    and sections of the form of guidelines, in their order, with the fields of its rules, and
+    whether the section requires an invariant in every rule."""
+    form, section = parse_form(text, where, title)
+    if form.header != common.header:
+        raise TemplateError("%s gives in its section %s header lines other than the form of "
+                            "guidelines" % (where, title))
+    positions = [form.sections.index(name) for name in common.sections if name in form.sections]
+    if len(positions) != len(common.sections) or positions != sorted(positions):
+        raise TemplateError("%s does not hold in its section %s the sections of the form of "
+                            "guidelines in their order" % (where, title))
+    form.fields = list(common.fields)
+    form.requires_invariant = bool(re.search(r"its \*Invariant\* names at least one "
+                                             r"invariant", " ".join(section.split())))
+    return form
+
+
+def read_roles(form, text, where):
+    """The tables of roles of a form, each one holding a column *Role*, with the columns, the
+    closed list of *Kind* and the rule of each role's meaning their checks act on."""
+    form.role_tables = [title for title, columns in form.tables.items() if ROLE in columns]
+    for title in form.role_tables:
+        for needed in (ROLE, KIND, TEXT_ON_IT, DECISION):
+            if needed not in form.tables[title]:
+                raise TemplateError("the table of %s in %s has no column %s"
+                                    % (title, where, needed))
+    meaning = ROLE_MEANING_RULE in form.required.get(RULES, [])
+    if not form.role_tables:
+        if meaning:
+            raise TemplateError("%s requires the rule %s but gives no table of roles"
+                                % (where, ROLE_MEANING_RULE))
+        return
+    kinds = re.search(r"\*Kind\*: one of (.*?);", " ".join(text.split()))
+    form.kinds = re.findall(r"`([^`]+)`", kinds.group(1)) if kinds else []
+    if BACKGROUND not in form.kinds or TEXT not in form.kinds:
+        raise TemplateError("%s gives no list of kinds holding %s and %s"
+                            % (where, BACKGROUND, TEXT))
+    if not meaning:
+        raise TemplateError("%s requires no rule %s" % (where, ROLE_MEANING_RULE))
+
+
+def read_coding_words(form, text, where):
+    """The words of the coding template the checks of its two forms act on: the form of a kind,
+    the section and the columns of each form's table, and the closed list of *Status*."""
+    if form.of_a_kind is None:
+        raise TemplateError("%s gives no section %s" % (where, FORM_OF_A_KIND))
+    for each, title, columns in ((form, KINDS_OF_CODE, (KIND, FILE, WHEN_TO_READ)),
+                                 (form.of_a_kind, FILES_OF_A_KIND, (FILE, STATUS, DECISION))):
+        if title not in each.sections or title not in each.tables:
+            raise TemplateError("%s gives no section %s holding a table" % (where, title))
+        for needed in columns:
+            if needed not in each.tables[title]:
+                raise TemplateError("the table of %s in %s has no column %s"
+                                    % (title, where, needed))
+    statuses = re.search(r"\*Status\*: one of (.*?);", " ".join(text.split()))
+    form.of_a_kind.statuses = re.findall(r"`([^`]+)`", statuses.group(1)) if statuses else []
+    for needed in STATUSES:
+        if needed not in form.of_a_kind.statuses:
+            raise TemplateError("%s gives no list of the values of *Status* holding %s"
+                                % (where, needed))
 
 
 # --- a file of guidelines as headings, fields and code --------------------------------------
@@ -768,16 +840,24 @@ def check_rules(document, sections, form, report, shared, foundation):
 
 
 def table_cells(line):
-    return [cell.strip() for cell in line.strip().strip("|").split("|")]
+    """The cells of a row of a table: the text between its bars, a bar at either end set aside
+    once, each cell stripped of the space around it. A bar in backticks splits a cell too, as
+    Markdown reads a row."""
+    text = line.strip()
+    text = text[1:] if text.startswith("|") else text
+    text = text[:-1] if text.endswith("|") else text
+    return [cell.strip() for cell in text.split("|")]
 
 
-def check_roles(document, sections, rules, form, report, foundation):
-    """Each row of a table of roles: a *Kind* of the closed list, a background's *Text on it*
-    naming a text role of the table, a decision; and each decision of the table named by the rule
-    of each role's meaning, unless that rule is dropped."""
+def check_tables(document, sections, form, report):
+    """Each table the template gives in a section the file keeps: a header holding its columns
+    and, right under it, a separator row; no other separator row; every row with as many cells as
+    the columns. Returns {section: [(line, {column: cell})]} of the tables whose header holds the
+    columns, with each row whose number of cells is that of the columns."""
     # invariant: guidelines-form/1
-    check = "check_roles"
+    check = "check_tables"
     report.ran(check, FORM)
+    tables = {}
     for title, columns in form.tables.items():
         block = sections.get(title)
         if block is None:
@@ -793,16 +873,42 @@ def check_roles(document, sections, rules, form, report, foundation):
                                       "gives %s" % (title, shown(" | ".join(table_cells(header))),
                                                     " | ".join(columns)), check, (FORM,))
             continue
+        if len(table) == 1:
+            report.error(header_line, "the table of `## %s` holds no separator row right under "
+                                      "its header" % title, check, (FORM,))
         rows = []
-        for line, text in table[1:]:
+        for position, (line, text) in enumerate(table[1:]):
             cells = table_cells(text)
-            if all(SEPARATOR_CELL.match(cell) for cell in cells):
+            separator = all(SEPARATOR_CELL.match(cell) for cell in cells)
+            if separator and position > 0:
+                report.error(line, "a separator row stands among the rows of the table of "
+                                   "`## %s`; it stands right under the header alone" % title,
+                             check, (FORM,))
                 continue
+            if not separator and position == 0:
+                report.error(line, "the table of `## %s` holds no separator row right under its "
+                                   "header" % title, check, (FORM,))
             if len(cells) != len(columns):
                 report.error(line, "the row holds %d cells; the table has %d columns"
                              % (len(cells), len(columns)), check, (FORM,))
                 continue
-            rows.append((line, dict(zip(columns, cells))))
+            if not separator:
+                rows.append((line, dict(zip(columns, cells))))
+        tables[title] = rows
+    return tables
+
+
+def check_roles(tables, rules, form, report, foundation):
+    """Each row of a table of roles: a *Kind* of the closed list, a background's *Text on it*
+    naming a text role of the table, a decision; and each decision of the table named by the rule
+    of each role's meaning, unless that rule is dropped."""
+    # invariant: guidelines-form/1
+    check = "check_roles"
+    report.ran(check, FORM)
+    for title in form.role_tables:
+        rows = tables.get(title)
+        if rows is None:
+            continue
         kinds = {bare(row[ROLE]): bare(row[KIND]) for _, row in rows}
         decisions = {}
         for line, row in rows:
@@ -861,18 +967,26 @@ def check_parts(fields, name, discipline, form, disciplines, parts, report):
                          % (other, shown(discipline)), check, (FORM,))
             return
     # A part in the name belongs to a discipline whose files stand one for each user interface,
-    # the styleguide's; every other discipline stands in `guidelines/<discipline>.md` alone
+    # the styleguide's; a kind in the name, to a discipline whose template gives a form of a kind,
+    # the coding discipline's; every other discipline stands in `guidelines/<discipline>.md` alone
     # (WAY-167).
+    rest = stem[len(discipline) + 1:] if stem.startswith(discipline + "-") else None
     if form.per_part:
-        part = stem[len(discipline) + 1:] if stem.startswith(discipline + "-") else ""
-        if part:
-            if parts is not None and part not in parts:
+        if rest:
+            if parts is not None and rest not in parts:
                 report.error(None, "the file's name names the part `%s`, which is no part of the "
-                                   "map" % shown(part), check, (FORM,))
+                                   "map" % shown(rest), check, (FORM,))
             return
+        given = "`guidelines/%s-<part>.md`"
     elif stem == discipline:
         return
-    given = "`guidelines/%s-<part>.md`" if form.per_part else "`guidelines/%s.md`"
+    elif form.of_a_kind is not None:
+        if rest is not None and IDENTIFIER.fullmatch(rest):
+            return
+        given = ("`guidelines/%s.md` or `guidelines/%s-<kind>.md`, `<kind>` being words of "
+                 "lower-case letters and digits joined by single hyphens")
+    else:
+        given = "`guidelines/%s.md`"
     report.error(None, "the file's name does not agree with its *Discipline* `%s`: guidelines of "
                        "that discipline stand in %s"
                  % (shown(discipline), given.replace("%s", shown(discipline))), check, (FORM,))
@@ -997,11 +1111,16 @@ def check_file(name, text, context, report):
     shared, foundation = context.shared, context.foundation
     fields = check_header(document, context.common, report, shared)
     discipline = bare(fields[DISCIPLINE][0]) if DISCIPLINE in fields else None
-    form = context.disciplines.get(discipline, context.common)
+    named = context.disciplines.get(discipline, context.common)
+    # A file `<discipline>-…` of a discipline whose template gives a form of a kind is held to
+    # that form, its name checked apart.
+    form = (named.of_a_kind if named.of_a_kind is not None
+            and name[:-len(".md")].startswith("%s-" % discipline) else named)
     sections = check_sections(document, form, report, foundation)
     rules = check_rules(document, sections, form, report, shared, foundation)
-    check_roles(document, sections, rules, form, report, foundation)
-    check_parts(fields, name, discipline, form, context.disciplines, context.parts, report)
+    tables = check_tables(document, sections, form, report)
+    check_roles(tables, rules, form, report, foundation)
+    check_parts(fields, name, discipline, named, context.disciplines, context.parts, report)
     check_paths(document, sections, context.tracked, report)
     if foundation.known:
         current = check_references(document, foundation, report)
