@@ -6876,3 +6876,387 @@ these binds it, as with the styleguide.
 *Rejected:* the skill only proposing the standing checks a product lacks — a product that has none
 of them would still have no signal; the three named in the template alone — nothing would bind the
 refinement to check them.
+
+### WAY-203/1 — Which rules of a linter's set block a change of a product's code?
+
+A rule of a linter's set stands as a rule of a product's coding guidelines, checked by an invariant
+that blocks a change breaking it, only where every report it gives on the product's code leads to a
+change of code worth making, a report counting by whether it leads to such a change, whether it is
+technically right or not. A rule of the set that gives a report leading to no such change is no rule
+of the coding guidelines: it may stand among their examples, and no invariant checks it, so the gate
+does not run it.
+
+- **Change:** new decision
+- **Scope:** product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-202@e0fb6a51
+- **Verification:** level 2 — an agent compares the work with the decision:
+  - complies: a rule on unused variables, every report of which led to removing dead code, blocks a
+    change; a rule on the order of imports that flagged two files whose order a generator writes
+    stands among the examples under its name in the tool, and the linter's invariant does not run
+    it; a rule whose report was technically wrong, yet led to a fix that made the code clearer,
+    still blocks;
+  - violates: a rule that flagged sound code once blocks because its other reports were right; a
+    rule whose technically right report nobody would change the code for blocks; the gate shows the
+    rules among the examples as warnings; a rule blocks because fewer than one report in ten led to
+    no change.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of <request link>
+
+*Rationale:* a change of sound code that a blocking rule stops gets through only by a change of the
+decision adopting the set (WAY-207), put to a human who does not judge code; Google blocks a change
+only by a check that gives no report its developers would not act on (WAY-195). A report that is
+technically right but leads to no change worth making costs the change as much as a wrong one, while
+a wrong report that leads to a better change costs nothing, so a report counts by what it leads to.
+A rule that once flagged sound code leaves the agent free again in its area, as an example it reads;
+that holds, because a rule that sometimes blocks sound code is worse than one an agent reads and may
+pass by. The gate knows no result that only warns (WAY-63), so such a rule is an example and nothing
+runs it. The price: some useful signals of a linter reach the agent only as an example to read.
+*Rejected:* the whole set the tool recommends blocking — the gate blocks sound code; a rule blocking
+while fewer than one report in ten leads to no change, as Google allows for checks shown in code
+review — the gate sometimes blocks sound code, and only a change of a decision passes it; a rule
+that gives such reports kept as a check that only warns — it changes what results the gate knows
+(WAY-63).
+
+### WAY-204/1 — How are the rules of a linter's set split between the rules that block and the examples?
+
+The skill `maintain-coding-guidelines` proposes which rules of a linter's set block and which stand
+among the examples from a trial run of the set on the product's code, each report of which an agent
+that wrote none of that code judges by whether it leads to a change of code worth making, whether it
+is technically right or not, and a rule with one report that leads to no such change goes among the
+examples; for a product with no code it proposes as blocking the rules the tool's documentation
+marks as recommended. The human approves that split in the product's decision adopting the set, and a
+rule on which a later report leads to no change of code worth making goes among the examples by a
+change of that decision, which the human approves.
+
+- **Change:** new decision
+- **Scope:** product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-203@96f71a98
+- **Verification:** level 2 — an agent compares the work with the decision:
+  - complies: the skill runs a set in a scratch worktree of a product with code, a fresh agent
+    judges each of its reports, the three rules with a report that led to no change worth making
+    stand among the examples, and the human adopts the set with that split shown by its effect; a
+    product with no code adopts the rules its linter's documentation marks as recommended, and when
+    a cycle later meets a report of one of them that leads to no change worth making, a change of
+    the adopting decision, approved by the human, moves it among the examples;
+  - violates: the agent that wrote the code judges the reports of the trial run; the split comes
+    from an agent's memory of which rules are noisy; a cycle turns a rule off in the linter's
+    configuration on meeting such a report, with no change of the decision.
+- **Review when:** the first product without code that adopted the rules its linter's documentation
+  marks as recommended has met a report of one of them that leads to no change of code worth making,
+  or has merged ten changes of its code without one · check by: 2027-03-31
+- **Origin:** none
+- **Approved by:** Mariusz, merge of <request link>
+
+*Rationale:* whether a rule's reports lead to changes worth making shows only on the product's own
+code, so the split is read off a trial run, and the agent that wrote that code would judge in its
+favour, so another agent judges each report, as Google weighs a report by what developers do with it
+(WAY-195). The human does not judge code, so the human approves the split as a whole, shown by its
+effect (WAY-194), never rule by rule. A product with no code has nothing to try a set on, so it
+takes the rules the tool's documentation recommends; their weak point is that they block with no
+evidence from the product, and the first report of one that leads to no change worth making takes it
+off by a change of the decision. The decision adopting the set names it and its edition (WAY-86),
+and what an invariant of the linter takes from that catalogue is which rules the set holds at that
+edition: one environment fact, which one edition of the tool's documentation states, about one
+thing, with one reason to change, a new edition (WAY-76), as git's rule of path patterns with its
+page's exceptions is one fact. A criterion of WCAG stands as a fact of its own (WAY-191) because
+each is a requirement of its own written in prose, while a rule of a linter's set is one whose
+content the tool itself runs at its pinned version, so the invariant takes from the catalogue its
+membership alone; the blocking rules then stand in the adopting decision as the set less the rules
+it keeps among the examples (WAY-60). The price is a trial run and a judgment of its reports each
+time a set is adopted.
+*Rejected:* every rule of the set blocking — the gate blocks sound code (WAY-203); the human
+deciding rule by rule — the human would judge what they cannot judge (WAY-194); an environment fact
+for each rule of the set — many facts with one source and one reason to change (WAY-76).
+
+### WAY-205/1 — How do a linter and a formatter enter a product whose code already breaks their rules?
+
+Where a product's code already breaks the rules of its linter's set that block, the skill
+`maintain-coding-guidelines` proposes the linter's invariant over the whole of that code, which
+stands on the list of violated invariants until the code is cleaned, and beside it a second
+invariant that holds from its first day: no file of the parts it names holds more reports of those
+rules than on `{fork-point}`, and a file not on `{fork-point}` holds none; the second is withdrawn
+once the first holds. A formatter enters a product by one reformatting of the whole of its code in
+the task that brings the formatter, with no second invariant.
+
+- **Change:** new decision
+- **Scope:** product-guidelines, invariants
+- **Based on:** none
+- **Relations:** derives from WAY-51@8bdac21a · derives from WAY-60@6e862c88
+- **Verification:** level 2 — an agent compares the work with the decision:
+  - complies: a product whose code breaks the blocking rules in forty files lists the linter's
+    invariant as violated by a change the human accepts and adds the second invariant, so a cleaned
+    file that gains a report back fails at once, and a new file with one fails too; the task that
+    brings a formatter reformats every file of the product once, and the formatter's invariant holds
+    from that commit;
+  - violates: the blocking rules are cut down to those the code already meets; the task that brings
+    the linter cleans every file of the product; the formatter's invariant stands on the list of
+    violated invariants beside a second invariant comparing files with the fork point; the full
+    invariant alone stands on the list, and a cleaned file gains reports back unseen.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of <request link>
+
+*Rationale:* a rule weakened until the code meets it describes the accident, not the intent
+(WAY-51), and cleaning the whole of the code in the task that brings the linter grows that task into
+cleaning the product. The linter's invariant stands whole on the list of violated invariants, which
+keeps the debt countable, but until the last file is clean it cannot see a report come back into a
+file already cleaned; the second invariant compares each file with the fork point (WAY-60), so it
+holds from the first day, new code follows the rules while old code is cleaned when a task has it in
+scope, and both fit WAY-51 and WAY-60 unchanged, as for the styleguide (WAY-190). This takes the
+place of Google's condition that a check is fixed across the whole code before it is turned on
+(WAY-195). A formatter rewrites the code itself without changing what it does, so one reformatting
+leaves nothing to clean and a second invariant would keep nothing. Its weak point: a renamed file
+that holds reports counts as a new file and is cleaned in the change that renames it.
+*Rejected:* only the rules the code already meets adopted — the rule is weakened until the code fits
+it (WAY-51); the whole of the code cleaned in the task that brings a linter — that task grows into
+cleaning the whole product.
+
+### WAY-206/1 — What does the audit of a product's dependencies check?
+
+The skill `maintain-coding-guidelines` proposes an audit of dependencies that checks a change and
+fails it only where a version of a dependency that the change brings in against `{fork-point}` has a
+known vulnerability, as the advisory database named by the product's decision adopting the audit
+gives it when the check runs, of at least the severity that decision sets, every severity being
+among the ways the skill offers. Until the clock runs the methods of a product's invariants, the
+template of the coding discipline carries no audit of the whole tree of a product's dependencies.
+
+- **Change:** new decision
+- **Scope:** product-guidelines, invariants
+- **Based on:** none
+- **Relations:** derives from WAY-202@e0fb6a51 · derives from WAY-60@6e862c88
+- **Verification:** level 2 — an agent compares the work with the decision:
+  - complies: a change that adds a library at a version with a known vulnerability of high severity
+    fails in a product whose decision sets high; a change to a page's text passes on the morning an
+    advisory is published for a dependency the product already holds; a product whose human chose
+    every severity fails a change bringing in a version with an advisory of low severity;
+  - violates: the audit reads the whole tree on every change, and a change unrelated to the
+    dependencies fails on an advisory published that morning; the template sets the threshold at
+    high for every product; the audit reads a copy of the database the product committed months
+    before; the template carries an audit of the whole tree of dependencies run every day.
+- **Review when:** the clock runs the methods of a product's invariants · check by: 2027-03-31
+- **Origin:** none
+- **Approved by:** Mariusz, merge of <request link>
+
+*Rationale:* an audit of the whole tree at every change fails a change that touches no dependency on
+a vulnerability published that morning, so the audit checks what the change brings, against the fork
+point, as Open Mercato's audit compares with a base (WAY-195). The severity from which a
+vulnerability counts and the database read are conditions of the product's invariant, so they stand
+in the decision that adopts the audit (WAY-60), and the severity is the product's choice, every
+severity among the ways. The tools stand at pinned versions, while the database is read as it stands
+when the check runs, so that a change brings in nothing known to be vulnerable that day. Two weak
+points follow. A vulnerability found in a dependency the product already holds gives no signal while
+no change brings in a version of it, until the clock runs the methods of a product's invariants,
+when the whole tree can be audited apart from any change. A later run on the same commit may record `fail` where an
+earlier one recorded `pass`, when an advisory is published for a version that commit brings in; such
+a check is answered as WAY-68 gives it, which this decision leaves unchanged.
+*Rejected:* the whole tree audited at every change — an unrelated change fails on a vulnerability
+published that morning; a copy of the database the product commits — nothing moves it apart from a
+change, so it ages without bound, and a change bringing in a version first flagged after it passes;
+WAY-68 narrowed so that a later `fail` on the same commit is no check giving different verdicts — a
+new meaning of WAY-68 for a rare case; a fixed threshold of severity for every product — the
+severity is the product's choice.
+
+### WAY-207/1 — Where is a fault of one file of a product's code fixed?
+
+The template of the coding discipline has a product's coding guidelines hold that a fault of one
+file is fixed in that file, never by turning a rule of the linter off for the whole product nor by
+changing the exemplar for that file's sake, and that turning a rule of the linter off for the whole
+product is a change of the product's decision adopting the linter's set, which the human approves as
+WAY-172 gives a changed meaning.
+
+- **Change:** new decision
+- **Scope:** product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-172@45806b6e · derives from WAY-193@1ae9ba7c
+- **Verification:** level 2 — an agent compares the change with the decision:
+  - complies: a new endpoint that the linter flags for an unused import loses that import; a team
+    that finds a blocking rule wrong for the product changes its decision adopting the set with the
+    human's approval, and only then the rule is turned off in the linter's configuration;
+  - violates: a rule is turned off in the linter's configuration so that one change gets through;
+    the exemplar is changed so that a new file departing from it passes the rules a script checks
+    from it.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of <request link>
+
+*Rationale:* a rule of the linter reads every file of the parts it covers, so turning it off for one
+file's sake changes what binds all the others, unseen by the task that made the change, and the
+exemplar is what every later file of its kind follows; a fix in the file stays where the fault is. A
+blocking rule gives no report that leads to no change worth making (WAY-203), so a report of it is a
+fault to fix, and a rule wrong for the product is a matter of the decision that adopted it, as a
+global design token is for a styleguide (WAY-178).
+*Rejected:* a rule turned off in the linter's configuration so that one change gets through — every
+other file loses the rule unseen.
+
+### WAY-208/1 — Which parts of a product get coding guidelines?
+
+The skill `maintain-coding-guidelines` proposes coding guidelines for every part of a product's map
+that holds code, the scripts of its build included, however small that part is, and the general file
+of its coding guidelines names each such part in *Applies to*.
+
+- **Change:** new decision
+- **Scope:** product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-193@1ae9ba7c
+- **Verification:** level 2 — an agent compares the work with the decision:
+  - complies: a product with a backend, a client in the browser and a part holding its build scripts
+    names all three in *Applies to* of `guidelines/coding.md`, and its standing checks read the code
+    of all three;
+  - violates: the skill passes over the part of build scripts because it is small; the general file
+    names only the backend because its kinds of code live there.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of <request link>
+
+*Rationale:* an agent left free does something different in every task, and that is what guidelines
+are for; even guidelines of modest quality are consistent, as for the styleguide of every user
+interface (WAY-183), and a small part of code drifts as surely as a large one. The general file
+holds what binds the whole of the code once (WAY-167), so the parts it covers are the parts its
+standing checks read.
+*Rejected:* no coding guidelines for a small or helper part, such as the scripts of the build — each
+task writes it its own way.
+
+### WAY-209/1 — When do a product's coding guidelines come into being?
+
+The skill `maintain-coding-guidelines` proposes that, in a product with no code, the general file of
+its coding guidelines, with its standing checks, comes into being before the first task that writes
+the product's code, and that the file of a kind of code comes into being with the task that creates
+the first file of that kind.
+
+- **Change:** new decision
+- **Scope:** product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-193@1ae9ba7c
+- **Verification:** level 2 — an agent compares the work with the decision:
+  - complies: a product whose plan brings its first code gets a task of coding guidelines first,
+    which adopts a linter, a formatter and an audit of dependencies before any code exists; the task
+    that writes the product's first migration writes `guidelines/coding-migration.md` with that
+    migration as its exemplar;
+  - violates: the linter and the formatter are brought in once the first code is written; a file of
+    the kind `endpoint` is written while the product holds no endpoint.
+- **Review when:** the first product whose coding guidelines were written before its first code has
+  merged the task that brought that code · check by: 2027-03-31
+- **Origin:** none
+- **Approved by:** Mariusz, merge of <request link>
+
+*Rationale:* the first code written with no standing check is the code every later change copies,
+and checks brought to it afterwards find code to clean (WAY-205), as a first screen built with no
+rules is the one every later screen copies (WAY-184). A file of a kind holds its exemplar, which
+exists only once the task that creates the first file of the kind has designated it (WAY-200).
+Coding guidelines written before any code have no trial run to start from (WAY-204); this way of
+working has not yet been tried on a product, so its first use is reviewed.
+*Rejected:* the linter and the formatter brought in only after the first code is written — that code
+is written with no standing check, and they meet it as code to clean.
+
+### WAY-210/1 — What does the coding-guidelines skill look at first?
+
+Before anything else, the skill `maintain-coding-guidelines` recognizes which parts of a product
+hold code and what the product already has for them — a linter, a formatter, an audit of
+dependencies, kinds of code that already have files, or nothing — and whether it has coding
+guidelines, and it extends what exists rather than setting a second tool beside it. A new linter,
+formatter or audit of dependencies is a choice the skill leaves to the human as a question of the
+task, never one it settles, recommending by default the tool most used in the product's technology,
+as research with sources shows it.
+
+- **Change:** new decision
+- **Scope:** product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-193@1ae9ba7c
+- **Verification:** level 2 — an agent compares the work with the decision:
+  - complies: in a product whose linter runs with a few rules, the skill proposes adding rules to
+    that linter's configuration; a product with no standing check gets three questions, each
+    recommending the tool research shows most used in the product's technology, with its sources;
+  - violates: the skill sets a second linter beside the one the product runs because it judges it
+    better; the skill chooses a formatter itself; the default recommendation is a tool the agent
+    prefers, with no source showing its use.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of <request link>
+
+*Rationale:* an existing tool, even a worse one, beats a better one brought in, since the code and
+the people working on it already follow it, and two linters over one code disagree, as for a
+styleguide's system (WAY-185). What the product has decides how the skill works — before the first
+code, an audit, or a refresh — so it is read first. A new tool is something the product has to keep,
+a technology choice, and the human makes it. The human is no developer, and a product with no
+standing check meets three such choices at once, so the skill recommends the tool most used in the
+technology, which the human can take as offered, as WCAG is recommended for adoption (WAY-191), and
+how widely an option is used within its family bears on how well an agent works with it (WAY-122).
+*Rejected:* a second linter set beside a product's working one because the skill judges it better —
+two tools over one code disagree; the skill choosing a new tool itself — a dependency the human
+never chose.
+
+### WAY-211/1 — Where do the tools of the standing checks and a linter's set of rules come from?
+
+The skill `maintain-coding-guidelines` takes the tools of the standing checks and a linter's set of
+rules from the human's preferences for the product's technology that the product's foundation
+settles, and, where the human has none, from research of each standing check for that technology,
+each source named with its page and version and every claim no source supports refuted by a critique
+before the human sees the options, as the options of a technology choice are checked (WAY-122). It
+researches again whenever a product's coding guidelines are refreshed or extended.
+
+- **Change:** new decision
+- **Scope:** product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-122@b343277a · derives from WAY-120@81f84997
+- **Verification:** level 2 — an agent compares the work with the decision:
+  - complies: the human has no preference for the linter of a product written in TypeScript;
+    research names the pages and versions of the tools' documentation and of a record of their use,
+    a fresh critic strikes a claimed difference no page gives, and only then the human sees the
+    options; a year later an extension of the coding guidelines runs the research again;
+  - violates: the tools come from the agent's memory; research reaches the human uncritiqued; an
+    extension reuses the first research; the skill researches a tool the human already named as
+    preferred and offers another in its place.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of <request link>
+
+*Rationale:* the product is the human's, so their preferences come first; where they have none,
+research with sources and a critique lets a human who cannot judge the tools tell a sound comparison
+from an invented one (WAY-122, WAY-120), as for a styleguide's starting rules (WAY-186). Tools and
+their recommended sets move, so refreshed coding guidelines are set against them again.
+*Rejected:* tools and sets proposed from the agent's memory — the human cannot tell a sound proposal
+from an invented one; research once for each product — later extensions miss what has moved.
+
+### WAY-212/1 — How does a product's instruction file lead to its coding guidelines?
+
+A product's root `AGENTS.md`, outside the block the-way's installer writes, points to its coding
+guidelines by one line naming `guidelines/coding.md` by its path in backticks with the condition of
+changing the product's code, written as the skill of `instruction-files` gives a pointer, and no
+line of it names a file `guidelines/coding-<kind>.md`. Each such file is named instead by a row of
+the table of `guidelines/coding.md`, by its path in backticks with the condition under which to read
+it, such as adding or changing a file of its kind.
+
+- **Change:** new decision
+- **Scope:** product-guidelines, instruction-files
+- **Based on:** none
+- **Relations:** derives from WAY-128@4dca37ca · derives from WAY-129@1336c32b · derives from
+  WAY-167@052adf27
+- **Verification:** level 1 — invariants: guidelines-check-kind-index. Level 2 for the pointer of
+  `AGENTS.md` — an agent compares the change with the decision:
+  - complies: `AGENTS.md` reads "Before you change the product's code, read `guidelines/coding.md`"
+    below the installer's block, and the table of `guidelines/coding.md` names
+    `guidelines/coding-endpoint.md` with "before adding or changing an endpoint";
+  - violates: `AGENTS.md` holds a line for each file of a kind; the pointer stands inside the
+    installer's block; the coding guidelines are imported with `@`; the pointer names a lint command
+    to run before a change.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of <request link>
+
+*Rationale:* coding guidelines no instruction leads to are not found by an agent in a new session; a
+path with its condition costs one line and is read when the condition comes (WAY-129), and the
+pointer leads to work an agent would not otherwise find (WAY-128). A line for each file of a kind
+would grow `AGENTS.md`, which the tools load into every session, with each kind the product gains,
+while the general file's table, as Open Mercato's table leading from a task to the guides to read
+(WAY-195), leads the agent in a second step to the files of the kinds its work touches. The price:
+two steps instead of one, and a table that could drift from the files, which an invariant keeps in
+step. The pointer stands outside the installer's block, which holds no path a product chooses
+(WAY-107), and the gate runs the standing checks, so the pointer names no command of its own
+(WAY-16). The table itself is what WAY-167 gives the general file; this decision sets how it leads.
+*Rejected:* a line of `AGENTS.md` for each file of the coding guidelines, as WAY-192 has for each
+styleguide — `AGENTS.md`, loaded into every session, grows with each kind; no pointer, leaving the
+way in to the task cycle — until the cycle reads guidelines, an agent in a new session does not find
+them.
