@@ -34,6 +34,11 @@ The step writes into the definition only, never into the product's foundation
   `elements/common/way_of_working.md` (WAY-150). Include every current decision that holds or
   constrains a listed technology choice; refresh the selection as the list takes shape.
 - Where "Technology" reads `TODO`, begin with step 1.
+- Where it holds a list, the list may have been written before the step looked at an agent's way
+  to the running product: first take the look step 1 gives at the logs, the interface and the
+  development data, add each matter it finds missing as an item ending `— open`, and, where it adds
+  one, show the list again as step 1 does before going on (WAY-121). A definition the gate has
+  approved does not come back to this step for these matters; its list stays as approved.
 - Where it holds an item ending `— open`, look first under "Projected foundation changes" for a
   decision written for that choice; where one stands, end the item `— projected: <its question>`.
   Then show the list, ask whether it still holds, and resume step 2 with the open items and the
@@ -47,6 +52,14 @@ The step writes into the definition only, never into the product's foundation
   decisions, list the technology and architecture choices the project needs, by the rule of the
   template's Technology section: a choice whose later settling could change how the work is cut
   into tasks, or that adds something the product has to run, pay for or back up
+  (WAY-121).
+- Then, where the project brings behaviour a user sees in the running product, look at the three
+  matters of an agent's way to the running product — its logs, its interface and its development
+  data — by the exception the template's Technology section gives. For each, look for a decision of
+  the foundation that settles it for that behaviour, reading what the matter asks as the template
+  gives it (WAY-165): where one stands, the matter is not listed; otherwise list it as a choice of
+  its own, even where its answer adds nothing to run, pay for or back up, or the product has none of
+  what the matter names. A matter listed is settled like any other choice from here on
   (WAY-121).
 - Name each choice in the language of the definition by what the product needs it for — "where
   the accounts and saved games are kept" — never by a technology. A way of logging in is listed as
@@ -91,7 +104,10 @@ waits, so that a resumed step finds it.
    (WAY-122).
 3. **Consequences.** For each option kept, the agent says what it costs, where it runs, what
    keeping it running takes and what changing it later costs; every difference claimed between the
-   options cites its source (WAY-123). It writes the comparison to
+   options cites its source (WAY-123). In a choice of an agent's way to the running product, it also
+   says for each option whether an agent can use it, and an option an agent cannot use stays in the
+   comparison with the lack "an agent does not check the running product this way" (WAY-166). It
+   writes the comparison to
    `.runs/technology/<choice>.md`, the choice's name in lower case with hyphens for spaces, which
    the product's Git ignores, and ends.
 4. **Critique.** Give one fresh agent, following `critique`, the whole comparison of a choice, its
@@ -105,7 +121,9 @@ waits, so that a resumed step finds it.
    source of the comparison. A difference with no consequence for the product decides nothing;
    where none remains, recommend the simplest and cheapest option (WAY-123). For a place to run,
    where more than one option is the simplest and cheapest, recommend of those the one an agent
-   works with best, by the template's rule (WAY-137). Then give one
+   works with best, by the template's rule (WAY-137); that tie rule serves a place to run alone. In a
+   choice of an agent's way to the running product, the recommendation passes over an option an
+   agent cannot use (WAY-166). Then give one
    fresh agent for the wave the option recommended for every choice of the wave, one a constraint
    of the definition settles included, with the definition and the comparisons, and ask it to run
    on each a devil's advocate, a pre-mortem and a search for unknown unknowns: what choosing that
