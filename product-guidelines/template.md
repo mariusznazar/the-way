@@ -120,12 +120,12 @@ A rule whose *Invariant* names an invariant other than `guidelines-form` gives t
   `\`, no `:` and no leading `/`; the form check reports a path that does (WAY-168, WAY-170). The
   file of guidelines that holds the cases stays within the form check's limit of 1048576 bytes,
   beyond which the form check does not read it (WAY-168, WAY-170).
-- **The outer fence of a case is three backticks**, and the text of a case holds no line that
-  opens a fence — three backticks or three tildes after at most three spaces; the form check
-  reports a tilde fence or backticks followed by text inside a case (WAY-168, WAY-170). A bare
-  three-backtick line inside a case closes the block there, as the form check reads fences: the
-  rest of the case reads as the rule's text, and the case's own closing line opens a block with no
-  info string, which the form check reports as a malformed test case (WAY-168, WAY-170).
+- **The outer fence of a case is three backticks**, and the text of a case holds no line that,
+  after any leading whitespace, starts with three backticks or three tildes; the form check reports
+  such a line (WAY-168, WAY-170). A bare three-backtick line inside a case closes the block there,
+  as the form check reads fences: the rest of the case reads as the rule's text, and the case's own
+  closing line opens a block with no info string, which the form check reports as a malformed test
+  case (WAY-168, WAY-170).
 - **A rule whose *Invariant* is the product's copy of `guidelines-form`** gives *Good* and *Bad* as
   descriptions alone, with no test-case blocks: its cases are the-way's own tests of the form check,
   the `guidelines-check-*` invariants with their good and bad fixtures, and a whole file of
@@ -175,11 +175,9 @@ and these files read it as one.
   selectors in backticks, a class name or a value holding a `/` — a fraction, or a role with an
   opacity after a slash — in fenced code, and no `@` import of a file outside code.
 - The paths and texts of a rule's test cases stay in fenced code, where that script reads no path
-  and no import. It takes for a fence any line that begins, after any run of spaces or tabs, with
-  three backticks or three tildes, and switches between code and text on each such line; a case
-  that keeps it quiet therefore holds no such line at any indentation, since a line indented four
-  spaces or more, which the form check reads as text of the case, would make the script read the
-  rest of the case as text outside code.
+  and no import. That script switches between code and text on every line that starts, after any
+  leading whitespace, with three backticks or three tildes, which is why the text of a case holds
+  no such line.
 - `instruction-files/principles.md` puts emphasis — words written in capitals to make a rule stand
   out — on one rule per file at most, and `instruction-files/check_instructions.py` warns where more
   than one line of a file carries such words.
