@@ -62,6 +62,9 @@ writes there is written for a reader who was not in it.
   - for the product's first guidelines: add `guidelines/**` to the files of the part of the map
     whose files direct whoever carries out its tasks, through `update-part-map`, and write the
     product's copies of the two invariants the template of guidelines gives (WAY-167, WAY-170);
+  - where a law or a contract binds the accessibility of the user interface, record at its part,
+    through `update-part-map`, the failure mode the human settled for that obligation, its
+    detection naming the invariant that rests on the obligation's environment fact (WAY-46);
   - each item an audit charge calls for (step 3).
 - *Questions to settle*: each meaning, role, pair, value with its source, rule of states, departure
   from the template and answer on accessibility, each with the human's words and date as its
@@ -171,7 +174,10 @@ Where the user interface has screens (WAY-187):
   from it by a decision with its reason (WAY-173). Ask also what no reading of the code can tell:
   the names the team uses, the exceptions it keeps on purpose (WAY-175).
 - **Accessibility.** First ask whether a law or a contract binds the accessibility of the user
-  interface: what one requires is an environment fact, and no adoption is needed (WAY-86). Then
+  interface: what one requires is an environment fact, and no adoption is needed (WAY-86). Such an
+  obligation also stands as a failure mode of the user interface's part, its kind of damage and
+  severity given by the human and its detection naming the invariant that rests on that fact; it
+  reaches the map through *To do* (WAY-46). Then
   propose the decision adopting WCAG, recommending the newest edition published when the decision
   is written, named by its number as read on the W3C's page in this session, never from memory, at
   level AA, for every screen of the user interface; propose another way only where the human
