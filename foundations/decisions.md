@@ -5575,7 +5575,10 @@ guidelines against the template every product's guidelines share and, where the-
 template of the file's discipline, at the commit of the-way the repository uses, together with the
 references the guidelines make as WAY-169 gives them. A product that keeps guidelines holds the
 invariants of guidelines that the-way's template of guidelines gives, whose methods run that script,
-so the gate runs it with the other checks a change calls for.
+so the gate runs it with the other checks a change calls for. Until a gate of the-way runs the
+methods of a product's invariants, the block the-way's installer writes into the product's root
+`AGENTS.md` names the script's two commands, without and with `--merge-onto`, to run before every
+merge, beside the format guards it names there.
 
 - **Change:** new decision
 - **Scope:** product-guidelines
@@ -5587,8 +5590,11 @@ so the gate runs it with the other checks a change calls for.
   - complies: the task that writes a product's first styleguide writes the two invariants of
     guidelines the template gives, whose methods run the script from the product's pinned the-way;
   - violates: a product writes its styleguide and no invariant of its foundation runs the script; a
-    product's instruction file names a command of its own for checking guidelines, beside the gate.
-- **Review when:** none
+    product's instruction file names a command of its own for checking guidelines, beside the gate;
+    the installer's block still names the script's commands once a gate runs the product's
+    invariants.
+- **Review when:** a gate of the-way runs the methods of a product's invariants on the product's
+  changes · check by: 2027-03-31
 - **Origin:** none
 - **Approved by:** Mariusz, merge of <request link>
 
@@ -5596,11 +5602,14 @@ so the gate runs it with the other checks a change calls for.
 script checks every file each time and costs no agent a reading. The templates come from the commit
 the repository uses, so a product's guidelines change their form only when it moves its pin
 (WAY-34). Run through the methods of invariants, the script runs under the one command that checks
-a change (WAY-16), and a product keeps no command of its own for it.
+a change (WAY-16), and a product keeps no command of its own for it. Until a gate runs a product's
+invariants nothing runs them in the product, so the installer's block names the script's commands,
+as it names the format guards, and the exception ends with that gate.
 *Rejected:* only the references checked, the form left to readers — a rule with no decision would
-pass as binding; a check each product writes for itself — it drifts from the template; a command
-named in the product's instructions beside the gate — of two commands an agent runs one (WAY-16);
-the form judged by an agent — a script decides it every time.
+pass as binding; a check each product writes for itself — it drifts from the template; a command of
+the product's own named in its instructions beside the gate — of two commands an agent runs one
+(WAY-16); the installer's block silent on the script until a gate exists — nothing would run the
+check in a product; the form judged by an agent — a script decides it every time.
 
 ### WAY-171/1 — What form does a file of a product's guidelines take?
 
@@ -5680,8 +5689,7 @@ entry on its own recommendation for the human to accept at the merge.
   - violates: a cycle writes a new role's decision on its own recommendation and leaves it to the
     merge; the orchestrator's go-ahead stands for the approval of a new meaning; a screen that uses
     an existing role waits for the human.
-- **Review when:** a merged change of a product that pins the-way uses, on a screen, a meaning that
-  no decision of the product's log carries · check by: 2026-12-31
+- **Review when:** none
 - **Origin:** none
 - **Approved by:** Mariusz, merge of <request link>
 
@@ -5771,35 +5779,62 @@ them.
 ### WAY-175/1 — What does the-way take from the outside skills its styleguide learned from, and what does it leave?
 
 From a course's lesson on building a user interface with an agent and its skill `10x-ui`, the-way's
-template of the styleguide discipline and its skill `maintain-styleguide` take: design tokens named
-by their role, never by a colour, kept in one source, with the shared components kept in the
-repository; a background always paired with the text on it; an audit in both directions, from the
-source of values to the screens and from each value on a screen to the design token or component
-meant to carry it, ending in three to five charges, each with its file and line and one sentence
-of its effect on the user, a charge not taken up kept as deferred with its reason; the standing
-question of what someone sees without data, straight from a link, after a refresh; recognising what
-a product already has and extending it; every value kept with where it comes from; the search for
-values written in place of design tokens, as the method of an invariant; the states default, hover,
-visible focus, disabled, error, empty and loading of each shared control, each shown or marked as
-not applying with its reason; a page showing the components in every state; the order of a plan for
-a change to a user interface, as an example; a fault of one screen fixed in its component; and an
-instruction file that points to the styleguide and forbids values written in place of design
-tokens. They leave out that skill's commands and folders of changes, the lists of tools and presets
-values are taken from, the moment it picks for its work, after the first screen shows real data,
-and its refusal to work on a screen that does not exist yet, one screen for each change, the routing
-of work between models, the comparison of screenshots, the files of a design tool and their links to
-code, and the role name `surface`. From the skills `om-ux-setup` and `om-ux-shape` of the Open
-Mercato collection they take reading what a repository's design already holds and saying plainly
-when it holds nothing, a palette read from the code as a proposal and never a rule until the product
-declares it, asking what only the team can know, describing each screen a product announces by what
-the user sees, the components it is built from and its states with the messages the user reads, and
-writing for a reader who was not in the conversation, and they leave out those skills' extractor
-with its files, their guidance on features that use artificial intelligence and their scoring
-rubric.
+template of the styleguide discipline and its skill `maintain-styleguide` take the design tokens
+named by their role and the background paired with its text (WAY-176), the states of shared
+controls (WAY-177), the fix of one screen's fault in its component (WAY-178), the page of every state
+(WAY-180), the order of a plan as an example (WAY-181), each value kept with its source (WAY-182),
+recognising and extending what a product has (WAY-185), the two-way audit with its charges and its
+standing question (WAY-187), the search for values written in place of design tokens as the method
+of an invariant (WAY-189), and the instruction file's pointer and rule (WAY-192). They leave out
+that skill's commands and folders of changes, the lists of tools and presets values are taken from,
+the moment it picks for its work and its refusal to work on a screen that does not exist yet (the
+moment is WAY-184's), one screen for each change, the routing of work between models, the comparison
+of screenshots, the files of a design tool and their links to code, and the role name `surface`.
+From the skills `om-ux-setup` and `om-ux-shape` of the Open Mercato collection they take reading what
+a repository's design already holds and saying plainly when it holds nothing (WAY-185), a palette
+read from the code as a proposal and never a rule until the product declares it, asking what only
+the team can know, describing each screen a product announces (WAY-186) and writing for a reader who
+was not in the conversation, and they leave out those skills' extractor with its files, their
+guidance on features that use artificial intelligence and their scoring rubric.
 
 - **Change:** new decision
 - **Scope:** product-guidelines
-- **Based on:** none
+- **Based on:** observation of the skills on 2026-10-18 using `sed -n` and `grep -n` in Git Bash on
+  Microsoft Windows NT 10.0.26300.0, and `git show` for the commit named; `10x-ui` is
+  `.claude/skills/10x-ui/SKILL.md` of the repository `loop2-10x` at commit `e854fef5`, the two
+  others `.agents/skills/om-ux-setup/` and `.agents/skills/om-ux-shape/` of the repository `loop`
+  at commit `715026e`. Taken, from `10x-ui`: "one source of values, with names describing the
+  **role** (`primary`, `surface`, `muted`, `destructive`), never the colour" · "**Importable
+  components that live in the repo**" · "every cell is **shown** (in the kitchen sink) or marked
+  **N/A with a reason**" · "a **kitchen-sink page** rendering the view in all seven states side by
+  side" · "phases in this order: **environment/library → token values → one view → states**" ·
+  "**deposit them in the repo**: the raw values in a file in the change folder, plus a line naming
+  where they came from" · "Extend it; do not fork a second palette … An existing, worse system beats
+  a better one you bring in." · "**Source → views.**" and "**View → source.** For every literal in
+  the view, which token or component should have covered it?" · "write **3–5 charges**. Each charge
+  gets a **file and line**, and **one sentence about the effect on the user**" · "Charges the plan
+  does not address stay in `## Charges` marked **deferred** with a reason" · "*what happens if
+  someone reaches this view logged out, with no data, or straight from a link?*" · "A candidate
+  list, not a verdict — each hit is a possible missing-token charge" · "Add a short UI block to the
+  repo's agent rules file … "no literal colours or arbitrary values in views — use tokens"". Left,
+  from `10x-ui`: "`/10x-new <change-id>` — one view, one token source or motif" · "`npx shadcn add
+  <name>`" and "**Named motif or preset**" · "after the first vertical slice renders with real data"
+  · "**Not now:** a view that does not exist yet" · "One view plus global tokens per change." ·
+  "Route by phase" · "`await expect(page).toHaveScreenshot({ maxDiffPixels: 100 })`" · "a
+  design-tool file as the only source of truth" · `surface` in the passage on roles above. Taken,
+  from `om-ux-setup/SKILL.md`: "degrades honestly when a repository has none" and "a proposed de-facto
+  palette derived from the colors its code already uses as the first draft of a design system"; from
+  its `references/rules.md`: "**Proposed is not enforced.**"; from its `SKILL.md`: "**Ask what only
+  the team knows.**"; from `om-ux-shape/references/report-templates.md`: "For each: what the user
+  sees, the components it is built from … Then the states that must exist for trust (empty,
+  loading, error, permission) with the actual message the user reads"; from its `SKILL.md`:
+  "someone who will build or draw this, does not know the design system, and was not in the
+  conversation". Left: "`npx uxproof@0.3.1 init --no-skills`" (`om-ux-setup/SKILL.md`), the
+  "Human-AI interaction checklist" (`om-ux-shape/references/hai-guidelines.md`) and the "Quality
+  Rubric" (`om-ux-shape/references/quality-rubric.md`). The course's lesson, from which the pairing of
+  a background with its text, the fix in the component, the theme generators among the lists of
+  tools and the links of a design tool to code come, is a private note its readers cannot open, and
+  no passage of it is quoted.
 - **Relations:** derives from WAY-100@e7a74a18
 - **Verification:** level 2 — an agent compares the change with the decision:
   - complies: the template of the styleguide carries the pair of a background and its text and the
@@ -5817,10 +5852,11 @@ rubric.
 *Rationale:* those skills and their lesson carry steps a styleguide needs beside steps bound to their
 own commands, tools and kind of product; taken whole, their tools and commands would become
 obligations, and naming each piece taken lets later work tell an adopted step from a resemblance
-(WAY-100). A source of values tied to named tools fits only the products that use them, so the skill
-picks the source; the moment after the first screen would leave that screen with no rules, so the
-styleguide comes before it; how a change is cut is the task cycle's (WAY-13); what a model costs is
-the harness's business, and the-way's one rule about models guards the independence of an assessment
+(WAY-100). Each piece is named by the decision that carries it, so it binds in one place (WAY-19). A
+source of values tied to named tools fits only the products that use them, so the skill picks the
+source; the moment after the first screen would leave that screen with no rules, so the styleguide
+comes before it; how a change is cut is the task cycle's (WAY-13); what a model costs is the
+harness's business, and the-way's one rule about models guards the independence of an assessment
 (WAY-10); a comparison of screenshots needs an agent's way to see the screens and reference shots
 nobody updates blindly, which no product has yet; no product of the-way works from a design tool;
 `surface` is a word of the-way's glossary in another meaning (WAY-104). The platform's extractor
@@ -5830,7 +5866,8 @@ skills is described here rather than pointed to (WAY-27).
 *Rejected:* the course's skill adopted whole — its commands, folders and lists of tools would bind
 every product; its steps followed with no decision naming them — an adopted step and a resemblance
 could not be told apart (WAY-100); pointers to the skills in place of a description — no reader can
-open them (WAY-27).
+open them (WAY-27); the content of each piece restated here beside the decision that carries it —
+two binding copies drift apart (WAY-19).
 
 ### WAY-176/1 — How does a styleguide name its colour roles and pair them?
 
@@ -6036,7 +6073,7 @@ technologies.
 
 The skill `maintain-styleguide` proposes a styleguide for every user interface of a product, an admin
 panel added to its backend included, however simple it is. A product whose users reach it only
-through an API or a terminal has no user interface in this sense and gets no styleguide.
+through an API or a terminal has no user interface and gets no styleguide.
 
 - **Change:** new decision
 - **Scope:** product-guidelines
@@ -6239,7 +6276,7 @@ uses a role in a meaning other than the one its decision gives.
 - **Change:** new decision
 - **Scope:** product-guidelines, invariants
 - **Based on:** none
-- **Relations:** derives from WAY-188@73da8ecb · derives from WAY-191@1f2ebdb9
+- **Relations:** derives from WAY-188@73da8ecb · derives from WAY-191@d9fff88e
 - **Verification:** level 1 — invariants: guidelines-check-carrier. Level 2 for what the skill
   proposes — an agent compares the work with the decision:
   - complies: a styleguide task proposes four invariants — the scan for values written in place of
@@ -6301,9 +6338,9 @@ task changes cleaned in full — a small change to a large file grows into clean
 
 The skill `maintain-styleguide` takes the thresholds of contrast and the demand of visible focus from
 WCAG through a decision of the product adopting it, which it asks the human for with the
-recommendation to adopt the newest edition published when the decision is written, named by its
-number as the W3C's page gives it at that time, at level AA, for every screen of the user interface
-the styleguide covers, proposing another way only where the human chooses it and writing nothing the
+recommendation to adopt the newest edition that is a W3C Recommendation when the decision is
+written, named by its number as the W3C's page gives it at that time, at level AA, for every screen
+of the user interface the styleguide covers, proposing another way only where the human chooses it and writing nothing the
 human has not accepted. Each success criterion an invariant of the styleguide takes a condition from
 stands as an environment fact the invariant rests on.
 
@@ -6313,8 +6350,8 @@ stands as an environment fact the invariant rests on.
 - **Relations:** derives from WAY-86@fa2a4251
 - **Verification:** level 2 — an agent compares the work with the decision:
   - complies: the skill says in plain words what contrast and focus are, recommends adopting the
-    edition of WCAG the W3C's page names as its newest that day at level AA for every screen, and
-    on the human's acceptance the task carries the decision and the facts of the contrast and focus
+    newest edition of WCAG the W3C's page names as a Recommendation that day, at level AA for every
+    screen, and on the human's acceptance the task carries the decision and the facts of the contrast and focus
     criteria, each quoting the passage of that edition;
   - violates: a contrast invariant writes a ratio with no decision adopting WCAG; the edition is
     named from memory; the skill writes the adopting decision without asking because it recommends

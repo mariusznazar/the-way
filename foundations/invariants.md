@@ -2136,7 +2136,7 @@ Every file `guidelines/<name>.md` holds, in their order, the header lines, secti
 
 - **Method:** `python -B product-guidelines/form_check.py --record .runs/guidelines-form.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-170@c1b230d2 · WAY-171@2bc38c05
+- **Derives from:** WAY-170@175a4fb6 · WAY-171@2bc38c05
 - **Part:** every
 - **Correction:** none
 
@@ -2147,7 +2147,7 @@ Every reference outside fenced code in a file `guidelines/<name>.md` — a decis
 - **Method:** `python -B product-guidelines/form_check.py --merge-onto {merge-onto} --record .runs/guidelines-reference.jsonl`
 - **Rests on:** none
 - **Derives from:** WAY-169@e2fb088c
-- **Part:** product-guidelines · decisions · invariants
+- **Part:** product-guidelines · decisions · invariants · agent-instructions · relation-model
 - **Correction:** none
 
 ## guidelines-check-form/1
@@ -2156,13 +2156,13 @@ The form check of guidelines, `product-guidelines/form_check.py`, reports as an 
 
 - **Method:** `python -B gate/run_tests.py product-guidelines --record .runs/product-guidelines-tests.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-170@c1b230d2 · WAY-171@2bc38c05
+- **Derives from:** WAY-170@175a4fb6 · WAY-171@2bc38c05
 - **Part:** product-guidelines · decisions · invariants · part-map · elements-common · relation-model
 - **Correction:** none
 
 ## guidelines-check-carrier/1
 
-The form check of guidelines, `product-guidelines/form_check.py`, reports as an error every rule under `## Rules` of a file `guidelines/<name>.md` that names no decision of the log, every such rule of a styleguide that names no invariant, and every decision the table of roles of a styleguide names that the rule `### Each role in its meaning` does not name, unless that rule is dropped.
+The form check of guidelines, `product-guidelines/form_check.py`, reports as an error every rule under `## Rules` of a file `guidelines/<name>.md` whose *Decision* holds no decision number with the log's prefix followed by `@`, every such rule of a styleguide whose *Invariant* holds no identifier of the invariants file followed by `@`, and every decision the table of roles of a styleguide names that the rule `### Each role in its meaning` does not name, unless that rule is dropped.
 
 - **Method:** `python -B gate/run_tests.py product-guidelines --record .runs/product-guidelines-tests.jsonl`
 - **Rests on:** none
@@ -2206,7 +2206,7 @@ The form check of guidelines, `product-guidelines/form_check.py`, reports as an 
 
 - **Method:** `python -B gate/run_tests.py product-guidelines --record .runs/product-guidelines-tests.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-170@c1b230d2
+- **Derives from:** WAY-170@175a4fb6
 - **Part:** product-guidelines · decisions · invariants · part-map · elements-common · relation-model
 - **Correction:** none
 

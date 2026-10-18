@@ -214,6 +214,13 @@ A surface is something of a product that someone outside the product relies on a
 - **Avoid:** none
 - **Not:** none
 
+## user interface
+
+A user interface is a set of screens that a product draws and through which a person uses it.
+
+- **Avoid:** none
+- **Not:** none
+
 ## verdict
 
 A verdict is a value from a template's closed list that a check records, or a person gives, for one entry of the foundation.
