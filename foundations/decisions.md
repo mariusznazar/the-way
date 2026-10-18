@@ -3466,7 +3466,7 @@ agent uses in its place.
   although decisions on the matters of an agent's way to the running product stand · check by:
   2027-03-31
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/24
 
 *Rationale:* whether a technology choice changes how the work is cut into tasks cannot be judged
 by someone who does not know the technologies, so the choice is settled before the cut; a step of
@@ -5370,7 +5370,7 @@ environment that persists are both options of that choice.
     test environment that persists because the data has to be set up from scratch.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/24
 
 *Rationale:* each answer serves an agent that checks behaviour a user sees in the running product.
 The logs tell the agent what the product did, and the answer says where that record lands, since
@@ -5411,7 +5411,7 @@ it.
     read its logs; the table shows the service with no word on whether an agent can use it.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/24
 
 *Rationale:* a choice of an agent's way to the running product exists so that an agent can check
 what a user sees in the running product; an option the agent cannot use leaves that check undone,
