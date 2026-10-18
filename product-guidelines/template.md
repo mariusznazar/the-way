@@ -174,7 +174,9 @@ Every reference outside fenced code in a file `guidelines/<name>.md` — a decis
   product's foundation, whose reworded decision or invariant leaves a reference stale, and the part
   that holds the pinned the-way, whose move can change how fingerprints are read (WAY-62).
 - In the-way itself the methods run `product-guidelines/form_check.py`, and the reference
-  invariant's *Part* reads `product-guidelines · decisions · invariants` (WAY-62).
+  invariant's *Part* reads
+  `product-guidelines · decisions · invariants · agent-instructions · relation-model`, as
+  `foundations/invariants.md` gives it (WAY-62).
 - Before the product has a main branch, the gate fills in `none` for `{merge-onto}`: the check
   after the merge records `unchecked` beside the verdict of the check on the same commit, and that
   is the expected state (WAY-61).

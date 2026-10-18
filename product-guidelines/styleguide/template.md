@@ -1,8 +1,8 @@
 # Styleguide template
 
 This file defines what the guidelines of the styleguide discipline add to the form every product's
-guidelines share, `product-guidelines/template.md`, and what each part of a styleguide carries. It
-is written for the author who writes a product's styleguide in a task's cycle. A product keeps a
+guidelines share, `product-guidelines/template.md`, and what each section of a styleguide carries.
+It is written for the author who writes a product's styleguide in a task's cycle. A product keeps a
 styleguide for each of its user interfaces — its screens, an admin panel added to its backend
 included — in a file `guidelines/styleguide-<part>.md`, `<part>` being the part of its map whose
 files draw that user interface (WAY-167, WAY-183).
@@ -70,9 +70,9 @@ examples of the styleguide in their places (WAY-171).
 - `## When to read` gives the condition under which an agent reads the styleguide: before it
   changes a file of that part (WAY-192).
 
-## What each part carries
+## What each section carries
 
-Each part below is marked as a rule or an example, with what it carries and, for a rule, the
+Each section below is marked as a rule or an example, with what it carries and, for a rule, the
 decision and invariant the skill `maintain-styleguide` proposes for it. The product writes those
 decisions and invariants in its own foundation; the styleguide names them.
 
@@ -138,7 +138,7 @@ decisions and invariants in its own foundation; the styleguide names them.
   template. *Invariant*: a script the product declares (WAY-188).
 - **The kitchen-sink page** — rule. It names by its path the page of the product that shows its
   shared components and samples in every state, served in development alone and never in
-  production; the page is code of the product, not part of the styleguide's text (WAY-180).
+  production; the page is code of the product, not a piece of the styleguide's text (WAY-180).
   *Decision*: the product's decision adopting this template. *Invariant*: a script the product
   declares, that a production build does not serve the page (WAY-188).
 - **Mockups** — example. A mockup is a pattern a screen is compared against, not its
@@ -183,7 +183,7 @@ For the author who writes the styleguide in a task's cycle:
 - Take every meaning from the task's settlements and from the decisions the task's foundation step
   wrote (WAY-172).
 - Take every value, and its source, from the task's *To do*, which names for each role the value
-  and its source as the human settled them, or the exact address of the source and the entry in it
+  and its source as the human settled them, or the exact address of the source and the item in it
   the value is read from; never from memory or from a mockup (WAY-182, WAY-179).
 - Point to the values; write none into the styleguide (WAY-176, WAY-171).
 - Run the form check. A meaning the task did not settle is a question that stops the cycle at a
