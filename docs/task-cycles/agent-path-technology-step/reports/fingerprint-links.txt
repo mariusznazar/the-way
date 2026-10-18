@@ -1,0 +1,3 @@
+decision fingerprint links counted: 450
+stale: 0
+links to WAY-121: 5 current ed19d693

@@ -1,0 +1,7 @@
+without matters | Status: ready for gate | all findings: []
+without matters | Status: approved 2026-10-03 | all findings: []
+with matters held | Status: ready for gate | all findings: []
+with matters held | Status: approved 2026-10-03 | all findings: []
+control open matter | Status: ready for gate | all findings: [('g', 'the choice is still open — the step that settles the technology has not ended')]
+control open matter | Status: approved 2026-10-03 | all findings: [('g', 'the choice is still open — the step that settles the technology has not ended')]
+MISMATCHES: 0

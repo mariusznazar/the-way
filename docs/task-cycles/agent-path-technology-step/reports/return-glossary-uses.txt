@@ -1,0 +1,9 @@
+foundations/decisions.md:3437: step looks at three matters of an agent's way to the running product — its logs, its interface and
+foundations/decisions.md:3465: - **Review when:** a project lists a matter of an agent's way to the running product that a
+foundations/decisions.md:3493: run wherever nothing changes; the agent's way to the running product as items every definition
+foundations/decisions.md:5346: ### WAY-165/1 — What does each matter of an agent's way to the running product ask?
+foundations/decisions.md:5348: Of the matters of an agent's way to the running product, the logs ask where the record of what the
+foundations/decisions.md:5395: In a choice of an agent's way to the running product, whether an agent can use an option is a
+foundations/decisions.md:5416: *Rationale:* a choice of an agent's way to the running product exists so that an agent can check
+7 use(s) of `agent's way to the running product`
+0 error(s), 0 warning(s), 0 unchecked
