@@ -164,6 +164,23 @@ that settles it (WAY-121). The skill `settle-technology` writes it before the re
   tasks, or when it adds something the product has to run, pay for or back up; a choice one task
   can make and change alone stays with that task
   (WAY-121).
+- As an exception to that rule, where the project brings behaviour a user sees in the running
+  product, three matters of an agent's way to the running product — its logs, its interface and its
+  development data — are looked at, and each matter that no decision of the foundation settles for
+  that behaviour stands on the list as a choice of its own, even where its answer adds nothing to
+  run, pay for or back up, and even where the product has none of what the matter names, whose
+  answer then says what an agent uses in its place; a matter a decision of the foundation already
+  settles for that behaviour is not listed. No definition has to hold these matters; a matter
+  listed is an ordinary choice of the list, with its marker as the table below gives it
+  (WAY-121).
+- The logs ask where the record of what the running product does goes and how an agent reads it;
+  the interface asks how an agent operates the product as its user does — through a screen in a
+  browser, a call to its API or a command in a terminal — and how it sees what the product answers;
+  the development data asks where the data comes from on which an agent checks the product's
+  behaviour outside production, and how an agent brings that data to the state a check needs. Data
+  set up from scratch and a dedicated test environment that persists are both options of that
+  choice
+  (WAY-165).
 - Each item names one choice in the language of the definition, by what the product needs it
   for, and ends with one marker in English
   (WAY-121; WAY-108 for the English form):
@@ -204,6 +221,11 @@ that settles it (WAY-121). The skill `settle-technology` writes it before the re
   cheapest option. The choices whose research started together reach the human together, in one
   table, once every one of their comparisons has passed the critique, each with its recommendation
   and the weak point of the option recommended (WAY-123).
+- In a choice of an agent's way to the running product, whether an agent can use an option is a
+  consequence for the product: an option an agent cannot use stays in the comparison with that lack
+  said as "an agent does not check the running product this way", and the recommendation passes
+  over it
+  (WAY-166).
 - Where the options of a place to run differ in no consequence for the product and more than one
   of them is the simplest and cheapest, the step recommends, of those, the one an agent works with
   best: operated from a terminal, deployed by a script and documented in pages an agent can read.

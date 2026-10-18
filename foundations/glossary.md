@@ -4,6 +4,13 @@ The words of the process, each in one meaning: every word a binding part of the-
 rule of an element's template uses in a meaning that a reader who knows the field would not give it.
 A product takes these words from the-way at the commit it pins (WAY-95).
 
+## agent's way to the running product
+
+An agent's way to the running product is the means through which an agent checks behaviour a user sees in a product while it runs.
+
+- **Avoid:** none
+- **Not:** none
+
 ## binding part
 
 A binding part is the text of an entry that whatever relies on the entry, rather than only mentioning it, depends on.
