@@ -139,6 +139,12 @@ INVARIANT_LINE = 15  # "- **Invariant:** none"
 PROSE_LINE = 19      # "Set up each test's data through the product's fixtures."
 WHERE_LINE = 29      # "- `tests/fixtures.py`"
 
+def as_coding(text):
+    """`text` as guidelines of a second discipline the-way gives no template of, in a file
+    `guidelines/coding.md`."""
+    return text.replace("- **Discipline:** testing", "- **Discipline:** coding")
+
+
 NO_GOOD = TESTING.replace("- **Good:** a test sets up its player through the fixtures.\n", "")
 ELSEWHERE = TESTING.replace("- **Applies to:** web", "- **Applies to:** mobile")
 
@@ -255,7 +261,7 @@ class Runs(Case):
 
     def test_a_run_with_no_option_records_lines_of_guidelines_form_alone(self):
         """Break caught: a run with no option recording checks its options do not select."""
-        self.product({"guidelines/testing.md": TESTING, "guidelines/testing-web.md": NO_GOOD})
+        self.product({"guidelines/testing.md": TESTING, "guidelines/coding.md": as_coding(NO_GOOD)})
         code, output, lines = self.run_check()
         self.assertEqual(code, 1, output)
         self.assertTrue(lines, output)
@@ -264,11 +270,12 @@ class Runs(Case):
 
     def test_findings_of_two_files_print_under_their_own_paths(self):
         """Break caught: one report for every file, so a finding names the wrong file."""
-        self.product({"guidelines/testing.md": NO_GOOD, "guidelines/testing-web.md": ELSEWHERE})
+        self.product({"guidelines/testing.md": NO_GOOD,
+                      "guidelines/coding.md": as_coding(ELSEWHERE)})
         code, output, _ = self.run_check()
         self.assertEqual(code, 1, output)
         first = self.errors(output, "guidelines/testing.md")
-        second = self.errors(output, "guidelines/testing-web.md")
+        second = self.errors(output, "guidelines/coding.md")
         self.assertTrue(any("Good" in message for _, message in first), output)
         self.assertFalse(any("mobile" in message for _, message in first), output)
         self.assertIn(4, [line for line, message in second if "mobile" in message], output)
@@ -278,8 +285,8 @@ class Runs(Case):
         """Break caught: a report whose count line is missing or counts another report's
         findings. The run's report comes first, then each file's, by path."""
         self.product({"guidelines/testing.md": TESTING,
-                      "guidelines/testing-web.md": NO_GOOD.replace("- **Applies to:** web",
-                                                                   "- **Applies to:** mobile"),
+                      "guidelines/coding.md": as_coding(NO_GOOD).replace(
+                          "- **Applies to:** web", "- **Applies to:** mobile"),
                       "guidelines/x.MD": TESTING})
         code, output, _ = self.run_check()
         self.assertEqual(code, 1, output)
@@ -312,12 +319,25 @@ class Names(Case):
                          if "styleguide-web" in message and "Discipline" in message], output)
 
 
+    def test_a_part_in_the_name_of_guidelines_other_than_a_styleguide_is_an_error(self):
+        """Break caught: guidelines of a discipline other than the styleguide accepted under a
+        part's name, `guidelines/<discipline>-<part>.md`, which WAY-167 gives the styleguide
+        alone — even where the part is one the map holds."""
+        self.product({"guidelines/testing-web.md": TESTING})
+        code, output, _ = self.run_check()
+        self.assertEqual(code, 1, output)
+        self.assertTrue([message for _, message in self.errors(output, "guidelines/testing-web.md")
+                         if "`guidelines/testing.md`" in message and "Discipline" in message],
+                        output)
+
+
 class Paths(Case):
     def test_a_path_refused_for_its_form_whose_remainder_git_tracks_is_an_error(self):
         """Break caught: the guard against an absolute path, or a `..` segment, dropped, so
         `/tests/fixtures.py` or `./../tests/fixtures.py` passes once its slash, `.` and `..` are
         set aside, as `tests/fixtures.py` is a tracked file."""
-        for path, why in (("/tests/fixtures.py", "absolute"), ("./../tests/fixtures.py", "`..` segment")):
+        for path, why in (("/tests/fixtures.py", "absolute"),
+                          ("./../tests/fixtures.py", "`..` segment")):
             with self.subTest(path=path):
                 self.setUp()
                 self.product({"guidelines/testing.md": with_line(TESTING, WHERE_LINE,
@@ -341,7 +361,7 @@ class References(Case):
         """Breaks caught: a run given `--merge-onto` recording the checks of form, or no check of
         references; `none` given and the check after the merge recorded as anything but
         `unchecked` with the shared reason, or the check on the commit itself left out."""
-        self.product({"guidelines/testing.md": TESTING, "guidelines/testing-web.md": NO_GOOD})
+        self.product({"guidelines/testing.md": TESTING, "guidelines/coding.md": as_coding(NO_GOOD)})
         code, output, lines = self.run_check("--merge-onto", "none")
         self.assertEqual(code, 1, output)   # the form error of NO_GOOD prints, unrecorded
         self.assertTrue(lines, output)

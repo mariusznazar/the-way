@@ -860,14 +860,19 @@ def check_parts(fields, name, discipline, form, disciplines, parts, report):
                                "it would be held to the wrong form"
                          % (other, shown(discipline)), check, (FORM,))
             return
-    part = stem[len(discipline) + 1:] if stem.startswith(discipline + "-") else ""
-    if (stem == discipline and not form.per_part) or part:
-        if part and parts is not None and part not in parts:
-            report.error(None, "the file's name names the part `%s`, which is no part of the map"
-                         % shown(part), check, (FORM,))
+    # A part in the name belongs to a discipline whose files stand one for each user interface,
+    # the styleguide's; every other discipline stands in `guidelines/<discipline>.md` alone
+    # (WAY-167).
+    if form.per_part:
+        part = stem[len(discipline) + 1:] if stem.startswith(discipline + "-") else ""
+        if part:
+            if parts is not None and part not in parts:
+                report.error(None, "the file's name names the part `%s`, which is no part of the "
+                                   "map" % shown(part), check, (FORM,))
+            return
+    elif stem == discipline:
         return
-    given = ("`guidelines/%s-<part>.md`" if form.per_part
-             else "`guidelines/%s.md` or `guidelines/%s-<part>.md`")
+    given = "`guidelines/%s-<part>.md`" if form.per_part else "`guidelines/%s.md`"
     report.error(None, "the file's name does not agree with its *Discipline* `%s`: guidelines of "
                        "that discipline stand in %s"
                  % (shown(discipline), given.replace("%s", shown(discipline))), check, (FORM,))
