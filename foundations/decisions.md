@@ -5439,12 +5439,11 @@ tie, and the choice would pass with an answer that gives the agent nothing.
 ### WAY-167/1 — Where do a product's guidelines stand, and what are their files named?
 
 A product's guidelines are written by hand and stand outside its foundation, in the directory
-`guidelines/` at the root of its repository: for each discipline of work on the product it keeps
-guidelines of, a file `guidelines/<discipline>.md`, or a file `guidelines/<discipline>-<part>.md`
-for each part of the product's map whose guidelines of that discipline differ, save the styleguide
-discipline, whose guidelines always stand in a file `guidelines/styleguide-<part>.md` for each user
-interface of the product, `<part>` being there the identifier of the part of the product's map whose
-files draw that user interface. The directory `guidelines/` belongs to the part of the product's map whose files direct whoever carries
+`guidelines/` at the root of its repository: a file `guidelines/<discipline>.md` for each discipline
+of work on the product it keeps guidelines of, save the styleguide discipline, whose guidelines
+stand in a file `guidelines/styleguide-<part>.md` for each user interface of the product, `<part>`
+being the identifier of the part of the product's map whose files draw that user interface. The
+directory `guidelines/` belongs to the part of the product's map whose files direct whoever carries
 out its tasks, as its instruction files and skills do.
 
 - **Change:** new decision
@@ -5455,12 +5454,9 @@ out its tasks, as its instruction files and skills do.
   - complies: a product with screens in a browser and an admin panel added to its backend keeps
     `guidelines/styleguide-web.md` and `guidelines/styleguide-admin.md`, named after the parts
     `web` and `admin` of its map, beside `guidelines/testing.md`, and the pattern `guidelines/**`
-    stands among the files of the part that holds its `AGENTS.md` and its skills; a product whose
-    API and screens are tested in different ways keeps `guidelines/testing-api.md` and
-    `guidelines/testing-web.md`;
+    stands among the files of the part that holds its `AGENTS.md` and its skills;
   - violates: a product's styleguide stands in `docs/` or in `foundations/`; a product with one
-    user interface names its styleguide `guidelines/styleguide.md`; a file
-    `guidelines/testing-backend.md` names no part of the map; a styleguide is composed by a
+    user interface names its styleguide `guidelines/styleguide.md`; a styleguide is composed by a
     script from the product's decisions; a product's guidelines become entries of an element of its
     foundation.
 - **Review when:** none
@@ -5475,8 +5471,7 @@ files and skills, so they belong to that part, whose files change every later ta
 instruction file leads to them as to knowledge needed now and then (WAY-128). One directory with
 fixed names lets a check find them in every product; a product whose screens and admin panel are
 drawn by two parts keeps a styleguide for each, and the part's identifier in the name ties a
-styleguide to the files it governs, so that a renamed part shows. Another discipline whose rules
-differ between parts takes a file per part on the same terms, and one file where they do not.
+styleguide to the files it governs, so that a renamed part shows.
 *Rejected:* guidelines as a sixth element of the foundation — what binds in them is already carried
 and checked by decisions and invariants, and the list of elements would no longer be closed; an
 extract a script composes from the foundation's entries, as rules for agents are generated from the
@@ -5486,8 +5481,7 @@ carries out tasks, whose files WAY-44 gives a part of their own, yet a change to
 against the part whose code it describes; meanings kept in the spec of a screen — the spec ends
 with its task, and the next screen gives the same colour another meaning; guidelines in the own
 directory of the part that directs agents — its path differs from product to product, and no check
-could find them; one file for each discipline whatever its parts — rules that differ from one part
-to another would stand mixed in one file; one styleguide for every user interface of a product — an admin panel and the
+could find them; one styleguide for every user interface of a product — an admin panel and the
 product's screens are drawn by different parts.
 
 ### WAY-168/1 — What does a rule of a product's guidelines hold beside the foundation entries that carry it?
