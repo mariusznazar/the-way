@@ -50,7 +50,7 @@ writes there is written for a reader who was not in it.
     `.the-way/product-guidelines/styleguide/template.md`, as its section "Writing the file" gives;
   - put the value of each role into the product's file of design tokens with its source, naming for
     each role the value and its source as the human settled them, or the exact address of the
-    source and the entry in it the value is read from (WAY-182);
+    source and the item in it the value is read from (WAY-182);
   - build the page of every state, or extend it;
   - write a check for each new invariant;
   - apply `maintain-instruction-files` for two changes: a pointer in the product's root
@@ -177,17 +177,24 @@ Where the user interface has screens (WAY-187):
   interface: what one requires is an environment fact, and no adoption is needed (WAY-86). Such an
   obligation also stands as a failure mode of the user interface's part, its kind of damage and
   severity given by the human and its detection naming the invariant that rests on that fact; it
-  reaches the map through *To do* (WAY-46). Then
-  propose the decision adopting WCAG, recommending the newest edition published when the decision
-  is written, named by its number as read on the W3C's page in this session, never from memory, at
-  level AA, for every screen of the user interface; propose another way only where the human
-  chooses it, and write nothing the human has not accepted (WAY-191, WAY-80). Each success
-  criterion an invariant takes a condition from — contrast and visible focus at least — becomes an
-  environment fact, with the edition's address and the passage word for word (WAY-191, WAY-76).
+  reaches the map through *To do* (WAY-46). Then propose the decision adopting WCAG, recommending
+  the newest edition that is a W3C Recommendation when the decision is written, named by its number
+  as read on the W3C's page in this session, never from memory, at level AA, for every screen of the
+  user interface; propose another way only where the human chooses it, and write nothing the human
+  has not accepted (WAY-191, WAY-80). Each success criterion an invariant takes a condition from —
+  contrast and visible focus at least — becomes an environment fact, with the edition's address and
+  the passage word for word (WAY-191, WAY-76).
+- **Which criterion, which ratio.** Put to the human, as a question with a recommendation shown by
+  what the user sees — "small text on any background stays readable for someone who sees less
+  well" — the criterion of the adopted edition each invariant takes its condition from, and the one
+  ratio the contrast script holds every pair of a background and its text to, read from that
+  criterion's passage: the stricter one wherever the size of the text on a pair is not known.
+  Record both with the facts of WCAG, so that the invariant's condition stands in a decision and
+  its fact (WAY-60, WAY-191).
 - **Invariants.** Every binding rule gets an invariant of the kind the styleguide template's
   required form gives, and a rule no invariant can check goes among the examples (WAY-188). Propose,
   each script a command the product declares (WAY-38):
-  - for each rule the styleguide template requires, the invariant its entry under "What each part
+  - for each rule the styleguide template requires, the invariant its item under "What each section
     carries" names — among them the first ones WAY-189 gives: by a script, no value written in place
     of a design token, visible focus on every control, and the contrast of every pair of a
     background and its text; by an agent, each role in its meaning;
