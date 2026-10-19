@@ -1271,7 +1271,9 @@ class TestCases(Watched):
     def test_a_rule_naming_guidelines_form_needs_no_case_and_takes_none_of_it(self):
         """Breaks caught: a rule naming the product's `guidelines-form` alone asked for cases,
         or its fenced blocks read as cases although no case of it is given (C11); a rule naming
-        it beside another invariant asked for its cases, or passing a pair of it."""
+        it beside another invariant asked for its cases, passing with no case of the other
+        invariant, as if naming `guidelines-form` exempted the whole rule, or passing a pair of
+        it."""
         alone = "- **Invariant:** guidelines-form@" + GUIDELINES_FORM_FP
         beside = ("- **Invariant:** guidelines-form@%s · endpoint-handler@8c2ca199"
                   % GUIDELINES_FORM_FP)
@@ -1289,6 +1291,15 @@ class TestCases(Watched):
                 code, output, _ = self.endpoint(text)
                 self.assertEqual(code, 0, output)
                 self.assertNotIn(": error:", output)
+        with self.subTest("beside another, with no case of the other"):
+            self.setUp()
+            text = replaced(replaced(CODING_ENDPOINT, INVARIANT_FIELD, beside), CASES, "")
+            code, output, _ = self.endpoint(text)
+            self.assertEqual(code, 1, output)
+            for which in ("good", "bad"):
+                self.assertTrue([message for message in self.missing(output, which)
+                                 if message in self.at(output, line_of(text, beside))], output)
+                self.assertFalse(self.missing(output, which, "guidelines-form"), output)
         with self.subTest("beside another, with a pair of it"):
             self.setUp()
             text = replaced(replaced(CODING_ENDPOINT, INVARIANT_FIELD, beside), CASES,
