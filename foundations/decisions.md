@@ -7246,10 +7246,10 @@ it, such as adding or changing a file of its kind.
     to run before a change.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
+- **Approved by:** Mariusz, merge of <request link>
 
-*Rationale:* coding guidelines no instruction leads to are not found by an agent in a new session; a
-path with its condition costs one line and is read when the condition comes (WAY-129), and the
+*Rationale:* coding guidelines no instruction leads to can be missed by a session outside the task
+cycle; a path with its condition costs one line and is read when the condition comes (WAY-129), and the
 pointer leads to work an agent would not otherwise find (WAY-128). A line for each file of a kind
 would grow `AGENTS.md`, which the tools load into every session, with each kind the product gains,
 while the general file's table, as Open Mercato's table leading from a task to the guides to read
@@ -7260,5 +7260,333 @@ step. The pointer stands outside the installer's block, which holds no path a pr
 (WAY-16). The table itself is what WAY-167 gives the general file; this decision sets how it leads.
 *Rejected:* a line of `AGENTS.md` for each file of the coding guidelines, as WAY-192 has for each
 styleguide — `AGENTS.md`, loaded into every session, grows with each kind; no pointer, leaving the
-way in to the task cycle — until the cycle reads guidelines, an agent in a new session does not find
-them.
+way in to the task cycle — a session outside that cycle can miss them.
+
+
+### WAY-213/1 — How do the agents of a task's cycle receive the product's guidelines?
+
+The task cycle selects every file of the product's guidelines whose *Applies to* names an affected
+part, a file of a kind of code only where its row's *When to read* in `guidelines/coding.md` also
+matches the change, and gives those files to the spec author and reviewer, planner, author,
+slice executor and code reviewers to read whole, never replacing them with a review checklist.
+The orchestrator records the selection and its reasons, each recipient checks it against its own
+work, and the selection is refreshed when the scope or sources change and against the actual
+change on return and reconciliation before dependent work proceeds.
+With the styleguide, the planner and the author working without a plan receive its example of
+the order of work (WAY-181), as an example they follow or explain departing from.
+
+- **Change:** new decision
+- **Scope:** task-cycle, product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-167@052adf27 · derives from WAY-171@2bc38c05 · derives from
+  WAY-148@4c7fab3a · derives from WAY-181@fc13a0df
+- **Verification:** level 2 — an agent compares the selection, handoffs and work with the decision:
+  - complies: a change touching screens and endpoints gives every named recipient the applicable
+    styleguide, general coding guidelines and matching kind guidelines; a later scope expansion
+    refreshes the next handoff; an author without a plan reads the order as an example;
+  - violates: only the reviewer gets guidelines; a checklist replaces a whole source; a kind's
+    reading condition is ignored; a recipient relies on a stale selection; the order rejects a plan.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of <request link>
+
+*Rationale:* shared guidance reaches the people designing and making a change before review can
+find its absence. Selection by the affected work bounds context without cutting the source into
+instructions detached from their meaning; checking the selection again costs reading when the
+work grows but keeps its first estimate from excluding later needs.
+*Rejected:* guidance given only to the reviewer — mistakes are found after they are built;
+a review checklist — examples can become obligations and lose their context; discovery left only
+to instruction pointers — a stage can miss what the preceding stage read.
+
+
+### WAY-214/1 — How does task refinement find missing product guidelines?
+
+The skill `refine-task` uses the same reading procedure as the task cycle to find guidelines by
+the affected parts' *Applies to* and a kind of code by its row in the general coding index, with
+the consequence of an absence following the discipline's creation timing.
+Before a diff exists, it identifies affected parts, user interfaces, code and kinds of code from
+the required behaviour, the complete part map and existing product files, expanding its reading
+and exposing unresolved classification or malformed metadata as a question rather than an empty
+match.
+An existing general coding file whose *Applies to* omits an affected code part is read for
+extension in the current task, not treated as an absent file.
+
+- **Change:** new decision
+- **Scope:** project-level, product-guidelines, task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-150@3bd9e695 · derives from WAY-167@052adf27 · derives from
+  WAY-171@2bc38c05 · derives from WAY-183@17222226 · derives from WAY-208@ed84e391 · derives from
+  WAY-213@930c9d5a
+- **Verification:** level 2 — an agent compares refinement and its reading with the decision:
+  - complies: an announced admin panel is recognized before its files exist; the same lookup
+    finds the missing styleguide and an unindexed kind; an omitted part extends existing coding
+    guidelines; an absent indexed file is named as a discrepancy;
+  - violates: each discipline uses an unrelated lookup; helper code is passed over because it is
+    small; an uncertain kind is silently considered covered; an omitted part creates a false wait
+    for a new general coding file.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of <request link>
+
+*Rationale:* discovery repeated per discipline drifts from what the later cycle reads. Recognizing
+the work before implementation lets refinement find its missing ground, at the cost of judgment
+about prospective responsibilities; visible uncertainty leaves that judgment open to correction.
+*Rejected:* separate discovery for each discipline — later additions bring another place to keep
+consistent; classification from names alone — a helper can contain code and a backend can draw
+screens without its name saying so.
+
+
+### WAY-215/1 — What happens to a task that needs missing discipline guidelines?
+
+Unless a departure under WAY-217 applies, a task changing a user interface with no styleguide or
+writing code in a product with no general coding guidelines, whether or not the product already
+has screens or code, stays in refinement as `waiting for human` with a *Questions to settle*
+question awaiting the merge of a separate guidelines task; refinement independent of that answer
+continues, and a task writing those guidelines does not wait for its own output.
+For an independent or source-only task `refine-task` adds the prerequisite to the product's
+backlog after human approval, while for a plan member it returns `plan change` if the plan lacks
+that task or `waits for task <n>` if the plan holds it, keeping the plan's ownership and states.
+After that task merges, refinement resumes, reads the guidelines and settles the meanings the
+task needs under WAY-172 before readiness; extension or correction of existing guidelines stays
+in the current task under WAY-172 and WAY-199, unless the human separates it.
+
+- **Change:** new decision
+- **Scope:** project-level, product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-124@4fbad55c · derives from WAY-144@d5802c22 · derives from
+  WAY-154@5da992f5 · derives from WAY-172@45806b6e · derives from WAY-199@9d0c758c · derives from
+  WAY-184@cdb363d5 · derives from WAY-209@977f8982 · derives from WAY-217@4334452a
+- **Verification:** level 2 — an agent compares the task, prerequisite and refinement with the decision:
+  - complies: a fix in an existing product without coding guidelines waits for their task's merge,
+    then reads them before the complete document is accepted; a plan member returns its missing
+    prerequisite to the plan owner; an existing styleguide is extended within the screen task;
+  - violates: an absent styleguide is added only to the screen task's To do; readiness is granted
+    merely because a dependency was named; a refiner edits the owning plan; the task writing
+    guidelines waits for those guidelines; the task's wait is copied into a new plan state.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of <request link>
+
+*Rationale:* guidelines prepared within the work that first needs them shrink to that work's
+needs, whereas separate preparation lets later work share meanings. Existing products accumulate
+the same inconsistency, so they take the same wait; its price includes urgent fixes waiting for
+that preparation. Extending guidance already present needs no such wait, and resumed refinement
+can settle what could not be known without it.
+*Rejected:* missing guidelines merely added to the consuming task — their scope contracts to its
+needs; a wait only for new products — existing code keeps growing without shared guidance;
+a wait first imposed in implementation — meanings surface after the task was accepted;
+every extension separated — ordinary corrections wait for unrelated preparation.
+
+
+### WAY-216/1 — What does refinement assign to a task creating an unindexed kind of code?
+
+A task that creates the first file of a kind of code whose row the general coding index lacks
+gains in *To do* the designation of that kind's exemplar under WAY-200 and its kind guidelines
+with their index row, without waiting for a separate exemplar task.
+Where files of the kind already exist, refinement records that discrepancy and routes exemplar
+selection through the comparison WAY-200 gives existing code, rather than treating the next file
+as the first.
+
+- **Change:** new decision
+- **Scope:** project-level, product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-200@02f168d5 · derives from WAY-209@977f8982
+- **Verification:** level 2 — an agent compares the task and existing code with the decision:
+  - complies: the task adding the first migration also designates its exemplar and writes its
+    kind guidelines and index row; existing unindexed endpoints go through comparison;
+  - violates: the first migration waits for an exemplar that cannot exist before it; existing
+    endpoints are ignored and the next endpoint is called the first.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of <request link>
+
+*Rationale:* the first instance supplies the material an exemplar needs, so separating its
+designation would create a circular wait. Existing instances instead need comparison, or the next
+one becomes a model without being judged against what the product already holds.
+*Rejected:* blocking every unindexed kind — a genuinely first instance could never arrive;
+designating the next instance regardless of existing code — it bypasses comparison.
+
+
+### WAY-217/1 — Does an approved departure count as missing guidelines?
+
+The shared reading of product guidelines treats no absent discipline file as missing for the
+affected part where a current decision of the product's log departs from those guidelines for
+that part, and applies that departure only within the scope the decision gives it.
+
+- **Change:** new decision
+- **Scope:** project-level, product-guidelines, task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-173@c423105b · derives from WAY-193@1ae9ba7c
+- **Verification:** level 2 — an agent compares the selection and departure with the product's decisions:
+  - complies: an approved departure for helper scripts removes their missing-guidelines finding
+    while an affected browser interface still needs its own styleguide;
+  - violates: a deliberate departure still blocks every task until the rejected guidelines are
+    written; a departure for one part silently exempts another.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of <request link>
+
+*Rationale:* a product can knowingly decline guidance through its own decision, and forcing its
+creation afterwards would cancel that choice. The price is that the departure removes the
+protection for later work too, which is why its stated scope matters.
+*Rejected:* no departure respected by discovery — an accepted product choice could never be used;
+a departure inferred by the agent — absence would authorize itself.
+
+
+### WAY-218/1 — Where does project breakdown place missing guidelines and first-kind work?
+
+The skill `plan-project` uses the same reading of product guidelines as refinement and the task
+cycle, and places a task for a missing styleguide or general coding guidelines before the tasks
+that need it, with those tasks depending on it, reusing an adequate task the plan already holds.
+It places the designation of the exemplar and kind guidelines with the task creating that kind's
+first file, under WAY-216, while changes beyond the approved definition follow the existing
+definition and plan approval route.
+
+- **Change:** new decision
+- **Scope:** project-level, product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-143@9ae691ca · derives from WAY-144@d5802c22 · derives from
+  WAY-184@cdb363d5 · derives from WAY-209@977f8982 · derives from WAY-214@b5335e6e · derives from
+  WAY-216@31a6b089
+- **Verification:** level 2 — an agent compares the breakdown with the definition and product:
+  - complies: the screen tasks depend on the missing styleguide task, while the first migration
+    task carries its exemplar work; a suitable existing prerequisite is reused;
+  - violates: guidance is discovered only when the first screen task is refined; a preparatory
+    task has no consumer; the plan silently enlarges the approved scope.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of <request link>
+
+*Rationale:* discovering the prerequisite during breakdown makes the dependencies visible before
+work is handed out; refinement remains useful for work outside a project and for later omissions.
+The cost is applying the shared reading at another point, rather than revising the plan when its
+first consumer reaches refinement.
+*Rejected:* discovery left to refinement alone — the initial breakdown lacks a prerequisite its
+own consumers already need; separate exemplar preparation — the material is made by its consumer.
+
+
+### WAY-219/1 — What does an author check before a user-interface change reaches review?
+
+Before review, the author of a one-author change and the executor of a slice changing a user
+interface check the affected components' states required by the product's applicable styleguide,
+beside the check of WAY-164, and inspect a screenshot through the agent's way to the running
+product that its foundation settles.
+Where the foundation settles no such way, they inspect the states in code and mark the screenshot
+unchecked for that reason in their report and the request; a settled way that fails keeps its
+actual failed or unperformed check rather than that reason.
+The report records what was checked, how, what was observed and the screenshot evidence where
+obtained, without treating a code inspection as evidence of rendered appearance.
+
+- **Change:** new decision
+- **Scope:** task-cycle, product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-164@898c9d56 · derives from WAY-177@8c1571e5 · derives from
+  WAY-187@d58726d5 · derives from WAY-165@97bffb69 · derives from WAY-173@c423105b
+- **Verification:** level 2 — an agent compares the author's evidence, review and request with the decision:
+  - complies: an author checks the states the adopted styleguide requires and inspects a
+    screenshot; with no settled way it inspects code and names the unchecked screenshot in both
+    places; a failed settled way is reported as that failure;
+  - violates: a passing suite replaces the state check; a default-state screenshot stands for all
+    required states; code inspection is called proof of visible focus; absent access is hidden.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of <request link>
+
+*Rationale:* states beyond the default are easy to omit, and rendered appearance can differ from
+what source inspection suggests. Looking at both catches different faults before review; where
+the running product cannot be reached, exposing the remaining gap lets the human weigh it without
+inventing a new technology choice inside the task.
+*Rejected:* state and screenshot checks left to the reviewer — faults reach review that the author
+can catch; stopping the cycle for an unsettled way to the interface — it creates another blocker
+after the change is made; code inspection described as rendered evidence — the gap disappears.
+
+
+### WAY-220/1 — How does a code reviewer grade a finding about appearance?
+
+A code reviewer grades a finding about appearance by its concrete effect on the user, within the
+review's existing severity scale, rather than treating it as Minor merely because it concerns
+appearance; the reviewer retains the grade and scope decisions WAY-161 assigns it.
+
+- **Change:** new decision
+- **Scope:** task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-161@cddc297e
+- **Verification:** level 2 — an agent compares the finding and its grade with the visible consequence:
+  - complies: a colour that makes a destructive action look harmless is judged by that consequence;
+    a visual difference with no blocking consequence can remain Minor;
+  - violates: an appearance defect is called Minor solely because it is visual; every visual
+    difference is automatically blocking; the orchestrator changes the reviewer's grade.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of <request link>
+
+*Rationale:* appearance can carry the meaning by which a person chooses an action, so a visual
+fault can change behaviour as seriously as incorrect code. Its consequence supplies the
+distinction without introducing another severity scale or moving judgment to the author.
+*Rejected:* appearance always minor — a misleading action survives review as polish;
+appearance always blocking — harmless differences cost a repair round.
+
+
+### WAY-221/1 — When can departure from a guideline example support a blocking finding?
+
+Departure from an example in product guidelines or from the part of an exemplar no script checks
+is not by itself grounds for a blocking review finding: the reviewer names the consequence for
+the user or for code correctness that warrants the blocking grade under WAY-161.
+Binding rules and their invariants retain their force, and this criterion gives the orchestrator
+no authority to regrade or discard a reviewer's finding.
+
+- **Change:** new decision
+- **Scope:** task-cycle, product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-168@dc4a98a1 · derives from WAY-196@0e714a05 · derives from
+  WAY-198@4dca82c6 · derives from WAY-161@cddc297e
+- **Verification:** level 2 — an agent compares a finding with the guideline and named consequence:
+  - complies: a different internal arrangement is not blocking merely because the exemplar uses
+    another; a departure causing incorrect input handling is graded by that effect;
+  - violates: the reviewer blocks only because the example was not copied; the orchestrator
+    discards an Important finding by calling the cited material an example.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of <request link>
+
+*Rationale:* examples teach useful ways without acquiring the force of approved rules, and
+comparison without a concrete consequence turns taste into a blocker. The price is that some
+consistency can drift until a recurring problem warrants a rule with its own invariant.
+*Rejected:* leaving the distinction unstated in review — examples acquire binding force in use;
+letting the orchestrator decide which findings count — the agent closing the work judges its own
+obstacle.
+
+
+### WAY-222/1 — What does the task cycle adopt from the course lesson on building a user interface with an agent?
+
+From a course lesson on building a user interface with an agent, the task cycle adopts the
+styleguide's order of work as an example delivered to the planner and the author without a plan
+(WAY-213), the author's and slice executor's checks of states and a screenshot (WAY-219), and
+grading appearance findings by their effect on the user (WAY-220).
+This adoption leaves out comparison with reference screenshots, prescribing any product's
+styleguide or coding guidelines, and selecting interface technology outside the project
+definition's technology step.
+
+- **Change:** new decision
+- **Scope:** task-cycle, product-guidelines
+- **Based on:** the course lesson on building a user interface with an agent is private material
+  its readers cannot open; the adopted practices are described in the binding sentences and no
+  passage of the lesson is quoted.
+- **Relations:** derives from WAY-100@e7a74a18 · derives from WAY-213@930c9d5a · derives from
+  WAY-219@a05a1361 · derives from WAY-220@05ec2de0
+- **Verification:** level 2 — an agent compares the cycle with the adoption's boundaries:
+  - complies: the planner receives an example, the author inspects states and a screenshot, and
+    the reviewer judges a visual consequence, without requiring a reference image comparison;
+  - violates: a further practice of the lesson becomes mandatory merely because it comes from
+    that lesson; the cycle dictates a product's visual meanings or styling technology.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of <request link>
+
+*Rationale:* these practices help the cycle catch visible defects while its existing foundation
+keeps meanings and technology choices with the product. Naming the adoption and its boundaries
+lets a later reader distinguish a deliberate choice from resemblance, without relying on private
+material or adopting the lesson as a whole.
+*Rejected:* adoption inferred from the styleguide's adoption — the cycle's practices have no
+explicit authority of their own; the lesson taken whole — unrelated practices bind every product;
+private quotations or pointers in place of the reasoning — readers cannot assess them.
