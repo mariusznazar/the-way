@@ -5474,7 +5474,7 @@ whoever carries out its tasks, as its instruction files and skills do.
     of that kind.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
 
 *Rationale:* a spec lives as long as its task and holds only what entered it, while guidelines are
 shared by the whole product and outlast every task that uses them. They stand outside the foundation
@@ -5546,7 +5546,7 @@ every run of the gate.
     every use of every rule.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
 
 *Rationale:* guidelines do not replace the foundation's elements but bring what they hold to the
 work of one discipline: an agent changing a product's screens needs what to do and how, not an
@@ -6479,7 +6479,7 @@ the template and the skill, never a product's code directly.
     template is edited to fit one product's departure.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
 
 *Rationale:* a rule of the template binding every product directly would be as rigid for a small
 script as for a product's main code, and it would bind from outside the product's log, where every
@@ -6517,7 +6517,7 @@ goes to the human only where the agent has no recommendation.
     asks rule by rule which rules of a set to take.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
 
 *Rationale:* the human who approves a product's decisions does not judge its code, so a choice shown
 by the names of rules or by values of configuration is one the human cannot weigh, while what a
@@ -6605,7 +6605,7 @@ fewer than one report in ten leading to no action for checks shown only in code 
     Mercato not named here enters the skill.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
 
 *Rationale:* that repository and that study carry pieces coding guidelines need beside pieces bound
 to their own tools, scale and kind of product; taken whole, their tools and practices would become
@@ -6654,7 +6654,7 @@ its decision binds with no invariant.
     rule a script could decide is left to an agent.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
 
 *Rationale:* coding guidelines are there to keep agents' code consistent without anyone's memory,
 and a rule only a decision carries is kept by the memory of the agent reading it; its two uses,
@@ -6698,7 +6698,7 @@ or alters the invariant's sentence or rewrites either use, and records what it g
 - **Review when:** a gate of the-way reports for an invariant how its method meets the uses of the
   rules that name it · check by: 2027-03-31
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
 
 *Rationale:* a use written by the author of the guidelines teaches the agent reading them what the
 rule forbids, while the reviewer's break is usually a small, artificial change from which a reader
@@ -6735,7 +6735,7 @@ the exemplar stands there as an example and binds no later code.
     the exemplar's code is copied into the guidelines.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
 
 *Rationale:* an exemplar left as an example alone lets an agent depart from it with no signal, while
 a choice designated by a decision is one the human approved, and copying from existing code without
@@ -6770,7 +6770,7 @@ kind give beside the path of each file of the kind they list its status, `exempl
     status of the files stands only in the decision.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
 
 *Rationale:* the rules a script checks from the exemplar are what binds, so they change only with a
 decision, while an edit that keeps them uses a meaning a decision carries, which takes no approval
@@ -6803,7 +6803,7 @@ the decision that designates it.
     with no approval of the human.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
 
 *Rationale:* who designates the exemplar follows from the state of the product, as the styleguide
 comes before the first screen (WAY-184) and the audit reads a product that has screens (WAY-187): a
@@ -6834,7 +6834,7 @@ line of the place that breaks a rule.
     gains.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
 
 *Rationale:* the human who approves the exemplar does not judge code, and a proposal with what the
 product gains, and a fault with its place, can be weighed by someone who is no developer, as the
@@ -6865,7 +6865,7 @@ log adopting it or departing from it with the reason.
     with no decision; the three stand in the template and in no decision of the-way.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
 
 *Rationale:* a product whose code no standing check reads changes its style and takes in a known
 vulnerability with no signal, and a skill that only proposes the checks leaves it so for as long as
@@ -6904,7 +6904,7 @@ it, so the gate does not run it.
     coding guidelines.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
 
 *Rationale:* a change of sound code that a blocking rule stops gets through only by a change of the
 decision adopting the set (WAY-207), put to a human who does not judge code; Google blocks a change
@@ -6950,7 +6950,7 @@ change of that decision, which the human approves.
   marks as recommended has met a report of one of them that leads to no change of code worth making,
   or has merged ten changes of its code without one · check by: 2027-03-31
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
 
 *Rationale:* whether a rule's reports lead to changes worth making shows only on the product's own
 code, so the split is read off a trial run, and the agent that wrote that code would judge in its
@@ -6999,7 +6999,7 @@ the task that brings the formatter, with no second invariant.
     invariant alone stands on the list, and a cleaned file gains reports back unseen.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
 
 *Rationale:* a rule weakened until the code meets it describes the accident, not the intent
 (WAY-51), and cleaning the whole of the code in the task that brings the linter grows that task into
@@ -7040,7 +7040,7 @@ template of the coding discipline carries no audit of the whole tree of a produc
     before; the template carries an audit of the whole tree of dependencies run every day.
 - **Review when:** the clock runs the methods of a product's invariants · check by: 2027-03-31
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
 
 *Rationale:* an audit of the whole tree at every change fails a change that touches no dependency on
 a vulnerability published that morning, so the audit checks what the change brings, against the fork
@@ -7082,7 +7082,7 @@ WAY-172 gives a changed meaning.
     from it.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
 
 *Rationale:* a rule of the linter reads every file of the parts it covers, so turning it off for one
 file's sake changes what binds all the others, unseen by the task that made the change, and the
@@ -7111,7 +7111,7 @@ of its coding guidelines names each such part in *Applies to*.
     names only the backend because its kinds of code live there.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
 
 *Rationale:* an agent left free does something different in every task, and that is what guidelines
 are for; even guidelines of modest quality are consistent, as for the styleguide of every user
@@ -7142,7 +7142,7 @@ the first file of that kind.
 - **Review when:** the first product whose coding guidelines were written before its first code has
   merged the task that brought that code · check by: 2027-03-31
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
 
 *Rationale:* the first code written with no standing check is the code every later change copies,
 and checks brought to it afterwards find code to clean (WAY-205), as a first screen built with no
@@ -7176,7 +7176,7 @@ as research with sources shows it.
     prefers, with no source showing its use.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
 
 *Rationale:* an existing tool, even a worse one, beats a better one brought in, since the code and
 the people working on it already follow it, and two linters over one code disagree, as for a
@@ -7213,7 +7213,7 @@ researches again whenever a product's coding guidelines are refreshed or extende
     preferred and offers another in its place.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
 
 *Rationale:* the product is the human's, so their preferences come first; where they have none,
 research with sources and a critique lets a human who cannot judge the tools tell a sound comparison
@@ -7246,7 +7246,7 @@ it, such as adding or changing a file of its kind.
     to run before a change.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
 
 *Rationale:* coding guidelines no instruction leads to are not found by an agent in a new session; a
 path with its condition costs one line and is read when the condition comes (WAY-129), and the
