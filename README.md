@@ -80,13 +80,15 @@ instead of the rule being weakened.
   the script that checks instruction files.
 - `product-guidelines/` — the form every product's guidelines share, the template of each
   discipline of guidelines with the skill that leads the work on them (the styleguide's in
-  `product-guidelines/styleguide/`), and the form check of guidelines.
+  `product-guidelines/styleguide/`, the coding guidelines' in `product-guidelines/coding/`), and the
+  form check of guidelines.
 
 ## Using the skills
 
 Each element's `skill/` directory, `elements/common/skill/` and `elements/common/critique/`, the
-project level's skill directories, `task-cycle/skill/`, `instruction-files/` and
-`product-guidelines/styleguide/` hold one skill, named in its `SKILL.md`.
+project level's skill directories, `task-cycle/skill/`, `instruction-files/`,
+`product-guidelines/styleguide/` and `product-guidelines/coding/` hold one skill, named in its
+`SKILL.md`.
 
 A Claude Code or Codex session working in a checkout or worktree of the-way finds each of them as
 the project skill `the-way-<name>`: `.claude/skills/` holds the entry points Claude Code reads and
