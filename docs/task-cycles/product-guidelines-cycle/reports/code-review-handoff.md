@@ -1,0 +1,19 @@
+# Independent whole-change review
+
+Worktree: C:/Storage/repos/the-way/.runs/worktrees/product-guidelines-cycle
+Branch: task/product-guidelines-cycle
+Cycle: .runs/task-cycles/product-guidelines-cycle
+Base: f98ac2fed3ab6ecbc1701e0c5f9a694dc9d91624
+Head: supplied in the orchestrator's dispatch and must match the current worktree.
+
+Use Superpowers requesting-code-review 6.4.1, reading its SKILL.md and code-reviewer.md at C:/Users/Mariusz/.claude/plugins/cache/claude-plugins-official/superpowers/6.4.1/skills/requesting-code-review/. Follow the pinned task cycle's one-author whole-change review contract, grade/scope ownership and bounded fix rules. Read the worktree's AGENTS.md and agent-instructions/README.md. Read the user review playbook at C:/Storage/The Brain/The Brain/Notes/Areas/(A) Claude code/playbook_code_review.md and its applicable delegated instructions, after the Obsidian rulebook at C:/Storage/The Brain/The Brain/Notes/Resources/(R) Obsidian/obsidian_rulebook.md. Do not spawn agents.
+
+Read the frozen task.md whole, reviewed spec.md and reports/foundation-report.md and reports/implementation-report.md. Independently select/read applicable foundation by elements/common/way_of_working.md and inspect FULL diff of the assigned base/head, including foundation commits. Read affected files sufficiently to assess context. This is the final review of a no-plan change: check every task item, every Settlement to record, carried projected entries, source fidelity, and foundation entries committed before dependent implementation. Check actual scope/sharpness against the author report and confirm or expand needed verification. Evaluate the author's weakest-point check, its evidence and what it fails to prove.
+
+Grade Critical/Important/Minor yourself and mark scope yourself. The orchestrator may not downgrade or reclassify a finding. A blocking finding is Critical/Important not marked outside scope. A fix will be one author fix and one review of that fix, if necessary; Minor/out-of-scope findings are retained verbatim for the PR, not fixed. Do not assume a preferred verdict. Identify reasonable-user correctness risks as the review method directs. Generic criterion from the accepted task: grade appearance by concrete user-visible consequence; divergence from an example or an unscripted exemplar alone cannot justify blocking without a named user/correctness consequence. This does not grade any particular finding in advance.
+
+If invariant sentences/checks were added/changed, follow the cycle's acceptance rules, including reviewer-authored deliberate break from the sentence and, where applicable, good/bad guideline cases in scratch worktrees. Never change a task-worktree product file to conduct a break. If none changed, explicitly mark those obligations not applicable. Do not rerun author focused checks just to advance the cycle; run tests only when review evidence or an unresolved concern requires them.
+
+Repository read-only. Write complete sanitized review to reports/code-review-report.md with assessed commit range, file list/line counts, source/read inventory, coverage/order/sharpness/weakest-check findings, Strengths, Critical/Important/Minor issues, Declined to judge, recommendations and explicit assessment. Every finding needs exact file:line, full wording and expanded rationale with mechanism/consequence and needed fix. Preserve review-playbook To paste/Why distinction where useful; no summary replacing full report. Executed check evidence includes command, actual exit code and full stdout/stderr report path; manual review includes actor/method/result/evidence. No unrun check is passed.
+
+Return concise verdict, report path, counts of findings by grade/scope, checked/unchecked work and unresolved questions. Questions go to the orchestrator, never the human. Stop at the report; do not fix, commit or start return/assessment.

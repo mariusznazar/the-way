@@ -1,0 +1,666 @@
+[
+  {
+    "entry": "WAY-09/1",
+    "source": "foundations/decisions.md:234",
+    "terms": [
+      "guideline",
+      "screen",
+      "styleguide"
+    ]
+  },
+  {
+    "entry": "WAY-22/1",
+    "source": "foundations/decisions.md:657",
+    "terms": [
+      "screen"
+    ]
+  },
+  {
+    "entry": "WAY-27/1",
+    "source": "foundations/decisions.md:775",
+    "terms": [
+      "guideline"
+    ]
+  },
+  {
+    "entry": "WAY-38/1",
+    "source": "foundations/decisions.md:1114",
+    "terms": [
+      "guideline"
+    ]
+  },
+  {
+    "entry": "WAY-61/1",
+    "source": "foundations/decisions.md:1745",
+    "terms": [
+      "checklist"
+    ]
+  },
+  {
+    "entry": "WAY-86/1",
+    "source": "foundations/decisions.md:2454",
+    "terms": [
+      "screen"
+    ]
+  },
+  {
+    "entry": "WAY-106/1",
+    "source": "foundations/decisions.md:3004",
+    "terms": [
+      "plan change"
+    ]
+  },
+  {
+    "entry": "WAY-118/1",
+    "source": "foundations/decisions.md:3346",
+    "terms": [
+      "checklist"
+    ]
+  },
+  {
+    "entry": "WAY-121/1",
+    "source": "foundations/decisions.md:3439",
+    "terms": [
+      "screen"
+    ]
+  },
+  {
+    "entry": "WAY-142/1",
+    "source": "foundations/decisions.md:4433",
+    "terms": [
+      "plan change"
+    ]
+  },
+  {
+    "entry": "WAY-143/1",
+    "source": "foundations/decisions.md:4485",
+    "terms": [
+      "screen"
+    ]
+  },
+  {
+    "entry": "WAY-146/1",
+    "source": "foundations/decisions.md:4606",
+    "terms": [
+      "screen"
+    ]
+  },
+  {
+    "entry": "WAY-147/1",
+    "source": "foundations/decisions.md:4646",
+    "terms": [
+      "plan change"
+    ]
+  },
+  {
+    "entry": "WAY-154/1",
+    "source": "foundations/decisions.md:4913",
+    "terms": [
+      "plan change",
+      "waiting for human",
+      "waits for task"
+    ]
+  },
+  {
+    "entry": "WAY-165/1",
+    "source": "foundations/decisions.md:5357",
+    "terms": [
+      "screen"
+    ]
+  },
+  {
+    "entry": "WAY-167/1",
+    "source": "foundations/decisions.md:5439",
+    "terms": [
+      "exemplar",
+      "guideline",
+      "screen",
+      "styleguide"
+    ]
+  },
+  {
+    "entry": "WAY-168/1",
+    "source": "foundations/decisions.md:5510",
+    "terms": [
+      "guideline",
+      "screen",
+      "styleguide"
+    ]
+  },
+  {
+    "entry": "WAY-169/1",
+    "source": "foundations/decisions.md:5580",
+    "terms": [
+      "guideline",
+      "styleguide"
+    ]
+  },
+  {
+    "entry": "WAY-170/1",
+    "source": "foundations/decisions.md:5622",
+    "terms": [
+      "guideline",
+      "styleguide"
+    ]
+  },
+  {
+    "entry": "WAY-171/1",
+    "source": "foundations/decisions.md:5665",
+    "terms": [
+      "guideline",
+      "styleguide"
+    ]
+  },
+  {
+    "entry": "WAY-172/1",
+    "source": "foundations/decisions.md:5717",
+    "terms": [
+      "guideline",
+      "screen",
+      "styleguide"
+    ]
+  },
+  {
+    "entry": "WAY-173/1",
+    "source": "foundations/decisions.md:5760",
+    "terms": [
+      "guideline",
+      "screen",
+      "styleguide"
+    ]
+  },
+  {
+    "entry": "WAY-174/1",
+    "source": "foundations/decisions.md:5795",
+    "terms": [
+      "guideline",
+      "screen",
+      "styleguide"
+    ]
+  },
+  {
+    "entry": "WAY-175/1",
+    "source": "foundations/decisions.md:5830",
+    "terms": [
+      "checklist",
+      "guideline",
+      "screen",
+      "screenshot",
+      "styleguide"
+    ]
+  },
+  {
+    "entry": "WAY-176/1",
+    "source": "foundations/decisions.md:5923",
+    "terms": [
+      "guideline",
+      "styleguide"
+    ]
+  },
+  {
+    "entry": "WAY-177/1",
+    "source": "foundations/decisions.md:5963",
+    "terms": [
+      "guideline",
+      "screen",
+      "screenshot",
+      "styleguide"
+    ]
+  },
+  {
+    "entry": "WAY-178/1",
+    "source": "foundations/decisions.md:5991",
+    "terms": [
+      "guideline",
+      "screen",
+      "styleguide"
+    ]
+  },
+  {
+    "entry": "WAY-179/1",
+    "source": "foundations/decisions.md:6017",
+    "terms": [
+      "guideline",
+      "screen",
+      "styleguide"
+    ]
+  },
+  {
+    "entry": "WAY-180/1",
+    "source": "foundations/decisions.md:6044",
+    "terms": [
+      "guideline",
+      "screen",
+      "styleguide",
+      "visual"
+    ]
+  },
+  {
+    "entry": "WAY-181/1",
+    "source": "foundations/decisions.md:6070",
+    "terms": [
+      "guideline",
+      "screen",
+      "styleguide"
+    ]
+  },
+  {
+    "entry": "WAY-182/1",
+    "source": "foundations/decisions.md:6096",
+    "terms": [
+      "guideline",
+      "styleguide"
+    ]
+  },
+  {
+    "entry": "WAY-183/1",
+    "source": "foundations/decisions.md:6123",
+    "terms": [
+      "guideline",
+      "screen",
+      "styleguide"
+    ]
+  },
+  {
+    "entry": "WAY-184/1",
+    "source": "foundations/decisions.md:6147",
+    "terms": [
+      "guideline",
+      "screen",
+      "styleguide"
+    ]
+  },
+  {
+    "entry": "WAY-185/1",
+    "source": "foundations/decisions.md:6176",
+    "terms": [
+      "guideline",
+      "screen",
+      "styleguide"
+    ]
+  },
+  {
+    "entry": "WAY-186/1",
+    "source": "foundations/decisions.md:6206",
+    "terms": [
+      "guideline",
+      "screen",
+      "styleguide"
+    ]
+  },
+  {
+    "entry": "WAY-187/1",
+    "source": "foundations/decisions.md:6247",
+    "terms": [
+      "guideline",
+      "screen",
+      "screenshot",
+      "styleguide"
+    ]
+  },
+  {
+    "entry": "WAY-188/1",
+    "source": "foundations/decisions.md:6286",
+    "terms": [
+      "guideline",
+      "screen",
+      "styleguide"
+    ]
+  },
+  {
+    "entry": "WAY-189/1",
+    "source": "foundations/decisions.md:6317",
+    "terms": [
+      "guideline",
+      "screenshot",
+      "styleguide"
+    ]
+  },
+  {
+    "entry": "WAY-190/1",
+    "source": "foundations/decisions.md:6352",
+    "terms": [
+      "guideline",
+      "screen",
+      "styleguide"
+    ]
+  },
+  {
+    "entry": "WAY-191/1",
+    "source": "foundations/decisions.md:6388",
+    "terms": [
+      "guideline",
+      "screen",
+      "styleguide"
+    ]
+  },
+  {
+    "entry": "WAY-192/1",
+    "source": "foundations/decisions.md:6424",
+    "terms": [
+      "guideline",
+      "styleguide"
+    ]
+  },
+  {
+    "entry": "WAY-193/1",
+    "source": "foundations/decisions.md:6460",
+    "terms": [
+      "guideline",
+      "styleguide"
+    ]
+  },
+  {
+    "entry": "WAY-194/1",
+    "source": "foundations/decisions.md:6496",
+    "terms": [
+      "exemplar",
+      "guideline"
+    ]
+  },
+  {
+    "entry": "WAY-195/1",
+    "source": "foundations/decisions.md:6535",
+    "terms": [
+      "exemplar",
+      "guideline",
+      "way-212"
+    ]
+  },
+  {
+    "entry": "WAY-196/1",
+    "source": "foundations/decisions.md:6633",
+    "terms": [
+      "exemplar",
+      "guideline"
+    ]
+  },
+  {
+    "entry": "WAY-197/1",
+    "source": "foundations/decisions.md:6674",
+    "terms": [
+      "exemplar",
+      "guideline"
+    ]
+  },
+  {
+    "entry": "WAY-198/1",
+    "source": "foundations/decisions.md:6715",
+    "terms": [
+      "exemplar",
+      "guideline"
+    ]
+  },
+  {
+    "entry": "WAY-199/1",
+    "source": "foundations/decisions.md:6750",
+    "terms": [
+      "exemplar",
+      "guideline"
+    ]
+  },
+  {
+    "entry": "WAY-200/1",
+    "source": "foundations/decisions.md:6785",
+    "terms": [
+      "exemplar",
+      "first file",
+      "guideline",
+      "screen",
+      "styleguide"
+    ]
+  },
+  {
+    "entry": "WAY-201/1",
+    "source": "foundations/decisions.md:6817",
+    "terms": [
+      "exemplar",
+      "guideline",
+      "styleguide"
+    ]
+  },
+  {
+    "entry": "WAY-202/1",
+    "source": "foundations/decisions.md:6846",
+    "terms": [
+      "guideline",
+      "styleguide"
+    ]
+  },
+  {
+    "entry": "WAY-203/1",
+    "source": "foundations/decisions.md:6880",
+    "terms": [
+      "guideline"
+    ]
+  },
+  {
+    "entry": "WAY-204/1",
+    "source": "foundations/decisions.md:6924",
+    "terms": [
+      "guideline"
+    ]
+  },
+  {
+    "entry": "WAY-205/1",
+    "source": "foundations/decisions.md:6976",
+    "terms": [
+      "guideline",
+      "styleguide"
+    ]
+  },
+  {
+    "entry": "WAY-206/1",
+    "source": "foundations/decisions.md:7019",
+    "terms": [
+      "guideline"
+    ]
+  },
+  {
+    "entry": "WAY-207/1",
+    "source": "foundations/decisions.md:7064",
+    "terms": [
+      "exemplar",
+      "guideline",
+      "styleguide"
+    ]
+  },
+  {
+    "entry": "WAY-208/1",
+    "source": "foundations/decisions.md:7096",
+    "terms": [
+      "guideline",
+      "styleguide"
+    ]
+  },
+  {
+    "entry": "WAY-209/1",
+    "source": "foundations/decisions.md:7124",
+    "terms": [
+      "exemplar",
+      "first code",
+      "first file",
+      "guideline",
+      "screen"
+    ]
+  },
+  {
+    "entry": "WAY-210/1",
+    "source": "foundations/decisions.md:7156",
+    "terms": [
+      "guideline",
+      "styleguide"
+    ]
+  },
+  {
+    "entry": "WAY-211/1",
+    "source": "foundations/decisions.md:7193",
+    "terms": [
+      "guideline",
+      "styleguide"
+    ]
+  },
+  {
+    "entry": "WAY-212/1",
+    "source": "foundations/decisions.md:7225",
+    "terms": [
+      "guideline",
+      "styleguide",
+      "way-212"
+    ]
+  },
+  {
+    "entry": "guidelines-form/1",
+    "source": "foundations/invariants.md:2133",
+    "terms": [
+      "guideline"
+    ]
+  },
+  {
+    "entry": "guidelines-reference-current/1",
+    "source": "foundations/invariants.md:2143",
+    "terms": [
+      "guideline"
+    ]
+  },
+  {
+    "entry": "guidelines-check-form/1",
+    "source": "foundations/invariants.md:2153",
+    "terms": [
+      "guideline"
+    ]
+  },
+  {
+    "entry": "guidelines-check-carrier/1",
+    "source": "foundations/invariants.md:2163",
+    "terms": [
+      "guideline",
+      "styleguide"
+    ]
+  },
+  {
+    "entry": "guidelines-check-colour-pair/1",
+    "source": "foundations/invariants.md:2173",
+    "terms": [
+      "guideline",
+      "styleguide"
+    ]
+  },
+  {
+    "entry": "guidelines-check-reference-target/1",
+    "source": "foundations/invariants.md:2183",
+    "terms": [
+      "guideline"
+    ]
+  },
+  {
+    "entry": "guidelines-check-stale-reference/1",
+    "source": "foundations/invariants.md:2193",
+    "terms": [
+      "guideline"
+    ]
+  },
+  {
+    "entry": "guidelines-check-code-path/1",
+    "source": "foundations/invariants.md:2203",
+    "terms": [
+      "guideline"
+    ]
+  },
+  {
+    "entry": "guidelines-check-kind-index/1",
+    "source": "foundations/invariants.md:2213",
+    "terms": [
+      "guideline",
+      "way-212"
+    ]
+  },
+  {
+    "entry": "guidelines-check-exemplar/1",
+    "source": "foundations/invariants.md:2223",
+    "terms": [
+      "exemplar",
+      "guideline"
+    ]
+  },
+  {
+    "entry": "guidelines-check-example-files/1",
+    "source": "foundations/invariants.md:2233",
+    "terms": [
+      "guideline"
+    ]
+  },
+  {
+    "entry": "gate-guidelines-example-evidence/1",
+    "source": "foundations/invariants.md:2243",
+    "terms": [
+      "guideline"
+    ]
+  },
+  {
+    "entry": "task-cycle",
+    "source": "foundations/part_map.md:136",
+    "terms": [
+      "guideline"
+    ]
+  },
+  {
+    "entry": "agent-instructions",
+    "source": "foundations/part_map.md:185",
+    "terms": [
+      "guideline"
+    ]
+  },
+  {
+    "entry": "installation",
+    "source": "foundations/part_map.md:242",
+    "terms": [
+      "guideline"
+    ]
+  },
+  {
+    "entry": "product-guidelines",
+    "source": "foundations/part_map.md:261",
+    "terms": [
+      "exemplar",
+      "guideline",
+      "screen",
+      "styleguide"
+    ]
+  },
+  {
+    "entry": "skills-reach-the-way-sessions",
+    "source": "foundations/part_map.md:296",
+    "terms": [
+      "guideline"
+    ]
+  },
+  {
+    "entry": "guidelines-form-check-command",
+    "source": "foundations/part_map.md:360",
+    "terms": [
+      "guideline"
+    ]
+  },
+  {
+    "entry": "guidelines",
+    "source": "foundations/glossary.md:105",
+    "terms": [
+      "guideline"
+    ]
+  },
+  {
+    "entry": "user interface",
+    "source": "foundations/glossary.md:217",
+    "terms": [
+      "screen"
+    ]
+  },
+  {
+    "entry": "exemplar",
+    "source": "foundations/glossary.md:245",
+    "terms": [
+      "exemplar"
+    ]
+  }
+]

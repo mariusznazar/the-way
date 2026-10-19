@@ -1,0 +1,13 @@
+{
+  "command": [
+    "python",
+    "-B",
+    "gate/run_tests.py",
+    "task-cycle"
+  ],
+  "cwd": "C:\\Storage\\repos\\the-way\\.runs\\worktrees\\product-guidelines-cycle",
+  "started": "2026-10-19T20:55:55.080871+00:00",
+  "finished": "2026-10-19T20:55:56.073443+00:00",
+  "exit_code": 0,
+  "full_output": "orchestrator-tests-task-cycle.txt"
+}

@@ -1,0 +1,578 @@
+foundations\part_map.md:143:  elements-common · project-level · gate · relation-model · product-guidelines
+foundations\part_map.md:197:  elements-common · project-level · task-cycle · gate · instruction-files · product-guidelines
+foundations\part_map.md:248:  elements-common · project-level · product-guidelines
+foundations\part_map.md:261:## product-guidelines
+foundations\part_map.md:263:The part answers for the form every product's guidelines share, for the template of each discipline
+foundations\part_map.md:264:of guidelines with the skill that leads the work on them, and for the form check of guidelines.
+foundations\part_map.md:266:- **Files:** product-guidelines/**
+foundations\part_map.md:270:  - the form check passes a reference whose entry changed its wording — a styleguide tells agents
+foundations\part_map.md:271:    an old rule — high — detected by guidelines-check-stale-reference
+foundations\part_map.md:272:  - the skill settles a meaning the human did not accept — the cycle builds screens on it — high —
+foundations\part_map.md:276:  - the form check, reading a crafted file of guidelines, reads outside the repository, reaches a
+foundations\part_map.md:279:  - the form check passes a file of coding guidelines of a kind whose exemplar no decision
+foundations\part_map.md:280:    designates — agents copy a file nobody approved — high — detected by guidelines-check-exemplar
+foundations\part_map.md:284:- **Trust boundary:** product-guidelines/form_check.py
+foundations\part_map.md:304:  environment-facts · project-level · task-cycle · gate · instruction-files · product-guidelines
+foundations\part_map.md:360:## guidelines-form-check-command
+foundations\part_map.md:362:The command that runs the form check of a product's guidelines keeps its name, its arguments and its
+foundations\part_map.md:365:- **Declared at:** product-guidelines/form_check.py · main
+foundations\invariants.md:2133:## guidelines-form/1
+foundations\invariants.md:2135:Every file `guidelines/<name>.md` holds, in their order, the header lines, sections, rules, rule fields and tables that the template of guidelines and the template of its discipline require at the commit of the-way the repository uses — the commit checked, in the-way itself, and the pinned commit, in a product — each with the values and the links those templates give it, with a name that agrees with its *Discipline*, each section or rule it drops reading `none —` with a decision of the log and that decision's fingerprint, each part it names being a part of the map, and each path under `## Where in code` naming something git tracks.
+foundations\invariants.md:2137:- **Method:** `python -B product-guidelines/form_check.py --record .runs/guidelines-form.jsonl`
+foundations\invariants.md:2143:## guidelines-reference-current/1
+foundations\invariants.md:2145:Every reference outside fenced code in a file `guidelines/<name>.md` — a decision number of the log or an identifier of the invariants file followed by `@` and a run of letters and digits, or any identifier followed by `@` and eight lower-case hexadecimal characters — names a decision of the log that is not repealed or an invariant of the file that is not withdrawn, and carries the fingerprint of that entry's binding part in the foundation of the same commit and, where {merge-onto} exists, in the foundation a merge onto {merge-onto} leaves.
+foundations\invariants.md:2147:- **Method:** `python -B product-guidelines/form_check.py --merge-onto {merge-onto} --record .runs/guidelines-reference.jsonl`
+foundations\invariants.md:2150:- **Part:** product-guidelines · decisions · invariants · agent-instructions · relation-model
+foundations\invariants.md:2153:## guidelines-check-form/1
+foundations\invariants.md:2155:The form check of guidelines, `product-guidelines/form_check.py`, reports as an error every header line, section, rule or rule field that the template of guidelines or the template of a file's discipline requires and a file `guidelines/<name>.md` lacks or holds out of order, every section or rule dropped with a text other than `none —` followed by a decision of the log and a fingerprint, every part named in *Applies to* or in a file's name that the part map does not hold, and every file whose name and *Discipline* disagree.
+foundations\invariants.md:2157:- **Method:** `python -B gate/run_tests.py product-guidelines --record .runs/product-guidelines-tests.jsonl`
+foundations\invariants.md:2160:- **Part:** product-guidelines · decisions · invariants · part-map · elements-common · relation-model
+foundations\invariants.md:2163:## guidelines-check-carrier/1
+foundations\invariants.md:2165:The form check of guidelines, `product-guidelines/form_check.py`, reports as an error every rule under `## Rules` of a file `guidelines/<name>.md` whose *Decision* holds no decision number with the log's prefix followed by `@`, every such rule whose *Invariant* holds no identifier of the invariants file followed by `@` in a file whose discipline's template requires an invariant in every rule, and every decision the table of roles of a styleguide names that the rule `### Each role in its meaning` does not name, unless that rule is dropped.
+foundations\invariants.md:2167:- **Method:** `python -B gate/run_tests.py product-guidelines --record .runs/product-guidelines-tests.jsonl`
+foundations\invariants.md:2170:- **Part:** product-guidelines · decisions · invariants · part-map · elements-common · relation-model
+foundations\invariants.md:2173:## guidelines-check-colour-pair/1
+foundations\invariants.md:2175:The form check of guidelines, `product-guidelines/form_check.py`, reports as an error every role of the kind `background` in the table of roles of a styleguide whose *Text on it* is empty or names no role of the kind `text` in that table.
+foundations\invariants.md:2177:- **Method:** `python -B gate/run_tests.py product-guidelines --record .runs/product-guidelines-tests.jsonl`
+foundations\invariants.md:2180:- **Part:** product-guidelines · decisions · invariants · part-map · elements-common · relation-model
+foundations\invariants.md:2183:## guidelines-check-reference-target/1
+foundations\invariants.md:2185:The form check of guidelines, `product-guidelines/form_check.py`, reports as an error every reference outside fenced code in a file `guidelines/<name>.md` — a decision number of the log or an identifier of the invariants file followed by `@` and a run of letters and digits, or any identifier followed by `@` and eight lower-case hexadecimal characters — that names a decision the log does not hold or has repealed, or an invariant the file does not hold or has withdrawn, and every such reference after a decision number or an invariant's identifier whose part after `@` is not eight lower-case hexadecimal characters.
+foundations\invariants.md:2187:- **Method:** `python -B gate/run_tests.py product-guidelines --record .runs/product-guidelines-tests.jsonl`
+foundations\invariants.md:2190:- **Part:** product-guidelines · decisions · invariants · part-map · elements-common · relation-model
+foundations\invariants.md:2193:## guidelines-check-stale-reference/1
+foundations\invariants.md:2195:The form check of guidelines, `product-guidelines/form_check.py`, reports as an error every reference outside fenced code in a file `guidelines/<name>.md` to a decision of the log or an invariant of the file whose fingerprint differs from that entry's current fingerprint on the commit checked and, given "{merge-onto}", every one whose fingerprint differs from that entry's current fingerprint in the foundation a merge onto that commit leaves.
+foundations\invariants.md:2197:- **Method:** `python -B gate/run_tests.py product-guidelines --record .runs/product-guidelines-tests.jsonl`
+foundations\invariants.md:2200:- **Part:** product-guidelines · decisions · invariants · part-map · elements-common · relation-model
+foundations\invariants.md:2203:## guidelines-check-code-path/1
+foundations\invariants.md:2205:The form check of guidelines, `product-guidelines/form_check.py`, reports as an error every path under `## Where in code` of a file `guidelines/<name>.md` that is absolute, holds a `..` segment, a drive or a UNC prefix, or names nothing git tracks.
+foundations\invariants.md:2207:- **Method:** `python -B gate/run_tests.py product-guidelines --record .runs/product-guidelines-tests.jsonl`
+foundations\invariants.md:2210:- **Part:** product-guidelines · decisions · invariants · part-map · elements-common · relation-model
+foundations\invariants.md:2213:## guidelines-check-kind-index/1
+foundations\invariants.md:2215:The form check of guidelines, `product-guidelines/form_check.py`, reports as an error every file `guidelines/coding-<kind>.md` git tracks that no row of the table under `## Kinds of code` in `guidelines/coding.md` names by its path in *File*, every row of that table whose *File* names no file git tracks, whose *Kind* is not the `<kind>` of the file its *File* names or whose *When to read* is empty, and every file `guidelines/coding-<kind>.md` git tracks where git tracks no `guidelines/coding.md`.
+foundations\invariants.md:2217:- **Method:** `python -B gate/run_tests.py product-guidelines --record .runs/product-guidelines-tests.jsonl`
+foundations\invariants.md:2219:- **Derives from:** WAY-167@052adf27 · WAY-212@116bffdf
+foundations\invariants.md:2220:- **Part:** product-guidelines · decisions · invariants · part-map · elements-common · relation-model
+foundations\invariants.md:2223:## guidelines-check-exemplar/1
+foundations\invariants.md:2225:The form check of guidelines, `product-guidelines/form_check.py`, reports as an error every file `guidelines/coding-<kind>.md` whose table under `## Files of this kind` holds no row, or more than one, whose *Status* is `exemplar`, every row of that table whose *Status* is not `exemplar`, `copy` or `do not copy`, whose *File* is absolute, holds a `..` segment, a drive or a UNC prefix or names nothing git tracks, or which is not the `exemplar` row and whose *Decision* is not `—`, and every `exemplar` row whose *Decision* names no decision the log holds and has not repealed, or names one whose binding sentences, their whitespace collapsed, lack its *File* in backticks or the file's `<kind>` in backticks.
+foundations\invariants.md:2227:- **Method:** `python -B gate/run_tests.py product-guidelines --record .runs/product-guidelines-tests.jsonl`
+foundations\invariants.md:2230:- **Part:** product-guidelines · decisions · invariants · part-map · elements-common · relation-model
+foundations\invariants.md:2233:## guidelines-check-example-files/1
+foundations\invariants.md:2235:The form check of guidelines, `product-guidelines/form_check.py`, reports as an error every rule under `## Rules` of a file `guidelines/<name>.md` whose *Invariant* names an invariant other than `guidelines-form` and whose text after its fields does not hold, for each such invariant, exactly one fenced block whose opening line's info string reads `good <identifier> <path>` and exactly one whose info string reads `bad <identifier> <path>`, `<identifier>` being that invariant's, and, in such a rule, every such block whose `<identifier>` its *Invariant* does not name or whose `<path>` is absolute, holds a `..` segment, a drive or a UNC prefix, every line inside such a block that would open a fence, every other fenced block, and every such block left open to the end of the file.
+foundations\invariants.md:2237:- **Method:** `python -B gate/run_tests.py product-guidelines --record .runs/product-guidelines-tests.jsonl`
+foundations\invariants.md:2240:- **Part:** product-guidelines · decisions · invariants · part-map · elements-common · relation-model
+foundations\invariants.md:2243:## gate-guidelines-example-evidence/1
+foundations\invariants.md:2245:For every invariant entry that a rule of a file `guidelines/<name>.md` names with a file for the use that follows the rule and one for the use that breaks it, and whose sentence a change adds or alters against "{fork-point}" or one of whose two files the change alters, the gate's report states whether the entry's method, run on the commit checked with each file put in place at its path, passes with the first and fails with the second — for an entry on the list of violated invariants, whether the first adds no failure the commit does not already have and the second adds one — or that this could not be checked.
+foundations\invariants.md:2250:- **Part:** gate · product-guidelines
+foundations\glossary.md:105:## guidelines
+foundations\glossary.md:107:Guidelines are text a product keeps outside its foundation that tells agents what to do and how in a discipline of work on the product.
+foundations\glossary.md:219:A user interface is a set of screens that a product draws and through which a person uses it.
+foundations\glossary.md:245:## exemplar
+foundations\glossary.md:247:An exemplar is a file of a product that a decision of the product designates as the model after which later code of its kind is written.
+foundations\decisions.md:240:`product-guidelines/` and `task-cycle/` — with `probes/` as a second directory of the environment
+foundations\decisions.md:259:with its tests; `product-guidelines/` the template that the guidelines of every product share, for
+foundations\decisions.md:260:each discipline of work whose guidelines the-way gives a template of, that template with the skill
+foundations\decisions.md:261:that leads the work on them, and the script that checks the form of guidelines, with its tests;
+foundations\decisions.md:268:  project-level, product-guidelines, task-cycle
+foundations\decisions.md:274:  `agent-instructions/`, `instruction-files/`, `project-level/`, `product-guidelines/` and
+foundations\decisions.md:286:    `instruction-files/`; the template of guidelines, the template and the skill of the styleguide
+foundations\decisions.md:287:    discipline, and the script that checks the form of guidelines with its tests stand together in
+foundations\decisions.md:288:    `product-guidelines/`;
+foundations\decisions.md:301:instructions; a product's guidelines stand outside its foundation and answer to no element, so their
+foundations\decisions.md:302:templates and their check stand apart from the elements, and their failures — a product's screens
+foundations\decisions.md:303:built on a meaning nobody approved, guidelines telling agents an old rule — are not those of
+foundations\decisions.md:313:the templates of guidelines and their check under `elements/` — guidelines are no element of the
+foundations\decisions.md:670:  - complies: "the product has no multiplayer" is a decision, and "no screen offers a second
+foundations\decisions.md:784:  installation, agent-instructions, instruction-files, product-guidelines, task-cycle
+foundations\decisions.md:1124:  installation, instruction-files, product-guidelines, task-cycle
+foundations\decisions.md:1773:    alternative describes it names the checklist a person assesses the page against;
+foundations\decisions.md:2468:  - complies: a decision adopts WCAG, naming its edition, level AA and the screens covered; an
+foundations\decisions.md:3028:the plan and change as the plan changes.
+foundations\decisions.md:3377:*Rejected:* a final checklist that only warns — it cannot prevent an unfinished search from
+foundations\decisions.md:3464:    screen looks, in a product whose foundation already says how an agent reaches its screens,
+foundations\decisions.md:3468:    game on a local address add nothing to run; a later project of that game, whose new screens
+foundations\decisions.md:3473:    project that brings a product's first screen leaves out how an agent operates it because a
+foundations\decisions.md:3495:short decision and later projects find it in the foundation. A product with no screen or no stored
+foundations\decisions.md:4464:*Rationale:* a plan changes with every move of a task, a definition rarely and only through its
+foundations\decisions.md:4502:  - violates: a task "the database schema" ends with tables no screen reads; a preparatory task
+foundations\decisions.md:4625:  - complies: the critique finds a task ending with tables no screen reads and a question placed in
+foundations\decisions.md:4649:task of the plan holds and which stays with the task while the plan changes. A task of the plan
+foundations\decisions.md:4919:ends its turn as `questions`, `waits for task <n>`, `ready for approval`, `plan change` or
+foundations\decisions.md:4925:ready for approval makes it waiting for human, and final acceptance makes both document and plan
+foundations\decisions.md:5361:the product as its user does — through a screen in a browser, a call to its API or a command in a
+foundations\decisions.md:5439:### WAY-167/1 — Where do a product's guidelines stand, and what are their files named?
+foundations\decisions.md:5441:A product's guidelines are written by hand and stand outside its foundation, in the directory
+foundations\decisions.md:5442:`guidelines/` at the root of its repository: a file `guidelines/<discipline>.md` for each discipline
+foundations\decisions.md:5443:of work on the product it keeps guidelines of, save the styleguide and coding disciplines. The
+foundations\decisions.md:5444:guidelines of the styleguide discipline stand in a file `guidelines/styleguide-<part>.md` for each
+foundations\decisions.md:5447:`guidelines/coding.md`, which holds the product's standing checks, the rules of the whole of its
+foundations\decisions.md:5449:`guidelines/coding-<kind>.md` for each kind of code that has an exemplar, which holds that exemplar
+foundations\decisions.md:5450:and its rules, `<kind>` being the identifier of the kind that the decision designating that exemplar
+foundations\decisions.md:5451:gives. The directory `guidelines/` belongs to the part of the product's map whose files direct
+foundations\decisions.md:5455:- **Scope:** product-guidelines, installation
+foundations\decisions.md:5458:- **Verification:** level 1 — invariants: guidelines-check-kind-index. Level 2 for where the files
+foundations\decisions.md:5460:  - complies: a product with screens in a browser and an admin panel added to its backend keeps
+foundations\decisions.md:5461:    `guidelines/styleguide-web.md` and `guidelines/styleguide-admin.md`, named after the parts
+foundations\decisions.md:5462:    `web` and `admin` of its map, beside `guidelines/testing.md`, and the pattern `guidelines/**`
+foundations\decisions.md:5464:    decision designates the exemplar of the kind `endpoint` keeps `guidelines/coding-endpoint.md`
+foundations\decisions.md:5465:    beside `guidelines/coding.md`, whose table names it with "before adding or changing an
+foundations\decisions.md:5466:    endpoint", while the product's linter and formatter stand in `guidelines/coding.md` alone;
+foundations\decisions.md:5467:  - violates: a product's styleguide stands in `docs/` or in `foundations/`; a product with one
+foundations\decisions.md:5468:    user interface names its styleguide `guidelines/styleguide.md`; a styleguide is composed by a
+foundations\decisions.md:5469:    script from the product's decisions; a product's guidelines become entries of an element of its
+foundations\decisions.md:5470:    foundation; every rule of a product's code, the exemplars of its kinds included, stands in
+foundations\decisions.md:5471:    `guidelines/coding.md`; a product's coding guidelines stand in `guidelines/coding-backend.md`
+foundations\decisions.md:5472:    and `guidelines/coding-web.md`, one for each part of its map, each repeating the standing
+foundations\decisions.md:5473:    checks; a file `guidelines/coding-endpoint.md` stands where no decision designates an exemplar
+foundations\decisions.md:5479:*Rationale:* a spec lives as long as its task and holds only what entered it, while guidelines are
+foundations\decisions.md:5485:fixed names lets a check find them in every product; a product whose screens and admin panel are
+foundations\decisions.md:5486:drawn by two parts keeps a styleguide for each, and the part's identifier in the name ties a
+foundations\decisions.md:5487:styleguide to the files it governs, so that a renamed part shows. Coding guidelines are cut by the
+foundations\decisions.md:5489:while its exemplar is one: the general file holds what binds the whole of the code once, and an
+foundations\decisions.md:5493:its exemplar, so that a file of a kind stands only where a human has approved what it holds.
+foundations\decisions.md:5494:*Rejected:* guidelines as a sixth element of the foundation — what binds in them is already carried
+foundations\decisions.md:5498:it and one that breaks it; a styleguide in documentation beside the code — it directs whoever
+foundations\decisions.md:5500:against the part whose code it describes; meanings kept in the spec of a screen — the spec ends
+foundations\decisions.md:5501:with its task, and the next screen gives the same colour another meaning; guidelines in the own
+foundations\decisions.md:5503:could find them; one styleguide for every user interface of a product — an admin panel and the
+foundations\decisions.md:5504:product's screens are drawn by different parts; all coding guidelines of a product in one file — it
+foundations\decisions.md:5505:grows beyond measure, and an agent reads rules its work does not touch; a file of coding guidelines
+foundations\decisions.md:5510:### WAY-168/1 — What does a rule of a product's guidelines hold beside the foundation entries that carry it?
+foundations\decisions.md:5512:A binding rule of a product's guidelines names by identifier the decision of the product's log that
+foundations\decisions.md:5515:decision alone; what a product's guidelines hold that names neither such a decision nor an invariant
+foundations\decisions.md:5516:is an example, not a rule. For each invariant a rule names other than the invariant of guidelines
+foundations\decisions.md:5526:- **Scope:** product-guidelines, decisions, invariants, gate
+foundations\decisions.md:5529:- **Verification:** level 1 — invariants: guidelines-check-carrier · guidelines-check-example-files
+foundations\decisions.md:5530:  · gate-guidelines-example-evidence. Level 2 for what a rule says, what stands as an example and
+foundations\decisions.md:5532:  - complies: a rule of a product's testing guidelines names the decision choosing the product's
+foundations\decisions.md:5542:  - violates: a rule of a styleguide repeats its decision's rationale and rejected options; an agent
+foundations\decisions.md:5551:*Rationale:* guidelines do not replace the foundation's elements but bring what they hold to the
+foundations\decisions.md:5552:work of one discipline: an agent changing a product's screens needs what to do and how, not an
+foundations\decisions.md:5559:guidelines that an instruction file leads to thus carries a decision the product records, the case
+foundations\decisions.md:5567:pays nothing for them. The invariant that checks the form of guidelines is left out, because the
+foundations\decisions.md:5568:form check's own tests are its cases, and a whole file of guidelines given as a case would need cases
+foundations\decisions.md:5570:*Rejected:* guidelines keeping their choices with reasons and rejected options in a log of their
+foundations\decisions.md:5573:built again for it; guidelines with no reasons anywhere — the meanings read from the options a
+foundations\decisions.md:5580:### WAY-169/1 — What happens to a reference of guidelines when the entry it names changes?
+foundations\decisions.md:5582:Every reference that a product's guidelines make with a fingerprint to a decision of the product's
+foundations\decisions.md:5587:fingerprint reaches the main branch only once the same change has brought the guidelines in line
+foundations\decisions.md:5592:- **Scope:** product-guidelines, relation-model
+foundations\decisions.md:5595:- **Verification:** level 1 — invariants: guidelines-reference-current ·
+foundations\decisions.md:5596:  guidelines-check-reference-target · guidelines-check-stale-reference. Level 2 for bringing the
+foundations\decisions.md:5597:  guidelines in line — an agent compares the change with the decision:
+foundations\decisions.md:5599:    same change rewrites that role's meaning in its styleguide's table and carries the decision's
+foundations\decisions.md:5601:  - violates: a script gives every reference of a styleguide its new fingerprint with no one reading
+foundations\decisions.md:5602:    the rules that carry them; a change rewording a decision merges, and the styleguide that
+foundations\decisions.md:5608:*Rationale:* without a fingerprint a changed decision goes through while the guidelines go on
+foundations\decisions.md:5609:telling agents the old rule, with no sign anywhere, and guidelines that say in silence other than
+foundations\decisions.md:5613:a parallel task can reword a decision the guidelines name without touching them (WAY-33). Every
+foundations\decisions.md:5616:*Rejected:* a flag for review that lets the merge go on, as WAY-02 alone gives it — the guidelines
+foundations\decisions.md:5618:guidelines; only the fields of a rule checked — a reference in a rule's prose or in an example drifts
+foundations\decisions.md:5622:### WAY-170/1 — What checks the form of a product's guidelines?
+foundations\decisions.md:5624:A script of the-way, the form check of guidelines, checks before a merge every file of a product's
+foundations\decisions.md:5625:guidelines against the template every product's guidelines share and, where the-way gives one, the
+foundations\decisions.md:5627:references the guidelines make as WAY-169 gives them. A product that keeps guidelines holds the
+foundations\decisions.md:5628:invariants of guidelines that the-way's template of guidelines gives, whose methods run that script,
+foundations\decisions.md:5635:- **Scope:** product-guidelines
+foundations\decisions.md:5638:- **Verification:** level 1 — invariants: guidelines-form · guidelines-check-form ·
+foundations\decisions.md:5639:  guidelines-check-code-path. Level 2 for the invariants a product holds — an agent compares the
+foundations\decisions.md:5641:  - complies: the task that writes a product's first styleguide writes the two invariants of
+foundations\decisions.md:5642:    guidelines the template gives, whose methods run the script from the product's pinned the-way;
+foundations\decisions.md:5643:  - violates: a product writes its styleguide and no invariant of its foundation runs the script; a
+foundations\decisions.md:5644:    product's instruction file names a command of its own for checking guidelines, beside the gate;
+foundations\decisions.md:5654:the repository uses, so a product's guidelines change their form only when it moves its pin
+foundations\decisions.md:5665:### WAY-171/1 — What form does a file of a product's guidelines take?
+foundations\decisions.md:5667:Every file of a product's guidelines holds, in this order, the header lines *Discipline* and
+foundations\decisions.md:5672:files and directories of the product the guidelines point to and copies no value from them, and a
+foundations\decisions.md:5676:the text is in the language the product writes its guidelines in, and a rule of the-way's templates
+foundations\decisions.md:5677:of guidelines changes only with a decision of the-way and cites its number.
+foundations\decisions.md:5680:- **Scope:** product-guidelines
+foundations\decisions.md:5683:- **Verification:** level 1 — invariants: guidelines-form · guidelines-check-form. Level 2 for the
+foundations\decisions.md:5686:  - complies: a product whose team writes in Polish writes the rules and examples of its styleguide
+foundations\decisions.md:5687:    in Polish under the English headings and fields; a rule added to the template of the styleguide
+foundations\decisions.md:5689:  - violates: a product translates the headings of its guidelines, and they can no longer be read
+foundations\decisions.md:5690:    mechanically; a styleguide copies the values of its colours under `## Where in code`; a rule
+foundations\decisions.md:5691:    enters a template of guidelines with no decision of the-way.
+foundations\decisions.md:5692:- **Review when:** the first product that writes the text of its guidelines in a language other than
+foundations\decisions.md:5693:  English has merged a change to a decision its guidelines restate · check by: 2027-03-31
+foundations\decisions.md:5697:*Rationale:* one form lets one script read the guidelines of every discipline, and a discipline's
+foundations\decisions.md:5698:template only adds to it, so guidelines of a discipline the-way gives no template of are still
+foundations\decisions.md:5700:holds goes stale, so the guidelines point to it (WAY-04). A part a template requires is dropped only
+foundations\decisions.md:5707:decision stands is caught by no fingerprint, only by a reader; the guidelines stand outside the
+foundations\decisions.md:5711:*Rejected:* every file of guidelines wholly in English — it binds the text every product's own agents
+foundations\decisions.md:5713:across tasks would change language from one session to the next; guidelines only of the disciplines
+foundations\decisions.md:5714:the-way gives templates of — a product could not write guidelines of a discipline of its own; a
+foundations\decisions.md:5717:### WAY-172/1 — How is a new or changed meaning of a product's guidelines approved?
+foundations\decisions.md:5719:A new or changed meaning of a product's guidelines is a decision of the product's log, new or
+foundations\decisions.md:5725:of a product's guidelines this decision prevails over WAY-114, under which an agent writes such an
+foundations\decisions.md:5729:- **Scope:** product-guidelines, decisions, project-level, task-cycle
+foundations\decisions.md:5734:  - complies: a styleguide task's document carries the meaning "red marks only what deletes", the
+foundations\decisions.md:5735:    human accepts the document, and its cycle writes the product's decision and then the screens
+foundations\decisions.md:5736:    that use it; a cycle whose screen needs a role the task did not settle proposes the role's
+foundations\decisions.md:5737:    decision on the task branch, opens a blocked draft request, and makes the screen only once the
+foundations\decisions.md:5741:    merge; the orchestrator's go-ahead stands for the approval of a new meaning; a screen that uses
+foundations\decisions.md:5747:*Rationale:* a meaning of guidelines binds every later screen, and code built on one the human never
+foundations\decisions.md:5756:built on a meaning the human has not seen, and turning it down reworks the screens; approval with
+foundations\decisions.md:5758:use of a meaning — every screen would wait for the human.
+foundations\decisions.md:5760:### WAY-173/1 — Does what the-way's template of the styleguide carries bind a product directly?
+foundations\decisions.md:5762:The rules the-way's template of the styleguide discipline carries and what the-way's skill
+foundations\decisions.md:5763:`maintain-styleguide` proposes bind a product only through a decision of the product's log adopting
+foundations\decisions.md:5766:and the skill, never a product's screens directly.
+foundations\decisions.md:5769:- **Scope:** product-guidelines
+foundations\decisions.md:5773:  - complies: a product's styleguide names, at each rule the template requires, the product's
+foundations\decisions.md:5774:    decision adopting it; a simple admin panel's styleguide drops the page showing its components in
+foundations\decisions.md:5776:    that decision; a cycle holds a product's screens to the product's decisions;
+foundations\decisions.md:5777:  - violates: a cycle holds a product's screens to a rule of the template the product never adopted;
+foundations\decisions.md:5785:admin panel as for a product's main screens, and it would bind from outside the product's log, where
+foundations\decisions.md:5786:every binding choice of guidelines stands (WAY-168). Adopted by a decision of the product, each rule
+foundations\decisions.md:5795:### WAY-174/1 — How does the-way's styleguide skill ask the human?
+foundations\decisions.md:5797:The-way's skill `maintain-styleguide` puts to the human every choice it settles for a styleguide, a
+foundations\decisions.md:5799:screen, never by the names or values of design tokens, saying in plain words what a term of the
+foundations\decisions.md:5805:- **Scope:** product-guidelines, decisions
+foundations\decisions.md:5819:*Rationale:* the human who approves a styleguide's meanings is no specialist of user interfaces, so
+foundations\decisions.md:5822:through its consequences (WAY-123). A meaning binds every later screen, and no decision enters
+foundations\decisions.md:5824:human made. The price is a longer conversation in each styleguide task.
+foundations\decisions.md:5826:WAY-114 gives it — screens are built on meanings the human never saw, and turning one down at the
+foundations\decisions.md:5830:### WAY-175/1 — What does the-way take from the outside skills its styleguide learned from, and what does it leave?
+foundations\decisions.md:5833:template of the styleguide discipline and its skill `maintain-styleguide` take the design tokens
+foundations\decisions.md:5835:controls (WAY-177), the fix of one screen's fault in its component (WAY-178), the page of every state
+foundations\decisions.md:5841:the moment it picks for its work and its refusal to work on a screen that does not exist yet (the
+foundations\decisions.md:5842:moment is WAY-184's), one screen for each change, the routing of work between models, the comparison
+foundations\decisions.md:5843:of screenshots, the files of a design tool and their links to code, and the role name `surface`.
+foundations\decisions.md:5847:the team can know, describing each screen a product announces (WAY-186) and writing for a reader who
+foundations\decisions.md:5852:- **Scope:** product-guidelines
+foundations\decisions.md:5874:  "Route by phase" · "`await expect(page).toHaveScreenshot({ maxDiffPixels: 100 })`" · "a
+foundations\decisions.md:5884:  "Human-AI interaction checklist" (`om-ux-shape/references/hai-guidelines.md`) and the "Quality
+foundations\decisions.md:5891:  - complies: the template of the styleguide carries the pair of a background and its text and the
+foundations\decisions.md:5897:- **Review when:** a product that pins the-way has settled how an agent sees its screens and keeps a
+foundations\decisions.md:5898:  page showing its components in every state, so that the comparison of screenshots left out can be
+foundations\decisions.md:5903:*Rationale:* those skills and their lesson carry steps a styleguide needs beside steps bound to their
+foundations\decisions.md:5908:source; the moment after the first screen would leave that screen with no rules, so the styleguide
+foundations\decisions.md:5911:(WAY-10); a comparison of screenshots needs an agent's way to see the screens and reference shots
+foundations\decisions.md:5915:styleguide decides, and its scoring rubric judges a document of another kind. What was seen in those
+foundations\decisions.md:5923:### WAY-176/1 — How does a styleguide name its colour roles and pair them?
+foundations\decisions.md:5925:The template of the styleguide discipline gives a styleguide a table of roles, each named by what it
+foundations\decisions.md:5935:- **Scope:** product-guidelines
+foundations\decisions.md:5938:- **Verification:** level 1 — invariants: guidelines-check-colour-pair. Level 2 for names, meanings
+foundations\decisions.md:5943:    names a role `surface` keeps that name in its code and styleguide, and its decisions say "the
+foundations\decisions.md:5963:### WAY-177/1 — What does a styleguide say of shared controls?
+foundations\decisions.md:5965:The template of the styleguide discipline has a styleguide point by its path to the directory of the
+foundations\decisions.md:5972:- **Scope:** product-guidelines
+foundations\decisions.md:5976:  - complies: a styleguide points to `src/components/` and gives the seven states, and names
+foundations\decisions.md:5978:  - violates: a styleguide describes a button in its default state only; a styleguide lists every
+foundations\decisions.md:5984:*Rationale:* the states other than the default are the ones that drift first and that a screenshot
+foundations\decisions.md:5985:of a screen with data never shows, so the styleguide names them for every shared control; a state a
+foundations\decisions.md:5991:### WAY-178/1 — Where is a fault of one screen fixed?
+foundations\decisions.md:5993:The template of the styleguide discipline has a styleguide hold that a global design token carries a
+foundations\decisions.md:5994:meaning for the whole product, and that a fault of one screen is fixed in that screen's component,
+foundations\decisions.md:5995:never by changing a global design token's value for that screen's sake. A change of a global design
+foundations\decisions.md:5999:- **Scope:** product-guidelines
+foundations\decisions.md:6003:  - complies: a list whose rows lose their spacing on one screen is fixed in that list's component;
+foundations\decisions.md:6004:    a change that darkens `primary` for every screen to reach the contrast its decision asks for
+foundations\decisions.md:6006:  - violates: the value of `muted` is changed so that one screen's text reads better, and every other
+foundations\decisions.md:6007:    screen changes with it; a change of what `primary` means is made as a fix of one screen.
+foundations\decisions.md:6012:*Rationale:* a global design token is read by every screen, so changing it for one screen changes
+foundations\decisions.md:6015:*Rejected:* a global value adjusted to fix one screen — every other screen moves with it.
+foundations\decisions.md:6017:### WAY-179/1 — What is a mockup to a styleguide?
+foundations\decisions.md:6019:The template of the styleguide discipline carries among its examples that a mockup is a pattern a
+foundations\decisions.md:6020:screen is compared against and not its specification: the meanings on a screen come from the
+foundations\decisions.md:6021:product's guidelines and its values from the file of design tokens.
+foundations\decisions.md:6024:- **Scope:** product-guidelines
+foundations\decisions.md:6028:  - complies: an agent building a screen from a mockup takes the role of each colour from the
+foundations\decisions.md:6029:    styleguide and its value from the file of design tokens, and uses the mockup to compare the
+foundations\decisions.md:6030:    finished screen;
+foundations\decisions.md:6031:  - violates: an agent reads the meaning of a colour off the mockup of one screen; the template
+foundations\decisions.md:6037:*Rationale:* a mockup draws one screen at one moment, so meanings taken from it differ from screen to
+foundations\decisions.md:6038:screen, while the styleguide and the file of design tokens hold one meaning and one value for the
+foundations\decisions.md:6041:*Rejected:* the meaning of a colour taken from the mockup of one screen — the next screen's mockup
+foundations\decisions.md:6046:The template of the styleguide discipline has a styleguide name by its path a page of the product
+foundations\decisions.md:6048:alone and never in production. The page is code of the product, not part of the styleguide's text.
+foundations\decisions.md:6051:- **Scope:** product-guidelines
+foundations\decisions.md:6055:  - complies: a styleguide names the page at `/states`, which answers "not found" in a production
+foundations\decisions.md:6057:  - violates: the page is served in production; the styleguide holds drawings of the states in
+foundations\decisions.md:6063:*Rationale:* the page is the visual half of the styleguide: it shows in one place what the text says
+foundations\decisions.md:6064:of every state, for an agent checking its work and for a reviewer, while a screen with data shows
+foundations\decisions.md:6070:### WAY-181/1 — Does a styleguide carry an order for the plan of a change to a user interface?
+foundations\decisions.md:6072:The template of the styleguide discipline carries among its examples, never as a rule, the order of
+foundations\decisions.md:6074:their source, then one screen, then its states.
+foundations\decisions.md:6077:- **Scope:** product-guidelines
+foundations\decisions.md:6081:  - complies: the planner of a change to a screen reads the order among the styleguide's examples
+foundations\decisions.md:6098:The template of the styleguide discipline has each value of the product's file of design tokens carry
+foundations\decisions.md:6099:beside it where it comes from. The skill `maintain-styleguide` chooses that source for each product,
+foundations\decisions.md:6103:- **Scope:** product-guidelines
+foundations\decisions.md:6123:### WAY-183/1 — Which user interfaces of a product get a styleguide?
+foundations\decisions.md:6125:The skill `maintain-styleguide` proposes a styleguide for every user interface of a product, an admin
+foundations\decisions.md:6127:through an API or a terminal has no user interface and gets no styleguide.
+foundations\decisions.md:6130:- **Scope:** product-guidelines
+foundations\decisions.md:6134:  - complies: a backend that gains an admin panel of three screens gets a short styleguide of its
+foundations\decisions.md:6141:*Rationale:* an agent left free does something different in every task, and that is what guidelines
+foundations\decisions.md:6142:are for; even guidelines of modest quality are consistent, and a product with them does not grow
+foundations\decisions.md:6143:into chaos, so a weak styleguide is better than none. A screen nobody outside the team sees still
+foundations\decisions.md:6145:*Rejected:* no styleguide for a small or helper user interface — each task styles it its own way.
+foundations\decisions.md:6147:### WAY-184/1 — When does a product's styleguide come into being?
+foundations\decisions.md:6149:The skill `maintain-styleguide` proposes that the styleguide of a user interface comes into being
+foundations\decisions.md:6150:before that user interface's first screen, with a set of starting rules wider than what the first
+foundations\decisions.md:6154:- **Scope:** product-guidelines
+foundations\decisions.md:6158:  - complies: a product whose plan brings its first screen gets a styleguide task first, whose
+foundations\decisions.md:6159:    rules cover the roles, states and focus the product's announced screens need;
+foundations\decisions.md:6160:  - violates: the first screen is built and the styleguide is written from it afterwards; the
+foundations\decisions.md:6161:    styleguide holds only the roles of the first screen.
+foundations\decisions.md:6162:- **Review when:** the first product whose styleguide was written before its first screen has merged
+foundations\decisions.md:6163:  the task that brought that screen · check by: 2027-03-31
+foundations\decisions.md:6167:*Rationale:* a first screen built with no rules is the screen every later one copies, and a rule that
+foundations\decisions.md:6168:blocks a change to a screen until a styleguide exists would need an exception for it. Rules wider
+foundations\decisions.md:6169:than the first task mean the next screens find their meanings already there. A styleguide written
+foundations\decisions.md:6170:before any screen has no audit to start from; this way of working has not yet been tried on a
+foundations\decisions.md:6172:*Rejected:* the styleguide written on the first screen — that screen is built with no rules; a
+foundations\decisions.md:6173:minimal styleguide before the first screen, with only that screen's roles — every next screen adds
+foundations\decisions.md:6176:### WAY-185/1 — What does the styleguide skill look at first?
+foundations\decisions.md:6178:Before anything else, the skill `maintain-styleguide` recognizes which user interface the styleguide
+foundations\decisions.md:6179:is for and what the product already has for it — a file of design tokens its screens read, one
+foundations\decisions.md:6180:nothing reads, shared components, or nothing — and whether it has screens and a styleguide, and it
+foundations\decisions.md:6185:- **Scope:** product-guidelines
+foundations\decisions.md:6190:    proposes making the screens read that file and adding roles to it; a product with no shared
+foundations\decisions.md:6199:*Rationale:* an existing system, even a worse one, beats a better one brought in, since the screens
+foundations\decisions.md:6201:works — before the first screen, an audit, or a refresh — so it is read first. A new library is
+foundations\decisions.md:6206:### WAY-186/1 — Where do a styleguide's starting rules come from?
+foundations\decisions.md:6208:The skill `maintain-styleguide` takes the starting rules of a styleguide written before the first
+foundations\decisions.md:6209:screen of its user interface from the human's preferences for the technology of that user interface
+foundations\decisions.md:6210:that the product's foundation settles, and, where the human has none, from research of the basic rules of a styleguide for that technology, each source named with
+foundations\decisions.md:6213:the screens the product announces — in its definition, plan, specs and mockups — proposes what the
+foundations\decisions.md:6214:research finds without imposing it, and researches again whenever a styleguide is refreshed or
+foundations\decisions.md:6218:- **Scope:** product-guidelines
+foundations\decisions.md:6225:    extension runs the research again; a product that has screens and no styleguide starts from the
+foundations\decisions.md:6226:    audit of its code, with no research until its styleguide is refreshed or extended;
+foundations\decisions.md:6234:*Rationale:* the value of a styleguide has two layers, consistency and the quality of its rules, and
+foundations\decisions.md:6239:refreshed styleguide is set against them again. A product that already has screens starts from what
+foundations\decisions.md:6240:its code holds, which the audit reads (WAY-187), so its first styleguide needs no starting set.
+foundations\decisions.md:6247:### WAY-187/1 — How does the styleguide skill audit a product that has screens?
+foundations\decisions.md:6249:For a product that has screens, the skill `maintain-styleguide` audits the user interface in both
+foundations\decisions.md:6250:directions — from the source of values to the screens that read them, and from each value on a
+foundations\decisions.md:6251:screen to the design token or component meant to cover it — and ends with three to five charges, each
+foundations\decisions.md:6260:- **Scope:** product-guidelines
+foundations\decisions.md:6265:    each is drawn and what the player cannot learn from it, and that a screen opened from a link
+foundations\decisions.md:6266:    shows a blank page before it fills; with no decision on how an agent opens the screens, it marks
+foundations\decisions.md:6268:  - violates: the styleguide is written from the idea of the product with no audit of its code; the
+foundations\decisions.md:6269:    audit checks only screens with data; an audit with no way to the running product says focus is
+foundations\decisions.md:6275:*Rationale:* without an audit a styleguide writes down an idea of the product, not its code; each
+foundations\decisions.md:6279:The standing question catches what a screenshot with data never shows. Logging in is a matter of the
+foundations\decisions.md:6280:product's behaviour, not of its styleguide, so the question leaves it out; a product with no decided
+foundations\decisions.md:6282:*Rejected:* a styleguide written with no audit — it describes the idea, not the code; the skill
+foundations\decisions.md:6284:task that does not exist yet; "logged out" in the standing question — not a matter of the styleguide.
+foundations\decisions.md:6286:### WAY-188/1 — What checks a binding rule of a styleguide?
+foundations\decisions.md:6288:Every binding rule of a product's styleguide names at least one invariant that checks it, by a script
+foundations\decisions.md:6290:not even an agent can check is an example, not a rule, whatever decision it names. In the guidelines
+foundations\decisions.md:6291:of the styleguide discipline this decision prevails over WAY-168, under which a rule naming its
+foundations\decisions.md:6295:- **Scope:** product-guidelines, invariants
+foundations\decisions.md:6298:- **Verification:** level 1 — invariants: guidelines-check-carrier. Level 2 for the choice between a
+foundations\decisions.md:6309:*Rationale:* a styleguide is there to keep agents' screens consistent without anyone's memory, and a
+foundations\decisions.md:6314:*Rejected:* the decision alone binding a rule of the styleguide — part of the rules is held only by
+foundations\decisions.md:6315:an agent's memory, which the styleguide is meant to replace.
+foundations\decisions.md:6317:### WAY-189/1 — Which invariants does a styleguide start with?
+foundations\decisions.md:6319:The skill `maintain-styleguide` proposes, and the rules the template of the styleguide discipline
+foundations\decisions.md:6320:requires call for, a styleguide's first invariants, each checked by a script the product declares: no
+foundations\decisions.md:6328:- **Scope:** product-guidelines, invariants
+foundations\decisions.md:6331:- **Verification:** level 1 — invariants: guidelines-check-carrier. Level 2 for what the skill
+foundations\decisions.md:6333:  - complies: a styleguide task proposes four invariants — the scan for values written in place of
+foundations\decisions.md:6337:  - violates: the contrast is judged by an agent looking at screenshots; the focus invariant is left
+foundations\decisions.md:6344:cannot be read on its background are the faults a styleguide meets first, and each can be decided by
+foundations\decisions.md:6347:styleguide's central promise, one meaning for each role, would rest on memory.
+foundations\decisions.md:6349:time; no invariants of focus and contrast at the start — the faults the styleguide is for go
+foundations\decisions.md:6354:Where a product cleans its screens as the tasks that touch their styles come, rather than in one
+foundations\decisions.md:6355:clean-up of every screen, the skill `maintain-styleguide` proposes, beside the invariant that no file
+foundations\decisions.md:6360:clean-up of every screen the skill proposes none.
+foundations\decisions.md:6363:- **Scope:** product-guidelines, invariants
+foundations\decisions.md:6372:    screen in one task gets the second invariant.
+foundations\decisions.md:6380:lets new code follow the styleguide while old code is cleaned when a task has it in scope. Both fit
+foundations\decisions.md:6383:cleaned screens; a test over a growing list of cleaned files — the list decides the invariant and
+foundations\decisions.md:6386:task changes cleaned in full — a small change to a large file grows into cleaning a whole screen.
+foundations\decisions.md:6388:### WAY-191/1 — Where do a styleguide's thresholds of contrast and its demand of visible focus come from?
+foundations\decisions.md:6390:The skill `maintain-styleguide` takes the thresholds of contrast and the demand of visible focus from
+foundations\decisions.md:6393:written, named by its number as the W3C's page gives it at that time, at level AA, for every screen
+foundations\decisions.md:6394:of the user interface the styleguide covers, proposing another way only where the human chooses it and writing nothing the
+foundations\decisions.md:6395:human has not accepted. Each success criterion an invariant of the styleguide takes a condition from
+foundations\decisions.md:6399:- **Scope:** product-guidelines, environment-facts
+foundations\decisions.md:6405:    screen, and on the human's acceptance the task carries the decision and the facts of the contrast and focus
+foundations\decisions.md:6416:level and screens, the catalogue binds the product as WAY-86 gives it, and the facts carry the
+foundations\decisions.md:6424:### WAY-192/1 — How does a product's instruction file lead to its styleguide?
+foundations\decisions.md:6426:A product's root `AGENTS.md`, outside the block the-way's installer writes, points to each styleguide
+foundations\decisions.md:6433:- **Scope:** product-guidelines, instruction-files
+foundations\decisions.md:6439:    `guidelines/styleguide-web.md`" below the installer's block, and a rules file loaded with the
+foundations\decisions.md:6442:  - violates: the pointer stands inside the installer's block; the styleguide is imported with `@`;
+foundations\decisions.md:6448:*Rationale:* a styleguide no instruction leads to is not found by an agent in a new session; a path
+foundations\decisions.md:6456:*Rejected:* a styleguide with no way in from the instructions — an agent in a new session does not
+foundations\decisions.md:6460:### WAY-193/1 — Does what the-way's template of coding guidelines carries bind a product directly?
+foundations\decisions.md:6463:`maintain-coding-guidelines` proposes bind a product only through a decision of the product's log
+foundations\decisions.md:6469:- **Scope:** product-guidelines
+foundations\decisions.md:6473:  - complies: a product's coding guidelines name, at each rule the template requires, the product's
+foundations\decisions.md:6486:binding choice of guidelines stands (WAY-168). Adopted by a decision of the product, each rule meets
+foundations\decisions.md:6492:styleguide (WAY-173).
+foundations\decisions.md:6496:### WAY-194/1 — How does the-way's coding-guidelines skill ask the human?
+foundations\decisions.md:6498:The-way's skill `maintain-coding-guidelines` puts to the human every choice it settles for coding
+foundations\decisions.md:6499:guidelines, a choice it recommends included, and shows each by its effect on the product in plain
+foundations\decisions.md:6506:- **Scope:** product-guidelines, decisions
+foundations\decisions.md:6511:    get in" and "every new endpoint checks its input as the exemplar does", each with the ways open,
+foundations\decisions.md:6525:the technology through its consequences (WAY-123). A standing check or an exemplar binds every later
+foundations\decisions.md:6529:conversation in each task that writes coding guidelines.
+foundations\decisions.md:6531:WAY-114 gives it — the human meets the choice of an exemplar or a departure from a standing check
+foundations\decisions.md:6535:### WAY-195/1 — What do coding guidelines take from Open Mercato and from Google's lessons on static analysis, and what do they leave?
+foundations\decisions.md:6538:`maintain-coding-guidelines` take the exemplar a decision designates for a kind of code with a table
+foundations\decisions.md:6542:(WAY-167, WAY-212), and they leave out that repository's skill of code review, its catalogue of
+foundations\decisions.md:6554:- **Scope:** product-guidelines
+foundations\decisions.md:6598:    their status and the decision designating the exemplar, and names no catalogue of lessons; the
+foundations\decisions.md:6610:*Rationale:* that repository and that study carry pieces coding guidelines need beside pieces bound
+foundations\decisions.md:6614:Review of code against guidelines is a matter of the task cycle, not of the guidelines. A catalogue
+foundations\decisions.md:6618:itself, and guidelines copy no value from the code (WAY-171). The gate knows no result that only
+foundations\decisions.md:6633:### WAY-196/1 — What checks a binding rule of coding guidelines?
+foundations\decisions.md:6635:Every binding rule of a product's coding guidelines names at least one invariant that checks it, by
+foundations\decisions.md:6637:by an agent judging whether new code follows the exemplar of its kind, and a rule that neither a
+foundations\decisions.md:6639:guidelines of the coding discipline this decision prevails over WAY-168, under which a rule naming
+foundations\decisions.md:6643:- **Scope:** product-guidelines, invariants
+foundations\decisions.md:6646:- **Verification:** level 1 — invariants: guidelines-check-carrier. Level 2 for the choice between a
+foundations\decisions.md:6648:  - complies: the rule that an endpoint validates its input as the exemplar does names a script's
+foundations\decisions.md:6651:    exemplar names its variables stands among the examples;
+foundations\decisions.md:6653:    endpoint follows the exemplar; a rule stands with no invariant because no script can check it; a
+foundations\decisions.md:6659:*Rationale:* coding guidelines are there to keep agents' code consistent without anyone's memory,
+foundations\decisions.md:6664:the exemplar has no sharp criterion, and how often it would flag sound code is unknown, so what of
+foundations\decisions.md:6665:the exemplar no script checks stays an example (WAY-198). The price: some useful signals reach the
+foundations\decisions.md:6668:*Rejected:* the decision alone binding a rule of coding guidelines — some of the rules are held only
+foundations\decisions.md:6670:warns — it changes what results the gate knows (WAY-63), far beyond guidelines; an agent for each kind
+foundations\decisions.md:6671:of code judging whether new code follows the exemplar — its criterion is vague and its false alarms
+foundations\decisions.md:6674:### WAY-197/1 — Who writes the use that breaks a rule of guidelines, and does it replace the deliberate break?
+foundations\decisions.md:6676:The use that breaks a rule of a product's guidelines is written by the author of the guidelines and
+foundations\decisions.md:6685:- **Scope:** product-guidelines, invariants, task-cycle
+foundations\decisions.md:6691:  - complies: the author of a product's coding guidelines writes, as the use breaking the rule that
+foundations\decisions.md:6694:    exemplar, and records that the script fails on both and passes with the use that follows the rule;
+foundations\decisions.md:6703:*Rationale:* a use written by the author of the guidelines teaches the agent reading them what the
+foundations\decisions.md:6712:teaches the reader little, and the guidelines wait for the end of the review; the author's use in
+foundations\decisions.md:6715:### WAY-198/1 — How does a product's exemplar bind?
+foundations\decisions.md:6718:the exemplar of that kind, naming in backticks its path and the kind's identifier, and what of that
+foundations\decisions.md:6719:exemplar a script can check — where a file of the kind lies, what it calls, how it validates its
+foundations\decisions.md:6720:input — stands in the coding guidelines of that kind as rules, each naming an invariant. The rest of
+foundations\decisions.md:6721:the exemplar stands there as an example and binds no later code.
+foundations\decisions.md:6724:- **Scope:** product-guidelines
+foundations\decisions.md:6727:- **Verification:** level 1 — invariants: guidelines-check-exemplar. Level 2 for what stands as a rule
+foundations\decisions.md:6729:  - complies: a product's decision designates `src/api/orders/route.ts` as the exemplar of the kind
+foundations\decisions.md:6730:    `endpoint`, and the coding guidelines of that kind hold, as rules naming a script's invariant
+foundations\decisions.md:6732:    with the shared schema, while how the exemplar names its variables stands among the examples;
+foundations\decisions.md:6733:  - violates: the coding guidelines of a kind name as its exemplar a file no decision designates;
+foundations\decisions.md:6734:    the whole behaviour of the exemplar is one rule an agent checks by comparing new code with it;
+foundations\decisions.md:6735:    the exemplar's code is copied into the guidelines.
+foundations\decisions.md:6740:*Rationale:* an exemplar left as an example alone lets an agent depart from it with no signal, while
+foundations\decisions.md:6743:the exemplar is written as invariants (WAY-22), which keep each later file of the kind to it; the
+foundations\decisions.md:6744:exemplar is ordinary code of the product, so the same invariants keep it from ageing. Its path and
+foundations\decisions.md:6745:kind in the decision's binding sentences let a script tie the guidelines to the approved choice.
+foundations\decisions.md:6746:*Rejected:* the exemplar as an example alone — an agent departs from it with no signal; an agent for
+foundations\decisions.md:6747:each kind judging whether new code follows the exemplar — its criterion is vague and how often it
+foundations\decisions.md:6750:### WAY-199/1 — What change of a product's exemplar takes approval?
+foundations\decisions.md:6752:Designating another file as the exemplar of a kind of code and changing a rule a script checks from
+foundations\decisions.md:6753:that exemplar are changes of the product's decisions, approved as WAY-172 gives a changed meaning,
+foundations\decisions.md:6754:while an edit of the exemplar that keeps those rules takes no approval. The coding guidelines of a
+foundations\decisions.md:6755:kind give beside the path of each file of the kind they list its status, `exemplar`, `copy` or
+foundations\decisions.md:6756:`do not copy`, and beside the exemplar's path the decision that designates it.
+foundations\decisions.md:6759:- **Scope:** product-guidelines
+foundations\decisions.md:6762:- **Verification:** level 1 — invariants: guidelines-check-exemplar. Level 2 for what takes approval
+foundations\decisions.md:6764:  - complies: a fix of a typo in the exemplar, and a change of its inner structure that keeps the
+foundations\decisions.md:6766:    exemplar proposes the change of the designating decision and waits for its approval; a file that
+foundations\decisions.md:6768:  - violates: a cycle moves the status `exemplar` to another file on its own; a rule a script checks
+foundations\decisions.md:6769:    from the exemplar is weakened in the same edit as the exemplar with no change of a decision; the
+foundations\decisions.md:6775:*Rationale:* the rules a script checks from the exemplar are what binds, so they change only with a
+foundations\decisions.md:6777:(WAY-172). An edit that changes only what of the exemplar no script checks passes with no approval,
+foundations\decisions.md:6778:and every later copy inherits it; that holds, because approving every change of the exemplar's
+foundations\decisions.md:6780:agent reading the guidelines what to copy and what not to, as Open Mercato's statuses do (WAY-195).
+foundations\decisions.md:6781:*Rejected:* approval of every change of the exemplar's behaviour — the human would judge code they
+foundations\decisions.md:6782:cannot judge; the status of the files kept in the decision alone — an agent reading the guidelines
+foundations\decisions.md:6785:### WAY-200/1 — Who designates a product's exemplar for a kind of code, and when?
+foundations\decisions.md:6787:Where a product holds no file of a kind of code, the exemplar of that kind is designated by the task
+foundations\decisions.md:6788:that creates its first file. Where it already holds files of that kind, the skill
+foundations\decisions.md:6789:`maintain-coding-guidelines` judges every one of them, compares them and proposes the exemplar from
+foundations\decisions.md:6794:- **Scope:** product-guidelines
+foundations\decisions.md:6799:    follows the product's rules best as the exemplar and marks two `do not copy`; a task that creates
+foundations\decisions.md:6800:    a product's first migration designates that migration as the exemplar of its kind;
+foundations\decisions.md:6801:  - violates: the oldest endpoint becomes the exemplar with no comparison; the exemplar waits until
+foundations\decisions.md:6808:*Rationale:* who designates the exemplar follows from the state of the product, as the styleguide
+foundations\decisions.md:6809:comes before the first screen (WAY-184) and the audit reads a product that has screens (WAY-187): a
+foundations\decisions.md:6810:first file built with no exemplar is the file every later one copies, and with several files a
+foundations\decisions.md:6813:*Rejected:* the exemplar designated only by the task that creates the first file — it says nothing of
+foundations\decisions.md:6814:a product that already has several; the exemplar designated after the fact by a separate decision
+foundations\decisions.md:6817:### WAY-201/1 — How does the coding-guidelines skill's audit of a product with code end?
+foundations\decisions.md:6819:The audit the skill `maintain-coding-guidelines` makes of a product that has code ends with a
+foundations\decisions.md:6820:proposed exemplar for each kind of code the product holds files of, each with one sentence of what
+foundations\decisions.md:6825:- **Scope:** product-guidelines
+foundations\decisions.md:6833:    stands as `do not copy` with no line; an exemplar is proposed with no word of what the product
+foundations\decisions.md:6839:*Rationale:* the human who approves the exemplar does not judge code, and a proposal with what the
+foundations\decisions.md:6841:styleguide's audit ends with charges of a place and an effect (WAY-187); the place also shows the
+foundations\decisions.md:6846:### WAY-202/1 — Which standing checks does the template of coding guidelines require, and from when do they bind a product?
+foundations\decisions.md:6851:guidelines, which is complete only once it holds, for each of the three, a decision of the product's
+foundations\decisions.md:6855:- **Scope:** product-guidelines
+foundations\decisions.md:6858:- **Verification:** level 1 — invariants: guidelines-check-form. Level 2 for the decisions the task
+foundations\decisions.md:6860:  - complies: a product with none of the three gets, in the task that writes its coding guidelines,
+foundations\decisions.md:6862:    them with its reason, and its coding guidelines name each at the rule the template requires;
+foundations\decisions.md:6864:    decision on the audit of dependencies; a product's coding guidelines leave out the formatter
+foundations\decisions.md:6874:(WAY-193). The price: until a product runs a task that writes its coding guidelines, nothing of
+foundations\decisions.md:6875:these binds it, as with the styleguide.
+foundations\decisions.md:6884:guidelines on its linter, only where every report it gives on the product's code leads to a change of
+foundations\decisions.md:6887:the product's code: it may stand among the examples of the coding guidelines, and no invariant checks
+foundations\decisions.md:6891:- **Scope:** product-guidelines
+foundations\decisions.md:6904:    coding guidelines.
+foundations\decisions.md:6926:The skill `maintain-coding-guidelines` proposes which rules of a linter's set block and which stand
+foundations\decisions.md:6936:- **Scope:** product-guidelines
+foundations\decisions.md:6979:`maintain-coding-guidelines` proposes the linter's invariant over the whole of that code, which
+foundations\decisions.md:6987:- **Scope:** product-guidelines, invariants
+foundations\decisions.md:7010:scope, and both fit WAY-51 and WAY-60 unchanged, as for the styleguide (WAY-190). This takes the
+foundations\decisions.md:7021:The skill `maintain-coding-guidelines` proposes an audit of dependencies that checks a change and
+foundations\decisions.md:7029:- **Scope:** product-guidelines, invariants
+foundations\decisions.md:7066:The template of the coding discipline has a product's coding guidelines hold that a fault of one
+foundations\decisions.md:7068:changing the exemplar for that file's sake, and that turning a rule of the linter off for the whole
+foundations\decisions.md:7073:- **Scope:** product-guidelines
+foundations\decisions.md:7081:    the exemplar is changed so that a new file departing from it passes the rules a script checks
+foundations\decisions.md:7089:exemplar is what every later file of its kind follows; a fix in the file stays where the fault is. A
+foundations\decisions.md:7092:global design token is for a styleguide (WAY-178).
+foundations\decisions.md:7096:### WAY-208/1 — Which parts of a product get coding guidelines?
+foundations\decisions.md:7098:The skill `maintain-coding-guidelines` proposes coding guidelines for every part of a product's map
+foundations\decisions.md:7100:of its coding guidelines names each such part in *Applies to*.
+foundations\decisions.md:7103:- **Scope:** product-guidelines
+foundations\decisions.md:7108:    names all three in *Applies to* of `guidelines/coding.md`, and its standing checks read the code
+foundations\decisions.md:7116:*Rationale:* an agent left free does something different in every task, and that is what guidelines
+foundations\decisions.md:7117:are for; even guidelines of modest quality are consistent, as for the styleguide of every user
+foundations\decisions.md:7121:*Rejected:* no coding guidelines for a small or helper part, such as the scripts of the build — each
+foundations\decisions.md:7124:### WAY-209/1 — When do a product's coding guidelines come into being?
+foundations\decisions.md:7126:The skill `maintain-coding-guidelines` proposes that, in a product with no code, the general file of
+foundations\decisions.md:7127:its coding guidelines, with its standing checks, comes into being before the first task that writes
+foundations\decisions.md:7129:the first file of that kind.
+foundations\decisions.md:7132:- **Scope:** product-guidelines
+foundations\decisions.md:7136:  - complies: a product whose plan brings its first code gets a task of coding guidelines first,
+foundations\decisions.md:7138:    that writes the product's first migration writes `guidelines/coding-migration.md` with that
+foundations\decisions.md:7139:    migration as its exemplar;
+foundations\decisions.md:7140:  - violates: the linter and the formatter are brought in once the first code is written; a file of
+foundations\decisions.md:7142:- **Review when:** the first product whose coding guidelines were written before its first code has
+foundations\decisions.md:7147:*Rationale:* the first code written with no standing check is the code every later change copies,
+foundations\decisions.md:7148:and checks brought to it afterwards find code to clean (WAY-205), as a first screen built with no
+foundations\decisions.md:7149:rules is the one every later screen copies (WAY-184). A file of a kind holds its exemplar, which
+foundations\decisions.md:7150:exists only once the task that creates the first file of the kind has designated it (WAY-200).
+foundations\decisions.md:7151:Coding guidelines written before any code have no trial run to start from (WAY-204); this way of
+foundations\decisions.md:7153:*Rejected:* the linter and the formatter brought in only after the first code is written — that code
+foundations\decisions.md:7156:### WAY-210/1 — What does the coding-guidelines skill look at first?
+foundations\decisions.md:7158:Before anything else, the skill `maintain-coding-guidelines` recognizes which parts of a product
+foundations\decisions.md:7161:guidelines, and it extends what exists rather than setting a second tool beside it. A new linter,
+foundations\decisions.md:7167:- **Scope:** product-guidelines
+foundations\decisions.md:7183:styleguide's system (WAY-185). What the product has decides how the skill works — before the first
+foundations\decisions.md:7195:The skill `maintain-coding-guidelines` takes the tools of the standing checks and a linter's set of
+foundations\decisions.md:7200:researches again whenever a product's coding guidelines are refreshed or extended.
+foundations\decisions.md:7203:- **Scope:** product-guidelines
+foundations\decisions.md:7210:    options; a year later an extension of the coding guidelines runs the research again;
+foundations\decisions.md:7220:from an invented one (WAY-122, WAY-120), as for a styleguide's starting rules (WAY-186). Tools and
+foundations\decisions.md:7221:their recommended sets move, so refreshed coding guidelines are set against them again.
+foundations\decisions.md:7225:### WAY-212/1 — How does a product's instruction file lead to its coding guidelines?
+foundations\decisions.md:7228:guidelines by one line naming `guidelines/coding.md` by its path in backticks with the condition of
+foundations\decisions.md:7230:line of it names a file `guidelines/coding-<kind>.md`. Each such file is named instead by a row of
+foundations\decisions.md:7231:the table of `guidelines/coding.md`, by its path in backticks with the condition under which to read
+foundations\decisions.md:7235:- **Scope:** product-guidelines, instruction-files
+foundations\decisions.md:7239:- **Verification:** level 1 — invariants: guidelines-check-kind-index. Level 2 for the pointer of
+foundations\decisions.md:7241:  - complies: `AGENTS.md` reads "Before you change the product's code, read `guidelines/coding.md`"
+foundations\decisions.md:7242:    below the installer's block, and the table of `guidelines/coding.md` names
+foundations\decisions.md:7243:    `guidelines/coding-endpoint.md` with "before adding or changing an endpoint";
+foundations\decisions.md:7245:    installer's block; the coding guidelines are imported with `@`; the pointer names a lint command
+foundations\decisions.md:7251:*Rationale:* coding guidelines no instruction leads to are not found by an agent in a new session; a
+foundations\decisions.md:7261:*Rejected:* a line of `AGENTS.md` for each file of the coding guidelines, as WAY-192 has for each
+foundations\decisions.md:7262:styleguide — `AGENTS.md`, loaded into every session, grows with each kind; no pointer, leaving the
+foundations\decisions.md:7263:way in to the task cycle — until the cycle reads guidelines, an agent in a new session does not find

@@ -1,0 +1,13 @@
+{
+  "command": [
+    "python",
+    "-B",
+    "gate/run_tests.py",
+    "elements/part-map"
+  ],
+  "cwd": "C:\\Storage\\repos\\the-way\\.runs\\worktrees\\product-guidelines-cycle",
+  "started": "2026-10-19T20:55:55.088637+00:00",
+  "finished": "2026-10-19T20:57:34.024056+00:00",
+  "exit_code": 0,
+  "full_output": "orchestrator-tests-elements-part-map.txt"
+}

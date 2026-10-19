@@ -1,0 +1,1 @@
+{"command": ["python", "-B", "elements/part-map/format_guard.py", "--base", "none"], "exit_code": 0}

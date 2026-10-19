@@ -1,0 +1,30 @@
+[
+  {
+    "command": [
+      "python",
+      "-X",
+      "utf8",
+      "-B",
+      ".runs\\task-cycles\\product-guidelines-cycle\\reports\\spec_review_read.py",
+      "decisions.md",
+      "inventory"
+    ],
+    "exit_code": 0,
+    "stdout": "spec-review-decisions.md.stdout.txt",
+    "stderr": "spec-review-decisions.md.stderr.txt"
+  },
+  {
+    "command": [
+      "python",
+      "-X",
+      "utf8",
+      "-B",
+      ".runs\\task-cycles\\product-guidelines-cycle\\reports\\spec_review_read.py",
+      "invariants.md",
+      "inventory"
+    ],
+    "exit_code": 0,
+    "stdout": "spec-review-invariants.md.stdout.txt",
+    "stderr": "spec-review-invariants.md.stderr.txt"
+  }
+]
