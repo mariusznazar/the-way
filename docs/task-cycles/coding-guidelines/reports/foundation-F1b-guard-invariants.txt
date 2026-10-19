@@ -1,0 +1,20 @@
+foundations/invariants.md:0: error: decisions.md:5458: WAY-167 is in force and verified at level 1, but no entry of the file derives from it
+foundations/invariants.md:0: error: decisions.md:5458: the level 1 verification of WAY-167/1 names `guidelines-check-kind-index`, which is not an entry of the file
+foundations/invariants.md:0: error: decisions.md:5529: the level 1 verification of WAY-168/1 names `guidelines-check-example-files`, which is not an entry of the file
+foundations/invariants.md:0: error: decisions.md:5529: the level 1 verification of WAY-168/1 names `gate-guidelines-example-evidence`, which is not an entry of the file
+foundations/invariants.md:0: error: decisions.md:6646: WAY-196 is in force and verified at level 1, but no entry of the file derives from it
+foundations/invariants.md:0: error: decisions.md:6727: WAY-198 is in force and verified at level 1, but no entry of the file derives from it
+foundations/invariants.md:0: error: decisions.md:6727: the level 1 verification of WAY-198/1 names `guidelines-check-exemplar`, which is not an entry of the file
+foundations/invariants.md:0: error: decisions.md:6762: WAY-199 is in force and verified at level 1, but no entry of the file derives from it
+foundations/invariants.md:0: error: decisions.md:6762: the level 1 verification of WAY-199/1 names `guidelines-check-exemplar`, which is not an entry of the file
+foundations/invariants.md:0: error: decisions.md:6858: WAY-202 is in force and verified at level 1, but no entry of the file derives from it
+foundations/invariants.md:0: error: decisions.md:7237: WAY-212 is in force and verified at level 1, but no entry of the file derives from it
+foundations/invariants.md:0: error: decisions.md:7237: the level 1 verification of WAY-212/1 names `guidelines-check-kind-index`, which is not an entry of the file
+foundations/invariants.md:2153: error: guidelines-check-form/1: the level 1 verification of WAY-202/1 names it, but its *Derives from* does not name WAY-202
+foundations/invariants.md:2163: error: guidelines-check-carrier/1: the level 1 verification of WAY-196/1 names it, but its *Derives from* does not name WAY-196
+unchecked: identifiers, versions, corrections and the list of violated invariants — --base none: there is no commit the branch left the main branch from
+unchecked: `TODO` in the entries — --merge-onto none: there is no commit to merge onto
+unchecked: the fingerprints the links of the entries carry — --merge-onto none: there is no commit to merge onto
+note: there is no human_verdicts.md; no human verdict is given
+14 error(s), 0 warning(s), 3 unchecked
+exit 1

@@ -1,0 +1,12 @@
+{"check": "relation-model/test_fingerprint.py::Fingerprint.test_a_carriage_return_and_line_feed_count_as_one_space", "verdict": "pass", "invariant": "fingerprint-definition/1"}
+{"check": "relation-model/test_fingerprint.py::Fingerprint.test_a_line_break_counts_as_one_space", "verdict": "pass", "invariant": "fingerprint-definition/1"}
+{"check": "relation-model/test_fingerprint.py::Fingerprint.test_a_lone_carriage_return_counts_as_one_space", "verdict": "pass", "invariant": "fingerprint-definition/1"}
+{"check": "relation-model/test_fingerprint.py::Fingerprint.test_a_run_of_spaces_and_line_breaks_counts_as_one_space", "verdict": "pass", "invariant": "fingerprint-definition/1"}
+{"check": "relation-model/test_fingerprint.py::Fingerprint.test_a_run_of_spaces_counts_as_one_space", "verdict": "pass", "invariant": "fingerprint-definition/1"}
+{"check": "relation-model/test_fingerprint.py::Fingerprint.test_a_tab_at_either_end_is_kept", "verdict": "pass", "invariant": "fingerprint-definition/1"}
+{"check": "relation-model/test_fingerprint.py::Fingerprint.test_a_tab_is_kept", "verdict": "pass", "invariant": "fingerprint-definition/1"}
+{"check": "relation-model/test_fingerprint.py::Fingerprint.test_a_text_gives_the_first_eight_lower_case_hex_characters_of_its_digest", "verdict": "pass", "invariant": "fingerprint-definition/1"}
+{"check": "relation-model/test_fingerprint.py::Fingerprint.test_a_text_outside_ascii_is_digested_as_utf_8", "verdict": "pass", "invariant": "fingerprint-definition/1"}
+{"check": "relation-model/test_fingerprint.py::Fingerprint.test_letter_case_is_kept", "verdict": "pass", "invariant": "fingerprint-definition/1"}
+{"check": "relation-model/test_fingerprint.py::Fingerprint.test_spaces_and_line_breaks_at_both_ends_are_trimmed", "verdict": "pass", "invariant": "fingerprint-definition/1"}
+{"check": "relation-model/test_fingerprint.py::Fingerprint.test_the_script_run_as_a_program_gives_the_same", "verdict": "pass", "invariant": "fingerprint-definition/1"}

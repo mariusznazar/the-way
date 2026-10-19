@@ -1,0 +1,159 @@
+# break 3 at a839ea7 — diff of form_check.py:
+diff --git a/product-guidelines/form_check.py b/product-guidelines/form_check.py
+index e21d51c..1a21554 100644
+--- a/product-guidelines/form_check.py
++++ b/product-guidelines/form_check.py
+@@ -1388,8 +1388,6 @@ def check_kind_index(general, reports, report, tracked):
+                 continue
+             kind = kind_of(path)
+             if kind is None:
+-                own.error(line, "the path `%s` of *%s* names no file `%s/%s-<kind>.md`"
+-                          % (shown(path), FILE, GUIDELINES, CODING), check, (FORM,))
+                 continue
+             if bare(row[KIND]) != kind:
+                 own.error(line, "the row's *%s* reads `%s`, but the file its *%s* names is of "
+
+# python3 -B gate/run_tests.py product-guidelines
+..................F....FF.........................................................................................................FFFF..........
+======================================================================
+FAIL: test_a_crafted_index_path_is_refused_before_git_sees_it (test_form_check.KindIndex.test_a_crafted_index_path_is_refused_before_git_sees_it) [200 KiB]
+Breaks caught: a *File* of the index handed to git, or tested only once git has seen
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user/ac1b534a-8705-5f4d-8b69-597c339e545d/scratchpad/rev-break3/product-guidelines/test_form_check.py", line 827, in test_a_crafted_index_path_is_refused_before_git_sees_it
+    self.assertIn(line_of(general, row), reported, output[-2000:])
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 26 not found in {15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25} : s/coding.md:17: error: the path `\\host\share\guidelines\coding-endpoint.md` of *File* holds a backslash, as a drive or a UNC prefix written for Windows does; a path of a table is relative to the root of the repository and stays in it
+guidelines/coding.md:18: error: the path `src/../guidelines/coding-endpoint.md` of *File* holds a `..` segment; a path of a table is relative to the root of the repository and stays in it
+guidelines/coding.md:19: error: the path `guidelines\coding-endpoint.md` of *File* holds a backslash, as a drive or a UNC prefix written for Windows does; a path of a table is relative to the root of the repository and stays in it
+guidelines/coding.md:20: error: the path `C:/guidelines/coding-endpoint.md` of *File* holds a `:`, as a drive, a URL or git's pathspec magic does; a path of a table is relative to the root of the repository and stays in it
+guidelines/coding.md:21: error: the path `C:guidelines/coding-endpoint.md` of *File* holds a `:`, as a drive, a URL or git's pathspec magic does; a path of a table is relative to the root of the repository and stays in it
+guidelines/coding.md:22: error: the path `guidelines/coding-endpoint.md\x07` of *File* holds a character that is not printable; a path of a table is relative to the root of the repository and stays in it
+guidelines/coding.md:23: error: the path `gui\x200bdelines/coding-endpoint.md` of *File* holds a character that is not printable; a path of a table is relative to the root of the repository and stays in it
+guidelines/coding.md:24: error: the path `:(literal)guidelines/coding-endpoint.md` of *File* holds a `:`, as a drive, a URL or git's pathspec magic does; a path of a table is relative to the root of the repository and stays in it
+guidelines/coding.md:25: error: the path `:!guidelines/coding-endpoint.md` of *File* holds a `:`, as a drive, a URL or git's pathspec magic does; a path of a table is relative to the root of the repository and stays in it
+11 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_row_naming_a_tracked_file_that_is_no_file_of_a_kind_is_an_error (test_form_check.KindIndex.test_a_row_naming_a_tracked_file_that_is_no_file_of_a_kind_is_an_error) (path='guidelines/coding.md')
+Break caught: any path git tracks taken for a file of a kind, so a row pointing to the
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user/ac1b534a-8705-5f4d-8b69-597c339e545d/scratchpad/rev-break3/product-guidelines/test_form_check.py", line 780, in test_a_row_naming_a_tracked_file_that_is_no_file_of_a_kind_is_an_error
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_row_naming_a_tracked_file_that_is_no_file_of_a_kind_is_an_error (test_form_check.KindIndex.test_a_row_naming_a_tracked_file_that_is_no_file_of_a_kind_is_an_error) (path='src/api/orders.ts')
+Break caught: any path git tracks taken for a file of a kind, so a row pointing to the
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user/ac1b534a-8705-5f4d-8b69-597c339e545d/scratchpad/rev-break3/product-guidelines/test_form_check.py", line 780, in test_a_row_naming_a_tracked_file_that_is_no_file_of_a_kind_is_an_error
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_row_naming_a_tracked_file_of_no_kind_is_reported (test_form_check_invariants.KindIndex.test_a_row_naming_a_tracked_file_of_no_kind_is_reported) (path='guidelines/testing.md')
+A row whose *File* names a file git tracks that is no file `guidelines/coding-<kind>.md`
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user/ac1b534a-8705-5f4d-8b69-597c339e545d/scratchpad/rev-break3/product-guidelines/test_form_check_invariants.py", line 1219, in test_a_row_naming_a_tracked_file_of_no_kind_is_reported
+    self.assert_reported_anew(self.check(files, ()), CODING_FILE,
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                              line=line_of(general, row))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/claude-0/-home-user/ac1b534a-8705-5f4d-8b69-597c339e545d/scratchpad/rev-break3/product-guidelines/test_form_check_invariants.py", line 553, in assert_reported_anew
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_row_naming_a_tracked_file_of_no_kind_is_reported (test_form_check_invariants.KindIndex.test_a_row_naming_a_tracked_file_of_no_kind_is_reported) (path='guidelines/styleguide-web.md')
+A row whose *File* names a file git tracks that is no file `guidelines/coding-<kind>.md`
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user/ac1b534a-8705-5f4d-8b69-597c339e545d/scratchpad/rev-break3/product-guidelines/test_form_check_invariants.py", line 1219, in test_a_row_naming_a_tracked_file_of_no_kind_is_reported
+    self.assert_reported_anew(self.check(files, ()), CODING_FILE,
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                              line=line_of(general, row))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/claude-0/-home-user/ac1b534a-8705-5f4d-8b69-597c339e545d/scratchpad/rev-break3/product-guidelines/test_form_check_invariants.py", line 553, in assert_reported_anew
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_row_naming_a_tracked_file_of_no_kind_is_reported (test_form_check_invariants.KindIndex.test_a_row_naming_a_tracked_file_of_no_kind_is_reported) (path='guidelines/coding.md')
+A row whose *File* names a file git tracks that is no file `guidelines/coding-<kind>.md`
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user/ac1b534a-8705-5f4d-8b69-597c339e545d/scratchpad/rev-break3/product-guidelines/test_form_check_invariants.py", line 1219, in test_a_row_naming_a_tracked_file_of_no_kind_is_reported
+    self.assert_reported_anew(self.check(files, ()), CODING_FILE,
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                              line=line_of(general, row))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/claude-0/-home-user/ac1b534a-8705-5f4d-8b69-597c339e545d/scratchpad/rev-break3/product-guidelines/test_form_check_invariants.py", line 553, in assert_reported_anew
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_row_naming_a_tracked_file_of_no_kind_is_reported (test_form_check_invariants.KindIndex.test_a_row_naming_a_tracked_file_of_no_kind_is_reported) (path='src/api/orders/route.ts')
+A row whose *File* names a file git tracks that is no file `guidelines/coding-<kind>.md`
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user/ac1b534a-8705-5f4d-8b69-597c339e545d/scratchpad/rev-break3/product-guidelines/test_form_check_invariants.py", line 1219, in test_a_row_naming_a_tracked_file_of_no_kind_is_reported
+    self.assert_reported_anew(self.check(files, ()), CODING_FILE,
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                              line=line_of(general, row))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/claude-0/-home-user/ac1b534a-8705-5f4d-8b69-597c339e545d/scratchpad/rev-break3/product-guidelines/test_form_check_invariants.py", line 553, in assert_reported_anew
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+----------------------------------------------------------------------
+Ran 140 tests in 231.472s
+
+FAILED (failures=7)
+exit 1
+
+# --record: entries whose verdict is not pass
+{"check": "product-guidelines/test_form_check.py::KindIndex.test_a_crafted_index_path_is_refused_before_git_sees_it", "verdict": "fail", "invariant": null}
+{"check": "product-guidelines/test_form_check.py::KindIndex.test_a_row_naming_a_tracked_file_that_is_no_file_of_a_kind_is_an_error", "verdict": "fail", "invariant": null}
+{"check": "product-guidelines/test_form_check_invariants.py::KindIndex.test_a_row_naming_a_tracked_file_of_no_kind_is_reported", "verdict": "fail", "invariant": "guidelines-check-kind-index/1"}

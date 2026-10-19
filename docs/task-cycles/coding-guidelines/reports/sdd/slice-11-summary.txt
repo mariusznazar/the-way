@@ -1,0 +1,22 @@
+0	tests-gate	python3 -B gate/run_tests.py gate --record .runs/s11-tests-gate.jsonl
+0	tests-elements-decisions	python3 -B gate/run_tests.py elements/decisions --record .runs/s11-tests-elements-decisions.jsonl
+0	tests-elements-invariants	python3 -B gate/run_tests.py elements/invariants --record .runs/s11-tests-elements-invariants.jsonl
+0	tests-elements-glossary	python3 -B gate/run_tests.py elements/glossary --record .runs/s11-tests-elements-glossary.jsonl
+0	tests-elements-part-map	python3 -B gate/run_tests.py elements/part-map --record .runs/s11-tests-elements-part-map.jsonl
+0	tests-elements-environment-facts	python3 -B gate/run_tests.py elements/environment-facts --record .runs/s11-tests-elements-environment-facts.jsonl
+0	tests-relation-model	python3 -B gate/run_tests.py relation-model --record .runs/s11-tests-relation-model.jsonl
+0	tests-agent-instructions	python3 -B gate/run_tests.py agent-instructions --record .runs/s11-tests-agent-instructions.jsonl
+0	tests-installation	python3 -B gate/run_tests.py installation --record .runs/s11-tests-installation.jsonl
+1	tests-instruction-files	python3 -B gate/run_tests.py instruction-files --record .runs/s11-tests-instruction-files.jsonl
+0	tests-task-cycle	python3 -B gate/run_tests.py task-cycle --record .runs/s11-tests-task-cycle.jsonl
+0	tests-project-level	python3 -B gate/run_tests.py project-level --record .runs/s11-tests-project-level.jsonl
+0	tests-product-guidelines	python3 -B gate/run_tests.py product-guidelines --record .runs/s11-tests-product-guidelines.jsonl
+0	guard-decisions	python3 -B elements/decisions/format_guard.py --base none --merge-onto none
+0	guard-invariants	python3 -B elements/invariants/format_guard.py --base none --merge-onto none
+0	guard-glossary	python3 -B elements/glossary/format_guard.py --base none --merge-onto none
+0	guard-environment-facts	python3 -B elements/environment-facts/format_guard.py --base none --merge-onto none
+0	guard-part-map	python3 -B elements/part-map/format_guard.py --base none --record .runs/s11-part-map-guard.jsonl
+0	form-check	python3 -B product-guidelines/form_check.py --record .runs/guidelines-form.jsonl
+0	form-check-reference	python3 -B product-guidelines/form_check.py --merge-onto none --record .runs/guidelines-reference.jsonl
+0	skill-entry-points	python3 -B agent-instructions/skill_entry_points.py
+0	diff-check	git diff --check 235b0b4..HEAD

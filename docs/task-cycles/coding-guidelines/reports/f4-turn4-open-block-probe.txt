@@ -1,0 +1,12 @@
+'```bad endpoint-location src/carts/route.ts\nimport { handle } from "../api/handler";\nexport const POST = handle((input: unknown) => input);\n```\n\n'
+'```bad endpoint-location src/carts/route.ts\nimport { handle } from "../api/handler";\nexport const POST = handle((input: unknown) => input);\n'
+opening line 63
+1
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the section `## Examples` is missing
+guidelines/coding-endpoint.md:0: error: the section `## Where in code` is missing
+guidelines/coding-endpoint.md:63: error: the fenced block opening here in the rule `### Under the API, through the shared handler` is left open to the end of the file: no line of ````` alone closes it
+3 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+

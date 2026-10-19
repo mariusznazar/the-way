@@ -1,0 +1,43 @@
+# F4 ExampleFiles RED at base 0607656 (before any change): python3 -B gate/run_tests.py product-guidelines | tail -40; exit of the pipeline 0, of the run: FAILED (failures=37), 118 tests
+
+
+======================================================================
+FAIL: test_another_fenced_block_in_a_rule_carrying_cases_is_reported (test_form_check_invariants.ExampleFiles.test_another_fenced_block_in_a_rule_carrying_cases_is_reported) (block='```good endpoint-validates')
+In a rule whose cases are required, every fenced block is a case: a block with
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1392, in test_another_fenced_block_in_a_rule_carrying_cases_is_reported
+    self.assert_reported_anew(self.check_kind(text), CODING_ENDPOINT_FILE)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 553, in assert_reported_anew
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_another_fenced_block_in_a_rule_carrying_cases_is_reported (test_form_check_invariants.ExampleFiles.test_another_fenced_block_in_a_rule_carrying_cases_is_reported) (block='~~~ts')
+In a rule whose cases are required, every fenced block is a case: a block with
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1392, in test_another_fenced_block_in_a_rule_carrying_cases_is_reported
+    self.assert_reported_anew(self.check_kind(text), CODING_ENDPOINT_FILE)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 553, in assert_reported_anew
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+----------------------------------------------------------------------
+Ran 118 tests in 176.806s
+
+FAILED (failures=37)
+
+[exited with code 0]

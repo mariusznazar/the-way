@@ -1,0 +1,6 @@
+unchecked: identifiers, versions, corrections and the list of violated invariants — --base none: there is no commit the branch left the main branch from
+unchecked: `TODO` in the entries — --merge-onto none: there is no commit to merge onto
+unchecked: the fingerprints the links of the entries carry — --merge-onto none: there is no commit to merge onto
+note: there is no human_verdicts.md; no human verdict is given
+0 error(s), 0 warning(s), 3 unchecked
+exit=0

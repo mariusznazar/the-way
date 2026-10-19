@@ -1,0 +1,4 @@
+differ 16 changed 8 intersection 0
+changed all equal produce: True
+all contain name: True
+CR present: False

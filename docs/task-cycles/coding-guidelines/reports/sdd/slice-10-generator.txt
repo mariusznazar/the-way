@@ -1,0 +1,28 @@
+changed .claude/skills/the-way-record-invariant/SKILL.md
+changed .agents/skills/the-way-record-invariant/SKILL.md
+changed .claude/skills/the-way-update-part-map/SKILL.md
+changed .agents/skills/the-way-update-part-map/SKILL.md
+changed .claude/skills/the-way-refine-task/SKILL.md
+changed .agents/skills/the-way-refine-task/SKILL.md
+changed .claude/skills/the-way-settle-technology/SKILL.md
+changed .agents/skills/the-way-settle-technology/SKILL.md
+exit=0
+ M .agents/skills/the-way-record-invariant/SKILL.md
+ M .agents/skills/the-way-refine-task/SKILL.md
+ M .agents/skills/the-way-settle-technology/SKILL.md
+ M .agents/skills/the-way-update-part-map/SKILL.md
+ M .claude/skills/the-way-record-invariant/SKILL.md
+ M .claude/skills/the-way-refine-task/SKILL.md
+ M .claude/skills/the-way-settle-technology/SKILL.md
+ M .claude/skills/the-way-update-part-map/SKILL.md
+ .agents/skills/the-way-record-invariant/SKILL.md  | 2 +-
+ .agents/skills/the-way-refine-task/SKILL.md       | 2 +-
+ .agents/skills/the-way-settle-technology/SKILL.md | 2 +-
+ .agents/skills/the-way-update-part-map/SKILL.md   | 2 +-
+ .claude/skills/the-way-record-invariant/SKILL.md  | 2 +-
+ .claude/skills/the-way-refine-task/SKILL.md       | 2 +-
+ .claude/skills/the-way-settle-technology/SKILL.md | 2 +-
+ .claude/skills/the-way-update-part-map/SKILL.md   | 2 +-
+ 8 files changed, 8 insertions(+), 8 deletions(-)
+entry points are current
+exit=0

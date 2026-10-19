@@ -1,0 +1,34 @@
+== coding/template.md: 3 shared run(s) of >= 8 words
+   - exemplar where a file of the kind lies what it calls how it validates its input
+   - a fault of one file is fixed in that file
+   - its tool the advisory database it reads and the severity from which a vulnerability counts
+== template.md: 2 shared run(s) of >= 8 words
+   - as the section test cases of a rule
+   - map whose files direct whoever carries out its tasks
+== WAY-194: 1 shared run(s) of >= 8 words
+   - by its effect on the product in plain words
+== WAY-195: 1 shared run(s) of >= 8 words
+   - leads to a change of code worth making
+== WAY-198: 1 shared run(s) of >= 8 words
+   - where a file of the kind lies what it calls how it validates its input
+== WAY-201: 2 shared run(s) of >= 8 words
+   - with one sentence of what the product gains by it
+   - with the file and line of the place that breaks
+== WAY-203: 1 shared run(s) of >= 8 words
+   - leads to a change of code worth making
+== WAY-204: 2 shared run(s) of >= 8 words
+   - leads to a change of code worth making whether
+   - a rule with one report that leads to no such change goes among the examples
+== WAY-207: 1 shared run(s) of >= 8 words
+   - a fault of one file is fixed in that file
+== WAY-208: 1 shared run(s) of >= 8 words
+   - code the scripts of its build included however small
+== WAY-209: 1 shared run(s) of >= 8 words
+   - with its standing checks comes into being before the first task that writes the product's code
+== WAY-210: 3 shared run(s) of >= 8 words
+   - a linter a formatter an audit of dependencies
+   - or nothing and whether it has coding guidelines
+   - beside it a new linter formatter or audit of dependencies is a
+== WAY-212: 2 shared run(s) of >= 8 words
+   - product's root `agents md` outside the block the-way's installer writes
+   - in backticks with the condition of changing the product's code

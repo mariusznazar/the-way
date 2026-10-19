@@ -1,0 +1,15 @@
+trigger: invariant named by a guidelines rule with test cases step10=yes step11=yes
+trigger: sentence added/altered or case rewritten            step10=yes step11=no (by "as step 10 gives")
+actor: the reviewer who writes the break                     step10=yes step11=no (by "as step 10 gives")
+scratch worktree of the commit                               step10=yes step11=yes
+good file and bad file in place                              step10=yes step11=yes
+pair whose info string names it (C18)                        step10=yes step11=no (by "as step 10 gives")
+records passes/fails                                         step10=yes step11=no (by "as step 10 gives")
+relative reading for listed invariant (C19)                  step10=yes step11=no (by "as step 10 gives")
+per-file companion strict (C19)                              step10=yes step11=no (by "as step 10 gives")
+not accepted otherwise                                       step10=yes step11=yes
+bad file beside the break, never the break                   step10=yes step11=no (by "as step 10 gives")
+applied only in scratch worktree, never working tree         step10=yes step11=no (by "as step 10 gives")
+citations                                                    step10=yes step11=yes
+added lines mentioning review against guidelines / checklist: []
+frontmatter hunk: False

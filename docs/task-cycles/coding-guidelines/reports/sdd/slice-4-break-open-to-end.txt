@@ -1,0 +1,35 @@
+.......................................................F................................................................................
+======================================================================
+FAIL: test_a_case_left_open_to_the_end_of_the_file_is_an_error_at_its_opening_line (test_form_check.TestCases.test_a_case_left_open_to_the_end_of_the_file_is_an_error_at_its_opening_line)
+Break caught: a case never closed taken as a case holding the rest of the file, so the
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user/ac1b534a-8705-5f4d-8b69-597c339e545d/scratchpad/review-1bff1ae/product-guidelines/test_form_check.py", line 1123, in test_a_case_left_open_to_the_end_of_the_file_is_an_error_at_its_opening_line
+    self.assertTrue(self.at(output, line_of(text, BAD_OPEN), "open to the end"), output)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the section `## Examples` is missing
+guidelines/coding-endpoint.md:0: error: the section `## Where in code` is missing
+2 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+----------------------------------------------------------------------
+Ran 136 tests in 242.108s
+
+FAILED (failures=1)
+exit 1
+diff --git a/product-guidelines/form_check.py b/product-guidelines/form_check.py
+index e21d51c..793428a 100644
+--- a/product-guidelines/form_check.py
++++ b/product-guidelines/form_check.py
+@@ -979,7 +979,7 @@ def check_rule_cases(document, rule, fields, named, required, fences, report, ch
+     seen = {}       # (`good` or `bad`, identifier) -> the line of its first case
+     for fence in fences:
+         line = fence.opening + 1
+-        if fence.closing is None:
++        if False and fence.closing is None:
+             report.error(line, "the fenced block opening here in the rule %s is left open to the "
+                                "end of the file: no line of `%s` alone closes it"
+                          % (name, shown(fence.fence)), check, (FORM,))

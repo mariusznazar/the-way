@@ -1,0 +1,1954 @@
+............................................FFFFFFFF.FFFFFF..FFFFFFFFFFFFFFFFFFFFFFFFFFF.FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF..........FFFFFFFFFFFF.......
+======================================================================
+FAIL: test_a_coding_rule_naming_no_invariant_is_reported (test_form_check_invariants.CodingCarrier.test_a_coding_rule_naming_no_invariant_is_reported) [a standing check of the general file]
+The coding template requires an invariant in every rule (WAY-196). Each rule loses
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1128, in test_a_coding_rule_naming_no_invariant_is_reported
+    self.assert_reported_anew(self.check(files, ()), path)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding.md naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_coding_rule_naming_no_invariant_is_reported (test_form_check_invariants.CodingCarrier.test_a_coding_rule_naming_no_invariant_is_reported) [a standing check naming a decision only]
+The coding template requires an invariant in every rule (WAY-196). Each rule loses
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1128, in test_a_coding_rule_naming_no_invariant_is_reported
+    self.assert_reported_anew(self.check(files, ()), path)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding.md naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_coding_rule_naming_no_invariant_is_reported (test_form_check_invariants.CodingCarrier.test_a_coding_rule_naming_no_invariant_is_reported) [a further rule of the general file]
+The coding template requires an invariant in every rule (WAY-196). Each rule loses
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1128, in test_a_coding_rule_naming_no_invariant_is_reported
+    self.assert_reported_anew(self.check(files, ()), path)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding.md naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_coding_rule_naming_no_invariant_is_reported (test_form_check_invariants.CodingCarrier.test_a_coding_rule_naming_no_invariant_is_reported) [a rule of a kind]
+The coding template requires an invariant in every rule (WAY-196). Each rule loses
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1128, in test_a_coding_rule_naming_no_invariant_is_reported
+    self.assert_reported_anew(self.check(files, ()), path)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_the_valid_coding_fixtures_pass (test_form_check_invariants.CodingFixtures.test_the_valid_coding_fixtures_pass) [coding] (options=())
+The general file and the file of a kind, as written above, hold no error, alone and
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1037, in test_the_valid_coding_fixtures_pass
+    self.assert_clean(self.check(files, options))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 581, in assert_clean
+    self.assertEqual(code, 0, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_the_valid_coding_fixtures_pass (test_form_check_invariants.CodingFixtures.test_the_valid_coding_fixtures_pass) [coding] (options=('--merge-onto', 'none'))
+The general file and the file of a kind, as written above, hold no error, alone and
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1037, in test_the_valid_coding_fixtures_pass
+    self.assert_clean(self.check(files, options))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 581, in assert_clean
+    self.assertEqual(code, 0, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : unchecked: the references in the foundation a merge leaves — --merge-onto none: there is no commit to merge onto
+0 error(s), 0 warning(s), 1 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_the_valid_coding_fixtures_pass (test_form_check_invariants.CodingFixtures.test_the_valid_coding_fixtures_pass) [every discipline] (options=())
+The general file and the file of a kind, as written above, hold no error, alone and
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1037, in test_the_valid_coding_fixtures_pass
+    self.assert_clean(self.check(files, options))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 581, in assert_clean
+    self.assertEqual(code, 0, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_the_valid_coding_fixtures_pass (test_form_check_invariants.CodingFixtures.test_the_valid_coding_fixtures_pass) [every discipline] (options=('--merge-onto', 'none'))
+The general file and the file of a kind, as written above, hold no error, alone and
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1037, in test_the_valid_coding_fixtures_pass
+    self.assert_clean(self.check(files, options))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 581, in assert_clean
+    self.assertEqual(code, 0, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : unchecked: the references in the foundation a merge leaves — --merge-onto none: there is no commit to merge onto
+0 error(s), 0 warning(s), 1 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_general_file_with_no_kinds_of_code_is_reported (test_form_check_invariants.CodingForm.test_a_general_file_with_no_kinds_of_code_is_reported)
+The general file alone, so that no file of a kind waits for a row of the table; an
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1080, in test_a_general_file_with_no_kinds_of_code_is_reported
+    self.assert_reported_anew(self.check({CODING_FILE: text}, ()), CODING_FILE,
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                              baseline={CODING_FILE: CODING}, fragments=("Kinds of code",))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 553, in assert_reported_anew
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_missing_or_misplaced_standing_check_rule_is_reported (test_form_check_invariants.CodingForm.test_a_missing_or_misplaced_standing_check_rule_is_reported) [no Linter]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1054, in test_a_missing_or_misplaced_standing_check_rule_is_reported
+    self.assert_reported_anew(self.check(dict(CODING_FILES, **{CODING_FILE: text}),
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                                         ()), CODING_FILE, fragments=fragments)
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding.md naming ('Linter',) that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_missing_or_misplaced_standing_check_rule_is_reported (test_form_check_invariants.CodingForm.test_a_missing_or_misplaced_standing_check_rule_is_reported) [no Formatter]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1054, in test_a_missing_or_misplaced_standing_check_rule_is_reported
+    self.assert_reported_anew(self.check(dict(CODING_FILES, **{CODING_FILE: text}),
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                                         ()), CODING_FILE, fragments=fragments)
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding.md naming ('Formatter',) that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_missing_or_misplaced_standing_check_rule_is_reported (test_form_check_invariants.CodingForm.test_a_missing_or_misplaced_standing_check_rule_is_reported) [no Dependency audit]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1054, in test_a_missing_or_misplaced_standing_check_rule_is_reported
+    self.assert_reported_anew(self.check(dict(CODING_FILES, **{CODING_FILE: text}),
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                                         ()), CODING_FILE, fragments=fragments)
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding.md naming ('Dependency audit',) that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_missing_or_misplaced_standing_check_rule_is_reported (test_form_check_invariants.CodingForm.test_a_missing_or_misplaced_standing_check_rule_is_reported) [Formatter before Linter]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1054, in test_a_missing_or_misplaced_standing_check_rule_is_reported
+    self.assert_reported_anew(self.check(dict(CODING_FILES, **{CODING_FILE: text}),
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                                         ()), CODING_FILE, fragments=fragments)
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding.md naming (('Linter', 'Formatter'),) that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_standing_check_dropped_by_a_departing_decision_passes (test_form_check_invariants.CodingForm.test_a_standing_check_dropped_by_a_departing_decision_passes)
+The control of the test above: the audit dropped as the template has it (WAY-202).
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1072, in test_a_standing_check_dropped_by_a_departing_decision_passes
+    self.assert_clean(self.check(dict(CODING_FILES, **{CODING_FILE: text}), ()))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 581, in assert_clean
+    self.assertEqual(code, 0, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_case_naming_an_invariant_its_rule_does_not_name_is_reported (test_form_check_invariants.ExampleFiles.test_a_case_naming_an_invariant_its_rule_does_not_name_is_reported) (identifier='lint-clean')
+A pair of cases added for an invariant of the invariants file that the rule's
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1345, in test_a_case_naming_an_invariant_its_rule_does_not_name_is_reported
+    self.assert_reported_anew(self.check_kind(text), CODING_ENDPOINT_FILE)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_case_naming_an_invariant_its_rule_does_not_name_is_reported (test_form_check_invariants.ExampleFiles.test_a_case_naming_an_invariant_its_rule_does_not_name_is_reported) (identifier='endpoint-handler')
+A pair of cases added for an invariant of the invariants file that the rule's
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1345, in test_a_case_naming_an_invariant_its_rule_does_not_name_is_reported
+    self.assert_reported_anew(self.check_kind(text), CODING_ENDPOINT_FILE)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_case_naming_an_invariant_its_rule_does_not_name_is_reported (test_form_check_invariants.ExampleFiles.test_a_case_naming_an_invariant_its_rule_does_not_name_is_reported) (identifier='guidelines-form')
+A pair of cases added for an invariant of the invariants file that the rule's
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1345, in test_a_case_naming_an_invariant_its_rule_does_not_name_is_reported
+    self.assert_reported_anew(self.check_kind(text), CODING_ENDPOINT_FILE)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_case_naming_an_invariant_its_rule_does_not_name_is_reported (test_form_check_invariants.ExampleFiles.test_a_case_naming_an_invariant_its_rule_does_not_name_is_reported) (identifier='missing-check')
+A pair of cases added for an invariant of the invariants file that the rule's
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1345, in test_a_case_naming_an_invariant_its_rule_does_not_name_is_reported
+    self.assert_reported_anew(self.check_kind(text), CODING_ENDPOINT_FILE)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_case_whose_path_is_out_of_the_repository_is_reported (test_form_check_invariants.ExampleFiles.test_a_case_whose_path_is_out_of_the_repository_is_reported) (path='/src/api/carts/route.ts')
+The path of a case may name a file that does not exist, but never one outside the
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1358, in test_a_case_whose_path_is_out_of_the_repository_is_reported
+    self.assert_reported_anew(self.check_kind(text), CODING_ENDPOINT_FILE)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_case_whose_path_is_out_of_the_repository_is_reported (test_form_check_invariants.ExampleFiles.test_a_case_whose_path_is_out_of_the_repository_is_reported) (path='../src/api/carts/route.ts')
+The path of a case may name a file that does not exist, but never one outside the
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1358, in test_a_case_whose_path_is_out_of_the_repository_is_reported
+    self.assert_reported_anew(self.check_kind(text), CODING_ENDPOINT_FILE)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_case_whose_path_is_out_of_the_repository_is_reported (test_form_check_invariants.ExampleFiles.test_a_case_whose_path_is_out_of_the_repository_is_reported) (path='src/../src/api/carts/route.ts')
+The path of a case may name a file that does not exist, but never one outside the
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1358, in test_a_case_whose_path_is_out_of_the_repository_is_reported
+    self.assert_reported_anew(self.check_kind(text), CODING_ENDPOINT_FILE)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_case_whose_path_is_out_of_the_repository_is_reported (test_form_check_invariants.ExampleFiles.test_a_case_whose_path_is_out_of_the_repository_is_reported) (path='src/api/carts/../route.ts')
+The path of a case may name a file that does not exist, but never one outside the
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1358, in test_a_case_whose_path_is_out_of_the_repository_is_reported
+    self.assert_reported_anew(self.check_kind(text), CODING_ENDPOINT_FILE)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_case_whose_path_is_out_of_the_repository_is_reported (test_form_check_invariants.ExampleFiles.test_a_case_whose_path_is_out_of_the_repository_is_reported) (path='C:/src/api/carts/route.ts')
+The path of a case may name a file that does not exist, but never one outside the
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1358, in test_a_case_whose_path_is_out_of_the_repository_is_reported
+    self.assert_reported_anew(self.check_kind(text), CODING_ENDPOINT_FILE)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_case_whose_path_is_out_of_the_repository_is_reported (test_form_check_invariants.ExampleFiles.test_a_case_whose_path_is_out_of_the_repository_is_reported) (path='C:\\src\\api\\carts\\route.ts')
+The path of a case may name a file that does not exist, but never one outside the
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1358, in test_a_case_whose_path_is_out_of_the_repository_is_reported
+    self.assert_reported_anew(self.check_kind(text), CODING_ENDPOINT_FILE)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_case_whose_path_is_out_of_the_repository_is_reported (test_form_check_invariants.ExampleFiles.test_a_case_whose_path_is_out_of_the_repository_is_reported) (path='C:src/api/carts/route.ts')
+The path of a case may name a file that does not exist, but never one outside the
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1358, in test_a_case_whose_path_is_out_of_the_repository_is_reported
+    self.assert_reported_anew(self.check_kind(text), CODING_ENDPOINT_FILE)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_case_whose_path_is_out_of_the_repository_is_reported (test_form_check_invariants.ExampleFiles.test_a_case_whose_path_is_out_of_the_repository_is_reported) (path='\\\\host\\share\\route.ts')
+The path of a case may name a file that does not exist, but never one outside the
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1358, in test_a_case_whose_path_is_out_of_the_repository_is_reported
+    self.assert_reported_anew(self.check_kind(text), CODING_ENDPOINT_FILE)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_case_whose_path_is_out_of_the_repository_is_reported (test_form_check_invariants.ExampleFiles.test_a_case_whose_path_is_out_of_the_repository_is_reported) (path='//host/share/route.ts')
+The path of a case may name a file that does not exist, but never one outside the
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1358, in test_a_case_whose_path_is_out_of_the_repository_is_reported
+    self.assert_reported_anew(self.check_kind(text), CODING_ENDPOINT_FILE)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_case_whose_path_names_no_file_yet_passes (test_form_check_invariants.ExampleFiles.test_a_case_whose_path_names_no_file_yet_passes)
+The control of the test above: the fixture's cases stand at paths no file holds, as
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1366, in test_a_case_whose_path_names_no_file_yet_passes
+    self.assert_clean(self.check(CODING_FILES, ()))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 581, in assert_clean
+    self.assertEqual(code, 0, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_line_that_would_open_a_fence_inside_a_case_is_reported (test_form_check_invariants.ExampleFiles.test_a_line_that_would_open_a_fence_inside_a_case_is_reported) (fence='~~~')
+A line of three backticks or tildes after at most three spaces, with or without an
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1379, in test_a_line_that_would_open_a_fence_inside_a_case_is_reported
+    self.assert_reported_anew(self.check_kind(text), CODING_ENDPOINT_FILE)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_line_that_would_open_a_fence_inside_a_case_is_reported (test_form_check_invariants.ExampleFiles.test_a_line_that_would_open_a_fence_inside_a_case_is_reported) (fence='~~~ts')
+A line of three backticks or tildes after at most three spaces, with or without an
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1379, in test_a_line_that_would_open_a_fence_inside_a_case_is_reported
+    self.assert_reported_anew(self.check_kind(text), CODING_ENDPOINT_FILE)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_line_that_would_open_a_fence_inside_a_case_is_reported (test_form_check_invariants.ExampleFiles.test_a_line_that_would_open_a_fence_inside_a_case_is_reported) (fence='```ts')
+A line of three backticks or tildes after at most three spaces, with or without an
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1379, in test_a_line_that_would_open_a_fence_inside_a_case_is_reported
+    self.assert_reported_anew(self.check_kind(text), CODING_ENDPOINT_FILE)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_line_that_would_open_a_fence_inside_a_case_is_reported (test_form_check_invariants.ExampleFiles.test_a_line_that_would_open_a_fence_inside_a_case_is_reported) (fence='   ```ts')
+A line of three backticks or tildes after at most three spaces, with or without an
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1379, in test_a_line_that_would_open_a_fence_inside_a_case_is_reported
+    self.assert_reported_anew(self.check_kind(text), CODING_ENDPOINT_FILE)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_line_that_would_open_a_fence_inside_a_case_is_reported (test_form_check_invariants.ExampleFiles.test_a_line_that_would_open_a_fence_inside_a_case_is_reported) (fence='  ~~~')
+A line of three backticks or tildes after at most three spaces, with or without an
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1379, in test_a_line_that_would_open_a_fence_inside_a_case_is_reported
+    self.assert_reported_anew(self.check_kind(text), CODING_ENDPOINT_FILE)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_line_that_would_open_a_fence_inside_a_case_is_reported (test_form_check_invariants.ExampleFiles.test_a_line_that_would_open_a_fence_inside_a_case_is_reported) (fence='````')
+A line of three backticks or tildes after at most three spaces, with or without an
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1379, in test_a_line_that_would_open_a_fence_inside_a_case_is_reported
+    self.assert_reported_anew(self.check_kind(text), CODING_ENDPOINT_FILE)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_line_that_would_open_a_fence_inside_a_case_is_reported (test_form_check_invariants.ExampleFiles.test_a_line_that_would_open_a_fence_inside_a_case_is_reported) (fence='```')
+A line of three backticks or tildes after at most three spaces, with or without an
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1379, in test_a_line_that_would_open_a_fence_inside_a_case_is_reported
+    self.assert_reported_anew(self.check_kind(text), CODING_ENDPOINT_FILE)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_rule_naming_an_invariant_without_its_good_or_bad_case_is_reported (test_form_check_invariants.ExampleFiles.test_a_rule_naming_an_invariant_without_its_good_or_bad_case_is_reported) [no good case]
+Every discipline: a coding rule of a kind and of the general file, a styleguide's rule,
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1309, in test_a_rule_naming_an_invariant_without_its_good_or_bad_case_is_reported
+    self.assert_reported_anew(self.check(files, ()), path)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_rule_naming_an_invariant_without_its_good_or_bad_case_is_reported (test_form_check_invariants.ExampleFiles.test_a_rule_naming_an_invariant_without_its_good_or_bad_case_is_reported) [no bad case]
+Every discipline: a coding rule of a kind and of the general file, a styleguide's rule,
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1309, in test_a_rule_naming_an_invariant_without_its_good_or_bad_case_is_reported
+    self.assert_reported_anew(self.check(files, ()), path)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_rule_naming_an_invariant_without_its_good_or_bad_case_is_reported (test_form_check_invariants.ExampleFiles.test_a_rule_naming_an_invariant_without_its_good_or_bad_case_is_reported) [no case]
+Every discipline: a coding rule of a kind and of the general file, a styleguide's rule,
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1309, in test_a_rule_naming_an_invariant_without_its_good_or_bad_case_is_reported
+    self.assert_reported_anew(self.check(files, ()), path)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_rule_naming_an_invariant_without_its_good_or_bad_case_is_reported (test_form_check_invariants.ExampleFiles.test_a_rule_naming_an_invariant_without_its_good_or_bad_case_is_reported) [a standing check with no case]
+Every discipline: a coding rule of a kind and of the general file, a styleguide's rule,
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1309, in test_a_rule_naming_an_invariant_without_its_good_or_bad_case_is_reported
+    self.assert_reported_anew(self.check(files, ()), path)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding.md naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_rule_naming_an_invariant_without_its_good_or_bad_case_is_reported (test_form_check_invariants.ExampleFiles.test_a_rule_naming_an_invariant_without_its_good_or_bad_case_is_reported) [a styleguide's rule with no case]
+Every discipline: a coding rule of a kind and of the general file, a styleguide's rule,
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1309, in test_a_rule_naming_an_invariant_without_its_good_or_bad_case_is_reported
+    self.assert_reported_anew(self.check(files, ()), path)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/styleguide-web.md naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_rule_naming_an_invariant_without_its_good_or_bad_case_is_reported (test_form_check_invariants.ExampleFiles.test_a_rule_naming_an_invariant_without_its_good_or_bad_case_is_reported) [a rule with no template naming an invariant]
+Every discipline: a coding rule of a kind and of the general file, a styleguide's rule,
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1309, in test_a_rule_naming_an_invariant_without_its_good_or_bad_case_is_reported
+    self.assert_reported_anew(self.check(files, ()), path)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/testing.md naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_rule_naming_two_invariants_without_the_cases_of_one_is_reported (test_form_check_invariants.ExampleFiles.test_a_rule_naming_two_invariants_without_the_cases_of_one_is_reported) [no case of the second]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1323, in test_a_rule_naming_two_invariants_without_the_cases_of_one_is_reported
+    self.assert_reported_anew(self.check_kind(text), CODING_ENDPOINT_FILE)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_rule_naming_two_invariants_without_the_cases_of_one_is_reported (test_form_check_invariants.ExampleFiles.test_a_rule_naming_two_invariants_without_the_cases_of_one_is_reported) [no case of the first]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1323, in test_a_rule_naming_two_invariants_without_the_cases_of_one_is_reported
+    self.assert_reported_anew(self.check_kind(text), CODING_ENDPOINT_FILE)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_rule_naming_two_invariants_without_the_cases_of_one_is_reported (test_form_check_invariants.ExampleFiles.test_a_rule_naming_two_invariants_without_the_cases_of_one_is_reported) [no bad case of the first]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1323, in test_a_rule_naming_two_invariants_without_the_cases_of_one_is_reported
+    self.assert_reported_anew(self.check_kind(text), CODING_ENDPOINT_FILE)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_rule_naming_two_invariants_without_the_cases_of_one_is_reported (test_form_check_invariants.ExampleFiles.test_a_rule_naming_two_invariants_without_the_cases_of_one_is_reported) [no good case of the first]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1323, in test_a_rule_naming_two_invariants_without_the_cases_of_one_is_reported
+    self.assert_reported_anew(self.check_kind(text), CODING_ENDPOINT_FILE)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_second_case_of_one_kind_for_an_invariant_is_reported (test_form_check_invariants.ExampleFiles.test_a_second_case_of_one_kind_for_an_invariant_is_reported) [two good cases]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1332, in test_a_second_case_of_one_kind_for_an_invariant_is_reported
+    self.assert_reported_anew(self.check_kind(replaced(CODING_ENDPOINT, old, new)),
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         CODING_ENDPOINT_FILE)
+                         ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_second_case_of_one_kind_for_an_invariant_is_reported (test_form_check_invariants.ExampleFiles.test_a_second_case_of_one_kind_for_an_invariant_is_reported) [two bad cases]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1332, in test_a_second_case_of_one_kind_for_an_invariant_is_reported
+    self.assert_reported_anew(self.check_kind(replaced(CODING_ENDPOINT, old, new)),
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         CODING_ENDPOINT_FILE)
+                         ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_another_fenced_block_in_a_rule_carrying_cases_is_reported (test_form_check_invariants.ExampleFiles.test_another_fenced_block_in_a_rule_carrying_cases_is_reported) (block='```ts')
+In a rule whose cases are required, every fenced block is a case: a block with
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1392, in test_another_fenced_block_in_a_rule_carrying_cases_is_reported
+    self.assert_reported_anew(self.check_kind(text), CODING_ENDPOINT_FILE)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_another_fenced_block_in_a_rule_carrying_cases_is_reported (test_form_check_invariants.ExampleFiles.test_another_fenced_block_in_a_rule_carrying_cases_is_reported) (block='```')
+In a rule whose cases are required, every fenced block is a case: a block with
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1392, in test_another_fenced_block_in_a_rule_carrying_cases_is_reported
+    self.assert_reported_anew(self.check_kind(text), CODING_ENDPOINT_FILE)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_another_fenced_block_in_a_rule_carrying_cases_is_reported (test_form_check_invariants.ExampleFiles.test_another_fenced_block_in_a_rule_carrying_cases_is_reported) (block='```sample endpoint-validates src/api/carts/route.ts')
+In a rule whose cases are required, every fenced block is a case: a block with
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1392, in test_another_fenced_block_in_a_rule_carrying_cases_is_reported
+    self.assert_reported_anew(self.check_kind(text), CODING_ENDPOINT_FILE)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_another_fenced_block_in_a_rule_carrying_cases_is_reported (test_form_check_invariants.ExampleFiles.test_another_fenced_block_in_a_rule_carrying_cases_is_reported) (block='```good endpoint-validates')
+In a rule whose cases are required, every fenced block is a case: a block with
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1392, in test_another_fenced_block_in_a_rule_carrying_cases_is_reported
+    self.assert_reported_anew(self.check_kind(text), CODING_ENDPOINT_FILE)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_another_fenced_block_in_a_rule_carrying_cases_is_reported (test_form_check_invariants.ExampleFiles.test_another_fenced_block_in_a_rule_carrying_cases_is_reported) (block='~~~ts')
+In a rule whose cases are required, every fenced block is a case: a block with
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1392, in test_another_fenced_block_in_a_rule_carrying_cases_is_reported
+    self.assert_reported_anew(self.check_kind(text), CODING_ENDPOINT_FILE)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_kind_file_with_no_exemplar_row_or_more_than_one_is_reported (test_form_check_invariants.Exemplar.test_a_kind_file_with_no_exemplar_row_or_more_than_one_is_reported) [no exemplar row]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1227, in test_a_kind_file_with_no_exemplar_row_or_more_than_one_is_reported
+    self.assert_reported_anew(self.check_kind(text), CODING_ENDPOINT_FILE)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_kind_file_with_no_exemplar_row_or_more_than_one_is_reported (test_form_check_invariants.Exemplar.test_a_kind_file_with_no_exemplar_row_or_more_than_one_is_reported) [no row at all]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1227, in test_a_kind_file_with_no_exemplar_row_or_more_than_one_is_reported
+    self.assert_reported_anew(self.check_kind(text), CODING_ENDPOINT_FILE)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_kind_file_with_no_exemplar_row_or_more_than_one_is_reported (test_form_check_invariants.Exemplar.test_a_kind_file_with_no_exemplar_row_or_more_than_one_is_reported) [two exemplar rows]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1227, in test_a_kind_file_with_no_exemplar_row_or_more_than_one_is_reported
+    self.assert_reported_anew(self.check_kind(text), CODING_ENDPOINT_FILE)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_row_other_than_the_exemplar_naming_a_decision_is_reported (test_form_check_invariants.Exemplar.test_a_row_other_than_the_exemplar_naming_a_decision_is_reported) (value='ABC-13@9a9314b5')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1261, in test_a_row_other_than_the_exemplar_naming_a_decision_is_reported
+    self.assert_reported_anew(self.check_kind(text), CODING_ENDPOINT_FILE,
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line_of(text, row))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md:15 naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_row_other_than_the_exemplar_naming_a_decision_is_reported (test_form_check_invariants.Exemplar.test_a_row_other_than_the_exemplar_naming_a_decision_is_reported) (value='none')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1261, in test_a_row_other_than_the_exemplar_naming_a_decision_is_reported
+    self.assert_reported_anew(self.check_kind(text), CODING_ENDPOINT_FILE,
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line_of(text, row))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md:15 naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_row_other_than_the_exemplar_naming_a_decision_is_reported (test_form_check_invariants.Exemplar.test_a_row_other_than_the_exemplar_naming_a_decision_is_reported) (value='')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1261, in test_a_row_other_than_the_exemplar_naming_a_decision_is_reported
+    self.assert_reported_anew(self.check_kind(text), CODING_ENDPOINT_FILE,
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line_of(text, row))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md:15 naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_row_whose_file_is_out_of_the_repository_or_untracked_is_reported (test_form_check_invariants.Exemplar.test_a_row_whose_file_is_out_of_the_repository_or_untracked_is_reported) (path='/src/api/users/route.ts')
+Paths of a row that is not the exemplar's, so that no decision is asked to name
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1251, in test_a_row_whose_file_is_out_of_the_repository_or_untracked_is_reported
+    self.assert_reported_anew(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self.check_kind(text, untracked={"src/api/draft/route.ts": "export {};\n"}),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        CODING_ENDPOINT_FILE, line=line_of(text, row))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md:15 naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_row_whose_file_is_out_of_the_repository_or_untracked_is_reported (test_form_check_invariants.Exemplar.test_a_row_whose_file_is_out_of_the_repository_or_untracked_is_reported) (path='{product-root}/src/api/users/route.ts')
+Paths of a row that is not the exemplar's, so that no decision is asked to name
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1251, in test_a_row_whose_file_is_out_of_the_repository_or_untracked_is_reported
+    self.assert_reported_anew(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self.check_kind(text, untracked={"src/api/draft/route.ts": "export {};\n"}),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        CODING_ENDPOINT_FILE, line=line_of(text, row))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md:15 naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_row_whose_file_is_out_of_the_repository_or_untracked_is_reported (test_form_check_invariants.Exemplar.test_a_row_whose_file_is_out_of_the_repository_or_untracked_is_reported) (path='../product/src/api/users/route.ts')
+Paths of a row that is not the exemplar's, so that no decision is asked to name
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1251, in test_a_row_whose_file_is_out_of_the_repository_or_untracked_is_reported
+    self.assert_reported_anew(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self.check_kind(text, untracked={"src/api/draft/route.ts": "export {};\n"}),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        CODING_ENDPOINT_FILE, line=line_of(text, row))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md:15 naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_row_whose_file_is_out_of_the_repository_or_untracked_is_reported (test_form_check_invariants.Exemplar.test_a_row_whose_file_is_out_of_the_repository_or_untracked_is_reported) (path='src/api/../api/users/route.ts')
+Paths of a row that is not the exemplar's, so that no decision is asked to name
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1251, in test_a_row_whose_file_is_out_of_the_repository_or_untracked_is_reported
+    self.assert_reported_anew(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self.check_kind(text, untracked={"src/api/draft/route.ts": "export {};\n"}),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        CODING_ENDPOINT_FILE, line=line_of(text, row))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md:15 naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_row_whose_file_is_out_of_the_repository_or_untracked_is_reported (test_form_check_invariants.Exemplar.test_a_row_whose_file_is_out_of_the_repository_or_untracked_is_reported) (path='C:/src/api/users/route.ts')
+Paths of a row that is not the exemplar's, so that no decision is asked to name
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1251, in test_a_row_whose_file_is_out_of_the_repository_or_untracked_is_reported
+    self.assert_reported_anew(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self.check_kind(text, untracked={"src/api/draft/route.ts": "export {};\n"}),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        CODING_ENDPOINT_FILE, line=line_of(text, row))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md:15 naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_row_whose_file_is_out_of_the_repository_or_untracked_is_reported (test_form_check_invariants.Exemplar.test_a_row_whose_file_is_out_of_the_repository_or_untracked_is_reported) (path='C:\\src\\api\\users\\route.ts')
+Paths of a row that is not the exemplar's, so that no decision is asked to name
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1251, in test_a_row_whose_file_is_out_of_the_repository_or_untracked_is_reported
+    self.assert_reported_anew(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self.check_kind(text, untracked={"src/api/draft/route.ts": "export {};\n"}),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        CODING_ENDPOINT_FILE, line=line_of(text, row))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md:15 naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_row_whose_file_is_out_of_the_repository_or_untracked_is_reported (test_form_check_invariants.Exemplar.test_a_row_whose_file_is_out_of_the_repository_or_untracked_is_reported) (path='\\\\host\\share\\src\\api\\users\\route.ts')
+Paths of a row that is not the exemplar's, so that no decision is asked to name
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1251, in test_a_row_whose_file_is_out_of_the_repository_or_untracked_is_reported
+    self.assert_reported_anew(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self.check_kind(text, untracked={"src/api/draft/route.ts": "export {};\n"}),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        CODING_ENDPOINT_FILE, line=line_of(text, row))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md:15 naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_row_whose_file_is_out_of_the_repository_or_untracked_is_reported (test_form_check_invariants.Exemplar.test_a_row_whose_file_is_out_of_the_repository_or_untracked_is_reported) (path='//host/share/src/api/users/route.ts')
+Paths of a row that is not the exemplar's, so that no decision is asked to name
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1251, in test_a_row_whose_file_is_out_of_the_repository_or_untracked_is_reported
+    self.assert_reported_anew(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self.check_kind(text, untracked={"src/api/draft/route.ts": "export {};\n"}),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        CODING_ENDPOINT_FILE, line=line_of(text, row))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md:15 naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_row_whose_file_is_out_of_the_repository_or_untracked_is_reported (test_form_check_invariants.Exemplar.test_a_row_whose_file_is_out_of_the_repository_or_untracked_is_reported) (path='src/api/missing/route.ts')
+Paths of a row that is not the exemplar's, so that no decision is asked to name
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1251, in test_a_row_whose_file_is_out_of_the_repository_or_untracked_is_reported
+    self.assert_reported_anew(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self.check_kind(text, untracked={"src/api/draft/route.ts": "export {};\n"}),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        CODING_ENDPOINT_FILE, line=line_of(text, row))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md:15 naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_row_whose_file_is_out_of_the_repository_or_untracked_is_reported (test_form_check_invariants.Exemplar.test_a_row_whose_file_is_out_of_the_repository_or_untracked_is_reported) (path='src/api/draft/route.ts')
+Paths of a row that is not the exemplar's, so that no decision is asked to name
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1251, in test_a_row_whose_file_is_out_of_the_repository_or_untracked_is_reported
+    self.assert_reported_anew(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self.check_kind(text, untracked={"src/api/draft/route.ts": "export {};\n"}),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        CODING_ENDPOINT_FILE, line=line_of(text, row))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md:15 naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_row_whose_status_is_off_the_list_is_reported (test_form_check_invariants.Exemplar.test_a_row_whose_status_is_off_the_list_is_reported) (status='copied')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1235, in test_a_row_whose_status_is_off_the_list_is_reported
+    self.assert_reported_anew(self.check_kind(text), CODING_ENDPOINT_FILE,
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line_of(text, row))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md:15 naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_row_whose_status_is_off_the_list_is_reported (test_form_check_invariants.Exemplar.test_a_row_whose_status_is_off_the_list_is_reported) (status='do-not-copy')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1235, in test_a_row_whose_status_is_off_the_list_is_reported
+    self.assert_reported_anew(self.check_kind(text), CODING_ENDPOINT_FILE,
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line_of(text, row))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md:15 naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_row_whose_status_is_off_the_list_is_reported (test_form_check_invariants.Exemplar.test_a_row_whose_status_is_off_the_list_is_reported) (status='')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1235, in test_a_row_whose_status_is_off_the_list_is_reported
+    self.assert_reported_anew(self.check_kind(text), CODING_ENDPOINT_FILE,
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line_of(text, row))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md:15 naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_row_whose_status_is_off_the_list_is_reported (test_form_check_invariants.Exemplar.test_a_row_whose_status_is_off_the_list_is_reported) (status='example')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1235, in test_a_row_whose_status_is_off_the_list_is_reported
+    self.assert_reported_anew(self.check_kind(text), CODING_ENDPOINT_FILE,
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line_of(text, row))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md:15 naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_an_exemplar_row_whose_decision_does_not_designate_it_is_reported (test_form_check_invariants.Exemplar.test_an_exemplar_row_whose_decision_does_not_designate_it_is_reported) [no decision]
+The exemplar's *Decision* names a decision the log does not hold, one it repealed,
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1282, in test_an_exemplar_row_whose_decision_does_not_designate_it_is_reported
+    self.assert_reported_anew(self.check_kind(text), CODING_ENDPOINT_FILE,
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line_of(text, row))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md:14 naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_an_exemplar_row_whose_decision_does_not_designate_it_is_reported (test_form_check_invariants.Exemplar.test_an_exemplar_row_whose_decision_does_not_designate_it_is_reported) [the kind alone]
+The exemplar's *Decision* names a decision the log does not hold, one it repealed,
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1282, in test_an_exemplar_row_whose_decision_does_not_designate_it_is_reported
+    self.assert_reported_anew(self.check_kind(text), CODING_ENDPOINT_FILE,
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line_of(text, row))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md:14 naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_an_exemplar_row_whose_decision_does_not_designate_it_is_reported (test_form_check_invariants.Exemplar.test_an_exemplar_row_whose_decision_does_not_designate_it_is_reported) [the path with the kind bare]
+The exemplar's *Decision* names a decision the log does not hold, one it repealed,
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1282, in test_an_exemplar_row_whose_decision_does_not_designate_it_is_reported
+    self.assert_reported_anew(self.check_kind(text), CODING_ENDPOINT_FILE,
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line_of(text, row))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md:14 naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_an_exemplar_row_whose_decision_does_not_designate_it_is_reported (test_form_check_invariants.Exemplar.test_an_exemplar_row_whose_decision_does_not_designate_it_is_reported) [the path bare with the kind]
+The exemplar's *Decision* names a decision the log does not hold, one it repealed,
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1282, in test_an_exemplar_row_whose_decision_does_not_designate_it_is_reported
+    self.assert_reported_anew(self.check_kind(text), CODING_ENDPOINT_FILE,
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line_of(text, row))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md:14 naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_an_exemplar_row_whose_decision_does_not_designate_it_is_reported (test_form_check_invariants.Exemplar.test_an_exemplar_row_whose_decision_does_not_designate_it_is_reported) [neither path nor kind]
+The exemplar's *Decision* names a decision the log does not hold, one it repealed,
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1282, in test_an_exemplar_row_whose_decision_does_not_designate_it_is_reported
+    self.assert_reported_anew(self.check_kind(text), CODING_ENDPOINT_FILE,
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         line=line_of(text, row))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding-endpoint.md:14 naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_kind_file_no_row_names_is_reported (test_form_check_invariants.KindIndex.test_a_kind_file_no_row_names_is_reported)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1149, in test_a_kind_file_no_row_names_is_reported
+    self.assert_reported_anew(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self.check({CODING_FILE: general, CODING_ENDPOINT_FILE: CODING_ENDPOINT}, ()),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        (CODING_FILE, CODING_ENDPOINT_FILE))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in ('guidelines/coding.md', 'guidelines/coding-endpoint.md') naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_kind_file_with_no_general_file_is_reported (test_form_check_invariants.KindIndex.test_a_kind_file_with_no_general_file_is_reported) [alone]
+Git lists the file of a kind and no `guidelines/coding.md`: alone, beside guidelines
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1199, in test_a_kind_file_with_no_general_file_is_reported
+    self.assert_reported_anew(self.check(files, (), untracked=untracked),
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         (CODING_ENDPOINT_FILE, CODING_FILE, "guidelines"))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in ('guidelines/coding-endpoint.md', 'guidelines/coding.md', 'guidelines') naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_kind_file_with_no_general_file_is_reported (test_form_check_invariants.KindIndex.test_a_kind_file_with_no_general_file_is_reported) [beside other disciplines]
+Git lists the file of a kind and no `guidelines/coding.md`: alone, beside guidelines
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1199, in test_a_kind_file_with_no_general_file_is_reported
+    self.assert_reported_anew(self.check(files, (), untracked=untracked),
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         (CODING_ENDPOINT_FILE, CODING_FILE, "guidelines"))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in ('guidelines/coding-endpoint.md', 'guidelines/coding.md', 'guidelines') naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_kind_file_with_no_general_file_is_reported (test_form_check_invariants.KindIndex.test_a_kind_file_with_no_general_file_is_reported) [the general file untracked]
+Git lists the file of a kind and no `guidelines/coding.md`: alone, beside guidelines
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1199, in test_a_kind_file_with_no_general_file_is_reported
+    self.assert_reported_anew(self.check(files, (), untracked=untracked),
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         (CODING_ENDPOINT_FILE, CODING_FILE, "guidelines"))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in ('guidelines/coding-endpoint.md', 'guidelines/coding.md', 'guidelines') naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_row_naming_no_file_git_lists_is_reported (test_form_check_invariants.KindIndex.test_a_row_naming_no_file_git_lists_is_reported) (untracked=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1160, in test_a_row_naming_no_file_git_lists_is_reported
+    self.assert_reported_anew(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self.check({CODING_FILE: general, CODING_ENDPOINT_FILE: CODING_ENDPOINT}, (),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                   untracked=untracked),
+                   ^^^^^^^^^^^^^^^^^^^^^
+        CODING_FILE, line=line_of(general, row))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding.md:15 naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_row_naming_no_file_git_lists_is_reported (test_form_check_invariants.KindIndex.test_a_row_naming_no_file_git_lists_is_reported) (untracked=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1160, in test_a_row_naming_no_file_git_lists_is_reported
+    self.assert_reported_anew(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self.check({CODING_FILE: general, CODING_ENDPOINT_FILE: CODING_ENDPOINT}, (),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                   untracked=untracked),
+                   ^^^^^^^^^^^^^^^^^^^^^
+        CODING_FILE, line=line_of(general, row))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding.md:15 naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-job.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_row_whose_kind_is_not_its_files_kind_is_reported (test_form_check_invariants.KindIndex.test_a_row_whose_kind_is_not_its_files_kind_is_reported) (kind='handler')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1171, in test_a_row_whose_kind_is_not_its_files_kind_is_reported
+    self.assert_reported_anew(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self.check({CODING_FILE: general, CODING_ENDPOINT_FILE: CODING_ENDPOINT}, ()),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        CODING_FILE, line=line_of(general, row))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding.md:14 naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_row_whose_kind_is_not_its_files_kind_is_reported (test_form_check_invariants.KindIndex.test_a_row_whose_kind_is_not_its_files_kind_is_reported) (kind='endpoints')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1171, in test_a_row_whose_kind_is_not_its_files_kind_is_reported
+    self.assert_reported_anew(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self.check({CODING_FILE: general, CODING_ENDPOINT_FILE: CODING_ENDPOINT}, ()),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        CODING_FILE, line=line_of(general, row))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding.md:14 naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_row_whose_kind_is_not_its_files_kind_is_reported (test_form_check_invariants.KindIndex.test_a_row_whose_kind_is_not_its_files_kind_is_reported) (kind='Endpoint')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1171, in test_a_row_whose_kind_is_not_its_files_kind_is_reported
+    self.assert_reported_anew(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self.check({CODING_FILE: general, CODING_ENDPOINT_FILE: CODING_ENDPOINT}, ()),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        CODING_FILE, line=line_of(general, row))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding.md:14 naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_row_whose_kind_is_not_its_files_kind_is_reported (test_form_check_invariants.KindIndex.test_a_row_whose_kind_is_not_its_files_kind_is_reported) (kind='')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1171, in test_a_row_whose_kind_is_not_its_files_kind_is_reported
+    self.assert_reported_anew(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self.check({CODING_FILE: general, CODING_ENDPOINT_FILE: CODING_ENDPOINT}, ()),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        CODING_FILE, line=line_of(general, row))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding.md:14 naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_row_whose_when_to_read_is_empty_is_reported (test_form_check_invariants.KindIndex.test_a_row_whose_when_to_read_is_empty_is_reported) (cell='|  |')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1181, in test_a_row_whose_when_to_read_is_empty_is_reported
+    self.assert_reported_anew(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self.check({CODING_FILE: general, CODING_ENDPOINT_FILE: CODING_ENDPOINT}, ()),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        CODING_FILE, line=line_of(general, row))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding.md:14 naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+======================================================================
+FAIL: test_a_row_whose_when_to_read_is_empty_is_reported (test_form_check_invariants.KindIndex.test_a_row_whose_when_to_read_is_empty_is_reported) (cell='| |')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 1181, in test_a_row_whose_when_to_read_is_empty_is_reported
+    self.assert_reported_anew(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self.check({CODING_FILE: general, CODING_ENDPOINT_FILE: CODING_ENDPOINT}, ()),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        CODING_FILE, line=line_of(general, row))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/product-guidelines/test_form_check_invariants.py", line 562, in assert_reported_anew
+    self.assertTrue(found, "no error in %s%s naming %r that the valid files lack:\n%s"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    % (path, "" if line is None else ":%d" % line, fragments, output))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no error in guidelines/coding.md:14 naming () that the valid files lack:
+note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
+0 error(s), 0 warning(s), 0 unchecked
+guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
+1 error(s), 0 warning(s), 0 unchecked
+0 error(s), 0 warning(s), 0 unchecked
+
+
+----------------------------------------------------------------------
+Ran 88 tests in 143.958s
+
+FAILED (failures=89)

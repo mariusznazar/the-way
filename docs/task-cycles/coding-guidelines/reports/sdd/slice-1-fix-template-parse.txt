@@ -1,0 +1,3 @@
+Parse of the templates: 64344a3 copies vs working tree (fix)
+same parse: True
+exit 0

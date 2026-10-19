@@ -1,0 +1,17 @@
+{"check": "elements/decisions/test_format_guard.py::FingerprintValue.test_a_binding_paragraph_over_several_lines_is_fingerprinted_whole", "verdict": "pass", "invariant": "decision-fingerprint-input/1"}
+{"check": "elements/decisions/test_format_guard.py::FingerprintValue.test_stale_fingerprint", "verdict": "pass", "invariant": "decision-fingerprint-input/1"}
+{"check": "elements/decisions/test_format_guard.py::MergedLog.test_a_reworded_version_removed_and_its_relation_renewed_on_the_commit_merged_onto", "verdict": "pass", "invariant": "log-merge-copies/1"}
+{"check": "elements/decisions/test_format_guard.py::MergedLog.test_a_version_both_sides_hold_with_different_text", "verdict": "pass", "invariant": "log-merge-copies/1"}
+{"check": "elements/decisions/test_format_guard.py::MergedLog.test_a_version_edited_on_both_sides", "verdict": "pass", "invariant": "log-merge-copies/1"}
+{"check": "elements/decisions/test_format_guard.py::MergedLog.test_a_version_edited_only_on_the_commit_merged_onto", "verdict": "pass", "invariant": "log-merge-copies/1"}
+{"check": "elements/decisions/test_format_guard.py::MergedLog.test_versions_both_sides_hold_alike_pass", "verdict": "pass", "invariant": "log-merge-copies/1"}
+{"check": "elements/decisions/test_format_guard.py::Relations.test_a_type_the_template_lists_without_a_fingerprint_carrying_one", "verdict": "pass", "invariant": "relation-fingerprint-presence/1"}
+{"check": "elements/decisions/test_format_guard.py::Reviews.test_next_check_neither_a_date_nor_none_after_a_kept_decision", "verdict": "pass", "invariant": "review-next-check/1"}
+{"check": "elements/decisions/test_format_guard.py::Reviews.test_a_date_one_day_before_the_given_date_warns", "verdict": "pass", "invariant": "decision-guard-overdue-review/1"}
+{"check": "elements/decisions/test_format_guard.py::Reviews.test_a_passed_date_after_a_decision_with_none_warns", "verdict": "pass", "invariant": "decision-guard-overdue-review/1"}
+{"check": "elements/decisions/test_format_guard.py::Reviews.test_a_review_before_the_version_does_not_answer_its_date", "verdict": "pass", "invariant": "decision-guard-overdue-review/1"}
+{"check": "elements/decisions/test_format_guard.py::Reviews.test_a_review_of_another_decision_does_not_answer_its_date", "verdict": "pass", "invariant": "decision-guard-overdue-review/1"}
+{"check": "elements/decisions/test_format_guard.py::Reviews.test_every_passed_date_warns", "verdict": "pass", "invariant": "decision-guard-overdue-review/1"}
+{"check": "elements/decisions/test_format_guard.py::Reviews.test_passed_date_without_review_warns", "verdict": "pass", "invariant": "decision-guard-overdue-review/1"}
+{"check": "elements/decisions/test_format_guard.py::Reviews.test_review_that_passed_again_warns", "verdict": "pass", "invariant": "decision-guard-overdue-review/1"}
+{"check": "elements/decisions/test_format_guard.py::Reviews.test_the_date_compared_is_the_one_given_not_the_day_of_the_run", "verdict": "pass", "invariant": "decision-guard-overdue-review/1"}

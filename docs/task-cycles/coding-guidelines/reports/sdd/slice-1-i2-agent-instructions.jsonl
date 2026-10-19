@@ -1,0 +1,2 @@
+{"check": "agent-instructions/test_instruction_files.py::InstructionFiles.test_no_instruction_file_holds_an_import", "verdict": "pass", "invariant": "instruction-file-imports/1"}
+{"check": "agent-instructions/test_instruction_files.py::InstructionFiles.test_the_root_claude_md_begins_with_the_import_of_agents_md", "verdict": "pass", "invariant": "root-claude-md-import/1"}

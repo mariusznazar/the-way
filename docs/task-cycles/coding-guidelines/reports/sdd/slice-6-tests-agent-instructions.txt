@@ -1,0 +1,15 @@
+..............F...
+======================================================================
+FAIL: test_the_tracked_entry_points_are_what_the_generator_produces (test_skill_entry_points.TrackedEntryPoints.test_the_tracked_entry_points_are_what_the_generator_produces)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/agent-instructions/test_skill_entry_points.py", line 260, in test_the_tracked_entry_points_are_what_the_generator_produces
+    self.assertEqual((ROOT / path).read_bytes(), text.encode("utf-8"), path)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: b"---[1902 chars]tain-styleguide`, `lead-project`, `plan-projec[206 chars]e.\n" != b"---[1902 chars]tain-coding-guidelines`, `maintain-styleguide`[236 chars]e.\n" : .claude/skills/the-way-critique/SKILL.md
+
+----------------------------------------------------------------------
+Ran 18 tests in 1.187s
+
+FAILED (failures=1)
+exit 1

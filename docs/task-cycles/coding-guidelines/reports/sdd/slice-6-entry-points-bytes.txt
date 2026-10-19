@@ -1,0 +1,4 @@
+HEAD aaaab9d
+.claude/skills/the-way-maintain-coding-guidelines/SKILL.md equal
+.agents/skills/the-way-maintain-coding-guidelines/SKILL.md equal
+exit 0

@@ -1,0 +1,27 @@
+verbose test ids: base 88 after 88 ; identical outcomes by name: True
+run_tests FAIL/ERROR headers (test + subtest): base 89 after 89 ; identical: True
+record lines (check, invariant, verdict): base 64 after 64 ; identical: True
+tests not ok (after), 23:
+   test_form_check_invariants.CodingCarrier.test_a_coding_rule_naming_no_invariant_is_reported ['FAIL']
+   test_form_check_invariants.CodingFixtures.test_the_valid_coding_fixtures_pass ['FAIL']
+   test_form_check_invariants.CodingForm.test_a_general_file_with_no_kinds_of_code_is_reported ['FAIL']
+   test_form_check_invariants.CodingForm.test_a_missing_or_misplaced_standing_check_rule_is_reported ['FAIL']
+   test_form_check_invariants.CodingForm.test_a_standing_check_dropped_by_a_departing_decision_passes ['FAIL']
+   test_form_check_invariants.ExampleFiles.test_a_case_naming_an_invariant_its_rule_does_not_name_is_reported ['FAIL']
+   test_form_check_invariants.ExampleFiles.test_a_case_whose_path_is_out_of_the_repository_is_reported ['FAIL']
+   test_form_check_invariants.ExampleFiles.test_a_case_whose_path_names_no_file_yet_passes ['FAIL']
+   test_form_check_invariants.ExampleFiles.test_a_line_that_would_open_a_fence_inside_a_case_is_reported ['FAIL']
+   test_form_check_invariants.ExampleFiles.test_a_rule_naming_an_invariant_without_its_good_or_bad_case_is_reported ['FAIL']
+   test_form_check_invariants.ExampleFiles.test_a_rule_naming_two_invariants_without_the_cases_of_one_is_reported ['FAIL']
+   test_form_check_invariants.ExampleFiles.test_a_second_case_of_one_kind_for_an_invariant_is_reported ['FAIL']
+   test_form_check_invariants.ExampleFiles.test_another_fenced_block_in_a_rule_carrying_cases_is_reported ['FAIL']
+   test_form_check_invariants.Exemplar.test_a_kind_file_with_no_exemplar_row_or_more_than_one_is_reported ['FAIL']
+   test_form_check_invariants.Exemplar.test_a_row_other_than_the_exemplar_naming_a_decision_is_reported ['FAIL']
+   test_form_check_invariants.Exemplar.test_a_row_whose_file_is_out_of_the_repository_or_untracked_is_reported ['FAIL']
+   test_form_check_invariants.Exemplar.test_a_row_whose_status_is_off_the_list_is_reported ['FAIL']
+   test_form_check_invariants.Exemplar.test_an_exemplar_row_whose_decision_does_not_designate_it_is_reported ['FAIL']
+   test_form_check_invariants.KindIndex.test_a_kind_file_no_row_names_is_reported ['FAIL']
+   test_form_check_invariants.KindIndex.test_a_kind_file_with_no_general_file_is_reported ['FAIL']
+   test_form_check_invariants.KindIndex.test_a_row_naming_no_file_git_lists_is_reported ['FAIL']
+   test_form_check_invariants.KindIndex.test_a_row_whose_kind_is_not_its_files_kind_is_reported ['FAIL']
+   test_form_check_invariants.KindIndex.test_a_row_whose_when_to_read_is_empty_is_reported ['FAIL']

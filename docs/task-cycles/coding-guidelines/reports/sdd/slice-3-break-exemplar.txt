@@ -1,0 +1,40 @@
+Deliberate break: guidelines-check-exemplar/1 (reviewer, Slice 3)
+Sentence made false: "... names one whose binding sentences, their whitespace collapsed, lack its *File* in backticks or the file's <kind> in backticks" -- the search made bare
+Worktree: /tmp/claude-0/-home-user/ac1b534a-8705-5f4d-8b69-597c339e545d/scratchpad/review-0607656 at 0607656
+Break (git diff):
+diff --git a/product-guidelines/form_check.py b/product-guidelines/form_check.py
+index 0112660..6006f40 100644
+--- a/product-guidelines/form_check.py
++++ b/product-guidelines/form_check.py
+@@ -574,7 +574,7 @@ class Foundation:
+             return "`%s`" % word in text
+         if key not in self.quoted:
+             self.quoted[key] = set(text.split("`")[1:-1])
+-        return word in self.quoted[key]
++        return word in text  # BREAK exemplar: the File and the kind searched bare, not in backticks
+ 
+ 
+ def decisions_named(value, foundation):
+
+Command: python3 -B gate/run_tests.py product-guidelines --record /tmp/claude-0/-home-user/ac1b534a-8705-5f4d-8b69-597c339e545d/scratchpad/break-exemplar.jsonl
+Exit code: 1  (seconds: 179)
+
+Verdicts for guidelines-check-exemplar/1 in the record:
+{"check": "product-guidelines/test_form_check_invariants.py::Exemplar.test_an_exemplar_row_whose_decision_does_not_designate_it_is_reported", "verdict": "fail", "invariant": "guidelines-check-exemplar/1", "description": "failed in [the path with the kind bare]: AssertionError: 0 != 1 : note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line"}
+{"check": "product-guidelines/test_form_check_invariants.py::CodingFixtures.test_the_valid_coding_fixtures_pass", "verdict": "pass", "invariant": "guidelines-check-exemplar/1"}
+{"check": "product-guidelines/test_form_check_invariants.py::Exemplar.test_a_kind_file_with_no_exemplar_row_or_more_than_one_is_reported", "verdict": "pass", "invariant": "guidelines-check-exemplar/1"}
+{"check": "product-guidelines/test_form_check_invariants.py::Exemplar.test_a_row_other_than_the_exemplar_naming_a_decision_is_reported", "verdict": "pass", "invariant": "guidelines-check-exemplar/1"}
+{"check": "product-guidelines/test_form_check_invariants.py::Exemplar.test_a_row_whose_file_is_out_of_the_repository_or_untracked_is_reported", "verdict": "pass", "invariant": "guidelines-check-exemplar/1"}
+{"check": "product-guidelines/test_form_check_invariants.py::Exemplar.test_a_row_whose_status_is_off_the_list_is_reported", "verdict": "pass", "invariant": "guidelines-check-exemplar/1"}
+
+Failing tests (unittest output, ExampleFiles = S4's pre-existing RED):
+FAIL: test_a_decision_naming_the_path_only_outside_backticks_is_an_error (test_form_check.FilesOfAKind.test_a_decision_naming_the_path_only_outside_backticks_is_an_error)
+FAIL: test_an_exemplar_row_whose_decision_does_not_designate_it_is_reported (test_form_check_invariants.Exemplar.test_an_exemplar_row_whose_decision_does_not_designate_it_is_reported) [the path with the kind bare]
+FAIL: test_an_exemplar_row_whose_decision_does_not_designate_it_is_reported (test_form_check_invariants.Exemplar.test_an_exemplar_row_whose_decision_does_not_designate_it_is_reported) [the path bare with the kind]
+(plus 37 ExampleFiles subtests, RED before the break)
+
+----------------------------------------------------------------------
+Ran 118 tests in 178.359s
+
+FAILED (failures=40)
+Scratch worktree removed afterwards: git worktree remove + prune (git worktree list shows only /home/user/the-way at 0607656).

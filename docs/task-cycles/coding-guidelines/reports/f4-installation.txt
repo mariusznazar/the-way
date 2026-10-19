@@ -1,0 +1,47 @@
+......F...F.......F..E...........
+======================================================================
+ERROR: test_wrapper_sends_the_skill_to_the_product_case_of_where_the_way_lies (test_install.InstallTest.test_wrapper_sends_the_skill_to_the_product_case_of_where_the_way_lies) [maintain-coding-guidelines]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/installation/test_install.py", line 120, in test_wrapper_sends_the_skill_to_the_product_case_of_where_the_way_lies
+    text = install.skill_wrapper(path, name, self.commit)
+  File "/home/user/the-way/installation/install.py", line 112, in skill_wrapper
+    original = committed(path, commit)
+  File "/home/user/the-way/installation/install.py", line 74, in committed
+    return git("show", f"{commit}:{path}", cwd=SOURCE).stdout
+           ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/installation/install.py", line 69, in git
+    raise RuntimeError(result.stderr.strip() or result.stdout.strip())
+RuntimeError: fatal: path 'product-guidelines/coding/SKILL.md' does not exist in '05e44b1102f180d5cb37873f6e82774ac22e9366'
+
+======================================================================
+FAIL: test_guidance_names_no_commit_and_covers_the_product_rules (test_install.InstallTest.test_guidance_names_no_commit_and_covers_the_product_rules)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/installation/test_install.py", line 139, in test_guidance_names_no_commit_and_covers_the_product_rules
+    self.assertIn(f"`the-way-{name}`", guidance)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '`the-way-maintain-coding-guidelines`' not found in "# Pinned the-way process\n\nThis repository uses the-way, the process for its foundation, at the commit the gitlink of the Git submodule `.the-way` records. After a fresh clone run `git submodule update --init -- .the-way`; it needs read access to the Git URL in `.gitmodules`. Before use, `git -C .the-way rev-parse HEAD` must show the commit `git ls-files --stage -- .the-way` records. If initialization fails or the commits differ, stop; never use another copy or version of the-way.\n\nWrite foundation entries only through the project skills `the-way-record-decision`, `the-way-record-invariant`, `the-way-record-glossary-term`, `the-way-update-part-map`, `the-way-record-environment-fact`. Use the project skills `the-way-find-foundation-entries`, `the-way-define-project`, `the-way-plan-project`, `the-way-lead-project`, `the-way-settle-technology`, `the-way-refine-task`, `the-way-implement-task`, `the-way-plan-task`, `the-way-critique`, `the-way-maintain-styleguide` for their named work. Where a skill or a file it reads names one without the `the-way-` prefix, use the prefixed project skill, never a personal skill of that name.\n\nRun the-way's scripts from this repository's root as `.the-way/<path>` and always name this repository's file or directory, e.g. `python -B .the-way/gate/run_tests.py <directory>` and `python -B .the-way/elements/<element>/format_guard.py foundations/<file>`. A guard run inside `.the-way` without a file checks the-way's own files. Records of a run (`--record`) go under `.runs/`, which `.gitignore` must keep ignored.\n\nThe main branch is the branch task branches merge into. In a clone, `git symbolic-ref --short refs/remotes/origin/HEAD` names it as `origin/<branch>`; otherwise ask the human. On a task branch pass `--base` the commit `git merge-base HEAD <main branch>` prints and `--merge-onto` the commit of the main branch the merge goes onto (the part map's guard takes no `--merge-onto`). Pass `none` only while this repository has no main branch at all; a command that cannot find the branch means a wrong name, not a missing branch. With `none` the checks that need the commit stay unchecked.\n\nUntil the part map has its first parts, its guard reports every tracked file as claimed by no part; that is expected, and it is not a pass.\n\nNothing runs these checks automatically. Before a merge, run the format guard of every changed foundation file and the tests of every changed part, and report what failed and what stayed unchecked. Where this repository holds `guidelines/`, run `python -B .the-way/product-guidelines/form_check.py` and `python -B .the-way/product-guidelines/form_check.py --merge-onto <main commit>` before every merge. A check that did not run is never a pass.\n"
+
+======================================================================
+FAIL: test_preview_apply_rerun_and_preserve_foundation (test_install.InstallTest.test_preview_apply_rerun_and_preserve_foundation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/installation/test_install.py", line 97, in test_preview_apply_rerun_and_preserve_foundation
+    self.assertIn(f"`{sibling}`", text)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '`maintain-coding-guidelines`' not found in "---\nname: the-way-record-decision\ndescription: Use when a decision has to be written into a product's decision log, foundations/decisions.md — a choice just settled in conversation that binds later work, a new answer to a question the log already holds, a decision recovered from existing code, a due review of a decision whose review-when date has come, or a decision a project definition projects. Use this product's pinned the-way commit.\n---\n\n# the-way-record-decision\n\nThe process for this repository is pinned as the Git submodule `.the-way`. Its commit is `05e44b1102f180d5cb37873f6e82774ac22e9366`.\n\nIf `.the-way/elements/decisions/skill/SKILL.md` is absent, run `git submodule update --init -- .the-way` from the product root. Check `git ls-files --stage -- .the-way` and `git -C .the-way rev-parse HEAD`: both must show `05e44b1102f180d5cb37873f6e82774ac22e9366`. If initialization fails or either commit differs, stop.\n\nRead `.the-way/elements/decisions/skill/SKILL.md` in full and follow it. Read the files it references inside `.the-way`. Where it says where the-way lies, the product's case applies: here the process root is `.the-way`. Do not substitute a global skill.\n\nWhere this skill or a file it reads names another the-way skill — `record-decision`, `record-invariant`, `record-glossary-term`, `update-part-map`, `record-environment-fact`, `find-foundation-entries`, `define-project`, `plan-project`, `lead-project`, `settle-technology`, `refine-task`, `implement-task`, `plan-task`, `critique` or `maintain-styleguide` — use this product's project skill of the same name with the `the-way-` prefix, never an unprefixed one.\n"
+
+======================================================================
+FAIL: test_warns_before_writing_paths_git_ignores (test_install.InstallTest.test_warns_before_writing_paths_git_ignores)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/installation/test_install.py", line 313, in test_warns_before_writing_paths_git_ignores
+    self.assertIn(f".claude/skills/the-way-{name}/SKILL.md", warning[0])
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '.claude/skills/the-way-maintain-coding-guidelines/SKILL.md' not found in 'WARNING: git ignores these paths in this repository, so they cannot be committed and other clones and cloud sessions will not get them: .claude/skills/the-way-record-decision/SKILL.md, .agents/skills/the-way-record-decision/SKILL.md, .claude/skills/the-way-record-invariant/SKILL.md, .agents/skills/the-way-record-invariant/SKILL.md, .claude/skills/the-way-record-glossary-term/SKILL.md, .agents/skills/the-way-record-glossary-term/SKILL.md, .claude/skills/the-way-update-part-map/SKILL.md, .agents/skills/the-way-update-part-map/SKILL.md, .claude/skills/the-way-record-environment-fact/SKILL.md, .agents/skills/the-way-record-environment-fact/SKILL.md, .claude/skills/the-way-find-foundation-entries/SKILL.md, .agents/skills/the-way-find-foundation-entries/SKILL.md, .claude/skills/the-way-define-project/SKILL.md, .agents/skills/the-way-define-project/SKILL.md, .claude/skills/the-way-plan-project/SKILL.md, .agents/skills/the-way-plan-project/SKILL.md, .claude/skills/the-way-lead-project/SKILL.md, .agents/skills/the-way-lead-project/SKILL.md, .claude/skills/the-way-settle-technology/SKILL.md, .agents/skills/the-way-settle-technology/SKILL.md, .claude/skills/the-way-refine-task/SKILL.md, .agents/skills/the-way-refine-task/SKILL.md, .claude/skills/the-way-implement-task/SKILL.md, .agents/skills/the-way-implement-task/SKILL.md, .claude/skills/the-way-plan-task/SKILL.md, .agents/skills/the-way-plan-task/SKILL.md, .claude/skills/the-way-critique/SKILL.md, .agents/skills/the-way-critique/SKILL.md, .claude/skills/the-way-maintain-styleguide/SKILL.md, .agents/skills/the-way-maintain-styleguide/SKILL.md'
+
+----------------------------------------------------------------------
+Ran 33 tests in 40.655s
+
+FAILED (failures=3, errors=1)

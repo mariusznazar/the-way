@@ -1,0 +1,71 @@
+.....FF......................s...........s..s..ssss...F..s.............ss................................
+======================================================================
+FAIL: test_a_network_path_given_as_root_or_file_exits_with_2_without_a_lookup (test_check_instructions.CommandLine.test_a_network_path_given_as_root_or_file_exits_with_2_without_a_lookup) (arguments=['\\\\192.0.2.1\\share\\x.md'])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/instruction-files/test_check_instructions.py", line 1074, in test_a_network_path_given_as_root_or_file_exits_with_2_without_a_lookup
+    code, out, err = run_main(arguments)
+                     ~~~~~~~~^^^^^^^^^^^
+  File "/home/user/the-way/instruction-files/test_check_instructions.py", line 81, in run_main
+    code = check_instructions.main(arguments)
+  File "/home/user/the-way/instruction-files/check_instructions.py", line 706, in main
+    if root is not None and not os.path.isdir(root):
+                                ~~~~~~~~~~~~~^^^^^^
+  File "/home/user/the-way/instruction-files/test_check_instructions.py", line 112, in checked
+    test.fail(f"{name} received a network path")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: isdir received a network path
+
+======================================================================
+FAIL: test_a_network_path_given_as_root_or_file_exits_with_2_without_a_lookup (test_check_instructions.CommandLine.test_a_network_path_given_as_root_or_file_exits_with_2_without_a_lookup) (arguments=['--file', '\\\\192.0.2.1\\share\\x.md'])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/instruction-files/test_check_instructions.py", line 1074, in test_a_network_path_given_as_root_or_file_exits_with_2_without_a_lookup
+    code, out, err = run_main(arguments)
+                     ~~~~~~~~^^^^^^^^^^^
+  File "/home/user/the-way/instruction-files/test_check_instructions.py", line 81, in run_main
+    code = check_instructions.main(arguments)
+  File "/home/user/the-way/instruction-files/check_instructions.py", line 712, in main
+    if not stat.S_ISREG(os.stat(path).st_mode):
+                        ~~~~~~~^^^^^^
+  File "/home/user/the-way/instruction-files/test_check_instructions.py", line 112, in checked
+    test.fail(f"{name} received a network path")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: stat received a network path
+
+======================================================================
+FAIL: test_net_and_network_are_mount_points_of_macos_only (test_check_instructions.NetworkShapesOffWindows.test_net_and_network_are_mount_points_of_macos_only)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/the-way/instruction-files/test_check_instructions.py", line 572, in test_net_and_network_are_mount_points_of_macos_only
+    self.assertEqual([level for level, _ in self.levels("/net/host/x.md")], ["warn"])
+                                            ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/instruction-files/test_check_instructions.py", line 531, in levels
+    return [(f.level, f.message) for f in dead(repo.findings())]
+                                               ~~~~~~~~~~~~~^^
+  File "/home/user/the-way/instruction-files/test_check_instructions.py", line 64, in findings
+    return check_instructions.check(self.root, [os.path.join(self.root, e) for e in extra])
+           ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/instruction-files/check_instructions.py", line 676, in check
+    texts[rel] = check_file(path, rel, root, findings,
+                 ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                            agents_beside=folder + "AGENTS.md" in present)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/the-way/instruction-files/check_instructions.py", line 491, in check_file
+    if resolve(token, bases):
+       ~~~~~~~^^^^^^^^^^^^^^
+  File "/home/user/the-way/instruction-files/check_instructions.py", line 466, in resolve
+    return names_something(path)
+  File "/home/user/the-way/instruction-files/check_instructions.py", line 443, in names_something
+    return os.path.lexists(path)
+           ~~~~~~~~~~~~~~~^^^^^^
+  File "/home/user/the-way/instruction-files/test_check_instructions.py", line 518, in checked
+    self.fail(f"{name} received a network-shaped path")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: lexists received a network-shaped path
+
+----------------------------------------------------------------------
+Ran 104 tests in 1.665s
+
+FAILED (failures=3, skipped=10)
+exit 1

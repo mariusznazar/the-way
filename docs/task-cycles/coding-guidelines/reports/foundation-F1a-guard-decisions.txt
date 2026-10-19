@@ -1,0 +1,32 @@
+foundations/decisions.md:6541: error: the text names WAY-206, which does not exist
+foundations/decisions.md:6542: error: the text names WAY-212, which does not exist
+foundations/decisions.md:6547: error: the text names WAY-203, which does not exist
+foundations/decisions.md:6548: error: the text names WAY-204, which does not exist
+foundations/decisions.md:6550: error: the text names WAY-205, which does not exist
+foundations/decisions.md:6610: error: *Rationale* names WAY-206, which does not exist
+foundations/decisions.md:6610: error: *Rationale* names WAY-206, which does not exist
+foundations/decisions.md:6610: error: *Rationale* names WAY-205, which does not exist
+foundations/decisions.md:71: warning: WAY-03: check-by date 2026-10-02 has passed without a review record
+foundations/decisions.md:635: warning: WAY-21: check-by date 2026-10-02 has passed without a review record
+foundations/decisions.md:1476: warning: WAY-52: check-by date 2026-10-02 has passed without a review record
+foundations/decisions.md:1558: warning: WAY-55: check-by date 2026-10-02 has passed without a review record
+foundations/decisions.md:1972: warning: WAY-69: check-by date 2026-10-02 has passed without a review record
+foundations/decisions.md:5477: warning: *Approved by* is the placeholder `merge of <request link>`
+foundations/decisions.md:5549: warning: *Approved by* is the placeholder `merge of <request link>`
+foundations/decisions.md:6482: warning: *Approved by* is the placeholder `merge of <request link>`
+foundations/decisions.md:6520: warning: *Approved by* is the placeholder `merge of <request link>`
+foundations/decisions.md:6608: warning: *Approved by* is the placeholder `merge of <request link>`
+foundations/decisions.md:6657: warning: *Approved by* is the placeholder `merge of <request link>`
+foundations/decisions.md:6701: warning: *Approved by* is the placeholder `merge of <request link>`
+foundations/decisions.md:6738: warning: *Approved by* is the placeholder `merge of <request link>`
+foundations/decisions.md:6773: warning: *Approved by* is the placeholder `merge of <request link>`
+foundations/decisions.md:6806: warning: *Approved by* is the placeholder `merge of <request link>`
+foundations/decisions.md:6837: warning: *Approved by* is the placeholder `merge of <request link>`
+foundations/decisions.md:6868: warning: *Approved by* is the placeholder `merge of <request link>`
+unchecked: the lines the log holds on the main branch, and the versions it gains per number — --base none: there is no commit the branch left the main branch from
+unchecked: a change to the template without a new version in the log — --base none: there is no commit the branch left the main branch from
+unchecked: `TODO` in the log — --merge-onto none: there is no commit to merge onto
+unchecked: the copies of a version both logs hold — --merge-onto none: there is no commit to merge onto
+unchecked: the fingerprints relations carry — --merge-onto none: there is no commit to merge onto
+8 error(s), 17 warning(s), 5 unchecked
+exit 1

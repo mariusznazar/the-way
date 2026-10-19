@@ -1,0 +1,34 @@
+HEAD aaaab9d
+would change .claude/skills/the-way-critique/SKILL.md
+would change .agents/skills/the-way-critique/SKILL.md
+would change .claude/skills/the-way-find-foundation-entries/SKILL.md
+would change .agents/skills/the-way-find-foundation-entries/SKILL.md
+would change .claude/skills/the-way-record-decision/SKILL.md
+would change .agents/skills/the-way-record-decision/SKILL.md
+would change .claude/skills/the-way-record-environment-fact/SKILL.md
+would change .agents/skills/the-way-record-environment-fact/SKILL.md
+would change .claude/skills/the-way-record-glossary-term/SKILL.md
+would change .agents/skills/the-way-record-glossary-term/SKILL.md
+would change .claude/skills/the-way-record-invariant/SKILL.md
+would change .agents/skills/the-way-record-invariant/SKILL.md
+would change .claude/skills/the-way-update-part-map/SKILL.md
+would change .agents/skills/the-way-update-part-map/SKILL.md
+would change .claude/skills/the-way-maintain-instruction-files/SKILL.md
+would change .agents/skills/the-way-maintain-instruction-files/SKILL.md
+would change .claude/skills/the-way-maintain-styleguide/SKILL.md
+would change .agents/skills/the-way-maintain-styleguide/SKILL.md
+would change .claude/skills/the-way-lead-project/SKILL.md
+would change .agents/skills/the-way-lead-project/SKILL.md
+would change .claude/skills/the-way-plan-project/SKILL.md
+would change .agents/skills/the-way-plan-project/SKILL.md
+would change .claude/skills/the-way-define-project/SKILL.md
+would change .agents/skills/the-way-define-project/SKILL.md
+would change .claude/skills/the-way-refine-task/SKILL.md
+would change .agents/skills/the-way-refine-task/SKILL.md
+would change .claude/skills/the-way-settle-technology/SKILL.md
+would change .agents/skills/the-way-settle-technology/SKILL.md
+would change .claude/skills/the-way-plan-task/SKILL.md
+would change .agents/skills/the-way-plan-task/SKILL.md
+would change .claude/skills/the-way-implement-task/SKILL.md
+would change .agents/skills/the-way-implement-task/SKILL.md
+exit 0

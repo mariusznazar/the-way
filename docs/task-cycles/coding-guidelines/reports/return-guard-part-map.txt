@@ -1,0 +1,9 @@
+unchecked: the list of parts of `wording-reaches-dependants` — its test leaves no coverage file
+unchecked: the list of parts of `skills-reach-the-way-sessions` — its test leaves no coverage file
+unchecked: the change path of every promise level in use — the levels sit at the declarations, and no command of the product reports them
+unchecked: the dependencies between parts, and new or stale violations — no command of the product reports the dependency graph
+unchecked: the list of known violations — --base none: there is no commit the branch left the main branch from
+unchecked: the identifiers of the map — --base none: there is no commit the branch left the main branch from
+unchecked: the lowering of a part's computed criticality — --base none: there is no commit the branch left the main branch from
+0 error(s), 0 warning(s), 7 unchecked
+exit: 0
