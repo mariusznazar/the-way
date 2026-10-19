@@ -2212,7 +2212,7 @@ The form check of guidelines, `product-guidelines/form_check.py`, reports as an 
 
 ## guidelines-check-kind-index/1
 
-The form check of guidelines, `product-guidelines/form_check.py`, reports as an error every file `guidelines/coding-<kind>.md` git lists that no row of the table under `## Kinds of code` in `guidelines/coding.md` names by its path in *File*, every row of that table whose *File* names no file git lists, whose *Kind* is not the `<kind>` of the file its *File* names or whose *When to read* is empty, and every file `guidelines/coding-<kind>.md` git lists where git lists no `guidelines/coding.md`.
+The form check of guidelines, `product-guidelines/form_check.py`, reports as an error every file `guidelines/coding-<kind>.md` git tracks that no row of the table under `## Kinds of code` in `guidelines/coding.md` names by its path in *File*, every row of that table whose *File* names no file git tracks, whose *Kind* is not the `<kind>` of the file its *File* names or whose *When to read* is empty, and every file `guidelines/coding-<kind>.md` git tracks where git tracks no `guidelines/coding.md`.
 
 - **Method:** `python -B gate/run_tests.py product-guidelines --record .runs/product-guidelines-tests.jsonl`
 - **Rests on:** none

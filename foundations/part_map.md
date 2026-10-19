@@ -140,7 +140,7 @@ them.
 
 - **Files:** task-cycle/**
 - **Depends on:** decisions · invariants · glossary · part-map · environment-facts ·
-  elements-common · project-level · gate · relation-model
+  elements-common · project-level · gate · relation-model · product-guidelines
 - **Failure modes:**
   - the orchestrator stops for an implementation choice it can settle from the task and foundation
     — an implementable task waits for the human before its request — high — not detected
