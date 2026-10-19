@@ -122,7 +122,8 @@ child agent and edits only the task document, its turn and the trial run's outpu
   such as endpoints, migrations or modules; or nothing — and whether it has coding guidelines. Say
   plainly when it has nothing (WAY-210).
 - That gives the mode, and modes combine:
-  - no code: the starting set of step 2;
+  - no code: the starting set of step 2, so that the general file with its standing checks comes
+    into being before the first task that writes the product's code (WAY-209);
   - code and no coding guidelines: step 2, and the trial run and the audit of step 3;
   - a task that creates the first file of a kind of code: "A new kind" in step 3;
   - existing coding guidelines, refreshed or extended: step 2, and step 3, which tries the set and
@@ -188,8 +189,8 @@ Where the product has code:
   - `do not copy` for each file that breaks a rule the product holds or the task settles, with the
     file and line of the place that breaks it, and `copy` for every other file of the kind.
 - **A new kind.** Where the task creates the first file of a kind of code, that file is the kind's
-  exemplar (WAY-200): step 4 settles the kind's identifier, the path the file takes and the rules a
-  script checks of it.
+  exemplar, and its file of guidelines comes into being with it (WAY-200, WAY-209): step 4 settles
+  the kind's identifier, the path the file takes and the rules a script checks of it.
 - A choice found in the product's files — a tool's configuration, a habit its files share — is a
   proposal, never a rule, until the human settles it. An existing choice the human keeps becomes a
   decision whose rationale is the human's words or `unknown`, never one the agent infers (WAY-29).
