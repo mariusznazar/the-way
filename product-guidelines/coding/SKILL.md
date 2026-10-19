@@ -79,9 +79,9 @@ writes there is written for a reader who was not in it.
   is kept — each with the human's words and date as its source.
 - *Context*: the trial run's evidence — how many reports each rule gave and what the judging
   agent found of them, with the paths of the output and of its verdicts; what the audit found, each
-  `do not copy` file with its file and line, each kind the human deferred and a finding the task
-  does not take up marked deferred with its reason; the research's sources, each page with its
-  version; what the audit or the trial run could not see.
+  `do not copy` file with its file and line, a finding the task does not take up marked deferred
+  with its reason; the research's sources, each page with its version; what the audit or the trial
+  run could not see.
 - *Settlements to record*: `refine-task` step 5 builds them through `find-foundation-entries` —
   the product's decisions, its invariants and the environment facts they rest on, the fact of each
   adopted set's edition among them. A change of the part map is never a row, which is why it stands
@@ -178,10 +178,8 @@ Where the product has code:
   WAY-205; where the formatter would rewrite it, the one reformatting of the whole of the code
   (WAY-205).
 - **Kinds** (WAY-200, WAY-201). Name the kinds of code the product already holds files of, each
-  with its files, and recommend auditing every one of them. The human may defer a kind, as a choice
-  put to them in step 4; the task document records each deferred kind with the human's reason in
-  *Context*. For each kind audited, judge every file of it the product holds, compare them, and
-  propose:
+  with its files; the audit covers every one of them. For each kind, judge every file of it the
+  product holds, compare them, and propose:
   - its exemplar, with one sentence of what the product gains by it, such as "every new endpoint
     checks its input as this one does";
   - what a script can check of that exemplar — where a file of the kind lies, what it calls, how it
@@ -218,9 +216,9 @@ Where the product has code:
   - for the formatter, its tool and its configuration;
   - for the audit of dependencies, its tool, the advisory database it reads and the severity from
     which a vulnerability counts, every severity among the ways (WAY-206);
-  - for each kind audited or new, its exemplar, the status of each of its files and the rules a
-    script checks of the exemplar, and each kind the human defers rather than audit, with the
-    reason (WAY-198, WAY-199, WAY-200, WAY-201);
+  - for each kind the product holds files of, and each new kind, its exemplar, the status of each
+    of its files and the rules a script checks of the exemplar (WAY-198, WAY-199, WAY-200,
+    WAY-201);
   - the product's decision adopting the coding template, and each departure from it by a decision
     with its reason (WAY-193).
 - **Invariants.** Every binding rule gets an invariant of the kind the coding template's required
