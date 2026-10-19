@@ -1,1 +1,0 @@
-{"command": ["python", "-B", "gate/run_tests.py", "gate"], "exit_code": 0}

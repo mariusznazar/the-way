@@ -1,4 +1,0 @@
-decisions.md population 208 scope_matches 153 whole_reads 208
-invariants.md population 222 scope_matches 68 whole_reads 117
-Semantic search matching entries: 95
-Unread matching entries: none

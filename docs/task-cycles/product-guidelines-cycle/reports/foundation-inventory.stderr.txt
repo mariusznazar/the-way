@@ -1,5 +1,0 @@
-Traceback (most recent call last):
-  File "C:\Storage\repos\the-way\.runs\worktrees\product-guidelines-cycle\.runs\task-cycles\product-guidelines-cycle\reports\foundation_inventory.py", line 27, in <module>
-    assert found, ident
-           ^^^^^
-AssertionError: Withdrawn identifiers

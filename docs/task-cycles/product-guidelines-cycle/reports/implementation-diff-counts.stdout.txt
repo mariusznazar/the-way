@@ -1,8 +1,0 @@
-5	2	product-guidelines/coding/SKILL.md
-77	0	product-guidelines/reading.md
-3	1	product-guidelines/styleguide/SKILL.md
-12	0	project-level/plan/skill/SKILL.md
-31	0	project-level/task/skill/SKILL.md
-11	5	task-cycle/plan/SKILL.md
-7	0	task-cycle/record_template.md
-52	3	task-cycle/skill/SKILL.md
