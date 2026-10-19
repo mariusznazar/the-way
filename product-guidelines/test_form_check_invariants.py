@@ -1150,7 +1150,7 @@ class KindIndex(FormCheckTestCase):
             self.check({CODING_FILE: general, CODING_ENDPOINT_FILE: CODING_ENDPOINT}, ()),
             (CODING_FILE, CODING_ENDPOINT_FILE))
 
-    def test_a_row_naming_no_file_git_lists_is_reported(self):
+    def test_a_row_naming_no_file_git_tracks_is_reported(self):
         # invariant: guidelines-check-kind-index/1
         row = "| job | `guidelines/coding-job.md` | before adding or changing a job |"
         general = replaced(CODING, KINDS_ROW + "\n", KINDS_ROW + "\n" + row + "\n")
@@ -1183,7 +1183,7 @@ class KindIndex(FormCheckTestCase):
                     CODING_FILE, line=line_of(general, row))
 
     def test_a_kind_file_with_no_general_file_is_reported(self):
-        """Git lists the file of a kind and no `guidelines/coding.md`: alone, beside guidelines
+        """Git tracks the file of a kind and no `guidelines/coding.md`: alone, beside guidelines
         of other disciplines, and with the general file standing untracked."""
         # invariant: guidelines-check-kind-index/1
         cases = (
@@ -1198,6 +1198,22 @@ class KindIndex(FormCheckTestCase):
             with self.subTest(name):
                 self.assert_reported_anew(self.check(files, (), untracked=untracked),
                                      (CODING_ENDPOINT_FILE, CODING_FILE, "guidelines"))
+
+    def test_a_kind_file_git_does_not_track_is_no_error(self):
+        """The control of the tests above: a file of a kind standing in the working tree but not
+        tracked by git is no file of the sentence, so no row is asked to name it and no general
+        file is asked to stand beside it."""
+        # invariant: guidelines-check-kind-index/1
+        general = replaced(CODING, KINDS_ROW + "\n", "")
+        cases = (
+            ("no row names it", {CODING_FILE: general}),
+            ("no general file", {TESTING_FILE: TESTING}),
+        )
+        for name, files in cases:
+            for options in ((), ("--merge-onto", "none")):
+                with self.subTest(name, options=options):
+                    self.assert_clean(self.check(
+                        files, options, untracked={CODING_ENDPOINT_FILE: CODING_ENDPOINT}))
 
 
 class Exemplar(FormCheckTestCase):
