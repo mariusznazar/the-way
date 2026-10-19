@@ -7246,7 +7246,7 @@ it, such as adding or changing a file of its kind.
     to run before a change.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/27
 
 *Rationale:* coding guidelines no instruction leads to can be missed by a session outside the task
 cycle; a path with its condition costs one line and is read when the condition comes (WAY-129), and the
@@ -7288,7 +7288,7 @@ the order of work (WAY-181), as an example they follow or explain departing from
     reading condition is ignored; a recipient relies on a stale selection; the order rejects a plan.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/27
 
 *Rationale:* shared guidance reaches the people designing and making a change before review can
 find its absence. Selection by the affected work bounds context without cutting the source into
@@ -7326,7 +7326,7 @@ extension in the current task, not treated as an absent file.
     for a new general coding file.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/27
 
 *Rationale:* discovery repeated per discipline drifts from what the later cycle reads. Recognizing
 the work before implementation lets refinement find its missing ground, at the cost of judgment
@@ -7365,7 +7365,7 @@ in the current task under WAY-172 and WAY-199, unless the human separates it.
     guidelines waits for those guidelines; the task's wait is copied into a new plan state.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/27
 
 *Rationale:* guidelines prepared within the work that first needs them shrink to that work's
 needs, whereas separate preparation lets later work share meanings. Existing products accumulate
@@ -7398,7 +7398,7 @@ as the first.
     endpoints are ignored and the next endpoint is called the first.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/27
 
 *Rationale:* the first instance supplies the material an exemplar needs, so separating its
 designation would create a circular wait. Existing instances instead need comparison, or the next
@@ -7424,7 +7424,7 @@ that part, and applies that departure only within the scope the decision gives i
     written; a departure for one part silently exempts another.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/27
 
 *Rationale:* a product can knowingly decline guidance through its own decision, and forcing its
 creation afterwards would cancel that choice. The price is that the departure removes the
@@ -7455,7 +7455,7 @@ definition and plan approval route.
     task has no consumer; the plan silently enlarges the approved scope.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/27
 
 *Rationale:* discovering the prerequisite during breakdown makes the dependencies visible before
 work is handed out; refinement remains useful for work outside a project and for later omissions.
@@ -7490,7 +7490,7 @@ obtained, without treating a code inspection as evidence of rendered appearance.
     required states; code inspection is called proof of visible focus; absent access is hidden.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/27
 
 *Rationale:* states beyond the default are easy to omit, and rendered appearance can differ from
 what source inspection suggests. Looking at both catches different faults before review; where
@@ -7518,7 +7518,7 @@ appearance; the reviewer retains the grade and scope decisions WAY-161 assigns i
     difference is automatically blocking; the orchestrator changes the reviewer's grade.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/27
 
 *Rationale:* appearance can carry the meaning by which a person chooses an action, so a visual
 fault can change behaviour as seriously as incorrect code. Its consequence supplies the
@@ -7547,7 +7547,7 @@ no authority to regrade or discard a reviewer's finding.
     discards an Important finding by calling the cited material an example.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/27
 
 *Rationale:* examples teach useful ways without acquiring the force of approved rules, and
 comparison without a concrete consequence turns taste into a blocker. The price is that some
@@ -7581,7 +7581,7 @@ definition's technology step.
     that lesson; the cycle dictates a product's visual meanings or styling technology.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/27
 
 *Rationale:* these practices help the cycle catch visible defects while its existing foundation
 keeps meanings and technology choices with the product. Naming the adoption and its boundaries
