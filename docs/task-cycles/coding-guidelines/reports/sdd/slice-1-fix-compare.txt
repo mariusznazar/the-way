@@ -1,4 +1,0 @@
-verbose test ids: base 88 after fix 88 ; identical outcomes by name: True
-run_tests FAIL/ERROR headers: base 89 after fix 89 ; identical: True
-record lines: base 64 after fix 64 ; identical: True
-tests not ok after fix: 23

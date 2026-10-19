@@ -1,4 +1,0 @@
-== row line 15 exit 1
-guidelines/coding.md:15: error: the path `guidelines/testing.md` of *File* names no file `guidelines/coding-<kind>.md`
-== row line 15 exit 1
-guidelines/coding.md:15: error: the path `src/api/orders/route.ts` of *File* names no file `guidelines/coding-<kind>.md`

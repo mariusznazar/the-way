@@ -1,8 +1,0 @@
-would change .claude/skills/the-way-record-invariant/SKILL.md
-would change .agents/skills/the-way-record-invariant/SKILL.md
-would change .claude/skills/the-way-update-part-map/SKILL.md
-would change .agents/skills/the-way-update-part-map/SKILL.md
-would change .claude/skills/the-way-refine-task/SKILL.md
-would change .agents/skills/the-way-refine-task/SKILL.md
-would change .claude/skills/the-way-settle-technology/SKILL.md
-would change .agents/skills/the-way-settle-technology/SKILL.md

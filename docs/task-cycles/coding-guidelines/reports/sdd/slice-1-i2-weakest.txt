@@ -1,7 +1,0 @@
-Which styleguide decisions (WAY-173..WAY-192) mention the list of violated invariants:
-WAY-190/1: list of violated invariants until the cleaning ends, a second invariant that holds from its first
-WAY-190/1: *Rationale:* a violated invariant stands whole on the list of violated invariants (WAY-51), so until
-
-Required rule headings named by the new text vs the form block:
-Every background with its text: 1
-No value in place of a design token: 1

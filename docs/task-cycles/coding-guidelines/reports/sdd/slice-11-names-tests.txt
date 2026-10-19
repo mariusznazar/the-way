@@ -1,7 +1,0 @@
-test_guidance_names_no_commit_and_covers_the_product_rules (installation.test_install.InstallTest.test_guidance_names_no_commit_and_covers_the_product_rules) ... ok
-test_preview_apply_rerun_and_preserve_foundation (installation.test_install.InstallTest.test_preview_apply_rerun_and_preserve_foundation) ... ok
-test_warns_before_writing_paths_git_ignores (installation.test_install.InstallTest.test_warns_before_writing_paths_git_ignores) ... ok
-test_wrapper_sends_the_skill_to_the_product_case_of_where_the_way_lies (installation.test_install.InstallTest.test_wrapper_sends_the_skill_to_the_product_case_of_where_the_way_lies) ... ok
-Ran 22 tests in 30.723s
-OK
-exit 0

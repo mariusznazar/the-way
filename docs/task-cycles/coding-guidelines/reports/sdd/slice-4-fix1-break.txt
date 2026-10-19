@@ -1,5 +1,0 @@
-## break: a rule naming guidelines-form taken as exempt whatever else it names
-FAIL: test_a_rule_naming_guidelines_form_needs_no_case_and_takes_none_of_it (test_form_check.TestCases.test_a_rule_naming_guidelines_form_needs_no_case_and_takes_none_of_it) [beside another, with no case of the other]
-FAIL: test_a_rule_naming_guidelines_form_needs_no_case_and_takes_none_of_it (test_form_check.TestCases.test_a_rule_naming_guidelines_form_needs_no_case_and_takes_none_of_it) [beside another, with a pair of it]
-Ran 1 test in 2.567s
-FAILED (failures=2)

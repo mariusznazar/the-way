@@ -1,5 +1,0 @@
-1
-0 error(s), 0 warning(s), 0 unchecked
-guidelines/styleguide-web.md:40: error: the rule `### Every background with its text` names the invariant `background-pair` in *Invariant* but gives no `good background-pair <path>` case after its fields: a rule gives a good and a bad case of each invariant it names other than `guidelines-form`
-guidelines/styleguide-web.md:40: error: the rule `### Every background with its text` names the invariant `background-pair` in *Invariant* but gives no `bad background-pair <path>` case after its fields: a rule gives a good and a bad case of each invariant it names other than `guidelines-form`
-2 error(s), 0 warning(s), 0 unchecked

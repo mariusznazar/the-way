@@ -1,7 +1,0 @@
-$ python3 -B product-guidelines/form_check.py --merge-onto none --record .runs/guidelines-reference.jsonl
-unchecked: the references in the foundation a merge leaves — --merge-onto none: there is no commit to merge onto
-note: the repository holds no guidelines/: no file of guidelines to check
-0 error(s), 0 warning(s), 1 unchecked
-exit 0
-{"check": "product-guidelines/form_check.py::check_references", "verdict": "pass", "invariant": "guidelines-reference-current/1"}
-{"check": "product-guidelines/form_check.py::check_merged_references", "verdict": "unchecked", "invariant": "guidelines-reference-current/1", "reason": "the method takes a commit the gate filled in as not existing", "description": "--merge-onto none: there is no commit to merge onto"}

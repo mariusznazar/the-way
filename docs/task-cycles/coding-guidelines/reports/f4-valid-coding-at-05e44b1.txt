@@ -1,7 +1,0 @@
-1
-note: no --merge-onto given: the references are not compared with the foundation a merge leaves; that check is not run, and is not counted in the last line
-0 error(s), 0 warning(s), 0 unchecked
-guidelines/coding-endpoint.md:0: error: the file's name does not agree with its *Discipline* `coding`: guidelines of that discipline stand in `guidelines/coding.md`
-1 error(s), 0 warning(s), 0 unchecked
-0 error(s), 0 warning(s), 0 unchecked
-

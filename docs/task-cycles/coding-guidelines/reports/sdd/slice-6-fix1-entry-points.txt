@@ -1,3 +1,0 @@
-HEAD before commit 5808fc7 + working tree
-entry points are current
-exit 0
