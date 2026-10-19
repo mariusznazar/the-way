@@ -11,8 +11,9 @@ The rules this template carries bind a product only through a decision of the pr
 them, and the product departs from any of them only by a decision of its log that gives the reason
 (WAY-173). Each rule below cites the decision of the-way that sets it (WAY-171). The rules of form
 every file of guidelines keeps — the header lines, the fields of a rule, references, code in
-backticks or fenced code, the language of the text, a dropped section or rule — stand in
-`product-guidelines/template.md`; this template holds what is particular to a styleguide.
+backticks or fenced code, the language of the text, a dropped section or rule, the test cases of a
+rule that names an invariant — stand in `product-guidelines/template.md`; this template holds what
+is particular to a styleguide.
 
 ## Required form
 
@@ -186,5 +187,12 @@ For the author who writes the styleguide in a task's cycle:
   and its source as the human settled them, or the exact address of the source and the item in it
   the value is read from; never from memory or from a mockup (WAY-182, WAY-179).
 - Point to the values; write none into the styleguide (WAY-176, WAY-171).
+- Write the test cases of each rule as the section "Test cases of a rule" of
+  `product-guidelines/template.md` gives them (WAY-168). `### Every background with its text`, whose
+  invariant is the product's copy of `guidelines-form`, carries none. Where the product cleans its
+  screens as tasks touch their styles, the invariant of `### No value in place of a design token`
+  that no file of the part holds such a value stands on the list of violated invariants: its cases
+  are read against the commit's own result, while those of the invariant beside it that compares
+  each file with `{fork-point}` take the strict reading (WAY-168, WAY-190).
 - Run the form check. A meaning the task did not settle is a question that stops the cycle at a
   blocked draft request, never a row of `## Roles` (WAY-172).
