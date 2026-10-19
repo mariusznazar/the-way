@@ -53,7 +53,7 @@ installer allows Git's file protocol only when the URL is a local path or a `fil
 | `foundations/glossary.md` | Empty glossary with its required description. |
 | `foundations/part_map.md` | Empty map with its required sections and table headers. |
 | `foundations/environment_facts.md` | Empty fact file with its required withdrawn identifiers table. |
-| `.claude/skills/the-way-*/SKILL.md` | Project skill entry points for Claude Code: the five foundation entry skills, `find-foundation-entries`, `define-project`, `plan-project`, `lead-project`, `settle-technology`, `refine-task`, `implement-task`, `plan-task`, `critique`, and `maintain-styleguide`. Each reads its source skill and referenced files from `.the-way` at the pinned commit, and sends work that skill hands to another the-way skill to the `the-way-` project skill of that name. |
+| `.claude/skills/the-way-*/SKILL.md` | Project skill entry points for Claude Code: the five foundation entry skills, `find-foundation-entries`, `define-project`, `plan-project`, `lead-project`, `settle-technology`, `refine-task`, `implement-task`, `plan-task`, `critique`, `maintain-styleguide`, and `maintain-coding-guidelines`. Each reads its source skill and referenced files from `.the-way` at the pinned commit, and sends work that skill hands to another the-way skill to the `the-way-` project skill of that name. |
 | `.agents/skills/the-way-*/SKILL.md` | The same entry points for Codex, byte for byte. |
 | `AGENTS.md` | The shared product guidance for Claude Code and Codex, between `<!-- the-way:begin -->` and `<!-- the-way:end -->`: initializing the submodule, using only the `the-way-*` skills, running the-way's scripts as `.the-way/<path>` on the product's files, the `--base` and `--merge-onto` commits, the empty part map's reports, and running the checks before a merge, the form check of `guidelines/` included. It names no commit, so it changes only when the guidance changes. |
 | `CLAUDE.md` | Created at the product root with the sole line `@AGENTS.md` when absent, so Claude Code receives the shared guidance and the product's other instructions in `AGENTS.md`. An existing file is preserved byte for byte. |
@@ -129,7 +129,9 @@ without a commit or a branch name and its commands on a main branch not called `
 refused as a directory, as non-UTF-8 text or for its markers — the refusal of an ignored
 `.the-way`, the four warnings, creation and preservation of root `CLAUDE.md`, effective import detection,
 the absence of a generated Claude rule, empty file form, the `maintain-styleguide` entry points and
-the form check's two commands run from the product,
+the form check's two commands run from the product, the `maintain-coding-guidelines` entry points
+and the refusal of a conflicting file, a directory or a non-UTF-8 file at their path in either skill
+directory,
 the invariants guard accepting a record under `.runs/`, and initialization in a fresh checkout.
 A symlinked `AGENTS.md` or `.gitignore` is refused by the same check as a directory but is not
 tested, since creating a symlink needs extra rights on Windows. They
