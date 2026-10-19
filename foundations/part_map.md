@@ -140,7 +140,7 @@ them.
 
 - **Files:** task-cycle/**
 - **Depends on:** decisions · invariants · glossary · part-map · environment-facts ·
-  elements-common · project-level · gate · relation-model
+  elements-common · project-level · gate · relation-model · product-guidelines
 - **Failure modes:**
   - the orchestrator stops for an implementation choice it can settle from the task and foundation
     — an implementable task waits for the human before its request — high — not detected
@@ -276,6 +276,11 @@ of guidelines with the skill that leads the work on them, and for the form check
   - the form check, reading a crafted file of guidelines, reads outside the repository, reaches a
     network host or stops without a report — a user's files can leave the machine, or a merge
     rests on a check that never ran — high — not detected
+  - the form check passes a file of coding guidelines of a kind whose exemplar no decision
+    designates — agents copy a file nobody approved — high — detected by guidelines-check-exemplar
+  - the skill proposes as blocking a rule of a linter's set that gives a report leading to no change
+    of code worth making — the gate blocks sound code, and only a change of a decision lets it
+    through — high — not detected
 - **Trust boundary:** product-guidelines/form_check.py
 
 ## wording-reaches-dependants

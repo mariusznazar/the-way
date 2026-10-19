@@ -17,9 +17,15 @@ guidelines are checked against it at the commit the product pins (WAY-34).
 
 - A product's guidelines stand in the directory `guidelines/` at the root of its repository, in a
   file `guidelines/<discipline>.md` for each discipline of work on the product it keeps guidelines
-  of; the guidelines of the styleguide discipline stand in a file `guidelines/styleguide-<part>.md`
-  for each user interface of the product, `<part>` being the identifier of the part of the
-  product's map whose files draw that user interface (WAY-167).
+  of, save the styleguide and coding disciplines (WAY-167).
+- The guidelines of the styleguide discipline stand in a file `guidelines/styleguide-<part>.md` for
+  each user interface of the product, `<part>` being the identifier of the part of the product's
+  map whose files draw that user interface (WAY-167).
+- The guidelines of the coding discipline stand in a file `guidelines/coding.md`, which holds the
+  product's standing checks, the rules of the whole of its code and a table naming each other file
+  of the discipline with when to read it, and in a file `guidelines/coding-<kind>.md` for each kind
+  of code that has an exemplar, which holds that exemplar and its rules, `<kind>` being the
+  identifier of the kind that the decision designating that exemplar gives (WAY-167).
 - The directory `guidelines/` belongs to the part of the product's map whose files direct whoever
   carries out its tasks, as its instruction files and skills do; the task that writes the
   product's first guidelines adds `guidelines/**` to that part's files (WAY-167).
@@ -45,8 +51,8 @@ sections and required rules to it at the places it names (WAY-171).
 
 - **Decision:** <PREFIX-NN>@<fingerprint> · …
 - **Invariant:** <identifier>@<fingerprint> · … | none
-- **Good:** <a use that follows the rule>
-- **Bad:** <a use that breaks it>
+- **Good:** <one line describing a use that follows the rule>
+- **Bad:** <one line describing a use that breaks it>
 
 <how to apply the rule: what to do, and how>
 
@@ -67,9 +73,11 @@ sections and required rules to it at the places it names (WAY-171).
 - **A binding rule** stands under `## Rules`, under a `### ` heading of its own, with the fields
   *Decision*, *Invariant*, *Good* and *Bad* in that order, followed by how to apply it (WAY-171).
   *Decision* names at least one decision of the product's log that carries the rule's choice;
-  *Invariant* names each invariant that checks the rule, or reads `none`; *Good* gives a use that
-  follows the rule and *Bad* one that breaks it (WAY-168). A discipline's template may require an
-  invariant in every rule; the styleguide's template does (WAY-188).
+  *Invariant* names each invariant that checks the rule, or reads `none`; *Good* describes in one
+  line a use that follows the rule and *Bad* one that breaks it, and a rule whose *Invariant* names
+  an invariant gives those uses as test cases, as the section *Test cases of a rule* below has it
+  (WAY-168). A discipline's template may require an invariant in every rule; the styleguide's
+  template does (WAY-188), and so does the coding template (WAY-196).
 - **A rule carries no rationale and no rejected options**: those stand in the decision it names
   (WAY-168).
 - **What names no decision is an example**, not a rule: it stands under `## Examples`, under a
@@ -82,6 +90,47 @@ sections and required rules to it at the places it names (WAY-171).
   `none —` followed by the product's decision that departs from the template, with its fingerprint:
   `none — <PREFIX-NN>@<fingerprint>` (WAY-171). Text the departing decision keeps as an example may
   then stand under `## Examples` (WAY-168).
+
+## Test cases of a rule
+
+A rule whose *Invariant* names an invariant other than `guidelines-form` gives the two uses its
+*Good* and *Bad* describe as test cases of that invariant, in the guidelines of every discipline
+(WAY-168).
+
+- **A pair for each invariant.** After its four fields, the rule's text holds, for each invariant
+  its *Invariant* names other than `guidelines-form`, exactly one fenced code block whose info
+  string — the text after the opening fence — is `good <identifier> <path>` and exactly one whose
+  info string is `bad <identifier> <path>`, `<identifier>` being that invariant's identifier
+  (WAY-168).
+- **A test case is a whole file.** Each such block holds the whole text of a file at `<path>` in
+  the product: the case is that file, added at that path or put in place of the file there, on the
+  commit checked. The method of the invariant the info string names passes with the `good` case and
+  fails with the `bad` one (WAY-168).
+- **An invariant on the list of violated invariants** fails on its commit whatever is added, so its
+  cases are read against the commit's own result: the `good` case adds no failure the commit does
+  not already have, and the `bad` case adds one. The per-file companion of such an invariant, which
+  compares each file with `{fork-point}` and holds from its first day (WAY-190, WAY-205), takes its
+  cases as they stand: it passes with the `good` case and fails with the `bad` one (WAY-168).
+- **Every fenced block of such a rule is a test case.** Code that only illustrates the rule stands
+  under `## Examples` (WAY-168).
+- **A test case is a short file** and may stand at a path the product does not hold, so that it
+  stays instructive: the `bad` case teaches the agent reading the guidelines what the rule forbids
+  (WAY-168, WAY-197).
+- **`<path>` is relative to the root of the repository** and holds no `..` segment, no drive, no
+  `\`, no `:` and no leading `/`; the form check reports a path that does (WAY-168, WAY-170). The
+  file of guidelines that holds the cases stays within the form check's limit of 1048576 bytes,
+  beyond which the form check does not read it (WAY-168, WAY-170).
+- **The outer fence of a case is three backticks**, and the text of a case holds no line that,
+  after any leading whitespace, starts with three backticks or three tildes; the form check reports
+  such a line (WAY-168, WAY-170). A bare three-backtick line inside a case closes the block there,
+  as the form check reads fences: the rest of the case reads as the rule's text, and the case's own
+  closing line opens a block with no info string, which the form check reports as a malformed test
+  case (WAY-168, WAY-170).
+- **A rule whose *Invariant* is the product's copy of `guidelines-form`** gives *Good* and *Bad* as
+  descriptions alone, with no test-case blocks: its cases are the-way's own tests of the form check,
+  the `guidelines-check-*` invariants with their good and bad fixtures, and a whole file of
+  guidelines given as a case would need cases of its own without end (WAY-168). The styleguide's
+  rule `### Every background with its text` is such a rule.
 
 ## Rules of writing
 
@@ -125,6 +174,10 @@ and these files read it as one.
   import. A file of guidelines that keeps that script quiet writes the names of code, at-rules and
   selectors in backticks, a class name or a value holding a `/` — a fraction, or a role with an
   opacity after a slash — in fenced code, and no `@` import of a file outside code.
+- The paths and texts of a rule's test cases stay in fenced code, where that script reads no path
+  and no import. That script switches between code and text on every line that starts, after any
+  leading whitespace, with three backticks or three tildes, which is why the text of a case holds
+  no such line.
 - `instruction-files/principles.md` puts emphasis — words written in capitals to make a rule stand
   out — on one rule per file at most, and `instruction-files/check_instructions.py` warns where more
   than one line of a file carries such words.

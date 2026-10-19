@@ -89,7 +89,7 @@ class StyleguideInstallationTest(unittest.TestCase):
         self.assertIn(f"If `.the-way/{SKILL_SOURCE}` is absent", wrapper)
         siblings = [path for directory in (".claude", ".agents")
                     for path in (self.product / directory / "skills").glob("the-way-*/SKILL.md")]
-        self.assertEqual(len(siblings), 30)
+        self.assertEqual(len(siblings), 32)
         for sibling in siblings:
             text = sibling.read_text(encoding="utf-8")
             self.assertRegex(text, r"names another the-way skill — [^\n]*`maintain-styleguide`"

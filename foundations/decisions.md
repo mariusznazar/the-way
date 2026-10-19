@@ -5440,28 +5440,41 @@ tie, and the choice would pass with an answer that gives the agent nothing.
 
 A product's guidelines are written by hand and stand outside its foundation, in the directory
 `guidelines/` at the root of its repository: a file `guidelines/<discipline>.md` for each discipline
-of work on the product it keeps guidelines of, save the styleguide discipline, whose guidelines
-stand in a file `guidelines/styleguide-<part>.md` for each user interface of the product, `<part>`
-being the identifier of the part of the product's map whose files draw that user interface. The
-directory `guidelines/` belongs to the part of the product's map whose files direct whoever carries
-out its tasks, as its instruction files and skills do.
+of work on the product it keeps guidelines of, save the styleguide and coding disciplines. The
+guidelines of the styleguide discipline stand in a file `guidelines/styleguide-<part>.md` for each
+user interface of the product, `<part>` being the identifier of the part of the product's map whose
+files draw that user interface; those of the coding discipline stand in a file
+`guidelines/coding.md`, which holds the product's standing checks, the rules of the whole of its
+code and a table naming each other file of the discipline with when to read it, and in a file
+`guidelines/coding-<kind>.md` for each kind of code that has an exemplar, which holds that exemplar
+and its rules, `<kind>` being the identifier of the kind that the decision designating that exemplar
+gives. The directory `guidelines/` belongs to the part of the product's map whose files direct
+whoever carries out its tasks, as its instruction files and skills do.
 
 - **Change:** new decision
 - **Scope:** product-guidelines, installation
 - **Based on:** none
 - **Relations:** derives from WAY-44@2f2b6227 · derives from WAY-04@29a75d2c
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Verification:** level 1 — invariants: guidelines-check-kind-index. Level 2 for where the files
+  stand and how they are named — an agent compares the change with the decision:
   - complies: a product with screens in a browser and an admin panel added to its backend keeps
     `guidelines/styleguide-web.md` and `guidelines/styleguide-admin.md`, named after the parts
     `web` and `admin` of its map, beside `guidelines/testing.md`, and the pattern `guidelines/**`
-    stands among the files of the part that holds its `AGENTS.md` and its skills;
+    stands among the files of the part that holds its `AGENTS.md` and its skills; a product whose
+    decision designates the exemplar of the kind `endpoint` keeps `guidelines/coding-endpoint.md`
+    beside `guidelines/coding.md`, whose table names it with "before adding or changing an
+    endpoint", while the product's linter and formatter stand in `guidelines/coding.md` alone;
   - violates: a product's styleguide stands in `docs/` or in `foundations/`; a product with one
     user interface names its styleguide `guidelines/styleguide.md`; a styleguide is composed by a
     script from the product's decisions; a product's guidelines become entries of an element of its
-    foundation.
+    foundation; every rule of a product's code, the exemplars of its kinds included, stands in
+    `guidelines/coding.md`; a product's coding guidelines stand in `guidelines/coding-backend.md`
+    and `guidelines/coding-web.md`, one for each part of its map, each repeating the standing
+    checks; a file `guidelines/coding-endpoint.md` stands where no decision designates an exemplar
+    of that kind.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/25
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
 
 *Rationale:* a spec lives as long as its task and holds only what entered it, while guidelines are
 shared by the whole product and outlast every task that uses them. They stand outside the foundation
@@ -5471,7 +5484,13 @@ files and skills, so they belong to that part, whose files change every later ta
 instruction file leads to them as to knowledge needed now and then (WAY-128). One directory with
 fixed names lets a check find them in every product; a product whose screens and admin panel are
 drawn by two parts keeps a styleguide for each, and the part's identifier in the name ties a
-styleguide to the files it governs, so that a renamed part shows.
+styleguide to the files it governs, so that a renamed part shows. Coding guidelines are cut by the
+kind of code rather than by part, since a kind such as an endpoint can live in more than one part
+while its exemplar is one: the general file holds what binds the whole of the code once, and an
+agent reads, beside it, only the files of the kinds its work touches, which the general file's
+table names with when to read each, as Open Mercato's table leading from a task to the guides to
+read does (WAY-195). The kind's identifier comes from the decision designating
+its exemplar, so that a file of a kind stands only where a human has approved what it holds.
 *Rejected:* guidelines as a sixth element of the foundation — what binds in them is already carried
 and checked by decisions and invariants, and the list of elements would no longer be closed; an
 extract a script composes from the foundation's entries, as rules for agents are generated from the
@@ -5482,32 +5501,52 @@ against the part whose code it describes; meanings kept in the spec of a screen 
 with its task, and the next screen gives the same colour another meaning; guidelines in the own
 directory of the part that directs agents — its path differs from product to product, and no check
 could find them; one styleguide for every user interface of a product — an admin panel and the
-product's screens are drawn by different parts.
+product's screens are drawn by different parts; all coding guidelines of a product in one file — it
+grows beyond measure, and an agent reads rules its work does not touch; a file of coding guidelines
+for each part of the map — a kind living in two parts and the standing checks repeat in several
+files and drift apart; a file for each kind with no general file — the standing checks have no
+place.
 
 ### WAY-168/1 — What does a rule of a product's guidelines hold beside the foundation entries that carry it?
 
 A binding rule of a product's guidelines names by identifier the decision of the product's log that
 carries its choice and each invariant that checks it, and says what to do and how, with a use that
 follows the rule and a use that breaks it, while its reasons and rejected options stand in that
-decision alone. What a product's guidelines hold that names neither such a decision nor an
-invariant is an example, not a rule.
+decision alone; what a product's guidelines hold that names neither such a decision nor an invariant
+is an example, not a rule. For each invariant a rule names other than the invariant of guidelines
+that checks their form, the use that follows the rule and the use that breaks it each give the whole
+text of a file at a path of the product, and that invariant's method, run on the commit checked with
+the file added at that path or put in place of the file there, passes with the first and fails with
+the second, or, for an invariant on the list of violated invariants, adds no failure the commit does
+not already have with the first and adds one with the second. The two uses are run against that
+method only when a change adds or alters the invariant's sentence or rewrites either use, never on
+every run of the gate.
 
 - **Change:** new decision
-- **Scope:** product-guidelines, decisions, invariants
+- **Scope:** product-guidelines, decisions, invariants, gate
 - **Based on:** none
 - **Relations:** derives from WAY-22@dcf291ea · derives from WAY-18@8c477ea2
-- **Verification:** level 1 — invariants: guidelines-check-carrier. Level 2 for what a rule says
-  and what stands as an example — an agent compares the change with the decision:
+- **Verification:** level 1 — invariants: guidelines-check-carrier · guidelines-check-example-files
+  · gate-guidelines-example-evidence. Level 2 for what a rule says, what stands as an example and
+  when the uses are run — an agent compares the change with the decision:
   - complies: a rule of a product's testing guidelines names the decision choosing the product's
-    fixtures for test data and says to set up each test's data through them, showing a test that
-    does and one that writes rows straight into the store of data; a sentence on how one team likes
-    to name its branches, which no decision carries, stands among the examples;
+    fixtures for test data and the invariant whose script finds a test that writes rows straight
+    into the store of data, and gives as its uses a short test file that sets up its data through
+    the fixtures, with which that script passes, and one that writes rows straight into the store,
+    with which it fails; a sentence on how one team likes to name its branches, which no decision
+    carries, stands among the examples; a change that rewords that invariant runs its script with
+    both files, and a change that touches neither the invariant nor the files runs neither; while
+    the invariant that no file of the product holds a value written in place of a design token
+    stands on the list of violated invariants, the file that follows the rule adds no failure and
+    the one that breaks it adds one;
   - violates: a rule of a styleguide repeats its decision's rationale and rejected options; an agent
     holds a change to a rule that names no decision; a rule says what to do with no use that
-    follows it and none that breaks it.
+    follows it and none that breaks it; a rule naming an invariant an agent checks gives its uses
+    in one line each, and the agent's check flags sound code unseen; every run of the gate runs
+    every use of every rule.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/25
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
 
 *Rationale:* guidelines do not replace the foundation's elements but bring what they hold to the
 work of one discipline: an agent changing a product's screens needs what to do and how, not an
@@ -5518,13 +5557,25 @@ once, and its fingerprint shows when the ground of the rule has moved (WAY-169).
 decision would bind with a choice nobody approved, so it is an example; a use that follows a rule
 and one that breaks it mark its line, as a pair of examples marks a decision's (WAY-12). A rule of
 guidelines that an instruction file leads to thus carries a decision the product records, the case
-in which WAY-130 lets a rule stand with no mistake behind it.
+in which WAY-130 lets a rule stand with no mistake behind it. Given as files run against the method
+of the invariant a rule names, the two uses also show that the check catches what the rule forbids
+and lets through what it allows; the second matters most where an agent judges the invariant, since
+a judge that flags sound code would otherwise go unseen. An invariant on the list of violated
+invariants fails on its commit whatever is added, so its uses are read against the failures the
+commit already has, while the invariant beside it that compares each file with the fork point takes
+them as they stand. The uses are run only when the invariant or a use changes, so an ordinary task
+pays nothing for them. The invariant that checks the form of guidelines is left out, because the
+form check's own tests are its cases, and a whole file of guidelines given as a case would need cases
+of its own without end.
 *Rejected:* guidelines keeping their choices with reasons and rejected options in a log of their
 own, narrowing WAY-18 and WAY-22 — a second log, whose collisions with the product's decisions no
 search of the whole foundation sees, and approval, the assessment of changes and the check of form
 built again for it; guidelines with no reasons anywhere — the meanings read from the options a
 choice rejected are lost; the reasons repeated in the rule beside its decision — two copies drift
-apart.
+apart; the two uses kept as illustration only — a check an agent runs may flag sound code, and
+nothing shows it; the uses run on every run of the gate — every task would pay for them; the uses
+run only by the reviewer in a task's cycle, with nothing tracking them — a use rewritten while its
+invariant stays unchanged passes unchecked.
 
 ### WAY-169/1 — What happens to a reference of guidelines when the entry it names changes?
 
@@ -5628,7 +5679,7 @@ of guidelines changes only with a decision of the-way and cites its number.
 - **Change:** new decision
 - **Scope:** product-guidelines
 - **Based on:** none
-- **Relations:** derives from WAY-168@47d9d53e
+- **Relations:** derives from WAY-168@dc4a98a1
 - **Verification:** level 1 — invariants: guidelines-form · guidelines-check-form. Level 2 for the
   language of the text and the rules of the templates — an agent compares the change with the
   decision:
@@ -5717,7 +5768,7 @@ and the skill, never a product's screens directly.
 - **Change:** new decision
 - **Scope:** product-guidelines
 - **Based on:** none
-- **Relations:** derives from WAY-168@47d9d53e · derives from WAY-100@e7a74a18
+- **Relations:** derives from WAY-168@dc4a98a1 · derives from WAY-100@e7a74a18
 - **Verification:** level 2 — an agent compares the work with the decision:
   - complies: a product's styleguide names, at each rule the template requires, the product's
     decision adopting it; a simple admin panel's styleguide drops the page showing its components in
@@ -6243,7 +6294,7 @@ decision binds with no invariant.
 - **Change:** new decision
 - **Scope:** product-guidelines, invariants
 - **Based on:** none
-- **Relations:** narrows WAY-168@47d9d53e · derives from WAY-08@2343e09f
+- **Relations:** narrows WAY-168@dc4a98a1 · derives from WAY-08@2343e09f
 - **Verification:** level 1 — invariants: guidelines-check-carrier. Level 2 for the choice between a
   script and an agent — an agent compares the change with the decision:
   - complies: the rule against values written in place of design tokens names a script's invariant;
@@ -6405,3 +6456,809 @@ no path a product chooses (WAY-107).
 *Rejected:* a styleguide with no way in from the instructions — an agent in a new session does not
 find it; the rule as a line of every session — it costs context in each and is not followed every
 time without its check.
+
+### WAY-193/1 — Does what the-way's template of coding guidelines carries bind a product directly?
+
+The rules the-way's template of the coding discipline carries and what the-way's skill
+`maintain-coding-guidelines` proposes bind a product only through a decision of the product's log
+adopting them, and the product departs from any of them only by a decision of its log that gives
+the reason. A decision of the-way on what that template carries or what that skill proposes binds
+the template and the skill, never a product's code directly.
+
+- **Change:** new decision
+- **Scope:** product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-168@dc4a98a1 · derives from WAY-100@e7a74a18
+- **Verification:** level 2 — an agent compares the work with the decision:
+  - complies: a product's coding guidelines name, at each rule the template requires, the product's
+    decision adopting it; a product with no dependencies of its own drops the audit of dependencies
+    by a decision of its log that gives that reason, the rule reading `none —` with that decision;
+    a cycle holds a product's code to the product's decisions;
+  - violates: a cycle blocks a product's change on a rule of a linter's set the product never
+    adopted; a product leaves out a rule the template requires with no decision of its own; the-way's
+    template is edited to fit one product's departure.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
+
+*Rationale:* a rule of the template binding every product directly would be as rigid for a small
+script as for a product's main code, and it would bind from outside the product's log, where every
+binding choice of guidelines stands (WAY-168). Adopted by a decision of the product, each rule meets
+the product's other choices where collisions are found, and a departure, written with its reason and
+approved, then holds in every later task alike, so it is no freedom to do otherwise from one task to
+the next. Its weak point: a product can knowingly drop a rule that would have protected it. The-way's
+decisions bind a product's work through its pin (WAY-34); these bind what the-way offers, and the
+product takes it as a practice from outside is taken (WAY-100), as it takes the template of the
+styleguide (WAY-173).
+*Rejected:* the template's rules binding every product directly — rigid for every product alike,
+and a binding choice standing outside the product's log.
+
+### WAY-194/1 — How does the-way's coding-guidelines skill ask the human?
+
+The-way's skill `maintain-coding-guidelines` puts to the human every choice it settles for coding
+guidelines, a choice it recommends included, and shows each by its effect on the product in plain
+words, never by the names of a linter's rules or the values of a tool's configuration. It asks for
+decisions, never for single rules, so that the human adopts a linter's set of rules whole. In the
+area of the questions that skill asks this decision prevails over WAY-114, under which a question
+goes to the human only where the agent has no recommendation.
+
+- **Change:** new decision
+- **Scope:** product-guidelines, decisions
+- **Based on:** none
+- **Relations:** derives from WAY-113@d3e5cbfa · narrows WAY-114@04b4f599
+- **Verification:** level 2 — an agent compares the conversation with the decision:
+  - complies: the skill shows "a change that adds a library with a known security hole does not
+    get in" and "every new endpoint checks its input as the exemplar does", each with the ways open,
+    their cost and its recommendation; it asks whether to adopt the formatter it recommends; it
+    shows a linter's set as "this many rules will block a change, and these few flagged sound code
+    here and stay as examples", and the human adopts the set with that split;
+  - violates: the skill asks the human to choose between two names of a linter's rules or two values
+    of a tool's configuration; it writes into the task a linter it recommends without asking; it
+    asks rule by rule which rules of a set to take.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
+
+*Rationale:* the human who approves a product's decisions does not judge its code, so a choice shown
+by the names of rules or by values of configuration is one the human cannot weigh, while what a
+choice does to the product can be weighed, as a technology choice reaches a human who cannot assess
+the technology through its consequences (WAY-123). A standing check or an exemplar binds every later
+change of the code, and no decision enters without the human's acceptance, so a recommendation the
+human never heard would be a choice no human made. Asked rule by rule, the human would judge each
+rule's worth in code, which the trial run already shows by its effect. The price is a longer
+conversation in each task that writes coding guidelines.
+*Rejected:* the skill writing what it recommends and asking only where it has no recommendation, as
+WAY-114 gives it — the human meets the choice of an exemplar or a departure from a standing check
+only in the finished document, as a recommendation nobody put to them; the human deciding rule by
+rule — they would judge what they cannot judge.
+
+### WAY-195/1 — What do coding guidelines take from Open Mercato and from Google's lessons on static analysis, and what do they leave?
+
+From the repository of Open Mercato, the-way's template of the coding discipline and its skill
+`maintain-coding-guidelines` take the exemplar a decision designates for a kind of code with a table
+of the files to copy from (WAY-198, WAY-199), the status of each file of a kind after an audit
+(WAY-199, WAY-200), the audit of dependencies that fails a change only on vulnerabilities it brings
+in against a base (WAY-206) and the table leading from a kind of work to the files to read before it
+(WAY-167, WAY-212), and they leave out that repository's skill of code review, its catalogue of
+lessons, the limit on the bytes of its instruction files with its ratchet, its sheets of facts
+generated from the code, its lint job that only reports, its audit of the whole tree of dependencies
+run every day on a schedule and its fixed threshold of severity. From the lessons Google drew from
+its tools of static analysis they take blocking a change only by a check every report of which leads
+to a change of code worth making (WAY-203) and judging a report by whether it leads to such a change,
+whether it is technically right or not (WAY-204). They leave out that study's conditions that a
+check blocking a change concerns correctness rather than style and that every existing instance of
+what it reports is fixed across the code before it is turned on (WAY-205), and its threshold of
+fewer than one report in ten leading to no action for checks shown only in code review.
+
+- **Change:** new decision
+- **Scope:** product-guidelines
+- **Based on:** observation of the sources on 2026-10-18 with curl 8.5.0, git 2.43.0 and pdftotext
+  24.02.0 on Ubuntu 24.04.5 LTS (Linux 6.18.44): the repository `open-mercato/open-mercato` at
+  commit `4374c48def1654927805c4b760f0e7f8648280f2`, its files read from
+  `https://raw.githubusercontent.com/open-mercato/open-mercato/4374c48def1654927805c4b760f0e7f8648280f2/<path>`;
+  and C. Sadowski, E. Aftandilian, A. Eagle, L. Miller-Cushon, C. Jaspan, "Lessons from Building
+  Static Analysis Tools at Google", Communications of the ACM 61(4), April 2018, pages 58–66, read
+  from the public copy
+  `https://storage.googleapis.com/gweb-research2023-media/pubtools/4365.pdf`. Taken, from Open
+  Mercato: "Identify the reference module (`customers`) when building CRUD features."
+  (`AGENTS.md:16`) · "**MUST use this module as the template** for new CRUD modules — copy file
+  structure and patterns" (`packages/core/src/modules/customers/AGENTS.md:7`) · "## Key Reference
+  Files — Copy From Here" (same file, line 33) · "Ask before changing this module's reference
+  patterns" (same file, line 16) · "`readable` | The file passed the reference-quality audit. Safe
+  to read and adapt." and "`qa-only` | The file exists and works, but fails at least one current
+  project rule. … Do **not** copy it." (`apps/mercato/src/modules/example/README.md:46-47`) · "The
+  ci.yml job passes `--baseline <base yarn.lock>` so a change fails only on advisories it
+  introduces." (`.github/workflows/audit.yml:23-24`) · "A single task often maps to **multiple
+  rows** — "add a new module with search" needs both the Module Development and Search guides. Read
+  **all** matching guides first" (`AGENTS.md:61`). Left, from Open Mercato: "Spec lifecycle
+  (pre-implement → implement → write/update), code review, DS review" (`AGENTS.md:126`) · "After
+  corrections, scan `.ai/lessons.md`; update one tagged lesson record + index row or the relevant
+  AGENTS.md." (`AGENTS.md:144`) · "this file must stay under **32,768 bytes**" (`AGENTS.md:5`) and
+  "**Chain ratchet** — … once a chain exceeds the budget, its **nested** (non-root) files may only
+  shrink." (`.ai/docs/agent-instructions.md:22-24`) · "Wire into yarn generate → versioned
+  apps/mercato/src/module-facts.generated.json"
+  (`.ai/runs/2026-06-30-ts-morph-module-fact-sheets/PLAN.md:20`) · "DS lint (advisory)" and
+  "Advisory by construction: joins no `needs` chain and is not a required status check"
+  (`.github/workflows/ci.yml:503-506`) · "This workflow re-evaluates the *unchanged* graph on a
+  daily schedule" (`.github/workflows/audit.yml:11`) · "node scripts/audit-ci.mjs --severity high"
+  (`.github/workflows/ci.yml:436`). Taken, from the study: "produce no effective false positives
+  (the analysis should never stop the build for correct code)" (page 62) · "We consider an issue to
+  be an “effective false positive” if developers did not take positive action after seeing the
+  issue." and "If an analysis incorrectly reports an issue, but developers make the fix anyway to
+  improve code readability or maintainability, that is not an effective false positive." (page 59).
+  Left, from the study: "report issues affecting only correctness rather than style or best
+  practices" and "The primary goal of an analyzer satisfying these criteria is not simply to detect
+  faults but to automatically fix all instances of a prospective compiler error throughout the
+  codebase." (page 62) · "tool writers take on the task of first fixing all the existing issues in
+  the codebase" (page 66) · "analysis results shown during code review are allowed to include up to
+  10% effective false positives" (page 62).
+- **Relations:** derives from WAY-100@e7a74a18
+- **Verification:** level 2 — an agent compares the change with the decision:
+  - complies: the template of the coding discipline gives a kind's file a table of its files with
+    their status and the decision designating the exemplar, and names no catalogue of lessons; the
+    skill proposes an audit of dependencies that checks the change against the fork point and puts
+    the threshold of severity to the human, every severity among the ways; a linter's rule on style
+    blocks a change once every report it gave in the trial run led to a change of code worth making;
+  - violates: the skill makes a limit on the bytes of a product's instruction files a rule; the
+    template sets the audit's threshold at high severity for every product; a rule of a linter that
+    flagged sound code in the trial run blocks because it concerns correctness; a step of Open
+    Mercato not named here enters the skill.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
+
+*Rationale:* that repository and that study carry pieces coding guidelines need beside pieces bound
+to their own tools, scale and kind of product; taken whole, their tools and practices would become
+obligations, and naming each piece taken lets later work tell an adopted step from a resemblance
+(WAY-100). Each piece is named by the decision that carries it, so it binds in one place (WAY-19).
+Review of code against guidelines is a matter of the task cycle, not of the guidelines. A catalogue
+of lessons is a register of rules beside the foundation, which takes a rule only as one of its
+entries (WAY-04). What an instruction file holds is set by what every session needs (WAY-128), not
+by a count of bytes. Sheets of facts describe what the code holds, which an agent reads in the code
+itself, and guidelines copy no value from the code (WAY-171). The gate knows no result that only
+warns (WAY-63). An audit of the whole tree of dependencies apart from any change would run by the
+clock, which runs the methods of environment facts (WAY-82), while a product's change is audited for
+what it brings (WAY-206). The threshold of severity is a product's own choice, every severity
+among the ways (WAY-206). From the study, style blocks a change too, because a remark on style never
+blocks in the review of code (WAY-161) and the human does not judge style; fixing every instance
+across the code before a check is turned on would grow the task that brings a linter into cleaning
+the whole product, and the pair of invariants of WAY-205 replaces it; a check that sometimes blocks
+sound code could be passed only by changing a decision. What was seen in those sources is described
+here as well as quoted, so a reader need not open them (WAY-27).
+*Rejected:* Open Mercato's practices taken whole — its review, lessons and limits on instruction
+files would bind every product; its steps followed with no decision naming them — an adopted step
+and a resemblance could not be told apart (WAY-100); the content of each piece restated here beside
+the decision that carries it — two binding copies drift apart (WAY-19).
+
+### WAY-196/1 — What checks a binding rule of coding guidelines?
+
+Every binding rule of a product's coding guidelines names at least one invariant that checks it, by
+a script where a script can decide it and otherwise by an agent whose method sets k of n runs, never
+by an agent judging whether new code follows the exemplar of its kind, and a rule that neither a
+script nor such an agent can check is an example, not a rule, whatever decision it names. In the
+guidelines of the coding discipline this decision prevails over WAY-168, under which a rule naming
+its decision binds with no invariant.
+
+- **Change:** new decision
+- **Scope:** product-guidelines, invariants
+- **Based on:** none
+- **Relations:** narrows WAY-168@dc4a98a1 · derives from WAY-08@2343e09f
+- **Verification:** level 1 — invariants: guidelines-check-carrier. Level 2 for the choice between a
+  script and an agent — an agent compares the change with the decision:
+  - complies: the rule that an endpoint validates its input as the exemplar does names a script's
+    invariant that every file of the kind calls the shared validation; the rule that no error is
+    swallowed silently names an invariant an agent checks, passing in two of three runs; how the
+    exemplar names its variables stands among the examples;
+  - violates: a rule of a kind's file names an invariant an agent checks by judging whether a new
+    endpoint follows the exemplar; a rule stands with no invariant because no script can check it; a
+    rule a script could decide is left to an agent.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
+
+*Rationale:* coding guidelines are there to keep agents' code consistent without anyone's memory,
+and a rule only a decision carries is kept by the memory of the agent reading it; its two uses,
+moreover, are cases of an invariant (WAY-168) and need one to be run against. A script costs nothing
+per run; an agent with k of n can judge where no script decides, and its cost stays bounded because
+it runs only when a change reaches its invariant (WAY-62). An agent judging whether new code follows
+the exemplar has no sharp criterion, and how often it would flag sound code is unknown, so what of
+the exemplar no script checks stays an example (WAY-198). The price: some useful signals reach the
+agent only as an example to read. An agent's verdict can flip, and a check that flips is answered as
+WAY-68 gives it.
+*Rejected:* the decision alone binding a rule of coding guidelines — some of the rules are held only
+by an agent's memory, and their uses have no invariant to be cases of; a new kind of check that only
+warns — it changes what results the gate knows (WAY-63), far beyond guidelines; an agent for each kind
+of code judging whether new code follows the exemplar — its criterion is vague and its false alarms
+unknown.
+
+### WAY-197/1 — Who writes the use that breaks a rule of guidelines, and does it replace the deliberate break?
+
+The use that breaks a rule of a product's guidelines is written by the author of the guidelines and
+stands beside the deliberate break the check of each invariant the rule names is accepted on, never
+in its place, so that the check is accepted only where both that use, as WAY-168 reads it, and the
+deliberate break the reviewer of the code writes from the invariant's sentence make it fail. Until a
+gate of the-way reports for an invariant how its method meets the uses of the rules naming it, the
+reviewer who writes that deliberate break also runs the method with both uses wherever a change adds
+or alters the invariant's sentence or rewrites either use, and records what it gave with each.
+
+- **Change:** new decision
+- **Scope:** product-guidelines, invariants, task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-168@dc4a98a1 · derives from WAY-69@7051f884
+- **Verification:** level 3 for who writes the use that breaks a rule — the human accepting the change
+  at the merge assesses how the work was handed out, from the record that names who wrote what.
+  Level 2 for what the check is accepted on — an agent compares the change with the decision:
+  - complies: the author of a product's coding guidelines writes, as the use breaking the rule that
+    each endpoint validates its input, a short endpoint that reads its input unchecked; the reviewer
+    of the script that checks the rule breaks the invariant by removing the validation from the
+    exemplar, and records that the script fails on both and passes with the use that follows the rule;
+  - violates: the author's use breaking the rule is recorded as the deliberate break, and the
+    reviewer writes none; the author of the check writes the use breaking the rule from the check;
+    a change rewrites the use breaking a rule and nobody runs the check with it.
+- **Review when:** a gate of the-way reports for an invariant how its method meets the uses of the
+  rules that name it · check by: 2027-03-31
+- **Origin:** none
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
+
+*Rationale:* a use written by the author of the guidelines teaches the agent reading them what the
+rule forbids, while the reviewer's break is usually a small, artificial change from which a reader
+learns little, and it would wait for the end of the review. Where the same agent writes the use and
+the check, the use may be fitted to the check; the reviewer's break, written from the sentence by an
+agent that wrote neither (WAY-69), keeps that out, so the use is a further case and WAY-69 stands
+as it is. The reviewer already runs the check on a break of its own making, so running it with the
+two uses costs a further run in the same place, by an agent that wrote neither the uses nor the
+check.
+*Rejected:* the use breaking the rule written by the reviewer — a small, artificial change that
+teaches the reader little, and the guidelines wait for the end of the review; the author's use in
+place of the reviewer's break — it changes WAY-69 and loses the independence that decision keeps.
+
+### WAY-198/1 — How does a product's exemplar bind?
+
+A decision of a product's log designates, for a kind of code, the one file of the product that is
+the exemplar of that kind, naming in backticks its path and the kind's identifier, and what of that
+exemplar a script can check — where a file of the kind lies, what it calls, how it validates its
+input — stands in the coding guidelines of that kind as rules, each naming an invariant. The rest of
+the exemplar stands there as an example and binds no later code.
+
+- **Change:** new decision
+- **Scope:** product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-22@dcf291ea · derives from WAY-193@1ae9ba7c
+- **Verification:** level 1 — invariants: guidelines-check-exemplar. Level 2 for what stands as a rule
+  and what as an example — an agent compares the change with the decision:
+  - complies: a product's decision designates `src/api/orders/route.ts` as the exemplar of the kind
+    `endpoint`, and the coding guidelines of that kind hold, as rules naming a script's invariant
+    each, that every route lies under `src/api/`, calls the shared handler and validates its input
+    with the shared schema, while how the exemplar names its variables stands among the examples;
+  - violates: the coding guidelines of a kind name as its exemplar a file no decision designates;
+    the whole behaviour of the exemplar is one rule an agent checks by comparing new code with it;
+    the exemplar's code is copied into the guidelines.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
+
+*Rationale:* an exemplar left as an example alone lets an agent depart from it with no signal, while
+a choice designated by a decision is one the human approved, and copying from existing code without
+such a choice turns whichever file an agent finds into law (WAY-04). What a commit can make false of
+the exemplar is written as invariants (WAY-22), which keep each later file of the kind to it; the
+exemplar is ordinary code of the product, so the same invariants keep it from ageing. Its path and
+kind in the decision's binding sentences let a script tie the guidelines to the approved choice.
+*Rejected:* the exemplar as an example alone — an agent departs from it with no signal; an agent for
+each kind judging whether new code follows the exemplar — its criterion is vague and how often it
+flags sound code is unknown.
+
+### WAY-199/1 — What change of a product's exemplar takes approval?
+
+Designating another file as the exemplar of a kind of code and changing a rule a script checks from
+that exemplar are changes of the product's decisions, approved as WAY-172 gives a changed meaning,
+while an edit of the exemplar that keeps those rules takes no approval. The coding guidelines of a
+kind give beside the path of each file of the kind they list its status, `exemplar`, `copy` or
+`do not copy`, and beside the exemplar's path the decision that designates it.
+
+- **Change:** new decision
+- **Scope:** product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-172@45806b6e · derives from WAY-198@4dca82c6
+- **Verification:** level 1 — invariants: guidelines-check-exemplar. Level 2 for what takes approval
+  — an agent compares the change with the decision:
+  - complies: a fix of a typo in the exemplar, and a change of its inner structure that keeps the
+    rules a script checks from it, go with no approval; a task that would make another file the
+    exemplar proposes the change of the designating decision and waits for its approval; a file that
+    reads its input unchecked stands in the table as `do not copy`;
+  - violates: a cycle moves the status `exemplar` to another file on its own; a rule a script checks
+    from the exemplar is weakened in the same edit as the exemplar with no change of a decision; the
+    status of the files stands only in the decision.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
+
+*Rationale:* the rules a script checks from the exemplar are what binds, so they change only with a
+decision, while an edit that keeps them uses a meaning a decision carries, which takes no approval
+(WAY-172). An edit that changes only what of the exemplar no script checks passes with no approval,
+and every later copy inherits it; that holds, because approving every change of the exemplar's
+behaviour would have the human judge code they do not judge. The status beside each path shows an
+agent reading the guidelines what to copy and what not to, as Open Mercato's statuses do (WAY-195).
+*Rejected:* approval of every change of the exemplar's behaviour — the human would judge code they
+cannot judge; the status of the files kept in the decision alone — an agent reading the guidelines
+would not see which files not to copy.
+
+### WAY-200/1 — Who designates a product's exemplar for a kind of code, and when?
+
+Where a product holds no file of a kind of code, the exemplar of that kind is designated by the task
+that creates its first file. Where it already holds files of that kind, the skill
+`maintain-coding-guidelines` judges every one of them, compares them and proposes the exemplar from
+that comparison, with the status `copy` or `do not copy` of every other file, and the human approves
+the decision that designates it.
+
+- **Change:** new decision
+- **Scope:** product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-198@4dca82c6
+- **Verification:** level 2 — an agent compares the work with the decision:
+  - complies: in a product with nine endpoints the skill judges all nine, proposes the one that
+    follows the product's rules best as the exemplar and marks two `do not copy`; a task that creates
+    a product's first migration designates that migration as the exemplar of its kind;
+  - violates: the oldest endpoint becomes the exemplar with no comparison; the exemplar waits until
+    someone asks for it while agents copy what they find; the skill writes the designating decision
+    with no approval of the human.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
+
+*Rationale:* who designates the exemplar follows from the state of the product, as the styleguide
+comes before the first screen (WAY-184) and the audit reads a product that has screens (WAY-187): a
+first file built with no exemplar is the file every later one copies, and with several files a
+choice made without comparing them makes whichever file an agent finds into law (WAY-04). The price
+is one more way of working for the skill.
+*Rejected:* the exemplar designated only by the task that creates the first file — it says nothing of
+a product that already has several; the exemplar designated after the fact by a separate decision
+once several files exist — until then every agent copies what it finds.
+
+### WAY-201/1 — How does the coding-guidelines skill's audit of a product with code end?
+
+The audit the skill `maintain-coding-guidelines` makes of a product that has code ends with a
+proposed exemplar for each kind of code the product holds files of, each with one sentence of what
+the product gains by it, and with the files of that kind marked `do not copy`, each with the file and
+line of the place that breaks a rule.
+
+- **Change:** new decision
+- **Scope:** product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-200@02f168d5
+- **Verification:** level 2 — an agent compares the work with the decision:
+  - complies: the audit proposes for the kind `endpoint` the file `src/api/orders/route.ts`, "every
+    new endpoint checks its input as this one does", and marks `src/api/legacy/users.ts` `do not
+    copy` at its line 42, where it reads the request's body unchecked;
+  - violates: the audit ends with the linter's reports listed by the names of their rules; a file
+    stands as `do not copy` with no line; an exemplar is proposed with no word of what the product
+    gains.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
+
+*Rationale:* the human who approves the exemplar does not judge code, and a proposal with what the
+product gains, and a fault with its place, can be weighed by someone who is no developer, as the
+styleguide's audit ends with charges of a place and an effect (WAY-187); the place also shows the
+next agent where not to copy from.
+*Rejected:* what the audit found shown as a comparison of the files' code — the human cannot weigh
+it.
+
+### WAY-202/1 — Which standing checks does the template of coding guidelines require, and from when do they bind a product?
+
+The template of the coding discipline requires three standing checks of a product's code — a
+linter, a formatter and an audit of dependencies — and a product departs from any of them only by a
+decision of its log that gives the reason. They bind a product from the task that writes its coding
+guidelines, which is complete only once it holds, for each of the three, a decision of the product's
+log adopting it or departing from it with the reason.
+
+- **Change:** new decision
+- **Scope:** product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-193@1ae9ba7c
+- **Verification:** level 1 — invariants: guidelines-check-form. Level 2 for the decisions the task
+  ends with — an agent compares the work with the decision:
+  - complies: a product with none of the three gets, in the task that writes its coding guidelines,
+    decisions adopting a linter, a formatter and an audit of dependencies, or departing from one of
+    them with its reason, and its coding guidelines name each at the rule the template requires;
+  - violates: the skill only proposes the standing checks a product lacks, and the task ends with no
+    decision on the audit of dependencies; a product's coding guidelines leave out the formatter
+    with no decision; the three stand in the template and in no decision of the-way.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
+
+*Rationale:* a product whose code no standing check reads changes its style and takes in a known
+vulnerability with no signal, and a skill that only proposes the checks leaves it so for as long as
+nobody takes the proposal up. Named in a binding sentence, the three give the refinement of the task
+something to check (WAY-139), and a departure with its reason is the product's own approved choice
+(WAY-193). The price: until a product runs a task that writes its coding guidelines, nothing of
+these binds it, as with the styleguide.
+*Rejected:* the skill only proposing the standing checks a product lacks — a product that has none
+of them would still have no signal; the three named in the template alone — nothing would bind the
+refinement to check them.
+
+### WAY-203/1 — Which rules of a linter's set block a change of a product's code?
+
+A rule of a linter's set stands among the rules that block a change in the product's decision
+adopting the set, and so is checked by the invariant of the one rule of the product's coding
+guidelines on its linter, only where every report it gives on the product's code leads to a change of
+code worth making, a report counting by whether it leads to such a change, whether it is technically
+right or not. A rule of the set that gives a report leading to no such change is no rule that binds
+the product's code: it may stand among the examples of the coding guidelines, and no invariant checks
+it, so the gate does not run it.
+
+- **Change:** new decision
+- **Scope:** product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-202@e0fb6a51
+- **Verification:** level 2 — an agent compares the work with the decision:
+  - complies: a rule on unused variables, every report of which led to removing dead code, stands
+    among the rules that block in the decision adopting the set and blocks a change; a rule on the order of imports that flagged two files whose order a generator writes
+    stands among the examples under its name in the tool, and the linter's invariant does not run
+    it; a rule whose report was technically wrong, yet led to a fix that made the code clearer,
+    still blocks;
+  - violates: a rule that flagged sound code once blocks because its other reports were right; a
+    rule whose technically right report nobody would change the code for blocks; the gate shows the
+    rules among the examples as warnings; a rule blocks because fewer than one report in ten led to
+    no change; each rule of the set that blocks stands as a rule of its own under `## Rules` of the
+    coding guidelines.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
+
+*Rationale:* a change of sound code that a blocking rule stops gets through only by a change of the
+decision adopting the set (WAY-207), put to a human who does not judge code; Google blocks a change
+only by a check that gives no report its developers would not act on (WAY-195). A report that is
+technically right but leads to no change worth making costs the change as much as a wrong one, while
+a wrong report that leads to a better change costs nothing, so a report counts by what it leads to.
+A rule that once flagged sound code leaves the agent free again in its area, as an example it reads;
+that holds, because a rule that sometimes blocks sound code is worse than one an agent reads and may
+pass by. The gate knows no result that only warns (WAY-63), so such a rule is an example and nothing
+runs it. The price: some useful signals of a linter reach the agent only as an example to read.
+*Rejected:* the whole set the tool recommends blocking — the gate blocks sound code; a rule blocking
+while fewer than one report in ten leads to no change, as Google allows for checks shown in code
+review — the gate sometimes blocks sound code, and only a change of a decision passes it; a rule
+that gives such reports kept as a check that only warns — it changes what results the gate knows
+(WAY-63).
+
+### WAY-204/1 — How are the rules of a linter's set split between the rules that block and the examples?
+
+The skill `maintain-coding-guidelines` proposes which rules of a linter's set block and which stand
+among the examples from a trial run of the set on the product's code, each report of which an agent
+that wrote none of that code judges by whether it leads to a change of code worth making, whether it
+is technically right or not, and a rule with one report that leads to no such change goes among the
+examples; for a product with no code it proposes as blocking the rules the tool's documentation
+marks as recommended. The human approves that split in the product's decision adopting the set, and a
+rule on which a later report leads to no change of code worth making goes among the examples by a
+change of that decision, which the human approves.
+
+- **Change:** new decision
+- **Scope:** product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-203@45e40683
+- **Verification:** level 2 — an agent compares the work with the decision:
+  - complies: the skill runs a set in a scratch worktree of a product with code, a fresh agent
+    judges each of its reports, the three rules with a report that led to no change worth making
+    stand among the examples, and the human adopts the set with that split shown by its effect; a
+    product with no code adopts the rules its linter's documentation marks as recommended, and when
+    a cycle later meets a report of one of them that leads to no change worth making, a change of
+    the adopting decision, approved by the human, moves it among the examples;
+  - violates: the agent that wrote the code judges the reports of the trial run; the split comes
+    from an agent's memory of which rules are noisy; a cycle turns a rule off in the linter's
+    configuration on meeting such a report, with no change of the decision.
+- **Review when:** the first product without code that adopted the rules its linter's documentation
+  marks as recommended has met a report of one of them that leads to no change of code worth making,
+  or has merged ten changes of its code without one · check by: 2027-03-31
+- **Origin:** none
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
+
+*Rationale:* whether a rule's reports lead to changes worth making shows only on the product's own
+code, so the split is read off a trial run, and the agent that wrote that code would judge in its
+favour, so another agent judges each report, as Google weighs a report by what developers do with it
+(WAY-195). The human does not judge code, so the human approves the split as a whole, shown by its
+effect (WAY-194), never rule by rule. A product with no code has nothing to try a set on, so it
+takes the rules the tool's documentation recommends; their weak point is that they block with no
+evidence from the product, and the first report of one that leads to no change worth making takes it
+off by a change of the decision. The decision adopting the set names it and its edition (WAY-86),
+and what an invariant of the linter takes from that catalogue is which rules the set holds at that
+edition: one environment fact, which one edition of the tool's documentation states, about one
+thing, with one reason to change, a new edition (WAY-76), as git's rule of path patterns with its
+page's exceptions is one fact. A criterion of WCAG stands as a fact of its own (WAY-191) because
+each is a requirement of its own written in prose, while a rule of a linter's set is one whose
+content the tool itself runs at its pinned version, so the invariant takes from the catalogue its
+membership alone; the blocking rules then stand in the adopting decision as the set less the rules
+it keeps among the examples (WAY-60). The price is a trial run and a judgment of its reports each
+time a set is adopted.
+*Rejected:* every rule of the set blocking — the gate blocks sound code (WAY-203); the human
+deciding rule by rule — the human would judge what they cannot judge (WAY-194); an environment fact
+for each rule of the set — many facts with one source and one reason to change (WAY-76).
+
+### WAY-205/1 — How do a linter and a formatter enter a product whose code already breaks their rules?
+
+Where a product's code already breaks the rules of its linter's set that block, the skill
+`maintain-coding-guidelines` proposes the linter's invariant over the whole of that code, which
+stands on the list of violated invariants until the code is cleaned, and beside it a second
+invariant that holds from its first day: no file of the parts it names holds more reports of those
+rules than on `{fork-point}`, and a file not on `{fork-point}` holds none; the second is withdrawn
+once the first holds. A formatter enters a product by one reformatting of the whole of its code in
+the task that brings the formatter, with no second invariant.
+
+- **Change:** new decision
+- **Scope:** product-guidelines, invariants
+- **Based on:** none
+- **Relations:** derives from WAY-51@8bdac21a · derives from WAY-60@6e862c88
+- **Verification:** level 2 — an agent compares the work with the decision:
+  - complies: a product whose code breaks the blocking rules in forty files lists the linter's
+    invariant as violated by a change the human accepts and adds the second invariant, so a cleaned
+    file that gains a report back fails at once, and a new file with one fails too; the task that
+    brings a formatter reformats every file of the product once, and the formatter's invariant holds
+    from that commit;
+  - violates: the blocking rules are cut down to those the code already meets; the task that brings
+    the linter cleans every file of the product; the formatter's invariant stands on the list of
+    violated invariants beside a second invariant comparing files with the fork point; the full
+    invariant alone stands on the list, and a cleaned file gains reports back unseen.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
+
+*Rationale:* a rule weakened until the code meets it describes the accident, not the intent
+(WAY-51), and cleaning the whole of the code in the task that brings the linter grows that task into
+cleaning the product. The linter's invariant stands whole on the list of violated invariants, which
+keeps the debt countable, but until the last file is clean it cannot see a report come back into a
+file already cleaned; the second invariant compares each file with the fork point (WAY-60), so it
+holds from the first day, new code follows the rules while old code is cleaned when a task has it in
+scope, and both fit WAY-51 and WAY-60 unchanged, as for the styleguide (WAY-190). This takes the
+place of Google's condition that a check is fixed across the whole code before it is turned on
+(WAY-195). A formatter rewrites the code itself without changing what it does, so one reformatting
+leaves nothing to clean and a second invariant would keep nothing. Its weak point: a renamed file
+that holds reports counts as a new file and is cleaned in the change that renames it.
+*Rejected:* only the rules the code already meets adopted — the rule is weakened until the code fits
+it (WAY-51); the whole of the code cleaned in the task that brings a linter — that task grows into
+cleaning the whole product.
+
+### WAY-206/1 — What does the audit of a product's dependencies check?
+
+The skill `maintain-coding-guidelines` proposes an audit of dependencies that checks a change and
+fails it only where a version of a dependency that the change brings in against `{fork-point}` has a
+known vulnerability, as the advisory database named by the product's decision adopting the audit
+gives it when the check runs, of at least the severity that decision sets, every severity being
+among the ways the skill offers. Until the clock runs the methods of a product's invariants, the
+template of the coding discipline carries no audit of the whole tree of a product's dependencies.
+
+- **Change:** new decision
+- **Scope:** product-guidelines, invariants
+- **Based on:** none
+- **Relations:** derives from WAY-202@e0fb6a51 · derives from WAY-60@6e862c88
+- **Verification:** level 2 — an agent compares the work with the decision:
+  - complies: a change that adds a library at a version with a known vulnerability of high severity
+    fails in a product whose decision sets high; a change to a page's text passes on the morning an
+    advisory is published for a dependency the product already holds; a product whose human chose
+    every severity fails a change bringing in a version with an advisory of low severity;
+  - violates: the audit reads the whole tree on every change, and a change unrelated to the
+    dependencies fails on an advisory published that morning; the template sets the threshold at
+    high for every product; the audit reads a copy of the database the product committed months
+    before; the template carries an audit of the whole tree of dependencies run every day.
+- **Review when:** the clock runs the methods of a product's invariants · check by: 2027-03-31
+- **Origin:** none
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
+
+*Rationale:* an audit of the whole tree at every change fails a change that touches no dependency on
+a vulnerability published that morning, so the audit checks what the change brings, against the fork
+point, as Open Mercato's audit compares with a base (WAY-195). The severity from which a
+vulnerability counts and the database read are conditions of the product's invariant, so they stand
+in the decision that adopts the audit (WAY-60), and the severity is the product's choice, every
+severity among the ways. The tools stand at pinned versions, while the database is read as it stands
+when the check runs, so that a change brings in nothing known to be vulnerable that day. Two weak
+points follow. A vulnerability found in a dependency the product already holds gives no signal while
+no change brings in a version of it, until the clock runs the methods of a product's invariants,
+when the whole tree can be audited apart from any change. A later run on the same commit may record `fail` where an
+earlier one recorded `pass`, when an advisory is published for a version that commit brings in; such
+a check is answered as WAY-68 gives it, which this decision leaves unchanged.
+*Rejected:* the whole tree audited at every change — an unrelated change fails on a vulnerability
+published that morning; a copy of the database the product commits — nothing moves it apart from a
+change, so it ages without bound, and a change bringing in a version first flagged after it passes;
+WAY-68 narrowed so that a later `fail` on the same commit is no check giving different verdicts — a
+new meaning of WAY-68 for a rare case; a fixed threshold of severity for every product — the
+severity is the product's choice.
+
+### WAY-207/1 — Where is a fault of one file of a product's code fixed?
+
+The template of the coding discipline has a product's coding guidelines hold that a fault of one
+file is fixed in that file, never by turning a rule of the linter off for the whole product nor by
+changing the exemplar for that file's sake, and that turning a rule of the linter off for the whole
+product is a change of the product's decision adopting the linter's set, which the human approves as
+WAY-172 gives a changed meaning.
+
+- **Change:** new decision
+- **Scope:** product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-172@45806b6e · derives from WAY-193@1ae9ba7c
+- **Verification:** level 2 — an agent compares the change with the decision:
+  - complies: a new endpoint that the linter flags for an unused import loses that import; a team
+    that finds a blocking rule wrong for the product changes its decision adopting the set with the
+    human's approval, and only then the rule is turned off in the linter's configuration;
+  - violates: a rule is turned off in the linter's configuration so that one change gets through;
+    the exemplar is changed so that a new file departing from it passes the rules a script checks
+    from it.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
+
+*Rationale:* a rule of the linter reads every file of the parts it covers, so turning it off for one
+file's sake changes what binds all the others, unseen by the task that made the change, and the
+exemplar is what every later file of its kind follows; a fix in the file stays where the fault is. A
+blocking rule gives no report that leads to no change worth making (WAY-203), so a report of it is a
+fault to fix, and a rule wrong for the product is a matter of the decision that adopted it, as a
+global design token is for a styleguide (WAY-178).
+*Rejected:* a rule turned off in the linter's configuration so that one change gets through — every
+other file loses the rule unseen.
+
+### WAY-208/1 — Which parts of a product get coding guidelines?
+
+The skill `maintain-coding-guidelines` proposes coding guidelines for every part of a product's map
+that holds code, the scripts of its build included, however small that part is, and the general file
+of its coding guidelines names each such part in *Applies to*.
+
+- **Change:** new decision
+- **Scope:** product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-193@1ae9ba7c
+- **Verification:** level 2 — an agent compares the work with the decision:
+  - complies: a product with a backend, a client in the browser and a part holding its build scripts
+    names all three in *Applies to* of `guidelines/coding.md`, and its standing checks read the code
+    of all three;
+  - violates: the skill passes over the part of build scripts because it is small; the general file
+    names only the backend because its kinds of code live there.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
+
+*Rationale:* an agent left free does something different in every task, and that is what guidelines
+are for; even guidelines of modest quality are consistent, as for the styleguide of every user
+interface (WAY-183), and a small part of code drifts as surely as a large one. The general file
+holds what binds the whole of the code once (WAY-167), so the parts it covers are the parts its
+standing checks read.
+*Rejected:* no coding guidelines for a small or helper part, such as the scripts of the build — each
+task writes it its own way.
+
+### WAY-209/1 — When do a product's coding guidelines come into being?
+
+The skill `maintain-coding-guidelines` proposes that, in a product with no code, the general file of
+its coding guidelines, with its standing checks, comes into being before the first task that writes
+the product's code, and that the file of a kind of code comes into being with the task that creates
+the first file of that kind.
+
+- **Change:** new decision
+- **Scope:** product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-193@1ae9ba7c
+- **Verification:** level 2 — an agent compares the work with the decision:
+  - complies: a product whose plan brings its first code gets a task of coding guidelines first,
+    which adopts a linter, a formatter and an audit of dependencies before any code exists; the task
+    that writes the product's first migration writes `guidelines/coding-migration.md` with that
+    migration as its exemplar;
+  - violates: the linter and the formatter are brought in once the first code is written; a file of
+    the kind `endpoint` is written while the product holds no endpoint.
+- **Review when:** the first product whose coding guidelines were written before its first code has
+  merged the task that brought that code · check by: 2027-03-31
+- **Origin:** none
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
+
+*Rationale:* the first code written with no standing check is the code every later change copies,
+and checks brought to it afterwards find code to clean (WAY-205), as a first screen built with no
+rules is the one every later screen copies (WAY-184). A file of a kind holds its exemplar, which
+exists only once the task that creates the first file of the kind has designated it (WAY-200).
+Coding guidelines written before any code have no trial run to start from (WAY-204); this way of
+working has not yet been tried on a product, so its first use is reviewed.
+*Rejected:* the linter and the formatter brought in only after the first code is written — that code
+is written with no standing check, and they meet it as code to clean.
+
+### WAY-210/1 — What does the coding-guidelines skill look at first?
+
+Before anything else, the skill `maintain-coding-guidelines` recognizes which parts of a product
+hold code and what the product already has for them — a linter, a formatter, an audit of
+dependencies, kinds of code that already have files, or nothing — and whether it has coding
+guidelines, and it extends what exists rather than setting a second tool beside it. A new linter,
+formatter or audit of dependencies is a choice the skill leaves to the human as a question of the
+task, never one it settles, recommending by default the tool most used in the product's technology,
+as research with sources shows it.
+
+- **Change:** new decision
+- **Scope:** product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-193@1ae9ba7c
+- **Verification:** level 2 — an agent compares the work with the decision:
+  - complies: in a product whose linter runs with a few rules, the skill proposes adding rules to
+    that linter's configuration; a product with no standing check gets three questions, each
+    recommending the tool research shows most used in the product's technology, with its sources;
+  - violates: the skill sets a second linter beside the one the product runs because it judges it
+    better; the skill chooses a formatter itself; the default recommendation is a tool the agent
+    prefers, with no source showing its use.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
+
+*Rationale:* an existing tool, even a worse one, beats a better one brought in, since the code and
+the people working on it already follow it, and two linters over one code disagree, as for a
+styleguide's system (WAY-185). What the product has decides how the skill works — before the first
+code, an audit, or a refresh — so it is read first. A new tool is something the product has to keep,
+a technology choice, and the human makes it. The human is no developer, and a product with no
+standing check meets three such choices at once, so the skill recommends the tool most used in the
+technology, which the human can take as offered, as WCAG is recommended for adoption (WAY-191), and
+how widely an option is used within its family bears on how well an agent works with it (WAY-122).
+*Rejected:* a second linter set beside a product's working one because the skill judges it better —
+two tools over one code disagree; the skill choosing a new tool itself — a dependency the human
+never chose.
+
+### WAY-211/1 — Where do the tools of the standing checks and a linter's set of rules come from?
+
+The skill `maintain-coding-guidelines` takes the tools of the standing checks and a linter's set of
+rules from the human's preferences for the product's technology that the product's foundation
+settles, and, where the human has none, from research of each standing check for that technology,
+each source named with its page and version and every claim no source supports refuted by a critique
+before the human sees the options, as the options of a technology choice are checked (WAY-122). It
+researches again whenever a product's coding guidelines are refreshed or extended.
+
+- **Change:** new decision
+- **Scope:** product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-122@b343277a · derives from WAY-120@81f84997
+- **Verification:** level 2 — an agent compares the work with the decision:
+  - complies: the human has no preference for the linter of a product written in TypeScript;
+    research names the pages and versions of the tools' documentation and of a record of their use,
+    a fresh critic strikes a claimed difference no page gives, and only then the human sees the
+    options; a year later an extension of the coding guidelines runs the research again;
+  - violates: the tools come from the agent's memory; research reaches the human uncritiqued; an
+    extension reuses the first research; the skill researches a tool the human already named as
+    preferred and offers another in its place.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
+
+*Rationale:* the product is the human's, so their preferences come first; where they have none,
+research with sources and a critique lets a human who cannot judge the tools tell a sound comparison
+from an invented one (WAY-122, WAY-120), as for a styleguide's starting rules (WAY-186). Tools and
+their recommended sets move, so refreshed coding guidelines are set against them again.
+*Rejected:* tools and sets proposed from the agent's memory — the human cannot tell a sound proposal
+from an invented one; research once for each product — later extensions miss what has moved.
+
+### WAY-212/1 — How does a product's instruction file lead to its coding guidelines?
+
+A product's root `AGENTS.md`, outside the block the-way's installer writes, points to its coding
+guidelines by one line naming `guidelines/coding.md` by its path in backticks with the condition of
+changing the product's code, written as the skill of `instruction-files` gives a pointer, and no
+line of it names a file `guidelines/coding-<kind>.md`. Each such file is named instead by a row of
+the table of `guidelines/coding.md`, by its path in backticks with the condition under which to read
+it, such as adding or changing a file of its kind.
+
+- **Change:** new decision
+- **Scope:** product-guidelines, instruction-files
+- **Based on:** none
+- **Relations:** derives from WAY-128@4dca37ca · derives from WAY-129@1336c32b · derives from
+  WAY-167@052adf27
+- **Verification:** level 1 — invariants: guidelines-check-kind-index. Level 2 for the pointer of
+  `AGENTS.md` — an agent compares the change with the decision:
+  - complies: `AGENTS.md` reads "Before you change the product's code, read `guidelines/coding.md`"
+    below the installer's block, and the table of `guidelines/coding.md` names
+    `guidelines/coding-endpoint.md` with "before adding or changing an endpoint";
+  - violates: `AGENTS.md` holds a line for each file of a kind; the pointer stands inside the
+    installer's block; the coding guidelines are imported with `@`; the pointer names a lint command
+    to run before a change.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
+
+*Rationale:* coding guidelines no instruction leads to are not found by an agent in a new session; a
+path with its condition costs one line and is read when the condition comes (WAY-129), and the
+pointer leads to work an agent would not otherwise find (WAY-128). A line for each file of a kind
+would grow `AGENTS.md`, which the tools load into every session, with each kind the product gains,
+while the general file's table, as Open Mercato's table leading from a task to the guides to read
+(WAY-195), leads the agent in a second step to the files of the kinds its work touches. The price:
+two steps instead of one, and a table that could drift from the files, which an invariant keeps in
+step. The pointer stands outside the installer's block, which holds no path a product chooses
+(WAY-107), and the gate runs the standing checks, so the pointer names no command of its own
+(WAY-16). The table itself is what WAY-167 gives the general file; this decision sets how it leads.
+*Rejected:* a line of `AGENTS.md` for each file of the coding guidelines, as WAY-192 has for each
+styleguide — `AGENTS.md`, loaded into every session, grows with each kind; no pointer, leaving the
+way in to the task cycle — until the cycle reads guidelines, an agent in a new session does not find
+them.

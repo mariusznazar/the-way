@@ -47,7 +47,11 @@ writes there is written for a reader who was not in it.
 
 - *To do*:
   - write `guidelines/styleguide-<part>.md` from
-    `.the-way/product-guidelines/styleguide/template.md`, as its section "Writing the file" gives;
+    `.the-way/product-guidelines/styleguide/template.md`, as its section "Writing the file" gives,
+    and the test cases of each rule as the section "Test cases of a rule" of
+    `.the-way/product-guidelines/template.md` gives them (WAY-168), the cases of
+    `### No value in place of a design token` read as that section gives for an invariant on the
+    list of violated invariants and for the invariant beside it (WAY-190);
   - put the value of each role into the product's file of design tokens with its source, naming for
     each role the value and its source as the human settled them, or the exact address of the
     source and the item in it the value is read from (WAY-182);

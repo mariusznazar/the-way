@@ -139,14 +139,109 @@ INVARIANT_LINE = 15  # "- **Invariant:** none"
 PROSE_LINE = 19      # "Set up each test's data through the product's fixtures."
 WHERE_LINE = 29      # "- `tests/fixtures.py`"
 
-def as_coding(text):
+def as_observability(text):
     """`text` as guidelines of a second discipline the-way gives no template of, in a file
-    `guidelines/coding.md`."""
-    return text.replace("- **Discipline:** testing", "- **Discipline:** coding")
+    `guidelines/observability.md`."""
+    return text.replace("- **Discipline:** testing", "- **Discipline:** observability")
 
 
+# A good and a bad case of `fixture-named`, for a rule of TESTING that names it (WAY-168).
+FIXTURE_CASES = ("```good fixture-named tests/test_player.py\n"
+                 "def test_player(player_fixture):\n    assert player_fixture\n```\n\n"
+                 "```bad fixture-named tests/test_player.py\n"
+                 "def test_player():\n    assert {}\n```\n\n")
 NO_GOOD = TESTING.replace("- **Good:** a test sets up its player through the fixtures.\n", "")
 ELSEWHERE = TESTING.replace("- **Applies to:** web", "- **Applies to:** mobile")
+
+# Coding guidelines in the two forms of the coding template: a general file and the file of the
+# kind `endpoint`. The decision ABC-06 designates the exemplar by its path and its kind in
+# backticks, and the invariant `endpoint-handler` checks the kind's rule; the commit adding the
+# guidelines adds both to the foundation, with the files they name.
+EXEMPLAR_DECISION = "The file `src/api/orders.ts` is the exemplar of the kind `endpoint`."
+EXEMPLAR_FP = "a7f9c135"
+HANDLER = "Every file of the kind endpoint answers through the shared handler."
+HANDLER_FP = "8c2ca199"
+CODING_LOG = LOG + "\n".join([
+    "", "### ABC-06/1 — Which file is the exemplar of an endpoint?", "",
+    EXEMPLAR_DECISION, "",
+    "- **Change:** new decision", "- **Scope:** web", "- **Based on:** none",
+    "- **Relations:** none",
+    "- **Verification:** level 2 — an agent compares the change with the decision:",
+    "  - complies: a new endpoint follows the exemplar;",
+    "  - violates: a new endpoint answers on its own.",
+    "- **Review when:** none", "- **Origin:** none",
+    "- **Approved by:** Anna, 2026-09-01", "",
+    "*Rationale:* one way of answering a request.",
+    "*Rejected:* none considered", ""])
+CODING_INVARIANTS = ("# Invariants\n\n## endpoint-handler/1\n\n%s\n\n"
+                     "- **Method:** `python -B tests/check_handler.py`\n- **Rests on:** none\n"
+                     "- **Derives from:** ABC-06@%s\n- **Part:** web\n- **Correction:** none\n\n"
+                     "## Withdrawn identifiers\n\n| Identifier | Why | Successors |\n"
+                     "|---|---|---|\n"
+                     "\n## Quarantined invariants\n\n| Identifier | Version | Until |\n"
+                     "|---|---|---|\n" % (HANDLER, EXEMPLAR_FP))
+KINDS_HEADER = "| Kind | File | When to read |"
+KINDS_ROW = "| endpoint | `guidelines/coding-endpoint.md` | before adding or changing an endpoint |"
+CODING = "\n".join([
+    "# Coding guidelines — the product", "",
+    "- **Discipline:** coding", "- **Applies to:** web", "",
+    "## When to read", "", "Before changing the product's code.", "",
+    "## Kinds of code", "", KINDS_HEADER, "|---|---|---|", KINDS_ROW, "",
+    "## Rules", "",
+    "### Linter", "", "none — ABC-05@016b5b2a", "",
+    "### Formatter", "", "none — ABC-05@016b5b2a", "",
+    "### Dependency audit", "", "none — ABC-05@016b5b2a", "",
+    "## Examples", "", "### Short functions", "",
+    "The team keeps a function short enough to read at a glance.", "",
+    "## Where in code", "", "- `src/api`", ""])
+FILES_HEADER = "| File | Status | Decision |"
+EXEMPLAR_ROW = "| `src/api/orders.ts` | exemplar | ABC-06@a7f9c135 |"
+CODING_ENDPOINT = "\n".join([
+    "# Coding guidelines — endpoint", "",
+    "- **Discipline:** coding", "- **Applies to:** web", "",
+    "## When to read", "", "Before adding or changing an endpoint.", "",
+    "## Files of this kind", "", FILES_HEADER, "|---|---|---|", EXEMPLAR_ROW, "",
+    "## Rules", "",
+    "### Through the shared handler", "",
+    "- **Decision:** ABC-06@a7f9c135",
+    "- **Invariant:** endpoint-handler@8c2ca199",
+    "- **Good:** an endpoint answers through the shared handler.",
+    "- **Bad:** an endpoint answers on its own.", "",
+    "Answer every request through the shared handler.", "",
+    "```good endpoint-handler src/api/carts.ts",
+    'import { handle } from "./handler";',
+    "export const POST = handle((input: unknown) => input);",
+    "```", "",
+    "```bad endpoint-handler src/api/carts.ts",
+    "export const POST = (input: unknown) => input;",
+    "```", "",
+    "## Examples", "", "### Names of inputs", "",
+    "The exemplar names each input after what it holds.", "",
+    "## Where in code", "", "- `src/api/orders.ts`", ""])
+CODING_FILES = {
+    "foundations/decisions.md": CODING_LOG,
+    "foundations/invariants.md": CODING_INVARIANTS,
+    "src/api/handler.ts": "export const handle = (answer: Function) => answer;\n",
+    "src/api/orders.ts": ('import { handle } from "./handler";\n'
+                          "export const POST = handle((input: unknown) => input);\n"),
+    "guidelines/coding.md": CODING,
+    "guidelines/coding-endpoint.md": CODING_ENDPOINT,
+}
+
+
+def line_of(text, line):
+    """The number (from 1) of the one line of `text` reading `line`."""
+    lines = text.split("\n")
+    if lines.count(line) != 1:
+        raise AssertionError("the fixture holds %r %d times, not once" % (line, lines.count(line)))
+    return lines.index(line) + 1
+
+
+def replaced(text, old, new):
+    """`text` with the one occurrence of `old` replaced by `new`."""
+    if text.count(old) != 1:
+        raise AssertionError("the fixture holds %r %d times, not once" % (old, text.count(old)))
+    return text.replace(old, new)
 
 
 def with_line(text, number, new):
@@ -261,7 +356,8 @@ class Runs(Case):
 
     def test_a_run_with_no_option_records_lines_of_guidelines_form_alone(self):
         """Break caught: a run with no option recording checks its options do not select."""
-        self.product({"guidelines/testing.md": TESTING, "guidelines/coding.md": as_coding(NO_GOOD)})
+        self.product({"guidelines/testing.md": TESTING,
+                      "guidelines/observability.md": as_observability(NO_GOOD)})
         code, output, lines = self.run_check()
         self.assertEqual(code, 1, output)
         self.assertTrue(lines, output)
@@ -271,11 +367,11 @@ class Runs(Case):
     def test_findings_of_two_files_print_under_their_own_paths(self):
         """Break caught: one report for every file, so a finding names the wrong file."""
         self.product({"guidelines/testing.md": NO_GOOD,
-                      "guidelines/coding.md": as_coding(ELSEWHERE)})
+                      "guidelines/observability.md": as_observability(ELSEWHERE)})
         code, output, _ = self.run_check()
         self.assertEqual(code, 1, output)
         first = self.errors(output, "guidelines/testing.md")
-        second = self.errors(output, "guidelines/coding.md")
+        second = self.errors(output, "guidelines/observability.md")
         self.assertTrue(any("Good" in message for _, message in first), output)
         self.assertFalse(any("mobile" in message for _, message in first), output)
         self.assertIn(4, [line for line, message in second if "mobile" in message], output)
@@ -285,7 +381,7 @@ class Runs(Case):
         """Break caught: a report whose count line is missing or counts another report's
         findings. The run's report comes first, then each file's, by path."""
         self.product({"guidelines/testing.md": TESTING,
-                      "guidelines/coding.md": as_coding(NO_GOOD).replace(
+                      "guidelines/observability.md": as_observability(NO_GOOD).replace(
                           "- **Applies to:** web", "- **Applies to:** mobile"),
                       "guidelines/x.MD": TESTING})
         code, output, _ = self.run_check()
@@ -331,6 +427,957 @@ class Names(Case):
                         output)
 
 
+class Coding(Case):
+    """The two forms of the coding template: the general file `guidelines/coding.md` and a file
+    `guidelines/coding-<kind>.md` for each kind of code (WAY-167), read with crafted names
+    (WAY-48)."""
+
+    def test_a_general_file_and_a_file_of_a_kind_pass(self):
+        """Break caught: a file `guidelines/coding-<kind>.md` refused for its name, or held to the
+        form of the general file, so the coding guidelines a product writes never pass."""
+        self.product(CODING_FILES)
+        for options in ((), ("--merge-onto", "none")):
+            with self.subTest(options=options):
+                code, output, lines = self.run_check(*options)
+                self.assertEqual(code, 0, output)
+                self.assertNotIn(": error:", output)
+                self.assertNotIn("fail", [line["verdict"] for line in lines], lines)
+
+    def test_a_name_whose_kind_is_no_identifier_is_an_error(self):
+        """Breaks caught: a kind of no word, an upper-case one, one starting with a hyphen or
+        holding a dot, or a name whose discipline differs in case, taken for a file of a kind;
+        or the error not naming the two forms the discipline gives."""
+        for name in ("coding-.md", "coding--a.md", "coding-A.md", "coding-a.md.md",
+                     "Coding-a.md"):
+            with self.subTest(name=name):
+                self.setUp()
+                self.product(dict(CODING_FILES, **{"guidelines/" + name: CODING_ENDPOINT}))
+                code, output, _ = self.run_check()
+                self.assertEqual(code, 1, output)
+                self.assertTrue([message for _, message in self.errors(output, "guidelines/" + name)
+                                 if "*Discipline* `coding`" in message
+                                 and "`guidelines/coding-<kind>.md`" in message], output)
+
+    def test_a_file_below_a_directory_named_like_a_kind_is_warned_of_and_not_read(self):
+        """Break caught: `guidelines/coding-a/b.md` read as guidelines, or passed with no word."""
+        self.product(dict(CODING_FILES, **{"guidelines/coding-a/b.md": CODING_ENDPOINT}))
+        code, output, _ = self.run_check()
+        self.assertEqual(code, 0, output)
+        self.assertNotIn(": error:", output)
+        self.assertRegex(output, r"(?m)^guidelines:\d+: warning: `guidelines/coding-a/b\.md`")
+
+
+class Tables(Case):
+    """Every table a template gives is checked for its header and the number of its cells; a
+    table of roles is checked beyond that by the rules of the styleguide (WAY-171)."""
+
+    def broken(self, path, old, new):
+        """Runs the check on the coding guidelines with the line `old` of the file `path` read as
+        `new`; returns the exit code, the output and the number of the line."""
+        text = CODING_FILES[path]
+        number = line_of(text, old)
+        self.product(dict(CODING_FILES, **{path: replaced(text, old, new)}))
+        code, output, _ = self.run_check()
+        return code, output, number
+
+    def test_a_row_whose_number_of_cells_differs_from_the_columns_is_an_error(self):
+        """Breaks caught: a row of a table other than the roles' left unchecked, or a `|` in
+        backticks taken as no border of a cell — as Markdown splits a row on it — so a row
+        holding four cells passes; or an empty last cell written `||` lost."""
+        general, kind = "guidelines/coding.md", "guidelines/coding-endpoint.md"
+        cases = (
+            ("a | inside backticks", general, KINDS_ROW,
+             "| endpoint | `guidelines/coding-endpoint.md|x` | before adding or changing an "
+             "endpoint |", "4 cells"),
+            ("too few cells", general, KINDS_ROW, "| endpoint | `guidelines/coding-endpoint.md` |",
+             "2 cells"),
+            ("too many cells", general, KINDS_ROW, KINDS_ROW + " now |", "4 cells"),
+            ("an empty cell too many", general, KINDS_ROW, KINDS_ROW + "|", "4 cells"),
+            ("too few cells in the files of a kind", kind, EXEMPLAR_ROW,
+             "| `src/api/orders.ts` | exemplar |", "2 cells"),
+        )
+        for name, path, old, new, fragment in cases:
+            with self.subTest(name):
+                self.setUp()
+                code, output, number = self.broken(path, old, new)
+                self.assertEqual(code, 1, output)
+                self.assertIn(number, [line for line, message in self.errors(output, path)
+                                       if fragment in message and "3 columns" in message], output)
+
+    def test_a_separator_row_among_the_rows_is_an_error(self):
+        """Break caught: a row of dashes anywhere in a table skipped as its separator."""
+        code, output, number = self.broken("guidelines/coding.md", KINDS_ROW,
+                                           KINDS_ROW + "\n|---|---|---|")
+        self.assertEqual(code, 1, output)
+        self.assertIn(number + 1, [line for line, message
+                                   in self.errors(output, "guidelines/coding.md")
+                                   if "separator" in message], output)
+
+    def test_a_header_that_differs_from_the_columns_is_an_error(self):
+        """Breaks caught: a header compared with the columns loosely, so a column named with
+        a space more or less passes; or the space around each cell, which Markdown sets aside,
+        taken for part of its name (the control)."""
+        for header in ("| Kind | File | When to  read |", "| Kind | File | Whento read |",
+                       "| Kind | File |"):
+            with self.subTest(header=header):
+                self.setUp()
+                code, output, number = self.broken("guidelines/coding.md", KINDS_HEADER, header)
+                self.assertEqual(code, 1, output)
+                self.assertIn(number, [line for line, message
+                                       in self.errors(output, "guidelines/coding.md")
+                                       if "Kind | File | When to read" in message], output)
+        self.setUp()
+        code, output, _ = self.broken("guidelines/coding.md", KINDS_HEADER,
+                                      "|Kind|  File  |   When to read |")
+        self.assertEqual(code, 0, output)
+
+    def test_a_section_of_a_table_holding_none_is_an_error(self):
+        """Break caught: `## Kinds of code` written as prose, so the table the template gives
+        is missing with no word."""
+        table = "\n".join([KINDS_HEADER, "|---|---|---|", KINDS_ROW])
+        self.product(dict(CODING_FILES, **{"guidelines/coding.md": replaced(
+            CODING, table, "Before an endpoint, read the file of endpoints.")}))
+        code, output, _ = self.run_check()
+        self.assertEqual(code, 1, output)
+        self.assertTrue([message for _, message in self.errors(output, "guidelines/coding.md")
+                         if "Kinds of code" in message and "no table" in message], output)
+
+    def test_a_table_with_a_header_and_no_row_passes(self):
+        """Break caught: a table of no row taken for no table: a product with no exemplar yet
+        keeps the table of its kinds with its header alone (WAY-167)."""
+        self.product({path: text for path, text in CODING_FILES.items()
+                      if path != "guidelines/coding-endpoint.md"}
+                     | {"guidelines/coding.md": replaced(CODING, KINDS_ROW + "\n", "")})
+        code, output, _ = self.run_check()
+        self.assertEqual(code, 0, output)
+
+    def test_a_row_of_one_mebibyte_of_bars_finishes_within_a_bound(self):
+        """Break caught: splitting a crafted row that runs away, so the run never ends with a
+        report."""
+        head = replaced(CODING, KINDS_ROW, "\0").encode("utf-8")
+        room = LIMIT - 16 - (len(head) - 1)
+        data = head.replace(b"\0", b"|" * room)
+        self.assertLess(len(data), LIMIT)
+        self.product(dict(CODING_FILES, **{"guidelines/coding.md": data}))
+        started = time.monotonic()
+        code, output, _ = self.run_check(timeout=120)
+        elapsed = time.monotonic() - started
+        self.assertEqual(code, 1, output[-2000:])
+        self.assertLess(elapsed, 30, "the run took %.1f s" % elapsed)
+        self.assertTrue([message for _, message in self.errors(output, "guidelines/coding.md")
+                         if "cells" in message], output[-2000:])
+
+
+class TemplateWords(Case):
+    """The structural words of the coding template that the checks act on are read back from it
+    (WAY-171): a copy of the templates lacking one is refused."""
+
+    def templates(self, coding):
+        """A copy of the-way's templates whose coding template reads `coding`; returns the
+        directory that stands for `product-guidelines`."""
+        here = os.path.join(self.base, "the-way", "product-guidelines")
+        source = os.path.join(THE_WAY, "product-guidelines")
+        for relative in ("template.md", os.path.join("styleguide", "template.md")):
+            os.makedirs(os.path.dirname(os.path.join(here, relative)), exist_ok=True)
+            shutil.copy(os.path.join(source, relative), os.path.join(here, relative))
+        os.makedirs(os.path.join(here, "coding"), exist_ok=True)
+        with open(os.path.join(here, "coding", "template.md"), "w", encoding="utf-8",
+                  newline="\n") as handle:
+            handle.write(coding)
+        return here
+
+    def coding_template(self):
+        with open(os.path.join(THE_WAY, "product-guidelines", "coding", "template.md"),
+                  encoding="utf-8") as handle:
+            return handle.read()
+
+    def test_a_coding_template_lacking_a_word_the_checks_act_on_is_refused(self):
+        """Breaks caught: a template read without the section, column or value of *Status* a
+        check of the coding discipline acts on, so the check passes every file. The control:
+        the template as it stands is read."""
+        text = self.coding_template()
+        statuses = "*Status*: one of `exemplar`, `copy` or `do not copy`;"
+        cases = (
+            ("Required form of a kind", "\n## Required form of a kind\n", "\n## Form of a kind\n"),
+            ("Kinds of code", "\n## Kinds of code\n", "\n## Kinds\n"),
+            ("Files of this kind", "\n## Files of this kind\n", "\n## Files\n"),
+            ("Kind", "| Kind | File | When to read |", "| Sort | File | When to read |"),
+            ("File", "| Kind | File | When to read |", "| Kind | Path | When to read |"),
+            ("When to read", "| Kind | File | When to read |", "| Kind | File | When |"),
+            ("File", "| File | Status | Decision |", "| Path | Status | Decision |"),
+            ("Status", "| File | Status | Decision |", "| File | State | Decision |"),
+            ("Decision", "| File | Status | Decision |", "| File | Status | Reason |"),
+            ("exemplar", statuses, "*Status*: one of `model`, `copy` or `do not copy`;"),
+            ("copy", statuses, "*Status*: one of `exemplar`, `follow` or `do not copy`;"),
+            ("do not copy", statuses, "*Status*: one of `exemplar`, `copy` or `avoid`;"),
+        )
+        module = load_form_check()
+        common, disciplines = module.read_templates(self.templates(text))
+        self.assertIn("coding", disciplines)
+        for word, old, new in cases:
+            with self.subTest(word=word, old=old):
+                self.setUp()
+                here = self.templates(replaced(text, old, new))
+                with self.assertRaises(module.TemplateError) as raised:
+                    module.read_templates(here)
+                self.assertIn(word, str(raised.exception))
+
+    def test_the_command_exits_2_on_a_coding_template_lacking_a_word(self):
+        """Break caught: a template the checks cannot act on read anyway, so the run passes."""
+        self.product(CODING_FILES)
+        here = self.templates(replaced(self.coding_template(), "\n## Files of this kind\n",
+                                       "\n## Files\n"))
+        shutil.copy(SCRIPT, here)
+        environment = dict(os.environ, PYTHONIOENCODING="utf-8")
+        run = subprocess.run([sys.executable, "-B", os.path.join(here, "form_check.py"),
+                              "--record", self.record], cwd=self.root, capture_output=True,
+                             text=True, encoding="utf-8", errors="replace", env=environment)
+        self.assertEqual(run.returncode, 2, run.stdout + run.stderr)
+        self.assertIn("Files of this kind", run.stdout + run.stderr)
+
+    def test_each_form_of_a_discipline_reads_its_own_demand_of_an_invariant(self):
+        """Break caught: the demand of an invariant in every rule read once for a discipline, so
+        a template that states it for one of its forms alone holds the other to it too."""
+        sentence = "its *Invariant* names at least one invariant"
+        text = self.coding_template()
+        section = text.index("\n## Required form of a kind\n")
+        head, tail = text[:section], text[section:]
+        self.assertIn(sentence, " ".join(head.split()))
+        self.assertIn(sentence, " ".join(tail.split()))
+        # The sentence may wrap over lines; only the section of the form of a kind loses it.
+        loosened = head + re.sub(r"its \*Invariant\*\s+names\s+at\s+least\s+one\s+invariant",
+                                 "its *Invariant* may name an invariant", tail)
+        self.assertNotIn(sentence, " ".join(loosened[section:].split()))
+        module = load_form_check()
+        _, disciplines = module.read_templates(self.templates(loosened))
+        self.assertTrue(disciplines["coding"].requires_invariant)
+        self.assertFalse(disciplines["coding"].of_a_kind.requires_invariant)
+
+
+# Decisions beside ABC-06 for the checks of the exemplar: one naming the path outside backticks,
+# and one in force at its first version and repealed at its second, whose first version names the
+# path and the kind in backticks, so that only the repeal is wrong.
+BARE_PATH_DECISION = "The file src/api/orders.ts is the exemplar of the kind `endpoint`."
+BARE_PATH_FP = "5047a97d"
+REPEALED_DECISION = ("The file `src/api/orders.ts` was the exemplar of the kind `endpoint` until "
+                     "the API was split.")
+REPEALED_FP = "cc24fd66"
+
+
+def decision_version(number, version, question, binding, change):
+    """A version of a decision of the log, in the form the decisions template gives."""
+    lines = ["", "### ABC-%02d/%d — %s" % (number, version, question), ""]
+    if binding is not None:
+        lines += [binding, ""]
+    return "\n".join(lines + [
+        "- **Change:** " + change, "- **Scope:** web", "- **Based on:** none",
+        "- **Relations:** none",
+        "- **Verification:** level 2 — an agent compares the change with the decision:",
+        "  - complies: a new endpoint follows the exemplar;",
+        "  - violates: a new endpoint answers on its own.",
+        "- **Review when:** none", "- **Origin:** none",
+        "- **Approved by:** Anna, 2026-09-01", "",
+        "*Rationale:* one way of answering a request.", "*Rejected:* none considered", ""])
+
+
+EXEMPLAR_LOG = (CODING_LOG
+                + decision_version(7, 1, "Which file was the exemplar before the split?",
+                                   REPEALED_DECISION, "new decision")
+                + decision_version(7, 2, "Which file was the exemplar before the split?", None,
+                                   "repeal")
+                + decision_version(8, 1, "Which file is the exemplar, named bare?",
+                                   BARE_PATH_DECISION, "new decision"))
+
+
+def crafted(path):
+    """(what, a crafted spelling of `path`) for each shape of path that is refused, or that names
+    nothing git tracks, before git sees it (WAY-48)."""
+    windows = path.replace("/", "\\")
+    return (("absolute", "/" + path), ("a UNC prefix", "//host/share/" + path),
+            ("a UNC prefix written for Windows", "\\\\host\\share\\" + windows),
+            ("a `..` segment", "src/../" + path), ("a backslash", windows),
+            ("a drive", "C:/" + path), ("a drive with no slash", "C:" + path),
+            ("a character that is not printable", path + "\x07"),
+            ("a zero-width space", path[:3] + "\u200b" + path[3:]),
+            ("a pathspec magic word", ":(literal)" + path), ("a short pathspec magic", ":!" + path),
+            ("200 KiB", "a" * 204800 + "/" + path))
+
+
+class Watched(Case):
+    def run_watched(self):
+        """Exit code, output, the arguments of every program the run starts and the seconds it
+        takes, of the command's main run in this process, every socket refused."""
+        calls, original = [], subprocess.run
+
+        def recording(arguments, *rest, **keywords):
+            calls.append([str(argument) for argument in arguments])
+            return original(arguments, *rest, **keywords)
+
+        def refuse(*arguments, **keywords):
+            raise AssertionError("a socket was opened")
+
+        started = time.monotonic()
+        with mock.patch.object(subprocess, "run", side_effect=recording), \
+                mock.patch.object(socket, "socket", side_effect=refuse), \
+                mock.patch.object(socket, "create_connection", side_effect=refuse), \
+                mock.patch.object(socket, "getaddrinfo", side_effect=refuse):
+            code, output = self.run_inside()
+        return code, output, calls, time.monotonic() - started
+
+    def assert_unseen(self, paths, calls):
+        """No path of `paths` reached git, and git was asked for what it tracks."""
+        self.assertTrue([call for call in calls if "ls-files" in call], calls)
+        for path in paths:
+            for call in calls:
+                self.assertFalse([argument for argument in call if path in argument],
+                                 "%r reached git: %r" % (path[:80], call[:6]))
+
+
+class KindIndex(Watched):
+    """The table under `## Kinds of code` of `guidelines/coding.md` and the files of a kind git
+    lists (WAY-167, WAY-212), read with crafted rows (WAY-48)."""
+
+    def test_a_kind_file_no_row_names_is_an_error(self):
+        """Break caught: a file of a kind left out of the index passing, so an agent led by the
+        general file never finds it."""
+        self.product(dict(CODING_FILES, **{"guidelines/coding.md": replaced(
+            CODING, KINDS_ROW + "\n", "")}))
+        code, output, lines = self.run_check()
+        self.assertEqual(code, 1, output)
+        self.assertTrue([message for _, message in self.errors(output,
+                                                               "guidelines/coding-endpoint.md")
+                         if "Kinds of code" in message], output)
+        self.assertIn("fail", [line["verdict"] for line in lines if line["invariant"] == FORM])
+
+    def test_a_row_differing_from_its_file_only_by_case_or_a_look_alike_is_an_error(self):
+        """Breaks caught: the *File* of a row compared with what git lists ignoring case or
+        folding Unicode, so a row naming `coding-Endpoint.md` or a Cyrillic `е` passes for the
+        file `coding-endpoint.md`; the file itself is then named by no row."""
+        for path in ("guidelines/coding-Endpoint.md", "guidelines/coding-\u0435ndpoint.md"):
+            with self.subTest(path=path):
+                self.setUp()
+                row = KINDS_ROW.replace("guidelines/coding-endpoint.md", path)
+                general = replaced(CODING, KINDS_ROW, row)
+                self.product(dict(CODING_FILES, **{"guidelines/coding.md": general}))
+                code, output, _ = self.run_check()
+                self.assertEqual(code, 1, output)
+                self.assertIn(line_of(general, row),
+                              [line for line, message in self.errors(output,
+                                                                     "guidelines/coding.md")
+                               if "git" in message], output)
+                self.assertTrue(self.errors(output, "guidelines/coding-endpoint.md"), output)
+
+    def test_a_row_naming_a_tracked_file_that_is_no_file_of_a_kind_is_an_error(self):
+        """Break caught: any path git tracks taken for a file of a kind, so a row pointing to the
+        general file or to code passes."""
+        for path in ("guidelines/coding.md", "src/api/orders.ts"):
+            with self.subTest(path=path):
+                self.setUp()
+                row = "| endpoint | `%s` | before adding or changing an endpoint |" % path
+                general = replaced(CODING, KINDS_ROW, KINDS_ROW + "\n" + row)
+                self.product(dict(CODING_FILES, **{"guidelines/coding.md": general}))
+                code, output, _ = self.run_check()
+                self.assertEqual(code, 1, output)
+                self.assertIn(line_of(general, row),
+                              [line for line, message in self.errors(output,
+                                                                     "guidelines/coding.md")
+                               if "guidelines/coding-<kind>.md" in message], output)
+
+    def test_a_file_cell_holding_no_path_in_backticks_is_an_error(self):
+        """Break caught: the *File* of a row read bare, though the template gives a path in
+        backticks (spec §4.3), so a path written as prose passes."""
+        for cell in ("guidelines/coding-endpoint.md", "``", "`guidelines/coding-endpoint.md` x"):
+            with self.subTest(cell=cell):
+                self.setUp()
+                row = KINDS_ROW.replace("`guidelines/coding-endpoint.md`", cell)
+                general = replaced(CODING, KINDS_ROW, row)
+                self.product(dict(CODING_FILES, **{"guidelines/coding.md": general}))
+                code, output, _ = self.run_check()
+                self.assertEqual(code, 1, output)
+                self.assertIn(line_of(general, row),
+                              [line for line, message in self.errors(output,
+                                                                     "guidelines/coding.md")
+                               if "backticks" in message], output)
+
+    def test_a_kind_file_beside_a_general_file_that_cannot_be_read_is_an_error(self):
+        """Break caught: a general file refused unread taken for an index of no row or for a
+        complete one, so the file of a kind passes unchecked."""
+        self.product(dict(CODING_FILES, **{"guidelines/coding.md": b"x" * (LIMIT + 1)}))
+        code, output, _ = self.run_check()
+        self.assertEqual(code, 1, output)
+        self.assertTrue([message for _, message in self.errors(output,
+                                                               "guidelines/coding-endpoint.md")
+                         if "guidelines/coding.md" in message], output)
+
+    def test_a_crafted_index_path_is_refused_before_git_sees_it(self):
+        """Breaks caught: a *File* of the index handed to git, or tested only once git has seen
+        it, so pathspec magic, a path outside the repository or a network share reaches git; a
+        socket opened; or matching that runs away on a long path."""
+        paths = [path for _, path in crafted("guidelines/coding-endpoint.md")]
+        rows = ["| endpoint | `%s` | before adding or changing an endpoint |" % path
+                for path in paths]
+        general = replaced(CODING, KINDS_ROW, "\n".join([KINDS_ROW] + rows))
+        self.product(dict(CODING_FILES, **{"guidelines/coding.md": general}))
+        code, output, calls, elapsed = self.run_watched()
+        self.assertEqual(code, 1, output[-2000:])
+        self.assertLess(elapsed, 30, "the run took %.1f s" % elapsed)
+        reported = {line for line, _ in self.errors(output, "guidelines/coding.md")}
+        for what, row in zip([what for what, _ in crafted("x")], rows):
+            with self.subTest(what):
+                self.assertIn(line_of(general, row), reported, output[-2000:])
+        self.assert_unseen(paths, calls)
+
+
+class FilesOfAKind(Watched):
+    """The table under `## Files of this kind` of a file `guidelines/coding-<kind>.md`: one
+    exemplar designated by a decision, the closed list of *Status*, each *File* a path git
+    tracks (WAY-198, WAY-199), read with crafted rows (WAY-48)."""
+
+    def kind_file(self, text, files=None):
+        """Runs the check on the coding guidelines, the file of a kind reading `text`, the log
+        holding EXEMPLAR_LOG and the files `files` added."""
+        self.product(dict(CODING_FILES, **dict(files or {}, **{
+            "foundations/decisions.md": EXEMPLAR_LOG, "guidelines/coding-endpoint.md": text})))
+        return self.run_check()
+
+    def exemplar_errors(self, output, line):
+        return [message for at, message in self.errors(output, "guidelines/coding-endpoint.md")
+                if at == line and "exemplar" in message]
+
+    def test_two_exemplar_rows_are_an_error(self):
+        """Break caught: the first `exemplar` row taken and the others passed, so a kind has two
+        exemplars and an agent copies either."""
+        second = "| `src/api/handler.ts` | exemplar | ABC-06@a7f9c135 |"
+        text = replaced(CODING_ENDPOINT, EXEMPLAR_ROW, EXEMPLAR_ROW + "\n" + second)
+        code, output, _ = self.kind_file(text)
+        self.assertEqual(code, 1, output)
+        self.assertTrue([message for message in self.exemplar_errors(output,
+                                                                     line_of(text, second))
+                         if "line %d" % line_of(text, EXEMPLAR_ROW) in message], output)
+
+    def test_no_exemplar_row_is_an_error(self):
+        """Break caught: a table of no `exemplar` row passing, so a kind has no exemplar."""
+        text = replaced(CODING_ENDPOINT, EXEMPLAR_ROW, "| `src/api/orders.ts` | copy | — |")
+        code, output, _ = self.kind_file(text)
+        self.assertEqual(code, 1, output)
+        self.assertTrue([message for _, message in self.errors(output,
+                                                               "guidelines/coding-endpoint.md")
+                         if "no row whose *Status* is `exemplar`" in message], output)
+
+    def test_a_kind_file_lacking_files_of_this_kind_is_an_error(self):
+        """Break caught: a file of a kind with no section `## Files of this kind` passing as one
+        of no exemplar to check (C32): both the missing section and the missing exemplar are
+        reported."""
+        text = replaced(CODING_ENDPOINT, "\n".join(["## Files of this kind", "", FILES_HEADER,
+                                                    "|---|---|---|", EXEMPLAR_ROW, "", ""]), "")
+        code, output, _ = self.kind_file(text)
+        self.assertEqual(code, 1, output)
+        messages = [message for _, message in self.errors(output, "guidelines/coding-endpoint.md")]
+        self.assertTrue([message for message in messages
+                         if "`## Files of this kind` is missing" in message], output)
+        self.assertTrue([message for message in messages
+                         if "no row whose *Status* is `exemplar`" in message], output)
+
+    def test_a_decision_naming_the_path_only_outside_backticks_is_an_error(self):
+        """Break caught: the binding sentences searched for the path bare, so a decision that
+        names the file in passing designates it."""
+        row = EXEMPLAR_ROW.replace("ABC-06@a7f9c135", "ABC-08@" + BARE_PATH_FP)
+        text = replaced(CODING_ENDPOINT, EXEMPLAR_ROW, row)
+        code, output, _ = self.kind_file(text)
+        self.assertEqual(code, 1, output)
+        self.assertTrue(self.exemplar_errors(output, line_of(text, row)), output)
+
+    def test_a_decision_naming_a_shorter_path_than_the_row_is_an_error(self):
+        """Break caught: the path searched without its closing backtick, so the decision's
+        `` `src/api/orders.ts` `` designates the row's `src/api/orders.tsx`."""
+        row = EXEMPLAR_ROW.replace("`src/api/orders.ts`", "`src/api/orders.tsx`")
+        text = replaced(CODING_ENDPOINT, EXEMPLAR_ROW, row)
+        code, output, _ = self.kind_file(text, {"src/api/orders.tsx": "export {};\n"})
+        self.assertEqual(code, 1, output)
+        self.assertTrue(self.exemplar_errors(output, line_of(text, row)), output)
+
+    def test_a_decision_number_of_another_log_s_prefix_is_an_error(self):
+        """Break caught: a decision number taken with any prefix, so `XYZ-06` stands for the
+        log's `ABC-06`."""
+        row = EXEMPLAR_ROW.replace("ABC-06@a7f9c135", "XYZ-06@a7f9c135")
+        text = replaced(CODING_ENDPOINT, EXEMPLAR_ROW, row)
+        code, output, _ = self.kind_file(text)
+        self.assertEqual(code, 1, output)
+        self.assertTrue(self.exemplar_errors(output, line_of(text, row)), output)
+
+    def test_a_repealed_decision_is_an_error(self):
+        """Break caught: the binding sentences of a decision's first version read where its
+        latest repeals it, so a repealed decision still designates the exemplar."""
+        row = EXEMPLAR_ROW.replace("ABC-06@a7f9c135", "ABC-07@" + REPEALED_FP)
+        text = replaced(CODING_ENDPOINT, EXEMPLAR_ROW, row)
+        code, output, lines = self.kind_file(text)
+        self.assertEqual(code, 1, output)
+        self.assertTrue([message for message in self.exemplar_errors(output, line_of(text, row))
+                         if "ABC-07" in message], output)
+        self.assertIn("fail", [line["verdict"] for line in lines if line["invariant"] == FORM])
+
+    def test_a_stale_fingerprint_of_the_exemplar_s_decision_is_an_error(self):
+        """Break caught: the reference in the exemplar's row left out of the checks of
+        references, so the exemplar stays designated by a decision whose binding sentences
+        changed (spec §5.2 item 4, WAY-169)."""
+        row = EXEMPLAR_ROW.replace("ABC-06@a7f9c135", "ABC-06@a7f9c130")
+        text = replaced(CODING_ENDPOINT, EXEMPLAR_ROW, row)
+        self.product(dict(CODING_FILES, **{"guidelines/coding-endpoint.md": text}))
+        code, output, lines = self.run_check("--merge-onto", "none")
+        self.assertEqual(code, 1, output)
+        self.assertTrue([message for at, message in self.errors(
+            output, "guidelines/coding-endpoint.md") if at == line_of(text, row)
+            and "a7f9c135" in message], output)
+        self.assertIn("fail", [line["verdict"] for line in lines
+                               if line["invariant"] == REFERENCES])
+
+    def test_a_file_of_the_kind_the_table_leaves_out_passes(self):
+        """Break caught: the table of the files of a kind asked to list every file of the kind,
+        so a file added after the audit fails until someone writes its row (C13)."""
+        self.product(dict(CODING_FILES, **{"src/api/carts.ts": CODING_FILES["src/api/orders.ts"],
+                                           "src/api/users.ts": CODING_FILES["src/api/orders.ts"]}))
+        code, output, _ = self.run_check()
+        self.assertEqual(code, 0, output)
+
+    def test_a_file_cell_holding_no_path_in_backticks_is_an_error(self):
+        """Break caught: the *File* of a row read bare, though the template gives a path in
+        backticks (spec §4.3)."""
+        row = "| src/api/handler.ts | copy | — |"
+        text = replaced(CODING_ENDPOINT, EXEMPLAR_ROW, EXEMPLAR_ROW + "\n" + row)
+        code, output, _ = self.kind_file(text)
+        self.assertEqual(code, 1, output)
+        self.assertIn(line_of(text, row), [line for line, message in self.errors(
+            output, "guidelines/coding-endpoint.md") if "backticks" in message], output)
+
+    def test_a_crafted_file_path_is_refused_before_git_sees_it(self):
+        """Breaks caught: a *File* handed to git, or tested only once git has seen it; a socket
+        opened; or matching that runs away on a long path."""
+        paths = [path for _, path in crafted("src/api/handler.ts")]
+        rows = ["| `%s` | copy | — |" % path for path in paths]
+        text = replaced(CODING_ENDPOINT, EXEMPLAR_ROW, "\n".join([EXEMPLAR_ROW] + rows))
+        self.product(dict(CODING_FILES, **{"guidelines/coding-endpoint.md": text}))
+        code, output, calls, elapsed = self.run_watched()
+        self.assertEqual(code, 1, output[-2000:])
+        self.assertLess(elapsed, 30, "the run took %.1f s" % elapsed)
+        reported = {line for line, _ in self.errors(output, "guidelines/coding-endpoint.md")}
+        for what, row in zip([what for what, _ in crafted("x")], rows):
+            with self.subTest(what):
+                self.assertIn(line_of(text, row), reported, output[-2000:])
+        self.assert_unseen(paths, calls)
+
+    def test_a_row_of_one_mebibyte_of_bars_or_backticks_finishes_within_a_bound(self):
+        """Break caught: reading a crafted row of the files of a kind that runs away, so the run
+        never ends with a report."""
+        for name, make in (("bars", lambda room: "|" * room),
+                           ("backticks",
+                            lambda room: "| " + "`" * (room - 20) + " | copy | — |")):
+            with self.subTest(name):
+                self.setUp()
+                head = replaced(CODING_ENDPOINT, EXEMPLAR_ROW,
+                                EXEMPLAR_ROW + "\n\0").encode("utf-8")
+                room = LIMIT - 16 - (len(head) - 1)
+                data = head.replace(b"\0", make(room).encode("utf-8"))
+                self.assertLess(len(data), LIMIT)
+                self.product(dict(CODING_FILES, **{"guidelines/coding-endpoint.md": data}))
+                started = time.monotonic()
+                code, output, _ = self.run_check(timeout=120)
+                elapsed = time.monotonic() - started
+                self.assertEqual(code, 1, output[-2000:])
+                self.assertLess(elapsed, 30, "the run took %.1f s" % elapsed)
+                self.assertTrue(self.errors(output, "guidelines/coding-endpoint.md"),
+                                output[-2000:])
+
+
+# The test cases of the rule of the file of a kind (WAY-168): the pair of `endpoint-handler`, as
+# CODING_ENDPOINT holds it, and a second invariant and the product's `guidelines-form`, which a
+# rule may name beside it.
+LOCATION = "Every file of the kind endpoint lies under the directory src/api."
+LOCATION_FP = "f58796ac"
+GUIDELINES_FORM = (
+    "Every file `guidelines/<name>.md` holds, in their order, the header lines, sections, rules, "
+    "rule fields and tables that the template of guidelines and the template of its discipline "
+    "require at the commit of the-way the repository uses — the commit checked, in the-way itself, "
+    "and the pinned commit, in a product — each with the values and the links those templates give "
+    "it, with a name that agrees with its *Discipline*, each section or rule it drops reading "
+    "`none —` with a decision of the log and that decision's fingerprint, each part it names being "
+    "a part of the map, and each path under `## Where in code` naming something git tracks.")
+GUIDELINES_FORM_FP = "7196030f"
+
+
+def invariant_entry(identifier, sentence):
+    """An entry of the invariants file, deriving from the exemplar's decision."""
+    return ("## %s/1\n\n%s\n\n- **Method:** `python -B tests/check.py`\n- **Rests on:** none\n"
+            "- **Derives from:** ABC-06@%s\n- **Part:** web\n- **Correction:** none\n\n"
+            % (identifier, sentence, EXEMPLAR_FP))
+
+
+CASES_INVARIANTS = replaced(CODING_INVARIANTS, "## Withdrawn identifiers",
+                            invariant_entry("endpoint-location", LOCATION)
+                            + invariant_entry("guidelines-form", GUIDELINES_FORM)
+                            + "## Withdrawn identifiers")
+INVARIANT_FIELD = "- **Invariant:** endpoint-handler@8c2ca199"
+GOOD_OPEN = "```good endpoint-handler src/api/carts.ts"
+GOOD_TEXT = ('import { handle } from "./handler";',
+             "export const POST = handle((input: unknown) => input);")
+GOOD_CASE = "\n".join((GOOD_OPEN,) + GOOD_TEXT + ("```",))
+BAD_OPEN = "```bad endpoint-handler src/api/carts.ts"
+BAD_CASE = "\n".join([BAD_OPEN, "export const POST = (input: unknown) => input;", "```"])
+CASES = GOOD_CASE + "\n\n" + BAD_CASE + "\n\n"
+OPEN_LINE = line_of(CODING_ENDPOINT, GOOD_OPEN)
+CHECK_CASES = "product-guidelines/form_check.py::check_cases"
+
+
+def pair(identifier, path="src/api/carts.ts"):
+    """A good and a bad case of the invariant `identifier`, each followed by a blank line."""
+    return ("```good %s %s\nexport {};\n```\n\n```bad %s %s\nexport const x = 1;\n```\n\n"
+            % (identifier, path, identifier, path))
+
+
+class TestCases(Watched):
+    """The test cases of every rule whose *Invariant* names an invariant other than
+    `guidelines-form`: a good and a bad case of each such invariant after the rule's fields, each
+    a fenced block of three backticks whose info string reads `good|bad <identifier> <path>`
+    (WAY-168, spec §5.2 item 5), read with crafted fences, info strings and paths (WAY-48)."""
+
+    def endpoint(self, text, invariants=CASES_INVARIANTS):
+        """Exit code, output and record of the check run on the coding guidelines, the file of a
+        kind reading `text` and the invariants file `invariants`."""
+        self.product(dict(CODING_FILES, **{"guidelines/coding-endpoint.md": text,
+                                           "foundations/invariants.md": invariants}))
+        return self.run_check()
+
+    def at(self, output, line, fragment=""):
+        """The messages of the errors the file of a kind reports at `line` holding `fragment`."""
+        return [message for at, message in self.errors(output, "guidelines/coding-endpoint.md")
+                if at == line and fragment in message]
+
+    def missing(self, output, which, identifier="endpoint-handler"):
+        """The messages reporting that the rule gives no `which` case of `identifier`."""
+        return [message for _, message in self.errors(output, "guidelines/coding-endpoint.md")
+                if "no `%s %s <path>`" % (which, identifier) in message]
+
+    def run_sealed(self):
+        """As run_watched, with every path the run gives `os.open`, `os.lstat`, `os.stat` or
+        `open` recorded too: (exit code, output, git's arguments, paths opened, seconds)."""
+        opened, real_open = [], open
+        real = {name: getattr(os, name) for name in ("open", "lstat", "stat")}
+
+        def watching(name):
+            def wrapper(path, *rest, **keywords):
+                opened.append(os.fsdecode(path) if isinstance(path, (str, bytes)) else str(path))
+                return real[name](path, *rest, **keywords)
+            return wrapper
+
+        def opening(path, *rest, **keywords):
+            opened.append(os.fsdecode(path) if isinstance(path, (str, bytes)) else str(path))
+            return real_open(path, *rest, **keywords)
+
+        with mock.patch.object(os, "open", watching("open")), \
+                mock.patch.object(os, "lstat", watching("lstat")), \
+                mock.patch.object(os, "stat", watching("stat")), \
+                mock.patch("builtins.open", opening):
+            code, output, calls, elapsed = self.run_watched()
+        return code, output, calls, opened, elapsed
+
+    def assert_sealed(self, paths, calls, opened):
+        """No path of `paths` reached git or the file system, and both were asked something."""
+        self.assert_unseen(paths, calls)
+        self.assertTrue([path for path in opened if "guidelines" in path], opened[:20])
+        for path in paths:
+            self.assertFalse([each for each in opened if path in each],
+                             "%r was opened or looked at" % path[:80])
+
+    def test_the_cases_of_the_valid_file_pass_and_are_recorded(self):
+        """Break caught: the check of test cases recorded under no check of its own, or failing
+        a rule that gives its pair, so the valid coding guidelines never pass."""
+        code, output, lines = self.endpoint(CODING_ENDPOINT)
+        self.assertEqual(code, 0, output)
+        self.assertIn("pass", [line["verdict"] for line in lines
+                               if line["check"] == CHECK_CASES and line["invariant"] == FORM])
+
+    def test_a_rule_naming_an_invariant_with_no_case_is_an_error(self):
+        """Break caught: a rule naming an invariant passing without its good case, its bad case
+        or both, so its *Good* and *Bad* stay descriptions no gate can apply (WAY-168)."""
+        for name, old, gone in (("no case", CASES, ("good", "bad")),
+                                ("no good case", GOOD_CASE + "\n\n", ("good",)),
+                                ("no bad case", BAD_CASE + "\n\n", ("bad",))):
+            with self.subTest(name):
+                self.setUp()
+                text = replaced(CODING_ENDPOINT, old, "")
+                code, output, lines = self.endpoint(text)
+                self.assertEqual(code, 1, output)
+                for which in ("good", "bad"):
+                    reported = [message for message in self.missing(output, which)
+                                if message in self.at(output, line_of(text, INVARIANT_FIELD))]
+                    self.assertEqual(bool(reported), which in gone, output)
+                self.assertIn("fail", [line["verdict"] for line in lines
+                                       if line["check"] == CHECK_CASES
+                                       and line["invariant"] == FORM], lines)
+
+    def test_a_case_left_open_to_the_end_of_the_file_is_an_error_at_its_opening_line(self):
+        """Break caught: a case never closed taken as a case holding the rest of the file, so the
+        sections it swallows go unread and the case counts (spec §5.2 item 5)."""
+        text = replaced(CODING_ENDPOINT, BAD_CASE, BAD_CASE[:-len("\n```")])
+        code, output, _ = self.endpoint(text)
+        self.assertEqual(code, 1, output)
+        self.assertTrue(self.at(output, line_of(text, BAD_OPEN), "open to the end"), output)
+
+    def test_a_tilde_fence_or_four_backticks_opening_a_case_is_a_malformed_case(self):
+        """Break caught: a case's info string read from a fence other than three backticks, which
+        the template gives as its outer fence, so a tilde fence counts as the case."""
+        for name, case in (("tildes", BAD_CASE.replace("```", "~~~")),
+                           ("four backticks", BAD_CASE.replace("```", "````"))):
+            with self.subTest(name):
+                self.setUp()
+                text = replaced(CODING_ENDPOINT, BAD_CASE, case)
+                code, output, _ = self.endpoint(text)
+                self.assertEqual(code, 1, output)
+                self.assertTrue(self.at(output, line_of(text, case.split("\n")[0]),
+                                        "malformed test case"), output)
+                self.assertTrue(self.missing(output, "bad"), output)
+
+    def test_a_fence_of_four_backticks_closing_a_case_is_an_error_at_that_line(self):
+        """Break caught: a case closed by a fence other than three backticks passing, though the
+        template gives three backticks as the outer fence of a case."""
+        text = replaced(CODING_ENDPOINT, GOOD_CASE, GOOD_CASE + "`")
+        code, output, _ = self.endpoint(text)
+        self.assertEqual(code, 1, output)
+        self.assertTrue(self.at(output, line_of(text, "````"), "three backticks"), output)
+        self.assertFalse(self.missing(output, "good"), output)
+
+    def test_a_line_inside_a_case_that_would_open_a_fence_is_an_error_at_that_line(self):
+        """Breaks caught: a line starting with three tildes, or three backticks followed by text,
+        passing inside a case; or one indented by four spaces or more, a tab or a no-break space
+        passing because Markdown would read no fence there, though
+        `instruction-files/check_instructions.py` toggles code after any leading whitespace (C33).
+        The case itself still counts."""
+        for fence in ("~~~", "~~~ts", "```ts", "   ```ts", "    ```", "        ~~~ts", "\t```ts",
+                      "  ~~~", " ```ts"):
+            with self.subTest(fence=fence):
+                self.setUp()
+                case = "\n".join((GOOD_OPEN, GOOD_TEXT[0], fence, GOOD_TEXT[1], "```"))
+                text = replaced(CODING_ENDPOINT, GOOD_CASE, case)
+                code, output, _ = self.endpoint(text)
+                self.assertEqual(code, 1, output)
+                self.assertTrue(self.at(output, line_of(text, fence), "opens a fence"), output)
+                self.assertFalse(self.missing(output, "good"), output)
+
+    def test_a_fence_after_a_line_break_python_splits_lines_on_inside_a_case_is_an_error(self):
+        """Break caught: a line inside a case read whole where
+        `instruction-files/check_instructions.py`, which splits lines as Python's `splitlines`
+        does, sees two — after a carriage return, a line or paragraph separator, a next-line
+        character, a vertical tab, a form feed or a file separator — the second starting with a
+        fence on which that script switches between code and text (C33)."""
+        for name, mark in (("carriage return", "\r"), ("line separator", " "),
+                           ("paragraph separator", " "), ("next line", "\x85"),
+                           ("vertical tab", "\x0b"), ("form feed", "\x0c"),
+                           ("file separator", "\x1c")):
+            with self.subTest(name):
+                self.setUp()
+                inner = GOOD_TEXT[0] + mark + "  ~~~ts"
+                case = "\n".join((GOOD_OPEN, inner, GOOD_TEXT[1], "```"))
+                text = replaced(CODING_ENDPOINT, GOOD_CASE, case)
+                code, output, _ = self.endpoint(text)
+                self.assertEqual(code, 1, output)
+                self.assertTrue(self.at(output, line_of(text, inner), "opens a fence"), output)
+
+    def test_a_bare_fence_inside_a_good_case_is_a_malformed_case_at_its_former_closing_fence(self):
+        """Break caught (C21): a bare line of three backticks inside a case read as anything but
+        the case's end, so the case's own closing line, which then opens a block with no info
+        string, goes unreported; the shortened case still counts as the good case."""
+        case = "\n".join((GOOD_OPEN, GOOD_TEXT[0], "```", GOOD_TEXT[1], "```"))
+        text = replaced(CODING_ENDPOINT, GOOD_CASE, case)
+        code, output, _ = self.endpoint(text)
+        self.assertEqual(code, 1, output)
+        self.assertTrue(self.at(output, line_of(text, GOOD_TEXT[1]) + 1, "malformed test case"),
+                        output)
+        self.assertFalse(self.missing(output, "good"), output)
+
+    def test_an_info_string_of_another_form_is_a_malformed_case_at_its_opening_line(self):
+        """Breaks caught: an info string with no identifier or no path, two spaces or two paths,
+        a word other than `good` or `bad` in its case, an identifier that is no identifier, or
+        none at all, taken for a case, so a block no gate can apply counts."""
+        for opening in ("```good", "```good endpoint-handler",
+                        "```good endpoint-handler  src/api/carts.ts src/api/users.ts",
+                        "```good endpoint-handler src/api/carts.ts src/api/users.ts",
+                        "```GOOD endpoint-handler src/api/carts.ts",
+                        "```good Endpoint-handler src/api/carts.ts",
+                        "```sample endpoint-handler src/api/carts.ts", "```ts", "```"):
+            with self.subTest(opening=opening):
+                self.setUp()
+                text = replaced(CODING_ENDPOINT, GOOD_OPEN, opening)
+                code, output, _ = self.endpoint(text)
+                self.assertEqual(code, 1, output)
+                self.assertTrue(self.at(output, OPEN_LINE, "malformed test case"), output)
+                self.assertTrue(self.missing(output, "good"), output)
+
+    def test_an_info_string_on_a_closing_fence_is_a_line_that_opens_a_fence(self):
+        """Break caught: an info string read from the line meant to close a case, which closes
+        nothing, so the case runs on and a second case is taken from its end."""
+        closing = "```good endpoint-handler src/api/elsewhere.ts"
+        text = replaced(CODING_ENDPOINT, GOOD_CASE, GOOD_CASE[:-len("```")] + closing)
+        code, output, _ = self.endpoint(text)
+        self.assertEqual(code, 1, output)
+        self.assertTrue(self.at(output, line_of(text, closing), "opens a fence"), output)
+
+    def test_a_case_naming_an_invariant_the_rule_does_not_name_is_an_error(self):
+        """Break caught: a case counted whatever invariant it names, so a pair for an invariant
+        of the file, for one the file does not hold, or for `guidelines-form` passes beside a
+        rule that names none of them."""
+        for identifier in ("endpoint-location", "lint-clean", "guidelines-form"):
+            with self.subTest(identifier=identifier):
+                self.setUp()
+                text = replaced(CODING_ENDPOINT, CASES, CASES + pair(identifier))
+                code, output, _ = self.endpoint(text)
+                self.assertEqual(code, 1, output)
+                self.assertTrue(self.at(output, line_of(text, "```good %s src/api/carts.ts"
+                                                        % identifier), "does not name"), output)
+
+    def test_a_rule_naming_two_invariants_with_the_pair_of_one_only_is_an_error(self):
+        """Break caught: a rule naming two invariants passing on the pair of the first, so the
+        second has no case (C18); its control, with both pairs, passes."""
+        two = "- **Invariant:** endpoint-handler@8c2ca199 · endpoint-location@" + LOCATION_FP
+        text = replaced(CODING_ENDPOINT, INVARIANT_FIELD, two)
+        code, output, _ = self.endpoint(text)
+        self.assertEqual(code, 1, output)
+        for which in ("good", "bad"):
+            self.assertTrue([message for message in self.missing(output, which,
+                                                                 "endpoint-location")
+                             if message in self.at(output, line_of(text, two))], output)
+            self.assertFalse(self.missing(output, which), output)
+        self.setUp()
+        code, output, _ = self.endpoint(replaced(text, CASES, CASES + pair("endpoint-location")))
+        self.assertEqual(code, 0, output)
+
+    def test_a_second_case_of_one_kind_is_an_error_at_its_opening_line(self):
+        """Break caught: a second good case of the same invariant passing, so the gate cannot
+        tell which file the rule gives."""
+        second = GOOD_CASE.replace("src/api/carts.ts", "src/api/baskets.ts")
+        text = replaced(CODING_ENDPOINT, CASES, CASES + second + "\n\n")
+        code, output, _ = self.endpoint(text)
+        self.assertEqual(code, 1, output)
+        self.assertTrue(self.at(output, line_of(text, second.split("\n")[0]),
+                                "line %d" % OPEN_LINE), output)
+
+    def test_a_block_before_the_rule_s_fields_end_is_a_malformed_case(self):
+        """Break caught: a case standing among the rule's fields counted, though the cases stand
+        after them."""
+        text = replaced(CODING_ENDPOINT, CASES, "")
+        text = replaced(text, INVARIANT_FIELD, GOOD_CASE + "\n" + INVARIANT_FIELD)
+        code, output, _ = self.endpoint(text)
+        self.assertEqual(code, 1, output)
+        self.assertTrue(self.at(output, line_of(text, GOOD_OPEN), "malformed test case"), output)
+
+    def test_a_rule_naming_guidelines_form_needs_no_case_and_takes_none_of_it(self):
+        """Breaks caught: a rule naming the product's `guidelines-form` alone asked for cases,
+        or its fenced blocks read as cases although no case of it is given (C11); a rule naming
+        it beside another invariant asked for its cases, passing with no case of the other
+        invariant, as if naming `guidelines-form` exempted the whole rule, or passing a pair of
+        it."""
+        alone = "- **Invariant:** guidelines-form@" + GUIDELINES_FORM_FP
+        beside = ("- **Invariant:** guidelines-form@%s · endpoint-handler@8c2ca199"
+                  % GUIDELINES_FORM_FP)
+        clean = (("alone, with no block", replaced(replaced(CODING_ENDPOINT, CASES, ""),
+                                                    INVARIANT_FIELD, alone)),
+                 ("alone, with blocks", replaced(replaced(CODING_ENDPOINT, CASES,
+                                                          pair("guidelines-form",
+                                                               "guidelines/coding-x.md")),
+                                                 INVARIANT_FIELD, alone)),
+                 ("beside another, with its pair", replaced(CODING_ENDPOINT, INVARIANT_FIELD,
+                                                            beside)))
+        for name, text in clean:
+            with self.subTest(name):
+                self.setUp()
+                code, output, _ = self.endpoint(text)
+                self.assertEqual(code, 0, output)
+                self.assertNotIn(": error:", output)
+        with self.subTest("beside another, with no case of the other"):
+            self.setUp()
+            text = replaced(replaced(CODING_ENDPOINT, INVARIANT_FIELD, beside), CASES, "")
+            code, output, _ = self.endpoint(text)
+            self.assertEqual(code, 1, output)
+            for which in ("good", "bad"):
+                self.assertTrue([message for message in self.missing(output, which)
+                                 if message in self.at(output, line_of(text, beside))], output)
+                self.assertFalse(self.missing(output, which, "guidelines-form"), output)
+        with self.subTest("beside another, with a pair of it"):
+            self.setUp()
+            text = replaced(replaced(CODING_ENDPOINT, INVARIANT_FIELD, beside), CASES,
+                            CASES + pair("guidelines-form", "guidelines/coding-x.md"))
+            code, output, _ = self.endpoint(text)
+            self.assertEqual(code, 1, output)
+            self.assertTrue(self.at(output, line_of(text, "```good guidelines-form "
+                                                    "guidelines/coding-x.md"),
+                                    "guidelines-form"), output)
+
+    def test_a_crafted_case_path_is_refused_and_never_reaches_git_or_the_file_system(self):
+        """Breaks caught: a case path outside the repository passing — absolute, a UNC prefix, a
+        `..` segment, a backslash, a drive, a character that is not printable, pathspec magic —
+        or any case path, refused or not, given to git, opened or looked at; a socket opened; or
+        matching that runs away on a path of 200 KiB, which, relative, names a file not yet
+        written and passes."""
+        for what, path in crafted("src/api/carts.ts") + (("the valid path", "src/api/carts.ts"),):
+            with self.subTest(what):
+                self.setUp()
+                text = replaced(CODING_ENDPOINT, GOOD_OPEN,
+                                "```good endpoint-handler " + path)
+                self.product(dict(CODING_FILES, **{"guidelines/coding-endpoint.md": text,
+                                                   "foundations/invariants.md": CASES_INVARIANTS}))
+                code, output, calls, opened, elapsed = self.run_sealed()
+                self.assertLess(elapsed, 30, "the run took %.1f s" % elapsed)
+                allowed = what in ("200 KiB", "the valid path")
+                self.assertEqual(code, 0 if allowed else 1, output[-2000:])
+                self.assertEqual(bool(self.at(output, OPEN_LINE, "path")), not allowed,
+                                 output[-2000:])
+                self.assert_sealed([path, "src/api/carts.ts"], calls, opened)
+
+    def test_an_info_string_of_one_mebibyte_finishes_within_a_bound(self):
+        """Break caught: reading a crafted info string that runs away, or printing it whole: a
+        path of nearly one MiB, which names a file not yet written and passes unopened, and an
+        identifier of nearly one MiB, which the rule does not name and is printed cut."""
+        for name in ("path", "identifier"):
+            with self.subTest(name):
+                self.setUp()
+                head = replaced(CODING_ENDPOINT, GOOD_OPEN, "\0").encode("utf-8")
+                room = LIMIT - len(head) - 64
+                opening = ("```good endpoint-handler src/" + "a" * room if name == "path"
+                           else "```good " + "a" * room + " src/api/carts.ts")
+                data = head.replace(b"\0", opening.encode("utf-8"))
+                self.assertLess(len(data), LIMIT)
+                self.product(dict(CODING_FILES, **{"guidelines/coding-endpoint.md": data,
+                                                   "foundations/invariants.md": CASES_INVARIANTS}))
+                code, output, calls, opened, elapsed = self.run_sealed()
+                self.assertLess(elapsed, 30, "the run took %.1f s" % elapsed)
+                self.assertLess(len(output), 20000)
+                if name == "path":
+                    self.assertEqual(code, 0, output[-2000:])
+                    self.assert_sealed(["a" * 100], calls, opened)
+                else:
+                    self.assertEqual(code, 1, output[-2000:])
+                    self.assertTrue(self.at(output, OPEN_LINE, "does not name"), output[-2000:])
+
+    def test_a_file_of_cases_just_over_one_mebibyte_is_refused_unread(self):
+        """Break caught: a file of guidelines over the limit read for its cases, so a crafted
+        file of cases costs what it likes and its paths are seen (WAY-48)."""
+        padding = "// " + "x" * 100
+        head = replaced(CODING_ENDPOINT, GOOD_CASE, "\n".join(
+            (GOOD_OPEN, GOOD_TEXT[0], "\0", GOOD_TEXT[1], "```"))).encode("utf-8")
+        room = LIMIT + 1 - (len(head) - 1)
+        lines = "\n".join([padding] * (room // (len(padding) + 1)))
+        body = (lines + "\n" + "x" * (room - len(lines) - 1)).encode("utf-8")
+        data = head.replace(b"\0", body)
+        self.assertEqual(len(data), LIMIT + 1)
+        self.product(dict(CODING_FILES, **{"guidelines/coding-endpoint.md": data,
+                                           "foundations/invariants.md": CASES_INVARIANTS}))
+        code, output, calls, opened, elapsed = self.run_sealed()
+        self.assertEqual(code, 1, output[-2000:])
+        self.assertTrue([message for _, message in self.errors(output,
+                                                               "guidelines/coding-endpoint.md")
+                         if "holds more than 1048576 bytes; it is not read" in message], output)
+        self.assertFalse(self.missing(output, "good"), output)
+        self.assert_sealed(["src/api/carts.ts"], calls, opened)
+
+
 class Paths(Case):
     def test_a_path_refused_for_its_form_whose_remainder_git_tracks_is_an_error(self):
         """Break caught: the guard against an absolute path, or a `..` segment, dropped, so
@@ -361,7 +1408,8 @@ class References(Case):
         """Breaks caught: a run given `--merge-onto` recording the checks of form, or no check of
         references; `none` given and the check after the merge recorded as anything but
         `unchecked` with the shared reason, or the check on the commit itself left out."""
-        self.product({"guidelines/testing.md": TESTING, "guidelines/coding.md": as_coding(NO_GOOD)})
+        self.product({"guidelines/testing.md": TESTING,
+                      "guidelines/observability.md": as_observability(NO_GOOD)})
         code, output, lines = self.run_check("--merge-onto", "none")
         self.assertEqual(code, 1, output)   # the form error of NO_GOOD prints, unrecorded
         self.assertTrue(lines, output)
@@ -498,9 +1546,12 @@ class References(Case):
         for name, carried, onto, branch, expected in cases:
             with self.subTest(name):
                 self.setUp()
-                self.product_onto({"guidelines/testing.md": with_line(
-                    TESTING, INVARIANT_LINE, cited % carried)}, onto, branch,
-                    base={"foundations/invariants.md": invariants_with(NAMED)})
+                # The rule names `fixture-named`, so it gives a good and a bad case of it.
+                text = replaced(with_line(TESTING, INVARIANT_LINE, cited % carried),
+                                "fixtures.\n\n## Examples", "fixtures.\n\n" + FIXTURE_CASES
+                                + "## Examples")
+                self.product_onto({"guidelines/testing.md": text}, onto, branch,
+                                  base={"foundations/invariants.md": invariants_with(NAMED)})
                 code, output, lines = self.run_check("--merge-onto", "onto")
                 errors = self.errors(output, "guidelines/testing.md")
                 if expected is None:

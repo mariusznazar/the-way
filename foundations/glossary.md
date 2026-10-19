@@ -241,3 +241,17 @@ A project orchestrator is the agent that leads a handed-over project plan in con
 
 - **Avoid:** none
 - **Not:** none
+
+## exemplar
+
+An exemplar is a file of a product that a decision of the product designates as the model after which later code of its kind is written.
+
+- **Avoid:** reference implementation — same thing
+- **Not:** none
+
+## standing check
+
+A standing check is a check that a tool makes of every change to a product's code for the whole of the product, rather than for one kind of code, as a linter, a formatter or an audit of dependencies does.
+
+- **Avoid:** standing guard — same thing
+- **Not:** none

@@ -336,6 +336,15 @@ continuing that work.
     Invariant checks written before the return step retain
     their existing acceptance and deliberate-break points: the code reviewer writes the break from
     the invariant's sentence, runs the check on it and reports whether it fails (WAY-69, WAY-08).
+    For an invariant a rule of the product's guidelines names with test cases, whose sentence the
+    change adds or alters or one of whose test cases it rewrites, that reviewer also runs the check
+    in a scratch worktree of the commit, once with the invariant's `good` file and once with its
+    `bad` file in place — the pair whose info string names that invariant — and records that it
+    passes with the first and fails with the second, or, for an invariant on the list of violated
+    invariants, that the first adds no failure the commit does not already have and the second adds
+    one, its per-file companion taking the strict reading; the check is not accepted otherwise, the
+    `bad` file is a case beside the deliberate break and never the break, and a test case is applied
+    only in that scratch worktree, never in the task's worktree (WAY-168, WAY-197, WAY-69).
     Checks added in the return step follow step 11's order. For visible behavior, verify it in the
     running product as well. Use Superpowers `requesting-code-review` for a fresh final review, or the
     final review already required by the selected execution skill; do not dispatch a duplicate
@@ -380,6 +389,9 @@ continuing that work.
     After those settlements, the code reviewer who did not write a return-step check reviews its
     final version, writes its deliberate break from the final invariant sentence and runs the
     check on it, recording the required failure before accepting it (WAY-149, WAY-69, WAY-08).
+    Where a rule of the product's guidelines names that check's invariant with test cases, the
+    reviewer also runs the check with the invariant's `good` and `bad` files in a scratch worktree
+    of the commit, as step 10 gives, and does not accept it otherwise (WAY-168, WAY-197).
     Reuse the affected review above where it covers that final check; do not add a whole-change
     review of an unchanged range. Passing on the product or finishing assessment alone does not
     accept a check. An undetected break is a finding to resolve. Remove or restore the deliberate
