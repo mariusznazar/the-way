@@ -649,6 +649,340 @@ class TemplateWords(Case):
         self.assertFalse(disciplines["coding"].of_a_kind.requires_invariant)
 
 
+# Decisions beside ABC-06 for the checks of the exemplar: one naming the path outside backticks,
+# and one in force at its first version and repealed at its second, whose first version names the
+# path and the kind in backticks, so that only the repeal is wrong.
+BARE_PATH_DECISION = "The file src/api/orders.ts is the exemplar of the kind `endpoint`."
+BARE_PATH_FP = "5047a97d"
+REPEALED_DECISION = ("The file `src/api/orders.ts` was the exemplar of the kind `endpoint` until "
+                     "the API was split.")
+REPEALED_FP = "cc24fd66"
+
+
+def decision_version(number, version, question, binding, change):
+    """A version of a decision of the log, in the form the decisions template gives."""
+    lines = ["", "### ABC-%02d/%d — %s" % (number, version, question), ""]
+    if binding is not None:
+        lines += [binding, ""]
+    return "\n".join(lines + [
+        "- **Change:** " + change, "- **Scope:** web", "- **Based on:** none",
+        "- **Relations:** none",
+        "- **Verification:** level 2 — an agent compares the change with the decision:",
+        "  - complies: a new endpoint follows the exemplar;",
+        "  - violates: a new endpoint answers on its own.",
+        "- **Review when:** none", "- **Origin:** none",
+        "- **Approved by:** Anna, 2026-09-01", "",
+        "*Rationale:* one way of answering a request.", "*Rejected:* none considered", ""])
+
+
+EXEMPLAR_LOG = (CODING_LOG
+                + decision_version(7, 1, "Which file was the exemplar before the split?",
+                                   REPEALED_DECISION, "new decision")
+                + decision_version(7, 2, "Which file was the exemplar before the split?", None,
+                                   "repeal")
+                + decision_version(8, 1, "Which file is the exemplar, named bare?",
+                                   BARE_PATH_DECISION, "new decision"))
+
+
+def crafted(path):
+    """(what, a crafted spelling of `path`) for each shape of path that is refused, or that names
+    nothing git tracks, before git sees it (WAY-48)."""
+    windows = path.replace("/", "\\")
+    return (("absolute", "/" + path), ("a UNC prefix", "//host/share/" + path),
+            ("a UNC prefix written for Windows", "\\\\host\\share\\" + windows),
+            ("a `..` segment", "src/../" + path), ("a backslash", windows),
+            ("a drive", "C:/" + path), ("a drive with no slash", "C:" + path),
+            ("a character that is not printable", path + "\x07"),
+            ("a zero-width space", path[:3] + "\u200b" + path[3:]),
+            ("a pathspec magic word", ":(literal)" + path), ("a short pathspec magic", ":!" + path),
+            ("200 KiB", "a" * 204800 + "/" + path))
+
+
+class Watched(Case):
+    def run_watched(self):
+        """Exit code, output, the arguments of every program the run starts and the seconds it
+        takes, of the command's main run in this process, every socket refused."""
+        calls, original = [], subprocess.run
+
+        def recording(arguments, *rest, **keywords):
+            calls.append([str(argument) for argument in arguments])
+            return original(arguments, *rest, **keywords)
+
+        def refuse(*arguments, **keywords):
+            raise AssertionError("a socket was opened")
+
+        started = time.monotonic()
+        with mock.patch.object(subprocess, "run", side_effect=recording), \
+                mock.patch.object(socket, "socket", side_effect=refuse), \
+                mock.patch.object(socket, "create_connection", side_effect=refuse), \
+                mock.patch.object(socket, "getaddrinfo", side_effect=refuse):
+            code, output = self.run_inside()
+        return code, output, calls, time.monotonic() - started
+
+    def assert_unseen(self, paths, calls):
+        """No path of `paths` reached git, and git was asked for what it tracks."""
+        self.assertTrue([call for call in calls if "ls-files" in call], calls)
+        for path in paths:
+            for call in calls:
+                self.assertFalse([argument for argument in call if path in argument],
+                                 "%r reached git: %r" % (path[:80], call[:6]))
+
+
+class KindIndex(Watched):
+    """The table under `## Kinds of code` of `guidelines/coding.md` and the files of a kind git
+    lists (WAY-167, WAY-212), read with crafted rows (WAY-48)."""
+
+    def test_a_kind_file_no_row_names_is_an_error(self):
+        """Break caught: a file of a kind left out of the index passing, so an agent led by the
+        general file never finds it."""
+        self.product(dict(CODING_FILES, **{"guidelines/coding.md": replaced(
+            CODING, KINDS_ROW + "\n", "")}))
+        code, output, lines = self.run_check()
+        self.assertEqual(code, 1, output)
+        self.assertTrue([message for _, message in self.errors(output,
+                                                               "guidelines/coding-endpoint.md")
+                         if "Kinds of code" in message], output)
+        self.assertIn("fail", [line["verdict"] for line in lines if line["invariant"] == FORM])
+
+    def test_a_row_differing_from_its_file_only_by_case_or_a_look_alike_is_an_error(self):
+        """Breaks caught: the *File* of a row compared with what git lists ignoring case or
+        folding Unicode, so a row naming `coding-Endpoint.md` or a Cyrillic `е` passes for the
+        file `coding-endpoint.md`; the file itself is then named by no row."""
+        for path in ("guidelines/coding-Endpoint.md", "guidelines/coding-\u0435ndpoint.md"):
+            with self.subTest(path=path):
+                self.setUp()
+                row = KINDS_ROW.replace("guidelines/coding-endpoint.md", path)
+                general = replaced(CODING, KINDS_ROW, row)
+                self.product(dict(CODING_FILES, **{"guidelines/coding.md": general}))
+                code, output, _ = self.run_check()
+                self.assertEqual(code, 1, output)
+                self.assertIn(line_of(general, row),
+                              [line for line, message in self.errors(output,
+                                                                     "guidelines/coding.md")
+                               if "git" in message], output)
+                self.assertTrue(self.errors(output, "guidelines/coding-endpoint.md"), output)
+
+    def test_a_row_naming_a_tracked_file_that_is_no_file_of_a_kind_is_an_error(self):
+        """Break caught: any path git tracks taken for a file of a kind, so a row pointing to the
+        general file or to code passes."""
+        for path in ("guidelines/coding.md", "src/api/orders.ts"):
+            with self.subTest(path=path):
+                self.setUp()
+                row = "| endpoint | `%s` | before adding or changing an endpoint |" % path
+                general = replaced(CODING, KINDS_ROW, KINDS_ROW + "\n" + row)
+                self.product(dict(CODING_FILES, **{"guidelines/coding.md": general}))
+                code, output, _ = self.run_check()
+                self.assertEqual(code, 1, output)
+                self.assertIn(line_of(general, row),
+                              [line for line, message in self.errors(output,
+                                                                     "guidelines/coding.md")
+                               if "guidelines/coding-<kind>.md" in message], output)
+
+    def test_a_file_cell_holding_no_path_in_backticks_is_an_error(self):
+        """Break caught: the *File* of a row read bare, though the template gives a path in
+        backticks (spec §4.3), so a path written as prose passes."""
+        for cell in ("guidelines/coding-endpoint.md", "``", "`guidelines/coding-endpoint.md` x"):
+            with self.subTest(cell=cell):
+                self.setUp()
+                row = KINDS_ROW.replace("`guidelines/coding-endpoint.md`", cell)
+                general = replaced(CODING, KINDS_ROW, row)
+                self.product(dict(CODING_FILES, **{"guidelines/coding.md": general}))
+                code, output, _ = self.run_check()
+                self.assertEqual(code, 1, output)
+                self.assertIn(line_of(general, row),
+                              [line for line, message in self.errors(output,
+                                                                     "guidelines/coding.md")
+                               if "backticks" in message], output)
+
+    def test_a_kind_file_beside_a_general_file_that_cannot_be_read_is_an_error(self):
+        """Break caught: a general file refused unread taken for an index of no row or for a
+        complete one, so the file of a kind passes unchecked."""
+        self.product(dict(CODING_FILES, **{"guidelines/coding.md": b"x" * (LIMIT + 1)}))
+        code, output, _ = self.run_check()
+        self.assertEqual(code, 1, output)
+        self.assertTrue([message for _, message in self.errors(output,
+                                                               "guidelines/coding-endpoint.md")
+                         if "guidelines/coding.md" in message], output)
+
+    def test_a_crafted_index_path_is_refused_before_git_sees_it(self):
+        """Breaks caught: a *File* of the index handed to git, or tested only once git has seen
+        it, so pathspec magic, a path outside the repository or a network share reaches git; a
+        socket opened; or matching that runs away on a long path."""
+        paths = [path for _, path in crafted("guidelines/coding-endpoint.md")]
+        rows = ["| endpoint | `%s` | before adding or changing an endpoint |" % path
+                for path in paths]
+        general = replaced(CODING, KINDS_ROW, "\n".join([KINDS_ROW] + rows))
+        self.product(dict(CODING_FILES, **{"guidelines/coding.md": general}))
+        code, output, calls, elapsed = self.run_watched()
+        self.assertEqual(code, 1, output[-2000:])
+        self.assertLess(elapsed, 30, "the run took %.1f s" % elapsed)
+        reported = {line for line, _ in self.errors(output, "guidelines/coding.md")}
+        for what, row in zip([what for what, _ in crafted("x")], rows):
+            with self.subTest(what):
+                self.assertIn(line_of(general, row), reported, output[-2000:])
+        self.assert_unseen(paths, calls)
+
+
+class FilesOfAKind(Watched):
+    """The table under `## Files of this kind` of a file `guidelines/coding-<kind>.md`: one
+    exemplar designated by a decision, the closed list of *Status*, each *File* a path git
+    tracks (WAY-198, WAY-199), read with crafted rows (WAY-48)."""
+
+    def kind_file(self, text, files=None):
+        """Runs the check on the coding guidelines, the file of a kind reading `text`, the log
+        holding EXEMPLAR_LOG and the files `files` added."""
+        self.product(dict(CODING_FILES, **dict(files or {}, **{
+            "foundations/decisions.md": EXEMPLAR_LOG, "guidelines/coding-endpoint.md": text})))
+        return self.run_check()
+
+    def exemplar_errors(self, output, line):
+        return [message for at, message in self.errors(output, "guidelines/coding-endpoint.md")
+                if at == line and "exemplar" in message]
+
+    def test_two_exemplar_rows_are_an_error(self):
+        """Break caught: the first `exemplar` row taken and the others passed, so a kind has two
+        exemplars and an agent copies either."""
+        second = "| `src/api/handler.ts` | exemplar | ABC-06@a7f9c135 |"
+        text = replaced(CODING_ENDPOINT, EXEMPLAR_ROW, EXEMPLAR_ROW + "\n" + second)
+        code, output, _ = self.kind_file(text)
+        self.assertEqual(code, 1, output)
+        self.assertTrue([message for message in self.exemplar_errors(output,
+                                                                     line_of(text, second))
+                         if "line %d" % line_of(text, EXEMPLAR_ROW) in message], output)
+
+    def test_no_exemplar_row_is_an_error(self):
+        """Break caught: a table of no `exemplar` row passing, so a kind has no exemplar."""
+        text = replaced(CODING_ENDPOINT, EXEMPLAR_ROW, "| `src/api/orders.ts` | copy | — |")
+        code, output, _ = self.kind_file(text)
+        self.assertEqual(code, 1, output)
+        self.assertTrue([message for _, message in self.errors(output,
+                                                               "guidelines/coding-endpoint.md")
+                         if "no row whose *Status* is `exemplar`" in message], output)
+
+    def test_a_kind_file_lacking_files_of_this_kind_is_an_error(self):
+        """Break caught: a file of a kind with no section `## Files of this kind` passing as one
+        of no exemplar to check (C32): both the missing section and the missing exemplar are
+        reported."""
+        text = replaced(CODING_ENDPOINT, "\n".join(["## Files of this kind", "", FILES_HEADER,
+                                                    "|---|---|---|", EXEMPLAR_ROW, "", ""]), "")
+        code, output, _ = self.kind_file(text)
+        self.assertEqual(code, 1, output)
+        messages = [message for _, message in self.errors(output, "guidelines/coding-endpoint.md")]
+        self.assertTrue([message for message in messages
+                         if "`## Files of this kind` is missing" in message], output)
+        self.assertTrue([message for message in messages
+                         if "no row whose *Status* is `exemplar`" in message], output)
+
+    def test_a_decision_naming_the_path_only_outside_backticks_is_an_error(self):
+        """Break caught: the binding sentences searched for the path bare, so a decision that
+        names the file in passing designates it."""
+        row = EXEMPLAR_ROW.replace("ABC-06@a7f9c135", "ABC-08@" + BARE_PATH_FP)
+        text = replaced(CODING_ENDPOINT, EXEMPLAR_ROW, row)
+        code, output, _ = self.kind_file(text)
+        self.assertEqual(code, 1, output)
+        self.assertTrue(self.exemplar_errors(output, line_of(text, row)), output)
+
+    def test_a_decision_naming_a_shorter_path_than_the_row_is_an_error(self):
+        """Break caught: the path searched without its closing backtick, so the decision's
+        `` `src/api/orders.ts` `` designates the row's `src/api/orders.tsx`."""
+        row = EXEMPLAR_ROW.replace("`src/api/orders.ts`", "`src/api/orders.tsx`")
+        text = replaced(CODING_ENDPOINT, EXEMPLAR_ROW, row)
+        code, output, _ = self.kind_file(text, {"src/api/orders.tsx": "export {};\n"})
+        self.assertEqual(code, 1, output)
+        self.assertTrue(self.exemplar_errors(output, line_of(text, row)), output)
+
+    def test_a_decision_number_of_another_log_s_prefix_is_an_error(self):
+        """Break caught: a decision number taken with any prefix, so `XYZ-06` stands for the
+        log's `ABC-06`."""
+        row = EXEMPLAR_ROW.replace("ABC-06@a7f9c135", "XYZ-06@a7f9c135")
+        text = replaced(CODING_ENDPOINT, EXEMPLAR_ROW, row)
+        code, output, _ = self.kind_file(text)
+        self.assertEqual(code, 1, output)
+        self.assertTrue(self.exemplar_errors(output, line_of(text, row)), output)
+
+    def test_a_repealed_decision_is_an_error(self):
+        """Break caught: the binding sentences of a decision's first version read where its
+        latest repeals it, so a repealed decision still designates the exemplar."""
+        row = EXEMPLAR_ROW.replace("ABC-06@a7f9c135", "ABC-07@" + REPEALED_FP)
+        text = replaced(CODING_ENDPOINT, EXEMPLAR_ROW, row)
+        code, output, lines = self.kind_file(text)
+        self.assertEqual(code, 1, output)
+        self.assertTrue([message for message in self.exemplar_errors(output, line_of(text, row))
+                         if "ABC-07" in message], output)
+        self.assertIn("fail", [line["verdict"] for line in lines if line["invariant"] == FORM])
+
+    def test_a_stale_fingerprint_of_the_exemplar_s_decision_is_an_error(self):
+        """Break caught: the reference in the exemplar's row left out of the checks of
+        references, so the exemplar stays designated by a decision whose binding sentences
+        changed (spec §5.2 item 4, WAY-169)."""
+        row = EXEMPLAR_ROW.replace("ABC-06@a7f9c135", "ABC-06@a7f9c130")
+        text = replaced(CODING_ENDPOINT, EXEMPLAR_ROW, row)
+        self.product(dict(CODING_FILES, **{"guidelines/coding-endpoint.md": text}))
+        code, output, lines = self.run_check("--merge-onto", "none")
+        self.assertEqual(code, 1, output)
+        self.assertTrue([message for at, message in self.errors(
+            output, "guidelines/coding-endpoint.md") if at == line_of(text, row)
+            and "a7f9c135" in message], output)
+        self.assertIn("fail", [line["verdict"] for line in lines
+                               if line["invariant"] == REFERENCES])
+
+    def test_a_file_of_the_kind_the_table_leaves_out_passes(self):
+        """Break caught: the table of the files of a kind asked to list every file of the kind,
+        so a file added after the audit fails until someone writes its row (C13)."""
+        self.product(dict(CODING_FILES, **{"src/api/carts.ts": CODING_FILES["src/api/orders.ts"],
+                                           "src/api/users.ts": CODING_FILES["src/api/orders.ts"]}))
+        code, output, _ = self.run_check()
+        self.assertEqual(code, 0, output)
+
+    def test_a_file_cell_holding_no_path_in_backticks_is_an_error(self):
+        """Break caught: the *File* of a row read bare, though the template gives a path in
+        backticks (spec §4.3)."""
+        row = "| src/api/handler.ts | copy | — |"
+        text = replaced(CODING_ENDPOINT, EXEMPLAR_ROW, EXEMPLAR_ROW + "\n" + row)
+        code, output, _ = self.kind_file(text)
+        self.assertEqual(code, 1, output)
+        self.assertIn(line_of(text, row), [line for line, message in self.errors(
+            output, "guidelines/coding-endpoint.md") if "backticks" in message], output)
+
+    def test_a_crafted_file_path_is_refused_before_git_sees_it(self):
+        """Breaks caught: a *File* handed to git, or tested only once git has seen it; a socket
+        opened; or matching that runs away on a long path."""
+        paths = [path for _, path in crafted("src/api/handler.ts")]
+        rows = ["| `%s` | copy | — |" % path for path in paths]
+        text = replaced(CODING_ENDPOINT, EXEMPLAR_ROW, "\n".join([EXEMPLAR_ROW] + rows))
+        self.product(dict(CODING_FILES, **{"guidelines/coding-endpoint.md": text}))
+        code, output, calls, elapsed = self.run_watched()
+        self.assertEqual(code, 1, output[-2000:])
+        self.assertLess(elapsed, 30, "the run took %.1f s" % elapsed)
+        reported = {line for line, _ in self.errors(output, "guidelines/coding-endpoint.md")}
+        for what, row in zip([what for what, _ in crafted("x")], rows):
+            with self.subTest(what):
+                self.assertIn(line_of(text, row), reported, output[-2000:])
+        self.assert_unseen(paths, calls)
+
+    def test_a_row_of_one_mebibyte_of_bars_or_backticks_finishes_within_a_bound(self):
+        """Break caught: reading a crafted row of the files of a kind that runs away, so the run
+        never ends with a report."""
+        for name, make in (("bars", lambda room: "|" * room),
+                           ("backticks",
+                            lambda room: "| " + "`" * (room - 20) + " | copy | — |")):
+            with self.subTest(name):
+                self.setUp()
+                head = replaced(CODING_ENDPOINT, EXEMPLAR_ROW,
+                                EXEMPLAR_ROW + "\n\0").encode("utf-8")
+                room = LIMIT - 16 - (len(head) - 1)
+                data = head.replace(b"\0", make(room).encode("utf-8"))
+                self.assertLess(len(data), LIMIT)
+                self.product(dict(CODING_FILES, **{"guidelines/coding-endpoint.md": data}))
+                started = time.monotonic()
+                code, output, _ = self.run_check(timeout=120)
+                elapsed = time.monotonic() - started
+                self.assertEqual(code, 1, output[-2000:])
+                self.assertLess(elapsed, 30, "the run took %.1f s" % elapsed)
+                self.assertTrue(self.errors(output, "guidelines/coding-endpoint.md"),
+                                output[-2000:])
+
+
 class Paths(Case):
     def test_a_path_refused_for_its_form_whose_remainder_git_tracks_is_an_error(self):
         """Break caught: the guard against an absolute path, or a `..` segment, dropped, so

@@ -49,7 +49,19 @@ a part named in *Applies to* or in the file's name that the map does not hold; a
 *Discipline* disagree, a file `<discipline>-<kind>.md` whose `<kind>` is not words of lower-case
 letters and digits joined by single hyphens among them; a path of `## Where in code` that is
 absolute, holds a `..` segment, a drive, a UNC prefix, a backslash or a `:`, or names nothing git
-tracks. A decision is named by a number
+tracks. In coding guidelines (WAY-167, WAY-198, WAY-199, WAY-212): a file
+`guidelines/coding-<kind>.md` git tracks that no row of the table under `## Kinds of code` of
+`guidelines/coding.md` names by its path in *File*, or beside which git tracks no
+`guidelines/coding.md` or that file cannot be read; a row of that table whose *File* names no file
+of a kind git tracks, whose *Kind* is not the `<kind>` of the file its *File* names, or whose *When
+to read* is empty; in the table under `## Files of this kind` of a file of a kind, no row or more
+than one whose *Status* is `exemplar`, a row whose *Status* is off the template's list, whose
+*File* names no file git tracks, or which is not the exemplar's and whose *Decision* is not `—`,
+and an exemplar's row whose *Decision* names no decision of the log in force, or one whose binding
+sentences, their whitespace collapsed, lack its *File* or the file's `<kind>` in backticks — that
+reference's fingerprint being checked as every reference's is. A *File* of either table is one
+path in backticks, refused as a path of `## Where in code` is. A file of a kind that the table of
+its files leaves out is no error. A decision is named by a number
 with the prefix of the product's log, an invariant by an identifier its invariants file holds as an
 entry or a withdrawn identifier. A path git lists under `guidelines/` that is not
 `guidelines/<name>.md`, one level deep with a lower-case `.md`, gets a warning and is not read.
@@ -138,6 +150,8 @@ CODING = "coding"
 KINDS_OF_CODE, FILES_OF_A_KIND = "Kinds of code", "Files of this kind"
 FILE, WHEN_TO_READ, STATUS = "File", "When to read", "Status"
 STATUSES = ("exemplar", "copy", "do not copy")
+EXEMPLAR, NO_DECISION = STATUSES[0], "—"
+GENERAL_CODING = "%s/%s.md" % (GUIDELINES, CODING)
 
 FIELD_LINE = re.compile(r"^- \*\*(.+?):\*\*(?: (.*))?$")
 OPEN_FENCE = re.compile(r"^ {0,3}(`{3,}|~{3,})(.*)$")
@@ -513,6 +527,10 @@ class Foundation:
     known: bool = True                               # False where the log or file is unread
     log_entries: list = field(default_factory=list)  # the log's entries, for the merged log
     entries: dict = field(default_factory=dict)      # identifier -> the invariant's entry
+    bindings: dict = field(default_factory=dict)     # "ABC-01" -> the binding sentences of its
+    #                                                  latest version, None for a repeal
+    quoted: dict = field(default_factory=dict)       # "ABC-01" -> what its binding sentences
+    #                                                  hold between two backticks, once asked
 
     def decision(self, word):
         """The decision number a word is, as the log writes it, or None: a number with the log's
@@ -543,6 +561,20 @@ class Foundation:
         if key not in self.invariants:
             return None, "the invariants file does not hold it"
         return self.invariants[key]
+
+    def names_in_backticks(self, key, word):
+        """Whether the binding sentences of a decision, their whitespace collapsed, hold
+        `` `word` `` once its own whitespace is collapsed. For a word with no backtick that plain
+        search of the text is the same as asking whether the word stands between two backticks
+        with none between them, which is how it is asked: each decision's text is split on its
+        backticks once, so a file naming many words costs no search of the log for each."""
+        word = " ".join(word.split())
+        text = " ".join((self.bindings.get(key) or "").split())
+        if "`" in word:
+            return "`%s`" % word in text
+        if key not in self.quoted:
+            self.quoted[key] = set(text.split("`")[1:-1])
+        return word in self.quoted[key]
 
 
 def decisions_named(value, foundation):
@@ -649,9 +681,11 @@ def read_foundation(top, report, borrowed, invariant_rules):
         report.error(None, "the decision log or the invariants file cannot be parsed, so no "
                            "reference can be checked: %s" % problem, check, (REFERENCES,))
         return Foundation(known=False)
+    bindings = {"%s-%02d" % (prefix, number): entry.binding
+                for number, (entry, _) in latest.items()}
     return Foundation(prefix, decision_fingerprints(latest, prefix, borrowed),
                       invariant_fingerprints(entries, borrowed), withdrawn,
-                      log_entries=log_entries, entries=entries)
+                      log_entries=log_entries, entries=entries, bindings=bindings)
 
 
 def merged_foundation(top, onto, foundation, borrowed, invariant_rules, report):
@@ -1042,6 +1076,172 @@ def check_paths(document, sections, tracked, report):
                              % shown(path), check, (FORM,))
 
 
+def kind_of(path):
+    """The `<kind>` of a path `guidelines/coding-<kind>.md`, one level below `guidelines/`, or
+    None for any other path."""
+    head = "%s/%s-" % (GUIDELINES, CODING)
+    if not path.startswith(head) or not is_guidelines_name(path[len(GUIDELINES) + 1:]):
+        return None
+    return path[len(head):-len(".md")]
+
+
+def code_path(cell):
+    """The path a cell of a table holds as one code span, `` `<path>` `` and nothing else, or
+    None."""
+    cell = cell.strip()
+    if len(cell) > 2 and cell[0] == "`" and cell[-1] == "`" and cell.count("`") == 2:
+        return cell[1:-1].strip() or None
+    return None
+
+
+def row_path(line, cell, report, check):
+    """The path the *File* of a row names in backticks, once it is found to be relative and to
+    stay in the repository; None, once the report says why, otherwise. The path is never given
+    to git."""
+    path = code_path(cell)
+    if path is None:
+        report.error(line, "*%s* holds `%s`, not one path in backticks" % (FILE, shown(cell)),
+                     check, (FORM,))
+        return None
+    why = refused(path)
+    if why:
+        report.error(line, "the path `%s` of *%s* %s; a path of a table is relative to the root "
+                           "of the repository and stays in it" % (shown(path), FILE, why),
+                     check, (FORM,))
+        return None
+    return path
+
+
+def check_exemplar(sections, tables, form, name, report, foundation, tracked):
+    """The table of the files of a kind: exactly one row `exemplar`; every *Status* on the closed
+    list; every *File* one path in backticks that stays in the repository and names a file git
+    tracks; `—` in *Decision* on every row but the exemplar's, and on the exemplar's a decision
+    of the log in force whose binding sentences, their whitespace collapsed, hold its *File* and
+    the file's `<kind>`, each in backticks. A file of the kind the table leaves out is no error
+    (C13)."""
+    # invariant: guidelines-form/1
+    check = "check_exemplar"
+    report.ran(check, FORM)
+    kind = kind_of("%s/%s" % (GUIDELINES, name))
+    block = sections.get(FILES_OF_A_KIND)
+    exemplar = None
+    for line, row in tables.get(FILES_OF_A_KIND) or []:
+        status = bare(row[STATUS])
+        if status not in form.statuses:
+            report.error(line, "the row's *%s* reads `%s`, which is none of %s"
+                         % (STATUS, shown(status), ", ".join("`%s`" % each
+                                                            for each in form.statuses)),
+                         check, (FORM,))
+        path = row_path(line, row[FILE], report, check)
+        if path is not None:
+            files, why = tracked()
+            if files is None:   # `why` then holds why git could not list them
+                report.error(line, "the path `%s` cannot be checked: %s" % (shown(path), why),
+                             check, (FORM,))
+            elif path not in files:
+                report.error(line, "the path `%s` names no file git tracks" % shown(path),
+                             check, (FORM,))
+        if status != EXEMPLAR:
+            if row[DECISION].strip() != NO_DECISION:
+                report.error(line, "the row's *%s* is not `%s`, so its *%s* reads `%s`; it "
+                                   "reads `%s`" % (STATUS, EXEMPLAR, DECISION, NO_DECISION,
+                                                   shown(row[DECISION])), check, (FORM,))
+            continue
+        if exemplar is not None:
+            report.error(line, "a second row whose *%s* is `%s`, beside the one at line %d: a "
+                               "file of a kind names one exemplar" % (STATUS, EXEMPLAR, exemplar),
+                         check, (FORM,))
+        else:
+            exemplar = line
+        check_designation(line, row[DECISION], path, kind, report, check, foundation)
+    if exemplar is None:
+        report.error(block.line if block else None,
+                     "the table under `## %s` holds no row whose *%s* is `%s`: a file of a kind "
+                     "names its exemplar, with the decision that designates it"
+                     % (FILES_OF_A_KIND, STATUS, EXEMPLAR), check, (FORM,))
+
+
+def check_designation(line, cell, path, kind, report, check, foundation):
+    """The *Decision* of an exemplar's row names a decision of the log in force whose binding
+    sentences hold the row's path and the kind, each in backticks."""
+    named = decisions_named(cell, foundation)
+    if not named:
+        report.error(line, "the exemplar's row names no decision of the log in *%s*, as "
+                           "`<PREFIX-NN>@<fingerprint>`: the decision that designates the "
+                           "exemplar" % DECISION, check, (FORM,))
+        return
+    if not foundation.known:
+        return
+    for key in named:
+        value, why = foundation.current(TO_DECISION, key)
+        if value is None:
+            report.error(line, "the exemplar's row names %s, which is not in force: %s"
+                         % (key, why), check, (FORM,))
+            continue
+        for word, what in ((path, "the row's *%s*" % FILE), (kind, "the kind of the file")):
+            if word is not None and not foundation.names_in_backticks(key, word):
+                report.error(line, "the binding sentences of %s do not name %s, `%s`, in "
+                                   "backticks, so it does not designate the exemplar"
+                             % (key, what, shown(word)), check, (FORM,))
+
+
+def check_kind_index(general, reports, report, tracked):
+    """Every file `guidelines/coding-<kind>.md` git lists is named by a row of the table under
+    `## Kinds of code` of `guidelines/coding.md`, by its path in *File*, and git lists that
+    general file; every row of the table names in *File* a file of a kind git lists, gives that
+    file's `<kind>` in *Kind* and a condition in *When to read*. What git lists here is what it
+    tracks, the one list it gives: a file written and not yet added names no kind, and a row
+    naming it names no file. `general` is (its report, the rows of that table) where the general
+    file is read, None otherwise; `reports` gives the report of each file of guidelines read,
+    `report` the run's own."""
+    # invariant: guidelines-form/1
+    check = "check_kind_index"
+    files, why = tracked()
+    if files is None:   # `why` then holds why git could not list them
+        report.error(None, "the table of `## %s` and the files of a kind cannot be checked: %s"
+                     % (KINDS_OF_CODE, why), check, (FORM,))
+        return
+    kinds = {path: kind_of(path) for path in sorted(files) if kind_of(path) is not None}
+    named = set()
+    if general is not None:
+        own, rows = general
+        own.ran(check, FORM)
+        for line, row in rows:
+            if not row[WHEN_TO_READ].strip():
+                own.error(line, "the row's *%s* is empty: it gives the condition under which an "
+                                "agent reads the file" % WHEN_TO_READ, check, (FORM,))
+            path = row_path(line, row[FILE], own, check)
+            if path is None:
+                continue
+            kind = kind_of(path)
+            if kind is None:
+                own.error(line, "the path `%s` of *%s* names no file `%s/%s-<kind>.md`"
+                          % (shown(path), FILE, GUIDELINES, CODING), check, (FORM,))
+                continue
+            if bare(row[KIND]) != kind:
+                own.error(line, "the row's *%s* reads `%s`, but the file its *%s* names is of "
+                                "the kind `%s`" % (KIND, shown(bare(row[KIND])), FILE,
+                                                   shown(kind)), check, (FORM,))
+            if path in kinds:
+                named.add(path)
+            else:
+                own.error(line, "the path `%s` of *%s* names no file git tracks"
+                          % (shown(path), FILE), check, (FORM,))
+    for path in kinds:
+        each = reports.get(path, report)
+        each.ran(check, FORM)
+        if GENERAL_CODING not in files:
+            each.error(None, "git tracks no `%s`, whose table under `## %s` names each file of "
+                             "a kind" % (GENERAL_CODING, KINDS_OF_CODE), check, (FORM,))
+        elif general is None:
+            each.error(None, "`%s` is not read, so no row of its table under `## %s` is found "
+                             "naming this file" % (GENERAL_CODING, KINDS_OF_CODE), check, (FORM,))
+        elif path not in named:
+            each.error(None, "no row of the table under `## %s` in `%s` names this file by its "
+                             "path in *%s*" % (KINDS_OF_CODE, GENERAL_CODING, FILE),
+                       check, (FORM,))
+
+
 def check_references(document, foundation, report):
     """Each reference outside fenced code carries eight lower-case hexadecimal characters after
     its `@`, names an entry in force and carries its current fingerprint on the commit checked.
@@ -1120,12 +1320,15 @@ def check_file(name, text, context, report):
     rules = check_rules(document, sections, form, report, shared, foundation)
     tables = check_tables(document, sections, form, report)
     check_roles(tables, rules, form, report, foundation)
+    if form.statuses:
+        check_exemplar(sections, tables, form, name, report, foundation, context.tracked)
     check_parts(fields, name, discipline, named, context.disciplines, context.parts, report)
     check_paths(document, sections, context.tracked, report)
     if foundation.known:
         current = check_references(document, foundation, report)
         if context.merged is not None:
             check_merged_references(current, context.merged, context.onto, report)
+    return tables
 
 
 # --- the run --------------------------------------------------------------------------------
@@ -1329,11 +1532,13 @@ def run(root=".", merge_onto=None, record=None, stream=None):
         context = Context(shared, common, disciplines,
                           read_parts(top, reports[0], part_map, map_rules),
                           tracked_paths(top, shared), foundation, merged, onto)
+        by_path, general = {}, None
         for name in names:
             path = "%s/%s" % (GUIDELINES, name)
             report = shared.Report(shown(path), options, program=PROGRAM,
                                    selected_by=SELECTED_BY)
             reports.append(report)
+            by_path[path] = report
             report.ran("read_guidelines", FORM)
             text, why = read_untrusted(top, path)
             if text is None:
@@ -1341,7 +1546,15 @@ def run(root=".", merge_onto=None, record=None, stream=None):
                 report.fail(None, "`%s` %s, so its references cannot be checked"
                             % (shown(path), why), SAME_COMMIT, (REFERENCES,))
                 continue
-            check_file(name, text, context, report)
+            tables = check_file(name, text, context, report)
+            if path == GENERAL_CODING:
+                general = (report, tables.get(KINDS_OF_CODE) or [])
+        # The index of the files of a kind, where the-way gives the coding template and git
+        # lists a file of that discipline under `guidelines/`: a file of a kind git tracks is
+        # one it lists there, so a run that lists none needs no answer of git about it.
+        if CODING in disciplines and any(path == GENERAL_CODING or kind_of(path) is not None
+                                         for path in by_path):
+            check_kind_index(general, by_path, reports[0], context.tracked)
 
     for report in reports:
         report.print(stream)
