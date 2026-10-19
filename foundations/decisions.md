@@ -6879,27 +6879,29 @@ refinement to check them.
 
 ### WAY-203/1 — Which rules of a linter's set block a change of a product's code?
 
-A rule of a linter's set stands as a rule of a product's coding guidelines, checked by an invariant
-that blocks a change breaking it, only where every report it gives on the product's code leads to a
-change of code worth making, a report counting by whether it leads to such a change, whether it is
-technically right or not. A rule of the set that gives a report leading to no such change is no rule
-of the coding guidelines: it may stand among their examples, and no invariant checks it, so the gate
-does not run it.
+A rule of a linter's set stands among the rules that block a change in the product's decision
+adopting the set, and so is checked by the invariant of the one rule of the product's coding
+guidelines on its linter, only where every report it gives on the product's code leads to a change of
+code worth making, a report counting by whether it leads to such a change, whether it is technically
+right or not. A rule of the set that gives a report leading to no such change is no rule that binds
+the product's code: it may stand among the examples of the coding guidelines, and no invariant checks
+it, so the gate does not run it.
 
 - **Change:** new decision
 - **Scope:** product-guidelines
 - **Based on:** none
 - **Relations:** derives from WAY-202@e0fb6a51
 - **Verification:** level 2 — an agent compares the work with the decision:
-  - complies: a rule on unused variables, every report of which led to removing dead code, blocks a
-    change; a rule on the order of imports that flagged two files whose order a generator writes
+  - complies: a rule on unused variables, every report of which led to removing dead code, stands
+    among the rules that block in the decision adopting the set and blocks a change; a rule on the order of imports that flagged two files whose order a generator writes
     stands among the examples under its name in the tool, and the linter's invariant does not run
     it; a rule whose report was technically wrong, yet led to a fix that made the code clearer,
     still blocks;
   - violates: a rule that flagged sound code once blocks because its other reports were right; a
     rule whose technically right report nobody would change the code for blocks; the gate shows the
     rules among the examples as warnings; a rule blocks because fewer than one report in ten led to
-    no change.
+    no change; each rule of the set that blocks stands as a rule of its own under `## Rules` of the
+    coding guidelines.
 - **Review when:** none
 - **Origin:** none
 - **Approved by:** Mariusz, merge of <request link>
@@ -6933,7 +6935,7 @@ change of that decision, which the human approves.
 - **Change:** new decision
 - **Scope:** product-guidelines
 - **Based on:** none
-- **Relations:** derives from WAY-203@96f71a98
+- **Relations:** derives from WAY-203@45e40683
 - **Verification:** level 2 — an agent compares the work with the decision:
   - complies: the skill runs a set in a scratch worktree of a product with code, a fresh agent
     judges each of its reports, the three rules with a report that led to no change worth making
