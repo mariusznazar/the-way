@@ -6817,9 +6817,9 @@ once several files exist — until then every agent copies what it finds.
 ### WAY-201/1 — How does the coding-guidelines skill's audit of a product with code end?
 
 The audit the skill `maintain-coding-guidelines` makes of a product that has code ends with a
-proposed exemplar for each kind of code it audits, each with one sentence of what the product gains
-by it, and with the files of that kind marked `do not copy`, each with the file and line of the place
-that breaks a rule.
+proposed exemplar for each kind of code the product holds files of, each with one sentence of what
+the product gains by it, and with the files of that kind marked `do not copy`, each with the file and
+line of the place that breaks a rule.
 
 - **Change:** new decision
 - **Scope:** product-guidelines
