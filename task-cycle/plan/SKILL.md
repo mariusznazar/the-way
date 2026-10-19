@@ -34,6 +34,10 @@ asks the human.
   plan item assigns.
 - The product's current foundation, selected and read by "Reading the foundation" in
   `elements/common/way_of_working.md` (WAY-150).
+- Read and apply `product-guidelines/reading.md`, checking the cycle's selection against the
+  whole task being divided; read selected files whole and return expansions or discrepancies
+  with their reasons before relying on the selection (WAY-213). With the styleguide read its
+  order-of-work example, follow it or explain the departure; it is no required slice order.
 - The code and the tests the change touches, as far as is needed to name each slice's files. Read
   to cut slices, not to design the code.
 - After a one-author attempt proved too large, its report; the whole attempt, foundation entries
@@ -111,8 +115,9 @@ recommendation; the orchestrator rules on execution before it starts.>
   such as the entries of a long log the slice rests on. A range identifying a foundation entry
   contains that complete entry, all fields, rationale and rejected options included; a search hit
   or paragraph cannot stand for it. Each receiving agent checks and expands its selection by
-  "Reading the foundation". Paths are relative to the repository root; none, written without
-  backticks, stands for an empty field.
+  "Reading the foundation" and `product-guidelines/reading.md`; include the applicable whole
+  guideline files for its work, never a replacement review checklist. Paths are relative to the
+  repository root; none, written without backticks, stands for an empty field.
 - *Checks* are commands that can actually run in the product, named with their arguments, and the
   checks the parts touched call for (WAY-13). A slice that changes behaviour names the test it
   starts from.
@@ -145,9 +150,10 @@ Keep the last report beside the plan as `plan-size.md`.
 
 ## 5. Return
 
-Write the full report to the dispatch's report path, including the final size-report path and
-any questions still open with proposed answers and evidence. Return under the cycle's file-transfer
-contract (WAY-148): status, plan/report paths, concise check result with failed or unchecked work,
+Write the full report to the dispatch's report path, including the final size-report path,
+guideline-selection changes and reasons, the chosen order's relation to the styleguide example,
+and any questions still open with proposed answers and evidence. Return under the cycle's
+file-transfer contract (WAY-148): status, plan/report paths, concise check result with failed or unchecked work,
 and every unresolved concern affecting the next dispatch. The boundary is the finished plan:
 return before any slice is made.
 

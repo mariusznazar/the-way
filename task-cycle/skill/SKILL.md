@@ -47,6 +47,11 @@ not pretend that your choice approved or changed the rule.
    foundation by "Reading the foundation" in `elements/common/way_of_working.md` (WAY-150).
    Verify that the pinned the-way checkout matches the product's gitlink. Follow product-specific
    git and test rules. The task document is a starting map, not proof that nothing else applies.
+   Read and apply `product-guidelines/reading.md` to select the product's guidelines (WAY-213).
+   As orchestrator, record affected parts and their evidence, selected paths and reasons, scoped
+   departures and unresolved findings in the cycle record. Read the selected files whole; a
+   finding needing refinement or a foundation meaning takes the route that procedure names
+   before dependent work starts.
 3. Require subagents and Superpowers version 6.4.1 with `brainstorming`,
    `subagent-driven-development`, `test-driven-development`, `requesting-code-review`, and
    `finishing-a-development-branch`, and the-way's `plan-task`, which writes every plan in place of
@@ -122,6 +127,24 @@ or file must still be read whole. Reuse a borrowed method's existing brief and r
 creating a second one. Apply this contract to design, planning, foundation work, implementation,
 reviews and the return step within their existing boundaries; the independent assessor receives
 only the filtered inputs in step 11, never this operational handoff.
+
+Every handoff to the spec author or reviewer, planner, no-plan author, slice executor or code
+reviewer carries the current guideline selection and its reasons, with
+`product-guidelines/reading.md`. Require the recipient to verify it against its own scope, read
+the selected files whole and report any expansion or discrepancy before relying on it. A checklist
+or quoted excerpt never replaces the sources. With the styleguide, give the planner and the
+no-plan author its order-of-work example (WAY-181): follow it or explain why another order fits;
+it is no mandatory slice order or reason to reject a plan. Preserve product instruction-file
+pointers, which also serve sessions outside this cycle.
+
+Refresh that selection after spec or planning changes, on each author/executor return, and at
+reconciliation, using current sources and actual changed files and affected parts before the next
+dependent dispatch. Record changed paths, reasons and unresolved findings; route a late gap as
+the shared reading requires, without waiving it. Review and fix handoffs, including those within
+the borrowed execution method, follow the same contract. The independent foundation assessor
+still receives only step 11's filtered inputs: no selection explanation, operational record or
+checklist is added; relevant repository guidelines remain available through its permitted source
+reading.
 
 Wait for an agent through the harness's completion notification or one blocking wait at the
 longest duration its live tool contract and active instructions permit (WAY-157). In Codex, use
@@ -292,8 +315,19 @@ continuing that work.
    author names the requirement of the task, and each executor the requirement of its slice read
    against the task, that its work most likely does not meet, writes a check that would catch it — a
    test, or a manual check recorded as the report contract gives it — runs it and states in its
-   report which requirement, which check and what the check showed (WAY-164). Its boundary is the
-   committed change or slice with focused checks run and their execution evidence recorded,
+   report which requirement, which check and what the check showed (WAY-164).
+   Before review, a no-plan author or slice executor changing a user interface also checks the
+   affected components' states required by the applicable product styleguide, respecting its
+   adopted exceptions and departures; this is additional to the weakest-point check (WAY-219).
+   Use the agent's route to the running product settled by its foundation to inspect a screenshot.
+   Record the affected UI and states, method, observed result and screenshot evidence path in the
+   stage report. Where the foundation settles no route, inspect states in code and mark the
+   screenshot unchecked for that reason in both the report and the request. Code inspection
+   establishes no rendered appearance. If a settled route fails, preserve the actual failed or
+   unperformed check and its evidence, not the no-route reason. This requires neither a reference
+   screenshot comparison nor a new route-selection blocker.
+   Its boundary is the committed change or slice with focused checks run and their execution
+   evidence recorded,
    returning before review. No author reviews its own work. The independent reviewer receives that
    report, reads the full diff of its assigned range and checks the author's sharpness findings and
    weakest-point check; you use the changed-file list, added and removed line counts and reviewer's
@@ -405,6 +439,19 @@ continuing that work.
 
 ## The end of a code review
 
+Every code-review handoff, a slice review and a review of a fix included, gives the reviewer these
+criteria alongside the applicable whole guidelines (WAY-220, WAY-221):
+
+- Grade an appearance finding by its concrete effect on the user within the existing
+  Critical/Important/Minor scale. Being visual makes it neither automatically Minor nor blocking.
+- Departure from a guideline example or a script-unchecked part of an exemplar alone does not
+  justify a blocking finding. Name the consequence for the user or code correctness that warrants
+  that grade. Binding rules and their invariants retain their force.
+
+These are generic criteria, never a preclassification of a finding. The reviewer alone decides
+grade and scope; the orchestrator cannot use them to downgrade or discard a finding. They add
+no binding product rule by treating an outside style source or an example as one.
+
 In the review of the whole change — the review of step 9 of a one-author change or a plan of one
 slice, or the final whole-branch review of a plan of more slices — a finding blocks when the
 reviewer grades it Critical or Important and has not itself marked it as outside the task's scope: a
@@ -492,7 +539,9 @@ step of `requesting-code-review` by which the executor rules on each "Declined t
     why; the execution route and its reason; after a discarded attempt, its reason and a link to the
     agent's report; the spec link where one exists and, only where a plan was written, its slices
     and plan link; what changed and why, test and review evidence with every check that did not run
-    named, what each weakest-point check of step 9 showed (WAY-164), the Minor findings of the
+    named, what each weakest-point check of step 9 showed (WAY-164), and step 9's UI state and
+    screenshot evidence, including a screenshot unchecked because no route was settled and any
+    failure of a settled route (WAY-219); the Minor findings of the
     review of the whole change and of every later code review in an item of their own and the
     findings their reviewers marked outside the task's scope in another, for the human to choose
     which become new tasks and to create them (WAY-161) — each with the reviewer's words and its

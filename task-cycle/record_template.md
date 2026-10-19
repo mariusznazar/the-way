@@ -49,6 +49,9 @@ the request; preparing reversible code for it does not authorize executing it.
   none>
 - Weakest-point checks: <for the author and each executor: the requirement named, the check, what
   it showed and the report that states it>
+- Product guidelines: <affected parts and evidence, selected paths and reasons, scoped
+  departures and gaps; selection changes after spec/planning, author returns and reconciliation;
+  recipients' whole-read confirmation and discrepancies, with their handoff/report paths>
 
 The last commit of a discarded attempt or of a slice returned too large is a historical name, not
 a link to follow: the commit is reachable only until the reflog expires. A choice or ruling of a
@@ -108,6 +111,10 @@ warnings and every unchecked result here, with the full output linked. An unrun 
 unchecked. For an invariant check, link its final sentence/check commits, product result,
 review, deliberate-break command and required failure, restoration and clean verification; mark
 superseded evidence and name the rerun after a correction.
+For a UI change, link the author's or executor's state check and screenshot inspection: affected
+components/states, method, observed result and evidence. Carry a screenshot unchecked for no
+settled route, or a failed settled route with its actual result, to the request; code inspection
+does not establish rendered appearance.
 
 ## Return step
 
