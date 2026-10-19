@@ -1199,6 +1199,26 @@ class KindIndex(FormCheckTestCase):
                 self.assert_reported_anew(self.check(files, (), untracked=untracked),
                                      (CODING_ENDPOINT_FILE, CODING_FILE, "guidelines"))
 
+    def test_a_row_naming_a_tracked_file_of_no_kind_is_reported(self):
+        """A row whose *File* names a file git tracks that is no file `guidelines/coding-<kind>.md`
+        — another discipline's guidelines, the general file itself, a file of the code — names a
+        file with no `<kind>`, so its *Kind* is not that file's `<kind>`, whatever it reads."""
+        # invariant: guidelines-check-kind-index/1
+        cases = (
+            ("testing", "guidelines/testing.md"),
+            ("styleguide", "guidelines/styleguide-web.md"),
+            ("coding", "guidelines/coding.md"),
+            ("endpoint", "src/api/orders/route.ts"),
+        )
+        for kind, path in cases:
+            with self.subTest(path=path):
+                row = "| %s | `%s` | before writing code of that kind |" % (kind, path)
+                general = replaced(CODING, KINDS_ROW + "\n", KINDS_ROW + "\n" + row + "\n")
+                files = {CODING_FILE: general, CODING_ENDPOINT_FILE: CODING_ENDPOINT,
+                         TESTING_FILE: TESTING, STYLEGUIDE_FILE: STYLEGUIDE}
+                self.assert_reported_anew(self.check(files, ()), CODING_FILE,
+                                          line=line_of(general, row))
+
     def test_a_kind_file_git_does_not_track_is_no_error(self):
         """The control of the tests above: a file of a kind standing in the working tree but not
         tracked by git is no file of the sentence, so no row is asked to name it and no general
@@ -1393,6 +1413,29 @@ class ExampleFiles(FormCheckTestCase):
                 text = replaced(CODING_ENDPOINT, VALIDATES_BAD,
                                 replaced(VALIDATES_BAD, inside, new))
                 self.assert_reported_anew(self.check_kind(text), CODING_ENDPOINT_FILE)
+
+    def test_a_case_left_open_to_the_end_of_the_file_is_reported(self):
+        """The last case of the file loses its closing line, so that no later fence closes it and
+        no line inside it would open one. It swallows the sections after it, whose absence the
+        form check reports apart; the error asked for is the one at the case's opening line."""
+        # invariant: guidelines-check-example-files/1
+        location_bad = LOCATION_CASES[LOCATION_CASES.index("```bad"):]
+        background_bad = BACKGROUND_CASES[BACKGROUND_CASES.index("```bad"):]
+        cases = (
+            ("the last case of a file of a kind", CODING_ENDPOINT_FILE, CODING_ENDPOINT,
+             location_bad, "```bad endpoint-location src/carts/route.ts"),
+            ("the last case of a styleguide", STYLEGUIDE_FILE, STYLEGUIDE, background_bad,
+             "```bad background-pair src/tokens.css"),
+        )
+        for name, path, valid, last, opening in cases:
+            with self.subTest(name):
+                self.assertTrue(last.endswith("\n```\n\n"))
+                self.assertNotIn("```", valid[valid.index(last) + len(last):])
+                text = replaced(valid, last, last[:-len("```\n\n")])
+                files = dict(CODING_FILES, **{path: text})
+                self.assert_reported_anew(self.check(files, ()), path,
+                                          line=line_of(text, opening),
+                                          fragments=("end of the file",))
 
     def test_another_fenced_block_in_a_rule_carrying_cases_is_reported(self):
         """In a rule whose cases are required, every fenced block is a case: a block with
