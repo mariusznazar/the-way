@@ -61,7 +61,27 @@ and an exemplar's row whose *Decision* names no decision of the log in force, or
 sentences, their whitespace collapsed, lack its *File* or the file's `<kind>` in backticks — that
 reference's fingerprint being checked as every reference's is. A *File* of either table is one
 path in backticks, refused as a path of `## Where in code` is. A file of a kind that the table of
-its files leaves out is no error. A decision is named by a number
+its files leaves out is no error. In guidelines of every discipline, the test cases of a rule kept
+under `## Rules` whose *Invariant* names an invariant other than `guidelines-form` (WAY-168): for
+each invariant it names other than `guidelines-form`, a missing case after its fields — a fenced
+block whose info string reads `good <identifier> <path>`, or one reading `bad <identifier> <path>`
+— reported at *Invariant*; at its opening line, a second such case of the same invariant, a case
+naming an invariant the rule does not name, or `guidelines-form`, a case whose path is absolute,
+holds a `..` segment, a drive, a UNC prefix, a backslash, a `:` or a character that is not
+printable, any other fenced block of the rule — one standing before the rule's fields end, opened
+by anything but three backticks, or whose info string is of no such form, as a bare line of three
+backticks closing a case early leaves the case's own closing line — reported as a malformed test
+case, and every fenced block of the rule left open to the end of the file; a case closed by
+anything but three backticks, at its closing line; and each line inside a case that, after any
+leading whitespace, starts with three backticks or three tildes, which
+`instruction-files/check_instructions.py` reads as a fence — a line split, as that script splits
+it, at a carriage return, a separator or a next-line character too — at that line. The info string
+is read from an opening fence alone, and a block opens and closes as Markdown reads fences: three
+or more backticks or tildes after at most three spaces, closed by a line of the same character
+alone, at least as long. A rule naming `guidelines-form` alone needs no case, its cases being
+the-way's own tests of this script. A path of a case may name a file the product does not hold. A
+decision is
+named by a number
 with the prefix of the product's log, an invariant by an identifier its invariants file holds as an
 entry or a withdrawn identifier. A path git lists under `guidelines/` that is not
 `guidelines/<name>.md`, one level deep with a lower-case `.md`, gets a warning and is not read.
@@ -96,6 +116,7 @@ the form the checks act on, or the record path does not end in `.jsonl` or canno
 """
 
 import argparse
+import bisect
 import importlib.util
 import json
 import os
@@ -152,6 +173,11 @@ FILE, WHEN_TO_READ, STATUS = "File", "When to read", "Status"
 STATUSES = ("exemplar", "copy", "do not copy")
 EXEMPLAR, NO_DECISION = STATUSES[0], "—"
 GENERAL_CODING = "%s/%s.md" % (GUIDELINES, CODING)
+# The test cases of a rule: their outer fence, the first word of their info string, the identifier
+# of the invariant they are never given for, and how a line that opens a fence starts.
+CASE_FENCE, CASE_KINDS = "```", ("good", "bad")
+FORM_IDENTIFIER = FORM.split("/")[0]
+INNER_FENCES = ("```", "~~~")
 
 FIELD_LINE = re.compile(r"^- \*\*(.+?):\*\*(?: (.*))?$")
 OPEN_FENCE = re.compile(r"^ {0,3}(`{3,}|~{3,})(.*)$")
@@ -463,7 +489,8 @@ class Block:
 class Document:
     def __init__(self, text):
         self.lines = text.split("\n")
-        self.code = fenced_lines(self.lines)
+        self.fences = fenced_blocks(self.lines)
+        self.code = fenced_lines(self.lines, self.fences)
         self.sections = self.blocks("## ", 0, len(self.lines))
         self.header_end = self.sections[0].line - 1 if self.sections else len(self.lines)
 
@@ -484,24 +511,40 @@ class Document:
                 if self.lines[index].strip()]
 
 
-def fenced_lines(lines):
-    """For each line, whether it stands in fenced code, its fences included: a fence of three or
-    more backticks or tildes, closed by a fence of the same character at least as long."""
-    flags, fence = [], None
-    for line in lines:
-        if fence is None:
+@dataclass
+class Fence:
+    opening: int       # the index of its opening line
+    fence: str         # the run of backticks or tildes that opens it
+    info: str          # the info string: what follows that run on the opening line
+    closing: int       # the index of its closing line, None for a block left open to the end
+
+
+def fenced_blocks(lines):
+    """Every fenced block of the lines, in their order: opened by a fence of three or more
+    backticks or tildes after at most three spaces — a run of backticks followed by no backtick
+    — and closed by a line of the same character alone, at least as long, after at most three
+    spaces."""
+    blocks, current = [], None
+    for index, line in enumerate(lines):
+        if current is None:
             opening = OPEN_FENCE.match(line)
             if opening and not (opening.group(1)[0] == "`" and "`" in opening.group(2)):
-                fence = opening.group(1)
-                flags.append(True)
-                continue
-            flags.append(False)
-        else:
-            flags.append(True)
-            stripped = line.strip()
-            if (len(line) - len(line.lstrip(" ")) <= 3 and len(stripped) >= len(fence)
-                    and set(stripped) == {fence[0]}):
-                fence = None
+                current = Fence(index, opening.group(1), opening.group(2), None)
+                blocks.append(current)
+            continue
+        stripped = line.strip()
+        if (len(line) - len(line.lstrip(" ")) <= 3 and len(stripped) >= len(current.fence)
+                and set(stripped) == {current.fence[0]}):
+            current.closing, current = index, None
+    return blocks
+
+
+def fenced_lines(lines, blocks):
+    """For each line, whether it stands in one of the fenced blocks, its fences included."""
+    flags = [False] * len(lines)
+    for block in blocks:
+        end = len(lines) - 1 if block.closing is None else block.closing
+        flags[block.opening:end + 1] = [True] * (end + 1 - block.opening)
     return flags
 
 
@@ -871,6 +914,136 @@ def check_rules(document, sections, form, report, shared, foundation):
                                        "discipline names one" % name, check, (FORM,))
         kept.setdefault(rule.title, fields)
     return kept
+
+
+def invariants_named(value, foundation):
+    """The invariants of the file a value names with a `@`, each once, in their order."""
+    return list(dict.fromkeys(match.group(1) for match in REFERENCE_TOKEN.finditer(value)
+                              if foundation.invariant(match.group(1))))
+
+
+def case_of(block):
+    """(`good` or `bad`, identifier, path) of a fenced block opened by three backticks whose info
+    string reads `good <identifier> <path>` or `bad <identifier> <path>`, its words split by one
+    space each; None for any other block."""
+    if block.fence != CASE_FENCE:
+        return None
+    words = block.info.strip().split(" ")
+    if (len(words) != 3 or words[0] not in CASE_KINDS or not IDENTIFIER.fullmatch(words[1])
+            or not words[2]):
+        return None
+    return tuple(words)
+
+
+def check_cases(document, sections, report, shared, foundation):
+    """In each rule kept under `## Rules` whose *Invariant* names an invariant other than
+    `guidelines-form`, the test cases of WAY-168 (spec §5.2 item 5): after the rule's fields,
+    exactly one good and one bad case of each such invariant, and no other fenced block. A case is
+    a block opened and closed by three backticks, not left open to the end of the file, whose info
+    string — read from its opening fence alone — reads `good <identifier> <path>` or `bad
+    <identifier> <path>`, the identifier one the rule names and the path relative and staying in
+    the repository, and none of whose lines starts, after any leading whitespace, with three
+    backticks or three tildes, on which `instruction-files/check_instructions.py` switches between
+    code and text, a line being read as that script splits it. A rule naming `guidelines-form`
+    alone gives no case: its cases are the-way's own tests of this script. No path of a case is
+    opened or given to git."""
+    # invariant: guidelines-form/1
+    check = "check_cases"
+    report.ran(check, FORM)
+    block = sections.get(RULES)
+    if block is None:
+        return
+    rules = document.blocks("### ", block.start, block.end)
+    starts = [rule.start for rule in rules]
+    fences = {}     # the position of a rule -> the fenced blocks opening in its body
+    for fence in document.fences:
+        position = bisect.bisect_right(starts, fence.opening) - 1
+        if position >= 0 and fence.opening < rules[position].end:
+            fences.setdefault(position, []).append(fence)
+    for position, rule in enumerate(rules):
+        if is_dropped(document.text_lines(rule)):
+            continue
+        fields = shared.parse_fields(document.prose(rule.start, rule.end), rule.start + 1)
+        named = invariants_named(fields[INVARIANT][0], foundation) if INVARIANT in fields else []
+        required = [identifier for identifier in named if identifier != FORM_IDENTIFIER]
+        if required:
+            check_rule_cases(document, rule, fields, named, required, fences.get(position, []),
+                             report, check)
+
+
+def check_rule_cases(document, rule, fields, named, required, fences, report, check):
+    """The test cases of one rule that needs them, `fences` being the fenced blocks opening in
+    its body and `required` the invariants it names other than `guidelines-form`."""
+    name = "`### %s`" % shown(rule.title)
+    last_field = max(line for _, line in fields.values())
+    seen = {}       # (`good` or `bad`, identifier) -> the line of its first case
+    for fence in fences:
+        line = fence.opening + 1
+        if fence.closing is None:
+            report.error(line, "the fenced block opening here in the rule %s is left open to the "
+                               "end of the file: no line of `%s` alone closes it"
+                         % (name, shown(fence.fence)), check, (FORM,))
+        case = case_of(fence)
+        if case is None or line <= last_field:
+            why = ("it stands before the rule's fields end" if line <= last_field
+                   else "it opens with `%s`, not three backticks" % shown(fence.fence)
+                   if fence.fence != CASE_FENCE
+                   else "its info string reads `%s`" % shown(fence.info.strip()))
+            report.error(line, "malformed test case: every fenced block of the rule %s, which "
+                               "names an invariant other than `%s`, is a test case after the "
+                               "rule's fields, opened by three backticks with the info string "
+                               "`good <identifier> <path>` or `bad <identifier> <path>`; %s"
+                         % (name, FORM_IDENTIFIER, why), check, (FORM,))
+            continue
+        which, identifier, path = case
+        if identifier in required:
+            if (which, identifier) in seen:
+                report.error(line, "a second `%s` case of the invariant `%s`, beside the one at "
+                                   "line %d: a rule gives exactly one of each for each invariant "
+                                   "it names" % (which, shown(identifier),
+                                                 seen[(which, identifier)]), check, (FORM,))
+            else:
+                seen[(which, identifier)] = line
+        elif identifier in named:
+            report.error(line, "the case names `%s`, whose cases are the-way's own tests of the "
+                               "form check: a rule gives no case of it" % FORM_IDENTIFIER,
+                         check, (FORM,))
+        else:
+            report.error(line, "the case names the invariant `%s`, which *%s* of the rule %s does "
+                               "not name" % (shown(identifier), INVARIANT, name), check, (FORM,))
+        why = refused(path)
+        if why:
+            report.error(line, "the path `%s` of the test case %s; the path of a test case is "
+                               "relative to the root of the repository and stays in it"
+                         % (shown(path), why), check, (FORM,))
+        if (fence.closing is not None
+                and document.lines[fence.closing].strip() != CASE_FENCE):
+            report.error(fence.closing + 1, "the test case opened at line %d is closed by `%s`; "
+                                            "the outer fence of a test case is three backticks"
+                         % (line, shown(document.lines[fence.closing].strip())), check, (FORM,))
+        end = len(document.lines) if fence.closing is None else fence.closing
+        for index in range(fence.opening + 1, end):
+            # `instruction-files/check_instructions.py` splits a file as `splitlines` does, at a
+            # carriage return, a separator or a next-line character too, so a line is read in the
+            # pieces that script reads.
+            for piece in document.lines[index].splitlines():
+                text = piece.lstrip()
+                if text.startswith(INNER_FENCES):
+                    report.error(index + 1, "the line inside the test case opened at line %d "
+                                            "starts with `%s`, which opens a fence: the text of a "
+                                            "test case holds no line that starts, after any "
+                                            "leading whitespace, with three backticks or three "
+                                            "tildes" % (line, text[:3]), check, (FORM,))
+                    break
+    at = fields[INVARIANT][1]
+    for identifier in required:
+        for which in CASE_KINDS:
+            if (which, identifier) not in seen:
+                report.error(at, "the rule %s names the invariant `%s` in *%s* but gives no "
+                                 "`%s %s <path>` case after its fields: a rule gives a good and "
+                                 "a bad case of each invariant it names other than `%s`"
+                             % (name, shown(identifier), INVARIANT, which, shown(identifier),
+                                FORM_IDENTIFIER), check, (FORM,))
 
 
 def table_cells(line):
@@ -1318,6 +1491,7 @@ def check_file(name, text, context, report):
             and name[:-len(".md")].startswith("%s-" % discipline) else named)
     sections = check_sections(document, form, report, foundation)
     rules = check_rules(document, sections, form, report, shared, foundation)
+    check_cases(document, sections, report, shared, foundation)
     tables = check_tables(document, sections, form, report)
     check_roles(tables, rules, form, report, foundation)
     if form.statuses:

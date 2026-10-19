@@ -145,6 +145,11 @@ def as_observability(text):
     return text.replace("- **Discipline:** testing", "- **Discipline:** observability")
 
 
+# A good and a bad case of `fixture-named`, for a rule of TESTING that names it (WAY-168).
+FIXTURE_CASES = ("```good fixture-named tests/test_player.py\n"
+                 "def test_player(player_fixture):\n    assert player_fixture\n```\n\n"
+                 "```bad fixture-named tests/test_player.py\n"
+                 "def test_player():\n    assert {}\n```\n\n")
 NO_GOOD = TESTING.replace("- **Good:** a test sets up its player through the fixtures.\n", "")
 ELSEWHERE = TESTING.replace("- **Applies to:** web", "- **Applies to:** mobile")
 
@@ -983,6 +988,385 @@ class FilesOfAKind(Watched):
                                 output[-2000:])
 
 
+# The test cases of the rule of the file of a kind (WAY-168): the pair of `endpoint-handler`, as
+# CODING_ENDPOINT holds it, and a second invariant and the product's `guidelines-form`, which a
+# rule may name beside it.
+LOCATION = "Every file of the kind endpoint lies under the directory src/api."
+LOCATION_FP = "f58796ac"
+GUIDELINES_FORM = (
+    "Every file `guidelines/<name>.md` holds, in their order, the header lines, sections, rules, "
+    "rule fields and tables that the template of guidelines and the template of its discipline "
+    "require at the commit of the-way the repository uses — the commit checked, in the-way itself, "
+    "and the pinned commit, in a product — each with the values and the links those templates give "
+    "it, with a name that agrees with its *Discipline*, each section or rule it drops reading "
+    "`none —` with a decision of the log and that decision's fingerprint, each part it names being "
+    "a part of the map, and each path under `## Where in code` naming something git tracks.")
+GUIDELINES_FORM_FP = "7196030f"
+
+
+def invariant_entry(identifier, sentence):
+    """An entry of the invariants file, deriving from the exemplar's decision."""
+    return ("## %s/1\n\n%s\n\n- **Method:** `python -B tests/check.py`\n- **Rests on:** none\n"
+            "- **Derives from:** ABC-06@%s\n- **Part:** web\n- **Correction:** none\n\n"
+            % (identifier, sentence, EXEMPLAR_FP))
+
+
+CASES_INVARIANTS = replaced(CODING_INVARIANTS, "## Withdrawn identifiers",
+                            invariant_entry("endpoint-location", LOCATION)
+                            + invariant_entry("guidelines-form", GUIDELINES_FORM)
+                            + "## Withdrawn identifiers")
+INVARIANT_FIELD = "- **Invariant:** endpoint-handler@8c2ca199"
+GOOD_OPEN = "```good endpoint-handler src/api/carts.ts"
+GOOD_TEXT = ('import { handle } from "./handler";',
+             "export const POST = handle((input: unknown) => input);")
+GOOD_CASE = "\n".join((GOOD_OPEN,) + GOOD_TEXT + ("```",))
+BAD_OPEN = "```bad endpoint-handler src/api/carts.ts"
+BAD_CASE = "\n".join([BAD_OPEN, "export const POST = (input: unknown) => input;", "```"])
+CASES = GOOD_CASE + "\n\n" + BAD_CASE + "\n\n"
+OPEN_LINE = line_of(CODING_ENDPOINT, GOOD_OPEN)
+CHECK_CASES = "product-guidelines/form_check.py::check_cases"
+
+
+def pair(identifier, path="src/api/carts.ts"):
+    """A good and a bad case of the invariant `identifier`, each followed by a blank line."""
+    return ("```good %s %s\nexport {};\n```\n\n```bad %s %s\nexport const x = 1;\n```\n\n"
+            % (identifier, path, identifier, path))
+
+
+class TestCases(Watched):
+    """The test cases of every rule whose *Invariant* names an invariant other than
+    `guidelines-form`: a good and a bad case of each such invariant after the rule's fields, each
+    a fenced block of three backticks whose info string reads `good|bad <identifier> <path>`
+    (WAY-168, spec §5.2 item 5), read with crafted fences, info strings and paths (WAY-48)."""
+
+    def endpoint(self, text, invariants=CASES_INVARIANTS):
+        """Exit code, output and record of the check run on the coding guidelines, the file of a
+        kind reading `text` and the invariants file `invariants`."""
+        self.product(dict(CODING_FILES, **{"guidelines/coding-endpoint.md": text,
+                                           "foundations/invariants.md": invariants}))
+        return self.run_check()
+
+    def at(self, output, line, fragment=""):
+        """The messages of the errors the file of a kind reports at `line` holding `fragment`."""
+        return [message for at, message in self.errors(output, "guidelines/coding-endpoint.md")
+                if at == line and fragment in message]
+
+    def missing(self, output, which, identifier="endpoint-handler"):
+        """The messages reporting that the rule gives no `which` case of `identifier`."""
+        return [message for _, message in self.errors(output, "guidelines/coding-endpoint.md")
+                if "no `%s %s <path>`" % (which, identifier) in message]
+
+    def run_sealed(self):
+        """As run_watched, with every path the run gives `os.open`, `os.lstat`, `os.stat` or
+        `open` recorded too: (exit code, output, git's arguments, paths opened, seconds)."""
+        opened, real_open = [], open
+        real = {name: getattr(os, name) for name in ("open", "lstat", "stat")}
+
+        def watching(name):
+            def wrapper(path, *rest, **keywords):
+                opened.append(os.fsdecode(path) if isinstance(path, (str, bytes)) else str(path))
+                return real[name](path, *rest, **keywords)
+            return wrapper
+
+        def opening(path, *rest, **keywords):
+            opened.append(os.fsdecode(path) if isinstance(path, (str, bytes)) else str(path))
+            return real_open(path, *rest, **keywords)
+
+        with mock.patch.object(os, "open", watching("open")), \
+                mock.patch.object(os, "lstat", watching("lstat")), \
+                mock.patch.object(os, "stat", watching("stat")), \
+                mock.patch("builtins.open", opening):
+            code, output, calls, elapsed = self.run_watched()
+        return code, output, calls, opened, elapsed
+
+    def assert_sealed(self, paths, calls, opened):
+        """No path of `paths` reached git or the file system, and both were asked something."""
+        self.assert_unseen(paths, calls)
+        self.assertTrue([path for path in opened if "guidelines" in path], opened[:20])
+        for path in paths:
+            self.assertFalse([each for each in opened if path in each],
+                             "%r was opened or looked at" % path[:80])
+
+    def test_the_cases_of_the_valid_file_pass_and_are_recorded(self):
+        """Break caught: the check of test cases recorded under no check of its own, or failing
+        a rule that gives its pair, so the valid coding guidelines never pass."""
+        code, output, lines = self.endpoint(CODING_ENDPOINT)
+        self.assertEqual(code, 0, output)
+        self.assertIn("pass", [line["verdict"] for line in lines
+                               if line["check"] == CHECK_CASES and line["invariant"] == FORM])
+
+    def test_a_rule_naming_an_invariant_with_no_case_is_an_error(self):
+        """Break caught: a rule naming an invariant passing without its good case, its bad case
+        or both, so its *Good* and *Bad* stay descriptions no gate can apply (WAY-168)."""
+        for name, old, gone in (("no case", CASES, ("good", "bad")),
+                                ("no good case", GOOD_CASE + "\n\n", ("good",)),
+                                ("no bad case", BAD_CASE + "\n\n", ("bad",))):
+            with self.subTest(name):
+                self.setUp()
+                text = replaced(CODING_ENDPOINT, old, "")
+                code, output, lines = self.endpoint(text)
+                self.assertEqual(code, 1, output)
+                for which in ("good", "bad"):
+                    reported = [message for message in self.missing(output, which)
+                                if message in self.at(output, line_of(text, INVARIANT_FIELD))]
+                    self.assertEqual(bool(reported), which in gone, output)
+                self.assertIn("fail", [line["verdict"] for line in lines
+                                       if line["check"] == CHECK_CASES
+                                       and line["invariant"] == FORM], lines)
+
+    def test_a_case_left_open_to_the_end_of_the_file_is_an_error_at_its_opening_line(self):
+        """Break caught: a case never closed taken as a case holding the rest of the file, so the
+        sections it swallows go unread and the case counts (spec §5.2 item 5)."""
+        text = replaced(CODING_ENDPOINT, BAD_CASE, BAD_CASE[:-len("\n```")])
+        code, output, _ = self.endpoint(text)
+        self.assertEqual(code, 1, output)
+        self.assertTrue(self.at(output, line_of(text, BAD_OPEN), "open to the end"), output)
+
+    def test_a_tilde_fence_or_four_backticks_opening_a_case_is_a_malformed_case(self):
+        """Break caught: a case's info string read from a fence other than three backticks, which
+        the template gives as its outer fence, so a tilde fence counts as the case."""
+        for name, case in (("tildes", BAD_CASE.replace("```", "~~~")),
+                           ("four backticks", BAD_CASE.replace("```", "````"))):
+            with self.subTest(name):
+                self.setUp()
+                text = replaced(CODING_ENDPOINT, BAD_CASE, case)
+                code, output, _ = self.endpoint(text)
+                self.assertEqual(code, 1, output)
+                self.assertTrue(self.at(output, line_of(text, case.split("\n")[0]),
+                                        "malformed test case"), output)
+                self.assertTrue(self.missing(output, "bad"), output)
+
+    def test_a_fence_of_four_backticks_closing_a_case_is_an_error_at_that_line(self):
+        """Break caught: a case closed by a fence other than three backticks passing, though the
+        template gives three backticks as the outer fence of a case."""
+        text = replaced(CODING_ENDPOINT, GOOD_CASE, GOOD_CASE + "`")
+        code, output, _ = self.endpoint(text)
+        self.assertEqual(code, 1, output)
+        self.assertTrue(self.at(output, line_of(text, "````"), "three backticks"), output)
+        self.assertFalse(self.missing(output, "good"), output)
+
+    def test_a_line_inside_a_case_that_would_open_a_fence_is_an_error_at_that_line(self):
+        """Breaks caught: a line starting with three tildes, or three backticks followed by text,
+        passing inside a case; or one indented by four spaces or more, a tab or a no-break space
+        passing because Markdown would read no fence there, though
+        `instruction-files/check_instructions.py` toggles code after any leading whitespace (C33).
+        The case itself still counts."""
+        for fence in ("~~~", "~~~ts", "```ts", "   ```ts", "    ```", "        ~~~ts", "\t```ts",
+                      "  ~~~", " ```ts"):
+            with self.subTest(fence=fence):
+                self.setUp()
+                case = "\n".join((GOOD_OPEN, GOOD_TEXT[0], fence, GOOD_TEXT[1], "```"))
+                text = replaced(CODING_ENDPOINT, GOOD_CASE, case)
+                code, output, _ = self.endpoint(text)
+                self.assertEqual(code, 1, output)
+                self.assertTrue(self.at(output, line_of(text, fence), "opens a fence"), output)
+                self.assertFalse(self.missing(output, "good"), output)
+
+    def test_a_fence_after_a_line_break_python_splits_lines_on_inside_a_case_is_an_error(self):
+        """Break caught: a line inside a case read whole where
+        `instruction-files/check_instructions.py`, which splits lines as Python's `splitlines`
+        does, sees two — after a carriage return, a line or paragraph separator, a next-line
+        character, a vertical tab, a form feed or a file separator — the second starting with a
+        fence on which that script switches between code and text (C33)."""
+        for name, mark in (("carriage return", "\r"), ("line separator", " "),
+                           ("paragraph separator", " "), ("next line", "\x85"),
+                           ("vertical tab", "\x0b"), ("form feed", "\x0c"),
+                           ("file separator", "\x1c")):
+            with self.subTest(name):
+                self.setUp()
+                inner = GOOD_TEXT[0] + mark + "  ~~~ts"
+                case = "\n".join((GOOD_OPEN, inner, GOOD_TEXT[1], "```"))
+                text = replaced(CODING_ENDPOINT, GOOD_CASE, case)
+                code, output, _ = self.endpoint(text)
+                self.assertEqual(code, 1, output)
+                self.assertTrue(self.at(output, line_of(text, inner), "opens a fence"), output)
+
+    def test_a_bare_fence_inside_a_good_case_is_a_malformed_case_at_its_former_closing_fence(self):
+        """Break caught (C21): a bare line of three backticks inside a case read as anything but
+        the case's end, so the case's own closing line, which then opens a block with no info
+        string, goes unreported; the shortened case still counts as the good case."""
+        case = "\n".join((GOOD_OPEN, GOOD_TEXT[0], "```", GOOD_TEXT[1], "```"))
+        text = replaced(CODING_ENDPOINT, GOOD_CASE, case)
+        code, output, _ = self.endpoint(text)
+        self.assertEqual(code, 1, output)
+        self.assertTrue(self.at(output, line_of(text, GOOD_TEXT[1]) + 1, "malformed test case"),
+                        output)
+        self.assertFalse(self.missing(output, "good"), output)
+
+    def test_an_info_string_of_another_form_is_a_malformed_case_at_its_opening_line(self):
+        """Breaks caught: an info string with no identifier or no path, two spaces or two paths,
+        a word other than `good` or `bad` in its case, an identifier that is no identifier, or
+        none at all, taken for a case, so a block no gate can apply counts."""
+        for opening in ("```good", "```good endpoint-handler",
+                        "```good endpoint-handler  src/api/carts.ts src/api/users.ts",
+                        "```good endpoint-handler src/api/carts.ts src/api/users.ts",
+                        "```GOOD endpoint-handler src/api/carts.ts",
+                        "```good Endpoint-handler src/api/carts.ts",
+                        "```sample endpoint-handler src/api/carts.ts", "```ts", "```"):
+            with self.subTest(opening=opening):
+                self.setUp()
+                text = replaced(CODING_ENDPOINT, GOOD_OPEN, opening)
+                code, output, _ = self.endpoint(text)
+                self.assertEqual(code, 1, output)
+                self.assertTrue(self.at(output, OPEN_LINE, "malformed test case"), output)
+                self.assertTrue(self.missing(output, "good"), output)
+
+    def test_an_info_string_on_a_closing_fence_is_a_line_that_opens_a_fence(self):
+        """Break caught: an info string read from the line meant to close a case, which closes
+        nothing, so the case runs on and a second case is taken from its end."""
+        closing = "```good endpoint-handler src/api/elsewhere.ts"
+        text = replaced(CODING_ENDPOINT, GOOD_CASE, GOOD_CASE[:-len("```")] + closing)
+        code, output, _ = self.endpoint(text)
+        self.assertEqual(code, 1, output)
+        self.assertTrue(self.at(output, line_of(text, closing), "opens a fence"), output)
+
+    def test_a_case_naming_an_invariant_the_rule_does_not_name_is_an_error(self):
+        """Break caught: a case counted whatever invariant it names, so a pair for an invariant
+        of the file, for one the file does not hold, or for `guidelines-form` passes beside a
+        rule that names none of them."""
+        for identifier in ("endpoint-location", "lint-clean", "guidelines-form"):
+            with self.subTest(identifier=identifier):
+                self.setUp()
+                text = replaced(CODING_ENDPOINT, CASES, CASES + pair(identifier))
+                code, output, _ = self.endpoint(text)
+                self.assertEqual(code, 1, output)
+                self.assertTrue(self.at(output, line_of(text, "```good %s src/api/carts.ts"
+                                                        % identifier), "does not name"), output)
+
+    def test_a_rule_naming_two_invariants_with_the_pair_of_one_only_is_an_error(self):
+        """Break caught: a rule naming two invariants passing on the pair of the first, so the
+        second has no case (C18); its control, with both pairs, passes."""
+        two = "- **Invariant:** endpoint-handler@8c2ca199 · endpoint-location@" + LOCATION_FP
+        text = replaced(CODING_ENDPOINT, INVARIANT_FIELD, two)
+        code, output, _ = self.endpoint(text)
+        self.assertEqual(code, 1, output)
+        for which in ("good", "bad"):
+            self.assertTrue([message for message in self.missing(output, which,
+                                                                 "endpoint-location")
+                             if message in self.at(output, line_of(text, two))], output)
+            self.assertFalse(self.missing(output, which), output)
+        self.setUp()
+        code, output, _ = self.endpoint(replaced(text, CASES, CASES + pair("endpoint-location")))
+        self.assertEqual(code, 0, output)
+
+    def test_a_second_case_of_one_kind_is_an_error_at_its_opening_line(self):
+        """Break caught: a second good case of the same invariant passing, so the gate cannot
+        tell which file the rule gives."""
+        second = GOOD_CASE.replace("src/api/carts.ts", "src/api/baskets.ts")
+        text = replaced(CODING_ENDPOINT, CASES, CASES + second + "\n\n")
+        code, output, _ = self.endpoint(text)
+        self.assertEqual(code, 1, output)
+        self.assertTrue(self.at(output, line_of(text, second.split("\n")[0]),
+                                "line %d" % OPEN_LINE), output)
+
+    def test_a_block_before_the_rule_s_fields_end_is_a_malformed_case(self):
+        """Break caught: a case standing among the rule's fields counted, though the cases stand
+        after them."""
+        text = replaced(CODING_ENDPOINT, CASES, "")
+        text = replaced(text, INVARIANT_FIELD, GOOD_CASE + "\n" + INVARIANT_FIELD)
+        code, output, _ = self.endpoint(text)
+        self.assertEqual(code, 1, output)
+        self.assertTrue(self.at(output, line_of(text, GOOD_OPEN), "malformed test case"), output)
+
+    def test_a_rule_naming_guidelines_form_needs_no_case_and_takes_none_of_it(self):
+        """Breaks caught: a rule naming the product's `guidelines-form` alone asked for cases,
+        or its fenced blocks read as cases although no case of it is given (C11); a rule naming
+        it beside another invariant asked for its cases, or passing a pair of it."""
+        alone = "- **Invariant:** guidelines-form@" + GUIDELINES_FORM_FP
+        beside = ("- **Invariant:** guidelines-form@%s · endpoint-handler@8c2ca199"
+                  % GUIDELINES_FORM_FP)
+        clean = (("alone, with no block", replaced(replaced(CODING_ENDPOINT, CASES, ""),
+                                                    INVARIANT_FIELD, alone)),
+                 ("alone, with blocks", replaced(replaced(CODING_ENDPOINT, CASES,
+                                                          pair("guidelines-form",
+                                                               "guidelines/coding-x.md")),
+                                                 INVARIANT_FIELD, alone)),
+                 ("beside another, with its pair", replaced(CODING_ENDPOINT, INVARIANT_FIELD,
+                                                            beside)))
+        for name, text in clean:
+            with self.subTest(name):
+                self.setUp()
+                code, output, _ = self.endpoint(text)
+                self.assertEqual(code, 0, output)
+                self.assertNotIn(": error:", output)
+        with self.subTest("beside another, with a pair of it"):
+            self.setUp()
+            text = replaced(replaced(CODING_ENDPOINT, INVARIANT_FIELD, beside), CASES,
+                            CASES + pair("guidelines-form", "guidelines/coding-x.md"))
+            code, output, _ = self.endpoint(text)
+            self.assertEqual(code, 1, output)
+            self.assertTrue(self.at(output, line_of(text, "```good guidelines-form "
+                                                    "guidelines/coding-x.md"),
+                                    "guidelines-form"), output)
+
+    def test_a_crafted_case_path_is_refused_and_never_reaches_git_or_the_file_system(self):
+        """Breaks caught: a case path outside the repository passing — absolute, a UNC prefix, a
+        `..` segment, a backslash, a drive, a character that is not printable, pathspec magic —
+        or any case path, refused or not, given to git, opened or looked at; a socket opened; or
+        matching that runs away on a path of 200 KiB, which, relative, names a file not yet
+        written and passes."""
+        for what, path in crafted("src/api/carts.ts") + (("the valid path", "src/api/carts.ts"),):
+            with self.subTest(what):
+                self.setUp()
+                text = replaced(CODING_ENDPOINT, GOOD_OPEN,
+                                "```good endpoint-handler " + path)
+                self.product(dict(CODING_FILES, **{"guidelines/coding-endpoint.md": text,
+                                                   "foundations/invariants.md": CASES_INVARIANTS}))
+                code, output, calls, opened, elapsed = self.run_sealed()
+                self.assertLess(elapsed, 30, "the run took %.1f s" % elapsed)
+                allowed = what in ("200 KiB", "the valid path")
+                self.assertEqual(code, 0 if allowed else 1, output[-2000:])
+                self.assertEqual(bool(self.at(output, OPEN_LINE, "path")), not allowed,
+                                 output[-2000:])
+                self.assert_sealed([path, "src/api/carts.ts"], calls, opened)
+
+    def test_an_info_string_of_one_mebibyte_finishes_within_a_bound(self):
+        """Break caught: reading a crafted info string that runs away, or printing it whole: a
+        path of nearly one MiB, which names a file not yet written and passes unopened, and an
+        identifier of nearly one MiB, which the rule does not name and is printed cut."""
+        for name in ("path", "identifier"):
+            with self.subTest(name):
+                self.setUp()
+                head = replaced(CODING_ENDPOINT, GOOD_OPEN, "\0").encode("utf-8")
+                room = LIMIT - len(head) - 64
+                opening = ("```good endpoint-handler src/" + "a" * room if name == "path"
+                           else "```good " + "a" * room + " src/api/carts.ts")
+                data = head.replace(b"\0", opening.encode("utf-8"))
+                self.assertLess(len(data), LIMIT)
+                self.product(dict(CODING_FILES, **{"guidelines/coding-endpoint.md": data,
+                                                   "foundations/invariants.md": CASES_INVARIANTS}))
+                code, output, calls, opened, elapsed = self.run_sealed()
+                self.assertLess(elapsed, 30, "the run took %.1f s" % elapsed)
+                self.assertLess(len(output), 20000)
+                if name == "path":
+                    self.assertEqual(code, 0, output[-2000:])
+                    self.assert_sealed(["a" * 100], calls, opened)
+                else:
+                    self.assertEqual(code, 1, output[-2000:])
+                    self.assertTrue(self.at(output, OPEN_LINE, "does not name"), output[-2000:])
+
+    def test_a_file_of_cases_just_over_one_mebibyte_is_refused_unread(self):
+        """Break caught: a file of guidelines over the limit read for its cases, so a crafted
+        file of cases costs what it likes and its paths are seen (WAY-48)."""
+        padding = "// " + "x" * 100
+        head = replaced(CODING_ENDPOINT, GOOD_CASE, "\n".join(
+            (GOOD_OPEN, GOOD_TEXT[0], "\0", GOOD_TEXT[1], "```"))).encode("utf-8")
+        room = LIMIT + 1 - (len(head) - 1)
+        lines = "\n".join([padding] * (room // (len(padding) + 1)))
+        body = (lines + "\n" + "x" * (room - len(lines) - 1)).encode("utf-8")
+        data = head.replace(b"\0", body)
+        self.assertEqual(len(data), LIMIT + 1)
+        self.product(dict(CODING_FILES, **{"guidelines/coding-endpoint.md": data,
+                                           "foundations/invariants.md": CASES_INVARIANTS}))
+        code, output, calls, opened, elapsed = self.run_sealed()
+        self.assertEqual(code, 1, output[-2000:])
+        self.assertTrue([message for _, message in self.errors(output,
+                                                               "guidelines/coding-endpoint.md")
+                         if "holds more than 1048576 bytes; it is not read" in message], output)
+        self.assertFalse(self.missing(output, "good"), output)
+        self.assert_sealed(["src/api/carts.ts"], calls, opened)
+
+
 class Paths(Case):
     def test_a_path_refused_for_its_form_whose_remainder_git_tracks_is_an_error(self):
         """Break caught: the guard against an absolute path, or a `..` segment, dropped, so
@@ -1151,9 +1535,12 @@ class References(Case):
         for name, carried, onto, branch, expected in cases:
             with self.subTest(name):
                 self.setUp()
-                self.product_onto({"guidelines/testing.md": with_line(
-                    TESTING, INVARIANT_LINE, cited % carried)}, onto, branch,
-                    base={"foundations/invariants.md": invariants_with(NAMED)})
+                # The rule names `fixture-named`, so it gives a good and a bad case of it.
+                text = replaced(with_line(TESTING, INVARIANT_LINE, cited % carried),
+                                "fixtures.\n\n## Examples", "fixtures.\n\n" + FIXTURE_CASES
+                                + "## Examples")
+                self.product_onto({"guidelines/testing.md": text}, onto, branch,
+                                  base={"foundations/invariants.md": invariants_with(NAMED)})
                 code, output, lines = self.run_check("--merge-onto", "onto")
                 errors = self.errors(output, "guidelines/testing.md")
                 if expected is None:
