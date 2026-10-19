@@ -87,6 +87,10 @@ human acceptance of the complete task, even when refinement finds no candidate s
   project member, update its plan through the owning workflow before refining either new item;
   for another task, ask which item to refine first. Read product files to answer factual
   questions before asking the human.
+- Read and apply `product-guidelines/reading.md` to this task's required behaviour, even before
+  its files exist (WAY-214). Record the affected parts and evidence, selected paths and reasons
+  in Context; read the selected guidelines whole. Carry gaps and uncertain classifications to
+  step 3, and refresh this reading when clarification changes the scope or its sources.
 
 ## 2. Draft from what is known
 
@@ -132,6 +136,30 @@ human acceptance of the complete task, even when refinement finds no candidate s
   `<the-way>/foundations/decisions.md`. Where it has none or an item is missing, add an item to
   *To do* for that work and offer the human to split it into a task of its own, which step 1
   then handles (WAY-139). A task with no such outcome takes no check.
+- Resolve the shared guideline reading's findings by their kind (WAY-215, WAY-216):
+  - Missing discipline guidelines keep this task `waiting for human`, with a named question
+    in *Questions to settle* awaiting a separate guidelines task's merge, even in a product
+    with screens or code. Continue refinement independent of that answer. A scoped departure
+    applies only where the shared reading establishes it; the task writing the missing
+    guidelines does not wait for itself.
+  - For an independent or source-only task, propose the prerequisite and, after human approval,
+    add its task to the product backlog using step 1's document conventions. For a plan member,
+    return `plan change` if the plan lacks it, or `waits for task <n>` for the named question if
+    the plan holds it; the owning project workflow writes the plan. The task document's
+    `waiting for human` does not set the plan row's state: preserve the question-specific waiting
+    rules, which may leave that row `to refine`.
+  - After the prerequisite merges, resume here, read its guidelines and settle the meanings
+    this task needs under WAY-172 before step 6's complete-document acceptance. Adding the
+    dependency alone gives no readiness. Use `maintain-styleguide` or
+    `maintain-coding-guidelines` for their matters of refinement.
+  - Keep extension or correction of existing guidelines in this task, including a coding file
+    whose *Applies to* omits the affected part, unless the human separates the work. Settle new
+    meanings and exemplar changes through those discipline skills under WAY-172 and WAY-199.
+  - For a genuinely first unindexed kind, add to *To do* designation of its first file as
+    exemplar, its kind guidelines and the general index row through
+    `maintain-coding-guidelines`, without a separate exemplar wait. Existing unindexed files
+    instead need the comparison WAY-200 requires; record the discrepancy and route that work
+    within this task's scope and, for a plan member, its plan boundary.
 
 ## 4. Carry the foundation decisions
 
@@ -174,6 +202,9 @@ human acceptance of the complete task, even when refinement finds no candidate s
   check its plan item and assignments; for any task using approved project settlements, check
   the definition's approval and that every projected entry its code makes true is marked with the
   part made true. Report an obstacle instead of declaring readiness when a check fails.
+- Recheck the guideline selection against the final scope and sources. A missing-discipline
+  question still awaiting its task's merge, or unresolved classification or metadata, prevents
+  readiness; a recorded dependency or an empty selection does not answer it.
 - Once these checks pass, show the complete final document and explicitly ask the human to accept
   that document, then wait. Acceptance of candidates, Human-action placement or an earlier draft
   is not this acceptance. Keep `Status: waiting for human` until it is given, including a task

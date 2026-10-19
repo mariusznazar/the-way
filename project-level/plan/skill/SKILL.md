@@ -70,6 +70,9 @@ read all turns and the requested change, and follow this workflow with these rou
   The complete part map's *Depends on* tells which work has to come first.
 - Read the product's files only as far as the cut needs: what is already there, so that no task
   puts in place what exists.
+- Read and apply `product-guidelines/reading.md` to the approved scope (WAY-218). Record its
+  affected parts, selected files and reasons, gaps and questions in the working evidence; read
+  the selected guidelines whole. Refresh this reading if the cut or its sources change.
 
 ## Reading the definition and plan
 
@@ -107,6 +110,15 @@ reduced copy. Selection is no reading cap; read a small file whole where useful.
   chooses nothing else (WAY-13).
 - Bring a technical element in with the first task that uses it. Write a preparatory task only for
   work that task cannot start without, and make that task depend on it (WAY-143).
+- For each missing styleguide or general coding file found by the shared reading, place a
+  guidelines task before its consumers and make them depend on it; reuse an adequate task the
+  plan already holds. Respect scoped departures and the guidelines-writing task's exemption.
+  Assign a genuinely first kind's exemplar, kind guidelines and index row to the task creating
+  its first file, not to a separate prerequisite; an existing unindexed kind needs WAY-200's
+  comparison through `maintain-coding-guidelines`. Keep extensions of existing guidelines with
+  their consuming task unless the human separates them. Follow step 5 for questions or work
+  beyond the approved definition, never silently enlarge it. Refinement checks these findings
+  again and waits for a prerequisite's merge only where its question needs that result.
 - Give each task its number, its name and its goal in the definition's language, the tasks it
   depends on and the items of In scope it delivers, as the template gives them (WAY-147, WAY-144).
   Every task of a new plan reads `to refine`.

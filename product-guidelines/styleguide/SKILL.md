@@ -28,7 +28,9 @@ below describe it in their own words.
 It runs inside the refinement of one task whose outcome is a styleguide, a task the product's
 backlog holds or one opened for it (WAY-107). `refine-task` opens or resumes the task through its
 steps 1 and 2; this skill takes over at its step 3 for the styleguide's matters and hands back to
-its step 4. Neither `refine-task` nor the task cycle changes for it.
+its step 4. Refinement and the task cycle find applicable and missing guidelines through
+`product-guidelines/reading.md`; this skill owns settling their styleguide meanings. The task
+writing a missing styleguide does not wait for its own output (WAY-215).
 
 | | This skill, in the refinement | The cycle's author, in `implement-task` |
 |---|---|---|

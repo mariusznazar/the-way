@@ -103,7 +103,7 @@ refinement and evidence-backed upkeep of task states.
 
 - **Files:** project-level/**
 - **Depends on:** decisions · invariants · glossary · part-map · environment-facts ·
-  elements-common · relation-model
+  elements-common · relation-model · product-guidelines
 - **Failure modes:**
   - the gate accepts an unresolved placeholder in a required section — tasks inherit an explicit
     gap as project scope or a future foundation rule — high — detected by project-readiness-gate
@@ -261,7 +261,8 @@ The part answers for preparing a product repository to use one pinned commit of 
 ## product-guidelines
 
 The part answers for the form every product's guidelines share, for the template of each discipline
-of guidelines with the skill that leads the work on them, and for the form check of guidelines.
+of guidelines with the skill that leads the work on them, for the shared reading that selects
+guidelines for a change and recognizes what is missing, and for the form check of guidelines.
 
 - **Files:** product-guidelines/**
 - **Depends on:** decisions · invariants · glossary · part-map · environment-facts ·

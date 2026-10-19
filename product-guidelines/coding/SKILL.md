@@ -29,8 +29,11 @@ It runs inside the refinement of one task whose outcome is coding guidelines —
 or extended — or the exemplar of a kind of code, a task the product's backlog holds or one opened
 for it (WAY-107). `refine-task` opens or resumes the task through its steps 1 and 2; this skill
 takes over at its step 3 for the matters of the coding guidelines and hands back to its step 4.
-Neither `refine-task` nor the task cycle changes for it. A product that pinned the-way before this
-skill existed reaches it once a task moves the pin, as `installation/README.md` gives it.
+Refinement and the task cycle find applicable and missing guidelines through
+`product-guidelines/reading.md`; this skill owns settling their coding-guideline meanings. The
+task writing the missing general file does not wait for its own output (WAY-215). A product that
+pinned the-way before this skill existed reaches it once a task moves the pin, as
+`installation/README.md` gives it.
 
 | | This skill, in the refinement | The cycle's author, in `implement-task` |
 |---|---|---|
