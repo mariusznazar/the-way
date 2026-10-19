@@ -1406,6 +1406,40 @@ class ExampleFiles(FormCheckTestCase):
             with self.subTest(name):
                 self.assert_clean(self.check({STYLEGUIDE_FILE: text}, ()))
 
+    def test_a_rule_naming_guidelines_form_beside_another_without_the_others_cases_is_reported(
+            self):
+        """The exemption reaches `guidelines-form` alone: a rule whose *Invariant* names it beside
+        another invariant still gives, for that other, exactly one good and one bad case, wherever
+        `guidelines-form` stands in the field."""
+        # invariant: guidelines-check-example-files/1
+        pair_good = BACKGROUND_CASES[:BACKGROUND_CASES.index("```bad")]
+        pair_bad = BACKGROUND_CASES[BACKGROUND_CASES.index("```bad"):]
+        styleguide = with_line(STYLEGUIDE, 40, "- **Invariant:** background-pair@" + PAIR_FP,
+                               "- **Invariant:** guidelines-form@%s · background-pair@%s"
+                               % (GUIDELINES_FORM_FP, PAIR_FP))
+        styleguide_after = with_line(STYLEGUIDE, 40, "- **Invariant:** background-pair@" + PAIR_FP,
+                                     "- **Invariant:** background-pair@%s · guidelines-form@%s"
+                                     % (PAIR_FP, GUIDELINES_FORM_FP))
+        endpoint = replaced(CODING_ENDPOINT, "- **Invariant:** endpoint-validates@" + VALIDATES_FP,
+                            "- **Invariant:** guidelines-form@%s · endpoint-validates@%s"
+                            % (GUIDELINES_FORM_FP, VALIDATES_FP))
+        cases = (
+            ("a styleguide's rule with no case of the other", STYLEGUIDE_FILE,
+             replaced(styleguide, BACKGROUND_CASES, "")),
+            ("a styleguide's rule with no good case of the other", STYLEGUIDE_FILE,
+             replaced(styleguide, pair_good, "")),
+            ("a styleguide's rule with no bad case of the other", STYLEGUIDE_FILE,
+             replaced(styleguide, pair_bad, "")),
+            ("guidelines-form named second, no case of the other", STYLEGUIDE_FILE,
+             replaced(styleguide_after, BACKGROUND_CASES, "")),
+            ("a coding rule with no case of the other", CODING_ENDPOINT_FILE,
+             replaced(endpoint, VALIDATES_GOOD + VALIDATES_BAD, "")),
+        )
+        for name, path, text in cases:
+            with self.subTest(name):
+                files = dict(CODING_FILES, **{path: text})
+                self.assert_reported_anew(self.check(files, ()), path)
+
 
 if __name__ == "__main__":
     unittest.main()
