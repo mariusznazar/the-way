@@ -156,8 +156,9 @@ task branch, and keep the records of both searches with the change (WAY-33).
    round, each with a proposed answer`).
 2. Show the whole entry with what the skill adds beside it, and one sentence of its meaning in the
    human's language. Write it on your recommendation; ask before writing only where you have no
-   recommendation or the entry would change the meaning of an approved decision. The human accepts
-   the meaning at the merge, or at the readiness gate for a projected entry (WAY-114).
+   recommendation or the entry would change the meaning of an approved decision beyond what the
+   approved task document or plan carries (WAY-30). The human accepts the meaning at the merge,
+   or at the readiness gate for a projected entry (WAY-114).
 3. Write the entry in its place in the file and run the element's format guard (WAY-09) from the
    product's repository root, `python -B <the element's directory>/format_guard.py`, with the
    arguments its `--help` gives for this file and for the commit the task branch left the main

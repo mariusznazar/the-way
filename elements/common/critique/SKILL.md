@@ -18,8 +18,9 @@ proposals added as consequences of earlier ones, and before presenting it to the
 One critic reads the whole set, not one proposal at a time.
 For a change to an invariant test or to the foundation, this critique is the change's independent
 assessment (WAY-10). Run it on a model other than the author's where one is available. Give it the
-diff and the files of the assessed commit — never the task's chronicle or the author's reasoning —
-and ask it to name what of the change can be cut, or that nothing can. In the task cycle its full
+diff and the files of the assessed commit — never the task's chronicle or the author's reasoning
+— commit messages included: name the assessed commits by hash only — and ask it to name what of
+the change can be cut, or that nothing can. In the task cycle its full
 report and the author's settlement go in the cycle record's `reports/`; outside the cycle, the
 assessment and the settlement of each remark go in short in the message of the commit that carries
 the change.
