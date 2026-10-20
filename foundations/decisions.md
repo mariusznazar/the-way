@@ -5518,14 +5518,17 @@ that checks their form, the use that follows the rule and the use that breaks it
 text of a file at a path of the product, and that invariant's method, run on the commit checked with
 the file added at that path or put in place of the file there, passes with the first and fails with
 the second, or, for an invariant on the list of violated invariants, adds no failure the commit does
-not already have with the first and adds one with the second. The two uses are run against that
-method only when a change adds or alters the invariant's sentence or rewrites either use, never on
-every run of the gate.
+not already have with the first and adds one with the second, except that under WAY-223's
+empty-history conditions the rule may hold one whole earlier-version file as
+`base <identifier> <path>` beside its `good` and `bad` files, all at the same path, for the separate
+prepared evidence. The two uses are run against that method only when a change adds or alters the
+invariant's sentence or rewrites either use or its prepared base, never on every run of the gate.
 
 - **Change:** new decision
 - **Scope:** product-guidelines, decisions, invariants, gate
 - **Based on:** none
-- **Relations:** derives from WAY-22@dcf291ea · derives from WAY-18@8c477ea2
+- **Relations:** derives from WAY-22@dcf291ea · derives from WAY-18@8c477ea2 · derives from
+  WAY-223@6df19670
 - **Verification:** level 1 — invariants: guidelines-check-carrier · guidelines-check-example-files
   · gate-guidelines-example-evidence. Level 2 for what a rule says, what stands as an example and
   when the uses are run — an agent compares the change with the decision:
@@ -5546,7 +5549,7 @@ every run of the gate.
     every use of every rule.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/28
 
 *Rationale:* guidelines do not replace the foundation's elements but bring what they hold to the
 work of one discipline: an agent changing a product's screens needs what to do and how, not an
@@ -5679,7 +5682,7 @@ of guidelines changes only with a decision of the-way and cites its number.
 - **Change:** new decision
 - **Scope:** product-guidelines
 - **Based on:** none
-- **Relations:** derives from WAY-168@dc4a98a1
+- **Relations:** derives from WAY-168@2a68d855
 - **Verification:** level 1 — invariants: guidelines-form · guidelines-check-form. Level 2 for the
   language of the text and the rules of the templates — an agent compares the change with the
   decision:
@@ -5768,7 +5771,7 @@ and the skill, never a product's screens directly.
 - **Change:** new decision
 - **Scope:** product-guidelines
 - **Based on:** none
-- **Relations:** derives from WAY-168@dc4a98a1 · derives from WAY-100@e7a74a18
+- **Relations:** derives from WAY-168@2a68d855 · derives from WAY-100@e7a74a18
 - **Verification:** level 2 — an agent compares the work with the decision:
   - complies: a product's styleguide names, at each rule the template requires, the product's
     decision adopting it; a simple admin panel's styleguide drops the page showing its components in
@@ -6294,7 +6297,7 @@ decision binds with no invariant.
 - **Change:** new decision
 - **Scope:** product-guidelines, invariants
 - **Based on:** none
-- **Relations:** narrows WAY-168@dc4a98a1 · derives from WAY-08@2343e09f
+- **Relations:** narrows WAY-168@2a68d855 · derives from WAY-08@2343e09f
 - **Verification:** level 1 — invariants: guidelines-check-carrier. Level 2 for the choice between a
   script and an agent — an agent compares the change with the decision:
   - complies: the rule against values written in place of design tokens names a script's invariant;
@@ -6468,7 +6471,7 @@ the template and the skill, never a product's code directly.
 - **Change:** new decision
 - **Scope:** product-guidelines
 - **Based on:** none
-- **Relations:** derives from WAY-168@dc4a98a1 · derives from WAY-100@e7a74a18
+- **Relations:** derives from WAY-168@2a68d855 · derives from WAY-100@e7a74a18
 - **Verification:** level 2 — an agent compares the work with the decision:
   - complies: a product's coding guidelines name, at each rule the template requires, the product's
     decision adopting it; a product with no dependencies of its own drops the audit of dependencies
@@ -6642,7 +6645,7 @@ its decision binds with no invariant.
 - **Change:** new decision
 - **Scope:** product-guidelines, invariants
 - **Based on:** none
-- **Relations:** narrows WAY-168@dc4a98a1 · derives from WAY-08@2343e09f
+- **Relations:** narrows WAY-168@2a68d855 · derives from WAY-08@2343e09f
 - **Verification:** level 1 — invariants: guidelines-check-carrier. Level 2 for the choice between a
   script and an agent — an agent compares the change with the decision:
   - complies: the rule that an endpoint validates its input as the exemplar does names a script's
@@ -6679,12 +6682,15 @@ in its place, so that the check is accepted only where both that use, as WAY-168
 deliberate break the reviewer of the code writes from the invariant's sentence make it fail. Until a
 gate of the-way reports for an invariant how its method meets the uses of the rules naming it, the
 reviewer who writes that deliberate break also runs the method with both uses wherever a change adds
-or alters the invariant's sentence or rewrites either use, and records what it gave with each.
+or alters the invariant's sentence or rewrites either use or its prepared base, and records what
+it gave with each, applying WAY-223's conditions separately to prepared guideline cases and to the
+reviewer's independently prepared earlier and later inputs for the deliberate break.
 
 - **Change:** new decision
 - **Scope:** product-guidelines, invariants, task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-168@dc4a98a1 · derives from WAY-69@7051f884
+- **Relations:** derives from WAY-168@2a68d855 · derives from WAY-69@7051f884 · derives from
+  WAY-223@6df19670
 - **Verification:** level 3 for who writes the use that breaks a rule — the human accepting the change
   at the merge assesses how the work was handed out, from the record that names who wrote what.
   Level 2 for what the check is accepted on — an agent compares the change with the decision:
@@ -6694,11 +6700,12 @@ or alters the invariant's sentence or rewrites either use, and records what it g
     exemplar, and records that the script fails on both and passes with the use that follows the rule;
   - violates: the author's use breaking the rule is recorded as the deliberate break, and the
     reviewer writes none; the author of the check writes the use breaking the rule from the check;
-    a change rewrites the use breaking a rule and nobody runs the check with it.
+    a change rewrites the use breaking a rule or its prepared base and nobody runs the check
+    with it; the reviewer reuses the author's prepared pair as the independent deliberate break.
 - **Review when:** a gate of the-way reports for an invariant how its method meets the uses of the
   rules that name it · check by: 2027-03-31
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/28
 
 *Rationale:* a use written by the author of the guidelines teaches the agent reading them what the
 rule forbids, while the reviewer's break is usually a small, artificial change from which a reader
@@ -7538,7 +7545,7 @@ no authority to regrade or discard a reviewer's finding.
 - **Change:** new decision
 - **Scope:** task-cycle, product-guidelines
 - **Based on:** none
-- **Relations:** derives from WAY-168@dc4a98a1 · derives from WAY-196@0e714a05 · derives from
+- **Relations:** derives from WAY-168@2a68d855 · derives from WAY-196@0e714a05 · derives from
   WAY-198@4dca82c6 · derives from WAY-161@cddc297e
 - **Verification:** level 2 — an agent compares a finding with the guideline and named consequence:
   - complies: a different internal arrangement is not blocking merely because the exemplar uses
@@ -7590,3 +7597,54 @@ material or adopting the lesson as a whole.
 *Rejected:* adoption inferred from the styleguide's adoption — the cycle's practices have no
 explicit authority of their own; the lesson taken whole — unrelated practices bind every product;
 private quotations or pointers in place of the reasoning — readers cannot assess them.
+
+### WAY-223/1 — How is a check accepted when the history it protects contains no elements yet?
+
+For a check preserving elements of an earlier version, acceptance evidence may use a prepared
+earlier version only after a successful read of the actual historical commit and all relevant data
+confirms an empty protected set that makes violation of that preservation clause impossible on the
+actual baseline; a nonempty set, unavailable history, invalid commit, failed read, parse error or
+`none` gives no such permission. The evidence runs the assessed commit's same check implementation
+and configuration in isolation, changing only the earlier and later input data through an explicit
+historical-input parameter, with a preserving later version passing and a violating later version
+failing for that preservation violation rather than a parsing failure or another rule, and records
+the actual assessed and historical commits, successful read and emptiness, reason for eligibility,
+prepared inputs, commands and outcomes separately from the Method's result on actual history,
+without redefining `{fork-point}` or replacing that result. The guideline author's prepared cases
+remain separate from the deliberate break: the code reviewer independently prepares its earlier
+and later inputs from the invariant's sentence under the same conditions, at the acceptance stage
+and with the rechecking after corrections the process already requires.
+
+- **Change:** new decision
+- **Scope:** invariants, product-guidelines, task-cycle, gate
+- **Based on:** none
+- **Relations:** derives from WAY-08@2343e09f · derives from WAY-61@4804d070 · derives from
+  WAY-69@7051f884
+- **Verification:** level 1 — invariants: invariant-test-break · gate-guidelines-example-evidence.
+  Level 2 for eligibility, execution and independent preparation — an agent compares the
+  acceptance evidence with the decision:
+  - complies: a check protecting published names records a successful read proving there are none,
+    keeps its real-history result, and runs the same implementation on an explicit prepared
+    earlier version with a published name, a preserving later version and a renaming later version;
+    a check protecting stored field kinds likewise retains its actual result and detects a kind
+    change in a separate prepared pair, whose reviewer prepares its own independent break;
+  - violates: the check fails because its input cannot be parsed; an invalid commit becomes an
+    empty set; a prepared earlier version replaces nonempty actual history; a copy of the checking
+    logic supplies the failure; a rule still falsifiable with new elements uses the exception;
+    a prepared pass is reported as the product's result, or as a pass on `{fork-point}`.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/28
+
+*Rationale:* an empty set makes preservation true without exercising detection of a changed
+element, so demanding a violation against it blocks introduction of protection for no additional
+assurance. Prepared evidence exercises detection while the separate actual-history result keeps
+the statement about the product honest; the price is explicit eligibility evidence and preparation
+kept separate from normal runs. Independent preparation retains the protection against a check
+fitted to its author's cases.
+*Rejected:* treating the first successful run as acceptance — it can pass without comparing any
+element; splitting introduction and protection into separate changes — protection begins later
+and work is divided only to manufacture a nonempty history; substituting prepared history for all
+checks — a real violation can disappear from the evidence; a parse error as the deliberate break
+— it exercises reading rather than preservation; rewriting preservation as agreement with a
+chosen list — it protects a different property.

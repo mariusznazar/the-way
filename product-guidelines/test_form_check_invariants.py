@@ -1500,5 +1500,172 @@ class ExampleFiles(FormCheckTestCase):
                 self.assert_reported_anew(self.check(files, ()), path)
 
 
+class PreparedExampleFiles(FormCheckTestCase):
+    """Optional bases are checked for form. Historical eligibility belongs to acceptance.
+
+    Inputs and expected verdicts follow guidelines-check-example-files/1 independently of the
+    parser (WAY-69); these tests neither compute expected values nor run a historical check.
+    """
+
+    BASE = case("base", "background-pair", "src/tokens.css", ":root { --primary: #123456; }")
+
+    def check_background(self, blocks):
+        text = replaced(STYLEGUIDE, BACKGROUND_CASES, blocks)
+        return self.check({STYLEGUIDE_FILE: text}, ())
+
+    def test_prepared_base_and_both_cases_pass_in_any_order(self):
+        # invariant: guidelines-check-example-files/1
+        good = case("good", "background-pair", "src/tokens.css", ":root { --x: 1; }")
+        bad = case("bad", "background-pair", "src/tokens.css", ":root { --x: 2; }")
+        for blocks in (self.BASE + good + bad, good + self.BASE + bad, good + bad + self.BASE):
+            with self.subTest(first=blocks.splitlines()[0]):
+                self.assert_clean(self.check_background(blocks))
+
+    def test_ordinary_pairs_need_no_base_and_may_have_different_paths(self):
+        # invariant: guidelines-check-example-files/1
+        self.assertIn("```good role-meaning src/components/save.tsx", STYLEGUIDE)
+        self.assertIn("```bad role-meaning src/components/warning.tsx", STYLEGUIDE)
+        self.assert_clean(self.check({STYLEGUIDE_FILE: STYLEGUIDE}, ()))
+
+    def test_a_base_belongs_only_to_its_named_invariant(self):
+        # invariant: guidelines-check-example-files/1
+        base = case("base", "endpoint-handler", "src/api/carts/route.ts", "export {};")
+        text = replaced(CODING_ENDPOINT, HANDLER_CASES, base + HANDLER_CASES)
+        # The second invariant keeps its ordinary pair at differing paths in the same rule.
+        self.assert_clean(self.check(dict(CODING_FILES, **{CODING_ENDPOINT_FILE: text}), ()))
+        location = case("base", "endpoint-location", "src/api/carts/route.ts", "export {};")
+        location_pair = replaced(LOCATION_CASES, "```bad endpoint-location src/carts/route.ts",
+                                 "```bad endpoint-location src/api/carts/route.ts")
+        text = replaced(text, LOCATION_CASES, location + location_pair)
+        self.assert_clean(self.check(dict(CODING_FILES, **{CODING_ENDPOINT_FILE: text}), ()))
+
+    def test_a_second_base_for_the_same_invariant_is_reported(self):
+        # invariant: guidelines-check-example-files/1
+        for second in (self.BASE, case("base", "background-pair", "src/other.css", ":root {}")):
+            with self.subTest(second=second.splitlines()[0]):
+                self.assert_reported(self.check_background(self.BASE + second + BACKGROUND_CASES),
+                                     STYLEGUIDE_FILE, fragments=("second", "base"))
+
+    def test_a_base_cannot_replace_either_mandatory_case(self):
+        # invariant: guidelines-check-example-files/1
+        good = case("good", "background-pair", "src/tokens.css", ":root {}")
+        bad = case("bad", "background-pair", "src/tokens.css", ":root {}")
+        for name, blocks, missing in (("base alone", self.BASE, "good"),
+                                     ("base with good", self.BASE + good, "bad"),
+                                     ("base with bad", self.BASE + bad, "good")):
+            with self.subTest(name):
+                self.assert_reported(self.check_background(blocks), STYLEGUIDE_FILE,
+                                     fragments=(missing + " background-pair <path>",))
+
+    def test_base_good_and_bad_paths_must_match_exactly(self):
+        # invariant: guidelines-check-example-files/1
+        for good_path, bad_path in (("src/other.css", "src/tokens.css"),
+                                   ("src/tokens.css", "src/other.css"),
+                                   ("src/other.css", "src/other.css"),
+                                   ("./src/tokens.css", "src/tokens.css"),
+                                   ("src/tokens.css", "src/Tokens.css")):
+            with self.subTest(good=good_path, bad=bad_path):
+                blocks = (self.BASE + case("good", "background-pair", good_path, ":root {}")
+                          + case("bad", "background-pair", bad_path, ":root {}"))
+                self.assert_reported(self.check_background(blocks), STYLEGUIDE_FILE,
+                                     fragments=("path", "base"))
+
+    def test_base_before_the_rule_fields_end_is_reported(self):
+        # invariant: guidelines-check-example-files/1
+        field = "- **Invariant:** background-pair@" + PAIR_FP
+        text = replaced(STYLEGUIDE, field, self.BASE + field)
+        self.assert_reported(self.check({STYLEGUIDE_FILE: text}, ()), STYLEGUIDE_FILE,
+                             line=line_of(text, "```base background-pair src/tokens.css"),
+                             fragments=("before", "fields"))
+
+    def test_base_for_an_unnamed_unknown_or_form_invariant_is_reported(self):
+        # invariant: guidelines-check-example-files/1
+        for identifier in ("role-meaning", "missing-check", "guidelines-form"):
+            with self.subTest(identifier=identifier):
+                base = case("base", identifier, "src/tokens.css", ":root {}")
+                self.assert_reported(self.check_background(base + BACKGROUND_CASES),
+                                     STYLEGUIDE_FILE, fragments=(identifier,))
+        named = replaced(STYLEGUIDE, "- **Invariant:** background-pair@" + PAIR_FP,
+                         "- **Invariant:** background-pair@%s · guidelines-form@%s"
+                         % (PAIR_FP, GUIDELINES_FORM_FP))
+        named = replaced(named, BACKGROUND_CASES,
+                         case("base", "guidelines-form", "src/tokens.css", ":root {}")
+                         + BACKGROUND_CASES)
+        self.assert_reported(self.check({STYLEGUIDE_FILE: named}, ()), STYLEGUIDE_FILE,
+                             fragments=("guidelines-form", "no case"))
+
+    def test_a_rule_without_an_eligible_invariant_cannot_hold_a_base(self):
+        # invariant: guidelines-check-example-files/1
+        field = "- **Invariant:** background-pair@" + PAIR_FP
+        for value in ("guidelines-form@" + GUIDELINES_FORM_FP, "none", None):
+            with self.subTest(value=value):
+                base = case("base", "guidelines-form", "src/tokens.css", ":root {}")
+                text = replaced(STYLEGUIDE, BACKGROUND_CASES, base)
+                text = replaced(text, field, "- **Invariant:** " + value if value else "")
+                self.assert_reported(self.check({STYLEGUIDE_FILE: text}, ()), STYLEGUIDE_FILE,
+                                     line=line_of(text, "```base guidelines-form src/tokens.css"))
+
+    def test_malformed_base_openings_are_reported(self):
+        # invariant: guidelines-check-example-files/1
+        for opening, closing in (("```base", "```"),
+                                 ("```base background-pair", "```"),
+                                 ("```base background-pair src/tokens.css extra", "```"),
+                                 ("~~~base background-pair src/tokens.css", "~~~"),
+                                 ("````base background-pair src/tokens.css", "````")):
+            with self.subTest(opening=opening):
+                blocks = opening + "\n:root {}\n" + closing + "\n\n" + BACKGROUND_CASES
+                self.assert_reported(self.check_background(blocks), STYLEGUIDE_FILE,
+                                     fragments=("malformed test case",))
+
+    def test_a_rule_with_no_fields_and_a_base_is_reported_without_crashing(self):
+        # invariant: guidelines-check-example-files/1
+        text = replaced(STYLEGUIDE, BACKGROUND,
+                         "### Every background with its text\n\n" + self.BASE)
+        self.assert_reported(self.check({STYLEGUIDE_FILE: text}, ()), STYLEGUIDE_FILE,
+                             line=line_of(text, "```base background-pair src/tokens.css"))
+
+    def test_a_malformed_base_in_a_form_only_rule_is_still_reported(self):
+        # invariant: guidelines-check-example-files/1
+        for separator in ("\t", " \t"):
+            with self.subTest(separator=separator):
+                opening = "```base" + separator + "guidelines-form src/tokens.css"
+                block = opening + "\n:root {}\n```\n\n"
+                text = replaced(STYLEGUIDE, BACKGROUND_CASES, block)
+                text = replaced(text, "- **Invariant:** background-pair@" + PAIR_FP,
+                                 "- **Invariant:** guidelines-form@" + GUIDELINES_FORM_FP)
+                self.assert_reported(self.check({STYLEGUIDE_FILE: text}, ()), STYLEGUIDE_FILE,
+                                     line=line_of(text, opening))
+
+    def test_unsafe_base_paths_are_reported_even_when_all_three_paths_match(self):
+        # invariant: guidelines-check-example-files/1
+        for path in ("/src/tokens.css", "../src/tokens.css", "src/../tokens.css",
+                     "C:/src/tokens.css", "C:src/tokens.css", r"C:\src\tokens.css",
+                     r"\\host\share\tokens.css", "//host/share/tokens.css", r"src\tokens.css"):
+            with self.subTest(path=path):
+                blocks = (case("base", "background-pair", path, ":root {}")
+                          + case("good", "background-pair", path, ":root {}")
+                          + case("bad", "background-pair", path, ":root {}"))
+                text = replaced(STYLEGUIDE, BACKGROUND_CASES, blocks)
+                self.assert_reported(self.check({STYLEGUIDE_FILE: text}, ()), STYLEGUIDE_FILE,
+                                     line=line_of(text, "```base background-pair " + path),
+                                     fragments=("path",))
+
+    def test_an_inner_fence_in_a_base_is_reported(self):
+        # invariant: guidelines-check-example-files/1
+        for fence in ("~~~", "```css", "    ~~~css", "\t```css", "````"):
+            with self.subTest(fence=fence):
+                base = case("base", "background-pair", "src/tokens.css", ":root {}", fence)
+                self.assert_reported(self.check_background(base + BACKGROUND_CASES),
+                                     STYLEGUIDE_FILE, fragments=("fence",))
+
+    def test_a_base_left_open_to_the_end_of_the_file_is_reported(self):
+        # invariant: guidelines-check-example-files/1
+        opening = "```base background-pair src/tokens.css"
+        text = replaced(STYLEGUIDE, BACKGROUND_CASES,
+                         BACKGROUND_CASES + opening + "\n:root {}\n")
+        self.assert_reported(self.check({STYLEGUIDE_FILE: text}, ()), STYLEGUIDE_FILE,
+                             line=line_of(text, opening), fragments=("end of the file",))
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -105,14 +105,23 @@ A rule whose *Invariant* names an invariant other than `guidelines-form` gives t
 - **A test case is a whole file.** Each such block holds the whole text of a file at `<path>` in
   the product: the case is that file, added at that path or put in place of the file there, on the
   commit checked. The method of the invariant the info string names passes with the `good` case and
-  fails with the `bad` one (WAY-168).
+  fails with the `bad` one; the prepared earlier-version evidence below is the sole exception to
+  using the actual earlier version for these runs (WAY-168, WAY-223).
+- **A prepared earlier version is conditional evidence.** A historical-preservation invariant may
+  carry, beside its mandatory `good` and `bad` blocks, exactly one block with info string
+  `base <identifier> <path>`, holding the whole earlier-version file; all three blocks name the same
+  path. The path and fence rules below apply to `base` as well. Use it only under the eligibility,
+  execution and separate-record requirements of *Evidence when the protected history is empty* in
+  `elements/invariants/template.md`; the form check verifies its shape, never eligibility. When
+  actual history contains protected elements, run the ordinary cases against that history and
+  revise any cases that depended on the prepared base before accepting the check (WAY-168, WAY-223).
 - **An invariant on the list of violated invariants** fails on its commit whatever is added, so its
   cases are read against the commit's own result: the `good` case adds no failure the commit does
   not already have, and the `bad` case adds one. The per-file companion of such an invariant, which
   compares each file with `{fork-point}` and holds from its first day (WAY-190, WAY-205), takes its
   cases as they stand: it passes with the `good` case and fails with the `bad` one (WAY-168).
-- **Every fenced block of such a rule is a test case.** Code that only illustrates the rule stands
-  under `## Examples` (WAY-168).
+- **Every fenced block of such a rule is a test case or its prepared base.** Code that only
+  illustrates the rule stands under `## Examples` (WAY-168).
 - **A test case is a short file** and may stand at a path the product does not hold, so that it
   stays instructive: the `bad` case teaches the agent reading the guidelines what the rule forbids
   (WAY-168, WAY-197).

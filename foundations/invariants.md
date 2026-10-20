@@ -135,11 +135,11 @@ Every entry of `foundations/invariants.md` names as its method a command that be
 
 ## invariant-test-break/1
 
-Every check that cites an invariant fails, in k of n runs where its command sets them, on the deliberate break it was accepted on.
+Every check that cites an invariant fails, in k of n runs where its command sets them, on the deliberate break it was accepted on, using the assessed commit's same check implementation and configuration, with prepared earlier-version data only under WAY-223.
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-08@2343e09f
+- **Derives from:** WAY-08@2343e09f · WAY-223@6df19670
 - **Part:** every
 - **Correction:** none
 
@@ -2166,7 +2166,7 @@ The form check of guidelines, `product-guidelines/form_check.py`, reports as an 
 
 - **Method:** `python -B gate/run_tests.py product-guidelines --record .runs/product-guidelines-tests.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-168@dc4a98a1 · WAY-188@73da8ecb · WAY-189@a76a39fb · WAY-196@0e714a05
+- **Derives from:** WAY-168@2a68d855 · WAY-188@73da8ecb · WAY-189@a76a39fb · WAY-196@0e714a05
 - **Part:** product-guidelines · decisions · invariants · part-map · elements-common · relation-model
 - **Correction:** none
 
@@ -2232,21 +2232,21 @@ The form check of guidelines, `product-guidelines/form_check.py`, reports as an 
 
 ## guidelines-check-example-files/1
 
-The form check of guidelines, `product-guidelines/form_check.py`, reports as an error every rule under `## Rules` of a file `guidelines/<name>.md` whose *Invariant* names an invariant other than `guidelines-form` and whose text after its fields does not hold, for each such invariant, exactly one fenced block whose opening line's info string reads `good <identifier> <path>` and exactly one whose info string reads `bad <identifier> <path>`, `<identifier>` being that invariant's, and, in such a rule, every such block whose `<identifier>` its *Invariant* does not name or whose `<path>` is absolute, holds a `..` segment, a drive or a UNC prefix, every line inside such a block that would open a fence, every other fenced block, and every such block left open to the end of the file.
+The form check of guidelines, `product-guidelines/form_check.py`, reports as an error every rule under `## Rules` of a file `guidelines/<name>.md` whose *Invariant* names an invariant other than `guidelines-form` and whose text after its fields does not hold, for each such invariant, exactly one fenced block whose opening line's info string reads `good <identifier> <path>` and exactly one whose info string reads `bad <identifier> <path>`, optionally with exactly one `base <identifier> <path>` block whose path equals both cases' paths, `<identifier>` being that invariant's, and, in such a rule, every such block whose `<identifier>` its *Invariant* does not name or whose `<path>` is absolute, holds a `..` segment, a drive or a UNC prefix, every line inside such a block that would open a fence, every other fenced block, and every such block left open to the end of the file, and every `base` block under any rule naming no invariant other than `guidelines-form`.
 
 - **Method:** `python -B gate/run_tests.py product-guidelines --record .runs/product-guidelines-tests.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-168@dc4a98a1
+- **Derives from:** WAY-168@2a68d855
 - **Part:** product-guidelines · decisions · invariants · part-map · elements-common · relation-model
 - **Correction:** none
 
 ## gate-guidelines-example-evidence/1
 
-For every invariant entry that a rule of a file `guidelines/<name>.md` names with a file for the use that follows the rule and one for the use that breaks it, and whose sentence a change adds or alters against "{fork-point}" or one of whose two files the change alters, the gate's report states whether the entry's method, run on the commit checked with each file put in place at its path, passes with the first and fails with the second — for an entry on the list of violated invariants, whether the first adds no failure the commit does not already have and the second adds one — or that this could not be checked.
+For every invariant entry that a rule of a file `guidelines/<name>.md` names with a file for the use that follows the rule and one for the use that breaks it, and whose sentence a change adds or alters against "{fork-point}" or one of whose cases or prepared base the change alters, the gate's report states whether the entry's method, run on the commit checked with each file put in place at its path, passes with the first and fails with the second — for an entry on the list of violated invariants, whether the first adds no failure the commit does not already have and the second adds one — using prepared earlier-version data only under WAY-223 and reporting that evidence separately from the actual-history result, or that this could not be checked.
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-168@dc4a98a1
+- **Derives from:** WAY-168@2a68d855 · WAY-223@6df19670
 - **Part:** gate · product-guidelines
 - **Correction:** none
 

@@ -370,8 +370,11 @@ continuing that work.
     Invariant checks written before the return step retain
     their existing acceptance and deliberate-break points: the code reviewer writes the break from
     the invariant's sentence, runs the check on it and reports whether it fails (WAY-69, WAY-08).
+    A check protecting an empty historical set follows *Evidence when the protected history is empty*
+    in `elements/invariants/template.md`: establish eligibility on actual history, then keep the
+    prepared evidence separate from the actual result (WAY-223).
     For an invariant a rule of the product's guidelines names with test cases, whose sentence the
-    change adds or alters or one of whose test cases it rewrites, that reviewer also runs the check
+    change adds or alters or whose test cases or prepared base it rewrites, that reviewer also runs the check
     in a scratch worktree of the commit, once with the invariant's `good` file and once with its
     `bad` file in place — the pair whose info string names that invariant — and records that it
     passes with the first and fails with the second, or, for an invariant on the list of violated
@@ -379,6 +382,9 @@ continuing that work.
     one, its per-file companion taking the strict reading; the check is not accepted otherwise, the
     `bad` file is a case beside the deliberate break and never the break, and a test case is applied
     only in that scratch worktree, never in the task's worktree (WAY-168, WAY-197, WAY-69).
+    Where the rule carries a `base` block, use it for those runs only if WAY-223's conditions hold;
+    otherwise use actual history and settle cases that cannot meet it. The reviewer prepares its
+    own earlier and later inputs for its independent deliberate break (WAY-223, WAY-197).
     Checks added in the return step follow step 11's order. For visible behavior, verify it in the
     running product as well. Use Superpowers `requesting-code-review` for a fresh final review, or the
     final review already required by the selected execution skill; do not dispatch a duplicate

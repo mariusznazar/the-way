@@ -73,6 +73,8 @@ project skill of that name with the `the-way-` prefix. Follow the steps of
   code it covers: the entry, its method, and the checks citing an identifier this change retires or
   a version it raises. The deliberate break is written from the sentence by the reviewer of that
   code, without the check's author (WAY-69). Where it is not a command, there is nothing to hand on.
+  For protection of an empty historical set, include the actual-history evidence and direct the
+  reviewer to the template's *Evidence when the protected history is empty* (WAY-223).
 
 ## Projected mode
 
