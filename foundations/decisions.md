@@ -895,7 +895,7 @@ exception lives only in a task document, plan or cycle record.
     an accepted settlement, or extends its meaning without asking.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/29
 
 *Rationale:* an exception kept only with the work leaves the foundation describing what the code no
 longer does (WAY-01); stopping shows the contradiction when it is found. Aligning or dropping the
@@ -1339,7 +1339,7 @@ change at the merge, with the lowered criticality in front of them.
 - **Review when:** a product that pins the-way holds data under an obligation from a law or a
   contract on one of its parts · check by: 2026-12-31
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/29
 
 *Rationale:* criticality sets how sharply a task is checked (WAY-13); hand-written, it goes stale.
 Silence about a part raises checks instead of removing them; lowering, the convenient move, waits
@@ -5759,7 +5759,7 @@ entry on its own recommendation for the human to accept at the merge.
     an existing role waits for the human.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/29
 
 *Rationale:* a meaning of guidelines binds every later screen, and code built on one the human never
 saw is reworked when the human turns it down at the merge, so the approval comes before the code,
@@ -7693,7 +7693,7 @@ mode changes no approved decision.
     the cycle suppresses the candidate question because neither condition in WAY-114 holds.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of <request link>
+- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/29
 
 *Rationale:* a candidate needs human judgment before it changes the part's criticality, but losing
 it leaves that judgment unavailable. A concrete recommendation with its strongest counterargument
