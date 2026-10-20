@@ -1,0 +1,5 @@
+WARN  dead-path AGENTS.md:20 `_zadania\` does not exist
+INFO  size AGENTS.md:0 21 lines, 187 words
+INFO  size CLAUDE.md:0 1 lines, 1 words
+INFO  size agent-instructions/README.md:0 52 lines, 506 words
+0 error, 1 warn, 3 info

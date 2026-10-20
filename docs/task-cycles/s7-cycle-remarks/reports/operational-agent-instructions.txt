@@ -1,0 +1,11 @@
+Command: python -B gate/run_tests.py agent-instructions
+Exit: 0
+
+STDOUT:
+
+STDERR:
+..................
+----------------------------------------------------------------------
+Ran 18 tests in 4.988s
+
+OK

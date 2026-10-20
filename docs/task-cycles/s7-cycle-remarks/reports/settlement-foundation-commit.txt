@@ -1,0 +1,28 @@
+fix: make candidate failure-mode question precedence explicit
+
+WAY-224 explicitly narrows WAY-114 only for cycle questions about candidate
+failure modes, including a recommendation that changes no approved decision.
+This records the route already required by task To do 7 and settlement 2.
+Update its verification examples; leave the general approval rule unchanged.
+
+Initial foundation search: read all five foundation files, all 209 existing
+decisions and 225 invariant sections; search approval, human recording,
+criticality, candidate questions, return steps and operational handoffs.
+WAY-46 owns criticality and human recording; the distinct candidate-question
+route belongs in WAY-224, not an overloaded WAY-46. The initial nine-part
+selection reached 207 current decisions after WAY-224 was added; all 210 read.
+
+Renewed foundation search: repeat semantic searches across decisions,
+invariants, part map, glossary and environment facts for approval, narrows,
+failure candidates, questions, workspace, brief, plan and return steps.
+Read WAY-25, WAY-114 and WAY-224 whole again: the recommended new candidate
+exposes the unresolved precedence collision, settled here with a direct
+narrows relation and stated area. Search finds no incoming WAY-224 fingerprint
+references; no invariant or other dependent fingerprint changes are needed.
+Current nine-part Scope reconciliation: 207 expected decisions, all 210 read,
+zero missing; 188 expected invariants within 225 sections already read.
+
+Validation: 169 decision tests pass; no-main form guard exits 0. Against the
+current integration target f0b5eb131de5d681ee3fcdeb264e9f88778af2ec, decision
+guard retains seven expected pre-main copy/placeholder errors and no relation
+findings; invariant relation guard exits 0. Existing warnings remain visible.

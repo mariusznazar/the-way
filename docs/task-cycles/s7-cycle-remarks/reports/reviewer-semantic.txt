@@ -1,0 +1,3 @@
+PASS: invariants file has exactly six WAY-46 fingerprint replacements and no other change.
+PASS: WAY-172 binding wording unchanged.
+EXIT: 0

@@ -1,0 +1,10 @@
+7	4	agent-instructions/README.md
+3	2	elements/common/critique/SKILL.md
+3	2	elements/common/way_of_working.md
+5	3	elements/part-map/skill/SKILL.md
+5	3	elements/part-map/template.md
+75	19	foundations/decisions.md
+6	6	foundations/invariants.md
+3	2	project-level/task/skill/SKILL.md
+5	3	project-level/task/template.md
+24	10	task-cycle/skill/SKILL.md

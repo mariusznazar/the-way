@@ -1,0 +1,14 @@
+Command: python -B .runs/task-cycles/s7-cycle-remarks/reports/return-selection.py
+Exit: 0
+
+STDOUT:
+revision: 8726cc1c6b6b031ca94c6e867d0df1297c286c01
+expected decisions: 207
+read decisions: 210
+unread expected: 0
+expected invariants: 188
+read invariant sections: 225
+foundation search domains: 5
+guidelines directory exists: False
+
+STDERR:

@@ -1,0 +1,10 @@
+{
+  "command": [
+    "python",
+    "-B",
+    "instruction-files/check_instructions.py",
+    "."
+  ],
+  "exit": 0,
+  "output": "final-settlement-instructions-before.txt"
+}

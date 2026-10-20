@@ -1,0 +1,9 @@
+{
+  "command": [
+    "python",
+    "-B",
+    ".runs\\task-cycles\\s7-cycle-remarks\\reports\\check-settlement-workspace.py"
+  ],
+  "exit": 0,
+  "output": "settlement-workspace-scenario-corrected.txt"
+}

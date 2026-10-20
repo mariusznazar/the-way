@@ -1,0 +1,33 @@
+Initial whole-foundation search at f0b5eb131de5d681ee3fcdeb264e9f88778af2ec:
+Read all five foundation elements, all 209 decisions and 225 invariant sections.
+Initial seven-part discovery selected 170 decisions and 174 invariant sections;
+whole reads also covered environment-facts and product-guidelines dependencies.
+Searched approval, meaning, acceptance, narrowing, failure modes, candidates,
+criticality, questions, deferred entries, return steps, commit messages,
+fingerprints, briefs, plans and cycle records. Identified WAY-172 as WAY-30's
+existing fingerprint dependent and six invariants as WAY-46's dependents.
+Separated the accepted candidate-question route into WAY-224 rather than
+overloading WAY-46's criticality answer. No glossary, environment-fact or
+part-map entry was required. Later assessment settlements made the candidate
+route's narrow precedence over WAY-114 explicit and preserved the original
+plan workspace for adapted briefs; the final search below includes both.
+
+Final whole-foundation search at product 9c2a87c28ff0359bb0a48425fa23c5d8119a63a0,
+against freshly fetched target f0b5eb131de5d681ee3fcdeb264e9f88778af2ec:
+The target is unchanged from the original base. Repeated semantic and incoming
+reference searches across all five foundation elements at both revisions,
+including approval/narrows, failure-mode questions, human recording, plans,
+brief/workspace identity, return, fingerprints and operational check failures.
+Reused unchanged whole reads and reread the four changed decision entries
+whole. Nine affected parts select 207 current decisions and 188 invariant
+sections; all 210 decisions and 225 invariant sections have been read, with
+no expected entry missing. WAY-30's dependent WAY-172 and all six WAY-46
+invariant links carry renewed fingerprints; WAY-172's binding meaning remains
+unchanged, so its four incoming references remain valid. WAY-224 explicitly
+narrows WAY-114 only for candidate failure-mode questions and has no incoming
+fingerprint reference. No stale prior WAY-30/WAY-46 fingerprint, additional
+collision, unlinked effect, omitted authorized entry, glossary ambiguity,
+external premise, part-map change or guideline gap was found. The workspace
+adapter and operational-error recovery remain implementations of existing
+rules. No further product edit is needed before the approval-link metadata
+replacement; this search is not a full-gate or semantic-completeness proof.

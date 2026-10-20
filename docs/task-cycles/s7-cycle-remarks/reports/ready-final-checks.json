@@ -1,0 +1,157 @@
+[
+  {
+    "name": "gate",
+    "command": [
+      "python",
+      "-B",
+      "gate/run_tests.py",
+      "gate"
+    ],
+    "exit": 0,
+    "output": "ready-final-gate.txt"
+  },
+  {
+    "name": "decisions",
+    "command": [
+      "python",
+      "-B",
+      "gate/run_tests.py",
+      "elements/decisions"
+    ],
+    "exit": 0,
+    "output": "ready-final-decisions.txt"
+  },
+  {
+    "name": "invariants",
+    "command": [
+      "python",
+      "-B",
+      "gate/run_tests.py",
+      "elements/invariants"
+    ],
+    "exit": 0,
+    "output": "ready-final-invariants.txt"
+  },
+  {
+    "name": "part-map",
+    "command": [
+      "python",
+      "-B",
+      "gate/run_tests.py",
+      "elements/part-map"
+    ],
+    "exit": 0,
+    "output": "ready-final-part-map.txt"
+  },
+  {
+    "name": "elements-common",
+    "command": [
+      "python",
+      "-B",
+      "gate/run_tests.py",
+      "elements/common"
+    ],
+    "exit": 1,
+    "output": "ready-final-elements-common.txt"
+  },
+  {
+    "name": "project-level",
+    "command": [
+      "python",
+      "-B",
+      "gate/run_tests.py",
+      "project-level"
+    ],
+    "exit": 0,
+    "output": "ready-final-project-level.txt"
+  },
+  {
+    "name": "task-cycle",
+    "command": [
+      "python",
+      "-B",
+      "gate/run_tests.py",
+      "task-cycle"
+    ],
+    "exit": 0,
+    "output": "ready-final-task-cycle.txt"
+  },
+  {
+    "name": "agent-instructions",
+    "command": [
+      "python",
+      "-B",
+      "gate/run_tests.py",
+      "agent-instructions"
+    ],
+    "exit": 0,
+    "output": "ready-final-agent-instructions.txt"
+  },
+  {
+    "name": "decision-form",
+    "command": [
+      "python",
+      "-B",
+      "elements/decisions/format_guard.py",
+      "--base",
+      "none",
+      "--merge-onto",
+      "none"
+    ],
+    "exit": 0,
+    "output": "ready-final-decision-form.txt"
+  },
+  {
+    "name": "invariant-form",
+    "command": [
+      "python",
+      "-B",
+      "elements/invariants/format_guard.py",
+      "--base",
+      "none",
+      "--merge-onto",
+      "none"
+    ],
+    "exit": 0,
+    "output": "ready-final-invariant-form.txt"
+  },
+  {
+    "name": "decision-relations",
+    "command": [
+      "python",
+      "-B",
+      "elements/decisions/format_guard.py",
+      "--base",
+      "none",
+      "--merge-onto",
+      "f0b5eb131de5d681ee3fcdeb264e9f88778af2ec"
+    ],
+    "exit": 1,
+    "output": "ready-final-decision-relations.txt"
+  },
+  {
+    "name": "invariant-relations",
+    "command": [
+      "python",
+      "-B",
+      "elements/invariants/format_guard.py",
+      "--base",
+      "none",
+      "--merge-onto",
+      "f0b5eb131de5d681ee3fcdeb264e9f88778af2ec"
+    ],
+    "exit": 0,
+    "output": "ready-final-invariant-relations.txt"
+  },
+  {
+    "name": "whitespace",
+    "command": [
+      "git",
+      "diff",
+      "--check",
+      "f0b5eb131de5d681ee3fcdeb264e9f88778af2ec..HEAD"
+    ],
+    "exit": 0,
+    "output": "ready-final-whitespace.txt"
+  }
+]

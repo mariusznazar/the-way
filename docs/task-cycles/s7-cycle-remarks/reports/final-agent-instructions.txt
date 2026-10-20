@@ -1,0 +1,8 @@
+Command: python -B gate/run_tests.py agent-instructions
+Exit code: 0
+
+..................
+----------------------------------------------------------------------
+Ran 18 tests in 5.063s
+
+OK

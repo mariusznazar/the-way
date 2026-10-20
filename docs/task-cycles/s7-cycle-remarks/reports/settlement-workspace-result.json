@@ -1,0 +1,11 @@
+{
+  "scratch": "C:\\Storage\\repos\\the-way\\.runs\\worktrees\\s7-cycle-remarks\\.runs\\task-cycles\\s7-cycle-remarks\\reports\\settlement-workspace-dkghwz16",
+  "original_plan": "C:\\Storage\\repos\\the-way\\.runs\\worktrees\\s7-cycle-remarks\\.runs\\task-cycles\\s7-cycle-remarks\\reports\\settlement-workspace-dkghwz16\\plans\\original\\plan.md",
+  "original_plan_sha256": "9520b5380567aee7fca4cacb66bb9e79971c8e86ceefc4f33eb4b0222e55d7b4",
+  "original_workspace": "c:\\Storage\\repos\\the-way\\.runs\\worktrees\\s7-cycle-remarks\\.runs\\task-cycles\\s7-cycle-remarks\\reports\\settlement-workspace-dkghwz16\\.superpowers\\sdd\\plan",
+  "divergent_workspace": "c:\\Storage\\repos\\the-way\\.runs\\worktrees\\s7-cycle-remarks\\.runs\\task-cycles\\s7-cycle-remarks\\reports\\settlement-workspace-dkghwz16\\.superpowers\\sdd\\plan-temporary",
+  "negative_control": "FAIL (expected): two-argument temporary extraction leaves original workspace without brief",
+  "corrected_route": "PASS: explicit original-workspace output, original marker and ledger unchanged, brief/report colocated, original bytes unchanged, temporary copy removed",
+  "report_fixture": "c:\\Storage\\repos\\the-way\\.runs\\worktrees\\s7-cycle-remarks\\.runs\\task-cycles\\s7-cycle-remarks\\reports\\settlement-workspace-dkghwz16\\.superpowers\\sdd\\plan\\task-1-report.md",
+  "limit": "Report naming is applied from the borrowed method; no real implementer or full cycle is dispatched."
+}

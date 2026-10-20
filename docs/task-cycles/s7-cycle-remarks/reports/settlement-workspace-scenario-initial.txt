@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "C:\Storage\repos\the-way\.runs\worktrees\s7-cycle-remarks\.runs\task-cycles\s7-cycle-remarks\reports\check-settlement-workspace.py", line 46, in <module>
+    assert marker_before.decode().strip() == original_relative
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

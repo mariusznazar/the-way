@@ -1,0 +1,2 @@
+NEGATIVE CONTROL: script exit 0; original-workspace contract FAIL (expected).
+CORRECTED ROUTE: PASS; marker, ledger, plan and cleanup checked.

@@ -1,0 +1,7 @@
+foundations\invariants.md:763:- **Derives from:** WAY-46@7511b86f
+foundations\invariants.md:773:- **Derives from:** WAY-46@7511b86f
+foundations\invariants.md:783:- **Derives from:** WAY-46@7511b86f
+foundations\invariants.md:793:- **Derives from:** WAY-46@7511b86f
+foundations\invariants.md:803:- **Derives from:** WAY-46@7511b86f
+foundations\invariants.md:813:- **Derives from:** WAY-46@7511b86f
+foundations\decisions.md:7681:- **Relations:** derives from WAY-46@7511b86f · derives from WAY-11@e882a9df · derives from
