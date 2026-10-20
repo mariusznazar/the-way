@@ -65,7 +65,9 @@ its files leaves out is no error. In guidelines of every discipline, the test ca
 under `## Rules` whose *Invariant* names an invariant other than `guidelines-form` (WAY-168): for
 each invariant it names other than `guidelines-form`, a missing case after its fields — a fenced
 block whose info string reads `good <identifier> <path>`, or one reading `bad <identifier> <path>`
-— reported at *Invariant*; at its opening line, a second such case of the same invariant, a case
+— reported at *Invariant*; an optional `base <identifier> <path>` block supplies a prepared earlier
+file (WAY-223), with the same path as both cases; at its opening line, a second block of the same
+kind and invariant, a case
 naming an invariant the rule does not name, or `guidelines-form`, a case whose path is absolute,
 holds a `..` segment, a drive, a UNC prefix, a backslash, a `:` or a character that is not
 printable, any other fenced block of the rule — one standing before the rule's fields end, opened
@@ -176,6 +178,7 @@ GENERAL_CODING = "%s/%s.md" % (GUIDELINES, CODING)
 # The test cases of a rule: their outer fence, the first word of their info string, the identifier
 # of the invariant they are never given for, and how a line that opens a fence starts.
 CASE_FENCE, CASE_KINDS = "```", ("good", "bad")
+BASE_KIND = "base"
 FORM_IDENTIFIER = FORM.split("/")[0]
 INNER_FENCES = ("```", "~~~")
 
@@ -923,13 +926,13 @@ def invariants_named(value, foundation):
 
 
 def case_of(block):
-    """(`good` or `bad`, identifier, path) of a fenced block opened by three backticks whose info
-    string reads `good <identifier> <path>` or `bad <identifier> <path>`, its words split by one
-    space each; None for any other block."""
+    """(kind, identifier, path) of a good, bad or prepared-base block opened by three backticks,
+    its info words split by one space each; None for any other block."""
     if block.fence != CASE_FENCE:
         return None
     words = block.info.strip().split(" ")
-    if (len(words) != 3 or words[0] not in CASE_KINDS or not IDENTIFIER.fullmatch(words[1])
+    if (len(words) != 3 or words[0] not in (*CASE_KINDS, BASE_KIND)
+            or not IDENTIFIER.fullmatch(words[1])
             or not words[2]):
         return None
     return tuple(words)
@@ -938,15 +941,18 @@ def case_of(block):
 def check_cases(document, sections, report, shared, foundation):
     """In each rule kept under `## Rules` whose *Invariant* names an invariant other than
     `guidelines-form`, the test cases of WAY-168 (spec §5.2 item 5): after the rule's fields,
-    exactly one good and one bad case of each such invariant, and no other fenced block. A case is
+    exactly one good and one bad case of each such invariant, with at most one base block at the
+    same path as both cases (WAY-223), and no other fenced block. A case is
     a block opened and closed by three backticks, not left open to the end of the file, whose info
     string — read from its opening fence alone — reads `good <identifier> <path>` or `bad
-    <identifier> <path>`, the identifier one the rule names and the path relative and staying in
+    <identifier> <path>` or `base <identifier> <path>`, the identifier one the rule names and the
+    path relative and staying in
     the repository, and none of whose lines starts, after any leading whitespace, with three
     backticks or three tildes, on which `instruction-files/check_instructions.py` switches between
     code and text, a line being read as that script splits it. A rule naming `guidelines-form`
     alone gives no case: its cases are the-way's own tests of this script. No path of a case is
-    opened or given to git."""
+    opened or given to git. This form check does not authorize use of a prepared base: actual
+    history and the empty protected set are checked during acceptance."""
     # invariant: guidelines-form/1
     check = "check_cases"
     report.ran(check, FORM)
@@ -966,17 +972,19 @@ def check_cases(document, sections, report, shared, foundation):
         fields = shared.parse_fields(document.prose(rule.start, rule.end), rule.start + 1)
         named = invariants_named(fields[INVARIANT][0], foundation) if INVARIANT in fields else []
         required = [identifier for identifier in named if identifier != FORM_IDENTIFIER]
-        if required:
-            check_rule_cases(document, rule, fields, named, required, fences.get(position, []),
-                             report, check)
+        rule_fences = fences.get(position, [])
+        has_base = any(fence.info.split(maxsplit=1)[:1] == [BASE_KIND] for fence in rule_fences)
+        if required or has_base:
+            check_rule_cases(document, rule, fields, named, required, rule_fences, report, check)
 
 
 def check_rule_cases(document, rule, fields, named, required, fences, report, check):
     """The test cases of one rule that needs them, `fences` being the fenced blocks opening in
     its body and `required` the invariants it names other than `guidelines-form`."""
     name = "`### %s`" % shown(rule.title)
-    last_field = max(line for _, line in fields.values())
-    seen = {}       # (`good` or `bad`, identifier) -> the line of its first case
+    last_field = max((line for _, line in fields.values()), default=rule.line)
+    seen = {}       # (kind, identifier) -> the line of its first block
+    paths = {}      # (kind, identifier) -> the path of its first block
     for fence in fences:
         line = fence.opening + 1
         if fence.closing is None:
@@ -992,18 +1000,20 @@ def check_rule_cases(document, rule, fields, named, required, fences, report, ch
             report.error(line, "malformed test case: every fenced block of the rule %s, which "
                                "names an invariant other than `%s`, is a test case after the "
                                "rule's fields, opened by three backticks with the info string "
-                               "`good <identifier> <path>` or `bad <identifier> <path>`; %s"
+                               "`good <identifier> <path>`, `bad <identifier> <path>` or "
+                               "`base <identifier> <path>`; %s"
                          % (name, FORM_IDENTIFIER, why), check, (FORM,))
             continue
         which, identifier, path = case
         if identifier in required:
             if (which, identifier) in seen:
                 report.error(line, "a second `%s` case of the invariant `%s`, beside the one at "
-                                   "line %d: a rule gives exactly one of each for each invariant "
-                                   "it names" % (which, shown(identifier),
+                                   "line %d: a rule gives one good and one bad case and at most "
+                                   "one base for each invariant it names" % (which, shown(identifier),
                                                  seen[(which, identifier)]), check, (FORM,))
             else:
                 seen[(which, identifier)] = line
+                paths[(which, identifier)] = path
         elif identifier in named:
             report.error(line, "the case names `%s`, whose cases are the-way's own tests of the "
                                "form check: a rule gives no case of it" % FORM_IDENTIFIER,
@@ -1035,7 +1045,7 @@ def check_rule_cases(document, rule, fields, named, required, fences, report, ch
                                             "leading whitespace, with three backticks or three "
                                             "tildes" % (line, text[:3]), check, (FORM,))
                     break
-    at = fields[INVARIANT][1]
+    at = fields[INVARIANT][1] if INVARIANT in fields else rule.line
     for identifier in required:
         for which in CASE_KINDS:
             if (which, identifier) not in seen:
@@ -1044,6 +1054,15 @@ def check_rule_cases(document, rule, fields, named, required, fences, report, ch
                                  "a bad case of each invariant it names other than `%s`"
                              % (name, shown(identifier), INVARIANT, which, shown(identifier),
                                 FORM_IDENTIFIER), check, (FORM,))
+        base = (BASE_KIND, identifier)
+        if base in paths:
+            for which in CASE_KINDS:
+                case = (which, identifier)
+                if case in paths and paths[case] != paths[base]:
+                    report.error(seen[case], "the `%s` case of `%s` has path `%s`, different "
+                                 "from its base path `%s`: base, good and bad use the same path"
+                                 % (which, shown(identifier), shown(paths[case]),
+                                    shown(paths[base])), check, (FORM,))
 
 
 def table_cells(line):

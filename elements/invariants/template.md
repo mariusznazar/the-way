@@ -92,7 +92,8 @@ naming its identifier and its current version, with `searched: <…>` in *Search
   fills in `none` in its place (WAY-61).
 - A method checks what its sentence is about, as it stands on the commit being checked: a check fed
   input made up for it is the method of a sentence about that check, not about the data it reads
-  (WAY-61).
+  (WAY-61). Prepared inputs used for acceptance under *Evidence when the protected history is empty*
+  below give separate evidence about the check, never the entry's result (WAY-223).
 - k and n, for a method that does not give the same verdict every time, stand in the command
   (WAY-08).
 - A method a product cannot yet name as any command reads `TODO`, and the entry is reported
@@ -229,6 +230,34 @@ naming its identifier and its current version, with `searched: <…>` in *Search
   agents, and the deliberate break the check is accepted on is written from the sentence by the
   reviewer of that code, who did not write the check (WAY-69). This binds the act of writing a
   check, not the history of the file it joins.
+
+## Evidence when the protected history is empty
+
+For a check that preserves elements of an earlier version, acceptance may use a prepared earlier
+version only when a successful read of the actual historical commit and all relevant data confirms
+that the protected set is empty, and therefore no later version can break that preservation clause
+against it (WAY-223). A missing file in a successfully read tree can establish absence; an
+unavailable history, invalid commit, failed read, parse error or `none` cannot. A nonempty set uses
+the actual history; difficulty constructing a case is no exception (WAY-223).
+
+Run the invariant's Method on the actual assessed commit and actual historical commit first,
+recording its result and the evidence of the empty set. Separately, in an isolated scratch copy of
+the assessed commit, run that same check implementation with a prepared earlier version containing
+protected elements, once with a later version preserving them and once with a later version that
+breaks the sentence; record the required pass and failure and the violation reported. Keep code and
+configuration from the assessed commit unchanged: only the earlier and later data are prepared,
+with the earlier data supplied through an explicit historical-input parameter of that same check.
+A copy of its logic, a parser failure or failure of another rule proves nothing about preservation
+(WAY-223).
+
+The evidence records the assessed and actual historical commit identifiers, the successful read and
+empty-set finding, the reason the actual baseline cannot supply a violation, the prepared inputs,
+the exact commands and their outcomes, and the separate actual-history result; a prepared base is
+never reported as `{fork-point}` (WAY-223). In guidelines the author supplies the `base`, `good` and
+`bad` files in the form `product-guidelines/template.md` gives. The code reviewer independently
+prepares the earlier and later inputs of the deliberate break from the invariant's sentence,
+without taking the author's cases as that break; both exercises meet this section's conditions
+(WAY-69, WAY-197, WAY-223). The acceptance stage and rechecking after corrections remain WAY-149's.
 
 ## Recovered
 
