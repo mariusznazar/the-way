@@ -126,9 +126,12 @@ rulings. Keep requirements and exact values in their authoritative files. A requ
 or file must still be read whole. Reuse a borrowed method's existing brief and report instead of
 creating a second one. For a plan written by `plan-task`, run the borrowed method's brief script on
 a temporary copy of the plan with each `### Slice N` heading written as `### Task N`, and remove
-the copy after extraction. Apply this contract to design, planning, foundation work, implementation,
-reviews and the return step within their existing boundaries; the independent assessor receives
-only the filtered inputs in step 11, never this operational handoff.
+the copy after extraction. Resolve the borrowed method's workspace with `sdd-workspace` on the
+original plan and pass `<workspace>/task-N-brief.md` as the brief script's third argument; keep the
+ledger and reports in that same original-plan workspace. Apply this contract to design, planning,
+foundation work, implementation, reviews and the return step within their existing boundaries;
+the independent assessor receives only the filtered inputs in step 11, never this operational
+handoff.
 
 Every handoff to the spec author or reviewer, planner, no-plan author, slice executor or code
 reviewer carries the current guideline selection and its reasons, with
