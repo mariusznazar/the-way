@@ -1,2 +1,0 @@
-PASS: reviewed HEAD, original range coverage, incoming references, unchanged 209 decisions, WAY-114 fingerprint, 207-entry selection, retained scenario artifacts.
-Exit: 0

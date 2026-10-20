@@ -1,8 +1,0 @@
-revision: 9a8bc5e7ae467a1dce81b4be830130c64337db0d
-expected decisions: 207
-read decisions: 210
-unread expected: 0
-expected invariants: 188
-read invariant sections: 225
-foundation search domains: 5
-guidelines directory exists: False

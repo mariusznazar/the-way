@@ -1,6 +1,0 @@
-Command: python -B elements/invariants/format_guard.py --base none --merge-onto f0b5eb131de5d681ee3fcdeb264e9f88778af2ec
-Exit code: 0
-
-unchecked: identifiers, versions, corrections and the list of violated invariants — --base none: there is no commit the branch left the main branch from
-note: there is no human_verdicts.md; no human verdict is given
-0 error(s), 0 warning(s), 1 unchecked
