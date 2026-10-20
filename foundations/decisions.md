@@ -870,7 +870,10 @@ options filled in as `none considered` — nobody knows what was considered.
 
 A change to a decision that a task needs is written into the task's plan, or into its task
 document where no plan is written, and approved with that plan or document by the decision's
-approver before the code that needs it is made. When a contradiction shows only during
+approver before the code that needs it is made; that approval, including a change carried by a row
+of *Settlements to record*, answers the question WAY-114 requires, so the agent writing the entry
+asks only about a meaning beyond what the approved plan or task document carries, and in this area
+this decision prevails over WAY-114. When a contradiction shows only during
 implementation, the agent stops, quotes the decision by its number, and either brings the change into line, drops the change, or
 proposes on the task branch a new wording or a narrowing of the decision — by a new version on the
 main branch, by an edit before it — and the code that needs it waits for the decision's approver. An
@@ -880,25 +883,30 @@ exception lives only in a task document, plan or cycle record.
 - **Change:** new decision
 - **Scope:** decisions, task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-01@60960941
+- **Relations:** derives from WAY-01@60960941 · narrows WAY-114@04b4f599
 - **Verification:** level 2 — an agent compares the change with the decision:
   - complies: a task branch whose code goes against a decision carries a proposed narrowing, and
     the merge waits for its approver; a task without a plan carries the known decision revision
-    in its task document, accepted by the decision's approver before dependent code;
+    in its task document, accepted by the decision's approver before dependent code, and the entry's
+    author records that meaning without asking again; a further meaning goes to the approver;
   - violates: a task branch whose code contradicts a decision that stays unchanged; a task's plan
     that records a "justified violation" of a decision; a task without a plan treats the
-    orchestrator's go-ahead as approval of a decision revision.
+    orchestrator's go-ahead as approval of a decision revision; the entry's author asks again about
+    an accepted settlement, or extends its meaning without asking.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/20
+- **Approved by:** Mariusz, merge of <request link>
 
 *Rationale:* an exception kept only with the work leaves the foundation describing what the code no
 longer does (WAY-01); stopping shows the contradiction when it is found. Aligning or dropping the
 change leaves the decision intact, so the agent may do either; changing the decision is its
-approver's.
+approver's. Asking again about the meaning already approved spends attention without presenting
+a new choice; a meaning beyond it still needs that choice.
 *Rejected:* a justified violation recorded in the plan, the decision unchanged — the foundation
 stops matching the code; a whole new answer as the only way to change a decision — a narrow
-exception takes the whole decision with it.
+exception takes the whole decision with it; repeated approval of the same meaning — the human
+answers a question already settled; an implied exception to WAY-114 — competing instructions leave
+the entry writer to choose which one governs.
 
 ### WAY-31/1 — Which links between entries are flagged when the named entry changes?
 
@@ -1301,9 +1309,11 @@ Impact Analysis) — it fails where it cannot reason.
 
 ### WAY-46/1 — How does the criticality of a part arise?
 
-A part carries the failure modes a human records at it, each with the kind of damage it does,
-its severity, and how it is detected before release — a named invariant, or an explicit "not
-detected"; an obligation from a law or a contract that raises the criticality of a part enters the
+A part carries the failure modes a human records at it — including those the task document commands
+to record or the human supplies or accepts from an agent's proposal in answer to the cycle's question,
+regardless of who enters them in the file — each with the kind of damage it does, its severity,
+and how it is detected before release — a named invariant, or an explicit "not detected"; an
+obligation from a law or a contract that raises the criticality of a part enters the
 part map as a failure mode of that part, whose detection names an invariant resting on the
 environment fact of that obligation. The criticality of a part is computed rather than written by
 hand: the highest of its own failure modes, of the critical flows it lies on, and of the parts that
@@ -1318,27 +1328,31 @@ change at the merge, with the lowered criticality in front of them.
 - **Relations:** derives from WAY-40@3d01f9cd
 - **Verification:** level 1 — invariants: failure-mode-severity · failure-mode-detection ·
   part-criticality-field · map-guard-unrecorded-criticality · map-guard-dependency-report ·
-  criticality-lowering-report. Level 2 for an obligation from outside — an agent compares the
-  change with the decision:
+  criticality-lowering-report. Level 2 for human authorization and an obligation from outside — an
+  agent compares the change with the decision:
   - complies: a part with personal data records "kept past the legal period", detected by an
-    invariant resting on the law's fact;
+    invariant resting on the law's fact; an agent enters the failure mode the task commands or the
+    human accepts in answer to the cycle's question;
   - violates: a part carries a field "minimum criticality: high" citing the law; the obligation is
-    noted in a part's responsibility with no failure mode.
+    noted in a part's responsibility with no failure mode; an agent records an unaccepted proposal,
+    or refuses to enter an accepted one because the human did not type it.
 - **Review when:** a product that pins the-way holds data under an obligation from a law or a
   contract on one of its parts · check by: 2026-12-31
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/4
+- **Approved by:** Mariusz, merge of <request link>
 
 *Rationale:* criticality sets how sharply a task is checked (WAY-13); hand-written, it goes stale.
 Silence about a part raises checks instead of removing them; lowering, the convenient move, waits
 for a human. Recorded detection shows which failures the gate misses, and lets a changed law reach
-its invariant (WAY-31).
+its invariant (WAY-31). Human authorization determines which failure modes belong to the part;
+requiring the human to type them would add transcription without another judgment.
 *Rejected:* criticality written by hand — a second copy of what flows and dependencies say; three
 axes (confidentiality, integrity, availability) — WAY-13 reads one measure; an unassessed part
 counting as the lowest — it would never raise a check; raising and lowering alike — the convenient
 direction must cost something; "failure symptom" and "first step to limit the damage" as fields —
 read in an incident, not when choosing checks; a floor of criticality as a field of the fact — it
-changes the computation before any product needs it.
+changes the computation before any product needs it; treating the person who types the entry as
+its authorizing human — it mistakes transcription for the judgment the criticality rests on.
 
 ### WAY-47/1 — How is a critical flow's list of parts checked?
 
@@ -5731,7 +5745,7 @@ entry on its own recommendation for the human to accept at the merge.
 - **Change:** new decision
 - **Scope:** product-guidelines, decisions, project-level, task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-30@6924312f · derives from WAY-125@f3e6afcf · narrows
+- **Relations:** derives from WAY-30@2141bece · derives from WAY-125@f3e6afcf · narrows
   WAY-114@04b4f599
 - **Verification:** level 2 — an agent compares the work with the decision:
   - complies: a styleguide task's document carries the meaning "red marks only what deletes", the
@@ -5745,7 +5759,7 @@ entry on its own recommendation for the human to accept at the merge.
     an existing role waits for the human.
 - **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/25
+- **Approved by:** Mariusz, merge of <request link>
 
 *Rationale:* a meaning of guidelines binds every later screen, and code built on one the human never
 saw is reworked when the human turns it down at the merge, so the approval comes before the code,
@@ -7648,3 +7662,40 @@ and work is divided only to manufacture a nonempty history; substituting prepare
 checks — a real violation can disappear from the evidence; a parse error as the deliberate break
 — it exercises reading rather than preservation; rewriting preservation as agreement with a
 chosen list — it protects a different property.
+
+### WAY-224/1 — How does a task cycle bring a candidate failure mode to the human?
+
+A candidate failure mode the cycle finds at a part goes to the human as a question in the
+request's *Questions*, naming the part, what fails, the damage, its severity, how it is detected,
+the agent's recommendation and the strongest argument against that recommendation. Such a
+question is not a foundation entry deferred by the return step: the cycle records the failure mode
+only when the task document commands it or the human supplies it or accepts the agent's proposal
+in answer to that question (WAY-46), and records the answer as a correction to the open request
+before it is merged.
+
+- **Change:** new decision
+- **Scope:** part-map, task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-46@7511b86f · derives from WAY-11@e882a9df · derives from
+  WAY-113@d3e5cbfa · derives from WAY-125@f3e6afcf
+- **Verification:** level 2 — an agent compares the task, the request and the human's answer with
+  the decision:
+  - complies: the request presents a candidate with all the named information and an argument
+    against its recommendation; the human accepts it and the cycle records it in the open request
+    before merge; a failure mode commanded by the task is recorded without another question;
+  - violates: the cycle records an unaccepted candidate, omits it because a human must record
+    failure modes, or defers an accepted answer to a separate task; the question omits the
+    strongest argument against its recommendation, or is treated as an entry left unwritten.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, merge of <request link>
+
+*Rationale:* a candidate needs human judgment before it changes the part's criticality, but losing
+it leaves that judgment unavailable. A concrete recommendation with its strongest counterargument
+lets the human correct or accept the assessment without composing it from nothing; correction
+before merge keeps the accepted assessment with the work that found it.
+*Rejected:* silently recording the agent's assessment — the agent takes the human's judgment;
+always making another task for an accepted candidate — the current work merges without the
+accepted criticality and the candidate can be lost; treating the question as a deferred entry —
+it requires recording a meaning before the human settles it; requiring this counterargument for
+every question — that would settle a broader rule than the candidate failure mode needs.

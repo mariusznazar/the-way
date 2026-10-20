@@ -760,7 +760,7 @@ Every failure mode recorded in the part map names its severity.
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-46@a5f43e40
+- **Derives from:** WAY-46@7511b86f
 - **Part:** part-map
 - **Correction:** none
 
@@ -770,7 +770,7 @@ Every failure mode recorded in the part map names an invariant that detects it b
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-46@a5f43e40
+- **Derives from:** WAY-46@7511b86f
 - **Part:** part-map
 - **Correction:** none
 
@@ -780,7 +780,7 @@ No part of the part map carries a criticality written by hand.
 
 - **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-46@a5f43e40
+- **Derives from:** WAY-46@7511b86f
 - **Part:** part-map
 - **Correction:** none
 
@@ -790,7 +790,7 @@ The map guard computes the highest criticality of the map's scale for a part wit
 
 - **Method:** `python -B gate/run_tests.py elements/part-map --record .runs/part-map-tests.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-46@a5f43e40
+- **Derives from:** WAY-46@7511b86f
 - **Part:** part-map
 - **Correction:** none
 
@@ -800,7 +800,7 @@ The map guard computes the criticality of a part that has failure modes recorded
 
 - **Method:** `python -B gate/run_tests.py elements/part-map --record .runs/part-map-tests.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-46@a5f43e40
+- **Derives from:** WAY-46@7511b86f
 - **Part:** part-map
 - **Correction:** none
 
@@ -810,7 +810,7 @@ The map guard, given "{fork-point}", reports every part whose computed criticali
 
 - **Method:** `python -B gate/run_tests.py elements/part-map --record .runs/part-map-tests.jsonl`
 - **Rests on:** none
-- **Derives from:** WAY-46@a5f43e40
+- **Derives from:** WAY-46@7511b86f
 - **Part:** part-map
 - **Correction:** none
 
