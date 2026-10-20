@@ -30,9 +30,9 @@ line, and today `python -B gate/run_tests.py gate` runs them. For changed founda
 their element format guards; use `--base none` and, where available, `--merge-onto none` because
 there is no `main` commit to compare with. Read the reports, including warnings and `unchecked`
 results. Before the request, also run the decisions and invariants guards with
-`--merge-onto <the current foundations tip>` and act only on their relation-fingerprint findings;
-their findings about copies of a version and about a placeholder request link are expected before
-`main`.
+`--merge-onto <the current foundations tip>`. Act on their relation-fingerprint findings and
+resolve any operational error that prevents those checks from running; their findings about
+copies of a version and about a placeholder request link are expected before `main`.
 
 The available tests and guards are partial checks. Record what ran, what failed and what remained
 unchecked in the review material. Never report them as a pass of the full gate. A missing method or
