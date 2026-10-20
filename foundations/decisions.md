@@ -7671,21 +7671,26 @@ the agent's recommendation and the strongest argument against that recommendatio
 question is not a foundation entry deferred by the return step: the cycle records the failure mode
 only when the task document commands it or the human supplies it or accepts the agent's proposal
 in answer to that question (WAY-46), and records the answer as a correction to the open request
-before it is merged.
+before it is merged. In the area of a cycle's questions about candidate failure modes, this
+decision prevails over WAY-114, including when the agent has a recommendation and recording the
+mode changes no approved decision.
 
 - **Change:** new decision
 - **Scope:** part-map, task-cycle
 - **Based on:** none
 - **Relations:** derives from WAY-46@7511b86f · derives from WAY-11@e882a9df · derives from
-  WAY-113@d3e5cbfa · derives from WAY-125@f3e6afcf
+  WAY-113@d3e5cbfa · derives from WAY-125@f3e6afcf · narrows WAY-114@04b4f599
 - **Verification:** level 2 — an agent compares the task, the request and the human's answer with
   the decision:
   - complies: the request presents a candidate with all the named information and an argument
     against its recommendation; the human accepts it and the cycle records it in the open request
-    before merge; a failure mode commanded by the task is recorded without another question;
+    before merge; the question is asked even when the agent has a recommendation and recording
+    the mode changes no approved decision; a failure mode commanded by the task is recorded
+    without another question;
   - violates: the cycle records an unaccepted candidate, omits it because a human must record
     failure modes, or defers an accepted answer to a separate task; the question omits the
-    strongest argument against its recommendation, or is treated as an entry left unwritten.
+    strongest argument against its recommendation, or is treated as an entry left unwritten;
+    the cycle suppresses the candidate question because neither condition in WAY-114 holds.
 - **Review when:** none
 - **Origin:** none
 - **Approved by:** Mariusz, merge of <request link>
