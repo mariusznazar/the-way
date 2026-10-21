@@ -14,12 +14,13 @@ notes: `C:\Storage\The Brain\The Brain\Notes\Projects\(P) Proces pracy nad produ
 An agent that cannot open it asks the human. Files and foundation entries the plan has not yet
 reached still describe the mechanism this guide drops: fingerprints and their renewal, entry
 versions, *Approved by* and the request link it waits for, format guards run as a step of a change,
-the independent assessment and a second search of the foundation before the merge. A change to
+the independent assessment, a second search of the foundation before the merge and the record of a
+search. A change to
 the-way does not apply that mechanism, whatever such a file or entry says. Where a test of the-way
 still requires part of it, such as a fingerprint beside a reference in the-way's own foundation,
 the change meets the test with the repository's existing tools and does no more. While the plan is
-applied, its own rhythm holds: each of its positions is one commit, reviewed as below, and each of
-its stages is one request.
+applied, its own rhythm holds: each of its positions is one commit, with every test run on it and
+reviewed as below, and each of its stages is one request.
 
 ## Start a change
 
@@ -38,14 +39,16 @@ new decision version merely to model the unfinished pre-`main` history.
 
 Once a foundation entry the change writes or rewords is settled, its author searches the whole
 foundation once for the entries the change touches and corrects them in the same change (WAY-33).
-A finding the author cannot settle by correcting an entry — two decisions colliding with no
-precedence written — goes to Mariusz before the change goes on. There is no second search before
-the merge.
+A finding the author cannot settle by correcting an entry, such as two decisions colliding with no
+precedence written, and a correction that would change the meaning of an approved decision beyond
+what the task or the plan's position settles (WAY-114), go to Mariusz before the change goes on.
+There is no second search before the merge.
 
-When the change is made, take the return step: compare each foundation entry the change touched,
-and the part map, with the files of the repository, and correct in the same change whatever no
-longer matches. Unlike the return step of WAY-11, it does not hunt for behaviour no invariant
-covers; an invariant is written only for a rule the change, a decision or Mariusz sets.
+When the change is made, take the return step: compare the foundation entries the change edits,
+those the task or the plan's position names and those the search found, and the part map, with the
+files of the repository, and correct in the same change whatever no longer matches. Unlike the
+return step of WAY-11, it does not hunt for behaviour no invariant covers; an invariant is written
+only for a rule the change, a decision or Mariusz sets.
 
 ## Check the change
 
@@ -66,8 +69,8 @@ The author of the change, or the agent that leads the work, asks an agent that d
 change to review it (WAY-10). The reviewer receives the whole diff, the task or the plan's position
 the change carries out, and the foundation entries the change touches, and reviews the change
 against them. The reviewer decides which of its remarks block. The author makes one fix for them,
-and an agent that did not make the change reviews that fix once; a remark still open after that goes to Mariusz in the
-request.
+and an agent that did not make the change reviews that fix once. A blocking remark still open after
+that stops the change and goes to Mariusz; the other remarks go into the request.
 
 ## Integrate into `foundations`
 
@@ -75,7 +78,9 @@ Open a request to merge the task branch into `foundations`. It holds:
 
 - every foundation entry the change alters, each with one sentence on what it changes in meaning;
 - every test command run and its exit code;
-- what was not checked.
+- what was not checked;
+- every remark of the review still open, in the reviewer's words;
+- every invariant test the change alters.
 
 Mariusz merges the request; the merge is the acceptance of the change and of every entry it alters.
 Creating `main` is a separate release decision that Mariusz makes; it is not part of integrating a

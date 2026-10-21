@@ -77,7 +77,7 @@ test, other than one to the-way itself, that carries no record of its independen
 (WAY-10). A task that needs an invariant test changed goes back to the foundation step.
 
 - **Change:** new decision
-- **Scope:** invariants, task-cycle
+- **Scope:** invariants, task-cycle, agent-instructions
 - **Based on:** impossiblebench-test-modification@9cdba560
 - **Relations:** derives from WAY-01@60960941
 - **Verification:** level 1 — invariants: foundation-change-assessment-record.
@@ -347,8 +347,8 @@ share its blind spots, so independence comes from another model and from not see
 reasoning; one such reader finds what a reader can, and the human who accepts at the merge reads the
 change with the assessment beside it. The finding it cites measured models of other publishers only,
 and this decision takes it across publishers (WAY-85). A change to the-way itself goes without the
-assessment: the review of the whole change by an agent that did not make it finds most of the
-errors that reach a product, and the human reads the diff of the foundation at the merge.
+assessment: an agent that did not make it reviews the whole change against its task and the
+foundation, and the human reads the diff of the foundation at the merge.
 *Rejected:* a panel of two assessors and a settler reading both orders — its cost per change
 outweighs what one independent reader misses, and its uncertainty becomes questions for the human;
 the author assessing its own change — it checks itself; assessing again every settlement that
@@ -942,8 +942,8 @@ and carrying the new fingerprint.
 *Rationale:* a relation or an invariant's link stands on what the named entry says (WAY-17), and a
 plain identifier never shows the ground moved; WAY-02's fingerprint serves, so no second
 mechanism; the renewal travels in the same merge, so nothing binds on the main branch unchecked.
-In the-way itself the renewal is dropped: a renewed fingerprint changes no meaning, and its author's
-search finds what a change touches.
+In the-way itself the renewal is dropped: renewing a fingerprint does not lead to a change in the
+entry that carries it, and its author's search finds what a change touches.
 *Rejected:* flags from the kind of change — a misnamed kind silences them; no flags, the author
 reading the dependents — a step that goes missing; flags left open on the main branch — an entry in
 force on unchecked ground; flags of graded strength — nothing reads the strength; a fingerprint on
@@ -1004,8 +1004,8 @@ a change to the foundation is merged only with the record of both searches.
 between entries written apart, where nobody thought of a link — only a search of the whole
 foundation finds them. Two tasks can contradict each other without a file conflict (WAY-01), so
 the search runs again before the merge, and the merge waits for its record, because a search is a
-step that goes missing. In the-way itself a change keeps the author's one search, and the human
-sees every entry it alters in its request.
+step that goes missing. In the-way itself a change keeps the author's one search, with no record
+of it, and accepts that risk: the human sees every entry it alters in its request.
 *Rejected:* fingerprints alone — they see only written links; a search within overlapping scopes
 — contradictions between parts go unseen; a search at writing only — parallel tasks collide once
 merged.
