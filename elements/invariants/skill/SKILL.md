@@ -1,6 +1,6 @@
 ---
 name: record-invariant
-description: Use when a product's invariants file, foundations/invariants.md, has to gain or change an entry — a rule the product must keep, from conversation, a task's return step, the behaviour of the critical flows and the parts they run through or an invariant a decision's verification calls for; a changed, split, merged or withdrawn invariant; a row on the list of violated or quarantined invariants; or an invariant a project definition projects.
+description: Use when a product's invariants file, foundations/invariants.md, has to gain or change an entry — a rule the product must keep, from conversation, a task's return step, the behaviour of the critical flows and the parts they run through or an invariant a decision's verification calls for; a changed, split, merged or withdrawn invariant; an invariant the product does not meet today, marked violated; or an invariant a project definition projects.
 ---
 
 # Record an invariant
@@ -41,59 +41,45 @@ project skill of that name with the `the-way-` prefix. Follow the steps of
   found — a change, split, merge or withdrawal, or an entry of its own where the template's "Where
   entries go" gives one; not found — a new identifier.
 - The search of the foundation also looks for a decision whose level 1 verification calls for this
-  rule, a flow of the part map carrying its sentence, a failure mode it detects, and a named link
-  whose entry's binding part has changed, to recheck and carry its new fingerprint (WAY-31).
+  rule, a flow of the part map carrying its sentence, a failure mode it detects, and an entry it
+  names whose binding part has changed, to check it against that part again (WAY-31).
 
 ## 3. Draft
 
-- *Method*: take its form from the template, tell the human which form it is and why, and do not
-  write the check to have something to name.
+- *Method*: `test` where a cheap test can check the sentence on the product, `review` otherwise,
+  as the template's "Method and test" gives it; tell the human which and why, and never write a test
+  only so that *Method* can read `test`.
 - *Part*: for each part named, say which change there could make the sentence false.
 - *Rests on*: put through the test in the template's section "Links" every fact quoted in the
   *Based on* of the decisions it derives from, and every fact that neither the product nor the-way
   at the commit it pins writes, such as a standard, a library or a law, found behind what the
   sentence names, a value it copies, or a meaning the product's rules hand elsewhere, as the part
   map hands the matching of a pattern to git.
-- An entry the human chose from what the product already does: search the decision log, the
-  product's documents and the history of the code, and draft its row on the list of recovered
-  invariants; the human accepting the change at the merge sets it, as the template's "Recovered"
-  says.
+- An entry the human chose from what the product already does, which no decision of the log
+  carries: *Derives from* reads `recovered from code —` and the place in the code that shows the
+  behaviour, as the template's "Links" says.
+- *Violated*: `yes` only for a rule the product does not meet today; ask first whether the product
+  is to be fixed instead (WAY-51).
 
 ## 4. Ask, show, write
 
 - Step 4.2: for a changed entry, show the wording on `{fork-point}` beside the new one, with the
-  checks that cite it, so that the human settles a raise or a correction as the template's
-  "Version and correction" says. In a task cycle the orchestrator proposes a raise or a correction,
-  which the request shows (WAY-57).
+  tests that cite it, and check each of those tests against the new wording.
 - Step 4.4: what follows from this entry is a decision whose level 1 verification gains, loses or
   renames it, through `record-decision`; and a flow or a failure mode that names it, or names an
   identifier this change retires, through `update-part-map`.
-- After step 4.4, where the method is a command, hand the human (or, in the task cycle, the
-  orchestrator) one instruction, for the check, to an agent that wrote neither the sentence nor the
-  code it covers: the entry, its method, and the checks citing an identifier this change retires or
-  a version it raises. The deliberate break is written from the sentence by the reviewer of that
-  code, without the check's author (WAY-69). Where it is not a command, there is nothing to hand on.
-  For protection of an empty historical set, include the actual-history evidence and direct the
-  reviewer to the template's *Evidence when the protected history is empty* (WAY-223).
+- After step 4.4 nothing is handed to another agent. Where *Method* reads `test`, the test is
+  written in the change that brings the entry and seen failing once, as the template's "Method and
+  test" says; the change names in its request each invariant test it alters (WAY-03).
 
 ## Projected mode
 
 Projected mode runs as `elements/common/way_of_working.md` gives it, with these differences for an
 invariant (WAY-117):
 
-- Step 3: *Method* reads `TODO` where the product cannot yet name a command or a file to assess it
-  against, as the template allows; *Part* names parts the product's map holds, and `every` where
-  the map holds no part yet; *Derives from* a projected decision reads
+- Step 3: *Method* reads `review`; the task that writes the invariant turns it to `test` with the
+  test, where a cheap test can check the sentence; *Part* names parts the product's map holds, and `every` where the map holds
+  no part yet; *Derives from* a projected decision reads
   `TODO — <the decision's question>, projected in <the definition's path>`.
-- Step 4.3: the heading reads `#### <identifier>/1`, or the current identifier with its next
-  version.
-- After step 4.4 nothing is handed on: the check and the deliberate break wait for the task that
-  writes the invariant.
-
-## Violated and quarantined invariants
-
-For a row on the list of violated invariants, ask first whether the product is to be fixed
-instead, and whether the entry is one the product does not meet or one with no runnable method,
-which the template reports `unchecked` instead (WAY-51, WAY-63). Before a quarantine, ask for the
-`pass` and `fail` recorded on one commit, whether a change of the invariant test's mechanics
-answers it instead, and the end date.
+- Step 4.3: the heading reads `#### <identifier>`.
+- After step 4.4 nothing is handed on: the test waits for the task that writes the invariant.

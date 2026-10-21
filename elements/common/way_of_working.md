@@ -159,8 +159,8 @@ differences, and each element's skill adds its own
   before the code exists, an open question of the definition with its place of resolution. Where
   `find-foundation-entries` called the skill, report what follows to it, which adds it to its
   table, and write nothing; otherwise write it through the skill of its element in projected
-  mode. What a skill hands to other agents after step 4.4 — a check, a deliberate break, a review
-  of uses — waits for the task that writes the entry.
+  mode. What a skill hands to other agents after step 4.4 — a check, a review of uses — waits for
+  the task that writes the entry.
 - In every step, a skill this one hands to runs in projected mode on the same definition, and no
   step writes into `foundations/`: neither an entry nor a row of a list or a scale the element's
   file holds. Such a row is an open question of the definition, `— resolved in: breakdown`.

@@ -133,16 +133,6 @@ Every entry of `foundations/invariants.md` names as its method a command that be
 - **Part:** every
 - **Correction:** none
 
-## invariant-test-break/1
-
-Every check that cites an invariant fails, in k of n runs where its command sets them, on the deliberate break it was accepted on, using the assessed commit's same check implementation and configuration, with prepared earlier-version data only under WAY-223.
-
-- **Method:** `TODO`
-- **Rests on:** none
-- **Derives from:** WAY-08@2343e09f · WAY-223@6df19670
-- **Part:** every
-- **Correction:** none
-
 ## repository-file-location/1
 
 Where {merge-onto} exists, every file git tracks lies in `foundations/` or in a directory WAY-09 names for a part of the process, belongs to the `repository` or the `agent-instructions` part of the part map, or is the `README.md` at the root.
@@ -1034,16 +1024,6 @@ Every `invariant:` line in a check that names an entry of `foundations/invariant
 - **Part:** every
 - **Correction:** none
 
-## invariant-correction-confirmation/1
-
-Every correction an entry of `foundations/invariants.md` declares is confirmed by the human who accepts the change at the merge, with the old and the new binding part in front of them.
-
-- **Method:** `TODO`
-- **Rests on:** none
-- **Derives from:** WAY-57@89a75ebe
-- **Part:** invariants
-- **Correction:** none
-
 ## invariant-recovered-form/1
 
 Every row of the list of recovered invariants in `foundations/invariants.md` names an entry at its current version and holds `searched: <…>` and `found: <…>`.
@@ -1062,16 +1042,6 @@ No entry of `foundations/invariants.md` that stands on the list of recovered inv
 - **Rests on:** none
 - **Derives from:** WAY-58@952ded5c
 - **Part:** invariants
-- **Correction:** none
-
-## gate-fork-point-evidence/1
-
-For every invariant entry whose sentence a change adds or alters against "{fork-point}", the gate's report states whether the entry's method passes on "{fork-point}" and fails there on a deliberate break, or that this could not be checked.
-
-- **Method:** `TODO`
-- **Rests on:** none
-- **Derives from:** WAY-58@952ded5c
-- **Part:** gate
 - **Correction:** none
 
 ## invariant-fingerprint-input/1
@@ -1134,16 +1104,6 @@ The gate reports no pass for an invariant for which neither a run of its command
 - **Part:** gate
 - **Correction:** none
 
-## gate-method-order/1
-
-The gate runs a method whose run leaves what another method reads, where a decision places that reading, before the method that reads it.
-
-- **Method:** `TODO`
-- **Rests on:** none
-- **Derives from:** WAY-61@4804d070
-- **Part:** gate
-- **Correction:** none
-
 ## invariant-part-names/1
 
 Every part an entry of `foundations/invariants.md` names is a part of the part map.
@@ -1166,7 +1126,7 @@ Every entry of `foundations/invariants.md` names `every` or at least one part, n
 
 ## change-reach/1
 
-The invariants the gate finds a change against "{fork-point}" reaching include every entry naming `every` or a part the change touches, and every entry whose method names a file the change alters.
+The invariants the gate finds a change against "{fork-point}" reaching include every entry naming `every` or a part the change touches, every entry that a test the change alters cites, and every entry one of whose tests names on a `data:` line a file the change alters.
 
 - **Method:** `TODO`
 - **Rests on:** git-path-patterns@1519f3f7
@@ -1181,26 +1141,6 @@ Every result the gate reports for an invariant is `pass`, `fail`, `unchecked` or
 - **Method:** `TODO`
 - **Rests on:** none
 - **Derives from:** WAY-63@f16348c8
-- **Part:** gate
-- **Correction:** none
-
-## gate-unchecked-reason/1
-
-Every `unchecked` the gate reports names a reason on the list in the invariants template.
-
-- **Method:** `TODO`
-- **Rests on:** none
-- **Derives from:** WAY-63@f16348c8
-- **Part:** gate · invariants
-- **Correction:** none
-
-## gate-missing-script/1
-
-The gate reports an invariant whose command runs, under a Python interpreter, a script that does not exist on the commit being checked `unchecked` for want of a declared or produced command where that script does not exist on "{fork-point}" either, and `error` where it exists there.
-
-- **Method:** `TODO`
-- **Rests on:** none
-- **Derives from:** WAY-105@a95814a3
 - **Part:** gate
 - **Correction:** none
 
@@ -1362,16 +1302,6 @@ No quarantine row in `foundations/invariants.md` names an invariant a critical f
 - **Rests on:** none
 - **Derives from:** WAY-68@3335280b
 - **Part:** invariants · part-map
-- **Correction:** none
-
-## gate-quarantine-result/1
-
-The gate reports a quarantined entry `unchecked` while the checked commit's committer date is no later than its end date, and `error` after.
-
-- **Method:** `TODO`
-- **Rests on:** none
-- **Derives from:** WAY-68@3335280b
-- **Part:** gate
 - **Correction:** none
 
 ## log-entry-field-presence/1
@@ -2220,6 +2150,13 @@ For every invariant entry that a rule of a file `guidelines/<name>.md` names wit
 | view-versions | withdrawn: the decision log holds one entry for each decision and says what binds today, with no view generated from it (WAY-18) | none |
 | view-links | withdrawn: the decision log holds one entry for each decision and says what binds today, with no view generated from it (WAY-18) | none |
 | foundation-change-assessment-record | withdrawn: a change to an invariant test or to the foundation has no assessment of its own; the review of the change and the human at the merge read it (WAY-10) | none |
+| invariant-test-break | withdrawn: an invariant's test is seen failing once by the agent that writes it, with no deliberate break accepted apart from that (WAY-08) | none |
+| invariant-correction-confirmation | withdrawn: an invariant carries no version, so no correction keeps one (WAY-57) | none |
+| gate-fork-point-evidence | withdrawn: a recovered invariant names in *Derives from* the place in the code that shows it, with no run on the older commit (WAY-58) | none |
+| gate-method-order | withdrawn: an invariant's method is a test of the product's suite, which reads no other method's run (WAY-61) | none |
+| gate-unchecked-reason | withdrawn: the invariants template keeps no closed list of reasons for `unchecked` (WAY-63) | none |
+| gate-missing-script | withdrawn: an invariant's method names no command and no script (WAY-105) | none |
+| gate-quarantine-result | withdrawn: a test giving different verdicts on one commit is fixed as any test is, with no quarantine (WAY-68) | none |
 
 ## Quarantined invariants
 

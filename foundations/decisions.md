@@ -69,30 +69,34 @@ full 64-character digest — unreadable, nothing gained.
 
 ### WAY-03/1 — Who may change an invariant test, and when?
 
-Invariant tests are written and accepted together with the foundation change, and during
-implementation they are read-only. A mechanism outside the model enforces this: when a change is
-merged, a check whose definition is taken from the main branch rejects any change to an invariant
-test, other than one to the-way itself, that carries no record of its independent assessment
-(WAY-10). A task that needs an invariant test changed goes back to the foundation step.
+Any change may alter an invariant test, in any step of its task, implementation included. A change
+that alters an invariant test names that test in its request, so that the agent reviewing the
+change and the human merging it see it.
 
 - **Change:** new decision
 - **Scope:** invariants, task-cycle, agent-instructions
 - **Based on:** impossiblebench-test-modification@9cdba560
 - **Relations:** derives from WAY-01@60960941
 - **Verification:** level 2 — an agent compares the change with the decision:
-  - complies: an implementer whose code an invariant test stops sends the task back to the
-    foundation step, and the test changes there with the foundation;
-  - violates: an implementer edits an invariant test during implementation to make its code pass.
+  - complies: an implementer whose code an invariant test stops fixes the code, or, where the test
+    reads its sentence wrongly, fixes the test and names it in the request;
+  - violates: a change alters an invariant test and its request does not name it; a test that read
+    its sentence rightly is weakened so that the code passes, even where the request names it; a
+    task goes back to an earlier step of its cycle only because an invariant test has to change.
 - **Review when:** no model in the range of fact impossiblebench-test-modification is Active in
   Anthropic's table of models · check by: 2026-10-02
 - **Origin:** none
 - **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/4
 
 *Rationale:* an agent that a test stands in the way of adjusts the test to the code: the build
-turns green, and the foundation lies. Keeping invariant tests out of the implementer's reach
-removes that move instead of forbidding it.
-*Rejected:* a written rule "do not change the tests" — prose stops nothing; a local hook — one
-switch skips it.
+turns green, and the foundation lies. Naming every change to an invariant test in the request puts
+that move in front of the reviewer, who did not make the change, and of the human at the merge
+(WAY-10), while a test that reads its sentence wrongly is fixed where it is found. Naming is
+enough where a block is not, because a changed test is read against the sentence it cites by
+someone who did not change it, before the change merges.
+*Rejected:* invariant tests read-only during implementation, kept so by a check at the merge, with
+a return to the foundation step for every change of one — each needed fix of a test stops the task;
+a local hook — one switch skips it; a written rule "do not change the tests" — prose stops nothing.
 
 ### WAY-04/1 — What makes up a product's foundation, and what in it is derived rather than written by hand?
 
@@ -198,34 +202,36 @@ version that never bound anything.
 
 ### WAY-08/1 — How is an invariant checked?
 
-Every invariant names its method of checking, and its current result comes from running that
-method, never from a status written by hand. The default method is a test in the broad sense —
-a code test, an end-to-end test or an exploratory test run by an agent on the working product —
-and a test counts only when a deliberately introduced break of the invariant makes it fail, in k
-of n runs, which its method's command sets and records as one verdict, for a test that does not
-give the same verdict every time. Human inspection is used for assessments that neither an
-automated check nor a repeatable measurement can settle, and it leaves a trace of who checked and
-when.
+Every invariant names its method of checking: a test of the product's test suite where a cheap test
+can check its sentence, and review otherwise, where the review of each change by an agent that did
+not make it compares the change with the sentence. The status of an invariant with a test comes
+from running that test, never from a status written by hand. An invariant's test is seen failing
+once, with the command that later shows it passing — run before the code that satisfies it, or,
+where the code already has the behaviour, against that behaviour broken for a moment.
 
 - **Change:** new decision
 - **Scope:** invariants
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 1 — invariants: invariant-method-form · invariant-test-break ·
-  human-verdict-invariant-row. Level 2 for the choice of method — an agent compares the change
-  with the decision:
-  - complies: a person settles whether an image's text alternative describes it, after the
-    accessibility check marked it incomplete;
-  - violates: an invariant that a repeatable measurement can settle is left to human inspection.
+- **Verification:** level 2 — an agent compares the change with the decision:
+  - complies: the invariant on the log's fields reads `test`, and its test runs the check on the
+    real log; whether an image's text alternative describes it reads `review`; a new invariant's
+    test fails before the code that satisfies it is written;
+  - violates: an invariant that a cheap test can check reads `review`; an entry carries a status
+    `pass` written by hand; an invariant's test is taken as checking its rule without having been
+    seen failing.
 - **Review when:** none
 - **Origin:** none
 - **Approved by:** Mariusz, 2026-09-29
 
-*Rationale:* coverage is not checking: code can be covered while no test fails when it is
-removed; a status written by hand goes stale with the next commit; k and n in the command let one
-run's verdict cover the n runs; even accessibility tools hand uncertain cases to a person.
-*Rejected:* test coverage for every invariant — untestable ones leave the foundation or get a
-test that always passes.
+*Rationale:* coverage is not checking: code can be covered while no test fails when it is removed,
+so a test counts once it has been seen failing; a status written by hand goes stale with the next
+commit. A check built for a rule no cheap test can decide costs more than it catches, while the
+review already reads each change against the foundation (WAY-10).
+*Rejected:* test coverage for every invariant — untestable ones leave the foundation or get a test
+that always passes; a deliberate break of every test, written apart from it and run k of n times —
+a ritual of its own for each test, where the one failure seen already shows it can fail; human
+inspection with a recorded verdict — a file of verdicts beside the review that reads the change.
 
 ### WAY-09/1 — What may enter the process repository?
 
@@ -1431,15 +1437,16 @@ dependency — inside one repository it always holds.
 
 ### WAY-51/1 — What does the main branch hold where the product does not meet an invariant or the part map's allowed dependencies?
 
-On the main branch the part map holds its allowed dependencies together with a listed debt:
-every dependency the code holds that the map does not allow stands on a derived list of known
-violations; an invariant the product does not meet stands, by identifier and current version, on
-the derived list `foundations/violated_invariants.md`. A new violation of the map breaks the gate;
-a row the code no longer contradicts breaks it too and goes in the same change; a listed `fail`
-leaves the gate's command at zero, and a listed `pass` makes it fail until the same change drops
-the row. A row of either list is added only by a change of the foundation that a human accepts,
-never by a step of implementation, and the state a product is in when this process enters it goes
-onto the list of known violations once.
+On the main branch the part map holds its allowed dependencies together with a listed debt: every
+dependency the code holds that the map does not allow stands on a derived list of known violations,
+and an invariant the product does not meet today stays whole and is marked violated at its entry.
+A new violation of the map breaks the gate, and a row the code no longer contradicts breaks it too
+and goes in the same change; a row is added to the list, and an invariant marked violated, only by
+a change of the foundation that a human accepts, never by a step of implementation, and the state a
+product is in when this process enters it goes onto the list of known violations once. A change
+that sets or clears the mark names it in its request; the test of a marked invariant stands in the
+product's suite marked as an expected failure in the product's test tool, and the change in which
+it starts to pass removes that marking and the mark of the invariant.
 
 - **Change:** new decision
 - **Scope:** part-map, invariants, gate, task-cycle
@@ -1447,23 +1454,29 @@ onto the list of known violations once.
 - **Relations:** derives from WAY-40@3d01f9cd · derives from WAY-53@aaeafada · derives from
   WAY-63@f16348c8 · narrows WAY-04@29a75d2c
 - **Verification:** level 1 — invariants: known-violation-coverage · known-violations-growth ·
-  known-violation-currency · known-violation-fields · known-violation-line-number ·
-  gate-exit-code · violated-list-growth · violated-position-version.
+  known-violation-currency · known-violation-fields · known-violation-line-number. Level 2 for the
+  mark of a violated invariant — an agent compares the change with the decision:
+  - complies: an invariant on loading saves that the product breaks today reads `Violated: yes`,
+    its test is marked as an expected failure, and the request that sets the mark names it;
+  - violates: an implementer marks an invariant violated so that the task can end; a request sets
+    or clears the mark without naming it; a marked invariant's test passes while the mark and the
+    expected failure stay; an invariant the product does not meet is reworded to fit the code.
 - **Review when:** none
 - **Origin:** none
 - **Approved by:** Mariusz, 2026-09-29
 
 *Rationale:* the process enters products that already break their rules (WAY-28); listed debt
 keeps each rule whole, since a rule written to fit the code hides the intent, and makes the gap
-countable. Where adding a row is the easy move, agents take it, so both lists share one ratchet.
+countable. Where adding to the debt is the easy move, agents take it, so it grows only by a change a
+human accepts. The mark stands at the invariant, where every reader of it sees it.
 *Rejected:* a main branch holding only what the code meets — no existing product could enter; the
-rule weakened until the code fits it — the foundation describes the accident (WAY-04); one list
-for both — the map's rows name parts and files, not entries; rows with line numbers — stale at the
-next edit; a row without a version — a debt for an old meaning excuses a new one; a rule left out
-or marked "not checked yet" until met — the gap stops being countable; debt paid by an end date —
-repaid by weakening the rule; a list any step may grow (Packwerk) — it outgrows the will to empty
-it; an addition check keyed to the entry's fingerprint — a second merge stop for what WAY-10
-assesses.
+rule weakened until the code fits it — the foundation describes the accident (WAY-04); a derived
+list of violated invariants beside the invariants file — a second file to keep in step with the
+entries, which a reader of the invariant does not see; one list for the map and the invariants — the
+map's rows name parts and files, not entries; rows with line numbers — stale at the next edit; a
+rule left out or marked "not checked yet" until met — the gap stops being countable; debt paid by
+an end date — repaid by weakening the rule; a list any step may grow (Packwerk) — it outgrows the
+will to empty it.
 
 ### WAY-52/1 — What is generated from the part map for an agent?
 
@@ -1586,14 +1599,15 @@ checking and the links that WAY-08 and WAY-17 require stand beside that sentence
 - **Verification:** level 1 — invariants: invariant-sentence-count.
   Level 2 for one invariant per sentence — an agent compares the change with the decision:
   - complies: "every version and review record in the log has every field of the template" as one
-    entry; "every human verdict names who checked and when" as one entry;
+    entry;
   - violates: "binding sentences number one to three and contain no *should*" as one entry; the
     sentence on fields split into one entry per field.
 - **Review when:** none
 - **Origin:** none
 - **Approved by:** Mariusz, 2026-10-01
 
-*Rationale:* one invariant per entry lets a break tell whether its method catches it (WAY-08).
+*Rationale:* one invariant per entry lets the failure of its test, seen once, show that the test
+catches that rule (WAY-08).
 *Rejected:* a split wherever a commit can break part of a sentence — one entry per version of the
 log.
 
@@ -1624,49 +1638,35 @@ readers have to pick.
 ### WAY-58/1 — What does an invariant entry record when it was recovered from what a product does?
 
 An invariant entry that a human chose from what the product already did before the task writing it
-began, as WAY-28 describes, and that names no decision entry of the product's log it derives from,
-stands in `foundations/invariants.md` on the list of recovered invariants, in a row naming its
-identifier, its current version, `searched: <…>` and `found: <…>`; no other invariant entry stands
-there. *found* names the place of each source the search found that gives a reason for keeping the
-behaviour or calls for a different one, or reads `nothing`; a place that only cites another is
-followed to the place it cites, marked when that source is superseded, and *found* never states a
-reason itself, nor one an agent infers. When an entry's binding part enters the foundation, the
-gate reports whether its method passes on the commit the task branch left the main branch from and
-fails there on a deliberate break, and the human accepting the change at the merge sets the row with
-that report in front of them.
+began, as WAY-28 describes, and that no decision entry of the product's log carries, reads in
+*Derives from* that it was recovered from code, with the place in the code that shows the
+behaviour. It states no reason for the behaviour, nor one an agent infers.
 
 - **Change:** new decision
-- **Scope:** invariants, gate
+- **Scope:** invariants
 - **Based on:** none
 - **Relations:** derives from WAY-28@94d8ef12 · derives from WAY-22@dcf291ea ·
   derives from WAY-17@b1e26133
-- **Verification:** level 1 — invariants: invariant-recovered-form · invariant-recovered-derived ·
-  gate-fork-point-evidence. Level 3 for the row — the human accepting the change at the merge sets
-  it with the gate's report in front of them, and the record of that decision names who and when.
-  Level 2 for what counts as already done and what *found* holds — an agent compares the change with
-  the decision:
+- **Verification:** level 2 — an agent compares the change with the decision:
   - complies: from a game's save module a human chooses "a save of another version is rejected
-    whole", which takes a row; *found* reads `the comment above the save format's version constant
-    at <sha>, decision D23 of the concept document`; an invariant written at a task's foundation
-    step for a feature being built stands on no row;
-  - violates: *found* reads "old saves are dropped because the rules may have changed"; *found*
-    lists a comment explaining how the loader parses a save; an invariant on a field the task adds
-    is marked recovered because its check cannot fail on the older commit.
+    whole", whose *Derives from* reads `recovered from code — the version check of the save loader
+    in src/save.ts`; an invariant written for a feature being built names its decision;
+  - violates: a recovered invariant's *Derives from* reads "old saves are dropped because the rules
+    may have changed"; an invariant on a field the task adds reads recovered from code; a recovered
+    invariant names no place in the code.
 - **Review when:** none
 - **Origin:** none
 - **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/4
 
 *Rationale:* WAY-28 lets a recovered invariant bind before anyone knows why it holds; without the
-row it reads like a chosen rule, hiding that its reason was never settled. *found* points to
-places, never reasons (WAY-22), and to those against the behaviour too, which a human weighing it
-most needs.
-*Rejected:* the mark only where no cause is known — a cause in a code comment or a concept document
-gives the rule two readings; a row for every entry naming no decision — an invariant for a feature
-being built would read as recovered; the mark set by the gate's run on the older commit — a rule new
-to the task can pass there too; a decision kept outside the log counted as named — nothing checks
-it; the reason quoted in *found* — a why inside an invariant; an origin field "derived from a
-decision" — it repeats WAY-17's link; an outside catalogue's requirement as a field — it is a fact,
-named under WAY-17.
+mark it reads like a chosen rule, hiding that its reason was never settled, and the place in the
+code leads whoever weighs a change to the behaviour. The reason stays out, since an invariant says
+nothing about why (WAY-22).
+*Rejected:* a list of recovered invariants with what was searched and found, set by the human at the
+merge from the gate's run on the older commit — a second record beside the entry, and a rule new to
+the task can pass that run too; the mark only where no cause is known — a cause in a code comment or
+a concept document gives the rule two readings; a decision kept outside the log counted as named —
+nothing checks it; the reason quoted beside the mark — a why inside an invariant.
 
 ### WAY-60/1 — Where may a condition that decides an invariant stand?
 
@@ -1681,11 +1681,11 @@ quantity measured while the product runs names its bound or tolerance, statistic
 - **Scope:** invariants, decisions, part-map, gate
 - **Based on:** none
 - **Relations:** derives from WAY-22@dcf291ea · derives from WAY-56@0d6340a8
-- **Verification:** level 1 — invariants: sentence-branch-names · sentence-gate-values. Level 2 for
-  the rest — an agent compares the change with the decision:
+- **Verification:** level 1 — invariants: sentence-branch-names. Level 2 for the rest — an agent
+  compares the change with the decision:
   - complies: "every version and review record in the log has every field of the template"; "the
-    list of violated invariants is a subset of its version on `{fork-point}`", the commit WAY-53
-    chose;
+    list of known violations of the part map is a subset of its version on `{fork-point}`", the
+    commit WAY-53 chose;
   - violates: "every request is answered within the limit set in `config.py`"; "every fingerprint
     on `main` equals the current fingerprint of the decision it names"; "a commit that changes
     `template.md` also appends a decision version to the log"; a bound written "~2 seconds"; a
@@ -1694,9 +1694,9 @@ quantity measured while the product runs names its bound or tolerance, statistic
 - **Origin:** none
 - **Approved by:** Mariusz, 2026-09-29
 
-*Rationale:* a condition outside the sentence moves unseen by the fingerprint (WAY-56), so it stands
-only where moving it takes a decision; a branch names another commit by the hour; a change is
-measured from the fork point, as a version is (WAY-57); a measured bound needs its statistic and
+*Rationale:* a condition outside the sentence moves while the sentence stays, so it stands only
+where moving it takes a decision; a branch names another commit by the hour; a change is measured
+from the fork point, where the work on it began; a measured bound needs its statistic and
 population.
 *Rejected:* every condition in the sentence — two answers where a measure meets a definition or a
 method; a closed list of places — it leaves out places a log uses; every place outside the
@@ -1706,18 +1706,12 @@ spreads one change over several commits.
 
 ### WAY-61/1 — How is an invariant's method of checking written, and how is its result read?
 
-An invariant entry's method of checking is either a command the gate runs, which counts as a command
-the product declares (WAY-38), begins with the name of the program it runs and is never a path alone,
-or the path alone of a file a human assesses the product against; a command is the same on every run
-and names no commit, branch or revision itself, and the commits its sentence names are values the gate
-fills in from the template's closed list. A method checks what its sentence is about, as it stands on
-the commit being checked, so a check fed input made up for it is the method of a sentence about that
-check, never of one about the data the check reads. One run of a command may check many invariants,
-and a method reads what another method's run left only where a decision places it, the gate then
-running the first before the second; the result of an entry whose method is a command is the verdict
-that run records, in a format from the template's closed list, for the entry's identifier and its
-current version; a verdict recorded for another version is not its result, and a run that records
-no verdict for the entry never gives it a pass.
+An invariant's method of checking is a test of the product's test suite, written in the product's
+language and run by the command that runs the product's tests, or review. A test checks what its
+invariant's sentence is about, as it stands on the commit being checked, so a test fed input made
+up for it is the method of a sentence about the check it exercises, never of one about the data
+that check reads. An invariant's result on a commit is the outcome of the tests citing it in a run
+on that commit, and a run in which none of them ran never gives it a pass.
 
 - **Change:** new decision
 - **Scope:** invariants, gate, decisions, part-map, elements-common
@@ -1725,47 +1719,36 @@ no verdict for the entry never gives it a pass.
 - **Relations:** derives from WAY-08@2343e09f · derives from WAY-16@5c1d60d4 ·
   derives from WAY-54@57b93cf6 · derives from WAY-57@89a75ebe · derives from WAY-38@6e10c3fd ·
   derives from WAY-60@6e862c88
-- **Verification:** level 1 — invariants: invariant-method-form · method-gate-values ·
-  gate-verdict-per-entry · gate-pass-without-verdict · gate-method-order · test-runner-pass-line.
-  Level 2 for what a method checks — an agent compares the change with the decision:
-  - complies: a sentence about the log's fields names the decision guard run on
-    `foundations/decisions.md`, one run giving each invariant a verdict; a sentence about the loader
-    names a test handing it a save of another version; an exploratory test names the command
-    starting an agent on the working product with its steps; a sentence on whether an image's text
-    alternative describes it names the checklist a person assesses the page against;
-  - violates: a sentence about the real log names as its method the guard's test, which feeds it
-    made-up logs; a test asserting only the guard's exit code on the real log is the method of one
-    of its invariants; an entry carries "runs as: script" beside its command; the gate gives every
-    invariant a guard checks the guard's exit code; a command names the main branch where the
-    sentence names `{fork-point}`.
-  Level 2 for which run's output a method reads — an agent compares the change with the decision:
-  - complies: the map guard reads a flow test's coverage file, as WAY-47 places it, after the gate
-    runs that test;
-  - violates: an invariant's method reads the record another invariant's guard run left, and no
-    decision places that reading.
+- **Verification:** level 2 — an agent compares the change with the decision:
+  - complies: a sentence about the log's fields is kept by a test running the decision guard on
+    `foundations/decisions.md`; a sentence about the loader is kept by a test handing it a save of
+    another version; a sentence on whether an image's text alternative describes it reads `review`;
+  - violates: a sentence about the real log names as its test the guard's test, which feeds it
+    made-up logs; an invariant counts as passing in a run where no test citing it ran; an
+    invariant's test is a script beside the product's suite, which the command running the
+    product's tests does not run.
 - **Review when:** none
 - **Origin:** none
 - **Approved by:** Mariusz, 2026-09-28
 
-*Rationale:* the gate runs a method or hands it to a person (WAY-16), so prose is none; one run
-serves many invariants, each needing a verdict of its own; a check that sees nothing passes quietly
-(WAY-38); a branch resolved at run time answers by the hour (WAY-60).
-*Rejected:* a kind named beside the method — a second value that can disagree (WAY-54); a form of
-its own for an exploratory test — it looks like a human's path; the run's exit code as each
-invariant's verdict — one broken rule fails all, a skipped one passes; one run per entry — a shared
-check runs many times; a verdict for whichever version a check cites — a check for an old meaning
-passes the raised entry; a check's tests on made-up input as the method of a sentence about real
-data — they show the check works, not that the data holds; a method in prose — the gate cannot run
-it.
+*Rationale:* the command that runs the product's tests already runs on every change, so an
+invariant's test runs with them, in the product's language; one run serves many invariants, each
+needing an outcome of its own; a check that sees nothing passes quietly (WAY-38).
+*Rejected:* a command per invariant that a gate of its own runs, recording a verdict for each entry
+— a second runner beside the product's tests; a kind named beside the method — a second value that
+can disagree (WAY-54); the run's exit code as each invariant's result — one broken rule fails all, a
+skipped one passes; a check's tests on made-up input as the method of a sentence about real data —
+they show the check works, not that the data holds.
 
 ### WAY-62/1 — What does an invariant entry name in the part map?
 
 An invariant entry names the parts of the part map where a change can make its sentence false,
 or `every` where a change to any part can. A change, against the commit its branch left the main
-branch from, reaches an invariant that names `every` or a part the change touches, or whose method
-names a file the change alters, whatever parts a file collecting entries gives that change
-(WAY-44), and the agent making the change reads every invariant it reaches. The entry names no
-failure mode, critical flow or surface.
+branch from, reaches an invariant that names `every` or a part the change touches, that a test the
+change alters cites, or one of whose tests names on a `data:` line a file the change alters,
+whatever parts a file collecting entries gives that change (WAY-44), and the agent making the
+change reads every invariant it reaches. The entry names no failure mode, critical flow or
+surface.
 
 - **Change:** new decision
 - **Scope:** invariants, part-map, gate, task-cycle
@@ -1774,9 +1757,9 @@ failure mode, critical flow or surface.
   derives from WAY-61@4804d070
 - **Verification:** level 1 — invariants: invariant-part-names · invariant-part-form · change-reach.
   Level 2 for which parts — an agent compares the change with the decision:
-  - complies: the invariant on the log's fields names `decisions`, and a decision scoped to `gate`
-    reaches it through its method's file; "every file git tracks matches the patterns of exactly
-    one part" names `every`;
+  - complies: the invariant on the log's fields names `decisions`, and a change to a test citing it
+    under `gate/` reaches it too; "every file git tracks matches the patterns of exactly one part"
+    names `every`;
   - violates: that sentence names `part-map`, so a file added under `gate/` never reaches it; an
     entry names the flow it protects.
 - **Review when:** none
@@ -1784,49 +1767,43 @@ failure mode, critical flow or surface.
 - **Approved by:** Mariusz, 2026-09-22
 
 *Rationale:* invariants need what scope gives decisions (WAY-21): parts, not paths, which would
-copy the map. A decision scoped to `gate` touches `gate`, not the log, so a method's files reach
-the invariant too. A missing part leaves the invariant unread by a change that can make it false,
+copy the map. A test may lie in another part than what it checks, so a change to it reaches the
+invariant too. A missing part leaves the invariant unread by a change that can make it false,
 and fails silently; an extra one costs a reading, so doubt names more.
-*Rejected:* parts computed from what the method reads — a test's command names its test file, not
-what it reaches; the invariant naming its failure mode, flow or surface — one link written at both
+*Rejected:* parts computed from what the test reads — a test names its own file, not what it
+reaches; the invariant naming its failure mode, flow or surface — one link written at both
 ends; the part holding the check — a file added elsewhere never reaches it.
 
 ### WAY-63/1 — What results does the gate report for invariants, and which make its command fail?
 
-An invariant's result on the commit being checked is `pass`, `fail`, `unchecked` for a reason on the
-template's closed list, or `error` otherwise. The gate reports a result for at least every invariant
-the change reaches and every invariant a critical flow names, and its command exits non-zero when
-a result it reports is `error`, a listed invariant's is `pass`, an unlisted invariant's or a fact's
-is `fail`, or a run records a failure for no entry, and zero otherwise.
+An invariant's result on the commit being checked is `pass` where every test citing it ran on that
+commit and passed, and `fail` where one of them failed; a run in which no test citing it ran gives
+it no result, and nothing written by hand stands in for one. An invariant whose method is review
+takes no result from a run: the review of each change it reaches compares the change with its
+sentence. The command running the product's tests exits non-zero when a test fails.
 
 - **Change:** new decision
 - **Scope:** invariants, gate, part-map, task-cycle, environment-facts
 - **Based on:** none
 - **Relations:** derives from WAY-61@4804d070 · derives from WAY-62@d9c21624 ·
   derives from WAY-08@2343e09f
-- **Verification:** level 1 — invariants: invariant-method-form · gate-result-values ·
-  gate-unchecked-reason · gate-reported-set · gate-exit-code. Level 2 for the reasons — an agent
-  compares the change with the decision:
-  - complies: a flow's list of parts with no coverage file is `unchecked` (WAY-47), as are a check
-    needing a commit the gate filled in as not existing and the comparison of a product's glossary
-    with the glossary of the-way in a repository that pins no the-way;
-  - violates: a guard whose call to git fails reports `unchecked`; a human's `pass` stays in force
-    after a change since the assessed commit reaches the entry; a critical flow's test is left out and
-    the command exits zero.
+- **Verification:** level 2 — an agent compares the change with the decision:
+  - complies: an invariant whose two tests pass in a run is `pass`; the reviewer of a change to a
+    part reads the invariants of that part whose method is review and compares the change with
+    them;
+  - violates: an entry reads "status: pass" written by hand; an invariant whose test did not run
+    counts as passing; a review passes a change without reading an invariant whose method is
+    review and which the change reaches.
 - **Review when:** none
 - **Origin:** none
 - **Approved by:** Mariusz, 2026-10-02
 
-*Rationale:* a check can always call itself unchecked, so only listed reasons count; `unchecked`
-leaves the command at zero, because an invariant may enter before its method can run (WAY-60,
-WAY-61), and a human reads it (WAY-47). A product that pins no the-way, or pins a commit of it
-holding no glossary, has no words of the process to compare its own with (WAY-34), so that
-comparison is undecided, not failed.
-*Rejected:* `unchecked` failing the command — every invariant without a method would fail every
-change; an open list of reasons — any excuse passes; a third exit code — nothing reads it; a
-human's verdict valid for the entry's version — it outlives changes to the product; no reason for
-a product that pins no the-way — its comparison with the glossary of the-way records nothing, and
-the gate reads `error` there.
+*Rationale:* the outcome of a test run on the commit is the only status that does not go stale; a
+test that did not run says nothing, so it is no pass; a rule no cheap test checks has the review as
+its reader (WAY-08).
+*Rejected:* `unchecked` for a reason on a closed list, and `error` for any other missing verdict —
+a vocabulary of results kept for a gate beside the product's own runner; a status written by hand —
+stale with the next commit; an invariant whose method is review left unread — a rule nothing keeps.
 
 ### WAY-64/1 — Where do invariant and environment fact entries stand, and what identifies one?
 
@@ -1870,87 +1847,80 @@ back; every identifier ever written kept — one dropped before the main branch 
 
 ### WAY-65/1 — How does a check cite its invariant, and which files are invariant tests?
 
-A check cites, at the smallest unit whose outcome a run records on its own, each invariant it gives
-a verdict for as `invariant: <identifier>/<version>`, and a run records no verdict for an invariant
-its check does not cite. A file is named as a check's data by a line `data: <path>`, and a file is
-an invariant test of a change when it is one on the commit the branch left the main branch from or
-on the commit being checked. Where several checks cite one invariant in a run, the run gives it
-`pass` only when each of them records `pass`.
+A test cites, at the test that checks it, each invariant it checks as `invariant: <identifier>`,
+and names each file it reads as its data by a line `data: <path>`. A file is an invariant test of a
+change when it cites an invariant on the commit the branch left the main branch from or on the
+commit being checked, and where several tests cite one invariant in a run, the invariant passes
+only when each of them passes.
 
 - **Change:** new decision
 - **Scope:** invariants, gate, decisions, part-map, relation-model, task-cycle
 - **Based on:** none
 - **Relations:** derives from WAY-03@7c2d4ca1 · derives from WAY-17@b1e26133 ·
   derives from WAY-57@89a75ebe · derives from WAY-61@4804d070
-- **Verification:** level 1 — invariants: invariant-citation-version · invariant-citation-target ·
-  data-line-target · invariant-tests-of-change · test-runner-pass-line · gate-verdict-per-entry.
-  Level 2 for where a citation stands — an agent compares the change with the decision:
-  - complies: the decision guard cites `log-entry-field-presence/1` at the rule checking
-    fields; a test comparing a load with a recorded save names the save on a `data:` line;
-  - violates: a test file cites at its top every invariant its tests serve.
+- **Verification:** level 1 — invariants: invariant-citation-target · data-line-target ·
+  invariant-tests-of-change. Level 2 for where a citation stands — an agent compares the change
+  with the decision:
+  - complies: a test running the decision guard on `foundations/decisions.md` cites
+    `log-entry-field-presence` at its assertion on fields; a test comparing a load with a recorded
+    save names the save on a `data:` line;
+  - violates: a test file cites at its top every invariant its tests serve; a test cites an
+    invariant with a version beside its identifier.
 - **Review when:** none
 - **Origin:** none
 - **Approved by:** Mariusz, 2026-09-29
 
-*Rationale:* a citation stands where the verdict is given (WAY-61); a pass from one check would
-hide another's fail; counting either commit keeps a dropped citation or deleted file protected
-(WAY-03); a test names its data as the dependent end (WAY-17).
-*Rejected:* the paths a method names as the invariant tests — a method names data, not checks; one
-citation per file — one broken check fails all it serves (WAY-61); only files citing on the commit
-checked — dropping a citation frees the file.
+*Rationale:* a citation stands where the outcome is given (WAY-61); a pass from one test would hide
+another's fail; counting either commit keeps a dropped citation or a deleted test among the
+invariant tests a request names (WAY-03); a test names its data as the dependent end (WAY-17); an
+invariant carries no version for a citation to name (WAY-57).
+*Rejected:* one citation per file — one broken test fails all it serves (WAY-61); only files citing
+on the commit checked — dropping a citation hides the change from the request.
 
 ### WAY-68/1 — What happens to a check that gives different verdicts on one commit?
 
-A check that cites an invariant and records both `pass` and `fail` for one commit is answered by a
-foundation change, quarantine last and never for an invariant a critical flow names. A quarantine
-stands in `foundations/invariants.md`, names the entry's current version and an end date, and its
-result is `unchecked` until the checked commit's committer date passes that date, then `error`.
-Until it is answered, a recorded `fail` stays the entry's result on that commit, whatever a later
-run records.
+A test that cites an invariant and gives both `pass` and `fail` on one commit is fixed as any test
+of the product is, and the foundation records no quarantine for it.
 
 - **Change:** new decision
 - **Scope:** invariants, gate, task-cycle
 - **Based on:** none
 - **Relations:** derives from WAY-08@2343e09f · derives from WAY-61@4804d070 ·
   derives from WAY-63@f16348c8
-- **Verification:** level 1 — invariants: quarantine-position-form · quarantine-flow-invariants ·
-  gate-quarantine-result. Level 2 — an agent compares the change with the decision:
-  - complies: a save-load test fails, then passes, on one commit; the independent assessment accepts
-    waiting for the load signal;
-  - violates: a failing test is called flaky with no `pass` recorded on that commit; a fixed-wait
-    failure is quarantined instead of fixed as a change of mechanics; a green rerun is taken as the
-    commit's result while the `fail` it follows stands unanswered.
+- **Verification:** level 2 — an agent compares the change with the decision:
+  - complies: a save-load test fails, then passes, on one commit, and a change makes it wait for
+    the load signal instead of a fixed pause;
+  - violates: a flipping test stands quarantined in the invariants file; a failing test is called
+    flaky and run again until it passes, with nothing fixed.
 - **Review when:** none
 - **Origin:** none
 - **Approved by:** Mariusz, 2026-09-22
 
-*Rationale:* a flipping test stops every task it reaches and the implementer may not touch it
-(WAY-03), so "just flaky" needs evidence; a green rerun undoing a fail makes rerunning the answer;
-a critical flow's test runs on every change (WAY-45); moving the end date is a human's foundation
-change (WAY-10).
-*Rejected:* a row of the list of violated invariants — it judges the product, not the check
-(WAY-51); a quarantine field in every entry — every entry pays for a rare case; a count of passes
-in a row to enter — k of n decides that (WAY-08); the date of the run — the result would follow
-the hour; deletion once the date passes (GitLab) — the check is weakened.
+*Rationale:* a test that flips on one commit is a fault of the test, which a change fixes like any
+other fault; a green run again hides the fault instead of answering it.
+*Rejected:* a quarantine with an end date in the invariants file, set by a change of the foundation
+— a mechanism and a date a human moves, kept for a rare case; a count of passes in a row — it hides
+the fault.
 
 ### WAY-69/1 — Who writes an invariant's sentence, its check and its deliberate break, and what may the check compute for itself?
 
-An invariant's sentence, the check that cites it and the code it covers come from three different
-agents, and the deliberate break the check is accepted on is written from the sentence by the
-reviewer of that code, who did not write the check. A check that cites an invariant takes the input
-it asserts on and the value it expects written out, wherever the code its invariant is about would
-otherwise compute either; only the side it compares against comes from the run.
+An invariant's sentence, its test and the code the test covers may come from one agent, and no
+deliberate break is written for the test beyond seeing it fail once (WAY-08); the agent reviewing
+the change, which made none of it, reads the test against the sentence. A test that cites an
+invariant takes the input it asserts on and the value it expects written out, wherever the code its
+invariant is about would otherwise compute either; only the side it compares against comes from
+the run.
 
 - **Change:** new decision
 - **Scope:** invariants, decisions, part-map, gate, task-cycle, relation-model
 - **Based on:** visible-scoring-reward-hacking@39a85ced · oracle-in-loop-building@d13c8e26
 - **Relations:** derives from WAY-08@2343e09f
-- **Verification:** level 3 for who writes what — the human accepting the change at the merge
-  assesses how the work was handed out, from the record that names who wrote what. Level 2 for what
-  a check computes — an agent compares the change with the decision:
-  - complies: a guard's test carries its expected wording and fingerprint as literals, so a longer
-    fingerprint fails it;
-  - violates: a test builds its reference by calling the code its invariant is about, and expects
+- **Verification:** level 2 — an agent compares the change with the decision:
+  - complies: the author of a change writes an invariant's sentence, its test and the code, sees
+    the test fail first, and an agent that made none of it reviews the change; a guard's test
+    carries its expected wording as literals;
+  - violates: a cycle pauses the author while two other agents write an invariant's sentence and
+    its test; a test builds its reference by calling the code its invariant is about, and expects
     that call's message; a test reads the value it expects, at run time, from the file its
     invariant is about.
 - **Review when:** no model in the range of fact oracle-in-loop-building is Active in Anthropic's
@@ -1958,24 +1928,23 @@ otherwise compute either; only the side it compares against comes from the run.
 - **Origin:** none
 - **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/4
 
-*Rationale:* a break chosen by a check's author aims at what the check does, not what the sentence
-says, a check by the sentence's author inherits its reading, and a check by the code's author is
-fitted to the code; two sides computed by one code move together, and the test stays green unseen.
-The reviewer already reads the check without having written it, so the break needs no agent of its
-own. This takes the visible-scoring finding across publishers (WAY-85).
-*Rejected:* hiding checks from the executor — it costs honest work; one agent writing all three
-under a written rule — prose stops nothing; a field naming the writers — nothing reads it; the
-expected value alone written out — the input still moves with the code; a `data:` line naming each
-file a verdict leans on — every tracked file turns read-only; a separate agent for the deliberate
-break — the code review already stands apart from the check.
+*Rationale:* two sides computed by one code move together, and the test stays green unseen. A test
+fitted to the code by the agent that wrote both meets the reviewer, which reads it against the
+sentence without having written either (WAY-10), so the writing needs no agents of its own. This
+takes the visible-scoring finding across publishers (WAY-85).
+*Rejected:* three different agents for the sentence, the test and the code, with the deliberate
+break written by the reviewer — a pause and two agents for each invariant, for what the review
+already reads; hiding tests from the executor — it costs honest work; the expected value alone
+written out — the input still moves with the code; a `data:` line naming each file a verdict leans
+on — every tracked file becomes the data of some test.
 
 ### WAY-71/1 — Does every field of a foundation entry appear in every entry, and what may it hold?
 
 Every field an element's template gives an entry of its kind appears in every entry of its kind,
 holding a value, or `none` or `TODO` where the template gives it that word: `none` says nothing is
-there, `TODO` that something is missing. The main branch holds `TODO` only in an invariant's or a fact's
-*Method*, and in an invariant's *Rests on* until the facts element has entries. A guard reports a
-missing field, or a word not given it, as an error.
+there, `TODO` that something is missing. The main branch holds `TODO` only in a fact's *Method*,
+and in an invariant's *Rests on* until the facts element has entries. A guard reports a missing
+field, or a word not given it, as an error.
 
 - **Change:** new decision
 - **Scope:** decisions, part-map, invariants, glossary, environment-facts, elements-common
@@ -1997,10 +1966,10 @@ missing field, or a word not given it, as an error.
 - **Origin:** none
 - **Approved by:** Mariusz, 2026-09-26
 
-*Rationale:* an omitted field looks forgotten (WAY-58); an undefined value misleads. A missing
-*Method* yields `unchecked`, not a false pass (WAY-63). Before facts have entries, an invariant can
-expose a needed fact as `TODO` instead of falsely claiming `none`; once they do, the gap must be
-resolved.
+*Rationale:* an omitted field looks forgotten (WAY-58); an undefined value misleads. An invariant
+with no test reads `review` as its method rather than `TODO` (WAY-105). Before facts have entries,
+an invariant can expose a needed fact as `TODO` instead of falsely claiming `none`; once they do,
+the gap must be resolved.
 *Rejected:* a decision for invariants alone — every element would need a copy; a wider scope for
 WAY-05 — it answers how a decision entry is written; both words in every field — a word with no
 meaning; optional fields left out when empty — intended and forgotten gaps look alike; for facts, a
@@ -2924,52 +2893,32 @@ process term — a short use of a multiword term can still collide with the doma
 
 ### WAY-105/1 — Which check reports an invariant whose command runs a script that does not exist, and how is that script read?
 
-The gate, when it runs an invariant's method whose program is a Python interpreter — `python`,
-`python3`, `python3.<minor>` or `py`, with or without `.exe` — reports the entry `unchecked` for
-want of a declared or produced command where the script the command runs does not exist on the
-commit being checked, or `error` where that script exists on the commit the branch left the main
-branch from; no format guard judges whether a command's script exists. The gate reads such a
-command as a POSIX shell splits it into words, quotes, backslashes and operators included, and its
-script is the first word after the interpreter's own options and the values they take, never a
-value the gate fills in. A method whose program is declared or produced by the product but is no
-Python interpreter, and whose script does not exist yet, reads `TODO`.
+None does: an invariant's method names no command and no script (WAY-61), so no check reads one.
+An invariant reads `test` as its method once a test of the product's suite cites it, and `review`
+until then.
 
 - **Change:** new decision
 - **Scope:** gate, invariants
 - **Based on:** none
 - **Relations:** derives from WAY-63@f16348c8 · derives from WAY-61@4804d070 ·
   derives from WAY-38@6e10c3fd
-- **Verification:** level 1 — invariants: gate-missing-script. Level 2 for what the format guard
-  leaves alone, which word of a command is its script, and the method of another program — an
-  agent compares the change with the decision:
-  - complies: an entry whose method is `python -B tools/check_saves.py --record .runs/saves.jsonl`,
-    written before `tools/check_saves.py` exists, passes the format guard with no warning; the gate
-    takes `my tools/check.py` as the script of `python -B "my tools/check.py" --base {fork-point}`,
-    and `tools/check.py` as that of `py -3 -W error tools/check.py`; in a product that declares
-    `node`, an entry whose check will be `node tools/check_saves.js`, not written yet, reads `TODO`;
-  - violates: the format guard warns on that entry; the gate takes `error` as the script of
-    `python -W error tools/check.py`, `"my` as that of the quoted path, or `{fork-point}` as a
-    script; in a product that declares `node`, an entry names `node tools/check_saves.js` before
-    that script exists.
+- **Verification:** level 2 — an agent compares the change with the decision:
+  - complies: an invariant written before its test reads `review`, and the change that adds a test
+    citing it turns its method to `test`;
+  - violates: an invariant reads `test` while no test cites it; an entry names
+    `python -B tools/check_saves.py` as its method.
 - **Review when:** none
 - **Origin:** the panel's record of the change that counts the checks a `none` option leaves
   unchecked in every guard's summary, in the message of commit d389623 of the-way
 - **Approved by:** Mariusz, 2026-10-02
 
-*Rationale:* an invariant may be written before the code that checks it, so when the entry is
-written a wrong path and a script not yet written look alike, and a warning there falls on the case
-the template allows, each one reaching a human. The gate runs the method, so it meets a missing
-script where the result is read, and the closed list of reasons already holds this one; a script
-the branch removed is a check the change dropped, which the list already makes an error. The cost
-is that a wrong path shows at the first run of the gate, not when the entry is written. A command
-is read as a POSIX shell reads it: a path in quotes is one word, and a word an option takes, or a
-word after the script, belongs to the option or the script. Which word is the script follows from
-the interpreter's own options, known for Python alone, so the method of another program waits as
-`TODO` until its script exists.
-*Rejected:* a warning of the format guard when the entry is written — it falls on the case the
-template allows, and every one reaches a human; nobody reporting it — a method with a wrong path
-looks checked until its first run; a command split on spaces — a quoted path breaks in two, and a
-word an option takes is read as the script.
+*Rationale:* an invariant may be written before its test, and its method then says what keeps it
+meanwhile: the review. A test of the product's suite runs with the product's command, so a test not
+yet written is only an invariant no test cites, which its method shows.
+*Rejected:* a command per invariant, with the gate reporting a missing script `unchecked` or
+`error` and reading the command as a POSIX shell splits it — a reading of commands kept for a runner
+beside the product's tests; `TODO` as the method until the test exists — it names nothing that keeps
+the rule meanwhile.
 
 ### WAY-106/1 — What does the project level write before tasks exist?
 
@@ -4693,45 +4642,30 @@ again for work already delegated; automatic compaction — it does not choose th
 
 ### WAY-149/1 — When does the deliberate break of a return-step check take place?
 
-For an invariant check added in a task's return step, its first acceptance deliberate break
-follows the one independent assessment of the change's foundation entries and invariant tests
-and the settlement of its remarks. Before that break, affected checks and code review run again
-for a settlement that changes code, assessed foundation entries or invariant tests, and the code
-reviewer who did not write the check reviews its final version, writes the break from the final
-invariant sentence and records the required failure (WAY-08, WAY-69); later corrections to the
-check or the behaviour its break covers repeat the affected verification before the final clean
-run. Checks written earlier in the cycle retain their existing acceptance and deliberate-break
-points, and settlement stays part of the one assessment (WAY-10), with an existing affected
-review reused where it covers the final check rather than adding a whole-change review of an
-unchanged range.
+A test added in a task's return step takes no deliberate break of its own: like every invariant
+test, it is seen failing once, with the command that later shows it passing (WAY-08), and the
+review of the change reads it (WAY-10).
 
 - **Change:** new decision
 - **Scope:** task-cycle
 - **Based on:** none
 - **Relations:** derives from WAY-10@db68de1c · derives from WAY-08@2343e09f · derives from
   WAY-69@7051f884
-- **Verification:** level 2 — an agent compares the cycle's check, assessment, settlement,
-  review and deliberate-break evidence with the decision:
-  - complies: a return-step check runs on the product, its assessment's remarks are settled,
-    affected checks and review run again, and the code reviewer reviews the final check and
-    records its failure on a break written from the final sentence; an earlier check keeps its
-    original acceptance point; a later correction repeats the affected evidence;
-  - violates: a return-step check is accepted on a break before assessment, or on a passing
-    product run alone; a changed final check uses a superseded break's evidence; assessment
-    replaces code review, settlement reopens assessment, or an earlier check's break is delayed
-    to the return step.
+- **Verification:** level 2 — an agent compares the cycle's tests and review with the decision:
+  - complies: a test added in the return step fails on the behaviour broken for a moment, passes
+    once it is restored, and the review of the change reads it;
+  - violates: a return-step test waits for an assessment or for a reviewer's break before it is
+    accepted; a return-step test is accepted on a passing run alone.
 - **Review when:** none
 - **Origin:** none
 - **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/17
 
-*Rationale:* settling assessment remarks before the first acceptance break avoids repeating a
-break for a check the settlement changes. A final check still needs independent review and a
-real failure on the rule it protects; changing the order cannot turn a product pass or an
-assessment into that evidence. Earlier checks keep the failure evidence their own stage needs.
-*Rejected:* breaks both before and after assessment by default — the earlier run may check a
-version that is immediately replaced; delaying every check's break — earlier stages lose their
-own acceptance evidence; accepting a check after assessment alone — an approved check may still
-detect no break; a second whole-change review of unchanged work — it repeats an existing review.
+*Rationale:* a test added late is accepted as an early one is: the failure seen shows it can fail,
+and the review reads it with the change; a later step of its own would add nothing those two do not
+show.
+*Rejected:* a deliberate break written by the code reviewer after the one independent assessment
+and the settlement of its remarks — a stage for each late test, for what the failure seen and the
+review already show; accepting a test on a passing product run alone — it may detect nothing.
 
 ### WAY-150/1 — How do the-way skills choose which product foundation material to read?
 
@@ -7571,54 +7505,33 @@ private quotations or pointers in place of the reasoning — readers cannot asse
 
 ### WAY-223/1 — How is a check accepted when the history it protects contains no elements yet?
 
-For a check preserving elements of an earlier version, acceptance evidence may use a prepared
-earlier version only after a successful read of the actual historical commit and all relevant data
-confirms an empty protected set that makes violation of that preservation clause impossible on the
-actual baseline; a nonempty set, unavailable history, invalid commit, failed read, parse error or
-`none` gives no such permission. The evidence runs the assessed commit's same check implementation
-and configuration in isolation, changing only the earlier and later input data through an explicit
-historical-input parameter, with a preserving later version passing and a violating later version
-failing for that preservation violation rather than a parsing failure or another rule, and records
-the actual assessed and historical commits, successful read and emptiness, reason for eligibility,
-prepared inputs, commands and outcomes separately from the Method's result on actual history,
-without redefining `{fork-point}` or replacing that result. The guideline author's prepared cases
-remain separate from the deliberate break: the code reviewer independently prepares its earlier
-and later inputs from the invariant's sentence under the same conditions, at the acceptance stage
-and with the rechecking after corrections the process already requires.
+A test protecting elements of an earlier version takes no evidence of its own when that history
+holds no elements yet: it is accepted as every invariant test is, by being seen failing once
+(WAY-08).
 
 - **Change:** new decision
 - **Scope:** invariants, product-guidelines, task-cycle, gate
 - **Based on:** none
 - **Relations:** derives from WAY-08@2343e09f · derives from WAY-61@4804d070 · derives from
   WAY-69@7051f884
-- **Verification:** level 1 — invariants: invariant-test-break · gate-guidelines-example-evidence.
-  Level 2 for eligibility, execution and independent preparation — an agent compares the
-  acceptance evidence with the decision:
-  - complies: a check protecting published names records a successful read proving there are none,
-    keeps its real-history result, and runs the same implementation on an explicit prepared
-    earlier version with a published name, a preserving later version and a renaming later version;
-    a check protecting stored field kinds likewise retains its actual result and detects a kind
-    change in a separate prepared pair, whose reviewer prepares its own independent break;
-  - violates: the check fails because its input cannot be parsed; an invalid commit becomes an
-    empty set; a prepared earlier version replaces nonempty actual history; a copy of the checking
-    logic supplies the failure; a rule still falsifiable with new elements uses the exception;
-    a prepared pass is reported as the product's result, or as a pass on `{fork-point}`.
+- **Verification:** level 2 — an agent compares the change with the decision:
+  - complies: a test protecting published names, while none is published yet, is seen failing on
+    input in which a published name is renamed, and the change records nothing else for its
+    acceptance;
+  - violates: a change records a read of the historical commit and prepared earlier versions as
+    the acceptance of a test; a test is taken as checking its rule without having been seen
+    failing, because the history it protects is empty.
 - **Review when:** none
 - **Origin:** none
 - **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/28
 
-*Rationale:* an empty set makes preservation true without exercising detection of a changed
-element, so demanding a violation against it blocks introduction of protection for no additional
-assurance. Prepared evidence exercises detection while the separate actual-history result keeps
-the statement about the product honest; the price is explicit eligibility evidence and preparation
-kept separate from normal runs. Independent preparation retains the protection against a check
-fitted to its author's cases.
-*Rejected:* treating the first successful run as acceptance — it can pass without comparing any
-element; splitting introduction and protection into separate changes — protection begins later
-and work is divided only to manufacture a nonempty history; substituting prepared history for all
-checks — a real violation can disappear from the evidence; a parse error as the deliberate break
-— it exercises reading rather than preservation; rewriting preservation as agreement with a
-chosen list — it protects a different property.
+*Rationale:* an empty history makes preservation true without exercising detection, and the failure
+seen once, on input in which an element changes, already shows the test detects it; evidence of the
+empty history beside it is a procedure of its own for what that failure shows.
+*Rejected:* acceptance on prepared earlier versions only after a successful read proves the
+protected set empty, with that evidence recorded apart from the result — a procedure for each
+protecting test; treating the first successful run as acceptance — it can pass without comparing
+any element.
 
 ### WAY-224/1 — How does a task cycle bring a candidate failure mode to the human?
 

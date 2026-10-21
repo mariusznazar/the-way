@@ -1,6 +1,6 @@
 ---
 name: the-way-record-invariant
-description: Use when a product's invariants file, foundations/invariants.md, has to gain or change an entry — a rule the product must keep, from conversation, a task's return step, the behaviour of the critical flows and the parts they run through or an invariant a decision's verification calls for; a changed, split, merged or withdrawn invariant; a row on the list of violated or quarantined invariants; or an invariant a project definition projects. Use this checkout's own the-way.
+description: Use when a product's invariants file, foundations/invariants.md, has to gain or change an entry — a rule the product must keep, from conversation, a task's return step, the behaviour of the critical flows and the parts they run through or an invariant a decision's verification calls for; a changed, split, merged or withdrawn invariant; an invariant the product does not meet today, marked violated; or an invariant a project definition projects. Use this checkout's own the-way.
 ---
 
 # the-way-record-invariant
