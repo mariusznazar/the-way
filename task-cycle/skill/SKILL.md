@@ -124,9 +124,14 @@ user's delegation, worktree, authoritative input paths and commits, applicable e
 skill, exact stage and write boundaries, expected outputs and full report path, and relevant
 rulings. Keep requirements and exact values in their authoritative files. A required whole entry
 or file must still be read whole. Reuse a borrowed method's existing brief and report instead of
-creating a second one. Apply this contract to design, planning, foundation work, implementation,
-reviews and the return step within their existing boundaries; the independent assessor receives
-only the filtered inputs in step 11, never this operational handoff.
+creating a second one. For a plan written by `plan-task`, run the borrowed method's brief script on
+a temporary copy of the plan with each `### Slice N` heading written as `### Task N`, and remove
+the copy after extraction. Resolve the borrowed method's workspace with `sdd-workspace` on the
+original plan and pass `<workspace>/task-N-brief.md` as the brief script's third argument; keep the
+ledger and reports in that same original-plan workspace. Apply this contract to design, planning,
+foundation work, implementation, reviews and the return step within their existing boundaries;
+the independent assessor receives only the filtered inputs in step 11, never this operational
+handoff.
 
 Every handoff to the spec author or reviewer, planner, no-plan author, slice executor or code
 reviewer carries the current guideline selection and its reasons, with
@@ -296,9 +301,12 @@ true included: its wording is yours, its meaning the row's (WAY-134). Of the pro
 plan member writes only those its plan item assigns; one assigned to another item returns to the
 plan through a blocked draft request. Set every *Review when* yourself. Ask the human before the
 request only where you have no recommendation, an entry would change the meaning of an approved
-decision, a row's meaning cannot hold — the code shows an exception the row does not allow, or the
-row collides with a current entry — or a row's entry needs a value neither the row nor your work
-gives, through a blocked draft request holding the question; never write a row with another meaning.
+decision beyond what the approved task document or plan carries (WAY-30), a row's meaning cannot
+hold — the code shows an exception the row does not allow, or the row collides with a current entry
+other than by changing it as the approved task document commands — or a row's entry needs a value
+neither the row nor your work gives, through a blocked draft request holding the question; never
+write a row with another meaning. A candidate failure mode may go to the human in the request's
+*Questions*, as step 13 gives (WAY-224).
 Search the whole foundation and run the applicable guards. An invariant's sentence, its check and
 the code it covers come from three different agents (WAY-69): give the check's author the sentence
 and its method, never the code's reasoning. On the one-author route, pause the author for the
@@ -406,8 +414,9 @@ continuing that work.
     Write the resulting entries that bind after the merge (WAY-36) as the foundation step writes;
     every other choice stays one line in the choice table. No foundation entry is deferred: an entry
     this request does not write is neither proposed nor listed for later; the review findings the
-    request lists (step 13) are no foundation entries. Read the projected entries of the task's
-    sources and the rows of its *Settlements to record*: write a row the foundation step missed
+    request lists (step 13) are no foundation entries. A question to the human about a candidate
+    failure mode is not a deferred entry and goes to step 13 (WAY-224). Read the projected entries
+    of the task's sources and the rows of its *Settlements to record*: write a row the foundation step missed
     (WAY-134), and a projected entry the code makes true that the foundation step missed (WAY-126);
     an entry assigned to another plan item returns to the plan. Write a new entry only for a rule
     none of them states. Keep three different authors for an invariant's sentence, its check and
@@ -559,8 +568,13 @@ step of `requesting-code-review` by which the executor rules on each "Declined t
     new sentence (WAY-57); a part whose computed criticality fell (WAY-46); a recovered row, with
     the gate's report (WAY-58); a moved use of a changed definition and a term WAY-97 asks the
     request to name. Under *Questions*, only the questions the foundation step allows, each with its
-    options and a recommendation where one exists; where there are none, say so. Give the number of
-    other choices and a link to the choice log. Link the cycle record and full reports by the SHA of
+    options and a recommendation where one exists; where there are none, say so. A candidate failure
+    mode found at a part goes here with the part, what fails, the damage, its severity, how it is
+    detected, the recommendation and the strongest argument against that recommendation (WAY-224).
+    Record a failure mode only when the task document commands it or the human supplies it or accepts
+    the agent's proposal in answer to this question; in the latter case, apply the answer as a
+    correction to the open request before it is merged (WAY-46, WAY-224). Give the number of other
+    choices and a link to the choice log. Link the cycle record and full reports by the SHA of
     the record commit. Where the request waits for human actions in the cycle, list them for the
     human to perform, each as the task document names it, with each effect outside the repository
     the cycle found that the document does not name, for the human to place (WAY-140). Where a

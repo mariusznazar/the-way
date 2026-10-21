@@ -85,13 +85,15 @@ the body; the project orchestrator changes only `Status:` after final acceptance
   Describe a claimed current behavior as a user's report until code or another source confirms it.
 - **To do:** a numbered list of distinct, executable changes to behavior or deliverables. Keep
   data needed to make a change in its item. Do not prescribe classes, functions or implementation
-  steps unless the approved source makes one a constraint. The cycle's plan chooses how.
+  steps unless the approved source makes one a constraint. The cycle's plan chooses how, or the
+  choices of its cycle record where no plan is written.
 - **Acceptance criteria:** an additional observable condition only when completing every `To do`
   item might still leave it false. Do not repeat the work list in other words.
 - **Questions to settle:** questions whose answers are or were needed to take the task. Keep each answer under
   its question. A product decision is settled by the human or by an already approved source;
-  an implementation choice belongs to the cycle's plan. Keep settled questions and answers with
-  their original provenance here, including answers transferred from a refinement conversation:
+  an implementation choice belongs to the cycle's plan, or to the choices of its cycle record
+  where no plan is written. Keep settled questions and answers with their original provenance here,
+  including answers transferred from a refinement conversation:
   exact document quotation and location/revision, factual code observation and `file:line`/revision,
   or the human's words and date. Code answers only how the product currently is, never how it is
   to be. A canonical answer shared by tasks is copied with its source into each affected task;

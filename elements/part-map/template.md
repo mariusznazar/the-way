@@ -181,9 +181,11 @@ outside it (WAY-42). What its fingerprint covers answers to the invariant `map-f
 
 ## Criticality: what is written and what is computed
 
-- A human writes the failure modes and the separations. A failure mode names what fails, the
-  kind of damage it does, its severity, and how it is detected before release — a named
-  invariant, or an explicit "not detected" (WAY-46).
+- A human writes the failure modes and the separations. A failure mode the task document commands,
+  or the human supplies or accepts from the agent's proposal in answer to the cycle's question,
+  counts as written by the human regardless of who enters it in the file (WAY-46). A failure mode
+  names what fails, the kind of damage it does, its severity, and how it is detected before release
+  — a named invariant, or an explicit "not detected" (WAY-46).
 - The script computes a part's criticality: the highest of its own failure modes, of the flows
   it lies on, and of the parts that depend on it, stopping where a dependency records a
   separation (WAY-46).

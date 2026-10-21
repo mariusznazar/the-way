@@ -48,9 +48,11 @@ project skill of that name with the `the-way-` prefix. Follow the steps of
 - *Depends on*: write what the part may depend on, not what the code reaches for today. Where the
   two differ, write the difference as the template's "Known violations" says, and show it in
   step 4.
-- Failure modes come from the human: ask what fails, what damage it does, how severe it is and
-  what detects it before release. A criticality dictated by hand is a question about failure
-  modes.
+- Failure modes come from the human. Use a mode already supplied by the human, commanded by the
+  task document or accepted from the agent's proposal in answer to the cycle's question, regardless
+  of who enters it in the file (WAY-46). Ask for what is still missing: what fails, what damage it
+  does, how severe it is and what detects it before release. A criticality dictated by hand is a
+  question about failure modes.
 - A degree of the scale, a level of promise or an exchange with the external context that the
   entry needs and the map's lists do not hold is a question in step 4, and its row goes into the
   same change.

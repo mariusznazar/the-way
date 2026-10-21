@@ -117,8 +117,9 @@ human acceptance of the complete task, even when refinement finds no candidate s
   project definition or a current foundation decision, route that change to its own process;
   do not silently settle it inside the task.
 - Settle known product choices needed to state the task's outcome before the cycle. A choice of
-  implementation method stays with the cycle's plan. An unanswered question that blocks taking
-  the task keeps `Status: waiting for human`; never turn it into an apparently executable `To do`
+  implementation method stays with the cycle's plan, or with the choices of its cycle record where
+  no plan is written. An unanswered question that blocks taking the task keeps `Status: waiting
+  for human`; never turn it into an apparently executable `To do`
   item. A new choice discovered during the cycle belongs in its decision record for the PR.
 - For a project member, reconcile every open question the plan places in its item. For a
   source-only task, reconcile the project questions explicitly brought into this task, without
