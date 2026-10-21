@@ -1,6 +1,6 @@
 ---
 name: the-way-update-part-map
-description: Use when a product's part map, foundations/part_map.md, has to gain or change an entry — a part whose responsibility or files change, a part split or merged, a new critical flow or a new surface, failure modes or a trust boundary recorded at a part, a file no part claims, the first map written for a product, or a change a project definition projects. Use this checkout's own the-way.
+description: Use when a product's part map, foundations/part_map.md, has to gain or change an entry — a part whose responsibility, files, allowed dependencies or trust boundary change, a part split or merged, a new surface or a changed one, a file no part claims, the first map written for a product, or a change a project definition projects. Use this checkout's own the-way.
 ---
 
 # the-way-update-part-map

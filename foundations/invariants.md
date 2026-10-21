@@ -270,18 +270,8 @@ Every derived file git tracks that its generator can produce from scratch is ide
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-04@29a75d2c · WAY-52@93101108 · WAY-53@aaeafada
+- **Derives from:** WAY-04@29a75d2c · WAY-53@aaeafada
 - **Part:** every
-- **Correction:** none
-
-## derived-subset-naming/1
-
-Every derived file compared as a subset of its version on {fork-point} is named in the template of its element.
-
-- **Method:** `TODO`
-- **Rests on:** none
-- **Derives from:** WAY-53@aaeafada
-- **Part:** decisions · part-map · invariants · glossary · environment-facts
 - **Correction:** none
 
 ## ci-checking-commands/1
@@ -624,16 +614,6 @@ Every identifier `foundations/part_map.md` held on {fork-point} stands in it as 
 - **Part:** part-map
 - **Correction:** none
 
-## map-fingerprint-input/1
-
-The fingerprint a script of the-way gives an entry of the part map is the fingerprint of the entry's binding sentence alone.
-
-- **Method:** `TODO`
-- **Rests on:** none
-- **Derives from:** WAY-42@b4b45de7
-- **Part:** part-map · relation-model
-- **Correction:** none
-
 ## map-entry-version/1
 
 No entry of the part map carries a version.
@@ -914,16 +894,6 @@ No row of the list of known violations names a line number.
 - **Part:** part-map
 - **Correction:** none
 
-## generated-pattern-source/1
-
-Every path pattern in a generated rule file comes from a part's rule for assigning files.
-
-- **Method:** `TODO`
-- **Rests on:** none
-- **Derives from:** WAY-52@93101108
-- **Part:** part-map
-- **Correction:** none
-
 ## generated-overview/1
 
 No file generated for an agent holds an overview of the repository's directories.
@@ -1146,22 +1116,12 @@ Every result the gate reports for an invariant is `pass`, `fail`, `unchecked` or
 
 ## gate-reported-set/1
 
-The gate reports a result for every invariant a change against "{fork-point}" reaches, and for every invariant a critical flow names.
+The gate reports a result for every invariant a change against "{fork-point}" reaches.
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-45@3798c435 · WAY-63@f16348c8
+- **Derives from:** WAY-63@f16348c8
 - **Part:** gate
-- **Correction:** none
-
-## flow-test-run/1
-
-The gate runs, on every change, every test holding a line `flow: <identifier>` that names a critical flow of the part map.
-
-- **Method:** `TODO`
-- **Rests on:** none
-- **Derives from:** WAY-45@3798c435
-- **Part:** gate · part-map
 - **Correction:** none
 
 ## gate-exit-code/1
@@ -2130,6 +2090,10 @@ For every invariant entry that a rule of a file `guidelines/<name>.md` names wit
 | fact-verdict-citation | withdrawn: an environment fact names no method, and no check cites it (WAY-81) | none |
 | gate-fact-run | withdrawn: no check of an environment fact runs on a change (WAY-82) | none |
 | fact-clock-exit | withdrawn: no clock runs the checks of environment facts (WAY-82) | none |
+| map-fingerprint-input | withdrawn: a reference names an entry of the part map by its identifier alone, and no fingerprint is computed for it (WAY-42) | none |
+| flow-test-run | withdrawn: a critical flow has no entry in the part map, and its test runs with the rest of the product's suite (WAY-45) | none |
+| generated-pattern-source | withdrawn: no rule file is generated from the part map for an agent (WAY-52) | none |
+| derived-subset-naming | withdrawn: no derived file is compared as a subset of its earlier version (WAY-53) | none |
 
 ## Quarantined invariants
 
