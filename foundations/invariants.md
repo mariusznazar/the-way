@@ -314,26 +314,6 @@ Every check the gate runs for an entry of the foundation comes from the method o
 - **Part:** every
 - **Correction:** none
 
-## view-versions/1
-
-The view of the decisions in force holds only the latest version of every number in the decision log, and a single line in place of a repealed number.
-
-- **Method:** `TODO`
-- **Rests on:** none
-- **Derives from:** WAY-18@8c477ea2
-- **Part:** every
-- **Correction:** none
-
-## view-links/1
-
-The view of the decisions in force shows every link the decision log writes at both of its ends.
-
-- **Method:** `TODO`
-- **Rests on:** none
-- **Derives from:** WAY-18@8c477ea2
-- **Part:** every
-- **Correction:** none
-
 ## decision-heading-form/1
 
 The heading of every decision version in the decision log has the form `### <prefix>-NN/V — <question>`.
@@ -2237,6 +2217,8 @@ For every invariant entry that a rule of a file `guidelines/<name>.md` names wit
 | invariant-test-change-acceptance | replaced: a change to an invariant test is covered by the one independent assessment of any change to an invariant test or to the foundation | foundation-change-assessment-record |
 | foundation-change-panel-record | replaced: the record of a panel of two assessors and two settlements became the record of one independent assessment and of how each remark was settled | foundation-change-assessment-record |
 | foundation-search-record | withdrawn: the author's one search of the foundation is not repeated before the merge and leaves no record (WAY-33) | none |
+| view-versions | withdrawn: the decision log holds one entry for each decision and says what binds today, with no view generated from it (WAY-18) | none |
+| view-links | withdrawn: the decision log holds one entry for each decision and says what binds today, with no view generated from it (WAY-18) | none |
 | foundation-change-assessment-record | withdrawn: a change to an invariant test or to the foundation has no assessment of its own; the review of the change and the human at the merge read it (WAY-10) | none |
 
 ## Quarantined invariants

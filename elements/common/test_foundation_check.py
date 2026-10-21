@@ -350,6 +350,40 @@ class FoundationCheckTest(unittest.TestCase):
         self.assertFails(self.run_on(foundations__decisions_dot_md=decisions),
                          "foundations/decisions.md:", "`ABC-11`")
 
+    # A list of withdrawn decision numbers after the last entry of the log; line 25 is its row.
+    WITHDRAWN_DECISION = ("\n## Withdrawn identifiers\n\n| Identifier | Why | Successors |\n"
+                          "|---|---|---|\n| ABC-03 | merged into ABC-02 | ABC-02 |\n")
+
+    def test_withdrawn_decision_number_with_its_successor_passes(self):
+        self.assertPasses(self.run_on(
+            foundations__decisions_dot_md=DECISIONS + self.WITHDRAWN_DECISION))
+
+    def test_withdrawn_decision_number_named_anywhere(self):
+        self.assertFails(self.run_on(
+            foundations__decisions_dot_md=DECISIONS + self.WITHDRAWN_DECISION,
+            README_dot_md="# The game\n\nSee ABC-03.\n"),
+            "README.md:3: `ABC-03` is withdrawn; name its successor", "1 error")
+
+    def test_withdrawn_decision_number_names_an_entry_again(self):
+        decisions = DECISIONS + self.WITHDRAWN_DECISION.replace("| ABC-03 |", "| ABC-02 |")
+        self.assertFails(self.run_on(foundations__decisions_dot_md=decisions),
+                         "foundations/decisions.md:25: `ABC-02` stands twice")
+
+    def test_withdrawn_decision_number_twice(self):
+        decisions = DECISIONS + self.WITHDRAWN_DECISION + "| ABC-03 | again | none |\n"
+        self.assertFails(self.run_on(foundations__decisions_dot_md=decisions),
+                         "foundations/decisions.md:26: `ABC-03` stands twice")
+
+    def test_withdrawn_decision_successor_that_is_no_decision(self):
+        decisions = DECISIONS + self.WITHDRAWN_DECISION.replace("| ABC-02 |\n", "| ABC-09 |\n")
+        self.assertFails(self.run_on(foundations__decisions_dot_md=decisions),
+                         "foundations/decisions.md:25: withdrawn `ABC-03` names the successor "
+                         "`ABC-09`, which this file does not hold")
+
+    def test_withdrawn_decision_successor_none_passes(self):
+        decisions = DECISIONS + self.WITHDRAWN_DECISION.replace("| ABC-02 |\n", "| none |\n")
+        self.assertPasses(self.run_on(foundations__decisions_dot_md=decisions))
+
     def test_decision_number_without_leading_zero_names_the_same_decision(self):
         self.assertPasses(self.run_on(README_dot_md="See ABC-1 and ABC-002.\n"))
 
@@ -500,6 +534,26 @@ class FoundationCheckTest(unittest.TestCase):
         decisions = self.edit(DECISIONS, "state: clock-tick@0123abcd", "state: clock-tock@0123abcd")
         self.assertFails(self.run_on(foundations__decisions_dot_md=decisions),
                          "foundations/decisions.md:", "`clock-tock`")
+
+    def test_based_on_names_by_identifier_alone_no_fact(self):
+        decisions = self.edit(DECISIONS, "- **Based on:** none\n",
+                              "- **Based on:** clock-tock · https://example.org/clock, § Ticks — "
+                              "\"the clock, steady, ticks\"; read 2026-10-01\n")
+        self.assertFails(self.run_on(foundations__decisions_dot_md=decisions),
+                         "foundations/decisions.md:17: `clock-tock` names no fact", "1 error")
+
+    def test_based_on_fact_by_identifier_alone_and_quoted_source_pass(self):
+        decisions = self.edit(DECISIONS, "- **Based on:** none\n",
+                              "- **Based on:** clock-tick · https://example.org/clock, § Ticks — "
+                              "\"the clock, steady, ticks\"; read 2026-10-01\n")
+        self.assertPasses(self.run_on(foundations__decisions_dot_md=decisions))
+
+    def test_based_on_fact_by_identifier_alone_on_next_line(self):
+        decisions = self.edit(DECISIONS, "- **Based on:** none\n",
+                              "- **Based on:** https://example.org/clock — \"one tick\"; read "
+                              "2026-10-01 ·\n  clock-tock\n")
+        self.assertFails(self.run_on(foundations__decisions_dot_md=decisions),
+                         "foundations/decisions.md:18: `clock-tock` names no fact")
 
     def test_test_cites_no_fact(self):
         tests = self.edit(FILES["tests/test_saving.py"], "fact: clock-tick/1", "fact: clock-tock/1")

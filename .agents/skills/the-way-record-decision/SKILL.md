@@ -1,6 +1,6 @@
 ---
 name: the-way-record-decision
-description: Use when a decision has to be written into a product's decision log, foundations/decisions.md — a choice just settled in conversation that binds later work, a new answer to a question the log already holds, a decision recovered from existing code, a due review of a decision whose review-when date has come, or a decision a project definition projects. Use this checkout's own the-way.
+description: Use when a decision has to be written into a product's decision log, foundations/decisions.md — a choice just settled in conversation that binds later work, a new answer to a question the log already holds, a decision recovered from existing code, a decision no longer needed, or a decision a project definition projects. Use this checkout's own the-way.
 ---
 
 # the-way-record-decision

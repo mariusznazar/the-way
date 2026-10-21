@@ -138,7 +138,7 @@ code alone — behaviour shows in runtime traces, deployment in infrastructure f
 
 ### WAY-05/1 — How is a decision entry written?
 
-A decision version opens with one to three binding sentences — in the present tense, describing
+A decision entry opens with one to three binding sentences — in the present tense, describing
 a state that is to be true, concrete enough to check — followed by fields a script or an agent
 reads, then rationale and rejected options in prose, which, where the entry's author writes it
 rather than quotes a source, names no file, script or count, nor what the process's own tools do or
@@ -164,38 +164,37 @@ log by its number instead of copying it.
 reasons they are given, so what binds stays short and checkable, reasoning below; a field
 nobody reads goes empty, and long lists of fields stop people recording decisions.
 *Rejected:* prose without fields — nothing a script can read reliably; many fields and relations —
-fields without a reader; a hand-written status — a second copy of the versions; a one-sentence
+fields without a reader; a hand-written status — every entry of the log binds; a one-sentence
 entry — no reasoning beside the rule; "will" or "should" — an intent, not a state; capitals such as
 MUST — shouting reads worse, not stronger; examples written for the template — an example with gaps
 teaches gaps; a rule of the template changed only with a decision citing its number — the template
 is the-way's own text, changed and reviewed like any other change to it.
 
-### WAY-07/1 — From when may a decision entry no longer be edited?
+### WAY-07/1 — How is a decision entry changed?
 
-An entry in the decision log is edited in place until it reaches the main branch; until then
-it gets no new version and no new decision about it. An edit that changes the meaning of an
-accepted entry is accepted again. Once an entry is on the main branch, it is never edited, and
-the log there only grows at the end.
+A decision entry is edited in place, on the main branch as before it, and holds only its current
+wording: the log has one entry for each number, and git keeps the earlier wordings.
 
 - **Change:** new decision
 - **Scope:** decisions
 - **Based on:** none
 - **Relations:** derives from WAY-01@60960941
-- **Verification:** level 1 — invariants: log-existing-lines · log-versions-added-per-number ·
-  log-merge-copies. Level 2 for acceptance after a change of meaning — an agent compares the change
-  with the decision:
-  - complies: an accepted entry whose binding sentences changed on the task branch is shown to
-    its approver again before the merge;
-  - violates: an entry reaches the main branch with binding sentences its approver never saw.
+- **Verification:** level 2 — an agent compares the change with the decision:
+  - complies: a decision whose rule changes is rewritten in its own entry, which then says only
+    what binds;
+  - violates: a change to a decision is appended as a second entry under the same number; an entry
+    keeps a sentence that no longer binds beside the one that replaced it.
 - **Review when:** none
 - **Origin:** none
 - **Approved by:** Mariusz, 2026-09-15
 
-*Rationale:* an entry binds only once it is on the main branch (WAY-01), so versions written
-before would carry states that never bound anything; there the log keeps what was in force. After a
-change of meaning without new acceptance, *Approved by* would name someone who did not approve it.
-*Rejected:* an entry fixed from the moment it is written — every edit made during a task
-becomes a version that never bound anything.
+*Rationale:* the log is read for what binds today (WAY-01), and an entry that holds only its current
+wording is read whole, without assembling it from earlier ones; what an entry said before is
+seldom needed, and git keeps it.
+*Rejected:* a log that only grows on the main branch, every change a new version of its number —
+a version restates the sentences the change leaves alone, and a reader assembles what binds from
+many copies; an entry fixed from the moment it is written — every edit made during a task becomes a
+version that never bound anything.
 
 ### WAY-08/1 — How is an invariant checked?
 
@@ -390,33 +389,34 @@ meeting a foundation check.
 
 ### WAY-12/1 — How is a decision checked?
 
-A decision is checked through the invariants derived from it, which its *Verification* names by
-the identifiers of their entries, and tests live only with invariants. Where no invariant can be
-derived today, an agent compares a change with the decision using a pair of examples — one that
-complies and one that violates — and where an agent cannot judge, a human assesses it and leaves a
-trace of who and when. A decision can combine levels, each covering what it can check of its
-binding sentences.
+A decision names in *Verification* the invariants derived from it, by the identifiers of their
+entries, where such invariants exist, and tests live only with invariants. A decision may also
+carry a pair of examples — a change that complies and one that violates — with which an agent
+compares a change with what no invariant of the decision checks.
 
 - **Change:** new decision
 - **Scope:** decisions, invariants
 - **Based on:** llm-decision-violation-detection@92f498f3
 - **Relations:** none
-- **Verification:** level 1 — invariants: decision-verification-level ·
-  level-one-decision-invariants · invariant-citation-target · verification-invariant-derivation.
-  Level 2 for the choice of level — an agent compares the change with the decision:
-  - complies: a decision on the product's direction is checked by an agent with a complying and a
-    violating example;
-  - violates: a decision whose rule a lint check could enforce is left at level 2.
+- **Verification:** level 1 — invariants: level-one-decision-invariants · invariant-citation-target
+  · verification-invariant-derivation. Level 2 for what a decision names — an agent compares the
+  change with the decision:
+  - complies: a decision on the product's direction carries a complying and a violating example
+    and names no invariant; a decision with a derived invariant names it after `invariants:`;
+  - violates: a decision names an invariant whose *Derives from* names another decision; a
+    decision asks for a human's assessment recorded in its entry.
 - **Review when:** none
 - **Origin:** none
 - **Approved by:** Mariusz, 2026-09-30
 
 *Rationale:* a test checks an invariant on every commit; a decision about direction or trade-offs
 often cannot be. Agents judge explicit, code-readable decisions well and deployment- or
-organisation-dependent ones poorly, a finding this decision takes across publishers (WAY-85);
-those stay with a human. A pair of examples marks the line.
+organisation-dependent ones poorly, a finding this decision takes across publishers (WAY-85), so a
+pair of examples marks the line where it helps, and the human who accepts a change sees the rest.
 *Rejected:* a rule in code as the only check — decisions that cannot be written as a rule go
-unchecked.
+unchecked; a level of verification named in every decision, a human's assessment among the levels
+— the level adds nothing to the invariants named and the examples given, and every change already
+reaches a human before it binds (WAY-14).
 
 ### WAY-13/1 — What sets the weight of a task's process?
 
@@ -463,26 +463,33 @@ touching a trust boundary's files, from the lighter preparation — it would tak
 preparation from small tasks it suits, while a human's decision and checks kept whole already
 stop such a change.
 
-### WAY-14/1 — Who approves a version of a decision?
+### WAY-14/1 — Who accepts a decision?
 
-A version of a decision is approved by a human, never by an agent, and records who approved it and
-either when, or the merge of the request by which they accepted it; in the-way, the approver is
-Mariusz.
+A decision, and every change to it, binds once a human accepts it by merging the request that
+carries it, never an agent; the entry names no approver, and git keeps who merged it and when. In
+the-way, that human is Mariusz.
 
 - **Change:** new decision
 - **Scope:** decisions
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 1 — invariants: decision-approval-record · decision-approver.
+- **Verification:** level 2 — an agent compares the change with the decision:
+  - complies: a decision written on a task branch binds once Mariusz merges its request, and its
+    entry holds no field naming him;
+  - violates: an agent merges a request that carries a decision; an entry is edited once its
+    request is open only to record who is to approve it.
 - **Review when:** the-way decides which of its elements a team may adapt, and with it who approves
   decisions for which parts · check by: 2026-12-31
 - **Origin:** none
 - **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/4
 
-*Rationale:* the record of who approved, and when or by which merge, is what a human considering a
-change reads, and what WAY-07 needs when an entry has to be accepted again.
-*Rejected:* a field in every entry naming who is to approve it — the same name repeated, stale once
-the team changes; lists of decision-makers and of those consulted — nothing reads them.
+*Rationale:* a decision binds the agents that follow, so none of them accepts one. The merge is the
+act by which a human accepts a change, and git records it with the person and the time; a field
+restating it is a second copy kept in step by hand.
+*Rejected:* a field in every entry recording who approved it and when, or the link of the request
+whose merge accepted it — a copy of what git records, written in by hand once the request opens; a
+field in every entry naming who is to approve it — the same name repeated, stale once the team
+changes; lists of decision-makers and of those consulted — nothing reads them.
 
 ### WAY-16/1 — How are the checks of invariants run?
 
@@ -532,100 +539,94 @@ invariant.
 and an assumption no entry names escapes review; the link sits in the dependent entry, because
 only its writer knows what it rests on.
 *Rejected:* links written by the entry depended on — it cannot know its dependents; optional
-links — a missing one looks unneeded; research findings outside the environment facts —
-decisions about agents would have no fact to flag them.
+links — a missing one looks unneeded; research findings outside the environment facts — a search
+from a changed finding would find no decision about agents that rests on it.
 
 ### WAY-18/1 — How is a product's decision log kept?
 
-A product keeps all its decisions in one log, whatever they are about. The decision log holds every
-decision version and review record in the order it was written, and what is in force today is a view
-that a script generates from the log: the latest version of each number, and in place of a repealed
-decision a single line pointing to the version that repealed it. A link between entries is written at
-one end only, and the view shows it at the other; the one exception is a decision's level 1
-invariants, which its *Verification* names while each of them names the decision in *Derives from*.
+A product keeps all its decisions in one log, whatever they are about. The log holds one entry for
+each decision in force, in the order the entries were written, and says what binds today with no
+view generated from it. A link between entries is written at one end only; the one exception is a
+decision's invariants, which its *Verification* names while each of them names the decision in
+*Derives from*.
 
 - **Change:** new decision
 - **Scope:** decisions
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 1 — invariants: view-versions · view-links. Level 2 for one log — an
-  agent compares the change with the decision:
+- **Verification:** level 2 — an agent compares the change with the decision:
   - complies: a business rule and a technical constraint of one product stand in the same log
     under one numbering; a product's existing architecture records stay a source, and a decision
     recovered from them enters the one log;
-  - violates: a separate log for business decisions next to the technical one.
+  - violates: a separate log for business decisions next to the technical one; a decision that
+    another narrows names that other in its own *Relations* as well.
 - **Review when:** none
 - **Origin:** none
 - **Approved by:** Mariusz, 2026-09-29
 
-*Rationale:* what is in force and the history serve different reads — checking a change, and
-reaching the options rejected earlier; one log, because a collision is caught only between decisions
-in the set a change is checked against; a link is written once, because nobody reopens an old entry.
-*Rejected:* a single document edited in place — the history is lost; a log without a view — every
-reader reconstructs the current state by hand; marks written by hand at a link's other end — they go
-missing; separate logs for business and technical decisions — collisions between them go unseen; a
-log per approver — each version records who approved it (WAY-14); a field for an entry's topic —
-nothing reads it (WAY-05).
+*Rationale:* one log, because a collision is caught only between decisions in the set a change is
+checked against; the log itself says what binds, so a reader reaches it without assembling versions
+or generating a view; a link is written once, because two copies of it drift apart.
+*Rejected:* a log of every version and review, with a view of what is in force generated from it —
+the view is one more thing to build and keep, and the history it leaves behind is what git keeps;
+marks written by hand at a link's other end — they go missing; separate logs for business and
+technical decisions — collisions between them go unseen; a log per approver — git records who
+merged each change (WAY-14); a field for an entry's topic — nothing reads it (WAY-05).
 
-### WAY-19/1 — How are decisions numbered and versioned?
+### WAY-19/1 — How are decisions numbered?
 
 A number stands for the question a decision answers, carries the product's prefix and is given
 in the order entries are written; a new question gets the next free number, and a new rule next
-to an existing decision is a new question. On the main branch, every change to a decision is a new
-version of its number, which gives the rationale for the change and restates the binding sentences
-and fields in full, except that a repeal has no binding sentences. When a new decision answers a
-question that an older one answered in passing, the sentence moves to the new decision, and the
-older one loses it — by a new version on the main branch, by an edit before it.
+to an existing decision is a new question. A new answer to a question the log holds rewrites that
+question's entry. When a new decision answers a question that an older one answered in passing, the
+sentence moves to the new decision, and the older one loses it in the same change.
 
 - **Change:** new decision
 - **Scope:** decisions
 - **Based on:** none
 - **Relations:** derives from WAY-02@3ffcbd46
-- **Verification:** level 1 — invariants: decision-heading-form · decision-version-sequence ·
-  log-entry-field-presence · log-entry-field-words. Level 2 for one number per question and for
-  sentences answered in passing — an agent compares the change with the decision:
-  - complies: once on the main branch, a new rule for who approves a version of a decision is
-    written as WAY-14/2; when a decision on a question arrives, an older decision that answered
-    it in passing loses that sentence;
-  - violates: the same question gets a second number; a version carries only the sentence that
-    changed; the sentence stays in both decisions.
+- **Verification:** level 1 — invariants: log-entry-field-presence · log-entry-field-words. Level 2
+  for one number per question and for sentences answered in passing — an agent compares the change
+  with the decision:
+  - complies: a new rule for who accepts a decision is written into WAY-14; when a decision on a
+    question arrives, an older decision that answered it in passing loses that sentence;
+  - violates: the same question gets a second number; the sentence stays in both decisions.
 - **Review when:** none
 - **Origin:** none
 - **Approved by:** Mariusz, 2026-09-29
 
-*Rationale:* a permanent number lets references survive a change (WAY-02); a version restates the
-decision whole, so no reader assembles it from pieces; a sentence answered in passing moves, because
-two entries answering one question drift apart; the product's prefix keeps numbers of different
-products apart in references.
+*Rationale:* a permanent number lets references survive a change (WAY-02); a new answer rewrites
+the one entry, so no reader assembles the decision from pieces; a sentence answered in passing
+moves, because two entries answering one question drift apart; the product's prefix keeps numbers
+of different products apart in references.
 *Rejected:* a new number for every change, the old entry marked as replaced — references rewired or
-left on a dead entry; numbering by topic — topics move, and numbers would move with them.
+left on a dead entry; numbering by topic — topics move, and numbers would move with them; a new
+version of the number for every change — a reader assembles what binds from many copies (WAY-07).
 
 ### WAY-20/1 — What kinds of change can a decision undergo?
 
-The first version of a decision names its kind of change as new decision, and every later version
-names it from a closed list: editorial correction, unchanged sentences, new wording, narrowing,
-challenge, repeal. A version of the kind unchanged sentences and a challenge keep the binding
-sentences of the previous version word for word, and a repeal has none.
+A change to a decision names no kind of change, in the entry or beside it; what the change does to
+the decision's meaning, the request that carries it says, naming the decision with one sentence of
+what it now means (WAY-114).
 
 - **Change:** new decision
 - **Scope:** decisions
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 1 — invariants: binding-sentence-count · decision-change-kind ·
-  decision-binding-across-versions · repeal-binding-sentences. Level 2 for the choice of kind — an
-  agent compares the change with the decision:
-  - complies: a version that answers the question anew is called a new wording; a typo fixed in
-    a binding sentence is called an editorial correction;
-  - violates: a version called an editorial correction turns "must" into "may".
+- **Verification:** level 2 — an agent compares the change with the decision:
+  - complies: a request that rewords a decision names it with one sentence of its new meaning, and
+    the entry holds no field for the kind of change;
+  - violates: an entry records that its last change was an editorial correction.
 - **Review when:** none
 - **Origin:** none
 - **Approved by:** Mariusz, 2026-09-29
 
-*Rationale:* whatever relies on a decision needs to know what a version did to it: a fixed
-typo leaves every reliance valid, a new answer does not. A word for a change left undefined means
-something different to each author, so the list is closed and defined in the template.
-*Rejected:* two kinds, change and replacement — a fixed typo looks like a new answer; an open list —
-each new kind carries its author's meaning.
+*Rationale:* what a change does to a decision is read once, by the human who accepts it, and the
+request's sentence of meaning tells them; a kind written into the entry speaks of a change, not of
+the decision, and the entry outlives it.
+*Rejected:* a closed list of kinds of change — editorial correction, unchanged sentences, new
+wording, narrowing, challenge, repeal — named by every later version of a decision — a kind speaks
+of the history, which git keeps, and a version restates the sentences the change leaves alone.
 
 ### WAY-21/1 — What is a decision's scope?
 
@@ -679,38 +680,26 @@ moving a checkable sentence out of its decision — the rule would be cut off fr
 
 ### WAY-24/1 — How is a decision that rests on a prediction reviewed?
 
-A decision that rests on a prediction names in *Review when* the predicted state of the world or the
-product, observable when it comes, and a check-by date; the field does not lift the decision, and
-whether the state has come is checked by the periodic review of the foundation. On the date, a
-review record records what was observed: the state has not come, with the next date; it has come and
-the decision is kept; or it has come and a named version changed the decision. Before the main
-branch, an edit in place that the decision's approver accepts again answers the date as well when it
-rewrites *Review when* from what was observed, and a check-by date is moved in no other way.
+A decision names no date or condition for its review, the log holds no record of a review, and
+the review of the foundation against the product is a task of the product's backlog.
 
 - **Change:** new decision
 - **Scope:** decisions
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 1 — invariants: review-when-form · decision-guard-overdue-review ·
-  review-next-check · review-named-version. Level 2 for who looks and when — an agent compares the
-  change with the decision:
-  - complies: the periodic review finds a passed check-by date and records that the state has not
-    come, with the next date; before the main branch, a decision whose state has come is edited in
-    place from what was observed and accepted again;
-  - violates: a review record says the state has not come but gives no next date; before the main
-    branch, a passed check-by date is moved later with neither a review record nor an edit from
-    what was observed.
+- **Verification:** level 2 — an agent compares the change with the decision:
+  - complies: a decision's entry holds no field for its review; a task of the backlog reviews the
+    foundation against the product;
+  - violates: an entry carries a check-by date; a record of a review is appended to the log.
 - **Review when:** none
 - **Origin:** none
 - **Approved by:** Mariusz, 2026-09-29
 
-*Rationale:* a prediction is a bet; a state and a date make it checkable. An end date is more often
-extended than acted on, so the date only asks for a look, and every look is recorded, so no run of
-"not yet" or moved date passes in silence.
-*Rejected:* a decision that expires on a date — the date gets extended; a review date without a
-state — nobody knows what to check; a review as a new version — a full copy for every look; the
-agent in the decision's scope checking the state — it is given the binding sentences, not this
-field.
+*Rationale:* a date in an entry asks for a look nobody is sent to make, and passes unseen; a review
+of the whole foundation, set as a task, looks at all of it at once.
+*Rejected:* *Review when* in each entry, with an observable state and a check-by date, and a review
+record appended on the date — the dates pass with nobody looking; a decision that expires on a date
+— the date gets extended.
 
 ### WAY-25/1 — What settles a collision between two decisions?
 
@@ -718,7 +707,7 @@ Where two decisions both apply and collide, the one that prevails names the othe
 as `narrows`, and its binding sentences state the area where it prevails; nothing follows along a
 chain, and two decisions that narrow each other are an error. A collision between two decisions
 with no precedence recorded is never settled by the agent that meets it; a human records the
-precedence — by a new version on the main branch, by an edit before it.
+precedence in the decision that prevails.
 
 - **Change:** new decision
 - **Scope:** decisions, task-cycle
@@ -764,7 +753,7 @@ non-goal is a decision of its own that says what the product does not do and why
 *Rationale:* a principle rules later choices only when it names what it gives up; the rationale names
 the problem, so a later reader can tell when the principle stops serving it; one entry each, so each
 changes on its own and precedence is recorded pair by pair (WAY-25).
-*Rejected:* several principles or non-goals in one entry — a change to one flags them all, and no
+*Rejected:* several principles or non-goals in one entry — a change to one reopens them all, and no
 precedence can be recorded between them.
 
 ### WAY-27/1 — Where may this repository point for its reasoning?
@@ -832,18 +821,22 @@ happens to touch them.
 
 ### WAY-29/1 — How is a decision recovered from an existing product written?
 
-A decision recovered from an existing product records in *Origin* what was searched and what was
-found, and its rationale and rejected options are quoted from that source, given by a human who
-knows them, or written as `unknown`. A rationale an agent proposes for a human's decision goes to
-the human as a question, never into the entry; the rationale of a decision an agent takes in a task
-is the agent's to write.
+A decision recovered from the code of an existing product says in *Origin*, in one sentence, that
+it was recovered from the code and where in the code it shows, and its rationale and rejected
+options are quoted from a source, given by a human who knows them, or written as `unknown`. A
+rationale an agent proposes for a human's decision goes to the human as a question, never into the
+entry; the rationale of a decision an agent takes in a task is the agent's to write.
 
 - **Change:** new decision
 - **Scope:** decisions
 - **Based on:** llm-design-rationale-expert-overlap@d27dc54f
 - **Relations:** derives from WAY-28@94d8ef12
-- **Verification:** level 1 — invariants: inherited-origin-form · inherited-rationale-source. Level
-  2 for the agent's role — an agent compares the change with the decision:
+- **Verification:** level 1 — invariants: inherited-rationale-source. Level 2 for *Origin* — an
+  agent compares the change with the decision:
+  - complies: the *Origin* of a decision recovered from a product's saving reads `recovered from
+    the code at src/core/save.py, save_game`;
+  - violates: *Origin* lists what was searched and what was found.
+  Level 2 for the agent's role — an agent compares the change with the decision:
   - complies: an agent finds the reason in a merged request and quotes it; an agent finds nothing
     and asks, and the entry gives the reason under the name of the human who knew it;
   - violates: an agent writes a plausible reason inferred from the code into the entry; an agent
@@ -856,24 +849,26 @@ is the agent's to write.
 for the reason the decision was made; a human who knows it is a source, a guess is not. The cited
 study compared generated arguments with expert rationale after giving models the problem and
 decision; it did not test recovery from code, and argument overlap is not a correctness rate. This
-decision takes its warning across model publishers (WAY-85). A recorded search is not repeated,
-and `unknown` shows nobody knows what the decision guards.
+decision takes its warning across model publishers (WAY-85). The place in the code shows a reader
+where the decision acts, and `unknown` shows nobody knows what the decision guards.
 *Rejected:* an agent's rationale in the entry — read as the reason the decision was made; rejected
-options filled in as `none considered` — nobody knows what was considered.
+options filled in as `none considered` — nobody knows what was considered; *Origin* recording what
+was searched and what was found — a list nothing reads once the decision is written, while the
+place in the code says where to look.
 
 ### WAY-30/1 — What happens when a change contradicts a decision?
 
 A change to a decision that a task needs is written into the task's plan, or into its task
-document where no plan is written, and approved with that plan or document by the decision's
-approver before the code that needs it is made; that approval, including a change carried by a row
-of *Settlements to record*, answers the question WAY-114 requires, so the agent writing the entry
-asks only about a meaning beyond what the approved plan or task document carries, and in this area
-this decision prevails over WAY-114. When a contradiction shows only during
-implementation, the agent stops, quotes the decision by its number, and either brings the change into line, drops the change, or
-proposes on the task branch a new wording or a narrowing of the decision — by a new version on the
-main branch, by an edit before it — and the code that needs it waits for the decision's approver. An
-exception written in advance into a decision's binding sentences is not a contradiction, and no
-exception lives only in a task document, plan or cycle record.
+document where no plan is written, and approved with that plan or document by the human who accepts
+decisions (WAY-14) before the code that needs it is made; that approval, including a change carried
+by a row of *Settlements to record*, answers the question WAY-114 requires, so the agent writing the
+entry asks only about a meaning beyond what the approved plan or task document carries, and in this
+area this decision prevails over WAY-114. When a contradiction shows only during implementation,
+the agent stops, quotes the decision by its number, and either brings the change into line, drops
+the change, or proposes on the task branch an edit of the decision, a new wording or a narrowing,
+and the code that needs it waits for that human. An exception written in advance into a decision's
+binding sentences is not a contradiction, and no exception lives only in a task document, plan or
+cycle record.
 
 - **Change:** new decision
 - **Scope:** decisions, task-cycle
@@ -881,9 +876,9 @@ exception lives only in a task document, plan or cycle record.
 - **Relations:** derives from WAY-01@60960941 · narrows WAY-114@04b4f599
 - **Verification:** level 2 — an agent compares the change with the decision:
   - complies: a task branch whose code goes against a decision carries a proposed narrowing, and
-    the merge waits for its approver; a task without a plan carries the known decision revision
-    in its task document, accepted by the decision's approver before dependent code, and the entry's
-    author records that meaning without asking again; a further meaning goes to the approver;
+    the merge waits for the human who accepts it; a task without a plan carries the known decision
+    revision in its task document, accepted by that human before dependent code, and the entry's
+    author records that meaning without asking again; a further meaning goes to that human;
   - violates: a task branch whose code contradicts a decision that stays unchanged; a task's plan
     that records a "justified violation" of a decision; a task without a plan treats the
     orchestrator's go-ahead as approval of a decision revision; the entry's author asks again about
@@ -894,8 +889,8 @@ exception lives only in a task document, plan or cycle record.
 
 *Rationale:* an exception kept only with the work leaves the foundation describing what the code no
 longer does (WAY-01); stopping shows the contradiction when it is found. Aligning or dropping the
-change leaves the decision intact, so the agent may do either; changing the decision is its
-approver's. Asking again about the meaning already approved spends attention without presenting
+change leaves the decision intact, so the agent may do either; changing the decision is the
+human's. Asking again about the meaning already approved spends attention without presenting
 a new choice; a meaning beyond it still needs that choice.
 *Rejected:* a justified violation recorded in the plan, the decision unchanged — the foundation
 stops matching the code; a whole new answer as the only way to change a decision — a narrow
@@ -945,16 +940,15 @@ goes against in a narrower area.
   - complies: a decision that exists to serve WAY-01 names `derives from WAY-01`; a rule for one
     part that deliberately departs from a general decision names `narrows`;
   - violates: `narrows` for a decision that only mentions another; a new answer to an old question
-    given a new number and a relation instead of a new version.
+    given a new number and a relation instead of an edit of the old decision.
 - **Review when:** none
 - **Origin:** none
 - **Approved by:** Mariusz, 2026-09-29
 
 *Rationale:* a relation type each author reads differently tells a reader nothing, so each type is
-defined once and the list is closed; both types rely on the other decision's binding part and carry
-its fingerprint (WAY-31), and `narrows` also tells the checking agent where the other does not
-apply.
-*Rejected:* `related to` — it relies on nothing, so nothing reads it and it carries no fingerprint.
+defined once and the list is closed; both types rely on what the other decision says, and `narrows`
+also records precedence (WAY-25), telling the checking agent where the other does not apply.
+*Rejected:* `related to` — it relies on nothing, so nothing reads it.
 
 ### WAY-33/1 — What does the author of a foundation change search for?
 
@@ -1073,10 +1067,10 @@ where no plan is written.
 - **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/20
 
 *Rationale:* a plan written in the present tense reads like a decision, and WAY-01 gives no way to
-recognise one. The log binds on the main branch (WAY-07), and a rule that ends when its change is
+recognise one. The log binds on the main branch (WAY-01), and a rule that ends when its change is
 merged binds nothing there: from its first day it records work already done.
-*Rejected:* plans written into the log and repealed once done — the log fills with history of
-work.
+*Rejected:* plans written into the log and taken out once done — the log holds, while the work
+lasts, a rule that binds nothing once the work is merged.
 
 ### WAY-37/1 — What happens to entries that wait for something when it arrives?
 
@@ -1228,12 +1222,11 @@ there.
 - **Origin:** none
 - **Approved by:** Mariusz, 2026-09-17
 
-*Rationale:* a decision keeps earlier versions because their reasons still bind (WAY-18); a map
-entry carries no reasons, so its earlier state binds nothing, and git answers whoever asks what the
-product looked like. An entry read at a task's start says what is true now, without versions to
-choose from.
-*Rejected:* versions as in the decision log — history that binds nothing, and the reader picks the
-current entry; an archive of past maps beside the map — git is one already.
+*Rationale:* an entry's earlier state binds nothing, and git answers whoever asks what the product
+looked like. An entry read at a task's start says what is true now, without versions to choose
+from.
+*Rejected:* versions of each entry — history that binds nothing, and the reader picks the current
+entry; an archive of past maps beside the map — git is one already.
 
 ### WAY-44/1 — What assigns a file to a part?
 
@@ -1978,10 +1971,9 @@ break — the code review already stands apart from the check.
 
 ### WAY-71/1 — Does every field of a foundation entry appear in every entry, and what may it hold?
 
-Every field an element's template gives an entry of its kind appears in every entry of its kind —
-in every version of a decision and every review record, the fields their forms give — holding a
-value, or `none` or `TODO` where the template gives it that word: `none` says nothing is there,
-`TODO` that something is missing. The main branch holds `TODO` only in an invariant's or a fact's
+Every field an element's template gives an entry of its kind appears in every entry of its kind,
+holding a value, or `none` or `TODO` where the template gives it that word: `none` says nothing is
+there, `TODO` that something is missing. The main branch holds `TODO` only in an invariant's or a fact's
 *Method*, and in an invariant's *Rests on* until the facts element has entries. A guard reports a
 missing field, or a word not given it, as an error.
 
@@ -2489,20 +2481,20 @@ security support — years without installers.
 
 ### WAY-90/1 — Which citations of a decision's *Based on* become environment fact entries, and how are they named?
 
-A decision's *Based on* quotes every citation with its source, given as WAY-80 gives a fact's
-source; once the environment facts element has entries, it names a fact entry instead for every
-citation that, stopping being true today, would send the decision to review — a finding about agents
-or models, the behaviour of a tool the process uses. A fact named there carries its fingerprint, as
-`<identifier>@<fingerprint>`, renewed as WAY-31 renews a relation's.
+A decision's *Based on* quotes every source outside the product that the decision rests on with its
+address, the place in it, the passage word for word and the date it was read; once the environment
+facts element has entries, it names instead a fact entry, by its identifier alone, for every
+citation that, once it stopped being true, would call the decision into question — a finding about
+agents or models, the behaviour of a tool the process uses.
 
 - **Change:** new decision
-- **Scope:** decisions, environment-facts, relation-model
+- **Scope:** decisions, environment-facts
 - **Based on:** none
 - **Relations:** derives from WAY-17@b1e26133
-- **Verification:** level 1 — invariants: based-on-fact-fingerprint · based-on-fact-fingerprint-value.
-  Level 2 for which citations become entries — an agent compares the change with the decision:
+- **Verification:** level 2 — an agent compares the change with the decision:
   - complies: the ImpossibleBench finding behind WAY-03 becomes a fact entry named in its *Based
-    on*; a past failure a decision cites stays quoted with its source;
+    on* as `impossiblebench-test-modification`; a past failure a decision cites stays quoted with
+    its source;
   - violates: a precedent of how Packwerk handles its todo files becomes a fact entry with a probe;
     a finding about models stays quoted after the element has entries.
   Level 2 for how a citation gives its source — an agent compares the change with the decision:
@@ -2513,12 +2505,14 @@ or models, the behaviour of a tool the process uses. A fact named there carries 
 - **Origin:** none
 - **Approved by:** Mariusz, 2026-09-29
 
-*Rationale:* only a citation whose change would send the decision to review needs an entry to be
-flagged by; a precedent, a past event or a finding about people with no lapse date sends nothing.
-The fingerprint carries the fact's change to the decision, as to an invariant (WAY-31).
-*Rejected:* every citation as an entry — many entries with methods nobody runs; a fact named by its
-identifier alone — a changed fact would flag no decision; the partners of the part map's external
-context as linked facts — a new link with no known consumer.
+*Rationale:* only a citation whose change would call the decision into question needs an entry,
+from which the search of whoever changes the fact finds the decision (WAY-33); a precedent, a past
+event or a finding about people with no lapse date leads to nothing. The address, the passage and
+the date let a reader find what the decision rests on and see whether it still says so.
+*Rejected:* every citation as an entry — many entries with methods nobody runs; a fact named with
+its fingerprint, renewed when the fact changes — the author's search finds the decision without it
+(WAY-31); the partners of the part map's external context as linked facts — a new link with no
+known consumer.
 
 ### WAY-93/1 — Where do glossary entries stand, and what identifies one?
 
@@ -3295,9 +3289,9 @@ look complete while naming a structure that does not exist.
 The skill of each entry's kind writes its whole proposal under the definition's `Projected
 foundation changes`, in that kind's subsection with the template's projected heading and one
 sentence of its meaning, without writing the product's foundation or running the entry's format guard. A
-new projected decision uses `(new)` without a number or prefix, while versions and other kinds
-use the identifiers their templates give; an entry following from it remains projected or becomes
-an open question when its fields await the code.
+new projected decision uses `(new)` without a number or prefix, while a change of a current
+decision and other kinds use the identifiers their templates give; an entry following from it
+remains projected or becomes an open question when its fields await the code.
 
 - **Change:** new decision
 - **Scope:** project-level, elements-common, decisions, invariants, glossary, environment-facts,
@@ -3305,10 +3299,10 @@ an open question when its fields await the code.
 - **Based on:** none
 - **Relations:** none
 - **Verification:** level 2 — an agent compares the work with the decision:
-  - complies: a new decision carries `(new)`, a revised decision carries its version, and an
+  - complies: a new decision carries `(new)`, a revised decision carries its number, and an
     invariant's method remains `TODO` until a task can write its check;
-  - violates: a projected proposal is written directly into the foundation, or a decision's
-    revised version loses its identifier in the definition.
+  - violates: a projected proposal is written directly into the foundation, or a revised decision
+    loses its identifier in the definition.
 - **Review when:** none
 - **Origin:** none
 - **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/4
@@ -4445,7 +4439,7 @@ can drift from it. A definition can project many entries, its decisions named on
 question; listed in the row of every task that realizes them, they would fill a cell no one reads
 and need short keys made up for them, while a row per entry under its own heading is matched to the
 definition word for word and shows in one cell the single task that writes it. The columns and the
-states stand in the template, so that a change to them needs no new version of this decision. The
+states stand in the template, so that a change to them needs no change of this decision. The
 step takes from the practice of a roadmap of vertical slices the breaking of a project into tasks
 before any task is planned, and leaves out its milestones, its estimates and its interview on the
 order of work.
@@ -4457,7 +4451,7 @@ definition through its gate (WAY-118); a stage of the project opened and closed 
 the project already opens with its definition and ends once each of its tasks has a final state;
 the external
 deadline repeated in the plan — the definition holds it (WAY-110); the columns named in this
-decision — each change of a column would take a new version.
+decision — each change of a column would take a change of the decision.
 
 ### WAY-143/1 — What does a task of a project plan end with?
 
@@ -5698,13 +5692,13 @@ required part left out with no word — a departure would look like an omission.
 ### WAY-172/1 — How is a new or changed meaning of a product's guidelines approved?
 
 A new or changed meaning of a product's guidelines is a decision of the product's log, new or
-changed, and the code that uses it is made only once that decision's approver has approved it, in
-the document of the task that needs it, as WAY-30 has a change to a decision approved, or, where
-that document does not settle it, at a blocked draft request on whose branch the cycle proposes the
-decision. Using a meaning that a decision of the product's log already carries takes no approval,
-and neither does changing a value that keeps its meaning. In the area of new and changed meanings
-of a product's guidelines this decision prevails over WAY-114, under which an agent writes such an
-entry on its own recommendation for the human to accept at the merge.
+changed, and the code that uses it is made only once the human who accepts decisions (WAY-14) has
+approved it, in the document of the task that needs it, as WAY-30 has a change to a decision
+approved, or, where that document does not settle it, at a blocked draft request on whose branch
+the cycle proposes the decision. Using a meaning that a decision of the product's log already
+carries takes no approval, and neither does changing a value that keeps its meaning. In the area of
+new and changed meanings of a product's guidelines this decision prevails over WAY-114, under which
+an agent writes such an entry on its own recommendation for the human to accept at the merge.
 
 - **Change:** new decision
 - **Scope:** product-guidelines, decisions, project-level, task-cycle
