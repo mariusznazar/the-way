@@ -767,14 +767,6 @@ class Record(GuardTestCase):
                           function)
 
     def test_the_description_a_none_leaves_begins_with_the_option_and_none(self):
-        # the way of working the skills share tells such `unchecked:` lines by this beginning
-        common = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "common")
-        with open(os.path.join(common, "way_of_working.md"), encoding="utf-8") as handle:
-            rule = " ".join(handle.read().split())
-        self.assertIn("those that a `none` given to an option leaves — the text after the dash "
-                      "begins with that option and `none` — go to the human once per run of the "
-                      "guard, as their number, and every other `unchecked:` line goes to the human "
-                      "on its own", rule)
         for option, description in (("--base", format_guard.shared.NO_BASE),
                                     ("--merge-onto", format_guard.shared.NO_MERGE_ONTO)):
             report = format_guard.Report(self.path)

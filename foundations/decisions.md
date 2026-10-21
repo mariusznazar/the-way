@@ -960,37 +960,38 @@ apply.
 
 ### WAY-33/1 — What does the author of a foundation change search for?
 
-When a foundation entry is written, or a version changes its binding part, an agent searches the
-whole foundation for entries it touches that no written link joins to it, and before the version
-is accepted each finding becomes a relation, a change to one of the entries, or a question to a
-human. Except in a change to the-way itself, which has its author's one search alone and no record
-of it, the search runs again against the current main branch before the task branch is merged, and
-a change to the foundation is merged only with the record of both searches.
+When a change writes a foundation entry or changes its binding part, its author, once the entry is
+settled, searches the whole foundation once for the entries the change touches — those that name
+the entry or that it names, and those no written link joins to it — and before the change is
+accepted each finding becomes a link, a change to one of the entries in the same change, or a
+question to a human. The search is not repeated before the merge and leaves no record.
 
 - **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, task-cycle,
   agent-instructions
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 1 — invariants: foundation-search-record. Level 2 for what the search
-  covers — an agent compares the change with the decision:
+- **Verification:** level 2 — an agent compares the change with the decision:
   - complies: a decision to keep the game's whole state in the browser is written, and the search
-    finds an unlinked requirement that players log in;
-  - violates: the search reads only the decisions whose scope overlaps; the search against the
-    main branch was made before another task that changed the foundation was merged.
+    finds an unlinked requirement that players log in; a reworded decision leads its author to the
+    invariants that derive from it, and each is brought in line in the same change;
+  - violates: the search reads only the decisions whose scope overlaps; a reworded decision is
+    merged while an invariant deriving from it still states the old rule.
 - **Review when:** none
 - **Origin:** none
 - **Approved by:** Mariusz, 2026-09-29
 
-*Rationale:* fingerprints flag only links someone wrote, while the costliest contradictions lie
-between entries written apart, where nobody thought of a link — only a search of the whole
-foundation finds them. Two tasks can contradict each other without a file conflict (WAY-01), so
-the search runs again before the merge, and the merge waits for its record, because a search is a
-step that goes missing. In the-way itself a change keeps the author's one search, with no record
-of it, and accepts that risk: the human sees every entry it alters in its request.
-*Rejected:* fingerprints alone — they see only written links; a search within overlapping scopes
-— contradictions between parts go unseen; a search at writing only — parallel tasks collide once
-merged.
+*Rationale:* a link names an entry by its identifier and no change flags it (WAY-31), and the
+costliest contradictions lie between entries written apart, where nobody thought of a link, so only
+a search of the whole foundation finds what a change touches, linked or not. Its author knows what
+the change settles and makes it once. Two tasks can still contradict each other without a file
+conflict (WAY-01); the change accepts that risk, since the review and the human who sees every
+entry it alters in its request read it against the foundation.
+*Rejected:* marks on links flagged by a change — they see only written links, and renewing a mark
+does not lead to a change in the entry that carries it; a search within overlapping scopes —
+contradictions between parts go unseen; a search of linked entries only — entries written apart go
+unseen; a second search against the main branch before the merge, with the record of both — it
+repeats the first search, and a record shows that a search ran, not what it missed.
 
 ### WAY-34/1 — Which version of the process does a product use?
 
@@ -1082,9 +1083,8 @@ work.
 ### WAY-37/1 — What happens to entries that wait for something when it arrives?
 
 A change that brings what entries of the foundation wait for — an element's template, the part
-map, a script — also fixes every entry that waits for it, in the same change: by a new version
-on the main branch, by an edit before it. An agent finds those entries by searching the whole
-foundation for what the change brings.
+map, a script — also fixes every entry that waits for it, in the same change. The author of the
+change finds those entries in its one search of the whole foundation (WAY-33).
 
 - **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, relation-model,
@@ -1773,7 +1773,8 @@ An invariant entry names the parts of the part map where a change can make its s
 or `every` where a change to any part can. A change, against the commit its branch left the main
 branch from, reaches an invariant that names `every` or a part the change touches, or whose method
 names a file the change alters, whatever parts a file collecting entries gives that change
-(WAY-44). The entry names no failure mode, critical flow or surface.
+(WAY-44), and the agent making the change reads every invariant it reaches. The entry names no
+failure mode, critical flow or surface.
 
 - **Change:** new decision
 - **Scope:** invariants, part-map, gate, task-cycle
@@ -1793,7 +1794,8 @@ names a file the change alters, whatever parts a file collecting entries gives t
 
 *Rationale:* invariants need what scope gives decisions (WAY-21): parts, not paths, which would
 copy the map. A decision scoped to `gate` touches `gate`, not the log, so a method's files reach
-the invariant too. A missing part fails silently, an extra one costs a run, so doubt names more.
+the invariant too. A missing part leaves the invariant unread by a change that can make it false,
+and fails silently; an extra one costs a reading, so doubt names more.
 *Rejected:* parts computed from what the method reads — a test's command names its test file, not
 what it reaches; the invariant naming its failure mode, flow or surface — one link written at both
 ends; the part holding the check — a file added elsewhere never reaches it.
@@ -2593,12 +2595,14 @@ are computed; a field for a definition's source or the decision that set it — 
 A word takes a glossary entry when it stands in the binding part of an entry of the foundation or in
 the rules of an element's template or of the part the elements share, and at least one of its uses
 in the files of `foundations/`, the elements' templates and the part the elements share carries a
-meaning a reader who knows the product's field would not give it; an agent finds the candidates and
-writes the entries, and a human accepts their meaning (WAY-114). A word's definition stands in the
-glossary alone, and a closed list of values a guard reads stays in its template with what each value
-means. The glossary of the-way holds the words of the process, and a product's glossary holds the
-words of its domain; a product takes the words of the process from the-way at the commit it pins and
-defines none of them again, and in the-way, whose product is the process, the two are one file.
+meaning a reader who knows the product's field would not give it; an agent that meets such a word in
+its work — writing an entry, searching the foundation, comparing it with the code — writes its
+entry, no sweep of every binding sentence looks for candidates, and a human accepts the meaning
+(WAY-114). A word's definition stands in the glossary alone, and a closed list of values a guard
+reads stays in its template with what each value means. The glossary of the-way holds the words of
+the process, and a product's glossary holds the words of its domain; a product takes the words of
+the process from the-way at the commit it pins and defines none of them again, and in the-way, whose
+product is the process, the two are one file.
 
 - **Change:** new decision
 - **Scope:** glossary, decisions, invariants, part-map, environment-facts
@@ -2632,7 +2636,8 @@ products too; a closed list's values mean the rule their guard applies, so they 
 *Rejected:* every term relevant to the system — no bound; a word defined where it is used, when used
 in one place — nearly nothing is; a script counting places — it cannot tell a definition from
 another sentence; a meaning new to the product as the test — the reader's meaning already catches a
-coined word.
+coined word; a sweep of every binding sentence for candidates with each entry written — a ritual
+every change pays for, while a word whose meaning is unclear shows where an agent works with it.
 
 ### WAY-96/1 — How is a glossary definition written?
 
@@ -4737,41 +4742,42 @@ detect no break; a second whole-change review of unchanged work — it repeats a
 
 ### WAY-150/1 — How do the-way skills choose which product foundation material to read?
 
-The-way skills default to selective reading of the product's foundation: they use the complete
-part map and existing entry links to choose material for the work, read selected entries whole,
-and expand the reading whenever the work or an uncertain relevance needs more context.
-The selection includes every current decision whose Scope names a touched part, including parts
-identified from proposed work before a file diff exists, and decisions the work explicitly names.
-Required whole-foundation searches and mandatory whole-source, template and example reads retain
-their domain and timing; selection is checked against all current Scope fields and refreshed when
-the work or foundation changes.
+The-way skills read a product's foundation selectively: the agent names the parts its work touches
+from the files it changes through the part map's rules for assigning files, or, where the work names
+no file yet, from the responsibilities it changes, and reads whole the decisions whose *Scope* names
+a touched part, the decisions the task's *Decisions in play* or the work's source names, the touched
+parts' entries of the map, the invariants the work reaches and the entries these link to as far as
+the work needs, reading more where relevance is uncertain. The selection is neither recorded nor
+compared with every *Scope* of the log, and the search of the whole foundation (WAY-33) and the
+whole reading of templates, rules and examples keep their domain.
 
 - **Change:** new decision
 - **Scope:** elements-common, decisions, invariants, glossary, part-map, environment-facts,
   project-level, task-cycle
 - **Based on:** none
 - **Relations:** derives from WAY-21@586e4a38 · derives from WAY-33@65f8dda4
-- **Verification:** level 2 — an agent compares the reading and its selection record with the
-  work and current foundation:
-  - complies: a project with no diff uses the complete map to name affected parts, inspects all
-    current Scope fields including wrapped values, reads every matched decision whole, follows
-    an incoming dependent and a relevant invariant naming every part, and expands after a
-    whole-foundation search finds a conflict outside those parts;
+- **Verification:** level 2 — an agent compares the reading with the work and current foundation:
+  - complies: a change to a file of `gate` reads the decisions whose *Scope* names `gate`, those
+    the task names, the invariants naming `gate` or `every` and the entries they link to; a project
+    with no file yet names its parts from the responsibilities it changes; the search of the whole
+    foundation finds a conflict outside those parts and the reading widens;
   - violates: only decisions already named by the task are read; a search hit replaces its whole
-    entry; a required source is reduced to selected excerpts; selection is reused after the
-    foundation changes without checking for newly applicable decisions.
+    entry; a template is reduced to selected excerpts; the work records its selection and compares
+    it with every *Scope* of the log.
 - **Review when:** none
 - **Origin:** none
 - **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/18
 
 *Rationale:* a growing foundation contains more material than each piece of work needs, while
-unconditional loading spends attention on unrelated rules. Selection from responsibilities and
-links keeps the governing material visible, and expansion addresses relevance that no known link
-captures; the cost is judgment about context and evidence that the selection covers its domain.
+unconditional loading spends attention on unrelated rules. The parts a change's files belong to
+find the decisions that govern it (WAY-21), the task names those it settles, and links lead to the
+rest, so the governing material stays visible; what no link joins, the author's search of the
+whole foundation finds (WAY-33).
 *Rejected:* unconditional whole-foundation loading — its context cost grows with unrelated work;
-selection only from known links or keywords — a governing decision or an unlinked conflict can
-remain unseen; a fixed reading limit — a difficult case loses needed context; a separate maintained
-index — a second account can drift without resolving semantic relevance.
+selection only from known links or keywords — a governing decision can remain unseen; a fixed
+reading limit — a difficult case loses needed context; a separate maintained index — a second
+account can drift without resolving semantic relevance; a record of the selection compared with
+every *Scope* of the log — it costs every piece of work and records reading, not understanding.
 
 ### WAY-151/1 — How much of large project definitions and existing plans does plan-project read?
 

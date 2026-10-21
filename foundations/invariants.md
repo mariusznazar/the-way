@@ -524,16 +524,6 @@ Every relation in the decision log has the type `derives from` or `narrows`.
 - **Part:** decisions
 - **Correction:** none
 
-## foundation-search-record/1
-
-Where {merge-onto} exists, no change alters, against {fork-point}, a foundation entry without the record of the search made when the entry was written and of the search against {merge-onto}.
-
-- **Method:** `TODO`
-- **Rests on:** none
-- **Derives from:** WAY-33@65f8dda4
-- **Part:** every
-- **Correction:** none
-
 ## skill-rule-source/1
 
 Every element's skill names its element's template and `elements/common/` as the source of the rules of its entries, and `elements/common/` as the source of the way of working the skills share.
@@ -2256,6 +2246,7 @@ For every invariant entry that a rule of a file `guidelines/<name>.md` names wit
 |---|---|---|
 | invariant-test-change-acceptance | replaced: a change to an invariant test is covered by the one independent assessment of any change to an invariant test or to the foundation | foundation-change-assessment-record |
 | foundation-change-panel-record | replaced: the record of a panel of two assessors and two settlements became the record of one independent assessment and of how each remark was settled | foundation-change-assessment-record |
+| foundation-search-record | withdrawn: the author's one search of the foundation is not repeated before the merge and leaves no record (WAY-33) | none |
 
 ## Quarantined invariants
 
