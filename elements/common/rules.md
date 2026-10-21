@@ -1,9 +1,9 @@
 # Rules of form the elements share
 
 This file holds, once, the rules of form that the entries of more than one element keep (WAY-09,
-WAY-35). Each rule names the entries it binds and cites the decision that sets it. What belongs to
-one element alone — its fields, which word each field takes, how its entries are named — stands in
-that element's template (WAY-35).
+WAY-35). Each rule names the entries it binds. What belongs to one element alone — its fields,
+which word each field takes, how its entries are named — stands in that element's template
+(WAY-35).
 
 ## Language
 
@@ -22,27 +22,16 @@ that element's template (WAY-35).
 - A format guard reports a missing field, or a word its template does not give that field, as an
   error (WAY-71).
 
-## Terms of the glossary
-
-- Any sentence of an entry of any element, its rationale included, that speaks of what a glossary
-  term defines uses the term, never a paraphrase of its definition, so that the list of the term's
-  uses finds it (WAY-97).
-- A term whose definition holds a word an invariant's sentence may not hold (WAY-60) enters such a
-  sentence only where the request names it for the human who accepts the change at the merge (WAY-97).
-
 ## Where the value of a field comes from
 
-Each template marks, for every field, where its value comes from, with one of three marks:
+- A template asks for what the value of a field follows from rather than for the name of a value,
+  so that the value is read off the product wherever a tool can read it (WAY-54).
 
-- *read off* — the value is read off, as a version the guard computes; a template asks for what a
-  value follows from rather than for the name of a value (WAY-54);
-- *transcribed* — a human copies the value unchanged from a record outside the product (WAY-54);
-- *judgment* — the value is neither read off nor transcribed: it holds someone's call, and no
-  question with a factual answer settles it. A reader takes such a value as a call, not as a
-  reading (WAY-54).
+## References
 
-A field whose parts come from different places carries a mark for each part: *judgment* for the
-entry a link names, *read off* for its fingerprint (WAY-54).
+- Another entry, a test, a document or a comment in code refers to an entry of any element by the
+  entry's identifier alone, with no fingerprint and no version beside it, and names an entry the
+  foundation holds (WAY-02).
 
 ## Identifiers
 
@@ -52,9 +41,9 @@ entry a link names, *read off* for its fingerprint (WAY-54).
 - The three files share one space of identifiers: no identifier is held by two entries or withdrawn
   identifiers of the three taken together, so that a reference resolves without naming its element;
   `none` is no identifier, since *Successors* uses that word (WAY-64).
-- An identifier stays the same when anything else about its entry changes — its files, its fields,
-  its wording or its version. Splitting or merging entries gives each entry that comes out of it a
-  new identifier (WAY-41, WAY-64).
+- An identifier stays the same when anything else about its entry changes — its files, its fields
+  or its wording. Splitting or merging entries gives each entry that comes out of it a new
+  identifier (WAY-41, WAY-64).
 
 ## Withdrawn identifiers
 
@@ -79,7 +68,6 @@ entry a link names, *read off* for its fingerprint (WAY-54).
   may read `none` (WAY-64); in the part map it names one or more identifiers, never `none`:
   the map withdraws an identifier only on a split or a merge, which leaves entries in its place
   (WAY-41).
-- The identifier and *Successors* are read off, and *Why* rests on a judgment (WAY-54).
 
 ## Human verdicts
 
@@ -101,7 +89,6 @@ entry a link names, *read off* for its fingerprint (WAY-54).
 - The part of the map that holds the file is set with the first verdict written
   (`TODO — decision pending: which decision sets that the part holding the file of human verdicts
   is set with the first verdict`).
-- The verdict and *Until* of a row rest on a judgment; the rest of the row is read off (WAY-54).
 
 ## `{fork-point}`
 
@@ -109,19 +96,8 @@ entry a link names, *read off* for its fingerprint (WAY-54).
   main branch the branch contains — a value the gate fills in; where that commit does not exist, the
   gate fills in `none` in its place (WAY-61).
 
-## Version
+## No version
 
-- An entry of the invariants or of the environment facts carries a version, starting at 1, in its
-  heading as `## <identifier>/<version>`, and holds only its current wording; earlier wordings are
-  read from git (WAY-57, WAY-79).
-- When the entry's fingerprint differs from its fingerprint on the commit the task branch left the
-  main branch from, its version is one higher than there; when it does not differ, the entry keeps
-  the version it has there (WAY-57, WAY-79). An invariant that declares a correction is the one
-  exception, and the invariants template gives its form (WAY-57).
-- The guard compares an entry with its state on the commit the task branch left the main branch
-  from; where there is no main branch, it compares nothing and every entry stays at version 1
-  (WAY-57, WAY-79), and it says so
-  (`TODO — decision pending: which decision sets that the guard says when there is no main branch
-  to compare with`).
-- A check cites such an entry by identifier and version, as `<identifier>/<version>`, and a check
-  citing a version other than the current one fails the gate (WAY-57, WAY-79).
+- An entry of the invariants, of the glossary or of the part map carries no version: it is edited in
+  place and holds only its current wording, and its earlier wordings are read from git (WAY-43,
+  WAY-57, WAY-97).

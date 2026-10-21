@@ -1,6 +1,6 @@
 ---
 name: critique
-description: Use when an agent's proposal needs an independent critical reading, when a complete set of proposals will be reviewed together by a human, or when a change to an invariant test or to the foundation needs its independent assessment. Checks purpose, evidence, cost, source fidelity and contradictions before the author gives a verdict.
+description: Use when an agent's proposal needs an independent critical reading, when a complete set of proposals will be reviewed together by a human, or when a proposal derived from sources has to be checked against them. Checks purpose, evidence, cost, source fidelity and contradictions before the author gives a verdict.
 ---
 
 # Critique a proposal
@@ -16,14 +16,9 @@ when the author has finished a set of proposals that the human will review colle
 case use one fresh agent as a second reader. For a set, start after it is complete, including
 proposals added as consequences of earlier ones, and before presenting it to the human.
 One critic reads the whole set, not one proposal at a time.
-For a change to an invariant test or to the foundation, this critique is the change's independent
-assessment (WAY-10). Run it on a model other than the author's where one is available. Give it the
-diff and the files of the assessed commit — never the task's chronicle or the author's reasoning
-— commit messages included: name the assessed commits by hash only — and ask it to name what of
-the change can be cut, or that nothing can. In the task cycle its full
-report and the author's settlement go in the cycle record's `reports/`; outside the cycle, the
-assessment and the settlement of each remark go in short in the message of the commit that carries
-the change.
+The diff of a change to an invariant test or to the foundation takes no critique of its own: the
+review of the change by an agent that did not make it reads it, and the human reads it at the merge
+(WAY-10).
 
 If a fresh agent cannot be started without the author's conversation context, say so and perform
 the same checks yourself as interim work. Do not describe that as an independent review. A set

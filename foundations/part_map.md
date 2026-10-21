@@ -80,9 +80,9 @@ The part answers for a product's environment facts.
 ## elements-common
 
 The part answers for rules of form and the way of working shared by foundation-entry skills, the
-code shared by their format guards, the skill that finds entries in a source, and the critique
-skill, which is also the independent assessor of a change to an invariant test or to the
-foundation.
+code shared by their format guards, the script that checks a whole foundation's identifiers,
+references and assignment of files to parts, the skill that finds entries in a source, and the
+critique skill, which reads a proposal critically before the human sees it.
 
 - **Files:** elements/common/**
 - **Depends on:** project-level · decisions · invariants · glossary · part-map · environment-facts

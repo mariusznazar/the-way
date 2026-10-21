@@ -3,8 +3,7 @@
 This file holds, once, the steps every element's skill takes to write an entry (WAY-35). Each rule
 of an entry stands in its element's template or in `rules.md` beside this file; a skill holds only
 the way of working particular to its element, and adds it to the steps below at the places it
-names (WAY-35). A fix to a rule goes to the template or to `rules.md`, with the decision that sets
-it; in the decisions element, a rule changes only with a decision in the log (WAY-35, WAY-05).
+names (WAY-35). A fix to a rule goes to the template or to `rules.md`.
 
 Paths under `elements/` below are those of the-way at the commit the product pins (WAY-34); in
 the-way itself, those of the checkout or worktree the session works in.
@@ -14,8 +13,7 @@ the-way itself, those of the checkout or worktree the session works in.
 When an agent has finished a set of proposals that the human will review together, one fresh
 agent critiques the complete set before it is shown. This includes entries added as consequences
 of earlier proposals. The agent follows `elements/common/critique/SKILL.md` for the critique and for
-an independently requested critique (WAY-120). A change to an invariant test
-or to the foundation is assessed by the same skill (WAY-10, WAY-120).
+an independently requested critique (WAY-120).
 
 ## How a skill asks
 
@@ -59,77 +57,46 @@ Every skill of the-way that asks the human asks this way
 
 ## Reading the foundation
 
-Use this method for the current foundation of the repository being worked on (WAY-150). Start
-from the task, source, proposed entry or project scope, and read the complete part map: its
-responsibilities, file assignments, dependencies, critical flows, surfaces, boundaries and the
-common rules and scales its entries use.
+Use this method for the current foundation of the repository being worked on (WAY-150). It
+selects what the work reads and is no search of the whole foundation, which step 2 makes once the
+entry is settled (WAY-33).
 
-1. Name the touched parts. For changed files, use the map's assignment rules; for a file
-   collecting entries about several parts, use the entries the work changes (WAY-44). Before a
-   diff exists, map proposed behaviour, responsibilities, integrations, flows and surfaces to
-   existing parts, including any responsibility or promise the work changes. Record a prospective
-   new part as such, not as an existing map entry. Uncertain ownership expands the candidate parts
-   and reading; an empty diff does not mean no affected parts.
-2. Inspect the complete decision log's current *Scope* fields, wrapped values included, using
-   the latest version of each decision and respecting repeals. Select every decision whose
-   *Scope* names any touched part, and every decision the work or its source explicitly names
-   (WAY-21). Read each selected entry whole, with all fields, rationale and *Rejected*: a search
-   hit or binding sentence locates an entry, never replaces it. Missing or malformed *Scope*
-   data is a finding to resolve, never a reason to silently omit an entry.
-3. Expand to whole linked entries needed to understand, apply or verify those rules: governing
-   *Relations*, *Based on* facts, *Verification* invariants, invariants' *Derives from* and
-   *Rests on*, and relevant map entries. Inspect current invariant *Part* fields across the
-   file, including `every`; select the invariants the work reaches under WAY-62, methods naming
-   a changed file and invariants of relevant critical flows. When changing an entry or deciding
-   its impact, search for incoming dependents: links stand at the dependent end (WAY-17,
-   WAY-31). Follow them as far as their meaning or validity affects the work; unrelated branches
-   need not all be loaded.
-4. Inspect the terms and *Avoid* spellings of the product's glossary where it exists and, in a
-   product other than the-way, of the-way's glossary at the pinned commit. Read whole entries for
-   terms used in the work and selected material, and meanings a draft may introduce or confuse
-   (WAY-95, WAY-97). Keep the mandatory whole templates, rules and examples of step 1, complete
-   entries named as examples included.
-5. Search all five foundation elements for the behaviour, rules, concepts and consequences the
-   work concerns, using alternative vocabulary as well as identifiers. A relevant topic,
-   candidate duplicate, unclear meaning, changed dependency, unknown owner or search finding
-   expands the selection. A required whole-foundation search keeps its entire domain and timing
-   under WAY-33, WAY-37 or the readiness gate, beyond known links and selected parts. Read every
-   finding whole and settle it as that search's rule requires.
-6. In the workflow's existing working record or handoff, keep the foundation revision, touched
-   parts, expected current *Scope* matches and selected decision identifiers with source
-   locations. Distinguish entries read from entries merely discovered. Compare the selected
-   identifiers with the expected matches from the complete current *Scope* inspection and
-   resolve every missing match before relying on the selection. Use existing scripts or an
-   exhaustive direct inspection; no new index is needed. Recheck when the work's scope or current
-   foundation changes. Uncertain relevance calls for additional reading, up to a whole file
-   where that is the smallest reliable way to resolve it.
+1. Name the parts the work touches by the part map's rules for assigning files: the parts of the
+   files the work changes or is to change, and, for a file collecting entries about several parts,
+   the parts the entries it writes or changes name (WAY-44). Where the work names no file yet — an
+   idea, a project's scope — name the parts whose responsibility it changes, and a new part as a
+   prospective one. Where a part is uncertain, read each candidate.
+2. Read the decisions whose *Scope* names a touched part (WAY-21), and those the task's *Decisions
+   in play* or the work's source names. Read each whole, with its rationale and *Rejected*: a
+   search hit or a binding sentence locates an entry, never replaces it.
+3. Read the touched parts' entries of the part map, the invariants the work reaches (WAY-62), and
+   the entries these and the decisions of step 2 link to — *Relations*, *Based on*,
+   *Verification*, *Derives from*, *Rests on* — as far as the work needs them, each whole.
+4. Read the glossary entries of the terms the work uses: of the product's glossary and, in a
+   product other than the-way, of the-way's glossary at the pinned commit (WAY-95).
 
-Selection is no token cap and does not forbid reading a small file whole. A handoff can name
-reading units, but each receiving stage checks its inputs and reads whole entries it relies on.
-The comparison records the declared set and evidence of reading; it proves neither understanding
-nor completeness of semantic collision discovery. `decisions-found-for-change` still has
-`Method: TODO`; Scope-name and fingerprint guards are partial checks, not a pass of that method
-or of the full gate. Keep the WAY-33 search record as separate evidence.
+The selection is not recorded, nor compared with every *Scope* of the log (WAY-150). Where
+relevance is uncertain, read more, up to a whole file where that is the smallest reliable way to
+settle it. The templates, rules and examples of step 1 are read whole whatever the selection.
 
 ## 2. Search the foundation
 
-Once the skill has settled what the entry is, search the whole foundation for entries it touches
-that no written link joins to it — not only those a link, a shared *Scope* or a shared *Part*
-leads to (WAY-33). Read each entry selected or found by the search whole (WAY-150): a decision's
-*Rejected* holds an option already weighed and refused, and nowhere else says so.
-The search also asks:
+Once the skill has settled what the entry is, search the whole foundation once for the entries it
+touches: those that name it or that it names, and those no written link joins to it — not only
+those a link, a shared *Scope* or a shared *Part* leads to (WAY-33). Read each entry the search
+finds whole (WAY-150): a decision's *Rejected* holds an option already weighed and refused, and
+nowhere else says so. The search also asks:
 
-- whether the entry uses a glossary term in another meaning than its entry gives, or spells out a
-  term's definition instead of using the term: a paraphrase is rewritten to the term, and another
-  meaning, or a word the glossary does not yet settle, goes through `record-glossary-term`
-  (WAY-33, WAY-97, WAY-99);
+- whether the entry uses a glossary term in another meaning than its entry gives, or a word in a
+  meaning a reader who knows the product's field would not give it, which the glossary does not
+  yet hold: such a word goes through `record-glossary-term` (WAY-95, WAY-99);
 - whether the change brings what entries of the foundation wait for — an element's template, the
   part map, a script; each such entry is fixed in the same change (WAY-37).
 
 Each finding becomes a link the element's template gives, a change to one of the entries, or a
 question in step 4, before the entry is accepted (WAY-33). The skill names what else the search
-looks for in its element. Repeat the search against the current main branch before merging the
-task branch, and keep the records of both searches with the change (WAY-33).
+looks for in its element. The search is not repeated before the merge and leaves no record
+(WAY-33).
 
 ## 3. Draft
 
@@ -159,23 +126,14 @@ task branch, and keep the records of both searches with the change (WAY-33).
    recommendation or the entry would change the meaning of an approved decision beyond what the
    approved task document or plan carries (WAY-30). The human accepts the meaning at the merge,
    or at the readiness gate for a projected entry (WAY-114).
-3. Write the entry in its place in the file and run the element's format guard (WAY-09) from the
-   product's repository root, `python -B <the element's directory>/format_guard.py`, with the
-   arguments its `--help` gives for this file and for the commit the task branch left the main
-   branch from, or for no main branch
-   (`TODO — decision pending: which decision sets that the skill runs the format guard on the file
-   it writes`). Fix what the entry broke and run it again; an error or a warning elsewhere in the
-   file goes to the human. Of the report's `unchecked:` lines, those that a `none` given to an
-   option leaves — the text after the dash begins with that option and `none` — go to the human
-   once per run of the guard, as their number, and every other `unchecked:` line goes to the human
-   on its own
-   (`TODO — decision pending: which decision sets how the unchecked lines of a guard's report reach
-   the human`).
+3. Write the entry in its place in the file and run `elements/common/foundation_check.py` with
+   `python -B` from the product's repository root. Fix what the entry broke and run it again; an
+   error the entry did not cause goes to the human.
 4. What follows from the entry goes through these steps one at a time, each through the skill of
    its element
    (`TODO — decision pending: which decision sets that the entries following from one entry are
-   written one at a time`): every entry that names this one with its fingerprint, when its binding
-   part changes (WAY-31, WAY-90); every link the entry names that the foundation does not
+   written one at a time`): every entry that names this one, when its binding part changes
+   (WAY-31, WAY-33); every link the entry names that the foundation does not
    hold yet (WAY-17); and each finding of step 2. The skill names what follows in its element.
 
 ## Projected mode
@@ -194,9 +152,9 @@ differences, and each element's skill adds its own
   sentence with the entry beside it and approves the meaning (WAY-114).
 - Step 4.3: write the entry under "Projected foundation changes" of the definition, in the
   subsection of its kind and with the heading `project-level/definition_template.md` gives,
-  followed by its meaning sentence; write nothing into `foundations/`. Run no format guard, and tell
-  the human that no script checked the entry's form: the guard checks it in the task that writes
-  the entry into the foundation.
+  followed by its meaning sentence; write nothing into `foundations/`. Run no foundation check, and
+  tell the human that no script checked the entry: the check runs in the task that writes the entry
+  into the foundation.
 - Step 4.4: what follows from the entry is another projected entry, or, where it cannot be written
   before the code exists, an open question of the definition with its place of resolution. Where
   `find-foundation-entries` called the skill, report what follows to it, which adds it to its

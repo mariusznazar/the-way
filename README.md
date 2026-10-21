@@ -59,8 +59,10 @@ instead of the rule being weakened.
 - `elements/<element>/` — for each file above: the form of an entry, real examples, a Claude Code
   skill that writes an entry, and a script that checks the file.
 - `elements/common/` — what the five elements share: the rules of form their entries keep, the way
-  of working their skills share, the code their checking scripts share, and the critique skill, which
-  is also the independent assessor of a change to the foundation.
+  of working their skills share, the code their checking scripts share, a script that checks the
+  whole foundation — each identifier stands once, each reference names an existing entry, each
+  file belongs to one part — and the critique skill, which reads a proposal critically before the
+  human sees it.
 - `relation-model/` — computes a short fingerprint of an entry's wording, so that anything pointing
   to the entry learns when the wording changed.
 - `gate/` — runs the tests and records, for each rule, whether it held.
