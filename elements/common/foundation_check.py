@@ -19,7 +19,9 @@ What it reports, each as `path:line: message`:
   successor of a withdrawn identifier that is neither an entry nor a withdrawn identifier of the
   same file — the decision log's withdrawn numbers included;
 - a reference that names no entry, or a withdrawn one: a decision number with the log's prefix
-  anywhere in a file git tracks, outside the log's list of withdrawn numbers; the parts a
+  anywhere in a file git tracks, outside the log's list of withdrawn numbers and outside a source
+  an invariant's *Derives from* quotes — an item of its own, its items joined by ` · `, holding a
+  passage between quotation marks; the parts a
   decision's *Scope*, an invariant's *Part*, a part's *Depends on*, a flow's *Parts* and
   guidelines' *Applies to* name; the invariants a decision's
   *Verification* (after `invariants:`), a flow's *Invariant*, a failure mode's `detected by`, the
@@ -70,6 +72,7 @@ CITATION = re.compile(r"^\s*(?:#|//|--|;|%|\*|/\*|<!--|REM\b)\s*(invariant|fact)
 ITEM = re.compile(r"[^·,\n]+")
 FIELD = re.compile(r"^- \*\*(.+?):\*\*(?: (.*))?$")
 FENCE = re.compile(r"^ {0,3}(`{3,}|~{3,})")
+QUOTED = re.compile(r"\"[^\"]*\"|\u201c[^\u201d]*\u201d")
 EMPTY = ("none", "TODO")
 
 
@@ -159,6 +162,21 @@ def based_on(found):
         start += len(item) + 1
 
 
+def unquoted(found, name):
+    """(line number, text) of each line of the items of a field's list joined by ` · ` that quote
+    no passage. An item quoting one between quotation marks is a source outside the foundation,
+    whatever else it holds; a ` · ` inside the quotation marks joins nothing."""
+    value, lines = found.get(name, ("", [0]))
+    masked = QUOTED.sub(lambda match: "\0" * len(match.group(0)), value)
+    start = 0
+    for piece in masked.split("·"):
+        if "\0" not in piece:
+            first = value.count("\n", 0, start)
+            for offset, text in enumerate(value[start:start + len(piece)].split("\n")):
+                yield lines[first + offset], text
+        start += len(piece) + 1
+
+
 def table(lines, title):
     """(line number, cells) of each row of the table under `## title`, header and separator
     row left out, the header's cells first as row 0."""
@@ -187,6 +205,8 @@ class Foundation:
         self.prefix, self.numbers = None, set()
         self.withdrawn_numbers = {}  # number -> (line, successors)
         self.withdrawn_lines = set()  # the lines of the log's list of withdrawn numbers
+        self.derived_lines = set()  # the lines of the invariants' *Derives from*
+        self.number = None  # a decision number with the log's prefix
         self.entries = {}    # path -> {identifier: (line, fields)}
         self.withdrawn = {}  # path -> {identifier: (line, successors)}
         self.parts = set()
@@ -200,6 +220,7 @@ class Foundation:
         if not first:
             return
         self.prefix = first.group(1)
+        self.number = re.compile(r"(?<![A-Za-z0-9-])%s-([0-9]+)(?![0-9])" % self.prefix)
         seen = {}
         for number, heading, _ in blocks(lines, "### "):
             match = re.match(r"^### %s-([0-9]+)(?:/([0-9]+))? — " % self.prefix, heading)
@@ -257,6 +278,8 @@ class Foundation:
                     held[name] = (path, number)
         self.parts = {name for name, (_, found) in self.entries[PART_MAP].items()
                       if "Files" in found}
+        for _, found in self.entries[INVARIANTS].values():
+            self.derived_lines.update(found.get("Derives from", ("", []))[1])
 
     def read_glossary(self):
         held = {}
@@ -307,21 +330,26 @@ class Foundation:
         else:
             self.report.error(path, line, "`%s` names no %s" % (name, kind))
 
-    def check_decision_numbers(self, path, lines):
+    def refer_decisions(self, path, number, text):
+        """Report each decision number in a text that names no decision, or a withdrawn one."""
         if not self.prefix:
             return
-        pattern = re.compile(r"(?<![A-Za-z0-9-])%s-([0-9]+)(?![0-9])" % self.prefix)
+        for match in self.number.finditer(text):
+            key = int(match.group(1))
+            if key in self.withdrawn_numbers:
+                self.report.error(path, number, "`%s` is withdrawn; name its successor"
+                                  % match.group(0))
+            elif key not in self.numbers:
+                self.report.error(path, number, "`%s` names no decision of the log"
+                                  % match.group(0))
+
+    def check_decision_numbers(self, path, lines):
+        """Every line but the log's withdrawn numbers and the invariants' *Derives from*, which
+        `check_foundation_references` reads apart from the sources it quotes."""
+        skipped = {DECISIONS: self.withdrawn_lines, INVARIANTS: self.derived_lines}.get(path, ())
         for number, line in enumerate(lines, start=1):
-            if path == DECISIONS and number in self.withdrawn_lines:
-                continue
-            for match in pattern.finditer(line):
-                key = int(match.group(1))
-                if key in self.withdrawn_numbers:
-                    self.report.error(path, number, "`%s` is withdrawn; name its successor"
-                                      % match.group(0))
-                elif key not in self.numbers:
-                    self.report.error(path, number, "`%s` names no decision of the log"
-                                      % match.group(0))
+            if number not in skipped:
+                self.refer_decisions(path, number, line)
 
     def check_foundation_references(self):
         for _, _, body in blocks(self.files[DECISIONS], "### "):
@@ -333,6 +361,8 @@ class Foundation:
             for word, line in located(found, "Verification", VERIFIED):
                 self.refer(DECISIONS, line, word, "invariant")
         for _, (_, found) in self.entries[INVARIANTS].items():
+            for line, text in unquoted(found, "Derives from"):
+                self.refer_decisions(INVARIANTS, line, text)
             for word, line in located(found, "Rests on"):
                 self.refer(INVARIANTS, line, word, "fact")
             for word, line in located(found, "Part"):

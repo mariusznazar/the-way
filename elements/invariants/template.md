@@ -42,7 +42,7 @@ holds what is particular to an invariant (WAY-35).
 
 - **Method:** test | review
 - **Rests on:** <environment fact> · … | TODO — <the fact, with its source> | none
-- **Derives from:** <decision> · … | recovered from code — <the place in the code that shows it> | `TODO — <the decision, and where it is expected>` | none
+- **Derives from:** <decision> · … | <address> § <place> — "<passage>"; read <YYYY-MM-DD> · … | recovered from code — <the place in the code that shows it> | `TODO — <the decision, and where it is expected>` | none
 - **Part:** <parts from the part map> | every
 - **Violated:** no | yes
 ```
@@ -129,15 +129,20 @@ gives (WAY-64).
   the sentence true, and no other: read otherwise, such a fact would change whether some commit
   makes the sentence true, or change a value the sentence copies from it. A fact that is only a
   reason for a decision the entry derives from stays in that decision's *Based on* (WAY-73).
+- An entry that no decision entry of the product's own log carries, taken from a source outside
+  that log — a ticket, a requirement of the product, met today or not yet — names in *Derives from*
+  each such source as a decision's *Based on* quotes a source that is no environment fact: its
+  address, the place in it, the passage stating the rule, quoted word for word between quotation
+  marks, and the date it was read, as `https://tracker.example.org/browse/GAME-12 § Acceptance
+  criteria — "a save of another version is rejected whole"; read 2026-10-21` (WAY-58).
 - An entry a human chose from what the product already did before the task writing it began, and
-  that no decision entry of the product's own log carries, reads in *Derives from*
-  `recovered from code —` and the place in the code that shows the behaviour; it states no reason
-  for the behaviour, nor one an agent infers (WAY-58). A decision named anywhere but that log — a
-  numbered decision in a concept document, a decision of the-way at the commit the product pins —
-  is no such decision (WAY-58). Where the source of an invariant taken from a product's own
-  requirements, which the product does not meet yet, is recorded is not settled
-  (`TODO — decision pending: where the source of an invariant taken from a product's own
-  requirements, which the product does not meet yet, is recorded`).
+  that neither a decision entry of the product's own log nor such a source carries, reads in
+  *Derives from* `recovered from code —` and the place in the code that shows the behaviour
+  (WAY-58).
+- Neither a source nor the place in the code comes with a reason for the behaviour, nor one an
+  agent infers (WAY-58). A decision named anywhere but the product's own log — a numbered decision
+  in a concept document, a decision of the-way at the commit the product pins — is no decision
+  entry of it (WAY-58).
 
 ## Part
 
@@ -178,7 +183,7 @@ read`).
 | sentence | the agent making or reviewing a change the invariant reaches |
 | Method | the agent making a change the invariant reaches, which runs its test or keeps to its sentence; the agent reviewing that change |
 | Rests on | the author of a change to a fact it names, through the search of the foundation; `foundation_check.py` |
-| Derives from | the author of a change to a decision it names, through the search of the foundation; the human weighing a change to a recovered invariant |
+| Derives from | the author of a change to a decision it names, through the search of the foundation; the human weighing a change to a recovered invariant or to one taken from a source outside the log; `foundation_check.py`, which reports a decision number the log does not hold, outside a quoted source |
 | Part | the agent selecting the invariants its change reaches; `foundation_check.py` |
 | Violated | the agent reviewing a change and the human merging it, who see the mark set or cleared in its request |
 | withdrawn identifiers | whoever follows an identifier that no longer names an entry; `foundation_check.py`, which keeps a withdrawn identifier from naming an entry again |

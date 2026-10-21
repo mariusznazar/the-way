@@ -1635,12 +1635,15 @@ wording.
 renewed with every change of meaning; earlier wordings kept in the entry — they bind nothing, and
 readers have to pick.
 
-### WAY-58/1 — What does an invariant entry record when it was recovered from what a product does?
+### WAY-58/1 — What does an invariant entry record in *Derives from* when no decision entry of the product's log carries it?
 
-An invariant entry that a human chose from what the product already did before the task writing it
-began, as WAY-28 describes, and that no decision entry of the product's log carries, reads in
-*Derives from* that it was recovered from code, with the place in the code that shows the
-behaviour. It states no reason for the behaviour, nor one an agent infers.
+An invariant entry that no decision entry of the product's log carries, taken from a source outside
+the log — a ticket, a requirement of the product — names that source in *Derives from* with its
+address, the place in it, the passage stating the rule quoted word for word between quotation
+marks and the date it was read. One that a human chose from what the product already did before the task writing it began,
+as WAY-28 describes, and that no such source carries either, reads in *Derives from* that it was
+recovered from code, with the place in the code that shows the behaviour. Neither states a reason
+for the behaviour, nor one an agent infers.
 
 - **Change:** new decision
 - **Scope:** invariants
@@ -1650,18 +1653,24 @@ behaviour. It states no reason for the behaviour, nor one an agent infers.
 - **Verification:** level 2 — an agent compares the change with the decision:
   - complies: from a game's save module a human chooses "a save of another version is rejected
     whole", whose *Derives from* reads `recovered from code — the version check of the save loader
-    in src/save.ts`; an invariant written for a feature being built names its decision;
+    in src/save.ts`; an invariant written for a feature being built names its decision; an invariant
+    taken from a ticket the product does not meet yet reads in *Derives from*
+    `https://tracker.example.org/browse/GAME-12 § Acceptance criteria — "a save of another version
+    is rejected whole"; read 2026-10-21`;
   - violates: a recovered invariant's *Derives from* reads "old saves are dropped because the rules
     may have changed"; an invariant on a field the task adds reads recovered from code; a recovered
-    invariant names no place in the code.
+    invariant names no place in the code; an invariant taken from a ticket names the ticket by its
+    key alone, or reads recovered from code.
 - **Review when:** none
 - **Origin:** none
 - **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/4
 
 *Rationale:* WAY-28 lets a recovered invariant bind before anyone knows why it holds; without the
 mark it reads like a chosen rule, hiding that its reason was never settled, and the place in the
-code leads whoever weighs a change to the behaviour. The reason stays out, since an invariant says
-nothing about why (WAY-22).
+code leads whoever weighs a change to the behaviour. A rule taken from a ticket or a requirement
+keeps in the foundation where it came from, and the address, the passage and the date let a reader
+find that source and see whether it still says so, as in a decision's *Based on* (WAY-90). The
+reason stays out, since an invariant says nothing about why (WAY-22).
 *Rejected:* a list of recovered invariants with what was searched and found, set by the human at the
 merge from the gate's run on the older commit — a second record beside the entry, and a rule new to
 the task can pass that run too; the mark only where no cause is known — a cause in a code comment or
@@ -1957,8 +1966,9 @@ field, or a word not given it, as an error.
   glossary-entry-field-words · glossary-entry-merge-todo · decision-verification-level ·
   decision-change-kind · review-when-form · review-next-check. Level 2
   for what `none` states — an agent compares the change with the decision:
-  - complies: an invariant whose author searched the log and found no decision it derives from
-    reads `Derives from: none`; a decision whose source is silent on what it rests on reads
+  - complies: an invariant whose author searched the log and found no decision it derives from,
+    and which was taken from no source outside the log, reads `Derives from: none`; a decision
+    whose source is silent on what it rests on reads
     `Based on: TODO — <what is missing>`;
   - violates: an invariant reads `Derives from: none` though nobody searched the log; a decision
     reads `Based on: none` where its source says nothing of what it rests on.

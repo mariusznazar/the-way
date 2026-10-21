@@ -26,7 +26,8 @@ project skill of that name with the `the-way-` prefix. Follow the steps of
 ## 2. Decide what the entry is
 
 - Find the rule and where it is said: the conversation, a decision's verification, the list a
-  task's return step made, or the product's code when the process enters an existing product.
+  task's return step made, a ticket or a requirement of the product, or the product's code when
+  the process enters an existing product.
 - Recovering from what a product does: list what the part does, each item as a candidate
   sentence with the place in the code that shows it, and let the human choose; only what the
   human chooses becomes an entry (WAY-28).
@@ -55,9 +56,12 @@ project skill of that name with the `the-way-` prefix. Follow the steps of
   at the commit it pins writes, such as a standard, a library or a law, found behind what the
   sentence names, a value it copies, or a meaning the product's rules hand elsewhere, as the part
   map hands the matching of a pattern to git.
-- An entry the human chose from what the product already does, which no decision of the log
-  carries: *Derives from* reads `recovered from code —` and the place in the code that shows the
-  behaviour, as the template's "Links" says.
+- An entry taken from a source outside the log, such as a ticket or a requirement of the product,
+  which no decision of the log carries: *Derives from* quotes that source with its address, place,
+  passage and date read, as the template's "Links" says.
+- An entry the human chose from what the product already does, which neither a decision of the log
+  nor such a source carries: *Derives from* reads `recovered from code —` and the place in the code
+  that shows the behaviour, as the template's "Links" says.
 - *Violated*: `yes` only for a rule the product does not meet today; ask first whether the product
   is to be fixed instead (WAY-51).
 

@@ -390,6 +390,43 @@ class FoundationCheckTest(unittest.TestCase):
     def test_other_prefix_is_no_reference(self):
         self.assertPasses(self.run_on(README_dot_md="Unlike XYZ-99 and abc-42.\n"))
 
+    # A source outside the log an invariant's *Derives from* quotes, its ticket's key and its
+    # passage holding numbers of the log's prefix that the log does not hold.
+    TICKET = ("https://tracker.example.org/browse/ABC-45 § Acceptance criteria —\n"
+              "  \"the clock never runs backwards, as ABC-46 asked\"; read 2026-10-21")
+
+    def test_derives_from_quoted_source_is_no_reference(self):
+        invariants = self.edit(INVARIANTS, "- **Derives from:** ABC-02\n",
+                               "- **Derives from:** ABC-02 · %s\n" % self.TICKET)
+        self.assertPasses(self.run_on(foundations__invariants_dot_md=invariants))
+
+    def test_derives_from_source_quoted_in_typographic_marks_is_no_reference(self):
+        ticket = self.TICKET.replace("\"the", "“the").replace("asked\"", "asked”")
+        invariants = self.edit(INVARIANTS, "- **Derives from:** ABC-02\n",
+                               "- **Derives from:** ABC-02 · %s\n" % ticket)
+        self.assertPasses(self.run_on(foundations__invariants_dot_md=invariants))
+
+    def test_derives_from_decision_beside_quoted_source_that_does_not_exist(self):
+        invariants = self.edit(INVARIANTS, "- **Derives from:** ABC-02\n",
+                               "- **Derives from:** ABC-09 · %s\n" % self.TICKET)
+        self.assertFails(self.run_on(foundations__invariants_dot_md=invariants),
+                         "foundations/invariants.md:18: `ABC-09` names no decision of the log",
+                         "1 error")
+
+    def test_derives_from_decision_after_quoted_source_on_next_line(self):
+        invariants = self.edit(INVARIANTS, "- **Derives from:** ABC-02\n",
+                               "- **Derives from:** %s ·\n  ABC-09\n" % self.TICKET)
+        self.assertFails(self.run_on(foundations__invariants_dot_md=invariants),
+                         "foundations/invariants.md:20: `ABC-09` names no decision of the log",
+                         "1 error")
+
+    def test_derives_from_text_quoting_nothing_is_read_for_decisions(self):
+        invariants = self.edit(INVARIANTS, "- **Derives from:** ABC-02\n",
+                               "- **Derives from:** recovered from code — src/game.py, after "
+                               "ABC-09\n")
+        self.assertFails(self.run_on(foundations__invariants_dot_md=invariants),
+                         "foundations/invariants.md:18: `ABC-09` names no decision of the log")
+
     # --- references to invariants -------------------------------------------------------------
 
     def test_verification_names_no_invariant(self):
