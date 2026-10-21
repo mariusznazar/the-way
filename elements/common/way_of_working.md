@@ -3,8 +3,7 @@
 This file holds, once, the steps every element's skill takes to write an entry (WAY-35). Each rule
 of an entry stands in its element's template or in `rules.md` beside this file; a skill holds only
 the way of working particular to its element, and adds it to the steps below at the places it
-names (WAY-35). A fix to a rule goes to the template or to `rules.md`, with the decision that sets
-it; in the decisions element, a rule changes only with a decision in the log (WAY-35, WAY-05).
+names (WAY-35). A fix to a rule goes to the template or to `rules.md`.
 
 Paths under `elements/` below are those of the-way at the commit the product pins (WAY-34); in
 the-way itself, those of the checkout or worktree the session works in.
@@ -174,8 +173,8 @@ task branch, and keep the records of both searches with the change (WAY-33).
 4. What follows from the entry goes through these steps one at a time, each through the skill of
    its element
    (`TODO — decision pending: which decision sets that the entries following from one entry are
-   written one at a time`): every entry that names this one with its fingerprint, when its binding
-   part changes (WAY-31, WAY-90); every link the entry names that the foundation does not
+   written one at a time`): every entry that names this one, when its binding part changes
+   (WAY-31, WAY-33); every link the entry names that the foundation does not
    hold yet (WAY-17); and each finding of step 2. The skill names what follows in its element.
 
 ## Projected mode
