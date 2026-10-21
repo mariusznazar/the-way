@@ -79,7 +79,10 @@ test, other than one to the-way itself, that carries no record of its independen
 - **Scope:** invariants, task-cycle, agent-instructions
 - **Based on:** impossiblebench-test-modification@9cdba560
 - **Relations:** derives from WAY-01@60960941
-- **Verification:** level 1 — invariants: foundation-change-assessment-record.
+- **Verification:** level 2 — an agent compares the change with the decision:
+  - complies: an implementer whose code an invariant test stops sends the task back to the
+    foundation step, and the test changes there with the foundation;
+  - violates: an implementer edits an invariant test during implementation to make its code pass.
 - **Review when:** no model in the range of fact impossiblebench-test-modification is Active in
   Anthropic's table of models · check by: 2026-10-02
 - **Origin:** none
@@ -240,21 +243,21 @@ under `.claude/skills/` and `.agents/skills/`, which the map gives to `agent-ins
 only once it holds what its part requires: an element its template and rules, examples or a
 pointer to entries of the-way that serve as its examples, a skill that writes its entries and a
 format guard; `elements/common/` the rules of form and the way of working the elements'
-templates and skills share, the code their format guards share and the skills that find entries
-and that critique proposals and assess changes; `project-level/` the templates of a project
-definition, a project plan and a task document, the skills that write them and lead a
-handed-over plan, the readiness check, the plan check, the reader of task-cycle evidence for plan
-states and their tests; `relation-model/` the script that computes fingerprints; `gate/` the
-test of every critical flow in the part map; `installation/` the installer, its tests and a
-README explaining how a product uses the pinned version; `agent-instructions/` the instructions
-for agents working on this repository, led to from the root agent instruction files;
-`instruction-files/` the principles of instruction files for coding agents, the account of how
-the tools load them, the skill that applies them, and the script that checks instruction files
-with its tests; `product-guidelines/` the template that the guidelines of every product share, for
-each discipline of work whose guidelines the-way gives a template of, that template with the skill
-that leads the work on them, and the script that checks the form of guidelines, with its tests;
-`task-cycle/` what the design of the task cycle sets, and until then it does not reach the
-main branch. The entries in `foundations/` are checked by the format guards of their elements.
+templates and skills share, the code their format guards share and the skills that find entries and
+that critique proposals; `project-level/` the templates of a project definition, a project plan and
+a task document, the skills that write them and lead a handed-over plan, the readiness check, the
+plan check, the reader of task-cycle evidence for plan states and their tests; `relation-model/` the
+script that computes fingerprints; `gate/` the test of every critical flow in the part map;
+`installation/` the installer, its tests and a README explaining how a product uses the pinned
+version; `agent-instructions/` the instructions for agents working on this repository, led to from
+the root agent instruction files; `instruction-files/` the principles of instruction files for
+coding agents, the account of how the tools load them, the skill that applies them, and the script
+that checks instruction files with its tests; `product-guidelines/` the template that the guidelines
+of every product share, for each discipline of work whose guidelines the-way gives a template of,
+that template with the skill that leads the work on them, and the script that checks the form of
+guidelines, with its tests; `task-cycle/` what the design of the task cycle sets, and until then it
+does not reach the main branch. The entries in `foundations/` are checked by the format guards of
+their elements.
 
 - **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common,
@@ -310,44 +313,39 @@ files of any repository, and its failures differ.
 
 ### WAY-10/1 — Who assesses a change to an invariant test or to the foundation?
 
-A change to an invariant test or to the foundation, other than a change to the-way itself, is
-assessed by one independent agent, on a model other than its author's where one is available, which
-sees the diff and the files of the commit it assesses without the task's chronicle or the author's
-reasoning and names what of the change can be cut, or that nothing can. The author settles each of
-its remarks and records how, and a settlement that changes the assessed foundation entries or
-invariant tests is part of the assessed change and does not reopen its assessment. A human accepts
-the change, with the assessment and its settlement, when merging it, and accepts a change to the-way
-itself by merging its request after an agent that did not make it has reviewed the whole change.
+A change to an invariant test or to the foundation has no assessment of its own, in a product as in
+the-way itself: an agent that did not make the change reviews the whole change, its foundation
+entries and invariant tests included, against its task and the foundation, and a human reads the
+diff of the foundation and accepts the change by merging its request.
 
 - **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common,
   task-cycle, agent-instructions
 - **Based on:** llm-self-preference@6d9f4b97
 - **Relations:** derives from WAY-03@7c2d4ca1
-- **Verification:** level 1 — invariants: foundation-change-assessment-record. Level 2 — an agent
-  compares the change with the decision:
-  - complies: one assessor on another model reads the diff without the author's reasoning, and the
-    author records how each remark was settled before the merge; a settlement that rewrites an
-    assessed invariant test is recorded beside the one assessment;
-  - violates: the assessor receives the author's reasoning; the author drops a remark without
-    recording why; a change other than one to the-way itself merges with no assessment record;
-    the edits of a settlement are sent to a second assessment.
+- **Verification:** level 2 — an agent compares the change with the decision:
+  - complies: a change that rewords a decision and the invariant test deriving from it is reviewed
+    on its whole diff by an agent that did not make it, and the human merges it with no other
+    assessment;
+  - violates: the author reviews its own change to the foundation; a cycle requires an assessment
+    of its own of a change's foundation entries before the merge; a change merges whose foundation
+    entries no reviewer read.
 - **Review when:** none
 - **Origin:** none
 - **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/5
 
-*Rationale:* the problem is a single executor that checks itself: agents on one model with one input
-share its blind spots, so independence comes from another model and from not seeing the author's
-reasoning; one such reader finds what a reader can, and the human who accepts at the merge reads the
-change with the assessment beside it. The finding it cites measured models of other publishers only,
-and this decision takes it across publishers (WAY-85). A change to the-way itself goes without the
-assessment: an agent that did not make it reviews the whole change against its task and the
-foundation, and the human reads the diff of the foundation at the merge.
-*Rejected:* a panel of two assessors and a settler reading both orders — its cost per change
-outweighs what one independent reader misses, and its uncertainty becomes questions for the human;
-the author assessing its own change — it checks itself; assessing again every settlement that
-changes the assessed entries or tests — each correction draws new remarks, and the change reaches
-the human only after a chain of assessments.
+*Rationale:* the problem is a single executor that checks itself: a model judging what it wrote
+favours it, so an agent that did not make the change reads it. An error of the product shows where
+the code and the foundation meet, and the review of the whole change reads both against the task;
+an assessment of the foundation apart from the code sees only entries, so what it finds beyond the
+review are faults of form and of checks, which the tests and the human reading the diff of the
+foundation at the merge also meet.
+*Rejected:* one independent assessor on a model other than the author's, which sees the diff
+without the author's reasoning and names what of the change can be cut — a stage of its own in
+every cycle that writes entries, reading entries without the code the review reads with them; a
+panel of two assessors and a settler reading both orders — its cost per change outweighs what one
+reader misses, and its uncertainty becomes questions for the human; the author assessing its own
+change — it checks itself.
 
 ### WAY-11/1 — How does a task end?
 
@@ -3385,24 +3383,24 @@ allowing an unexplained `TODO` — no later task would own the missing answer.
 ### WAY-120/1 — How does the-way critique an agent's proposal?
 
 An agent may invoke critique for any proposal without waiting for the human to express doubt; a
-completed set for collective human review and every change to an invariant test or to the
-foundation other than a change to the-way itself go through it, and for such a change the critique
-is its independent assessment (WAY-10). An independent critique gives one fresh agent the full
-proposal or set, its sources and applicable rules without the author's defense; the author checks
-each observation and gives one explicit verdict. For a collectively reviewed set the critic checks
-form, fidelity to source and contradictions across entries before presentation.
+completed set for collective human review goes through it, and the diff of a change to an
+invariant test or to the foundation does not (WAY-10). An independent critique gives one fresh
+agent the full proposal or set, its sources and applicable rules without the author's defense; the
+author checks each observation and gives one explicit verdict. For a collectively reviewed set the
+critic checks form, fidelity to source and contradictions across entries before presentation.
 
 - **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common,
   project-level, relation-model, gate, installation, agent-instructions, instruction-files,
   repository, task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-10@db68de1c
+- **Relations:** none
 - **Verification:** level 2 — an agent compares the review with the decision:
   - complies: one fresh critic receives a finished set and its sources, reports evidence for each
     concern, and the author verifies it before presenting corrected proposals and open questions;
   - violates: one critic is run per row of a set, the author silently changes a human settlement,
-    or two critics are run on one change.
+    two critics are run on one set, or the merge of a change to the foundation waits for a
+    critique of its diff.
 - **Review when:** none
 - **Origin:** none
 - **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/4
@@ -5889,13 +5887,12 @@ obligations, and naming each piece taken lets later work tell an adopted step fr
 source of values tied to named tools fits only the products that use them, so the skill picks the
 source; the moment after the first screen would leave that screen with no rules, so the styleguide
 comes before it; how a change is cut is the task cycle's (WAY-13); what a model costs is the
-harness's business, and the-way's one rule about models guards the independence of an assessment
-(WAY-10); a comparison of screenshots needs an agent's way to see the screens and reference shots
-nobody updates blindly, which no product has yet; no product of the-way works from a design tool;
-`surface` is a word of the-way's glossary in another meaning (WAY-104). The platform's extractor
-brings a tool and files of its own, its guidance on artificial intelligence concerns features no
-styleguide decides, and its scoring rubric judges a document of another kind. What was seen in those
-skills is described here rather than pointed to (WAY-27).
+harness's business; a comparison of screenshots needs an agent's way to see the screens and
+reference shots nobody updates blindly, which no product has yet; no product of the-way works from a
+design tool; `surface` is a word of the-way's glossary in another meaning (WAY-104). The platform's
+extractor brings a tool and files of its own, its guidance on artificial intelligence concerns
+features no styleguide decides, and its scoring rubric judges a document of another kind. What was
+seen in those skills is described here rather than pointed to (WAY-27).
 *Rejected:* the course's skill adopted whole — its commands, folders and lists of tools would bind
 every product; its steps followed with no decision naming them — an adopted step and a resemblance
 could not be told apart (WAY-100); pointers to the skills in place of a description — no reader can

@@ -1,6 +1,6 @@
 ---
 name: the-way-critique
-description: Use when an agent's proposal needs an independent critical reading, when a complete set of proposals will be reviewed together by a human, or when a change to an invariant test or to the foundation needs its independent assessment. Checks purpose, evidence, cost, source fidelity and contradictions before the author gives a verdict. Use this checkout's own the-way.
+description: Use when an agent's proposal needs an independent critical reading, when a complete set of proposals will be reviewed together by a human, or when a proposal derived from sources has to be checked against them. Checks purpose, evidence, cost, source fidelity and contradictions before the author gives a verdict. Use this checkout's own the-way.
 ---
 
 # the-way-critique

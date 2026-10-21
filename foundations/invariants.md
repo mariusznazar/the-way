@@ -203,16 +203,6 @@ Every term `elements/glossary/examples.md` names is the term of an entry of `fou
 - **Part:** glossary
 - **Correction:** none
 
-## foundation-change-assessment-record/1
-
-Where {merge-onto} exists, no change alters, against {fork-point}, an invariant test or a foundation entry without a record of its independent assessment, naming what of the change can be cut or that nothing can, and of how each remark was settled.
-
-- **Method:** `TODO`
-- **Rests on:** none
-- **Derives from:** WAY-10@db68de1c · WAY-03@7c2d4ca1
-- **Part:** every
-- **Correction:** none
-
 ## return-step-record/1
 
 Where {merge-onto} exists, every change against {fork-point} holds, in one of its commits, the record of its task's return step.
@@ -2247,6 +2237,7 @@ For every invariant entry that a rule of a file `guidelines/<name>.md` names wit
 | invariant-test-change-acceptance | replaced: a change to an invariant test is covered by the one independent assessment of any change to an invariant test or to the foundation | foundation-change-assessment-record |
 | foundation-change-panel-record | replaced: the record of a panel of two assessors and two settlements became the record of one independent assessment and of how each remark was settled | foundation-change-assessment-record |
 | foundation-search-record | withdrawn: the author's one search of the foundation is not repeated before the merge and leaves no record (WAY-33) | none |
+| foundation-change-assessment-record | withdrawn: a change to an invariant test or to the foundation has no assessment of its own; the review of the change and the human at the merge read it (WAY-10) | none |
 
 ## Quarantined invariants
 
