@@ -7,6 +7,21 @@ product pilots; the full gate does not yet exist. Changes to the-way itself foll
 When `main` is created, replace this guide with the task-cycle instructions before integrating
 another change.
 
+## While the slimming plan is applied
+
+The-way is being slimmed down one file or skill at a time, by a plan kept in the author's private
+notes: `C:\Storage\The Brain\The Brain\Notes\Projects\(P) Proces pracy nad produktem\odchudzanie_radykalne_dane\plan_nanoszenia.md`.
+An agent that cannot open it asks the human. Files and foundation entries the plan has not yet
+reached still describe the mechanism this guide drops: fingerprints and their renewal, entry
+versions, *Approved by* and the request link it waits for, format guards run as a step of a change,
+the independent assessment, a second search of the foundation before the merge and the record of a
+search. A change to
+the-way does not apply that mechanism, whatever such a file or entry says. Where a test of the-way
+still requires part of it, such as a fingerprint beside a reference in the-way's own foundation,
+the change meets the test with the repository's existing tools and does no more. While the plan is
+applied, its own rhythm holds: each of its positions is one commit, with every test run on it and
+reviewed as below, and each of its stages is one request.
+
 ## Start a change
 
 Start new work on a short task branch from a current, clean `foundations` commit. Keep unrelated
@@ -14,39 +29,59 @@ working-tree changes out of that branch and out of its commits.
 
 Before editing, use `foundations/part_map.md` to identify the parts touched and read the decisions
 whose *Scope* names those parts. Read the affected invariants and the relevant element templates
-and skills. A change to a foundation entry follows the skill for that element, including a search
-of the whole foundation for unlinked effects (WAY-33).
+and skills. A change to a foundation entry follows the skill for that element, apart from the
+mechanism this guide drops.
 
-Until an entry reaches `main`, edit an existing decision in place. Show a change of meaning to
-Mariusz for renewed acceptance (WAY-07). Update every fingerprint and dependent entry affected by
-a changed binding part (WAY-31). Do not manufacture a new decision version merely to model
-the unfinished pre-`main` history.
+Until an entry reaches `main`, edit an existing decision in place (WAY-07). Do not manufacture a
+new decision version merely to model the unfinished pre-`main` history.
+
+## Make the change
+
+Once a foundation entry the change writes or rewords is settled, its author searches the whole
+foundation once for the entries the change touches and corrects them in the same change (WAY-33).
+A finding the author cannot settle by correcting an entry, such as two decisions colliding with no
+precedence written, and a correction that would change the meaning of an approved decision beyond
+what the task or the plan's position settles (WAY-114), go to Mariusz before the change goes on.
+There is no second search before the merge.
+
+When the change is made, take the return step: compare the foundation entries the change edits,
+those the task or the plan's position names and those the search found, and the part map, with the
+files of the repository, and correct in the same change whatever no longer matches. Unlike the
+return step of WAY-11, it does not hunt for behaviour no invariant covers; an invariant is written
+only for a rule the change, a decision or Mariusz sets.
 
 ## Check the change
 
-Run tests for each changed part with `python -B gate/run_tests.py <directory>`. Run the existing
-critical-flow tests for every change (WAY-45): they are the tests holding a `flow: <identifier>`
-line, and today `python -B gate/run_tests.py gate` runs them. For changed foundation files, run
-their element format guards; use `--base none` and, where available, `--merge-onto none` because
-there is no `main` commit to compare with. Read the reports, including warnings and `unchecked`
-results. Before the request, also run the decisions and invariants guards with
-`--merge-onto <the current foundations tip>`. Act on their relation-fingerprint findings and
-resolve any operational error that prevents those checks from running; their findings about
-copies of a version and about a placeholder request link are expected before `main`.
+Run every test of the-way: from the root, run `python -B gate/run_tests.py <directory>` for each
+directory that holds a `test_*.py` file git tracks, without `--record`. In a POSIX shell this lists
+those directories:
 
-The available tests and guards are partial checks. Record what ran, what failed and what remained
-unchecked in the review material. Never report them as a pass of the full gate. A missing method or
-command stays visible as debt rather than being treated as agreement.
+```
+git ls-files | grep -E '(^|/)test_[^/]*\.py$' | xargs -n1 dirname | sort -u
+```
+
+The whole run takes about 16 minutes. Run the tests on the change as it goes into the request. A
+run passes when its exit code is 0. One run fails for a known reason until the plan removes
+`probes/`: `probes/claude-code-project-skills` looks for a sentence that the documentation it reads
+no longer holds.
+
+The author of the change, or the agent that leads the work, asks an agent that did not make the
+change to review it (WAY-10). The reviewer receives the whole diff, the task or the plan's position
+the change carries out, and the foundation entries the change touches, and reviews the change
+against them. The reviewer decides which of its remarks block. The author makes one fix for them,
+and an agent that did not make the change reviews that fix once. A blocking remark still open after
+that stops the change and goes to Mariusz; the other remarks go into the request.
 
 ## Integrate into `foundations`
 
-Before integration, compare the task branch with the current `foundations` tip. For a foundation
-change, search the whole foundation again against that tip (WAY-33), update affected entries and
-rerun the checks. A foundation change or a change to an invariant test is assessed once by an
-independent agent following `elements/common/critique/SKILL.md` (WAY-10). Its record goes where
-`elements/common/critique/SKILL.md` puts it; the record of both foundation searches goes in the
-message of the commit that carries the change. Mariusz accepts the change at the merge.
+Open a request to merge the task branch into `foundations`. It holds:
 
-Show the diff, test results, warnings and unchecked work before asking Mariusz to accept the merge.
-Merge into `foundations` only after that review. Creating `main` is a separate release decision
-that Mariusz makes; it is not part of integrating a change.
+- every foundation entry the change alters, each with one sentence on what it changes in meaning;
+- every test command run and its exit code;
+- what was not checked;
+- every remark of the review still open, in the reviewer's words;
+- every invariant test the change alters.
+
+Mariusz merges the request; the merge is the acceptance of the change and of every entry it alters.
+Creating `main` is a separate release decision that Mariusz makes; it is not part of integrating a
+change.

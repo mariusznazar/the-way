@@ -73,11 +73,11 @@ nothing gained; one computation per element — a reference would need its eleme
 Invariant tests are written and accepted together with the foundation change, and during
 implementation they are read-only. A mechanism outside the model enforces this: when a change is
 merged, a check whose definition is taken from the main branch rejects any change to an invariant
-test that carries no record of its independent assessment (WAY-10). A task that needs an invariant
-test changed goes back to the foundation step.
+test, other than one to the-way itself, that carries no record of its independent assessment
+(WAY-10). A task that needs an invariant test changed goes back to the foundation step.
 
 - **Change:** new decision
-- **Scope:** invariants, task-cycle
+- **Scope:** invariants, task-cycle, agent-instructions
 - **Based on:** impossiblebench-test-modification@9cdba560
 - **Relations:** derives from WAY-01@60960941
 - **Verification:** level 1 — invariants: foundation-change-assessment-record.
@@ -316,17 +316,18 @@ files of any repository, and its failures differ.
 
 ### WAY-10/1 — Who assesses a change to an invariant test or to the foundation?
 
-A change to an invariant test or to the foundation is assessed by one independent agent, on a model
-other than its author's where one is available, which sees the diff and the files of the commit it
-assesses without the task's chronicle or the author's reasoning and names what of the change can be
-cut, or that nothing can. The author settles each of its remarks and records how, and a settlement
-that changes the assessed foundation entries or invariant tests is part of the assessed change and
-does not reopen its assessment. A human accepts the change, with the assessment and its settlement,
-when merging it.
+A change to an invariant test or to the foundation, other than a change to the-way itself, is
+assessed by one independent agent, on a model other than its author's where one is available, which
+sees the diff and the files of the commit it assesses without the task's chronicle or the author's
+reasoning and names what of the change can be cut, or that nothing can. The author settles each of
+its remarks and records how, and a settlement that changes the assessed foundation entries or
+invariant tests is part of the assessed change and does not reopen its assessment. A human accepts
+the change, with the assessment and its settlement, when merging it, and accepts a change to the-way
+itself by merging its request after an agent that did not make it has reviewed the whole change.
 
 - **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common,
-  task-cycle
+  task-cycle, agent-instructions
 - **Based on:** llm-self-preference@6d9f4b97
 - **Relations:** derives from WAY-03@7c2d4ca1
 - **Verification:** level 1 — invariants: foundation-change-assessment-record. Level 2 — an agent
@@ -335,8 +336,8 @@ when merging it.
     author records how each remark was settled before the merge; a settlement that rewrites an
     assessed invariant test is recorded beside the one assessment;
   - violates: the assessor receives the author's reasoning; the author drops a remark without
-    recording why; a change merges with no assessment record; the edits of a settlement are sent
-    to a second assessment.
+    recording why; a change other than one to the-way itself merges with no assessment record;
+    the edits of a settlement are sent to a second assessment.
 - **Review when:** none
 - **Origin:** none
 - **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/5
@@ -345,7 +346,9 @@ when merging it.
 share its blind spots, so independence comes from another model and from not seeing the author's
 reasoning; one such reader finds what a reader can, and the human who accepts at the merge reads the
 change with the assessment beside it. The finding it cites measured models of other publishers only,
-and this decision takes it across publishers (WAY-85).
+and this decision takes it across publishers (WAY-85). A change to the-way itself goes without the
+assessment: an agent that did not make it reviews the whole change against its task and the
+foundation, and the human reads the diff of the foundation at the merge.
 *Rejected:* a panel of two assessors and a settler reading both orders — its cost per change
 outweighs what one independent reader misses, and its uncertainty becomes questions for the human;
 the author assessing its own change — it checks itself; assessing again every settlement that
@@ -913,12 +916,14 @@ the entry writer to choose which one governs.
 A relation `derives from` or `narrows` relies on the binding part of the decision it names and
 carries that decision's fingerprint (`derives from WAY-01@<fingerprint>`), and an invariant entry's
 *Derives from* and *Rests on* carry the fingerprint of each entry they name, while its *Part*
-carries none. A change to the fingerprint of an entry so named reaches the main branch together
-with every decision that relates to it with a fingerprint and every invariant carrying it, each
-checked against the new binding part and carrying the new fingerprint.
+carries none. Except in the-way itself, where the fingerprints its entries carry are not renewed and
+the author's search of the foundation (WAY-33) finds the entries a change touches, a change to the
+fingerprint of an entry so named reaches the main branch together with every decision that relates
+to it with a fingerprint and every invariant carrying it, each checked against the new binding part
+and carrying the new fingerprint.
 
 - **Change:** new decision
-- **Scope:** decisions, relation-model, invariants, environment-facts
+- **Scope:** decisions, relation-model, invariants, environment-facts, agent-instructions
 - **Based on:** none
 - **Relations:** derives from WAY-02@3ffcbd46 · derives from WAY-17@b1e26133
 - **Verification:** level 1 — invariants: decision-guard-stale-reference ·
@@ -937,6 +942,8 @@ checked against the new binding part and carrying the new fingerprint.
 *Rationale:* a relation or an invariant's link stands on what the named entry says (WAY-17), and a
 plain identifier never shows the ground moved; WAY-02's fingerprint serves, so no second
 mechanism; the renewal travels in the same merge, so nothing binds on the main branch unchecked.
+In the-way itself the renewal is dropped: renewing a fingerprint does not lead to a change in the
+entry that carries it, and its author's search finds what a change touches.
 *Rejected:* flags from the kind of change — a misnamed kind silences them; no flags, the author
 reading the dependents — a step that goes missing; flags left open on the main branch — an entry in
 force on unchecked ground; flags of graded strength — nothing reads the strength; a fingerprint on
@@ -974,11 +981,13 @@ apply.
 When a foundation entry is written, or a version changes its binding part, an agent searches the
 whole foundation for entries it touches that no written link joins to it, and before the version
 is accepted each finding becomes a relation, a change to one of the entries, or a question to a
-human. The search runs again against the current main branch before the task branch is merged,
-and a change to the foundation is merged only with the record of both searches.
+human. Except in a change to the-way itself, which has its author's one search alone and no record
+of it, the search runs again against the current main branch before the task branch is merged, and
+a change to the foundation is merged only with the record of both searches.
 
 - **Change:** new decision
-- **Scope:** decisions, invariants, glossary, part-map, environment-facts, task-cycle
+- **Scope:** decisions, invariants, glossary, part-map, environment-facts, task-cycle,
+  agent-instructions
 - **Based on:** none
 - **Relations:** none
 - **Verification:** level 1 — invariants: foundation-search-record. Level 2 for what the search
@@ -995,7 +1004,8 @@ and a change to the foundation is merged only with the record of both searches.
 between entries written apart, where nobody thought of a link — only a search of the whole
 foundation finds them. Two tasks can contradict each other without a file conflict (WAY-01), so
 the search runs again before the merge, and the merge waits for its record, because a search is a
-step that goes missing.
+step that goes missing. In the-way itself a change keeps the author's one search, with no record
+of it, and accepts that risk: the human sees every entry it alters in its request.
 *Rejected:* fingerprints alone — they see only written links; a search within overlapping scopes
 — contradictions between parts go unseen; a search at writing only — parallel tasks collide once
 merged.
@@ -3422,11 +3432,11 @@ allowing an unexplained `TODO` — no later task would own the missing answer.
 
 An agent may invoke critique for any proposal without waiting for the human to express doubt; a
 completed set for collective human review and every change to an invariant test or to the
-foundation go through it, and for such a change the critique is its independent assessment
-(WAY-10). An independent critique gives one fresh agent the full proposal or set, its sources and
-applicable rules without the author's defense; the author checks each observation and gives one
-explicit verdict. For a collectively reviewed set the critic checks form, fidelity to source and
-contradictions across entries before presentation.
+foundation other than a change to the-way itself go through it, and for such a change the critique
+is its independent assessment (WAY-10). An independent critique gives one fresh agent the full
+proposal or set, its sources and applicable rules without the author's defense; the author checks
+each observation and gives one explicit verdict. For a collectively reviewed set the critic checks
+form, fidelity to source and contradictions across entries before presentation.
 
 - **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common,
