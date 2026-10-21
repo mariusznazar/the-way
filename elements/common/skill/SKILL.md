@@ -44,9 +44,8 @@ When the section already holds a working table, resume from the first row whose 
   section carries" in full.
 - Read the source in full.
 - Select and read the product's foundation by "Reading the foundation" in
-  `elements/common/way_of_working.md`; search all five elements for duplicates and collisions,
-  beyond selected parts and known links, so that no candidate repeats an entry that stands there,
-  and a candidate that collides with one is shown beside it.
+  `elements/common/way_of_working.md`: the parts the source touches, and the entries they and the
+  source lead to.
 - Read in each element's template what makes something an entry of it: the plan test in the
   decisions' template (WAY-36, WAY-26); "Which words take an entry" in the glossary's; "Which facts
   are written" in the environment facts'; for an invariant, a sentence a commit can make false; for
@@ -78,6 +77,10 @@ When the section already holds a working table, resume from the first row whose 
   the last column names what the task's cycle would do or choose without it. Write the table under
   "Settlements to record" with a column *State* after the template's columns, and show it whole as
   above.
+- Before either table is written, once its candidates are named, search the whole foundation once
+  — all five elements, beyond the parts selected and the links known — for an entry that already
+  states a candidate's settlement or collides with it. A settlement that stands there is no
+  candidate; a candidate that collides with an entry is shown beside it.
 
 ## 3. The human cuts
 

@@ -3705,14 +3705,15 @@ change.
 A projected entry of an approved project definition enters the product's foundation in the
 foundation step of the first task whose code makes it true — the task the plan assigns, or a task
 that uses the definition as a source only, even where the plan assigns the entry to another task —
-whole, in the wording the readiness gate approved, with *Approved by* transcribed from the gate
-record and with the projected terms and environment facts it uses or rests on; where the code
-makes only part of it true, the agent writes that part and the human accepts its meaning at the
-merge (WAY-114). The task the plan assigns writes what of the entry the foundation does not yet
-hold, and a projected entry no code makes true. The return step reads the projected entries of the
-task's sources as well as the foundation, writes one the code makes true that the foundation step
-missed — an invariant with a check by an agent that did not write the code it covers, run on that
-code — and writes a new entry only for a rule none of them states.
+whole, in the wording the readiness gate approved, with the projected terms and environment facts
+it uses or rests on and with no record of approval copied from the gate, since the merge of the
+task's request brings it in; where the code makes only part of it true, the agent writes that part
+and the human accepts its meaning at the merge (WAY-114). The task the plan assigns writes what of
+the entry the foundation does not yet hold, and a projected entry no code makes true. The return
+step reads the projected entries of the task's sources as well as the foundation, writes one the
+code makes true that the foundation step missed — an invariant with a check by an agent that did
+not write the code it covers, run on that code — and writes a new entry only for a rule none of
+them states.
 
 - **Change:** new decision
 - **Scope:** project-level, task-cycle, decisions, invariants, glossary, environment-facts,
@@ -3722,13 +3723,13 @@ code — and writes a new entry only for a rule none of them states.
   WAY-114@04b4f599 · derives from WAY-118@5af868b3 · narrows WAY-106@63eddf70
 - **Verification:** level 2 — an agent compares the change with the decision:
   - complies: a source-only task whose code adds the store a projected decision chooses writes
-    that decision whole in its foundation step, *Approved by* copied from the gate record, and
-    the task the plan assigns later finds it and writes nothing; a task whose code makes one of
-    a projected decision's two sentences true writes that sentence and lists its meaning in the
-    request;
+    that decision whole in its foundation step, and the task the plan assigns later finds it and
+    writes nothing; a task whose code makes one of a projected decision's two sentences true writes
+    that sentence and lists its meaning in the request;
     a plan member whose code would make another item's entry true returns to the plan first;
   - violates: the return step writes a new decision for a rule a projected entry of the
-    task's source states; a shortened projected entry is written with the gate's *Approved by*;
+    task's source states; a shortened projected entry is written as the gate approved it, its
+    meaning left out of the request;
     the code a late-found projected invariant covers is set aside and rewritten.
 - **Review when:** none
 - **Origin:** none
