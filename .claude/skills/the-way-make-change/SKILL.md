@@ -1,6 +1,6 @@
 ---
 name: the-way-make-change
-description: Use to make the code of one change in a the-way task cycle — as the one author of a change without a plan, as the executor of a planned slice, or as the agent fixing a review's findings. Covers reading, tests, the own-work check, when to return without code, commits and the report. Use this checkout's own the-way.
+description: Use to make the code of one change in a the-way task cycle — as the one author of a change without a plan, as the executor of a planned slice, as the agent fixing a review's findings, or for a correction after the human's remarks on the request. Covers reading, tests, the own-work check, when to return without code, commits and the report. Use this checkout's own the-way.
 ---
 
 # the-way-make-change

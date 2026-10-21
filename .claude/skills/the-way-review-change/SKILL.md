@@ -1,6 +1,6 @@
 ---
 name: the-way-review-change
-description: Use to review the code of one change in a the-way task cycle as an agent that did not make it — a planned slice, the whole change, the fix of earlier findings, or a later change to an open request. Read-only; returns a verdict, graded findings and the checks it ran. Use this checkout's own the-way.
+description: Use to review the code of one change in a the-way task cycle as an agent that did not make it — a planned slice, the whole change, the fix of earlier findings, or a later change to an open request. Read-only; returns PASS or FAIL, graded findings and the checks it ran. Use this checkout's own the-way.
 ---
 
 # the-way-review-change

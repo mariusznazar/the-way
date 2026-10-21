@@ -22,7 +22,7 @@ worktree the session works in; in a product, it is the product's pinned `.the-wa
   report says where the choice showed and what that agent found.
 - The foundation entries and guidelines of the parts the choice touches, selected by "Reading the
   foundation" in `elements/common/way_of_working.md` and `product-guidelines/reading.md`. Read
-  each selected file whole.
+  each selected entry and guideline file whole.
 - The code the choice depends on, as far as needed to see the ways open — read to design, not to
   write.
 
@@ -32,9 +32,11 @@ worktree the session works in; in a product, it is the product's pinned `.the-wa
   the design is a question.
 - Send your questions to the orchestrator in batches, each question with the answer you recommend
   and what a wrong answer would cost. A batch holds every question you can already see; hold none
-  back for later. When an answer opens a new question, send it in the next batch and name the
-  answer that opened it. Where no source answers, the orchestrator picks the smallest reversible
-  reading that fulfils the task; never ask the human and never widen the task.
+  back for later. Return with each batch, with the status `questions`, and wait to be resumed with
+  the answers; when an answer opens a new question, return with it in the next batch and name the
+  answer that opened it. Write the spec once no question remains. Where no source answers, the
+  orchestrator picks the smallest reversible reading that fulfils the task; never ask the human
+  and never widen the task.
 - Weigh two or three ways with their costs and recommend one. Leave out every feature the task does
   not need.
 - Divide what you design into units that each do one thing, behind an interface that says what the
@@ -98,6 +100,6 @@ broke besides.
 
 The designer writes the spec to its path and the full report to the dispatch's report path: the
 questions sent and their answers, the ways weighed and why the rejected ones lost, and the result
-of the four checks. The reviewer writes its report to its own path. Each returns to the
-orchestrator its status or verdict and its paths. The boundary is the reviewed spec: return before
+of the four checks, and returns with the status `done`. The reviewer writes its report to its own
+path and returns its first line. Each gives the orchestrator its paths. The boundary is the reviewed spec: return before
 any plan, slice or code.
