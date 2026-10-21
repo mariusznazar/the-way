@@ -1584,16 +1584,6 @@ Every `fact:` line in a check names an entry of `foundations/environment_facts.m
 - **Part:** every
 - **Correction:** none
 
-## fact-verdict-citation/1
-
-A run records a verdict for an environment fact only from a command that cites the fact on a `fact:` line.
-
-- **Method:** `TODO`
-- **Rests on:** none
-- **Derives from:** WAY-81@37613ee7
-- **Part:** gate
-- **Correction:** none
-
 ## based-on-fact-fingerprint/1
 
 Every environment fact the *Based on* of the latest version of a decision names carries a fingerprint, and every `<identifier>@<fingerprint>` that *Based on* names outside quoted text names an entry or a withdrawn identifier of `foundations/environment_facts.md`.
@@ -1612,26 +1602,6 @@ Where {merge-onto} exists, every fingerprint the *Based on* of the latest versio
 - **Rests on:** none
 - **Derives from:** WAY-90@e6fa3272
 - **Part:** decisions · environment-facts
-- **Correction:** none
-
-## gate-fact-run/1
-
-The gate runs the method of every environment fact whose entry a change enters or rewords against "{fork-point}", or whose command names a file that change alters.
-
-- **Method:** `TODO`
-- **Rests on:** none
-- **Derives from:** WAY-82@790a7972
-- **Part:** gate
-- **Correction:** none
-
-## fact-clock-exit/1
-
-The clock exits non-zero when some fact's result is `fail` or `error`, and zero otherwise.
-
-- **Method:** `TODO`
-- **Rests on:** none
-- **Derives from:** WAY-82@790a7972
-- **Part:** gate · environment-facts
 - **Correction:** none
 
 ## human-verdict-invariant-row/1
@@ -2157,6 +2127,9 @@ For every invariant entry that a rule of a file `guidelines/<name>.md` names wit
 | gate-unchecked-reason | withdrawn: the invariants template keeps no closed list of reasons for `unchecked` (WAY-63) | none |
 | gate-missing-script | withdrawn: an invariant's method names no command and no script (WAY-105) | none |
 | gate-quarantine-result | withdrawn: a test giving different verdicts on one commit is fixed as any test is, with no quarantine (WAY-68) | none |
+| fact-verdict-citation | withdrawn: an environment fact names no method, and no check cites it (WAY-81) | none |
+| gate-fact-run | withdrawn: no check of an environment fact runs on a change (WAY-82) | none |
+| fact-clock-exit | withdrawn: no clock runs the checks of environment facts (WAY-82) | none |
 
 ## Quarantined invariants
 

@@ -1951,9 +1951,9 @@ on — every tracked file becomes the data of some test.
 
 Every field an element's template gives an entry of its kind appears in every entry of its kind,
 holding a value, or `none` or `TODO` where the template gives it that word: `none` says nothing is
-there, `TODO` that something is missing. The main branch holds `TODO` only in a fact's *Method*,
-and in an invariant's *Rests on* until the facts element has entries. A guard reports a missing
-field, or a word not given it, as an error.
+there, `TODO` that something is missing. The main branch holds `TODO` only in an invariant's
+*Rests on*, until the facts element has entries. A guard reports a missing field, or a word not
+given it, as an error.
 
 - **Change:** new decision
 - **Scope:** decisions, part-map, invariants, glossary, environment-facts, elements-common
@@ -2017,20 +2017,19 @@ An invariant's *Rests on* names every environment fact holding a condition that 
 commit makes its sentence true, and no other fact. A fact holds such a condition when, read
 otherwise, it would change whether some commit makes the sentence true, or change a value the
 sentence copies from it. A fact that is only a reason for a decision the invariant derives
-from stands in that decision's *Based on* alone; every environment fact on the main branch is named
-by an invariant's *Rests on* or by a decision's *Based on*, and on a task branch, a fact that nothing
-names is a warning.
+from stands in that decision's *Based on* alone; a fact stands only while an invariant's *Rests on*
+or a decision's *Based on* names it, and the change that removes the last such name withdraws it.
 
 - **Change:** new decision
 - **Scope:** invariants, decisions, environment-facts
 - **Based on:** none
 - **Relations:** derives from WAY-17@b1e26133 · derives from WAY-60@6e862c88
-- **Verification:** level 1 — invariants: fact-dependants. Level 2 for which facts an invariant's
-  *Rests on* names — an agent compares the change with the decision:
+- **Verification:** level 2 — an agent compares the change with the decision:
   - complies: `script-imports` rests on `python-stdlib-modules`, not on a finding a decision it
-    derives from quotes;
+    derives from quotes; a change that drops the last decision citing a fact withdraws the fact;
   - violates: an invariant rests on the report of a past failure its decision quotes; an invariant
-    bounding a page's load time by an outside standard's threshold reads `Rests on: none`.
+    bounding a page's load time by an outside standard's threshold reads `Rests on: none`; a fact
+    that nothing names stays among the entries.
 - **Review when:** none
 - **Origin:** none
 - **Approved by:** Mariusz, 2026-10-01
@@ -2038,11 +2037,13 @@ names is a warning.
 *Rationale:* a fact holding a condition changes whether the sentence holds with no commit, so
 *Rests on* is its only path to the invariant; a mere reason reaches it through its decision
 (WAY-31). A link is written at the dependent's end (WAY-17), so a fact nothing names is seen from
-nowhere.
+nowhere; the change that drops its last name names it, so its author's search of the foundation
+finds it (WAY-33).
 *Rejected:* every fact in the *Based on* of the decisions it derives from — flags invariants that
 still hold, and misses conditions no decision quotes; the choice left to each author — "rest on"
-reads two ways; no check on unnamed facts — facts outlive their readers; an error on the task branch
-too — a fact written before its dependent would break the branch midway.
+reads two ways; unnamed facts left in the file — facts outlive their readers; a check reporting an
+unnamed fact as a warning on the task branch and an error at the merge — the author's search
+already finds it, in the change that leaves it unnamed.
 
 ### WAY-74/1 — What form does the-way's own record of a run take?
 
@@ -2090,8 +2091,7 @@ stand as two entries.
 - **Scope:** environment-facts, invariants
 - **Based on:** none
 - **Relations:** derives from WAY-22@dcf291ea
-- **Verification:** level 1 — invariants: fact-sentence-count. Level 2 for what one sentence may
-  hold — an agent compares the change with the decision:
+- **Verification:** level 2 — an agent compares the change with the decision:
   - complies: git's path-pattern rule for attributes files, with its page's two exceptions, is one
     fact, without what `git check-attr` prints; git's ignore rules, from a page of the same edition,
     stand as a second entry;
@@ -2101,104 +2101,96 @@ stand as two entries.
 - **Origin:** none
 - **Approved by:** Mariusz, 2026-09-26
 
-*Rationale:* a fact is reviewed when its source changes, so what changes together stands together:
-two sources in one entry let a new edition of one flag every entry resting on the other. An
+*Rationale:* a fact is changed when its source changes, so what changes together stands together:
+two sources in one entry would send a new edition of one to every entry resting on the other. An
 invariant written as a fact would never be checked on the commit that breaks it.
 *Rejected:* git's pattern rule and what `git check-attr` reports in one entry — the second is about
-a method's tool, and no commit changes it (WAY-73); both as facts in *Rests on* — the second holds
+a test's tool, and no commit changes it (WAY-73); both as facts in *Rests on* — the second holds
 no condition of the sentence (WAY-73).
 
 ### WAY-77/1 — What does an environment fact's *Holds for* name?
 
-An environment fact names in *Holds for* what its sentence is true of — a tool and its version, a
-platform, an edition, or the models a study measured — and never a word whose meaning moves with
-the date, such as "latest"; where the source publishes no editions, *Holds for* says so. A range
-the product declares for itself stands in the sentence of an invariant, never in a fact.
-
-- **Change:** new decision
-- **Scope:** environment-facts, invariants
-- **Based on:** none
-- **Relations:** none
-- **Verification:** level 1 — invariants: fact-scope-word. Level 2 for what a range names — an agent
-  compares the change with the decision:
-  - complies: the standard library's modules are a fact for CPython 3.14, while "the repository
-    declares Python 3.14" is an invariant; the fact about JSON Lines reads "JSON Lines, which
-    jsonlines.org publishes without versions";
-  - violates: a fact's method reads the product's `.python-version` to choose which interpreter to
-    probe; *Holds for* reads "jsonlines.org as read on 2026-09-26".
-- **Review when:** none
-- **Origin:** none
-- **Approved by:** Mariusz, 2026-09-26
-
-*Rationale:* a fact is true in the range it names, and a newer range does not refute it; "latest"
-would make its verdict change with the date, not the world. The product's range changes with a
-commit, so it belongs to an invariant, meeting the fact through *Rests on* (WAY-73).
-*Rejected:* a fact's method reading the product's declared version — a sentence about the product in
-a fact; a script comparing the product's range with the fact's — *Holds for* is prose, and the
-invariant's writer sees both; the date read in *Holds for* of a source without editions — every
-re-reading would flag its dependants for nothing.
-
-### WAY-78/1 — What is the binding part of an environment fact entry?
-
-The binding part of an environment fact entry is its sentence together with its *Holds for*. The
-source, its passage and the date read, and the method stay outside it, and no digest of the
-source's text is kept.
+An environment fact entry names no *Holds for*: what its sentence is true of is shown by the edition
+its source cites, or, where the source publishes no editions, by the date it was read. Its sentence
+holds no word whose meaning moves with the date, such as "latest". A range the product declares for
+itself stands in the sentence of an invariant, never in a fact.
 
 - **Change:** new decision
 - **Scope:** environment-facts, invariants
 - **Based on:** none
 - **Relations:** none
 - **Verification:** level 2 — an agent compares the change with the decision:
-  - complies: a widened *Holds for* changes the binding part; a source re-read on a new date does
-    not;
-  - violates: the date read or the method is counted as part of what dependants rely on.
+  - complies: the standard library's modules are a fact cited from the documentation of CPython
+    3.14, while "the repository declares Python 3.14" is an invariant; the fact about JSON Lines
+    quotes jsonlines.org, which publishes no versions, with the date it was read;
+  - violates: a fact's sentence says what "the latest release" of a tool does; an entry carries a
+    field repeating the edition its source cites.
+- **Review when:** none
+- **Origin:** none
+- **Approved by:** Mariusz, 2026-09-26
+
+*Rationale:* the address of an edition already names what the fact is true of, and the date read
+does so for a source without editions, so a field naming it again is a copy that drifts. "Latest"
+would make the sentence change with the date, not the world. The product's range changes with a
+commit, so it belongs to an invariant, meeting the fact through *Rests on* (WAY-73).
+*Rejected:* *Holds for* naming the tools, platforms, editions or measured models the sentence is
+true of — it repeats what the source names, for the sake of a probe comparing the release it ran on
+and of a fingerprint, neither of which a fact keeps (WAY-81, WAY-02); a fact reading the product's
+declared version — a sentence about the product in a fact.
+
+### WAY-78/1 — What is the binding part of an environment fact entry?
+
+The binding part of an environment fact entry is its sentence. The source, its passage and the date
+read stay outside it, and no digest of the source's text is kept.
+
+- **Change:** new decision
+- **Scope:** environment-facts, invariants
+- **Based on:** none
+- **Relations:** none
+- **Verification:** level 2 — an agent compares the change with the decision:
+  - complies: a sentence reworded for a new edition changes the binding part; a source re-read on a
+    new date that still says the same does not, and the entries naming the fact are left alone;
+  - violates: the date read is counted as part of what dependants rely on.
 - **Review when:** none
 - **Origin:** none
 - **Approved by:** Mariusz, 2026-09-28
 
-*Rationale:* what relies on a fact relies on its claim and the range it holds for, while the source
-and its date change at every re-reading; a source that changes fails the watch (WAY-82). Text
-changed beside the quoted passage passes unseen, an accepted cost.
+*Rationale:* what relies on a fact relies on its claim, while the source and its date change at
+every re-reading; a source that no longer says the same changes the sentence (WAY-82). Text changed
+beside the quoted passage passes unseen, an accepted cost.
 *Rejected:* the source's text in the binding part — a rebuilt page would change it for every
-dependant; the sentence alone — a widened range passes unseen; a digest of the passage (as a lock
-file keeps one) — the quoted passage is already the anchor.
+dependant; a digest of the passage (as a lock file keeps one) — the quoted passage is already the
+anchor.
 
 ### WAY-79/1 — Is an environment fact entry versioned?
 
-An environment fact entry carries a version number, starting at 1, and holds only its current
-wording. When its fingerprint differs from its fingerprint on the commit the task branch left the
-main branch from, its version is one higher than there, and otherwise it keeps the version it has
-there. A check citing a fact at a version other than the current one fails the gate.
+An environment fact entry carries no version: it is edited in place and holds only its current
+wording, and its earlier wordings are read from git.
 
 - **Change:** new decision
 - **Scope:** environment-facts, relation-model, gate, elements-common
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 1 — invariants: fact-version-new · fact-version-changed ·
-  fact-version-unchanged · fact-citation-version. Level 2 for a raise — an agent compares the
-  change with the decision:
-  - complies: a typo fixed in a fact's sentence raises the version; a range widened from CPython
-    3.14 to 3.14 and 3.15 raises the version; the probe citing the old version fails until
-    rechecked;
-  - violates: a typo fixed in a fact's sentence keeps the version; every citation moved to the new
-    version by a script, with no one checking the probe.
+- **Verification:** level 2 — an agent compares the change with the decision:
+  - complies: a fact's sentence is rewritten in place for a new edition, and its heading stays
+    `## <identifier>`;
+  - violates: a reworded fact's heading gains a version, or the entry keeps its earlier sentence
+    beside the new one.
 - **Review when:** none
 - **Origin:** none
 - **Approved by:** Mariusz, 2026-09-29
 
-*Rationale:* a version pins a method's result to the binding part it checked: a probe cites the
-fact by identifier and version and fails once the meaning moves, as for invariants (WAY-57); a
-fact's history binds nothing, so earlier wordings are read from git.
-*Rejected:* no version, as in the part map (WAY-43) — results keyed by fingerprint, a second
-mechanism beside WAY-57's; a correction keeping the version, as for invariants — it saves only
-editing the `fact:` lines, whose failure shows the raise anyway.
+*Rationale:* the foundation states what is in force today (WAY-01), and git keeps every earlier
+wording; what rests on a fact is found by the search of whoever changes it (WAY-33), as for
+invariants (WAY-57).
+*Rejected:* a version raised with each change of the sentence, cited by each check of the fact — it
+serves a probe, which no fact keeps (WAY-81), and is a second record of what git keeps.
 
 ### WAY-80/1 — What is an environment fact's source?
 
 Every environment fact entry names its source: an edition with its publisher's own address, or a
 page without editions with its closest archived copy, giving the place, the passage word for word
-and the date read; or an observation naming the command, the tool and its version, the platform
-and the date it ran. The sentence says no more than its source, and a model's memory, an agent's
+and the date read. The sentence says no more than its source, and a model's memory, an agent's
 paraphrase or a text quoting the source is no source. A fact resting on a whole section of rules
 quotes the sentence of its source that sets those rules and names the section by its place alone,
 where the edition has an address of its own.
@@ -2207,100 +2199,86 @@ where the edition has an address of its own.
 - **Scope:** environment-facts
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 1 — invariants: fact-source-form. Level 2 for what the sentence may say,
-  what counts as a source and how a whole section of rules is cited — an agent compares the change
-  with the decision:
+- **Verification:** level 2 — an agent compares the change with the decision:
   - complies: the JSON Lines fact quotes "strongly recommended but not required" and says the final
     terminator may be left out; the git path patterns fact quotes the sentence handing matching to
     `.gitignore` rules and names that section by place;
   - violates: the sentence says every line ends in `\n`; the source is the model's recollection of
-    a page, or a blog post quoting the RFC; a fact on a pattern syntax quotes its rules one by one,
-    or only the rules the product uses.
+    a page, a blog post quoting the RFC, or the output of a command the author ran; a fact on a
+    pattern syntax quotes its rules one by one, or only the rules the product uses.
 - **Review when:** none
 - **Origin:** none
 - **Approved by:** Mariusz, 2026-09-30
 
 *Rationale:* an edition with its own address does not change under the citation, a passage word
-for word lets a re-reading compare two texts, and the date says when that held. An observation is a
-source when anyone can rerun it; a recollection or a quoting text carries a paraphrase's drift.
+for word lets a reader compare it with what the source says now, and the date says when that held;
+a recollection or a quoting text carries a paraphrase's drift.
 *Rejected:* a source named by its work alone — a new edition changes what the citation says; a
-summary in place of the passage — the drift this decision exists to stop; a whole section of rules
-narrowed to those the product uses — a pattern outside them rests on no fact; such a section quoted
-rule by rule — a standing `TODO` in the source.
+summary in place of the passage — the drift this decision exists to stop; an observation naming a
+command, its tool and the date it ran — no reader finds its passage at an address, and running it
+again is a probe, which no fact keeps (WAY-81); a whole section of rules narrowed to those the
+product uses — a pattern outside them rests on no fact; such a section quoted rule by rule — a
+standing `TODO` in the source.
 
 ### WAY-81/1 — How is an environment fact's method written, and on which release of its tool does a probe's verdict count?
 
-A fact's method is a command beginning with the program it runs, the path alone of a
-file a human re-reads the source against, or `TODO`; a command probes the behaviour the sentence
-states, watches the state its source publishes, or both. A command sets what it can of the
-runner's configuration that could change its verdict, and cites each fact it gives a verdict for as
-`fact: <identifier>/<version>`, and a run records no verdict for an uncited fact. Where a fact's
-*Holds for* names a release of the tool its probe runs, the probe reads the release it runs on and
-records it in the `description` of its line; a `fail` on any release is a `fail`; a `pass` counts
-only on a release *Holds for* names, a build of it included, and on another the fact is
-`unchecked`.
+An environment fact names no method and gives no result: no probe or watch runs for it, no check
+cites it, and no status stands beside it. Its passage, address and date let whoever reads the fact
+compare it with what the source says now.
 
 - **Change:** new decision
 - **Scope:** environment-facts, gate, invariants
 - **Based on:** none
-- **Relations:** derives from WAY-61@4804d070
-- **Verification:** level 1 — invariants: fact-method-form · fact-citation-target ·
-  fact-verdict-citation. Level 2 for what a command asks and what it sets — an agent compares the
-  change with the decision:
-  - complies: the fact on path patterns runs `git -c core.ignorecase=false check-attr` on patterns
-    the page's rules decide; the fact on SHA-256 probes the digests NIST publishes for it; the fact
-    on JSON watches `obsoleted_by` of its RFC and that its passage still stands;
-  - violates: a probe asks `git --version` and compares the number in place of the behaviour; a
-    probe relies on the git configuration of the machine it runs on.
-  Level 2 for the release a probe's verdict counts on — an agent compares the change with the
-  decision:
-  - complies: run on git 2.56.0, the probe of a git 2.55.0 fact writes `git 2.56.0` in
-    `description`; it fails the fact where the behaviour differs and leaves it `unchecked` where it
-    agrees; on Git for Windows 2.55.0.windows.3, a build of git 2.55.0, its pass counts; the probe
-    of the SHA-256 fact, whose *Holds for* names no tool release, reads none;
-  - violates: the probe passes the fact on git 2.56.0; it skips on another release without asking
-    about the behaviour; it writes the release under a key of its own beside `description`.
+- **Relations:** none
+- **Verification:** level 2 — an agent compares the change with the decision:
+  - complies: a fact's entry holds its sentence and *Source* and nothing else;
+  - violates: a fact names a command that probes the behaviour its sentence states or watches its
+    source; a test cites a fact on a `fact:` line; a status `pass` stands beside a fact.
 - **Review when:** none
 - **Origin:** none
 - **Approved by:** Mariusz, 2026-10-01
 
-*Rationale:* the forms are WAY-61's, so both elements read alike; a version number says nothing
-of what a release does; the machine running a method changes its fidelity, not the truth; a pass on
-another release says nothing of the named one, while a fail there still calls for review.
-*Rejected:* a kind of method named beside it — the form says it (WAY-54); a version number in
-place of the behaviour — it trusts the label; the runner's configuration or the tool's release as
-a fact in *Rests on* — it changes fidelity, not truth (WAY-73); a pass counted on any release — it
-passes a fact about another release; the release under a key of its own — nothing reads it
-(WAY-74).
+*Rationale:* a probe tells that the world moved only when something runs it and someone reads its
+failure; the passage with its address and the date read lets whoever reads the fact see at once
+whether the source still says so, with nothing kept running.
+*Rejected:* a method for each fact — a command probing the behaviour or watching the source, run
+with the runner's configuration set and a verdict counted only on the release *Holds for* names, or
+the path of a file a person re-reads with a dated verdict — a program, a record and a release to
+match for every fact, read only when it fails.
 
 ### WAY-82/1 — When does an environment fact's method run, and what fails its watch?
 
-A fact's method runs on every change that enters or rewords its entry or alters a file its command
-names, and by the clock, run on the main branch, which records each verdict and exits non-zero on
-a `fail` or an `error`. Elsewhere a fact's `fail` stops no change; a watch fails on a published
-change to its edition or when its passage no longer stands, and an announced revision fails nothing.
+No check of an environment fact runs, on a change or by a clock, and nothing fails when the world
+moves. A fact changes when someone finds that its source no longer says what its sentence says, or
+that a newer edition the product stands on says otherwise; the change that rewrites or withdraws it
+corrects every entry naming it. An announced revision changes nothing until the new edition is out,
+and neither a fact nor a decision citing it names a date or condition for its review.
 
 - **Change:** new decision
 - **Scope:** environment-facts, gate, task-cycle
 - **Based on:** none
 - **Relations:** derives from WAY-60@6e862c88
-- **Verification:** level 1 — invariants: gate-fact-run · fact-clock-exit · gate-exit-code. Level 2
-  for what fails a watch — an agent compares the change with the decision:
-  - complies: RFC 8259 gaining `obsoleted_by` fails the watch of the fact citing it; NIST's notice
-    that it will revise FIPS 180-4 fails nothing; the passage quoted from jsonlines.org vanishing
-    from the page fails its watch;
-  - violates: a change touching no fact fails the gate on a fact's `fail`; the clock exits zero
-    while a fact results `fail`.
+- **Verification:** level 2 — an agent compares the change with the decision:
+  - complies: RFC 8259 gaining `obsoleted_by` is found by whoever next reads the fact, who moves it
+    to the new edition and checks the entries naming it in the same change; NIST's notice that it
+    will revise FIPS 180-4 changes nothing;
+  - violates: a change touching no fact fails on a fact; a fact's sentence is rewritten while an
+    invariant resting on it is left as it was; a decision names the date of an announced revision
+    as the day to look at a fact again.
 - **Review when:** none
 - **Origin:** none
 - **Approved by:** Mariusz, 2026-10-01
 
-*Rationale:* the world changes with no commit, so in the gate of an unrelated change a fact's
-verdict would follow the date (WAY-60); the clock gives the world its own rhythm. An announced
-revision is a prediction, which belongs in *Review when* (WAY-24).
-*Rejected:* facts checked in every change's gate — the verdict follows the date; one review date
-for every fact — sources change at different paces; an announced revision failing the watch, once
-or as a standing flag — a review with no possible outcome.
+*Rationale:* the world changes with no commit, so a check of it in the gate of an unrelated change
+would give a verdict that follows the date (WAY-60). A moved source is found by whoever reads the
+fact — the author of a change resting on it, a task's return step, or the review of the foundation
+against the product, a task of the product's backlog (WAY-24) — and that change then reaches what
+rests on the fact (WAY-33).
+*Rejected:* a fact's method run on every change that enters or rewords it and by a clock on the
+main branch, its failure shown to a human — a run and a record for every fact, whose failures reach
+someone only when a person reads them; an announced revision written as a condition in *Review
+when* of the decision citing the fact — a date in an entry asks for a look nobody is sent to make
+(WAY-24).
 
 ### WAY-83/1 — Where does a human verdict stand, and how long is it in force?
 
@@ -2333,11 +2311,10 @@ verdicts would stay dead.
 ### WAY-84/1 — How is a setting that people of the product change outside its repository written?
 
 The current state of a setting that people of the product change outside its repository — who can
-open it, a host's access rule — is an environment fact whose method reads that state where it
-lives, or is re-read by the person who sets it where reading it takes their credentials. A choice
-of such a setting is a decision only where the product declares it, and that decision rests on the
-fact. A fact about the visibility of a repository the product links to names that one repository,
-and its method reads it anonymously.
+open it, a host's access rule — is an environment fact, its source the place where that state is
+shown. A choice of such a setting is a decision only where the product declares it, and that
+decision rests on the fact. A fact about the visibility of a repository the product links to names
+that one repository.
 
 - **Change:** new decision
 - **Scope:** environment-facts, decisions
@@ -2345,55 +2322,51 @@ and its method reads it anonymously.
 - **Relations:** none
 - **Verification:** level 2 — an agent compares the change with the decision:
   - complies: each repository this one links to has its own fact on whether an anonymous reader can
-    open it; a condition on who can open this repository rests on a fact its owner re-reads, with a
-    dated verdict; no decision on this repository's visibility is written, as the repository
-    declares none;
-  - violates: a probe decides the repository is private from an anonymous 404; one fact lists
-    every repository this one links to; a decision "the repository is private" is written where
-    the product declares no visibility.
+    open it; no decision on this repository's visibility is written, as the repository declares
+    none;
+  - violates: one fact lists every repository this one links to; a decision "the repository is
+    private" is written where the product declares no visibility; an anonymous 404 is taken to
+    show that a repository is private.
 - **Review when:** none
 - **Origin:** none
 - **Approved by:** Mariusz, 2026-09-29
 
-*Rationale:* such a setting changes with a click and no commit, so a method run against the world
-alone sees it move, as for a fact; where only the setter can read it, a change between re-readings
-goes unseen. A decision needs someone who chose; otherwise no commit could check it.
-*Rejected:* a field naming who sets the setting — a failed run shows without it; a decision and a
-fact for every such setting — a decision where nobody chose; a token on the clock's machine — a
-secret, and a new reason to be unchecked; a verdict from an anonymous 404 and the repository's
-`origin` — its fidelity depends on who runs it.
+*Rationale:* such a setting changes with a click and no commit, so it is a fact about the world, and
+each repository changes on its own. A decision needs someone who chose; otherwise no commit could
+check it.
+*Rejected:* a field naming who sets the setting — nothing reads it; a decision and a fact for every
+such setting — a decision where nobody chose; a method reading the setting where it lives, or a
+dated re-read by the person who sets it — a run and a record for every setting, as WAY-81 rejects
+for every fact.
 
 ### WAY-85/1 — How is a finding of a study written as an environment fact?
 
-A finding of a study stands as an environment fact recording what the study measured, in the
-version of the paper its source names, with *Holds for* naming the measured models by the dated
-identifiers the study gives, or by its own names where it gives none. That the agents of this
-process behave the same is a prediction, written in *Review when* of each decision citing the fact
-as a state a script can check, never in the fact. A decision citing a finding none of whose
-measured models the publisher of this process's models lists says in its rationale that it takes
-the finding across publishers, and carries no such state.
+A finding of a study stands as an environment fact saying what the study found, its source citing
+the version of the paper, and the models the study measured named as the study names them, in the
+sentence or in a passage its source quotes. That the agents of this process behave the same is no
+part of the fact. A decision citing a finding none of whose measured models the publisher of this
+process's models lists says in its rationale that it takes the finding across publishers.
 
 - **Change:** new decision
 - **Scope:** environment-facts, decisions
 - **Based on:** anthropic-model-states@640ad66c
 - **Relations:** none
 - **Verification:** level 2 — an agent compares the change with the decision:
-  - complies: the finding behind WAY-03 is a fact holding for arXiv:2510.20270v1 and the three
-    Claude models it measured; WAY-03's *Review when* waits for no model in that fact's range being
-    Active in Anthropic's table; WAY-69, citing a finding on another publisher's model only, says it
-    takes the finding across publishers;
-  - violates: the fact says "Claude models change tests" with no version and no models; the fact
-    carries a field saying the finding still applies to this process's agents; a decision citing a
-    finding on other publishers' models only carries a state met the day it is written.
+  - complies: the finding behind WAY-03 is a fact whose source is arXiv:2510.20270v1, quoting the
+    passage that names the three Claude models it measured; WAY-69, citing a finding on another
+    publisher's model only, says it takes the finding across publishers;
+  - violates: the fact says "Claude models change tests" with no version of the paper and no
+    models; the fact says the finding applies to this process's agents.
 - **Review when:** none
 - **Origin:** none
 - **Approved by:** Mariusz, 2026-09-26
 
 *Rationale:* what a paper measured on given models is true for good; that this process's agents
-behave the same is a bet that ages as those models leave service, and bets already have *Review
-when* (WAY-24). Named models let a script check it against the publisher's table.
-*Rejected:* the transfer as a field of the fact — a second mechanism for predictions beside WAY-24,
-and a fact no longer true or false today.
+behave the same is a bet that ages as those models leave service, so it is no fact, and the names
+of the measured models let a reader of the decision weigh it.
+*Rejected:* the transfer as a field of the fact — a fact no longer true or false today; the transfer
+as a condition in *Review when* of each decision citing the fact, which a script checks against the
+publisher's table of models — a date in an entry asks for a look nobody is sent to make (WAY-24).
 
 ### WAY-86/1 — How does a catalogue of requirements or a binding rule reach a product?
 
@@ -2426,8 +2399,8 @@ holding the product to it until a human settles otherwise makes silence raise ch
 remove them.
 *Rejected:* a field naming the kind of source — no reader until a product adopts a catalogue or
 takes on a binding rule (WAY-05); a script matching adopted requirements to facts and invariants —
-the same, and WAY-73 already catches an unnamed fact; "the rule applies" as an environment fact — a
-commit removing what the rule covers would make it false (WAY-76).
+the same, and WAY-73 already withdraws a fact nothing names; "the rule applies" as an environment
+fact — a commit removing what the rule covers would make it false (WAY-76).
 
 ### WAY-89/1 — Which version of Python do the scripts of the-way run on, and when does it move?
 
@@ -2474,8 +2447,8 @@ agents or models, the behaviour of a tool the process uses.
   - complies: the ImpossibleBench finding behind WAY-03 becomes a fact entry named in its *Based
     on* as `impossiblebench-test-modification`; a past failure a decision cites stays quoted with
     its source;
-  - violates: a precedent of how Packwerk handles its todo files becomes a fact entry with a probe;
-    a finding about models stays quoted after the element has entries.
+  - violates: a precedent of how Packwerk handles its todo files becomes a fact entry; a finding
+    about models stays quoted after the element has entries.
   Level 2 for how a citation gives its source — an agent compares the change with the decision:
   - complies: a paper's finding is quoted with the edition's address, the place and passage, and
     the date read;
@@ -2488,10 +2461,10 @@ agents or models, the behaviour of a tool the process uses.
 from which the search of whoever changes the fact finds the decision (WAY-33); a precedent, a past
 event or a finding about people with no lapse date leads to nothing. The address, the passage and
 the date let a reader find what the decision rests on and see whether it still says so.
-*Rejected:* every citation as an entry — many entries with methods nobody runs; a fact named with
-its fingerprint, renewed when the fact changes — the author's search finds the decision without it
-(WAY-31); the partners of the part map's external context as linked facts — a new link with no
-known consumer.
+*Rejected:* every citation as an entry — many entries whose change would call no decision into
+question, each a second copy of its quote; a fact named with its fingerprint, renewed when the fact
+changes — the author's search finds the decision without it (WAY-31); the partners of the part
+map's external context as linked facts — a new link with no known consumer.
 
 ### WAY-93/1 — Where do glossary entries stand, and what identifies one?
 
@@ -6485,15 +6458,15 @@ of lessons is a register of rules beside the foundation, which takes a rule only
 entries (WAY-04). What an instruction file holds is set by what every session needs (WAY-128), not
 by a count of bytes. Sheets of facts describe what the code holds, which an agent reads in the code
 itself, and guidelines copy no value from the code (WAY-171). The gate knows no result that only
-warns (WAY-63). An audit of the whole tree of dependencies apart from any change would run by the
-clock, which runs the methods of environment facts (WAY-82), while a product's change is audited for
-what it brings (WAY-206). The threshold of severity is a product's own choice, every severity
-among the ways (WAY-206). From the study, style blocks a change too, because a remark on style never
-blocks in the review of code (WAY-161) and the human does not judge style; fixing every instance
-across the code before a check is turned on would grow the task that brings a linter into cleaning
-the whole product, and the pair of invariants of WAY-205 replaces it; a check that sometimes blocks
-sound code could be passed only by changing a decision. What was seen in those sources is described
-here as well as quoted, so a reader need not open them (WAY-27).
+warns (WAY-63). An audit of the whole tree of dependencies apart from any change would run by a
+clock, while a product's change is audited for what it brings (WAY-206). The threshold of severity
+is a product's own choice, every severity among the ways (WAY-206). From the study, style blocks a
+change too, because a remark on style never blocks in the review of code (WAY-161) and the human
+does not judge style; fixing every instance across the code before a check is turned on would grow
+the task that brings a linter into cleaning the whole product, and the pair of invariants of WAY-205
+replaces it; a check that sometimes blocks sound code could be passed only by changing a decision.
+What was seen in those sources is described here as well as quoted, so a reader need not open them
+(WAY-27).
 *Rejected:* Open Mercato's practices taken whole — its review, lessons and limits on instruction
 files would bind every product; its steps followed with no decision naming them — an adopted step
 and a resemblance could not be told apart (WAY-100); the content of each piece restated here beside

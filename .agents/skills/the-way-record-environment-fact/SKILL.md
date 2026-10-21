@@ -1,6 +1,6 @@
 ---
 name: the-way-record-environment-fact
-description: Use when a product's environment facts file, foundations/environment_facts.md, has to gain or change an entry — a fact an invariant's Rests on or a decision's Based on needs, a citation whose change would send its decision to review, a fact a task's return step found, a failed run of a fact's method, a fact shown false or left with nothing resting on it, or a fact a project definition projects. Use this checkout's own the-way.
+description: Use when a product's environment facts file, foundations/environment_facts.md, has to gain or change an entry — a fact an invariant's Rests on or a decision's Based on needs, a citation whose change would call its decision into question, a source a task's return step found, a source that no longer says what its fact says, a fact shown false or left with nothing resting on it, or a fact a project definition projects. Use this checkout's own the-way.
 ---
 
 # the-way-record-environment-fact

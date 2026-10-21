@@ -592,6 +592,17 @@ class FoundationCheckTest(unittest.TestCase):
         self.assertFails(self.run_on(foundations__decisions_dot_md=decisions),
                          "foundations/decisions.md:18: `clock-tock` names no fact")
 
+    def test_fact_in_the_form_without_version_is_named_by_identifier_alone(self):
+        # the form the environment facts template gives: a heading with no version, the sentence
+        # and *Source*
+        facts = self.edit(FACTS, "## clock-tick/1\n", "## clock-tick\n")
+        invariants = self.edit(INVARIANTS, "- **Rests on:** clock-tick@0123abcd",
+                               "- **Rests on:** clock-tick")
+        decisions = self.edit(DECISIONS, "- **Based on:** none\n", "- **Based on:** clock-tick\n")
+        self.assertPasses(self.run_on(foundations__environment_facts_dot_md=facts,
+                                      foundations__invariants_dot_md=invariants,
+                                      foundations__decisions_dot_md=decisions))
+
     def test_test_cites_no_fact(self):
         tests = self.edit(FILES["tests/test_saving.py"], "fact: clock-tick/1", "fact: clock-tock/1")
         self.assertFails(self.run_on(tests__test_saving_dot_py=tests),
