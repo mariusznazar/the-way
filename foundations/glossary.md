@@ -1,7 +1,7 @@
 # Glossary
 
-The words of the process, each in one meaning: every word a binding part of the-way's foundation or a
-rule of an element's template uses in a meaning that a reader who knows the field would not give it.
+The words of the process, each in one meaning: every word that means in the-way something other than
+a reader who knows the field takes it to mean.
 A product takes these words from the-way at the commit it pins (WAY-95).
 
 ## agent's way to the running product

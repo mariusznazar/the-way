@@ -2496,45 +2496,38 @@ known consumer.
 ### WAY-93/1 — Where do glossary entries stand, and what identifies one?
 
 Glossary entries stand in one file, `foundations/glossary.md`, each under its term as the foundation
-writes it in running text, which no other entry there holds. Terms are a space of their own, and a
-change that makes a term read like an identifier of the part map, the invariants or the environment
-facts is a warning, after which one side is renamed where the two name different things; in the-way,
-a term that names an element raises none against the part whose files include
-`elements/<identifier>/`. The file opens with a title and a paragraph saying what it holds, and holds
-no other heading than its entries.
+writes it in running text, which no other entry there holds. The file opens with a title and a
+paragraph saying what it holds, and holds no other heading than its entries.
 
 - **Change:** new decision
-- **Scope:** glossary, part-map, invariants, environment-facts
+- **Scope:** glossary
 - **Based on:** none
 - **Relations:** narrows WAY-02@3ffcbd46
-- **Verification:** level 1 — invariants: glossary-file · glossary-file-sections · glossary-term-holder
-  · glossary-term-collision. Level 2 for what follows the warning — an agent compares the change with
+- **Verification:** level 1 — invariants: glossary-file · glossary-file-sections ·
+  glossary-term-holder. Level 2 for the term heading its entry — an agent compares the change with
   the decision:
-  - complies: a new term "repository" raises the warning against a part `repository` meaning
-    something else, and one is renamed; the term "part map" raises none against the part `part-map`;
-  - violates: the warning on "repository" is cleared as the same thing because the names are spelt
-    alike; a renamed term keeps its entry under the new word while the old word stays usable.
+  - complies: the entry of "part map" is headed `## part map`, as the foundation writes the term;
+  - violates: an entry is headed by an identifier of the concept apart from its word; a term heads
+    two entries of the file.
 - **Review when:** none
 - **Origin:** none
 - **Approved by:** Mariusz, 2026-09-29
 
 *Rationale:* a sentence depends on a term by its word (WAY-94), so the word as the text writes it
-heads the entry. A term and an identifier that read alike still meet in the text, so the change
-bringing them together is shown once, when the name is chosen.
+heads the entry, and one entry per term gives each word one meaning to read.
 *Rejected:* terms in the shared space of identifiers (WAY-64) — a word a part takes would stay
-undefined; an identifier of the concept apart from its word — names no reader uses; the warning for
-every part named after its element — every *Scope* and *Part* value naming one renamed; a warning at
-every run of the guard — people learn to ignore it; a list of withdrawn terms — *Avoid* already holds
-the old word.
+undefined; an identifier of the concept apart from its word — names no reader uses; a warning where
+a term and an identifier of the part map, the invariants or the environment facts read alike, with
+one side renamed where they name different things — a term and an identifier name things in
+different places of a sentence, and a word with two meanings in the foundation is renamed as WAY-99
+says; a list of withdrawn terms — git keeps the earlier entries.
 
 ### WAY-94/1 — What does a glossary entry hold, and what is its binding part?
 
-A glossary entry holds one definition of its term and two fields: *Avoid*, each other word for what
-the term names with what it is confused with — the term's last word standing for the whole term is
-no other word — and *Not*, each meaning the word carries or carried in the files of `foundations/`,
-the elements' templates and the part the elements share, besides its definition and a meaning a
-reader who knows the product's field gives it, with what carries it. The definition is the binding
-part, and a sentence depends on a term by using its word, carrying no fingerprint.
+A glossary entry holds one definition of its term and one field, *Not*: each meaning the word
+carries or carried in the files git tracks, besides its definition and a meaning a reader who knows
+the product's field gives it, with what carries it. The definition is the binding part, and a
+sentence depends on a term by using its word, carrying no fingerprint.
 
 - **Change:** new decision
 - **Scope:** glossary, relation-model
@@ -2542,186 +2535,154 @@ part, and a sentence depends on a term by using its word, carrying no fingerprin
 - **Relations:** narrows WAY-02@3ffcbd46 · derives from WAY-04@29a75d2c
 - **Verification:** level 1 — invariants: glossary-entry-field-presence · glossary-entry-field-words.
   Level 2 for the binding part — an agent compares the change with the decision:
-  - complies: an invariant's sentence uses "verdict" with no fingerprint, and a changed definition of
-    "verdict" lists it for review;
-  - violates: a sentence cites the term as `verdict@<fingerprint>`; a changed *Avoid* is treated as a
+  - complies: an invariant's sentence uses "verdict" with no fingerprint, and the author of a
+    changed definition of "verdict" finds it by searching for the word;
+  - violates: a sentence cites the term as `verdict@<fingerprint>`; a changed *Not* is treated as a
     change to the entry's binding part.
 - **Review when:** none
 - **Origin:** none
 - **Approved by:** Mariusz, 2026-10-01
 
 *Rationale:* a fingerprint at every use would flag, at each changed definition, every sentence using
-a common term — flags people clear unread (WAY-02) — so a changed definition's uses are reviewed
-instead (WAY-97). A term's last word is the term shortened, and banning it would ban the term's own
-uses.
-*Rejected:* *Avoid* and *Not* in the binding part — they change mechanically and no dependant reads
-them; a reader's meaning in *Not* — the reader brings it along; a field of neighbouring words — the
-definitions carry the difference (WAY-96); a field of forms the endings miss — it makes a second word
-legal and empties *Avoid*; worked examples run as tests, an area of meaning, broader and narrower
-terms, an allowed synonym, a list of uses, the code's name for a term — nothing reads them, or they
-are computed; a field for a definition's source or the decision that set it — no entry needs one.
+a common term — flags people clear unread (WAY-02) — so the author of a changed definition searches
+for the word instead (WAY-97).
+*Rejected:* *Not* in the binding part — it changes mechanically and no dependant reads it; *Avoid*,
+the other words for what the term names — a field kept for words nobody lists; a reader's meaning
+in *Not* — the reader brings it along; a field of neighbouring words — the definitions carry the
+difference; worked examples run as tests, an area of meaning, broader and narrower terms, an allowed
+synonym, a list of uses, the code's name for a term — nothing reads them, or they are computed; a
+field for a definition's source or the decision that set it — no entry needs one.
 
 ### WAY-95/1 — Which words take a glossary entry, and in which glossary?
 
-A word takes a glossary entry when it stands in the binding part of an entry of the foundation or in
-the rules of an element's template or of the part the elements share, and at least one of its uses
-in the files of `foundations/`, the elements' templates and the part the elements share carries a
-meaning a reader who knows the product's field would not give it; an agent that meets such a word in
-its work — writing an entry, searching the foundation, comparing it with the code — writes its
-entry, no sweep of every binding sentence looks for candidates, and a human accepts the meaning
-(WAY-114). A word's definition stands in the glossary alone, and a closed list of values a guard
-reads stays in its template with what each value means. The glossary of the-way holds the words of
-the process, and a product's glossary holds the words of its domain; a product takes the words of
-the process from the-way at the commit it pins and defines none of them again, and in the-way, whose
-product is the process, the two are one file.
+A word takes a glossary entry when it means, in the product, something other than a reader who knows
+the product's field takes it to mean; an agent that meets such a word in its work — writing an
+entry, searching the foundation, in a task's return step — writes its entry, no sweep of every
+binding sentence looks for candidates, and a human accepts the meaning (WAY-114). The glossary of
+the-way holds the words of the process, and a product's glossary holds the words of its domain; a
+product takes the words of the process from the-way at the commit it pins and defines none of them
+again, and in the-way, whose product is the process, the two are one file.
 
 - **Change:** new decision
 - **Scope:** glossary, decisions, invariants, part-map, environment-facts
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 1 — invariants: glossary-term-use · glossary-process-terms. Level 2 for
-  which words take an entry, where a definition stands and which glossary holds it — two uses carry
-  two meanings when a definition true of one is false of the other, a noun naming one occurrence of
-  what its verb does, or what does it, carries the verb's meaning, a word naming what a kind of
-  entry records names the entry that records it too, and a word naming what a rule computes keeps
-  the meaning a reader of the field gives it; an agent compares the change with the decision:
-  - complies: "clock", used for a command and for a deadline, takes an entry with one meaning;
-    "digest", used only as SHA-256 uses it, takes none; "run", used for running a command and for
-    text running across lines, takes none; "critical flow" names the flow and its entry of the part
-    map with one meaning; "criticality", computed for a part by a rule of the part map, takes none;
-    the kinds of change of a decision stay defined in the decision template; a word used plainly and
-    for a term becomes the term or has its other uses rewritten; a game's glossary
-    defines "level" and uses "verdict" as the glossary of the-way defines it at the pinned commit;
-  - violates: every noun of the decision log takes an entry; a decision defines a term in its
-    binding sentence while the glossary holds another definition; the glossary defines "criticality"
-    by the rule that computes it; a word takes an entry for its plain meaning only, to hold its
-    *Not*; a game's glossary gives "verdict" a definition of its own; the glossary of the-way
-    defines "level" as the game uses it.
+- **Verification:** level 1 — invariants: glossary-process-terms. Level 2 for which words take an
+  entry and which glossary holds it — an agent compares the change with the decision:
+  - complies: "clock", used for a command run apart from any change, takes an entry; "digest", used
+    only as SHA-256 uses it, takes none; "run", used for running a command and for text running
+    across lines, takes none; a game's glossary defines "level" and uses "verdict" as the glossary
+    of the-way defines it at the pinned commit;
+  - violates: every noun of the decision log takes an entry; an agent reads every binding sentence
+    of the foundation for candidates before it writes an entry; a game's glossary gives "verdict" a
+    definition of its own; the glossary of the-way defines "level" as the game uses it.
 - **Review when:** none
 - **Origin:** none
 - **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/4
 
 *Rationale:* a glossary of every relevant word grows without bound, kept by memory, while a word
-used as the field uses it needs no entry. A definition stands once because copies drift, between
-products too; a closed list's values mean the rule their guard applies, so they stay beside it.
+used as the field uses it needs no entry. A word whose meaning is unclear shows where an agent works
+with it. A definition of a word of the process stands once, in the-way, because copies drift
+between products.
 *Rejected:* every term relevant to the system — no bound; a word defined where it is used, when used
 in one place — nearly nothing is; a script counting places — it cannot tell a definition from
-another sentence; a meaning new to the product as the test — the reader's meaning already catches a
-coined word; a sweep of every binding sentence for candidates with each entry written — a ritual
-every change pays for, while a word whose meaning is unclear shows where an agent works with it.
+another sentence; a sweep of every binding sentence for candidates with each entry written — a
+ritual every change pays for; a word's definition moved out of every sentence that says what it is,
+into the glossary — a rewrite of sentences the reader already understands; every term with a use
+outside the glossary checked at the merge — a check of the glossary's bookkeeping, not of what a
+word means.
 
 ### WAY-96/1 — How is a glossary definition written?
 
-A glossary definition is one sentence in the present tense with no normative word, shaped for a noun
-as "<term> is <genus> that <difference>" and for a verb or an adjective as "<subject> is <term> when
-<condition>", and its genus is no term of the glossary in another meaning. It says what the word
-means and holds no rule about what the word names, and where two terms name neighbouring things, the
-definition of one uses the other.
+A glossary definition is one sentence.
 
 - **Change:** new decision
 - **Scope:** glossary
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 1 — invariants: glossary-definition-count · glossary-definition-words.
-  Level 2 for the shape, the rule and neighbouring terms — a definition carries a rule when it holds
-  something the decision or invariant setting it could change while the word went on naming the same
-  thing; an agent compares the change with the decision:
-  - complies: "The assessor is the agent that assesses a change", the rest left to WAY-10;
-    the definition of result names its neighbour: "the verdict that counts for it there, or …";
-  - violates: "The assessor is the agent on another model that assesses a change…", with the
-    model rule WAY-10 sets;
-    "The binding part is the part of an entry that…", its genus a term of the part map; the
-    definitions of verdict and result each standing alone.
+- **Verification:** level 1 — invariants: glossary-definition-count. Level 2 — an agent compares the
+  change with the decision:
+  - complies: "The clock is the command that, unlike the gate, runs checks apart from any change.";
+  - violates: a definition of two sentences, the second telling what the clock checks.
 - **Review when:** none
 - **Origin:** none
 - **Approved by:** Mariusz, 2026-09-27
 
-*Rationale:* a genus that is a term in another meaning brings the homonym back; a rule inside a
-definition changes it whenever the rule moves and sends the review of uses after what is a
-decision's change; neighbouring terms stay apart only where one definition says how they differ.
-*Rejected:* a phrase replacing the term, with no article or full stop — the count would count
-something other than sentences; a rule told by a number, a date or a list — a place or a party
-passes it; a rule told by putting the definition into the sentence setting the rule — that sentence
-repeats what the thing does; a field naming neighbouring terms — the definitions carry it.
+*Rationale:* a definition of one sentence is read whole beside every use of its word.
+*Rejected:* a fixed shape — the present tense with no normative word, "<term> is <genus> that
+<difference>" for a noun, no rule about what the word names, a neighbouring term named in the
+definition — a test every definition goes through, while the human accepting the entry reads its
+meaning; a phrase replacing the term, with no article or full stop — the count would count
+something other than sentences; a field naming neighbouring terms — nothing reads it.
 
 ### WAY-97/1 — How does a sentence rely on a glossary term, and what does a change to a definition go through?
 
-A sentence of a foundation entry that speaks of what a glossary term defines uses the term, never a
-paraphrase of its definition, and a term whose definition holds a word an invariant's sentence may
-not hold enters such a sentence only where the request names it for the human who accepts the change
-at the merge. A glossary entry carries no version and is edited in place, and every change to a
-definition goes, in the same change, through a review in which an agent puts the new definition in
-place of the word in every use the guard lists and every other form it finds, and reports each use
-whose meaning moves to the human accepting the change at the merge. A term used by an entry on the
-main branch keeps its meaning, and a new meaning takes a new word.
+A sentence relies on a glossary term by using its word. A glossary entry carries no version and is
+edited in place, its meaning included, and the author of a change to a definition searches, in the
+same change, the texts that use the word and rewrites each use whose meaning the new definition
+moves.
 
 - **Change:** new decision
 - **Scope:** glossary, decisions, invariants, part-map, environment-facts, elements-common
 - **Based on:** none
-- **Relations:** narrows WAY-02@3ffcbd46 · narrows WAY-60@6e862c88
-- **Verification:** level 1 — invariants: glossary-entry-version · glossary-definition-uses. Level 2
-  for the review, a new meaning and a paraphrase — an agent compares the change with the decision:
-  - complies: the definition of "verdict" is reworded, the guard lists its uses, and the agent
-    reports that none moves; after the main branch, a second sense of "gate" takes a new word; "The
-    clock exits non-zero when some fact's result is `fail` or `error`";
-  - violates: a definition is reworded as a mere fix and no uses are looked at; after the main
-    branch "verdict" widens under an invariant's unchanged sentence and version; "The command that,
-    unlike the gate, runs checks apart from any change exits non-zero when …", spelling out "clock".
+- **Relations:** narrows WAY-02@3ffcbd46
+- **Verification:** level 1 — invariants: glossary-entry-version. Level 2 for the uses of a changed
+  definition — an agent compares the change with the decision:
+  - complies: the definition of "verdict" is reworded, its author searches every file git tracks
+    for the word and its forms, and rewrites, in the same change, the two sentences whose meaning
+    moves;
+  - violates: a definition is reworded and no uses are looked at; a use whose meaning moved is left
+    for a later change.
 - **Review when:** none
 - **Origin:** none
 - **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/4
 
-*Rationale:* a sentence relies on a term by its word, which the review searches for, so a paraphrase
-hides a dependant, and a term can hide from an invariant's guard a word its sentence may not hold.
-On the main branch, a moved definition would silently change what tests check.
-*Rejected:* a version as for invariants and facts — nothing reads it; a review only of a declared
-new meaning — the line is a judgment every time; impact analysis by a model alone — nobody knows
-what it missed (WAY-02); a record of the review checked by the guard — it sees only that a record
-exists; after the main branch, the old entry withdrawn for a new one — old entries read in the new
-meaning; a fingerprinted link from such an invariant to the entry — the word already reaches it.
+*Rationale:* a sentence relies on a term by its word, so a search for the word finds the sentences
+a changed meaning reaches, and the author who changed the meaning knows what moved. The review of
+the change, by an agent that did not make it (WAY-10), and the human at the merge see the changed
+definition and the rewritten sentences in one diff.
+*Rejected:* a version as for invariants and facts — nothing reads it; a review of every use by
+another agent, putting the new definition in place of the word — a second reading of what the
+author has just searched; a term used on the main branch keeping its meaning, a new meaning taking
+a new word — a word stays bound to a meaning the product no longer has; a sentence barred from
+spelling out a term's definition — every sentence of every entry read against every definition, by
+hand; a term whose definition holds a word an invariant's sentence may not hold named in
+the request — the rule on that word stays with the invariant; impact analysis by a model alone —
+nobody knows what it missed (WAY-02).
 
 ### WAY-98/1 — Where is a word of a glossary entry's *Avoid* an error?
 
-A word stands in a glossary entry's *Avoid* only where every use of it in the files of `foundations/`,
-the elements' templates and the part the elements share carries the term's meaning, and it is an error where a change makes it
-stand more times in such a file than on the commit the task branch left the main branch from. What a use
-of a term leaves out (WAY-97), text in quotation marks, an identifier of the part map, the invariants
-or the environment facts standing in a field's value, the glossary's entries and text a new decision
-version restates word for word are not counted.
+A glossary entry holds no *Avoid*: no word is kept out of the foundation as another word for a term,
+and no count of a word's uses against the commit the task branch left the main branch from is an
+error.
 
 - **Change:** new decision
 - **Scope:** glossary, decisions, invariants, part-map, environment-facts
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 1 — invariants: glossary-avoid-growth · glossary-avoid-single ·
-  glossary-avoid-term · glossary-avoid-carrier · glossary-not-quoted-word. Level 2 for what may stand
-  in *Avoid* — an agent compares the change with the decision:
-  - complies: "checker", whose every use names the format guard, stands in that term's *Avoid*; a
-    paragraph holding it is rewrapped and the guard stays quiet;
-  - violates: "run" stands in an *Avoid* though the foundation also runs commands; "main branch", kept
-    out of an invariant's sentence only, is put into an *Avoid*.
+- **Verification:** level 2 — an agent compares the change with the decision:
+  - complies: an entry of the glossary holds its definition and *Not*; a change that writes
+    "checker" for the format guard is read by its review like any other word;
+  - violates: an entry lists other words for its term; a change fails because a word stands more
+    times in a file than on the commit its branch left from.
 - **Review when:** none
 - **Origin:** none
 - **Approved by:** Mariusz, 2026-09-29
 
-*Rationale:* a synonym comes back in whatever the next author writes, so every file is counted; a
-word with another correct meaning cannot be banned without that meaning. Counts per file survive
-rewrapping. Quotes, names and restated sentences are not uses, and the count skips what the list of
-uses skips.
-*Rejected:* the binding parts alone — a synonym in a rationale teaches the next author; added lines —
-every rewrap errs; a word banned from one kind of sentence moved into *Avoid* — "main branch" is
-right outside an invariant's sentence; a word in two *Avoid* lists, or one that is also a term — the
-guard would give two answers; a ratcheted list of old occurrences — the counts per file stand in for
-it.
+*Rationale:* a word kept out as a synonym is rarely named in advance, so the field stays empty while
+each entry carries it and a guard counts it; a synonym that confuses a reader shows where an agent
+works with the word, as any other unclear word does (WAY-95).
+*Rejected:* *Avoid* counted in every file against the commit the task branch left the main branch
+from — a field and a count kept for words nobody lists.
 
 ### WAY-99/1 — How does one word keep one meaning in the foundation?
 
-Where a word carries two meanings in the files of `foundations/`, the elements' templates and the
-part the elements share and one of them is a meaning a reader who knows the product's field would not give it, one of the two is
-renamed wherever those files may still be edited, and the glossary entry of the word names in *Not*
-each such meaning it no longer carries, with the term, identifier, closed-list value or quoted word —
-holding neither the term nor its forms — that carries it now. A meaning whose word a human has not yet chosen reads `TODO` in *Not*, which a task
-branch may hold and the main branch never does.
+Where a word carries two meanings in the files git tracks and one of them is a meaning a reader who
+knows the product's field would not give it, one of the two is renamed, and the glossary entry of
+the word names in *Not* each such meaning it no longer carries, with the term, identifier,
+closed-list value or quoted word — holding neither the term nor its forms — that carries it now. A
+meaning whose word a human has not yet chosen reads `TODO` in *Not*, which a task branch may hold
+and the main branch never does.
 
 - **Change:** new decision
 - **Scope:** glossary, decisions, invariants, part-map, environment-facts
@@ -2740,7 +2701,7 @@ branch may hold and the main branch never does.
 
 *Rationale:* a sentence a test cites carries its words as they stand, so a word read in two meanings
 makes it true and false at once. A carrier holding the word itself would keep the homonym under a
-new label. The word is the human's choice, accepted at the merge (WAY-10).
+new label. The word is the human's choice, accepted at the merge (WAY-114).
 *Rejected:* two meanings told apart by an area — the sentence carries no area; a note beside the
 word — nobody citing the sentence reads it; renaming two meanings a reader of the field tells apart —
 neither is the product's own; a *Not* that always names a word — the author would choose before the
@@ -2854,24 +2815,20 @@ the last word of a term it holds, in any of its forms, is written in the files o
 `foundations/` with a qualifier — a phrase holding the word — and the bare word keeps there the
 meaning of the process; the qualified word takes a glossary entry only where WAY-95 gives a word
 one, and where the bare word itself has an entry in the glossary of the-way, that entry records no
-*Not* for its domain meaning. The *Avoid*
-of an entry of the product's glossary holds such a word only with a qualifier. The product's code,
-its interface and talk about the product use the word of the domain unchanged.
+*Not* for its domain meaning. The product's code, its interface and talk about the product use the
+word of the domain unchanged.
 
 - **Change:** new decision
 - **Scope:** glossary, decisions, invariants, part-map, environment-facts
 - **Based on:** none
-- **Relations:** derives from WAY-95@455377de · derives from WAY-98@94371030 ·
-  narrows WAY-99@7d44dfd7
+- **Relations:** derives from WAY-95@455377de · narrows WAY-99@7d44dfd7
 - **Verification:** level 1 — invariants: glossary-process-terms. Level 2 for how the sentences of
   a product's foundation, its code and its interface write the word — an agent compares the change
   with the decision:
   - complies: a game's invariants say "game clock" for the timer of a match, and a factory's say
     "assembly step" for an operation, while their code and interfaces use `Clock` and "Step";
-    a game's glossary entry "game clock" lists "match clock" in *Avoid*;
   - violates: a game's invariant says "clock" for the timer of a match or a factory's says "step"
-    for an operation; a game's glossary defines "clock" as the timer of a match, or an entry
-    "lab result" lists "fact", the last word of "environment fact", in *Avoid*.
+    for an operation; a game's glossary defines "clock" as the timer of a match.
 - **Review when:** none
 - **Origin:** none
 - **Approved by:** Mariusz, 2026-10-04
@@ -2883,12 +2840,7 @@ product keep the words of its domain, since the rule protects the reading of the
 A product cannot edit the glossary of the-way, so the *Not* that WAY-99 asks of the word's entry has
 nowhere to stand, and a phrase holding the word, which WAY-99 refuses as a carrier, here keeps the
 word of the field recognizable. A term's last word can stand for the process term in short form, so
-the qualifier also keeps a domain use of that word apart. A word of *Avoid* counts as an error at
-every use WAY-98 counts, whatever meaning the use carries, so the bare word in a product's *Avoid*
-would bar the meaning of
-the process that the bare word keeps; the last word of a term of the-way, such as "fact" for
-"environment fact", stands for the whole term (WAY-94), so in a product's *Avoid* it would bar that
-term's short form in the same way.
+the qualifier also keeps a domain use of that word apart.
 *Rejected:* the bare word of the process in a product's glossary, its meaning of the domain marked
 beside it and reported as a warning rather than an error — one word carries two meanings in the
 repository, and whoever reads the foundation tells at every use which one it carries; the words of
@@ -2897,8 +2849,7 @@ for the domain — a plain word in a product's sentence may still carry either m
 keeps nothing apart, and every entry of the-way is rewritten to it; a word holding neither the word
 of the process nor its forms, as WAY-99 asks of a carrier — for words the field uses daily, such as
 "part", "entry" or "result", the foundation drifts from the words the product's people and code use;
-the bare word in a product's *Avoid*, its uses in the meaning of the process left out of the count —
-no count tells one meaning of a word from another; qualifying a domain word only when it is a whole
+qualifying a domain word only when it is a whole
 process term — a short use of a multiword term can still collide with the domain meaning.
 
 ### WAY-105/1 — Which check reports an invariant whose command runs a script that does not exist, and how is that script read?
