@@ -127,7 +127,6 @@ def fingerprint_of(bodies=None):
 def definition(bodies=None, gate_fingerprint=None, status="Status: approved 2026-10-03"):
     content = body_text(definition_bodies(bodies), DEFINITION_SECTIONS)
     gate = ("- Approved by: Mariusz, 2026-10-03\n"
-            "- Foundation searched at: 595f839\n"
             "- Definition fingerprint: %s" % (gate_fingerprint or wording_fingerprint(content)))
     return "# Pierwsza mapa\n\n%s\n\n%s\n\n## Gate record\n\n%s\n" % (status, content, gate)
 

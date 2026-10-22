@@ -89,7 +89,7 @@ class CodingGuidelinesInstallationTest(unittest.TestCase):
         self.assertTrue(wrapper.startswith(
             f"---\nname: {NAME}\ndescription: {description} "
             "Use this product's pinned the-way commit.\n---\n"), wrapper)
-        self.assertIn(f"Its commit is `{self.commit}`", wrapper)
+        self.assertNotIn(self.commit, wrapper)
         self.assertIn(f"Read `.the-way/{SKILL_SOURCE}` in full and follow it.", wrapper)
         self.assertIn(f"If `.the-way/{SKILL_SOURCE}` is absent", wrapper)
         siblings = [path for directory in (".claude", ".agents")

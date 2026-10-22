@@ -362,9 +362,9 @@ Every subprocess the plan-state reader starts runs Git.
 | gate-fork-point-evidence | withdrawn: a recovered invariant names in *Derives from* the place in the code that shows it, with no run on the older commit (WAY-58) | none |
 | gate-method-order | withdrawn: an invariant's method is a test of the product's suite, which reads no other method's run (WAY-61) | none |
 | gate-unchecked-reason | withdrawn: the invariants template keeps no closed list of reasons for `unchecked` (WAY-63) | none |
-| gate-missing-script | withdrawn: an invariant's method names no command and no script (WAY-105) | none |
+| gate-missing-script | withdrawn: an invariant's method names no command and no script (WAY-61) | none |
 | gate-quarantine-result | withdrawn: a test giving different verdicts on one commit is fixed as any test is, with no quarantine (WAY-68) | none |
-| fact-verdict-citation | withdrawn: an environment fact names no method, and no check cites it (WAY-81) | none |
+| fact-verdict-citation | withdrawn: an environment fact names no method, and no check cites it (WAY-82) | none |
 | gate-fact-run | withdrawn: no check of an environment fact runs on a change (WAY-82) | none |
 | fact-clock-exit | withdrawn: no clock runs the checks of environment facts (WAY-82) | none |
 | map-fingerprint-input | withdrawn: a reference names an entry of the part map by its identifier alone, and no fingerprint is computed for it (WAY-42) | none |
@@ -374,14 +374,14 @@ Every subprocess the plan-state reader starts runs Git.
 | decision-guard-stale-reference | withdrawn: a reference names an entry by its identifier alone, with no fingerprint for a guard to compare with the current wording (WAY-02) | none |
 | gate-check-source | withdrawn: no program picks checks from the methods written in the entries; one command runs all of a product's tests (WAY-16) | none |
 | gate-boundary-change | withdrawn: no program picks the checks of a change; a change touching the files of a trust boundary is checked for crafted input and reviewed for that risk (WAY-48) | none |
-| gate-verdict-per-entry | withdrawn: no run records a verdict for each entry; an invariant's result is the outcome of the tests citing it (WAY-63, WAY-74) | none |
+| gate-verdict-per-entry | withdrawn: no run records a verdict for each entry; an invariant's result is the outcome of the tests citing it (WAY-63) | none |
 | gate-pass-without-verdict | withdrawn: no program reports a result for each invariant; a run in which no test citing an invariant ran gives it no pass (WAY-61, WAY-63) | none |
 | change-reach | withdrawn: no program finds the invariants a change reaches; the agent making the change reads them (WAY-62) | none |
 | gate-result-values | withdrawn: no program reports a result for each invariant; an invariant's result is `pass` or `fail` from the tests citing it (WAY-63) | none |
 | gate-reported-set | withdrawn: no program reports a result for each invariant a change reaches; every test runs on every change (WAY-16, WAY-63) | none |
-| run-record-form | withdrawn: the-way keeps no record of a run of its own (WAY-74) | none |
-| run-record-lines | withdrawn: the-way keeps no record of a run of its own (WAY-74) | none |
-| test-runner-pass-line | withdrawn: the test runner records no verdict for each invariant a test cites; its exit code says whether a test failed (WAY-63, WAY-74) | none |
+| run-record-form | withdrawn: the-way keeps no record of a run of its own; the command running the tests exits non-zero when a test fails (WAY-63) | none |
+| run-record-lines | withdrawn: the-way keeps no record of a run of its own; the command running the tests exits non-zero when a test fails (WAY-63) | none |
+| test-runner-pass-line | withdrawn: the test runner records no verdict for each invariant a test cites; its exit code says whether a test failed (WAY-63) | none |
 | log-reference-target | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
 | binding-sentence-count | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
 | binding-sentence-words | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |

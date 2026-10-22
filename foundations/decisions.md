@@ -230,17 +230,17 @@ skills share, the script that checks a foundation, the script that migrates a fo
 earlier form, and the skills that find entries and that critique proposals; `project-level/` the
 templates of a project definition, a project plan and a task document, the skills that write them
 and lead a handed-over plan, the readiness check, the plan check, the reader of task-cycle evidence
-for plan states and their tests; `relation-model/` the script that computes fingerprints; `gate/`
-the test of every critical flow in the part map; `installation/` the installer, its tests and a
-README explaining how a product uses the pinned version; `agent-instructions/` the instructions for
-agents working on this repository, led to from the root agent instruction files;
-`instruction-files/` the principles of instruction files for coding agents, the account of how the
-tools load them, the skill that applies them, and the script that checks instruction files with its
-tests; `product-guidelines/` the template that the guidelines of every product share, for each
-discipline of work whose guidelines the-way gives a template of, that template with the skill that
-leads the work on them; `task-cycle/` what the design of the task cycle sets, and until then it
-does not reach the main branch. The entries in `foundations/` are checked by
-`elements/common/foundation_check.py`.
+for plan states and their tests; `relation-model/` the script that computes the fingerprint of a
+project definition; `gate/` the command that runs every test, with its tests, and the test of every
+critical flow; `installation/` the installer, its tests and a README explaining how a product uses
+the pinned version; `agent-instructions/` the instructions for agents working on this repository,
+led to from the root agent instruction files; `instruction-files/` the principles of instruction
+files for coding agents, the account of how the tools load them, the skill that applies them, and
+the script that checks instruction files with its tests; `product-guidelines/` the template that the
+guidelines of every product share, for each discipline of work whose guidelines the-way gives a
+template of, that template with the skill that leads the work on them; `task-cycle/` what the design
+of the task cycle sets, and until then it does not reach the main branch. The entries in
+`foundations/` are checked by `elements/common/foundation_check.py`.
 
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common,
   relation-model, gate, installation, agent-instructions, instruction-files, repository,
@@ -254,41 +254,41 @@ does not reach the main branch. The entries in `foundations/` are checked by
   decision:
   - complies: code two skills of the elements share moves into `elements/common/`, and both read it
     from there; a new rule of form for the entries in `foundations/` is checked by
-    `elements/common/foundation_check.py`; the installer, its tests and instructions stand together in `installation/`; the templates of a
-    definition, a plan and a task document, the skills that write them and the checks of a
-    definition and a plan stand in `project-level/`; the agent instructions
-    have their own part and root entry points; the project skill entry points under
+    `elements/common/foundation_check.py`; the installer, its tests and instructions stand together
+    in `installation/`; the templates of a definition, a plan and a task document, the skills that
+    write them and the checks of a definition and a plan stand in `project-level/`; the agent
+    instructions have their own part and root entry points; the project skill entry points under
     `.claude/skills/` and `.agents/skills/` stand at the root as files of `agent-instructions`, and
     the script that generates them stands with its test in `agent-instructions/`; the principles,
     the loading account, the skill and the check script of instruction files stand together in
     `instruction-files/`; the template of guidelines and the template and the skill of the
     styleguide discipline stand together in `product-guidelines/`;
   - violates: a `tools/` directory for shared scripts reaches the main branch; a new element comes
-    with a format guard of its own beside `elements/common/foundation_check.py`; `task-cycle/`
-    reaches the main branch before the design of the task cycle sets what it holds.
+    with a script of its own that checks the form of its entries beside
+    `elements/common/foundation_check.py`; `task-cycle/` reaches the main branch before the design
+    of the task cycle sets what it holds.
 - **Origin:** none
 
 *Rationale:* anything brought in on the side makes the repository a store of material; directories
 follow the parts, so a change's files name its part and decisions (WAY-21); an incomplete directory
-is work in progress, kept on a branch (WAY-01); probes stand apart, so an element's tests run no
-fact's method; product installation and agent instructions have different failures from repository
-configuration; the project definition and task cycle answer different questions; the principles of
-instruction files serve any repository, so they stand apart from this repository's own agent
-instructions; a product's guidelines stand outside its foundation and answer to no element, so their
-templates stand apart from the elements, and their failures — a product's screens
-built on a meaning nobody approved, guidelines telling agents an old rule — are not those of
-instruction files.
+is work in progress, kept on a branch (WAY-01); product installation and agent instructions have
+different failures from repository configuration; the project definition and task cycle answer
+different questions; the principles of instruction files serve any repository, so they stand apart
+from this repository's own agent instructions; a product's guidelines stand outside its foundation
+and answer to no element, so their templates stand apart from the elements, and their failures — a
+product's screens built on a meaning nobody approved, guidelines telling agents an old rule — are
+not those of instruction files.
 *Rejected:* material merged as soon as it is written — a store from the first day; an element whose
-only tool is a skill — the form holds only while someone remembers to run it; one `tools/`
-directory for everything shared — it matches no part and grows into a store; one set of template,
-skill and script for every directory — a script that only reads has nothing for a skill to write;
-the files serving the whole repository left out of the map on purpose — they lose their part and
-its failure mode; installation or agent instructions folded into repository configuration — their
-failures lose their own parts; the principles of instruction files folded into this repository's
-own agent instructions — that part answers for the-way's own instructions, and its failures differ;
-the templates of guidelines under `elements/` — guidelines are no element of the
-foundation (WAY-04); the same folded into `instruction-files/` — that part answers for instruction
-files of any repository, and its failures differ.
+only tool is a skill — the form holds only while someone remembers to run it; one `tools/` directory
+for everything shared — it matches no part and grows into a store; one set of template, skill and
+script for every directory — a script that only reads has nothing for a skill to write; the files
+serving the whole repository left out of the map on purpose — they lose their part; installation or
+agent instructions folded into repository configuration — their failures lose their own parts; the
+principles of instruction files folded into this repository's own agent instructions — that part
+answers for the-way's own instructions, and its failures differ; the templates of guidelines under
+`elements/` — guidelines are no element of the foundation (WAY-04); the same folded into
+`instruction-files/` — that part answers for instruction files of any repository, and its failures
+differ.
 
 ### WAY-10 — Who assesses a change to an invariant test or to the foundation?
 
@@ -482,7 +482,7 @@ on the other, and none is optional: a decision and an invariant name the environ
 rest on, an invariant derived from a decision names that decision, and a check names its
 invariant.
 
-- **Scope:** relation-model, decisions, invariants, environment-facts
+- **Scope:** decisions, invariants, environment-facts
 - **Based on:** none
 - **Relations:** derives from WAY-02
 - **Verification:** none
@@ -547,28 +547,6 @@ of different products apart in references.
 *Rejected:* a new number for every change, the old entry marked as replaced — references rewired or
 left on a dead entry; numbering by topic — topics move, and numbers would move with them; a new
 version of the number for every change — a reader assembles what binds from many copies (WAY-07).
-
-### WAY-20 — What kinds of change can a decision undergo?
-
-A change to a decision names no kind of change, in the entry or beside it; what the change does to
-the decision's meaning, the request that carries it says, naming the decision with one sentence of
-what it now means (WAY-114).
-
-- **Scope:** decisions
-- **Based on:** none
-- **Relations:** none
-- **Verification:** an agent compares the change with the decision:
-  - complies: a request that rewords a decision names it with one sentence of its new meaning, and
-    the entry holds no field for the kind of change;
-  - violates: an entry records that its last change was an editorial correction.
-- **Origin:** none
-
-*Rationale:* what a change does to a decision is read once, by the human who accepts it, and the
-request's sentence of meaning tells them; a kind written into the entry speaks of a change, not of
-the decision, and the entry outlives it.
-*Rejected:* a closed list of kinds of change — editorial correction, unchanged sentences, new
-wording, narrowing, challenge, repeal — named by every later version of a decision — a kind speaks
-of the history, which git keeps, and a version restates the sentences the change leaves alone.
 
 ### WAY-21 — What is a decision's scope?
 
@@ -841,7 +819,7 @@ A decision names its relation to another decision with one of two types, and the
 `derives from` — a higher decision this one serves; `narrows` — a decision this one deliberately
 goes against in a narrower area.
 
-- **Scope:** decisions, relation-model
+- **Scope:** decisions
 - **Based on:** none
 - **Relations:** none
 - **Verification:** an agent compares the change with the decision:
@@ -892,7 +870,9 @@ repeats the first search, and a record shows that a search ran, not what it miss
 
 A product uses the-way at a commit pinned in its own repository: its templates, skills and
 scripts, and the decisions of the-way that bind its work, all come from that commit. A newer
-version of the process enters a product only through a task in the product that moves the pin.
+version of the process enters a product only in one commit of the product that moves the pin,
+made when a task of the product needs a change of the process, or in a step of its own that takes
+several changes of the-way at once.
 
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, relation-model,
   installation, instruction-files, task-cycle
@@ -901,17 +881,20 @@ version of the process enters a product only through a task in the product that 
 - **Verification:** an agent compares the change with the decision; the invariants of this decision
   belong to each product's foundation, since no commit of the-way decides them:
   - complies: a product's foundation holds the invariants "this repository pins a commit of
-    the-way" and "CI runs only that commit's scripts"; a task in the product moves the pin and
-    carries what the newer version changes for the product;
+    the-way" and "CI runs only that commit's scripts"; a task that needs a newer skill moves the
+    pin in one commit, the entry points and guidance the installer rewrote included, and carries
+    what the newer version changes for the product;
   - violates: a product's CI fetches the latest the-way on every run; a skill in a product session
-    comes from a copy of the-way other than the pinned commit.
+    comes from a copy of the-way other than the pinned commit; a product moves its pin after every
+    change of the-way, though none of its tasks needs one.
 - **Origin:** none
 
 *Rationale:* a pinned commit turns a change of the process into a change in each product, taken
 in there before it binds, so one change cannot stop every product's checks at once. The price:
 products lag behind the process, and moving a pin is work, like updating a dependency.
 *Rejected:* every product on the newest the-way — results change with no change in the product;
-templates and scripts copied into each product — the copies drift.
+templates and scripts copied into each product — the copies drift; a move after every change of
+the-way — it interrupts the product's own work for changes none of its tasks needs.
 
 ### WAY-35 — What does an element's skill hold?
 
@@ -935,7 +918,7 @@ and a skill reads the rules and that way of working from there instead of restat
 part, so the rules stand where every writer and every check reaches them; steps and questions are
 no rule of an entry.
 *Rejected:* rules restated in the skill next to the template — two copies that drift, and the
-format guard and the skill hold entries to different rules; each rule citing the decision that sets
+template and the skill hold entries to different rules; each rule citing the decision that sets
 it — the rules are the-way's own text, changed and reviewed like any other change to it.
 
 ### WAY-36 — Is a rule a decision or does it belong in a plan?
@@ -1047,7 +1030,7 @@ identifier of an entry removed with nothing in its place, stays in the map as a 
 giving why and naming its successors, or `none` for an entry removed; an identifier is never
 reused.
 
-- **Scope:** part-map, elements-common, relation-model
+- **Scope:** part-map, elements-common
 - **Based on:** none
 - **Relations:** derives from WAY-40
 - **Verification:** invariants: map-reference-target.
@@ -1166,49 +1149,6 @@ comment line naming the flow in its test — a link nothing reads; the flow as a
 the same list in two places; picking flow tests from the change (Azure Test Impact Analysis) — it
 fails where it cannot reason.
 
-### WAY-46 — How does the criticality of a part arise?
-
-A part of the map carries no failure modes and no criticality, and nothing computes a criticality
-from the map.
-
-- **Scope:** part-map, task-cycle, environment-facts, invariants
-- **Based on:** none
-- **Relations:** derives from WAY-40
-- **Verification:** an agent compares the change with the decision:
-  - complies: a part's entry holds its sentence, *Files*, *Depends on* and *Trust boundary*, and
-    nothing else;
-  - violates: a part carries a criticality or a list of failure modes; a cycle records a failure
-    mode at a part.
-- **Origin:** none
-
-*Rationale:* a computed criticality sets how sharply a change is checked, and a part with no failure
-modes recorded would count as the highest, so every part of a new map would draw the sharpest
-checks, whatever it holds. What a stranger can send, and what cannot be undone, set those checks
-instead (WAY-48).
-*Rejected:* failure modes recorded at each part, each with its damage, severity and detection, and a
-criticality computed from them, from the flows a part lies on and from the parts depending on it —
-sharp checks spread over parts that hold no risk for them; criticality written by hand — it goes
-stale with the code.
-
-### WAY-47 — How is a critical flow's list of parts checked?
-
-A critical flow has no list of parts in the map (WAY-45), so no list is checked against the
-coverage its test leaves, and no script reads a coverage file.
-
-- **Scope:** part-map, task-cycle
-- **Based on:** none
-- **Relations:** derives from WAY-45
-- **Verification:** an agent compares the change with the decision:
-  - complies: the map names no coverage file, and a flow's test runs with the product's other
-    tests;
-  - violates: a script reads a coverage file to compare a flow's parts with the map.
-- **Origin:** none
-
-*Rationale:* a list of parts would decide which changes lie on a flow and so which tests run; where
-every test runs on every change, nothing is chosen by it, and a check of the list guards nothing.
-*Rejected:* the list of parts checked against the coverage the flow's test leaves, a flow with no
-coverage file reported as unchecked — it keeps accurate a list nothing reads (WAY-45).
-
 ### WAY-48 — How is a trust boundary recorded?
 
 A trust boundary is recorded at the part that holds it, as a pattern of the code files which take
@@ -1225,7 +1165,7 @@ crafted input, and its review is aimed at that risk.
   - complies: the file that parses requests from the network and the file that reads a user's saved
     game are the boundaries of their parts; a change to a workflow holding a deployment key gets a
     review aimed at that key;
-  - violates: a format guard that reads the product's own files is recorded as a trust boundary; a
+  - violates: a script that only checks the product's own files is recorded as a trust boundary; a
     change to the parser of requests is reviewed like any other.
 - **Origin:** none
 
@@ -1380,7 +1320,7 @@ gate runs and what follows from what it reports belong to the task cycle, not to
 
 *Rationale:* critical-flow tests span parts and need a single owner. The gate serves every
 element, so an element directory is the wrong owner; the task cycle decides the work to run, not
-where its runner lives. As its own part, the gate carries its failures and criticality.
+where its runner lives. As its own part, the gate carries its own failures.
 *Rejected:* gate inside the invariants element — shared work owned by one element; gate inside
 task-cycle — code coupled to task steps; gate among repository configuration — its failures lose
 their own part; critical-flow tests in individual elements — no one element owns a cross-part flow.
@@ -1497,12 +1437,13 @@ spreads one change over several commits.
 
 ### WAY-61 — How is an invariant's method of checking written, and how is its result read?
 
-An invariant's method of checking is a test of the product's test suite, written in the product's
-language and run by the command that runs the product's tests, or review. A test checks what its
-invariant's sentence is about, as it stands on the commit being checked, so a test fed input made
-up for it is the method of a sentence about the check it exercises, never of one about the data
-that check reads. An invariant's result on a commit is the outcome of the tests citing it in a run
-on that commit, and a run in which none of them ran never gives it a pass.
+An invariant's method of checking reads `test` once a test of the product's test suite, written in
+the product's language and run by the command that runs the product's tests, cites it, and `review`
+until then, and it names no command and no script. A test checks what its invariant's sentence is
+about, as it stands on the commit being checked, so a test fed input made up for it is the method of
+a sentence about the check it exercises, never of one about the data that check reads. An
+invariant's result on a commit is the outcome of the tests citing it in a run on that commit, and a
+run in which none of them ran never gives it a pass.
 
 - **Scope:** invariants, gate, decisions, part-map, elements-common
 - **Based on:** none
@@ -1513,17 +1454,22 @@ on that commit, and a run in which none of them ran never gives it a pass.
   - complies: a sentence about the instruction files of the repository is kept by a test running
     its check on those files; a sentence about the loader is kept by a test handing it a save of
     another version; a sentence on whether an image's text alternative describes it reads `review`;
+    an invariant written before its test reads `review`, and the change that adds a test citing it
+    turns its method to `test`;
   - violates: a sentence about the real instruction files names as its test the check's own test,
-    which feeds it made-up files; an invariant counts as passing in a run where no test citing it ran; an
-    invariant's test is a script beside the product's suite, which the command running the
-    product's tests does not run.
+    which feeds it made-up files; an invariant counts as passing in a run where no test citing it
+    ran; an invariant's test is a script beside the product's suite, which the command running the
+    product's tests does not run; an invariant reads `test` while no test cites it; an entry names
+    `python -B tools/check_saves.py` as its method.
 - **Origin:** none
 
 *Rationale:* the command that runs the product's tests already runs on every change, so an
 invariant's test runs with them, in the product's language; one run serves many invariants, each
-needing an outcome of its own; a check that sees nothing passes quietly (WAY-38).
+needing an outcome of its own; a check that sees nothing passes quietly (WAY-38). An invariant may
+be written before its test, and its method then says what keeps it meanwhile: the review.
 *Rejected:* a command per invariant that a gate of its own runs, recording a verdict for each entry
-— a second runner beside the product's tests; a kind named beside the method — a second value that
+— a second runner beside the product's tests; `TODO` as the method until the test exists — it
+names nothing that keeps the rule meanwhile; a kind named beside the method — a second value that
 can disagree (WAY-54); the run's exit code as each invariant's result — one broken rule fails all, a
 skipped one passes; a check's tests on made-up input as the method of a sentence about real data —
 they show the check works, not that the data holds.
@@ -1598,7 +1544,7 @@ identifier there never names an entry again. Splitting or merging environment fa
 invariant entries held there, gives each entry that comes out of it a new identifier, and any other
 change keeps it.
 
-- **Scope:** environment-facts, invariants, part-map, elements-common, relation-model
+- **Scope:** environment-facts, invariants, part-map, elements-common
 - **Based on:** none
 - **Relations:** derives from WAY-02 · derives from WAY-56 ·
   derives from WAY-57
@@ -1627,7 +1573,7 @@ change when it cites an invariant on the commit the branch left the main branch 
 commit being checked, and where several tests cite one invariant in a run, the invariant passes
 only when each of them passes.
 
-- **Scope:** invariants, gate, decisions, part-map, relation-model, task-cycle
+- **Scope:** invariants, gate, decisions, part-map, task-cycle
 - **Based on:** none
 - **Relations:** derives from WAY-03 · derives from WAY-17 ·
   derives from WAY-57 · derives from WAY-61
@@ -1675,7 +1621,7 @@ An invariant's sentence, its test and the code the test covers may come from one
 deliberate break is written for the test beyond seeing it fail once (WAY-08); the agent reviewing
 the change, which made none of it, reads the test against the sentence.
 
-- **Scope:** invariants, decisions, part-map, gate, task-cycle, relation-model
+- **Scope:** invariants, decisions, part-map, gate, task-cycle
 - **Based on:** visible-scoring-reward-hacking · oracle-in-loop-building
 - **Relations:** derives from WAY-08
 - **Verification:** an agent compares the change with the decision:
@@ -1713,7 +1659,7 @@ missing field, or a word not given it, as an error.
 - **Origin:** none
 
 *Rationale:* an omitted field looks forgotten (WAY-58); an undefined value misleads. An invariant
-with no test reads `review` as its method rather than `TODO` (WAY-105). Before facts have entries,
+with no test reads `review` as its method rather than `TODO` (WAY-61). Before facts have entries,
 an invariant can expose a needed fact as `TODO` instead of falsely claiming `none`; once they do,
 the gap must be resolved.
 *Rejected:* a decision for invariants alone — every element would need a copy; a wider scope for
@@ -1775,29 +1721,6 @@ reads two ways; unnamed facts left in the file — facts outlive their readers; 
 unnamed fact as a warning on the task branch and an error at the merge — the author's search
 already finds it, in the change that leaves it unnamed.
 
-### WAY-74 — What form does the-way's own record of a run take?
-
-None: the-way keeps no record of a run of its own. The report of a run is the one the command
-running the tests prints, and its result is that command's exit code (WAY-63).
-
-- **Scope:** invariants, gate, decisions, part-map, repository, environment-facts,
-  elements-common
-- **Based on:** none
-- **Relations:** derives from WAY-63
-- **Verification:** an agent compares the change with the decision:
-  - complies: `python -B gate/run_tests.py` prints the report `unittest` gives, exits 1 when a test
-    fails, and writes no file;
-  - violates: a check writes a verdict for each invariant into a JSON Lines file beside its report;
-    a command names a `.jsonl` path for the record of its run.
-- **Origin:** none
-
-*Rationale:* the report a person reads and the exit code already say which test failed; a verdict
-recorded for each entry has no reader once one command runs every test (WAY-16) and a result is
-the outcome of the tests citing an entry (WAY-61).
-*Rejected:* a JSON Lines file at a path git ignores, holding a line per verdict a check gives an
-invariant or a fact — a second report kept for a gate beside the product's own runner; the commit,
-moment and tool versions in every line — nothing reads them.
-
 ### WAY-76 — How much does one environment fact entry hold?
 
 An environment fact entry states in one sentence one fact that one edition of one source says, with
@@ -1823,12 +1746,12 @@ invariant written as a fact would never be checked on the commit that breaks it.
 a test's tool, and no commit changes it (WAY-73); both as facts in *Rests on* — the second holds
 no condition of the sentence (WAY-73).
 
-### WAY-77 — What does an environment fact's *Holds for* name?
+### WAY-77 — What shows what an environment fact is true of?
 
-An environment fact entry names no *Holds for*: what its sentence is true of is shown by the edition
-its source cites, or, where the source publishes no editions, by the date it was read. Its sentence
-holds no word whose meaning moves with the date, such as "latest". A range the product declares for
-itself stands in the sentence of an invariant, never in a fact.
+What an environment fact's sentence is true of is shown by the edition its source cites, or, where
+the source publishes no editions, by the date it was read, and no field of the entry names it
+again. Its sentence holds no word whose meaning moves with the date, such as "latest". A range the
+product declares for itself stands in the sentence of an invariant, never in a fact.
 
 - **Scope:** environment-facts, invariants
 - **Based on:** none
@@ -1845,9 +1768,9 @@ itself stands in the sentence of an invariant, never in a fact.
 does so for a source without editions, so a field naming it again is a copy that drifts. "Latest"
 would make the sentence change with the date, not the world. The product's range changes with a
 commit, so it belongs to an invariant, meeting the fact through *Rests on* (WAY-73).
-*Rejected:* *Holds for* naming the tools, platforms, editions or measured models the sentence is
-true of — it repeats what the source names, for the sake of a probe comparing the release it ran on
-and of a fingerprint, neither of which a fact keeps (WAY-81, WAY-02); a fact reading the product's
+*Rejected:* a field naming the tools, platforms, editions or measured models the sentence is true
+of — it repeats what the source names, for the sake of a check comparing the release it ran on and
+of a fingerprint, neither of which a fact keeps (WAY-82, WAY-02); a fact reading the product's
 declared version — a sentence about the product in a fact.
 
 ### WAY-78 — What is the binding part of an environment fact entry?
@@ -1876,7 +1799,7 @@ anchor.
 An environment fact entry carries no version: it is edited in place and holds only its current
 wording, and its earlier wordings are read from git.
 
-- **Scope:** environment-facts, relation-model, gate, elements-common
+- **Scope:** environment-facts, elements-common
 - **Based on:** none
 - **Relations:** none
 - **Verification:** an agent compares the change with the decision:
@@ -1890,7 +1813,7 @@ wording, and its earlier wordings are read from git.
 wording; what rests on a fact is found by the search of whoever changes it (WAY-33), as for
 invariants (WAY-57).
 *Rejected:* a version raised with each change of the sentence, cited by each check of the fact — it
-serves a probe, which no fact keeps (WAY-81), and is a second record of what git keeps.
+serves a check of the fact, which no fact keeps (WAY-82), and is a second record of what git keeps.
 
 ### WAY-80 — What is an environment fact's source?
 
@@ -1919,63 +1842,45 @@ a recollection or a quoting text carries a paraphrase's drift.
 *Rejected:* a source named by its work alone — a new edition changes what the citation says; a
 summary in place of the passage — the drift this decision exists to stop; an observation naming a
 command, its tool and the date it ran — no reader finds its passage at an address, and running it
-again is a probe, which no fact keeps (WAY-81); a whole section of rules narrowed to those the
-product uses — a pattern outside them rests on no fact; such a section quoted rule by rule — a
-standing `TODO` in the source.
+again is a check of the fact, which no fact keeps (WAY-82); a whole section of rules narrowed to
+those the product uses — a pattern outside them rests on no fact; such a section quoted rule by rule
+— a standing `TODO` in the source.
 
-### WAY-81 — How is an environment fact's method written, and on which release of its tool does a probe's verdict count?
+### WAY-82 — How does an environment fact keep up with what its source says?
 
-An environment fact names no method and gives no result: no probe or watch runs for it, no check
-cites it, and no status stands beside it. Its passage, address and date let whoever reads the fact
-compare it with what the source says now.
+An environment fact names no method and no status, no test cites it, no check of it runs, on a
+change or by a clock, and nothing fails when the world moves. A fact changes when someone finds
+that its source no longer says what its sentence says, or that a newer edition the product stands
+on says otherwise; the change that rewrites or withdraws it corrects every entry naming it. An
+announced revision changes nothing until the new edition is out, and neither a fact nor a decision
+citing it names a date or condition for its review.
 
-- **Scope:** environment-facts, gate, invariants
-- **Based on:** none
-- **Relations:** none
-- **Verification:** an agent compares the change with the decision:
-  - complies: a fact's entry holds its sentence and *Source* and nothing else;
-  - violates: a fact names a command that probes the behaviour its sentence states or watches its
-    source; a test cites a fact on a `fact:` line; a status `pass` stands beside a fact.
-- **Origin:** none
-
-*Rationale:* a probe tells that the world moved only when something runs it and someone reads its
-failure; the passage with its address and the date read lets whoever reads the fact see at once
-whether the source still says so, with nothing kept running.
-*Rejected:* a method for each fact — a command probing the behaviour or watching the source, run
-with the runner's configuration set and a verdict counted only on the release *Holds for* names, or
-the path of a file a person re-reads with a dated verdict — a program, a record and a release to
-match for every fact, read only when it fails.
-
-### WAY-82 — When does an environment fact's method run, and what fails its watch?
-
-No check of an environment fact runs, on a change or by a clock, and nothing fails when the world
-moves. A fact changes when someone finds that its source no longer says what its sentence says, or
-that a newer edition the product stands on says otherwise; the change that rewrites or withdraws it
-corrects every entry naming it. An announced revision changes nothing until the new edition is out,
-and neither a fact nor a decision citing it names a date or condition for its review.
-
-- **Scope:** environment-facts, gate, task-cycle
+- **Scope:** environment-facts, invariants, gate, task-cycle
 - **Based on:** none
 - **Relations:** derives from WAY-60
 - **Verification:** an agent compares the change with the decision:
-  - complies: RFC 8259 gaining `obsoleted_by` is found by whoever next reads the fact, who moves it
-    to the new edition and checks the entries naming it in the same change; NIST's notice that it
-    will revise FIPS 180-4 changes nothing;
-  - violates: a change touching no fact fails on a fact; a fact's sentence is rewritten while an
-    invariant resting on it is left as it was; a decision names the date of an announced revision
-    as the day to look at a fact again.
+  - complies: a fact's entry holds its sentence and *Source* and nothing else; RFC 8259 gaining
+    `obsoleted_by` is found by whoever next reads the fact, who moves it to the new edition and
+    checks the entries naming it in the same change; NIST's notice that it will revise FIPS 180-4
+    changes nothing;
+  - violates: a fact names a command that tests the behaviour its sentence states or watches its
+    source; a test cites a fact on a `fact:` line; a change touching no fact fails on a fact; a
+    fact's sentence is rewritten while an invariant resting on it is left as it was; a decision
+    names the date of an announced revision as the day to look at a fact again.
 - **Origin:** none
 
 *Rationale:* the world changes with no commit, so a check of it in the gate of an unrelated change
-would give a verdict that follows the date (WAY-60). A moved source is found by whoever reads the
-fact — the author of a change resting on it, a task's return step, or the review of the foundation
-against the product, a task of the product's backlog (WAY-24) — and that change then reaches what
-rests on the fact (WAY-33).
-*Rejected:* a fact's method run on every change that enters or rewords it and by a clock on the
-main branch, its failure shown to a human — a run and a record for every fact, whose failures reach
-someone only when a person reads them; an announced revision written as a condition in *Review
-when* of the decision citing the fact — a date in an entry asks for a look nobody is sent to make
-(WAY-24).
+would give a verdict that follows the date (WAY-60). The passage with its address and the date read
+lets whoever reads the fact see at once whether the source still says so, with nothing kept
+running. A moved source is found by whoever reads the fact — the author of a change resting on it,
+a task's return step, or the review of the foundation against the product, a task of the product's
+backlog (WAY-24) — and that change then reaches what rests on the fact (WAY-33).
+*Rejected:* a method for each fact — a command testing the behaviour or watching the source, run
+on every change that enters or rewords the fact and by a clock on the main branch, or the path of
+a file a person re-reads with a dated verdict — a program, a run and a record for every fact, whose
+failures reach someone only when a person reads them; an announced revision written as a condition
+in *Review when* of the decision citing the fact — a date in an entry asks for a look nobody is
+sent to make (WAY-24).
 
 ### WAY-84 — How is a setting that people of the product change outside its repository written?
 
@@ -2002,7 +1907,7 @@ each repository changes on its own. A decision needs someone who chose; otherwis
 check it.
 *Rejected:* a field naming who sets the setting — nothing reads it; a decision and a fact for every
 such setting — a decision where nobody chose; a method reading the setting where it lives, or a
-dated re-read by the person who sets it — a run and a record for every setting, as WAY-81 rejects
+dated re-read by the person who sets it — a run and a record for every setting, as WAY-82 rejects
 for every fact.
 
 ### WAY-85 — How is a finding of a study written as an environment fact?
@@ -2150,13 +2055,13 @@ carries or carried in the files git tracks, besides its definition and a meaning
 the product's field gives it, with what carries it. The definition is the binding part, and a
 sentence depends on a term by using its word, carrying no fingerprint.
 
-- **Scope:** glossary, relation-model
+- **Scope:** glossary
 - **Based on:** none
 - **Relations:** narrows WAY-02 · derives from WAY-04
 - **Verification:** an agent compares the change with the decision:
-  - complies: an invariant's sentence uses "verdict" with no fingerprint, and the author of a
-    changed definition of "verdict" finds it by searching for the word;
-  - violates: a sentence cites the term as `verdict@<fingerprint>`; a changed *Not* is treated as a
+  - complies: an invariant's sentence uses "slice" with no fingerprint, and the author of a
+    changed definition of "slice" finds it by searching for the word;
+  - violates: a sentence cites the term as `slice@<fingerprint>`; a changed *Not* is treated as a
     change to the entry's binding part.
 - **Origin:** none
 
@@ -2184,13 +2089,13 @@ again, and in the-way, whose product is the process, the two are one file.
 - **Based on:** none
 - **Relations:** none
 - **Verification:** an agent compares the change with the decision:
-  - complies: "clock", used for a command run apart from any change, takes an entry; "digest", used
-    only as SHA-256 uses it, takes none; "run", used for running a command and for text running
-    across lines, takes none; a game's glossary defines "level" and uses "verdict" as the glossary
-    of the-way defines it at the pinned commit;
+  - complies: "gate", used for the one command that runs all of a product's tests, takes an entry;
+    "digest", used only as SHA-256 uses it, takes none; "run", used for running a command and for
+    text running across lines, takes none; a game's glossary defines "level" and uses "return step"
+    as the glossary of the-way defines it at the pinned commit;
   - violates: every noun of the decision log takes an entry; an agent reads every binding sentence
-    of the foundation for candidates before it writes an entry; a game's glossary gives "verdict" a
-    definition of its own; the glossary of the-way defines "level" as the game uses it.
+    of the foundation for candidates before it writes an entry; a game's glossary gives "return
+    step" a definition of its own; the glossary of the-way defines "level" as the game uses it.
 - **Origin:** none
 
 *Rationale:* a glossary of every relevant word grows without bound, kept by memory, while a word
@@ -2213,8 +2118,9 @@ A glossary definition is one sentence.
 - **Based on:** none
 - **Relations:** none
 - **Verification:** an agent compares the change with the decision:
-  - complies: "The clock is the command that, unlike the gate, runs checks apart from any change.";
-  - violates: a definition of two sentences, the second telling what the clock checks.
+  - complies: "The gate is the one command that runs all of a product's tests, the tests of its
+    invariants among them.";
+  - violates: a definition of two sentences, the second telling what the gate runs.
 - **Origin:** none
 
 *Rationale:* a definition of one sentence is read whole beside every use of its word.
@@ -2235,7 +2141,7 @@ moves.
 - **Based on:** none
 - **Relations:** narrows WAY-02
 - **Verification:** an agent compares the change with the decision:
-  - complies: the definition of "verdict" is reworded, its author searches every file git tracks
+  - complies: the definition of "slice" is reworded, its author searches every file git tracks
     for the word and its forms, and rewrites, in the same change, the two sentences whose meaning
     moves;
   - violates: a definition is reworded and no uses are looked at; a use whose meaning moved is left
@@ -2254,28 +2160,6 @@ spelling out a term's definition — every sentence of every entry read against 
 hand; a term whose definition holds a word an invariant's sentence may not hold named in
 the request — the rule on that word stays with the invariant; impact analysis by a model alone —
 nobody knows what it missed (WAY-02).
-
-### WAY-98 — Where is a word of a glossary entry's *Avoid* an error?
-
-A glossary entry holds no *Avoid*: no word is kept out of the foundation as another word for a term,
-and no count of a word's uses against the commit the task branch left the main branch from is an
-error.
-
-- **Scope:** glossary, decisions, invariants, part-map, environment-facts
-- **Based on:** none
-- **Relations:** none
-- **Verification:** an agent compares the change with the decision:
-  - complies: an entry of the glossary holds its definition and *Not*; a change that writes
-    "checker" for the format guard is read by its review like any other word;
-  - violates: an entry lists other words for its term; a change fails because a word stands more
-    times in a file than on the commit its branch left from.
-- **Origin:** none
-
-*Rationale:* a word kept out as a synonym is rarely named in advance, so the field stays empty while
-each entry carries it and a guard counts it; a synonym that confuses a reader shows where an agent
-works with the word, as any other unclear word does (WAY-95).
-*Rejected:* *Avoid* counted in every file against the commit the task branch left the main branch
-from — a field and a count kept for words nobody lists.
 
 ### WAY-99 — How does one word keep one meaning in the foundation?
 
@@ -2310,8 +2194,9 @@ A method or practice borrowed from outside a product binds its way of working on
 decision that names what is adopted, where it applies, and why. When an agent recognizes a likeness
 to a method or practice no decision has adopted, it asks a human before treating it as a rule.
 
-- **Scope:** decisions, part-map, relation-model, invariants, glossary, environment-facts,
-  elements-common, task-cycle, gate, repository
+- **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common,
+  relation-model, gate, installation, agent-instructions, instruction-files, repository,
+  project-level, product-guidelines, task-cycle
 - **Based on:** none
 - **Relations:** none
 - **Verification:** an agent compares the change with the decision:
@@ -2353,13 +2238,15 @@ The-way is a process for work on a technology product in which a change of premi
 an ordinary step: it passes through the product's foundation and needs no memory of what is linked
 to what.
 
-- **Scope:** decisions, part-map, relation-model, invariants, glossary, environment-facts,
-  elements-common, task-cycle, gate, repository
+- **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common,
+  relation-model, gate, installation, agent-instructions, instruction-files, repository,
+  project-level, product-guidelines, task-cycle
 - **Based on:** none
 - **Relations:** none
 - **Verification:** an agent compares the change with the decision:
-  - complies: a change of product direction goes through the foundation, and references to affected
-    entries are checked before the change is merged;
+  - complies: a change of product direction goes through the foundation, and its author searches
+    the foundation for the entries the change touches and brings each finding into line in the
+    same change or asks a human;
   - violates: a change of direction relies on the author remembering which decisions and documents
     to update.
 - **Origin:** none
@@ -2407,10 +2294,10 @@ word of the domain unchanged.
 - **Based on:** none
 - **Relations:** derives from WAY-95 · narrows WAY-99
 - **Verification:** an agent compares the change with the decision:
-  - complies: a game's invariants say "game clock" for the timer of a match, and a factory's say
-    "assembly step" for an operation, while their code and interfaces use `Clock` and "Step";
-  - violates: a game's invariant says "clock" for the timer of a match or a factory's says "step"
-    for an operation; a game's glossary defines "clock" as the timer of a match.
+  - complies: a game's invariants say "castle gate" for the way into a castle, and a factory's say
+    "assembly step" for an operation, while their code and interfaces use `Gate` and "Step";
+  - violates: a game's invariant says "gate" for the way into a castle or a factory's says "step"
+    for an operation; a game's glossary defines "gate" as the way into a castle.
 - **Origin:** none
 
 *Rationale:* a word of the process written bare in a product's foundation for something of its
@@ -2428,35 +2315,9 @@ the process written in a fixed form in the-way, such as in backticks, leaving th
 for the domain — a plain word in a product's sentence may still carry either meaning, so the form
 keeps nothing apart, and every entry of the-way is rewritten to it; a word holding neither the word
 of the process nor its forms, as WAY-99 asks of a carrier — for words the field uses daily, such as
-"part", "entry" or "result", the foundation drifts from the words the product's people and code use;
-qualifying a domain word only when it is a whole
-process term — a short use of a multiword term can still collide with the domain meaning.
-
-### WAY-105 — Which check reports an invariant whose command runs a script that does not exist, and how is that script read?
-
-None does: an invariant's method names no command and no script (WAY-61), so no check reads one.
-An invariant reads `test` as its method once a test of the product's suite cites it, and `review`
-until then.
-
-- **Scope:** gate, invariants
-- **Based on:** none
-- **Relations:** derives from WAY-63 · derives from WAY-61 ·
-  derives from WAY-38
-- **Verification:** an agent compares the change with the decision:
-  - complies: an invariant written before its test reads `review`, and the change that adds a test
-    citing it turns its method to `test`;
-  - violates: an invariant reads `test` while no test cites it; an entry names
-    `python -B tools/check_saves.py` as its method.
-- **Origin:** the panel's record of the change that counts the checks a `none` option leaves
-  unchecked in every guard's summary, in the message of commit d389623 of the-way
-
-*Rationale:* an invariant may be written before its test, and its method then says what keeps it
-meanwhile: the review. A test of the product's suite runs with the product's command, so a test not
-yet written is only an invariant no test cites, which its method shows.
-*Rejected:* a command per invariant, with the gate reporting a missing script `unchecked` or
-`error` and reading the command as a POSIX shell splits it — a reading of commands kept for a runner
-beside the product's tests; `TODO` as the method until the test exists — it names nothing that keeps
-the rule meanwhile.
+"part", "entry" or "element", the foundation drifts from the words the product's people and code
+use; qualifying a domain word only when it is a whole process term — a short use of a multiword term
+can still collide with the domain meaning.
 
 ### WAY-106 — What does the project level write before tasks exist?
 
@@ -2777,10 +2638,9 @@ rationale and rejected options; only projected fields awaiting code or the world
 Before approval an agent searches the whole current foundation once for what the definition and
 its projected entries touch, linked or not, the only search of the whole foundation on the way to
 the gate, and the human approves the whole projected entries with permitted `TODO`; the gate
-record then names the approver, the foundation commit searched and the fingerprint of the
-definition's sections from Goal through Projected foundation changes, and no projected entry
-carries a field of approval. A change to those sections after approval goes through the gate again
-before breakdown relies on it.
+record then names the approver and the fingerprint of the definition's sections from Goal through
+Projected foundation changes, and no projected entry carries a field of approval. A change to those
+sections after approval goes through the gate again before breakdown relies on it.
 
 - **Scope:** project-level
 - **Based on:** none
@@ -2796,10 +2656,9 @@ before breakdown relies on it.
 - **Origin:** none
 
 *Rationale:* a warning lets a later step guess precisely what definition was meant to settle;
-blocking exposes the missing answer while the person who can give it is present. The search and
-fingerprint show which foundation and wording were approved. Once every projected entry is
-written, one search sees them all and the definition's own text; the gate record approves them
-together.
+blocking exposes the missing answer while the person who can give it is present. The fingerprint
+shows which wording was approved. Once every projected entry is written, one search sees them all
+and the definition's own text; the gate record approves them together.
 *Rejected:* a final checklist that only warns — it cannot prevent an unfinished search from
 passing; an approval without a content fingerprint — later edits would still look approved; a
 search of the whole foundation when the candidates are named and for each projected entry as well
@@ -2816,8 +2675,7 @@ author checks each observation and gives one explicit verdict. For a collectivel
 critic checks form, fidelity to source and contradictions across entries before presentation.
 
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common,
-  project-level, relation-model, gate, installation, agent-instructions, instruction-files,
-  repository, task-cycle
+  project-level, product-guidelines
 - **Based on:** none
 - **Relations:** none
 - **Verification:** an agent compares the review with the decision:
@@ -3441,11 +3299,11 @@ task's candidates are named — it repeats the cycle's search on wording not yet
 A task's cycle writes a spec, reviewed by an agent other than its author, before implementation
 and any plan where the task leaves an open design choice and nowhere else, and an invariant whose
 sentence a row of the task's *Settlements to record* or a projected entry of its sources gives
-leaves none. An agent that
-meets an open design choice while it makes the change returns a report that holds no code, the
-attempt is discarded with the foundation entries the cycle wrote for it, and a fresh agent given
-the report writes the spec, after whose review the orchestrator chooses again whether one author
-can hold the change or it needs a plan, using the same judgment as before implementation (WAY-136).
+leaves none. An agent that meets an open design choice while it makes the change returns a report
+that holds no code, the attempt is discarded with the foundation entries the cycle wrote for it,
+and a fresh agent given the report writes the spec, after whose review the orchestrator chooses
+again whether one author can hold the change or it needs a plan, using the same judgment as before
+implementation (WAY-136).
 
 - **Scope:** task-cycle
 - **Based on:** none
@@ -3993,30 +3851,6 @@ proving completeness; a slice method's own ledger of progress beside the record 
 record and has to be copied into it before its workspace is cleaned; rereading every stage's
 evidence during ordinary coordination — it pays again for work already delegated; automatic
 compaction — it does not choose the evidence a ruling needs.
-
-### WAY-149 — When does the deliberate break of a return-step check take place?
-
-A test added in a task's return step takes no deliberate break of its own: like every invariant
-test, it is seen failing once, with the command that later shows it passing (WAY-08), and the
-review of the change reads it (WAY-10).
-
-- **Scope:** task-cycle
-- **Based on:** none
-- **Relations:** derives from WAY-10 · derives from WAY-08 · derives from
-  WAY-69
-- **Verification:** an agent compares the cycle's tests and review with the decision:
-  - complies: a test added in the return step fails on the behaviour broken for a moment, passes
-    once it is restored, and the review of the change reads it;
-  - violates: a return-step test waits for an assessment or for a reviewer's break before it is
-    accepted; a return-step test is accepted on a passing run alone.
-- **Origin:** none
-
-*Rationale:* a test added late is accepted as an early one is: the failure seen shows it can fail,
-and the review reads it with the change; a later step of its own would add nothing those two do not
-show.
-*Rejected:* a deliberate break written by the code reviewer after the one independent assessment
-and the settlement of its remarks — a stage for each late test, for what the failure seen and the
-review already show; accepting a test on a passing product run alone — it may detect nothing.
 
 ### WAY-150 — How do the-way skills choose which product foundation material to read?
 
@@ -5364,7 +5198,6 @@ A binding rule of a product's styleguide names an invariant only where a cheap t
 suite checks it on a convention of the product's code, as WAY-168 gives every rule of guidelines;
 the rule that each role keeps the meaning its decision gives, and every other rule only a reading
 can judge, names none, and the review of each change the rule reaches compares the change with it.
-No agent run k of n times checks a rule of a styleguide.
 
 - **Scope:** product-guidelines, invariants
 - **Based on:** none
@@ -5498,8 +5331,9 @@ faults of focus seen in the first trial stay unchecked.
 A product's root `AGENTS.md`, outside the block the-way's installer writes, points to each styleguide
 by its path in backticks with the condition of changing a file of the part it covers, and the rule
 forbidding values written in place of design tokens in that part's files stands where the skill of
-`instruction-files` places a rule for some files, saying that the product's invariant is what keeps
-it; both are written as that skill gives them.
+`instruction-files` places a rule for some files, saying what keeps it: the product's invariant,
+or, while that invariant is marked violated, the review of each change to the part's files
+(WAY-190); both are written as that skill gives them.
 
 - **Scope:** product-guidelines, instruction-files
 - **Based on:** none
@@ -5509,7 +5343,9 @@ it; both are written as that skill gives them.
   - complies: `AGENTS.md` reads "Before you change a file of `web`, read
     `guidelines/styleguide-web.md`" below the installer's block, and a rules file loaded with the
     files of `web` forbids values written in place of design tokens and names the invariant that
-    checks it;
+    checks it; in a product cleaning its screens gradually, whose invariant is marked violated, the
+    same rule says that until the mark is cleared the review of each change to the files of `web`
+    keeps it;
   - violates: the pointer stands inside the installer's block; the styleguide is imported with `@`;
     the rule names a lint command of its own; the rule stands in `AGENTS.md` for every session.
 - **Origin:** none
@@ -5520,8 +5356,10 @@ leads to work an agent would not otherwise find (WAY-128). The rule concerns som
 stands where the tools load it with them (WAY-128); it carries a decision the product records
 (WAY-168), so it needs no recorded mistake (WAY-130), and it holds every time only through its
 invariant, which the instruction says it is for (WAY-133); the gate runs that invariant, so the
-instruction names no command of its own (WAY-16). The pointer stands outside the installer's block, which holds
-no path a product chooses (WAY-107).
+instruction names no command of its own (WAY-16). While the invariant is marked violated, its test
+stands as an expected failure and keeps nothing, so the instruction names the review of each change
+as what keeps the rule until the mark is cleared (WAY-190). The pointer stands outside the
+installer's block, which holds no path a product chooses (WAY-107).
 *Rejected:* a styleguide with no way in from the instructions — an agent in a new session does not
 find it; the rule as a line of every session — it costs context in each and is not followed every
 time without its check.
@@ -5724,36 +5562,6 @@ well as the review of each change reads it.
 where no script decides it, and a rule no such check can decide moved among the examples — the
 checks cost more than the code they guard; an agent for each kind of code judging whether new code
 follows the exemplar — its criterion is vague and its false alarms unknown.
-
-### WAY-197 — Who writes the uses of a rule of guidelines, and are they run against its invariant's test?
-
-The use that follows a rule of a product's guidelines and the use that breaks it, where the rule
-gives them, are written by the author of the guidelines, each in one line, and nobody runs the test
-of an invariant the rule names with them: that test is accepted as every invariant test is, by being
-seen failing once (WAY-08).
-
-- **Scope:** product-guidelines, invariants, task-cycle
-- **Based on:** none
-- **Relations:** derives from WAY-168 · derives from WAY-08
-- **Verification:** an agent compares the change with the decision:
-  - complies: the author of a product's coding guidelines gives the rule that each endpoint
-    validates its input, in one line each, an endpoint that reads its body through the shared
-    schema and one that reads it unchecked; the test of the rule's invariant is seen failing once
-    on an endpoint with its validation removed, and the change records nothing else for it;
-  - violates: the reviewer of the change writes the use that breaks the rule; a change records the
-    test's run with each use as the test's acceptance; a rule's uses stand as whole files beside the
-    test of its invariant.
-- **Origin:** none
-
-*Rationale:* a use written by the author of the guidelines teaches the agent reading them what the
-rule asks and forbids, while a small, artificial break written by another agent teaches a reader
-little and would wait for the end of the review. The test of the invariant already shows it can
-fail once it has been seen failing (WAY-08), so running it with the uses would test the test again
-(WAY-168), and the uses, serving as no case of it, stay one line each.
-*Rejected:* the use breaking the rule written by the reviewer — a small, artificial change that
-teaches the reader little, and the guidelines wait for the end of the review; the two uses run
-against the test of the invariant, beside a deliberate break the reviewer writes, whenever either
-changes — a procedure for each rule that tests the test.
 
 ### WAY-198 — How does a product's exemplar bind?
 
@@ -6044,8 +5852,8 @@ The skill `maintain-coding-guidelines` proposes an audit of dependencies that ch
 fails it only where a version of a dependency that the change brings in against `{fork-point}` has a
 known vulnerability, as the advisory database named by the product's decision adopting the audit
 gives it when the check runs, of at least the severity that decision sets, every severity being
-among the ways the skill offers. Until the clock runs the methods of a product's invariants, the
-template of the coding discipline carries no audit of the whole tree of a product's dependencies.
+among the ways the skill offers. The template of the coding discipline carries no audit of the
+whole tree of a product's dependencies.
 
 - **Scope:** product-guidelines, invariants
 - **Based on:** none
@@ -6069,8 +5877,7 @@ in the decision that adopts the audit (WAY-60), and the severity is the product'
 severity among the ways. The tools stand at pinned versions, while the database is read as it stands
 when the check runs, so that a change brings in nothing known to be vulnerable that day. Two weak
 points follow. A vulnerability found in a dependency the product already holds gives no signal while
-no change brings in a version of it, until the clock runs the methods of a product's invariants,
-when the whole tree can be audited apart from any change. A later run on the same commit may record `fail` where an
+no change brings in a version of it. A later run on the same commit may record `fail` where an
 earlier one recorded `pass`, when an advisory is published for a version that commit brings in; such
 a check is answered as WAY-68 gives it, which this decision leaves unchanged.
 *Rejected:* the whole tree audited at every change — an unrelated change fails on a vulnerability
@@ -6567,70 +6374,34 @@ material or adopting the lesson as a whole.
 explicit authority of their own; the lesson taken whole — unrelated practices bind every product;
 private quotations or pointers in place of the reasoning — readers cannot assess them.
 
-### WAY-223 — How is a check accepted when the history it protects contains no elements yet?
-
-A test protecting elements of an earlier version takes no evidence of its own when that history
-holds no elements yet: it is accepted as every invariant test is, by being seen failing once
-(WAY-08).
-
-- **Scope:** invariants, product-guidelines, task-cycle, gate
-- **Based on:** none
-- **Relations:** derives from WAY-08 · derives from WAY-61 · derives from
-  WAY-69
-- **Verification:** an agent compares the change with the decision:
-  - complies: a test protecting published names, while none is published yet, is seen failing on
-    input in which a published name is renamed, and the change records nothing else for its
-    acceptance;
-  - violates: a change records a read of the historical commit and prepared earlier versions as
-    the acceptance of a test; a test is taken as checking its rule without having been seen
-    failing, because the history it protects is empty.
-- **Origin:** none
-
-*Rationale:* an empty history makes preservation true without exercising detection, and the failure
-seen once, on input in which an element changes, already shows the test detects it; evidence of the
-empty history beside it is a procedure of its own for what that failure shows.
-*Rejected:* acceptance on prepared earlier versions only after a successful read proves the
-protected set empty, with that evidence recorded apart from the result — a procedure for each
-protecting test; treating the first successful run as acceptance — it can pass without comparing
-any element.
-
-### WAY-224 — How does a task cycle bring a candidate failure mode to the human?
-
-A task cycle brings no candidate failure mode to the human and records none, since the part map
-records no failure modes (WAY-46).
-
-- **Scope:** part-map, task-cycle
-- **Based on:** none
-- **Relations:** derives from WAY-46
-- **Verification:** an agent compares the task, the request and the human's answer with the
-  decision:
-  - complies: the request's *Questions* hold no question about a failure mode of a part;
-  - violates: the cycle records a failure mode at a part, or asks the human to accept one.
-- **Origin:** none
-
-*Rationale:* a failure mode of a part would only feed a criticality, and the map computes none
-(WAY-46), so a question about one would settle nothing.
-*Rejected:* a candidate failure mode put to the human in the request's *Questions*, with the agent's
-recommendation and the strongest argument against it, and recorded once the human accepts it — a
-judgment asked for a value nothing reads.
-
 ## Withdrawn identifiers
 
 | Identifier | Why | Successors |
 |---|---|---|
 | WAY-06 | folded into WAY-01 when the entries of group 03 were slimmed | WAY-01 |
 | WAY-15 | removed when the entries of group 09 were slimmed (a foundation that does not change with every change of code); the commit names no successor | none |
+| WAY-20 | withdrawn: it said only that a change names no kind of change; what a change does to an entry's meaning reaches the human as WAY-114 gives it | WAY-114 |
 | WAY-23 | folded into WAY-18 when the entries of group 04 were slimmed | WAY-18 |
 | WAY-39 | folded into WAY-02 when the entries of group 01 were slimmed | WAY-02 |
+| WAY-46 | withdrawn: it said only that a part carries no failure modes and no criticality; the part map gives a part no such field | WAY-40 |
+| WAY-47 | withdrawn: it said only that no list of a critical flow's parts is checked; a critical flow has no entry in the part map (WAY-45) | WAY-45 |
 | WAY-50 | folded into WAY-49 when the entries of group 16 were slimmed | WAY-49 |
 | WAY-59 | removed when the entries of group 17 were slimmed (form of entries); the commit names no successor | none |
 | WAY-66 | folded into WAY-31 when the entries of group 01 were slimmed | WAY-31 |
 | WAY-67 | folded into WAY-51 when the entries of group 03 were slimmed | WAY-51 |
 | WAY-70 | folded into WAY-69 when the entries of group 14 were slimmed | WAY-69 |
+| WAY-74 | withdrawn: it said only that the-way keeps no record of a run; the exit code of the command running the tests says whether a test failed (WAY-63) | WAY-63 |
 | WAY-75 | folded into WAY-64 when the entries of group 02 were slimmed | WAY-64 |
+| WAY-81 | withdrawn: it said only that an environment fact names no method; how a fact keeps up with its source stands in WAY-82 | WAY-82 |
 | WAY-83 | withdrawn: the foundation records no human verdict | none |
 | WAY-87 | folded into WAY-46 when the entries of group 06 were slimmed | WAY-46 |
 | WAY-88 | folded into WAY-73 when the entries of group 07 were slimmed | WAY-73 |
 | WAY-91 | removed when the entries of group 13 were slimmed (a result comes from running the method); the commit names no successor | none |
 | WAY-92 | folded into WAY-95 when the entries of group 05 were slimmed | WAY-95 |
+| WAY-98 | withdrawn: it said only that a glossary entry holds no *Avoid*; WAY-94 gives an entry its one field | WAY-94 |
+| WAY-105 | withdrawn: when an invariant's method reads `test` and when `review` stands in WAY-61, which answers how an invariant's method of checking is written | WAY-61 |
 | WAY-119 | withdrawn: no decision carries *Review when* | none |
+| WAY-149 | withdrawn: it said only that a return-step test takes no deliberate break; every invariant test is seen failing once (WAY-08) | WAY-08 |
+| WAY-197 | withdrawn: the uses of a rule are optional lines of the rule (WAY-168), and the test of its invariant is seen failing once like every other (WAY-08) | WAY-168 · WAY-08 |
+| WAY-223 | withdrawn: it said only that a test protecting a history with no elements takes no evidence of its own; every invariant test is seen failing once (WAY-08) | WAY-08 |
+| WAY-224 | withdrawn: the part map records no failure modes, so no cycle asks the human about one | none |

@@ -103,7 +103,7 @@ A section is never left empty
 | Touched parts and decisions | what the foundation says of the project: the parts it touches, the decisions whose *Scope* names them, the invariants it may break |
 | Technology | the technology choices the project needs, each with the entry that settles it; the skill `settle-technology` writes it, and it reads `TODO` until that step begins |
 | Projected foundation changes | what the definition settles about the product, as projected entries of the foundation, each with one sentence of its meaning, below the line that records the step finding them |
-| Gate record | who approved the gate and when, the commit of the foundation searched, the fingerprint |
+| Gate record | who approved the gate and when, and the fingerprint |
 
 WAY-108.
 
@@ -338,7 +338,6 @@ form and order:
 
 ```markdown
 - Approved by: <who>, YYYY-MM-DD
-- Foundation searched at: <the commit of the product's foundation the search for collisions read>
 - Definition fingerprint: <the fingerprint readiness_check.py --fingerprint prints>
 ```
 

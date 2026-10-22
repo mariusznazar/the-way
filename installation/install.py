@@ -51,6 +51,10 @@ BEGIN = "<!-- the-way:begin -->"
 END = "<!-- the-way:end -->"
 IGNORE = ".gitignore"
 RUNS = ".runs/"
+# Every entry point the installer writes says this, whatever commit wrote it; a file at an entry
+# point's path that does not is the product's own.
+OWN_MARK = f"The process for this repository is pinned as the Git submodule `{SUBMODULE}`"
+OWN_DESCRIPTION = " Use this product's pinned the-way commit."
 # Codex reads AGENTS.override.md instead of AGENTS.md, and at most this many bytes of them.
 CODEX_OVERRIDE = "AGENTS.override.md"
 CODEX_LIMIT = 32 * 1024
@@ -83,19 +87,13 @@ def empty_foundations() -> dict[str, str]:
         "decisions.md": "# Decision log\n",
         "invariants.md": (
             "# Invariants\n\n"
-            "## Withdrawn identifiers\n\n| Identifier | Why | Successors |\n|---|---|---|\n\n"
-            "## Quarantined invariants\n\n| Identifier | Version | Until |\n|---|---|---|\n\n"
-            "## Recovered invariants\n\n| Identifier | Version | Searched | Found |\n|---|---|---|---|\n"
+            "## Withdrawn identifiers\n\n| Identifier | Why | Successors |\n|---|---|---|\n"
         ),
         "glossary.md": "# Glossary\n\nTerms used by this product's foundation.\n",
         "part_map.md": (
             "# Part map\n\n"
-            "## Criticality scale\n\n"
             "## External context\n\n"
-            "| Partner | Direction | What comes in | Updates with the product |\n"
-            "|---|---|---|---|\n\n"
-            "## Change paths\n\n"
-            "| Promise level | What a change at this level may do | What it owes the consumer first |\n"
+            "| Partner | Direction | What comes in |\n"
             "|---|---|---|\n\n"
             "## Files left out on purpose\n\n| File | Why |\n|---|---|\n\n"
             "## Withdrawn identifiers\n\n| Identifier | Why | Successors |\n|---|---|---|\n"
@@ -113,6 +111,8 @@ def sibling_names() -> str:
 
 
 def skill_wrapper(path: str, name: str, commit: str) -> str:
+    """The entry point of one skill, with its description at `commit`. It names no commit, since
+    the gitlink records it; the installer rewrites it whenever a moved pin reads differently."""
     original = committed(path, commit)
     original_name = re.search(r"^name: (.+)$", original, re.M)
     if not original_name or original_name.group(1) != name:
@@ -122,16 +122,15 @@ def skill_wrapper(path: str, name: str, commit: str) -> str:
         raise RuntimeError(f"Missing skill description for {path}")
     project_name = f"the-way-{name}"
     return (f"---\nname: {project_name}\n"
-            f"description: {description.group(1)} Use this product's pinned the-way commit.\n"
+            f"description: {description.group(1)}{OWN_DESCRIPTION}\n"
             "---\n\n"
             f"# {project_name}\n\n"
-            f"The process for this repository is pinned as the Git submodule `{SUBMODULE}`. "
-            f"Its commit is `{commit}`.\n\n"
+            f"{OWN_MARK}, at the commit its gitlink records.\n\n"
             f"If `{SUBMODULE}/{path}` is absent, run "
             f"`git submodule update --init -- {SUBMODULE}` from the product root. "
             f"Check `git ls-files --stage -- {SUBMODULE}` and "
-            f"`git -C {SUBMODULE} rev-parse HEAD`: both must show `{commit}`. "
-            "If initialization fails or either commit differs, stop.\n\n"
+            f"`git -C {SUBMODULE} rev-parse HEAD`: both must show the same commit. "
+            "If initialization fails or the commits differ, stop.\n\n"
             f"Read `{SUBMODULE}/{path}` in full and follow it. "
             f"Read the files it references inside `{SUBMODULE}`. "
             "Where it says where the-way lies, the product's case applies: "
@@ -142,8 +141,9 @@ def skill_wrapper(path: str, name: str, commit: str) -> str:
 
 
 def product_guidance() -> str:
-    """The guidance for agents in a product. It names no commit: the gitlink records the commit,
-    so the text changes only when the guidance itself changes, not when the pin moves."""
+    """The guidance for agents in a product, which the installer keeps between its markers in
+    AGENTS.md. It names no commit, since the gitlink records it; the installer rewrites it in place
+    whenever a moved pin's guidance reads differently."""
     names = ", ".join(f"`the-way-{name}`" for name, _ in ELEMENTS.values())
     other_names = ", ".join(f"`the-way-{name}`" for name in SKILLS if name not in
                             {entry_name for entry_name, _ in ELEMENTS.values()})
@@ -157,31 +157,23 @@ def product_guidance() -> str:
             f"Write foundation entries only through the project skills {names}. Use the project "
             f"skills {other_names} for their named work. Where a skill or "
             "a file it reads names one without the `the-way-` prefix, use the prefixed project "
-            "skill, never a personal skill of that name.\n\n"
-            "Run the-way's scripts from this repository's root as "
-            f"`{SUBMODULE}/<path>` and always name this repository's file or directory, e.g. "
-            f"`python -B {SUBMODULE}/gate/run_tests.py <directory>` and "
-            f"`python -B {SUBMODULE}/elements/<element>/format_guard.py foundations/<file>`. "
-            f"A guard run inside `{SUBMODULE}` without a file checks the-way's own files. "
-            f"Records of a run (`--record`) go under `{RUNS}`, which `.gitignore` must keep "
+            "skill, never a personal skill of that name. In a task cycle the methods of the-way "
+            "apply — `the-way-write-spec`, `the-way-plan-task`, `the-way-make-change` and "
+            "`the-way-review-change` — even where an installed plugin offers methods of its own."
+            "\n\n"
+            f"Run the-way's scripts from this repository's root as `{SUBMODULE}/<path>`. There "
+            f"`python -B {SUBMODULE}/elements/common/foundation_check.py` checks this repository's "
+            "foundation, its guidelines and the part each file git tracks belongs to. The skills "
+            f"of the-way keep their working files under `{RUNS}`, which `.gitignore` must keep "
             "ignored.\n\n"
-            "The main branch is the branch task branches merge into. In a clone, "
-            "`git symbolic-ref --short refs/remotes/origin/HEAD` names it as `origin/<branch>`; "
-            "otherwise ask the human. On a task branch pass `--base` the commit "
-            "`git merge-base HEAD <main branch>` prints and `--merge-onto` the commit of the main "
-            "branch the merge goes onto (the part map's guard takes no `--merge-onto`). Pass "
-            "`none` only while this repository has no main branch at all; a command that cannot "
-            "find the branch means a wrong name, not a missing branch. With `none` the checks that "
-            "need the commit stay unchecked.\n\n"
-            "Until the part map has its first parts, its guard reports every tracked file as "
-            "claimed by no part; that is expected, and it is not a pass.\n\n"
-            "Nothing runs these checks automatically. Before a merge, run the format guard of "
-            "every changed foundation file and the tests of every changed part, and report what "
-            "failed and what stayed unchecked. Where this repository holds `guidelines/`, run "
-            f"`python -B {SUBMODULE}/product-guidelines/form_check.py` and "
-            f"`python -B {SUBMODULE}/product-guidelines/form_check.py --merge-onto <main commit>` "
-            "before every merge. "
-            "A check that did not run is never a pass.\n")
+            "Until the part map has its first parts, `foundation_check.py` reports every file git "
+            "tracks as claimed by no part; that is expected, and it is not a pass. The first map "
+            "is written with `the-way-update-part-map`.\n\n"
+            "Before a merge, run every test of this repository with its one command, which "
+            f"runs `python -B {SUBMODULE}/elements/common/foundation_check.py` too, and report "
+            "what failed and what stayed unchecked. While the one command does not run "
+            "that check, run it on its own and report the check as left unchecked by the one "
+            "command. A check that did not run is never a pass.\n")
 
 
 def agents_block() -> str:
@@ -239,7 +231,9 @@ def appended(text: str, addition: str, blank_line: bool) -> str:
 
 
 def agents_change(path: Path) -> tuple[str, str]:
-    """CREATE, APPEND or KEEP the marked block of the product guidance in AGENTS.md."""
+    """CREATE, APPEND, KEEP or REPLACE the marked block of the product guidance in AGENTS.md.
+    REPLACE carries the whole new text: the block rewritten where it stands, in the file's own
+    line ending, and everything outside the markers byte for byte."""
     block = agents_block()
     if not os.path.lexists(path):
         return "CREATE", block
@@ -251,8 +245,9 @@ def agents_change(path: Path) -> tuple[str, str]:
     if begins == ends == 1 and normal.index(BEGIN) < normal.index(END):
         if normal[normal.index(BEGIN):normal.index(END) + len(END)] == block[:-1]:
             return "KEEP", ""
-        raise RuntimeError(f"{AGENTS} holds a the-way block that differs from this commit's "
-                           f"guidance; remove the block from {BEGIN} to {END} and run again")
+        newline = "\r\n" if "\r\n" in text else "\n"
+        start, end = text.index(BEGIN), text.index(END) + len(END)
+        return "REPLACE", text[:start] + block[:-1].replace("\n", newline) + text[end:]
     raise RuntimeError(f"{AGENTS} holds {begins} {BEGIN} and {ends} {END} markers; it must hold "
                        "one complete block or none. Fix it by hand and run again")
 
@@ -293,6 +288,39 @@ def check_parents(target: Path, path: Path) -> None:
         parent = parent.parent
 
 
+def owned_entry_point(path: Path) -> bool:
+    """Whether the file at an entry point's path is one the installer wrote, at this commit or
+    an earlier one: a regular UTF-8 file whose header names the skill of its directory with the
+    `the-way-` prefix, whose description ends as the installer ends it, and which points to the
+    pinned submodule."""
+    if path.is_symlink() or not path.is_file():
+        return False
+    try:
+        text = path.read_bytes().decode("utf-8")
+    except UnicodeDecodeError:
+        return False
+    header = re.match(r"---\r?\nname: (.+?)\r?\ndescription: (.+?)\r?\n---\r?\n", text)
+    return bool(header and header.group(1) == path.parent.name and
+                path.parent.name.startswith("the-way-") and
+                header.group(2).endswith(OWN_DESCRIPTION) and OWN_MARK in text)
+
+
+def stale_entry_points(target: Path) -> list[Path]:
+    """The installer's entry points of skills this commit of the-way no longer has. An entry
+    point the installer did not write stays, whatever its name."""
+    stale = []
+    for directory in SKILL_DIRECTORIES:
+        skills = target / directory / "skills"
+        if skills.is_symlink() or not skills.is_dir():
+            continue
+        for entry in sorted(skills.iterdir()):
+            name = entry.name.removeprefix("the-way-")
+            if entry.name.startswith("the-way-") and name not in SKILLS and \
+                    not entry.is_symlink() and owned_entry_point(entry / "SKILL.md"):
+                stale.append(entry / "SKILL.md")
+    return stale
+
+
 def verify_remote(url: str, commit: str) -> None:
     with tempfile.TemporaryDirectory(prefix="the-way-pin-") as temporary:
         mirror = Path(temporary) / "source"
@@ -305,8 +333,10 @@ def verify_remote(url: str, commit: str) -> None:
             raise RuntimeError(f"Commit {commit} is not available from {url}; publish it first")
 
 
-def plan(target: Path, commit: str,
-         url: str) -> tuple[dict[Path, str], dict[Path, tuple[str, str]], bool, bool]:
+def plan(target: Path, commit: str, url: str) -> tuple[
+        dict[Path, str], dict[Path, tuple[str, str]], list[Path], bool, bool, str | None]:
+    """What the run does: the files the installer owns, the shared files, the entry points it
+    deletes, whether it adds or initializes the submodule, and the pin it moves from, if any."""
     files: dict[Path, str] = {}
     for filename, content in empty_foundations().items():
         files[target / "foundations" / filename] = content
@@ -322,9 +352,6 @@ def plan(target: Path, commit: str,
     submodule_path = target / SUBMODULE
     modules_file = target / ".gitmodules"
     if pin:
-        if pin != commit:
-            raise RuntimeError(f"Existing {SUBMODULE} pins {pin}, requested {commit}; "
-                               "moving a pin is a separate product task")
         configured = git("config", "-f", str(modules_file), "--get",
                          f"submodule.{SUBMODULE}.url", cwd=target, check=False)
         if configured.returncode or configured.stdout.strip() != url:
@@ -364,13 +391,54 @@ def plan(target: Path, commit: str,
         if path.parts[-2] == "foundations":
             if not path.is_file() or path.is_symlink():
                 raise RuntimeError(f"Existing foundation path is not a regular file: {path}")
-        elif not path.is_file() or path.is_symlink() or path.read_text(encoding="utf-8") != expected:
+        elif not owned_entry_point(path):
             raise RuntimeError(f"Existing integration file differs: {path}")
     if pin and os.path.lexists(submodule_path / ".git"):
         checked_out = git("-C", SUBMODULE, "rev-parse", "HEAD", cwd=target).stdout.strip()
         if checked_out != pin:
             raise RuntimeError(f"{SUBMODULE} has {checked_out} checked out but the gitlink pins {pin}")
-    return files, shared, pin is None, bool(pin and not os.path.lexists(submodule_path / ".git"))
+    initialize = bool(pin and not os.path.lexists(submodule_path / ".git"))
+    moved_from = pin if pin and pin != commit else None
+    if moved_from and not initialize:
+        changed = git("-C", SUBMODULE, "status", "--porcelain", "--untracked-files=no",
+                      cwd=target).stdout.splitlines()
+        if changed:
+            raise RuntimeError(f"{SUBMODULE} has uncommitted changes, so its pin is not moved: " +
+                               ", ".join(line[3:] for line in changed) +
+                               "; commit or discard them in the-way and run again")
+    return files, shared, stale_entry_points(target), pin is None, initialize, moved_from
+
+
+def going_back(target: Path, pin: str, commit: str) -> bool:
+    """Whether `commit` is older than `pin`, as the-way's history or the checkout's knows it."""
+    for cwd in (SOURCE, target / SUBMODULE):
+        if not os.path.lexists(cwd / ".git"):
+            continue
+        found = git("merge-base", "--is-ancestor", commit, pin, cwd=cwd, check=False)
+        if found.returncode in (0, 1):
+            return found.returncode == 0
+    return False
+
+
+def untracked_in_checkout(target: Path) -> list[str]:
+    if not os.path.lexists(target / SUBMODULE / ".git"):
+        return []
+    listed = git("-C", SUBMODULE, "status", "--porcelain", "--untracked-files=all",
+                 cwd=target).stdout.splitlines()
+    return [line[3:] for line in listed if line.startswith("?? ")]
+
+
+def file_action(path: Path, content: str) -> str:
+    if not os.path.lexists(path):
+        return "CREATE"
+    if path.parts[-2] == "foundations" or path.read_bytes() == content.encode("utf-8"):
+        return "KEEP"
+    return "REPLACE"
+
+
+def shown_diff(name: str, before: str, after: str) -> str:
+    return "\n".join(difflib.unified_diff(before.splitlines(), after.splitlines(),
+                                         fromfile=name, tofile=name, lineterm=""))
 
 
 def ignored_paths(target: Path, paths: list[Path]) -> list[str]:
@@ -403,7 +471,8 @@ def warnings_for(target: Path, files: dict[Path, str],
                         f"not see the the-way block unless {CODEX_OVERRIDE} carries the same text")
     action, text = shared[target / AGENTS]
     size = len(text.encode("utf-8"))
-    if action != "CREATE":
+    if action in ("APPEND", "KEEP"):
+        # APPEND carries the added lines alone; REPLACE and CREATE carry the whole new file.
         size += (target / AGENTS).stat().st_size
     if size > CODEX_LIMIT:
         warnings.append(f"{AGENTS} will hold {size} bytes; Codex reads at most {CODEX_LIMIT} bytes "
@@ -428,23 +497,33 @@ def run() -> int:
         raise RuntimeError("Submodule URL contains credentials; use a credential-free URL")
     if is_local(url):
         FILE_PROTOCOL[:] = ["-c", "protocol.file.allow=always"]
-    files, shared, add_submodule, initialize_submodule = plan(target, commit, url)
+    files, shared, stale, add_submodule, initialize_submodule, moved_from = \
+        plan(target, commit, url)
 
     print(f"Product: {target}\nProcess commit: {commit}\nSubmodule URL: {url}")
-    print(f"{'ADD' if add_submodule else 'KEEP'} {SUBMODULE} (gitlink at {commit})")
+    if moved_from:
+        older = " (older than the pin)" if going_back(target, moved_from, commit) else ""
+        print(f"MOVE {SUBMODULE} from {moved_from} to {commit}{older} (checks it out and stages "
+              "the gitlink)")
+    else:
+        print(f"{'ADD' if add_submodule else 'KEEP'} {SUBMODULE} (gitlink at {commit})")
     if add_submodule:
         print(f"UPDATE .gitmodules: add path={SUBMODULE}, url={url}")
         print(f"+[submodule \"{SUBMODULE}\"]\n+\tpath = {SUBMODULE}\n+\turl = {url}")
         print("STAGE .gitmodules and .the-way (git submodule add stages these paths)")
-    elif initialize_submodule:
+    if initialize_submodule:
         print(f"INITIALIZE {SUBMODULE} from its pinned commit")
+    actions = {path: file_action(path, content) for path, content in files.items()}
     for path, content in files.items():
-        action = "KEEP" if os.path.lexists(path) else "CREATE"
-        print(f"{action} {path.relative_to(target).as_posix()}")
-        if action == "CREATE":
+        name = path.relative_to(target).as_posix()
+        print(f"{actions[path]} {name}")
+        if actions[path] == "CREATE":
             print("\n".join(difflib.unified_diff([], content.splitlines(), fromfile="/dev/null",
-                                                 tofile=path.relative_to(target).as_posix(),
-                                                 lineterm="")))
+                                                 tofile=name, lineterm="")))
+        elif actions[path] == "REPLACE":
+            print(shown_diff(name, path.read_bytes().decode("utf-8"), content))
+    for path in stale:
+        print(f"DELETE {path.relative_to(target).as_posix()} (its skill is no longer in the-way)")
     for path, (action, text) in shared.items():
         name = path.relative_to(target).as_posix()
         print(f"{action} {name}")
@@ -458,13 +537,22 @@ def run() -> int:
             if existing and not existing.endswith(b"\n"):
                 shown = shown[1:]   # this newline only ends the existing last line
             print("\n".join("+" + line for line in shown.split("\n")[:-1]))
-    for warning in warnings_for(target, files, shared):
+        elif action == "REPLACE":
+            print("(the block is rewritten where it stands; the rest stays byte for byte)")
+            print(shown_diff(name, read_text_file(path, name).replace("\r\n", "\n"),
+                             text.replace("\r\n", "\n")))
+    warnings = warnings_for(target, files, shared)
+    untracked = untracked_in_checkout(target) if moved_from else []
+    if untracked:
+        warnings.append(f"{SUBMODULE} holds files git does not track: {', '.join(untracked)}; "
+                        "the move keeps them, and no other clone has them")
+    for warning in warnings:
         print(f"WARNING: {warning}")
     if not args.apply:
         print("Preview only. Run again with --apply to confirm and write.")
         return 0
-    if not add_submodule and not initialize_submodule and \
-            all(os.path.lexists(path) for path in files) and \
+    if not add_submodule and not initialize_submodule and not moved_from and not stale and \
+            all(action == "KEEP" for action in actions.values()) and \
             all(action == "KEEP" for action, _ in shared.values()):
         print("Already installed; no changes.")
         return 0
@@ -472,8 +560,9 @@ def run() -> int:
         print("Cancelled; no changes.")
         return 0
 
-    if add_submodule:
+    if add_submodule or moved_from:
         verify_remote(url, commit)
+    if add_submodule:
         git("submodule", "add", "--", url, SUBMODULE, cwd=target)
         if git("-C", SUBMODULE, "cat-file", "-e", f"{commit}^{{commit}}", cwd=target,
                check=False).returncode:
@@ -482,12 +571,23 @@ def run() -> int:
         git("add", "--", SUBMODULE, cwd=target)
     elif initialize_submodule:
         git("submodule", "update", "--init", "--", SUBMODULE, cwd=target)
+    if moved_from:
+        if git("-C", SUBMODULE, "cat-file", "-e", f"{commit}^{{commit}}", cwd=target,
+               check=False).returncode:
+            git("-C", SUBMODULE, "fetch", "--quiet", "origin", commit, cwd=target)
+        git("-C", SUBMODULE, "checkout", "--quiet", "--detach", commit, cwd=target)
+        git("add", "--", SUBMODULE, cwd=target)
     for path, content in files.items():
-        if os.path.lexists(path):
-            continue
-        path.parent.mkdir(parents=True, exist_ok=True)
-        with path.open("x", encoding="utf-8", newline="\n") as handle:
-            handle.write(content)
+        if actions[path] == "CREATE":
+            path.parent.mkdir(parents=True, exist_ok=True)
+            with path.open("x", encoding="utf-8", newline="\n") as handle:
+                handle.write(content)
+        elif actions[path] == "REPLACE":
+            path.write_bytes(content.encode("utf-8"))
+    for path in stale:
+        path.unlink()
+        if not any(path.parent.iterdir()):
+            path.parent.rmdir()
     for path, (action, text) in shared.items():
         if action == "CREATE":
             with path.open("x", encoding="utf-8", newline="\n") as handle:
@@ -495,6 +595,8 @@ def run() -> int:
         elif action == "APPEND":
             with path.open("ab") as handle:
                 handle.write(text.encode("utf-8"))
+        elif action == "REPLACE":
+            path.write_bytes(text.encode("utf-8"))
     print("Installed. Commit the product files and gitlink when ready.")
     return 0
 

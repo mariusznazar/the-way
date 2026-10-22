@@ -1,4 +1,5 @@
-"""Product installation checks for the styleguide skill and the guidance naming the form check."""
+"""Product installation checks for the styleguide skill and the guidance naming the check of the
+foundation, which checks guidelines too."""
 
 from pathlib import Path
 import subprocess
@@ -12,12 +13,11 @@ INSTALL = SOURCE / "installation/install.py"
 SKILL_SOURCE = "product-guidelines/styleguide/SKILL.md"
 WRAPPERS = (".claude/skills/the-way-maintain-styleguide/SKILL.md",
             ".agents/skills/the-way-maintain-styleguide/SKILL.md")
-FORM = "python -B .the-way/product-guidelines/form_check.py"
-REFERENCES = "python -B .the-way/product-guidelines/form_check.py --merge-onto <main commit>"
-# Before every merge: a renamed file `## Where in code` names, or a moved pin, breaks guidelines
-# whatever files the change touches (product-guidelines/template.md, the invariants' *Part*).
-SENTENCE = (f"Where this repository holds `guidelines/`, run `{FORM}` and `{REFERENCES}` before "
-            "every merge.")
+CHECK = "python -B .the-way/elements/common/foundation_check.py"
+# Before every merge: a reference of guidelines to an entry the change removed, or a moved pin,
+# breaks guidelines whatever files the change touches.
+SENTENCE = (f"Before a merge, run every test of this repository with its one command, which "
+            f"runs `{CHECK}` too,")
 
 
 def command(*args: str, cwd: Path, input_text: str | None = None):
@@ -83,7 +83,7 @@ class StyleguideInstallationTest(unittest.TestCase):
         self.assertEqual(claude.read_bytes(), codex.read_bytes())
         wrapper = claude.read_text(encoding="utf-8")
         self.assertTrue(wrapper.startswith("---\nname: the-way-maintain-styleguide\n"), wrapper)
-        self.assertIn(f"Its commit is `{self.commit}`", wrapper)
+        self.assertNotIn(self.commit, wrapper)
         self.assertIn(f"Read `.the-way/{SKILL_SOURCE}` in full and follow it.", wrapper)
         self.assertIn(f"If `.the-way/{SKILL_SOURCE}` is absent", wrapper)
         siblings = [path for directory in (".claude", ".agents")
@@ -117,23 +117,22 @@ class StyleguideInstallationTest(unittest.TestCase):
         self.assertIn("Already installed; no changes", repeated.stdout)
         self.assertEqual(installed, self.product_files())
 
-    def test_block_of_an_earlier_pin_without_the_sentence_is_refused_before_writing(self) -> None:
-        # Keeping the earlier block would leave a product's agents without the form check.
+    def test_block_of_an_earlier_pin_without_the_sentence_is_rewritten(self) -> None:
+        # Keeping the earlier block would leave a product's agents without the foundation check.
         applied = self.install("--apply")
         self.assertEqual(applied.returncode, 0, applied.stdout + applied.stderr)
         agents = self.product / "AGENTS.md"
         current = agents.read_text(encoding="utf-8")
-        earlier = current.replace(SENTENCE + " ", "")
+        earlier = current.replace(SENTENCE, "Before a merge, run the tests of every changed part,")
         self.assertNotEqual(earlier, current)
         agents.write_text(earlier, encoding="utf-8", newline="\n")
         for name in WRAPPERS:
             (self.product / name).unlink()
-        before = self.product_files()
-        for args in ((), ("--apply",)):
-            refused = self.install(*args)
-            self.assertNotEqual(refused.returncode, 0, refused.stdout)
-            self.assertIn("differs from this commit's guidance", refused.stderr)
-            self.assertEqual(before, self.product_files())
+        rewritten = self.install("--apply")
+        self.assertEqual(rewritten.returncode, 0, rewritten.stdout + rewritten.stderr)
+        self.assertEqual(agents.read_text(encoding="utf-8"), current)
+        for name in WRAPPERS:
+            self.assertTrue((self.product / name).is_file(), name)
 
 
 if __name__ == "__main__":

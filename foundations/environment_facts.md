@@ -53,9 +53,9 @@ Language models detecting violations of architectural decisions reach substantia
 
 ## instruction-density-accuracy
 
-Of the 20 models IFScale evaluated across seven providers — claude-3.5-haiku, claude-3.7-sonnet, claude-opus-4, claude-sonnet-4, deepseek-r1-0528, gemini-2.5-flash-preview, gemini-2.5-pro-preview, llama-4-maverick, llama-4-scout, gpt-4.1, gpt-4.1-mini, gpt-4.1-nano, gpt-4o, gpt-4o-mini, gpt-4.5-preview, o3, o4-mini, qwen3-235b-a22b, grok-3-beta and grok-3-mini-beta — even the best reach only 68% accuracy at its maximum density of 500 instructions.
+Of the 20 models IFScale evaluated across seven providers, which the rows of its tables of full results name, even the best reach only 68% accuracy at its maximum density of 500 instructions.
 
-- **Source:** https://arxiv.org/abs/2507.11538v1 § Abstract — "We evaluate 20 state-of-the-art models across seven major providers and find that even the best frontier models only achieve 68% accuracy at the max density of 500 instructions."; read 2026-09-26
+- **Source:** https://arxiv.org/abs/2507.11538v1 § Abstract — "We evaluate 20 state-of-the-art models across seven major providers and find that even the best frontier models only achieve 68% accuracy at the max density of 500 instructions."; read 2026-09-26 · https://arxiv.org/html/2507.11538v1 § Table 1 — "across all 20 evaluated LLMs" · § Table 1 — "claude-3.5-haiku" · § Table 1 — "claude-3.7-sonnet" · § Table 1 — "claude-opus-4" · § Table 1 — "claude-opus-4 (r)" · § Table 1 — "claude-sonnet-4" · § Table 1 — "claude-sonnet-4 (r)" · § Table 1 — "deepseek-r1-0528" · § Table 1 — "gemini-2.5-flash-preview" · § Table 1 — "gemini-2.5-pro-preview" · § Table 2 — "llama-4-maverick" · § Table 2 — "llama-4-scout" · § Table 2 — "gpt-4.1" · § Table 2 — "gpt-4.1-mini" · § Table 2 — "gpt-4.1-nano" · § Table 2 — "gpt-4o" · § Table 2 — "gpt-4o-mini" · § Table 2 — "gpt-4.5-preview" · § Table 3 — "o3 (medium)" · § Table 3 — "o3 (high)" · § Table 3 — "o4-mini (medium)" · § Table 3 — "qwen3-235b-a22b" · § Table 3 — "grok-3-beta" · § Table 3 — "grok-3-mini-beta"; read 2026-10-22
 
 ## context-file-effect
 

@@ -159,8 +159,7 @@ neither this agent nor the project orchestrator starts task implementation.
    an element in projected mode makes one. Settle each finding before the gate: a projected change
    to the entry through the skill of its element in projected mode, a projected entry struck or
    turned into a change of the entry that already states it, shown to the human at 7.3, or the
-   definition brought into line with it. Note the commit of the product's foundation you searched,
-   as `git rev-parse HEAD` in the product prints it.
+   definition brought into line with it.
 3. Run `critique` once on all finished projected entries, the definition and its sources
    (WAY-120). Verify its observations, correct proposals through the skills of their elements and
    bring any conflict with a human settlement back to the human. If an independent critic cannot

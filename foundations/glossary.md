@@ -22,18 +22,6 @@ A binding sentence is a sentence of a binding part.
 
 - **Not:** none
 
-## clock
-
-The clock is the command that, unlike the gate, runs checks apart from any change.
-
-- **Not:** none
-
-## correction
-
-A correction is a change to the binding part of an entry that leaves its meaning unchanged.
-
-- **Not:** none
-
 ## critical flow
 
 A critical flow is something a product does end to end across several of its parts, singled out as one to keep working.
@@ -61,12 +49,6 @@ An entry is the text, under one or more headings of its own, that a file of the 
 ## environment fact
 
 An environment fact is something a product takes as true about the world around it that, unlike an invariant, no commit of the product makes true or false.
-
-- **Not:** none
-
-## format guard
-
-A format guard is the script of an element that checks the shape of that element's entries.
 
 - **Not:** none
 
@@ -154,12 +136,6 @@ A repository instruction file is an instruction file for coding agents that a re
 
 - **Not:** none
 
-## result
-
-A result is the value reported for an entry on one commit: the verdict that counts for it there, or a value of its template's closed list standing in place of one.
-
-- **Not:** none
-
 ## return step
 
 The return step is the step of a task that carries back to the foundation what the task's change holds and the foundation does not yet say.
@@ -181,12 +157,6 @@ A surface is something of a product that someone outside the product relies on a
 ## user interface
 
 A user interface is a set of screens that a product draws and through which a person uses it.
-
-- **Not:** none
-
-## verdict
-
-A verdict is a value from a template's closed list that a person gives for one entry of the foundation.
 
 - **Not:** none
 

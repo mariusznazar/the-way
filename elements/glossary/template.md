@@ -18,8 +18,8 @@ template holds what is particular to a glossary entry (WAY-35).
 - A product takes the words of the process from the-way at the commit it pins, and its glossary
   defines none of them again (WAY-95).
 - A word of the product's domain that the glossary of the-way holds, or the last word of a term
-  it holds, in any of its forms, is written in the product's foundation with a qualifier — "game
-  clock" for "clock", or "assembly step" for "step", the last word of "return step". The bare word
+  it holds, in any of its forms, is written in the product's foundation with a qualifier — "castle
+  gate" for "gate", or "assembly step" for "step", the last word of "return step". The bare word
   there keeps the meaning of the process. The qualified word takes an entry only as "Which words
   take an entry" says. The product's code, its interface and talk about the product use the word
   of the domain unchanged (WAY-104).

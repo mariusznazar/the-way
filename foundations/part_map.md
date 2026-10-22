@@ -26,8 +26,8 @@ the-way itself.
 
 ## relation-model
 
-The part answers for how the fingerprint of an entry is computed from its binding part, and for
-the code that tells whether a string has the form of an identifier or of a version.
+The part answers for how the fingerprint of a text is computed, with which a project plan notices
+that the project definition it was written from has changed.
 
 - **Files:** relation-model/**
 - **Depends on:** none
@@ -40,7 +40,7 @@ and for the invariants of the-way itself.
 
 - **Files:** elements/invariants/**
   foundations/invariants.md
-- **Depends on:** decisions · part-map · relation-model · environment-facts · elements-common
+- **Depends on:** decisions · part-map · environment-facts · elements-common
 - **Trust boundary:** none
 
 ## glossary
@@ -59,7 +59,7 @@ The part answers for a product's environment facts.
 
 - **Files:** elements/environment-facts/**
   foundations/environment_facts.md
-- **Depends on:** decisions · part-map · invariants · relation-model · elements-common
+- **Depends on:** decisions · part-map · invariants · elements-common
 - **Trust boundary:** none
 
 ## elements-common
@@ -96,7 +96,7 @@ them.
 
 - **Files:** task-cycle/**
 - **Depends on:** decisions · invariants · glossary · part-map · environment-facts ·
-  elements-common · project-level · gate · relation-model · product-guidelines
+  elements-common · project-level · gate · product-guidelines
 - **Trust boundary:** none
 
 ## gate
@@ -173,10 +173,13 @@ argument and its exit codes.
 ## installation-command
 
 The command that installs a pinned the-way checkout, empty foundation files, project skills, agent
-guidance for Claude Code and Codex and a `.runs/` ignore line in a product keeps its preview and
-confirmation, replaces no existing file, and adds to an existing file of the working tree only the
-`.the-way` section of `.gitmodules`, a marked block at the end of `AGENTS.md` and the `.runs/` line
-at the end of `.gitignore`.
+guidance for Claude Code and Codex and a `.runs/` ignore line in a product, or moves the product's
+pin to the checkout's commit, keeps its preview and confirmation. Of the files it finds, it
+rewrites only its own — the skill entry points it wrote, which point to `.the-way`, and its marked
+block in `AGENTS.md`, where the block stands — and deletes only its own entry points of skills the
+commit lacks; to another existing file of the working tree it adds only the `.the-way` section of
+`.gitmodules`, a marked block at the end of `AGENTS.md` and the `.runs/` line at the end of
+`.gitignore`.
 
 - **Relied on by:** a product pinned to a commit of the-way
 

@@ -8,28 +8,11 @@ itself follow this guide.
 When `main` is created, replace this guide with the task-cycle instructions before integrating
 another change.
 
-## While the slimming plan is applied
+## The form of the foundation
 
-The-way is being slimmed down one file or skill at a time, by a plan kept in the author's private
-notes: `C:\Storage\The Brain\The Brain\Notes\Projects\(P) Proces pracy nad produktem\odchudzanie_radykalne_dane\plan_nanoszenia.md`.
-An agent that cannot open it asks the human. Files and foundation entries the plan has not yet
-reached still describe the mechanism this guide drops: fingerprints and their renewal, entry
-versions, *Approved by* and the request link it waits for, format guards run as a step of a change,
-the independent assessment, a second search of the foundation before the merge and the record of a
-search. A change to
-the-way does not apply that mechanism, whatever such a file or entry says. Where a test of the-way
-still requires part of it, the change meets the test with the repository's existing tools and does
-no more. The foundation of the-way itself is migrated: its entries hold no fingerprint, version,
-*Approved by* or *Review when*, and there is no list of violated, quarantined or recovered
-invariants and no file of human verdicts. No format guard and no probe checks it;
-`elements/common/foundation_check.py` checks its identifiers, references, fields and the part of
-each file, and `elements/common/migrate_foundation.py` brings a foundation of the earlier form to
-the current one. No script checks the form of a product's guidelines. The block the installer
-writes into a product's `AGENTS.md` and `installation/README.md` still tell a product to run the
-format guard of each foundation file and the form check of guidelines until the plan's positions
-P26 and P27 rewrite them. While the plan is
-applied, its own rhythm holds: each of its positions is one commit, with every test run on it and
-reviewed as below, and each of its stages is one request.
+`elements/common/foundation_check.py` checks the identifiers, references, fields and the part of
+each file of the foundation of the-way, and `elements/common/migrate_foundation.py` brings a
+foundation of the earlier form to the current one.
 
 ## Start a change
 
@@ -38,8 +21,7 @@ working-tree changes out of that branch and out of its commits.
 
 Before editing, use `foundations/part_map.md` to identify the parts touched and read the decisions
 whose *Scope* names those parts. Read the affected invariants and the relevant element templates
-and skills. A change to a foundation entry follows the skill for that element, apart from the
-mechanism this guide drops.
+and skills. A change to a foundation entry follows the skill for that element.
 
 Until an entry reaches `main`, edit an existing decision in place (WAY-07). Do not manufacture a
 new decision version merely to model the unfinished pre-`main` history.

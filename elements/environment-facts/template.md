@@ -3,7 +3,7 @@
 This file defines how an environment fact entry is written. Facts are about such things as a
 platform, a format, a licence, a law, the behaviour of a tool or a finding of a study. An entry is a
 sentence and its source: the address, the passage word for word and the date it was read (WAY-80).
-Nothing runs to check a fact and no status stands beside it (WAY-81), and nothing its sentence says
+Nothing runs to check a fact and no status stands beside it (WAY-82), and nothing its sentence says
 is an invariant (WAY-76). An invariant names the facts holding a condition of its sentence in
 *Rests on* (WAY-73), and a decision names the facts it rests on in *Based on* (WAY-90).
 
@@ -167,7 +167,6 @@ withdrawn in the same change, with that in *Why* (WAY-64, WAY-73).
   fact`).
 - A likeness an agent notices between the product and a requirement nothing has adopted or applied
   goes to a human as a question: "do we adopt this?" or "does this bind us?" (WAY-86).
-- How an obligation raises the criticality of a part stands in the part map template (WAY-46).
 
 ## Fields and their readers
 

@@ -57,7 +57,7 @@ gives (WAY-64).
 - *Method* reads `test` where a test of the product's test suite checks the sentence, and `review`
   where no cheap test can: then the review of each change the invariant reaches, by an agent that
   did not make the change, compares the change with the sentence (WAY-08). An invariant whose test
-  is not written yet reads `review` (WAY-105).
+  is not written yet reads `review` (WAY-61).
 - An invariant's test is a test of the product's own suite, in the product's language, run by the
   command that runs the product's tests (WAY-61).
 - A test checks what its sentence is about, as it stands on the commit being checked: a test fed
@@ -72,8 +72,7 @@ gives (WAY-64).
 - An invariant's test is seen failing once, with the command that later shows it passing: run before
   the code that satisfies it, or, where the code already has the behaviour, against that behaviour
   broken for a moment (WAY-08). No other break is written for it, and it takes no agent of its own
-  (WAY-69). A test protecting elements of an earlier version is accepted the same way when that
-  history holds none yet (WAY-223).
+  (WAY-69).
 - A test that gives different verdicts on one commit is fixed as any test of the product is; the
   foundation records no quarantine for it (WAY-68).
 - A change may alter an invariant test in any step of its task, and names in its request each
