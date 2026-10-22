@@ -71,7 +71,11 @@ Discovery uses the common form above; the response follows the discipline's crea
 Give each finding, its source and consequence to the owning workflow: `refine-task` places
 questions, prerequisite work and the return after its merge (WAY-215); `plan-project` places
 preparatory tasks and dependencies within the approved definition (WAY-218). An agent of the task
-cycle names its finding in its report: one that changes what the task needs returns to
-refinement; one needing a new foundation meaning takes the cycle's foundation route. Record the
-pause or question through that workflow before dependent work, continue independent work where
-allowed, and invent no status or silent waiver.
+cycle names its finding in its report: one that changes what the task needs stops the cycle, which
+opens a blocked draft request showing it, as `implement-task` gives where the required outcome
+cannot be made; one needing a foundation entry the task, any spec and the foundation leave open is
+an open design choice, returned without code for a spec (WAY-135); one that would change an approved
+decision beyond what the task document or plan carries is a question the cycle's foundation step
+allows (WAY-30). Record the pause or
+question through that workflow before dependent work, continue independent work where allowed, and
+invent no status or silent waiver.

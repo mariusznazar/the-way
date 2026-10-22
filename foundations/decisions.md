@@ -3391,9 +3391,9 @@ or in its return step where the foundation step missed it, one that no code make
 keeping its meaning and choosing its wording; where that meaning cannot hold, or the entry needs a
 value neither the row nor the cycle's work gives, the cycle asks the human through a blocked draft
 request rather than write another entry, and otherwise the human accepts the entry's meaning at the
-merge (WAY-114). A kept row whose settlement the cycle's search of the whole foundation (WAY-33)
-finds an entry already stating becomes no second entry: the cycle ties the row to that entry and
-names both in the request.
+merge (WAY-114); a kept row whose settlement the cycle's search of the whole foundation (WAY-33)
+finds already stated becomes no second entry, the cycle tying the row to that entry and naming
+both in the request.
 
 - **Scope:** project-level, task-cycle, elements-common, decisions, invariants, glossary,
   environment-facts
@@ -3424,8 +3424,9 @@ cycle would guess drops one no reader would miss. Refinement compares the candid
 entries it reads for the task's parts; what no link joins, the one search of the whole foundation
 finds once the cycle has settled the entry (WAY-33), and a rule already stated keeps one entry. A
 meaning that cannot hold goes back to the human before the request because the human settled it,
-and finding the change only at the merge would leave code already written for another meaning. In an orchestrated round a single human-facing
-agent keeps these choices together without making the refiner a second channel to the human.
+and finding the change only at the merge would leave code already written for another meaning. In
+an orchestrated round a single human-facing agent keeps these choices together without making the
+refiner a second channel to the human.
 *Rejected:* whole entries written while the task is refined, as a project definition projects
 them — a task has no gate to approve their wording, and refining a task would weigh as much as
 defining a project; noting a settlement only when the human states one — a settlement said in

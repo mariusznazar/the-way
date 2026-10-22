@@ -144,7 +144,8 @@ invariant covers it.
 
 - Request URL and status: <URL and draft/ready/blocked>
 - Cycle and its reasons: <as the request states them>
-- What this request settles: <identifier and meaning sentence for each entry>
+- What this request settles: <identifier and meaning sentence for each entry, and each kept row
+  tied to an entry already stated, with that entry (WAY-134)>
 - What the foundation puts in front of the human at the merge: <each invariant test the change
   alters (WAY-03), each surface it alters (WAY-49) and each *Violated* mark it sets or clears
   (WAY-51), or none>

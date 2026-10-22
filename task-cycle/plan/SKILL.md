@@ -97,8 +97,9 @@ Write the plan in this form; the script reads the slice headings and the fields 
   its plan item assigns; each entry the spec names; and an entry the change makes follow, such as a
   part-map change for a file the change adds. *From* names the row, the projected entry or the
   spec; *What depends on it* names the slices whose code needs it. An invariant's row names its
-  check too, which an agent writes from the sentence and its method alone (WAY-69). Write `none`
-  under the table where the change writes no entry. The plan names entries; it never words them.
+  check too; one agent may write the sentence, its test and the code the test covers (WAY-69).
+  Write `none` under the table where the change writes no entry. The plan names entries; it never
+  words them.
 - A slice is narrow: one goal, the files that goal changes, and checks that run when it is made. Cut
   along what a reviewer can judge alone. If the selected planning route yields only one useful
   slice, keep it as one; never add a slice for its own sake or divide inseparable work.

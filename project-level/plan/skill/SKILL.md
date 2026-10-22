@@ -81,14 +81,14 @@ and plan check on those whole files at their original paths, never on selected e
 reduced copy. Selection is no reading cap; read a small file whole where useful.
 
 - Before choosing work at start or resume, inspect the complete heading structure, status and
-  header, gate record and document versions. Inventory every top-level In scope item in its
+  header, gate record and document revisions. Inventory every top-level In scope item in its
   original order and numbering, every projected-entry heading, and every open question with its
   exact wording and assigned place. For an existing plan, inventory every task's number, name,
   state and dependencies, every projected-entry realizing and writing assignment, every question
   with its placement or answer, and the locations of phases and change-log content.
 - Accumulate the complete inventories in manageable batches with ordinary file/search tools.
   Read table rows and question items as complete units, including wrapped continuations. Keep
-  their source versions and locations in temporary working evidence; this is no second plan or
+  their source revisions and locations in temporary working evidence; this is no second plan or
   maintained product format. Refresh the inventories when either source changes.
 - Use status and unfinished sections to choose where to resume. For that work, read complete
   scope items, task rows, projected entries and questions, with dependency and assignment context.

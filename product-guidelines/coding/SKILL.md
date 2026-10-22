@@ -19,8 +19,7 @@ This skill lives in `product-guidelines/coding/` of the-way. In the-way itself, 
 checkout or worktree the session works in, the directory `git rev-parse --show-toplevel` prints in
 the session's working directory; in a product, it is the product's pinned `.the-way`. The files
 named below lie there, and each skill named below is the project skill of that name with the
-`the-way-` prefix. The skill uses no Superpowers method: the-way adopts them for the task cycle
-alone (WAY-125). What it takes from outside practice, and what it leaves, WAY-195 names; the steps
+`the-way-` prefix. What it takes from outside practice, and what it leaves, WAY-195 names; the steps
 below describe it in their own words.
 
 ## Where the skill works
