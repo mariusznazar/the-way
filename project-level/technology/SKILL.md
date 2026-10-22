@@ -67,8 +67,8 @@ The step writes into the definition only, never into the product's foundation
 - For each, find what settles it: a decision of the product's foundation, `held by`; a projected
   decision of this definition, `projected`; nothing, `open`. A decision that settles the choice in
   a sentence about something else still holds it; name that decision. A decision of the foundation
-  the project changes no longer holds the choice: where the definition projects its new version or
-  edit, the item is `projected` with that heading's question; otherwise it is `open`.
+  the project changes no longer holds the choice: where the definition projects its edit, the item
+  is `projected` with that heading's question; otherwise it is `open`.
 - Write the list into "Technology" in the form the template gives, and set the status line to
   `definition — open: Technology`, before asking.
 - Show the list, with one sentence for each item saying why the project needs it, and ask the
