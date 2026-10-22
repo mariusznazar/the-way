@@ -704,7 +704,7 @@ def read_foundation(top, report, borrowed, invariant_rules):
     """What references name on the commit checked, read from the working tree as a product's
     untrusted files; a Foundation not known, once the report says why, where the log or the
     invariants file cannot be read. A file absent is no failure: it holds no entry."""
-    # invariant: guidelines-reference-current/1
+    # invariant: guidelines-reference-current
     check = SAME_COMMIT
     texts = []
     for path, what in ((DECISION_LOG, "decision"), (INVARIANTS, "invariant")):
@@ -740,7 +740,7 @@ def merged_foundation(top, onto, foundation, borrowed, invariant_rules, report):
     report of this script's own that is discarded but for the failures of git it holds; each
     invariant as on the branch where its sentence differs from the fork point, as on `onto`
     otherwise."""
-    # invariant: guidelines-reference-current/1
+    # invariant: guidelines-reference-current
     def failed(message):
         report.error(None, message, AFTER_MERGE, (REFERENCES,))
 
@@ -829,7 +829,7 @@ def check_order(found, expected, label, report, check, missing_at=None):
 
 def check_header(document, form, report, shared):
     """The header lines the template gives, in its order, before the first section."""
-    # invariant: guidelines-form/1
+    # invariant: guidelines-form
     check = "check_header"
     report.ran(check, FORM)
     fields = shared.parse_fields(document.prose(0, document.header_end), 1)
@@ -841,7 +841,7 @@ def check_header(document, form, report, shared):
 def check_sections(document, form, report, foundation):
     """The sections the template gives, in its order, each once; a dropped one holding only
     `none —` with a decision of the log."""
-    # invariant: guidelines-form/1
+    # invariant: guidelines-form
     check = "check_sections"
     report.ran(check, FORM)
     found, sections = {}, {}
@@ -879,7 +879,7 @@ def check_rules(document, sections, form, report, shared, foundation):
     decision in *Decision* and, where the discipline requires it, an invariant in *Invariant*;
     each dropped rule holding only `none —` with its decision. Returns {rule: its fields} of the
     rules kept."""
-    # invariant: guidelines-form/1
+    # invariant: guidelines-form
     check = "check_rules"
     report.ran(check, FORM)
     block = sections.get(RULES)
@@ -953,7 +953,7 @@ def check_cases(document, sections, report, shared, foundation):
     alone gives no case: its cases are the-way's own tests of this script. No path of a case is
     opened or given to git. This form check does not authorize use of a prepared base: actual
     history and the empty protected set are checked during acceptance."""
-    # invariant: guidelines-form/1
+    # invariant: guidelines-form
     check = "check_cases"
     report.ran(check, FORM)
     block = sections.get(RULES)
@@ -1080,7 +1080,7 @@ def check_tables(document, sections, form, report):
     and, right under it, a separator row; no other separator row; every row with as many cells as
     the columns. Returns {section: [(line, {column: cell})]} of the tables whose header holds the
     columns, with each row whose number of cells is that of the columns."""
-    # invariant: guidelines-form/1
+    # invariant: guidelines-form
     check = "check_tables"
     report.ran(check, FORM)
     tables = {}
@@ -1128,7 +1128,7 @@ def check_roles(tables, rules, form, report, foundation):
     """Each row of a table of roles: a *Kind* of the closed list, a background's *Text on it*
     naming a text role of the table, a decision; and each decision of the table named by the rule
     of each role's meaning, unless that rule is dropped."""
-    # invariant: guidelines-form/1
+    # invariant: guidelines-form
     check = "check_roles"
     report.ran(check, FORM)
     for title in form.role_tables:
@@ -1170,7 +1170,7 @@ def check_parts(fields, name, discipline, form, disciplines, parts, report):
     """Each part *Applies to* names, and the part a file's name holds, is a part of the map; the
     file's name agrees with its *Discipline*, and no file carries the name of a discipline the-way
     gives a template of under another *Discipline*, which would hold it to the wrong form."""
-    # invariant: guidelines-form/1
+    # invariant: guidelines-form
     check = "check_parts"
     report.ran(check, FORM)
     if parts is not None and APPLIES_TO in fields:
@@ -1236,7 +1236,7 @@ def refused(path):
 def check_paths(document, sections, tracked, report):
     """Each path in backticks under `## Where in code` is relative, stays in the repository and
     names a file or a directory git tracks."""
-    # invariant: guidelines-form/1
+    # invariant: guidelines-form
     check = "check_paths"
     report.ran(check, FORM)
     block = sections.get(WHERE)
@@ -1311,7 +1311,7 @@ def check_exemplar(sections, tables, form, name, report, foundation, tracked):
     of the log in force whose binding sentences, their whitespace collapsed, hold its *File* and
     the file's `<kind>`, each in backticks. A file of the kind the table leaves out is no error
     (C13)."""
-    # invariant: guidelines-form/1
+    # invariant: guidelines-form
     check = "check_exemplar"
     report.ran(check, FORM)
     kind = kind_of("%s/%s" % (GUIDELINES, name))
@@ -1386,7 +1386,7 @@ def check_kind_index(general, reports, report, tracked):
     naming it names no file. `general` is (its report, the rows of that table) where the general
     file is read, None otherwise; `reports` gives the report of each file of guidelines read,
     `report` the run's own."""
-    # invariant: guidelines-form/1
+    # invariant: guidelines-form
     check = "check_kind_index"
     files, why = tracked()
     if files is None:   # `why` then holds why git could not list them
@@ -1439,7 +1439,7 @@ def check_references(document, foundation, report):
     its `@`, names an entry in force and carries its current fingerprint on the commit checked.
     Returns the references found current there, as (line, reference, kind, entry, fingerprint),
     for the check after the merge."""
-    # invariant: guidelines-reference-current/1
+    # invariant: guidelines-reference-current
     check = SAME_COMMIT
     report.ran(check, REFERENCES)
     current = []
@@ -1466,7 +1466,7 @@ def check_references(document, foundation, report):
 def check_merged_references(current, merged, onto, report):
     """Each reference current on the commit checked names an entry in force, and carries its
     current fingerprint, in the foundation a merge onto `onto` leaves."""
-    # invariant: guidelines-reference-current/1
+    # invariant: guidelines-reference-current
     check = AFTER_MERGE
     report.ran(check, REFERENCES)
     after = "after a merge onto %s" % shown(onto)
@@ -1530,7 +1530,7 @@ def check_file(name, text, context, report):
 def list_guidelines(top, report, shared):
     """The names of the files `guidelines/<name>.md` git lists, tracked or not ignored; a warning
     for every other path it lists under `guidelines/`; None where `guidelines` is no directory."""
-    # invariant: guidelines-form/1
+    # invariant: guidelines-form
     check = "read_guidelines"
     report.ran(check, FORM)
     try:
@@ -1590,7 +1590,7 @@ def is_guidelines_name(name):
 def read_parts(top, report, part_map, map_rules):
     """The identifiers of the parts the product's map holds, or None once the report says why
     they cannot be read."""
-    # invariant: guidelines-form/1
+    # invariant: guidelines-form
     check = "check_parts"
     report.ran(check, FORM)
     text, why = read_untrusted(top, PART_MAP)
@@ -1643,7 +1643,7 @@ def merge_check(top, merge_onto, report, shared):
     note says that check does not run; given `none`, it is recorded `unchecked` with the reason the
     guards share; a commit that does not exist is an error of the run. The check on the commit
     itself runs in every run, with no file of guidelines too."""
-    # invariant: guidelines-reference-current/1
+    # invariant: guidelines-reference-current
     report.ran(SAME_COMMIT, REFERENCES)
     if merge_onto is None:
         report.notes.append("no --merge-onto given: the references are not compared with the "

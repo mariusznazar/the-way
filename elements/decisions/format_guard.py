@@ -1,5 +1,8 @@
 """Format guard of a product's decision log.
 
+Kept only as a library of product-guidelines/form_check.py until the slimming plan's position P17
+removes both.
+
 Checks the log against the rules of template.md, which lies next to this script. Field names,
 kinds of change, relation types, forms of a review record's *Result*, levels of verification, the
 fields that never take `none` or `TODO`, the number of binding sentences and the words kept out of
@@ -424,8 +427,6 @@ def version_blocks(text, rules):
 
 
 def check_headings(entries, text, rules, prefix, report):
-    # invariant: decision-heading-form/1
-    # invariant: decision-version-sequence/1
     check, form, sequence = "check_headings", "decision-heading-form/1", "decision-version-sequence/1"
     report.ran(check, form, sequence)
     shape = "`### %s-NN/V — <question>`" % prefix
@@ -477,8 +478,6 @@ def check_fields(entries, rules, prefix, report):
     """Every field of the form is present, and holds `none` or `TODO` only where the table of
     states gives it that word (WAY-71). *Outranks*, *Approver override* and *Consequences* are
     reported with what stands in their place."""
-    # invariant: log-entry-field-presence/1
-    # invariant: log-entry-field-words/1
     check, presence, words = "check_fields", "log-entry-field-presence/1", "log-entry-field-words/1"
     report.ran(check, presence, words)
     for entry in entries:
@@ -514,7 +513,6 @@ def check_fields(entries, rules, prefix, report):
 
 
 def check_changes(entries, rules, prefix, report):
-    # invariant: decision-change-kind/1
     check, kind_named = "check_changes", "decision-change-kind/1"
     report.ran(check, kind_named)
     for entry in versions_of(entries):
@@ -538,9 +536,6 @@ def check_changes(entries, rules, prefix, report):
 
 
 def check_bindings(entries, rules, prefix, report):
-    # invariant: binding-sentence-count/1
-    # invariant: binding-sentence-words/1
-    # invariant: repeal-binding-sentences/1
     check = "check_bindings"
     count, words, repeal = ("binding-sentence-count/1", "binding-sentence-words/1",
                             "repeal-binding-sentences/1")
@@ -571,7 +566,6 @@ def check_bindings(entries, rules, prefix, report):
 
 
 def check_binding_across_versions(entries, rules, prefix, report, versions):
-    # invariant: decision-binding-across-versions/1
     check, kept = "check_binding_across_versions", "decision-binding-across-versions/1"
     report.ran(check, kept)
     for entry in versions_of(entries):
@@ -589,8 +583,6 @@ def check_binding_across_versions(entries, rules, prefix, report, versions):
 
 
 def check_relations(entries, rules, prefix, report):
-    # invariant: relation-type/1
-    # invariant: relation-fingerprint-presence/1
     check, typed, presence = "check_relations", "relation-type/1", "relation-fingerprint-presence/1"
     report.ran(check, typed, presence)
     types = sorted(rules.relation_types, key=len, reverse=True)
@@ -622,7 +614,6 @@ def check_relations(entries, rules, prefix, report):
 
 
 def check_verification(entries, rules, prefix, report):
-    # invariant: decision-verification-level/1
     check, level = "check_verification", "decision-verification-level/1"
     report.ran(check, level)
     for entry in versions_of(entries):
@@ -642,7 +633,6 @@ def check_verification(entries, rules, prefix, report):
 
 
 def check_approval(entries, prefix, report):
-    # invariant: decision-approval-record/1
     check, record = "check_approval", "decision-approval-record/1"
     report.ran(check, record)
     for entry in versions_of(entries):
@@ -664,7 +654,6 @@ def check_approval(entries, prefix, report):
 
 
 def check_approver(entries, approver, prefix, report):
-    # invariant: decision-approver/1
     check, named = "check_approver", "decision-approver/1"
     report.ran(check, named)
     for entry in versions_of(entries):
@@ -683,7 +672,6 @@ def check_approver(entries, approver, prefix, report):
 
 
 def check_review_when(entries, rules, prefix, report):
-    # invariant: review-when-form/1
     check, form = "check_review_when", "review-when-form/1"
     report.ran(check, form)
     for entry in versions_of(entries):
@@ -701,7 +689,6 @@ def check_review_when(entries, rules, prefix, report):
 
 
 def check_inherited(entries, rules, prefix, report):
-    # invariant: inherited-origin-form/1
     check, form = "check_inherited", "inherited-origin-form/1"
     report.ran(check, form)
     for entry in versions_of(entries):
@@ -714,7 +701,6 @@ def check_inherited(entries, rules, prefix, report):
 
 
 def check_references(text, entries, prefix, report, numbers, versions):
-    # invariant: log-reference-target/1
     check, target = "check_references", "log-reference-target/1"
     report.ran(check, target)
     opens = {}
@@ -748,9 +734,6 @@ def check_references(text, entries, prefix, report, numbers, versions):
 
 
 def check_reviews(entries, rules, prefix, report, numbers, versions):
-    # invariant: review-next-check/1
-    # invariant: review-named-version/1
-    # invariant: log-reference-target/1
     check = "check_reviews"
     dated, named, target = "review-next-check/1", "review-named-version/1", "log-reference-target/1"
     report.ran(check, dated, named, target)
@@ -821,7 +804,6 @@ def merged_log(log_path, entries, merge_onto, prefix, top, report, no_commit=Non
     conflict too). That difference is a failure of log-merge-copies: it is either an edit of an
     entry one side holds, or two versions written under one heading on both sides. Where the
     commit merged onto holds no log, the log after the merge is this log alone."""
-    # invariant: log-merge-copies/1
     check, copies = "merged_log", "log-merge-copies/1"
     if no_commit:
         report.unchecked(check, NO_COMMIT_REASON, no_commit, copies)
@@ -903,7 +885,6 @@ def check_merge_todo(entries, prefix, report, no_commit=None):
     """Reports every field of every entry of the log that holds `TODO`, which the main branch does
     not hold (WAY-71). Given `no_commit`, which says why there is no commit to merge onto, records
     it unchecked instead."""
-    # invariant: log-entry-merge-todo/1
     check, merge_todo = "check_merge_todo", "log-entry-merge-todo/1"
     if no_commit:
         report.unchecked(check, NO_COMMIT_REASON, no_commit, merge_todo)
@@ -929,7 +910,6 @@ def check_fingerprints(latest, rules, prefix, report, no_commit=None):
     log after the merge, with the current fingerprint of the decision it names there; a stale one
     is reported with the version that set the current fingerprint and its kind of change. Given
     `no_commit`, which says why there is no commit to merge onto, records it unchecked instead."""
-    # invariant: relation-fingerprint-value/1
     check, current_value = "check_fingerprints", "relation-fingerprint-value/1"
     if no_commit:
         report.unchecked(check, NO_COMMIT_REASON, no_commit, current_value)
@@ -966,7 +946,6 @@ def check_fingerprints(latest, rules, prefix, report, no_commit=None):
 def check_narrows(latest, prefix, report):
     """No two decisions name each other as `narrows` in their latest versions: the one that
     prevails names the other, never both (WAY-25)."""
-    # invariant: narrows-pairs/1
     check, pairs = "check_narrows", "narrows-pairs/1"
     report.ran(check, pairs)
     relation = re.compile(r"^narrows %s-(\d{2,})\b" % re.escape(prefix))
@@ -1046,8 +1025,6 @@ def find_commit(log_path, option, commit, report):
 def check_against_base(log_path, text, base, prefix, report, top, no_commit=None):
     """Compares the log with its state on the base, and returns the versions it gains there. Given
     `no_commit`, which says why there is no base, records it unchecked instead."""
-    # invariant: log-existing-lines/1
-    # invariant: log-versions-added-per-number/1
     check = "check_against_base"
     existing, added_per_number = "log-existing-lines/1", "log-versions-added-per-number/1"
     if no_commit:
@@ -1087,7 +1064,6 @@ def check_against_base(log_path, text, base, prefix, report, top, no_commit=None
 
 def check_template_change(top, base, added, report, no_commit=None):
     """Given `no_commit`, which says why there is no base, records the check unchecked."""
-    # invariant: decision-template-change/1
     check, change = "check_template_change", "decision-template-change/1"
     if no_commit:
         report.unchecked(check, NO_COMMIT_REASON, no_commit, change)
@@ -1111,7 +1087,6 @@ def check_template_change(top, base, added, report, no_commit=None):
 def check_examples(entries, examples_path, prefix, report):
     """Every decision number `examples.md` names is the number of a decision in the log: an
     example names a decision by its number instead of copying it (WAY-05)."""
-    # invariant: decision-example-numbers/1
     check, named = "check_examples", "decision-example-numbers/1"
     report.ran(check, named)
     with open(examples_path, encoding="utf-8") as handle:

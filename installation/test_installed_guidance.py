@@ -30,7 +30,7 @@ class InstalledGuidanceTest(unittest.TestCase):
                        str(SOURCE), *args, cwd=self.product, input_text=input_text)
 
     def test_creates_root_claude_import_when_missing(self) -> None:
-        # invariant: installation-claude-guidance/1
+        # invariant: installation-claude-guidance
         applied = self.install("--apply", input_text="y\n")
         self.assertEqual(applied.returncode, 0, applied.stdout + applied.stderr)
         claude = self.product / "CLAUDE.md"
@@ -39,7 +39,7 @@ class InstalledGuidanceTest(unittest.TestCase):
         self.assertFalse((self.product / ".claude/rules/the-way.md").exists())
 
     def test_warns_before_confirmation_and_preserves_existing_file_without_import(self) -> None:
-        # invariant: installation-claude-guidance/1
+        # invariant: installation-claude-guidance
         claude = self.product / "CLAUDE.md"
         original = b"# Product guidance\r\n\r\nKeep this guidance.\r\n"
         claude.write_bytes(original)
@@ -56,7 +56,7 @@ class InstalledGuidanceTest(unittest.TestCase):
         self.assertFalse((self.product / ".claude/rules/the-way.md").exists())
 
     def test_code_fenced_import_mention_still_warns(self) -> None:
-        # invariant: installation-claude-guidance/1
+        # invariant: installation-claude-guidance
         claude = self.product / "CLAUDE.md"
         original = b"# Product guidance\n\n```markdown\n@AGENTS.md\n```\n"
         claude.write_bytes(original)
@@ -73,7 +73,7 @@ class InstalledGuidanceTest(unittest.TestCase):
         self.assertFalse((self.product / ".claude/rules/the-way.md").exists())
 
     def test_effective_import_needs_no_missing_import_warning_and_is_preserved(self) -> None:
-        # invariant: installation-claude-guidance/1
+        # invariant: installation-claude-guidance
         claude = self.product / "CLAUDE.md"
         original = b"@AGENTS.md\n\n# Product guidance\nKeep this guidance.\n"
         claude.write_bytes(original)

@@ -78,6 +78,7 @@ one left behind is withdrawn and never reused stand in `elements/common/rules.md
   *Part*, where `every` names all — not from the file's own part (WAY-44, WAY-62).
 - A file no pattern matches, and a file two parts claim, is an error of
   `elements/common/foundation_check.py`, unless it stands on the list of files left out on purpose
+  (WAY-44). So is a pattern of *Files* or *Trust boundary* that matches no file git tracks
   (WAY-44).
 
 ## Allowed dependencies
@@ -170,27 +171,21 @@ The binding part of an entry is one sentence: a part's responsibility or a surfa
 
 `examples.md` names, by identifier, the entries of this repository's own map
 (`foundations/part_map.md`) that show the form of an entry; they are read there, in the commit of
-the-way a product pins, instead of being copied (WAY-09, WAY-34). The format guard checks that each
-identifier it names is an entry of the map (`map-example-target`).
+the-way a product pins, instead of being copied (WAY-09, WAY-34).
 
-## Read by the format guard until the migration
+## The earlier form, read by the format guard
 
-The sections below hold the earlier form of the map, which `format_guard.py` beside this file
-reads while `foundations/part_map.md` still keeps that form: failure modes and the separation of a
-dependency, a critical flow as an entry with its criticality and its coverage, a surface's
-declaration at the item, the criticality scale, the column of the external context on whether a
-partner updates with the product, the change paths of the promise levels and the derived list of
-known violations. They bind no entry written by the sections above, and they go with the format
-guards when the foundation is migrated (`agent-instructions/README.md`).
-
-In the earlier form, an obligation from a law or a contract that raises the criticality of a part
-enters the map as a failure mode of that part, whose detection names an invariant resting on the
-environment fact of that obligation (WAY-46); a test of the environment facts element reads this
-sentence until the migration.
+The sections below hold the earlier form of the map, which `format_guard.py` beside this file reads:
+failure modes and the separation of a dependency, a critical flow as an entry with its criticality
+and its coverage, a surface's declaration at the item, the criticality scale, the column of the
+external context on whether a partner updates with the product, the change paths of the promise
+levels and the derived list of known violations. The guard is kept only as a library of
+`product-guidelines/form_check.py` until the slimming plan's position P17 removes both; these
+sections bind no entry and go with it.
 
 ## Part
 
-Earlier form, read by the format guard only until the migration.
+Earlier form, read only by the format guard.
 
 ```markdown
 ## <identifier>
@@ -207,7 +202,7 @@ Earlier form, read by the format guard only until the migration.
 
 ## Critical flow
 
-Earlier form, read by the format guard only until the migration.
+Earlier form, read only by the format guard.
 
 ```markdown
 ## <identifier>
@@ -222,7 +217,7 @@ Earlier form, read by the format guard only until the migration.
 
 ## Surface
 
-Earlier form, read by the format guard only until the migration.
+Earlier form, read only by the format guard.
 
 ```markdown
 ## <identifier>
@@ -235,7 +230,7 @@ Earlier form, read by the format guard only until the migration.
 
 ## Criticality scale
 
-Earlier form, read by the format guard only until the migration.
+Earlier form, read only by the format guard.
 
 ```markdown
 ## Criticality scale
@@ -246,7 +241,7 @@ Earlier form, read by the format guard only until the migration.
 
 ## External context
 
-Earlier form, read by the format guard only until the migration.
+Earlier form, read only by the format guard.
 
 ```markdown
 ## External context
@@ -258,7 +253,7 @@ Earlier form, read by the format guard only until the migration.
 
 ## Change paths
 
-Earlier form, read by the format guard only until the migration.
+Earlier form, read only by the format guard.
 
 ```markdown
 ## Change paths
@@ -268,7 +263,7 @@ Earlier form, read by the format guard only until the migration.
 
 ## Known violations
 
-Earlier form, read by the format guard only until the migration. The derived file beside the map,
+Earlier form, read only by the format guard. The derived file beside the map,
 `foundations/known_violations.md`:
 
 ```markdown

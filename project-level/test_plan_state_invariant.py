@@ -311,7 +311,7 @@ class PlanStateEvidence(unittest.TestCase):
                           rows.replace(chr(92), "/").lower(), self.output)
 
     def test_git_listed_worktree_proves_start_without_completion(self):
-        # invariant: project-plan-state-evidence/1
+        # invariant: project-plan-state-evidence
         # Break caught: ignoring a listed worktree, or treating it as merged completion.
         path = self.worktree()
         self.assertEqual(self.run_reader(), 0, self.output)
@@ -320,7 +320,7 @@ class PlanStateEvidence(unittest.TestCase):
         self.evidence_has(str(path), ".runs/task-cycles/report-download")
 
     def test_branch_only_archive_proves_start_but_not_done(self):
-        # invariant: project-plan-state-evidence/1
+        # invariant: project-plan-state-evidence
         # Break caught: treating an unmerged cycle-record commit as integration evidence.
         self.git(self.repo, "switch", "-c", "task/report-download")
         commit = self.archive()
@@ -329,7 +329,7 @@ class PlanStateEvidence(unittest.TestCase):
         self.evidence_has("docs/task-cycles/report-download/", commit)
 
     def test_fresh_remote_record_composes_both_transitions(self):
-        # invariant: project-plan-state-evidence/1
+        # invariant: project-plan-state-evidence
         # Break caught: using stale local integration refs, or dropping the first transition.
         producer = self.root / "publisher"
         self.git(self.root, "clone", str(self.remote), str(producer))
@@ -346,7 +346,7 @@ class PlanStateEvidence(unittest.TestCase):
         self.assertIn("integration: refs/remotes/origin/delivery " + commit, self.output.splitlines())
 
     def test_deleted_merged_branch_still_proves_done(self):
-        # invariant: project-plan-state-evidence/1
+        # invariant: project-plan-state-evidence
         # Break caught: requiring the original task branch after integration.
         self.git(self.repo, "switch", "-c", "task/report-download")
         commit = self.archive()
@@ -360,7 +360,7 @@ class PlanStateEvidence(unittest.TestCase):
         self.evidence_has(commit, "origin/delivery")
 
     def test_neighbour_slug_does_not_prove_progress(self):
-        # invariant: project-plan-state-evidence/1
+        # invariant: project-plan-state-evidence
         # Break caught: matching an archive or working directory by slug prefix.
         self.archive("report-download-extra")
         self.git(self.repo, "push", "origin", "delivery")
@@ -370,7 +370,7 @@ class PlanStateEvidence(unittest.TestCase):
         self.unresolved()
 
     def test_branch_name_and_message_do_not_prove_start(self):
-        # invariant: project-plan-state-evidence/1
+        # invariant: project-plan-state-evidence
         # Break caught: inferring a started cycle from a branch name or commit message.
         self.git(self.repo, "switch", "-c", "task/report-download")
         self.write(self.repo / "ordinary.txt", "report-download\n")
@@ -381,7 +381,7 @@ class PlanStateEvidence(unittest.TestCase):
         self.unresolved()
 
     def test_unlisted_directory_cannot_prove_start(self):
-        # invariant: project-plan-state-evidence/1
+        # invariant: project-plan-state-evidence
         # Break caught: scanning neighbouring directories instead of Git-listed worktrees.
         (self.root / "unlisted/.runs/task-cycles/report-download").mkdir(parents=True)
         self.assertEqual(self.run_reader(), 0, self.output)
@@ -389,7 +389,7 @@ class PlanStateEvidence(unittest.TestCase):
         self.unresolved()
 
     def test_failed_fetch_never_yields_completion_from_cached_record(self):
-        # invariant: project-plan-state-evidence/1
+        # invariant: project-plan-state-evidence
         # Break caught: continuing to done from cached integration after failed fetch.
         self.archive()
         self.git(self.repo, "push", "origin", "delivery")
@@ -400,7 +400,7 @@ class PlanStateEvidence(unittest.TestCase):
         self.unresolved()
 
     def test_missing_remote_exposes_unestablished_integration(self):
-        # invariant: project-plan-state-evidence/1
+        # invariant: project-plan-state-evidence
         # Break caught: guessing an integration branch when no remote establishes it.
         self.archive()
         self.git(self.repo, "remote", "remove", "origin")
@@ -411,7 +411,7 @@ class PlanStateEvidence(unittest.TestCase):
         self.assertFalse(any(line.startswith("integration:") for line in self.output.splitlines()), self.output)
 
     def test_missing_remote_head_does_not_guess_delivery(self):
-        # invariant: project-plan-state-evidence/1
+        # invariant: project-plan-state-evidence
         # Break caught: guessing the integration ref from the checked-out branch.
         self.archive()
         self.git(self.repo, "push", "origin", "delivery")
@@ -423,7 +423,7 @@ class PlanStateEvidence(unittest.TestCase):
         self.unresolved()
 
     def test_another_remote_does_not_obscure_declared_origin_integration(self):
-        # invariant: project-plan-state-evidence/1
+        # invariant: project-plan-state-evidence
         # Break caught: losing valid origin completion evidence because another remote exists.
         commit = self.archive()
         self.git(self.repo, "push", "origin", "delivery")
@@ -444,7 +444,7 @@ class PlanStateEvidence(unittest.TestCase):
         self.assertIn("integration: refs/remotes/origin/delivery " + commit, self.output.splitlines())
 
     def test_unavailable_listed_worktree_is_visible(self):
-        # invariant: project-plan-state-evidence/1
+        # invariant: project-plan-state-evidence
         # Break caught: silently dropping an unavailable worktree and claiming a complete reading.
         path = self.worktree()
         shutil.rmtree(path)
@@ -453,7 +453,7 @@ class PlanStateEvidence(unittest.TestCase):
         self.unresolved(str(path))
 
     def test_shallow_history_cannot_prove_done(self):
-        # invariant: project-plan-state-evidence/1
+        # invariant: project-plan-state-evidence
         # Break caught: reporting completion from an incomplete shallow history.
         self.archive()
         self.git(self.repo, "push", "origin", "delivery")
@@ -466,7 +466,7 @@ class PlanStateEvidence(unittest.TestCase):
         self.unresolved()
 
     def test_done_row_with_live_cycle_is_reported_as_conflict(self):
-        # invariant: project-plan-state-evidence/1
+        # invariant: project-plan-state-evidence
         # Break caught: normalizing contradictory live-cycle evidence for a done task.
         self.worktree()
         self.set_state("done")
@@ -476,7 +476,7 @@ class PlanStateEvidence(unittest.TestCase):
                             for line in self.output.splitlines()), self.output)
 
     def test_draft_plan_gives_no_progress_proposal(self):
-        # invariant: project-plan-state-evidence/1
+        # invariant: project-plan-state-evidence
         # Break caught: proposing cycle progress before a plan has been handed over.
         self.worktree()
         self.write(self.plan, self.plan.read_text(encoding="utf-8").replace(
@@ -485,7 +485,7 @@ class PlanStateEvidence(unittest.TestCase):
         self.proposals_are()
 
     def test_unapproved_definition_gives_no_progress_proposal(self):
-        # invariant: project-plan-state-evidence/1
+        # invariant: project-plan-state-evidence
         # Break caught: proposing progress for a definition without approval.
         self.worktree()
         self.write(self.definition, self.definition.read_text(encoding="utf-8").replace(
@@ -494,7 +494,7 @@ class PlanStateEvidence(unittest.TestCase):
         self.proposals_are()
 
     def test_invalid_plan_gives_no_progress_proposal(self):
-        # invariant: project-plan-state-evidence/1
+        # invariant: project-plan-state-evidence
         # Break caught: proposing progress despite an unreadable task table structure.
         self.worktree()
         self.write(self.plan, self.plan.read_text(encoding="utf-8").replace("## Tasks", "## Missing tasks"))
@@ -502,7 +502,7 @@ class PlanStateEvidence(unittest.TestCase):
         self.proposals_are()
 
     def test_unreadable_definition_gives_no_progress_proposal(self):
-        # invariant: project-plan-state-evidence/1
+        # invariant: project-plan-state-evidence
         # Break caught: proceeding with cycle evidence when the definition cannot be read.
         self.worktree()
         self.definition.unlink()
@@ -517,7 +517,7 @@ class PlanStateEvidence(unittest.TestCase):
         self.assertEqual((self.plan.read_bytes(), self.task.read_bytes()), before)
 
     def test_identity_bearing_archive_has_no_mandatory_record_basename(self):
-        # invariant: project-plan-state-evidence/1
+        # invariant: project-plan-state-evidence
         # Break caught: rejecting valid provenance solely because its record has another basename.
         commit = self.archive(basename="delivery-notes.md")
         self.git(self.repo, "push", "origin", "delivery")
@@ -527,7 +527,7 @@ class PlanStateEvidence(unittest.TestCase):
         self.evidence_has(commit, "docs/task-cycles/report-download/", "origin/delivery")
 
     def test_other_plans_integrated_same_name_cannot_start_current_task(self):
-        # invariant: project-plan-state-evidence/1
+        # invariant: project-plan-state-evidence
         # Break caught: treating a plan-local slug as globally identifying an integrated cycle.
         other = self.other_plan()
         self.archive(source=other)
@@ -537,7 +537,7 @@ class PlanStateEvidence(unittest.TestCase):
         self.task_conflict()
 
     def test_frozen_task_identity_does_not_require_current_content_equality(self):
-        # invariant: project-plan-state-evidence/1
+        # invariant: project-plan-state-evidence
         # Break caught: discarding an owned historical cycle after a source-only editorial change.
         commit = self.archive()
         self.git(self.repo, "push", "origin", "delivery")
@@ -549,7 +549,7 @@ class PlanStateEvidence(unittest.TestCase):
         self.evidence_has(commit, "origin/delivery")
 
     def test_other_plans_integrated_same_name_cannot_complete_current_task(self):
-        # invariant: project-plan-state-evidence/1
+        # invariant: project-plan-state-evidence
         # Break caught: borrowing completion and commit evidence from another same-named task.
         other = self.other_plan()
         self.archive(source=other)
@@ -560,7 +560,7 @@ class PlanStateEvidence(unittest.TestCase):
         self.task_conflict()
 
     def test_other_plans_live_same_name_cannot_start_current_task(self):
-        # invariant: project-plan-state-evidence/1
+        # invariant: project-plan-state-evidence
         # Break caught: using a Git-listed live cycle whose recorded source belongs to another plan.
         self.worktree(source=self.other_plan())
         self.assertEqual(self.run_reader(), 1, self.output)
@@ -568,7 +568,7 @@ class PlanStateEvidence(unittest.TestCase):
         self.task_conflict()
 
     def test_live_directory_without_provenance_cannot_start_task(self):
-        # invariant: project-plan-state-evidence/1
+        # invariant: project-plan-state-evidence
         # Break caught: using a bare same-named live directory as proof of task ownership.
         self.worktree(provenance=False)
         self.assertEqual(self.run_reader(), 0, self.output)
@@ -576,7 +576,7 @@ class PlanStateEvidence(unittest.TestCase):
         self.task_unchecked()
 
     def test_archived_header_alone_cannot_prove_task_ownership(self):
-        # invariant: project-plan-state-evidence/1
+        # invariant: project-plan-state-evidence
         # Break caught: accepting a cycle title and task slug without recorded provenance.
         self.write(self.repo / "docs/task-cycles/report-download/delivery-notes.md",
                    "# Cycle record — Download a report\n\n- Status: complete\n")
@@ -586,7 +586,7 @@ class PlanStateEvidence(unittest.TestCase):
         self.task_unchecked()
 
     def test_archived_content_without_provenance_cannot_complete_task(self):
-        # invariant: project-plan-state-evidence/1
+        # invariant: project-plan-state-evidence
         # Break caught: treating any integrated file in the exact directory as an owned cycle.
         self.write(self.repo / "docs/task-cycles/report-download/notes.txt", "Delivered report-download.\n")
         self.commit_archive_files()
@@ -596,7 +596,7 @@ class PlanStateEvidence(unittest.TestCase):
         self.task_unchecked()
 
     def test_unanchored_same_basename_provenance_remains_unchecked(self):
-        # invariant: project-plan-state-evidence/1
+        # invariant: project-plan-state-evidence
         # Break caught: resolving ambiguous task/plan basenames by choosing a same-named project.
         self.other_plan()
         self.cycle(self.repo / "docs/task-cycles/report-download", source="tasks/report-download.md")

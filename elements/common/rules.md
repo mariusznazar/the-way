@@ -17,10 +17,10 @@ which word each field takes, how its entries are named — stands in that elemen
 - A field holds a value, or `none` or `TODO` only where its element's template gives it that word:
   `none` states that nothing is there, `TODO` that something is known to be missing. `none` is a
   statement, not a blank: where a source is silent, the field reads `TODO` (WAY-71).
-- The main branch holds `TODO` only in an invariant's or an environment fact's *Method*, and in an
-  invariant's *Rests on* until the environment facts element has entries (WAY-71).
-- A format guard reports a missing field, or a word its template does not give that field, as an
-  error (WAY-71).
+- The main branch holds `TODO` only in an invariant's *Rests on* until the environment facts element
+  has entries (WAY-71).
+- `elements/common/foundation_check.py` reports a missing field, or a word its template does not
+  give that field, as an error (WAY-71).
 
 ## Where the value of a field comes from
 
@@ -50,7 +50,8 @@ which word each field takes, how its entries are named — stands in that elemen
 - An identifier the invariants file or the environment facts file held on the commit the task
   branch left the main branch from stays in it, as an entry or as a withdrawn identifier; one that
   never reached the main branch may go (WAY-64). An identifier of the part map left behind
-  by a split or a merge stays in the map as a withdrawn identifier and is never reused (WAY-41).
+  by a split or a merge, or of an entry removed with nothing in its place, stays in the map as a
+  withdrawn identifier and is never reused (WAY-41).
 - A withdrawn identifier stays withdrawn: it never names an entry again (WAY-41, WAY-64).
 - Each of the three files carries its withdrawn identifiers in one list after its last entry, in
   this form (WAY-41, WAY-64):
@@ -64,31 +65,18 @@ which word each field takes, how its entries are named — stands in that elemen
 - *Why* says why the identifier was withdrawn, and where entries were split or merged, it says so
   (WAY-41, WAY-64).
 - *Successors* lists the identifiers that took its place, joined by ` · `, each an entry or a
-  withdrawn identifier of the same file. In the invariants file and the environment facts file it
-  may read `none` (WAY-64); in the part map it names one or more identifiers, never `none`:
-  the map withdraws an identifier only on a split or a merge, which leaves entries in its place
-  (WAY-41).
+  withdrawn identifier of the same file, or reads `none` where nothing took its place (WAY-41,
+  WAY-64).
 
 ## Human verdicts
 
-- A human verdict on an invariant or an environment fact stands in a row of
-  `foundations/human_verdicts.md`, one file for both elements (WAY-83), written by hand
-  (`TODO — decision pending: which decision sets that the file of human verdicts is written by
-  hand`):
+No human verdict is recorded for any entry. The earlier form below is read only by the format
+guards, kept as a library of `product-guidelines/form_check.py` until the slimming plan's position
+P17 removes both; it binds no entry: a row of `foundations/human_verdicts.md` in the form
 
   ```markdown
   | Entry | Version | Verdict | By | On | Commit | Until |
   ```
-
-- The row names the entry, its version, the verdict — `pass` or `fail` — who gave it, when, and the
-  commit assessed, and counts only for the entry's current version (WAY-83).
-- An invariant's row reads `none` in *Until*, and its verdict lapses when a change since the
-  assessed commit reaches the entry. A fact's row carries a date in *Until*, after which its verdict
-  lapses; the gate compares that date with the committer date of the commit it checks, and the
-  clock with the day it runs (WAY-83).
-- The part of the map that holds the file is set with the first verdict written
-  (`TODO — decision pending: which decision sets that the part holding the file of human verdicts
-  is set with the first verdict`).
 
 ## `{fork-point}`
 

@@ -20,7 +20,7 @@ SCRIPT = os.path.join(HERE, "foundation_check.py")
 
 DECISIONS = """# Decision log
 
-### ABC-01/1 — How is a game saved?
+### ABC-01 — How is a game saved?
 
 A game is saved to one file.
 
@@ -28,6 +28,10 @@ A game is saved to one file.
 - **Based on:** a save holds the whole state: clock-tick@0123abcd
 - **Relations:** none
 - **Verification:** level 1 — invariants: save-round-trip. Level 2 for the rest.
+- **Origin:** none
+
+*Rationale:* one file is easy to copy.
+*Rejected:* none considered
 
 ### ABC-02 — Where does the clock run?
 
@@ -37,18 +41,23 @@ The clock runs in the core, ABC-01 aside.
 - **Based on:** none
 - **Relations:** derives from ABC-01@0123abcd
 - **Verification:** level 1 — invariants: save-round-trip · clock-steady.
+- **Origin:** none
+
+*Rationale:* the core holds time.
+*Rejected:* none considered
 """
 
 INVARIANTS = """# Invariants
 
-## save-round-trip/1
+## save-round-trip
 
 A saved game loads back unchanged.
 
-- **Method:** `python -B -m unittest tests/test_saving.py`
+- **Method:** test
 - **Rests on:** clock-tick@0123abcd
 - **Derives from:** ABC-01@0123abcd
 - **Part:** core · shell
+- **Violated:** no
 
 ## clock-steady
 
@@ -58,6 +67,7 @@ The clock never runs backwards.
 - **Rests on:** none
 - **Derives from:** ABC-02
 - **Part:** every
+- **Violated:** no
 
 ## Withdrawn identifiers
 
@@ -68,7 +78,7 @@ The clock never runs backwards.
 
 FACTS = """# Environment facts
 
-## clock-tick/1
+## clock-tick
 
 The system clock ticks once a millisecond.
 
@@ -81,9 +91,13 @@ GLOSSARY = """# Glossary
 
 A tick is one step of the game's clock.
 
+- **Not:** none
+
 ## save
 
 A save is the file that holds a game.
+
+- **Not:** none
 """
 
 PART_MAP = """# Part map
@@ -96,6 +110,7 @@ The part answers for the rules of the game.
 - **Depends on:** none
 - **Failure modes:**
   - a save loses a field — high — detected by save-round-trip
+- **Trust boundary:** none
 
 ## shell
 
@@ -106,13 +121,7 @@ The part answers for everything around the rules.
   tests/**
   guidelines/**
 - **Depends on:** core
-
-## saving-works
-
-Someone saves a game and loads it back.
-
-- **Parts:** core · shell
-- **Invariant:** save-round-trip
+- **Trust boundary:** none
 
 ## Files left out on purpose
 
@@ -125,6 +134,16 @@ Someone saves a game and loads it back.
 | Identifier | Why | Successors |
 |---|---|---|
 | engine | split | core · shell |
+"""
+
+# A critical flow, an entry of the map's earlier form.
+FLOW = """## saving-works
+
+Someone saves a game and loads it back.
+
+- **Parts:** core · shell
+- **Invariant:** save-round-trip
+
 """
 
 GUIDELINES = """# Coding guidelines — the game's code
@@ -251,12 +270,15 @@ class FoundationCheckTest(unittest.TestCase):
         self.assertFails(self.run_on(foundations__decisions_dot_md=decisions),
                          "foundations/decisions.md:", "`ABC-02` stands twice")
 
-    def test_decision_versions_of_one_number_pass(self):
-        decisions = DECISIONS + "\n### ABC-01/2 — How is a game saved?\n\nTwo files.\n"
-        self.assertPasses(self.run_on(foundations__decisions_dot_md=decisions))
+    def test_decision_version_is_the_earlier_form(self):
+        decisions = DECISIONS.replace("### ABC-02 —", "### ABC-02/2 —")
+        self.assertFails(self.run_on(foundations__decisions_dot_md=decisions),
+                         "foundations/decisions.md:16: `ABC-02/2` stands in the earlier form",
+                         "migrate_foundation.py", "1 error")
 
     def test_decision_version_twice(self):
-        decisions = DECISIONS + "\n### ABC-01/1 — How is a game saved?\n\nTwo files.\n"
+        decisions = DECISIONS.replace("### ABC-01 —", "### ABC-01/1 —") + (
+            "\n### ABC-01/1 — How is a game saved?\n\nTwo files.\n")
         self.assertFails(self.run_on(foundations__decisions_dot_md=decisions),
                          "`ABC-01/1` stands twice")
 
@@ -271,7 +293,7 @@ class FoundationCheckTest(unittest.TestCase):
                          "foundations/invariants.md:", "`save-round-trip` stands twice")
 
     def test_fact_identifier_held_by_invariant(self):
-        facts = self.edit(FACTS, "## clock-tick/1\n", "## clock-steady/1\n")
+        facts = self.edit(FACTS, "## clock-tick\n", "## clock-steady\n")
         invariants = INVARIANTS.replace("clock-tick@0123abcd", "none")
         decisions = DECISIONS.replace("clock-tick@0123abcd", "none")
         tests = FILES["tests/test_saving.py"].replace("    # fact: clock-tick/1\n", "")
@@ -367,17 +389,17 @@ class FoundationCheckTest(unittest.TestCase):
     def test_withdrawn_decision_number_names_an_entry_again(self):
         decisions = DECISIONS + self.WITHDRAWN_DECISION.replace("| ABC-03 |", "| ABC-02 |")
         self.assertFails(self.run_on(foundations__decisions_dot_md=decisions),
-                         "foundations/decisions.md:25: `ABC-02` stands twice")
+                         "foundations/decisions.md:33: `ABC-02` stands twice")
 
     def test_withdrawn_decision_number_twice(self):
         decisions = DECISIONS + self.WITHDRAWN_DECISION + "| ABC-03 | again | none |\n"
         self.assertFails(self.run_on(foundations__decisions_dot_md=decisions),
-                         "foundations/decisions.md:26: `ABC-03` stands twice")
+                         "foundations/decisions.md:34: `ABC-03` stands twice")
 
     def test_withdrawn_decision_successor_that_is_no_decision(self):
         decisions = DECISIONS + self.WITHDRAWN_DECISION.replace("| ABC-02 |\n", "| ABC-09 |\n")
         self.assertFails(self.run_on(foundations__decisions_dot_md=decisions),
-                         "foundations/decisions.md:25: withdrawn `ABC-03` names the successor "
+                         "foundations/decisions.md:33: withdrawn `ABC-03` names the successor "
                          "`ABC-09`, which this file does not hold")
 
     def test_withdrawn_decision_successor_none_passes(self):
@@ -410,14 +432,14 @@ class FoundationCheckTest(unittest.TestCase):
         invariants = self.edit(INVARIANTS, "- **Derives from:** ABC-02\n",
                                "- **Derives from:** ABC-09 · %s\n" % self.TICKET)
         self.assertFails(self.run_on(foundations__invariants_dot_md=invariants),
-                         "foundations/invariants.md:18: `ABC-09` names no decision of the log",
+                         "foundations/invariants.md:19: `ABC-09` names no decision of the log",
                          "1 error")
 
     def test_derives_from_decision_after_quoted_source_on_next_line(self):
         invariants = self.edit(INVARIANTS, "- **Derives from:** ABC-02\n",
                                "- **Derives from:** %s ·\n  ABC-09\n" % self.TICKET)
         self.assertFails(self.run_on(foundations__invariants_dot_md=invariants),
-                         "foundations/invariants.md:20: `ABC-09` names no decision of the log",
+                         "foundations/invariants.md:21: `ABC-09` names no decision of the log",
                          "1 error")
 
     def test_derives_from_text_quoting_nothing_is_read_for_decisions(self):
@@ -425,7 +447,7 @@ class FoundationCheckTest(unittest.TestCase):
                                "- **Derives from:** recovered from code — src/game.py, after "
                                "ABC-09\n")
         self.assertFails(self.run_on(foundations__invariants_dot_md=invariants),
-                         "foundations/invariants.md:18: `ABC-09` names no decision of the log")
+                         "foundations/invariants.md:19: `ABC-09` names no decision of the log")
 
     # --- references to invariants -------------------------------------------------------------
 
@@ -462,16 +484,17 @@ class FoundationCheckTest(unittest.TestCase):
                          "tests/test_more.py:1:", "`invariant: save-round-trip and more`")
 
     def test_citation_of_nothing(self):
-        self.assertFails(self.run_on(tests__test_more_dot_py="# fact:\n"),
-                         "tests/test_more.py:1:", "`fact: `")
+        self.assertFails(self.run_on(tests__test_more_dot_py="# invariant:\n"),
+                         "tests/test_more.py:1:", "`invariant: `")
 
     def test_invariant_line_inside_a_string_is_no_citation(self):
         tests = 'TEXT = "# invariant: save-trip/1"\n'
         self.assertPasses(self.run_on(tests__test_text_dot_py=tests))
 
     def test_flow_names_no_invariant(self):
-        part_map = self.edit(PART_MAP, "- **Invariant:** save-round-trip",
-                             "- **Invariant:** save-trip")
+        part_map = self.edit(PART_MAP, "## Files left out on purpose\n", FLOW.replace(
+            "- **Invariant:** save-round-trip", "- **Invariant:** save-trip") +
+            "## Files left out on purpose\n")
         self.assertFails(self.run_on(foundations__part_map_dot_md=part_map),
                          "foundations/part_map.md:", "`save-trip`")
 
@@ -527,7 +550,7 @@ class FoundationCheckTest(unittest.TestCase):
         decisions = self.edit(DECISIONS, "- **Scope:** core, shell", "- **Scope:** core,\n  saves")
         # *Scope* of ABC-02 opens on line 16, so `saves` stands on line 17
         self.assertFails(self.run_on(foundations__decisions_dot_md=decisions),
-                         "foundations/decisions.md:17: `saves`")
+                         "foundations/decisions.md:21: `saves`")
 
     def test_scope_naming_a_flow_names_no_part(self):
         decisions = self.edit(DECISIONS, "- **Scope:** core, shell", "- **Scope:** saving-works")
@@ -545,7 +568,9 @@ class FoundationCheckTest(unittest.TestCase):
                          "foundations/part_map.md:", "`engine`", "withdrawn")
 
     def test_flow_names_no_part(self):
-        part_map = self.edit(PART_MAP, "- **Parts:** core · shell", "- **Parts:** core · ui")
+        part_map = self.edit(PART_MAP, "## Files left out on purpose\n", FLOW.replace(
+            "- **Parts:** core · shell", "- **Parts:** core · ui") +
+            "## Files left out on purpose\n")
         self.assertFails(self.run_on(foundations__part_map_dot_md=part_map), "`ui`")
 
     def test_guidelines_apply_to_no_part(self):
@@ -577,7 +602,7 @@ class FoundationCheckTest(unittest.TestCase):
                               "- **Based on:** clock-tock · https://example.org/clock, § Ticks — "
                               "\"the clock, steady, ticks\"; read 2026-10-01\n")
         self.assertFails(self.run_on(foundations__decisions_dot_md=decisions),
-                         "foundations/decisions.md:17: `clock-tock` names no fact", "1 error")
+                         "foundations/decisions.md:21: `clock-tock` names no fact", "1 error")
 
     def test_based_on_fact_by_identifier_alone_and_quoted_source_pass(self):
         decisions = self.edit(DECISIONS, "- **Based on:** none\n",
@@ -590,12 +615,12 @@ class FoundationCheckTest(unittest.TestCase):
                               "- **Based on:** https://example.org/clock — \"one tick\"; read "
                               "2026-10-01 ·\n  clock-tock\n")
         self.assertFails(self.run_on(foundations__decisions_dot_md=decisions),
-                         "foundations/decisions.md:18: `clock-tock` names no fact")
+                         "foundations/decisions.md:22: `clock-tock` names no fact")
 
     def test_fact_in_the_form_without_version_is_named_by_identifier_alone(self):
         # the form the environment facts template gives: a heading with no version, the sentence
         # and *Source*
-        facts = self.edit(FACTS, "## clock-tick/1\n", "## clock-tick\n")
+        facts = FACTS
         invariants = self.edit(INVARIANTS, "- **Rests on:** clock-tick@0123abcd",
                                "- **Rests on:** clock-tick")
         decisions = self.edit(DECISIONS, "- **Based on:** none\n", "- **Based on:** clock-tick\n")
@@ -603,10 +628,126 @@ class FoundationCheckTest(unittest.TestCase):
                                       foundations__invariants_dot_md=invariants,
                                       foundations__decisions_dot_md=decisions))
 
-    def test_test_cites_no_fact(self):
+    def test_fact_line_is_no_citation(self):
         tests = self.edit(FILES["tests/test_saving.py"], "fact: clock-tick/1", "fact: clock-tock/1")
-        self.assertFails(self.run_on(tests__test_saving_dot_py=tests),
-                         "tests/test_saving.py:3:", "`clock-tock`")
+        self.assertPasses(self.run_on(tests__test_saving_dot_py=tests))
+
+    # --- every field of an entry ----------------------------------------------------------------
+
+    def test_decision_lacks_a_field(self):
+        decisions = self.edit(DECISIONS, "- **Origin:** none\n", "")
+        self.assertFails(self.run_on(foundations__decisions_dot_md=decisions),
+                         "foundations/decisions.md:", "the entry lacks *Origin*")
+
+    def test_decision_lacks_its_rationale(self):
+        decisions = self.edit(DECISIONS, "*Rationale:* the core holds time.\n", "")
+        self.assertFails(self.run_on(foundations__decisions_dot_md=decisions),
+                         "the entry lacks *Rationale*")
+
+    def test_invariant_lacks_violated(self):
+        invariants = self.edit(INVARIANTS, "- **Violated:** no\n", "")
+        self.assertFails(self.run_on(foundations__invariants_dot_md=invariants),
+                         "foundations/invariants.md:", "the entry lacks *Violated*")
+
+    def test_invariant_method_of_the_earlier_form(self):
+        invariants = self.edit(INVARIANTS, "- **Method:** review\n", "- **Method:** `TODO`\n")
+        self.assertFails(self.run_on(foundations__invariants_dot_md=invariants),
+                         "*Method* does not take ``TODO``")
+
+    def test_invariant_violated_takes_yes_or_no(self):
+        invariants = self.edit(INVARIANTS, "- **Violated:** no\n", "- **Violated:** maybe\n")
+        self.assertFails(self.run_on(foundations__invariants_dot_md=invariants),
+                         "*Violated* does not take `maybe`")
+
+    def test_fact_source_takes_no_todo(self):
+        facts = FACTS.replace(
+            '- **Source:** https://example.org/clock — "one tick a millisecond"; read 2026-10-01',
+            "- **Source:** TODO")
+        self.assertFails(self.run_on(foundations__environment_facts_dot_md=facts),
+                         "*Source* does not take `TODO`")
+
+    def test_part_lacks_its_trust_boundary(self):
+        part_map = self.edit(PART_MAP, "- **Depends on:** core\n- **Trust boundary:** none\n",
+                             "- **Depends on:** core\n")
+        self.assertFails(self.run_on(foundations__part_map_dot_md=part_map),
+                         "foundations/part_map.md:", "the entry lacks *Trust boundary*")
+
+    def test_surface_names_who_relies_on_it(self):
+        surface = "## save-promise\n\nA save of one release loads in the next.\n\n"
+        good = self.edit(PART_MAP, "## Files left out on purpose\n", surface +
+                         "- **Relied on by:** the players' saves\n\n## Files left out on purpose\n")
+        self.assertPasses(self.run_on(foundations__part_map_dot_md=good))
+        bad = good.replace("- **Relied on by:** the players' saves", "- **Relied on by:** none")
+        self.assertFails(self.run_on(foundations__part_map_dot_md=bad),
+                         "*Relied on by* does not take `none`")
+
+    def test_map_entry_neither_part_nor_surface(self):
+        part_map = self.edit(PART_MAP, "## Files left out on purpose\n",
+                             "## save-promise\n\nA save loads.\n\n## Files left out on purpose\n")
+        self.assertFails(self.run_on(foundations__part_map_dot_md=part_map),
+                         "`save-promise` is neither a part")
+
+    def test_glossary_entry_lacks_not(self):
+        glossary = self.edit(GLOSSARY, "A save is the file that holds a game.\n\n- **Not:** none\n",
+                             "A save is the file that holds a game.\n")
+        self.assertFails(self.run_on(foundations__glossary_dot_md=glossary),
+                         "foundations/glossary.md:", "the entry lacks *Not*")
+
+    def test_entries_of_the_earlier_form_are_errors(self):
+        invariants = self.edit(INVARIANTS, "## clock-steady\n", "## clock-steady/1\n")
+        facts = self.edit(FACTS, "## clock-tick\n", "## clock-tick/1\n")
+        part_map = self.edit(PART_MAP, "- **Depends on:** core\n",
+                             "- **Depends on:** core\n- **Criticality:** high\n")
+        self.assertFails(self.run_on(foundations__invariants_dot_md=invariants,
+                                     foundations__environment_facts_dot_md=facts,
+                                     foundations__part_map_dot_md=part_map),
+                         "foundations/invariants.md:13: `clock-steady/1` stands in the earlier form",
+                         "foundations/environment_facts.md:3: `clock-tick/1` stands in the earlier",
+                         "foundations/part_map.md:13: `shell` stands in the earlier form",
+                         "3 errors")
+
+    def test_flow_is_the_earlier_form(self):
+        part_map = self.edit(PART_MAP, "## Files left out on purpose\n",
+                             FLOW + "## Files left out on purpose\n")
+        self.assertFails(self.run_on(foundations__part_map_dot_md=part_map),
+                         "`saving-works` stands in the earlier form", "1 error")
+
+    def test_part_and_scope_take_parts_only(self):
+        for field, old in (("Part", "- **Part:** every\n"), ("Scope", "- **Scope:** core\n")):
+            for word in ("none", "TODO"):
+                with self.subTest(field=field, word=word):
+                    new = "- **%s:** %s\n" % (field, word)
+                    if field == "Part":
+                        result = self.run_on(foundations__invariants_dot_md=self.edit(
+                            INVARIANTS, old, new))
+                    else:
+                        result = self.run_on(foundations__decisions_dot_md=self.edit(
+                            DECISIONS, old, new))
+                    self.assertFails(result, "*%s* does not take `%s`" % (field, word))
+
+    def test_pattern_of_the_map_matching_no_file(self):
+        for field, old, new in (
+                ("Files", "  tests/**\n", "  tests/**\n  docs/**\n"),
+                ("Trust boundary", "- **Depends on:** core\n- **Trust boundary:** none\n",
+                 "- **Depends on:** core\n- **Trust boundary:** tests/net/*.py\n")):
+            with self.subTest(field=field):
+                part_map = self.edit(PART_MAP, old, new)
+                self.assertFails(self.run_on(foundations__part_map_dot_md=part_map),
+                                 "foundations/part_map.md:", "in the *%s* of `shell` matches no "
+                                 "file git tracks" % field, "1 error")
+
+    # --- a decision's Based on quoting a source --------------------------------------------------
+
+    def test_number_in_a_source_based_on_quotes_is_no_reference(self):
+        decisions = self.edit(DECISIONS, "- **Based on:** none\n",
+                              '- **Based on:** https://example.org/log § 2 — "as ABC-07 says"; '
+                              "read 2026-10-01\n")
+        self.assertPasses(self.run_on(foundations__decisions_dot_md=decisions))
+
+    def test_number_in_based_on_outside_a_quotation_is_a_reference(self):
+        decisions = self.edit(DECISIONS, "- **Based on:** none\n", "- **Based on:** ABC-07\n")
+        self.assertFails(self.run_on(foundations__decisions_dot_md=decisions),
+                         "`ABC-07` names no decision of the log")
 
     # --- every file git tracks belongs to one part --------------------------------------------
 

@@ -592,13 +592,13 @@ class Fixtures(FormCheckTestCase):
         """The styleguide and the guidelines of a discipline with no template, as written above,
         hold no error: every other test breaks one thing in them. Were they to fail, no error
         another test sees could be told from one the fixture itself carries."""
-        # invariant: guidelines-check-form/1
-        # invariant: guidelines-check-carrier/1
-        # invariant: guidelines-check-colour-pair/1
-        # invariant: guidelines-check-reference-target/1
-        # invariant: guidelines-check-stale-reference/1
-        # invariant: guidelines-check-code-path/1
-        # invariant: guidelines-check-example-files/1
+        # invariant: guidelines-check-form
+        # invariant: guidelines-check-carrier
+        # invariant: guidelines-check-colour-pair
+        # invariant: guidelines-check-reference-target
+        # invariant: guidelines-check-stale-reference
+        # invariant: guidelines-check-code-path
+        # invariant: guidelines-check-example-files
         self.assertEqual(STYLEGUIDE.count("```good "), 2)
         self.assertEqual(STYLEGUIDE.count("```bad "), 2)
         files = {STYLEGUIDE_FILE: STYLEGUIDE, TESTING_FILE: TESTING}
@@ -611,7 +611,7 @@ class Fixtures(FormCheckTestCase):
 
 class Form(FormCheckTestCase):
     def test_a_missing_or_misplaced_header_line_is_reported(self):
-        # invariant: guidelines-check-form/1
+        # invariant: guidelines-check-form
         cases = (
             ("no Applies to", replaced(STYLEGUIDE, "- **Applies to:** web\n", ""), ("Applies to",)),
             ("no Discipline", replaced(TESTING, "- **Discipline:** testing\n", ""), ("Discipline",)),
@@ -626,7 +626,7 @@ class Form(FormCheckTestCase):
                 self.assert_reported(self.check({path: text}, ()), path, fragments=fragments)
 
     def test_a_missing_or_misplaced_section_is_reported(self):
-        # invariant: guidelines-check-form/1
+        # invariant: guidelines-check-form
         cases = (
             ("no When to read", STYLEGUIDE_FILE,
              TITLE + HEADER + ROLES + RULES + EXAMPLES + WHERE, ("When to read",)),
@@ -650,7 +650,7 @@ class Form(FormCheckTestCase):
                 self.assert_reported(self.check({path: text}, ()), path, fragments=fragments)
 
     def test_a_missing_or_misplaced_required_rule_is_reported(self):
-        # invariant: guidelines-check-form/1
+        # invariant: guidelines-check-form
         cases = (
             ("no Visible focus", replaced(STYLEGUIDE, dropped("Visible focus"), ""),
              ("Visible focus",)),
@@ -667,7 +667,7 @@ class Form(FormCheckTestCase):
                                      fragments=fragments)
 
     def test_a_missing_or_misplaced_rule_field_is_reported(self):
-        # invariant: guidelines-check-form/1
+        # invariant: guidelines-check-form
         cases = (
             ("no Good in a styleguide", STYLEGUIDE_FILE,
              with_line(STYLEGUIDE, 24, "- **Good:** the main action of a form uses `primary`.",
@@ -690,7 +690,7 @@ class Form(FormCheckTestCase):
                 self.assert_reported(self.check({path: text}, ()), path, fragments=fragments)
 
     def test_a_drop_with_any_text_but_a_departing_decision_is_reported(self):
-        # invariant: guidelines-check-form/1
+        # invariant: guidelines-check-form
         line = "none — ABC-03@" + DEPARTURE_FP
         cases = (
             ("a reason in place of a decision", STYLEGUIDE_FILE,
@@ -712,13 +712,13 @@ class Form(FormCheckTestCase):
 
     def test_a_drop_naming_its_departing_decision_passes(self):
         """The control of the test above: a section and a rule dropped as the template has it."""
-        # invariant: guidelines-check-form/1
+        # invariant: guidelines-check-form
         text = replaced(TESTING, "Before writing a test of the web interface.",
                         "none — ABC-03@" + DEPARTURE_FP)
         self.assert_clean(self.check({TESTING_FILE: text}, ()))
 
     def test_a_part_the_map_does_not_hold_is_reported(self):
-        # invariant: guidelines-check-form/1
+        # invariant: guidelines-check-form
         self.assert_reported(
             self.check({STYLEGUIDE_FILE: with_line(STYLEGUIDE, 4, "- **Applies to:** web",
                                                    "- **Applies to:** web · mobile")}, ()),
@@ -736,7 +736,7 @@ class Form(FormCheckTestCase):
     def test_a_file_whose_name_and_discipline_disagree_is_reported(self):
         """A styleguide stands in `guidelines/styleguide-<part>.md`, and guidelines of any other
         discipline in `guidelines/<discipline>.md` alone, never under a part's name (WAY-167)."""
-        # invariant: guidelines-check-form/1
+        # invariant: guidelines-check-form
         cases = (
             ("guidelines/styleguide-web.md", TESTING),
             ("guidelines/web.md", TESTING),
@@ -754,7 +754,7 @@ class Form(FormCheckTestCase):
 
     def test_a_file_whose_name_follows_its_discipline_passes(self):
         """The control of the test above: the same texts under names that agree with them."""
-        # invariant: guidelines-check-form/1
+        # invariant: guidelines-check-form
         for path, text in (("guidelines/testing.md", TESTING),
                            ("guidelines/styleguide-web.md", STYLEGUIDE)):
             with self.subTest(path):
@@ -763,7 +763,7 @@ class Form(FormCheckTestCase):
 
 class Carrier(FormCheckTestCase):
     def test_a_rule_naming_no_decision_is_reported(self):
-        # invariant: guidelines-check-carrier/1
+        # invariant: guidelines-check-carrier
         cases = (
             ("a styleguide's rule", STYLEGUIDE_FILE, with_line(
                 STYLEGUIDE, 39, "- **Decision:** ABC-01@" + ROLES_FP, "- **Decision:** none")),
@@ -778,7 +778,7 @@ class Carrier(FormCheckTestCase):
                 self.assert_reported(self.check({path: text}, ()), path)
 
     def test_a_styleguide_rule_naming_no_invariant_is_reported(self):
-        # invariant: guidelines-check-carrier/1
+        # invariant: guidelines-check-carrier
         further = ("### Spacing on a grid\n\n- **Decision:** ABC-02@" + MUTED_FP + "\n"
                    "- **Invariant:** none\n- **Good:** a card keeps the grid's gap.\n"
                    "- **Bad:** a card sets a gap of its own.\n\nKeep every gap on the grid.\n\n")
@@ -801,12 +801,12 @@ class Carrier(FormCheckTestCase):
 
     def test_a_rule_naming_no_invariant_outside_a_styleguide_passes(self):
         """The control of the test above: TESTING's rule names `none` in *Invariant*."""
-        # invariant: guidelines-check-carrier/1
+        # invariant: guidelines-check-carrier
         self.assertIn("- **Invariant:** none\n", TESTING)
         self.assert_clean(self.check({TESTING_FILE: TESTING}, ()))
 
     def test_a_decision_of_the_roles_the_meaning_rule_does_not_name_is_reported(self):
-        # invariant: guidelines-check-carrier/1
+        # invariant: guidelines-check-carrier
         text = with_line(STYLEGUIDE, 22, "- **Decision:** ABC-01@%s · ABC-02@%s"
                          % (ROLES_FP, MUTED_FP), "- **Decision:** ABC-01@" + ROLES_FP)
         self.assert_reported(self.check({STYLEGUIDE_FILE: text}, ()), STYLEGUIDE_FILE,
@@ -815,14 +815,14 @@ class Carrier(FormCheckTestCase):
     def test_a_decision_of_the_roles_passes_where_the_meaning_rule_is_dropped(self):
         """The control of the test above: the rule "Each role in its meaning" dropped by a
         decision leaves the table's decisions unnamed by it, and that is no error."""
-        # invariant: guidelines-check-carrier/1
+        # invariant: guidelines-check-carrier
         text = replaced(STYLEGUIDE, EACH_ROLE, dropped("Each role in its meaning"))
         self.assert_clean(self.check({STYLEGUIDE_FILE: text}, ()))
 
 
 class ColourPair(FormCheckTestCase):
     def test_a_background_without_a_text_role_is_reported(self):
-        # invariant: guidelines-check-colour-pair/1
+        # invariant: guidelines-check-colour-pair
         row = ("| primary | background | this is the main action of the screen | primary-text | "
                "ABC-01@" + ROLES_FP + " |")
         for text_on_it in ("", "—", "muted", "primary", "ink"):
@@ -857,7 +857,7 @@ PLACES = (
 
 class ReferenceTarget(FormCheckTestCase):
     def test_a_reference_to_an_entry_not_in_force_is_reported_wherever_it_stands(self):
-        # invariant: guidelines-check-reference-target/1
+        # invariant: guidelines-check-reference-target
         targets = (
             ("a decision the log does not hold", "ABC-09@0123abcd"),
             ("a repealed decision", "ABC-04@" + FONT_FP),
@@ -872,7 +872,7 @@ class ReferenceTarget(FormCheckTestCase):
                                          line=line, fragments=(reference,), record=REFERENCES)
 
     def test_a_reference_whose_fingerprint_is_not_eight_hexadecimal_characters_is_reported(self):
-        # invariant: guidelines-check-reference-target/1
+        # invariant: guidelines-check-reference-target
         references = ("ABC-01@daa9", "ABC-01@DAA9CF8D", "ABC-01@daa9cf8d0", "ABC-01@zz",
                       "role-meaning@v2", "old-pair@x")
         for where, line, old, new in PLACES:
@@ -885,7 +885,7 @@ class ReferenceTarget(FormCheckTestCase):
     def test_a_versioned_package_name_or_a_bare_identifier_is_no_reference(self):
         """`react@18`, `tailwindcss@4` and `lucide-react@0` fit neither form of a reference, and
         an identifier with no `@` is a bare mention; none is reported."""
-        # invariant: guidelines-check-reference-target/1
+        # invariant: guidelines-check-reference-target
         line = "Write every background role with the text role that stands on it."
         for mention in ("`react@18`", "react@18", "`tailwindcss@4`", "lucide-react@0",
                         "ABC-01", "ABC-01/1", "role-meaning", "old-pair", "ABC-09"):
@@ -894,8 +894,8 @@ class ReferenceTarget(FormCheckTestCase):
                 self.assert_clean(self.check({STYLEGUIDE_FILE: text}))
 
     def test_a_reference_in_fenced_code_is_ignored(self):
-        # invariant: guidelines-check-reference-target/1
-        # invariant: guidelines-check-stale-reference/1
+        # invariant: guidelines-check-reference-target
+        # invariant: guidelines-check-stale-reference
         example = "A mockup is a pattern to compare against; meanings come from this file."
         for fence in ("```", "~~~"):
             with self.subTest(fence=fence):
@@ -911,7 +911,7 @@ class ReferenceTarget(FormCheckTestCase):
 
 class StaleReference(FormCheckTestCase):
     def test_a_stale_reference_on_the_commit_checked_is_reported_wherever_it_stands(self):
-        # invariant: guidelines-check-stale-reference/1
+        # invariant: guidelines-check-stale-reference
         cases = (
             ("a Decision field", 22, "- **Decision:** ABC-01@%s · ABC-02@%s" % (ROLES_FP, MUTED_FP),
              "- **Decision:** ABC-01@%s · ABC-02@%s" % (ROLES_STALE, MUTED_FP), "ABC-01",
@@ -943,7 +943,7 @@ class StaleReference(FormCheckTestCase):
         """The commit merged onto rewords a decision, or an invariant, that the branch never
         touched: the references the branch carries are current on its own commit and stale in
         the foundation the merge leaves."""
-        # invariant: guidelines-check-stale-reference/1
+        # invariant: guidelines-check-stale-reference
         cases = (
             ("a decision reworded on the commit merged onto",
              {"foundations/decisions.md": LOG_ONTO}, 22, "ABC-01", ROLES_REWORDED_FP),
@@ -960,7 +960,7 @@ class StaleReference(FormCheckTestCase):
     def test_a_reference_a_merge_leaves_stale_is_current_on_the_commit_checked(self):
         """The control of the test above: the same branch, checked with no commit to merge onto,
         holds no error, so what the test above sees comes from the merge."""
-        # invariant: guidelines-check-stale-reference/1
+        # invariant: guidelines-check-stale-reference
         for onto in ({"foundations/decisions.md": LOG_ONTO},
                      {"foundations/invariants.md": INVARIANTS_ONTO}):
             with self.subTest(onto=sorted(onto)):
@@ -969,7 +969,7 @@ class StaleReference(FormCheckTestCase):
 
 class CodePath(FormCheckTestCase):
     def test_a_path_outside_what_git_tracks_is_reported(self):
-        # invariant: guidelines-check-code-path/1
+        # invariant: guidelines-check-code-path
         line = "- `src/tokens.css`"
         paths = ("../outside.md", "src/../src/tokens.css", "/etc/passwd", r"C:\x", "C:/x",
                  r"\\host\share\x", "//host/share/x", ":(glob)**", "http://host/x",
@@ -988,7 +988,7 @@ class CodePath(FormCheckTestCase):
         its form, not only for naming nothing git tracks: each path below would name a tracked
         file of the product were its prefix or its `..` stripped, or resolved against the
         product's root. The remainders themselves pass first, so the error is the prefix's."""
-        # invariant: guidelines-check-code-path/1
+        # invariant: guidelines-check-code-path
         line = "- `src/tokens.css`"
         for remainder in ("src/tokens.css", "tests/fixtures.py", "src/components"):
             with self.subTest(remainder=remainder):
@@ -1012,7 +1012,7 @@ class CodePath(FormCheckTestCase):
     def test_a_tracked_file_or_directory_passes(self):
         """The control of the test above: STYLEGUIDE names a tracked file and a directory whose
         files git tracks."""
-        # invariant: guidelines-check-code-path/1
+        # invariant: guidelines-check-code-path
         self.assertIn("- `src/tokens.css`\n- `src/components`\n", STYLEGUIDE)
         self.assert_clean(self.check({STYLEGUIDE_FILE: STYLEGUIDE}, ()))
 
@@ -1023,11 +1023,11 @@ class CodingFixtures(FormCheckTestCase):
         beside the styleguide and the guidelines with no template: every coding test breaks one
         thing in them. The exemplar's decision wraps its path and its kind over lines, which
         passes, its whitespace collapsed."""
-        # invariant: guidelines-check-form/1
-        # invariant: guidelines-check-carrier/1
-        # invariant: guidelines-check-kind-index/1
-        # invariant: guidelines-check-exemplar/1
-        # invariant: guidelines-check-example-files/1
+        # invariant: guidelines-check-form
+        # invariant: guidelines-check-carrier
+        # invariant: guidelines-check-kind-index
+        # invariant: guidelines-check-exemplar
+        # invariant: guidelines-check-example-files
         self.assertIn("\n`src/api/orders/route.ts`", EXEMPLAR_DECISION)
         self.assertIn("\n`endpoint`", EXEMPLAR_DECISION)
         every = dict(CODING_FILES, **{STYLEGUIDE_FILE: STYLEGUIDE, TESTING_FILE: TESTING})
@@ -1039,7 +1039,7 @@ class CodingFixtures(FormCheckTestCase):
 
 class CodingForm(FormCheckTestCase):
     def test_a_missing_or_misplaced_standing_check_rule_is_reported(self):
-        # invariant: guidelines-check-form/1
+        # invariant: guidelines-check-form
         cases = (
             ("no Linter", replaced(CODING, LINTER_HEAD + LINTER_CASES, ""), ("Linter",)),
             ("no Formatter", replaced(CODING, FORMATTER, ""), ("Formatter",)),
@@ -1055,7 +1055,7 @@ class CodingForm(FormCheckTestCase):
                                                      ()), CODING_FILE, fragments=fragments)
 
     def test_a_standing_check_dropped_without_a_departing_decision_is_reported(self):
-        # invariant: guidelines-check-form/1
+        # invariant: guidelines-check-form
         for body in ("none — the product has no dependencies yet", "none",
                      "none — ABC-18", "the product has no dependencies yet"):
             with self.subTest(body=body):
@@ -1066,7 +1066,7 @@ class CodingForm(FormCheckTestCase):
 
     def test_a_standing_check_dropped_by_a_departing_decision_passes(self):
         """The control of the test above: the audit dropped as the template has it (WAY-202)."""
-        # invariant: guidelines-check-form/1
+        # invariant: guidelines-check-form
         text = replaced(CODING, AUDIT_HEAD + AUDIT_CASES,
                         "### Dependency audit\n\nnone — ABC-18@%s\n\n" % NO_AUDIT_DECISION_FP)
         self.assert_clean(self.check(dict(CODING_FILES, **{CODING_FILE: text}), ()))
@@ -1074,7 +1074,7 @@ class CodingForm(FormCheckTestCase):
     def test_a_general_file_with_no_kinds_of_code_is_reported(self):
         """The general file alone, so that no file of a kind waits for a row of the table; an
         error the general file alone gives with its table counts for nothing."""
-        # invariant: guidelines-check-form/1
+        # invariant: guidelines-check-form
         text = replaced(CODING, "## Kinds of code\n\n| Kind | File | When to read |\n"
                                 "|---|---|---|\n" + KINDS_ROW + "\n\n", "")
         self.assert_reported_anew(self.check({CODING_FILE: text}, ()), CODING_FILE,
@@ -1084,7 +1084,7 @@ class CodingForm(FormCheckTestCase):
         """A file of a kind stands in `guidelines/coding-<kind>.md`, `<kind>` an identifier
         (WAY-167). Each misnamed file stands beside a general file whose table names it, the
         `<kind>` its name gives in *Kind*, so that the error asked for is the one of its name."""
-        # invariant: guidelines-check-form/1
+        # invariant: guidelines-check-form
         for path, kind in (("guidelines/coding-.md", ""), ("guidelines/coding-Endpoint.md",
                                                             "Endpoint"),
                            ("guidelines/coding--x.md", "-x")):
@@ -1105,7 +1105,7 @@ class CodingCarrier(FormCheckTestCase):
     def test_a_coding_rule_naming_no_invariant_is_reported(self):
         """The coding template requires an invariant in every rule (WAY-196). Each rule loses
         its cases with its invariant, so that no case names an invariant the rule does not."""
-        # invariant: guidelines-check-carrier/1
+        # invariant: guidelines-check-carrier
         further = rule("Errors are never swallowed", "ABC-10@" + LINT_DECISION_FP, "none",
                        "a caught error is passed on.", "a caught error is dropped.",
                        "Pass on every error you catch.")
@@ -1128,7 +1128,7 @@ class CodingCarrier(FormCheckTestCase):
                 self.assert_reported_anew(self.check(files, ()), path)
 
     def test_a_coding_rule_naming_no_decision_is_reported(self):
-        # invariant: guidelines-check-carrier/1
+        # invariant: guidelines-check-carrier
         cases = (
             (CODING_FILE, replaced(CODING, "- **Decision:** ABC-11@" + FORMAT_DECISION_FP,
                                    "- **Decision:** none")),
@@ -1144,14 +1144,14 @@ class CodingCarrier(FormCheckTestCase):
 
 class KindIndex(FormCheckTestCase):
     def test_a_kind_file_no_row_names_is_reported(self):
-        # invariant: guidelines-check-kind-index/1
+        # invariant: guidelines-check-kind-index
         general = replaced(CODING, KINDS_ROW + "\n", "")
         self.assert_reported_anew(
             self.check({CODING_FILE: general, CODING_ENDPOINT_FILE: CODING_ENDPOINT}, ()),
             (CODING_FILE, CODING_ENDPOINT_FILE))
 
     def test_a_row_naming_no_file_git_tracks_is_reported(self):
-        # invariant: guidelines-check-kind-index/1
+        # invariant: guidelines-check-kind-index
         row = "| job | `guidelines/coding-job.md` | before adding or changing a job |"
         general = replaced(CODING, KINDS_ROW + "\n", KINDS_ROW + "\n" + row + "\n")
         for untracked in (None, {"guidelines/coding-job.md": CODING_ENDPOINT.replace(
@@ -1163,7 +1163,7 @@ class KindIndex(FormCheckTestCase):
                     CODING_FILE, line=line_of(general, row))
 
     def test_a_row_whose_kind_is_not_its_files_kind_is_reported(self):
-        # invariant: guidelines-check-kind-index/1
+        # invariant: guidelines-check-kind-index
         for kind in ("handler", "endpoints", "Endpoint", ""):
             with self.subTest(kind=kind):
                 row = KINDS_ROW.replace("| endpoint |", "| %s |" % kind if kind else "|  |")
@@ -1173,7 +1173,7 @@ class KindIndex(FormCheckTestCase):
                     CODING_FILE, line=line_of(general, row))
 
     def test_a_row_whose_when_to_read_is_empty_is_reported(self):
-        # invariant: guidelines-check-kind-index/1
+        # invariant: guidelines-check-kind-index
         for cell in ("|  |", "| |"):
             with self.subTest(cell=cell):
                 row = "| endpoint | `guidelines/coding-endpoint.md` %s" % cell
@@ -1185,7 +1185,7 @@ class KindIndex(FormCheckTestCase):
     def test_a_kind_file_with_no_general_file_is_reported(self):
         """Git tracks the file of a kind and no `guidelines/coding.md`: alone, beside guidelines
         of other disciplines, and with the general file standing untracked."""
-        # invariant: guidelines-check-kind-index/1
+        # invariant: guidelines-check-kind-index
         cases = (
             ("alone", {CODING_ENDPOINT_FILE: CODING_ENDPOINT}, None),
             ("beside other disciplines", {CODING_ENDPOINT_FILE: CODING_ENDPOINT,
@@ -1203,7 +1203,7 @@ class KindIndex(FormCheckTestCase):
         """A row whose *File* names a file git tracks that is no file `guidelines/coding-<kind>.md`
         — another discipline's guidelines, the general file itself, a file of the code — names a
         file with no `<kind>`, so its *Kind* is not that file's `<kind>`, whatever it reads."""
-        # invariant: guidelines-check-kind-index/1
+        # invariant: guidelines-check-kind-index
         cases = (
             ("testing", "guidelines/testing.md"),
             ("styleguide", "guidelines/styleguide-web.md"),
@@ -1223,7 +1223,7 @@ class KindIndex(FormCheckTestCase):
         """The control of the tests above: a file of a kind standing in the working tree but not
         tracked by git is no file of the sentence, so no row is asked to name it and no general
         file is asked to stand beside it."""
-        # invariant: guidelines-check-kind-index/1
+        # invariant: guidelines-check-kind-index
         general = replaced(CODING, KINDS_ROW + "\n", "")
         cases = (
             ("no row names it", {CODING_FILE: general}),
@@ -1244,7 +1244,7 @@ class Exemplar(FormCheckTestCase):
                           untracked=untracked)
 
     def test_a_kind_file_with_no_exemplar_row_or_more_than_one_is_reported(self):
-        # invariant: guidelines-check-exemplar/1
+        # invariant: guidelines-check-exemplar
         demoted = "| `src/api/orders/route.ts` | copy | — |"
         both = "ABC-16@" + TWO_EXEMPLARS_DECISION_FP
         cases = (
@@ -1263,7 +1263,7 @@ class Exemplar(FormCheckTestCase):
                 self.assert_reported_anew(self.check_kind(text), CODING_ENDPOINT_FILE)
 
     def test_a_row_whose_status_is_off_the_list_is_reported(self):
-        # invariant: guidelines-check-exemplar/1
+        # invariant: guidelines-check-exemplar
         for status in ("copied", "do-not-copy", "", "example"):
             with self.subTest(status=status):
                 row = COPY_ROW.replace("| copy |", "| %s |" % status if status else "|  |")
@@ -1274,7 +1274,7 @@ class Exemplar(FormCheckTestCase):
     def test_a_row_whose_file_is_out_of_the_repository_or_untracked_is_reported(self):
         """Paths of a row that is not the exemplar's, so that no decision is asked to name
         them; each but the last two would name a tracked file were its prefix or `..` stripped."""
-        # invariant: guidelines-check-exemplar/1
+        # invariant: guidelines-check-exemplar
         paths = ("/src/api/users/route.ts", PRODUCT_ROOT + "/src/api/users/route.ts",
                  "../product/src/api/users/route.ts", "src/api/../api/users/route.ts",
                  "C:/src/api/users/route.ts", r"C:\src\api\users\route.ts",
@@ -1289,7 +1289,7 @@ class Exemplar(FormCheckTestCase):
                     CODING_ENDPOINT_FILE, line=line_of(text, row))
 
     def test_a_row_other_than_the_exemplar_naming_a_decision_is_reported(self):
-        # invariant: guidelines-check-exemplar/1
+        # invariant: guidelines-check-exemplar
         for value in ("ABC-13@" + EXEMPLAR_DECISION_FP, "none", ""):
             with self.subTest(value=value):
                 row = COPY_ROW.replace("| — |", "| %s |" % value if value else "|  |")
@@ -1301,7 +1301,7 @@ class Exemplar(FormCheckTestCase):
         """The exemplar's *Decision* names a decision the log does not hold, one it repealed,
         none, or one whose binding sentences lack the row's *File* in backticks or the kind
         `endpoint` in backticks."""
-        # invariant: guidelines-check-exemplar/1
+        # invariant: guidelines-check-exemplar
         cases = (
             ("a decision the log does not hold", "ABC-09@0123abcd"),
             ("a repealed decision", "ABC-04@" + FONT_FP),
@@ -1326,7 +1326,7 @@ class ExampleFiles(FormCheckTestCase):
     def test_a_rule_naming_an_invariant_without_its_good_or_bad_case_is_reported(self):
         """Every discipline: a coding rule of a kind and of the general file, a styleguide's rule,
         and a rule of guidelines with no template once it names an invariant (WAY-168)."""
-        # invariant: guidelines-check-example-files/1
+        # invariant: guidelines-check-example-files
         testing_named = replaced(TESTING, "- **Invariant:** none",
                                  "- **Invariant:** lint-clean@" + LINT_FP)
         cases = (
@@ -1345,7 +1345,7 @@ class ExampleFiles(FormCheckTestCase):
                 self.assert_reported_anew(self.check(files, ()), path)
 
     def test_a_rule_naming_two_invariants_without_the_cases_of_one_is_reported(self):
-        # invariant: guidelines-check-example-files/1
+        # invariant: guidelines-check-example-files
         handler_good, handler_bad = (HANDLER_CASES[:HANDLER_CASES.index("```bad")],
                                      HANDLER_CASES[HANDLER_CASES.index("```bad"):])
         cases = (
@@ -1359,7 +1359,7 @@ class ExampleFiles(FormCheckTestCase):
                 self.assert_reported_anew(self.check_kind(text), CODING_ENDPOINT_FILE)
 
     def test_a_second_case_of_one_kind_for_an_invariant_is_reported(self):
-        # invariant: guidelines-check-example-files/1
+        # invariant: guidelines-check-example-files
         second_good = VALIDATES_GOOD.replace("src/api/carts/route.ts", "src/api/baskets/route.ts")
         second_bad = VALIDATES_BAD.replace("src/api/carts/route.ts", "src/api/baskets/route.ts")
         for name, old, new in (("two good cases", VALIDATES_GOOD, VALIDATES_GOOD + second_good),
@@ -1372,7 +1372,7 @@ class ExampleFiles(FormCheckTestCase):
         """A pair of cases added for an invariant of the invariants file that the rule's
         *Invariant* does not name: one no rule of the file names, one another rule names, and
         the product's `guidelines-form`."""
-        # invariant: guidelines-check-example-files/1
+        # invariant: guidelines-check-example-files
         for identifier in ("lint-clean", "endpoint-handler", "guidelines-form", "missing-check"):
             with self.subTest(identifier=identifier):
                 extra = (case("good", identifier, "src/api/carts/route.ts", "export {};")
@@ -1383,7 +1383,7 @@ class ExampleFiles(FormCheckTestCase):
     def test_a_case_whose_path_is_out_of_the_repository_is_reported(self):
         """The path of a case may name a file that does not exist, but never one outside the
         product's root: absolute, with a `..` segment, a drive or a UNC prefix."""
-        # invariant: guidelines-check-example-files/1
+        # invariant: guidelines-check-example-files
         opening = "```good endpoint-validates src/api/carts/route.ts"
         for path in ("/src/api/carts/route.ts", "../src/api/carts/route.ts",
                      "src/../src/api/carts/route.ts", "src/api/carts/../route.ts",
@@ -1396,7 +1396,7 @@ class ExampleFiles(FormCheckTestCase):
     def test_a_case_whose_path_names_no_file_yet_passes(self):
         """The control of the test above: the fixture's cases stand at paths no file holds, as
         `src/api/carts/route.ts`, which is no error (WAY-168: added at that path)."""
-        # invariant: guidelines-check-example-files/1
+        # invariant: guidelines-check-example-files
         self.assertNotIn("src/api/carts/route.ts", FOUNDATION)
         self.assertIn("```good endpoint-validates src/api/carts/route.ts\n", CODING_ENDPOINT)
         self.assert_clean(self.check(CODING_FILES, ()))
@@ -1405,7 +1405,7 @@ class ExampleFiles(FormCheckTestCase):
         """A line of three backticks or tildes after at most three spaces, with or without an
         info string, inside a case. A bare line of three backticks closes the case there, and
         the case's own closing line then opens a block that is no case."""
-        # invariant: guidelines-check-example-files/1
+        # invariant: guidelines-check-example-files
         inside = "export const POST = handle((input: unknown) => input);\n```"
         for fence in ("~~~", "~~~ts", "```ts", "   ```ts", "  ~~~", "````", "```"):
             with self.subTest(fence=fence):
@@ -1418,7 +1418,7 @@ class ExampleFiles(FormCheckTestCase):
         """The last case of the file loses its closing line, so that no later fence closes it and
         no line inside it would open one. It swallows the sections after it, whose absence the
         form check reports apart; the error asked for is the one at the case's opening line."""
-        # invariant: guidelines-check-example-files/1
+        # invariant: guidelines-check-example-files
         location_bad = LOCATION_CASES[LOCATION_CASES.index("```bad"):]
         background_bad = BACKGROUND_CASES[BACKGROUND_CASES.index("```bad"):]
         cases = (
@@ -1440,7 +1440,7 @@ class ExampleFiles(FormCheckTestCase):
     def test_another_fenced_block_in_a_rule_carrying_cases_is_reported(self):
         """In a rule whose cases are required, every fenced block is a case: a block with
         another info string, with none, or a case's info string lacking its path."""
-        # invariant: guidelines-check-example-files/1
+        # invariant: guidelines-check-example-files
         blocks = ("```ts\nconst limit = 10;\n```\n\n", "```\nconst limit = 10;\n```\n\n",
                   "```sample endpoint-validates src/api/carts/route.ts\nexport {};\n```\n\n",
                   "```good endpoint-validates\nexport {};\n```\n\n",
@@ -1454,7 +1454,7 @@ class ExampleFiles(FormCheckTestCase):
         """The exemption: a rule whose *Invariant* is the product's `guidelines-form` gives no
         case, and a rule naming it beside another invariant gives the cases of the other alone
         (WAY-168)."""
-        # invariant: guidelines-check-example-files/1
+        # invariant: guidelines-check-example-files
         alone = replaced(with_line(STYLEGUIDE, 40, "- **Invariant:** background-pair@" + PAIR_FP,
                                    "- **Invariant:** guidelines-form@" + GUIDELINES_FORM_FP),
                          BACKGROUND_CASES, "")
@@ -1470,7 +1470,7 @@ class ExampleFiles(FormCheckTestCase):
         """The exemption reaches `guidelines-form` alone: a rule whose *Invariant* names it beside
         another invariant still gives, for that other, exactly one good and one bad case, wherever
         `guidelines-form` stands in the field."""
-        # invariant: guidelines-check-example-files/1
+        # invariant: guidelines-check-example-files
         pair_good = BACKGROUND_CASES[:BACKGROUND_CASES.index("```bad")]
         pair_bad = BACKGROUND_CASES[BACKGROUND_CASES.index("```bad"):]
         styleguide = with_line(STYLEGUIDE, 40, "- **Invariant:** background-pair@" + PAIR_FP,
@@ -1503,7 +1503,7 @@ class ExampleFiles(FormCheckTestCase):
 class PreparedExampleFiles(FormCheckTestCase):
     """Optional bases are checked for form. Historical eligibility belongs to acceptance.
 
-    Inputs and expected verdicts follow guidelines-check-example-files/1 independently of the
+    Inputs and expected verdicts follow guidelines-check-example-files independently of the
     parser (WAY-69); these tests neither compute expected values nor run a historical check.
     """
 
@@ -1514,7 +1514,7 @@ class PreparedExampleFiles(FormCheckTestCase):
         return self.check({STYLEGUIDE_FILE: text}, ())
 
     def test_prepared_base_and_both_cases_pass_in_any_order(self):
-        # invariant: guidelines-check-example-files/1
+        # invariant: guidelines-check-example-files
         good = case("good", "background-pair", "src/tokens.css", ":root { --x: 1; }")
         bad = case("bad", "background-pair", "src/tokens.css", ":root { --x: 2; }")
         for blocks in (self.BASE + good + bad, good + self.BASE + bad, good + bad + self.BASE):
@@ -1522,13 +1522,13 @@ class PreparedExampleFiles(FormCheckTestCase):
                 self.assert_clean(self.check_background(blocks))
 
     def test_ordinary_pairs_need_no_base_and_may_have_different_paths(self):
-        # invariant: guidelines-check-example-files/1
+        # invariant: guidelines-check-example-files
         self.assertIn("```good role-meaning src/components/save.tsx", STYLEGUIDE)
         self.assertIn("```bad role-meaning src/components/warning.tsx", STYLEGUIDE)
         self.assert_clean(self.check({STYLEGUIDE_FILE: STYLEGUIDE}, ()))
 
     def test_a_base_belongs_only_to_its_named_invariant(self):
-        # invariant: guidelines-check-example-files/1
+        # invariant: guidelines-check-example-files
         base = case("base", "endpoint-handler", "src/api/carts/route.ts", "export {};")
         text = replaced(CODING_ENDPOINT, HANDLER_CASES, base + HANDLER_CASES)
         # The second invariant keeps its ordinary pair at differing paths in the same rule.
@@ -1540,14 +1540,14 @@ class PreparedExampleFiles(FormCheckTestCase):
         self.assert_clean(self.check(dict(CODING_FILES, **{CODING_ENDPOINT_FILE: text}), ()))
 
     def test_a_second_base_for_the_same_invariant_is_reported(self):
-        # invariant: guidelines-check-example-files/1
+        # invariant: guidelines-check-example-files
         for second in (self.BASE, case("base", "background-pair", "src/other.css", ":root {}")):
             with self.subTest(second=second.splitlines()[0]):
                 self.assert_reported(self.check_background(self.BASE + second + BACKGROUND_CASES),
                                      STYLEGUIDE_FILE, fragments=("second", "base"))
 
     def test_a_base_cannot_replace_either_mandatory_case(self):
-        # invariant: guidelines-check-example-files/1
+        # invariant: guidelines-check-example-files
         good = case("good", "background-pair", "src/tokens.css", ":root {}")
         bad = case("bad", "background-pair", "src/tokens.css", ":root {}")
         for name, blocks, missing in (("base alone", self.BASE, "good"),
@@ -1558,7 +1558,7 @@ class PreparedExampleFiles(FormCheckTestCase):
                                      fragments=(missing + " background-pair <path>",))
 
     def test_base_good_and_bad_paths_must_match_exactly(self):
-        # invariant: guidelines-check-example-files/1
+        # invariant: guidelines-check-example-files
         for good_path, bad_path in (("src/other.css", "src/tokens.css"),
                                    ("src/tokens.css", "src/other.css"),
                                    ("src/other.css", "src/other.css"),
@@ -1571,7 +1571,7 @@ class PreparedExampleFiles(FormCheckTestCase):
                                      fragments=("path", "base"))
 
     def test_base_before_the_rule_fields_end_is_reported(self):
-        # invariant: guidelines-check-example-files/1
+        # invariant: guidelines-check-example-files
         field = "- **Invariant:** background-pair@" + PAIR_FP
         text = replaced(STYLEGUIDE, field, self.BASE + field)
         self.assert_reported(self.check({STYLEGUIDE_FILE: text}, ()), STYLEGUIDE_FILE,
@@ -1579,7 +1579,7 @@ class PreparedExampleFiles(FormCheckTestCase):
                              fragments=("before", "fields"))
 
     def test_base_for_an_unnamed_unknown_or_form_invariant_is_reported(self):
-        # invariant: guidelines-check-example-files/1
+        # invariant: guidelines-check-example-files
         for identifier in ("role-meaning", "missing-check", "guidelines-form"):
             with self.subTest(identifier=identifier):
                 base = case("base", identifier, "src/tokens.css", ":root {}")
@@ -1595,7 +1595,7 @@ class PreparedExampleFiles(FormCheckTestCase):
                              fragments=("guidelines-form", "no case"))
 
     def test_a_rule_without_an_eligible_invariant_cannot_hold_a_base(self):
-        # invariant: guidelines-check-example-files/1
+        # invariant: guidelines-check-example-files
         field = "- **Invariant:** background-pair@" + PAIR_FP
         for value in ("guidelines-form@" + GUIDELINES_FORM_FP, "none", None):
             with self.subTest(value=value):
@@ -1606,7 +1606,7 @@ class PreparedExampleFiles(FormCheckTestCase):
                                      line=line_of(text, "```base guidelines-form src/tokens.css"))
 
     def test_malformed_base_openings_are_reported(self):
-        # invariant: guidelines-check-example-files/1
+        # invariant: guidelines-check-example-files
         for opening, closing in (("```base", "```"),
                                  ("```base background-pair", "```"),
                                  ("```base background-pair src/tokens.css extra", "```"),
@@ -1618,14 +1618,14 @@ class PreparedExampleFiles(FormCheckTestCase):
                                      fragments=("malformed test case",))
 
     def test_a_rule_with_no_fields_and_a_base_is_reported_without_crashing(self):
-        # invariant: guidelines-check-example-files/1
+        # invariant: guidelines-check-example-files
         text = replaced(STYLEGUIDE, BACKGROUND,
                          "### Every background with its text\n\n" + self.BASE)
         self.assert_reported(self.check({STYLEGUIDE_FILE: text}, ()), STYLEGUIDE_FILE,
                              line=line_of(text, "```base background-pair src/tokens.css"))
 
     def test_a_malformed_base_in_a_form_only_rule_is_still_reported(self):
-        # invariant: guidelines-check-example-files/1
+        # invariant: guidelines-check-example-files
         for separator in ("\t", " \t"):
             with self.subTest(separator=separator):
                 opening = "```base" + separator + "guidelines-form src/tokens.css"
@@ -1637,7 +1637,7 @@ class PreparedExampleFiles(FormCheckTestCase):
                                      line=line_of(text, opening))
 
     def test_unsafe_base_paths_are_reported_even_when_all_three_paths_match(self):
-        # invariant: guidelines-check-example-files/1
+        # invariant: guidelines-check-example-files
         for path in ("/src/tokens.css", "../src/tokens.css", "src/../tokens.css",
                      "C:/src/tokens.css", "C:src/tokens.css", r"C:\src\tokens.css",
                      r"\\host\share\tokens.css", "//host/share/tokens.css", r"src\tokens.css"):
@@ -1651,7 +1651,7 @@ class PreparedExampleFiles(FormCheckTestCase):
                                      fragments=("path",))
 
     def test_an_inner_fence_in_a_base_is_reported(self):
-        # invariant: guidelines-check-example-files/1
+        # invariant: guidelines-check-example-files
         for fence in ("~~~", "```css", "    ~~~css", "\t```css", "````"):
             with self.subTest(fence=fence):
                 base = case("base", "background-pair", "src/tokens.css", ":root {}", fence)
@@ -1659,7 +1659,7 @@ class PreparedExampleFiles(FormCheckTestCase):
                                      STYLEGUIDE_FILE, fragments=("fence",))
 
     def test_a_base_left_open_to_the_end_of_the_file_is_reported(self):
-        # invariant: guidelines-check-example-files/1
+        # invariant: guidelines-check-example-files
         opening = "```base background-pair src/tokens.css"
         text = replaced(STYLEGUIDE, BACKGROUND_CASES,
                          BACKGROUND_CASES + opening + "\n:root {}\n")

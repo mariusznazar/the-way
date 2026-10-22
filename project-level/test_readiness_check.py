@@ -152,35 +152,35 @@ class Whole(unittest.TestCase):
 
 class Structure(unittest.TestCase):
     def test_a_missing_status_line_is_reported(self):
-        # invariant: project-definition-form/1
+        # invariant: project-definition-form
         self.assertEqual(conditions(definition(status="")),
                          [("structure", "no `Status:` line above the first section")])
 
     def test_a_status_off_its_forms_is_reported(self):
-        # invariant: project-definition-form/1
+        # invariant: project-definition-form
         found = conditions(definition(status="Status: almost done"))
         self.assertEqual([c for c, _ in found], ["structure"])
 
     def test_a_missing_section_is_reported(self):
-        # invariant: project-definition-form/1
+        # invariant: project-definition-form
         order = [n for n in readiness_check.SECTIONS[:-1] if n != "Risks"]
         found = conditions(definition(order=order))
         self.assertIn(("structure", "the section `## Risks` is missing"), found)
 
     def test_a_section_standing_twice_is_reported(self):
-        # invariant: project-definition-form/1
+        # invariant: project-definition-form
         order = list(readiness_check.SECTIONS[:-1]) + ["Risks"]
         found = conditions(definition(order=order))
         self.assertIn(("structure", "`## Risks` stands a second time"), found)
 
     def test_a_section_outside_the_template_is_reported(self):
-        # invariant: project-definition-form/1
+        # invariant: project-definition-form
         text = definition().replace("## Risks", "## Stakeholders\n\nMariusz\n\n## Risks")
         self.assertIn(("structure", "`## Stakeholders` is no section of the template"),
                       conditions(text))
 
     def test_sections_out_of_order_are_reported(self):
-        # invariant: project-definition-form/1
+        # invariant: project-definition-form
         order = list(readiness_check.SECTIONS[:-1])
         order[0], order[1] = order[1], order[0]
         found = conditions(definition(order=order))
@@ -201,7 +201,7 @@ class Structure(unittest.TestCase):
 
 class Gaps(unittest.TestCase):
     def test_todo_in_a_section_is_reported_with_its_line(self):
-        # invariant: project-readiness-gate/1
+        # invariant: project-readiness-gate
         text = definition(bodies={"Success": "TODO"})
         findings = readiness_check.check(text)
         todo = [f for f in findings if f.condition == "a"]
@@ -217,7 +217,7 @@ class Gaps(unittest.TestCase):
         self.assertEqual(conditions(text), [])
 
     def test_change_todo_in_a_projected_decision_blocks_the_gate(self):
-        # invariant: project-readiness-gate/1
+        # invariant: project-readiness-gate
         decision = DECISION.format(approval="Mariusz, 2026-10-03").replace(
             "- **Change:** new decision", "- **Change:** TODO")
         text = definition(bodies={"Projected foundation changes":
@@ -225,7 +225,7 @@ class Gaps(unittest.TestCase):
         self.assertIn(("a", "`## Projected foundation changes` holds TODO"), conditions(text))
 
     def test_approved_by_todo_in_a_projected_decision_blocks_the_gate(self):
-        # invariant: project-readiness-gate/1
+        # invariant: project-readiness-gate
         text = definition(bodies={"Projected foundation changes":
                                   projected(approval="TODO")})
         self.assertIn(("a", "`## Projected foundation changes` holds TODO"), conditions(text))
@@ -254,7 +254,7 @@ class Gaps(unittest.TestCase):
         self.assertEqual(conditions(text), [])
 
     def test_todo_in_the_binding_sentence_of_a_projected_entry_is_reported(self):
-        # invariant: project-readiness-gate/1
+        # invariant: project-readiness-gate
         decision = DECISION.format(approval="Mariusz, 2026-10-03").replace(
             "The archive has no public write API.", "TODO")
         found = conditions(definition(bodies={"Projected foundation changes":
@@ -290,7 +290,7 @@ class Gaps(unittest.TestCase):
         self.assertEqual([c for c, _ in conditions(text) if c == "a"], [])
 
     def test_an_empty_section_is_reported(self):
-        # invariant: project-readiness-gate/1
+        # invariant: project-readiness-gate
         found = conditions(definition(bodies={"Risks": ""}))
         self.assertIn(("a", "`## Risks` is empty — write `none` or `TODO`"), found)
 
@@ -301,7 +301,7 @@ class Gaps(unittest.TestCase):
 
 class OpenQuestions(unittest.TestCase):
     def test_a_question_without_its_place_is_reported(self):
-        # invariant: project-readiness-gate/1
+        # invariant: project-readiness-gate
         text = definition(bodies={"Open questions": "- Jak mierzymy postęp?"})
         self.assertEqual([c for c, _ in conditions(text)], ["d"])
 
@@ -344,7 +344,7 @@ WORKING_TABLE_MESSAGE = ("the working table of candidates still stands — the s
 
 class Candidates(unittest.TestCase):
     def test_a_projected_section_without_the_candidates_line_is_reported(self):
-        # invariant: project-readiness-gate/1
+        # invariant: project-readiness-gate
         found = conditions(definition(bodies={"Projected foundation changes": "none"}))
         self.assertEqual(found, [("f", "`## Projected foundation changes` does not begin with "
                                        "`Candidates: <n> shown, <k> accepted — YYYY-MM-DD`")])
@@ -370,7 +370,7 @@ class Candidates(unittest.TestCase):
         self.assertEqual(conditions(definition(bodies={"Projected foundation changes": body})), [])
 
     def test_a_working_table_still_standing_is_reported_before_approval(self):
-        # invariant: project-readiness-gate/1
+        # invariant: project-readiness-gate
         body = projected(approval="on acceptance", entries=WORKING_TABLE + "\n\n### Decisions\n\n"
                          + DECISION.format(approval="on acceptance"))
         text = definition(status="Status: ready for gate", gate="",
@@ -401,37 +401,37 @@ class Technology(unittest.TestCase):
         return conditions(definition(bodies={"Technology": body}, **kwargs))
 
     def test_a_definition_without_the_technology_section_is_reported(self):
-        # invariant: project-technology-record/1
+        # invariant: project-technology-record
         order = [n for n in readiness_check.SECTIONS[:-1] if n != "Technology"]
         self.assertIn(("structure", "the section `## Technology` is missing"),
                       conditions(definition(order=order)))
 
     def test_none_is_reported(self):
-        # invariant: project-technology-record/1
+        # invariant: project-technology-record
         self.assertEqual(self.technology("none"), [("g", NONE_MESSAGE)])
 
     def test_a_choice_without_its_entry_is_reported(self):
-        # invariant: project-technology-record/1
+        # invariant: project-technology-record
         self.assertEqual(self.technology("- Magazyn danych"), [("g", NO_MARKER_MESSAGE)])
 
     def test_an_open_choice_is_reported_before_approval(self):
-        # invariant: project-technology-record/1
+        # invariant: project-technology-record
         text = definition(status="Status: ready for gate", gate="",
                           bodies={"Technology": "- Magazyn danych — open"})
         self.assertEqual(conditions(text, before_approval=True), [("g", OPEN_MESSAGE)])
 
     def test_held_by_off_the_identifier_form_is_reported(self):
-        # invariant: project-technology-record/1
+        # invariant: project-technology-record
         self.assertEqual(self.technology("- Język — held by: decyzja o języku"),
                          [("g", HELD_FORM_MESSAGE)])
 
     def test_a_projected_question_no_heading_holds_is_reported(self):
-        # invariant: project-technology-record/1
+        # invariant: project-technology-record
         self.assertEqual(self.technology("- Magazyn danych — projected: Where is data stored?"),
                          [("g", DANGLING_MESSAGE)])
 
     def test_projected_naming_an_invariant_heading_is_reported(self):
-        # invariant: project-technology-record/1
+        # invariant: project-technology-record
         entries = "### Decisions\n\n%s\n\n### Invariants\n\n%s" % (
             DECISION.format(approval="Mariusz, 2026-10-03"), INVARIANT)
         text = definition(bodies={
@@ -440,17 +440,17 @@ class Technology(unittest.TestCase):
         self.assertEqual(conditions(text), [("g", DANGLING_MESSAGE)])
 
     def test_held_by_without_a_version_is_reported(self):
-        # invariant: project-technology-record/1
+        # invariant: project-technology-record
         self.assertEqual(self.technology("- Magazyn danych — held by: ARC-02"),
                          [("g", HELD_FORM_MESSAGE)])
 
     def test_a_choice_still_open_after_a_held_marker_is_reported(self):
-        # invariant: project-technology-record/1
+        # invariant: project-technology-record
         found = self.technology("- Magazyn danych — held by: ARC-02/1 — open")
         self.assertEqual([c for c, _ in found], ["g"])
 
     def test_projected_with_no_decision_heading_in_the_section_is_reported(self):
-        # invariant: project-technology-record/1
+        # invariant: project-technology-record
         text = definition(bodies={
             "Technology": "- Magazyn danych — projected: Which database?",
             "Projected foundation changes": projected(
@@ -458,17 +458,17 @@ class Technology(unittest.TestCase):
         self.assertEqual(conditions(text), [("g", DANGLING_MESSAGE)])
 
     def test_projected_matching_the_candidates_line_is_reported(self):
-        # invariant: project-technology-record/1
+        # invariant: project-technology-record
         self.assertEqual(self.technology("- Hosting — projected: 2026-10-03"),
                          [("g", DANGLING_MESSAGE)])
 
     def test_projected_naming_part_of_a_heading_question_is_reported(self):
-        # invariant: project-technology-record/1
+        # invariant: project-technology-record
         self.assertEqual(self.technology("- Archiwum — projected: What does the archive"),
                          [("g", DANGLING_MESSAGE)])
 
     def test_a_decision_heading_outside_projected_changes_holds_no_question(self):
-        # invariant: project-technology-record/1
+        # invariant: project-technology-record
         text = definition(bodies={
             "Background": "Gra istnieje tylko jako koncepcja.\n\n"
                           "#### (new) — Where is data stored?",
@@ -476,23 +476,23 @@ class Technology(unittest.TestCase):
         self.assertEqual(conditions(text), [("g", DANGLING_MESSAGE)])
 
     def test_an_open_choice_after_a_settled_one_is_reported(self):
-        # invariant: project-technology-record/1
+        # invariant: project-technology-record
         body = "- Język aplikacji — held by: ARC-01/1\n- Magazyn danych — open"
         self.assertEqual(self.technology(body), [("g", OPEN_MESSAGE)])
 
     def test_none_followed_by_choices_is_reported(self):
-        # invariant: project-technology-record/1
+        # invariant: project-technology-record
         found = self.technology("none\n- Magazyn danych — open")
         self.assertIn(("g", OPEN_MESSAGE), found)
         self.assertIn(("g", "a line under `## Technology` that is no choice item"), found)
 
     def test_indented_prose_under_technology_is_reported(self):
-        # invariant: project-technology-record/1
+        # invariant: project-technology-record
         self.assertEqual(self.technology("  Zostajemy przy obecnym stacku."),
                          [("g", "a line under `## Technology` that is no choice item")])
 
     def test_prose_under_technology_is_reported(self):
-        # invariant: project-technology-record/1
+        # invariant: project-technology-record
         self.assertEqual(self.technology("Wszystko jest w fundamencie."),
                          [("g", "a line under `## Technology` that is no choice item")])
 

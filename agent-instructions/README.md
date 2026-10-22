@@ -18,8 +18,17 @@ versions, *Approved by* and the request link it waits for, format guards run as 
 the independent assessment, a second search of the foundation before the merge and the record of a
 search. A change to
 the-way does not apply that mechanism, whatever such a file or entry says. Where a test of the-way
-still requires part of it, such as a fingerprint beside a reference in the-way's own foundation,
-the change meets the test with the repository's existing tools and does no more. While the plan is
+still requires part of it, the change meets the test with the repository's existing tools and does
+no more. The foundation of the-way itself is migrated: its entries hold no fingerprint, version,
+*Approved by* or *Review when*, and there is no list of violated, quarantined or recovered
+invariants and no file of human verdicts. No format guard and no probe checks it;
+`elements/common/foundation_check.py` checks its identifiers, references, fields and the part of
+each file, and `elements/common/migrate_foundation.py` brings a foundation of the earlier form to
+the current one. The format guards of the decisions, the invariants and the part map, with
+`elements/common/guard_shared.py`, stay only as a library of `product-guidelines/form_check.py`
+until the plan's position P17 removes both. The block the installer writes into a product's
+`AGENTS.md` and `installation/README.md` still tell a product to run the format guard of each
+foundation file until the plan's positions P26 and P27 rewrite them. While the plan is
 applied, its own rhythm holds: each of its positions is one commit, with every test run on it and
 reviewed as below, and each of its stages is one request.
 
@@ -65,10 +74,7 @@ only once it is added to git (`git add`). The whole run takes about 16 minutes. 
 change as it goes into the request. A run passes when its exit code is 0. While the change is
 made, `python -B gate/run_tests.py <directory>` runs the tests of one directory. A change to
 `gate/run_tests.py` is also checked with `python -B -m unittest discover -s gate -p "test_*.py"`,
-which does not rest on the runner it checks. Until
-the plan removes `probes/`, the run fails for a known reason: `probes/claude-code-project-skills`
-and `probes/anthropic-model-states` look for sentences that the documentation they read no longer
-holds.
+which does not rest on the runner it checks.
 
 The author of the change, or the agent that leads the work, asks an agent that did not make the
 change to review it (WAY-10). The reviewer receives the whole diff, the task or the plan's position

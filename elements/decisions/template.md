@@ -204,9 +204,10 @@ instead of being copied (WAY-05, WAY-34).
 
 ## The old form
 
-The decisions' format guard, `format_guard.py` beside this file, reads the three sections below
-until it is removed: the old form of an entry, with versions, review records and kinds of change.
-They bind no entry; an entry follows the sections above.
+The decisions' format guard, `format_guard.py` beside this file, reads the three sections below: the
+old form of an entry, with versions, review records and kinds of change. The guard is kept only as a
+library of `product-guidelines/form_check.py` until the slimming plan's position P17 removes both;
+these sections bind no entry and go with it.
 
 ## Decision version
 

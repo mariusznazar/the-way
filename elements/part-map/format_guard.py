@@ -1,5 +1,8 @@
 """Format guard of a product's part map.
 
+Kept only as a library of product-guidelines/form_check.py until the slimming plan's position P17
+removes both.
+
 Checks a map against template.md, which lies next to this script. The fields of each kind of
 entry, the words `none` and `TODO` each field takes and the titles of the lists are read from the
 forms of the template, so the rules of an entry live in one place (WAY-35, WAY-71). Each check
@@ -389,7 +392,6 @@ class Report(shared.Report):
 def check_sections(text, report):
     """Every `## ` section of the map is an entry or one of the lists the template names for the
     map (WAY-40)."""
-    # invariant: map-section-kinds/1
     check, kinds = "check_sections", "map-section-kinds/1"
     report.ran(check, kinds)
     for line, lines in split_sections(text):
@@ -403,8 +405,6 @@ def check_sections(text, report):
 
 
 def check_kinds(entries, rules, report):
-    # invariant: map-entry-kinds/1
-    # invariant: part-criticality-field/1
     check, kinds, criticality = "check_kinds", "map-entry-kinds/1", "part-criticality-field/1"
     report.ran(check, kinds, criticality)
     for entry in entries:
@@ -427,8 +427,6 @@ def check_kinds(entries, rules, report):
 
 
 def check_identifiers(entries, sections, report):
-    # invariant: map-identifier-form/1
-    # invariant: map-entry-version/1
     check, form, version = "check_identifiers", "map-identifier-form/1", "map-entry-version/1"
     report.ran(check, form, version)
     withdrawn = {cells[0]: line for cells, line in listed_rows(sections, "Withdrawn identifiers")}
@@ -460,8 +458,6 @@ def check_identifiers(entries, sections, report):
 def check_fields(entries, rules, report):
     """Every field of an entry's kind is present, and holds `none` or `TODO` only where the form
     of its kind gives it that word; a `TODO` the form gives is a warning (WAY-71)."""
-    # invariant: map-entry-field-presence/1
-    # invariant: map-entry-field-words/1
     check, presence, words = "check_fields", "map-entry-field-presence/1", "map-entry-field-words/1"
     report.ran(check, presence, words)
     for entry in entries:
@@ -497,7 +493,6 @@ def check_fields(entries, rules, report):
 
 
 def check_references(entries, sections, report):
-    # invariant: flow-part-names/1
     check, flow_parts = "check_references", "flow-part-names/1"
     report.ran(check, flow_parts)
     withdrawn = {cells[0] for cells, _ in listed_rows(sections, "Withdrawn identifiers")}
@@ -608,8 +603,6 @@ def criticality(entries, sections):
 
 
 def check_criticality(entries, sections, rules, report):
-    # invariant: failure-mode-severity/1
-    # invariant: failure-mode-detection/1
     check, severity, detection = ("check_criticality", "failure-mode-severity/1",
                                   "failure-mode-detection/1")
     report.ran(check, severity, detection)
@@ -680,7 +673,6 @@ def named_invariants(entries):
 
 def check_invariant_names(entries, map_path, report):
     """Every invariant the map names is an entry of the invariants file beside it (WAY-64)."""
-    # invariant: map-invariant-names/1
     check, names = "check_invariant_names", "map-invariant-names/1"
     path = os.path.join(os.path.dirname(os.path.abspath(map_path)), "invariants.md")
     if not os.path.isfile(path):
@@ -761,7 +753,6 @@ def matched_by_git(root, wanted, paths):
 def check_map_file(map_path, top, tracked, report):
     """The repository holds one part map, at foundations/part_map.md (WAY-40). Another map is
     known by its name: a tracked file named part_map.md anywhere else."""
-    # invariant: part-map-file/1
     check, one_file = "check_map_file", "part-map-file/1"
     report.ran(check, one_file)
     expected = os.path.join(top, *MAP_PATH.split("/"))
@@ -777,9 +768,6 @@ def check_map_file(map_path, top, tracked, report):
 
 def check_files(entries, sections, report, top, tracked):
     """Returns {tracked path: [parts whose patterns claim it]}, or None where git cannot match."""
-    # invariant: file-part-assignment/1
-    # invariant: path-pattern-reach/1
-    # invariant: left-out-file-assignment/1
     check = "check_files"
     assignment, reach, left_out_claim = (
         "file-part-assignment/1", "path-pattern-reach/1", "left-out-file-assignment/1")
@@ -841,8 +829,6 @@ def check_flows(entries, report, top, tracked, claims):
     """Every critical flow names an invariant and is named by a test, in a comment line
     `# flow: <identifier>` of a file git tracks (WAY-45); the map names no test. Returns the
     tests found for each flow, or None where git lists no file."""
-    # invariant: flow-invariant-link/1
-    # invariant: flow-coverage-parts/1
     check, link, coverage_parts = "check_flows", "flow-invariant-link/1", "flow-coverage-parts/1"
     if top is None or tracked is None:
         return None
@@ -916,7 +902,6 @@ def check_flows(entries, report, top, tracked, claims):
 def check_flow_tests(entries, named, report):
     """Every test naming a critical flow of the-way's own map in a line `# flow: <identifier>`
     lies under gate/ (WAY-55)."""
-    # invariant: flow-test-location/1
     check, location = "check_flow_tests", "flow-test-location/1"
     report.ran(check, location)
     for entry in entries:
@@ -935,9 +920,6 @@ def promise_levels(sections):
 
 
 def check_surfaces(entries, sections, rules, text, report, top):
-    # invariant: surface-declaration/1
-    # invariant: map-withdrawal-date/1
-    # invariant: surface-change-path/1
     check = "check_surfaces"
     declaration, withdrawal, change_path = ("surface-declaration/1", "map-withdrawal-date/1",
                                             "surface-change-path/1")
@@ -1007,8 +989,6 @@ def check_surfaces(entries, sections, rules, text, report, top):
 def check_promise_levels(entries, report):
     """The levels of promise sit at the declarations, and no command of the product reports them,
     so what the map says of them cannot be read against the code (WAY-49)."""
-    # invariant: surface-promise-level/1
-    # invariant: promise-level-policy/1
     check = "check_promise_levels"
     why = "the levels sit at the declarations, and no command of the product reports them"
     if any(entry.kind == "surface" for entry in entries):
@@ -1018,7 +998,6 @@ def check_promise_levels(entries, report):
 
 
 def check_lists(sections, rules, report):
-    # invariant: external-exchange-row/1
     check, exchange = "check_lists", "external-exchange-row/1"
     report.ran(check, exchange)
     for title, columns in rules.lists.items():
@@ -1050,7 +1029,6 @@ def check_withdrawn(entries, sections, rules, report):
     """Every withdrawn identifier of the map gives why it was withdrawn and names one or more
     successors, each an entry or a withdrawn identifier of the map, never `none`: the map withdraws
     an identifier only on a split or a merge, which leaves entries in its place (WAY-41)."""
-    # invariant: map-withdrawal-successors/1
     check, successors = "check_withdrawn", "map-withdrawal-successors/1"
     report.ran(check, successors)
     section = sections.get("Withdrawn identifiers")
@@ -1104,7 +1082,6 @@ def check_examples(entries, examples_path, report):
     """Every identifier `examples.md` names is the identifier of an entry of the map: an example
     names an entry of the-way's map by its identifier instead of copying it (WAY-09, WAY-34). An
     item of a list names the identifier it opens with."""
-    # invariant: map-example-target/1
     check, target = "check_examples", "map-example-target/1"
     text = read_file(examples_path, report, "the examples")
     if text is None:
@@ -1150,7 +1127,6 @@ def latest_scopes(text):
 
 def check_scopes(entries, sections, report, map_path):
     """Every name in the scope of the latest version of a decision is a part of the map (WAY-21)."""
-    # invariant: decision-scope-names/1
     check, names = "check_scopes", "decision-scope-names/1"
     log = os.path.join(os.path.dirname(os.path.abspath(map_path)), "decisions.md")
     if not os.path.isfile(log):
@@ -1187,8 +1163,6 @@ def violations_path(map_path, rules):
 
 def check_violations(entries, rules, report, map_path):
     """Checks the rows of the list of known violations and returns them (WAY-51)."""
-    # invariant: known-violation-fields/1
-    # invariant: known-violation-line-number/1
     check, fields, line_number = ("check_violations", "known-violation-fields/1",
                                   "known-violation-line-number/1")
     path = violations_path(map_path, rules)
@@ -1228,8 +1202,6 @@ def check_violations(entries, rules, report, map_path):
 def check_dependencies(report):
     """What the code holds against the map's dependencies comes from the product's dependency
     graph, which no command of the product reports yet (WAY-51, WAY-38)."""
-    # invariant: known-violation-coverage/1
-    # invariant: known-violation-currency/1
     check = "check_dependencies"
     why = "no command of the product reports the dependency graph"
     report.cannot_check("the dependencies between parts, and new or stale violations", why)
@@ -1240,7 +1212,6 @@ def check_dependencies(report):
 def check_violations_growth(map_path, rules, positions, base, top, report, no_commit=None):
     """The list of known violations is a subset of its version on the base (WAY-51). Given
     `no_commit`, which says why there is no base, records it unchecked instead."""
-    # invariant: known-violations-growth/1
     check, growth = "check_violations_growth", "known-violations-growth/1"
     if no_commit:
         report.unchecked(check, NO_COMMIT_REASON, no_commit, growth)
@@ -1270,7 +1241,6 @@ def check_identifier_persistence(entries, sections, rules, base_text, base, repo
     """Every identifier the map held on the base stands in it as an entry or as a withdrawn
     identifier (WAY-41). Given `no_commit`, which says why there is no base, records the check
     unchecked instead; a base without the map held no identifier."""
-    # invariant: map-identifier-persistence/1
     check, persistence = "check_identifier_persistence", "map-identifier-persistence/1"
     if no_commit:
         report.unchecked(check, NO_COMMIT_REASON, no_commit, persistence)

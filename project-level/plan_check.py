@@ -1,5 +1,5 @@
 """The check of a project plan: what a script can decide of a plan that breaks an approved project
-definition into tasks (WAY-142, WAY-146; invariants `project-plan-form/1`, `project-plan-check/1`).
+definition into tasks (WAY-142, WAY-146; invariants `project-plan-form`, `project-plan-check`).
 
 Usage, from any directory:
 

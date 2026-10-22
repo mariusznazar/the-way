@@ -68,7 +68,7 @@ class OneDirectory(RunnerTestCase):
         self.assertIn("Ran 2 tests", output)
 
     def test_a_failing_test_exits_one(self):
-        # invariant: gate-exit-code/1
+        # invariant: gate-exit-code
         self.write("tests/test_sample.py",
                    module("self.assertTrue(True)", "self.assertEqual(2, 3)"))
         code, output = self.runner("tests")
@@ -76,21 +76,21 @@ class OneDirectory(RunnerTestCase):
         self.assertIn("FAILED (failures=1)", output)
 
     def test_an_erring_test_exits_one(self):
-        # invariant: gate-exit-code/1
+        # invariant: gate-exit-code
         self.write("tests/test_sample.py", module("raise RuntimeError('broken')"))
         code, output = self.runner("tests")
         self.assertEqual(code, 1, output)
         self.assertIn("RuntimeError: broken", output)
 
     def test_a_module_that_cannot_be_imported_exits_one(self):
-        # invariant: gate-exit-code/1
+        # invariant: gate-exit-code
         self.write("tests/test_sample.py", "import no_such_module_anywhere\n" + PASSING)
         code, output = self.runner("tests")
         self.assertEqual(code, 1, output)
         self.assertIn("no_such_module_anywhere", output)
 
     def test_an_unexpected_success_exits_one(self):
-        # invariant: gate-exit-code/1
+        # invariant: gate-exit-code
         self.write("tests/test_sample.py", "\n".join((
             "import unittest", "", "",
             "class Checks(unittest.TestCase):",
@@ -102,7 +102,7 @@ class OneDirectory(RunnerTestCase):
         self.assertIn("unexpected successes=1", output)
 
     def test_a_directory_holding_no_test_exits_one(self):
-        # invariant: gate-exit-code/1
+        # invariant: gate-exit-code
         self.write("tests/helper.py", "VALUE = 1\n")
         code, output = self.runner("tests")
         self.assertEqual(code, 1, output)
@@ -123,7 +123,7 @@ class OneDirectory(RunnerTestCase):
 
 class EveryDirectory(RunnerTestCase):
     def test_every_directory_holding_a_tracked_test_file_runs_in_a_process_of_its_own(self):
-        # invariant: gate-exit-code/1
+        # invariant: gate-exit-code
         # Two modules of one name in two directories: run in one process, the second would be
         # taken for the first, and its tests would not run.
         self.write("a/test_same.py", PASSING)
@@ -140,7 +140,7 @@ class EveryDirectory(RunnerTestCase):
                                                  "passed"), output)
 
     def test_a_failing_directory_fails_the_run_and_the_rest_still_run(self):
-        # invariant: gate-exit-code/1
+        # invariant: gate-exit-code
         self.write("a/test_one.py", module("self.assertEqual(1, 2)"))
         self.write("b/test_two.py", PASSING)
         self.track("a/test_one.py", "b/test_two.py")
@@ -151,7 +151,7 @@ class EveryDirectory(RunnerTestCase):
                                                  "code 1)"), output)
 
     def test_a_directory_whose_tracked_test_file_is_gone_does_not_run(self):
-        # invariant: gate-exit-code/1
+        # invariant: gate-exit-code
         self.write("a/test_one.py", PASSING)
         self.write("gone/test_gone.py", PASSING)
         self.track("a/test_one.py", "gone/test_gone.py")
@@ -161,7 +161,7 @@ class EveryDirectory(RunnerTestCase):
         self.assertNotIn("== gone", output)
 
     def test_a_process_exiting_zero_before_unittest_reports_fails_the_run(self):
-        # invariant: gate-exit-code/1
+        # invariant: gate-exit-code
         self.write("a/test_one.py", module("import os; os._exit(0)"))
         self.write("b/test_two.py", PASSING)
         self.track("a/test_one.py", "b/test_two.py")
@@ -171,7 +171,7 @@ class EveryDirectory(RunnerTestCase):
                                                  "code 0 without unittest's OK)"), output)
 
     def test_a_report_that_does_not_end_with_ok_fails_the_run(self):
-        # invariant: gate-exit-code/1
+        # invariant: gate-exit-code
         self.write("a/test_one.py", "import atexit\n"
                    "atexit.register(print, 'printed after the report')\n" + PASSING)
         self.track("a/test_one.py")
@@ -182,7 +182,7 @@ class EveryDirectory(RunnerTestCase):
                                                  "code 0 without unittest's OK)"), output)
 
     def test_a_repository_without_a_tracked_test_file_exits_one(self):
-        # invariant: gate-exit-code/1
+        # invariant: gate-exit-code
         self.write("a/helper.py", "VALUE = 1\n")
         self.track("a/helper.py")
         code, output = self.runner()
