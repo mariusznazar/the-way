@@ -1,6 +1,6 @@
 ---
 name: the-way-record-glossary-term
-description: Use when a product's glossary, foundations/glossary.md, has to gain or change an entry — a word a binding sentence or a template's rule uses in two meanings or in a meaning a reader of the field would not give it, a word a task's return step or a search of the foundation found, a sentence that defines a word, a reworded definition, a renamed term, a second meaning moved to another word, a word added to Avoid, or a term a project definition projects. Use this checkout's own the-way.
+description: Use when a product's glossary, foundations/glossary.md, has to gain or change an entry — a word that means in the product something other than a reader of its field takes it to mean, a word used in two meanings, a word a task's return step or a search of the foundation found, a changed meaning, a second meaning moved to another word, or a term a project definition projects. Use this checkout's own the-way.
 ---
 
 # the-way-record-glossary-term

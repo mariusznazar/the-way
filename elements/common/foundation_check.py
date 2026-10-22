@@ -10,23 +10,28 @@ every other file git tracks. The script reads files and asks git; it writes noth
 
 What it reports, each as `path:line: message`:
 
-- an identifier standing twice: a decision number in the decision log; an identifier among the
+- an identifier standing twice: a decision number among the entries and the withdrawn numbers of
+  the decision log; an identifier among the
   entries and withdrawn identifiers of the invariants, the environment facts and the part map
   together; a term of the glossary. Old headings are read too: a decision `PREFIX-NN/V` may stand
   in several versions, each once, and a heading `identifier/V` names `identifier`;
 - a withdrawn identifier naming an entry again, which is the same identifier standing twice, and a
   successor of a withdrawn identifier that is neither an entry nor a withdrawn identifier of the
-  same file;
+  same file — the decision log's withdrawn numbers included;
 - a reference that names no entry, or a withdrawn one: a decision number with the log's prefix
-  anywhere in a file git tracks; the parts a decision's *Scope*, an invariant's *Part*, a part's
-  *Depends on*, a flow's *Parts* and guidelines' *Applies to* name; the invariants a decision's
+  anywhere in a file git tracks, outside the log's list of withdrawn numbers and outside a source
+  an invariant's *Derives from* quotes — an item of its own, its items joined by ` · `, holding a
+  passage between quotation marks; the parts a
+  decision's *Scope*, an invariant's *Part*, a part's *Depends on*, a flow's *Parts* and
+  guidelines' *Applies to* name; the invariants a decision's
   *Verification* (after `invariants:`), a flow's *Invariant*, a failure mode's `detected by`, the
   lists of violated, quarantined and recovered invariants, a guidelines rule's *Invariant* and a
   comment line `invariant: <identifier>` in a file other than Markdown name; the facts an
-  invariant's *Rests on* and a comment line `fact: <identifier>` name; and a reference written
-  `<identifier>@<fingerprint>` in a decision's *Based on* (a fact) and in guidelines outside
-  fenced code (an invariant). Old references are read too: `ID@<fingerprint>` and `ID/<version>`
-  name `ID`;
+  invariant's *Rests on*, a decision's *Based on* as an item of its own — its items joined by
+  ` · ` — and a comment line `fact: <identifier>` name; and a reference written
+  `<identifier>@<fingerprint>` in guidelines outside fenced code (an invariant). Old references
+  are read too: `ID@<fingerprint>` and `ID/<version>` name `ID`, and in a decision's *Based on* a
+  fact written `ID@<fingerprint>` anywhere in the field;
 - a file git tracks that no part's *Files* claims, or that two parts claim, by path patterns git
   itself matches, letter case counting, unless the map lists it under `Files left out on purpose`;
   and a file on that list that a part claims.
@@ -67,6 +72,7 @@ CITATION = re.compile(r"^\s*(?:#|//|--|;|%|\*|/\*|<!--|REM\b)\s*(invariant|fact)
 ITEM = re.compile(r"[^·,\n]+")
 FIELD = re.compile(r"^- \*\*(.+?):\*\*(?: (.*))?$")
 FENCE = re.compile(r"^ {0,3}(`{3,}|~{3,})")
+QUOTED = re.compile(r"\"[^\"]*\"|\u201c[^\u201d]*\u201d")
 EMPTY = ("none", "TODO")
 
 
@@ -142,6 +148,35 @@ def located(found, name, pattern=None):
                 yield word, lines[value.count("\n", 0, start + item.start())]
 
 
+def based_on(found):
+    """(word, line number) of each fact a decision's *Based on* names: an item of its own, the
+    items joined by ` · `, that is an identifier alone; and, in the old form, an identifier with
+    its fingerprint anywhere in the field. A quoted source is no such item, whatever it holds."""
+    value, lines = found.get("Based on", ("", [0]))
+    yield from located(found, "Based on", FINGERPRINTED)
+    start = 0
+    for item in value.split("·"):
+        word = item.strip()
+        if word not in EMPTY and re.fullmatch(WORDS, word):
+            yield word, lines[value.count("\n", 0, start + item.index(word))]
+        start += len(item) + 1
+
+
+def unquoted(found, name):
+    """(line number, text) of each line of the items of a field's list joined by ` · ` that quote
+    no passage. An item quoting one between quotation marks is a source outside the foundation,
+    whatever else it holds; a ` · ` inside the quotation marks joins nothing."""
+    value, lines = found.get(name, ("", [0]))
+    masked = QUOTED.sub(lambda match: "\0" * len(match.group(0)), value)
+    start = 0
+    for piece in masked.split("·"):
+        if "\0" not in piece:
+            first = value.count("\n", 0, start)
+            for offset, text in enumerate(value[start:start + len(piece)].split("\n")):
+                yield lines[first + offset], text
+        start += len(piece) + 1
+
+
 def table(lines, title):
     """(line number, cells) of each row of the table under `## title`, header and separator
     row left out, the header's cells first as row 0."""
@@ -168,6 +203,10 @@ class Foundation:
         self.files = {path: read(root, path) for path in
                       (DECISIONS, INVARIANTS, FACTS, GLOSSARY, PART_MAP, VIOLATED)}
         self.prefix, self.numbers = None, set()
+        self.withdrawn_numbers = {}  # number -> (line, successors)
+        self.withdrawn_lines = set()  # the lines of the log's list of withdrawn numbers
+        self.derived_lines = set()  # the lines of the invariants' *Derives from*
+        self.number = None  # a decision number with the log's prefix
         self.entries = {}    # path -> {identifier: (line, fields)}
         self.withdrawn = {}  # path -> {identifier: (line, successors)}
         self.parts = set()
@@ -181,6 +220,7 @@ class Foundation:
         if not first:
             return
         self.prefix = first.group(1)
+        self.number = re.compile(r"(?<![A-Za-z0-9-])%s-([0-9]+)(?![0-9])" % self.prefix)
         seen = {}
         for number, heading, _ in blocks(lines, "### "):
             match = re.match(r"^### %s-([0-9]+)(?:/([0-9]+))? — " % self.prefix, heading)
@@ -198,6 +238,17 @@ class Foundation:
                                                          "line %d" % (twice, line))
                     break
             seen.setdefault(key, []).append((version, number))
+        for number, cells in table(lines, WITHDRAWN)[1:]:
+            self.withdrawn_lines.add(number)
+            match = re.fullmatch(r"%s-([0-9]+)" % self.prefix, cells[0])
+            if not match:
+                self.report.error(DECISIONS, number, "`%s` is no number of the log" % cells[0])
+                continue
+            key = int(match.group(1))
+            if key in self.numbers or key in self.withdrawn_numbers:
+                self.report.error(DECISIONS, number, "`%s` stands twice" % cells[0])
+            else:
+                self.withdrawn_numbers[key] = (number, cells[2] if len(cells) > 2 else "")
 
     def read_named(self):
         """The entries and withdrawn identifiers of the invariants, the facts and the part map,
@@ -227,6 +278,8 @@ class Foundation:
                     held[name] = (path, number)
         self.parts = {name for name, (_, found) in self.entries[PART_MAP].items()
                       if "Files" in found}
+        for _, found in self.entries[INVARIANTS].values():
+            self.derived_lines.update(found.get("Derives from", ("", []))[1])
 
     def read_glossary(self):
         held = {}
@@ -241,6 +294,14 @@ class Foundation:
                 held[term.lower()] = number
 
     def check_successors(self):
+        for key, (number, successors) in self.withdrawn_numbers.items():
+            for successor in items(successors):
+                match = re.fullmatch(r"%s-([0-9]+)" % self.prefix, successor)
+                if successor not in EMPTY and not (match and int(match.group(1)) in
+                                                   self.numbers | set(self.withdrawn_numbers)):
+                    self.report.error(DECISIONS, number, "withdrawn `%s-%02d` names the successor "
+                                                         "`%s`, which this file does not hold"
+                                      % (self.prefix, key, successor))
         for path, withdrawn in self.withdrawn.items():
             for name, (number, successors) in withdrawn.items():
                 for successor in items(successors):
@@ -269,26 +330,39 @@ class Foundation:
         else:
             self.report.error(path, line, "`%s` names no %s" % (name, kind))
 
-    def check_decision_numbers(self, path, lines):
+    def refer_decisions(self, path, number, text):
+        """Report each decision number in a text that names no decision, or a withdrawn one."""
         if not self.prefix:
             return
-        pattern = re.compile(r"(?<![A-Za-z0-9-])%s-([0-9]+)(?![0-9])" % self.prefix)
+        for match in self.number.finditer(text):
+            key = int(match.group(1))
+            if key in self.withdrawn_numbers:
+                self.report.error(path, number, "`%s` is withdrawn; name its successor"
+                                  % match.group(0))
+            elif key not in self.numbers:
+                self.report.error(path, number, "`%s` names no decision of the log"
+                                  % match.group(0))
+
+    def check_decision_numbers(self, path, lines):
+        """Every line but the log's withdrawn numbers and the invariants' *Derives from*, which
+        `check_foundation_references` reads apart from the sources it quotes."""
+        skipped = {DECISIONS: self.withdrawn_lines, INVARIANTS: self.derived_lines}.get(path, ())
         for number, line in enumerate(lines, start=1):
-            for match in pattern.finditer(line):
-                if int(match.group(1)) not in self.numbers:
-                    self.report.error(path, number, "`%s` names no decision of the log"
-                                      % match.group(0))
+            if number not in skipped:
+                self.refer_decisions(path, number, line)
 
     def check_foundation_references(self):
         for _, _, body in blocks(self.files[DECISIONS], "### "):
             found = fields(body)
             for word, line in located(found, "Scope"):
                 self.refer(DECISIONS, line, word, "part")
-            for word, line in located(found, "Based on", FINGERPRINTED):
+            for word, line in based_on(found):
                 self.refer(DECISIONS, line, word, "fact")
             for word, line in located(found, "Verification", VERIFIED):
                 self.refer(DECISIONS, line, word, "invariant")
         for _, (_, found) in self.entries[INVARIANTS].items():
+            for line, text in unquoted(found, "Derives from"):
+                self.refer_decisions(INVARIANTS, line, text)
             for word, line in located(found, "Rests on"):
                 self.refer(INVARIANTS, line, word, "fact")
             for word, line in located(found, "Part"):

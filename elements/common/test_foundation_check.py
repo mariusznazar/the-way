@@ -350,11 +350,82 @@ class FoundationCheckTest(unittest.TestCase):
         self.assertFails(self.run_on(foundations__decisions_dot_md=decisions),
                          "foundations/decisions.md:", "`ABC-11`")
 
+    # A list of withdrawn decision numbers after the last entry of the log; line 25 is its row.
+    WITHDRAWN_DECISION = ("\n## Withdrawn identifiers\n\n| Identifier | Why | Successors |\n"
+                          "|---|---|---|\n| ABC-03 | merged into ABC-02 | ABC-02 |\n")
+
+    def test_withdrawn_decision_number_with_its_successor_passes(self):
+        self.assertPasses(self.run_on(
+            foundations__decisions_dot_md=DECISIONS + self.WITHDRAWN_DECISION))
+
+    def test_withdrawn_decision_number_named_anywhere(self):
+        self.assertFails(self.run_on(
+            foundations__decisions_dot_md=DECISIONS + self.WITHDRAWN_DECISION,
+            README_dot_md="# The game\n\nSee ABC-03.\n"),
+            "README.md:3: `ABC-03` is withdrawn; name its successor", "1 error")
+
+    def test_withdrawn_decision_number_names_an_entry_again(self):
+        decisions = DECISIONS + self.WITHDRAWN_DECISION.replace("| ABC-03 |", "| ABC-02 |")
+        self.assertFails(self.run_on(foundations__decisions_dot_md=decisions),
+                         "foundations/decisions.md:25: `ABC-02` stands twice")
+
+    def test_withdrawn_decision_number_twice(self):
+        decisions = DECISIONS + self.WITHDRAWN_DECISION + "| ABC-03 | again | none |\n"
+        self.assertFails(self.run_on(foundations__decisions_dot_md=decisions),
+                         "foundations/decisions.md:26: `ABC-03` stands twice")
+
+    def test_withdrawn_decision_successor_that_is_no_decision(self):
+        decisions = DECISIONS + self.WITHDRAWN_DECISION.replace("| ABC-02 |\n", "| ABC-09 |\n")
+        self.assertFails(self.run_on(foundations__decisions_dot_md=decisions),
+                         "foundations/decisions.md:25: withdrawn `ABC-03` names the successor "
+                         "`ABC-09`, which this file does not hold")
+
+    def test_withdrawn_decision_successor_none_passes(self):
+        decisions = DECISIONS + self.WITHDRAWN_DECISION.replace("| ABC-02 |\n", "| none |\n")
+        self.assertPasses(self.run_on(foundations__decisions_dot_md=decisions))
+
     def test_decision_number_without_leading_zero_names_the_same_decision(self):
         self.assertPasses(self.run_on(README_dot_md="See ABC-1 and ABC-002.\n"))
 
     def test_other_prefix_is_no_reference(self):
         self.assertPasses(self.run_on(README_dot_md="Unlike XYZ-99 and abc-42.\n"))
+
+    # A source outside the log an invariant's *Derives from* quotes, its ticket's key and its
+    # passage holding numbers of the log's prefix that the log does not hold.
+    TICKET = ("https://tracker.example.org/browse/ABC-45 § Acceptance criteria —\n"
+              "  \"the clock never runs backwards, as ABC-46 asked\"; read 2026-10-21")
+
+    def test_derives_from_quoted_source_is_no_reference(self):
+        invariants = self.edit(INVARIANTS, "- **Derives from:** ABC-02\n",
+                               "- **Derives from:** ABC-02 · %s\n" % self.TICKET)
+        self.assertPasses(self.run_on(foundations__invariants_dot_md=invariants))
+
+    def test_derives_from_source_quoted_in_typographic_marks_is_no_reference(self):
+        ticket = self.TICKET.replace("\"the", "“the").replace("asked\"", "asked”")
+        invariants = self.edit(INVARIANTS, "- **Derives from:** ABC-02\n",
+                               "- **Derives from:** ABC-02 · %s\n" % ticket)
+        self.assertPasses(self.run_on(foundations__invariants_dot_md=invariants))
+
+    def test_derives_from_decision_beside_quoted_source_that_does_not_exist(self):
+        invariants = self.edit(INVARIANTS, "- **Derives from:** ABC-02\n",
+                               "- **Derives from:** ABC-09 · %s\n" % self.TICKET)
+        self.assertFails(self.run_on(foundations__invariants_dot_md=invariants),
+                         "foundations/invariants.md:18: `ABC-09` names no decision of the log",
+                         "1 error")
+
+    def test_derives_from_decision_after_quoted_source_on_next_line(self):
+        invariants = self.edit(INVARIANTS, "- **Derives from:** ABC-02\n",
+                               "- **Derives from:** %s ·\n  ABC-09\n" % self.TICKET)
+        self.assertFails(self.run_on(foundations__invariants_dot_md=invariants),
+                         "foundations/invariants.md:20: `ABC-09` names no decision of the log",
+                         "1 error")
+
+    def test_derives_from_text_quoting_nothing_is_read_for_decisions(self):
+        invariants = self.edit(INVARIANTS, "- **Derives from:** ABC-02\n",
+                               "- **Derives from:** recovered from code — src/game.py, after "
+                               "ABC-09\n")
+        self.assertFails(self.run_on(foundations__invariants_dot_md=invariants),
+                         "foundations/invariants.md:18: `ABC-09` names no decision of the log")
 
     # --- references to invariants -------------------------------------------------------------
 
@@ -500,6 +571,37 @@ class FoundationCheckTest(unittest.TestCase):
         decisions = self.edit(DECISIONS, "state: clock-tick@0123abcd", "state: clock-tock@0123abcd")
         self.assertFails(self.run_on(foundations__decisions_dot_md=decisions),
                          "foundations/decisions.md:", "`clock-tock`")
+
+    def test_based_on_names_by_identifier_alone_no_fact(self):
+        decisions = self.edit(DECISIONS, "- **Based on:** none\n",
+                              "- **Based on:** clock-tock · https://example.org/clock, § Ticks — "
+                              "\"the clock, steady, ticks\"; read 2026-10-01\n")
+        self.assertFails(self.run_on(foundations__decisions_dot_md=decisions),
+                         "foundations/decisions.md:17: `clock-tock` names no fact", "1 error")
+
+    def test_based_on_fact_by_identifier_alone_and_quoted_source_pass(self):
+        decisions = self.edit(DECISIONS, "- **Based on:** none\n",
+                              "- **Based on:** clock-tick · https://example.org/clock, § Ticks — "
+                              "\"the clock, steady, ticks\"; read 2026-10-01\n")
+        self.assertPasses(self.run_on(foundations__decisions_dot_md=decisions))
+
+    def test_based_on_fact_by_identifier_alone_on_next_line(self):
+        decisions = self.edit(DECISIONS, "- **Based on:** none\n",
+                              "- **Based on:** https://example.org/clock — \"one tick\"; read "
+                              "2026-10-01 ·\n  clock-tock\n")
+        self.assertFails(self.run_on(foundations__decisions_dot_md=decisions),
+                         "foundations/decisions.md:18: `clock-tock` names no fact")
+
+    def test_fact_in_the_form_without_version_is_named_by_identifier_alone(self):
+        # the form the environment facts template gives: a heading with no version, the sentence
+        # and *Source*
+        facts = self.edit(FACTS, "## clock-tick/1\n", "## clock-tick\n")
+        invariants = self.edit(INVARIANTS, "- **Rests on:** clock-tick@0123abcd",
+                               "- **Rests on:** clock-tick")
+        decisions = self.edit(DECISIONS, "- **Based on:** none\n", "- **Based on:** clock-tick\n")
+        self.assertPasses(self.run_on(foundations__environment_facts_dot_md=facts,
+                                      foundations__invariants_dot_md=invariants,
+                                      foundations__decisions_dot_md=decisions))
 
     def test_test_cites_no_fact(self):
         tests = self.edit(FILES["tests/test_saving.py"], "fact: clock-tick/1", "fact: clock-tock/1")

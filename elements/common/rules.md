@@ -13,7 +13,7 @@ which word each field takes, how its entries are named — stands in that elemen
 ## Every field, and the words `none` and `TODO`
 
 - Every field an element's template gives an entry of its kind appears in every entry of that kind
-  — in every version of a decision and every review record, the fields their forms give (WAY-71).
+  (WAY-71).
 - A field holds a value, or `none` or `TODO` only where its element's template gives it that word:
   `none` states that nothing is there, `TODO` that something is known to be missing. `none` is a
   statement, not a blank: where a source is silent, the field reads `TODO` (WAY-71).
@@ -98,6 +98,6 @@ which word each field takes, how its entries are named — stands in that elemen
 
 ## No version
 
-- An entry of the invariants, of the glossary or of the part map carries no version: it is edited in
-  place and holds only its current wording, and its earlier wordings are read from git (WAY-43,
-  WAY-57, WAY-97).
+- An entry of the decisions, of the invariants, of the environment facts, of the glossary or of the
+  part map carries no version: it is edited in place and holds only its current wording, and its
+  earlier wordings are read from git (WAY-07, WAY-43, WAY-57, WAY-79, WAY-97).
