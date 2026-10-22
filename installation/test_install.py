@@ -229,28 +229,6 @@ class InstallTest(unittest.TestCase):
         self.assertIn("Already installed; no changes", kept.stdout)
         self.assertEqual(ignore.read_bytes(), b".runs/\nbuild/\n")
 
-    def test_invariants_guard_accepts_a_record_under_runs_in_a_fresh_product(self) -> None:
-        applied = self.install("--apply", input_text="y\n")
-        self.assertEqual(applied.returncode, 0, applied.stderr)
-        path = self.product / "foundations" / "invariants.md"
-        entry = ("## save-round-trip/1\n\n"
-                 "A document saved and loaded back holds the same content as before it was saved.\n\n"
-                 "- **Method:** `python -B tools/check.py --record .runs/saving.jsonl`\n"
-                 "- **Rests on:** none\n- **Derives from:** none\n- **Part:** saving\n"
-                 "- **Correction:** none\n\n")
-        path.write_text(path.read_text(encoding="utf-8").replace(
-            "## Withdrawn identifiers", entry + "## Withdrawn identifiers", 1),
-            encoding="utf-8", newline="\n")
-        guard = (sys.executable, "-B", ".the-way/elements/invariants/format_guard.py",
-                 "foundations/invariants.md", "--base", "none", "--merge-onto", "none")
-        result = command(*guard, cwd=self.product)
-        self.assertIn("error(s)", result.stdout, result.stderr)
-        self.assertNotIn("git does not ignore", result.stdout)
-        # Control: the same guard reports the record path once git no longer ignores it.
-        (self.product / ".gitignore").write_text("", encoding="utf-8")
-        result = command(*guard, cwd=self.product)
-        self.assertIn("git does not ignore `.runs/saving.jsonl`", result.stdout)
-
     def test_rejects_conflicting_integration_file_before_writing(self) -> None:
         for directory in (".claude", ".agents"):
             with self.subTest(directory=directory):
@@ -363,15 +341,6 @@ class InstallTest(unittest.TestCase):
         self.assertEqual(main, "origin/master")
         base = command("git", "merge-base", "HEAD", main, cwd=clone)
         self.assertEqual(base.returncode, 0, base.stderr)
-        onto = command("git", "rev-parse", main, cwd=clone).stdout.strip()
-        self.assertTrue(command("git", "-c", "protocol.file.allow=always", "submodule", "update",
-                                "--init", "--", ".the-way", cwd=clone).returncode == 0)
-        guard = command(sys.executable, "-B", ".the-way/elements/decisions/format_guard.py",
-                        "foundations/decisions.md", "--base", base.stdout.strip(),
-                        "--merge-onto", onto, cwd=clone)
-        self.assertEqual(guard.returncode, 0, guard.stdout + guard.stderr)
-        self.assertNotIn("--base none", guard.stdout)
-        self.assertNotIn("--merge-onto none", guard.stdout)
 
     def test_declined_apply_writes_nothing(self) -> None:
         result = self.install("--apply", input_text="n\n")

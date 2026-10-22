@@ -224,8 +224,7 @@ skill entry points under `.claude/skills/` and `.agents/skills/`, which the map 
 the main branch only once it holds what its part requires: an element its template and rules,
 examples or a pointer to entries of the-way that serve as its examples, and a skill that writes its
 entries; `elements/common/` the rules of form and the way of working the elements' templates and
-skills share, the code the remaining format guards share as a library of the form check of
-guidelines, the script that checks a foundation, the script that migrates a foundation from the
+skills share, the script that checks a foundation, the script that migrates a foundation from the
 earlier form, and the skills that find entries and that critique proposals; `project-level/` the
 templates of a project definition, a project plan and a task document, the skills that write them
 and lead a handed-over plan, the readiness check, the plan check, the reader of task-cycle evidence
@@ -237,9 +236,9 @@ agents working on this repository, led to from the root agent instruction files;
 tools load them, the skill that applies them, and the script that checks instruction files with its
 tests; `product-guidelines/` the template that the guidelines of every product share, for each
 discipline of work whose guidelines the-way gives a template of, that template with the skill that
-leads the work on them, and the script that checks the form of guidelines, with its tests;
-`task-cycle/` what the design of the task cycle sets, and until then it does not reach the main
-branch. The entries in `foundations/` are checked by `elements/common/foundation_check.py`.
+leads the work on them; `task-cycle/` what the design of the task cycle sets, and until then it
+does not reach the main branch. The entries in `foundations/` are checked by
+`elements/common/foundation_check.py`.
 
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common,
   relation-model, gate, installation, agent-instructions, instruction-files, repository,
@@ -260,9 +259,8 @@ branch. The entries in `foundations/` are checked by `elements/common/foundation
     `.claude/skills/` and `.agents/skills/` stand at the root as files of `agent-instructions`, and
     the script that generates them stands with its test in `agent-instructions/`; the principles,
     the loading account, the skill and the check script of instruction files stand together in
-    `instruction-files/`; the template of guidelines, the template and the skill of the styleguide
-    discipline, and the script that checks the form of guidelines with its tests stand together in
-    `product-guidelines/`;
+    `instruction-files/`; the template of guidelines and the template and the skill of the
+    styleguide discipline stand together in `product-guidelines/`;
   - violates: a `tools/` directory for shared scripts reaches the main branch; a new element comes
     with a format guard of its own beside `elements/common/foundation_check.py`; `task-cycle/`
     reaches the main branch before the design of the task cycle sets what it holds.
@@ -275,7 +273,7 @@ fact's method; product installation and agent instructions have different failur
 configuration; the project definition and task cycle answer different questions; the principles of
 instruction files serve any repository, so they stand apart from this repository's own agent
 instructions; a product's guidelines stand outside its foundation and answer to no element, so their
-templates and their check stand apart from the elements, and their failures — a product's screens
+templates stand apart from the elements, and their failures — a product's screens
 built on a meaning nobody approved, guidelines telling agents an old rule — are not those of
 instruction files.
 *Rejected:* material merged as soon as it is written — a store from the first day; an element whose
@@ -286,7 +284,7 @@ the files serving the whole repository left out of the map on purpose — they l
 its failure mode; installation or agent instructions folded into repository configuration — their
 failures lose their own parts; the principles of instruction files folded into this repository's
 own agent instructions — that part answers for the-way's own instructions, and its failures differ;
-the templates of guidelines and their check under `elements/` — guidelines are no element of the
+the templates of guidelines under `elements/` — guidelines are no element of the
 foundation (WAY-04); the same folded into `instruction-files/` — that part answers for instruction
 files of any repository, and its failures differ.
 
@@ -4710,8 +4708,7 @@ whoever carries out its tasks, as its instruction files and skills do.
 - **Scope:** product-guidelines, installation
 - **Based on:** none
 - **Relations:** derives from WAY-44 · derives from WAY-04
-- **Verification:** invariants: guidelines-check-kind-index. For where the files stand and how they
-  are named, an agent compares the change with the decision:
+- **Verification:** an agent compares the change with the decision:
   - complies: a product with screens in a browser and an admin panel added to its backend keeps
     `guidelines/styleguide-web.md` and `guidelines/styleguide-admin.md`, named after the parts
     `web` and `admin` of its map, beside `guidelines/testing.md`, and the pattern `guidelines/**`
@@ -4762,42 +4759,28 @@ general file — the standing checks have no place.
 ### WAY-168 — What does a rule of a product's guidelines hold beside the foundation entries that carry it?
 
 A binding rule of a product's guidelines names by identifier the decision of the product's log that
-carries its choice and each invariant that checks it, and says what to do and how, with a use that
-follows the rule and a use that breaks it, while its reasons and rejected options stand in that
-decision alone; what a product's guidelines hold that names neither such a decision nor an invariant
-is an example, not a rule. For each invariant a rule names other than the invariant of guidelines
-that checks their form, the use that follows the rule and the use that breaks it each give the whole
-text of a file at a path of the product, and that invariant's method, run on the commit checked with
-the file added at that path or put in place of the file there, passes with the first and fails with
-the second, or, for an invariant on the list of violated invariants, adds no failure the commit does
-not already have with the first and adds one with the second, except that under WAY-223's
-empty-history conditions the rule may hold one whole earlier-version file as
-`base <identifier> <path>` beside its `good` and `bad` files, all at the same path, for the separate
-prepared evidence. The two uses are run against that method only when a change adds or alters the
-invariant's sentence or rewrites either use or its prepared base, never on every run of the gate.
+carries its choice and says what to do and how, and may give a use that follows it and one that
+breaks it, each in one line, while its reasons and rejected options stand in that decision alone;
+what a product's guidelines hold that names no such decision is an example, not a rule. A rule
+names an invariant only where a cheap test of the product's suite checks the rule on a convention of
+the product's code; a rule no such test can check names none, and the review of each change the rule
+reaches compares the change with it.
 
-- **Scope:** product-guidelines, decisions, invariants, gate
+- **Scope:** product-guidelines, decisions, invariants
 - **Based on:** none
-- **Relations:** derives from WAY-22 · derives from WAY-18 · derives from
-  WAY-223
-- **Verification:** invariants: guidelines-check-carrier · guidelines-check-example-files. For what
-  a rule says, what stands as an example and when the uses are run, an agent compares the change
-  with the decision:
+- **Relations:** derives from WAY-22 · derives from WAY-18 · derives from WAY-08
+- **Verification:** an agent compares the change with the decision:
   - complies: a rule of a product's testing guidelines names the decision choosing the product's
-    fixtures for test data and the invariant whose script finds a test that writes rows straight
-    into the store of data, and gives as its uses a short test file that sets up its data through
-    the fixtures, with which that script passes, and one that writes rows straight into the store,
-    with which it fails; a sentence on how one team likes to name its branches, which no decision
-    carries, stands among the examples; a change that rewords that invariant runs its script with
-    both files, and a change that touches neither the invariant nor the files runs neither; while
-    the invariant that no file of the product holds a value written in place of a design token
-    stands on the list of violated invariants, the file that follows the rule adds no failure and
-    the one that breaks it adds one;
+    fixtures for test data and the invariant whose test finds a test that writes rows straight into
+    the store of data, and gives in one line each a test that sets up its data through the fixtures
+    and one that writes rows straight into the store; a rule that red marks only what deletes names
+    its decision and no invariant, and the review of a change to the screens compares their buttons
+    with it; a sentence on how one team likes to name its branches, which no decision carries,
+    stands among the examples;
   - violates: a rule of a styleguide repeats its decision's rationale and rejected options; an agent
-    holds a change to a rule that names no decision; a rule says what to do with no use that
-    follows it and none that breaks it; a rule naming an invariant an agent checks gives its uses
-    in one line each, and the agent's check flags sound code unseen; every run of the gate runs
-    every use of every rule.
+    holds a change to a rule that names no decision; a rule whose meaning only a reading can judge
+    names an invariant an agent checks; a rule carries whole files as cases run against the test of
+    its invariant.
 - **Origin:** none
 
 *Rationale:* guidelines do not replace the foundation's elements but bring what they hold to the
@@ -4805,107 +4788,87 @@ work of one discipline: an agent changing a product's screens needs what to do a
 account of why. A choice that binds is a decision (WAY-22), and a product keeps every decision in
 one log (WAY-18), where a collision with the product's other choices can be found and the search of
 the whole foundation sees it (WAY-33); named by its identifier, the decision carries its reasons
-once, and its fingerprint shows when the ground of the rule has moved (WAY-169). A rule naming no
-decision would bind with a choice nobody approved, so it is an example; a use that follows a rule
-and one that breaks it mark its line, as a pair of examples marks a decision's (WAY-12). A rule of
-guidelines that an instruction file leads to thus carries a decision the product records, the case
-in which WAY-130 lets a rule stand with no mistake behind it. Given as files run against the method
-of the invariant a rule names, the two uses also show that the check catches what the rule forbids
-and lets through what it allows; the second matters most where an agent judges the invariant, since
-a judge that flags sound code would otherwise go unseen. An invariant on the list of violated
-invariants fails on its commit whatever is added, so its uses are read against the failures the
-commit already has, while the invariant beside it that compares each file with the fork point takes
-them as they stand. The uses are run only when the invariant or a use changes, so an ordinary task
-pays nothing for them. The invariant that checks the form of guidelines is left out, because the
-form check's own tests are its cases, and a whole file of guidelines given as a case would need cases
-of its own without end.
+once, and a change that rewords it brings the rule in line (WAY-169). A rule naming no decision
+would bind with a choice nobody approved, so it is an example; where a rule gives a use that follows
+it and one that breaks it, they mark its line, as a pair of examples marks a decision's, and like
+that pair they are optional (WAY-12). A rule of guidelines that an instruction file leads to thus
+carries a decision the product records, the case in which WAY-130 lets a rule stand with no mistake
+behind it. A cheap test on a convention of the code catches a breach of its rule on every change for
+little, while a rule whose meaning only a reading can judge is read by the review that reads every
+change anyway (WAY-08); an agent run as its check would cost more than that review and could flag
+sound code unseen.
 *Rejected:* guidelines keeping their choices with reasons and rejected options in a log of their
 own, narrowing WAY-18 and WAY-22 — a second log, whose collisions with the product's decisions no
-search of the whole foundation sees, and approval, the assessment of changes and the check of form
-built again for it; guidelines with no reasons anywhere — the meanings read from the options a
-choice rejected are lost; the reasons repeated in the rule beside its decision — two copies drift
-apart; the two uses kept as illustration only — a check an agent runs may flag sound code, and
-nothing shows it; the uses run on every run of the gate — every task would pay for them; the uses
-run only by the reviewer in a task's cycle, with nothing tracking them — a use rewritten while its
-invariant stays unchanged passes unchecked.
+search of the whole foundation sees, and approval and the review of changes built again for it;
+guidelines with no reasons anywhere — the meanings read from the options a choice rejected are
+lost; the reasons repeated in the rule beside its decision — two copies drift apart; an invariant
+for every rule, checked by an agent where no test decides it — the checks cost more than the code
+they guard; the two uses of a rule given as whole files and run against the test of its invariant
+whenever either changes — they test the test, which is already seen failing once (WAY-08).
 
 ### WAY-169 — What happens to a reference of guidelines when the entry it names changes?
 
-Every reference that a product's guidelines make with a fingerprint to a decision of the product's
-log or to an invariant of its foundation, wherever it stands in their text outside fenced code,
-names a decision the log holds and has not repealed or an invariant the foundation holds and has not
-withdrawn, and carries that entry's current fingerprint on the commit checked and, where a main
-branch exists, after the merge onto it. A change that leaves such a reference with another
-fingerprint reaches the main branch only once the same change has brought the guidelines in line
-with the entry's new binding part and given the reference its fingerprint, as WAY-31 has it for a
-relation.
+A product's guidelines name a decision of the product's log or an invariant of its foundation by
+its identifier alone, with no fingerprint and no version, and name an entry the foundation holds and
+has not withdrawn. A change that changes the binding part of a decision or an invariant brings every
+rule of the guidelines naming it in line in the same change, its author finding those rules by the
+entry's identifier.
 
-- **Scope:** product-guidelines, relation-model
+- **Scope:** product-guidelines, elements-common
 - **Based on:** none
-- **Relations:** derives from WAY-02 · derives from WAY-31
-- **Verification:** invariants: guidelines-reference-current · guidelines-check-reference-target ·
-  guidelines-check-stale-reference. For bringing the guidelines in line, an agent compares the
-  change with the decision:
-  - complies: a product rewords the decision that gives its `destructive` role its meaning, and the
-    same change rewrites that role's meaning in its styleguide's table and carries the decision's
-    new fingerprint there;
-  - violates: a script gives every reference of a styleguide its new fingerprint with no one reading
-    the rules that carry them; a change rewording a decision merges, and the styleguide that
-    restates it is left for a later task.
+- **Relations:** derives from WAY-02 · derives from WAY-33
+- **Verification:** an agent compares the change with the decision:
+  - complies: a rule of a styleguide names `GAME-07` in *Decision*; a product rewords the decision
+    that gives its `destructive` role its meaning, and the same change rewrites that role's meaning
+    in its styleguide;
+  - violates: a rule reads `GAME-07@60960941`; a change rewording a decision merges, and the
+    styleguide that restates it is left for a later task.
 - **Origin:** none
 
-*Rationale:* without a fingerprint a changed decision goes through while the guidelines go on
-telling agents the old rule, with no sign anywhere, and guidelines that say in silence other than
-their decision are worse than weak ones. A flag that only asks for review is cleared unread or left
-for later, so the reference stops the merge, as a relation does (WAY-31), and the change that moved
-the entry is the one whose author knows what moved. The check runs after the merge as well, because
-a parallel task can reword a decision the guidelines name without touching them (WAY-33). Every
-reference outside fenced code counts, in a rule's prose, an example or a table as much as in a
-field, since an agent reads them all alike.
-*Rejected:* a flag for review that lets the merge go on, as WAY-02 alone gives it — the guidelines
-keep the old rule; references with no fingerprint — a reworded decision reaches no rule of the
-guidelines; only the fields of a rule checked — a reference in a rule's prose or in an example drifts
-unseen; a fingerprint on every mention of an entry — a bare mention relies on nothing and would be
-flagged for nothing (WAY-02).
+*Rationale:* an identifier outlives every rewording of its entry, so a reference by it stays valid,
+and one naming no entry, or a withdrawn one, leads nowhere and is found by the check of references
+(WAY-02, WAY-170). Guidelines that say in silence other than their decision are worse than weak
+ones, since agents go on following the old rule, and the author of the change that moved the entry
+knows what moved, so that change brings them in line, as it brings the entries it touches (WAY-33).
+Every reference counts, in a rule's prose, an example or a table as much as in a field, since an
+agent reads them all alike.
+*Rejected:* a fingerprint on every reference, stopping the merge until it is renewed — renewing a
+mark does not lead to reading the rule that carries it, and every rewording that changes no meaning
+makes work; the guidelines left for a later task — agents read the old rule meanwhile; only the
+fields of a rule brought in line — a reference in a rule's prose or in an example drifts unseen.
 
 ### WAY-170 — What checks the form of a product's guidelines?
 
-A script of the-way, the form check of guidelines, checks before a merge every file of a product's
-guidelines against the template every product's guidelines share and, where the-way gives one, the
-template of the file's discipline, at the commit of the-way the repository uses, together with the
-references the guidelines make as WAY-169 gives them. A product that keeps guidelines holds the
-invariants of guidelines that the-way's template of guidelines gives, whose methods run that script,
-so the gate runs it with the other checks a change calls for. Until a gate of the-way runs the
-methods of a product's invariants, the block the-way's installer writes into the product's root
-`AGENTS.md` names the script's two commands, without and with `--merge-onto`, to run before every
-merge, beside the format guards it names there.
+No script of the-way checks the form of a product's guidelines: the review of a change that writes
+or changes them compares them with the template every product's guidelines share and, where the-way
+gives one, the template of their discipline, at the commit of the-way the product pins.
+`elements/common/foundation_check.py` reports every decision number in a file of a product's
+guidelines, every invariant a rule's *Invariant* names and every part *Applies to* names that the
+product's foundation does not hold, or holds as withdrawn.
 
-- **Scope:** product-guidelines
+- **Scope:** product-guidelines, elements-common
 - **Based on:** none
-- **Relations:** derives from WAY-04 · narrows WAY-16
-- **Verification:** invariants: guidelines-form · guidelines-check-form ·
-  guidelines-check-code-path. For the invariants a product holds, an agent compares the change with
-  the decision:
-  - complies: the task that writes a product's first styleguide writes the two invariants of
-    guidelines the template gives, whose methods run the script from the product's pinned the-way;
-  - violates: a product writes its styleguide and no invariant of its foundation runs the script; a
-    product's instruction file names a command of its own for checking guidelines, beside the gate;
-    the installer's block still names the script's commands once a gate runs the product's
-    invariants.
+- **Relations:** derives from WAY-10 · derives from WAY-34
+- **Verification:** an agent compares the change with the decision:
+  - complies: the review of a task that writes a product's first styleguide finds a rule that
+    repeats its decision's rationale and asks for it to go; a styleguide names `GAME-40`, which the
+    log does not hold, and the check of references reports it;
+  - violates: a change to a product's styleguide merges without its review reading the template of
+    the styleguide; the-way's template of guidelines gives every product an invariant whose test
+    checks the headings of its guidelines; a rule names a withdrawn decision, and nothing reports
+    it.
 - **Origin:** none
 
-*Rationale:* a rule of form kept by memory holds only while someone remembers it (WAY-04), while a
-script checks every file each time and costs no agent a reading. The templates come from the commit
-the repository uses, so a product's guidelines change their form only when it moves its pin
-(WAY-34). Run through the methods of invariants, the script runs under the one command that checks
-a change (WAY-16), and a product keeps no command of its own for it. Until a gate runs a product's
-invariants nothing runs them in the product, so the installer's block names the script's commands,
-as it names the format guards, and the exception ends with that gate.
-*Rejected:* only the references checked, the form left to readers — a rule with no decision would
-pass as binding; a check each product writes for itself — it drifts from the template; a command of
-the product's own named in its instructions beside the gate — of two commands an agent runs one
-(WAY-16); the installer's block silent on the script until a gate exists — nothing would run the
-check in a product; the form judged by an agent — a script decides it every time.
+*Rationale:* the form of a file of guidelines misleads no agent that reads it, while what a rule
+says can, and only a reading judges that; the review reads the guidelines a change touches anyway
+(WAY-10). A reference naming no entry does mislead, and a check of references finds it in every
+file at once (WAY-02). The templates come from the commit the product pins, so a product's
+guidelines change their form only when it moves its pin (WAY-34).
+*Rejected:* a script of the-way checking every file of guidelines against the templates before each
+merge — it reports headings and fields, never a wrong meaning, and every change to a template is a
+change to the script; invariants of guidelines that every product holds, whose tests run that script
+— each product carries entries for a check of the-way's; the form left to readers with no check of
+references — a rule naming a withdrawn decision would go on binding.
 
 ### WAY-171 — What form does a file of a product's guidelines take?
 
@@ -4913,41 +4876,42 @@ Every file of a product's guidelines holds, in this order, the header lines *Dis
 *Applies to*, the latter naming parts of the product's map, and the sections `## When to read`,
 `## Rules`, `## Examples` and `## Where in code`, with what the template of its discipline adds at
 the places that template names, and each rule of `## Rules` stands under a heading of its own with
-the fields *Decision*, *Invariant*, *Good* and *Bad*. `## Where in code` names by their paths the
-files and directories of the product the guidelines point to and copies no value from them, and a
-section or a rule that a template of the-way requires and the product drops holds only `none —`
-followed by the product's decision that departs from it, with its fingerprint. The headings, header
-lines, field names, values of closed lists and the marker `none —` stay in English while the rest of
-the text is in the language the product writes its guidelines in, and a rule of the-way's templates
-of guidelines changes only with a decision of the-way and cites its number.
+the fields *Decision*, *Invariant*, *Good* and *Bad*, the last two reading `none` where the rule
+gives no such use. `## Where in code` names by their paths the files and directories of the
+product the guidelines point to and copies no value from them, and a section or a rule that a
+template of the-way requires and the product drops holds only `none —` followed by the product's
+decision that departs from it. The headings, header lines, field names, values of closed lists and
+the marker `none —` stay in English while the rest of the text is in the language the product
+writes its guidelines in, and a rule of the-way's templates of guidelines changes only with a
+decision of the-way and cites its number.
 
 - **Scope:** product-guidelines
 - **Based on:** none
 - **Relations:** derives from WAY-168
-- **Verification:** invariants: guidelines-form · guidelines-check-form. For the language of the
-  text and the rules of the templates, an agent compares the change with the decision:
+- **Verification:** an agent compares the change with the decision:
   - complies: a product whose team writes in Polish writes the rules and examples of its styleguide
     in Polish under the English headings and fields; a rule added to the template of the styleguide
     discipline cites the decision of the-way that sets it;
-  - violates: a product translates the headings of its guidelines, and they can no longer be read
-    mechanically; a styleguide copies the values of its colours under `## Where in code`; a rule
-    enters a template of guidelines with no decision of the-way.
+  - violates: a product translates the headings of its guidelines, and the-way's templates and
+    skills no longer find them; a styleguide copies the values of its colours under
+    `## Where in code`; a rule enters a template of guidelines with no decision of the-way.
 - **Origin:** none
 
-*Rationale:* one form lets one script read the guidelines of every discipline, and a discipline's
-template only adds to it, so guidelines of a discipline the-way gives no template of are still
-checked; the fields carry what a rule holds beside its entries (WAY-168). A copy of a value the code
-holds goes stale, so the guidelines point to it (WAY-04). A part a template requires is dropped only
-by a decision, so a departure is the product's own approved choice, visible where the part would
-stand. The structural words stay in English because they are read mechanically, as a project
-definition keeps its headings in English while its content follows the human's language (WAY-108);
-the rest follows the product, whose agents and people read it, and binding it to English would bind
-every product's text for no reader of the-way's. The price: where that text is in another language
-than the decisions, a meaning it restates is a translation, and a translation that drifts while its
-decision stands is caught by no fingerprint, only by a reader; the guidelines stand outside the
-foundation, so this is not the translation WAY-114 keeps out of it, and the decision stays the one
-binding wording. A template's rule cites its decision, so that the templates follow the decisions,
-as the elements' templates do (WAY-35).
+*Rationale:* one form lets an agent and a reviewer find the same sections in the guidelines of every
+discipline, and a discipline's template only adds to it, so guidelines of a discipline the-way gives
+no template of still have one; the fields carry what a rule holds beside its entries (WAY-168). A
+copy of a value the code holds goes stale, so the guidelines point to it (WAY-04). A part a template
+requires is dropped only by a decision, so a departure is the product's own approved choice,
+visible where the part would stand. The structural words stay in English because the-way's
+templates and skills name them and the check of references reads fields by their names, as a
+project definition keeps its headings in English while its content follows the human's language
+(WAY-108); the rest follows the product, whose agents and people read it, and binding it to English
+would bind every product's text for no reader of the-way's. The price: where that text is in another
+language than the decisions, a meaning it restates is a translation, and a translation that drifts
+while its decision stands is caught only by a reader; the guidelines stand outside the foundation,
+so this is not the translation WAY-114 keeps out of it, and the decision stays the one binding
+wording. A template's rule cites its decision, so that the templates follow the decisions, as the
+elements' templates do (WAY-35).
 *Rejected:* every file of guidelines wholly in English — it binds the text every product's own agents
 and people read; the language of the conversation that wrote each part — a document that lives
 across tasks would change language from one session to the next; guidelines only of the disciplines
@@ -5159,8 +5123,8 @@ foundation then writes with a qualifier (WAY-104).
 - **Scope:** product-guidelines
 - **Based on:** none
 - **Relations:** derives from WAY-173
-- **Verification:** invariants: guidelines-check-colour-pair. For names, meanings and values, an
-  agent compares the change with the decision:
+- **Verification:** for names, meanings and values, an agent compares the change with the
+  decision:
   - complies: the role `destructive`, of the kind `background`, means "this action deletes something
     for good", carries `destructive-foreground` as the text on it, and names the decision that gives
     that meaning, while its value stands only in the file of design tokens; a product whose library
@@ -5482,8 +5446,8 @@ decision binds with no invariant.
 - **Scope:** product-guidelines, invariants
 - **Based on:** none
 - **Relations:** narrows WAY-168 · derives from WAY-08
-- **Verification:** invariants: guidelines-check-carrier. For the choice between a script and an
-  agent, an agent compares the change with the decision:
+- **Verification:** for the choice between a script and an agent, an agent compares the change
+  with the decision:
   - complies: the rule against values written in place of design tokens names a script's invariant;
     the rule that each role keeps its meaning names an invariant an agent checks, passing in two of
     three runs; the sentence on mockups stands among the examples;
@@ -5512,8 +5476,7 @@ uses a role in a meaning other than the one its decision gives.
 - **Scope:** product-guidelines, invariants
 - **Based on:** none
 - **Relations:** derives from WAY-188 · derives from WAY-191
-- **Verification:** invariants: guidelines-check-carrier. For what the skill proposes, an agent
-  compares the work with the decision:
+- **Verification:** for what the skill proposes, an agent compares the work with the decision:
   - complies: a styleguide task proposes four invariants — the scan for values written in place of
     design tokens, focus on every control, contrast computed from the file of design tokens and,
     checked by an agent, each role in its meaning — and the product declares the commands of the
@@ -5806,8 +5769,8 @@ its decision binds with no invariant.
 - **Scope:** product-guidelines, invariants
 - **Based on:** none
 - **Relations:** narrows WAY-168 · derives from WAY-08
-- **Verification:** invariants: guidelines-check-carrier. For the choice between a script and an
-  agent, an agent compares the change with the decision:
+- **Verification:** for the choice between a script and an agent, an agent compares the change
+  with the decision:
   - complies: the rule that an endpoint validates its input as the exemplar does names a script's
     invariant that every file of the kind calls the shared validation; the rule that no error is
     swallowed silently names an invariant an agent checks, passing in two of three runs; how the
@@ -5882,8 +5845,8 @@ the exemplar stands there as an example and binds no later code.
 - **Scope:** product-guidelines
 - **Based on:** none
 - **Relations:** derives from WAY-22 · derives from WAY-193
-- **Verification:** invariants: guidelines-check-exemplar. For what stands as a rule and what as an
-  example, an agent compares the change with the decision:
+- **Verification:** for what stands as a rule and what as an example, an agent compares the change
+  with the decision:
   - complies: a product's decision designates `src/api/orders/route.ts` as the exemplar of the kind
     `endpoint`, and the coding guidelines of that kind hold, as rules naming a script's invariant
     each, that every route lies under `src/api/`, calls the shared handler and validates its input
@@ -5914,8 +5877,7 @@ kind give beside the path of each file of the kind they list its status, `exempl
 - **Scope:** product-guidelines
 - **Based on:** none
 - **Relations:** derives from WAY-172 · derives from WAY-198
-- **Verification:** invariants: guidelines-check-exemplar. For what takes approval, an agent
-  compares the change with the decision:
+- **Verification:** for what takes approval, an agent compares the change with the decision:
   - complies: a fix of a typo in the exemplar, and a change of its inner structure that keeps the
     rules a script checks from it, go with no approval; a task that would make another file the
     exemplar proposes the change of the designating decision and waits for its approval; a file that
@@ -6001,8 +5963,8 @@ log adopting it or departing from it with the reason.
 - **Scope:** product-guidelines
 - **Based on:** none
 - **Relations:** derives from WAY-193
-- **Verification:** invariants: guidelines-check-form. For the decisions the task ends with, an
-  agent compares the work with the decision:
+- **Verification:** for the decisions the task ends with, an agent compares the work with the
+  decision:
   - complies: a product with none of the three gets, in the task that writes its coding guidelines,
     decisions adopting a linter, a formatter and an audit of dependencies, or departing from one of
     them with its reason, and its coding guidelines name each at the rule the template requires;
@@ -6349,8 +6311,8 @@ it, such as adding or changing a file of its kind.
 - **Based on:** none
 - **Relations:** derives from WAY-128 · derives from WAY-129 · derives from
   WAY-167
-- **Verification:** invariants: guidelines-check-kind-index. For the pointer of `AGENTS.md`, an
-  agent compares the change with the decision:
+- **Verification:** for the pointer of `AGENTS.md`, an agent compares the change with the
+  decision:
   - complies: `AGENTS.md` reads "Before you change the product's code, read `guidelines/coding.md`"
     below the installer's block, and the table of `guidelines/coding.md` names
     `guidelines/coding-endpoint.md` with "before adding or changing an endpoint";

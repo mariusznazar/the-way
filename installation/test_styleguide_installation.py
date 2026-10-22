@@ -1,7 +1,6 @@
 """Product installation checks for the styleguide skill and the guidance naming the form check."""
 
 from pathlib import Path
-import re
 import subprocess
 import sys
 import tempfile
@@ -117,36 +116,6 @@ class StyleguideInstallationTest(unittest.TestCase):
         self.assertEqual(repeated.returncode, 0, repeated.stdout + repeated.stderr)
         self.assertIn("Already installed; no changes", repeated.stdout)
         self.assertEqual(installed, self.product_files())
-
-    def test_guidance_names_both_form_check_commands_and_they_run_in_the_product(self) -> None:
-        # A command the guidance names that the pinned checkout cannot run leaves guidelines unchecked.
-        applied = self.install("--apply")
-        self.assertEqual(applied.returncode, 0, applied.stdout + applied.stderr)
-        guidance = (self.product / "AGENTS.md").read_text(encoding="utf-8")
-        self.assertIn(SENTENCE, guidance)
-        named = re.findall(r"`(python -B \.the-way/product-guidelines/form_check\.py[^`]*)`",
-                           guidance)
-        self.assertEqual(named, [FORM, REFERENCES])
-        self.git("add", "--", "AGENTS.md", "CLAUDE.md", ".gitignore", "foundations",
-                 ".claude", ".agents")
-        self.git("commit", "-q", "-m", "Install the pinned process")
-        main_commit = self.git("rev-parse", "HEAD").stdout.strip()
-        commands = [text.replace("<main commit>", main_commit).split() for text in named]
-        for args in commands:
-            with self.subTest(command=args, guidelines="none"):
-                ran = command(*args, cwd=self.product)
-                self.assertEqual(ran.returncode, 0, ran.stdout + ran.stderr)
-                self.assertIn("note:", ran.stdout)
-        # the-way holds no guidelines either, so only a product file can fail the run.
-        broken = self.product / "guidelines" / "styleguide-web.md"
-        broken.parent.mkdir()
-        broken.write_text("# Styleguide guidelines - web\n\nNo header lines.\n", encoding="utf-8")
-        for args in commands:
-            with self.subTest(command=args, guidelines="broken"):
-                ran = command(*args, cwd=self.product)
-                self.assertEqual(ran.returncode, 1, ran.stdout + ran.stderr)
-                self.assertIn("guidelines/styleguide-web.md:0: error: the header line "
-                              "*Discipline* is missing", ran.stdout)
 
     def test_block_of_an_earlier_pin_without_the_sentence_is_refused_before_writing(self) -> None:
         # Keeping the earlier block would leave a product's agents without the form check.

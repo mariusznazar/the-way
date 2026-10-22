@@ -7,23 +7,21 @@ return step of a change compares them with the code.
 ## decisions
 
 The part answers for the decision log: the form of an entry, the skill that writes one and the
-log of the-way itself, and for the decisions' format guard, kept only as a library of the form
-check of guidelines.
+log of the-way itself.
 
 - **Files:** elements/decisions/**
   foundations/decisions.md
-- **Depends on:** relation-model · elements-common
+- **Depends on:** elements-common
 - **Trust boundary:** none
 
 ## part-map
 
 The part answers for the part map: the form of an entry, the skill that writes one and the map of
-the-way itself, and for the map's format guard, kept only as a library of the form check of
-guidelines.
+the-way itself.
 
 - **Files:** elements/part-map/**
   foundations/part_map.md
-- **Depends on:** relation-model · elements-common
+- **Depends on:** elements-common
 - **Trust boundary:** none
 
 ## relation-model
@@ -38,8 +36,7 @@ the code that tells whether a string has the form of an identifier or of a versi
 ## invariants
 
 The part answers for what a product states as an invariant and for how that statement is checked,
-and for the invariants of the-way itself, and for the invariants' format guard, kept only as a
-library of the form check of guidelines.
+and for the invariants of the-way itself.
 
 - **Files:** elements/invariants/**
   foundations/invariants.md
@@ -68,9 +65,8 @@ The part answers for a product's environment facts.
 ## elements-common
 
 The part answers for rules of form and the way of working shared by foundation-entry skills, the
-code the format guards share, kept only as a library of the form check of guidelines, the
-script that checks a whole foundation's identifiers,
-references and assignment of files to parts, the script that migrates a foundation from the
+script that checks a whole foundation's identifiers, references and assignment of files to parts,
+the references of a product's guidelines included, the script that migrates a foundation from the
 earlier form of the-way, the skill that finds entries in a source, and the critique skill, which
 reads a proposal critically before the human sees it.
 
@@ -160,12 +156,12 @@ The part answers for preparing a product repository to use one pinned commit of 
 
 The part answers for the form every product's guidelines share, for the template of each discipline
 of guidelines with the skill that leads the work on them, for the shared reading that selects
-guidelines for a change and recognizes what is missing, and for the form check of guidelines.
+guidelines for a change and recognizes what is missing.
 
 - **Files:** product-guidelines/**
 - **Depends on:** decisions · invariants · glossary · part-map · environment-facts ·
-  elements-common · relation-model · project-level · instruction-files · task-cycle
-- **Trust boundary:** product-guidelines/form_check.py
+  elements-common · project-level · instruction-files · task-cycle
+- **Trust boundary:** none
 
 ## test-runner-command
 
@@ -219,6 +215,6 @@ plan and task documents.
 | invariants-guard-command | withdrawn: no format guard checks a product's foundation | none |
 | environment-facts-guard-command | withdrawn: no format guard checks a product's foundation | none |
 | glossary-guard-command | withdrawn: no format guard checks a product's foundation | none |
-| guidelines-form-check-command | withdrawn: the form check of guidelines leaves with the format guards it loads, and until then a product runs it only from the commit of the-way it pins (WAY-170) | none |
+| guidelines-form-check-command | withdrawn: no script of the-way checks the form of a product's guidelines (WAY-170) | none |
 | wording-reaches-dependants | withdrawn: a critical flow has no entry in the map, and no reference carries a fingerprint | none |
 | skills-reach-the-way-sessions | withdrawn: a critical flow has no entry in the map; the invariant skill-entry-points and its test hold it | none |

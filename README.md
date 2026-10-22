@@ -79,10 +79,9 @@ of the rule being weakened.
 - `instruction-files/` — the principles by which instruction files for coding agents are written,
   judged and kept, how Claude Code, Codex and Cursor load them, the skill that applies them, and
   the script that checks instruction files.
-- `product-guidelines/` — the form every product's guidelines share, the template of each
+- `product-guidelines/` — the form every product's guidelines share, and the template of each
   discipline of guidelines with the skill that leads the work on them (the styleguide's in
-  `product-guidelines/styleguide/`, the coding guidelines' in `product-guidelines/coding/`), and the
-  form check of guidelines.
+  `product-guidelines/styleguide/`, the coding guidelines' in `product-guidelines/coding/`).
 
 ## Using the skills
 

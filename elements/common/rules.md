@@ -68,16 +68,6 @@ which word each field takes, how its entries are named — stands in that elemen
   withdrawn identifier of the same file, or reads `none` where nothing took its place (WAY-41,
   WAY-64).
 
-## Human verdicts
-
-No human verdict is recorded for any entry. The earlier form below is read only by the format
-guards, kept as a library of `product-guidelines/form_check.py` until the slimming plan's position
-P17 removes both; it binds no entry: a row of `foundations/human_verdicts.md` in the form
-
-  ```markdown
-  | Entry | Version | Verdict | By | On | Commit | Until |
-  ```
-
 ## `{fork-point}`
 
 - `{fork-point}` is the commit the task branch left the main branch from — the last commit of the
