@@ -81,12 +81,6 @@ Write the plan in this form; the script reads the slice headings and the fields 
   slice changes behaviour>
 - **Depends on:** none | Slice <id> · <entry>
 
-## Independence and execution
-
-<independent slices, why dependencies and write sets permit separate work, and possible parallel
-work; or no useful opportunity. Name the adopted method's restriction separately from the
-recommendation; the orchestrator rules on execution before it starts.>
-
 ## Coverage
 
 | What the task requires | Slices or entries |
@@ -106,10 +100,8 @@ recommendation; the orchestrator rules on execution before it starts.>
   check too, which an agent writes from the sentence and its method alone (WAY-69). Write `none`
   under the table where the change writes no entry. The plan names entries; it never words them.
 - A slice is narrow: one goal, the files that goal changes, and checks that run when it is made. Cut
-  along what a reviewer can judge alone and recommend useful independent slices regardless of
-  the chosen execution skill. If the selected planning route yields only one useful slice, keep
-  it as one; never add a slice for its own sake or
-  divide inseparable work merely to claim parallel execution.
+  along what a reviewer can judge alone. If the selected planning route yields only one useful
+  slice, keep it as one; never add a slice for its own sake or divide inseparable work.
 - *Change* names every file the slice changes or creates. *Read* names what its agent has to read
   to make it besides those files: a file whole, or `<path>:<first>-<last>` where a range is enough,
   such as the entries of a long log the slice rests on. A range identifying a foundation entry
@@ -118,19 +110,10 @@ recommendation; the orchestrator rules on execution before it starts.>
   "Reading the foundation" and `product-guidelines/reading.md`; include the applicable whole
   guideline files for its work, never a replacement review checklist. Paths are relative to the
   repository root; none, written without backticks, stands for an empty field.
-- *Checks* are commands that can actually run in the product, named with their arguments, and the
-  checks the parts touched call for (WAY-13). A slice that changes behaviour names the test it
-  starts from.
-- Order the slices so that each comes after what it depends on. Two slices change the same file only
-  where one depends on the other.
-- *Independence and execution* is one short section derived from dependencies and write sets,
-  not a peer list repeated for every slice. Name the useful independent slices and why each can
-  be worked on and reviewed separately, or say there is no such opportunity. Identify possible
-  parallel work even when the execution skill must run it sequentially: adopted Superpowers 6.4.1
-  `subagent-driven-development` forbids parallel implementation subagents. A one-slice plan says
-  there is no parallel slice work. The recommendation is not permission to execute in parallel;
-  the cycle's orchestrator records its ruling on dependencies, shared files or mutable state,
-  separate review and skill restrictions before execution (WAY-136).
+- *Checks* are commands that can actually run in the product, named with their arguments. A slice
+  that changes behaviour names the test it starts from.
+- Order the slices so that each comes after what it depends on; the slices are made one after
+  another in that order. Two slices change the same file only where one depends on the other.
 - No code: no function body, no test body, no text a file will hold. Name what is to exist — a
   file, a function, a command, a field — and what it is to do, and leave the making to the slice's
   agent.
