@@ -4015,13 +4015,13 @@ verifying disputed or incomplete evidence; routine progression uses the short re
 source paths and commits, without loading the material the stage agent reads and checks or its
 full report again, and without requiring prior conversational history. A missing or incomplete
 report is repaired before dependent work proceeds, and this transfer contract preserves required
-whole-source reads by the agent performing the work, check and review duties with their assigned
-owners and the independent assessor's filtered inputs
-(WAY-10), reusing a borrowed method's existing brief and report rather than duplicating them.
+whole-source reads by the agent performing the work, and check and review duties with their
+assigned owners. The cycle record is the cycle's only log: no method of the cycle keeps a log of
+its own beside it.
 
 - **Scope:** task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-125 · derives from WAY-10
+- **Relations:** derives from WAY-125
 - **Verification:** an agent compares the stage handoff, return, report and orchestrator's ruling
   with the decision:
   - complies: a short return names its complete report, commit range and failed or unchecked
@@ -4032,8 +4032,8 @@ owners and the independent assessor's filtered inputs
   - violates: a full report exists only in conversation, a short return conceals a failed check,
     dependent work proceeds on a missing report or mismatched commit range, or a question is
     settled from the short return alone; a selective read replaces a mandatory whole-source
-    read by the responsible agent; the independent assessor receives the operational handoff or
-    author's reasoning; the orchestrator reloads completed stage material for routine progression.
+    read by the responsible agent; a method keeps a log of the cycle's progress beside the record;
+    the orchestrator reloads completed stage material for routine progression.
 - **Origin:** none
 
 *Rationale:* full material kept outside routine coordination avoids repeated context while
@@ -4044,8 +4044,10 @@ reads to the agent that uses them keeps coordination from repeating the stage it
 *Rejected:* full handoffs and reports repeated in messages — coordination accumulates material
 it need not reread; short summaries as the only record — lost evidence cannot be recovered on
 resumption; a second universal brief and report contract — duplicated obligations drift without
-proving completeness; rereading every stage's evidence during ordinary coordination — it pays
-again for work already delegated; automatic compaction — it does not choose the evidence a ruling needs.
+proving completeness; a slice method's own ledger of progress beside the record — it repeats the
+record and has to be copied into it before its workspace is cleaned; rereading every stage's
+evidence during ordinary coordination — it pays again for work already delegated; automatic
+compaction — it does not choose the evidence a ruling needs.
 
 ### WAY-149 — When does the deliberate break of a return-step check take place?
 

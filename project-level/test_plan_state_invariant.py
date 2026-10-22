@@ -147,14 +147,17 @@ CYCLE_RECORD = """# Cycle record — Download a report
 - Process pin: 0123456789abcdef
 - Target branch and base: delivery, 0123456789abcdef
 - Task branch: task/report-download
-- Foundation route: unchanged
 - Status: complete
 
-## Sharpness at start and after the final diff
+## Two questions at start
 
 none
 
-## Spec and plan
+## Spec and execution route
+
+none
+
+## Slices
 
 none
 
@@ -177,10 +180,6 @@ none
 none
 
 ## Return step
-
-none
-
-## Independent assessment
 
 none
 
