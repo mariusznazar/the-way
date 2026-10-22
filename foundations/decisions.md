@@ -6336,48 +6336,54 @@ styleguide — `AGENTS.md`, loaded into every session, grows with each kind; no 
 way in to the task cycle — a session outside that cycle can miss them.
 
 
-### WAY-213 — How do the agents of a task's cycle receive the product's guidelines?
+### WAY-213 — How do the agents of a task's cycle read the product's guidelines?
 
-The task cycle selects every file of the product's guidelines whose *Applies to* names an affected
-part, a file of a kind of code only where its row's *When to read* in `guidelines/coding.md` also
-matches the change, and gives those files to the spec author and reviewer, planner, author,
-slice executor and code reviewers to read whole, never replacing them with a review checklist.
-The orchestrator records the selection and its reasons, each recipient checks it against its own
-work, and the selection is refreshed when the scope or sources change and against the actual
-change on return and reconciliation before dependent work proceeds.
-With the styleguide, the planner and the author working without a plan receive its example of
-the order of work (WAY-181), as an example they follow or explain departing from.
+Each agent of the task cycle that writes or reviews the spec, plans, makes or reviews the change
+reads by `product-guidelines/reading.md` the product's guidelines of the parts its own work
+touches: every file whose *Applies to* names such a part, a file of a kind of code only where its
+row's *When to read* in `guidelines/coding.md` also matches the work, each read whole and never
+replaced with a review checklist. No one selects the guidelines for another agent, the selection
+is not recorded with its reasons, and it is not refreshed at every handoff; an agent whose work
+reaches a further part reads that part's guidelines.
+With the styleguide, the planner and the author working without a plan read its example of the
+order of work (WAY-181), as an example they follow or explain departing from.
 
 - **Scope:** task-cycle, product-guidelines
 - **Based on:** none
 - **Relations:** derives from WAY-167 · derives from WAY-171 · derives from
-  WAY-148 · derives from WAY-181
-- **Verification:** an agent compares the selection, handoffs and work with the decision:
-  - complies: a change touching screens and endpoints gives every named recipient the applicable
-    styleguide, general coding guidelines and matching kind guidelines; a later scope expansion
-    refreshes the next handoff; an author without a plan reads the order as an example;
-  - violates: only the reviewer gets guidelines; a checklist replaces a whole source; a kind's
-    reading condition is ignored; a recipient relies on a stale selection; the order rejects a plan.
+  WAY-150 · derives from WAY-181
+- **Verification:** an agent compares each agent's reading and work with the decision:
+  - complies: the author of a change touching screens and endpoints reads the styleguide, the
+    general coding guidelines and the matching kind guidelines itself; a reviewer whose review
+    reaches a part the author did not touch reads that part's guidelines; an author without a plan
+    reads the order as an example;
+  - violates: only the reviewer reads guidelines; a checklist replaces a whole source; a kind's
+    reading condition is ignored; the orchestrator selects guidelines for the agents and records
+    the selection with its reasons; the order rejects a plan.
 - **Origin:** none
 
-*Rationale:* shared guidance reaches the people designing and making a change before review can
-find its absence. Selection by the affected work bounds context without cutting the source into
-instructions detached from their meaning; checking the selection again costs reading when the
-work grows but keeps its first estimate from excluding later needs.
+*Rationale:* shared guidance reaches the agents designing and making a change before review can
+find its absence. Reading by the parts the work touches bounds context without cutting the source
+into instructions detached from their meaning, and each agent reading for its own work keeps the
+reading where the work is, as the reading of the foundation does (WAY-150).
 *Rejected:* guidance given only to the reviewer — mistakes are found after they are built;
 a review checklist — examples can become obligations and lose their context; discovery left only
-to instruction pointers — a stage can miss what the preceding stage read.
+to instruction pointers — with no shared procedure, a stage can miss a file the same parts lead
+another stage to; a selection the orchestrator records with its reasons, each recipient checks
+and every handoff refreshes — it costs every dispatch a record and a check, while each agent
+reading by the parts its own work touches already reaches what such a record would hand it.
 
 
 ### WAY-214 — How does task refinement find missing product guidelines?
 
-The skill `refine-task` uses the same reading procedure as the task cycle to find guidelines by
-the affected parts' *Applies to* and a kind of code by its row in the general coding index, with
-the consequence of an absence following the discipline's creation timing.
+The skill `refine-task` uses the reading the agents of the task cycle use,
+`product-guidelines/reading.md`, to find guidelines by the affected parts' *Applies to* and a kind
+of code by its row in the general coding index, with the consequence of an absence following the
+discipline's creation timing.
 Before a diff exists, it identifies affected parts, user interfaces, code and kinds of code from
-the required behaviour, the complete part map and existing product files, expanding its reading
-and exposing unresolved classification or malformed metadata as a question rather than an empty
-match.
+the required behaviour, the responsibilities of the part map and existing product files,
+expanding its reading and exposing unresolved classification or malformed metadata as a question
+rather than an empty match.
 An existing general coding file whose *Applies to* omits an affected code part is read for
 extension in the current task, not treated as an absent file.
 
@@ -6477,7 +6483,7 @@ that part, and applies that departure only within the scope the decision gives i
 - **Scope:** project-level, product-guidelines, task-cycle
 - **Based on:** none
 - **Relations:** derives from WAY-173 · derives from WAY-193
-- **Verification:** an agent compares the selection and departure with the product's decisions:
+- **Verification:** an agent compares the reading and departure with the product's decisions:
   - complies: an approved departure for helper scripts removes their missing-guidelines finding
     while an affected browser interface still needs its own styleguide;
   - violates: a deliberate departure still blocks every task until the rejected guidelines are
@@ -6606,7 +6612,7 @@ obstacle.
 ### WAY-222 — What does the task cycle adopt from the course lesson on building a user interface with an agent?
 
 From a course lesson on building a user interface with an agent, the task cycle adopts the
-styleguide's order of work as an example delivered to the planner and the author without a plan
+styleguide's order of work as an example the planner and the author without a plan read
 (WAY-213), the author's and slice executor's checks of states and a screenshot (WAY-219), and
 grading appearance findings by their effect on the user (WAY-220).
 This adoption leaves out comparison with reference screenshots, prescribing any product's
@@ -6620,7 +6626,7 @@ definition's technology step.
 - **Relations:** derives from WAY-100 · derives from WAY-213 · derives from
   WAY-219 · derives from WAY-220
 - **Verification:** an agent compares the cycle with the adoption's boundaries:
-  - complies: the planner receives an example, the author inspects states and a screenshot, and
+  - complies: the planner reads an example, the author inspects states and a screenshot, and
     the reviewer judges a visual consequence, without requiring a reference image comparison;
   - violates: a further practice of the lesson becomes mandatory merely because it comes from
     that lesson; the cycle dictates a product's visual meanings or styling technology.

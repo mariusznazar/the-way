@@ -70,9 +70,9 @@ read all turns and the requested change, and follow this workflow with these rou
   The complete part map's *Depends on* tells which work has to come first.
 - Read the product's files only as far as the cut needs: what is already there, so that no task
   puts in place what exists.
-- Read and apply `product-guidelines/reading.md` to the approved scope (WAY-218). Record its
-  affected parts, selected files and reasons, gaps and questions in the working evidence; read
-  the selected guidelines whole. Refresh this reading if the cut or its sources change.
+- Read the product's guidelines of the parts the approved scope touches by
+  `product-guidelines/reading.md` (WAY-218), each whole, and keep what it finds missing or
+  uncertain in the working evidence.
 
 ## Reading the definition and plan
 
