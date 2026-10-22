@@ -5052,9 +5052,7 @@ is for and never by a colour, such as `primary` or `muted`, of the kind `backgro
 `other`, with one sentence of what someone using the product understands on seeing it and the
 decision that carries that meaning, each pointing to the role's value in the product's file of design
 tokens without copying it. Each role of the kind `background` stands in that table with the role of
-the kind `text` that stands on it. A role's name avoids a word the glossary of the-way holds in
-another meaning, unless the product's technology gives the role that name, which the product's
-foundation then writes with a qualifier (WAY-104).
+the kind `text` that stands on it.
 
 - **Scope:** product-guidelines
 - **Based on:** none
@@ -5064,8 +5062,7 @@ foundation then writes with a qualifier (WAY-104).
   - complies: the role `destructive`, of the kind `background`, means "this action deletes something
     for good", carries `destructive-foreground` as the text on it, and names the decision that gives
     that meaning, while its value stands only in the file of design tokens; a product whose library
-    names a role `surface` keeps that name in its code and styleguide, and its decisions say "the
-    `surface` colour role";
+    names a role `surface` keeps that name in its code and its styleguide;
   - violates: a role is named `red-600`; one role named `green` stands for both "this rule can act"
     and "the game is won"; the table copies the colours' values.
 - **Origin:** none
@@ -5075,12 +5072,12 @@ a role makes a second meaning visible as a role that does not fit; the sentence 
 understands is what an agent at work needs, and the decision it names is where that meaning is
 approved and checked against the product's other choices (WAY-168). A background never stands alone:
 its text decides whether anything on it can be read, so the two are written together. Values are
-held by the code, so the table points to them (WAY-171). A word the-way's glossary holds would carry
-two meanings for an agent reading both foundations, and the qualifier keeps it apart where the
-product's technology already chose it (WAY-104).
+held by the code, so the table points to them (WAY-171).
 *Rejected:* variables named by shade, as one product's design system has them — they do not catch
 one colour in two meanings; a background role defined with no text role on it — its pair goes
-unchecked; the values written into the table — a copy of the code goes stale.
+unchecked; the values written into the table — a copy of the code goes stale; role names kept clear
+of every word the glossary of the-way holds — a role's name lives in the product's code, which uses
+the words of its own field unchanged (WAY-104), and the-way's words stay on the-way's side.
 
 ### WAY-177 — What does a styleguide say of shared controls?
 
@@ -5373,95 +5370,104 @@ task that does not exist yet; "logged out" in the standing question — not a ma
 
 ### WAY-188 — What checks a binding rule of a styleguide?
 
-Every binding rule of a product's styleguide names at least one invariant that checks it, by a script
-where a script can decide it and otherwise by an agent whose method sets k of n runs, and a rule that
-not even an agent can check is an example, not a rule, whatever decision it names. In the guidelines
-of the styleguide discipline this decision prevails over WAY-168, under which a rule naming its
-decision binds with no invariant.
+A binding rule of a product's styleguide names an invariant only where a cheap test of the product's
+suite checks it on a convention of the product's code, as WAY-168 gives every rule of guidelines;
+the rule that each role keeps the meaning its decision gives, and every other rule only a reading
+can judge, names none, and the review of each change the rule reaches compares the change with it.
+No agent run k of n times checks a rule of a styleguide.
 
 - **Scope:** product-guidelines, invariants
 - **Based on:** none
-- **Relations:** narrows WAY-168 · derives from WAY-08
-- **Verification:** for the choice between a script and an agent, an agent compares the change
-  with the decision:
-  - complies: the rule against values written in place of design tokens names a script's invariant;
-    the rule that each role keeps its meaning names an invariant an agent checks, passing in two of
-    three runs; the sentence on mockups stands among the examples;
-  - violates: a rule on the meaning of a colour stands with no invariant because no script can check
-    it; a rule a script could decide is left to an agent.
+- **Relations:** derives from WAY-168 · derives from WAY-08
+- **Verification:** an agent compares the change with the decision:
+  - complies: the rule against values written in place of design tokens names the invariant whose
+    test scans the files of the user interface's part; the rule that each role keeps its meaning
+    names none, and the review of a change that colours a new button reads the role it uses against
+    that role's decision;
+  - violates: the rule that each role keeps its meaning names an invariant an agent checks, passing
+    in two of three runs; the contrast of the pairs of design tokens, which a test computes from
+    their file, is left to the review.
 - **Origin:** none
 
-*Rationale:* a styleguide is there to keep agents' screens consistent without anyone's memory, and a
-rule only a decision carries is kept by the memory of the agent reading it. A script costs nothing
-per run; an agent with k of n can judge a meaning, and its cost stays bounded because it runs only
-when a change reaches its invariant (WAY-62) and only where no script can decide. An agent's verdict
-can flip, and a check that flips is answered as WAY-68 gives it.
-*Rejected:* the decision alone binding a rule of the styleguide — part of the rules is held only by
-an agent's memory, which the styleguide is meant to replace.
+*Rationale:* a cheap test on a convention of the code catches a breach on every change for little,
+so the rules such a test decides name its invariant (WAY-189). The meaning a role carries is what a
+styleguide is for, and only a reading judges it; the review reads every change to the screens
+anyway, against the task and the foundation's sentences (WAY-10), so it reads the decision of a role
+the change uses, while an agent run as an invariant's check costs more than that review and could
+flag sound screens unseen (WAY-168). The price: a role used in a second meaning is caught only as
+surely as the reviewer reads the decisions of the roles.
+*Rejected:* an invariant for every binding rule of a styleguide, checked by an agent with k of n
+where no script decides it — the checks cost more than the review that reads the change anyway; a
+rule only its decision carries, with neither a test nor the review reading the change against it —
+the rule rests on the memory of the agent at work, which the styleguide is meant to replace.
 
 ### WAY-189 — Which invariants does a styleguide start with?
 
 The skill `maintain-styleguide` proposes, and the rules the template of the styleguide discipline
-requires call for, a styleguide's first invariants, each checked by a script the product declares: no
-file of the user interface's part holds a value written in place of a design token; every control
-those files draw shows a visible focus; and every pair of a background and its text reaches, with the
-values of the file of design tokens, the contrast that the product's decision adopting WCAG takes
-(WAY-191). Beside them it proposes an invariant an agent checks with k of n, that no file of that part
-uses a role in a meaning other than the one its decision gives.
+requires call for, a styleguide's first invariants, each checked by a cheap test of the product's
+suite on a convention of its code: no file of the user interface's part holds a value written in
+place of a design token; every control those files draw shows a visible focus; and every pair of a
+background and its text reaches, with the values of the file of design tokens, the contrast that the
+product's decision adopting WCAG takes (WAY-191). It proposes no invariant over the meanings of the
+roles, which the review of each change compares with their decisions (WAY-188).
 
 - **Scope:** product-guidelines, invariants
 - **Based on:** none
 - **Relations:** derives from WAY-188 · derives from WAY-191
 - **Verification:** for what the skill proposes, an agent compares the work with the decision:
-  - complies: a styleguide task proposes four invariants — the scan for values written in place of
-    design tokens, focus on every control, contrast computed from the file of design tokens and,
-    checked by an agent, each role in its meaning — and the product declares the commands of the
-    first three;
+  - complies: a styleguide task proposes three invariants — the scan for values written in place of
+    design tokens, focus on every control and contrast computed from the file of design tokens —
+    each with its test in the product's suite, and leaves each role's meaning to the review;
   - violates: the contrast is judged by an agent looking at screenshots; the focus invariant is left
-    out because the browser draws a default outline; no invariant guards the meanings of roles.
+    out because the browser draws a default outline; an agent checks with k of n that each role
+    keeps its meaning.
 - **Origin:** none
 
 *Rationale:* values written in place of design tokens, controls with no visible focus and text that
 cannot be read on its background are the faults a styleguide meets first, and each can be decided by
-a script reading the files and the file of design tokens, so none is left to an agent. A meaning
-cannot be read by a script, so the one invariant over meanings is an agent's; without it the
-styleguide's central promise, one meaning for each role, would rest on memory.
-*Rejected:* focus and contrast checked by an agent instead of a script — a script decides them every
-time; no invariants of focus and contrast at the start — the faults the styleguide is for go
-unchecked.
+a test reading the files and the file of design tokens, so none is left to the review. A meaning
+cannot be read by a test, and the review that reads every change already reads it (WAY-188).
+*Rejected:* focus and contrast left to the review or to an agent — a test decides them every time
+for little; no invariants of focus and contrast at the start — the faults the styleguide is for go
+unchecked; an invariant an agent checks with k of n, that no file of the part uses a role in a
+meaning other than its decision gives — it costs more than the review that reads each change anyway
+(WAY-188).
 
 ### WAY-190 — What keeps a product cleaned gradually from adding values written in place of design tokens?
 
 Where a product cleans its screens as the tasks that touch their styles come, rather than in one
-clean-up of every screen, the skill `maintain-styleguide` proposes, beside the invariant that no file
-of the user interface's part holds a value written in place of a design token, which stands on the
-list of violated invariants until the cleaning ends, a second invariant that holds from its first
-day: no file of that part holds more such values than on `{fork-point}`, and a file not on
-`{fork-point}` holds none. The second invariant is withdrawn once the first holds, and for a single
-clean-up of every screen the skill proposes none.
+clean-up of every screen, the invariant that no file of the user interface's part holds a value
+written in place of a design token stays whole and is marked violated until the cleaning ends, as
+WAY-51 gives, and the skill `maintain-styleguide` proposes no second invariant that compares each
+file with its state on `{fork-point}`. Until the mark is cleared, the review of each change to that
+part's files is what keeps a cleaned file or a new one from gaining such a value.
 
 - **Scope:** product-guidelines, invariants
 - **Based on:** none
-- **Relations:** derives from WAY-51 · derives from WAY-60
+- **Relations:** derives from WAY-51 · derives from WAY-188
 - **Verification:** an agent compares the work with the decision:
-  - complies: a product with values written in place of design tokens in nine files lists the full
-    invariant as violated by a change the human accepts and adds the second, so a cleaned file that
-    gains one value back fails at once, and a new file with one fails too;
-  - violates: the full invariant alone stands on the list, and a cleaned file regains values
-    unseen; a test lists the files already cleaned and grows the list; a product that cleans every
-    screen in one task gets the second invariant.
+  - complies: a product with values written in place of design tokens in nine files marks the full
+    invariant violated by a change the human accepts, its test standing as an expected failure; the
+    review of a later change that adds such a value to a cleaned file asks for it to go; the change
+    that cleans the last file clears the mark;
+  - violates: beside the marked invariant stands a second one that no file holds more such values
+    than on the fork point; a test lists the files already cleaned and grows the list; the rule is
+    narrowed to the files the product has already cleaned.
 - **Origin:** none
 
-*Rationale:* a violated invariant stands whole on the list of violated invariants (WAY-51), so until
-the last file is clean it cannot see values come back into a file already cleaned; the second
-invariant compares each file with the fork point (WAY-60), so it holds from the first day and still
-lets new code follow the styleguide while old code is cleaned when a task has it in scope. Both fit
-WAY-51 and WAY-60 unchanged. Its weak point: a renamed file with such values looks like a new file.
-*Rejected:* the full invariant alone on the list — until the cleaning ends only a reviewer guards the
-cleaned screens; a test over a growing list of cleaned files — the list decides the invariant and
-changes with no change of the foundation, and a new file outside it escapes the rule; rows of the
-list for each file — the same at the price of changing the gate's rule and its scripts; every file a
-task changes cleaned in full — a small change to a large file grows into cleaning a whole screen.
+*Rationale:* a violated invariant stays whole and is marked at its entry (WAY-51), so the debt shows
+and the rule is not weakened to fit the code, while old code is cleaned when a task has it in
+scope. Until the last file is clean the invariant's test, an expected failure, cannot see a value
+come back into a file already cleaned; the review, which reads every change to the screens anyway
+(WAY-188), sees it there. The price: until the cleaning ends such a value is caught only as surely
+as the reviewer reads the changed file.
+*Rejected:* a second invariant, holding from its first day, that no file of the part holds more such
+values than on `{fork-point}` and a file not on `{fork-point}` holds none, withdrawn once the full
+invariant holds — an entry kept only for the time of the cleaning, whose withdrawal nothing checks,
+and a renamed file looks new to it; a test over a growing list of cleaned files — the list decides
+the invariant and changes with no change of the foundation, and a new file outside it escapes the
+rule; every file a task changes cleaned in full — a small change to a large file grows into cleaning
+a whole screen.
 
 ### WAY-191 — Where do a styleguide's thresholds of contrast and its demand of visible focus come from?
 
@@ -5469,9 +5475,10 @@ The skill `maintain-styleguide` takes the thresholds of contrast and the demand 
 WCAG through a decision of the product adopting it, which it asks the human for with the
 recommendation to adopt the newest edition that is a W3C Recommendation when the decision is
 written, named by its number as the W3C's page gives it at that time, at level AA, for every screen
-of the user interface the styleguide covers, proposing another way only where the human chooses it and writing nothing the
-human has not accepted. Each success criterion an invariant of the styleguide takes a condition from
-stands as an environment fact the invariant rests on.
+of the user interface the styleguide covers, proposing another way only where the human chooses it
+and writing nothing the human has not accepted. Each success criterion an invariant of the
+styleguide takes a condition from stands as an environment fact the invariant rests on, with its
+source as WAY-80 gives it.
 
 - **Scope:** product-guidelines, environment-facts
 - **Based on:** none
@@ -5479,22 +5486,22 @@ stands as an environment fact the invariant rests on.
 - **Verification:** an agent compares the work with the decision:
   - complies: the skill says in plain words what contrast and focus are, recommends adopting the
     newest edition of WCAG the W3C's page names as a Recommendation that day, at level AA for every
-    screen, and on the human's acceptance the task carries the decision and the facts of the contrast and focus
-    criteria, each quoting the passage of that edition;
+    screen, and on the human's acceptance the task carries the decision and the facts of the
+    contrast and focus criteria, each quoting the passage of that edition;
   - violates: a contrast invariant writes a ratio with no decision adopting WCAG; the edition is
     named from memory; the skill writes the adopting decision without asking because it recommends
     adopting.
 - **Origin:** none
 
 *Rationale:* a threshold written into an invariant with no adopted catalogue is a number from WCAG
-without its source, and a new edition would prompt no review; adopted by a decision naming edition,
-level and screens, the catalogue binds the product as WAY-86 gives it, and the facts carry the
-criteria to the invariants (WAY-73). WCAG is a good standard and the human takes it unless meaning to
-do otherwise, so the skill recommends adopting it, yet no decision enters without the human. A law
-or a contract binds without adoption (WAY-86), so it is asked about before.
+without its source, and no reader can tell which edition it follows; adopted by a decision naming
+edition, level and screens, the catalogue binds the product as WAY-86 gives it, and the facts carry
+the criteria to the invariants (WAY-73). WCAG is a good standard and the human takes it unless
+meaning to do otherwise, so the skill recommends adopting it, yet no decision enters without the
+human. A law or a contract binds without adoption (WAY-86), so it is asked about before.
 *Rejected:* thresholds of the product's own in an invariant's sentence with no adoption — a number
-from WCAG with no named source, and no review at a new edition; no invariants of contrast and focus
-at the start — the faults of focus seen in the first trial stay unchecked.
+from WCAG with no named source or edition; no invariants of contrast and focus at the start — the
+faults of focus seen in the first trial stay unchecked.
 
 ### WAY-192 — How does a product's instruction file lead to its styleguide?
 

@@ -34,7 +34,7 @@ writing a missing styleguide does not wait for its own output (WAY-215).
 
 | | This skill, in the refinement | The cycle's author, in `implement-task` |
 |---|---|---|
-| Writes | the task document, through `refine-task`'s steps, and the research reports under `.runs/styleguide/<part>/`, which the product's git ignores | the product's entries, through the skill of each element, in the foundation step; the styleguide's file; the values of design tokens with their sources; the page of every state; the checks of the invariants, by other agents (WAY-69); the changes to the instruction files and to the part map |
+| Writes | the task document, through `refine-task`'s steps, and the research reports under `.runs/styleguide/<part>/`, which the product's git ignores | the product's entries, through the skill of each element, in the foundation step; the styleguide's file; the values of design tokens with their sources; the page of every state; the test of each invariant (WAY-69); the changes to the instruction files and to the part map |
 | Never writes | the foundation, the styleguide's file, the product's code (WAY-01, WAY-28) | a meaning the task did not settle (WAY-172) |
 
 A meaning reaches the code only through the task document: the human's acceptance of the whole
@@ -49,16 +49,12 @@ writes there is written for a reader who was not in it.
 
 - *To do*:
   - write `guidelines/styleguide-<part>.md` from
-    `.the-way/product-guidelines/styleguide/template.md`, as its section "Writing the file" gives,
-    and the test cases of each rule as the section "Test cases of a rule" of
-    `.the-way/product-guidelines/template.md` gives them (WAY-168), the cases of
-    `### No value in place of a design token` read as that section gives for an invariant on the
-    list of violated invariants and for the invariant beside it (WAY-190);
+    `.the-way/product-guidelines/styleguide/template.md`, as its section "Writing the file" gives;
   - put the value of each role into the product's file of design tokens with its source, naming for
     each role the value and its source as the human settled them, or the exact address of the
     source and the item in it the value is read from (WAY-182);
   - build the page of every state, or extend it;
-  - write a check for each new invariant;
+  - write the test of each new invariant in the product's suite;
   - apply `maintain-instruction-files` for two changes: a pointer in the product's root
     `AGENTS.md`, outside the block the-way's installer writes, naming
     `guidelines/styleguide-<part>.md` in backticks with the condition of changing a file of
@@ -66,11 +62,7 @@ writes there is written for a reader who was not in it.
     standing where that skill places a rule for some files, saying that the product's invariant is
     what keeps it and naming no command of its own (WAY-192);
   - for the product's first guidelines: add `guidelines/**` to the files of the part of the map
-    whose files direct whoever carries out its tasks, through `update-part-map`, and write the
-    product's copies of the two invariants the template of guidelines gives (WAY-167, WAY-170);
-  - where a law or a contract binds the accessibility of the user interface, record at its part,
-    through `update-part-map`, the failure mode the human settled for that obligation, its
-    detection naming the invariant that rests on the obligation's environment fact (WAY-46);
+    whose files direct whoever carries out its tasks, through `update-part-map` (WAY-167);
   - each item an audit charge calls for (step 3).
 - *Questions to settle*: each meaning, role, pair, value with its source, rule of states, departure
   from the template and answer on accessibility, each with the human's words and date as its
@@ -175,43 +167,41 @@ Where the user interface has screens (WAY-187):
   state of a control — say in plain words what it means (WAY-174, WAY-113).
 - **What it settles.** The roles of the table the styleguide template gives, each row settled with
   the human, its value and the value's source among them; the states of the shared controls; the
-  page of every state; the meanings grouped into decisions as that template's section "Pairs,
-  meanings and role names" gives; the product's decision adopting the template, and each departure
-  from it by a decision with its reason (WAY-173). Ask also what no reading of the code can tell:
-  the names the team uses, the exceptions it keeps on purpose (WAY-175).
+  page of every state; the meanings grouped into decisions as that template's section "Pairs and
+  meanings" gives; the product's decision adopting the template, and each departure from it by a
+  decision with its reason (WAY-173). Ask also what no reading of the code can tell: the names the
+  team uses, the exceptions it keeps on purpose (WAY-175).
 - **Accessibility.** First ask whether a law or a contract binds the accessibility of the user
-  interface: what one requires is an environment fact, and no adoption is needed (WAY-86). Such an
-  obligation also stands as a failure mode of the user interface's part, its kind of damage and
-  severity given by the human and its detection naming the invariant that rests on that fact; it
-  reaches the map through *To do* (WAY-46). Then propose the decision adopting WCAG, recommending
-  the newest edition that is a W3C Recommendation when the decision is written, named by its number
-  as read on the W3C's page in this session, never from memory, at level AA, for every screen of the
-  user interface; propose another way only where the human chooses it, and write nothing the human
-  has not accepted (WAY-191, WAY-80). Each success criterion an invariant takes a condition from —
-  contrast and visible focus at least — becomes an environment fact, with the edition's address and
-  the passage word for word (WAY-191, WAY-76).
+  interface: what one requires is an environment fact, and no adoption is needed (WAY-86). Then
+  propose the decision adopting WCAG, recommending the newest edition that is a W3C Recommendation
+  when the decision is written, named by its number as read on the W3C's page in this session, never
+  from memory, at level AA, for every screen of the user interface; propose another way only where
+  the human chooses it, and write nothing the human has not accepted (WAY-191, WAY-80). Each success
+  criterion an invariant takes a condition from — contrast and visible focus at least — becomes an
+  environment fact, with its source as WAY-80 gives it (WAY-191).
 - **Which criterion, which ratio.** Put to the human, as a question with a recommendation shown by
   what the user sees — "small text on any background stays readable for someone who sees less
   well" — the criterion of the adopted edition each invariant takes its condition from, and the one
-  ratio the contrast script holds every pair of a background and its text to, read from that
+  ratio the contrast test holds every pair of a background and its text to, read from that
   criterion's passage: the stricter one wherever the size of the text on a pair is not known.
   Record both with the facts of WCAG, so that the invariant's condition stands in a decision and
   its fact (WAY-60, WAY-191).
-- **Invariants.** Every binding rule gets an invariant of the kind the styleguide template's
-  required form gives, and a rule no invariant can check goes among the examples (WAY-188). Propose,
-  each script a command the product declares (WAY-38):
-  - for each rule the styleguide template requires, the invariant its item under "What each section
-    carries" names — among them the first ones WAY-189 gives: by a script, no value written in place
-    of a design token, visible focus on every control, and the contrast of every pair of a
-    background and its text; by an agent, each role in its meaning;
+- **Invariants.** Propose an invariant only for a rule a cheap test of the product's suite checks on
+  a convention of the product's code; the review compares each change with every other rule, each
+  role in its meaning among them (WAY-168, WAY-188). Propose:
+  - the three first invariants WAY-189 gives, each with its test in the product's suite: no value
+    written in place of a design token, visible focus on every control, and the contrast of every
+    pair of a background and its text;
   - the product's decision that the rule against values written in place of design tokens names,
-    which says what counts as such a value, so that the invariant's condition stands in a decision
+    which says what counts as such a value, and the product's decision that the rule of visible
+    focus names, which says which elements are controls and how the code marks them — a class, a
+    component, an attribute — so that the condition of each invariant stands in a decision
     (WAY-60);
   - where the human chooses to clean the screens as tasks touch their styles rather than in one
-    clean-up, the second invariant WAY-190 gives, while the full one stands on the list of violated
-    invariants by a foundation change the human accepts (WAY-190, WAY-51); its weak point, a
-    renamed file that looks new, is said when it is proposed;
-  - for each further rule of the product, an invariant that checks it.
+    clean-up, the invariant against such values marked violated by a foundation change the human
+    accepts, until the cleaning ends (WAY-190, WAY-51); say when proposing it that until then only
+    the review keeps a cleaned file from gaining such a value back;
+  - for any other rule, the template's or the product's, that such a test checks, its invariant.
 - **Critique.** Once the set of proposals is complete, one fresh agent critiques it before it is
   shown together, as "Critique before collective review" gives (WAY-120).
 - Write each answer under its question in the task document before asking the next, as
