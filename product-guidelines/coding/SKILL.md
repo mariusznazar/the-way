@@ -72,7 +72,8 @@ writes there is written for a reader who was not in it.
 - *Questions to settle*: each choice step 4 settles — every standing check adopted or departed
   from with its reason, each tool, set and edition, the parts, the audit's database and severity,
   the split of the set, each kind's exemplar and the status of its files, the rules a script checks
-  of each exemplar, each invariant, and the way the list of rules that block is kept — each with
+  of each exemplar, each invariant, and the flag by which the linter's test makes a comment that
+  turns a rule off have no effect, where the tool has one — each with
   the human's words and date as its source.
 - *Context*: the trial run's evidence — how many reports each rule gave and what the judging
   agent found of them, with the paths of the output and of its verdicts; what the audit found, each
@@ -227,9 +228,9 @@ Where the product has code:
   each with a test of the product's suite (WAY-61):
   - for the rule of each standing check, the invariants the coding template's section "What each
     section carries" names for it, with the parts it gives them;
-  - for the linter, which way of keeping the list of rules that block applies — its first invariant
-    passing the list to the tool, or a second invariant keeping the product's configuration to the
-    list — by what the tool allows (WAY-207);
+  - for the linter, the flag or the configuration by which its test makes a comment that turns a
+    rule off have no effect, where the tool has one, and the review of each change to the linter's
+    configuration as what keeps that configuration to the decision (WAY-203, WAY-207);
   - where the code breaks the rules that block, the linter's invariant marked violated by a change
     of the foundation the human accepts, until the code is cleaned (WAY-205, WAY-51); its weak
     point, that until then no test shows a report coming back into a cleaned file or reaching a new

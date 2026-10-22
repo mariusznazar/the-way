@@ -5187,7 +5187,9 @@ guidelines on its linter, only where every report it gives on the product's code
 code worth making, a report counting by whether it leads to such a change, whether it is technically
 right or not. A rule of the set that gives a report leading to no such change is no rule that binds
 the product's code: it may stand among the examples of the coding guidelines, and no invariant checks
-it, so the gate does not run it.
+it, so the gate does not run it. A comment in the code that turns off a rule that blocks has no
+effect: where the tool can be told so by a flag or its configuration, the test of the linter's
+invariant runs it so, and where it cannot, the review of each change finds such a comment.
 
 - **Scope:** product-guidelines
 - **Based on:** none
@@ -5197,7 +5199,9 @@ it, so the gate does not run it.
     among the rules that block in the decision adopting the set and blocks a change; a rule on the order of imports that flagged two files whose order a generator writes
     stands among the examples under its name in the tool, and the linter's invariant does not run
     it; a rule whose report was technically wrong, yet led to a fix that made the code clearer,
-    still blocks;
+    still blocks; the linter's test runs the tool with its flag that ignores comments turning rules
+    off, so such a comment leaves the report standing; the review of a change to a script whose tool
+    has no such flag finds a comment that turns a rule off;
   - violates: a rule that flagged sound code once blocks because its other reports were right; a
     rule whose technically right report nobody would change the code for blocks; the gate shows the
     rules among the examples as warnings; a rule blocks because fewer than one report in ten led to
@@ -5213,13 +5217,19 @@ a wrong report that leads to a better change costs nothing, so a report counts b
 A rule that once flagged sound code leaves the agent free again in its area, as an example it reads;
 that holds, because a rule that sometimes blocks sound code is worse than one an agent reads and may
 pass by. The gate knows no result that only warns (WAY-63), so such a rule is an example and nothing
-runs it. The price: some useful signals of a linter reach the agent only as an example to read.
+runs it. A rule that blocks gives no report that leads to no change worth making, so no comment that
+turns it off is sound; a tool that can ignore such comments does it on every change for nothing,
+while where it cannot, the review reads each change anyway. The price: some useful signals of a
+linter reach the agent only as an example to read, and a comment that turns a rule off in a file
+whose tool cannot ignore it is caught only as surely as the reviewer reads the change.
 *Rejected:* the whole set the tool recommends blocking — the gate blocks sound code; a rule blocking
 while fewer than one report in ten leads to no change, as Google allows for checks shown in code
 review — the gate sometimes blocks sound code, and only a change of a decision passes it; a rule
 that gives such reports kept as a check that only warns — it changes what results the gate knows
 (WAY-63); only rules of correctness blocking, never rules of style — a remark on style never blocks
-in the review of code (WAY-161), and the human does not judge style.
+in the review of code (WAY-161), and the human does not judge style; a script of the product's own
+finding every comment that turns a rule off where the tool has no flag for it — code kept for what
+the review of each change already sees.
 
 ### WAY-204 — How are the rules of a linter's set split between the rules that block and the examples?
 
@@ -5347,7 +5357,8 @@ The template of the coding discipline has a product's coding guidelines hold tha
 file is fixed in that file, never by turning a rule of the linter off for the whole product nor by
 changing the exemplar for that file's sake, and that turning a rule of the linter off for the whole
 product is a change of the product's decision adopting the linter's set, which the human approves as
-WAY-172 gives a changed meaning.
+WAY-172 gives a changed meaning. The review of each change to the linter's configuration keeps it to
+that decision, and no invariant compares the configuration with the decision's rules that block.
 
 - **Scope:** product-guidelines
 - **Based on:** none
@@ -5355,10 +5366,12 @@ WAY-172 gives a changed meaning.
 - **Verification:** an agent compares the change with the decision:
   - complies: a new endpoint that the linter flags for an unused import loses that import; a team
     that finds a blocking rule wrong for the product changes its decision adopting the set with the
-    human's approval, and only then the rule is turned off in the linter's configuration;
+    human's approval, and only then the rule is turned off in the linter's configuration; the review
+    of a change that turns a rule off in the configuration with no change of the decision asks for
+    the decision;
   - violates: a rule is turned off in the linter's configuration so that one change gets through;
     the exemplar is changed so that a new file departing from it passes the rules a script checks
-    from it.
+    from it; an invariant compares the linter's configuration with the decision's rules that block.
 - **Origin:** none
 
 *Rationale:* a rule of the linter reads every file of the parts it covers, so turning it off for one
@@ -5366,9 +5379,14 @@ file's sake changes what binds all the others, unseen by the task that made the 
 exemplar is what every later file of its kind follows; a fix in the file stays where the fault is. A
 blocking rule gives no report that leads to no change worth making (WAY-203), so a report of it is a
 fault to fix, and a rule wrong for the product is a matter of the decision that adopted it, as a
-global design token is for a styleguide (WAY-178).
+global design token is for a styleguide (WAY-178). The configuration changes in a few files a review
+reads with every change to them, and the tool, pinned with its set unchanged, already runs the rules
+the decision names. The price: a rule turned off in the configuration with no change of the decision
+is caught only as surely as the reviewer reads that change.
 *Rejected:* a rule turned off in the linter's configuration so that one change gets through — every
-other file loses the rule unseen.
+other file loses the rule unseen; a second invariant keeping the linter's configuration to the
+decision's rules that block — a check of a list the review of each change to the configuration
+already reads.
 
 ### WAY-208 — Which parts of a product get coding guidelines?
 

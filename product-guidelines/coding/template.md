@@ -125,21 +125,17 @@ those decisions and invariants in its own foundation; the coding guidelines name
 - **Linter** — rule. *Decision*: the product's decision adopting the linter and its set of rules,
   naming the set, its edition, the parts it reads and the rules of the set that stand among the
   examples for the reports they give that lead to no change of code worth making (WAY-86, WAY-202,
-  WAY-203, WAY-204). *Invariant*:
-  1. that no file of the parts named breaks a rule of the set that blocks, resting on the
-     environment fact of the set's edition (WAY-203, WAY-73); an inline suppression of a rule that
-     blocks counts as a break, since such a rule gives no report that leads to no change worth
-     making, so no suppression of it is sound, and a fault of one file is fixed in that file
-     (WAY-203, WAY-207, WAY-173);
-  2. the rules that block are exactly the list of the adopting decision, so that turning one off
-     fails the gate until that decision changes (WAY-207, WAY-60). Where the test of the first
-     invariant passes that list to the tool itself, the first invariant already holds it and no
-     second is written; where the test reads the product's configuration, a second invariant keeps
-     that configuration to the list; the skill names in the task which way the tool allows
-     (WAY-207).
+  WAY-203, WAY-204). *Invariant*: that no file of the parts named breaks a rule of the set that
+  blocks, resting on the environment fact of the set's edition (WAY-203, WAY-73). A comment in the
+  code that turns off a rule that blocks has no effect: where the tool can be told so by a flag or
+  its configuration, the invariant's test runs it so, and where it cannot, the review of each
+  change finds such a comment; a fault of one file is fixed in that file (WAY-203, WAY-207,
+  WAY-173). Turning a rule that blocks off in the linter's configuration is a change of the
+  adopting decision, which the review of each change to the configuration holds it to; no invariant
+  compares the configuration with the decision (WAY-207).
 
-  Where the product's code already breaks the rules that block, the first invariant is marked
-  violated until the code is cleaned (WAY-205, WAY-51).
+  Where the product's code already breaks the rules that block, the invariant is marked violated
+  until the code is cleaned (WAY-205, WAY-51).
 - **Formatter** — rule. *Decision*: the product's decision adopting the formatter and its
   configuration (WAY-202). *Invariant*: that every file of the parts named stands as the formatter
   leaves it. A product whose code does not stand so when the formatter enters is reformatted whole,
@@ -203,10 +199,10 @@ those decisions and invariants in its own foundation; the coding guidelines name
   criterion of WCAG, a requirement of its own in prose, stands as a fact of its own (WAY-191). The
   invariant of the rules that block rests on that fact (WAY-73); no fact stands for each rule.
 - **The rules that block stand in the adopting decision**, as the set taken whole less the rules it
-  keeps among the examples (WAY-60, WAY-204); the first or the second invariant of `### Linter`
-  keeps them there (WAY-207).
-- **Inline suppressions** of a rule that blocks count as breaks in the first invariant of
-  `### Linter`, as that rule has it above (WAY-203, WAY-173).
+  keeps among the examples (WAY-60, WAY-204); the review of each change to the linter's
+  configuration keeps the configuration to them (WAY-207).
+- **Comments that turn a rule off** have no effect where the tool can be told so, and the review of
+  each change finds them where it cannot, as `### Linter` has it above (WAY-203, WAY-173).
 - **The test of each invariant.** Each invariant of a standing check has a test in the product's
   suite, in its language, that runs the pinned tool on the parts the invariant names and fails where
   the tool reports a break or cannot run (WAY-61, WAY-63).
