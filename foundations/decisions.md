@@ -5,12 +5,12 @@ The decisions of the-way, the process for building products. Entries follow
 
 ### WAY-01 — What state does the foundation describe?
 
-On the main branch, the foundation describes the product as it is — its rules, together with
-the listed debt wherever the product does not yet meet them — and roadmaps and plans do not change
-it. A task that sets out to change the foundation makes that change in its foundation step, and the
-code follows; a foundation change in progress lives on the task's branch in the product's
-repository and reaches the main branch in the same merge as the code that follows it. When a task
-closes, the foundation again matches the current state.
+On the main branch, the foundation describes the product as it is — its rules, with each invariant
+the product does not yet meet marked violated (WAY-51) — and roadmaps and plans do not change it. A
+task that sets out to change the foundation makes that change on its branch in the product's
+repository, and the change reaches the main branch in the same merge as the code it describes; no
+entry the task calls for is left for a later task. When a task closes, the foundation again matches
+the current state.
 
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, task-cycle
 - **Based on:** none
@@ -18,8 +18,8 @@ closes, the foundation again matches the current state.
 - **Verification:** invariants: foundation-change-merge-route. For the rest, an agent compares the
   change with the decision:
   - complies: a task branch changes a decision and its code, and both reach the main branch in
-    one merge; a task that brings the code back in line with an invariant runs without a
-    foundation step;
+    one merge; a task that brings the code back in line with an invariant changes no entry but
+    that invariant's *Violated* mark;
   - violates: a planned feature is written into the foundation before it is built; the code is
     merged and the foundation change is left for a later task.
 - **Origin:** none
@@ -27,10 +27,12 @@ closes, the foundation again matches the current state.
 *Rationale:* a foundation that describes intent ages with every change of direction, unseen,
 because it is expected to differ from the code; one that describes the current state can be
 checked against the product at any time. An abandoned task's foundation change is dropped with its
-branch, leaving no false description.
+branch, leaving no false description. Whether an entry is written before the code that rests on it
+or with it changes nothing on the main branch, which receives both in one merge.
 *Rejected:* the foundation as a description of the target product — it ages unseen; the foundation
 updated only after deployment — a step at a task's end goes missing; a "designed, not built" mark
-on the main branch — an abandoned task leaves it for good.
+on the main branch — an abandoned task leaves it for good; each entry written before the code that
+depends on it, checked by the review — an order the merge erases, checked at every review.
 
 ### WAY-02 — How does whatever depends on an entry refer to it?
 
@@ -323,41 +325,40 @@ change — it checks itself.
 
 ### WAY-11 — How does a task end?
 
-A task ends with its return step before its branch is merged: an agent searches the diff and the
-task's log for new rules and decisions, code behaviour with no invariant over it, environment
-facts the change rests on that the foundation does not yet hold and words whose use the glossary
-does not yet settle, writes the resulting foundation entries in the same change, which its
-independent assessment covers (WAY-10), and compares the foundation with the code in the parts
-the task touched. Uncovered code behaviour becomes an invariant when changing it in a later task
-would violate a requirement or a settled rule of the product; an implementation detail that can
-change without such a violation stays in ordinary tests and the description of the change, and
-this distinction leaves decision-derived invariants (WAY-12, WAY-22), accepted settlements
-(WAY-134) and the task's duties for projected entries (WAY-126) required. A periodic review of the
-foundation runs apart from tasks.
+A task ends with its return step before its branch is merged: an agent compares with the code the
+foundation entries the change writes or changes, those its task names and those the search of the
+foundation found, and the part map of the parts the task touched, and corrects in the same change
+whatever no longer matches. In the same change it writes the sources outside the product that the
+change rests on and the foundation does not yet hold, as environment facts, a word the change uses
+in a meaning other than the usual one, as a glossary term, and the accepted settlements (WAY-134)
+and projected entries (WAY-126) the task carries that are not yet written. It writes an invariant
+only for a rule the task, a decision or a human sets, never for code behaviour merely because no
+invariant covers it. A periodic review of the foundation runs apart from tasks.
 
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, task-cycle
 - **Based on:** none
 - **Relations:** derives from WAY-01
-- **Verification:** invariants: return-step-record. For what the return step finds and how it
-  classifies uncovered behaviour, an agent compares the diff, the task's log and sources with the
-  decision:
-  - complies: a newly found rule that a later change would break becomes an invariant, with its
-    requirement or settlement named; a replaceable layout calculation stays in ordinary tests
-    and the change description, with the reason recorded; an invariant required by a decision
-    is written even when its check costs work; accepted settlements and applicable projected
-    entries are written;
-  - violates: a product rule is left only in ordinary tests; every replaceable detail becomes
-    a foundation invariant merely because the diff reveals it; a costly decision-derived
-    invariant or an applicable accepted or projected entry is omitted under the distinction.
+- **Verification:** invariants: return-step-record. For what the return step compares and writes,
+  an agent compares the diff, the task and its sources with the decision:
+  - complies: the return step finds that a part-map entry still names a file the change removed and
+    corrects it; the release notes of a library the change rests on are written as an environment
+    fact; a replaceable layout calculation stays in ordinary tests; an invariant the task's
+    settlement sets is written;
+  - violates: a decision the change makes false is left for a later task; behaviour of the diff
+    becomes an invariant only because no invariant covers it; an accepted settlement or an
+    applicable projected entry is left out.
 - **Origin:** none
 
-*Rationale:* some of the foundation is learned only in implementation and in use, and a task that
-missed the foundation does not report it; an end step goes missing, so the merge waits for its
-record. Facts and words are listed because, like rules, they are learned in code.
+*Rationale:* some of the foundation is learned only in implementation, and a change that drifted
+from an entry does not report it; comparing what the change touched with the code finds that drift
+where it arises, at the cost of reading only those entries. Facts and words are written because,
+like rules, they are learned in code. An invariant written for behaviour no task, decision or human
+sets binds a detail nobody chose, and its test fails on later changes nobody objects to.
 *Rejected:* the foundation changed only at the foundation step — what implementation teaches stays
-in the code; every uncovered detail made an invariant — a replaceable implementation becomes a
-product rule; ordinary tests alone for product rules — later work can change a requirement without
-meeting a foundation check.
+in the code; a search of the diff and the task's log for every behaviour no invariant covers, each
+turned into an invariant where a later change could break a requirement — it costs a large share of
+a cycle and binds details nobody chose; ordinary tests alone for a rule the task sets — later work
+can change it without meeting a foundation check.
 
 ### WAY-12 — How is a decision checked?
 
@@ -387,45 +388,43 @@ reaches a human before it binds (WAY-14).
 
 ### WAY-13 — What sets the weight of a task's process?
 
-What a task touches, never its size, sets the path that merges its change and how sharply that
-change is checked: an agent's analysis at the start of the task settles whether it changes the
-foundation, which chooses among the paths that merge a change, while three things set how sharply
-it is checked — the criticality of the parts it touches, as the part map computes it, whether it
-touches the files of a trust boundary, and whether the change can be undone. Paths that merge a
-change differ in their steps, never in the outcome a task has to reach, and only a human sets a
-task to return knowledge instead of a change, which merges nothing. A task's size may lighten
-how its change is prepared and made — its plan and the number of agents making it — never the
-outcome it has to reach or the checks run on the finished change, and otherwise serves only as a
-signal to split it; an agent may check a change more sharply than the map computes, never less, and
-a human decides on every change that cannot be undone.
+Every change, whatever its size, passes the product's tests and a review by an agent that did not
+make it. At its start a task's cycle answers two questions — does the change touch the files of a
+trust boundary (WAY-48), and does it hold an operation that cannot be undone — and a change for
+which either answer is yes gets a review aimed at that risk; an operation that cannot be undone is
+only prepared, and a human performs it after deciding at the request. A task's size may lighten how
+its change is prepared and made — its plan and the number of agents making it — never the outcome
+it has to reach or the checks run on the finished change, and otherwise serves only as a signal to
+split it; only a human sets a task to return knowledge instead of a change, which merges nothing.
 
 - **Scope:** task-cycle
 - **Based on:** none
 - **Relations:** none
-- **Verification:** invariants: foundation-change-path. For the rest, an agent compares the change
-  with the decision:
-  - complies: a one-line format change that breaks users' saved data gets the sharpest checks and
-    a human's decision; a change one agent can hold, including its foundation entries, is made without a
-    plan and runs the same checks as any change to the parts it touches;
-  - violates: a task takes the path for changes that leave the foundation unchanged because it
-    changes few lines; a small task skips a check that the parts it touches call for; a change that
-    cannot be undone reaches the main branch without a human's decision; an agent turns a task into
-    one that returns knowledge instead of a change without a human setting it so.
+- **Verification:** an agent compares the change with the decision:
+  - complies: a one-line change to a stored format that cannot be undone is prepared, reviewed for
+    that risk and run by a human who decided at the request; a change to the parser of network
+    requests gets a review told of the boundary; a change one agent can hold, its foundation
+    entries included, is made without a plan and gets the same tests and review as any change;
+  - violates: a small task skips its review; the cycle runs a migration that cannot be undone; a
+    change to a trust boundary's files is reviewed like any other; an agent turns a task into one
+    that returns knowledge instead of a change without a human setting it so.
 - **Origin:** none
 
-*Rationale:* size misleads both ways about what can go wrong: a rename across many files is easy to
-undo, a one-line change to a stored format can destroy every user's data, so what a task touches,
-never its size, sets its path and its checks. Size does tell how much preparation a change needs: a
-small change can be made without a plan, while the checks on the finished change stay whole and a
-human still decides on what cannot be undone.
-Paths differ only in steps, because a weaker outcome would bypass the process; returning knowledge
+*Rationale:* size misleads about what can go wrong: a rename across many files is easy to undo, a
+one-line change to a stored format can destroy every user's data. What a stranger can send and what
+cannot be undone are the risks a review aimed at them catches and an ordinary review may pass, and
+two questions name them at the start without computing anything. Size does tell how much
+preparation a change needs: a small change can be made without a plan, while the checks on the
+finished change stay whole and a human still decides on what cannot be undone. Returning knowledge
 alters what a task delivers, so a human sets it.
-*Rejected:* one cycle for all tasks — how much process a task needs depends on what can go wrong;
-the path chosen by size — size misleads; a human approving every diff (DORA) — no fewer failed
-changes, and attention spent where it adds nothing; keeping a change that cannot be undone, or one
-touching a trust boundary's files, from the lighter preparation — it would take the lighter
-preparation from small tasks it suits, while a human's decision and checks kept whole already
-stop such a change.
+*Rejected:* checks as sharp as a criticality computed from the parts a change touches, with the path
+that merges it chosen by whether it changes the foundation, recorded at the start and recalculated
+after each diff — every cycle computes and records them, and a part with no failure modes recorded
+draws the sharpest checks whatever it holds; the path chosen by size — size misleads; a human
+approving every diff (DORA) — no fewer failed changes, and attention spent where it adds nothing;
+keeping a change that cannot be undone, or one touching a trust boundary's files, from the lighter
+preparation — it would take the lighter preparation from small tasks it suits, while a human's
+decision and a review aimed at the risk already stop such a change.
 
 ### WAY-14 — Who accepts a decision?
 
@@ -3068,69 +3067,47 @@ source-only task's code would hold a rule the foundation lacks, and its return s
 second entry for it; readiness inferred from an agent's completed refinement or from acceptance of
 candidate rows alone — neither accepts the complete task the cycle takes.
 
-### WAY-125 — Which Superpowers methods does the autonomous task cycle adopt?
+### WAY-125 — Which methods does the autonomous task cycle use?
 
-The the-way task cycle adopts Superpowers 6.4.1 methods for brainstorming a design and written spec,
-test-first implementation, subagent execution with independent task and final code reviews, and
-preparing a pull or merge request, only for a ready task run through `implement-task`; each
-method and its linked material are read whole by the agent conducting it, while the orchestrator
-reads only the methods it conducts and takes the boundaries of delegated methods from the cycle. The
-orchestrator answers workflow questions and gives provisional stage go-aheads under the task
-owner's delegation, never records these as human approval, controls the return between stages,
-keeps agent reports before a borrowed skill cleans its workspace, runs the independent assessment
-of its foundation change and its return step, and brings the request to the human for review.
-Decisions reserved to a human by the foundation remain reserved; when required code cannot proceed
-without one, the cycle opens a blocked draft request; in the review of the whole change, WAY-161
-and WAY-162 replace the steps of these methods by which the orchestrator adjudicates and parks the
-findings left after the review of the final fix, the final fix takes in deferred minor findings,
-and the executor rules on each line the reviewer declined to judge; a different Superpowers version
-requires a reviewed change to the-way before use.
+The task cycle `implement-task` uses the-way's own methods: `write-spec` for a spec and its review,
+`plan-task` for a plan, `make-change` for each change an author, a slice's executor or a fix makes,
+and `review-change` for each code review; the orchestrator conducts the cycle and its loop of
+slices itself. Each agent reads the method of its stage, and what it names, whole, while the
+orchestrator reads no method it does not conduct. The orchestrator answers the agents' questions
+and gives provisional go-aheads under the task owner's delegation, never recording these as human
+approval, and brings the request to the human, the cycle's first point of human review. Decisions
+reserved to a human by the foundation remain reserved; when required code cannot proceed without
+one, the cycle opens a blocked draft request.
 
 - **Scope:** task-cycle
-- **Based on:** observation of installed Superpowers 6.4.1 on 2026-10-05 using `Get-Content -Raw
-  -Encoding utf8 '<source-root>/<skill>/SKILL.md'` for each skill below; Windows PowerShell
-  5.1.26100.9444 on Microsoft Windows NT 10.0.26300.0; source root
-  `C:/Users/Mariusz/.claude/plugins/cache/claude-plugins-official/superpowers/6.4.1/skills/`:
-  `brainstorming/SKILL.md` — "Help turn ideas into fully formed designs and specs through natural
-  collaborative dialogue." `test-driven-development/SKILL.md` — "Write the test first. Watch it
-  fail. Write minimal code to pass." `subagent-driven-development/SKILL.md` — "Fresh subagent per
-  task + task review (spec + quality) + broad final review = high quality, fast iteration"
-  `requesting-code-review/SKILL.md` — "The reviewer gets precisely crafted context for evaluation —
-  never your session's history." `finishing-a-development-branch/SKILL.md` — "Verify tests → Detect
-  environment → Present options → Execute choice → Clean up."
-- **Relations:** derives from WAY-100 · derives from WAY-13
+- **Based on:** none
+- **Relations:** derives from WAY-13
 - **Verification:** an agent compares a cycle with the decision:
-  - complies: agents use the named methods at version 6.4.1, return between stages, and show
-    provisional choices in the request without claiming human approval; the orchestrator reads
-    the cycle, subagent execution and code-review methods it conducts, while the design agent,
-    code author, planner and foundation author read the methods of their own stages;
-  - violates: an agent treats its own spec approval as the owner's approval, skips the request
-    review, or silently runs a different Superpowers version; the orchestrator loads a delegated
-    method merely because its stage begins, or a stage agent works from its boundary alone
-    without reading that method; the orchestrator parks a finding left after the review of the
-    final fix, or rules on a line the reviewer declined to judge, as the borrowed methods give it.
+  - complies: the designer reads `write-spec` and each slice's executor `make-change`, while the
+    orchestrator reads `implement-task` alone; the request shows the orchestrator's provisional
+    choices without claiming the owner's approval; the cycle runs in a harness with no plugin
+    installed;
+  - violates: the orchestrator loads `review-change` because a review begins, or a reviewer works
+    from its handoff without reading that method; an agent treats its own spec approval as the
+    owner's; the cycle requires a method the product's pin of the-way does not carry.
 - **Origin:** none
 
-*Rationale:* the borrowed skills provide design, test and review methods, while the-way must keep
-control of task sources, binding foundation approvals and the single human review point. Naming
-the version makes the dependency visible when the process is pinned in a product. When a spec is
-written and how a plan is written are the-way's own (WAY-135, WAY-136), so the methods adopted here
-are those a cycle uses whenever its stage comes. The agent doing the work needs the complete
-method, while loading it again for coordination spends attention without performing that work.
-Where the-way sets itself how the review of the whole change ends and where its findings go, the
-steps of the borrowed methods that settle the same give way, so that no borrowed step rules alone
-on what the-way puts before the human.
-*Rejected:* adopting the complete Superpowers workflow with its intermediate human gates — it would
-interrupt the delegated cycle; copying the skill bodies into the orchestrator — it would create a
-second implementation of those methods; reading every delegated method in the orchestrator too
-— it repeats context already held by the agent that applies it; every step of the borrowed review
-methods kept — the orchestrator would rule alone on findings the reviewer still holds against the
-change.
+*Rationale:* the-way pinned in a product carries every method its cycle uses, so the cycle runs the
+same in every harness and its methods change only with the pin. The agent doing the work needs its
+whole method, while loading it again for coordination spends attention without doing that work.
+The request is where the human judges the cycle's work, so an approval a stage asks for is the
+orchestrator's provisional one.
+*Rejected:* methods of an outside plugin, with or without a required version — the cycle overrides
+their steps, keeps their log beside its record, and a product meets whichever version its harness
+has installed; every method written into the one cycle skill — the orchestrator would read every
+stage's method; a workflow with intermediate human gates — it would interrupt the delegated cycle;
+reading every method in the orchestrator too — it repeats context the agent applying it already
+holds.
 
 ### WAY-126 — How does a projected entry enter the foundation?
 
 A projected entry of an approved project definition enters the product's foundation in the
-foundation step of the first task whose code makes it true — the task the plan assigns, or a task
+change of the first task whose code makes it true — the task the plan assigns, or a task
 that uses the definition as a source only, even where the plan assigns the entry to another task —
 whole, in the wording the readiness gate approved, with the projected terms and environment facts
 it uses or rests on and with no record of approval copied from the gate, since the merge of the
@@ -3138,9 +3115,8 @@ task's request brings it in; where the code makes only part of it true, the agen
 and the human accepts its meaning at the merge (WAY-114). The task the plan assigns writes what of
 the entry the foundation does not yet hold, and a projected entry no code makes true. The return
 step reads the projected entries of the task's sources as well as the foundation, writes one the
-code makes true that the foundation step missed — an invariant with a check by an agent that did
-not write the code it covers, run on that code — and writes a new entry only for a rule none of
-them states.
+code makes true that the foundation step missed — an invariant with its test run on that code — and
+writes a new entry only for a rule none of them states.
 
 - **Scope:** project-level, task-cycle, decisions, invariants, glossary, environment-facts,
   part-map
@@ -3161,16 +3137,14 @@ them states.
 
 *Rationale:* a projected entry is wording a human already settled at the gate, and the task
 whose code first makes it true is the one that can show it holds; entering with that code keeps
-the foundation describing the present product and keeps one entry per rule. Writing it in the
-foundation step keeps the order a foundation change has: the entry, and an invariant's test, are
-written before the code that follows. A part of an entry is wording the gate did not
-approve in that form, so its meaning reaches the human at the merge.
+the foundation describing the present product and keeps one entry per rule. A part of an entry is
+wording the gate did not approve in that form, so its meaning reaches the human at the merge.
 *Rejected:* holding a projected entry back for the task the plan assigns — the foundation would
 lag behind the code it describes; a return step that searches only the current foundation — a
 rule settled in a definition comes back as a second entry under another name; carrying a
 shortened entry as approved — the foundation would gain binding sentences no human approved in
-that form; rewriting the code a late-found projected invariant covers — a check by an agent that
-did not write the code guards it without a second implementation.
+that form; rewriting the code a late-found projected invariant covers — its test, seen failing
+once and read by the review of the change, guards it without a second implementation.
 
 ### WAY-127 — How does a session working on the-way itself reach the-way's skills?
 
@@ -3444,8 +3418,8 @@ another entry, and otherwise the human accepts the entry's meaning at the merge 
 - **Relations:** derives from WAY-115 · narrows WAY-114
 - **Verification:** an agent compares the task document, or the cycle, with the decision:
   - complies: a task whose human settled in refinement that an exported record keeps its owner
-    carries that row, and its cycle writes a decision with that meaning in its foundation step,
-    before the code, and names it in the request; a task whose refinement found nothing carries the
+    carries that row, and its cycle writes a decision with that meaning in the same change as its
+    code and names it in the request; a task whose refinement found nothing carries the
     counting line with none below it; in an orchestrated round the project orchestrator shows the
     candidate table and required challenge questions while the refiner records the human's answers;
   - violates: the cycle writes the entry with another meaning, or leaves out a kept settlement
@@ -3489,8 +3463,8 @@ can hold the change or it needs a plan, using the same judgment as before implem
   WAY-126 · derives from WAY-134
 - **Verification:** an agent compares a cycle with the decision:
   - complies: a task whose rows of *Settlements to record* carry its two decisions and its invariant
-    proceeds without a spec, and the invariant's check comes from an agent given only the sentence
-    and its method; a task whose part-map change follows from the file it adds, with no other way
+    proceeds without a spec, and the review reads the invariant's test against its sentence; a
+    task whose part-map change follows from the file it adds, with no other way
     open, proceeds without a spec; an agent that finds the task needs a decision the task does not
     carry returns a report without code, the branch goes back to its base, and a fresh agent writes
     the spec; a reviewed spec is followed by one author without a plan when the change still
@@ -3505,87 +3479,70 @@ can hold the change or it needs a plan, using the same judgment as before implem
 whose agreement with the current entries has to be checked before code is written on it; where the
 task's document carries every entry, a spec restates what the human already settled and its review
 finds nothing the reviews of the code would miss. An invariant the document carries is kept from
-fitting the code by the separate authors of its sentence, its check and the code (WAY-69), not by a
-spec. A choice found while the code is made cannot be weighed apart from that code, so the attempt
-goes, its slices already made among them, since the spec may change what they made, and a fresh
-agent designs from the task and the report. Settling the design does not itself create work to
+fitting the code by the review that reads its test against its sentence (WAY-69), not by a spec. A
+choice found while the code is made cannot be weighed apart from that code, so the attempt goes,
+its slices already made among them, since the spec may change what they made, and a fresh agent
+designs from the task and the report. Settling the design does not itself create work to
 divide; the extent of the settled change decides whether a plan earns its cost.
 *Rejected:* a spec for every task that changes the foundation — almost every task changes it, and
 the spec would restate entries the human settled at a large share of the cycle's cost; no spec for
 any task — an entry an agent designs would reach the code unchecked against the current entries;
 an attempt that met an open design choice kept and completed — a spec would be written around
 partial code; the agent of that attempt writing the spec — the spec would carry the shape of the
-abandoned code; a spec for every task that writes an invariant — its separate authors already keep
-its check apart from the code.
+abandoned code; a spec for every task that writes an invariant — the review already reads its
+test against its sentence.
 
 ### WAY-136 — When does a task's change need a plan, and who makes and reviews it?
 
-A change that, as the orchestrator judges from the task document in step 4 before implementation,
-one agent can hold is made without a plan by one author, who writes its foundation entries, its
-code and its return step, while an invariant's sentence and its check come from two other agents
-(WAY-69); the same judgment follows a reviewed spec, and an author that finds the change too large
-returns a report without code, its attempt is discarded with the foundation entries it wrote,
+A change that, as the orchestrator judges from the task document before implementation, one agent
+can hold is made without a plan by one author, who writes its foundation entries, its code and its
+return step; the same judgment follows a reviewed spec, and an author that finds the change too
+large returns a report without code, its attempt is discarded with the foundation entries it wrote,
 and a planner divides the change. Every other change gets a plan written with the-way's skill
-`plan-task`, which divides it into slices and holds no code, recommends useful slices that can be
-worked on and reviewed separately and identifies possible parallel work independently of the
-chosen execution skill, while the orchestrator records before execution whether that opportunity
-can be used, from dependencies, shared files or mutable state, separate review and the skill's
-restrictions; each slice is made by an agent of its own, and a slice that proves too large for it
-is discarded with its code and goes back to the planner to be split. A one-author change and
-every slice are reviewed by an agent that did not make them, and a change of more than one slice
-then gets one review of the whole change, while the review of a one-author change or of a plan's
-only slice is the review of the whole change; the one-author review also checks coverage of the
-task, every row of its *Settlements to record* and every projected entry it carries, and that
-foundation entries precede the code that depends on them.
+`plan-task`, which divides it into slices and holds no code; the slices are made one after another
+in the plan's order, each by an agent of its own, and a slice that proves too large for it is
+discarded with its code and goes back to the planner to be split. A one-author change and every
+slice are reviewed by an agent that did not make them, and a change of more than one slice then gets
+one review of the whole change, while the review of a one-author change or of a plan's only slice is
+the review of the whole change; that review also checks coverage of the task, every row of its
+*Settlements to record* and every projected entry it carries.
 
 - **Scope:** task-cycle
-- **Based on:** observation of installed Superpowers 6.4.1 on 2026-10-10 using `sed -n` and
-  `grep -n` in Git Bash on Microsoft Windows NT 10.0.26300.0; source root
-  `C:/Users/Mariusz/.claude/plugins/cache/claude-plugins-official/superpowers/6.4.1/skills/`:
-  `writing-plans/SKILL.md` — "Each step is one action (2-5 minutes)" and, under "No
-  Placeholders", "Steps that describe what to do without showing how (code blocks required for
-  code steps)"
+- **Based on:** none
 - **Relations:** derives from WAY-13 · derives from WAY-69 · derives from
   WAY-126 · derives from WAY-134
 - **Verification:** an agent compares the cycle and any plan with the decision:
   - complies: the orchestrator selects one author from a settled task, including its foundation
     entries, without first writing a plan; the author does its return step and another agent's
-    whole-change review checks task, settlement and projected-entry coverage and foundation order;
-    an invariant's sentence, check and code have different authors; a reviewed spec is followed by
-    the same size judgment; an oversized author's attempt and its foundation entries are discarded
-    before planning; a change of several slices has each reviewed and then one whole-change review,
-    while a plan's only slice needs no duplicate review; an outgrown slice is discarded and split;
-    a plan identifies independent slices although the execution skill forbids parallel executors,
-    and the orchestrator records sequential execution with that restriction; shared mutable state
-    prevents a proposed parallel run;
+    whole-change review checks task, settlement and projected-entry coverage; a reviewed spec is
+    followed by the same size judgment; an oversized author's attempt and its foundation entries
+    are discarded before planning; a change of several slices has them made one after another,
+    each reviewed, and then one whole-change review, while a plan's only slice needs no duplicate
+    review; an outgrown slice is discarded and split;
   - violates: a small task needs a plan merely because it writes foundation entries or follows a
-    spec; the orchestrator writes a plan to decide whether to omit it; the code author also writes
-    the invariant sentence or check; an author reviews its own work, or its whole-change review
-    omits the coverage and order checks because there was no plan; an oversized author's entries
-    survive its discarded attempt; a plan holds code or uses Superpowers `writing-plans`; outgrown
-    slice code is kept; the planner suppresses useful independent slices because of the execution
-    skill or creates unnecessary slices to claim parallel work; the orchestrator treats different
-    files alone as proof of independence or overrides the skill's restriction.
+    spec; the orchestrator writes a plan to decide whether to omit it; an author reviews its own
+    work, or its whole-change review omits the coverage checks because there was no plan; an
+    oversized author's entries survive its discarded attempt; a plan holds code; outgrown slice
+    code is kept; two slices are made at once.
 - **Origin:** none
 
 *Rationale:* a plan earns its cost by dividing a change into work an agent can hold and a reviewer
 can read separately; where the change fits an author, repeated reading and handoffs add cost
 without adding a check of the finished change. The risk is that the author fits its foundation to
-its code; independent review and assessment, together with separate invariant authors, keep that
-choice open to challenge. An incorrect size judgment costs an abandoned attempt, and discarding
-its entries as well as its code keeps the later division from inheriting a failed shape. A useful
-division outlives the restrictions of an execution method, while the execution ruling prevents
-work whose dependencies or shared state make parallel execution unsafe.
+its code; the review by an agent that made none of it keeps that choice open to challenge. An
+incorrect size judgment costs an abandoned attempt, and discarding its entries as well as its code
+keeps the later division from inheriting a failed shape. Slices made one after another each start
+from the work before them, in one worktree, with no shared state to settle between them.
 *Rejected:* a plan for every change, including a small plan used only to choose the route — it
 charges for division where none is needed; lighter preparation only for changes leaving the
 foundation unchanged — foundation work is common and does not itself require division; lighter
-review, assessment or gate for a small change — size does not establish that its meaning stayed;
-small work outside the task cycle — duplicate rules of the record, request and return step drift;
-Superpowers `writing-plans` — code written ahead still needs review; a whole-change review after
-the review of a plan's only slice — it reads the same range again; an outgrown attempt kept and
-completed — its division would be written around unfinished work; a plan shaped only by the
-execution method — it hides useful independent work; parallel execution from different file names
-alone — shared state and dependencies can still join the work.
+review or gate for a small change — size does not establish that its meaning stayed; small work
+outside the task cycle — duplicate rules of the record, request and return step drift; a plan that
+writes the code ahead — code written ahead still needs review; a whole-change review after the
+review of a plan's only slice — it reads the same range again; an outgrown attempt kept and
+completed — its division would be written around unfinished work; slices made side by side — each
+needs a worktree of its own and a ruling on their dependencies and shared state before it runs, a
+cost the change meets without gaining a check.
 
 ### WAY-137 — What decides between places to run that the simplest and cheapest option leaves tied?
 
@@ -4337,78 +4294,81 @@ evidence; an unlimited wait assumed for every tool — capabilities and active i
 
 The independent code reviewer reads the full diff of a one-author change or planned slice, while
 the task-cycle orchestrator uses its changed-file list with added and removed line counts and the
-reviewer's verdict for routine progression. A question, finding or disputed or incomplete evidence
+first line of the reviewer's report, `PASS` or `FAIL` with the head commit, for routine
+progression. A question, finding or disputed or incomplete evidence
 still calls for the orchestrator's relevant source and report reading under WAY-148.
 
 - **Scope:** task-cycle
 - **Based on:** none
 - **Relations:** derives from WAY-136 · derives from WAY-148
 - **Verification:** an agent compares the review range and coordination record with the change:
-  - complies: the independent reviewer reads the entire committed range and returns its verdict,
-    while the orchestrator uses that verdict and the range's file and line-count summary;
+  - complies: the independent reviewer reads the entire committed range and returns `PASS` or
+    `FAIL`, while the orchestrator uses that line and the range's file and line-count summary;
   - violates: the reviewer sees only a summary, or the orchestrator reads the full diff again
     for routine progression; an unresolved finding is settled without reading its evidence.
 - **Origin:** none
 
 *Rationale:* the independent reviewer already reads the change for correctness, so repeating that
 read in coordination costs attention. The trade-off is that coordination does not catch what the
-reviewer misses; independent foundation assessment where required and human review remain.
+reviewer misses; the human's review of the request remains.
 *Rejected:* the orchestrator routinely reading the full diff beside the reviewer — duplicated
 reading dominates coordination; giving the reviewer only a summary — the actual change escapes review.
 
 ### WAY-159 — When does the task-cycle orchestrator rely on focused-check evidence?
 
-The author or executor runs the focused checks of a one-author change or planned slice and records
-each command, exit code and full output in the cycle's reports directory; the orchestrator relies
-on that evidence instead of rerunning those checks for routine progression. A report missing the
-command, exit code or full output is incomplete and returns to its agent for repair before dependent
-work proceeds, while a change, failure or disputed evidence still calls for affected verification.
+The author or executor runs the focused checks of its change or slice and reports each as its
+command and exit code; the orchestrator relies on that evidence instead of rerunning those checks
+for routine progression. A report missing the command or the exit code of a check it ran is
+incomplete and returns to its agent for repair before dependent work proceeds, and a claim that
+tests passed does not repair it, while a change, failure or disputed evidence still calls for
+affected verification.
 
 - **Scope:** task-cycle
 - **Based on:** none
 - **Relations:** derives from WAY-148 · derives from WAY-13
 - **Verification:** an agent compares the executor's check evidence and subsequent coordination with
   the committed range:
-  - complies: the executor records the command, exit code and full output, and the orchestrator
+  - complies: the executor reports the command and exit code of each check, and the orchestrator
     proceeds without another run; a missing exit code returns for repair; a correction runs its
     affected checks again;
-  - violates: a bare claim that tests passed substitutes for an unrecorded check, the orchestrator
+  - violates: a bare claim that tests passed substitutes for an unreported check, the orchestrator
     reruns a check solely because the executor returned, or a changed range uses stale evidence.
 - **Origin:** none
 
 *Rationale:* repeating a completed check for coordination spends time without checking another
-state. Recorded execution can be inspected when a result is uncertain; a changed state or an
-unresolved failure needs new evidence rather than reuse by habit.
+state. A command and its exit code say what ran and whether it passed, and the check can be run
+again when a result is uncertain; a changed state or an unresolved failure needs new evidence
+rather than reuse by habit.
 *Rejected:* rerunning focused checks after every return — repeated work delays the cycle; trusting
 a claim without execution evidence — a check that never ran can appear complete; never rerunning
-after a correction — the evidence would describe an earlier change.
+after a correction — the evidence would describe an earlier change; the full output of every check
+kept in a file of the cycle — the command and exit code already settle whether it passed, and a
+report naming a failure says what failed.
 
-### WAY-160 — How does the task-cycle orchestrator run and read the completed change's gate?
+### WAY-160 — How does the task-cycle orchestrator run the finished change's gate?
 
-The task-cycle orchestrator itself runs the product's full required gate on the completed change
-and keeps its full output in a file in the cycle's reports directory. Its context receives the
-command's exit code, summary, error and failure lines, warnings and every `unchecked` result,
-while the full output remains available for a question, finding or disputed or incomplete evidence
-under WAY-148.
+The task-cycle orchestrator itself runs the product's gate on the tree that goes into the request,
+and the request gives its command and exit code and names each check that failed or did not run; a
+check that did not run is unchecked, never passed.
 
 - **Scope:** task-cycle
 - **Based on:** none
 - **Relations:** derives from WAY-16 · derives from WAY-63 · derives from WAY-148
-- **Verification:** an agent compares the gate invocation, retained output and the material returned
-  to the orchestrator's context:
-  - complies: the orchestrator runs the full required gate, retains its complete output and reads
-    its exit code and summary with all errors, failures, warnings and unchecked results;
-  - violates: the focused-check reports replace the completed change's gate, the full output is
-    lost, only a green summary is returned despite warnings, or the whole output is loaded for
-    routine progression.
+- **Verification:** an agent compares the gate's run and the request with the decision:
+  - complies: the orchestrator runs the gate after the review of the whole change and again after
+    the return step changed the tree, and the request gives the command and its exit code;
+  - violates: the focused-check reports replace the gate on the finished change; the request calls
+    a check that did not run passed; the gate ran on a tree other than the one the request holds.
 - **Origin:** none
 
-*Rationale:* the completed change needs verification across the work that made it, and the
-orchestrator owns that execution. Keeping the complete evidence while bringing its actionable
-results into coordination limits context without hiding failed or unchecked work.
-*Rejected:* full gate output routinely loaded into coordination — successful detail obscures what
-needs action; an exit code alone — warnings and unchecked work can remain despite success;
-executor checks in place of the completed change's gate — the combined result is never checked.
+*Rationale:* the finished change needs verification across the work that made it, which no
+author's focused checks give, and the orchestrator owns that run. The command and its exit code
+tell the human what passed; the checks that failed or did not run, named, keep what stayed
+unchecked in view.
+*Rejected:* the gate's full output kept in a file of the cycle, with its failure lines brought into
+the orchestrator's context — the exit code and the failures named settle the same; executor checks
+in place of the gate on the finished change — the combined result is never checked; an exit code
+alone — a check that did not run would pass unseen.
 
 ### WAY-161 — Which findings of the review of the whole change are fixed, and how does the request carry the rest?
 
@@ -4423,17 +4383,9 @@ findings outside the scope become new tasks and creates them. The orchestrator m
 from one of these kinds to another.
 
 - **Scope:** task-cycle
-- **Based on:** observation of installed Superpowers 6.4.1 on 2026-10-17 using `cat -n` in Git Bash
-  (GNU bash 5.3.15) on MINGW64_NT-10.0-26300; source root
-  `C:/Users/Mariusz/.claude/plugins/cache/claude-plugins-official/superpowers/6.4.1/skills/`:
-  `requesting-code-review/code-reviewer.md` — "list every behavior you considered and set aside as
-  outside the plan or spec, one line each, with the reason. The executor rules on each line;
-  nothing you set aside is dropped silently." · "Critical (Must Fix)" · "Important (Should Fix)" ·
-  "Minor (Nice to Have)"; `requesting-code-review/SKILL.md` — "Note Minor issues for later";
-  `subagent-driven-development/SKILL.md` — "Point it at the ledger's deferred-minor and parked lines
-  so it can triage which must be fixed before merge."
+- **Based on:** none
 - **Relations:** derives from WAY-136 · derives from WAY-125 · derives from
-  WAY-140 · derives from WAY-100
+  WAY-140
 - **Verification:** an agent compares the cycle and its request with the decision:
   - complies: the review of a one-author change returns only Minor findings, and the change goes
     to its request without a fix, the request listing each of them with the reviewer's words and
@@ -4441,15 +4393,16 @@ from one of these kinds to another.
     does not ask for, the request lists it in an item of its own, and the human creates a task for
     it; the final review of a planned change returns an Important finding within the task, and a
     fix follows;
-  - violates: a fix runs for Minor findings alone; the fix after the final review of a planned
-    change takes in the deferred minor findings; the orchestrator rules on a line the reviewer
+  - violates: a fix runs for Minor findings alone; the fix after the whole-change review of a
+    planned change takes in the Minor findings of its slice reviews; the orchestrator rules on a
+    line the reviewer
     declined to judge, or moves an Important finding within the task to the list for new tasks;
     the cycle adds a task to the product's backlog itself; the Minor findings stand only in the
     cycle's reports the request links to.
 - **Origin:** none
 
 *Rationale:* the grade a reviewer gives already says how much a finding matters, so taking it as
-the line between what blocks and what does not adds no second label to the borrowed review and
+the line between what blocks and what does not adds no second label to the review and
 leaves no finding without a place; a label given against the task would let a finding tied to no
 requirement of the task pass as non-blocking. A minor finding fixed in a round of its own spends
 that round on polish, while one listed in the request with the reviewer's words stays in front of
@@ -4460,7 +4413,7 @@ orchestrator sorting them could move an inconvenient finding out of the way of t
 The human creates the new task because each product keeps its backlog where it chooses (WAY-101),
 and where that is outside the repository, only a human makes an effect there (WAY-140).
 *Rejected:* a label of its own, blocking or not, that the reviewer gives each finding against the
-task — an addition to the borrowed review, and a finding tied to no requirement of the task would
+task — a second scale beside the grade, and a finding tied to no requirement of the task would
 pass as non-blocking; the orchestrator ruling on each finding — the agent that wants the cycle
 closed decides to skip a repair; the Minor findings kept only in the cycle's reports the request
 links to — nobody reads them; the cycle adding the new task to the product's backlog itself — where
@@ -4474,92 +4427,76 @@ the request's list, whose reading is the remedy.
 
 ### WAY-162 — How does a code review of a task's change end when its findings block?
 
-In the review of the whole change — of a one-author change, or the final review of a planned
-change's whole branch — and in each code review the cycle runs after it, for a settlement of the
-independent assessment, for the reconciliation with the target branch and for the human's remarks
-on the request, the findings that block, as WAY-161 grades them, get one fix and one review of that
-fix, and a new Critical or Important finding in the fix itself counts as one that remains. Where a
-blocking finding remains after that review of the fix, no third round runs, the orchestrator
-neither rules on it nor carries it into the settlements of the independent assessment, and the
-cycle opens a draft request marked `blocked` that lists each remaining blocking finding with its
-place in the code and its reason, what the fix tried, and the time, models and tokens the cycle has
-used so far, from its record of stages, with the number of review rounds. In the code reviews
-after the review of the whole change, the findings that do not block go unfixed to the request's
-lists as WAY-161 gives them; the fix loop of each single slice of a plan stays as WAY-125 and
-WAY-136 adopt it.
+In every code review of a task's cycle — of a slice of its plan, of the whole change, of the
+return step's commits, of the reconciliation with the target branch and of a change made for the
+human's remarks on the request — the findings that block, as WAY-161 grades them, get one fix and
+one review of that fix, and a new Critical or Important finding in the fix itself counts as one
+that remains. Where a blocking finding remains after that review of the fix, no third round runs,
+the orchestrator does not rule on it, no further slice is made, and the cycle opens a draft request
+marked `blocked` that lists each remaining blocking finding with its place in the code and its
+reason, what the fix tried, and the time, models and tokens the cycle has used so far, from its
+record of stages, with the number of review rounds. In the code reviews after the review of the
+whole change, the findings that do not block go unfixed to the request's lists as WAY-161 gives
+them.
 
 - **Scope:** task-cycle
-- **Based on:** observation of installed Superpowers 6.4.1 on 2026-10-17 using `cat -n` in Git Bash
-  (GNU bash 5.3.15) on MINGW64_NT-10.0-26300; source root
-  `C:/Users/Mariusz/.claude/plugins/cache/claude-plugins-official/superpowers/6.4.1/skills/`:
-  `subagent-driven-development/SKILL.md` — "Adjudicate any residual findings as in the task loop's
-  breaker: park with rulings, or rule on the load-bearing ones and ledger what you decided." ·
-  "There is no second fix wave — residual load-bearing findings surface to your human partner when
-  finishing-a-development-branch presents the options." · "New Critical/Important breakage in the
-  fix diff joins the open findings list."
+- **Based on:** none
 - **Relations:** derives from WAY-161 · derives from WAY-136 · derives from
-  WAY-125 · derives from WAY-100
+  WAY-125
 - **Verification:** an agent compares the cycle and its request with the decision:
   - complies: after the review of the fix of a one-author change an Important finding stays open,
     and the cycle runs no further fix and opens a draft request marked `blocked` with that
-    finding's place and reason, what the fix tried and the cycle's cost so far; the review of a
-    settlement of the independent assessment ends the same way after one fix; a Minor finding of
-    the review of the reconciliation with the target branch is listed in the request; a slice's fix
-    loop runs its rounds as the borrowed method gives them;
-  - violates: the orchestrator parks a finding left after the review of the final fix and marks
-    the request ready; a third round of fixes runs; a finding left after the review of the fix is
-    moved into the settlements of the independent assessment; a new Important finding in the fix
-    is left out of the blocked request because the findings it set out to fix were fixed; a Minor
-    finding of a later code review stands only in that review's report.
+    finding's place and reason, what the fix tried and the cycle's cost so far; a slice whose fix
+    leaves a blocking finding ends the cycle the same way, and its later slices are not made; a
+    Minor finding of the review of the reconciliation with the target branch is listed in the
+    request;
+  - violates: the orchestrator rules on a finding left after the review of the fix and marks the
+    request ready; a third round of fixes runs, on a slice or on the whole change; a new Important
+    finding in the fix is left out of the blocked request because the findings it set out to fix
+    were fixed; a Minor finding of a later code review stands only in that review's report.
 - **Origin:** none
 
-*Rationale:* one fix and one review of it settle an ordinary task; a finding that survives the
-review of its fix shows a loop that further rounds do not close, and each further round costs as
-much as the one before it. The orchestrator wants the cycle closed, so a ruling of its own on what
-the reviewer still blocks would let a change the reviewer did not accept reach the request as
+*Rationale:* one fix and one review of it settle an ordinary piece of work; a finding that survives
+the review of its fix shows a loop that further rounds do not close, and each further round costs
+as much as the one before it. The orchestrator wants the cycle closed, so a ruling of its own on
+what the reviewer still blocks would let a change the reviewer did not accept reach the request as
 ready; the blocked request puts that call before the human, with what the fix tried and what the
 cycle has cost, so the human weighs going on against its price. A new Critical or Important finding
 in the fix is one the fix made, and counting it as remaining keeps a fix from trading one blocking
-finding for another. The same end holds for every code review after the review of the whole
-change, so that no later review becomes a way round it, while the fix loop of a single slice keeps
-the borrowed method's own end, because the review of the whole change still reads that slice and a
-stop at the human over findings in one slice would halt the whole cycle. The findings of those
-later reviews that do not block reach the request as WAY-161's do, because a list the request only
-links to is a list nobody reads.
-*Rejected:* the orchestrator ruling on the findings left after the review of the final fix, as the
-borrowed method does — a change the reviewer did not accept reaches the request as ready; this end
-on the one-author route alone — on the planned route the orchestrator would still rule on the
-remaining findings itself; the same end for the fix loop of every slice — it replaces the borrowed
-method's rounds and stops the cycle at the human over findings in one slice; a report of the
-remaining findings without a request, in conversation or in the cycle record — the request is the
-one place where the human judges the cycle's work, and a report in conversation is lost with the
-session; a remaining finding carried into the settlements of the independent assessment, and no
-bound for the code reviews after the review of the whole change — the orchestrator would rule on
-the remaining findings after all; the findings of those later reviews that do not block kept in
-their reports, which the record links — a list the request only links to is a list nobody reads;
-one more round for a finding the fix introduced — a fix could trade one blocking finding for
-another without end.
+finding for another. The bound holds for a slice as for the whole change: rounds cost the same
+there, and a later slice built on one its review did not accept would carry the finding forward.
+The findings of later reviews that do not block reach the request as WAY-161's do, because a list
+the request only links to is a list nobody reads.
+*Rejected:* the orchestrator ruling on the findings left after the review of the final fix — a
+change the reviewer did not accept reaches the request as ready; up to five rounds of fixes on a
+slice, the orchestrator ruling on what remains after them — each round costs as much as the last,
+and the orchestrator rules in the end after all; a report of the remaining findings without a
+request, in conversation or in the cycle record — the request is the one place where the human
+judges the cycle's work, and a report in conversation is lost with the session; no bound for the
+code reviews after the review of the whole change — the orchestrator would rule on the remaining
+findings after all; the findings of those later reviews that do not block kept in their reports,
+which the record links — a list the request only links to is a list nobody reads; one more round
+for a finding the fix introduced — a fix could trade one blocking finding for another without end.
 
 ### WAY-163 — What does the cycle run before it opens a request its code review blocked?
 
 Before the cycle opens a request that a remaining blocking finding blocks (WAY-162), it runs the
-product's full required gate on the change and writes its cycle record with its record of stages,
-while it runs neither the reconciliation with the target branch, nor the return step, nor the
-independent assessment on code its review has not accepted, and the request names each of these
-that has not run on that code. After the human's decision on the request, the work on its branch
-starts with that reconciliation and runs the others on code that has passed review or that the
-human accepted despite the finding.
+product's gate on the change and writes its cycle record with its record of stages, while it makes
+no further slice and runs neither the reconciliation with the target branch nor the return step on
+code its review has not accepted, and the request names each of these that has not run on that
+code. After the human's decision on the request, the work on its branch starts with that
+reconciliation and runs the others on code that has passed review or that the human accepted
+despite the finding.
 
 - **Scope:** task-cycle
 - **Based on:** none
 - **Relations:** derives from WAY-162 · derives from WAY-11 · derives from
   WAY-10
 - **Verification:** an agent compares the cycle and its request with the decision:
-  - complies: a cycle blocked after the review of the final fix runs the full gate, writes its
-    record, opens the blocked request naming the reconciliation with the target branch, the return
-    step and the independent assessment as not run, and runs them once the human accepts the code
-    despite the finding; a cycle blocked by the review of a settlement of the independent
-    assessment names only what has not run on the code it holds;
+  - complies: a cycle blocked after the review of the final fix runs the gate, writes its record,
+    opens the blocked request naming the reconciliation with the target branch and the return step
+    as not run, and runs them once the human accepts the code despite the finding; a cycle blocked
+    by the review of a slice names the slices not made as well;
   - violates: the return step runs on code its reviewer blocked; the target branch is merged and
     its affected code review run before a request blocked by an earlier review; the blocked request
     opens without a run of the gate on the change; a request whose code the human accepted despite
@@ -4569,16 +4506,16 @@ human accepted despite the finding.
 *Rationale:* work an agent does on code its review has not accepted is done again once the fix the
 human's decision calls for is made, while a run of the gate costs little and shows the human where
 the code stands against the rest of the product's checks, and the cycle record holds the cost the
-request names. The return step and the independent assessment still come before any merge (WAY-11,
-WAY-10), so leaving them out before a blocked request moves them rather than drops them, even where
-the human's decision changes no code. The reconciliation with the target branch waits with them,
-because it would draw a code review and an assessment of its own on that code, and the work after
-the human's decision begins by merging the target branch in any case.
+request names. The return step still comes before any merge (WAY-11), so leaving it out before a
+blocked request moves it rather than drops it, even where the human's decision changes no code. The
+reconciliation with the target branch waits with it, because it would draw a code review of its own
+on that code, and the work after the human's decision begins by merging the target branch in any
+case.
 *Rejected:* every step up to the request run before the blocked request — agents work on code the
 review did not accept and repeat that work after the fix; the cycle record and the cost alone — the
 human would not see where the code stands against the rest of the product's checks; the
-reconciliation with the target branch before the blocked request — its review and assessment would
-run on code the review did not accept, and the merge is made again after the fix.
+reconciliation with the target branch before the blocked request — its review would run on code the
+review did not accept, and the merge is made again after the fix.
 
 ### WAY-164 — What does the author of a change check of its own work before review?
 
@@ -4599,8 +4536,8 @@ request lists what each such check showed among its test evidence.
     executor of each slice reports the same for its slice; the reviewer is given those reports, and
     the request lists each check among its test evidence;
   - violates: an author reports only that its suite passes; the executor of a slice reports no such
-    check; the request leaves out what the checks showed; the author's check stands in for the
-    deliberate break of an invariant's check.
+    check; the request leaves out what the checks showed; the author's check stands in for an
+    invariant's test seen failing.
 - **Origin:** none
 
 *Rationale:* a suite its author writes passes because it tests what the author meant, so a passing
@@ -4609,8 +4546,7 @@ misses finds what the author can still catch before a reviewer spends a round on
 of each slice does the same against its slice, so that a larger change does not reach review with
 no agent having attacked its own work. The report is the reviewer's material, and the request
 shows the human what the attack found beside the other test evidence. The check does not replace
-the deliberate break the reviewer writes for an invariant's check, and it is never that check,
-which an agent other than the code's author writes (WAY-69).
+an invariant's test, which is seen failing once in its own right (WAY-08).
 *Rejected:* the author of a one-author change alone — in a larger change made from a plan, no agent
 would attack its own work before review.
 

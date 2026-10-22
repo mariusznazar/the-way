@@ -36,12 +36,12 @@ not authorize running it.
   smaller active-instruction limit; actual timeout/interruption if waiting had to resume>
 - Whole-change review: <reviewer other than the author, by `review-change`; range by base and head
   commits, the report's first line and its path, changed files with added and removed line counts;
-  coverage of every task item, settlement row and carried projected entry, source fidelity and
-  entries before dependent code; on the planned route, also the plan review's evidence>
+  coverage of every task item, settlement row and carried projected entry, and source fidelity;
+  on the planned route, also the plan review's evidence>
 - Review rounds: <for each code review whose findings blocked — of the whole change, of the
-  reconciliation with the target branch, of a correction — its range and report, the blocking
-  findings, the fix range and the review of that fix; any blocking finding that remained after it;
-  a slice's rounds stand in its row of Slices; or none>
+  return step, of the reconciliation with the target branch, of a correction — its range and
+  report, the blocking findings, the fix range and the review of that fix; any blocking finding
+  that remained after it; a slice's rounds stand in its row of Slices; or none>
 - Weakest-point checks: <for the author and each executor: the requirement named, the check, what
   it showed and the report that states it>
 
@@ -55,9 +55,12 @@ attempt.
 | Slice | Base | Executor and model | Head | Mechanical check | Review, fix and review of the fix |
 |---|---|---|---|---|---|
 
-Only on the planned route, one row per slice, made in the plan's order. Write the base before the
-slice's executor is dispatched. The mechanical check is the orchestrator's after the executor
-returns: what it compared and any mismatch it passed to the reviewer.
+Only on the planned route, one row per slice, made in the plan's order. Where the plan lists
+foundation entries, a row `Foundation entries` comes first, with its agent and head; it shares
+slice 1's base, written before that agent is dispatched, so slice 1's review covers the entries.
+Write each base before the slice's executor is dispatched. The mechanical check is the
+orchestrator's after the executor returns: what it compared and any mismatch it passed to the
+reviewer.
 
 ## Events
 

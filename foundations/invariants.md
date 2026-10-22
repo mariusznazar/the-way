@@ -63,16 +63,6 @@ Where {merge-onto} exists, every change against {fork-point} holds, in one of it
 - **Part:** every
 - **Violated:** no
 
-## foundation-change-path
-
-No change that, against {fork-point}, alters a foundation entry runs on the path for tasks that leave the foundation unchanged.
-
-- **Method:** review
-- **Rests on:** none
-- **Derives from:** WAY-13
-- **Part:** every
-- **Violated:** no
-
 ## derived-file-content
 
 Every derived file git tracks that its generator can produce from scratch is identical to what the generator produces on the same commit, except for the values that file declares as varying between runs.
@@ -552,3 +542,4 @@ Every subprocess the plan-state reader starts runs Git.
 | guidelines-check-kind-index | withdrawn: no script of the-way checks the form of a product's guidelines; the review of a change compares them with the templates, and `elements/common/foundation_check.py` reports a decision, an invariant or a part they name that the foundation does not hold (WAY-170) | none |
 | guidelines-check-exemplar | withdrawn: no script of the-way checks the form of a product's guidelines; the review of a change compares them with the templates, and `elements/common/foundation_check.py` reports a decision, an invariant or a part they name that the foundation does not hold (WAY-170) | none |
 | guidelines-check-example-files | withdrawn: no script of the-way checks the form of a product's guidelines; the review of a change compares them with the templates, and `elements/common/foundation_check.py` reports a decision, an invariant or a part they name that the foundation does not hold (WAY-170) | none |
+| foundation-change-path | withdrawn: a task's cycle chooses no path by whether its change alters the foundation; every change gets the same tests and review (WAY-13) | none |

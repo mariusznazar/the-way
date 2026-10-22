@@ -105,7 +105,7 @@ never dispatch a subagent.
 
 Write the full report to the dispatch's report path:
 
-- **Status:** `done`, `done with concerns`, `returned` or `blocked` (section 5);
+- **Status:** `done`, `done with concerns`, `questions`, `returned` or `blocked` (section 5);
 - the files changed, with added and removed line counts, and the commits;
 - each check you ran as its command and exit code, the failing run of each test written first and
   of each invariant's test included; each check you did not run, with the reason;
@@ -118,4 +118,7 @@ Write the full report to the dispatch's report path:
   cause marked as a guess.
 
 Return to the orchestrator the status, the commits, a one-line check result and the report path.
-Send a question back instead of guessing where the work cannot proceed without an answer.
+Where the work cannot proceed without an answer, do not guess: commit what you have, return every
+question you can already see in one batch with the status `questions`, each with the answer you
+recommend, and wait to be resumed with the answers. The status `blocked` is for a missing fact or
+permission (section 5) and for a question the cycle's foundation step leaves to the human.

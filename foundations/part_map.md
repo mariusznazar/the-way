@@ -91,7 +91,7 @@ refinement and evidence-backed upkeep of task states.
 
 ## task-cycle
 
-The part answers for the steps a task runs through and for how sharply a change is checked along
+The part answers for the steps a task runs through and for the review its change gets along
 them.
 
 - **Files:** task-cycle/**

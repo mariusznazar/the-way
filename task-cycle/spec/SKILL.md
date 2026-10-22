@@ -101,5 +101,5 @@ broke besides.
 The designer writes the spec to its path and the full report to the dispatch's report path: the
 questions sent and their answers, the ways weighed and why the rejected ones lost, and the result
 of the four checks, and returns with the status `done`. The reviewer writes its report to its own
-path and returns its first line. Each gives the orchestrator its paths. The boundary is the reviewed spec: return before
-any plan, slice or code.
+path and returns its first line. Each gives the orchestrator its paths. The boundary is the
+reviewed spec: return before any plan, slice or code.
