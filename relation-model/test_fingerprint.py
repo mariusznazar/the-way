@@ -2,7 +2,7 @@
 characters of the SHA-256 digest of the text in UTF-8, after every run of spaces and line breaks
 becomes one space and both ends are trimmed.
 
-Every expected fingerprint is written out, computed apart from the script under test (WAY-69):
+Every expected fingerprint is written out, computed apart from the script under test:
 the texts below that differ only in spaces and line breaks all normalize to WORDING, whose
 digest begins with WORDING_FINGERPRINT.
 

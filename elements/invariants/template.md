@@ -74,10 +74,6 @@ gives (WAY-64).
   broken for a moment (WAY-08). No other break is written for it, and it takes no agent of its own
   (WAY-69). A test protecting elements of an earlier version is accepted the same way when that
   history holds none yet (WAY-223).
-- A test takes the input it asserts on and the value it expects written out, wherever the code its
-  invariant is about would otherwise compute either; only the side it compares against comes from
-  the run (WAY-69). Which files a test names, so that a fixture or a builder of its input cannot be
-  changed underneath it, is not settled.
 - A test that gives different verdicts on one commit is fixed as any test of the product is; the
   foundation records no quarantine for it (WAY-68).
 - A change may alter an invariant test in any step of its task, and names in its request each

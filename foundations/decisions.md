@@ -1669,37 +1669,28 @@ other fault; a green run again hides the fault instead of answering it.
 — a mechanism and a date a human moves, kept for a rare case; a count of passes in a row — it hides
 the fault.
 
-### WAY-69 — Who writes an invariant's sentence, its check and its deliberate break, and what may the check compute for itself?
+### WAY-69 — Who writes an invariant's sentence, its check and its deliberate break?
 
 An invariant's sentence, its test and the code the test covers may come from one agent, and no
 deliberate break is written for the test beyond seeing it fail once (WAY-08); the agent reviewing
-the change, which made none of it, reads the test against the sentence. A test that cites an
-invariant takes the input it asserts on and the value it expects written out, wherever the code its
-invariant is about would otherwise compute either; only the side it compares against comes from
-the run.
+the change, which made none of it, reads the test against the sentence.
 
 - **Scope:** invariants, decisions, part-map, gate, task-cycle, relation-model
 - **Based on:** visible-scoring-reward-hacking · oracle-in-loop-building
 - **Relations:** derives from WAY-08
 - **Verification:** an agent compares the change with the decision:
   - complies: the author of a change writes an invariant's sentence, its test and the code, sees
-    the test fail first, and an agent that made none of it reviews the change; a guard's test
-    carries its expected wording as literals;
+    the test fail first, and an agent that made none of it reviews the change;
   - violates: a cycle pauses the author while two other agents write an invariant's sentence and
-    its test; a test builds its reference by calling the code its invariant is about, and expects
-    that call's message; a test reads the value it expects, at run time, from the file its
-    invariant is about.
+    its test.
 - **Origin:** none
 
-*Rationale:* two sides computed by one code move together, and the test stays green unseen. A test
-fitted to the code by the agent that wrote both meets the reviewer, which reads it against the
-sentence without having written either (WAY-10), so the writing needs no agents of its own. This
-takes the visible-scoring finding across publishers (WAY-85).
+*Rationale:* a test fitted to the code by the agent that wrote both meets the reviewer, which reads
+it against the sentence without having written either (WAY-10), so the writing needs no agents of
+its own. This takes the visible-scoring finding across publishers (WAY-85).
 *Rejected:* three different agents for the sentence, the test and the code, with the deliberate
 break written by the reviewer — a pause and two agents for each invariant, for what the review
-already reads; hiding tests from the executor — it costs honest work; the expected value alone
-written out — the input still moves with the code; a `data:` line naming each file a verdict leans
-on — every tracked file becomes the data of some test.
+already reads; hiding tests from the executor — it costs honest work.
 
 ### WAY-71 — Does every field of a foundation entry appear in every entry, and what may it hold?
 
@@ -5691,10 +5682,10 @@ clock, while a product's change is audited for what it brings (WAY-206). The thr
 is a product's own choice, every severity among the ways (WAY-206). From the study, style blocks a
 change too, because a remark on style never blocks in the review of code (WAY-161) and the human
 does not judge style; fixing every instance across the code before a check is turned on would grow
-the task that brings a linter into cleaning the whole product, and the pair of invariants of WAY-205
-replaces it; a check that sometimes blocks sound code could be passed only by changing a decision.
-What was seen in those sources is described here as well as quoted, so a reader need not open them
-(WAY-27).
+the task that brings a linter into cleaning the whole product, and the linter's invariant marked
+violated until the code is cleaned (WAY-205) replaces it; a check that sometimes blocks sound code
+could be passed only by changing a decision. What was seen in those sources is described here as
+well as quoted, so a reader need not open them (WAY-27).
 *Rejected:* Open Mercato's practices taken whole — its review, lessons and limits on instruction
 files would bind every product; its steps followed with no decision naming them — an adopted step
 and a resemblance could not be told apart (WAY-100); the content of each piece restated here beside
@@ -5702,80 +5693,68 @@ the decision that carries it — two binding copies drift apart (WAY-19).
 
 ### WAY-196 — What checks a binding rule of coding guidelines?
 
-Every binding rule of a product's coding guidelines names at least one invariant that checks it, by
-a script where a script can decide it and otherwise by an agent whose method sets k of n runs, never
-by an agent judging whether new code follows the exemplar of its kind, and a rule that neither a
-script nor such an agent can check is an example, not a rule, whatever decision it names. In the
-guidelines of the coding discipline this decision prevails over WAY-168, under which a rule naming
-its decision binds with no invariant.
+The rule of a product's coding guidelines on each of its standing checks names the invariants of
+that check the template of the coding discipline gives, and each rule a script checks of an
+exemplar names the invariant whose test checks it (WAY-198). Any other rule of a product's coding guidelines names an invariant only
+where a cheap test checks it on a convention of the product's code, and otherwise none, the review
+of each change it reaches comparing the change with it, as WAY-168 gives every rule of guidelines.
 
 - **Scope:** product-guidelines, invariants
 - **Based on:** none
-- **Relations:** narrows WAY-168 · derives from WAY-08
-- **Verification:** for the choice between a script and an agent, an agent compares the change
-  with the decision:
-  - complies: the rule that an endpoint validates its input as the exemplar does names a script's
-    invariant that every file of the kind calls the shared validation; the rule that no error is
-    swallowed silently names an invariant an agent checks, passing in two of three runs; how the
-    exemplar names its variables stands among the examples;
-  - violates: a rule of a kind's file names an invariant an agent checks by judging whether a new
-    endpoint follows the exemplar; a rule stands with no invariant because no script can check it; a
-    rule a script could decide is left to an agent.
+- **Relations:** derives from WAY-168 · derives from WAY-08
+- **Verification:** an agent compares the change with the decision:
+  - complies: the rule of the linter names the invariant whose test runs the rules that block over
+    the parts named; the rule that an endpoint validates its input as the exemplar does names the
+    invariant whose test finds an endpoint that does not call the shared validation; the rule that
+    no error is swallowed silently names no invariant, and the review of a change to the code
+    compares it with the rule; how the exemplar names its variables stands among the examples;
+  - violates: the rule of the formatter names no invariant though a test can run the formatter; the
+    rule that no error is swallowed silently names an invariant an agent checks in two of three
+    runs; a rule of a kind's file names an invariant an agent checks by judging whether a new
+    endpoint follows the exemplar.
 - **Origin:** none
 
-*Rationale:* coding guidelines are there to keep agents' code consistent without anyone's memory,
-and a rule only a decision carries is kept by the memory of the agent reading it; its two uses,
-moreover, are cases of an invariant (WAY-168) and need one to be run against. A script costs nothing
-per run; an agent with k of n can judge where no script decides, and its cost stays bounded because
-it runs only when a change reaches its invariant (WAY-62). An agent judging whether new code follows
-the exemplar has no sharp criterion, and how often it would flag sound code is unknown, so what of
-the exemplar no script checks stays an example (WAY-198). The price: some useful signals reach the
-agent only as an example to read. An agent's verdict can flip, and a check that flips is answered as
-WAY-68 gives it.
-*Rejected:* the decision alone binding a rule of coding guidelines — some of the rules are held only
-by an agent's memory, and their uses have no invariant to be cases of; a new kind of check that only
-warns — it changes what results the gate knows (WAY-63), far beyond guidelines; an agent for each kind
-of code judging whether new code follows the exemplar — its criterion is vague and its false alarms
-unknown.
+*Rationale:* a standing check is a run of a tool, which a test makes for little on every change, and
+what a script checks of an exemplar is a convention of the code by its nature (WAY-198), so both
+carry an invariant; a rule whose meaning only a reading can judge is read by the review that reads
+every change anyway (WAY-08, WAY-168). An agent run as the check of such a rule would cost more on
+every change than that review and could flag sound code unseen, and one judging whether new code
+follows the exemplar has no sharp criterion at all. The price: a rule with no test is kept only as
+well as the review of each change reads it.
+*Rejected:* an invariant for every rule of coding guidelines, checked by an agent with k of n runs
+where no script decides it, and a rule no such check can decide moved among the examples — the
+checks cost more than the code they guard; an agent for each kind of code judging whether new code
+follows the exemplar — its criterion is vague and its false alarms unknown.
 
-### WAY-197 — Who writes the use that breaks a rule of guidelines, and does it replace the deliberate break?
+### WAY-197 — Who writes the uses of a rule of guidelines, and are they run against its invariant's test?
 
-The use that breaks a rule of a product's guidelines is written by the author of the guidelines and
-stands beside the deliberate break the check of each invariant the rule names is accepted on, never
-in its place, so that the check is accepted only where both that use, as WAY-168 reads it, and the
-deliberate break the reviewer of the code writes from the invariant's sentence make it fail. Until a
-gate of the-way reports for an invariant how its method meets the uses of the rules naming it, the
-reviewer who writes that deliberate break also runs the method with both uses wherever a change adds
-or alters the invariant's sentence or rewrites either use or its prepared base, and records what
-it gave with each, applying WAY-223's conditions separately to prepared guideline cases and to the
-reviewer's independently prepared earlier and later inputs for the deliberate break.
+The use that follows a rule of a product's guidelines and the use that breaks it, where the rule
+gives them, are written by the author of the guidelines, each in one line, and nobody runs the test
+of an invariant the rule names with them: that test is accepted as every invariant test is, by being
+seen failing once (WAY-08).
 
 - **Scope:** product-guidelines, invariants, task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-168 · derives from WAY-69 · derives from
-  WAY-223
+- **Relations:** derives from WAY-168 · derives from WAY-08
 - **Verification:** an agent compares the change with the decision:
-  - complies: the author of a product's coding guidelines writes, as the use breaking the rule that
-    each endpoint validates its input, a short endpoint that reads its input unchecked; the reviewer
-    of the script that checks the rule breaks the invariant by removing the validation from the
-    exemplar, and records that the script fails on both and passes with the use that follows the rule;
-  - violates: the author's use breaking the rule is recorded as the deliberate break, and the
-    reviewer writes none; the author of the check writes the use breaking the rule from the check;
-    a change rewrites the use breaking a rule or its prepared base and nobody runs the check
-    with it; the reviewer reuses the author's prepared pair as the independent deliberate break.
+  - complies: the author of a product's coding guidelines gives the rule that each endpoint
+    validates its input, in one line each, an endpoint that reads its body through the shared
+    schema and one that reads it unchecked; the test of the rule's invariant is seen failing once
+    on an endpoint with its validation removed, and the change records nothing else for it;
+  - violates: the reviewer of the change writes the use that breaks the rule; a change records the
+    test's run with each use as the test's acceptance; a rule's uses stand as whole files beside the
+    test of its invariant.
 - **Origin:** none
 
 *Rationale:* a use written by the author of the guidelines teaches the agent reading them what the
-rule forbids, while the reviewer's break is usually a small, artificial change from which a reader
-learns little, and it would wait for the end of the review. Where the same agent writes the use and
-the check, the use may be fitted to the check; the reviewer's break, written from the sentence by an
-agent that wrote neither (WAY-69), keeps that out, so the use is a further case and WAY-69 stands
-as it is. The reviewer already runs the check on a break of its own making, so running it with the
-two uses costs a further run in the same place, by an agent that wrote neither the uses nor the
-check.
+rule asks and forbids, while a small, artificial break written by another agent teaches a reader
+little and would wait for the end of the review. The test of the invariant already shows it can
+fail once it has been seen failing (WAY-08), so running it with the uses would test the test again
+(WAY-168), and the uses, serving as no case of it, stay one line each.
 *Rejected:* the use breaking the rule written by the reviewer — a small, artificial change that
-teaches the reader little, and the guidelines wait for the end of the review; the author's use in
-place of the reviewer's break — it changes WAY-69 and loses the independence that decision keeps.
+teaches the reader little, and the guidelines wait for the end of the review; the two uses run
+against the test of the invariant, beside a deliberate break the reviewer writes, whenever either
+changes — a procedure for each rule that tests the test.
 
 ### WAY-198 — How does a product's exemplar bind?
 
@@ -5895,36 +5874,46 @@ next agent where not to copy from.
 *Rejected:* what the audit found shown as a comparison of the files' code — the human cannot weigh
 it.
 
-### WAY-202 — Which standing checks does the template of coding guidelines require, and from when do they bind a product?
+### WAY-202 — What does the template of coding guidelines require of a product, and from when does it bind?
 
 The template of the coding discipline requires three standing checks of a product's code — a
-linter, a formatter and an audit of dependencies — and a product departs from any of them only by a
-decision of its log that gives the reason. They bind a product from the task that writes its coding
-guidelines, which is complete only once it holds, for each of the three, a decision of the product's
-log adopting it or departing from it with the reason.
+linter, a formatter and an audit of dependencies — and one rule of its tests: a test takes the
+input it asserts on and the value it expects written out, wherever the code under test would
+otherwise compute either, and only the side it compares against comes from the run. A product
+departs from any of them only by a decision of its log that gives the reason. They bind a product
+from the task that writes its coding guidelines, which is complete only once it holds, for each of
+the three standing checks, a decision of the product's log adopting it or departing from it with
+the reason.
 
 - **Scope:** product-guidelines
 - **Based on:** none
 - **Relations:** derives from WAY-193
-- **Verification:** for the decisions the task ends with, an agent compares the work with the
-  decision:
+- **Verification:** for the decisions the task ends with and the tests of a product, an agent
+  compares the work with the decision:
   - complies: a product with none of the three gets, in the task that writes its coding guidelines,
     decisions adopting a linter, a formatter and an audit of dependencies, or departing from one of
-    them with its reason, and its coding guidelines name each at the rule the template requires;
+    them with its reason, and its coding guidelines name each at the rule the template requires; a
+    test of a price writes out the basket it feeds in and the total it expects;
   - violates: the skill only proposes the standing checks a product lacks, and the task ends with no
     decision on the audit of dependencies; a product's coding guidelines leave out the formatter
-    with no decision; the three stand in the template and in no decision of the-way.
+    with no decision; the three stand in the template and in no decision of the-way; a test builds
+    the total it expects by calling the function that computes the price; a test reads the value it
+    expects, at run time, from the file the code under test reads.
 - **Origin:** none
 
 *Rationale:* a product whose code no standing check reads changes its style and takes in a known
 vulnerability with no signal, and a skill that only proposes the checks leaves it so for as long as
 nobody takes the proposal up. Named in a binding sentence, the three give the refinement of the task
 something to check (WAY-139), and a departure with its reason is the product's own approved choice
-(WAY-193). The price: until a product runs a task that writes its coding guidelines, nothing of
-these binds it, as with the styleguide.
+(WAY-193). Two sides of a test computed by one code move together, and the test stays green unseen;
+the rule stands in the coding guidelines, which an agent reads before it changes the product's code,
+tests included (WAY-212). The price: until a product runs a task that writes its coding guidelines,
+nothing of these binds it, as with the styleguide.
 *Rejected:* the skill only proposing the standing checks a product lacks — a product that has none
 of them would still have no signal; the three named in the template alone — nothing would bind the
-refinement to check them.
+refinement to check them; the expected value alone written out — the input still moves with the
+code; a line naming each file a test's verdict leans on, in place of values written out — every
+tracked file becomes the data of some test.
 
 ### WAY-203 — Which rules of a linter's set block a change of a product's code?
 
@@ -6017,42 +6006,38 @@ for each rule of the set — many facts with one source and one reason to change
 ### WAY-205 — How do a linter and a formatter enter a product whose code already breaks their rules?
 
 Where a product's code already breaks the rules of its linter's set that block, the skill
-`maintain-coding-guidelines` proposes the linter's invariant over the whole of that code, which
-stands on the list of violated invariants until the code is cleaned, and beside it a second
-invariant that holds from its first day: no file of the parts it names holds more reports of those
-rules than on `{fork-point}`, and a file not on `{fork-point}` holds none; the second is withdrawn
-once the first holds. A formatter enters a product by one reformatting of the whole of its code in
-the task that brings the formatter, with no second invariant.
+`maintain-coding-guidelines` proposes the linter's invariant over the whole of that code, marked
+violated until the code is cleaned (WAY-51). A formatter enters a product by one reformatting of the
+whole of its code in the task that brings the formatter.
 
 - **Scope:** product-guidelines, invariants
 - **Based on:** none
-- **Relations:** derives from WAY-51 · derives from WAY-60
+- **Relations:** derives from WAY-51
 - **Verification:** an agent compares the work with the decision:
-  - complies: a product whose code breaks the blocking rules in forty files lists the linter's
-    invariant as violated by a change the human accepts and adds the second invariant, so a cleaned
-    file that gains a report back fails at once, and a new file with one fails too; the task that
-    brings a formatter reformats every file of the product once, and the formatter's invariant holds
-    from that commit;
+  - complies: a product whose code breaks the blocking rules in forty files marks the linter's
+    invariant violated by a change the human accepts, and its test stands as an expected failure
+    until the last file is clean; the task that brings a formatter reformats every file of the
+    product once, and the formatter's invariant holds from that commit;
   - violates: the blocking rules are cut down to those the code already meets; the task that brings
-    the linter cleans every file of the product; the formatter's invariant stands on the list of
-    violated invariants beside a second invariant comparing files with the fork point; the full
-    invariant alone stands on the list, and a cleaned file gains reports back unseen.
+    the linter cleans every file of the product; the formatter's invariant is marked violated;
+    beside the linter's marked invariant stands a second one comparing the reports of each file
+    with `{fork-point}`.
 - **Origin:** none
 
 *Rationale:* a rule weakened until the code meets it describes the accident, not the intent
 (WAY-51), and cleaning the whole of the code in the task that brings the linter grows that task into
-cleaning the product. The linter's invariant stands whole on the list of violated invariants, which
-keeps the debt countable, but until the last file is clean it cannot see a report come back into a
-file already cleaned; the second invariant compares each file with the fork point (WAY-60), so it
-holds from the first day, new code follows the rules while old code is cleaned when a task has it in
-scope, and both fit WAY-51 and WAY-60 unchanged, as for the styleguide (WAY-190). This takes the
-place of Google's condition that a check is fixed across the whole code before it is turned on
-(WAY-195). A formatter rewrites the code itself without changing what it does, so one reformatting
-leaves nothing to clean and a second invariant would keep nothing. Its weak point: a renamed file
-that holds reports counts as a new file and is cleaned in the change that renames it.
+cleaning the product. The invariant stays whole and marked, so the debt shows at its entry, and old
+code is cleaned when a task has it in scope. This takes the place of Google's condition that a
+check is fixed across the whole code before it is turned on (WAY-195). A formatter rewrites the code
+itself without changing what it does, so one reformatting leaves nothing to clean. Its weak point:
+until the last file is clean, no test shows a report coming back into a cleaned file or reaching a
+new one. Until the mark is cleared, the review of each change to the named parts' files is what
+keeps a cleaned file or a new one from gaining such a report.
 *Rejected:* only the rules the code already meets adopted — the rule is weakened until the code fits
 it (WAY-51); the whole of the code cleaned in the task that brings a linter — that task grows into
-cleaning the whole product.
+cleaning the whole product; beside the marked invariant, a second one that holds from its first
+day, that no file holds more reports than on `{fork-point}` and a file not there holds none — an
+invariant written for the time of the cleaning alone, to be withdrawn once it ends.
 
 ### WAY-206 — What does the audit of a product's dependencies check?
 

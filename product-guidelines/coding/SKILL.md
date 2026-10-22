@@ -37,7 +37,7 @@ pinned the-way before this skill existed reaches it once a task moves the pin, a
 
 | | This skill, in the refinement | The cycle's author, in `implement-task` |
 |---|---|---|
-| Writes | the task document, through `refine-task`'s steps, and the reports of the research and of the trial run under `.runs/coding/`, which the product's git ignores | the product's entries, through the skill of each element, in the foundation step; the files of the coding guidelines with the test cases of their rules; each adopted tool, installed and configured; the one reformatting of the code where the task settles it; the checks of the invariants, by other agents (WAY-69); the changes to the instruction files and to the part map |
+| Writes | the task document, through `refine-task`'s steps, and the reports of the research and of the trial run under `.runs/coding/`, which the product's git ignores | the product's entries, through the skill of each element, in the foundation step; the files of the coding guidelines; each adopted tool, installed and configured; the one reformatting of the code where the task settles it; the test of each new invariant (WAY-08); the changes to the instruction files and to the part map |
 | Never writes | the foundation, the coding guidelines, the product's code or any other file git tracks, which it leaves as it found them (WAY-01, WAY-28) | a meaning the task did not settle (WAY-172) |
 
 A meaning reaches the code only through the task document: the human's acceptance of the whole
@@ -53,17 +53,14 @@ writes there is written for a reader who was not in it.
 - *To do*:
   - write or extend `guidelines/coding.md`, and `guidelines/coding-<kind>.md` for each kind whose
     exemplar the task settles, from `.the-way/product-guidelines/coding/template.md`, as its section
-    "Writing the files" gives, and the test cases of each rule as the section "Test cases of a
-    rule" of `.the-way/product-guidelines/template.md` gives them, its limit on the lines of a case
-    that open a fence included;
+    "Writing the files" gives;
   - install and configure the tool of each standing check the task adopts, at the version, with the
     set and for the parts the task settles, as the coding template's section "The tools of the
     standing checks" gives;
   - where the task brings a formatter to code it would rewrite, reformat the whole of the code once
     (WAY-205);
-  - write a check for each new invariant, by agents other than the author of the code it covers
-    (WAY-69), each script reading a test case that stands at a new path within the parts it reads,
-    as the coding template's item "Test cases of the standing checks" gives;
+  - write the test of each new invariant in the product's suite, seen failing once (WAY-08,
+    WAY-61);
   - apply `maintain-instruction-files` for the pointer in the product's root `AGENTS.md`, outside
     the block the-way's installer writes: one line naming `guidelines/coding.md` in backticks with
     the condition of changing the product's code, naming no file of a kind and no command of its
@@ -72,14 +69,13 @@ writes there is written for a reader who was not in it.
     the product's map that holds its build configuration, and add each part step 1 found missing
     for code the task brings (WAY-44);
   - for the product's first guidelines: add `guidelines/**` to the files of the part of the map
-    whose files direct whoever carries out its tasks, through `update-part-map`, and write the
-    product's copies of the two invariants the template of guidelines gives (WAY-167, WAY-170);
+    whose files direct whoever carries out its tasks, through `update-part-map` (WAY-167);
   - each item the audit calls for (step 3).
 - *Questions to settle*: each choice step 4 settles — every standing check adopted or departed
   from with its reason, each tool, set and edition, the parts, the audit's database and severity,
   the split of the set, each kind's exemplar and the status of its files, the rules a script checks
-  of each exemplar, each invariant with its kind of check, and the way the list of rules that block
-  is kept — each with the human's words and date as its source.
+  of each exemplar, each invariant, and the way the list of rules that block is kept — each with
+  the human's words and date as its source.
 - *Context*: the trial run's evidence — how many reports each rule gave and what the judging
   agent found of them, with the paths of the output and of its verdicts; what the audit found, each
   `do not copy` file with its file and line, a finding the task does not take up marked deferred
@@ -177,8 +173,8 @@ Where the product has code:
   there, or no fresh agent can judge, no split is proposed: stop and say so. The split goes to
   step 4 with its evidence.
 - In the same place, count the files that break the rules that block and the files the formatter
-  would rewrite: where the code breaks those rules, step 4 proposes the pair of invariants of
-  WAY-205; where the formatter would rewrite it, the one reformatting of the whole of the code
+  would rewrite: where the code breaks those rules, step 4 proposes the linter's invariant marked
+  violated; where the formatter would rewrite it, the one reformatting of the whole of the code
   (WAY-205).
 - **Kinds** (WAY-200, WAY-201). Name the kinds of code the product already holds files of, each
   with its files; the audit covers every one of them. For each kind, judge every file of it the
@@ -222,21 +218,27 @@ Where the product has code:
   - for each kind the product holds files of, and each new kind, its exemplar, the status of each
     of its files and the rules a script checks of the exemplar (WAY-198, WAY-199, WAY-200,
     WAY-201);
+  - the rule of the product's tests, shown by its effect — "a test writes out the input it feeds and
+    the value it expects, so that it fails when the code goes wrong" — adopted with the template or
+    departed from by a decision with its reason (WAY-202);
   - the product's decision adopting the coding template, and each departure from it by a decision
     with its reason (WAY-193).
-- **Invariants.** Every binding rule gets an invariant of the kind the coding template's required
-  forms give, and a rule no such invariant can check goes among the examples (WAY-196). Propose,
-  each script a command the product declares (WAY-38):
+- **Invariants.** A binding rule gets an invariant where a cheap test checks it on a convention of
+  the product's code, the rule of each standing check always; a rule no such test checks gets none,
+  and the review of each change it reaches compares the change with it (WAY-196, WAY-168). Propose,
+  each with a test of the product's suite (WAY-61):
   - for the rule of each standing check, the invariants the coding template's section "What each
     section carries" names for it, with the parts it gives them;
   - for the linter, which way of keeping the list of rules that block applies — its first invariant
     passing the list to the tool, or a second invariant keeping the product's configuration to the
     list — by what the tool allows (WAY-207);
-  - where the code breaks the rules that block, the second invariant WAY-205 gives, while the full
-    one stands on the list of violated invariants by a foundation change the human accepts
-    (WAY-205, WAY-51); its weak point, a renamed file that looks new, is said when it is proposed;
-  - for each rule of an exemplar and each further rule of the whole product, an invariant that
-    checks it.
+  - where the code breaks the rules that block, the linter's invariant marked violated by a change
+    of the foundation the human accepts, until the code is cleaned (WAY-205, WAY-51); its weak
+    point, that until then no test shows a report coming back into a cleaned file or reaching a new
+    one and only the review of each change to those files keeps them from gaining one, is said when
+    it is proposed;
+  - for each rule a script checks of an exemplar, an invariant that checks it (WAY-198), and for
+    each further rule of the whole product, an invariant where a cheap test checks it (WAY-196).
 - **Weak points.** Name each when its choice is proposed:
   - for a product with no code, that the recommended rules block with no evidence from the
     product's code, and that the first report of one that leads to no change worth making takes it

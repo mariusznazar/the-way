@@ -13,16 +13,15 @@ The rules this template carries bind a product only through a decision of the pr
 them, and the product departs from any of them only by a decision of its log that gives the reason;
 a decision of the-way on what this template carries binds the template, never a product's code
 directly (WAY-193). Each rule below cites the decision of the-way that sets it (WAY-171). The rules
-of form every file of guidelines keeps — the header lines, the fields of a rule, the test cases of a
-rule, references, code in backticks or fenced code, the language of the text, a dropped section or
-rule — stand in `product-guidelines/template.md`; this template holds what is particular to coding
-guidelines.
+of form every file of guidelines keeps — the header lines, the fields of a rule, references, code in
+backticks or fenced code, the language of the text, a dropped section or rule — stand in
+`product-guidelines/template.md`; this template holds what is particular to coding guidelines.
 
 ## Required form
 
-The form check reads the merged form of the general file `guidelines/coding.md` from the fenced
-block of this section: the form of `product-guidelines/template.md` with the section
-`## Kinds of code` and the required rules of the coding discipline in their places (WAY-171).
+The general file `guidelines/coding.md` holds the form of the fenced block of this section: the
+form of `product-guidelines/template.md` with the section `## Kinds of code` and the required rules
+of the coding discipline in their places (WAY-171).
 
 ```markdown
 # Coding guidelines — <the product>
@@ -42,6 +41,7 @@ block of this section: the form of `product-guidelines/template.md` with the sec
 ### Linter
 ### Formatter
 ### Dependency audit
+### Test inputs and expected values
 ### <further rules of the whole product>
 
 ## Examples
@@ -52,17 +52,14 @@ block of this section: the form of `product-guidelines/template.md` with the sec
 ```
 
 - Each `### ` under `## Rules` carries the fields *Decision*, *Invariant*, *Good* and *Bad* the
-  template of guidelines gives a rule, and its *Invariant* names at least one invariant that checks
-  it, by a script where a script can decide it and otherwise by an agent whose method sets k of n
-  runs, never by an agent judging whether new code follows the exemplar of its kind (WAY-171,
-  WAY-196).
-- The three standing checks, `### Linter`, `### Formatter` and `### Dependency audit`, stand in the
-  order above, and each that the product goes without reads `none — <PREFIX-NN>@<fingerprint>`,
-  naming the product's decision that departs from it with its reason (WAY-171, WAY-202). The
-  product's further rules follow them.
-- A rule that neither a script nor such an agent can check is an example, not a rule, whatever
-  decision it names: the product drops it by a decision, and may keep its text under `## Examples`
-  (WAY-196).
+  template of guidelines gives a rule. The rule of each standing check names the invariants of that
+  check as the section "What each section carries" gives; any other rule names an invariant where a cheap test checks it on a
+  convention of the product's code, and otherwise reads `none`, the review of each change the rule
+  reaches comparing the change with it (WAY-168, WAY-196).
+- The three standing checks, `### Linter`, `### Formatter` and `### Dependency audit`, and the rule
+  `### Test inputs and expected values` stand in the order above, and each that the product goes
+  without reads `none — <PREFIX-NN>`, naming the product's decision that departs from it with its
+  reason (WAY-171, WAY-202). The product's further rules follow them.
 - *Applies to* names every part of the product's map that holds code, the scripts of its build
   included (WAY-208).
 - `## When to read` gives the condition under which an agent reads the file: before any change of
@@ -73,9 +70,9 @@ block of this section: the form of `product-guidelines/template.md` with the sec
 
 ## Required form of a kind
 
-The form check reads the merged form of a file `guidelines/coding-<kind>.md` from the fenced block
-of this section: the form of `product-guidelines/template.md` with the section
-`## Files of this kind` in its place (WAY-171, WAY-199).
+A file `guidelines/coding-<kind>.md` holds the form of the fenced block of this section: the form of
+`product-guidelines/template.md` with the section `## Files of this kind` in its place (WAY-171,
+WAY-199).
 
 ```markdown
 # Coding guidelines — <kind>
@@ -102,11 +99,8 @@ of this section: the form of `product-guidelines/template.md` with the section
 ```
 
 - Each `### ` under `## Rules` carries the fields *Decision*, *Invariant*, *Good* and *Bad* the
-  template of guidelines gives a rule, and its *Invariant* names at least one invariant that checks
-  it, by a script where a script can decide it and otherwise by an agent whose method sets k of n
-  runs, never by an agent judging whether new code follows the exemplar (WAY-171, WAY-196).
-- A rule that neither a script nor such an agent can check is an example, not a rule, whatever
-  decision it names (WAY-196).
+  template of guidelines gives a rule, and its *Invariant* names the invariant whose test checks
+  the rule on the files of the kind (WAY-171, WAY-196, WAY-198).
 - The file's name holds the identifier of its kind, as the decision designating the kind's exemplar
   gives it: words of lower-case letters and digits joined by single hyphens, as `endpoint` or
   `background-job` (WAY-167).
@@ -132,47 +126,52 @@ those decisions and invariants in its own foundation; the coding guidelines name
   naming the set, its edition, the parts it reads and the rules of the set that stand among the
   examples for the reports they give that lead to no change of code worth making (WAY-86, WAY-202,
   WAY-203, WAY-204). *Invariant*:
-  1. a script the product declares, that no file of the parts named breaks a rule of the set that
-     blocks, resting on the environment fact of the set's edition (WAY-203, WAY-73); an inline
-     suppression of a rule that blocks counts as a break, since such a rule gives no report that
-     leads to no change worth making, so no suppression of it is sound, and a fault of one file is
-     fixed in that file (WAY-203, WAY-207, WAY-193);
+  1. that no file of the parts named breaks a rule of the set that blocks, resting on the
+     environment fact of the set's edition (WAY-203, WAY-73); an inline suppression of a rule that
+     blocks counts as a break, since such a rule gives no report that leads to no change worth
+     making, so no suppression of it is sound, and a fault of one file is fixed in that file
+     (WAY-203, WAY-207, WAY-193);
   2. the rules that block are exactly the list of the adopting decision, so that turning one off
-     fails the gate until that decision changes (WAY-207, WAY-60). Where the method of the first
+     fails the gate until that decision changes (WAY-207, WAY-60). Where the test of the first
      invariant passes that list to the tool itself, the first invariant already holds it and no
-     second is written; where the method reads the product's configuration, a second invariant, by
-     a script, keeps that configuration to the list; the skill names in the task which way the tool
-     allows (WAY-207);
-  3. where the product's code already breaks the rules that block, the first invariant stands on
-     the list of violated invariants, and beside it an invariant that holds from its first day: no
-     file of the parts named holds more reports of those rules than on `{fork-point}`, and a file
-     not on `{fork-point}` holds none (WAY-205).
+     second is written; where the test reads the product's configuration, a second invariant keeps
+     that configuration to the list; the skill names in the task which way the tool allows
+     (WAY-207).
+
+  Where the product's code already breaks the rules that block, the first invariant is marked
+  violated until the code is cleaned (WAY-205, WAY-51).
 - **Formatter** — rule. *Decision*: the product's decision adopting the formatter and its
-  configuration (WAY-202). *Invariant*: a script the product declares, that every file of the parts
-  named stands as the formatter leaves it. A product whose code does not stand so when the formatter
-  enters is reformatted whole, once, by the task that brings the formatter, with no second invariant
-  (WAY-205).
+  configuration (WAY-202). *Invariant*: that every file of the parts named stands as the formatter
+  leaves it. A product whose code does not stand so when the formatter enters is reformatted whole,
+  once, by the task that brings the formatter (WAY-205).
 - **Dependency audit** — rule. *Decision*: the product's decision adopting the audit, naming its
   tool, the advisory database it reads and the severity from which a vulnerability counts; the skill
   puts that severity to the human with every severity among the ways (WAY-202, WAY-206, WAY-60).
-  *Invariant*: a script the product declares, that the change against `{fork-point}` brings in no
-  version of a dependency with a known vulnerability of at least that severity, as that database
-  gives it when the check runs (WAY-206).
+  *Invariant*: that the change against `{fork-point}` brings in no version of a dependency with a
+  known vulnerability of at least that severity, as that database gives it when the check runs
+  (WAY-206).
 - **The *Part* of each invariant of a standing check** names the parts holding the code it reads and
   the part holding the product's build configuration and its lockfile, where the tool's
   configuration and its pinned version stand; the audit's names the parts holding every manifest and
   lockfile it reads. A change of a configuration file or of the lockfile alone thus reaches it
   (WAY-62).
-- **A standing check the product goes without** reads `none — <PREFIX-NN>@<fingerprint>`, naming the
-  product's decision that departs from it with its reason (WAY-202, WAY-171).
-- **Further rules of the whole product** — rule each, with an invariant each (WAY-196).
+- **A standing check the product goes without** reads `none — <PREFIX-NN>`, naming the product's
+  decision that departs from it with its reason (WAY-202, WAY-171).
+- **Test inputs and expected values** — rule. *Decision*: the product's decision adopting this
+  template (WAY-193). *Invariant*: `none`; the review of each change compares its tests with the
+  rule (WAY-196). The rule: a test takes the input it asserts on and the value it expects written
+  out, wherever the code under test would otherwise compute either; only the side it compares
+  against comes from the run (WAY-202). Which files a test names, so that a fixture or a builder of
+  its input cannot be changed underneath it, this template does not settle.
+- **Further rules of the whole product** — rule each, naming an invariant where a cheap test checks
+  it on a convention of the code and otherwise `none` (WAY-196).
 - **`## Files of this kind`** — a table of the file of a kind, one row for each file of the kind it
   lists (WAY-199):
   - *File*: the path of the file, in backticks, relative to the root of the repository; it names
     something git tracks;
   - *Status*: one of `exemplar`, `copy` or `do not copy`;
   - *Decision*: on the row whose *Status* is `exemplar`, the product's decision designating that
-    file, with its fingerprint; on every other row, `—`.
+    file, by its identifier; on every other row, `—`.
 
   Exactly one row is the exemplar's, and the binding sentences of its decision name in backticks
   that path and the kind's identifier (WAY-198, WAY-199). The audit that writes or refreshes the
@@ -184,38 +183,13 @@ those decisions and invariants in its own foundation; the coding guidelines name
   kept for the reports they give that lead to no change of code worth making, each named as the tool
   names it (WAY-203); nothing here binds (WAY-168).
 - **`## Where in code`** — in the general file, the configuration files of the standing checks and
-  the product's scripts of their invariants; in a file of a kind, the directories its files lie in;
+  the product's tests of their invariants; in a file of a kind, the directories its files lie in;
   no value is copied from them (WAY-171).
-- **The product's copy of `guidelines-form`** carries, in coding guidelines, what the form check
-  reports of their tables and test cases: the table of `## Kinds of code` and its agreement with
-  the files of a kind, the closed list of *Status*, the one exemplar and its decision naming its
-  path and kind, each *File* naming something git tracks, and the test cases of each rule with
-  their paths.
-  These are values and links the templates give, which that invariant's sentence covers (WAY-170,
-  WAY-171).
-- **Test cases of the standing checks** — each rule gives a pair of cases for each invariant it
-  names, as `product-guidelines/template.md` has it (WAY-168):
-  - for the first invariant of `### Linter`, a short new source file at a new path within the parts
-    named, one breaking a rule that blocks and one following it;
-  - for its second, where it is written, the linter's configuration file at its path, one with a
-    rule of the decision's list turned off and one holding the list exactly;
-  - for its third, where it is written, a short new source file holding one report of a rule that
-    blocks and one holding none;
-  - for `### Formatter`, a short new source file left unformatted and the same file formatted;
-  - for `### Dependency audit`, a manifest or lockfile of one dependency at a new path within the
-    parts the audit reads, one naming a version with a known vulnerability and one a version with
-    none.
-
-  The product's scripts read a short file at a new path within the parts they read: the linter and
-  the formatter every file of those parts, the audit every manifest and lockfile there. Where the
-  first invariant of `### Linter` stands on the list of violated invariants, its cases are read
-  against the commit's own result, while those of the third take the strict reading (WAY-168,
-  WAY-205).
 
 ## The tools of the standing checks
 
 - **Pinned versions.** Each standing check's tool stands at an exact version in the product's
-  declared dependencies and lockfile, and the method of each of its invariants runs that pinned
+  declared dependencies and lockfile, and the test of each of its invariants runs that pinned
   version from the product's own environment, never a version fetched when the check runs: a
   command is the same on every run (WAY-61). A new version of a linter that changes the edition of
   the adopted set is a change of the adopting decision and of the set's environment fact (WAY-86,
@@ -233,11 +207,9 @@ those decisions and invariants in its own foundation; the coding guidelines name
   keeps them there (WAY-207).
 - **Inline suppressions** of a rule that blocks count as breaks in the first invariant of
   `### Linter`, as that rule has it above (WAY-203, WAY-193).
-- **The record of a run.** Each invariant's method is a script the product declares, which runs the
-  tool and writes the-way's record of a run: a line for each invariant it gives a verdict for,
-  `pass` or `fail` from the tool's result, and a failure recorded for no entry where the tool could
-  not run (WAY-61, WAY-74), as the scripts of a styleguide's invariants do (WAY-189). The-way gives
-  no adapter for a tool's own report; the product's command stands where the-way has none (WAY-38).
+- **The test of each invariant.** Each invariant of a standing check has a test in the product's
+  suite, in its language, that runs the pinned tool on the parts the invariant names and fails where
+  the tool reports a break or cannot run (WAY-61, WAY-63).
 - **No command of its own in the instructions.** The coding guidelines and the product's `AGENTS.md`
   name the invariants, never a command of a tool to run beside the gate (WAY-16).
 
@@ -248,6 +220,5 @@ For the author who writes the coding guidelines in a task's cycle:
 - Take every tool, set of rules, exemplar, status and departure from the task's settlements and
   from the decisions the task's foundation step wrote, never from memory (WAY-172, WAY-211).
 - Point to the configuration and to the code; copy no value into the guidelines (WAY-171).
-- Write each test case as `product-guidelines/template.md` gives it (WAY-168).
-- Run the form check. A choice the task did not settle is a question that stops the cycle at a
-  blocked draft request, never a rule or a row (WAY-172).
+- A choice the task did not settle is a question that stops the cycle at a blocked draft request,
+  never a rule or a row (WAY-172).
