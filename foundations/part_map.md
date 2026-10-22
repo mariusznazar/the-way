@@ -173,10 +173,13 @@ argument and its exit codes.
 ## installation-command
 
 The command that installs a pinned the-way checkout, empty foundation files, project skills, agent
-guidance for Claude Code and Codex and a `.runs/` ignore line in a product keeps its preview and
-confirmation, replaces no existing file, and adds to an existing file of the working tree only the
-`.the-way` section of `.gitmodules`, a marked block at the end of `AGENTS.md` and the `.runs/` line
-at the end of `.gitignore`.
+guidance for Claude Code and Codex and a `.runs/` ignore line in a product, or moves the product's
+pin to the checkout's commit, keeps its preview and confirmation. Of the files it finds, it
+rewrites only its own — the skill entry points it wrote, which point to `.the-way`, and its marked
+block in `AGENTS.md`, where the block stands — and deletes only its own entry points of skills the
+commit lacks; to another existing file of the working tree it adds only the `.the-way` section of
+`.gitmodules`, a marked block at the end of `AGENTS.md` and the `.runs/` line at the end of
+`.gitignore`.
 
 - **Relied on by:** a product pinned to a commit of the-way
 

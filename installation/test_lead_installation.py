@@ -75,7 +75,7 @@ class LeadInstallationTest(unittest.TestCase):
         self.assertEqual(claude.read_bytes(), codex.read_bytes())
         wrapper = claude.read_text(encoding="utf-8")
         self.assertIn("name: the-way-lead-project\n", wrapper)
-        self.assertIn(f"Its commit is `{self.commit}`", wrapper)
+        self.assertNotIn(self.commit, wrapper)
         self.assertIn(f"Read `.the-way/{LEAD_SOURCE}` in full", wrapper)
         self.assertIn("git submodule update --init -- .the-way", wrapper)
         self.assertIn("git ls-files --stage -- .the-way", wrapper)
@@ -137,8 +137,8 @@ class LeadInstallationTest(unittest.TestCase):
                     self.assertFalse((self.product / ".the-way").exists())
                 path.unlink()
 
-    def test_different_product_pin_is_not_moved(self) -> None:
-        # New skill availability must not silently migrate an existing product.
+    def test_pin_whose_checkout_differs_is_not_moved(self) -> None:
+        # A gitlink and a checkout that disagree leave no pin to move from.
         applied = self.install("--apply")
         self.assertEqual(applied.returncode, 0, applied.stdout + applied.stderr)
         other_commit = self.git("rev-parse", "HEAD^", cwd=SOURCE).stdout.strip()
@@ -148,7 +148,8 @@ class LeadInstallationTest(unittest.TestCase):
         for args in ((), ("--apply",)):
             refused = self.install(*args)
             self.assertNotEqual(refused.returncode, 0)
-            self.assertIn(f"pins {other_commit}, requested {self.commit}", refused.stderr)
+            self.assertIn(f"has {self.commit} checked out but the gitlink pins {other_commit}",
+                          refused.stderr)
             self.assertEqual(before, self.product_files())
             self.assertEqual(index, self.git("ls-files", "--stage").stdout)
             self.assertEqual(self.git("-C", ".the-way", "rev-parse", "HEAD").stdout.strip(),
