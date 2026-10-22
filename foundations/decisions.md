@@ -3384,27 +3384,33 @@ the agent refining it presents the table, while in orchestrated refinement the p
 orchestrator presents it and the questions against choices required by WAY-113 in the round
 package, and the refiner returns that material through the conversation file instead of asking
 the human. A candidate is a decision, an invariant, a glossary term, or an environment fact a
-candidate decision or invariant rests on, and a settlement that a current entry, or a projected
-entry the task carries, already states is no candidate. The task's cycle writes each kept row
-whole into the foundation in its foundation step, or in its return step where the foundation
-step missed it, one that no code makes true included, keeping its meaning and choosing its
-wording; where that meaning cannot hold, or the entry needs a value neither the row nor the
-cycle's work gives, the cycle asks the human through a blocked draft request rather than write
-another entry, and otherwise the human accepts the entry's meaning at the merge (WAY-114).
+candidate decision or invariant rests on, and a settlement that a current entry the refinement
+reads for the parts the task touches, or a projected entry the task carries, already states is no
+candidate. The task's cycle writes each kept row whole into the foundation in its foundation step,
+or in its return step where the foundation step missed it, one that no code makes true included,
+keeping its meaning and choosing its wording; where that meaning cannot hold, or the entry needs a
+value neither the row nor the cycle's work gives, the cycle asks the human through a blocked draft
+request rather than write another entry, and otherwise the human accepts the entry's meaning at the
+merge (WAY-114). A kept row whose settlement the cycle's search of the whole foundation (WAY-33)
+finds an entry already stating becomes no second entry: the cycle ties the row to that entry and
+names both in the request.
 
 - **Scope:** project-level, task-cycle, elements-common, decisions, invariants, glossary,
   environment-facts
 - **Based on:** none
-- **Relations:** derives from WAY-115 · narrows WAY-114
+- **Relations:** derives from WAY-115 · derives from WAY-33 · narrows WAY-114
 - **Verification:** an agent compares the task document, or the cycle, with the decision:
   - complies: a task whose human settled in refinement that an exported record keeps its owner
     carries that row, and its cycle writes a decision with that meaning in the same change as its
-    code and names it in the request; a task whose refinement found nothing carries the
-    counting line with none below it; in an orchestrated round the project orchestrator shows the
-    candidate table and required challenge questions while the refiner records the human's answers;
+    code and names it in the request; a task whose refinement found nothing carries the counting
+    line with none below it; in an orchestrated round the project orchestrator shows the candidate
+    table and required challenge questions while the refiner records the human's answers; the
+    cycle's search finds a decision of an untouched part that already states a kept row, and the
+    request names the row with that decision instead of a new one;
   - violates: the cycle writes the entry with another meaning, or leaves out a kept settlement
     because no code makes it true; the refinement writes whole entries into the task document; a
-    kept row repeats a rule a current decision states; an orchestrated refiner asks the human
+    kept row repeats a rule a current decision the refinement read states; the cycle writes a
+    second entry for a rule its search found already stated; an orchestrated refiner asks the human
     directly about candidates or substitutes its own acceptance.
 - **Origin:** none
 
@@ -3414,9 +3420,11 @@ a question, where it reads as one more choice the cycle may make otherwise. A ro
 words carries the meaning into the cycle without a second point of acceptance: the wording stays
 the agent's, as for every entry a cycle writes, and the human judges the meaning at the merge. A
 table read from the whole document finds a settlement said in passing, and its column of what the
-cycle would guess drops one no reader would miss. A meaning that cannot hold goes back to the human
-before the request because the human settled it, and finding the change only at the merge would
-leave code already written for another meaning. In an orchestrated round a single human-facing
+cycle would guess drops one no reader would miss. Refinement compares the candidates with the
+entries it reads for the task's parts; what no link joins, the one search of the whole foundation
+finds once the cycle has settled the entry (WAY-33), and a rule already stated keeps one entry. A
+meaning that cannot hold goes back to the human before the request because the human settled it,
+and finding the change only at the merge would leave code already written for another meaning. In an orchestrated round a single human-facing
 agent keeps these choices together without making the refiner a second channel to the human.
 *Rejected:* whole entries written while the task is refined, as a project definition projects
 them — a task has no gate to approve their wording, and refining a task would weigh as much as
@@ -3424,7 +3432,8 @@ defining a project; noting a settlement only when the human states one — a set
 passing in the request is missed, and the agent alone decides what binds; letting the cycle change
 or drop a settlement and show the difference in the request — the human's settlement could be
 reversed and seen only once the code is written; decisions and invariants alone — a word whose
-meaning the human settled would be defined by the cycle.
+meaning the human settled would be defined by the cycle; a search of the whole foundation when a
+task's candidates are named — it repeats the cycle's search on wording not yet settled.
 
 ### WAY-135 — When does a task's cycle write a spec?
 

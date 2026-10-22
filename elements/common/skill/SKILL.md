@@ -77,14 +77,11 @@ When the section already holds a working table, resume from the first row whose 
   the last column names what the task's cycle would do or choose without it. Write the table under
   "Settlements to record" with a column *State* after the template's columns, and show it whole as
   above.
-- For a task, before its table is written, once its candidates are named, search the whole
-  foundation once — all five elements, beyond the parts selected and the links known — for an
-  entry that already states a candidate's settlement or collides with it. A settlement that stands
-  there is no candidate; a candidate that collides with an entry is shown beside it.
-- For a project definition, no search of the whole foundation runs here: `define-project` makes the
-  one search at the readiness gate, once every entry is written (WAY-118). A settlement that an
-  entry read in step 1 already states is no candidate; a candidate that collides with such an
-  entry is shown beside it.
+- No search of the whole foundation runs here. For a project definition, `define-project` makes
+  the one search at the readiness gate, once every entry is written (WAY-118); for a task, its
+  cycle makes it when it writes each kept row (WAY-33, WAY-134). A settlement that an entry read
+  in step 1 already states is no candidate; a candidate that collides with such an entry is shown
+  beside it.
 
 ## 3. The human cuts
 
