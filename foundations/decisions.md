@@ -2612,7 +2612,8 @@ agent uses in its place.
 
 - **Scope:** project-level, decisions
 - **Based on:** none
-- **Relations:** derives from WAY-106 · derives from WAY-116
+- **Relations:** derives from WAY-106 · derives from WAY-116 · derives from
+  WAY-100
 - **Verification:** invariants: project-technology-record. For what the step lists and settles, an
   agent compares the work with the decision:
   - complies: a project that adds an account server lists its store of data and its way of
@@ -2645,7 +2646,10 @@ nothing to run, pay for or back up and change no cut of the work, so the rule of
 would never list them; the exception lists each matter as a choice of its own, weighed apart, and
 only where no decision already answers it, so the first project of a product settles each in a
 short decision and later projects find it in the foundation. A product with no screen or no stored
-data still needs the answer that says what an agent uses instead.
+data still needs the answer that says what an agent uses instead. The step takes from the lesson
+"Towards Autonomous Product Development" the question of how an agent sees the running product —
+through its logs, its interface and its development data — and leaves out the lesson's hard limit
+that keeps an agent away from the production database and from root access.
 *Rejected:* a round inside the conversation about goal and scope — no place to compare
 technologies; the first tasks of the breakdown — the cut itself may depend on the choice; the step
 after the readiness gate — each settled choice would change approved sections and send the
@@ -3484,7 +3488,8 @@ written in the language of the definition under headings, states and markers kep
 
 - **Scope:** project-level
 - **Based on:** none
-- **Relations:** derives from WAY-106 · derives from WAY-118
+- **Relations:** derives from WAY-106 · derives from WAY-118 · derives from
+  WAY-100
 - **Verification:** invariants: project-plan-form. For what the plan holds beyond its form, an agent
   compares the plan with the decision:
   - complies: the plan of a Polish definition gives each task's goal in Polish under English
@@ -3503,7 +3508,10 @@ can drift from it. A definition can project many entries, its decisions named on
 question; listed in the row of every task that realizes them, they would fill a cell no one reads
 and need short keys made up for them, while a row per entry under its own heading is matched to the
 definition word for word and shows in one cell the single task that writes it. The columns and the
-states stand in the template, so that a change to them needs no change of this decision.
+states stand in the template, so that a change to them needs no change of this decision. The
+step takes from the practice of a roadmap of vertical slices the breaking of a project into tasks
+before any task is planned, and leaves out its milestones, its estimates and its interview on the
+order of work.
 *Rejected:* the realizing and the writing tasks as two columns of the table of tasks — a cell grows
 to many long headings and needs keys made up for them; each task described again in a section of
 its own beside an index table and a table for a tracker — three copies of one task drift apart; the
@@ -3523,7 +3531,7 @@ first task that uses it, or with a preparatory task that task depends on.
 
 - **Scope:** project-level
 - **Based on:** none
-- **Relations:** none
+- **Relations:** derives from WAY-100
 - **Verification:** invariants: project-plan-check. For what a task ends with and where a technical
   element enters, an agent compares the plan with the decision:
   - complies: a task "the player opens the forest and sees it on a grid of hexagons" also brings in
@@ -3540,7 +3548,9 @@ and its mistakes show only when a later task uses the layer; a task that ends in
 shows at its merge whether the project moves. Some work has to come first, such as a server for the
 product to run on, and it earns a task of its own only by naming what it opens the way for, so a
 later reader sees why it stands there; a technical element brought in early for later use is work
-nobody checks until it is needed, and is often built for a need that changes.
+nobody checks until it is needed, and is often built for a need that changes. The rule takes from
+the practice of vertical slices the cut by what can be checked in the running product, and from its
+enabling work the rule that such work names what it opens the way for.
 *Rejected:* tasks cut by layers of the product — nothing can be checked until the last layer lands;
 preparatory work no task depends on — it grows into a layer of its own; a field of the preparatory
 task naming the task it opens the way for — it repeats a dependency the plan already holds; the word
@@ -3557,7 +3567,7 @@ follows the dependencies.
 
 - **Scope:** project-level, task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-106
+- **Relations:** derives from WAY-106 · derives from WAY-100
 - **Verification:** invariants: project-plan-form. For cycle starts and refinement waits, an agent
   compares the plan, or the work on it, with the decision:
   - complies: two cycles start together because neither task depends on the other and their
@@ -3572,7 +3582,9 @@ follows the dependencies.
 
 *Rationale:* the dependencies already say which tasks can go together; a second field derived from
 them is a copy that drifts as soon as one dependency changes, and its lists grow long enough that
-nobody reads them. The task order WAY-106 gives the plan is this order of cycle starts. Refinement
+nobody reads them. The rule takes from the practice of a roadmap its graph of dependencies and the
+order that follows from it, and leaves out its field of work that can run alongside. The task
+order WAY-106 gives the plan is this order of cycle starts. Refinement
 can settle a dependent task before its prerequisites are delivered; only a question needing their
 result earns a wait.
 *Rejected:* a field naming the tasks a task can be worked on beside — a copy of the dependencies
@@ -3637,7 +3649,7 @@ question. A check a script can make is never left to the critique.
 
 - **Scope:** project-level
 - **Based on:** none
-- **Relations:** derives from WAY-120
+- **Relations:** derives from WAY-100 · derives from WAY-120
 - **Verification:** invariants: project-plan-form · project-plan-check. For the critique, an agent
   compares the work with the decision:
   - complies: the critique finds a task ending with tables no screen reads and a question placed in
@@ -3652,7 +3664,8 @@ question. A check a script can make is never left to the critique.
 same thing answers well most of the time and costs a reading of the whole plan; what a script
 cannot tell — whether an end can be checked, whether an element came early, whether a question was
 moved or answered in full — needs a reader who did not write the plan, since its writer applied the
-rules it would be checking.
+rules it would be checking. The rule takes from the practice of a roadmap its review of the plan
+before it is handed on, split between a script and a reader who did not write the plan.
 *Rejected:* the author checking its own plan against the rules before writing it — the same agent
 applies and judges them; checks of a plan's form across several copies of each task — a plan holding
 each task once has no copies to compare; an agent checking what a script decides — it costs more
@@ -3666,7 +3679,7 @@ enters its cycle under that name, and the cycle names its record by it.
 
 - **Scope:** project-level, task-cycle
 - **Based on:** none
-- **Relations:** none
+- **Relations:** derives from WAY-100
 - **Verification:** invariants: project-plan-form. For the cycle, an agent compares the cycle with
   the decision:
   - complies: the task `forest-on-hex-grid` of a plan keeps its cycle record under
@@ -3678,9 +3691,10 @@ enters its cycle under that name, and the cycle names its record by it.
 
 *Rationale:* a task's cycle record and its entry in the product's backlog meet its row in the plan
 through its name, so a name that changes leads a reader to the wrong work; words, because a number
-that keeps the plan's own cells short says nothing in a record read apart from the plan. Where the
-product keeps its backlog is its own choice (WAY-107), and a task's entry there links its document,
-so the plan needs no table of its tasks written for a tracker.
+that keeps the plan's own cells short says nothing in a record read apart from the plan. The rule
+takes from the practice of a roadmap the stable name each of its items carries into later work.
+Where the product keeps its backlog is its own choice (WAY-107), and a task's entry there links its
+document, so the plan needs no table of its tasks written for a tracker.
 *Rejected:* the cycle naming its record when it starts — the plan and the record name one task
 differently; the plan's number as the name — it says nothing where it is read; a table of the
 plan's tasks with titles for a tracker — a second copy of the tasks, which the product's backlog
@@ -4313,7 +4327,11 @@ gives. The directory `guidelines/` belongs to the part of the product's map whos
 whoever carries out its tasks, as its instruction files and skills do.
 
 - **Scope:** product-guidelines, installation
-- **Based on:** none
+- **Based on:**
+  https://raw.githubusercontent.com/open-mercato/open-mercato/4374c48def1654927805c4b760f0e7f8648280f2/AGENTS.md
+  § line 61 — "A single task often maps to **multiple rows** — "add a new module with search" needs
+  both the Module Development and Search guides. Read **all** matching guides first"; read
+  2026-10-18
 - **Relations:** derives from WAY-44 · derives from WAY-04
 - **Verification:** an agent compares the change with the decision:
   - complies: a product with screens in a browser and an admin panel added to its backend keeps
@@ -4346,7 +4364,7 @@ kind of code rather than by part, since a kind such as an endpoint can live in m
 while its exemplar is one: the general file holds what binds the whole of the code once, and an
 agent reads, beside it, only the files of the kinds its work touches, which the general file's
 table names with when to read each, as Open Mercato's table leading from a task to the guides to
-read does (WAY-100). The kind's identifier comes from the decision designating
+read does. The kind's identifier comes from the decision designating
 its exemplar, so that a file of a kind stands only where a human has approved what it holds.
 *Rejected:* guidelines as a sixth element of the foundation — what binds in them is already carried
 and checked by decisions and invariants, and the list of elements would no longer be closed; an
@@ -5066,7 +5084,11 @@ kind give beside the path of each file of the kind they list its status, `exempl
 `do not copy`, and beside the exemplar's path the decision that designates it.
 
 - **Scope:** product-guidelines
-- **Based on:** none
+- **Based on:**
+  https://raw.githubusercontent.com/open-mercato/open-mercato/4374c48def1654927805c4b760f0e7f8648280f2/apps/mercato/src/modules/example/README.md
+  § line 46 — "`readable` | The file passed the reference-quality audit. Safe to read and adapt." ·
+  § line 47 — "`qa-only` | The file exists and works, but fails at least one current project rule. …
+  Do **not** copy it."; read 2026-10-18
 - **Relations:** derives from WAY-172 · derives from WAY-198
 - **Verification:** for what takes approval, an agent compares the change with the decision:
   - complies: a fix of a typo in the exemplar, and a change of its inner structure that keeps the
@@ -5083,7 +5105,7 @@ decision, while an edit that keeps them uses a meaning a decision carries, which
 (WAY-172). An edit that changes only what of the exemplar no script checks passes with no approval,
 and every later copy inherits it; that holds, because approving every change of the exemplar's
 behaviour would have the human judge code they do not judge. The status beside each path shows an
-agent reading the guidelines what to copy and what not to, as Open Mercato's statuses do (WAY-100).
+agent reading the guidelines what to copy and what not to, as Open Mercato's statuses do.
 *Rejected:* approval of every change of the exemplar's behaviour — the human would judge code they
 cannot judge; the status of the files kept in the decision alone — an agent reading the guidelines
 would not see which files not to copy.
@@ -5192,7 +5214,16 @@ effect: where the tool can be told so by a flag or its configuration, the test o
 invariant runs it so, and where it cannot, the review of each change finds such a comment.
 
 - **Scope:** product-guidelines
-- **Based on:** none
+- **Based on:** C. Sadowski, E. Aftandilian, A. Eagle, L. Miller-Cushon, C. Jaspan, "Lessons from
+  Building Static Analysis Tools at Google", Communications of the ACM 61(4), April 2018,
+  https://storage.googleapis.com/gweb-research2023-media/pubtools/4365.pdf § page 62 — "produce no
+  effective false positives (the analysis should never stop the build for correct code)" · § page 59
+  — "We consider an issue to be an “effective false positive” if developers did not take positive
+  action after seeing the issue." · § page 59 — "If an analysis incorrectly reports an issue, but
+  developers make the fix anyway to improve code readability or maintainability, that is not an
+  effective false positive." · § page 62 — "analysis results shown during code review are allowed to
+  include up to 10% effective false positives" · § page 62 — "report issues affecting only
+  correctness rather than style or best practices"; read 2026-10-18
 - **Relations:** derives from WAY-202
 - **Verification:** an agent compares the work with the decision:
   - complies: a rule on unused variables, every report of which led to removing dead code, stands
@@ -5211,7 +5242,7 @@ invariant runs it so, and where it cannot, the review of each change finds such 
 
 *Rationale:* a change of sound code that a blocking rule stops gets through only by a change of the
 decision adopting the set (WAY-207), put to a human who does not judge code; Google blocks a change
-only by a check that gives no report its developers would not act on (WAY-100). A report that is
+only by a check that gives no report its developers would not act on. A report that is
 technically right but leads to no change worth making costs the change as much as a wrong one, while
 a wrong report that leads to a better change costs nothing, so a report counts by what it leads to.
 A rule that once flagged sound code leaves the agent free again in its area, as an example it reads;
@@ -5245,7 +5276,13 @@ environment fact, the rules the set holds at the edition the adopting decision n
 decision gives the blocking rules as the set less the rules it keeps among the examples.
 
 - **Scope:** product-guidelines
-- **Based on:** none
+- **Based on:** C. Sadowski, E. Aftandilian, A. Eagle, L. Miller-Cushon, C. Jaspan, "Lessons from
+  Building Static Analysis Tools at Google", Communications of the ACM 61(4), April 2018,
+  https://storage.googleapis.com/gweb-research2023-media/pubtools/4365.pdf § page 59 — "We consider
+  an issue to be an “effective false positive” if developers did not take positive action after
+  seeing the issue." · § page 59 — "If an analysis incorrectly reports an issue, but developers make
+  the fix anyway to improve code readability or maintainability, that is not an effective false
+  positive."; read 2026-10-18
 - **Relations:** derives from WAY-203
 - **Verification:** an agent compares the work with the decision:
   - complies: the skill runs a set in a scratch worktree of a product with code, a fresh agent
@@ -5261,18 +5298,18 @@ decision gives the blocking rules as the set less the rules it keeps among the e
 
 *Rationale:* whether a rule's reports lead to changes worth making shows only on the product's own
 code, so the split is read off a trial run, and the agent that wrote that code would judge in its
-favour, so another agent judges each report, as Google weighs a report by what developers do with it
-(WAY-100). The human does not judge code, so the human approves the split as a whole, shown by its
-effect (WAY-174), never rule by rule. A product with no code has nothing to try a set on, so it
-takes the rules the tool's documentation recommends; their weak point is that they block with no
-evidence from the product, and the first report of one that leads to no change worth making takes it
-off by a change of the decision. Which rules a set holds at one edition is one fact, which one
-edition of the tool's documentation states, about one thing, with one reason to change, a new
-edition (WAY-76), as git's rule of path patterns with its page's exceptions is one fact. A
-criterion of WCAG stands as a fact of its own (WAY-191) because each is a requirement of its own
-written in prose, while a rule of a linter's set is one whose content the tool itself runs at its
-pinned version, so the invariant needs the set's membership alone. The price is a trial run and a
-judgment of its reports each time a set is adopted.
+favour, so another agent judges each report, as Google weighs a report by what developers do with
+it. The human does not judge code, so the human approves the split as a whole, shown by its effect
+(WAY-174), never rule by rule. A product with no code has nothing to try a set on, so it takes the
+rules the tool's documentation recommends; their weak point is that they block with no evidence from
+the product, and the first report of one that leads to no change worth making takes it off by a
+change of the decision. Which rules a set holds at one edition is one fact, which one edition of the
+tool's documentation states, about one thing, with one reason to change, a new edition (WAY-76), as
+git's rule of path patterns with its page's exceptions is one fact. A criterion of WCAG stands as a
+fact of its own (WAY-191) because each is a requirement of its own written in prose, while a rule of
+a linter's set is one whose content the tool itself runs at its pinned version, so the invariant
+needs the set's membership alone. The price is a trial run and a judgment of its reports each time a
+set is adopted.
 *Rejected:* every rule of the set blocking — the gate blocks sound code (WAY-203); the human
 deciding rule by rule — the human would judge what they cannot judge (WAY-174); an environment fact
 for each rule of the set — many facts with one source and one reason to change (WAY-76).
@@ -5285,7 +5322,10 @@ violated until the code is cleaned (WAY-51). A formatter enters a product by one
 whole of its code in the task that brings the formatter.
 
 - **Scope:** product-guidelines, invariants
-- **Based on:** none
+- **Based on:** C. Sadowski, E. Aftandilian, A. Eagle, L. Miller-Cushon, C. Jaspan, "Lessons from
+  Building Static Analysis Tools at Google", Communications of the ACM 61(4), April 2018,
+  https://storage.googleapis.com/gweb-research2023-media/pubtools/4365.pdf § page 66 — "tool writers
+  take on the task of first fixing all the existing issues in the codebase"; read 2026-10-18
 - **Relations:** derives from WAY-51
 - **Verification:** an agent compares the work with the decision:
   - complies: a product whose code breaks the blocking rules in forty files marks the linter's
@@ -5302,7 +5342,7 @@ whole of its code in the task that brings the formatter.
 (WAY-51), and cleaning the whole of the code in the task that brings the linter grows that task into
 cleaning the product. The invariant stays whole and marked, so the debt shows at its entry, and old
 code is cleaned when a task has it in scope. This takes the place of Google's condition that a
-check is fixed across the whole code before it is turned on (WAY-100). A formatter rewrites the code
+check is fixed across the whole code before it is turned on. A formatter rewrites the code
 itself without changing what it does, so one reformatting leaves nothing to clean. Its weak point:
 until the last file is clean, no test shows a report coming back into a cleaned file or reaching a
 new one.
@@ -5320,7 +5360,10 @@ among the ways the skill offers. The template of the coding discipline carries n
 whole tree of a product's dependencies.
 
 - **Scope:** product-guidelines, invariants
-- **Based on:** none
+- **Based on:**
+  https://raw.githubusercontent.com/open-mercato/open-mercato/4374c48def1654927805c4b760f0e7f8648280f2/.github/workflows/audit.yml
+  § lines 23-24 — "The ci.yml job passes `--baseline <base yarn.lock>` so a change fails only on
+  advisories it introduces."; read 2026-10-18
 - **Relations:** derives from WAY-202 · derives from WAY-60
 - **Verification:** an agent compares the work with the decision:
   - complies: a change that adds a library at a version with a known vulnerability of high severity
@@ -5335,7 +5378,7 @@ whole tree of a product's dependencies.
 
 *Rationale:* an audit of the whole tree at every change fails a change that touches no dependency on
 a vulnerability published that morning, so the audit checks what the change brings, against the fork
-point, as Open Mercato's audit compares with a base (WAY-100). The severity from which a
+point, as Open Mercato's audit compares with a base. The severity from which a
 vulnerability counts and the database read are conditions of the product's invariant, so they stand
 in the decision that adopts the audit (WAY-60), and the severity is the product's choice, every
 severity among the ways. The tools stand at pinned versions, while the database is read as it stands
@@ -5513,7 +5556,11 @@ the table of `guidelines/coding.md`, by its path in backticks with the condition
 it, such as adding or changing a file of its kind.
 
 - **Scope:** product-guidelines, instruction-files
-- **Based on:** none
+- **Based on:**
+  https://raw.githubusercontent.com/open-mercato/open-mercato/4374c48def1654927805c4b760f0e7f8648280f2/AGENTS.md
+  § line 61 — "A single task often maps to **multiple rows** — "add a new module with search" needs
+  both the Module Development and Search guides. Read **all** matching guides first"; read
+  2026-10-18
 - **Relations:** derives from WAY-128 · derives from WAY-129 · derives from
   WAY-167
 - **Verification:** for the pointer of `AGENTS.md`, an agent compares the change with the
@@ -5531,7 +5578,7 @@ cycle; a path with its condition costs one line and is read when the condition c
 the pointer leads to work an agent would not otherwise find (WAY-128). A line for each file of a
 kind would grow `AGENTS.md`, which the tools load into every session, with each kind the product
 gains, while the general file's table, as Open Mercato's table leading from a task to the guides to
-read (WAY-100), leads the agent in a second step to the files of the kinds its work touches. The
+read leads the agent in a second step to the files of the kinds its work touches. The
 price: two steps instead of one, and a table that could drift from the files, which only the review
 of a change that adds or removes a kind's file catches (WAY-170). The pointer stands outside the
 installer's block, which holds no path a product chooses (WAY-107), and the gate runs the standing
@@ -5949,16 +5996,16 @@ becomes the data of some test.
 | WAY-119 | withdrawn: no decision carries *Review when* | none |
 | WAY-149 | withdrawn: it said only that a return-step test takes no deliberate break; every invariant test is seen failing once (WAY-08) | WAY-08 |
 | WAY-157 | withdrawn: how the orchestrator waits for an agent is a step of the task-cycle skill and binds no other work | none |
-| WAY-175 | withdrawn: it only listed what the styleguide's template and skill took from outside skills; each piece binds through the decision that carries it (WAY-100) | WAY-100 |
+| WAY-175 | withdrawn: what the styleguide's template and skill take from outside is no question a decision answers; each piece binds through the decision that carries it, with its source in *Based on* (WAY-100) | WAY-100 |
 | WAY-179 | withdrawn: an example of a template needs no decision (WAY-168) | none |
 | WAY-181 | withdrawn: the order of a plan is an example the styleguide carries, and WAY-213 says who reads it and how | WAY-213 |
 | WAY-188 | withdrawn: what checks a rule of a styleguide is what WAY-168 gives every rule of guidelines | WAY-168 |
 | WAY-190 | withdrawn: what keeps a product cleaned gradually from breaking a marked invariant again stands in WAY-51 for every marked invariant | WAY-51 |
 | WAY-193 | withdrawn: the same rule for every discipline stands in WAY-173 | WAY-173 |
 | WAY-194 | withdrawn: how both skills of guidelines ask the human stands in WAY-174 | WAY-174 |
-| WAY-195 | withdrawn: it only listed what coding guidelines took from outside sources; each piece binds through the decision that carries it (WAY-100) | WAY-100 |
+| WAY-195 | withdrawn: what coding guidelines take from outside is no question a decision answers; each piece binds through the decision that carries it, with its source in *Based on* (WAY-100) | WAY-100 |
 | WAY-196 | withdrawn: what checks a rule of coding guidelines stands in WAY-168 and WAY-198, and the invariants of a standing check in WAY-202 | WAY-168 · WAY-198 |
 | WAY-197 | withdrawn: the uses of a rule are optional lines of the rule (WAY-168), and the test of its invariant is seen failing once like every other (WAY-08) | WAY-168 · WAY-08 |
-| WAY-222 | withdrawn: it only listed what the task cycle took from a course lesson; each piece binds through the decision that carries it (WAY-100) | WAY-100 |
+| WAY-222 | withdrawn: what the task cycle takes from outside is no question a decision answers; each piece binds through the decision that carries it, with its source in *Based on* (WAY-100) | WAY-100 |
 | WAY-223 | withdrawn: it said only that a test protecting a history with no elements takes no evidence of its own; every invariant test is seen failing once (WAY-08) | WAY-08 |
 | WAY-224 | withdrawn: the part map records no failure modes, so no cycle asks the human about one | none |
