@@ -210,8 +210,8 @@ Before approval, the project readiness check rejects a definition whose Technolo
 The project plan check rejects a plan whose `Status:` line, sections, tables, change log or task
 states depart from the form the plan template gives, in which two tasks hold one number or one name
 or a task's state names the task itself, whose header names no definition the check can read or a
-fingerprint other than the one that definition's gate record holds, or whose definition holds an
-In scope that is neither `none` nor a list.
+fingerprint other than the one that definition's gate record holds and its text gives, or whose
+definition holds an In scope that is neither `none` nor a list.
 
 - **Method:** test
 - **Rests on:** none
@@ -222,12 +222,12 @@ In scope that is neither `none` nor a list.
 ## project-plan-check
 
 The project plan check rejects a plan in which a projected entry of its definition has no task
-realizing it, not exactly one task writing it into the foundation or more than one row, an item of
-the definition's In scope has no task, a task depends on itself, directly or through other tasks, a
-preparatory task has no task depending on it, an open question of the definition does not stand in
-the plan once, word for word with the place its definition gives it, with a task of the plan or an
-answer, or a cell names a task, an entry, an item or a question that the plan or its definition does
-not hold.
+realizing it, not exactly one task writing it into the foundation, or more than one row; an item of
+the definition's In scope has no task; a task depends on itself, directly or through other tasks; a
+preparatory task has no task depending on it; an open question of the definition does not stand in
+the plan exactly once, word for word with the place its definition gives it, with a task of the plan
+or an answer; or a cell or an item names a task, an entry, an item or a question that the plan or
+its definition does not hold.
 
 - **Method:** test
 - **Rests on:** none
@@ -278,11 +278,13 @@ For a product with no root `CLAUDE.md`, the installation command creates that fi
 ## project-plan-state-evidence
 
 For each task of a valid handed-over plan with an approved definition, the plan-state reader
-proposes a move to in cycle or to done only from git evidence that the task's recorded provenance
-ties to that task — its working cycle directory, a commit of its archived cycle directory, or a
-cycle record reachable in the product's freshly fetched integration history — proposing both moves
-together where both proofs hold, reports missing, ambiguous, contradictory, incomplete, failed or
-conflicting evidence instead of proposing progress from it, and edits no plan or task document.
+proposes a move to in cycle only from the task's working cycle directory in a worktree git lists or
+a commit of its archived cycle directory, and a move to done only from a cycle record reachable in
+the product's freshly fetched integration history, each tied to the task by its recorded
+provenance; it proposes both moves together where both proofs hold, reports missing or ambiguous
+provenance as unchecked and contradictory provenance for the human to reconcile, reports
+incomplete, failed or conflicting evidence instead of proposing progress from it, and edits no plan
+or task document.
 
 - **Method:** test
 - **Rests on:** none
