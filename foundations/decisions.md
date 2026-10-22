@@ -892,7 +892,9 @@ repeats the first search, and a record shows that a search ran, not what it miss
 
 A product uses the-way at a commit pinned in its own repository: its templates, skills and
 scripts, and the decisions of the-way that bind its work, all come from that commit. A newer
-version of the process enters a product only through a task in the product that moves the pin.
+version of the process enters a product only in one commit of the product that moves the pin,
+made when a task of the product needs a change of the process, or in a step of its own that takes
+several changes of the-way at once.
 
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, relation-model,
   installation, instruction-files, task-cycle
@@ -901,17 +903,20 @@ version of the process enters a product only through a task in the product that 
 - **Verification:** an agent compares the change with the decision; the invariants of this decision
   belong to each product's foundation, since no commit of the-way decides them:
   - complies: a product's foundation holds the invariants "this repository pins a commit of
-    the-way" and "CI runs only that commit's scripts"; a task in the product moves the pin and
-    carries what the newer version changes for the product;
+    the-way" and "CI runs only that commit's scripts"; a task that needs a newer skill moves the
+    pin in one commit, the entry points and guidance the installer rewrote included, and carries
+    what the newer version changes for the product;
   - violates: a product's CI fetches the latest the-way on every run; a skill in a product session
-    comes from a copy of the-way other than the pinned commit.
+    comes from a copy of the-way other than the pinned commit; a product moves its pin after every
+    change of the-way, though none of its tasks needs one.
 - **Origin:** none
 
 *Rationale:* a pinned commit turns a change of the process into a change in each product, taken
 in there before it binds, so one change cannot stop every product's checks at once. The price:
 products lag behind the process, and moving a pin is work, like updating a dependency.
 *Rejected:* every product on the newest the-way — results change with no change in the product;
-templates and scripts copied into each product — the copies drift.
+templates and scripts copied into each product — the copies drift; a move after every change of
+the-way — it interrupts the product's own work for changes none of its tasks needs.
 
 ### WAY-35 — What does an element's skill hold?
 

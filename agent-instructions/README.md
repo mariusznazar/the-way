@@ -24,10 +24,7 @@ no more. The foundation of the-way itself is migrated: its entries hold no finge
 invariants and no file of human verdicts. No format guard and no probe checks it;
 `elements/common/foundation_check.py` checks its identifiers, references, fields and the part of
 each file, and `elements/common/migrate_foundation.py` brings a foundation of the earlier form to
-the current one. No script checks the form of a product's guidelines. The block the installer
-writes into a product's `AGENTS.md` and `installation/README.md` still tell a product to run the
-format guard of each foundation file and the form check of guidelines until the plan's positions
-P26 and P27 rewrite them. While the plan is
+the current one. No script checks the form of a product's guidelines. While the plan is
 applied, its own rhythm holds: each of its positions is one commit, with every test run on it and
 reviewed as below, and each of its stages is one request.
 
