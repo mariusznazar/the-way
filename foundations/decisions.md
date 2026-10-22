@@ -738,9 +738,9 @@ entry; the rationale of a decision an agent takes in a task is the agent's to wr
 *Rationale:* a reason an agent writes looks exactly like a recorded one, and later readers take it
 for the reason the decision was made; a human who knows it is a source, a guess is not. The cited
 study compared generated arguments with expert rationale after giving models the problem and
-decision; it did not test recovery from code, and argument overlap is not a correctness rate. This
-decision takes its warning across model publishers (WAY-85). The place in the code shows a reader
-where the decision acts, and `unknown` shows nobody knows what the decision guards.
+decision; it did not test recovery from code, and argument overlap is not a correctness rate. The
+place in the code shows a reader where the decision acts, and `unknown` shows nobody knows what the
+decision guards.
 *Rejected:* an agent's rationale in the entry — read as the reason the decision was made; rejected
 options filled in as `none considered` — nobody knows what was considered; *Origin* recording what
 was searched and what was found — a list nothing reads once the decision is written, while the
@@ -1566,7 +1566,7 @@ reviewing the change, which made none of it, reads the test against the sentence
 
 *Rationale:* a test fitted to the code by the agent that wrote both meets the reviewer, which reads
 it against the sentence without having written either (WAY-10), so the writing needs no agents of
-its own. This takes the visible-scoring finding across publishers (WAY-85).
+its own.
 *Rejected:* three different agents for the sentence, the test and the code, with the deliberate
 break written by the reviewer — a pause and two agents for each invariant, for what the review
 already reads; hiding tests from the executor — it costs honest work.
@@ -1823,16 +1823,17 @@ for every fact.
 A finding of a study stands as an environment fact saying what the study found, its source citing
 the version of the paper, and the models the study measured named as the study names them, in the
 sentence or in a passage its source quotes. That the agents of this process behave the same is no
-part of the fact. A decision citing a finding none of whose measured models the publisher of this
-process's models lists says in its rationale that it takes the finding across publishers.
+part of the fact. A decision citing a finding none of whose measured models comes from a publisher
+whose models the process's agents run on says in its rationale that it takes the finding across
+publishers.
 
 - **Scope:** environment-facts, decisions
-- **Based on:** anthropic-model-states
+- **Based on:** anthropic-model-states · openai-model-states
 - **Relations:** none
 - **Verification:** an agent compares the change with the decision:
   - complies: the finding behind WAY-03 is a fact whose source is arXiv:2510.20270v1, quoting the
-    passage that names the three Claude models it measured; WAY-69, citing a finding on another
-    publisher's model only, says it takes the finding across publishers;
+    passage that names the three Claude models it measured; WAY-12, citing a finding on models of
+    other publishers only, says it takes the finding across publishers;
   - violates: the fact says "Claude models change tests" with no version of the paper and no
     models; the fact says the finding applies to this process's agents.
 - **Origin:** none
