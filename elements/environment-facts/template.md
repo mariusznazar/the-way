@@ -185,37 +185,4 @@ read`).
 ## Examples
 
 The entries of the-way's own `foundations/environment_facts.md` serve as this element's examples
-(WAY-09). Until the foundation is migrated, they still carry the earlier form below — a version,
-*Holds for* and *Method* — which the form above leaves out.
-
-## Read by the format guard until the migration
-
-The three sections below hold the earlier form of an entry, which `format_guard.py` beside this file
-and its tests read while `foundations/environment_facts.md` still keeps that form: a version in the
-heading, *Holds for*, *Method* and a fact's result. They bind no entry written by the sections
-above, and they go with the format guard when the foundation is migrated
-(`agent-instructions/README.md`).
-
-## Entry
-
-Earlier form, read by the format guard only until the migration.
-
-```markdown
-## <identifier>/<version>
-
-<one sentence: the fact>
-
-- **Holds for:** <the tools, platforms, editions or measured models the sentence is true of, with versions>
-- **Source:** <address of the edition> § <place> — "<passage, word for word>"; read <YYYY-MM-DD> · … | <address of the page> (archived: <address of the archived copy>, <YYYY-MM-DD>) § <place> — "<passage, word for word>"; read <YYYY-MM-DD> | observed: `<command>` on <tool and version, platform>; run <YYYY-MM-DD>
-- **Method:** `<program> <arguments>` | <path of a file a human re-reads the source against> | `TODO`
-```
-
-## Holds for
-
-Earlier form, read by the format guard only until the migration. *Holds for* named what the
-sentence is true of, with versions. It never reads "latest" or "newest".
-
-## Result
-
-Earlier form, kept until the migration. A fact's result was `pass`, `fail`, `unchecked` for a
-reason the invariants template gave, or `error`.
+(WAY-09).

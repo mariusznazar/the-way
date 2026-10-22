@@ -97,31 +97,4 @@ read`).
 
 `examples.md` names, by term, the entries of this repository's own glossary
 (`foundations/glossary.md`) that show the form of an entry; they are read there, in the commit of
-the-way a product pins, instead of being copied (WAY-09, WAY-34). The format guard checks that each
-term it names is the term of an entry of that glossary (`glossary-example-target`).
-
-## Read by the format guard until the migration
-
-The two sections below hold the earlier form of an entry, which `format_guard.py` beside this file
-reads while `foundations/glossary.md` still keeps that form: an *Avoid* field in every entry, and
-the words a definition may not hold. They bind no entry written by the sections above, and they go
-with the format guard when the foundation is migrated (`agent-instructions/README.md`).
-
-## Entry
-
-Earlier form, read by the format guard only until the migration.
-
-```markdown
-## <term>
-
-<one sentence: the definition>
-
-- **Avoid:** <word> — <what a reader takes it for instead, or "same thing" for a synonym> · … | none
-- **Not:** <meaning> — <what carries it, or TODO> · … | none
-```
-
-## The definition
-
-Earlier form, read by the format guard only until the migration. The definition is one sentence in
-the present tense, with no normative word: neither *must* nor any word the decision template keeps
-out of binding sentences.
+the-way a product pins, instead of being copied (WAY-09, WAY-34).

@@ -1,4 +1,7 @@
-"""Code the format guards of the elements share (WAY-09): reading a file and the sections and
+"""Kept only as a library of product-guidelines/form_check.py until the slimming plan's position P17
+removes both.
+
+Code the format guards of the elements share (WAY-09): reading a file and the sections and
 fields of an entry, reading the rules of form the elements share from `rules.md` beside this
 module, the report of a run and the-way's own record of it (WAY-74), and the calls to git. A guard
 loads this module by its path; the form of an identifier and of a version comes from the relation

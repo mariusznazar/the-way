@@ -98,7 +98,7 @@ class InstallTest(unittest.TestCase):
                           "`the-way-` prefix, never an unprefixed one", text)
             for _, sibling in NAMES:
                 self.assertIn(f"`{sibling}`", text)
-        # invariant: installation-claude-guidance/1
+        # invariant: installation-claude-guidance
         self.assertFalse((self.product / ".claude/rules/the-way.md").exists())
         self.assertEqual((self.product / "CLAUDE.md").read_bytes(), b"@AGENTS.md\n")
         self.assertEqual((self.product / "AGENTS.md").read_text(encoding="utf-8"), BLOCK)
@@ -383,7 +383,7 @@ class InstallTest(unittest.TestCase):
         self.assertFalse((self.product / ".gitignore").exists())
 
     def test_existing_claude_import_detection_and_cancel_preserve_bytes(self) -> None:
-        # invariant: installation-claude-guidance/1
+        # invariant: installation-claude-guidance
         claude = self.product / "CLAUDE.md"
         cases = (
             (b"@AGENTS.md\r\n# Guidance\r\n", False),
@@ -418,7 +418,7 @@ class InstallTest(unittest.TestCase):
                 self.assertEqual(claude.read_bytes(), original)
 
     def test_warns_for_ignored_new_claude_import(self) -> None:
-        # invariant: installation-claude-guidance/1
+        # invariant: installation-claude-guidance
         (self.product / ".gitignore").write_bytes(b"CLAUDE.md\n")
         preview = self.install()
         self.assertEqual(preview.returncode, 0, preview.stderr)
@@ -430,7 +430,7 @@ class InstallTest(unittest.TestCase):
         self.assertEqual((self.product / "CLAUDE.md").read_bytes(), b"@AGENTS.md\n")
 
     def test_rejects_claude_directory_before_writing(self) -> None:
-        # invariant: installation-claude-guidance/1
+        # invariant: installation-claude-guidance
         claude = self.product / "CLAUDE.md"
         claude.mkdir()
         for args in ((), ("--apply",)):
@@ -441,7 +441,7 @@ class InstallTest(unittest.TestCase):
         self.assertEqual(sorted(path.name for path in self.product.iterdir()), [".git", "CLAUDE.md"])
 
     def test_rejects_claude_invalid_utf8_before_writing(self) -> None:
-        # invariant: installation-claude-guidance/1
+        # invariant: installation-claude-guidance
         claude = self.product / "CLAUDE.md"
         claude.write_bytes(b"\xff\xfe rules")
         for args in ((), ("--apply",)):
@@ -452,7 +452,7 @@ class InstallTest(unittest.TestCase):
         self.assertEqual(sorted(path.name for path in self.product.iterdir()), [".git", "CLAUDE.md"])
 
     def test_rejects_symlink_at_claude_without_touching_target(self) -> None:
-        # invariant: installation-claude-guidance/1
+        # invariant: installation-claude-guidance
         outside = Path(self.temporary.name) / "outside.md"
         outside.write_bytes(b"@AGENTS.md\n")
         claude = self.product / "CLAUDE.md"
@@ -471,24 +471,18 @@ class InstallTest(unittest.TestCase):
     def test_empty_foundations_have_valid_form(self) -> None:
         applied = self.install("--apply", input_text="y\n")
         self.assertEqual(applied.returncode, 0, applied.stderr)
-        for element, filename in (
-            ("decisions", "decisions.md"),
-            ("invariants", "invariants.md"),
-            ("glossary", "glossary.md"),
-            ("part-map", "part_map.md"),
-            ("environment-facts", "environment_facts.md"),
-        ):
-            guard = self.product / ".the-way" / "elements" / element / "format_guard.py"
-            result = command(sys.executable, "-B", str(guard),
-                             str(self.product / "foundations" / filename), cwd=self.product)
-            if element == "part-map":
-                # An empty map cannot yet assign the two tracked submodule files to a product
-                # part. These are content checks, not errors in the map's empty file form.
-                self.assertIn("no part claims `.gitmodules`", result.stdout)
-                self.assertIn("no part claims `.the-way`", result.stdout)
-                self.assertIn("2 error(s)", result.stdout)
-            else:
-                self.assertEqual(result.returncode, 0, f"{element}: {result.stdout}\n{result.stderr}")
+        check = self.product / ".the-way" / "elements" / "common" / "foundation_check.py"
+        result = command(sys.executable, "-B", str(check), str(self.product), cwd=self.product)
+        # An empty map assigns no file to a part yet, so the check reports each file git tracks
+        # as claimed by no part; it reports nothing about the form of the empty foundation files.
+        errors = result.stdout.splitlines()[:-1]
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        self.assertIn(".gitmodules: no part claims it: give it to a part or list it as left out "
+                      "on purpose", errors)
+        self.assertIn(".the-way: no part claims it: give it to a part or list it as left out on "
+                      "purpose", errors)
+        for line in errors:
+            self.assertIn(": no part claims it:", line)
 
     def test_pinned_submodule_initializes_in_a_fresh_checkout(self) -> None:
         applied = self.install("--apply", input_text="y\n")

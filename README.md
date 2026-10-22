@@ -50,8 +50,8 @@ product only when it moves to a newer commit.
 | `environment_facts.md` | Sourced facts outside the product, each with the range where it holds and a way to check it again | A rule's external premise can be revisited when the world changes. |
 | `glossary.md` | Terms used by the foundation, each with one definition and any words or meanings to avoid | A changed meaning reaches the sentences that use the term. |
 
-Where the product does not meet a rule today, `violated_invariants.md` lists it openly as debt,
-instead of the rule being weakened.
+Where the product does not meet a rule today, its invariant reads `Violated: yes` openly, instead
+of the rule being weakened.
 
 ## What else is here
 
@@ -66,7 +66,6 @@ instead of the rule being weakened.
 - `relation-model/` — computes a short fingerprint of an entry's wording, so that anything pointing
   to the entry learns when the wording changed.
 - `gate/` — runs the tests and records, for each rule, whether it held.
-- `probes/` — scripts that check the environment facts again.
 - `installation/` — prepares a product repository to use one pinned commit of the-way; see
   `installation/README.md`.
 - `project-level/` — defines a project, settles its technology, breaks it into a plan of tasks, and

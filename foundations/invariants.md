@@ -1,1854 +1,261 @@
 # Invariants
 
-What the-way states as true or false on every commit, each with its method of checking. The rules
-of an entry stand in `elements/invariants/template.md`.
+What the-way states as true or false on every commit, each checked by a test or by review. The
+rules of an entry stand in `elements/invariants/template.md`.
 
-## decision-guard-stale-reference/1
-
-The decision guard, given "{merge-onto}", reports every `derives from` or `narrows` relation, in the latest version of a decision in the log a merge onto that commit leaves, whose fingerprint differs from the current fingerprint there of the decision it names.
-
-- **Method:** `python -B gate/run_tests.py gate --record .runs/gate-tests.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-02@3ffcbd46 · WAY-31@a14c616c
-- **Part:** decisions · relation-model
-- **Correction:** none
-
-## decision-fingerprint-input/1
-
-The fingerprint the decision guard gives a decision version is the fingerprint of its binding sentences alone.
-
-- **Method:** `python -B gate/run_tests.py elements/decisions --record .runs/decisions-tests.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-02@3ffcbd46
-- **Part:** decisions · relation-model
-- **Correction:** none
-
-## log-reference-target/1
-
-Every decision number the decision log refers to is the number of a decision in the log.
-
-- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-02@3ffcbd46
-- **Part:** decisions
-- **Correction:** none
-
-## foundation-file-kinds/1
+## foundation-file-kinds
 
 Every file in `foundations/` holds the entries of one of the five foundation elements, or is a file an element's template or the part the elements share names.
 
-- **Method:** `TODO`
+- **Method:** review
 - **Rests on:** none
-- **Derives from:** WAY-04@29a75d2c
+- **Derives from:** WAY-04
 - **Part:** every
-- **Correction:** none
+- **Violated:** no
 
-## binding-sentence-count/1
-
-Every decision version in the decision log, other than a repeal, opens with one to three binding sentences.
-
-- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-05@2f8233e2 · WAY-20@deffabbb
-- **Part:** decisions
-- **Correction:** none
-
-## binding-sentence-words/1
-
-No binding sentence in the decision log contains, outside code, a word the decision template forbids there.
-
-- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-05@2f8233e2
-- **Part:** decisions
-- **Correction:** none
-
-## decision-example-numbers/1
-
-Every decision number `elements/decisions/examples.md` names is the number of a decision in the decision log.
-
-- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-05@2f8233e2
-- **Part:** decisions
-- **Correction:** none
-
-## decision-template-change/1
-
-A change that, against {fork-point}, alters `elements/decisions/template.md` also adds a version to the decision log.
-
-- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --base {fork-point} --record .runs/decisions-base.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-05@2f8233e2
-- **Part:** decisions
-- **Correction:** none
-
-## foundation-change-merge-route/1
+## foundation-change-merge-route
 
 Where {merge-onto} exists, every commit of the first-parent history of {merge-onto} that alters a foundation entry against its first parent is a merge.
 
-- **Method:** `TODO`
+- **Method:** review
 - **Rests on:** none
-- **Derives from:** WAY-01@60960941
+- **Derives from:** WAY-01
 - **Part:** every
-- **Correction:** none
+- **Violated:** no
 
-## log-existing-lines/1
-
-The decision log begins with every line it held on {fork-point}, unchanged and in the same order.
-
-- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --base {fork-point} --record .runs/decisions-base.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-07@acacb194
-- **Part:** decisions
-- **Correction:** none
-
-## log-versions-added-per-number/1
-
-Against {fork-point}, the decision log gains at most one version of each number.
-
-- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --base {fork-point} --record .runs/decisions-base.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-07@acacb194
-- **Part:** decisions
-- **Correction:** none
-
-## log-merge-copies/1
-
-Where {merge-onto} exists, every decision version that the decision log and the decision log on {merge-onto} both hold reads the same in both.
-
-- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --merge-onto {merge-onto} --record .runs/decisions-merge-onto.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-07@acacb194
-- **Part:** decisions
-- **Correction:** none
-
-## invariant-method-form/1
-
-Every entry of `foundations/invariants.md` names as its method a command that begins with the name of the program it runs, the path alone of a file that exists, or `TODO`, alone or followed by ` — ` and what is missing.
-
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-08@2343e09f · WAY-61@4804d070 · WAY-63@f16348c8
-- **Part:** every
-- **Correction:** none
-
-## repository-file-location/1
+## repository-file-location
 
 Where {merge-onto} exists, every file git tracks lies in `foundations/` or in a directory WAY-09 names for a part of the process, belongs to the `repository` or the `agent-instructions` part of the part map, or is the `README.md` at the root.
 
-- **Method:** `TODO`
+- **Method:** review
 - **Rests on:** none
-- **Derives from:** WAY-09@ce6bd9c0
+- **Derives from:** WAY-09
 - **Part:** every
-- **Correction:** none
+- **Violated:** no
 
-## element-directory-contents/1
+## element-directory-contents
 
-Where {merge-onto} exists, every element directory holds a template, examples or a pointer to entries of the-way that serve as its examples, a skill and a format guard.
+Where {merge-onto} exists, every element directory holds a template, examples or a pointer to entries of the-way that serve as its examples, and a skill.
 
-- **Method:** `TODO`
+- **Method:** review
 - **Rests on:** none
-- **Derives from:** WAY-09@ce6bd9c0
+- **Derives from:** WAY-09
 - **Part:** decisions · part-map · invariants · glossary · environment-facts
-- **Correction:** none
+- **Violated:** no
 
-## relation-model-directory-contents/1
+## relation-model-directory-contents
 
 Where {merge-onto} exists, `relation-model/` holds the script that computes fingerprints.
 
-- **Method:** `TODO`
+- **Method:** review
 - **Rests on:** none
-- **Derives from:** WAY-09@ce6bd9c0
+- **Derives from:** WAY-09
 - **Part:** relation-model
-- **Correction:** none
+- **Violated:** no
 
-## invariant-example-target/1
-
-Every identifier `elements/invariants/examples.md` names is the identifier of an entry of `foundations/invariants.md`.
-
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-09@ce6bd9c0
-- **Part:** invariants
-- **Correction:** none
-
-## map-example-target/1
-
-Every identifier `elements/part-map/examples.md` names is the identifier of an entry of the part map.
-
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-09@ce6bd9c0
-- **Part:** part-map
-- **Correction:** none
-
-## glossary-example-target/1
-
-Every term `elements/glossary/examples.md` names is the term of an entry of `foundations/glossary.md`.
-
-- **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-09@ce6bd9c0
-- **Part:** glossary
-- **Correction:** none
-
-## return-step-record/1
+## return-step-record
 
 Where {merge-onto} exists, every change against {fork-point} holds, in one of its commits, the record of its task's return step.
 
-- **Method:** `TODO`
+- **Method:** review
 - **Rests on:** none
-- **Derives from:** WAY-11@e882a9df
+- **Derives from:** WAY-11
 - **Part:** every
-- **Correction:** none
+- **Violated:** no
 
-## decision-verification-level/1
-
-Every decision version in the decision log names its level of verification, or holds `TODO` in *Verification*.
-
-- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-12@0f1f7ea4 · WAY-71@c32828c9
-- **Part:** decisions
-- **Correction:** none
-
-## level-one-decision-invariants/1
-
-Every decision in force whose verification includes level 1 has at least one entry of `foundations/invariants.md` deriving from it.
-
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-12@0f1f7ea4 · WAY-17@b1e26133
-- **Part:** every
-- **Correction:** none
-
-## verification-invariant-derivation/1
-
-Every identifier the level 1 verification of the latest version of a decision in the decision log names is an entry of `foundations/invariants.md` whose *Derives from* names that decision.
-
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-12@0f1f7ea4 · WAY-17@b1e26133
-- **Part:** every
-- **Correction:** none
-
-## foundation-change-path/1
+## foundation-change-path
 
 No change that, against {fork-point}, alters a foundation entry runs on the path for tasks that leave the foundation unchanged.
 
-- **Method:** `TODO`
+- **Method:** review
 - **Rests on:** none
-- **Derives from:** WAY-13@e6c830b7
+- **Derives from:** WAY-13
 - **Part:** every
-- **Correction:** none
+- **Violated:** no
 
-## decision-approval-record/1
-
-Every decision version in the decision log records in *Approved by* who approved it and either on what
-date, or by the merge of which request.
-
-- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-14@3a9cc628
-- **Part:** decisions
-- **Correction:** none
-
-## decision-approver/1
-
-Every decision version in the decision log names Mariusz in *Approved by*.
-
-- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-14@3a9cc628
-- **Part:** decisions
-- **Correction:** none
-
-## derived-file-content/1
+## derived-file-content
 
 Every derived file git tracks that its generator can produce from scratch is identical to what the generator produces on the same commit, except for the values that file declares as varying between runs.
 
-- **Method:** `TODO`
+- **Method:** review
 - **Rests on:** none
-- **Derives from:** WAY-04@29a75d2c · WAY-53@aaeafada
+- **Derives from:** WAY-04 · WAY-53
 - **Part:** every
-- **Correction:** none
+- **Violated:** no
 
-## ci-checking-commands/1
+## ci-checking-commands
 
-No CI configuration git tracks runs a checking command other than the gate's command.
+No CI configuration git tracks runs a checking command other than `python -B gate/run_tests.py`.
 
-- **Method:** `TODO`
+- **Method:** review
 - **Rests on:** none
-- **Derives from:** WAY-16@5c1d60d4
+- **Derives from:** WAY-16
 - **Part:** every
-- **Correction:** none
+- **Violated:** no
 
-## gate-check-source/1
-
-Every check the gate runs for an entry of the foundation comes from the method of checking written in that entry.
-
-- **Method:** `TODO`
-- **Rests on:** none
-- **Derives from:** WAY-16@5c1d60d4
-- **Part:** every
-- **Correction:** none
-
-## decision-heading-form/1
-
-The heading of every decision version in the decision log has the form `### <prefix>-NN/V — <question>`.
-
-- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-19@ab65670f
-- **Part:** decisions
-- **Correction:** none
-
-## decision-version-sequence/1
-
-The versions of each number in the decision log are consecutive.
-
-- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-19@ab65670f
-- **Part:** decisions
-- **Correction:** none
-
-## decision-change-kind/1
-
-The first version of every number in the decision log names `new decision` in *Change* and every later version a kind of change from the list in the decision template, unless *Change* holds `TODO`.
-
-- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-20@deffabbb · WAY-71@c32828c9
-- **Part:** decisions
-- **Correction:** none
-
-## decision-binding-across-versions/1
-
-Every decision version in the decision log whose kind of change is unchanged sentences or challenge keeps the binding sentences of the version before it word for word.
-
-- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-20@deffabbb
-- **Part:** decisions
-- **Correction:** none
-
-## repeal-binding-sentences/1
-
-No repeal in the decision log has binding sentences.
-
-- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-20@deffabbb
-- **Part:** decisions
-- **Correction:** none
-
-## decision-scope-names/1
-
-Every name in the scope of the latest version of a decision in the decision log is the identifier of a part in the part map.
-
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-21@586e4a38 · WAY-41@f42aae15
-- **Part:** every
-- **Correction:** none
-
-## decisions-found-for-change/1
+## decisions-found-for-change
 
 The decisions found for a change against {fork-point} include every decision whose scope names a part the change touches.
 
-- **Method:** `TODO`
-- **Rests on:** git-path-patterns@1519f3f7
-- **Derives from:** WAY-21@586e4a38
+- **Method:** review
+- **Rests on:** git-path-patterns
+- **Derives from:** WAY-21
 - **Part:** every
-- **Correction:** none
+- **Violated:** no
 
-## review-when-form/1
-
-Every *Review when* in the decision log other than `none` or `TODO` names both a state and a date.
-
-- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-24@f2dcb6d4 · WAY-71@c32828c9
-- **Part:** decisions
-- **Correction:** none
-
-## decision-guard-overdue-review/1
-
-The decision guard, given a date, warns of every check-by date earlier than it that no later review record answers.
-
-- **Method:** `python -B gate/run_tests.py elements/decisions --record .runs/decisions-tests.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-24@f2dcb6d4
-- **Part:** decisions
-- **Correction:** none
-
-## review-next-check/1
-
-Every review record in the decision log that records that the state has not come names a date, or holds `TODO`, in *Next check*, and every other one holds nothing there but a date, `none` or `TODO`.
-
-- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-24@f2dcb6d4 · WAY-71@c32828c9
-- **Part:** decisions
-- **Correction:** none
-
-## review-named-version/1
-
-Every version of a decision that a review record names exists in the decision log.
-
-- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-24@f2dcb6d4
-- **Part:** decisions
-- **Correction:** none
-
-## narrows-pairs/1
-
-No two decisions in the decision log name each other as `narrows` in their latest versions.
-
-- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-25@018149d3
-- **Part:** decisions
-- **Correction:** none
-
-## outbound-link-reach/1
+## outbound-link-reach
 
 No file git tracks contains a link into a repository that a reader not signed in to its host cannot open, or into a private note collection, other than a link in the `## Backlog` section of the root `AGENTS.md` to the place of the repository's tasks.
 
-- **Method:** `TODO`
+- **Method:** review
 - **Rests on:** none
-- **Derives from:** WAY-27@fb27e458
+- **Derives from:** WAY-27
 - **Part:** every
-- **Correction:** none
+- **Violated:** no
 
-## inherited-origin-form/1
-
-Every inherited decision in the decision log has *Origin* in the form `inherited — searched: <…>; found: <…>`.
-
-- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-29@d4c8835a
-- **Part:** decisions
-- **Correction:** none
-
-## inherited-rationale-source/1
+## inherited-rationale-source
 
 The *Rationale* of every inherited decision in the decision log is `unknown`, a quotation with its source, or attributed to the human who gave it.
 
-- **Method:** `TODO`
+- **Method:** review
 - **Rests on:** none
-- **Derives from:** WAY-29@d4c8835a
+- **Derives from:** WAY-29
 - **Part:** decisions
-- **Correction:** none
+- **Violated:** no
 
-## relation-fingerprint-presence/1
-
-A relation in the decision log carries a fingerprint when, and only when, its type is `derives from` or `narrows`.
-
-- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-31@a14c616c
-- **Part:** decisions
-- **Correction:** none
-
-## relation-fingerprint-value/1
-
-Where {merge-onto} exists, every fingerprint a relation carries in the latest version of a decision, in the decision log a merge onto {merge-onto} leaves, equals the current fingerprint there of the decision it names.
-
-- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --merge-onto {merge-onto} --record .runs/decisions-merge-onto.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-02@3ffcbd46 · WAY-31@a14c616c
-- **Part:** decisions · relation-model
-- **Correction:** none
-
-## relation-type/1
-
-Every relation in the decision log has the type `derives from` or `narrows`.
-
-- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-32@1131acb7
-- **Part:** decisions
-- **Correction:** none
-
-## skill-rule-source/1
+## skill-rule-source
 
 Every element's skill names its element's template and `elements/common/` as the source of the rules of its entries, and `elements/common/` as the source of the way of working the skills share.
 
-- **Method:** `TODO`
+- **Method:** review
 - **Rests on:** none
-- **Derives from:** WAY-35@11333629
+- **Derives from:** WAY-35
 - **Part:** decisions · part-map · invariants · glossary · environment-facts
-- **Correction:** none
+- **Violated:** no
 
-## script-language/1
+## script-language
 
 Every script git tracks is a Python file.
 
-- **Method:** `TODO`
+- **Method:** review
 - **Rests on:** none
-- **Derives from:** WAY-38@6e10c3fd
+- **Derives from:** WAY-38
 - **Part:** every
-- **Correction:** none
+- **Violated:** no
 
-## script-imports/1
+## script-imports
 
 No script git tracks imports a module other than one of the standard library of Python 3.14 or a Python file git tracks.
 
-- **Method:** `TODO`
-- **Rests on:** python-stdlib-modules@258d2586
-- **Derives from:** WAY-38@6e10c3fd · WAY-89@fbb25ae3
+- **Method:** review
+- **Rests on:** python-stdlib-modules
+- **Derives from:** WAY-38 · WAY-89
 - **Part:** every
-- **Correction:** none
+- **Violated:** no
 
-## script-subprocesses/1
+## script-subprocesses
 
 No script git tracks starts a program other than git or a command the product declares in its repository.
 
-- **Method:** `TODO`
+- **Method:** review
 - **Rests on:** none
-- **Derives from:** WAY-38@6e10c3fd
+- **Derives from:** WAY-38
 - **Part:** every
-- **Correction:** none
+- **Violated:** no
 
-## map-guard-missing-command/1
-
-The map guard reports a check whose declared command the product lacks as unchecked, never as agreement.
-
-- **Method:** `python -B gate/run_tests.py elements/part-map --record .runs/part-map-tests.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-38@6e10c3fd
-- **Part:** part-map
-- **Correction:** none
-
-## fingerprint-definition/1
+## fingerprint-definition
 
 The script of `relation-model` gives a text the first eight characters, in lower-case hexadecimal, of the SHA-256 digest of that text encoded in UTF-8, after every run of spaces and line breaks is replaced by a single space and both ends are trimmed.
 
-- **Method:** `python -B gate/run_tests.py relation-model --record .runs/relation-model-tests.jsonl`
-- **Rests on:** sha-256@6ba272ed · utf-8@6afd686d
-- **Derives from:** WAY-02@3ffcbd46
+- **Method:** test
+- **Rests on:** sha-256 · utf-8
+- **Derives from:** WAY-02
 - **Part:** relation-model
-- **Correction:** none
+- **Violated:** no
 
-## map-entry-kinds/1
-
-Every entry of the part map is a part, a critical flow or a surface.
-
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-40@3d01f9cd
-- **Part:** part-map
-- **Correction:** none
-
-## map-section-kinds/1
-
-The part map holds no section other than its entries and the lists its template names.
-
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-40@3d01f9cd
-- **Part:** part-map
-- **Correction:** none
-
-## part-map-file/1
-
-The repository holds exactly one part map, `foundations/part_map.md`.
-
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-40@3d01f9cd
-- **Part:** every
-- **Correction:** none
-
-## map-identifier-form/1
-
-The identifier in the heading of every entry of the part map has the form `elements/common/` gives.
-
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-41@f42aae15 · WAY-35@11333629
-- **Part:** part-map
-- **Correction:** none
-
-## identifier-holders/1
-
-No identifier is held by two entries or withdrawn identifiers of the part map, `foundations/invariants.md` and `foundations/environment_facts.md` taken together.
-
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-41@f42aae15 · WAY-64@c5192c61
-- **Part:** part-map · invariants · environment-facts
-- **Correction:** none
-
-## map-reference-target/1
+## map-reference-target
 
 Every part map identifier referred to from the foundation, a test or a generated rule file stands in the part map as an entry or as a withdrawn identifier.
 
-- **Method:** `TODO`
+- **Method:** review
 - **Rests on:** none
-- **Derives from:** WAY-41@f42aae15
+- **Derives from:** WAY-41
 - **Part:** every
-- **Correction:** none
+- **Violated:** no
 
-## map-withdrawal-successors/1
-
-Every withdrawn identifier of the part map gives why it was withdrawn and names one or more successors, each an entry or a withdrawn identifier of the map.
-
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-41@f42aae15
-- **Part:** part-map
-- **Correction:** none
-
-## map-identifier-persistence/1
-
-Every identifier `foundations/part_map.md` held on {fork-point} stands in it as an entry or as a withdrawn identifier.
-
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --base {fork-point} --record .runs/part-map-base.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-41@f42aae15
-- **Part:** part-map
-- **Correction:** none
-
-## map-entry-version/1
-
-No entry of the part map carries a version.
-
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-43@6a3b5e9e
-- **Part:** part-map
-- **Correction:** none
-
-## file-part-assignment/1
-
-Every file git tracks matches the path patterns of exactly one part of the part map, or stands on the map's list of files left out on purpose.
-
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
-- **Rests on:** git-path-patterns@1519f3f7
-- **Derives from:** WAY-44@2f2b6227
-- **Part:** every
-- **Correction:** none
-
-## path-pattern-reach/1
-
-Every path pattern in the part map matches at least one file git tracks.
-
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
-- **Rests on:** git-path-patterns@1519f3f7
-- **Derives from:** WAY-44@2f2b6227 · WAY-48@947e51e4
-- **Part:** every
-- **Correction:** none
-
-## left-out-file-assignment/1
-
-No file on the part map's list of files left out on purpose matches the path patterns of a part.
-
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
-- **Rests on:** git-path-patterns@1519f3f7
-- **Derives from:** WAY-44@2f2b6227
-- **Part:** part-map
-- **Correction:** none
-
-## flow-part-names/1
-
-Every part a critical flow of the part map lists, and every part a part's *Depends on* names, is a part of the map.
-
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-40@3d01f9cd · WAY-45@3798c435
-- **Part:** part-map
-- **Correction:** none
-
-## flow-invariant-link/1
-
-Every critical flow in the part map names an invariant, and some test holds a line `flow: <identifier>` naming that flow.
-
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-45@3798c435
-- **Part:** part-map · gate
-- **Correction:** none
-
-## map-invariant-names/1
-
-Every invariant identifier the part map names is an entry of `foundations/invariants.md`.
-
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-64@c5192c61
-- **Part:** every
-- **Correction:** none
-
-## failure-mode-severity/1
-
-Every failure mode recorded in the part map names its severity.
-
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-46@7511b86f
-- **Part:** part-map
-- **Correction:** none
-
-## failure-mode-detection/1
-
-Every failure mode recorded in the part map names an invariant that detects it before release, or reads "not detected".
-
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-46@7511b86f
-- **Part:** part-map
-- **Correction:** none
-
-## part-criticality-field/1
-
-No part of the part map carries a criticality written by hand.
-
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-46@7511b86f
-- **Part:** part-map
-- **Correction:** none
-
-## map-guard-unrecorded-criticality/1
-
-The map guard computes the highest criticality of the map's scale for a part with no failure modes recorded.
-
-- **Method:** `python -B gate/run_tests.py elements/part-map --record .runs/part-map-tests.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-46@7511b86f
-- **Part:** part-map
-- **Correction:** none
-
-## map-guard-dependency-report/1
-
-The map guard computes the criticality of a part that has failure modes recorded as the highest of the severities of its own failure modes, of the criticalities of the critical flows it lies on, and of the computed criticalities of the parts that depend on it by a dependency recording no separation.
-
-- **Method:** `python -B gate/run_tests.py elements/part-map --record .runs/part-map-tests.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-46@7511b86f
-- **Part:** part-map
-- **Correction:** none
-
-## criticality-lowering-report/1
-
-The map guard, given "{fork-point}", reports every part whose computed criticality is lower than on that commit.
-
-- **Method:** `python -B gate/run_tests.py elements/part-map --record .runs/part-map-tests.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-46@7511b86f
-- **Part:** part-map
-- **Correction:** none
-
-## flow-coverage-parts/1
-
-For every critical flow whose test leaves a coverage file, every part that coverage names stands in the flow's list of parts.
-
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
-- **Rests on:** git-path-patterns@1519f3f7
-- **Derives from:** WAY-47@bc0da442
-- **Part:** every
-- **Correction:** none
-
-## map-guard-missing-coverage/1
-
-The map guard reports a critical flow whose test leaves no coverage file as "list of parts unchecked", never as agreeing with the map.
-
-- **Method:** `python -B gate/run_tests.py elements/part-map --record .runs/part-map-tests.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-47@bc0da442
-- **Part:** part-map
-- **Correction:** none
-
-## map-guard-test-runs/1
-
-The map guard starts no test run of its own.
-
-- **Method:** `python -B gate/run_tests.py elements/part-map --record .runs/part-map-tests.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-47@bc0da442
-- **Part:** part-map
-- **Correction:** none
-
-## external-exchange-row/1
-
-Every exchange with the external context in the part map records its direction, whether what comes in is trusted, and whether the partner updates together with the product.
-
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-48@947e51e4 · WAY-49@e8e0ff7c
-- **Part:** part-map
-- **Correction:** none
-
-## gate-boundary-change/1
-
-The gate runs the check for crafted input on every change that, against "{fork-point}", touches the files of a trust boundary.
-
-- **Method:** `TODO`
-- **Rests on:** git-path-patterns@1519f3f7
-- **Derives from:** WAY-48@947e51e4
-- **Part:** gate
-- **Correction:** none
-
-## surface-promise-level/1
-
-Every item declared a surface carries a level of promise.
-
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-49@e8e0ff7c
-- **Part:** every
-- **Correction:** none
-
-## surface-declaration/1
-
-Every surface in the part map names a file that exists and an item whose name stands in that file, or says that it cannot be marked at the item and names a test file that exists.
-
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-49@e8e0ff7c
-- **Part:** every
-- **Correction:** none
-
-## map-withdrawal-date/1
-
-No withdrawal date is written in the part map.
-
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-49@e8e0ff7c
-- **Part:** part-map
-- **Correction:** none
-
-## promise-level-policy/1
-
-Every level of promise a declaration uses has a policy in the part map.
-
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-49@e8e0ff7c
-- **Part:** every
-- **Correction:** none
-
-## surface-change-path/1
-
-No surface in the part map carries a change path of its own.
-
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-49@e8e0ff7c
-- **Part:** part-map
-- **Correction:** none
-
-## known-violation-coverage/1
-
-Every dependency the code holds that the part map does not allow stands on the list of known violations.
-
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-51@8bdac21a
-- **Part:** every
-- **Correction:** none
-
-## known-violations-growth/1
-
-The list of known violations is a subset of its version on {fork-point}.
-
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --base {fork-point} --record .runs/part-map-base.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-51@8bdac21a
-- **Part:** part-map
-- **Correction:** none
-
-## known-violation-currency/1
-
-Every row of the list of known violations names a dependency the code holds that the part map does not allow.
-
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-51@8bdac21a
-- **Part:** every
-- **Correction:** none
-
-## known-violation-fields/1
-
-Every row of the list of known violations names a source part, a target part, a file and what it reaches for.
-
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-51@8bdac21a
-- **Part:** part-map
-- **Correction:** none
-
-## known-violation-line-number/1
-
-No row of the list of known violations names a line number.
-
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-51@8bdac21a
-- **Part:** part-map
-- **Correction:** none
-
-## generated-overview/1
+## generated-overview
 
 No file generated for an agent holds an overview of the repository's directories.
 
-- **Method:** `TODO`
+- **Method:** review
 - **Rests on:** none
-- **Derives from:** WAY-52@93101108
+- **Derives from:** WAY-52
 - **Part:** part-map · agent-instructions
-- **Correction:** none
+- **Violated:** no
 
-## flow-test-location/1
+## gate-exit-code
 
-Every test holding a line `flow: <identifier>` that names a critical flow of the part map lies under `gate/`.
+`gate/run_tests.py` exits non-zero when a test it runs fails or errs, a test module it finds cannot be imported, a test marked as an expected failure passes or a directory it runs holds no test, and zero when every test it runs passes; run without a directory, it runs the tests of every directory holding a `test_*.py` file that git tracks and the working tree holds, and exits non-zero also when no directory holds such a file or a directory's run exits zero without a report that `unittest` ends with OK.
 
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
+- **Method:** test
 - **Rests on:** none
-- **Derives from:** WAY-55@d30c3b6c
-- **Part:** every
-- **Correction:** none
-
-## invariant-sentence-count/1
-
-Every entry of `foundations/invariants.md` states its invariant in one sentence.
-
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-56@0d6340a8
-- **Part:** invariants
-- **Correction:** none
-
-## invariant-identifier-form/1
-
-The identifier in the heading of every entry of `foundations/invariants.md` has the form `elements/common/` gives.
-
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-64@c5192c61 · WAY-35@11333629
-- **Part:** invariants · elements-common
-- **Correction:** none
-
-## invariant-version-number/1
-
-The heading of every entry of `foundations/invariants.md` carries a version number.
-
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-57@89a75ebe
-- **Part:** invariants
-- **Correction:** none
-
-## invariant-version-new/1
-
-Every entry of `foundations/invariants.md` with no fingerprint on {fork-point} carries version 1 and declares no correction.
-
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --base {fork-point} --record .runs/invariants-base.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-57@89a75ebe
-- **Part:** invariants
-- **Correction:** none
-
-## invariant-version-changed/1
-
-Every entry of `foundations/invariants.md` whose fingerprint differs from its fingerprint on {fork-point} carries either a version one higher than there and no correction, or the version it has there and a correction naming both fingerprints.
-
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --base {fork-point} --record .runs/invariants-base.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-57@89a75ebe
-- **Part:** invariants
-- **Correction:** none
-
-## invariant-version-unchanged/1
-
-Every entry of `foundations/invariants.md` whose fingerprint equals its fingerprint on {fork-point} carries the version it has there, and declares no correction whose second fingerprint differs from it.
-
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --base {fork-point} --record .runs/invariants-base.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-57@89a75ebe
-- **Part:** invariants
-- **Correction:** none
-
-## invariant-earlier-wording/1
-
-No entry of `foundations/invariants.md` holds, beside its current sentence, a sentence it held on {fork-point}.
-
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --base {fork-point} --record .runs/invariants-base.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-57@89a75ebe
-- **Part:** invariants
-- **Correction:** none
-
-## invariant-citation-version/1
-
-Every `invariant:` line in a check that names an entry of `foundations/invariants.md` cites its current version.
-
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-57@89a75ebe · WAY-65@581724fc
-- **Part:** every
-- **Correction:** none
-
-## invariant-recovered-form/1
-
-Every row of the list of recovered invariants in `foundations/invariants.md` names an entry at its current version and holds `searched: <…>` and `found: <…>`.
-
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-58@952ded5c
-- **Part:** invariants
-- **Correction:** none
-
-## invariant-recovered-derived/1
-
-No entry of `foundations/invariants.md` that stands on the list of recovered invariants names in *Derives from* a decision of `foundations/decisions.md`.
-
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-58@952ded5c
-- **Part:** invariants
-- **Correction:** none
-
-## invariant-fingerprint-input/1
-
-The fingerprint the invariants guard gives an invariant entry is the fingerprint of its sentence alone.
-
-- **Method:** `python -B gate/run_tests.py elements/invariants --record .runs/invariants-tests.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-56@0d6340a8
-- **Part:** invariants · relation-model
-- **Correction:** none
-
-## sentence-branch-names/1
-
-No sentence in `foundations/invariants.md`, outside quoted text, contains the words "main branch" or "task branch".
-
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-60@6e862c88
-- **Part:** invariants
-- **Correction:** none
-
-## sentence-gate-values/1
-
-Every value in braces that a sentence of `foundations/invariants.md` names outside quoted text stands on the gate's list, and is taken by its command unless its method is not a command.
-
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-60@6e862c88
-- **Part:** invariants
-- **Correction:** none
-
-## method-gate-values/1
-
-Every value a command in `foundations/invariants.md` takes from the gate stands on the list in the invariants template.
-
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-61@4804d070
-- **Part:** invariants
-- **Correction:** none
-
-## gate-verdict-per-entry/1
-
-For every invariant whose command a run of the gate carried out, the gate's report shows the verdict that run recorded for the entry's identifier and current version, and `pass` only where every check of that run citing the entry recorded `pass`.
-
-- **Method:** `TODO`
-- **Rests on:** none
-- **Derives from:** WAY-61@4804d070 · WAY-65@581724fc
+- **Derives from:** WAY-63 · WAY-16
 - **Part:** gate
-- **Correction:** none
+- **Violated:** no
 
-## gate-pass-without-verdict/1
-
-The gate reports no pass for an invariant for which neither a run of its command recorded a verdict nor a human verdict for it is in force.
-
-- **Method:** `TODO`
-- **Rests on:** none
-- **Derives from:** WAY-61@4804d070
-- **Part:** gate
-- **Correction:** none
-
-## invariant-part-names/1
-
-Every part an entry of `foundations/invariants.md` names is a part of the part map.
-
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-62@d9c21624
-- **Part:** invariants · part-map
-- **Correction:** none
-
-## invariant-part-form/1
-
-Every entry of `foundations/invariants.md` names `every` or at least one part, never both.
-
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-62@d9c21624
-- **Part:** invariants
-- **Correction:** none
-
-## change-reach/1
-
-The invariants the gate finds a change against "{fork-point}" reaching include every entry naming `every` or a part the change touches, every entry that a test the change alters cites, and every entry one of whose tests names on a `data:` line a file the change alters.
-
-- **Method:** `TODO`
-- **Rests on:** git-path-patterns@1519f3f7
-- **Derives from:** WAY-62@d9c21624
-- **Part:** gate
-- **Correction:** none
-
-## gate-result-values/1
-
-Every result the gate reports for an invariant is `pass`, `fail`, `unchecked` or `error`.
-
-- **Method:** `TODO`
-- **Rests on:** none
-- **Derives from:** WAY-63@f16348c8
-- **Part:** gate
-- **Correction:** none
-
-## gate-reported-set/1
-
-The gate reports a result for every invariant a change against "{fork-point}" reaches.
-
-- **Method:** `TODO`
-- **Rests on:** none
-- **Derives from:** WAY-63@f16348c8
-- **Part:** gate
-- **Correction:** none
-
-## gate-exit-code/1
-
-The gate's command exits non-zero when some result it reports is `error`, an invariant on the list of violated invariants results `pass`, an invariant off that list or an environment fact results `fail`, or a run records a failure for no entry, and zero otherwise.
-
-- **Method:** `TODO`
-- **Rests on:** none
-- **Derives from:** WAY-63@f16348c8 · WAY-51@8bdac21a · WAY-82@790a7972
-- **Part:** gate
-- **Correction:** none
-
-## invariants-file/1
-
-The repository holds exactly one file of invariant entries, `foundations/invariants.md`.
-
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-64@c5192c61
-- **Part:** every
-- **Correction:** none
-
-## invariant-identifier-persistence/1
-
-Every identifier `foundations/invariants.md` held on {fork-point} stands in it as an entry or as a withdrawn identifier.
-
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --base {fork-point} --record .runs/invariants-base.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-64@c5192c61
-- **Part:** invariants
-- **Correction:** none
-
-## invariant-withdrawal-persistence/1
-
-Every identifier that stood as a withdrawn identifier of `foundations/invariants.md` on {fork-point} is still a withdrawn identifier of that file.
-
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --base {fork-point} --record .runs/invariants-base.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-64@c5192c61
-- **Part:** invariants
-- **Correction:** none
-
-## withdrawal-successors/1
-
-Every withdrawn identifier of `foundations/invariants.md` has the form `elements/common/` gives, gives why it was withdrawn and names as successors only entries or withdrawn identifiers of that file, or `none`.
-
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-64@c5192c61
-- **Part:** invariants · elements-common
-- **Correction:** none
-
-## invariant-citation-target/1
-
-Every `invariant:` line in a check names an entry of `foundations/invariants.md`.
-
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-12@0f1f7ea4 · WAY-17@b1e26133 · WAY-65@581724fc
-- **Part:** every
-- **Correction:** none
-
-## data-line-target/1
-
-Every `data:` line in an invariant test names a file that exists.
-
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-65@581724fc
-- **Part:** every
-- **Correction:** none
-
-## invariant-tests-of-change/1
+## invariant-tests-of-change
 
 The invariant tests of a change include every file that is an invariant test on "{fork-point}" or on the commit being checked.
 
-- **Method:** `TODO`
+- **Method:** review
 - **Rests on:** none
-- **Derives from:** WAY-65@581724fc
+- **Derives from:** WAY-65
 - **Part:** gate
-- **Correction:** none
+- **Violated:** no
 
-## link-fingerprint-presence/1
-
-Every name in the *Derives from* or *Rests on* of an entry of `foundations/invariants.md`, other than `none` or `TODO`, carries a fingerprint.
-
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-31@a14c616c
-- **Part:** invariants
-- **Correction:** none
-
-## link-fingerprint-value/1
-
-Where {merge-onto} exists, every fingerprint in the *Derives from* or *Rests on* of an entry of `foundations/invariants.md` equals the current fingerprint of the entry it names.
-
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --merge-onto {merge-onto} --record .runs/invariants-merge-onto.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-31@a14c616c
-- **Part:** every
-- **Correction:** none
-
-## violated-list-growth/1
-
-The list of violated invariants is a subset of its version on {fork-point}.
-
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --base {fork-point} --record .runs/invariants-base.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-51@8bdac21a
-- **Part:** invariants
-- **Correction:** none
-
-## violated-position-version/1
-
-The list of violated invariants has the columns the invariants template gives it, and every row of it names an entry of `foundations/invariants.md` at its current version and no other.
-
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-51@8bdac21a
-- **Part:** invariants
-- **Correction:** none
-
-## quarantine-position-form/1
-
-Every quarantine row in `foundations/invariants.md` names an entry at its current version and an end date.
-
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-68@3335280b
-- **Part:** invariants
-- **Correction:** none
-
-## quarantine-flow-invariants/1
-
-No quarantine row in `foundations/invariants.md` names an invariant a critical flow names.
-
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-68@3335280b
-- **Part:** invariants · part-map
-- **Correction:** none
-
-## log-entry-field-presence/1
-
-Every decision version and review record of the decision log carries every field the decision template gives one of its kind.
-
-- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-19@ab65670f · WAY-71@c32828c9
-- **Part:** decisions
-- **Correction:** none
-
-## log-entry-field-words/1
-
-No field of a decision version or review record of the decision log holds `none` or `TODO` where the decision template does not give it that word.
-
-- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --record .runs/decisions.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-19@ab65670f · WAY-71@c32828c9
-- **Part:** decisions
-- **Correction:** none
-
-## log-entry-merge-todo/1
-
-Where {merge-onto} exists, no field of a decision version or review record of the decision log holds `TODO`.
-
-- **Method:** `python -B elements/decisions/format_guard.py foundations/decisions.md --merge-onto {merge-onto} --record .runs/decisions-merge-onto.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-71@c32828c9
-- **Part:** decisions
-- **Correction:** none
-
-## map-entry-field-presence/1
-
-Every entry of the part map carries every field the part map template gives an entry of its kind.
-
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-71@c32828c9
-- **Part:** part-map
-- **Correction:** none
-
-## map-entry-field-words/1
-
-No field of an entry of the part map holds `none` or `TODO` where the part map template does not give it that word.
-
-- **Method:** `python -B elements/part-map/format_guard.py foundations/part_map.md --record .runs/part-map.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-71@c32828c9
-- **Part:** part-map
-- **Correction:** none
-
-## invariant-entry-field-presence/1
-
-Every entry of `foundations/invariants.md` carries every field the invariants template gives an entry.
-
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-71@c32828c9
-- **Part:** invariants
-- **Correction:** none
-
-## invariant-entry-field-words/1
-
-No field of an entry of `foundations/invariants.md` holds `none` or `TODO` where the invariants template does not give it that word.
-
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-71@c32828c9
-- **Part:** invariants
-- **Correction:** none
-
-## invariant-entry-merge-todo/1
-
-Where {merge-onto} exists, no field of an entry of `foundations/invariants.md` other than *Method* and *Rests on* holds `TODO`, and *Rests on* holds it only while the environment facts that merge leaves hold no entry.
-
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --merge-onto {merge-onto} --record .runs/invariants-merge-onto.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-71@c32828c9
-- **Part:** invariants · environment-facts
-- **Correction:** none
-
-## run-record-form/1
-
-Every line of the-way's own record of a run is one JSON object holding `check`, `verdict` as `pass` or `fail` or as `unchecked` beside a `reason`, and `invariant` or `fact` as `<identifier>/<version>` or `invariant` as `null`, and beside them at most `description`.
-
-- **Method:** `TODO`
-- **Rests on:** json-text@8141eb36 · json-lines@f16c5b84
-- **Derives from:** WAY-74@1e1c88d7
-- **Part:** decisions · part-map · invariants · glossary · environment-facts · elements-common · gate
-- **Correction:** none
-
-## run-record-path/1
-
-Every path ending in `.jsonl` that a command in `foundations/invariants.md` or `foundations/environment_facts.md` names is one git ignores, and no such command names two.
-
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
-- **Rests on:** gitignore-paths@3218da8f
-- **Derives from:** WAY-74@1e1c88d7
-- **Part:** invariants · environment-facts · repository
-- **Correction:** none
-
-## run-record-lines/1
-
-The gate reads, from the-way's own record of a run, only the lines the run it started for that command wrote.
-
-- **Method:** `TODO`
-- **Rests on:** none
-- **Derives from:** WAY-74@1e1c88d7
-- **Part:** gate
-- **Correction:** none
-
-## test-runner-pass-line/1
-
-The test runner's record of a run holds a `pass` line for an invariant's identifier and version, and no `fail` line naming them, only when the body of every test method citing them in a `test_*.py` file under the directory the runner was given, as the run starts, executed in that run while its own test ran, and returned, with nothing raised out of that body, its set-up, its tear-down or any of its subtests.
-
-- **Method:** `python -B gate/run_tests.py gate --record .runs/gate-tests.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-61@4804d070 · WAY-65@581724fc
-- **Part:** gate
-- **Correction:** none
-
-## python-version-declared/1
+## python-version-declared
 
 The repository declares Python 3.14 in `.python-version`.
 
-- **Method:** `TODO`
+- **Method:** review
 - **Rests on:** none
-- **Derives from:** WAY-89@fbb25ae3
+- **Derives from:** WAY-89
 - **Part:** repository
-- **Correction:** none
+- **Violated:** no
 
-## environment-facts-file/1
-
-Every environment fact entry the repository holds stands in `foundations/environment_facts.md`.
-
-- **Method:** `python -B elements/environment-facts/format_guard.py foundations/environment_facts.md --record .runs/environment-facts.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-64@c5192c61
-- **Part:** every
-- **Correction:** none
-
-## fact-identifier-form/1
-
-The identifier in the heading of every entry of `foundations/environment_facts.md` has the form `elements/common/` gives.
-
-- **Method:** `python -B elements/environment-facts/format_guard.py foundations/environment_facts.md --record .runs/environment-facts.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-64@c5192c61 · WAY-35@11333629
-- **Part:** environment-facts · elements-common
-- **Correction:** none
-
-## fact-identifier-persistence/1
-
-Every identifier `foundations/environment_facts.md` held on {fork-point} stands in it as an entry or as a withdrawn identifier.
-
-- **Method:** `python -B elements/environment-facts/format_guard.py foundations/environment_facts.md --base {fork-point} --record .runs/environment-facts-base.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-64@c5192c61
-- **Part:** environment-facts
-- **Correction:** none
-
-## fact-withdrawal-persistence/1
-
-Every identifier that stood as a withdrawn identifier of `foundations/environment_facts.md` on {fork-point} is still a withdrawn identifier of that file.
-
-- **Method:** `python -B elements/environment-facts/format_guard.py foundations/environment_facts.md --base {fork-point} --record .runs/environment-facts-base.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-64@c5192c61
-- **Part:** environment-facts
-- **Correction:** none
-
-## fact-withdrawal-successors/1
-
-Every withdrawn identifier of `foundations/environment_facts.md` has the form `elements/common/` gives, gives why it was withdrawn and names as successors only entries or withdrawn identifiers of that file, or `none`.
-
-- **Method:** `python -B elements/environment-facts/format_guard.py foundations/environment_facts.md --record .runs/environment-facts.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-64@c5192c61
-- **Part:** environment-facts · elements-common
-- **Correction:** none
-
-## fact-sentence-count/1
-
-Every entry of `foundations/environment_facts.md` states its fact in one sentence.
-
-- **Method:** `python -B elements/environment-facts/format_guard.py foundations/environment_facts.md --record .runs/environment-facts.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-76@42d7b6fb
-- **Part:** environment-facts
-- **Correction:** none
-
-## fact-scope-word/1
-
-No *Holds for* of an entry of `foundations/environment_facts.md` reads "latest" or "newest".
-
-- **Method:** `python -B elements/environment-facts/format_guard.py foundations/environment_facts.md --record .runs/environment-facts.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-77@6c15f725
-- **Part:** environment-facts
-- **Correction:** none
-
-## fact-fingerprint-input/1
-
-The fingerprint the environment facts guard gives an entry is the fingerprint of its sentence and its *Holds for* joined by a line break.
-
-- **Method:** `python -B gate/run_tests.py elements/environment-facts --record .runs/environment-facts-tests.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-78@1e07affb
-- **Part:** environment-facts · relation-model
-- **Correction:** none
-
-## fact-version-new/1
-
-Every entry of `foundations/environment_facts.md` with no fingerprint on {fork-point} carries version 1.
-
-- **Method:** `python -B elements/environment-facts/format_guard.py foundations/environment_facts.md --base {fork-point} --record .runs/environment-facts-base.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-79@9ee7723d
-- **Part:** environment-facts
-- **Correction:** none
-
-## fact-version-changed/1
-
-Every entry of `foundations/environment_facts.md` whose fingerprint differs from its fingerprint on {fork-point} carries a version one higher than there.
-
-- **Method:** `python -B elements/environment-facts/format_guard.py foundations/environment_facts.md --base {fork-point} --record .runs/environment-facts-base.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-79@9ee7723d
-- **Part:** environment-facts
-- **Correction:** none
-
-## fact-version-unchanged/1
-
-Every entry of `foundations/environment_facts.md` whose fingerprint equals its fingerprint on {fork-point} carries the version it has there.
-
-- **Method:** `python -B elements/environment-facts/format_guard.py foundations/environment_facts.md --base {fork-point} --record .runs/environment-facts-base.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-79@9ee7723d
-- **Part:** environment-facts
-- **Correction:** none
-
-## fact-citation-version/1
-
-Every `fact:` line in a check that names an entry of `foundations/environment_facts.md` cites its current version.
-
-- **Method:** `python -B elements/environment-facts/format_guard.py foundations/environment_facts.md --record .runs/environment-facts.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-79@9ee7723d
-- **Part:** every
-- **Correction:** none
-
-## fact-source-form/1
-
-Every *Source* of an entry of `foundations/environment_facts.md` has one of the forms the environment facts template gives.
-
-- **Method:** `python -B elements/environment-facts/format_guard.py foundations/environment_facts.md --record .runs/environment-facts.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-80@ba34ecc9
-- **Part:** environment-facts
-- **Correction:** none
-
-## fact-method-form/1
-
-Every entry of `foundations/environment_facts.md` names as its method a command that begins with the name of the program it runs, the path alone of a file that exists, or `TODO`.
-
-- **Method:** `python -B elements/environment-facts/format_guard.py foundations/environment_facts.md --record .runs/environment-facts.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-81@37613ee7
-- **Part:** every
-- **Correction:** none
-
-## fact-citation-target/1
-
-Every `fact:` line in a check names an entry of `foundations/environment_facts.md`, never a withdrawn identifier.
-
-- **Method:** `python -B elements/environment-facts/format_guard.py foundations/environment_facts.md --record .runs/environment-facts.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-81@37613ee7
-- **Part:** every
-- **Correction:** none
-
-## based-on-fact-fingerprint/1
-
-Every environment fact the *Based on* of the latest version of a decision names carries a fingerprint, and every `<identifier>@<fingerprint>` that *Based on* names outside quoted text names an entry or a withdrawn identifier of `foundations/environment_facts.md`.
-
-- **Method:** `python -B elements/environment-facts/format_guard.py foundations/environment_facts.md --record .runs/environment-facts.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-90@e6fa3272
-- **Part:** decisions · environment-facts
-- **Correction:** none
-
-## based-on-fact-fingerprint-value/1
-
-Where {merge-onto} exists, every fingerprint the *Based on* of the latest version of a decision carries for an environment fact equals that fact's current fingerprint.
-
-- **Method:** `python -B elements/environment-facts/format_guard.py foundations/environment_facts.md --merge-onto {merge-onto} --record .runs/environment-facts-merge-onto.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-90@e6fa3272
-- **Part:** decisions · environment-facts
-- **Correction:** none
-
-## human-verdict-invariant-row/1
-
-Every row of `foundations/human_verdicts.md` naming an invariant names an entry of `foundations/invariants.md` whose method is a path, gives `pass` or `fail`, names who gave it, when and the commit assessed, and reads `none` in *Until*.
-
-- **Method:** `python -B elements/invariants/format_guard.py foundations/invariants.md --record .runs/invariants.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-08@2343e09f · WAY-83@827c14d1
-- **Part:** invariants
-- **Correction:** none
-
-## human-verdict-fact-row/1
-
-Every row of `foundations/human_verdicts.md` naming an environment fact names an entry of `foundations/environment_facts.md` whose method is a path, gives `pass` or `fail`, names who gave it, when and the commit assessed, and carries a date in *Until*.
-
-- **Method:** `python -B elements/environment-facts/format_guard.py foundations/environment_facts.md --record .runs/environment-facts.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-83@827c14d1
-- **Part:** environment-facts
-- **Correction:** none
-
-## gate-human-verdict/1
-
-The gate counts a human verdict for an entry only from the row naming its current version, for an invariant only while no change since the commit the row names reaches the entry, and for an environment fact only while the committer date of the commit being checked is no later than the row's *Until*.
-
-- **Method:** `TODO`
-- **Rests on:** none
-- **Derives from:** WAY-83@827c14d1
-- **Part:** gate
-- **Correction:** none
-
-## fact-dependants/1
-
-Where {merge-onto} exists, every entry of `foundations/environment_facts.md` is named by the *Rests on* of an invariant or by the *Based on* of the latest version of a decision.
-
-- **Method:** `python -B elements/environment-facts/format_guard.py foundations/environment_facts.md --merge-onto {merge-onto} --record .runs/environment-facts-merge-onto.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-73@4cc25894
-- **Part:** environment-facts · invariants · decisions
-- **Correction:** none
-
-## fact-entry-field-presence/1
-
-Every entry of `foundations/environment_facts.md` carries every field the environment facts template gives an entry.
-
-- **Method:** `python -B elements/environment-facts/format_guard.py foundations/environment_facts.md --record .runs/environment-facts.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-71@c32828c9
-- **Part:** environment-facts
-- **Correction:** none
-
-## fact-entry-field-words/1
-
-No field of an entry of `foundations/environment_facts.md` holds `none` or `TODO` where the environment facts template does not give it that word.
-
-- **Method:** `python -B elements/environment-facts/format_guard.py foundations/environment_facts.md --record .runs/environment-facts.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-71@c32828c9
-- **Part:** environment-facts
-- **Correction:** none
-
-## glossary-file/1
-
-Every glossary entry the repository holds stands in `foundations/glossary.md`.
-
-- **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-93@f6b3a7d4
-- **Part:** every
-- **Correction:** none
-
-## glossary-file-sections/1
-
-`foundations/glossary.md` holds a title, the paragraph under it and its entries, and no other heading.
-
-- **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-93@f6b3a7d4
-- **Part:** glossary
-- **Correction:** none
-
-## glossary-term-holder/1
-
-No term is held by two entries of `foundations/glossary.md`.
-
-- **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-93@f6b3a7d4
-- **Part:** glossary
-- **Correction:** none
-
-## glossary-term-collision/1
-
-The glossary guard warns on every change that, against "{fork-point}", adds or renames a term of `foundations/glossary.md` or an identifier of the part map, the invariants or the environment facts so that the two read alike, its hyphens read as spaces, save that in the-way it does not warn where the identifier is of a part whose files include `elements/<identifier>/` and the term, in any of its forms, names that element.
-
-- **Method:** `python -B gate/run_tests.py elements/glossary --record .runs/glossary-tests.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-93@f6b3a7d4
-- **Part:** glossary
-- **Correction:** none
-
-## glossary-process-terms/1
-
-The glossary guard, given a product's glossary, reports as an error every entry there whose term,
-in any of its forms, is a term the glossary of the-way holds at the commit the product pins or the
-last word of one, or whose *Avoid* lists, in any of its forms, such a term or last word.
-
-- **Method:** `python -B gate/run_tests.py elements/glossary --record .runs/glossary-tests.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-95@455377de · WAY-104@b1f1850d
-- **Part:** glossary · installation
-- **Correction:** none
-
-## glossary-entry-field-presence/1
-
-Every entry of `foundations/glossary.md` carries every field the glossary template gives an entry.
-
-- **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-94@05a966c6 · WAY-71@c32828c9
-- **Part:** glossary
-- **Correction:** none
-
-## glossary-entry-field-words/1
-
-No field of an entry of `foundations/glossary.md` holds `none` or `TODO` where the glossary template does not give it that word.
-
-- **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-94@05a966c6 · WAY-71@c32828c9
-- **Part:** glossary
-- **Correction:** none
-
-## glossary-term-use/1
-
-Where {merge-onto} exists, every term of `foundations/glossary.md` has a use outside the glossary in a file of `foundations/`, in a Markdown file of `elements/common/` or in an element's template.
-
-- **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --merge-onto {merge-onto} --record .runs/glossary-merge-onto.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-95@455377de
-- **Part:** glossary · decisions · invariants · part-map · environment-facts · elements-common
-- **Correction:** none
-
-## glossary-definition-count/1
-
-Every entry of `foundations/glossary.md` gives its definition in one sentence, counted as the decision guard counts binding sentences.
-
-- **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-96@38f5315a
-- **Part:** glossary · decisions
-- **Correction:** none
-
-## glossary-definition-words/1
-
-No definition in `foundations/glossary.md` contains, outside code, *must* or a word the decision template forbids in binding sentences.
-
-- **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-96@38f5315a
-- **Part:** glossary · decisions
-- **Correction:** none
-
-## glossary-entry-version/1
-
-No entry of `foundations/glossary.md` carries a version.
-
-- **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-97@cf7b62ff
-- **Part:** glossary
-- **Correction:** none
-
-## glossary-definition-uses/1
-
-For every entry of `foundations/glossary.md` whose definition differs from its definition on "{fork-point}", the glossary guard's report lists the uses of its term.
-
-- **Method:** `python -B gate/run_tests.py elements/glossary --record .runs/glossary-tests.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-97@cf7b62ff
-- **Part:** glossary
-- **Correction:** none
-
-## glossary-avoid-growth/1
-
-No word of an *Avoid* in `foundations/glossary.md` stands, outside the text WAY-98 does not count, more times in a file of `foundations/`, in a Markdown file of `elements/common/` or in an element's template than on {fork-point}.
-
-- **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --base {fork-point} --record .runs/glossary-base.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-98@94371030
-- **Part:** every
-- **Correction:** none
-
-## glossary-avoid-single/1
-
-No word stands in the *Avoid* of two entries of `foundations/glossary.md`.
-
-- **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-98@94371030
-- **Part:** glossary
-- **Correction:** none
-
-## glossary-avoid-term/1
-
-No word of an *Avoid* in `foundations/glossary.md` is a term there.
-
-- **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-98@94371030
-- **Part:** glossary
-- **Correction:** none
-
-## glossary-avoid-carrier/1
-
-No word of an *Avoid* in `foundations/glossary.md` is a word the *Not* of an entry there names.
-
-- **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-98@94371030
-- **Part:** glossary
-- **Correction:** none
-
-## glossary-not-target/1
-
-Every term, identifier and closed-list value the *Not* of an entry of `foundations/glossary.md` names exists.
-
-- **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-99@7d44dfd7
-- **Part:** glossary · decisions · part-map · invariants · environment-facts
-- **Correction:** none
-
-## glossary-not-quoted-word/1
-
-Nothing the *Not* of an entry of `foundations/glossary.md` names holds the term or its forms, and every word it names in quotation marks is used, as WAY-98 counts a use, outside quotation marks and outside the glossary in a file of `foundations/`, in a Markdown file of `elements/common/` or in an element's template.
-
-- **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --record .runs/glossary.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-99@7d44dfd7 · WAY-98@94371030
-- **Part:** glossary · decisions · invariants · part-map · environment-facts · elements-common
-- **Correction:** none
-
-## glossary-entry-merge-todo/1
-
-Where {merge-onto} exists, no field of an entry of `foundations/glossary.md` holds `TODO`.
-
-- **Method:** `python -B elements/glossary/format_guard.py foundations/glossary.md --merge-onto {merge-onto} --record .runs/glossary-merge-onto.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-99@7d44dfd7 · WAY-71@c32828c9
-- **Part:** glossary
-- **Correction:** none
-
-## project-definition-form/1
+## project-definition-form
 
 The project readiness check rejects a definition with no valid `Status:` line, a missing,
 repeated or unexpected required second-level section, or required sections out of order.
 
-- **Method:** `python -B gate/run_tests.py project-level --record .runs/project-level-tests.jsonl`
+- **Method:** test
 - **Rests on:** none
-- **Derives from:** WAY-108@f70cfcdd
+- **Derives from:** WAY-108
 - **Part:** project-level
-- **Correction:** none
+- **Violated:** no
 
-## project-readiness-gate/1
+## project-readiness-gate
 
 Before approval, the project readiness check rejects a definition with a missing or unresolved
 required section, an open question with no place of resolution, or an unfinished candidate search.
 
-- **Method:** `python -B gate/run_tests.py project-level --record .runs/project-level-tests.jsonl`
+- **Method:** test
 - **Rests on:** none
-- **Derives from:** WAY-118@5af868b3
+- **Derives from:** WAY-118
 - **Part:** project-level
-- **Correction:** none
+- **Violated:** no
 
-## project-technology-record/1
+## project-technology-record
 
 Before approval, the project readiness check rejects a definition whose Technology section is missing or reads `none`, or holds a line that is no choice item, a choice still open, or a choice that names neither a decision as `<PREFIX>-<NN>/<version>` nor a question a heading of a projected decision holds.
 
-- **Method:** `python -B gate/run_tests.py project-level --record .runs/project-level-tests.jsonl`
+- **Method:** test
 - **Rests on:** none
-- **Derives from:** WAY-121@ed19d693
+- **Derives from:** WAY-121
 - **Part:** project-level
-- **Correction:** none
+- **Violated:** no
 
-## project-plan-form/1
+## project-plan-form
 
 The project plan check rejects a plan with no valid `Status:` line, a header that names no
 definition it can read or a fingerprint other than the one that definition's gate record holds and
@@ -1859,13 +266,13 @@ whose header row, separator row or any cell differs from the form the plan templ
 or a name held by two tasks, or a task whose state the template's list does not hold or names the
 task itself.
 
-- **Method:** `python -B gate/run_tests.py project-level --record .runs/project-level-tests.jsonl`
+- **Method:** test
 - **Rests on:** none
-- **Derives from:** WAY-142@e53cd0ac · WAY-144@d5802c22 · WAY-146@7677c3cd · WAY-147@8cfe543f
+- **Derives from:** WAY-142 · WAY-144 · WAY-146 · WAY-147
 - **Part:** project-level
-- **Correction:** none
+- **Violated:** no
 
-## project-plan-check/1
+## project-plan-check
 
 The project plan check rejects a plan in which a projected entry of its definition has no task
 realizing it, not exactly one of those tasks writing it into the foundation, or more than one row;
@@ -1876,53 +283,53 @@ a task of the plan or an answer; or a cell or an item
 names a task, a projected entry, an In scope item or an open question that the plan or its
 definition does not hold.
 
-- **Method:** `python -B gate/run_tests.py project-level --record .runs/project-level-tests.jsonl`
+- **Method:** test
 - **Rests on:** none
-- **Derives from:** WAY-143@9ae691ca · WAY-145@4312fd6b · WAY-146@7677c3cd
+- **Derives from:** WAY-143 · WAY-145 · WAY-146
 - **Part:** project-level
-- **Correction:** none
+- **Violated:** no
 
-## skill-entry-points/1
+## skill-entry-points
 
 Every file named `SKILL.md` that git tracks, or that stands untracked and not ignored by git, outside the `.claude/` and `.agents/` directories at the repository's root, with `<name>` the name its frontmatter gives, has a file `.claude/skills/the-way-<name>/SKILL.md` and a byte-identical file `.agents/skills/the-way-<name>/SKILL.md`, whose frontmatter names `the-way-<name>` and gives a description starting with the description the frontmatter of that `SKILL.md` gives, whose text contains, in backticks, the path of that `SKILL.md` from the repository's root, and contains `--show-superproject-working-tree`, `git ls-files --stage -- ':/.the-way'`, `git rev-parse --show-toplevel` and the words "If the skill tells you to resolve a link to find the-way, skip that", and whose text holds a sentence that names, each in backticks, the name of every such `SKILL.md` and holds the words "with the `the-way-` prefix, never an unprefixed one"; and every directory in `.claude/skills/` or `.agents/skills/` whose name begins with `the-way-` is named `the-way-<name>` for the `<name>` of such a `SKILL.md`.
 
-- **Method:** `python -B gate/run_tests.py gate --record .runs/gate-tests.jsonl`
+- **Method:** test
 - **Rests on:** none
-- **Derives from:** WAY-127@69651fc7
+- **Derives from:** WAY-127
 - **Part:** every
-- **Correction:** none
+- **Violated:** no
 
-## instruction-file-imports/1
+## instruction-file-imports
 
 No repository instruction file of the-way holds, outside code spans and fenced code blocks, an `@` that stands at the start of a line or right after whitespace, `(`, `[`, `{`, `"`, `'`, `“`, `‘` or `„` and is followed by a character other than whitespace, except the first line of the root `CLAUDE.md` when it reads `@AGENTS.md` and nothing else; the root `AGENTS.md` or `CLAUDE.md` names by its path a Markdown file that git tracks, one whose name ends in `.md` or `.markdown`, when that file's path from the repository's root, written with `/` or with `\` between directories, stands anywhere in its text with no ASCII letter or digit and none of `.`, `-`, `_`, `/` and `\` right before it, a code span runs from a run of backticks to the next run of as many backticks on the same line, and a fenced code block runs from a line whose first characters other than spaces are three backticks or three tildes to the next such line.
 
-- **Method:** `python -B gate/run_tests.py agent-instructions --record .runs/agent-instructions-tests.jsonl`
+- **Method:** test
 - **Rests on:** none
-- **Derives from:** WAY-129@1336c32b
+- **Derives from:** WAY-129
 - **Part:** every
-- **Correction:** none
+- **Violated:** no
 
-## root-claude-md-import/1
+## root-claude-md-import
 
 Where git tracks a `CLAUDE.md` at the repository's root, its text begins with `@AGENTS.md` followed directly by a line break, `\n` or `\r\n`, or by the end of the text.
 
-- **Method:** `python -B gate/run_tests.py agent-instructions --record .runs/agent-instructions-tests.jsonl`
+- **Method:** test
 - **Rests on:** none
-- **Derives from:** WAY-132@1242ac75
+- **Derives from:** WAY-132
 - **Part:** agent-instructions
-- **Correction:** none
+- **Violated:** no
 
-## installation-claude-guidance/1
+## installation-claude-guidance
 
 For a product with no root `CLAUDE.md`, the installation command creates that file with `@AGENTS.md` as its sole line; for a product with an existing root `CLAUDE.md`, it preserves the file byte for byte and warns in the installation plan before confirmation when the file has no effective `@AGENTS.md` import; in neither case does it write `.claude/rules/the-way.md`.
 
-- **Method:** `python -B gate/run_tests.py installation --record .runs/installation-tests.jsonl`
-- **Rests on:** claude-code-imports@5b9359fd
-- **Derives from:** WAY-141@5d0990a0
+- **Method:** test
+- **Rests on:** claude-code-imports
+- **Derives from:** WAY-141
 - **Part:** installation
-- **Correction:** none
+- **Violated:** no
 
-## project-plan-state-evidence/1
+## project-plan-state-evidence
 
 For each task of a valid handed-over plan with an approved definition, the plan-state reader uses
 existing recorded task provenance to establish that cycle traces belong to the current plan's
@@ -1934,141 +341,131 @@ missing or ambiguous task provenance as unchecked and contradictory task provena
 reconciliation without proposing progress from either, and exposes incomplete, failed or
 conflicting observations without unsupported progress or edits to the plan or task documents.
 
-- **Method:** `python -B gate/run_tests.py project-level --record .runs/project-plan-state-evidence.jsonl`
+- **Method:** test
 - **Rests on:** none
-- **Derives from:** WAY-153@9874911d
+- **Derives from:** WAY-153
 - **Part:** project-level
-- **Correction:** none
+- **Violated:** no
 
-## project-plan-state-subprocesses/1
+## project-plan-state-subprocesses
 
 Every subprocess the plan-state reader starts runs Git.
 
-- **Method:** `python -B gate/run_tests.py project-level --record .runs/project-plan-state-evidence.jsonl`
+- **Method:** test
 - **Rests on:** none
-- **Derives from:** WAY-153@9874911d
+- **Derives from:** WAY-153
 - **Part:** project-level
-- **Correction:** none
+- **Violated:** no
 
-## guidelines-form/1
+## guidelines-form
 
 Every file `guidelines/<name>.md` holds, in their order, the header lines, sections, rules, rule fields and tables that the template of guidelines and the template of its discipline require at the commit of the-way the repository uses — the commit checked, in the-way itself, and the pinned commit, in a product — each with the values and the links those templates give it, with a name that agrees with its *Discipline*, each section or rule it drops reading `none —` with a decision of the log and that decision's fingerprint, each part it names being a part of the map, and each path under `## Where in code` naming something git tracks.
 
-- **Method:** `python -B product-guidelines/form_check.py --record .runs/guidelines-form.jsonl`
+- **Method:** test
 - **Rests on:** none
-- **Derives from:** WAY-170@175a4fb6 · WAY-171@2bc38c05
+- **Derives from:** WAY-170 · WAY-171
 - **Part:** every
-- **Correction:** none
+- **Violated:** no
 
-## guidelines-reference-current/1
+## guidelines-reference-current
 
 Every reference outside fenced code in a file `guidelines/<name>.md` — a decision number of the log or an identifier of the invariants file followed by `@` and a run of letters and digits, or any identifier followed by `@` and eight lower-case hexadecimal characters — names a decision of the log that is not repealed or an invariant of the file that is not withdrawn, and carries the fingerprint of that entry's binding part in the foundation of the same commit and, where {merge-onto} exists, in the foundation a merge onto {merge-onto} leaves.
 
-- **Method:** `python -B product-guidelines/form_check.py --merge-onto {merge-onto} --record .runs/guidelines-reference.jsonl`
+- **Method:** test
 - **Rests on:** none
-- **Derives from:** WAY-169@e2fb088c
+- **Derives from:** WAY-169
 - **Part:** product-guidelines · decisions · invariants · agent-instructions · relation-model
-- **Correction:** none
+- **Violated:** no
 
-## guidelines-check-form/1
+## guidelines-check-form
 
 The form check of guidelines, `product-guidelines/form_check.py`, reports as an error every header line, section, rule or rule field that the template of guidelines or the template of a file's discipline requires and a file `guidelines/<name>.md` lacks or holds out of order, every section or rule dropped with a text other than `none —` followed by a decision of the log and a fingerprint, every part named in *Applies to* or in a file's name that the part map does not hold, and every file whose name and *Discipline* disagree.
 
-- **Method:** `python -B gate/run_tests.py product-guidelines --record .runs/product-guidelines-tests.jsonl`
+- **Method:** test
 - **Rests on:** none
-- **Derives from:** WAY-170@175a4fb6 · WAY-171@2bc38c05 · WAY-202@e0fb6a51
+- **Derives from:** WAY-170 · WAY-171 · WAY-202
 - **Part:** product-guidelines · decisions · invariants · part-map · elements-common · relation-model
-- **Correction:** none
+- **Violated:** no
 
-## guidelines-check-carrier/1
+## guidelines-check-carrier
 
 The form check of guidelines, `product-guidelines/form_check.py`, reports as an error every rule under `## Rules` of a file `guidelines/<name>.md` whose *Decision* holds no decision number with the log's prefix followed by `@`, every such rule whose *Invariant* holds no identifier of the invariants file followed by `@` in a file whose discipline's template requires an invariant in every rule, and every decision the table of roles of a styleguide names that the rule `### Each role in its meaning` does not name, unless that rule is dropped.
 
-- **Method:** `python -B gate/run_tests.py product-guidelines --record .runs/product-guidelines-tests.jsonl`
+- **Method:** test
 - **Rests on:** none
-- **Derives from:** WAY-168@2a68d855 · WAY-188@73da8ecb · WAY-189@a76a39fb · WAY-196@0e714a05
+- **Derives from:** WAY-168 · WAY-188 · WAY-189 · WAY-196
 - **Part:** product-guidelines · decisions · invariants · part-map · elements-common · relation-model
-- **Correction:** none
+- **Violated:** no
 
-## guidelines-check-colour-pair/1
+## guidelines-check-colour-pair
 
 The form check of guidelines, `product-guidelines/form_check.py`, reports as an error every role of the kind `background` in the table of roles of a styleguide whose *Text on it* is empty or names no role of the kind `text` in that table.
 
-- **Method:** `python -B gate/run_tests.py product-guidelines --record .runs/product-guidelines-tests.jsonl`
+- **Method:** test
 - **Rests on:** none
-- **Derives from:** WAY-176@e8801ae5
+- **Derives from:** WAY-176
 - **Part:** product-guidelines · decisions · invariants · part-map · elements-common · relation-model
-- **Correction:** none
+- **Violated:** no
 
-## guidelines-check-reference-target/1
+## guidelines-check-reference-target
 
 The form check of guidelines, `product-guidelines/form_check.py`, reports as an error every reference outside fenced code in a file `guidelines/<name>.md` — a decision number of the log or an identifier of the invariants file followed by `@` and a run of letters and digits, or any identifier followed by `@` and eight lower-case hexadecimal characters — that names a decision the log does not hold or has repealed, or an invariant the file does not hold or has withdrawn, and every such reference after a decision number or an invariant's identifier whose part after `@` is not eight lower-case hexadecimal characters.
 
-- **Method:** `python -B gate/run_tests.py product-guidelines --record .runs/product-guidelines-tests.jsonl`
+- **Method:** test
 - **Rests on:** none
-- **Derives from:** WAY-169@e2fb088c
+- **Derives from:** WAY-169
 - **Part:** product-guidelines · decisions · invariants · part-map · elements-common · relation-model
-- **Correction:** none
+- **Violated:** no
 
-## guidelines-check-stale-reference/1
+## guidelines-check-stale-reference
 
 The form check of guidelines, `product-guidelines/form_check.py`, reports as an error every reference outside fenced code in a file `guidelines/<name>.md` to a decision of the log or an invariant of the file whose fingerprint differs from that entry's current fingerprint on the commit checked and, given "{merge-onto}", every one whose fingerprint differs from that entry's current fingerprint in the foundation a merge onto that commit leaves.
 
-- **Method:** `python -B gate/run_tests.py product-guidelines --record .runs/product-guidelines-tests.jsonl`
+- **Method:** test
 - **Rests on:** none
-- **Derives from:** WAY-169@e2fb088c
+- **Derives from:** WAY-169
 - **Part:** product-guidelines · decisions · invariants · part-map · elements-common · relation-model
-- **Correction:** none
+- **Violated:** no
 
-## guidelines-check-code-path/1
+## guidelines-check-code-path
 
 The form check of guidelines, `product-guidelines/form_check.py`, reports as an error every path under `## Where in code` of a file `guidelines/<name>.md` that is absolute, holds a `..` segment, a drive or a UNC prefix, or names nothing git tracks.
 
-- **Method:** `python -B gate/run_tests.py product-guidelines --record .runs/product-guidelines-tests.jsonl`
+- **Method:** test
 - **Rests on:** none
-- **Derives from:** WAY-170@175a4fb6
+- **Derives from:** WAY-170
 - **Part:** product-guidelines · decisions · invariants · part-map · elements-common · relation-model
-- **Correction:** none
+- **Violated:** no
 
-## guidelines-check-kind-index/1
+## guidelines-check-kind-index
 
 The form check of guidelines, `product-guidelines/form_check.py`, reports as an error every file `guidelines/coding-<kind>.md` git tracks that no row of the table under `## Kinds of code` in `guidelines/coding.md` names by its path in *File*, every row of that table whose *File* names no file git tracks, whose *Kind* is not the `<kind>` of the file its *File* names or whose *When to read* is empty, and every file `guidelines/coding-<kind>.md` git tracks where git tracks no `guidelines/coding.md`.
 
-- **Method:** `python -B gate/run_tests.py product-guidelines --record .runs/product-guidelines-tests.jsonl`
+- **Method:** test
 - **Rests on:** none
-- **Derives from:** WAY-167@052adf27 · WAY-212@116bffdf
+- **Derives from:** WAY-167 · WAY-212
 - **Part:** product-guidelines · decisions · invariants · part-map · elements-common · relation-model
-- **Correction:** none
+- **Violated:** no
 
-## guidelines-check-exemplar/1
+## guidelines-check-exemplar
 
 The form check of guidelines, `product-guidelines/form_check.py`, reports as an error every file `guidelines/coding-<kind>.md` whose table under `## Files of this kind` holds no row, or more than one, whose *Status* is `exemplar`, every row of that table whose *Status* is not `exemplar`, `copy` or `do not copy`, whose *File* is absolute, holds a `..` segment, a drive or a UNC prefix or names nothing git tracks, or which is not the `exemplar` row and whose *Decision* is not `—`, and every `exemplar` row whose *Decision* names no decision the log holds and has not repealed, or names one whose binding sentences, their whitespace collapsed, lack its *File* in backticks or the file's `<kind>` in backticks.
 
-- **Method:** `python -B gate/run_tests.py product-guidelines --record .runs/product-guidelines-tests.jsonl`
+- **Method:** test
 - **Rests on:** none
-- **Derives from:** WAY-198@4dca82c6 · WAY-199@9d0c758c
+- **Derives from:** WAY-198 · WAY-199
 - **Part:** product-guidelines · decisions · invariants · part-map · elements-common · relation-model
-- **Correction:** none
+- **Violated:** no
 
-## guidelines-check-example-files/1
+## guidelines-check-example-files
 
 The form check of guidelines, `product-guidelines/form_check.py`, reports as an error every rule under `## Rules` of a file `guidelines/<name>.md` whose *Invariant* names an invariant other than `guidelines-form` and whose text after its fields does not hold, for each such invariant, exactly one fenced block whose opening line's info string reads `good <identifier> <path>` and exactly one whose info string reads `bad <identifier> <path>`, optionally with exactly one `base <identifier> <path>` block whose path equals both cases' paths, `<identifier>` being that invariant's, and, in such a rule, every such block whose `<identifier>` its *Invariant* does not name or whose `<path>` is absolute, holds a `..` segment, a drive or a UNC prefix, every line inside such a block that would open a fence, every other fenced block, and every such block left open to the end of the file, and every `base` block under any rule naming no invariant other than `guidelines-form`.
 
-- **Method:** `python -B gate/run_tests.py product-guidelines --record .runs/product-guidelines-tests.jsonl`
+- **Method:** test
 - **Rests on:** none
-- **Derives from:** WAY-168@2a68d855
+- **Derives from:** WAY-168
 - **Part:** product-guidelines · decisions · invariants · part-map · elements-common · relation-model
-- **Correction:** none
-
-## gate-guidelines-example-evidence/1
-
-For every invariant entry that a rule of a file `guidelines/<name>.md` names with a file for the use that follows the rule and one for the use that breaks it, and whose sentence a change adds or alters against "{fork-point}" or one of whose cases or prepared base the change alters, the gate's report states whether the entry's method, run on the commit checked with each file put in place at its path, passes with the first and fails with the second — for an entry on the list of violated invariants, whether the first adds no failure the commit does not already have and the second adds one — using prepared earlier-version data only under WAY-223 and reporting that evidence separately from the actual-history result, or that this could not be checked.
-
-- **Method:** `TODO`
-- **Rests on:** none
-- **Derives from:** WAY-168@2a68d855 · WAY-223@6df19670
-- **Part:** gate · product-guidelines
-- **Correction:** none
+- **Violated:** no
 
 ## Withdrawn identifiers
 
@@ -2094,13 +491,163 @@ For every invariant entry that a rule of a file `guidelines/<name>.md` names wit
 | flow-test-run | withdrawn: a critical flow has no entry in the part map, and its test runs with the rest of the product's suite (WAY-45) | none |
 | generated-pattern-source | withdrawn: no rule file is generated from the part map for an agent (WAY-52) | none |
 | derived-subset-naming | withdrawn: no derived file is compared as a subset of its earlier version (WAY-53) | none |
-
-## Quarantined invariants
-
-| Identifier | Version | Until |
-|---|---|---|
-
-## Recovered invariants
-
-| Identifier | Version | Searched | Found |
-|---|---|---|---|
+| decision-guard-stale-reference | withdrawn: a reference names an entry by its identifier alone, with no fingerprint for a guard to compare with the current wording (WAY-02) | none |
+| gate-check-source | withdrawn: no program picks checks from the methods written in the entries; one command runs all of a product's tests (WAY-16) | none |
+| gate-boundary-change | withdrawn: no program picks the checks of a change; a change touching the files of a trust boundary is checked for crafted input and reviewed for that risk (WAY-48) | none |
+| gate-verdict-per-entry | withdrawn: no run records a verdict for each entry; an invariant's result is the outcome of the tests citing it (WAY-63, WAY-74) | none |
+| gate-pass-without-verdict | withdrawn: no program reports a result for each invariant; a run in which no test citing an invariant ran gives it no pass (WAY-61, WAY-63) | none |
+| change-reach | withdrawn: no program finds the invariants a change reaches; the agent making the change reads them (WAY-62) | none |
+| gate-result-values | withdrawn: no program reports a result for each invariant; an invariant's result is `pass` or `fail` from the tests citing it (WAY-63) | none |
+| gate-reported-set | withdrawn: no program reports a result for each invariant a change reaches; every test runs on every change (WAY-16, WAY-63) | none |
+| run-record-form | withdrawn: the-way keeps no record of a run of its own (WAY-74) | none |
+| run-record-lines | withdrawn: the-way keeps no record of a run of its own (WAY-74) | none |
+| test-runner-pass-line | withdrawn: the test runner records no verdict for each invariant a test cites; its exit code says whether a test failed (WAY-63, WAY-74) | none |
+| log-reference-target | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| binding-sentence-count | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| binding-sentence-words | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| decision-example-numbers | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| decision-template-change | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| log-existing-lines | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| log-versions-added-per-number | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| log-merge-copies | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| invariant-method-form | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| invariant-example-target | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| map-example-target | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| glossary-example-target | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| decision-verification-level | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| level-one-decision-invariants | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| verification-invariant-derivation | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| decision-approval-record | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| decision-approver | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| decision-heading-form | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| decision-version-sequence | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| decision-change-kind | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| decision-binding-across-versions | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| repeal-binding-sentences | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| decision-scope-names | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| review-when-form | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| review-next-check | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| review-named-version | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| narrows-pairs | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| inherited-origin-form | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| relation-fingerprint-presence | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| relation-fingerprint-value | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| relation-type | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| map-entry-kinds | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| map-section-kinds | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| part-map-file | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| map-identifier-form | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| identifier-holders | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| map-withdrawal-successors | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| map-identifier-persistence | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| map-entry-version | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| file-part-assignment | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| path-pattern-reach | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| left-out-file-assignment | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| flow-part-names | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| flow-invariant-link | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| map-invariant-names | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| failure-mode-severity | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| failure-mode-detection | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| part-criticality-field | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| flow-coverage-parts | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| external-exchange-row | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| surface-promise-level | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| surface-declaration | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| map-withdrawal-date | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| promise-level-policy | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| surface-change-path | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| known-violation-coverage | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| known-violations-growth | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| known-violation-currency | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| known-violation-fields | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| known-violation-line-number | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| flow-test-location | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| invariant-sentence-count | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| invariant-identifier-form | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| invariant-version-number | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| invariant-version-new | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| invariant-version-changed | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| invariant-version-unchanged | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| invariant-earlier-wording | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| invariant-citation-version | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| invariant-recovered-form | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| invariant-recovered-derived | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| sentence-branch-names | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| sentence-gate-values | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| method-gate-values | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| invariant-part-names | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| invariant-part-form | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| invariants-file | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| invariant-identifier-persistence | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| invariant-withdrawal-persistence | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| withdrawal-successors | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| invariant-citation-target | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| data-line-target | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| link-fingerprint-presence | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| link-fingerprint-value | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| violated-list-growth | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| violated-position-version | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| quarantine-position-form | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| quarantine-flow-invariants | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| log-entry-field-presence | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| log-entry-field-words | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| log-entry-merge-todo | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| map-entry-field-presence | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| map-entry-field-words | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| invariant-entry-field-presence | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| invariant-entry-field-words | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| invariant-entry-merge-todo | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| run-record-path | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| environment-facts-file | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| fact-identifier-form | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| fact-identifier-persistence | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| fact-withdrawal-persistence | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| fact-withdrawal-successors | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| fact-sentence-count | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| fact-scope-word | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| fact-version-new | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| fact-version-changed | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| fact-version-unchanged | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| fact-citation-version | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| fact-source-form | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| fact-method-form | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| fact-citation-target | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| based-on-fact-fingerprint | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| based-on-fact-fingerprint-value | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| human-verdict-invariant-row | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| human-verdict-fact-row | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| fact-dependants | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| fact-entry-field-presence | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| fact-entry-field-words | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| glossary-file | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| glossary-file-sections | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| glossary-term-holder | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| glossary-entry-field-presence | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| glossary-entry-field-words | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| glossary-term-use | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| glossary-definition-count | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| glossary-definition-words | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| glossary-entry-version | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| glossary-avoid-growth | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| glossary-avoid-single | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| glossary-avoid-term | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| glossary-avoid-carrier | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| glossary-not-target | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| glossary-not-quoted-word | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| glossary-entry-merge-todo | withdrawn: no format guard checks the foundation; `elements/common/foundation_check.py` checks its identifiers, references and fields | none |
+| decision-fingerprint-input | withdrawn: it held a behaviour of a format guard, and no format guard checks the foundation | none |
+| decision-guard-overdue-review | withdrawn: it held a behaviour of a format guard, and no format guard checks the foundation | none |
+| map-guard-missing-command | withdrawn: it held a behaviour of a format guard, and no format guard checks the foundation | none |
+| map-guard-unrecorded-criticality | withdrawn: it held a behaviour of a format guard, and no format guard checks the foundation | none |
+| map-guard-dependency-report | withdrawn: it held a behaviour of a format guard, and no format guard checks the foundation | none |
+| criticality-lowering-report | withdrawn: it held a behaviour of a format guard, and no format guard checks the foundation | none |
+| map-guard-missing-coverage | withdrawn: it held a behaviour of a format guard, and no format guard checks the foundation | none |
+| map-guard-test-runs | withdrawn: it held a behaviour of a format guard, and no format guard checks the foundation | none |
+| invariant-fingerprint-input | withdrawn: it held a behaviour of a format guard, and no format guard checks the foundation | none |
+| fact-fingerprint-input | withdrawn: it held a behaviour of a format guard, and no format guard checks the foundation | none |
+| glossary-term-collision | withdrawn: it held a behaviour of a format guard, and no format guard checks the foundation | none |
+| glossary-definition-uses | withdrawn: it held a behaviour of a format guard, and no format guard checks the foundation | none |
+| glossary-process-terms | withdrawn: it held a behaviour of a format guard, and no format guard checks the foundation | none |
+| gate-human-verdict | withdrawn: the foundation records no human verdict | none |
+| gate-guidelines-example-evidence | withdrawn: no gate reports how the method of an invariant meets the uses of a rule of guidelines | none |

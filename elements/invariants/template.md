@@ -192,22 +192,20 @@ read`).
 
 `examples.md` names, by identifier, the entries of this repository's own invariants
 (`foundations/invariants.md`) that show the form of an entry; they are read there, in the commit of
-the-way a product pins, instead of being copied (WAY-09, WAY-34). The format guard checks that each
-identifier it names is the identifier of an entry of that file (`invariant-example-target`).
+the-way a product pins, instead of being copied (WAY-09, WAY-34).
 
-## Read by the format guard until the migration
+## The earlier form, read by the format guard
 
-The four sections below hold the earlier form of an entry, which `format_guard.py` beside this
-file, and the format guard of the glossary, read while `foundations/invariants.md` still keeps that
-form: a version in the heading, a command, a path or `TODO` as *Method*, a fingerprint beside each
+The four sections below hold the earlier form of an entry, which `format_guard.py` beside this file
+reads: a version in the heading, a command, a path or `TODO` as *Method*, a fingerprint beside each
 link, *Correction*, the lists of quarantined and recovered invariants, the derived list of violated
-invariants and the results the guards report. They bind no entry written by the sections above,
-and they go with the format guards when the foundation is migrated
-(`agent-instructions/README.md`).
+invariants and the results the guards reported. The guard is kept only as a library of
+`product-guidelines/form_check.py` until the slimming plan's position P17 removes both; these
+sections bind no entry and go with it.
 
 ## Entry
 
-Earlier form, read by the format guard only until the migration.
+Earlier form, read only by the format guard.
 
 ```markdown
 ## <identifier>/<version>
@@ -235,12 +233,12 @@ Earlier form, read by the format guard only until the migration.
 
 ## Method
 
-Earlier form, read by the format guard only until the migration. The values the format guard
+Earlier form, read only by the format guard. The values the format guard
 accepts in braces in a command: `{fork-point}` and `{merge-onto}`.
 
 ## Result, report and debt
 
-Earlier form, read by the format guard only until the migration.
+Earlier form, read only by the format guard.
 
 - Reasons for `unchecked` the format guards report, word for word:
   - the method takes a commit the gate filled in as not existing;
@@ -252,7 +250,7 @@ An entry's result on the commit being checked is `pass`, `fail`, `unchecked` or 
 
 ## Violated invariants
 
-Earlier form, read by the format guard only until the migration. The derived list beside the
+Earlier form, read only by the format guard. The derived list beside the
 invariants, `foundations/violated_invariants.md`:
 
 ```markdown

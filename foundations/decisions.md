@@ -1,9 +1,9 @@
 # Decision log
 
 The decisions of the-way, the process for building products. Entries follow
-`elements/decisions/template.md` and, on the main branch, are only ever appended.
+`elements/decisions/template.md` and are edited in place.
 
-### WAY-01/1 — What state does the foundation describe?
+### WAY-01 — What state does the foundation describe?
 
 On the main branch, the foundation describes the product as it is — its rules, together with
 the listed debt wherever the product does not yet meet them — and roadmaps and plans do not change
@@ -12,20 +12,17 @@ code follows; a foundation change in progress lives on the task's branch in the 
 repository and reaches the main branch in the same merge as the code that follows it. When a task
 closes, the foundation again matches the current state.
 
-- **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, task-cycle
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 1 — invariants: foundation-change-merge-route. Level 2 for the rest — an
-  agent compares the change with the decision:
+- **Verification:** invariants: foundation-change-merge-route. For the rest, an agent compares the
+  change with the decision:
   - complies: a task branch changes a decision and its code, and both reach the main branch in
     one merge; a task that brings the code back in line with an invariant runs without a
     foundation step;
   - violates: a planned feature is written into the foundation before it is built; the code is
     merged and the foundation change is left for a later task.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-29
 
 *Rationale:* a foundation that describes intent ages with every change of direction, unseen,
 because it is expected to differ from the code; one that describes the current state can be
@@ -35,7 +32,7 @@ branch, leaving no false description.
 updated only after deployment — a step at a task's end goes missing; a "designed, not built" mark
 on the main branch — an abandoned task leaves it for good.
 
-### WAY-02/1 — How does whatever depends on an entry refer to it?
+### WAY-02 — How does whatever depends on an entry refer to it?
 
 Every foundation entry has a permanent identifier, and everything that depends on it — other
 entries, tests, documents and code comments — refers to it by that identifier alone, with no
@@ -44,19 +41,16 @@ the process records one, is the first eight characters, in lower-case hexadecima
 digest of a text encoded in UTF-8, taken after every run of spaces and line breaks is replaced by a
 single space and both ends are trimmed; nothing else in the text is changed before it is digested.
 
-- **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, relation-model
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 1 — invariants: log-reference-target · fingerprint-definition. Level 2
-  for a reference by identifier alone — an agent compares the change with the decision:
+- **Verification:** invariants: fingerprint-definition. For a reference by identifier alone, an
+  agent compares the change with the decision:
   - complies: a test names the invariant it checks as `invariant: map-reference-target`; a
     decision relates to another as `derives from WAY-01`;
   - violates: a new relation reads `derives from WAY-01@60960941`; a test cites
     `invariant: map-reference-target/1`.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-29
 
 *Rationale:* an identifier outlives every rewording of its entry, so a reference by it stays valid,
 and one naming no entry leads nowhere; what a change to an entry touches is found by the search its
@@ -67,26 +61,22 @@ rewording makes its author renew marks that change no meaning, and flags raised 
 cleared unread; a version beside a reference — a reference relies on what the entry says today; the
 full 64-character digest — unreadable, nothing gained.
 
-### WAY-03/1 — Who may change an invariant test, and when?
+### WAY-03 — Who may change an invariant test, and when?
 
 Any change may alter an invariant test, in any step of its task, implementation included. A change
 that alters an invariant test names that test in its request, so that the agent reviewing the
 change and the human merging it see it.
 
-- **Change:** new decision
 - **Scope:** invariants, task-cycle, agent-instructions
-- **Based on:** impossiblebench-test-modification@9cdba560
-- **Relations:** derives from WAY-01@60960941
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Based on:** impossiblebench-test-modification
+- **Relations:** derives from WAY-01
+- **Verification:** an agent compares the change with the decision:
   - complies: an implementer whose code an invariant test stops fixes the code, or, where the test
     reads its sentence wrongly, fixes the test and names it in the request;
   - violates: a change alters an invariant test and its request does not name it; a test that read
     its sentence rightly is weakened so that the code passes, even where the request names it; a
     task goes back to an earlier step of its cycle only because an invariant test has to change.
-- **Review when:** no model in the range of fact impossiblebench-test-modification is Active in
-  Anthropic's table of models · check by: 2026-10-02
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/4
 
 *Rationale:* an agent that a test stands in the way of adjusts the test to the code: the build
 turns green, and the foundation lies. Naming every change to an invariant test in the request puts
@@ -98,7 +88,7 @@ someone who did not change it, before the change merges.
 a return to the foundation step for every change of one — each needed fix of a test stops the task;
 a local hook — one switch skips it; a written rule "do not change the tests" — prose stops nothing.
 
-### WAY-04/1 — What makes up a product's foundation, and what in it is derived rather than written by hand?
+### WAY-04 — What makes up a product's foundation, and what in it is derived rather than written by hand?
 
 A product's foundation has five elements, and the list is closed: invariants, decisions, a
 glossary of product terms, a part map, and environment facts. A new pattern enters the
@@ -111,13 +101,11 @@ which the code cannot show, and a dependency the code holds that the part map do
 recorded as an invariant the product does not meet (WAY-51), never by rewriting the allowed
 dependencies to fit the code.
 
-- **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 1 — invariants: foundation-file-kinds · derived-file-content. Level 2
-  for the rule on new patterns and for what is derived — an agent compares the change with the
-  decision:
+- **Verification:** invariants: foundation-file-kinds · derived-file-content. For the rule on new
+  patterns and for what is derived, an agent compares the change with the decision:
   - complies: the map's allowed dependencies are written by hand, and the return step compares
     them with the dependencies the code holds; a dependency of the code that a human accepts
     although the map does not allow it stands as the invariant "the part `ui` does not depend on
@@ -125,9 +113,7 @@ dependencies to fit the code.
   - violates: a hand-written architecture document appears next to the part map; a hand-written
     list of the product's endpoints kept next to the code; the allowed dependencies in the part
     map copied from the current import graph.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-29
 
 *Rationale:* each element holds what no other can, and a foundation nobody maintains gives only
 paper safety; a hand-written copy of the state goes stale, and code shows only what exists: a
@@ -143,7 +129,7 @@ inconvenient would be called one and escape checking; "do not write by hand what
 from code" as the whole rule — it reads as a demand to derive the map's rules; derivation from
 code alone — behaviour shows in runtime traces, deployment in infrastructure files.
 
-### WAY-05/1 — How is a decision entry written?
+### WAY-05 — How is a decision entry written?
 
 A decision entry opens with one to three binding sentences — in the present tense, describing
 a state that is to be true, concrete enough to check — followed by fields a script or an agent
@@ -154,18 +140,13 @@ while someone or something reads it, and what a decision forces on later work st
 sentence or a field, never in prose. An example in `elements/decisions/` names a decision of the
 log by its number instead of copying it.
 
-- **Change:** new decision
 - **Scope:** decisions
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 1 — invariants: binding-sentence-count · binding-sentence-words ·
-  decision-example-numbers. Level 2 for the rule that every field has a reader — an agent compares
-  the change with the decision:
+- **Verification:** an agent compares the change with the decision:
   - complies: a new field enters the template together with the reader named in its table;
   - violates: a "notes" or "related artifacts" field that nothing reads.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-29
 
 *Rationale:* a record written like a legal code is followed worse, and agents generalise from the
 reasons they are given, so what binds stays short and checkable, reasoning below; a field
@@ -177,23 +158,20 @@ MUST — shouting reads worse, not stronger; examples written for the template �
 teaches gaps; a rule of the template changed only with a decision citing its number — the template
 is the-way's own text, changed and reviewed like any other change to it.
 
-### WAY-07/1 — How is a decision entry changed?
+### WAY-07 — How is a decision entry changed?
 
 A decision entry is edited in place, on the main branch as before it, and holds only its current
 wording: the log has one entry for each number, and git keeps the earlier wordings.
 
-- **Change:** new decision
 - **Scope:** decisions
 - **Based on:** none
-- **Relations:** derives from WAY-01@60960941
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Relations:** derives from WAY-01
+- **Verification:** an agent compares the change with the decision:
   - complies: a decision whose rule changes is rewritten in its own entry, which then says only
     what binds;
   - violates: a change to a decision is appended as a second entry under the same number; an entry
     keeps a sentence that no longer binds beside the one that replaced it.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-15
 
 *Rationale:* the log is read for what binds today (WAY-01), and an entry that holds only its current
 wording is read whole, without assembling it from earlier ones; what an entry said before is
@@ -203,7 +181,7 @@ a version restates the sentences the change leaves alone, and a reader assembles
 many copies; an entry fixed from the moment it is written — every edit made during a task becomes a
 version that never bound anything.
 
-### WAY-08/1 — How is an invariant checked?
+### WAY-08 — How is an invariant checked?
 
 Every invariant names its method of checking: a test of the product's test suite where a cheap test
 can check its sentence, and review otherwise, where the review of each change by an agent that did
@@ -212,20 +190,17 @@ from running that test, never from a status written by hand. An invariant's test
 once, with the command that later shows it passing — run before the code that satisfies it, or,
 where the code already has the behaviour, against that behaviour broken for a moment.
 
-- **Change:** new decision
 - **Scope:** invariants
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Verification:** an agent compares the change with the decision:
   - complies: the invariant on the log's fields reads `test`, and its test runs the check on the
     real log; whether an image's text alternative describes it reads `review`; a new invariant's
     test fails before the code that satisfies it is written;
   - violates: an invariant that a cheap test can check reads `review`; an entry carries a status
     `pass` written by hand; an invariant's test is taken as checking its rule without having been
     seen failing.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-29
 
 *Rationale:* coverage is not checking: code can be covered while no test fails when it is removed,
 so a test counts once it has been seen failing; a status written by hand goes stale with the next
@@ -236,52 +211,49 @@ that always passes; a deliberate break of every test, written apart from it and 
 a ritual of its own for each test, where the one failure seen already shows it can fail; human
 inspection with a recorded verdict — a file of verdicts beside the review that reads the change.
 
-### WAY-09/1 — What may enter the process repository?
+### WAY-09 — What may enter the process repository?
 
 On the main branch, this repository holds `foundations/` with the entries of the-way itself, a
 directory for each part of the process other than `repository` — `elements/<element>/` for each
 foundation element, `elements/common/` for what the elements share, `relation-model/`, `gate/`,
 `installation/`, `agent-instructions/`, `instruction-files/`, `project-level/`,
-`product-guidelines/` and `task-cycle/` — with `probes/` as a second directory of the environment
-facts part, for the checks of the-way's own facts, the files that configure the whole repository,
-which its part map gives to the `repository` part (WAY-44), the root agent instruction files and
-the project skill entry points
-under `.claude/skills/` and `.agents/skills/`, which the map gives to `agent-instructions`
-(WAY-44), and a `README.md` that describes the repository. A directory reaches the main branch
-only once it holds what its part requires: an element its template and rules, examples or a
-pointer to entries of the-way that serve as its examples, a skill that writes its entries and a
-format guard; `elements/common/` the rules of form and the way of working the elements'
-templates and skills share, the code their format guards share and the skills that find entries and
-that critique proposals; `project-level/` the templates of a project definition, a project plan and
-a task document, the skills that write them and lead a handed-over plan, the readiness check, the
-plan check, the reader of task-cycle evidence for plan states and their tests; `relation-model/` the
-script that computes fingerprints; `gate/` the test of every critical flow in the part map;
-`installation/` the installer, its tests and a README explaining how a product uses the pinned
-version; `agent-instructions/` the instructions for agents working on this repository, led to from
-the root agent instruction files; `instruction-files/` the principles of instruction files for
-coding agents, the account of how the tools load them, the skill that applies them, and the script
-that checks instruction files with its tests; `product-guidelines/` the template that the guidelines
-of every product share, for each discipline of work whose guidelines the-way gives a template of,
-that template with the skill that leads the work on them, and the script that checks the form of
-guidelines, with its tests; `task-cycle/` what the design of the task cycle sets, and until then it
-does not reach the main branch. The entries in `foundations/` are checked by the format guards of
-their elements.
+`product-guidelines/` and `task-cycle/` — the files that configure the whole repository, which its
+part map gives to the `repository` part (WAY-44), the root agent instruction files and the project
+skill entry points under `.claude/skills/` and `.agents/skills/`, which the map gives to
+`agent-instructions` (WAY-44), and a `README.md` that describes the repository. A directory reaches
+the main branch only once it holds what its part requires: an element its template and rules,
+examples or a pointer to entries of the-way that serve as its examples, and a skill that writes its
+entries; `elements/common/` the rules of form and the way of working the elements' templates and
+skills share, the code the remaining format guards share as a library of the form check of
+guidelines, the script that checks a foundation, the script that migrates a foundation from the
+earlier form, and the skills that find entries and that critique proposals; `project-level/` the
+templates of a project definition, a project plan and a task document, the skills that write them
+and lead a handed-over plan, the readiness check, the plan check, the reader of task-cycle evidence
+for plan states and their tests; `relation-model/` the script that computes fingerprints; `gate/`
+the test of every critical flow in the part map; `installation/` the installer, its tests and a
+README explaining how a product uses the pinned version; `agent-instructions/` the instructions for
+agents working on this repository, led to from the root agent instruction files;
+`instruction-files/` the principles of instruction files for coding agents, the account of how the
+tools load them, the skill that applies them, and the script that checks instruction files with its
+tests; `product-guidelines/` the template that the guidelines of every product share, for each
+discipline of work whose guidelines the-way gives a template of, that template with the skill that
+leads the work on them, and the script that checks the form of guidelines, with its tests;
+`task-cycle/` what the design of the task cycle sets, and until then it does not reach the main
+branch. The entries in `foundations/` are checked by `elements/common/foundation_check.py`.
 
-- **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common,
   relation-model, gate, installation, agent-instructions, instruction-files, repository,
   project-level, product-guidelines, task-cycle
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 1 — invariants: repository-file-location · element-directory-contents ·
-  relation-model-directory-contents · invariant-example-target · map-example-target ·
-  glossary-example-target. Level 2 for what `elements/common/`, `installation/`,
+- **Verification:** invariants: repository-file-location · element-directory-contents ·
+  relation-model-directory-contents. For what `elements/common/`, `installation/`,
   `agent-instructions/`, `instruction-files/`, `project-level/`, `product-guidelines/` and
-  `task-cycle/` hold and for the format guards checking `foundations/` — an agent compares the
-  change with the decision:
-  - complies: code two format guards share moves into `elements/common/`, and both load it from
-    there; a new file of entries in `foundations/` comes with the format guard of its element; the
-    installer, its tests and instructions stand together in `installation/`; the templates of a
+  `task-cycle/` hold and for what checks `foundations/`, an agent compares the change with the
+  decision:
+  - complies: code two skills of the elements share moves into `elements/common/`, and both read it
+    from there; a new rule of form for the entries in `foundations/` is checked by
+    `elements/common/foundation_check.py`; the installer, its tests and instructions stand together in `installation/`; the templates of a
     definition, a plan and a task document, the skills that write them and the checks of a
     definition and a plan stand in `project-level/`; the agent instructions
     have their own part and root entry points; the project skill entry points under
@@ -291,11 +263,10 @@ their elements.
     `instruction-files/`; the template of guidelines, the template and the skill of the styleguide
     discipline, and the script that checks the form of guidelines with its tests stand together in
     `product-guidelines/`;
-  - violates: a `tools/` directory for shared scripts reaches the main branch; `task-cycle/`
+  - violates: a `tools/` directory for shared scripts reaches the main branch; a new element comes
+    with a format guard of its own beside `elements/common/foundation_check.py`; `task-cycle/`
     reaches the main branch before the design of the task cycle sets what it holds.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/25
 
 *Rationale:* anything brought in on the side makes the repository a store of material; directories
 follow the parts, so a change's files name its part and decisions (WAY-21); an incomplete directory
@@ -319,28 +290,25 @@ the templates of guidelines and their check under `elements/` — guidelines are
 foundation (WAY-04); the same folded into `instruction-files/` — that part answers for instruction
 files of any repository, and its failures differ.
 
-### WAY-10/1 — Who assesses a change to an invariant test or to the foundation?
+### WAY-10 — Who assesses a change to an invariant test or to the foundation?
 
 A change to an invariant test or to the foundation has no assessment of its own, in a product as in
 the-way itself: an agent that did not make the change reviews the whole change, its foundation
 entries and invariant tests included, against its task and the foundation, and a human reads the
 diff of the foundation and accepts the change by merging its request.
 
-- **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common,
   task-cycle, agent-instructions
-- **Based on:** llm-self-preference@6d9f4b97
-- **Relations:** derives from WAY-03@7c2d4ca1
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Based on:** llm-self-preference
+- **Relations:** derives from WAY-03
+- **Verification:** an agent compares the change with the decision:
   - complies: a change that rewords a decision and the invariant test deriving from it is reviewed
     on its whole diff by an agent that did not make it, and the human merges it with no other
     assessment;
   - violates: the author reviews its own change to the foundation; a cycle requires an assessment
     of its own of a change's foundation entries before the merge; a change merges whose foundation
     entries no reviewer read.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/5
 
 *Rationale:* the problem is a single executor that checks itself: a model judging what it wrote
 favours it, so an agent that did not make the change reads it. An error of the product shows where
@@ -355,7 +323,7 @@ panel of two assessors and a settler reading both orders — its cost per change
 reader misses, and its uncertainty becomes questions for the human; the author assessing its own
 change — it checks itself.
 
-### WAY-11/1 — How does a task end?
+### WAY-11 — How does a task end?
 
 A task ends with its return step before its branch is merged: an agent searches the diff and the
 task's log for new rules and decisions, code behaviour with no invariant over it, environment
@@ -369,13 +337,12 @@ this distinction leaves decision-derived invariants (WAY-12, WAY-22), accepted s
 (WAY-134) and the task's duties for projected entries (WAY-126) required. A periodic review of the
 foundation runs apart from tasks.
 
-- **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-01@60960941
-- **Verification:** level 1 — invariants: return-step-record. Level 2 for what the return step
-  finds and how it classifies uncovered behaviour — an agent compares the diff, the task's log
-  and sources with the decision:
+- **Relations:** derives from WAY-01
+- **Verification:** invariants: return-step-record. For what the return step finds and how it
+  classifies uncovered behaviour, an agent compares the diff, the task's log and sources with the
+  decision:
   - complies: a newly found rule that a later change would break becomes an invariant, with its
     requirement or settlement named; a replaceable layout calculation stays in ordinary tests
     and the change description, with the reason recorded; an invariant required by a decision
@@ -384,9 +351,7 @@ foundation runs apart from tasks.
   - violates: a product rule is left only in ordinary tests; every replaceable detail becomes
     a foundation invariant merely because the diff reveals it; a costly decision-derived
     invariant or an applicable accepted or projected entry is omitted under the distinction.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/17
 
 *Rationale:* some of the foundation is learned only in implementation and in use, and a task that
 missed the foundation does not report it; an end step goes missing, so the merge waits for its
@@ -396,27 +361,22 @@ in the code; every uncovered detail made an invariant — a replaceable implemen
 product rule; ordinary tests alone for product rules — later work can change a requirement without
 meeting a foundation check.
 
-### WAY-12/1 — How is a decision checked?
+### WAY-12 — How is a decision checked?
 
 A decision names in *Verification* the invariants derived from it, by the identifiers of their
 entries, where such invariants exist, and tests live only with invariants. A decision may also
 carry a pair of examples — a change that complies and one that violates — with which an agent
 compares a change with what no invariant of the decision checks.
 
-- **Change:** new decision
 - **Scope:** decisions, invariants
-- **Based on:** llm-decision-violation-detection@92f498f3
+- **Based on:** llm-decision-violation-detection
 - **Relations:** none
-- **Verification:** level 1 — invariants: level-one-decision-invariants · invariant-citation-target
-  · verification-invariant-derivation. Level 2 for what a decision names — an agent compares the
-  change with the decision:
+- **Verification:** an agent compares the change with the decision:
   - complies: a decision on the product's direction carries a complying and a violating example
     and names no invariant; a decision with a derived invariant names it after `invariants:`;
   - violates: a decision names an invariant whose *Derives from* names another decision; a
     decision asks for a human's assessment recorded in its entry.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-30
 
 *Rationale:* a test checks an invariant on every commit; a decision about direction or trade-offs
 often cannot be. Agents judge explicit, code-readable decisions well and deployment- or
@@ -427,7 +387,7 @@ unchecked; a level of verification named in every decision, a human's assessment
 — the level adds nothing to the invariants named and the examples given, and every change already
 reaches a human before it binds (WAY-14).
 
-### WAY-13/1 — What sets the weight of a task's process?
+### WAY-13 — What sets the weight of a task's process?
 
 What a task touches, never its size, sets the path that merges its change and how sharply that
 change is checked: an agent's analysis at the start of the task settles whether it changes the
@@ -441,12 +401,11 @@ outcome it has to reach or the checks run on the finished change, and otherwise 
 signal to split it; an agent may check a change more sharply than the map computes, never less, and
 a human decides on every change that cannot be undone.
 
-- **Change:** new decision
 - **Scope:** task-cycle
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 1 — invariants: foundation-change-path. Level 2 for the rest — an agent
-  compares the change with the decision:
+- **Verification:** invariants: foundation-change-path. For the rest, an agent compares the change
+  with the decision:
   - complies: a one-line format change that breaks users' saved data gets the sharpest checks and
     a human's decision; a change one agent can hold, including its foundation entries, is made without a
     plan and runs the same checks as any change to the parts it touches;
@@ -454,9 +413,7 @@ a human decides on every change that cannot be undone.
     changes few lines; a small task skips a check that the parts it touches call for; a change that
     cannot be undone reaches the main branch without a human's decision; an agent turns a task into
     one that returns knowledge instead of a change without a human setting it so.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/20
 
 *Rationale:* size misleads both ways about what can go wrong: a rename across many files is easy to
 undo, a one-line change to a stored format can destroy every user's data, so what a task touches,
@@ -472,25 +429,21 @@ touching a trust boundary's files, from the lighter preparation — it would tak
 preparation from small tasks it suits, while a human's decision and checks kept whole already
 stop such a change.
 
-### WAY-14/1 — Who accepts a decision?
+### WAY-14 — Who accepts a decision?
 
 A decision, and every change to it, binds once a human accepts it by merging the request that
 carries it, never an agent; the entry names no approver, and git keeps who merged it and when. In
 the-way, that human is Mariusz.
 
-- **Change:** new decision
 - **Scope:** decisions
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Verification:** an agent compares the change with the decision:
   - complies: a decision written on a task branch binds once Mariusz merges its request, and its
     entry holds no field naming him;
   - violates: an agent merges a request that carries a decision; an entry is edited once its
     request is open only to record who is to approve it.
-- **Review when:** the-way decides which of its elements a team may adapt, and with it who approves
-  decisions for which parts · check by: 2026-12-31
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/4
 
 *Rationale:* a decision binds the agents that follow, so none of them accepts one. The merge is the
 act by which a human accepts a change, and git records it with the person and the time; a field
@@ -500,49 +453,43 @@ whose merge accepted it — a copy of what git records, written in by hand once 
 field in every entry naming who is to approve it — the same name repeated, stale once the team
 changes; lists of decision-makers and of those consulted — nothing reads them.
 
-### WAY-16/1 — How are the checks of invariants run?
+### WAY-16 — How are the checks of invariants run?
 
-The gate takes its checks from the methods of checking written in the entries, never from a list
-written by hand, and one command runs the checks a change calls for together with the product's own
-tests it calls for — the same command for an agent, for a human and for whatever runs it when a
-change is merged.
+One command runs all of a product's tests, the tests of its invariants among them — the
+same command for an agent, for a human and for whatever runs it when a change is merged —
+and no list of checks written by hand stands beside it.
 
-- **Change:** new decision
-- **Scope:** invariants, agent-instructions, task-cycle
+- **Scope:** invariants, agent-instructions, task-cycle, gate
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 1 — invariants: ci-checking-commands · gate-check-source. Level 2 for the
-  same command for everyone — an agent compares the change with the decision:
-  - complies: the instructions for agents name the gate's command as the way to check a change;
-  - violates: the instructions for agents list test and lint commands of their own; the product's
-    tests run under a command of their own beside the gate's.
-- **Review when:** none
+- **Verification:** invariants: ci-checking-commands. For the same command for everyone, an agent
+  compares the change with the decision:
+  - complies: the instructions for agents name that one command as the way to check a change;
+  - violates: the instructions for agents list test and lint commands of their own; the tests of
+    the invariants run under a command of their own beside the product's tests.
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-30
 
-*Rationale:* a list of checks written by hand is a second copy of the invariants that drifts: a
-new invariant never runs, a removed one still does. One command for all leaves no doubt which list
-ran.
-*Rejected:* a gate written for each product — it drifts from that product's invariants; separate
-commands for an agent, a human and whatever runs the gate when a change is merged — three lists to
-keep in step; the product's tests under a command of their own — of two commands an agent runs one.
+*Rationale:* a list of checks written by hand is a second copy of the tests that drifts: a new
+test never runs, a removed one still does. One command for all leaves no doubt which tests ran, and
+running all of them leaves nothing to choose.
+*Rejected:* a gate taking its checks from the methods written in the entries and running those a
+change calls for — a second runner beside the product's tests, and a choice of tests that can
+leave out the one a change breaks; separate commands for an agent, a human and whatever runs the
+tests when a change is merged — three lists to keep in step; the tests of the invariants under a
+command of their own — of two commands an agent runs one.
 
-### WAY-17/1 — Which links between foundation entries are mandatory?
+### WAY-17 — Which links between foundation entries are mandatory?
 
 Every link of the chain fact → decision → invariant → test is written in the entry that depends
 on the other, and none is optional: a decision and an invariant name the environment facts they
 rest on, an invariant derived from a decision names that decision, and a check names its
 invariant.
 
-- **Change:** new decision
 - **Scope:** relation-model, decisions, invariants, environment-facts
 - **Based on:** none
-- **Relations:** derives from WAY-02@3ffcbd46
-- **Verification:** level 1 — invariants: level-one-decision-invariants · invariant-citation-target
-  · verification-invariant-derivation.
-- **Review when:** none
+- **Relations:** derives from WAY-02
+- **Verification:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-23
 
 *Rationale:* the chain is the path a change travels, so a missing link breaks it without a sign,
 and an assumption no entry names escapes review; the link sits in the dependent entry, because
@@ -551,7 +498,7 @@ only its writer knows what it rests on.
 links — a missing one looks unneeded; research findings outside the environment facts — a search
 from a changed finding would find no decision about agents that rests on it.
 
-### WAY-18/1 — How is a product's decision log kept?
+### WAY-18 — How is a product's decision log kept?
 
 A product keeps all its decisions in one log, whatever they are about. The log holds one entry for
 each decision in force, in the order the entries were written, and says what binds today with no
@@ -559,19 +506,16 @@ view generated from it. A link between entries is written at one end only; the o
 decision's invariants, which its *Verification* names while each of them names the decision in
 *Derives from*.
 
-- **Change:** new decision
 - **Scope:** decisions
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Verification:** an agent compares the change with the decision:
   - complies: a business rule and a technical constraint of one product stand in the same log
     under one numbering; a product's existing architecture records stay a source, and a decision
     recovered from them enters the one log;
   - violates: a separate log for business decisions next to the technical one; a decision that
     another narrows names that other in its own *Relations* as well.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-29
 
 *Rationale:* one log, because a collision is caught only between decisions in the set a change is
 checked against; the log itself says what binds, so a reader reaches it without assembling versions
@@ -582,7 +526,7 @@ marks written by hand at a link's other end — they go missing; separate logs f
 technical decisions — collisions between them go unseen; a log per approver — git records who
 merged each change (WAY-14); a field for an entry's topic — nothing reads it (WAY-05).
 
-### WAY-19/1 — How are decisions numbered?
+### WAY-19 — How are decisions numbered?
 
 A number stands for the question a decision answers, carries the product's prefix and is given
 in the order entries are written; a new question gets the next free number, and a new rule next
@@ -590,19 +534,14 @@ to an existing decision is a new question. A new answer to a question the log ho
 question's entry. When a new decision answers a question that an older one answered in passing, the
 sentence moves to the new decision, and the older one loses it in the same change.
 
-- **Change:** new decision
 - **Scope:** decisions
 - **Based on:** none
-- **Relations:** derives from WAY-02@3ffcbd46
-- **Verification:** level 1 — invariants: log-entry-field-presence · log-entry-field-words. Level 2
-  for one number per question and for sentences answered in passing — an agent compares the change
-  with the decision:
+- **Relations:** derives from WAY-02
+- **Verification:** an agent compares the change with the decision:
   - complies: a new rule for who accepts a decision is written into WAY-14; when a decision on a
     question arrives, an older decision that answered it in passing loses that sentence;
   - violates: the same question gets a second number; the sentence stays in both decisions.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-29
 
 *Rationale:* a permanent number lets references survive a change (WAY-02); a new answer rewrites
 the one entry, so no reader assembles the decision from pieces; a sentence answered in passing
@@ -612,23 +551,20 @@ of different products apart in references.
 left on a dead entry; numbering by topic — topics move, and numbers would move with them; a new
 version of the number for every change — a reader assembles what binds from many copies (WAY-07).
 
-### WAY-20/1 — What kinds of change can a decision undergo?
+### WAY-20 — What kinds of change can a decision undergo?
 
 A change to a decision names no kind of change, in the entry or beside it; what the change does to
 the decision's meaning, the request that carries it says, naming the decision with one sentence of
 what it now means (WAY-114).
 
-- **Change:** new decision
 - **Scope:** decisions
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Verification:** an agent compares the change with the decision:
   - complies: a request that rewords a decision names it with one sentence of its new meaning, and
     the entry holds no field for the kind of change;
   - violates: an entry records that its last change was an editorial correction.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-29
 
 *Rationale:* what a change does to a decision is read once, by the human who accepts it, and the
 request's sentence of meaning tells them; a kind written into the entry speaks of a change, not of
@@ -637,21 +573,17 @@ the decision, and the entry outlives it.
 wording, narrowing, challenge, repeal — named by every later version of a decision — a kind speaks
 of the history, which git keeps, and a version restates the sentences the change leaves alone.
 
-### WAY-21/1 — What is a decision's scope?
+### WAY-21 — What is a decision's scope?
 
 A decision's scope names the parts of the product it governs, taken from the part map, and never
 file paths, so that the decisions governing a change are found from the files it touches through
 the part map's rule for assigning files.
 
-- **Change:** new decision
 - **Scope:** decisions, part-map, task-cycle
-- **Based on:** instruction-density-accuracy@f62b9a6d
+- **Based on:** instruction-density-accuracy
 - **Relations:** none
-- **Verification:** level 1 — invariants: decision-scope-names · decisions-found-for-change.
-- **Review when:** no model in the range of fact instruction-density-accuracy is Active in
-  Anthropic's table of models · check by: 2026-10-02
+- **Verification:** invariants: decisions-found-for-change.
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-30
 
 *Rationale:* an agent can apply only decisions it sees. The part map already assigns files to
 parts, so using those parts as scope makes the governing decisions discoverable without copying
@@ -659,7 +591,7 @@ paths into each entry. Topics cannot be derived from changed files.
 *Rejected:* file paths in each decision — duplicate the map; topics — cannot be derived from a
 change; no scope — relevant decisions get lost among the rest.
 
-### WAY-22/1 — Is a rule a decision or an invariant?
+### WAY-22 — Is a rule a decision or an invariant?
 
 An invariant says nothing about why or what was rejected; a decision is a choice between
 options, with its rationale, and it binds later choices, including those that cannot be checked on a
@@ -667,19 +599,16 @@ commit — direction, trade-off principles, non-goals. A rule that records a cho
 what of it a commit can make false is written as an invariant derived from it; a rule with no choice
 behind it is an invariant alone.
 
-- **Change:** new decision
 - **Scope:** decisions, invariants
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Verification:** an agent compares the change with the decision:
   - complies: "the product has no multiplayer" is a decision, and "no screen offers a second
     player" an invariant derived from it; "a saved game is never lost on reload" is an invariant
     with a test;
   - violates: a non-goal that a commit can break is left without a derived invariant; an
     invariant carries a rationale and rejected options.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-27
 
 *Rationale:* an invariant is checked mechanically on every commit, a decision weighed when a later
 choice is made; a checkable rule left only in a decision's prose escapes the gate, and a choice
@@ -687,22 +616,19 @@ written only as an invariant loses its reasons.
 *Rejected:* one kind of entry for both — either the gate reads prose or the reasons are lost;
 moving a checkable sentence out of its decision — the rule would be cut off from its reason.
 
-### WAY-24/1 — How is a decision that rests on a prediction reviewed?
+### WAY-24 — How is a decision that rests on a prediction reviewed?
 
 A decision names no date or condition for its review, the log holds no record of a review, and
 the review of the foundation against the product is a task of the product's backlog.
 
-- **Change:** new decision
 - **Scope:** decisions
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Verification:** an agent compares the change with the decision:
   - complies: a decision's entry holds no field for its review; a task of the backlog reviews the
     foundation against the product;
   - violates: an entry carries a check-by date; a record of a review is appended to the log.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-29
 
 *Rationale:* a date in an entry asks for a look nobody is sent to make, and passes unseen; a review
 of the whole foundation, set as a task, looks at all of it at once.
@@ -710,7 +636,7 @@ of the whole foundation, set as a task, looks at all of it at once.
 record appended on the date — the dates pass with nobody looking; a decision that expires on a date
 — the date gets extended.
 
-### WAY-25/1 — What settles a collision between two decisions?
+### WAY-25 — What settles a collision between two decisions?
 
 Where two decisions both apply and collide, the one that prevails names the other in *Relations*
 as `narrows`, and its binding sentences state the area where it prevails; nothing follows along a
@@ -718,19 +644,15 @@ chain, and two decisions that narrow each other are an error. A collision betwee
 with no precedence recorded is never settled by the agent that meets it; a human records the
 precedence in the decision that prevails.
 
-- **Change:** new decision
 - **Scope:** decisions, task-cycle
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 1 — invariants: narrows-pairs. Level 2 for a collision with no precedence
-  — an agent compares the change with the decision:
+- **Verification:** an agent compares the change with the decision:
   - complies: an agent meets two applicable decisions that pull opposite ways, finds no
     precedence between them, stops and asks for it;
   - violates: an agent settles the collision in favour of the newer decision; an agent infers
     that A prevails over C because A narrows B and B narrows C.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-29
 
 *Rationale:* pairs record only what someone actually weighed; nothing follows along a chain, because
 A over B and B over C were weighed in different situations; an agent that settles an unrecorded
@@ -739,25 +661,22 @@ collision makes a trade-off no human made, and the human who records it answers 
 levels of authority over whole groups of decisions — a collision inside a level stays unresolved;
 the newest decision wins — the date of a decision is not its weight.
 
-### WAY-26/1 — How are trade-off principles and non-goals written?
+### WAY-26 — How are trade-off principles and non-goals written?
 
 Each trade-off principle is a decision of its own, whose binding sentence says which of two good
 things is chosen when they conflict and whose rationale names the problem it solves. Each
 non-goal is a decision of its own that says what the product does not do and why.
 
-- **Change:** new decision
 - **Scope:** decisions, task-cycle
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Verification:** an agent compares the change with the decision:
   - complies: "When speed of release conflicts with completeness, we choose speed", an entry of its
     own whose rationale names the problem; "The product has no multiplayer", with its reason, as an
     entry of its own;
   - violates: a principle naming one good thing only ("we value quality"); several principles or
     several non-goals in one entry.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-29
 
 *Rationale:* a principle rules later choices only when it names what it gives up; the rationale names
 the problem, so a later reader can tell when the principle stops serving it; one entry each, so each
@@ -765,28 +684,25 @@ changes on its own and precedence is recorded pair by pair (WAY-25).
 *Rejected:* several principles or non-goals in one entry — a change to one reopens them all, and no
 precedence can be recorded between them.
 
-### WAY-27/1 — Where may this repository point for its reasoning?
+### WAY-27 — Where may this repository point for its reasoning?
 
 Nothing in this repository points to a source outside it that its readers cannot reach: every
 entry carries its whole reasoning, and what is seen only in such a source is described in the
 entry instead of being pointed to. The one exception is the place of its tasks, named in the
 `## Backlog` section of its root `AGENTS.md` and nowhere else.
 
-- **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, relation-model,
   installation, agent-instructions, instruction-files, product-guidelines, task-cycle
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 1 — invariants: outbound-link-reach. Level 2 for the reasoning in the
-  entry — an agent compares the change with the decision:
+- **Verification:** invariants: outbound-link-reach. For the reasoning in the entry, an agent
+  compares the change with the decision:
   - complies: a decision quotes a public study with its address; a pattern seen in a product
     outside the repository is described in the rationale, without a pointer to it; the-way's root
     `AGENTS.md` names, in `## Backlog`, the private note where its tasks are kept;
   - violates: *Origin* points to a private note; a rationale rests on "as in our other product"
     without saying what was seen.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/8
 
 *Rationale:* a pointer to a source the reader cannot open is a dead end, leaving a claim nobody
 can check; what was seen there, written down, can at least be judged, and WAY-17 still has a fact
@@ -796,7 +712,7 @@ source an entry points to.
 *Rejected:* *Origin* pointing to the notes where the reasoning was worked out — no reader can open
 them.
 
-### WAY-28/1 — How does the process enter a product that already exists?
+### WAY-28 — How does the process enter a product that already exists?
 
 When the process enters a product that already exists, the existing state is its starting point
 and needs no justification, and the rules apply to changes from then on. The part map comes
@@ -805,11 +721,10 @@ are then recovered from what the product does — an agent lists what a part doe
 which of it the product must keep — and the other invariants come through the return step of
 tasks. Decisions are recovered only when a task touches the parts they govern.
 
-- **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, task-cycle
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Verification:** an agent compares the change with the decision:
   - complies: on entering a product, the part map comes first; a human picks a critical payment
     flow's invariants from the agent's list of what it does; a decision is recovered when a task
     first touches the parts it governs;
@@ -817,9 +732,7 @@ tasks. Decisions are recovered only when a task touches the parts they govern.
     human's choice; an agent recovers from the code decisions for the whole product before any
     task touches them; the critical flows and the parts they run through wait for a task like any
     other.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-27
 
 *Rationale:* decisions recovered in advance tempt an agent to invent reasons that look like
 decisions. What the product does today is a state, not a rule (WAY-04); only a human knows what it
@@ -828,7 +741,7 @@ must protect. An invariant needs no decision above it, so it binds before anyone
 are known; everything on demand, the critical flows included — a break there shows only when a task
 happens to touch them.
 
-### WAY-29/1 — How is a decision recovered from an existing product written?
+### WAY-29 — How is a decision recovered from an existing product written?
 
 A decision recovered from the code of an existing product says in *Origin*, in one sentence, that
 it was recovered from the code and where in the code it shows, and its rationale and rejected
@@ -836,23 +749,20 @@ options are quoted from a source, given by a human who knows them, or written as
 rationale an agent proposes for a human's decision goes to the human as a question, never into the
 entry; the rationale of a decision an agent takes in a task is the agent's to write.
 
-- **Change:** new decision
 - **Scope:** decisions
-- **Based on:** llm-design-rationale-expert-overlap@d27dc54f
-- **Relations:** derives from WAY-28@94d8ef12
-- **Verification:** level 1 — invariants: inherited-rationale-source. Level 2 for *Origin* — an
-  agent compares the change with the decision:
+- **Based on:** llm-design-rationale-expert-overlap
+- **Relations:** derives from WAY-28
+- **Verification:** invariants: inherited-rationale-source. For *Origin*, an agent compares the
+  change with the decision:
   - complies: the *Origin* of a decision recovered from a product's saving reads `recovered from
     the code at src/core/save.py, save_game`;
   - violates: *Origin* lists what was searched and what was found.
-  Level 2 for the agent's role — an agent compares the change with the decision:
+  For the agent's role, an agent compares the change with the decision:
   - complies: an agent finds the reason in a merged request and quotes it; an agent finds nothing
     and asks, and the entry gives the reason under the name of the human who knew it;
   - violates: an agent writes a plausible reason inferred from the code into the entry; an agent
     lists in *Rejected* the options it infers were weighed.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/4
 
 *Rationale:* a reason an agent writes looks exactly like a recorded one, and later readers take it
 for the reason the decision was made; a human who knows it is a source, a guess is not. The cited
@@ -865,7 +775,7 @@ options filled in as `none considered` — nobody knows what was considered; *Or
 was searched and what was found — a list nothing reads once the decision is written, while the
 place in the code says where to look.
 
-### WAY-30/1 — What happens when a change contradicts a decision?
+### WAY-30 — What happens when a change contradicts a decision?
 
 A change to a decision that a task needs is written into the task's plan, or into its task
 document where no plan is written, and approved with that plan or document by the human who accepts
@@ -879,11 +789,10 @@ and the code that needs it waits for that human. An exception written in advance
 binding sentences is not a contradiction, and no exception lives only in a task document, plan or
 cycle record.
 
-- **Change:** new decision
 - **Scope:** decisions, task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-01@60960941 · narrows WAY-114@04b4f599
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Relations:** derives from WAY-01 · narrows WAY-114
+- **Verification:** an agent compares the change with the decision:
   - complies: a task branch whose code goes against a decision carries a proposed narrowing, and
     the merge waits for the human who accepts it; a task without a plan carries the known decision
     revision in its task document, accepted by that human before dependent code, and the entry's
@@ -892,9 +801,7 @@ cycle record.
     that records a "justified violation" of a decision; a task without a plan treats the
     orchestrator's go-ahead as approval of a decision revision; the entry's author asks again about
     an accepted settlement, or extends its meaning without asking.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/29
 
 *Rationale:* an exception kept only with the work leaves the foundation describing what the code no
 longer does (WAY-01); stopping shows the contradiction when it is found. Aligning or dropping the
@@ -907,25 +814,22 @@ exception takes the whole decision with it; repeated approval of the same meanin
 answers a question already settled; an implied exception to WAY-114 — competing instructions leave
 the entry writer to choose which one governs.
 
-### WAY-31/1 — Does a link between entries carry a fingerprint?
+### WAY-31 — Does a link between entries carry a fingerprint?
 
 A relation `derives from` or `narrows`, and an invariant entry's *Derives from*, *Rests on* and
 *Part*, name each entry by its identifier alone and carry no fingerprint, and no change to the
 named entry flags them; the author's search of the foundation (WAY-33) finds the entries a change
 touches.
 
-- **Change:** new decision
 - **Scope:** decisions, invariants, environment-facts
 - **Based on:** none
-- **Relations:** derives from WAY-02@3ffcbd46 · derives from WAY-17@b1e26133
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Relations:** derives from WAY-02 · derives from WAY-17
+- **Verification:** an agent compares the change with the decision:
   - complies: an invariant's *Derives from* reads `WAY-01`; a reworded WAY-01 sends its author to
     search the foundation for the entries it touches;
   - violates: a new relation reads `derives from WAY-01@60960941`; a script renews fingerprints
     across the log.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-29
 
 *Rationale:* a relation or an invariant's link stands on what the named entry says (WAY-17), and
 what a change to that entry touches is found by its author's search (WAY-33), so a link needs no
@@ -934,32 +838,28 @@ mark that every rewording renews.
 same merge — renewing a fingerprint does not lead to a change in the entry that carries it; flags
 from the kind of change — a misnamed kind silences them.
 
-### WAY-32/1 — What types of relation can a decision name?
+### WAY-32 — What types of relation can a decision name?
 
 A decision names its relation to another decision with one of two types, and the list is closed:
 `derives from` — a higher decision this one serves; `narrows` — a decision this one deliberately
 goes against in a narrower area.
 
-- **Change:** new decision
 - **Scope:** decisions, relation-model
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 1 — invariants: relation-type. Level 2 for the choice of type — an agent
-  compares the change with the decision:
+- **Verification:** an agent compares the change with the decision:
   - complies: a decision that exists to serve WAY-01 names `derives from WAY-01`; a rule for one
     part that deliberately departs from a general decision names `narrows`;
   - violates: `narrows` for a decision that only mentions another; a new answer to an old question
     given a new number and a relation instead of an edit of the old decision.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-29
 
 *Rationale:* a relation type each author reads differently tells a reader nothing, so each type is
 defined once and the list is closed; both types rely on what the other decision says, and `narrows`
 also records precedence (WAY-25), telling the checking agent where the other does not apply.
 *Rejected:* `related to` — it relies on nothing, so nothing reads it.
 
-### WAY-33/1 — What does the author of a foundation change search for?
+### WAY-33 — What does the author of a foundation change search for?
 
 When a change writes a foundation entry or changes its binding part, its author, once the entry is
 settled, searches the whole foundation once for the entries the change touches — those that name
@@ -967,20 +867,17 @@ the entry or that it names, and those no written link joins to it — and before
 accepted each finding becomes a link, a change to one of the entries in the same change, or a
 question to a human. The search is not repeated before the merge and leaves no record.
 
-- **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, task-cycle,
   agent-instructions
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Verification:** an agent compares the change with the decision:
   - complies: a decision to keep the game's whole state in the browser is written, and the search
     finds an unlinked requirement that players log in; a reworded decision leads its author to the
     invariants that derive from it, and each is brought in line in the same change;
   - violates: the search reads only the decisions whose scope overlaps; a reworded decision is
     merged while an invariant deriving from it still states the old rule.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-29
 
 *Rationale:* a link names an entry by its identifier and no change flags it (WAY-31), and the
 costliest contradictions lie between entries written apart, where nobody thought of a link, so only
@@ -994,28 +891,24 @@ contradictions between parts go unseen; a search of linked entries only — entr
 unseen; a second search against the main branch before the merge, with the record of both — it
 repeats the first search, and a record shows that a search ran, not what it missed.
 
-### WAY-34/1 — Which version of the process does a product use?
+### WAY-34 — Which version of the process does a product use?
 
 A product uses the-way at a commit pinned in its own repository: its templates, skills and
 scripts, and the decisions of the-way that bind its work, all come from that commit. A newer
 version of the process enters a product only through a task in the product that moves the pin.
 
-- **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, relation-model,
   installation, instruction-files, task-cycle
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 2 — an agent compares the change with the decision; the invariants of
-  this decision belong to each product's foundation, since no commit of the-way decides them:
+- **Verification:** an agent compares the change with the decision; the invariants of this decision
+  belong to each product's foundation, since no commit of the-way decides them:
   - complies: a product's foundation holds the invariants "this repository pins a commit of
     the-way" and "CI runs only that commit's scripts"; a task in the product moves the pin and
     carries what the newer version changes for the product;
   - violates: a product's CI fetches the latest the-way on every run; a skill in a product session
     comes from a copy of the-way other than the pinned commit.
-- **Review when:** the first product has moved its pin to a newer the-way twice · check by:
-  2026-11-17
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-23
 
 *Rationale:* a pinned commit turns a change of the process into a change in each product, taken
 in there before it binds, so one change cannot stop every product's checks at once. The price:
@@ -1023,27 +916,23 @@ products lag behind the process, and moving a pin is work, like updating a depen
 *Rejected:* every product on the newest the-way — results change with no change in the product;
 templates and scripts copied into each product — the copies drift.
 
-### WAY-35/1 — What does an element's skill hold?
+### WAY-35 — What does an element's skill hold?
 
 An element's skill holds only the way of working particular to its element: every rule of the
 element's entries stands in the element's template, or once in the part the elements share
 (WAY-09) where it is common to them; the way of working the skills share stands once in that part,
 and a skill reads the rules and that way of working from there instead of restating them.
 
-- **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 1 — invariants: skill-rule-source · invariant-identifier-form ·
-  fact-identifier-form · map-identifier-form. Level 2 for what the skill holds — an agent
-  compares the change with the decision:
+- **Verification:** invariants: skill-rule-source. For what the skill holds, an agent compares the
+  change with the decision:
   - complies: a fix to a field's form in the skill's output goes into the template, not the
     skill; the skill orders its steps and says what to ask;
   - violates: the skill says a rationale has at most three sentences while the template does not;
     the skill restates the list of fields.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-29
 
 *Rationale:* an entry written by hand or by another agent meets only the template and the shared
 part, so the rules stand where every writer and every check reaches them; steps and questions are
@@ -1052,18 +941,17 @@ no rule of an entry.
 format guard and the skill hold entries to different rules; each rule citing the decision that sets
 it — the rules are the-way's own text, changed and reviewed like any other change to it.
 
-### WAY-36/1 — Is a rule a decision or does it belong in a plan?
+### WAY-36 — Is a rule a decision or does it belong in a plan?
 
 A rule enters the decision log only when it still binds once the change that brings it has been
 merged; a rule that ends with a piece of work — an order of steps, a first merge, a transition
 between two states — stays in the plan of that work, or in the choices of its cycle record
 where no plan is written.
 
-- **Change:** new decision
 - **Scope:** decisions, task-cycle
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Verification:** an agent compares the change with the decision:
   - complies: "the foundation reaches the main branch whole, once every element is ready" stays in
     the plan of building the foundation; "when what entries wait for arrives, they are fixed in
     the same change" enters the log; an exclusion that ends with a task without a plan stays
@@ -1071,9 +959,7 @@ where no plan is written.
   - violates: a decision on the order in which elements are built; a decision whose binding
     sentences say what happens until the first merge; an exclusion that ends with its task
     written into the log as a product non-goal.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/20
 
 *Rationale:* a plan written in the present tense reads like a decision, and WAY-01 gives no way to
 recognise one. The log binds on the main branch (WAY-01), and a rule that ends when its change is
@@ -1081,25 +967,22 @@ merged binds nothing there: from its first day it records work already done.
 *Rejected:* plans written into the log and taken out once done — the log holds, while the work
 lasts, a rule that binds nothing once the work is merged.
 
-### WAY-37/1 — What happens to entries that wait for something when it arrives?
+### WAY-37 — What happens to entries that wait for something when it arrives?
 
 A change that brings what entries of the foundation wait for — an element's template, the part
 map, a script — also fixes every entry that waits for it, in the same change. The author of the
 change finds those entries in its one search of the whole foundation (WAY-33).
 
-- **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, relation-model,
   task-cycle
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Verification:** an agent compares the change with the decision:
   - complies: the change bringing the invariants template turns every invariant named in working
     form into a reference to its entry;
   - violates: the part map arrives, and WAY-21 still says that a scope names parts from a working
     list.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-17
 
 *Rationale:* an entry that says what holds until something exists turns false when it arrives, and
 nothing leads from what arrives to what waits for it. Whoever brings it knows what it is, while the
@@ -1107,23 +990,19 @@ authors of the waiting entries may be gone; a fix left for later goes missing.
 *Rejected:* fixes left to the periodic review (WAY-11) — the foundation says something false until
 the review comes.
 
-### WAY-38/1 — In what are the scripts of the-way written?
+### WAY-38 — In what are the scripts of the-way written?
 
 Every script of the-way runs on the version of Python the repository declares, with its standard
 library alone, and installs nothing. It calls git, and the commands a product declares in its own
 repository, reading their output through an adapter for the format. Where a product declares no such
 command, the script reports what it could not check, never agreement.
 
-- **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, relation-model,
   installation, instruction-files, product-guidelines, task-cycle
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 1 — invariants: script-language · script-imports · script-subprocesses ·
-  map-guard-missing-command.
-- **Review when:** none
+- **Verification:** invariants: script-language · script-imports · script-subprocesses.
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-26
 
 *Rationale:* a product runs the scripts of its pinned commit (WAY-34), so every language and
 package they need is something each product has to provide. The state of a language the scripts do
@@ -1136,25 +1015,21 @@ that output for the scripts to read — no signal before a push, and a CI step f
 alone; the scripts parsing other languages themselves — tools that tried gave it up
 (cargo-semver-checks).
 
-### WAY-40/1 — What kinds of entry does the part map hold?
+### WAY-40 — What kinds of entry does the part map hold?
 
 The part map holds two kinds of entry: a part and a surface. An allowed dependency and a trust
 boundary are fields of the part they belong to, so neither is an entry of its own, and a critical
 flow has no entry (WAY-45). The whole map lives in one Markdown file of fixed shape in
 `foundations/`.
 
-- **Change:** new decision
 - **Scope:** part-map
 - **Based on:** none
-- **Relations:** derives from WAY-04@29a75d2c
-- **Verification:** level 1 — invariants: map-section-kinds · part-map-file. Level 2 for the kinds
-  of entry — an agent compares the change with the decision:
+- **Relations:** derives from WAY-04
+- **Verification:** an agent compares the change with the decision:
   - complies: a payment service is a part, and the file format its clients read is a surface;
   - violates: the map holds an entry for a critical flow, a list of known violations of its
     allowed dependencies, or a criticality scale.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-10-01
 
 *Rationale:* each kind answers what the other cannot: a part, what it is responsible for and which
 files are its; a surface, what someone outside relies on. A dependency has no identity beyond its
@@ -1166,24 +1041,20 @@ the dependencies the code holds against the map as a derived list beside it — 
 nothing goes stale, while a violated invariant stands where its reader sees it (WAY-51); one file
 per part — a rename becomes a move of files.
 
-### WAY-41/1 — What identifies an entry of the part map?
+### WAY-41 — What identifies an entry of the part map?
 
 Every entry of the part map carries a permanent identifier made of words, such as
 `relation-model`, and it stays the same when the files assigned to it change. Splitting or merging
-entries gives each entry that comes out of it a new identifier, and the identifier left behind
-stays in the map as a withdrawn identifier giving why and naming its successors; an identifier is
-never reused.
+entries gives each entry that comes out of it a new identifier; the identifier left behind, and the
+identifier of an entry removed with nothing in its place, stays in the map as a withdrawn identifier
+giving why and naming its successors, or `none` for an entry removed; an identifier is never
+reused.
 
-- **Change:** new decision
 - **Scope:** part-map, elements-common, relation-model
 - **Based on:** none
-- **Relations:** derives from WAY-40@3d01f9cd
-- **Verification:** level 1 — invariants: decision-scope-names · map-identifier-form ·
-  identifier-holders · map-reference-target · map-withdrawal-successors ·
-  map-identifier-persistence.
-- **Review when:** none
+- **Relations:** derives from WAY-40
+- **Verification:** invariants: map-reference-target.
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-28
 
 *Rationale:* every reference to a part rests on its identifier, so it must outlive a move of the
 part's files; words, because a number says nothing where it is read; a withdrawn identifier stays,
@@ -1192,24 +1063,21 @@ so an old reference still says where the part went.
 unreadable where it is read; a number beside the name — a second field for a rare rename; a reused
 identifier (Backstage) — an old reference silently points elsewhere.
 
-### WAY-42/1 — What is the binding part of a part map entry?
+### WAY-42 — What is the binding part of a part map entry?
 
 The binding part of an entry of the part map is one sentence: a part's responsibility or a
 surface's promise. Path patterns, allowed dependencies, a trust boundary and who relies on a
 surface stay outside it.
 
-- **Change:** new decision
 - **Scope:** part-map
 - **Based on:** none
-- **Relations:** derives from WAY-02@3ffcbd46
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Relations:** derives from WAY-02
+- **Verification:** an agent compares the change with the decision:
   - complies: a part's sentence says what it answers for, and a directory moved to another place
     changes only its *Files*;
   - violates: a part's sentence lists the directories its files sit in, so that a move rewrites
     it.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-30
 
 *Rationale:* whatever names an entry relies on what the entry answers for, and a change of that
 sentence sends the author to the entries naming it (WAY-02, WAY-33). Files and the other fields
@@ -1219,25 +1087,21 @@ author there for changes that do not alter that promise.
 beside each reference — renewed on every reworded sentence, while a reference by identifier and the
 search on each change of a sentence find the same entries (WAY-02).
 
-### WAY-43/1 — Is an entry of the part map versioned?
+### WAY-43 — Is an entry of the part map versioned?
 
 An entry of the part map is edited in place and carries no version, so the map shows the
 product as it is today. What the entry said before an edit stays in git, and is read from
 there.
 
-- **Change:** new decision
 - **Scope:** part-map
 - **Based on:** none
-- **Relations:** derives from WAY-01@60960941
-- **Verification:** level 1 — invariants: map-entry-version. Level 2 for the rest — an agent
-  compares the change with the decision:
+- **Relations:** derives from WAY-01
+- **Verification:** an agent compares the change with the decision:
   - complies: a part whose responsibility narrows has its sentence rewritten in the same change
     as the code;
   - violates: a part gains a second version of its responsibility with the earlier one kept
     above it; the map holds a section of retired entries next to the live ones.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-17
 
 *Rationale:* an entry's earlier state binds nothing, and git answers whoever asks what the product
 looked like. An entry read at a task's start says what is true now, without versions to choose
@@ -1245,28 +1109,29 @@ from.
 *Rejected:* versions of each entry — history that binds nothing, and the reader picks the current
 entry; an archive of past maps beside the map — git is one already.
 
-### WAY-44/1 — What assigns a file to a part?
+### WAY-44 — What assigns a file to a part?
 
 Every file git tracks belongs to exactly one part of the map, by path patterns that git itself
 matches, each naming a directory or one kind of file — every invariant test, say — rather than
 listing a directory's files one by one; a file that no pattern matches, and a file that two parts
 claim, is an error of the check of the foundation, unless the map lists that file as left out on
-purpose. Tests belong to the part they test and generated files to the part of their generator; the
+purpose, and so is a pattern of a part's *Files* or *Trust boundary* that matches no file git
+tracks. Tests belong to the part they test and generated files to the part of their generator; the
 files that serve the whole repository — the lockfile and the build configuration — are a part of
 their own, and the files that only direct whoever carries out its tasks — instructions for agents,
 skills, hooks and the configuration of agents' tools and of CI — are another. For a file that
 collects entries about many parts, the parts a change touches follow from the entries it adds or
 changes, not from the part the file itself belongs to.
 
-- **Change:** new decision
 - **Scope:** part-map, agent-instructions, task-cycle
-- **Based on:** git-path-patterns@1519f3f7
-- **Relations:** derives from WAY-40@3d01f9cd
-- **Verification:** level 1 — invariants: file-part-assignment · path-pattern-reach ·
-  left-out-file-assignment.
-- **Review when:** none
+- **Based on:** git-path-patterns
+- **Relations:** derives from WAY-40
+- **Verification:** an agent compares the change with the decision:
+  - complies: a change renaming `net/` to `network/` rewrites the *Trust boundary* `net/*.py` of
+    its part, and `elements/common/foundation_check.py` reports no pattern matching no file;
+  - violates: the *Trust boundary* still names `net/*.py`, which matches no file git tracks, and
+    the change is merged with that error of the check.
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-29
 
 *Rationale:* a change is read against the decisions and the invariants of the parts it touches
 (WAY-21, WAY-62), so every file yields one part. git matches, because a second dialect could resolve
@@ -1279,25 +1144,21 @@ added or removed; tests as a part of their own — a test change stops counting 
 files left unassigned in silence — the map passes while saying less and less; a ledger file's part
 taken from its path — every recorded decision counts against the decisions part alone.
 
-### WAY-45/1 — How is a critical flow recorded and tested?
+### WAY-45 — How is a critical flow recorded and tested?
 
 A critical flow has no entry in the part map. What has to stay true along it is an invariant whose
 *Part* names the parts the flow runs through, and its test is a test of the product's suite like any
 other, run with the rest of the suite.
 
-- **Change:** new decision
 - **Scope:** part-map, task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-40@3d01f9cd
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Relations:** derives from WAY-40
+- **Verification:** an agent compares the change with the decision:
   - complies: what has to keep working along a payment flow is an invariant whose *Part* names the
     parts the flow runs through, and its test runs whenever the product's tests run;
   - violates: the map holds an entry for the flow; the flow's test runs only when a change touches
     one of its parts.
-- **Review when:** a product holds more critical flows than its gate can run on every change ·
-  check by: 2026-12-31
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-27
 
 *Rationale:* the product's tests run whole on every change, so a flow's test needs no list of parts
 to be chosen by, and the invariant's *Part* already names where a change can break the flow
@@ -1308,24 +1169,20 @@ comment line naming the flow in its test — a link nothing reads; the flow as a
 the same list in two places; picking flow tests from the change (Azure Test Impact Analysis) — it
 fails where it cannot reason.
 
-### WAY-46/1 — How does the criticality of a part arise?
+### WAY-46 — How does the criticality of a part arise?
 
 A part of the map carries no failure modes and no criticality, and nothing computes a criticality
 from the map.
 
-- **Change:** new decision
 - **Scope:** part-map, task-cycle, environment-facts, invariants
 - **Based on:** none
-- **Relations:** derives from WAY-40@3d01f9cd
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Relations:** derives from WAY-40
+- **Verification:** an agent compares the change with the decision:
   - complies: a part's entry holds its sentence, *Files*, *Depends on* and *Trust boundary*, and
     nothing else;
   - violates: a part carries a criticality or a list of failure modes; a cycle records a failure
     mode at a part.
-- **Review when:** a product that pins the-way holds data under an obligation from a law or a
-  contract on one of its parts · check by: 2026-12-31
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/29
 
 *Rationale:* a computed criticality sets how sharply a change is checked, and a part with no failure
 modes recorded would count as the highest, so every part of a new map would draw the sharpest
@@ -1336,29 +1193,26 @@ criticality computed from them, from the flows a part lies on and from the parts
 sharp checks spread over parts that hold no risk for them; criticality written by hand — it goes
 stale with the code.
 
-### WAY-47/1 — How is a critical flow's list of parts checked?
+### WAY-47 — How is a critical flow's list of parts checked?
 
 A critical flow has no list of parts in the map (WAY-45), so no list is checked against the
 coverage its test leaves, and no script reads a coverage file.
 
-- **Change:** new decision
 - **Scope:** part-map, task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-45@3798c435
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Relations:** derives from WAY-45
+- **Verification:** an agent compares the change with the decision:
   - complies: the map names no coverage file, and a flow's test runs with the product's other
     tests;
   - violates: a script reads a coverage file to compare a flow's parts with the map.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-17
 
 *Rationale:* a list of parts would decide which changes lie on a flow and so which tests run; where
 every test runs on every change, nothing is chosen by it, and a check of the list guards nothing.
 *Rejected:* the list of parts checked against the coverage the flow's test leaves, a flow with no
 coverage file reported as unchecked — it keeps accurate a list nothing reads (WAY-45).
 
-### WAY-48/1 — How is a trust boundary recorded?
+### WAY-48 — How is a trust boundary recorded?
 
 A trust boundary is recorded at the part that holds it, as a pattern of the code files which take
 in what the product does not control — data from the network, keys, the deployment, files that come
@@ -1367,20 +1221,16 @@ the product's own files. An exchange with the external context records its direc
 marks what comes in as untrusted. A change that touches the files of a boundary is checked for
 crafted input, and its review is aimed at that risk.
 
-- **Change:** new decision
 - **Scope:** part-map, task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-40@3d01f9cd
-- **Verification:** level 1 — invariants: path-pattern-reach · gate-boundary-change. Level 2 for
-  which files are a boundary — an agent compares the change with the decision:
+- **Relations:** derives from WAY-40
+- **Verification:** an agent compares the change with the decision:
   - complies: the file that parses requests from the network and the file that reads a user's saved
     game are the boundaries of their parts; a change to a workflow holding a deployment key gets a
     review aimed at that key;
   - violates: a format guard that reads the product's own files is recorded as a trust boundary; a
     change to the parser of requests is reviewed like any other.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-17
 
 *Rationale:* a part that parses what a stranger sends is the oldest way in, whatever else it does,
 so the boundary sets its checks on its own. A pattern of files is matched like parts (WAY-44). A
@@ -1392,24 +1242,21 @@ unimportant one; every script that reads a file as a boundary — the checks for
 spread over files no stranger writes; the boundary as a line in a diagram (pytm) — only a human
 looking reads it.
 
-### WAY-49/1 — How does the part map record a surface, and how is a change to it made known?
+### WAY-49 — How does the part map record a surface, and how is a change to it made known?
 
 A surface is what someone outside the product relies on — an API, a file format, a command — and
 its entry in the part map states the promise in one sentence and names who relies on it. A change
 that alters a surface names the surface in its request.
 
-- **Change:** new decision
 - **Scope:** part-map
 - **Based on:** none
-- **Relations:** derives from WAY-40@3d01f9cd
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Relations:** derives from WAY-40
+- **Verification:** an agent compares the change with the decision:
   - complies: the entry of a save-file format names the players whose saved games the product must
     keep reading, and the request that renames one of its fields names the surface;
   - violates: a surface carries a level of promise or a path of change of its own; a change drops a
     command-line option, and its request does not name the surface.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-30
 
 *Rationale:* a broken promise falls on someone who took no part in the change, so the map names who
 that is, and the request names the change for the agent reviewing it and the human merging it.
@@ -1419,7 +1266,7 @@ machinery to keep for each surface, while the one who relies on it and a change 
 reach the reviewer and the human; surfaces computed from the code — tools see shape, never the
 promise.
 
-### WAY-51/1 — What does the main branch hold where the product does not meet an invariant?
+### WAY-51 — What does the main branch hold where the product does not meet an invariant?
 
 On the main branch an invariant the product does not meet today stays whole and is marked violated
 at its entry; an invariant is marked violated only by a change of the foundation that a human
@@ -1428,19 +1275,16 @@ request; the test of a marked invariant stands in the product's suite marked as 
 in the product's test tool, and the change in which it starts to pass removes that marking and the
 mark of the invariant.
 
-- **Change:** new decision
 - **Scope:** invariants, gate, task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-63@f16348c8 · narrows WAY-04@29a75d2c
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Relations:** derives from WAY-63 · narrows WAY-04
+- **Verification:** an agent compares the change with the decision:
   - complies: an invariant on loading saves that the product breaks today reads `Violated: yes`,
     its test is marked as an expected failure, and the request that sets the mark names it;
   - violates: an implementer marks an invariant violated so that the task can end; a request sets
     or clears the mark without naming it; a marked invariant's test passes while the mark and the
     expected failure stay; an invariant the product does not meet is reworded to fit the code.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-29
 
 *Rationale:* the process enters products that already break their rules (WAY-28); the mark keeps
 each rule whole, since a rule written to fit the code hides the intent, and makes the gap countable.
@@ -1454,23 +1298,19 @@ holds against the part map — the same second file, and a dependency the map do
 invariant like any other (WAY-04); a rule left out or marked "not checked yet" until met — the gap
 stops being countable; debt paid by an end date — repaid by weakening the rule.
 
-### WAY-52/1 — What is generated from the part map for an agent?
+### WAY-52 — What is generated from the part map for an agent?
 
 Nothing is generated from the part map for an agent: an agent reads the entries of the parts its
 change touches, and no overview of the repository is generated for it.
 
-- **Change:** new decision
 - **Scope:** part-map, decisions
-- **Based on:** context-file-effect@c44e5ef0 · claude-code-path-rules@ac99f128
-- **Relations:** derives from WAY-40@3d01f9cd · derives from WAY-21@586e4a38 · derives from WAY-44@2f2b6227
-- **Verification:** level 1 — invariants: generated-overview. Level 2 for what an agent reads — an
-  agent compares the change with the decision:
+- **Based on:** context-file-effect · claude-code-path-rules
+- **Relations:** derives from WAY-40 · derives from WAY-21 · derives from WAY-44
+- **Verification:** invariants: generated-overview. For what an agent reads, an agent compares the
+  change with the decision:
   - complies: an agent working on a change reads the map's entries of the parts it touches;
   - violates: a rule file for agents is generated from the map.
-- **Review when:** no model in the range of fact context-file-effect is Active in Anthropic's table
-  of models · check by: 2026-10-02
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-30
 
 *Rationale:* agents follow instructions in context files, while repository overviews have not
 helped. An agent reading the entries of the parts its change touches has the rules a generated file
@@ -1480,47 +1320,39 @@ already read — a derived file to keep in step for what an agent reads in the m
 for agents — added context cost without measured benefit; rule files written by hand — a copy of the
 map; the whole decision log on every path — relevant rules get lost among the rest.
 
-### WAY-53/1 — How is a derived file compared with what its generator produces?
+### WAY-53 — How is a derived file compared with what its generator produces?
 
 A derived file is identical to what its generator produces on the same commit, except for values the
 file itself declares as varying between runs.
 
-- **Change:** new decision
 - **Scope:** decisions, part-map, invariants, gate
 - **Based on:** none
-- **Relations:** derives from WAY-04@29a75d2c
-- **Verification:** level 1 — invariants: derived-file-content.
-- **Review when:** none
+- **Relations:** derives from WAY-04
+- **Verification:** invariants: derived-file-content.
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-20
 
-*Rationale:* equality with the generator's output catches a hand edit; a record of results the gate
-keeps carries the moment of the run, so only declared values are skipped.
+*Rationale:* equality with the generator's output catches a hand edit; a value such as the moment
+of a run changes with every run, so only declared values are skipped.
 *Rejected:* records of results kept outside the repository — a commit's result readable only from
 whatever ran it; whole files lifted out of the comparison — a hand edit in them goes uncaught; a
 derived file compared as a subset of its version on the commit the branch left the main branch from
 — debt kept as a list beside the entries, while a violated rule is marked at its invariant (WAY-51).
 
-### WAY-54/1 — Where does the value of a field in a template come from?
+### WAY-54 — Where does the value of a field in a template come from?
 
 The value of a field is read off the product wherever a tool can read it, and a template asks for
 what a value follows from rather than for the name of a value; a value that a closed list of the
 template does not hold is a question to the human, never the nearest value on the list.
 
-- **Change:** new decision
 - **Scope:** decisions, part-map, invariants, glossary, environment-facts, elements-common
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Verification:** an agent compares the change with the decision:
   - complies: a part's files are matched by git from its path patterns, never listed by hand
-    beside them; a method names the command the gate runs, and its kind follows
-    from that command;
-  - violates: a template asks the author to name a method's kind, which the command the gate
-    runs already tells; a skill writes the nearest value of a closed list, with a reason why it
-    will do.
-- **Review when:** none
+    beside them; an invariant's method reads `test` or `review`, which already tells its kind;
+  - violates: a template asks the author to name a method's kind beside the method; a skill writes
+    the nearest value of a closed list, with a reason why it will do.
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-29
 
 *Rationale:* an author naming a value picks the nearest with a plausible reason, and a wrong name
 looks like a right one; a value read off cannot be talked into place. Where none fits, that pull
@@ -1530,7 +1362,7 @@ value meaning "none of these fits" in every closed list — it records what came
 each field of a template saying whether its value is read off, transcribed or a judgment — a field
 stays in a template only while someone reads it (WAY-05).
 
-### WAY-55/1 — Which part of the process holds the gate?
+### WAY-55 — Which part of the process holds the gate?
 
 In this repository, the gate is a part of the process of its own, and its directory is
 `gate/`: the gate's code and the test of every critical flow are files there. No other part's
@@ -1538,21 +1370,16 @@ directory holds that code or such a test, and a file under `gate/` that only cal
 another part's directory leaves the gate in that part. Which checks a change calls for, when the
 gate runs and what follows from what it reports belong to the task cycle, not to this part.
 
-- **Change:** new decision
 - **Scope:** gate, decisions, invariants, glossary, part-map, environment-facts, relation-model,
   repository, task-cycle
 - **Based on:** none
-- **Relations:** narrows WAY-44@2f2b6227
-- **Verification:** level 1 — invariants: flow-test-location. Level 2 for code ownership and the
-  boundary with the task cycle — an agent compares the change with the decision:
+- **Relations:** narrows WAY-44
+- **Verification:** an agent compares the change with the decision:
   - complies: the gate's code and a critical flow's test live under `gate/`, while the task cycle
     decides when the gate runs and how to use its result;
   - violates: a file under `gate/` only calls the gate's body kept in an element, or `gate/`
     decides which checks a change calls for.
-- **Review when:** the gate runs as a program CI invokes, and the rule that picks its checks has a
-  home · check by: 2026-10-02
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-30
 
 *Rationale:* critical-flow tests span parts and need a single owner. The gate serves every
 element, so an element directory is the wrong owner; the task cycle decides the work to run, not
@@ -1561,47 +1388,40 @@ where its runner lives. As its own part, the gate carries its failures and criti
 task-cycle — code coupled to task steps; gate among repository configuration — its failures lose
 their own part; critical-flow tests in individual elements — no one element owns a cross-part flow.
 
-### WAY-56/1 — How much does one invariant entry hold, and what is its binding part?
+### WAY-56 — How much does one invariant entry hold, and what is its binding part?
 
 An invariant entry states one invariant in one sentence, which is its binding part. The method of
 checking and the links that WAY-08 and WAY-17 require stand beside that sentence, not inside it.
 
-- **Change:** new decision
 - **Scope:** invariants
 - **Based on:** none
-- **Relations:** derives from WAY-22@dcf291ea
-- **Verification:** level 1 — invariants: invariant-sentence-count.
-  Level 2 for one invariant per sentence — an agent compares the change with the decision:
+- **Relations:** derives from WAY-22
+- **Verification:** an agent compares the change with the decision:
   - complies: "every version and review record in the log has every field of the template" as one
     entry;
   - violates: "binding sentences number one to three and contain no *should*" as one entry; the
     sentence on fields split into one entry per field.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-10-01
 
 *Rationale:* one invariant per entry lets the failure of its test, seen once, show that the test
 catches that rule (WAY-08).
 *Rejected:* a split wherever a commit can break part of a sentence — one entry per version of the
 log.
 
-### WAY-57/1 — Is an invariant entry versioned?
+### WAY-57 — Is an invariant entry versioned?
 
 An invariant entry carries no version: it is edited in place and holds only its current wording,
 and earlier wordings are read from git.
 
-- **Change:** new decision
 - **Scope:** invariants, elements-common
 - **Based on:** none
-- **Relations:** derives from WAY-01@60960941
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Relations:** derives from WAY-01
+- **Verification:** an agent compares the change with the decision:
   - complies: an invariant's sentence is reworded in place, and its heading stays
     `## <identifier>`;
   - violates: a reworded invariant's heading gains a version, or the entry keeps its earlier
     sentence beside the new one.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/4
 
 *Rationale:* the foundation states what is in force today (WAY-01), and git keeps every earlier
 wording.
@@ -1609,7 +1429,7 @@ wording.
 renewed with every change of meaning; earlier wordings kept in the entry — they bind nothing, and
 readers have to pick.
 
-### WAY-58/1 — What does an invariant entry record in *Derives from* when no decision entry of the product's log carries it?
+### WAY-58 — What does an invariant entry record in *Derives from* when no decision entry of the product's log carries it?
 
 An invariant entry that no decision entry of the product's log carries, taken from a source outside
 the log — a ticket, a requirement of the product — names that source in *Derives from* with its
@@ -1619,12 +1439,11 @@ as WAY-28 describes, and that no such source carries either, reads in *Derives f
 recovered from code, with the place in the code that shows the behaviour. Neither states a reason
 for the behaviour, nor one an agent infers.
 
-- **Change:** new decision
 - **Scope:** invariants
 - **Based on:** none
-- **Relations:** derives from WAY-28@94d8ef12 · derives from WAY-22@dcf291ea ·
-  derives from WAY-17@b1e26133
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Relations:** derives from WAY-28 · derives from WAY-22 ·
+  derives from WAY-17
+- **Verification:** an agent compares the change with the decision:
   - complies: from a game's save module a human chooses "a save of another version is rejected
     whole", whose *Derives from* reads `recovered from code — the version check of the save loader
     in src/save.ts`; an invariant written for a feature being built names its decision; an invariant
@@ -1635,9 +1454,7 @@ for the behaviour, nor one an agent infers.
     may have changed"; an invariant on a field the task adds reads recovered from code; a recovered
     invariant names no place in the code; an invariant taken from a ticket names the ticket by its
     key alone, or reads recovered from code.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/4
 
 *Rationale:* WAY-28 lets a recovered invariant bind before anyone knows why it holds; without the
 mark it reads like a chosen rule, hiding that its reason was never settled, and the place in the
@@ -1651,7 +1468,7 @@ the task can pass that run too; the mark only where no cause is known — a caus
 a concept document gives the rule two readings; a decision kept outside the log counted as named —
 nothing checks it; the reason quoted beside the mark — a why inside an invariant.
 
-### WAY-60/1 — Where may a condition that decides an invariant stand?
+### WAY-60 — Where may a condition that decides an invariant stand?
 
 A condition deciding an invariant stands in its sentence, or where changing it takes a foundation
 change a human decides, or where a decision in the product's log or the pinned the-way places it.
@@ -1660,20 +1477,16 @@ An invariant's sentence names no branch, measures any change it speaks of agains
 the main branch alone as holding where `{merge-onto}` exists. A sentence bounding or equating a
 quantity measured while the product runs names its bound or tolerance, statistic and population.
 
-- **Change:** new decision
 - **Scope:** invariants, decisions, part-map, gate
 - **Based on:** none
-- **Relations:** derives from WAY-22@dcf291ea · derives from WAY-56@0d6340a8
-- **Verification:** level 1 — invariants: sentence-branch-names. Level 2 for the rest — an agent
-  compares the change with the decision:
+- **Relations:** derives from WAY-22 · derives from WAY-56
+- **Verification:** an agent compares the change with the decision:
   - complies: "every version and review record in the log has every field of the template";
   - violates: "every request is answered within the limit set in `config.py`"; "every fingerprint
     on `main` equals the current fingerprint of the decision it names"; "a commit that changes
     `template.md` also appends a decision version to the log"; a bound written "~2 seconds"; a
     sentence measuring a change against `{merge-onto}`.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-29
 
 *Rationale:* a condition outside the sentence moves while the sentence stays, so it stands only
 where moving it takes a decision; a branch names another commit by the hour; a change is measured
@@ -1685,7 +1498,7 @@ foundation forbidden — WAY-38 and WAY-53 place conditions in the product; an i
 until its condition has a home — nothing counts it (WAY-51); a commit's parent as the base — a task
 spreads one change over several commits.
 
-### WAY-61/1 — How is an invariant's method of checking written, and how is its result read?
+### WAY-61 — How is an invariant's method of checking written, and how is its result read?
 
 An invariant's method of checking is a test of the product's test suite, written in the product's
 language and run by the command that runs the product's tests, or review. A test checks what its
@@ -1694,23 +1507,20 @@ up for it is the method of a sentence about the check it exercises, never of one
 that check reads. An invariant's result on a commit is the outcome of the tests citing it in a run
 on that commit, and a run in which none of them ran never gives it a pass.
 
-- **Change:** new decision
 - **Scope:** invariants, gate, decisions, part-map, elements-common
 - **Based on:** none
-- **Relations:** derives from WAY-08@2343e09f · derives from WAY-16@5c1d60d4 ·
-  derives from WAY-54@57b93cf6 · derives from WAY-57@89a75ebe · derives from WAY-38@6e10c3fd ·
-  derives from WAY-60@6e862c88
-- **Verification:** level 2 — an agent compares the change with the decision:
-  - complies: a sentence about the log's fields is kept by a test running the decision guard on
-    `foundations/decisions.md`; a sentence about the loader is kept by a test handing it a save of
+- **Relations:** derives from WAY-08 · derives from WAY-16 ·
+  derives from WAY-54 · derives from WAY-57 · derives from WAY-38 ·
+  derives from WAY-60
+- **Verification:** an agent compares the change with the decision:
+  - complies: a sentence about the instruction files of the repository is kept by a test running
+    its check on those files; a sentence about the loader is kept by a test handing it a save of
     another version; a sentence on whether an image's text alternative describes it reads `review`;
-  - violates: a sentence about the real log names as its test the guard's test, which feeds it
-    made-up logs; an invariant counts as passing in a run where no test citing it ran; an
+  - violates: a sentence about the real instruction files names as its test the check's own test,
+    which feeds it made-up files; an invariant counts as passing in a run where no test citing it ran; an
     invariant's test is a script beside the product's suite, which the command running the
     product's tests does not run.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-28
 
 *Rationale:* the command that runs the product's tests already runs on every change, so an
 invariant's test runs with them, in the product's language; one run serves many invariants, each
@@ -1721,7 +1531,7 @@ can disagree (WAY-54); the run's exit code as each invariant's result — one br
 skipped one passes; a check's tests on made-up input as the method of a sentence about real data —
 they show the check works, not that the data holds.
 
-### WAY-62/1 — What does an invariant entry name in the part map?
+### WAY-62 — What does an invariant entry name in the part map?
 
 An invariant entry names the parts of the part map where a change can make its sentence false,
 or `every` where a change to any part can. A change, against the commit its branch left the main
@@ -1731,21 +1541,17 @@ whatever parts a file collecting entries gives that change (WAY-44), and the age
 change reads every invariant it reaches. The entry names no failure mode, critical flow or
 surface.
 
-- **Change:** new decision
 - **Scope:** invariants, part-map, gate, task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-16@5c1d60d4 · derives from WAY-44@2f2b6227 ·
-  derives from WAY-61@4804d070
-- **Verification:** level 1 — invariants: invariant-part-names · invariant-part-form · change-reach.
-  Level 2 for which parts — an agent compares the change with the decision:
+- **Relations:** derives from WAY-16 · derives from WAY-44 ·
+  derives from WAY-61
+- **Verification:** an agent compares the change with the decision:
   - complies: the invariant on the log's fields names `decisions`, and a change to a test citing it
     under `gate/` reaches it too; "every file git tracks matches the patterns of exactly one part"
     names `every`;
   - violates: that sentence names `part-map`, so a file added under `gate/` never reaches it; an
     entry names the flow it protects.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-22
 
 *Rationale:* invariants need what scope gives decisions (WAY-21): parts, not paths, which would
 copy the map. A test may lie in another part than what it checks, so a change to it reaches the
@@ -1755,7 +1561,7 @@ and fails silently; an extra one costs a reading, so doubt names more.
 reaches; the invariant naming its failure mode, flow or surface — one link written at both
 ends; the part holding the check — a file added elsewhere never reaches it.
 
-### WAY-63/1 — What results does the gate report for invariants, and which make its command fail?
+### WAY-63 — What is an invariant's result, and when does the command running the tests fail?
 
 An invariant's result on the commit being checked is `pass` where every test citing it ran on that
 commit and passed, and `fail` where one of them failed; a run in which no test citing it ran gives
@@ -1763,21 +1569,19 @@ it no result, and nothing written by hand stands in for one. An invariant whose 
 takes no result from a run: the review of each change it reaches compares the change with its
 sentence. The command running the product's tests exits non-zero when a test fails.
 
-- **Change:** new decision
 - **Scope:** invariants, gate, part-map, task-cycle, environment-facts
 - **Based on:** none
-- **Relations:** derives from WAY-61@4804d070 · derives from WAY-62@d9c21624 ·
-  derives from WAY-08@2343e09f
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Relations:** derives from WAY-61 · derives from WAY-62 ·
+  derives from WAY-08
+- **Verification:** invariants: gate-exit-code. For the rest, an agent compares the change with the
+  decision:
   - complies: an invariant whose two tests pass in a run is `pass`; the reviewer of a change to a
     part reads the invariants of that part whose method is review and compares the change with
     them;
   - violates: an entry reads "status: pass" written by hand; an invariant whose test did not run
     counts as passing; a review passes a change without reading an invariant whose method is
     review and which the change reaches.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-10-02
 
 *Rationale:* the outcome of a test run on the commit is the only status that does not go stale; a
 test that did not run says nothing, so it is no pass; a rule no cheap test checks has the review as
@@ -1786,7 +1590,7 @@ its reader (WAY-08).
 a vocabulary of results kept for a gate beside the product's own runner; a status written by hand —
 stale with the next commit; an invariant whose method is review left unread — a rule nothing keeps.
 
-### WAY-64/1 — Where do invariant and environment fact entries stand, and what identifies one?
+### WAY-64 — Where do invariant and environment fact entries stand, and what identifies one?
 
 Invariant entries stand in one file, `foundations/invariants.md`, and environment fact entries in
 one file, `foundations/environment_facts.md`, each under an identifier made of words that no other
@@ -1797,25 +1601,17 @@ identifier there never names an entry again. Splitting or merging environment fa
 invariant entries held there, gives each entry that comes out of it a new identifier, and any other
 change keeps it.
 
-- **Change:** new decision
 - **Scope:** environment-facts, invariants, part-map, elements-common, relation-model
 - **Based on:** none
-- **Relations:** derives from WAY-02@3ffcbd46 · derives from WAY-56@0d6340a8 ·
-  derives from WAY-57@89a75ebe
-- **Verification:** level 1 — invariants: identifier-holders · map-invariant-names ·
-  invariant-identifier-form · invariants-file · invariant-identifier-persistence ·
-  invariant-withdrawal-persistence · withdrawal-successors · environment-facts-file ·
-  fact-identifier-form · fact-identifier-persistence · fact-withdrawal-persistence ·
-  fact-withdrawal-successors. Level 2 for what counts as a split — an agent compares the change
-  with the decision:
+- **Relations:** derives from WAY-02 · derives from WAY-56 ·
+  derives from WAY-57
+- **Verification:** an agent compares the change with the decision:
   - complies: an invariant drops a clause in place and keeps its identifier (WAY-57); an entry
     taking in a clause of another keeps its identifier, and the other is split; a fact joining
     JSON and JSON Lines splits into two new identifiers, the old withdrawn naming both;
   - violates: an entry drops a clause that reappears as a new entry and keeps its identifier; a
     changed meaning is withdrawn naming `none` and restated under a new identifier.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-29
 
 *Rationale:* words, so a citation says what it leans on; a change of meaning is made in the entry
 itself (WAY-57), so only a split or merge changes an identifier, and a withdrawn one shows a
@@ -1826,7 +1622,7 @@ would need its element; one half of a split keeping the identifier — nothing s
 the other half; a fact shown false deleted — an older citation leads nowhere, and the fact can come
 back; every identifier ever written kept — one dropped before the main branch was never cited.
 
-### WAY-65/1 — How does a check cite its invariant, and which files are invariant tests?
+### WAY-65 — How does a check cite its invariant, and which files are invariant tests?
 
 A test cites, at the test that checks it, each invariant it checks as `invariant: <identifier>`,
 and names each file it reads as its data by a line `data: <path>`. A file is an invariant test of a
@@ -1834,22 +1630,18 @@ change when it cites an invariant on the commit the branch left the main branch 
 commit being checked, and where several tests cite one invariant in a run, the invariant passes
 only when each of them passes.
 
-- **Change:** new decision
 - **Scope:** invariants, gate, decisions, part-map, relation-model, task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-03@7c2d4ca1 · derives from WAY-17@b1e26133 ·
-  derives from WAY-57@89a75ebe · derives from WAY-61@4804d070
-- **Verification:** level 1 — invariants: invariant-citation-target · data-line-target ·
-  invariant-tests-of-change. Level 2 for where a citation stands — an agent compares the change
-  with the decision:
-  - complies: a test running the decision guard on `foundations/decisions.md` cites
-    `log-entry-field-presence` at its assertion on fields; a test comparing a load with a recorded
+- **Relations:** derives from WAY-03 · derives from WAY-17 ·
+  derives from WAY-57 · derives from WAY-61
+- **Verification:** invariants: invariant-tests-of-change. For where a citation stands, an agent
+  compares the change with the decision:
+  - complies: a test running the check of instruction files on the repository cites
+    `instruction-file-imports` at its assertion on imports; a test comparing a load with a recorded
     save names the save on a `data:` line;
   - violates: a test file cites at its top every invariant its tests serve; a test cites an
     invariant with a version beside its identifier.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-29
 
 *Rationale:* a citation stands where the outcome is given (WAY-61); a pass from one test would hide
 another's fail; counting either commit keeps a dropped citation or a deleted test among the
@@ -1858,24 +1650,21 @@ invariant carries no version for a citation to name (WAY-57).
 *Rejected:* one citation per file — one broken test fails all it serves (WAY-61); only files citing
 on the commit checked — dropping a citation hides the change from the request.
 
-### WAY-68/1 — What happens to a check that gives different verdicts on one commit?
+### WAY-68 — What happens to a check that gives different verdicts on one commit?
 
 A test that cites an invariant and gives both `pass` and `fail` on one commit is fixed as any test
 of the product is, and the foundation records no quarantine for it.
 
-- **Change:** new decision
 - **Scope:** invariants, gate, task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-08@2343e09f · derives from WAY-61@4804d070 ·
-  derives from WAY-63@f16348c8
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Relations:** derives from WAY-08 · derives from WAY-61 ·
+  derives from WAY-63
+- **Verification:** an agent compares the change with the decision:
   - complies: a save-load test fails, then passes, on one commit, and a change makes it wait for
     the load signal instead of a fixed pause;
   - violates: a flipping test stands quarantined in the invariants file; a failing test is called
     flaky and run again until it passes, with nothing fixed.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-22
 
 *Rationale:* a test that flips on one commit is a fault of the test, which a change fixes like any
 other fault; a green run again hides the fault instead of answering it.
@@ -1883,7 +1672,7 @@ other fault; a green run again hides the fault instead of answering it.
 — a mechanism and a date a human moves, kept for a rare case; a count of passes in a row — it hides
 the fault.
 
-### WAY-69/1 — Who writes an invariant's sentence, its check and its deliberate break, and what may the check compute for itself?
+### WAY-69 — Who writes an invariant's sentence, its check and its deliberate break, and what may the check compute for itself?
 
 An invariant's sentence, its test and the code the test covers may come from one agent, and no
 deliberate break is written for the test beyond seeing it fail once (WAY-08); the agent reviewing
@@ -1892,11 +1681,10 @@ invariant takes the input it asserts on and the value it expects written out, wh
 invariant is about would otherwise compute either; only the side it compares against comes from
 the run.
 
-- **Change:** new decision
 - **Scope:** invariants, decisions, part-map, gate, task-cycle, relation-model
-- **Based on:** visible-scoring-reward-hacking@39a85ced · oracle-in-loop-building@d13c8e26
-- **Relations:** derives from WAY-08@2343e09f
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Based on:** visible-scoring-reward-hacking · oracle-in-loop-building
+- **Relations:** derives from WAY-08
+- **Verification:** an agent compares the change with the decision:
   - complies: the author of a change writes an invariant's sentence, its test and the code, sees
     the test fail first, and an agent that made none of it reviews the change; a guard's test
     carries its expected wording as literals;
@@ -1904,10 +1692,7 @@ the run.
     its test; a test builds its reference by calling the code its invariant is about, and expects
     that call's message; a test reads the value it expects, at run time, from the file its
     invariant is about.
-- **Review when:** no model in the range of fact oracle-in-loop-building is Active in Anthropic's
-  table of models · check by: 2026-10-02
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/4
 
 *Rationale:* two sides computed by one code move together, and the test stays green unseen. A test
 fitted to the code by the agent that wrote both meets the reviewer, which reads it against the
@@ -1919,34 +1704,25 @@ already reads; hiding tests from the executor — it costs honest work; the expe
 written out — the input still moves with the code; a `data:` line naming each file a verdict leans
 on — every tracked file becomes the data of some test.
 
-### WAY-71/1 — Does every field of a foundation entry appear in every entry, and what may it hold?
+### WAY-71 — Does every field of a foundation entry appear in every entry, and what may it hold?
 
 Every field an element's template gives an entry of its kind appears in every entry of its kind,
 holding a value, or `none` or `TODO` where the template gives it that word: `none` says nothing is
 there, `TODO` that something is missing. The main branch holds `TODO` only in an invariant's
-*Rests on*, until the facts element has entries. A guard reports a missing field, or a word not
-given it, as an error.
+*Rests on*, until the facts element has entries. `elements/common/foundation_check.py` reports a
+missing field, or a word not given it, as an error.
 
-- **Change:** new decision
 - **Scope:** decisions, part-map, invariants, glossary, environment-facts, elements-common
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 1 — invariants: log-entry-field-presence · log-entry-field-words ·
-  log-entry-merge-todo · map-entry-field-presence · map-entry-field-words ·
-  invariant-entry-field-presence · invariant-entry-field-words · invariant-entry-merge-todo ·
-  fact-entry-field-presence · fact-entry-field-words · glossary-entry-field-presence ·
-  glossary-entry-field-words · glossary-entry-merge-todo · decision-verification-level ·
-  decision-change-kind · review-when-form · review-next-check. Level 2
-  for what `none` states — an agent compares the change with the decision:
+- **Verification:** an agent compares the change with the decision:
   - complies: an invariant whose author searched the log and found no decision it derives from,
     and which was taken from no source outside the log, reads `Derives from: none`; a decision
     whose source is silent on what it rests on reads
     `Based on: TODO — <what is missing>`;
   - violates: an invariant reads `Derives from: none` though nobody searched the log; a decision
     reads `Based on: none` where its source says nothing of what it rests on.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-26
 
 *Rationale:* an omitted field looks forgotten (WAY-58); an undefined value misleads. An invariant
 with no test reads `review` as its method rather than `TODO` (WAY-105). Before facts have entries,
@@ -1957,22 +1733,19 @@ WAY-05 — it answers how a decision entry is written; both words in every field
 meaning; optional fields left out when empty — intended and forgotten gaps look alike; for facts, a
 state field and a ratcheted list — three mechanisms where one serves.
 
-### WAY-72/1 — In what language is a product's foundation written?
+### WAY-72 — In what language is a product's foundation written?
 
 A product's foundation is written in English, whatever language the product shows the people who
 use it and whatever language its team speaks.
 
-- **Change:** new decision
 - **Scope:** decisions, part-map, invariants, glossary, environment-facts, elements-common
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Verification:** an agent compares the change with the decision:
   - complies: the foundation of a game whose players read Polish, built by a team that speaks
     Polish, is written in English;
   - violates: a product starts its decision log in Polish because its users and its team speak it.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-23
 
 *Rationale:* every template's fields are English, and the words the rules of form keep out (WAY-05,
 WAY-60) are English words: an entry in another language passes those rules without a word, so they
@@ -1983,7 +1756,7 @@ every language, and one without a list checked by nothing; the file's language, 
 no entries — word checks go silent on other languages; a guard reporting other languages unchecked
 — recognising a language needs more than the standard library (WAY-38).
 
-### WAY-73/1 — Which entries name an environment fact?
+### WAY-73 — Which entries name an environment fact?
 
 An invariant's *Rests on* names every environment fact holding a condition that decides whether a
 commit makes its sentence true, and no other fact. A fact holds such a condition when, read
@@ -1992,19 +1765,16 @@ sentence copies from it. A fact that is only a reason for a decision the invaria
 from stands in that decision's *Based on* alone; a fact stands only while an invariant's *Rests on*
 or a decision's *Based on* names it, and the change that removes the last such name withdraws it.
 
-- **Change:** new decision
 - **Scope:** invariants, decisions, environment-facts
 - **Based on:** none
-- **Relations:** derives from WAY-17@b1e26133 · derives from WAY-60@6e862c88
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Relations:** derives from WAY-17 · derives from WAY-60
+- **Verification:** an agent compares the change with the decision:
   - complies: `script-imports` rests on `python-stdlib-modules`, not on a finding a decision it
     derives from quotes; a change that drops the last decision citing a fact withdraws the fact;
   - violates: an invariant rests on the report of a past failure its decision quotes; an invariant
     bounding a page's load time by an outside standard's threshold reads `Rests on: none`; a fact
     that nothing names stays among the entries.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-10-01
 
 *Rationale:* a fact holding a condition changes whether the sentence holds with no commit, so
 *Rests on* is its only path to the invariant; a mere reason reaches it through its decision
@@ -2017,61 +1787,46 @@ reads two ways; unnamed facts left in the file — facts outlive their readers; 
 unnamed fact as a warning on the task branch and an error at the merge — the author's search
 already finds it, in the change that leaves it unnamed.
 
-### WAY-74/1 — What form does the-way's own record of a run take?
+### WAY-74 — What form does the-way's own record of a run take?
 
-The-way's own record of a run is a JSON Lines file at the one `.jsonl` path the command names,
-which git ignores and the gate clears before the run. It holds a line per verdict a check gives an
-invariant or a fact, and per failure recorded for no entry. A line holds `check`, `verdict` as
-`pass`, `fail` or `unchecked` beside a `reason` the template of the invariants element lists,
-`invariant` or `fact` as `<identifier>/<version>` or `invariant` as `null`, and at most
-`description`.
+None: the-way keeps no record of a run of its own. The report of a run is the one the command
+running the tests prints, and its result is that command's exit code (WAY-63).
 
-- **Change:** new decision
 - **Scope:** invariants, gate, decisions, part-map, repository, environment-facts,
   elements-common
-- **Based on:** JSON Lines holds one JSON value on each line: json-lines@f16c5b84.
-- **Relations:** derives from WAY-61@4804d070 · derives from WAY-63@f16348c8 ·
-  derives from WAY-65@581724fc
-- **Verification:** level 1 — invariants: run-record-form · run-record-path · run-record-lines.
-  Level 2 for the report beside the record — an agent compares the change with the decision:
-  - complies: the decision guard, given a record's path, writes its verdicts there and still
-    prints its report for a person;
-  - violates: a guard writes its verdicts only into its report.
-- **Review when:** none
+- **Based on:** none
+- **Relations:** derives from WAY-63
+- **Verification:** an agent compares the change with the decision:
+  - complies: `python -B gate/run_tests.py` prints the report `unittest` gives, exits 1 when a test
+    fails, and writes no file;
+  - violates: a check writes a verdict for each invariant into a JSON Lines file beside its report;
+    a command names a `.jsonl` path for the record of its run.
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-29
 
-*Rationale:* lines survive a run stopping halfway, and an invariant without one gets no pass
-(WAY-61); the standard library reads JSON, which escapes any description (WAY-38); a stale file
-gives verdicts of a run that never happened, a tracked one changes every run; each key has a
-reader.
-*Rejected:* plain text lines — spaces in a description need their own syntax; JUnit XML — its unit
-is a test case, not an invariant; a product's format — the gate reads it through an adapter
-(WAY-61); the run's output as the record — a person loses the guard's report; `pass` and `fail`
-alone — a check unable to read a coverage file could only stay silent; the commit, moment and tool
-versions in every line — nothing reads them; one key `entry` for both — a rename across every guard
-and test; a fact's verdict under `invariant` — the key would lie.
+*Rationale:* the report a person reads and the exit code already say which test failed; a verdict
+recorded for each entry has no reader once one command runs every test (WAY-16) and a result is
+the outcome of the tests citing an entry (WAY-61).
+*Rejected:* a JSON Lines file at a path git ignores, holding a line per verdict a check gives an
+invariant or a fact — a second report kept for a gate beside the product's own runner; the commit,
+moment and tool versions in every line — nothing reads them.
 
-### WAY-76/1 — How much does one environment fact entry hold?
+### WAY-76 — How much does one environment fact entry hold?
 
 An environment fact entry states in one sentence one fact that one edition of one source says, with
 one reason to change, and nothing its sentence says is an invariant. Pages of one document published
 together in one edition count as one source, and two facts from one edition about different things
 stand as two entries.
 
-- **Change:** new decision
 - **Scope:** environment-facts, invariants
 - **Based on:** none
-- **Relations:** derives from WAY-22@dcf291ea
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Relations:** derives from WAY-22
+- **Verification:** an agent compares the change with the decision:
   - complies: git's path-pattern rule for attributes files, with its page's two exceptions, is one
     fact, without what `git check-attr` prints; git's ignore rules, from a page of the same edition,
     stand as a second entry;
   - violates: the digest SHA-256 gives and the octets UTF-8 uses stand in one entry; "the
     repository declares Python 3.14" is written as a fact.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-26
 
 *Rationale:* a fact is changed when its source changes, so what changes together stands together:
 two sources in one entry would send a new edition of one to every entry resting on the other. An
@@ -2080,26 +1835,23 @@ invariant written as a fact would never be checked on the commit that breaks it.
 a test's tool, and no commit changes it (WAY-73); both as facts in *Rests on* — the second holds
 no condition of the sentence (WAY-73).
 
-### WAY-77/1 — What does an environment fact's *Holds for* name?
+### WAY-77 — What does an environment fact's *Holds for* name?
 
 An environment fact entry names no *Holds for*: what its sentence is true of is shown by the edition
 its source cites, or, where the source publishes no editions, by the date it was read. Its sentence
 holds no word whose meaning moves with the date, such as "latest". A range the product declares for
 itself stands in the sentence of an invariant, never in a fact.
 
-- **Change:** new decision
 - **Scope:** environment-facts, invariants
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Verification:** an agent compares the change with the decision:
   - complies: the standard library's modules are a fact cited from the documentation of CPython
     3.14, while "the repository declares Python 3.14" is an invariant; the fact about JSON Lines
     quotes jsonlines.org, which publishes no versions, with the date it was read;
   - violates: a fact's sentence says what "the latest release" of a tool does; an entry carries a
     field repeating the edition its source cites.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-26
 
 *Rationale:* the address of an edition already names what the fact is true of, and the date read
 does so for a source without editions, so a field naming it again is a copy that drifts. "Latest"
@@ -2110,22 +1862,19 @@ true of — it repeats what the source names, for the sake of a probe comparing 
 and of a fingerprint, neither of which a fact keeps (WAY-81, WAY-02); a fact reading the product's
 declared version — a sentence about the product in a fact.
 
-### WAY-78/1 — What is the binding part of an environment fact entry?
+### WAY-78 — What is the binding part of an environment fact entry?
 
 The binding part of an environment fact entry is its sentence. The source, its passage and the date
 read stay outside it, and no digest of the source's text is kept.
 
-- **Change:** new decision
 - **Scope:** environment-facts, invariants
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Verification:** an agent compares the change with the decision:
   - complies: a sentence reworded for a new edition changes the binding part; a source re-read on a
     new date that still says the same does not, and the entries naming the fact are left alone;
   - violates: the date read is counted as part of what dependants rely on.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-28
 
 *Rationale:* what relies on a fact relies on its claim, while the source and its date change at
 every re-reading; a source that no longer says the same changes the sentence (WAY-82). Text changed
@@ -2134,23 +1883,20 @@ beside the quoted passage passes unseen, an accepted cost.
 dependant; a digest of the passage (as a lock file keeps one) — the quoted passage is already the
 anchor.
 
-### WAY-79/1 — Is an environment fact entry versioned?
+### WAY-79 — Is an environment fact entry versioned?
 
 An environment fact entry carries no version: it is edited in place and holds only its current
 wording, and its earlier wordings are read from git.
 
-- **Change:** new decision
 - **Scope:** environment-facts, relation-model, gate, elements-common
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Verification:** an agent compares the change with the decision:
   - complies: a fact's sentence is rewritten in place for a new edition, and its heading stays
     `## <identifier>`;
   - violates: a reworded fact's heading gains a version, or the entry keeps its earlier sentence
     beside the new one.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-29
 
 *Rationale:* the foundation states what is in force today (WAY-01), and git keeps every earlier
 wording; what rests on a fact is found by the search of whoever changes it (WAY-33), as for
@@ -2158,7 +1904,7 @@ invariants (WAY-57).
 *Rejected:* a version raised with each change of the sentence, cited by each check of the fact — it
 serves a probe, which no fact keeps (WAY-81), and is a second record of what git keeps.
 
-### WAY-80/1 — What is an environment fact's source?
+### WAY-80 — What is an environment fact's source?
 
 Every environment fact entry names its source: an edition with its publisher's own address, or a
 page without editions with its closest archived copy, giving the place, the passage word for word
@@ -2167,20 +1913,17 @@ paraphrase or a text quoting the source is no source. A fact resting on a whole 
 quotes the sentence of its source that sets those rules and names the section by its place alone,
 where the edition has an address of its own.
 
-- **Change:** new decision
 - **Scope:** environment-facts
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Verification:** an agent compares the change with the decision:
   - complies: the JSON Lines fact quotes "strongly recommended but not required" and says the final
     terminator may be left out; the git path patterns fact quotes the sentence handing matching to
     `.gitignore` rules and names that section by place;
   - violates: the sentence says every line ends in `\n`; the source is the model's recollection of
     a page, a blog post quoting the RFC, or the output of a command the author ran; a fact on a
     pattern syntax quotes its rules one by one, or only the rules the product uses.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-30
 
 *Rationale:* an edition with its own address does not change under the citation, a passage word
 for word lets a reader compare it with what the source says now, and the date says when that held;
@@ -2192,23 +1935,20 @@ again is a probe, which no fact keeps (WAY-81); a whole section of rules narrowe
 product uses — a pattern outside them rests on no fact; such a section quoted rule by rule — a
 standing `TODO` in the source.
 
-### WAY-81/1 — How is an environment fact's method written, and on which release of its tool does a probe's verdict count?
+### WAY-81 — How is an environment fact's method written, and on which release of its tool does a probe's verdict count?
 
 An environment fact names no method and gives no result: no probe or watch runs for it, no check
 cites it, and no status stands beside it. Its passage, address and date let whoever reads the fact
 compare it with what the source says now.
 
-- **Change:** new decision
 - **Scope:** environment-facts, gate, invariants
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Verification:** an agent compares the change with the decision:
   - complies: a fact's entry holds its sentence and *Source* and nothing else;
   - violates: a fact names a command that probes the behaviour its sentence states or watches its
     source; a test cites a fact on a `fact:` line; a status `pass` stands beside a fact.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-10-01
 
 *Rationale:* a probe tells that the world moved only when something runs it and someone reads its
 failure; the passage with its address and the date read lets whoever reads the fact see at once
@@ -2218,7 +1958,7 @@ with the runner's configuration set and a verdict counted only on the release *H
 the path of a file a person re-reads with a dated verdict — a program, a record and a release to
 match for every fact, read only when it fails.
 
-### WAY-82/1 — When does an environment fact's method run, and what fails its watch?
+### WAY-82 — When does an environment fact's method run, and what fails its watch?
 
 No check of an environment fact runs, on a change or by a clock, and nothing fails when the world
 moves. A fact changes when someone finds that its source no longer says what its sentence says, or
@@ -2226,20 +1966,17 @@ that a newer edition the product stands on says otherwise; the change that rewri
 corrects every entry naming it. An announced revision changes nothing until the new edition is out,
 and neither a fact nor a decision citing it names a date or condition for its review.
 
-- **Change:** new decision
 - **Scope:** environment-facts, gate, task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-60@6e862c88
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Relations:** derives from WAY-60
+- **Verification:** an agent compares the change with the decision:
   - complies: RFC 8259 gaining `obsoleted_by` is found by whoever next reads the fact, who moves it
     to the new edition and checks the entries naming it in the same change; NIST's notice that it
     will revise FIPS 180-4 changes nothing;
   - violates: a change touching no fact fails on a fact; a fact's sentence is rewritten while an
     invariant resting on it is left as it was; a decision names the date of an announced revision
     as the day to look at a fact again.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-10-01
 
 *Rationale:* the world changes with no commit, so a check of it in the gate of an unrelated change
 would give a verdict that follows the date (WAY-60). A moved source is found by whoever reads the
@@ -2252,35 +1989,7 @@ someone only when a person reads them; an announced revision written as a condit
 when* of the decision citing the fact — a date in an entry asks for a look nobody is sent to make
 (WAY-24).
 
-### WAY-83/1 — Where does a human verdict stand, and how long is it in force?
-
-A human verdict on an invariant or an environment fact stands in a row of
-`foundations/human_verdicts.md` naming the entry, its version, the verdict, who, when, the commit
-assessed and *Until*, and counts only for the entry's current version. An invariant's verdict, with
-`none` in *Until*, lapses when a change since that commit reaches the entry; a fact's lapses after
-the date in *Until*, which the gate compares with the checked commit's committer date and the clock
-with the day it runs.
-
-- **Change:** new decision
-- **Scope:** invariants, environment-facts, gate, elements-common
-- **Based on:** none
-- **Relations:** derives from WAY-63@f16348c8
-- **Verification:** level 1 — invariants: human-verdict-invariant-row · human-verdict-fact-row ·
-  gate-human-verdict. Level 2 for the clock — an agent compares the change with the decision:
-  - complies: the clock, run on a day after a fact's *Until*, counts no human verdict for that fact;
-  - violates: the clock compares *Until* with the committer date of the commit it runs on.
-- **Review when:** none
-- **Origin:** none
-- **Approved by:** Mariusz, 2026-09-26
-
-*Rationale:* a path method gives no result until a person assesses (WAY-61, WAY-81), and WAY-08
-asks for a trace; a row is visible, fixable and checkable; one file serves both, as only the lapse
-differs; the gate's date follows the commit, the clock's the world.
-*Rejected:* the verdict in a commit message — invisible to a reader of the foundation, never
-fixed, often written by an agent; waiting until a first verdict is needed — the rule on dated
-verdicts would stay dead.
-
-### WAY-84/1 — How is a setting that people of the product change outside its repository written?
+### WAY-84 — How is a setting that people of the product change outside its repository written?
 
 The current state of a setting that people of the product change outside its repository — who can
 open it, a host's access rule — is an environment fact, its source the place where that state is
@@ -2288,20 +1997,17 @@ shown. A choice of such a setting is a decision only where the product declares 
 decision rests on the fact. A fact about the visibility of a repository the product links to names
 that one repository.
 
-- **Change:** new decision
 - **Scope:** environment-facts, decisions
-- **Based on:** github-private-repository-response@e0f7ced2
+- **Based on:** github-private-repository-response
 - **Relations:** none
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Verification:** an agent compares the change with the decision:
   - complies: each repository this one links to has its own fact on whether an anonymous reader can
     open it; no decision on this repository's visibility is written, as the repository declares
     none;
   - violates: one fact lists every repository this one links to; a decision "the repository is
     private" is written where the product declares no visibility; an anonymous 404 is taken to
     show that a repository is private.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-29
 
 *Rationale:* such a setting changes with a click and no commit, so it is a fact about the world, and
 each repository changes on its own. A decision needs someone who chose; otherwise no commit could
@@ -2311,7 +2017,7 @@ such setting — a decision where nobody chose; a method reading the setting whe
 dated re-read by the person who sets it — a run and a record for every setting, as WAY-81 rejects
 for every fact.
 
-### WAY-85/1 — How is a finding of a study written as an environment fact?
+### WAY-85 — How is a finding of a study written as an environment fact?
 
 A finding of a study stands as an environment fact saying what the study found, its source citing
 the version of the paper, and the models the study measured named as the study names them, in the
@@ -2319,19 +2025,16 @@ sentence or in a passage its source quotes. That the agents of this process beha
 part of the fact. A decision citing a finding none of whose measured models the publisher of this
 process's models lists says in its rationale that it takes the finding across publishers.
 
-- **Change:** new decision
 - **Scope:** environment-facts, decisions
-- **Based on:** anthropic-model-states@640ad66c
+- **Based on:** anthropic-model-states
 - **Relations:** none
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Verification:** an agent compares the change with the decision:
   - complies: the finding behind WAY-03 is a fact whose source is arXiv:2510.20270v1, quoting the
     passage that names the three Claude models it measured; WAY-69, citing a finding on another
     publisher's model only, says it takes the finding across publishers;
   - violates: the fact says "Claude models change tests" with no version of the paper and no
     models; the fact says the finding applies to this process's agents.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-26
 
 *Rationale:* what a paper measured on given models is true for good; that this process's agents
 behave the same is a bet that ages as those models leave service, so it is no fact, and the names
@@ -2340,7 +2043,7 @@ of the measured models let a reader of the decision weigh it.
 as a condition in *Review when* of each decision citing the fact, which a script checks against the
 publisher's table of models — a date in an entry asks for a look nobody is sent to make (WAY-24).
 
-### WAY-86/1 — How does a catalogue of requirements or a binding rule reach a product?
+### WAY-86 — How does a catalogue of requirements or a binding rule reach a product?
 
 A voluntary catalogue of requirements binds a product only through a decision adopting it that
 names the catalogue, its edition, the level or list taken and the area of the product, and a
@@ -2349,11 +2052,10 @@ a contract, a licence — needs no adoption: what it requires is an environment 
 product is held to it until a human settles, in a decision, that the rule does not apply. An agent
 that notices a likeness to a requirement nothing has adopted or applied asks a human.
 
-- **Change:** new decision
 - **Scope:** environment-facts, decisions, invariants
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Verification:** an agent compares the change with the decision:
   - complies: a decision adopts WCAG, naming its edition, level AA and the screens covered; an
     invariant taking a criterion's condition rests on that requirement's environment fact; the
     attribution an icon licence requires is an environment fact, and the invariant crediting the
@@ -2361,9 +2063,7 @@ that notices a likeness to a requirement nothing has adopted or applied asks a h
   - violates: an agent writes an invariant from an ASVS requirement because the code looks like
     it, with no adopting decision; a licence is left out because nobody adopted it; "the licence
     applies to the product's icons" is written as an environment fact.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-29
 
 *Rationale:* a voluntary catalogue binds only because someone chose it; without that choice an
 agent would bind the product to whatever it recognised. A law binds whether chosen or not, and
@@ -2374,25 +2074,21 @@ takes on a binding rule (WAY-05); a script matching adopted requirements to fact
 the same, and WAY-73 already withdraws a fact nothing names; "the rule applies" as an environment
 fact — a commit removing what the rule covers would make it false (WAY-76).
 
-### WAY-89/1 — Which version of Python do the scripts of the-way run on, and when does it move?
+### WAY-89 — Which version of Python do the scripts of the-way run on, and when does it move?
 
 The scripts of the-way run on Python 3.14, which the repository declares in `.python-version`, and
 the declared version moves when the version in use leaves bugfix support, never because a newer
 version comes out.
 
-- **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, relation-model, gate,
   installation, instruction-files, repository, task-cycle
-- **Based on:** python-314-bugfix-status@cb6aa573 · python-release-binaries@6d2c12f8 ·
+- **Based on:** python-314-bugfix-status · python-release-binaries ·
   https://raw.githubusercontent.com/python/peps/b53285d29f16cc743a7a6339c947c49ccf70c525/peps/pep-0745.rst
   § Bugfix releases — "3.14.14: Tuesday, 2027-10-05 (Final regular bugfix release with binary installers)";
   read 2026-09-30
 - **Relations:** none
-- **Verification:** level 1 — invariants: python-version-declared · script-imports.
-- **Review when:** the status of Python 3.14 in the table of versions of the Python Developer's
-  Guide no longer reads "bugfix" · check by: 2027-10-05
+- **Verification:** invariants: python-version-declared · script-imports.
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-26
 
 *Rationale:* one declared version, not a floor, because a floor gives a script's verdict per
 interpreter; the end of bugfix support sets the move because the Python project publishes no new
@@ -2403,7 +2099,7 @@ invariant per version admitted — a fact and a verdict for each; 3.12 alone —
 support; a move at each new release — a yearly review nothing here needs; a move at the end of
 security support — years without installers.
 
-### WAY-90/1 — Which citations of a decision's *Based on* become environment fact entries, and how are they named?
+### WAY-90 — Which citations of a decision's *Based on* become environment fact entries, and how are they named?
 
 A decision's *Based on* quotes every source outside the product that the decision rests on with its
 address, the place in it, the passage word for word and the date it was read; once the environment
@@ -2411,23 +2107,20 @@ facts element has entries, it names instead a fact entry, by its identifier alon
 citation that, once it stopped being true, would call the decision into question — a finding about
 agents or models, the behaviour of a tool the process uses.
 
-- **Change:** new decision
 - **Scope:** decisions, environment-facts
 - **Based on:** none
-- **Relations:** derives from WAY-17@b1e26133
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Relations:** derives from WAY-17
+- **Verification:** an agent compares the change with the decision:
   - complies: the ImpossibleBench finding behind WAY-03 becomes a fact entry named in its *Based
     on* as `impossiblebench-test-modification`; a past failure a decision cites stays quoted with
     its source;
   - violates: a precedent of how Packwerk handles its todo files becomes a fact entry; a finding
     about models stays quoted after the element has entries.
-  Level 2 for how a citation gives its source — an agent compares the change with the decision:
+  For how a citation gives its source, an agent compares the change with the decision:
   - complies: a paper's finding is quoted with the edition's address, the place and passage, and
     the date read;
   - violates: a finding is quoted with its authors and year alone.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-29
 
 *Rationale:* only a citation whose change would call the decision into question needs an entry,
 from which the search of whoever changes the fact finds the decision (WAY-33); a precedent, a past
@@ -2438,25 +2131,20 @@ question, each a second copy of its quote; a fact named with its fingerprint, re
 changes — the author's search finds the decision without it (WAY-31); the partners of the part
 map's external context as linked facts — a new link with no known consumer.
 
-### WAY-93/1 — Where do glossary entries stand, and what identifies one?
+### WAY-93 — Where do glossary entries stand, and what identifies one?
 
 Glossary entries stand in one file, `foundations/glossary.md`, each under its term as the foundation
 writes it in running text, which no other entry there holds. The file opens with a title and a
 paragraph saying what it holds, and holds no other heading than its entries.
 
-- **Change:** new decision
 - **Scope:** glossary
 - **Based on:** none
-- **Relations:** narrows WAY-02@3ffcbd46
-- **Verification:** level 1 — invariants: glossary-file · glossary-file-sections ·
-  glossary-term-holder. Level 2 for the term heading its entry — an agent compares the change with
-  the decision:
+- **Relations:** narrows WAY-02
+- **Verification:** an agent compares the change with the decision:
   - complies: the entry of "part map" is headed `## part map`, as the foundation writes the term;
   - violates: an entry is headed by an identifier of the concept apart from its word; a term heads
     two entries of the file.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-29
 
 *Rationale:* a sentence depends on a term by its word (WAY-94), so the word as the text writes it
 heads the entry, and one entry per term gives each word one meaning to read.
@@ -2467,26 +2155,22 @@ one side renamed where they name different things — a term and an identifier n
 different places of a sentence, and a word with two meanings in the foundation is renamed as WAY-99
 says; a list of withdrawn terms — git keeps the earlier entries.
 
-### WAY-94/1 — What does a glossary entry hold, and what is its binding part?
+### WAY-94 — What does a glossary entry hold, and what is its binding part?
 
 A glossary entry holds one definition of its term and one field, *Not*: each meaning the word
 carries or carried in the files git tracks, besides its definition and a meaning a reader who knows
 the product's field gives it, with what carries it. The definition is the binding part, and a
 sentence depends on a term by using its word, carrying no fingerprint.
 
-- **Change:** new decision
 - **Scope:** glossary, relation-model
 - **Based on:** none
-- **Relations:** narrows WAY-02@3ffcbd46 · derives from WAY-04@29a75d2c
-- **Verification:** level 1 — invariants: glossary-entry-field-presence · glossary-entry-field-words.
-  Level 2 for the binding part — an agent compares the change with the decision:
+- **Relations:** narrows WAY-02 · derives from WAY-04
+- **Verification:** an agent compares the change with the decision:
   - complies: an invariant's sentence uses "verdict" with no fingerprint, and the author of a
     changed definition of "verdict" finds it by searching for the word;
   - violates: a sentence cites the term as `verdict@<fingerprint>`; a changed *Not* is treated as a
     change to the entry's binding part.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-10-01
 
 *Rationale:* a fingerprint at every use would flag, at each changed definition, every sentence using
 a common term — flags people clear unread (WAY-02) — so the author of a changed definition searches
@@ -2498,7 +2182,7 @@ difference; worked examples run as tests, an area of meaning, broader and narrow
 synonym, a list of uses, the code's name for a term — nothing reads them, or they are computed; a
 field for a definition's source or the decision that set it — no entry needs one.
 
-### WAY-95/1 — Which words take a glossary entry, and in which glossary?
+### WAY-95 — Which words take a glossary entry, and in which glossary?
 
 A word takes a glossary entry when it means, in the product, something other than a reader who knows
 the product's field takes it to mean; an agent that meets such a word in its work — writing an
@@ -2508,12 +2192,10 @@ the-way holds the words of the process, and a product's glossary holds the words
 product takes the words of the process from the-way at the commit it pins and defines none of them
 again, and in the-way, whose product is the process, the two are one file.
 
-- **Change:** new decision
 - **Scope:** glossary, decisions, invariants, part-map, environment-facts
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 1 — invariants: glossary-process-terms. Level 2 for which words take an
-  entry and which glossary holds it — an agent compares the change with the decision:
+- **Verification:** an agent compares the change with the decision:
   - complies: "clock", used for a command run apart from any change, takes an entry; "digest", used
     only as SHA-256 uses it, takes none; "run", used for running a command and for text running
     across lines, takes none; a game's glossary defines "level" and uses "verdict" as the glossary
@@ -2521,9 +2203,7 @@ again, and in the-way, whose product is the process, the two are one file.
   - violates: every noun of the decision log takes an entry; an agent reads every binding sentence
     of the foundation for candidates before it writes an entry; a game's glossary gives "verdict" a
     definition of its own; the glossary of the-way defines "level" as the game uses it.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/4
 
 *Rationale:* a glossary of every relevant word grows without bound, kept by memory, while a word
 used as the field uses it needs no entry. A word whose meaning is unclear shows where an agent works
@@ -2537,21 +2217,17 @@ into the glossary — a rewrite of sentences the reader already understands; eve
 outside the glossary checked at the merge — a check of the glossary's bookkeeping, not of what a
 word means.
 
-### WAY-96/1 — How is a glossary definition written?
+### WAY-96 — How is a glossary definition written?
 
 A glossary definition is one sentence.
 
-- **Change:** new decision
 - **Scope:** glossary
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 1 — invariants: glossary-definition-count. Level 2 — an agent compares the
-  change with the decision:
+- **Verification:** an agent compares the change with the decision:
   - complies: "The clock is the command that, unlike the gate, runs checks apart from any change.";
   - violates: a definition of two sentences, the second telling what the clock checks.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-27
 
 *Rationale:* a definition of one sentence is read whole beside every use of its word.
 *Rejected:* a fixed shape — the present tense with no normative word, "<term> is <genus> that
@@ -2560,27 +2236,23 @@ definition — a test every definition goes through, while the human accepting t
 meaning; a phrase replacing the term, with no article or full stop — the count would count
 something other than sentences; a field naming neighbouring terms — nothing reads it.
 
-### WAY-97/1 — How does a sentence rely on a glossary term, and what does a change to a definition go through?
+### WAY-97 — How does a sentence rely on a glossary term, and what does a change to a definition go through?
 
 A sentence relies on a glossary term by using its word. A glossary entry carries no version and is
 edited in place, its meaning included, and the author of a change to a definition searches, in the
 same change, the texts that use the word and rewrites each use whose meaning the new definition
 moves.
 
-- **Change:** new decision
 - **Scope:** glossary, decisions, invariants, part-map, environment-facts, elements-common
 - **Based on:** none
-- **Relations:** narrows WAY-02@3ffcbd46
-- **Verification:** level 1 — invariants: glossary-entry-version. Level 2 for the uses of a changed
-  definition — an agent compares the change with the decision:
+- **Relations:** narrows WAY-02
+- **Verification:** an agent compares the change with the decision:
   - complies: the definition of "verdict" is reworded, its author searches every file git tracks
     for the word and its forms, and rewrites, in the same change, the two sentences whose meaning
     moves;
   - violates: a definition is reworded and no uses are looked at; a use whose meaning moved is left
     for a later change.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/4
 
 *Rationale:* a sentence relies on a term by its word, so a search for the word finds the sentences
 a changed meaning reaches, and the author who changed the meaning knows what moved. The review of
@@ -2595,24 +2267,21 @@ hand; a term whose definition holds a word an invariant's sentence may not hold 
 the request — the rule on that word stays with the invariant; impact analysis by a model alone —
 nobody knows what it missed (WAY-02).
 
-### WAY-98/1 — Where is a word of a glossary entry's *Avoid* an error?
+### WAY-98 — Where is a word of a glossary entry's *Avoid* an error?
 
 A glossary entry holds no *Avoid*: no word is kept out of the foundation as another word for a term,
 and no count of a word's uses against the commit the task branch left the main branch from is an
 error.
 
-- **Change:** new decision
 - **Scope:** glossary, decisions, invariants, part-map, environment-facts
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Verification:** an agent compares the change with the decision:
   - complies: an entry of the glossary holds its definition and *Not*; a change that writes
     "checker" for the format guard is read by its review like any other word;
   - violates: an entry lists other words for its term; a change fails because a word stands more
     times in a file than on the commit its branch left from.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-29
 
 *Rationale:* a word kept out as a synonym is rarely named in advance, so the field stays empty while
 each entry carries it and a guard counts it; a synonym that confuses a reader shows where an agent
@@ -2620,7 +2289,7 @@ works with the word, as any other unclear word does (WAY-95).
 *Rejected:* *Avoid* counted in every file against the commit the task branch left the main branch
 from — a field and a count kept for words nobody lists.
 
-### WAY-99/1 — How does one word keep one meaning in the foundation?
+### WAY-99 — How does one word keep one meaning in the foundation?
 
 Where a word carries two meanings in the files git tracks and one of them is a meaning a reader who
 knows the product's field would not give it, one of the two is renamed, and the glossary entry of
@@ -2629,20 +2298,15 @@ closed-list value or quoted word — holding neither the term nor its forms — 
 meaning whose word a human has not yet chosen reads `TODO` in *Not*, which a task branch may hold
 and the main branch never does.
 
-- **Change:** new decision
 - **Scope:** glossary, decisions, invariants, part-map, environment-facts
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 1 — invariants: glossary-not-target · glossary-not-quoted-word ·
-  glossary-entry-merge-todo. Level 2 for how a second meaning goes — an agent compares the change with
-  the decision:
+- **Verification:** an agent compares the change with the decision:
   - complies: a game's "shard" carries a currency and a level's piece, the piece becomes "fragment",
     and *Not* of "shard" names it;
   - violates: "shard (currency)" and "shard (piece)" stand side by side in the foundation; *Not* of
     "shard" names "level shard", a phrase holding the word itself.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-29
 
 *Rationale:* a sentence a test cites carries its words as they stand, so a word read in two meanings
 makes it true and false at once. A carrier holding the word itself would keep the homonym under a
@@ -2652,25 +2316,22 @@ word — nobody citing the sentence reads it; renaming two meanings a reader of 
 neither is the product's own; a *Not* that always names a word — the author would choose before the
 human sees the case.
 
-### WAY-100/1 — When does a method or practice borrowed from elsewhere bind a product?
+### WAY-100 — When does a method or practice borrowed from elsewhere bind a product?
 
 A method or practice borrowed from outside a product binds its way of working only through a
 decision that names what is adopted, where it applies, and why. When an agent recognizes a likeness
 to a method or practice no decision has adopted, it asks a human before treating it as a rule.
 
-- **Change:** new decision
 - **Scope:** decisions, part-map, relation-model, invariants, glossary, environment-facts,
   elements-common, task-cycle, gate, repository
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Verification:** an agent compares the change with the decision:
   - complies: a decision adopts only the risk assessment step of an outside process for task
     planning and gives its reason; an agent offers an unadopted technique as a proposal;
   - violates: a skill makes an outside planning ritual mandatory because an agent recognizes it,
     without a decision adopting it.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-30
 
 *Rationale:* borrowing pieces without a conscious choice makes the product's boundaries hard to
 explain and change. Naming the chosen piece, its scope and its reason lets later work distinguish
@@ -2678,22 +2339,19 @@ it from a resemblance or a habit.
 *Rejected:* importing a whole outside method by default — its unrelated steps become obligations;
 treating recognition by an agent as adoption — recognition does not settle fit or scope.
 
-### WAY-101/1 — Who chooses the backlog tool used with the-way?
+### WAY-101 — Who chooses the backlog tool used with the-way?
 
 The-way's task cycle requires no particular backlog application or service; each product chooses
 where it keeps its roadmap, projects and tasks.
 
-- **Change:** new decision
 - **Scope:** decisions, elements-common, task-cycle
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Verification:** an agent compares the change with the decision:
   - complies: a task-cycle step accepts task information supplied from a product's chosen files or
     tracker;
   - violates: the step can obtain tasks only from one named backlog service.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-30
 
 *Rationale:* the backlog hierarchy belongs to the process, while its storage belongs to the
 product. Requiring one service would force a product to move its tasks before it could use the
@@ -2701,25 +2359,22 @@ process.
 *Rejected:* one fixed backlog service for all products — adopting the process would also require
 adopting that service.
 
-### WAY-102/1 — What is the-way for?
+### WAY-102 — What is the-way for?
 
 The-way is a process for work on a technology product in which a change of premises or direction is
 an ordinary step: it passes through the product's foundation and needs no memory of what is linked
 to what.
 
-- **Change:** new decision
 - **Scope:** decisions, part-map, relation-model, invariants, glossary, environment-facts,
   elements-common, task-cycle, gate, repository
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Verification:** an agent compares the change with the decision:
   - complies: a change of product direction goes through the foundation, and references to affected
     entries are checked before the change is merged;
   - violates: a change of direction relies on the author remembering which decisions and documents
     to update.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-30
 
 *Rationale:* a process that relies on a person to remember every affected artifact fails when work
 spans tasks and sessions. Making foundation changes routine gives each change a place to start and
@@ -2728,24 +2383,21 @@ a route to its dependents.
 their links; treating a change of premises as an exceptional repair — the foundation falls behind
 the product's direction.
 
-### WAY-103/1 — Who is the-way for?
+### WAY-103 — Who is the-way for?
 
 The-way is built first for its author and aims at anyone who builds a technology product and adopts
 the process for their own needs; the process is written for the agents that carry out the task cycle
 too.
 
-- **Change:** new decision
 - **Scope:** decisions, elements-common, task-cycle
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Verification:** an agent compares the change with the decision:
   - complies: an element's skill gives an agent steps it can perform, and a new task-cycle step is
     understandable to a builder using their own product;
   - violates: a task-cycle step relies on private shorthand only the author understands, or leaves
     the agent's action unstated.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-09-30
 
 *Rationale:* starting with the author gives the process a real first user; aiming at independent
 builders keeps one person's setup from defining the audience. Agents need instructions they can
@@ -2753,7 +2405,7 @@ execute because they perform the task cycle.
 *Rejected:* an author-only procedure — another builder would have to reconstruct its unwritten
 conventions; prose addressed only to humans — an agent could not take its assigned steps from it.
 
-### WAY-104/1 — How does a product write a word of its domain that the glossary of the-way holds?
+### WAY-104 — How does a product write a word of its domain that the glossary of the-way holds?
 
 A word of a product's domain that the glossary of the-way holds at the commit the product pins, or
 the last word of a term it holds, in any of its forms, is written in the files of the product's
@@ -2763,20 +2415,15 @@ one, and where the bare word itself has an entry in the glossary of the-way, tha
 *Not* for its domain meaning. The product's code, its interface and talk about the product use the
 word of the domain unchanged.
 
-- **Change:** new decision
 - **Scope:** glossary, decisions, invariants, part-map, environment-facts
 - **Based on:** none
-- **Relations:** derives from WAY-95@455377de · narrows WAY-99@7d44dfd7
-- **Verification:** level 1 — invariants: glossary-process-terms. Level 2 for how the sentences of
-  a product's foundation, its code and its interface write the word — an agent compares the change
-  with the decision:
+- **Relations:** derives from WAY-95 · narrows WAY-99
+- **Verification:** an agent compares the change with the decision:
   - complies: a game's invariants say "game clock" for the timer of a match, and a factory's say
     "assembly step" for an operation, while their code and interfaces use `Clock` and "Step";
   - violates: a game's invariant says "clock" for the timer of a match or a factory's says "step"
     for an operation; a game's glossary defines "clock" as the timer of a match.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-10-04
 
 *Rationale:* a word of the process written bare in a product's foundation for something of its
 domain carries two meanings for an agent that reads the-way's rules beside the product's, and a
@@ -2797,26 +2444,23 @@ of the process nor its forms, as WAY-99 asks of a carrier — for words the fiel
 qualifying a domain word only when it is a whole
 process term — a short use of a multiword term can still collide with the domain meaning.
 
-### WAY-105/1 — Which check reports an invariant whose command runs a script that does not exist, and how is that script read?
+### WAY-105 — Which check reports an invariant whose command runs a script that does not exist, and how is that script read?
 
 None does: an invariant's method names no command and no script (WAY-61), so no check reads one.
 An invariant reads `test` as its method once a test of the product's suite cites it, and `review`
 until then.
 
-- **Change:** new decision
 - **Scope:** gate, invariants
 - **Based on:** none
-- **Relations:** derives from WAY-63@f16348c8 · derives from WAY-61@4804d070 ·
-  derives from WAY-38@6e10c3fd
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Relations:** derives from WAY-63 · derives from WAY-61 ·
+  derives from WAY-38
+- **Verification:** an agent compares the change with the decision:
   - complies: an invariant written before its test reads `review`, and the change that adds a test
     citing it turns its method to `test`;
   - violates: an invariant reads `test` while no test cites it; an entry names
     `python -B tools/check_saves.py` as its method.
-- **Review when:** none
 - **Origin:** the panel's record of the change that counts the checks a `none` option leaves
   unchecked in every guard's summary, in the message of commit d389623 of the-way
-- **Approved by:** Mariusz, 2026-10-02
 
 *Rationale:* an invariant may be written before its test, and its method then says what keeps it
 meanwhile: the review. A test of the product's suite runs with the product's command, so a test not
@@ -2826,24 +2470,21 @@ yet written is only an invariant no test cites, which its method shows.
 beside the product's tests; `TODO` as the method until the test exists — it names nothing that keeps
 the rule meanwhile.
 
-### WAY-106/1 — What does the project level write before tasks exist?
+### WAY-106 — What does the project level write before tasks exist?
 
 The project level reads a product's foundation and records prospective changes in the project
 definition; it writes no foundation entries. The definition holds the project's settled scope and
 projected foundation entries, while the project plan holds phases, task order and which task
 realizes or writes each projected entry.
 
-- **Change:** new decision
 - **Scope:** project-level, task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-01@60960941
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Relations:** derives from WAY-01
+- **Verification:** an agent compares the change with the decision:
   - complies: a definition projects a new decision and the plan later assigns a task to write it;
   - violates: the definition writes the future decision into the product's foundation, or assigns
     projected entries to tasks before the breakdown has made those tasks.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-10-04
 
 *Rationale:* the foundation describes what the product holds today; a project first settles what
 the product is to become. The task assignment follows the breakdown and changes with it, while
@@ -2852,24 +2493,21 @@ the definition remains the source of what was settled.
 a future product as current; keeping the task assignment in the definition — it would duplicate
 the plan and change as the plan changes.
 
-### WAY-107/1 — Where does a product tell the project level where its backlog stands?
+### WAY-107 — Where does a product tell the project level where its backlog stands?
 
 A product names where it keeps projects and tasks in a `## Backlog` section of its root `AGENTS.md`,
 outside the block the-way's installer owns. A project definition stands in the named project
 place; when the place is unnamed, the agent asks the human and offers to record the answer there.
 
-- **Change:** new decision
 - **Scope:** project-level, installation
 - **Based on:** none
-- **Relations:** derives from WAY-101@518c4b32
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Relations:** derives from WAY-101
+- **Verification:** an agent compares the change with the decision:
   - complies: a product names a directory for projects and a tracker for tasks in its own backlog
     section, and the project definition is written in that directory;
   - violates: the project skill assumes one backlog service for every product, or puts the
     product's paths inside the installer's marked block.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-10-04
 
 *Rationale:* the product chooses its own backlog place, and a root instruction gives an agent one
 place to find it. Keeping the place outside the generated block lets the product change it without
@@ -2878,7 +2516,7 @@ editing the process's installed guidance.
 backlog; asking for the location in every project conversation — the answer would be lost between
 sessions.
 
-### WAY-108/1 — What form does a project definition take?
+### WAY-108 — What form does a project definition take?
 
 A project definition is one document with the ordered sections of the project-level template; its
 title and content use the language in which the human opened the conversation, while headings,
@@ -2889,19 +2527,16 @@ section contains content, `none` for nothing there, or `TODO` for something miss
 stays as `TODO` in the section or projected entry that needs it, or as an open question naming
 the breakdown or task that resolves it.
 
-- **Change:** new decision
 - **Scope:** project-level
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 1 — invariants: project-definition-form. Level 2 for the language of
-  content and the meaning of `none` — an agent compares the change with the decision:
+- **Verification:** invariants: project-definition-form. For the language of content and the meaning
+  of `none`, an agent compares the change with the decision:
   - complies: a Polish conversation produces Polish section content under fixed English headings,
     and a section with no risks reads `none` only after the human has said there are none;
   - violates: translated headings make the readiness check unable to read the document, or an
     unanswered section silently reads `none`.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-10-04
 
 *Rationale:* the person deciding the project reads its content in the language of the conversation;
 fixed structural words let later work resume and check the document. A written state and
@@ -2909,54 +2544,48 @@ an explicit missing value show where the next conversation begins.
 *Rejected:* translating structural words with the content — a checker could not read every
 language; inferring progress from prose alone — a fresh agent would reconstruct the state.
 
-### WAY-109/1 — What may a project definition treat as settled without the human's answer?
+### WAY-109 — What may a project definition treat as settled without the human's answer?
 
 The definition's background, success and risks come from the human's answers; material supplied to
 the agent anchors questions and is not silently adopted as a settlement. Every success signal
 states what would falsify it.
 
-- **Change:** new decision
 - **Scope:** project-level
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Verification:** an agent compares the change with the decision:
   - complies: a concept's claim of success enters the agent's question, and the definition records
     the person's answer with a condition that would show it false;
   - violates: a concept's assumption becomes a risk without asking, or a success signal names no
     circumstance that would show it false.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-10-04
 
 *Rationale:* a fluent draft makes an agent's inference look like the human's decision. A condition
 that could disprove success gives later work a way to judge it.
 *Rejected:* filling gaps from plausible material — later tasks would inherit invented choices.
 
-### WAY-110/1 — When does a deadline enter a project definition?
+### WAY-110 — When does a deadline enter a project definition?
 
 A deadline enters the definition only when the human names one imposed from outside, in the
 human's own words and with how firmly it binds. The agent neither asks for a deadline nor derives
 one from material, and does not argue the project's scope or cost from it.
 
-- **Change:** new decision
 - **Scope:** project-level
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Verification:** an agent compares the change with the decision:
   - complies: the human names an externally imposed launch date and says how firm it is, so the
     definition records that answer in their words;
   - violates: the agent asks for a deadline as a routine field, infers one from a concept's date,
     or uses a stated date to press for a smaller scope.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-10-04
 
 *Rationale:* a date imposed by the surroundings can constrain the work, while a date invented for
 planning makes the constraint appear to come from the human.
 *Rejected:* a routine deadline question — it creates pressure without an external constraint;
 deriving a deadline from background material — it mistakes context for a settlement.
 
-### WAY-111/1 — What does the project level read in the current foundation?
+### WAY-111 — What does the project level read in the current foundation?
 
 Before drafting, the agent selects and reads the current foundation under WAY-150, identifying
 touched parts from the proposed project's responsibilities, behaviour, flows and surfaces. It
@@ -2964,19 +2593,16 @@ brings a touched part, a decision the project may change, an invariant it may br
 it crosses to the human as material and asks
 whether the project changes an existing decision or fits it.
 
-- **Change:** new decision
 - **Scope:** project-level
 - **Based on:** none
-- **Relations:** derives from WAY-150@3bd9e695
-- **Verification:** level 2 — an agent compares the work with the decision:
+- **Relations:** derives from WAY-150
+- **Verification:** an agent compares the work with the decision:
   - complies: before any diff exists, the agent maps the idea to affected responsibilities and
     surfaces, reads every applicable Scope decision and expands to an unlinked invariant, then
     shows the touched decision and boundary and asks whether the project changes or fits it;
   - violates: the agent treats the absence of a diff as no touched parts, or reads only decisions
     already linked to the idea and misses an unlinked invariant or a boundary in the map.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/18
 
 *Rationale:* the current foundation gives a project its starting constraints before its design
 has files to point from. Reading from the proposed behaviour finds those constraints while leaving
@@ -2985,7 +2611,7 @@ room to follow an unexpected conflict; showing the conflict lets the human decid
 reading only entries with a matching scope or known link — an unlinked conflict stays hidden;
 waiting for changed files to choose context — the project is drafted before those files exist.
 
-### WAY-112/1 — How does an agent develop and resume a project definition?
+### WAY-112 — How does an agent develop and resume a project definition?
 
 The agent confirms its understanding of the goal with the human before the definition's first
 write, then creates the initial sketch in the product's project place without a separate request
@@ -2995,18 +2621,15 @@ assessment as an open question with its resolver but on a choice as a reason to 
 recommendation with costs. It writes each answer and the updated `Status:` line before the next
 question; work resumes from that line and, while entries are being found, from the candidate table.
 
-- **Change:** new decision
 - **Scope:** project-level
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 2 — an agent compares the work with the decision:
+- **Verification:** an agent compares the work with the decision:
   - complies: after the goal is confirmed, an agent writes a sketch, then records each answer and
     its new status before continuing; a later agent resumes from the recorded open section;
   - violates: an agent writes a complete definition from the source before checking the goal, or
     asks another question while the prior answer exists only in conversation.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-10-04
 
 *Rationale:* the first confirmation prevents a polished document for the wrong goal; saving each
 answer makes the document a reliable place to resume. Source-anchored challenges can change an
@@ -3015,7 +2638,7 @@ assumption without asking the human to defend an invented objection.
 new decision; writing only at the end — an interruption loses settled answers; challenging every
 line by a fixed script — questions without a real anchor consume the person's attention.
 
-### WAY-113/1 — How does an agent of the-way ask a human decision?
+### WAY-113 — How does an agent of the-way ask a human decision?
 
 An agent asks in plain conversation text: a decision question gives the available ways, the cost
 of each and a recommendation, while a question of assessment stays open; neither opens a separate
@@ -3024,21 +2647,18 @@ against that choice anchored in the human's words or supplied material, unless t
 with the work, or the human took one of the ways offered and the decision question named, anchored
 in the material, the weak point of that way.
 
-- **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common,
   project-level
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 2 — an agent compares the exchange with the decision:
+- **Verification:** an agent compares the exchange with the decision:
   - complies: a choice is presented in text with the costs of both ways and a recommendation,
     followed by a source-anchored question against the answer when it enters a binding entry,
     unless the person took a way offered whose weak point the question named;
   - violates: the choice appears only in a separate option panel, an agent asks a generic
     challenge unrelated to the person's answer, or an agent asks against a way offered whose weak
     point the question already named and the person took as offered.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-10-05
 
 *Rationale:* the person sees the trade-off where they make the choice. A challenge grounded in
 their own material can expose a contradiction without inventing one. Where the question already
@@ -3051,7 +2671,7 @@ would add no later protection; a challenge to every choice entering a binding en
 taken as offered whose weak point the question named — it asks again what the choice already
 weighed.
 
-### WAY-114/1 — What does a human accept of an entry, and when?
+### WAY-114 — What does a human accept of an entry, and when?
 
 A human accepts the meaning of a foundation entry, shown as one sentence in the human's language with
 the entry beside it, while its wording is the agent's: an agent writes the entry and the human accepts
@@ -3059,20 +2679,17 @@ it at the merge of the change that holds it, or, for a projected entry, at the r
 that, a question goes to the human only where the agent has no recommendation or the entry would
 change the meaning of an approved decision; a translation never enters the foundation.
 
-- **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common,
   project-level
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 2 — an agent compares the work with the decision:
+- **Verification:** an agent compares the work with the decision:
   - complies: the request lists each entry it writes with one sentence of its meaning in Polish, and
     the human reads the entries before merging;
   - violates: an agent asks the human to confirm a choice it already recommends; a translation is
     written into the foundation; an entry changes the meaning of an approved decision without a
     question.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/4
 
 *Rationale:* the human judges what an entry settles; its wording rarely changes that, and the human
 who merges reads what the change holds and answers for it.
@@ -3080,7 +2697,7 @@ who merges reads what the change holds and answers for it.
 while the meaning rarely moves, and each acceptance costs a round; storing a translation in the
 foundation — two binding wordings could drift apart.
 
-### WAY-115/1 — How are foundation entries found in a project's source?
+### WAY-115 — How are foundation entries found in a project's source?
 
 The agent reads the project's sources in full and selects and reads the product's foundation under
 WAY-150, then shows the human a complete candidate table with each proposed settlement, its kind,
@@ -3091,18 +2708,15 @@ their kinds, and each accepted row is recorded as it is worked through. The defi
 working table until the step ends, then replaces it with a `Candidates:` line recording how many
 rows were shown and accepted.
 
-- **Change:** new decision
 - **Scope:** elements-common, project-level
 - **Based on:** none
-- **Relations:** derives from WAY-150@3bd9e695
-- **Verification:** level 2 — an agent compares the work with the decision:
+- **Relations:** derives from WAY-150
+- **Verification:** an agent compares the work with the decision:
   - complies: the human sees every column of the candidate table, rejects an exclusion whose
     absence would make no task guess, and the completed definition carries the candidates line;
   - violates: the conversation hides the source and the next reader's guess while a file holds
     them, or entries are written before the human has cut the table.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/18
 
 *Rationale:* the source distinguishes a human settlement from material offered for consideration;
 the concrete guess filters noise before it becomes a rule. A table with row states lets work
@@ -3111,25 +2725,22 @@ resume, and a final line shows that the search occurred even when it yields no e
 misread become permanent noise; showing a shortened table — the human cannot judge provenance or
 the reason a candidate matters.
 
-### WAY-116/1 — Which foundation entries may a project definition project?
+### WAY-116 — Which foundation entries may a project definition project?
 
 A project definition projects decisions, invariants and glossary terms that the human can settle
 before the breakdown, and environment facts only where a projected decision or invariant rests on
 them. Of the part map it projects a changed existing part only when every field is already known;
 a new part or surface remains an open question for the breakdown.
 
-- **Change:** new decision
 - **Scope:** project-level, decisions, invariants, glossary, environment-facts, part-map
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 2 — an agent compares the definition with the decision:
+- **Verification:** an agent compares the definition with the decision:
   - complies: the definition holds a proposed access rule, a related glossary term and a
     changed known part, while a future new part is an open question resolved in the breakdown;
   - violates: it invents files for a part that has not been designed, or records a fact with no
     projected entry depending on it.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-10-04
 
 *Rationale:* a project can settle rules of a future product before it has tasks, but some map
 fields exist only once code and files do. Restricting facts to what a proposed rule rests on
@@ -3138,7 +2749,7 @@ prevents a speculative inventory of the surrounding world.
 invariants and terms; projecting new parts with guessed files or missing fields — the map would
 look complete while naming a structure that does not exist.
 
-### WAY-117/1 — How does a foundation entry stand in a project definition before it is written?
+### WAY-117 — How does a foundation entry stand in a project definition before it is written?
 
 The skill of each entry's kind writes its whole proposal under the definition's `Projected
 foundation changes`, in that kind's subsection with the template's projected heading and one
@@ -3147,19 +2758,16 @@ new projected decision uses `(new)` without a number or prefix, while a change o
 decision and other kinds use the identifiers their templates give; an entry following from it
 remains projected or becomes an open question when its fields await the code.
 
-- **Change:** new decision
 - **Scope:** project-level, elements-common, decisions, invariants, glossary, environment-facts,
   part-map
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 2 — an agent compares the work with the decision:
+- **Verification:** an agent compares the work with the decision:
   - complies: a new decision carries `(new)`, a revised decision carries its number, and an
     invariant's method remains `TODO` until a task can write its check;
   - violates: a projected proposal is written directly into the foundation, or a revised decision
     loses its identifier in the definition.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/4
 
 *Rationale:* the project's definition keeps a future rule visible without claiming it already
 holds. Code-dependent evidence can be completed when the task writes the entry.
@@ -3167,7 +2775,7 @@ holds. Code-dependent evidence can be completed when the task writes the entry.
 look checked before the product exists; leaving the human's reasoning to later tasks — they
 cannot recover what was considered during definition.
 
-### WAY-118/1 — What makes a project definition ready for breakdown?
+### WAY-118 — What makes a project definition ready for breakdown?
 
 The readiness gate blocks a definition with a missing section, unresolved content, an open
 question without its place of resolution, an unfinished candidate search, or an unsettled
@@ -3181,19 +2789,16 @@ approver, the foundation commit searched and the fingerprint of the definition's
 Goal through Projected foundation changes. A change to those sections after approval goes through
 the gate again before breakdown relies on it.
 
-- **Change:** new decision
 - **Scope:** project-level
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 1 — invariants: project-readiness-gate. Level 2 for the foundation
-  search and human approval — an agent compares the work with the decision:
+- **Verification:** invariants: project-readiness-gate. For the foundation search and human
+  approval, an agent compares the work with the decision:
   - complies: the script stops an unfinished candidate table, the agent resolves a collision with
     an existing decision, and the human approves the finished proposals;
   - violates: a warning-only review lets the breakdown begin with a missing decision reason, or
     an edit to a fingerprinted section after approval keeps the old gate record.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-10-04
 
 *Rationale:* a warning lets a later step guess precisely what definition was meant to settle;
 blocking exposes the missing answer while the person who can give it is present. The search and
@@ -3201,26 +2806,22 @@ fingerprint show which foundation and wording were approved.
 *Rejected:* a final checklist that only warns — it cannot prevent an unfinished search from
 passing; an approval without a content fingerprint — later edits would still look approved.
 
-### WAY-119/1 — When may a projected decision leave Review when unresolved at the gate?
+### WAY-119 — When may a projected decision leave Review when unresolved at the gate?
 
 At the readiness gate, a projected decision's *Review when* holds a review condition and date, or
 `none` after the human has settled that no such condition applies. It may read `TODO` only when
 the timing depends on later work, the human expressly accepts deferral, and a related open
 question names the breakdown or task that settles it.
 
-- **Change:** new decision
 - **Scope:** project-level, decisions
 - **Based on:** none
-- **Relations:** derives from WAY-118@5af868b3
-- **Verification:** level 2 — an agent compares the definition and human approval with the
-  decision:
+- **Relations:** derives from WAY-118
+- **Verification:** an agent compares the definition and human approval with the decision:
   - complies: a prediction's review date depends on the release, so the human accepts `TODO` and
     an open question names the task that will set the date;
   - violates: the gate passes a `Review when: TODO` with no related open question, or an agent
     writes `none` simply because the source said nothing about review.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-10-04
 
 *Rationale:* the date for testing a prediction can depend on delivery that has not yet been
 planned. An explicit deferral keeps that uncertainty visible and gives later work a place to
@@ -3228,7 +2829,7 @@ finish it.
 *Rejected:* blocking every `TODO` — the human would have to guess a date before the plan exists;
 allowing an unexplained `TODO` — no later task would own the missing answer.
 
-### WAY-120/1 — How does the-way critique an agent's proposal?
+### WAY-120 — How does the-way critique an agent's proposal?
 
 An agent may invoke critique for any proposal without waiting for the human to express doubt; a
 completed set for collective human review goes through it, and the diff of a change to an
@@ -3237,21 +2838,18 @@ agent the full proposal or set, its sources and applicable rules without the aut
 author checks each observation and gives one explicit verdict. For a collectively reviewed set the
 critic checks form, fidelity to source and contradictions across entries before presentation.
 
-- **Change:** new decision
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common,
   project-level, relation-model, gate, installation, agent-instructions, instruction-files,
   repository, task-cycle
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 2 — an agent compares the review with the decision:
+- **Verification:** an agent compares the review with the decision:
   - complies: one fresh critic receives a finished set and its sources, reports evidence for each
     concern, and the author verifies it before presenting corrected proposals and open questions;
   - violates: one critic is run per row of a set, the author silently changes a human settlement,
     two critics are run on one set, or the merge of a change to the foundation waits for a
     critique of its diff.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/4
 
 *Rationale:* the author is attached to its own fluent proposal, and an independent reading can
 find a mismatch with its source or another entry before the human spends attention on the set.
@@ -3260,7 +2858,7 @@ The author's verdict keeps the critic an aid rather than a second decision-maker
 review; letting the critic's remarks edit human settlements without asking — it would disguise a
 new decision as a correction.
 
-### WAY-121/1 — Where does a project settle the technology it needs?
+### WAY-121 — Where does a project settle the technology it needs?
 
 Before a project definition goes through its readiness gate, a step of its own lists the
 technology and architecture choices the project needs — such as a language, a framework, a store
@@ -3276,13 +2874,12 @@ foundation settles for that behaviour, even where its answer adds nothing to run
 up, and even where the product has none of what the matter names, whose answer then says what an
 agent uses in its place.
 
-- **Change:** new decision
 - **Scope:** project-level, decisions
 - **Based on:** none
-- **Relations:** derives from WAY-106@63eddf70 · derives from WAY-116@afbcd2fa · derives from
-  WAY-100@e7a74a18
-- **Verification:** level 1 — invariants: project-technology-record. Level 2 for what the step
-  lists and settles — an agent compares the work with the decision:
+- **Relations:** derives from WAY-106 · derives from WAY-116 · derives from
+  WAY-100
+- **Verification:** invariants: project-technology-record. For what the step lists and settles, an
+  agent compares the work with the decision:
   - complies: a project that adds an account server lists its store of data and its way of
     logging in, and the definition projects a decision on each; a project that changes only how a
     screen looks, in a product whose foundation already says how an agent reaches its screens,
@@ -3298,11 +2895,7 @@ agent uses in its place.
     browser on a local address adds nothing to run; the logs, the interface and the development
     data stand on the list as one choice; a product that keeps no data leaves its development data
     off the list for that reason.
-- **Review when:** a task cycle finds no way to check behaviour a user sees in the running product
-  although decisions on the matters of an agent's way to the running product stand · check by:
-  2027-03-31
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/24
 
 *Rationale:* whether a technology choice changes how the work is cut into tasks cannot be judged
 by someone who does not know the technologies, so the choice is settled before the cut; a step of
@@ -3338,7 +2931,7 @@ the agent's judgment alone; the matters on the list the deployment skill of a pr
 (WAY-139) — only a task that deploys the product checks that list, so a product run on a local
 machine alone would leave an agent with no way to it.
 
-### WAY-122/1 — How are the options of a technology choice found and checked before a human sees them?
+### WAY-122 — How are the options of a technology choice found and checked before a human sees them?
 
 The options of each technology choice a project needs come from research of that choice against
 the project definition, rather than from a fixed list of bundled stacks, and the research of every
@@ -3355,11 +2948,10 @@ reason, unless the human named it or the definition holds it as a constraint, an
 with that reason as such a lack; and every option is offered only after a critique that refutes
 every claimed difference between the options which no source supports.
 
-- **Change:** new decision
 - **Scope:** project-level, decisions
 - **Based on:** none
-- **Relations:** derives from WAY-121@ed19d693 · derives from WAY-120@81f84997
-- **Verification:** level 2 — an agent compares the work with the decision:
+- **Relations:** derives from WAY-121 · derives from WAY-120
+- **Verification:** an agent compares the work with the decision:
   - complies: research for a store of data compares a file kept beside the application with a
     database server, each typed and documented, and the critique strikes a claimed difference in
     speed that no source gives; a built-in module with no record of wide use stays in the
@@ -3369,9 +2961,7 @@ every claimed difference between the options which no source supports.
     documentation and a maintained project disappears from the comparison because it lacks one of
     the properties; an option the human names disappears from the comparison; the research of a
     choice that depends on no unsettled choice waits for another choice to be settled.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-10-05
 
 *Rationale:* a fixed list of stacks, each bundling a framework, a store of data and a place to run,
 settles several choices at once and without the project, so a bundle can run against choices the
@@ -3397,7 +2987,7 @@ excludes an option whose lack costs the product nothing, and the recommendation 
 used option with no gain for the product; research one choice at a time — the human waits for each
 research in turn.
 
-### WAY-123/1 — How does a technology choice reach a human who cannot assess the technology?
+### WAY-123 — How does a technology choice reach a human who cannot assess the technology?
 
 The step that settles a project's technology shows the options of each choice by their
 consequences for the product — what it costs, where it runs, what keeping it running takes and
@@ -3407,11 +2997,10 @@ remains, the step recommends the simplest and cheapest option. The choices whose
 together reach the human together, in one table, once every one of their comparisons has passed
 the critique, each with its recommendation and the weak point of the option recommended.
 
-- **Change:** new decision
 - **Scope:** project-level, decisions
 - **Based on:** none
-- **Relations:** derives from WAY-121@ed19d693 · derives from WAY-113@d3e5cbfa
-- **Verification:** level 2 — an agent compares the work with the decision:
+- **Relations:** derives from WAY-121 · derives from WAY-113
+- **Verification:** an agent compares the work with the decision:
   - complies: two stores of data are shown as "a file kept with the application and copied with
     it for a backup" against "a server to keep running in the container, with backups of its
     own", and the human picks one;
@@ -3419,9 +3008,7 @@ the critique, each with its recommendation and the weak point of the option reco
     difference in consequences are offered as a matter of taste instead of the simpler one being
     recommended; two choices whose research started together reach the human in separate
     tables.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-10-05
 
 *Rationale:* a human who cannot assess the technology can still weigh what an option costs and
 where it fails, so a technical difference reaches the decision only through a consequence. Where
@@ -3436,7 +3023,7 @@ every choice shown on its own, followed by a question against it — the human w
 and each choice costs two exchanges; each comparison shown as soon as its critique passes — the
 tables come one choice at a time.
 
-### WAY-124/1 — When is a task ready for its cycle?
+### WAY-124 — When is a task ready for its cycle?
 
 A task document records whether the task is independent, belongs to an item of a project's plan,
 or uses an approved project definition as a source without belonging to its plan; it carries the
@@ -3451,12 +3038,11 @@ using an approved definition checks that its approval still holds and names each
 entry, or the part of it, that its code makes true, while source-only use takes no other
 assignment or dependency from the plan.
 
-- **Change:** new decision
 - **Scope:** project-level, task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-106@63eddf70 · derives from WAY-118@5af868b3 · derives from
-  WAY-126@35accf8b · derives from WAY-134@2fc974a9 · derives from WAY-140@6e564611
-- **Verification:** level 2 — an agent compares the task document with its stated sources:
+- **Relations:** derives from WAY-106 · derives from WAY-118 · derives from
+  WAY-126 · derives from WAY-134 · derives from WAY-140
+- **Verification:** an agent compares the task document with its stated sources:
   - complies: an independent task is ready without a project plan, a source-only task uses
     approved project wording without taking its plan's assignments yet names a projected entry its
     code makes true with the part made true, a project member matches its plan item, and a task
@@ -3469,9 +3055,7 @@ assignment or dependency from the plan.
     candidate settlement of its refinement awaits the human, or a task is ready while a human
     action its document places before the cycle is not yet done, or an agent marks a task ready
     after the human accepted its candidate rows but never saw and accepted the complete document.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/19
 
 *Rationale:* a project can inform a task without owning it; the handoff must show which relationship
 applies so the next agent does not import work or dependencies the task never took on. A projected
@@ -3486,7 +3070,7 @@ source-only task's code would hold a rule the foundation lacks, and its return s
 second entry for it; readiness inferred from an agent's completed refinement or from acceptance of
 candidate rows alone — neither accepts the complete task the cycle takes.
 
-### WAY-125/1 — Which Superpowers methods does the autonomous task cycle adopt?
+### WAY-125 — Which Superpowers methods does the autonomous task cycle adopt?
 
 The the-way task cycle adopts Superpowers 6.4.1 methods for brainstorming a design and written spec,
 test-first implementation, subagent execution with independent task and final code reviews, and
@@ -3504,7 +3088,6 @@ findings left after the review of the final fix, the final fix takes in deferred
 and the executor rules on each line the reviewer declined to judge; a different Superpowers version
 requires a reviewed change to the-way before use.
 
-- **Change:** new decision
 - **Scope:** task-cycle
 - **Based on:** observation of installed Superpowers 6.4.1 on 2026-10-05 using `Get-Content -Raw
   -Encoding utf8 '<source-root>/<skill>/SKILL.md'` for each skill below; Windows PowerShell
@@ -3517,8 +3100,8 @@ requires a reviewed change to the-way before use.
   `requesting-code-review/SKILL.md` — "The reviewer gets precisely crafted context for evaluation —
   never your session's history." `finishing-a-development-branch/SKILL.md` — "Verify tests → Detect
   environment → Present options → Execute choice → Clean up."
-- **Relations:** derives from WAY-100@e7a74a18 · derives from WAY-13@e6c830b7
-- **Verification:** level 2 — an agent compares a cycle with the decision:
+- **Relations:** derives from WAY-100 · derives from WAY-13
+- **Verification:** an agent compares a cycle with the decision:
   - complies: agents use the named methods at version 6.4.1, return between stages, and show
     provisional choices in the request without claiming human approval; the orchestrator reads
     the cycle, subagent execution and code-review methods it conducts, while the design agent,
@@ -3528,9 +3111,7 @@ requires a reviewed change to the-way before use.
     method merely because its stage begins, or a stage agent works from its boundary alone
     without reading that method; the orchestrator parks a finding left after the review of the
     final fix, or rules on a line the reviewer declined to judge, as the borrowed methods give it.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/22
 
 *Rationale:* the borrowed skills provide design, test and review methods, while the-way must keep
 control of task sources, binding foundation approvals and the single human review point. Naming
@@ -3548,7 +3129,7 @@ second implementation of those methods; reading every delegated method in the or
 methods kept — the orchestrator would rule alone on findings the reviewer still holds against the
 change.
 
-### WAY-126/1 — How does a projected entry enter the foundation?
+### WAY-126 — How does a projected entry enter the foundation?
 
 A projected entry of an approved project definition enters the product's foundation in the
 foundation step of the first task whose code makes it true — the task the plan assigns, or a task
@@ -3563,13 +3144,12 @@ code makes true that the foundation step missed — an invariant with a check by
 not write the code it covers, run on that code — and writes a new entry only for a rule none of
 them states.
 
-- **Change:** new decision
 - **Scope:** project-level, task-cycle, decisions, invariants, glossary, environment-facts,
   part-map
 - **Based on:** none
-- **Relations:** derives from WAY-01@60960941 · derives from WAY-11@e882a9df · derives from
-  WAY-114@04b4f599 · derives from WAY-118@5af868b3 · narrows WAY-106@63eddf70
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Relations:** derives from WAY-01 · derives from WAY-11 · derives from
+  WAY-114 · derives from WAY-118 · narrows WAY-106
+- **Verification:** an agent compares the change with the decision:
   - complies: a source-only task whose code adds the store a projected decision chooses writes
     that decision whole in its foundation step, and the task the plan assigns later finds it and
     writes nothing; a task whose code makes one of a projected decision's two sentences true writes
@@ -3579,9 +3159,7 @@ them states.
     task's source states; a shortened projected entry is written as the gate approved it, its
     meaning left out of the request;
     the code a late-found projected invariant covers is set aside and rewritten.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/4
 
 *Rationale:* a projected entry is wording a human already settled at the gate, and the task
 whose code first makes it true is the one that can show it holds; entering with that code keeps
@@ -3596,7 +3174,7 @@ shortened entry as approved — the foundation would gain binding sentences no h
 that form; rewriting the code a late-found projected invariant covers — a check by an agent that
 did not write the code guards it without a second implementation.
 
-### WAY-127/1 — How does a session working on the-way itself reach the-way's skills?
+### WAY-127 — How does a session working on the-way itself reach the-way's skills?
 
 A session working on the-way itself reaches each skill of the-way as the project skill
 `the-way-<name>` through two identical tracked entry points, `.claude/skills/the-way-<name>/SKILL.md`
@@ -3608,29 +3186,26 @@ reaches a skill of the-way other than one to `instruction-files/`, whose skill, 
 that pins the-way, follows that repository's pinned copy instead, and the-way is not installed in
 itself.
 
-- **Change:** new decision
 - **Scope:** agent-instructions, elements-common, project-level, task-cycle, decisions, invariants,
   glossary, part-map, environment-facts, installation, instruction-files
-- **Based on:** claude-code-project-skills@d58fb91f · claude-code-nested-skills@4dd3d448 ·
-  codex-repository-skills@7db28f98 · codex-skill-paths@5b5b6c79
-- **Relations:** derives from WAY-44@2f2b6227
-- **Verification:** level 1 — invariants: skill-entry-points. Level 2 for the paragraphs of the
-  skills that say where the-way lies — an agent compares the change with the decision:
+- **Based on:** claude-code-project-skills · claude-code-nested-skills ·
+  codex-repository-skills · codex-skill-paths
+- **Relations:** derives from WAY-44
+- **Verification:** invariants: skill-entry-points. For the paragraphs of the skills that say where
+  the-way lies, an agent compares the change with the decision:
   - complies: a skill's paragraph names, as the place of the-way, the checkout or worktree the
     session works in for the-way itself and the pinned `.the-way` for a product, and names
     another the-way skill it hands to as the project skill with the `the-way-` prefix;
   - violates: a skill tells an agent to resolve a global link to find the-way; a skill run in the-way
     hands its work to `critique` without the prefix.
-  Level 2 for the global link and the skill of `instruction-files/` — an agent compares the change
+  For the global link and the skill of `instruction-files/`, an agent compares the change
   with the decision:
   - complies: a global link leads to `instruction-files/` of a worktree kept at the merged tip, and
     the skill judging a product that pins the-way follows that product's
     `.the-way/instruction-files/SKILL.md`;
   - violates: a global link leads to another skill of the-way; the skill judges a product that pins
     the-way with the copy its global link reaches.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/11
 
 *Rationale:* a session on the-way tries a change to a skill with the skill of its own branch, so a
 skill it reads from another checkout tests nothing it changed. Entry points tracked in the
@@ -3655,7 +3230,7 @@ by git — a global link reads one checkout whatever branch the session works on
 need a git setting and extra rights on Windows; names without the prefix — which skill a session
 gets would rest on how Claude Code and Codex settle two skills of one name.
 
-### WAY-128/1 — What may a line of an instruction file that a tool loads into every session hold, and where does any other rule stand?
+### WAY-128 — What may a line of an instruction file that a tool loads into every session hold, and where does any other rule stand?
 
 A line for a file that an agent's tool loads into every session — one the skill of
 `instruction-files` proposes, or one a change to the-way's repository instruction files adds or
@@ -3666,21 +3241,17 @@ calls for it reaches the agent: a rule for some files in a file the tools load w
 rule for an activity in the steps of the skill that carries out that activity or in the file that
 leads it, and knowledge needed now and then in a file such a step or line points to.
 
-- **Change:** new decision
 - **Scope:** instruction-files, agent-instructions
-- **Based on:** context-file-effect@c44e5ef0 · claude-code-path-rules@ac99f128 ·
-  codex-agents-md@6dc13475
-- **Relations:** derives from WAY-100@e7a74a18
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Based on:** context-file-effect · claude-code-path-rules ·
+  codex-agents-md
+- **Relations:** derives from WAY-100
+- **Verification:** an agent compares the change with the decision:
   - complies: a change adds to the-way's root `AGENTS.md` a line pointing, with its condition, to a
     guide no session would find otherwise; the skill proposes to move a rule for one directory's
     files into a file loaded with them;
   - violates: the skill proposes a line describing a repository's directories and stack; a change
     adds to the-way's root `AGENTS.md` the test command its guide already gives.
-- **Review when:** no model in the range of fact context-file-effect is Active in Anthropic's table
-  of models · check by: 2027-01-08
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/11
 
 *Rationale:* a line loaded into every session costs context in each, and agents carry out what it
 asks, so it earns its place only when each session needs it; descriptions of a repository have not
@@ -3697,25 +3268,22 @@ rules of its own — a split changes nothing unless it changes when the rule loa
 the repository's code — the agent reads the code itself; binding the lines that stand today — every
 unchanged line would become a breach on the day of the merge.
 
-### WAY-129/1 — How does an instruction file point an agent to another file?
+### WAY-129 — How does an instruction file point an agent to another file?
 
 The-way's repository instruction files hold no `@` import other than the line `@AGENTS.md` alone at
 the top of the root `CLAUDE.md`, and the skill of `instruction-files` proposes none other. A pointer
 the skill proposes, or a change to the-way's repository instruction files adds, names the file to
 read by its path in backticks with the condition under which to read it.
 
-- **Change:** new decision
 - **Scope:** instruction-files, agent-instructions
-- **Based on:** claude-code-imports@5b9359fd
-- **Relations:** derives from WAY-100@e7a74a18
-- **Verification:** level 1 — invariants: instruction-file-imports. Level 2 for the condition beside
-  a path — an agent compares the change with the decision:
+- **Based on:** claude-code-imports
+- **Relations:** derives from WAY-100
+- **Verification:** invariants: instruction-file-imports. For the condition beside a path, an agent
+  compares the change with the decision:
   - complies: a pointer reads "Before you change the-way, read `agent-instructions/README.md`";
   - violates: a pointer reads "See @docs/style.md for the style"; a list of paths with no word on
     when to read them.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/11
 
 *Rationale:* an import loads the whole file it names into every session, so a file meant for
 occasional reading costs its full length in each; a path with its condition costs one line and is
@@ -3723,7 +3291,7 @@ read when the condition comes.
 *Rejected:* `@` as a light pointer — it loads, it does not point; the text of the file pasted in — a
 second copy that drifts.
 
-### WAY-130/1 — When does a rule enter an instruction file, and when does it leave?
+### WAY-130 — When does a rule enter an instruction file, and when does it leave?
 
 The skill of `instruction-files` proposes a rule, and a change to the-way's repository instruction
 files adds one, only to remove a mistake agents made more than once, found in records of their
@@ -3732,15 +3300,14 @@ the repository records or a step of an activity in the file that leads that acti
 proposes to take out a rule added for a mistake once that mistake can no longer be named, or once
 agents working without it show that it is not needed.
 
-- **Change:** new decision
 - **Scope:** instruction-files, agent-instructions
 - **Based on:** https://arxiv.org/html/2511.12884v2 § 4.2.3 — "The evolution of Agent context files
   is driven by small, incremental additions, while deletions are minimal." · § 4.2.3 — "this
   suggests that the increase in line counts is not simply due to uneven edit sizes, but instead
   reflects a meaningful tendency to add new instructions rather than remove existing ones."; read
   2026-10-08
-- **Relations:** derives from WAY-100@e7a74a18
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Relations:** derives from WAY-100
+- **Verification:** an agent compares the change with the decision:
   - complies: a change adding a rule to the-way's root `AGENTS.md` names in its request the mistake
     it removes and the records where agents made it twice or more; a change adds to the guide that
     leads the-way's integration the step a new decision sets, with that decision as its reason; the
@@ -3748,9 +3315,7 @@ agents working without it show that it is not needed.
   - violates: a rule added "just in case" after one slip recalled from memory; the skill proposes a
     rule whose mistake it did not look for; a rule against one slip is added to the guide as a step
     of the work.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/11
 
 *Rationale:* files grow by small additions and are rarely cut, so a rule needs a way out from the
 day it enters, and the mistake it removes is that way out. A repeated mistake is the signal; a
@@ -3763,7 +3328,7 @@ is lost before the rule is written; removal by the calendar — a long absence o
 rule working; one test for the rules against mistakes and for the steps of a guide or the rules a
 decision sets — a guide could gain no step of new work until agents had gone wrong without it.
 
-### WAY-131/1 — How is it settled whether a rule of an instruction file works?
+### WAY-131 — How is it settled whether a rule of an instruction file works?
 
 Where the skill of `instruction-files` says whether a rule works, and where the request of a change
 to the-way's repository instruction files says so, it is settled as three separate questions:
@@ -3773,19 +3338,16 @@ and tool release, as its effect needs to stand out from the variation between ru
 helped, by whether its mistake stops coming back in agents' work over time, never by test sessions
 alone.
 
-- **Change:** new decision
 - **Scope:** instruction-files, agent-instructions
-- **Based on:** agent-run-variance@538af710
-- **Relations:** derives from WAY-100@e7a74a18
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Based on:** agent-run-variance
+- **Relations:** derives from WAY-100
+- **Verification:** an agent compares the change with the decision:
   - complies: a rule whose behaviour never happens without it is shown working by a few sessions
     with and without it; a rule meant to make a behaviour more frequent is judged over many sessions
     or by watching its mistake;
   - violates: a few sessions with and without are taken as proof that a rule raised a behaviour
     that also happens without it; a rule is called useless because one session did not load it.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/11
 
 *Rationale:* loading, following and helping fail apart and are fixed apart — another carrier, other
 wording or a mechanism, or nothing; runs of one agent on one task differ, so a small effect drowns
@@ -3795,7 +3357,7 @@ decision takes it across publishers (WAY-85).
 behaviour absent without the rule; one question "does it work" — it mixes defects with different
 fixes.
 
-### WAY-132/1 — Which file carries the instructions Claude Code, Codex and Cursor share?
+### WAY-132 — Which file carries the instructions Claude Code, Codex and Cursor share?
 
 The skill of `instruction-files` proposes for a repository whose agents use more than one of Claude
 Code, Codex and Cursor, and the-way keeps for itself, a root `AGENTS.md` that carries the
@@ -3803,22 +3365,19 @@ instructions those tools share and a root `CLAUDE.md`, where there is one, whose
 `@AGENTS.md` alone and which holds only what Claude Code alone needs. The skill leaves out of this
 proposal the files and the marked block the-way's installer writes in a product.
 
-- **Change:** new decision
 - **Scope:** instruction-files, agent-instructions
-- **Based on:** claude-code-agents-md@e4007cb8 · codex-agents-md@6dc13475 · cursor-agents-md@aaa19b03 ·
-  claude-code-imports@5b9359fd
-- **Relations:** derives from WAY-100@e7a74a18
-- **Verification:** level 1 — invariants: root-claude-md-import. Level 2 for what `CLAUDE.md` holds
-  and for respecting the installer's files — an agent compares the change with the decision:
+- **Based on:** claude-code-agents-md · codex-agents-md · cursor-agents-md ·
+  claude-code-imports
+- **Relations:** derives from WAY-100
+- **Verification:** invariants: root-claude-md-import. For what `CLAUDE.md` holds and for respecting
+  the installer's files, an agent compares the change with the decision:
   - complies: the-way's `CLAUDE.md` is the one line `@AGENTS.md`; the skill proposes, after the
     import, a note for Claude Code alone; in a product, the skill leaves the installer's root
     `CLAUDE.md` and marked block of `AGENTS.md` to the installer;
   - violates: the skill proposes a `CLAUDE.md` restating the rules of `AGENTS.md`; the skill
     proposes to delete the installer's root `CLAUDE.md` or edit the block between the installer's
     markers.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/11
 
 *Rationale:* the tools read a shared instructions file at the root, while Claude Code reads it by
 itself only where no file of its own stands; a file of its own that opens by importing the shared
@@ -3833,7 +3392,7 @@ Code's documentation advises importing it from a file of its own; a file of its 
 to the shared one — Claude Code's documentation advises the import instead wherever someone who
 clones the repository works on Windows.
 
-### WAY-133/1 — How is a rule of an instruction file kept when it has to hold every time?
+### WAY-133 — How is a rule of an instruction file kept when it has to hold every time?
 
 Where a rule of an instruction file has to hold every time, the skill of `instruction-files`
 proposes a mechanism that keeps it without the agent choosing to — a CI check, a linter, a check of
@@ -3842,11 +3401,10 @@ agent that can turn the hook off — and a change to the-way's repository instru
 a rule only with its mechanism. The instruction file then says what the mechanism is for, or
 carries what the mechanism cannot check.
 
-- **Change:** new decision
 - **Scope:** instruction-files, agent-instructions
-- **Based on:** single-rule-compliance@cf537693
-- **Relations:** derives from WAY-100@e7a74a18
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Based on:** single-rule-compliance
+- **Relations:** derives from WAY-100
+- **Verification:** an agent compares the change with the decision:
   - complies: the skill proposes a CI check for a rule it found broken in commits, and an
     instruction only for what the check cannot read; a change adds to the-way's guide a rule that
     every commit names its task, together with a CI check that fails a request whose commits name
@@ -3854,10 +3412,7 @@ carries what the mechanism cannot check.
   - violates: a change adds a rule that has to hold on every commit only as a line of `AGENTS.md`;
     the skill proposes a hook of one agent tool, or a local git hook, as what keeps a rule against
     an agent that can switch it off.
-- **Review when:** no model in the range of fact single-rule-compliance is Active in Anthropic's
-  table of models · check by: 2027-01-08
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/11
 
 *Rationale:* a loaded rule is still not always followed, so what has to hold every time needs a
 mechanism that does not depend on the agent; the instruction beside it explains, so the agent meets
@@ -3868,7 +3423,7 @@ hook of one agent tool also reaches only that tool's sessions.
 which is not followed every time; a mechanism with no word to the agent — the agent learns of it
 only by failing it; a local hook as the keeper of every rule — one switch skips it.
 
-### WAY-134/1 — How does a task carry what its refinement settles for the foundation?
+### WAY-134 — How does a task carry what its refinement settles for the foundation?
 
 Before a task is ready for its cycle, the human sees a table of candidates found in the task
 document and the conversation that refined it, in the form WAY-115 gives with each settlement in
@@ -3885,12 +3440,11 @@ wording; where that meaning cannot hold, or the entry needs a value neither the 
 cycle's work gives, the cycle asks the human through a blocked draft request rather than write
 another entry, and otherwise the human accepts the entry's meaning at the merge (WAY-114).
 
-- **Change:** new decision
 - **Scope:** project-level, task-cycle, elements-common, decisions, invariants, glossary,
   environment-facts
 - **Based on:** none
-- **Relations:** derives from WAY-115@eb7ba15c · narrows WAY-114@04b4f599
-- **Verification:** level 2 — an agent compares the task document, or the cycle, with the decision:
+- **Relations:** derives from WAY-115 · narrows WAY-114
+- **Verification:** an agent compares the task document, or the cycle, with the decision:
   - complies: a task whose human settled in refinement that an exported record keeps its owner
     carries that row, and its cycle writes a decision with that meaning in its foundation step,
     before the code, and names it in the request; a task whose refinement found nothing carries the
@@ -3900,9 +3454,7 @@ another entry, and otherwise the human accepts the entry's meaning at the merge 
     because no code makes it true; the refinement writes whole entries into the task document; a
     kept row repeats a rule a current decision states; an orchestrated refiner asks the human
     directly about candidates or substitutes its own acceptance.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/19
 
 *Rationale:* a settlement the human makes while a task is refined binds after the merge as much as
 one a project settles, yet with no place in the task document it reaches the cycle as an answer to
@@ -3922,7 +3474,7 @@ or drop a settlement and show the difference in the request — the human's sett
 reversed and seen only once the code is written; decisions and invariants alone — a word whose
 meaning the human settled would be defined by the cycle.
 
-### WAY-135/1 — When does a task's cycle write a spec?
+### WAY-135 — When does a task's cycle write a spec?
 
 A task's cycle writes a spec, reviewed by an agent other than its author, before implementation
 and any plan where the task leaves an open design choice and nowhere else, and an invariant whose
@@ -3933,12 +3485,11 @@ attempt is discarded with the foundation entries the cycle wrote for it, and a f
 the report writes the spec, after whose review the orchestrator chooses again whether one author
 can hold the change or it needs a plan, using the same judgment as before implementation (WAY-136).
 
-- **Change:** new decision
 - **Scope:** task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-13@e6c830b7 · derives from WAY-69@7051f884 · derives from
-  WAY-126@35accf8b · derives from WAY-134@2fc974a9
-- **Verification:** level 2 — an agent compares a cycle with the decision:
+- **Relations:** derives from WAY-13 · derives from WAY-69 · derives from
+  WAY-126 · derives from WAY-134
+- **Verification:** an agent compares a cycle with the decision:
   - complies: a task whose rows of *Settlements to record* carry its two decisions and its invariant
     proceeds without a spec, and the invariant's check comes from an agent given only the sentence
     and its method; a task whose part-map change follows from the file it adds, with no other way
@@ -3950,11 +3501,7 @@ can hold the change or it needs a plan, using the same judgment as before implem
     leaves no other way open; an agent designs a decision the task does not carry and goes on with
     the code; a spec is written around the code of an attempt that met an open design choice;
     a plan is required merely because a spec was written.
-- **Review when:** five cycles of `implement-task` have run under this decision, or a cycle has
-  found a new foundation entry contradicting a current one only after its code was written ·
-  check by: 2026-11-30
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/20
 
 *Rationale:* a spec and its review earn their cost where an agent designs a foundation entry itself,
 whose agreement with the current entries has to be checked before code is written on it; where the
@@ -3973,7 +3520,7 @@ partial code; the agent of that attempt writing the spec — the spec would carr
 abandoned code; a spec for every task that writes an invariant — its separate authors already keep
 its check apart from the code.
 
-### WAY-136/1 — When does a task's change need a plan, and who makes and reviews it?
+### WAY-136 — When does a task's change need a plan, and who makes and reviews it?
 
 A change that, as the orchestrator judges from the task document in step 4 before implementation,
 one agent can hold is made without a plan by one author, who writes its foundation entries, its
@@ -3993,7 +3540,6 @@ only slice is the review of the whole change; the one-author review also checks 
 task, every row of its *Settlements to record* and every projected entry it carries, and that
 foundation entries precede the code that depends on them.
 
-- **Change:** new decision
 - **Scope:** task-cycle
 - **Based on:** observation of installed Superpowers 6.4.1 on 2026-10-10 using `sed -n` and
   `grep -n` in Git Bash on Microsoft Windows NT 10.0.26300.0; source root
@@ -4001,9 +3547,9 @@ foundation entries precede the code that depends on them.
   `writing-plans/SKILL.md` — "Each step is one action (2-5 minutes)" and, under "No
   Placeholders", "Steps that describe what to do without showing how (code blocks required for
   code steps)"
-- **Relations:** derives from WAY-13@e6c830b7 · derives from WAY-69@7051f884 · derives from
-  WAY-126@35accf8b · derives from WAY-134@2fc974a9
-- **Verification:** level 2 — an agent compares the cycle and any plan with the decision:
+- **Relations:** derives from WAY-13 · derives from WAY-69 · derives from
+  WAY-126 · derives from WAY-134
+- **Verification:** an agent compares the cycle and any plan with the decision:
   - complies: the orchestrator selects one author from a settled task, including its foundation
     entries, without first writing a plan; the author does its return step and another agent's
     whole-change review checks task, settlement and projected-entry coverage and foundation order;
@@ -4022,11 +3568,7 @@ foundation entries precede the code that depends on them.
     slice code is kept; the planner suppresses useful independent slices because of the execution
     skill or creates unnecessary slices to claim parallel work; the orchestrator treats different
     files alone as proof of independence or overrides the skill's restriction.
-- **Review when:** five cycles of `implement-task` have run under this decision, or a one-author
-  change has been returned as too large in two cycles out of three, or a cycle has returned more
-  than one slice in three of its plan as too large · check by: 2026-11-30
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/20
 
 *Rationale:* a plan earns its cost by dividing a change into work an agent can hold and a reviewer
 can read separately; where the change fits an author, repeated reading and handoffs add cost
@@ -4047,7 +3589,7 @@ completed — its division would be written around unfinished work; a plan shape
 execution method — it hides useful independent work; parallel execution from different file names
 alone — shared state and dependencies can still join the work.
 
-### WAY-137/1 — What decides between places to run that the simplest and cheapest option leaves tied?
+### WAY-137 — What decides between places to run that the simplest and cheapest option leaves tied?
 
 Where the options of a place to run differ in no consequence for the product and more than one of
 them is the simplest and cheapest, the step that settles a project's technology recommends, of
@@ -4056,11 +3598,10 @@ documented in pages an agent can read. For a place to run, how well an agent wor
 decides nothing else: it leaves no option out of the comparison and is weighed against no
 consequence for the product.
 
-- **Change:** new decision
 - **Scope:** project-level, decisions
 - **Based on:** none
-- **Relations:** derives from WAY-100@e7a74a18 · narrows WAY-123@f3b45293
-- **Verification:** level 2 — an agent compares the work with the decision:
+- **Relations:** derives from WAY-100 · narrows WAY-123
+- **Verification:** an agent compares the work with the decision:
   - complies: two hosts that cost the same and take the same upkeep remain after the simplest and
     cheapest rule, and the one with a command-line tool and a deployment script is recommended; a
     host with no command-line tool stays in the comparison and is recommended where it costs less
@@ -4069,9 +3610,7 @@ consequence for the product.
     reason; a host is recommended over a cheaper one because an agent can operate it from a
     terminal; the table of consequences scores how well an agent works with each host beside its
     cost.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/14
 
 *Rationale:* an agent writes the deployment for a place to run and reads what it reports, yet a
 place to run has no types and no language family (WAY-122), so nothing in its comparison says how
@@ -4087,7 +3626,7 @@ falls to the agent's taste, and the property can enter higher unseen; the same t
 choice — a language, a framework or a store of data already counts how well an agent works with it
 through the properties WAY-122 weighs.
 
-### WAY-138/1 — Which option of a technology choice is tested for what choosing it could break, and where do the risks found go?
+### WAY-138 — Which option of a technology choice is tested for what choosing it could break, and where do the risks found go?
 
 The step that settles a project's technology tests the option it recommends for each choice it
 settles, one a constraint of the definition settles included, with a devil's advocate, a pre-mortem
@@ -4098,12 +3637,11 @@ them, and they stand in the table beside the option recommended before the human
 who chooses that option takes its risks, and each risk taken reaches the decision of that choice in
 its *Rationale*, beside the lacks of the option chosen, marked as a hypothesis.
 
-- **Change:** new decision
 - **Scope:** project-level, decisions
 - **Based on:** none
-- **Relations:** derives from WAY-100@e7a74a18 · derives from WAY-122@b343277a · derives from
-  WAY-123@f3b45293
-- **Verification:** level 2 — an agent compares the work with the decision:
+- **Relations:** derives from WAY-100 · derives from WAY-122 · derives from
+  WAY-123
+- **Verification:** an agent compares the work with the decision:
   - complies: a project settles its store of data and its place to run, the table shows beside each
     option recommended the risks the three tests gave, each marked as a hypothesis, and the human
     who takes the recommended host finds those risks in the *Rationale* of its decision beside its
@@ -4113,10 +3651,7 @@ its *Rationale*, beside the lacks of the option chosen, marked as a hypothesis.
     only after the human has chosen; every option of a choice is tested; an agent tests a decision
     written before the project and adds risks to it; a risk taken reaches the decision's *Based on*
     as a fact.
-- **Review when:** the tests run on choices other than a place to run give no risk that the
-  comparison of their choice did not already show · check by: 2026-12-31
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/14
 
 *Rationale:* the critique checks that a comparison is true, not what choosing an option sets off; a
 risk of the option recommended — a plan with no backup of the data, a framework whose next major
@@ -4137,7 +3672,7 @@ facts with sources, and a risk read there passes for one; an entry of its own fo
 assumptions as a kind of entry escape checking (WAY-04); tests on choices decisions of the
 foundation hold — they reopen what was settled.
 
-### WAY-139/1 — What does the-way hold for the skill that deploys a product, and which step checks that a product has one?
+### WAY-139 — What does the-way hold for the skill that deploys a product, and which step checks that a product has one?
 
 The-way holds no skill of a product, only the list of what a product's deployment skill covers: a
 preview of deployments; where the secrets lie and how they are rotated; rollback, with its number of
@@ -4147,11 +3682,10 @@ logs. When a task's outcome deploys the product or changes how or where it runs,
 every item of the list, and where it has none or an item is missing, the task gains an item of its
 To do for that work or the human splits that work into a task of its own.
 
-- **Change:** new decision
 - **Scope:** project-level
 - **Based on:** none
-- **Relations:** derives from WAY-100@e7a74a18
-- **Verification:** level 2 — an agent compares the work with the decision:
+- **Relations:** derives from WAY-100
+- **Verification:** an agent compares the work with the decision:
   - complies: refining a task that moves the product to another host finds that the product's
     deployment skill says nothing of rollback, and the task gains an item of its To do that adds
     it; a task that sets up the product's first deployment finds no deployment skill, and the human
@@ -4161,9 +3695,7 @@ To do for that work or the human splits that work into a task of its own.
     the product runs reaches its cycle with a deployment skill that does not say where the secrets
     lie, and with no item or task for it; the list stands only in a template, and the decision
     points to it.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/14
 
 *Rationale:* how a product is deployed and operated depends on where and how it runs, which differs
 from product to product, so a skill of the-way would fit none of them; what such a skill has to
@@ -4176,7 +3708,7 @@ by its deployment skill, unless the human splits that work off.
 product; a document of operations kept beside the product — no step reads it, so it goes stale
 unread; the list in a template alone — nothing binds the refinement to check it.
 
-### WAY-140/1 — How does a task change something outside the product's repository?
+### WAY-140 — How does a task change something outside the product's repository?
 
 A task's effect outside the product's repository — on a server, in DNS, on keys or on an external
 account — is made only by a human, through a human action the task document names and places before
@@ -4191,13 +3723,11 @@ on the agent's proposal: before the cycle when the cycle's code needs its effect
 account, a key or a database, and in the cycle when it uses code the cycle writes, such as a
 deployment or a DNS record pointing to a new address.
 
-- **Change:** new decision
 - **Scope:** project-level, task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-100@e7a74a18 · derives from WAY-107@0ffcebe1 · derives from
-  WAY-125@f3e6afcf
-- **Verification:** level 2 — an agent compares the task document, or the cycle, with the
-  decision:
+- **Relations:** derives from WAY-100 · derives from WAY-107 · derives from
+  WAY-125
+- **Verification:** an agent compares the task document, or the cycle, with the decision:
   - complies: a task that sends mail through an outside service names opening the account and
     creating its key as human actions before the cycle; a task that moves the product to a new
     address names pointing its DNS record there as a human action in the cycle, and the cycle, its
@@ -4209,9 +3739,7 @@ deployment or a DNS record pointing to a new address.
     is ready with no human action named for it; the agent alone decides that a human action goes in
     the cycle; the cycle finds that its change needs a key the task document does not name and
     creates the key itself.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/14
 
 *Rationale:* an effect outside the repository is not undone by resetting a branch and does not show
 in the diff the human reviews, so the human who makes it sees what it changes; named in the task
@@ -4231,7 +3759,7 @@ first; the agent placing each human action alone — the human performs it and i
 into the work; human actions listed only when someone asks for them — a step the human has to take
 comes to light after the work that needed it.
 
-### WAY-141/1 — How does the installer give Claude Code the guidance in a product's root AGENTS.md?
+### WAY-141 — How does the installer give Claude Code the guidance in a product's root AGENTS.md?
 
 When a product has no root `CLAUDE.md`, the installer creates one whose sole line is `@AGENTS.md`,
 so Claude Code receives the installer's block and the product's other instructions from root
@@ -4239,14 +3767,11 @@ so Claude Code receives the installer's block and the product's other instructio
 installation plan warns about the missing import, and the installer leaves every existing root
 `CLAUDE.md` untouched. The installer writes no `.claude/rules/the-way.md`.
 
-- **Change:** new decision
 - **Scope:** installation
-- **Based on:** claude-code-imports@5b9359fd · claude-code-agents-md@e4007cb8
+- **Based on:** claude-code-imports · claude-code-agents-md
 - **Relations:** none
-- **Verification:** level 1 — invariants: installation-claude-guidance.
-- **Review when:** none
+- **Verification:** invariants: installation-claude-guidance.
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/15
 
 *Rationale:* importing the shared instructions gives Claude Code the product's backlog location
 as well as the installer's guidance through one route. An existing file may hold product guidance,
@@ -4255,7 +3780,7 @@ so the installer reports a missing import before confirmation and leaves the fil
 carrying the product's other instructions; adding the import to an existing file — it changes
 product-owned guidance without its owner's choice.
 
-### WAY-142/1 — What does the breakdown of a project write, and in what form?
+### WAY-142 — What does the breakdown of a project write, and in what form?
 
 The breakdown of a project writes its plan as one document beside the approved definition, whose
 header names the definition and the fingerprint the definition's gate record holds, and whose
@@ -4267,13 +3792,12 @@ plan also holds each open question of the definition, word for word, with where 
 phases with what closes each where it has any, and a log of its changes, each with its reason,
 written in the language of the definition under headings, states and markers kept in English.
 
-- **Change:** new decision
 - **Scope:** project-level
 - **Based on:** none
-- **Relations:** derives from WAY-106@63eddf70 · derives from WAY-118@5af868b3 · derives from
-  WAY-100@e7a74a18
-- **Verification:** level 1 — invariants: project-plan-form. Level 2 for what the plan holds beyond
-  its form — an agent compares the plan with the decision:
+- **Relations:** derives from WAY-106 · derives from WAY-118 · derives from
+  WAY-100
+- **Verification:** invariants: project-plan-form. For what the plan holds beyond its form, an agent
+  compares the plan with the decision:
   - complies: the plan of a Polish definition gives each task's goal in Polish under English
     headings, its header carries the fingerprint the gate recorded, and the projected decision
     `(new) — Who owns a document?` stands in the table of entries with tasks 3 and 5 realizing it
@@ -4281,10 +3805,7 @@ written in the language of the definition under headings, states and markers kep
   - violates: a task stands in the table and again under a heading of its own repeating its
     fields; the goals of a Polish definition's tasks stand in English; a phase names no condition
     that closes it.
-- **Review when:** every task of the first plan this step writes reads `done` or `dropped —
-  approved by human` · check by: 2027-01-31
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/16
 
 *Rationale:* a plan changes with every move of a task, a definition rarely and only through its
 gate, so the two stand apart, and the fingerprint in the plan's header shows when the definition
@@ -4307,19 +3828,18 @@ the external
 deadline repeated in the plan — the definition holds it (WAY-110); the columns named in this
 decision — each change of a column would take a change of the decision.
 
-### WAY-143/1 — What does a task of a project plan end with?
+### WAY-143 — What does a task of a project plan end with?
 
 A task of a project plan ends with something that can be checked in the running product, never with
 a layer of the product put in place; a preparatory task stands in the plan only where a task of the
 plan depends on it, the task it opens the way for. A technical element enters the plan with the
 first task that uses it, or with a preparatory task that task depends on.
 
-- **Change:** new decision
 - **Scope:** project-level
 - **Based on:** none
-- **Relations:** derives from WAY-100@e7a74a18
-- **Verification:** level 1 — invariants: project-plan-check. Level 2 for what a task ends with and
-  where a technical element enters — an agent compares the plan with the decision:
+- **Relations:** derives from WAY-100
+- **Verification:** invariants: project-plan-check. For what a task ends with and where a technical
+  element enters, an agent compares the plan with the decision:
   - complies: a task "the player opens the forest and sees it on a grid of hexagons" also brings in
     the first data files of the game; a preparatory task puts the empty application on the test
     server, and the task of player accounts depends on it; in the-way, a task ends with
@@ -4327,10 +3847,7 @@ first task that uses it, or with a preparatory task that task depends on.
   - violates: a task "the database schema" ends with tables no screen reads; a preparatory task
     sets up logging for the whole product for later use and no task depends on it; the store of data enters
     in a task before the first task that saves anything.
-- **Review when:** every task of the first plan this step writes reads `done` or `dropped —
-  approved by human` · check by: 2027-01-31
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/16
 
 *Rationale:* a task that ends with a layer in place cannot be checked by anyone using the product,
 and its mistakes show only when a later task uses the layer; a task that ends in the running product
@@ -4345,7 +3862,7 @@ preparatory work no task depends on — it grows into a layer of its own; a fiel
 task naming the task it opens the way for — it repeats a dependency the plan already holds; the word
 slice for a task of the plan — the word already names a piece of a task's change.
 
-### WAY-144/1 — How does a project plan show which tasks can be worked on side by side?
+### WAY-144 — How does a project plan show which tasks can be worked on side by side?
 
 The dependencies of a project plan constrain the start of a task's cycle, not its refinement: a
 task starts its cycle only when the tasks it depends on are done, while refinement waits for
@@ -4354,12 +3871,11 @@ side by side when neither task depends on the other, directly or through other t
 holds no field naming the tasks a task can be worked on beside, and its order of cycle starts
 follows the dependencies.
 
-- **Change:** new decision
 - **Scope:** project-level, task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-106@63eddf70 · derives from WAY-100@e7a74a18
-- **Verification:** level 1 — invariants: project-plan-form. Level 2 for cycle starts and refinement waits — an
-  agent compares the plan, or the work on it, with the decision:
+- **Relations:** derives from WAY-106 · derives from WAY-100
+- **Verification:** invariants: project-plan-form. For cycle starts and refinement waits, an agent
+  compares the plan, or the work on it, with the decision:
   - complies: two cycles start together because neither task depends on the other and their
     dependencies are done; two dependent tasks are refined together, with only a question needing
     an unfinished result waiting for its named task; a task needing a saved state lists the task
@@ -4368,9 +3884,7 @@ follows the dependencies.
     ordered by a goal picked in an interview against their dependencies; a task starts its cycle
     before a dependency is done, or refinement waits for every dependency without a question
     requiring those results.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/19
 
 *Rationale:* the dependencies already say which tasks can go together; a second field derived from
 them is a copy that drifts as soon as one dependency changes, and its lists grow long enough that
@@ -4382,7 +3896,7 @@ before its prerequisites are delivered; only a question needing their result ear
 that grows past reading; the order tilted by a goal the human picks in an interview before the plan
 — the definition already states the goal and its risks, and the human corrects the finished plan.
 
-### WAY-145/1 — Who sets where an open question of an approved project definition is resolved?
+### WAY-145 — Who sets where an open question of an approved project definition is resolved?
 
 Once a project definition has passed its readiness gate, the place of resolution it gives an open
 question is the question's first assignment, and the plan decides from then on where the question
@@ -4393,13 +3907,12 @@ through its readiness gate again, while a move that changes which task writes a 
 into the foundation is the human's to decide. A question that arises only in the breakdown goes to
 the human before the plan is handed over.
 
-- **Change:** new decision
 - **Scope:** project-level
 - **Based on:** none
-- **Relations:** derives from WAY-106@63eddf70 · derives from WAY-118@5af868b3 · derives from
-  WAY-126@35accf8b
-- **Verification:** level 1 — invariants: project-plan-check. Level 2 for moves, answers and new
-  questions — an agent compares the plan with the decision:
+- **Relations:** derives from WAY-106 · derives from WAY-118 · derives from
+  WAY-126
+- **Verification:** invariants: project-plan-check. For moves, answers and new questions, an agent
+  compares the plan with the decision:
   - complies: the breakdown moves the question on a session's secret from the task of the test
     server to the task of accounts, where sessions first exist, and writes why in the log of
     changes; the breakdown finds that nothing says whether the test server is public from the first
@@ -4409,9 +3922,7 @@ the human before the plan is handed over.
     projected decision to another task is made without the human; the breakdown answers a question
     from its own reading of the code; a question found in the breakdown waits in a task as an
     unknown.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/16
 
 *Rationale:* the place a definition gives a question is set before the tasks exist, so the
 breakdown is the first to see where the question meets the work; moving it changes the way to the
@@ -4428,7 +3939,7 @@ definition's exclusions; a question moved without a word — a reader takes it f
 own placement; only the human answering a question the breakdown resolves — the human would restate
 what the foundation already holds.
 
-### WAY-146/1 — What checks a project plan before it is handed over?
+### WAY-146 — What checks a project plan before it is handed over?
 
 Before a project plan is handed over, a script checks the form it reads the plan by and what the
 plan's structure decides: each projected entry of the definition has tasks that realize it, exactly
@@ -4441,21 +3952,18 @@ technical element enters with the first task that uses it, whether each question
 definition puts it or the log of changes gives its move, and whether a quoted answer settles its
 question. A check a script can make is never left to the critique.
 
-- **Change:** new decision
 - **Scope:** project-level
 - **Based on:** none
-- **Relations:** derives from WAY-100@e7a74a18 · derives from WAY-120@81f84997
-- **Verification:** level 1 — invariants: project-plan-form · project-plan-check. Level 2 for the
-  critique — an agent compares the work with the decision:
+- **Relations:** derives from WAY-100 · derives from WAY-120
+- **Verification:** invariants: project-plan-form · project-plan-check. For the critique, an agent
+  compares the work with the decision:
   - complies: the critique finds a task ending with tables no screen reads and a question placed in
     another task than the definition names with no line in the log, while the script reports a
     projected decision no task writes;
   - violates: the critique is asked whether every item of In scope has a task; the plan reaches the
     human with a question the script would have found unplaced; the agent that wrote the plan
     judges its own tasks.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/16
 
 *Rationale:* a rule a script can decide holds every time the script runs, while an agent asked the
 same thing answers well most of the time and costs a reading of the whole plan; what a script
@@ -4468,26 +3976,23 @@ applies and judges them; checks of a plan's form across several copies of each t
 each task once has no copies to compare; an agent checking what a script decides — it costs more
 and sometimes misses.
 
-### WAY-147/1 — How is a task of a project plan named, and what does its cycle take from the name?
+### WAY-147 — How is a task of a project plan named, and what does its cycle take from the name?
 
 A project plan gives each of its tasks a name of lower-case words joined by hyphens, which no other
 task of the plan holds and which stays with the task while the plan changes. A task of the plan
 enters its cycle under that name, and the cycle names its record by it.
 
-- **Change:** new decision
 - **Scope:** project-level, task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-100@e7a74a18
-- **Verification:** level 1 — invariants: project-plan-form. Level 2 for the cycle — an agent
-  compares the cycle with the decision:
+- **Relations:** derives from WAY-100
+- **Verification:** invariants: project-plan-form. For the cycle, an agent compares the cycle with
+  the decision:
   - complies: the task `forest-on-hex-grid` of a plan keeps its cycle record under
     `docs/task-cycles/forest-on-hex-grid/`;
   - violates: the cycle of a task of a plan names its record by a name it makes up; a task's name
     changes when its goal is reworded; a plan carries a second table of its tasks with titles for a
     tracker.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/16
 
 *Rationale:* a task's cycle record and its entry in the product's backlog meet its row in the plan
 through its name, so a name that changes leads a reader to the wrong work; words, because a number
@@ -4499,7 +4004,7 @@ differently; the plan's number as the name — it says nothing where it is read;
 plan's tasks with titles for a tracker — a second copy of the tasks, which the product's backlog
 already holds.
 
-### WAY-148/1 — How do task-cycle stages pass their work to the orchestrator?
+### WAY-148 — How do task-cycle stages pass their work to the orchestrator?
 
 Every task-cycle stage passes its full handoff and report through files in the cycle's reports
 directory, while its messages carry routing, stage status, paths, commits, a concise check result
@@ -4514,12 +4019,11 @@ whole-source reads by the agent performing the work, check and review duties wit
 owners and the independent assessor's filtered inputs
 (WAY-10), reusing a borrowed method's existing brief and report rather than duplicating them.
 
-- **Change:** new decision
 - **Scope:** task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-125@f3e6afcf · derives from WAY-10@db68de1c
-- **Verification:** level 2 — an agent compares the stage handoff, return, report and
-  orchestrator's ruling with the decision:
+- **Relations:** derives from WAY-125 · derives from WAY-10
+- **Verification:** an agent compares the stage handoff, return, report and orchestrator's ruling
+  with the decision:
   - complies: a short return names its complete report, commit range and failed or unchecked
     checks, and the record permits resumption from files; the orchestrator reads the evidence
     of an unresolved question before deciding it; a missing report is repaired before the next
@@ -4530,9 +4034,7 @@ owners and the independent assessor's filtered inputs
     settled from the short return alone; a selective read replaces a mandatory whole-source
     read by the responsible agent; the independent assessor receives the operational handoff or
     author's reasoning; the orchestrator reloads completed stage material for routine progression.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/21
 
 *Rationale:* full material kept outside routine coordination avoids repeated context while
 preserving evidence a ruling needs and a place from which work can resume. Short returns make
@@ -4545,25 +4047,22 @@ resumption; a second universal brief and report contract — duplicated obligati
 proving completeness; rereading every stage's evidence during ordinary coordination — it pays
 again for work already delegated; automatic compaction — it does not choose the evidence a ruling needs.
 
-### WAY-149/1 — When does the deliberate break of a return-step check take place?
+### WAY-149 — When does the deliberate break of a return-step check take place?
 
 A test added in a task's return step takes no deliberate break of its own: like every invariant
 test, it is seen failing once, with the command that later shows it passing (WAY-08), and the
 review of the change reads it (WAY-10).
 
-- **Change:** new decision
 - **Scope:** task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-10@db68de1c · derives from WAY-08@2343e09f · derives from
-  WAY-69@7051f884
-- **Verification:** level 2 — an agent compares the cycle's tests and review with the decision:
+- **Relations:** derives from WAY-10 · derives from WAY-08 · derives from
+  WAY-69
+- **Verification:** an agent compares the cycle's tests and review with the decision:
   - complies: a test added in the return step fails on the behaviour broken for a moment, passes
     once it is restored, and the review of the change reads it;
   - violates: a return-step test waits for an assessment or for a reviewer's break before it is
     accepted; a return-step test is accepted on a passing run alone.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/17
 
 *Rationale:* a test added late is accepted as an early one is: the failure seen shows it can fail,
 and the review reads it with the change; a later step of its own would add nothing those two do not
@@ -4572,7 +4071,7 @@ show.
 and the settlement of its remarks — a stage for each late test, for what the failure seen and the
 review already show; accepting a test on a passing product run alone — it may detect nothing.
 
-### WAY-150/1 — How do the-way skills choose which product foundation material to read?
+### WAY-150 — How do the-way skills choose which product foundation material to read?
 
 The-way skills read a product's foundation selectively: the agent names the parts its work touches
 from the files it changes through the part map's rules for assigning files, or, where the work names
@@ -4583,12 +4082,11 @@ the work needs, reading more where relevance is uncertain. The selection is neit
 compared with every *Scope* of the log, and the search of the whole foundation (WAY-33) and the
 whole reading of templates, rules and examples keep their domain.
 
-- **Change:** new decision
 - **Scope:** elements-common, decisions, invariants, glossary, part-map, environment-facts,
   project-level, task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-21@586e4a38 · derives from WAY-33@65f8dda4
-- **Verification:** level 2 — an agent compares the reading with the work and current foundation:
+- **Relations:** derives from WAY-21 · derives from WAY-33
+- **Verification:** an agent compares the reading with the work and current foundation:
   - complies: a change to a file of `gate` reads the decisions whose *Scope* names `gate`, those
     the task names, the invariants naming `gate` or `every` and the entries they link to; a project
     with no file yet names its parts from the responsibilities it changes; the search of the whole
@@ -4596,9 +4094,7 @@ whole reading of templates, rules and examples keep their domain.
   - violates: only decisions already named by the task are read; a search hit replaces its whole
     entry; a template is reduced to selected excerpts; the work records its selection and compares
     it with every *Scope* of the log.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/18
 
 *Rationale:* a growing foundation contains more material than each piece of work needs, while
 unconditional loading spends attention on unrelated rules. The parts a change's files belong to
@@ -4611,7 +4107,7 @@ reading limit — a difficult case loses needed context; a separate maintained i
 account can drift without resolving semantic relevance; a record of the selection compared with
 every *Scope* of the log — it costs every piece of work and records reading, not understanding.
 
-### WAY-151/1 — How much of large project definitions and existing plans does plan-project read?
+### WAY-151 — How much of large project definitions and existing plans does plan-project read?
 
 The-way's plan-project limits reading of large project definitions and existing plans to the
 material needed for the work, starting from complete inventories of scope items, projected entries,
@@ -4623,21 +4119,18 @@ the inputs to the existing readiness and plan checks.
 The plan's one independent critique reads the complete plan and every source unit needed for its
 whole semantic judgment under WAY-146, independently of the author's selection.
 
-- **Change:** new decision
 - **Scope:** project-level
 - **Based on:** none
-- **Relations:** derives from WAY-146@7677c3cd
-- **Verification:** level 2 — an agent compares the reading, inventories and verification record
-  with the authoritative definition and plan:
+- **Relations:** derives from WAY-146
+- **Verification:** an agent compares the reading, inventories and verification record with the
+  authoritative definition and plan:
   - complies: resuming an unfinished plan inventories all tasks, assignments and exact questions,
     then reads a distant dependency and projected-entry writer that affect the resumed work;
     whole-original checks run and the critic reads the whole plan with all needed sources;
   - violates: only nearby rows are inspected and a distant dependency is missed; a readiness or plan
     check receives a reduced copy; a new breakdown omits a scope item; the critic's review is
     bounded by the author's excerpts or leaves some tasks and questions unjudged.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/18
 
 *Rationale:* large project documents hold context for many tasks, while resumed work usually
 changes only some of it. Complete inventories expose distant assignments and dependencies before
@@ -4648,7 +4141,7 @@ repeatedly; reading only the unfinished section — distant dependencies and set
 checking reduced copies or limiting the critic to selected material — omissions can agree with
 the reduced input and pass unseen; maintaining a second plan for reading — copies drift.
 
-### WAY-152/1 — How does the project orchestrator lead a handed-over plan?
+### WAY-152 — How does the project orchestrator lead a handed-over plan?
 
 The project orchestrator leads a handed-over project plan from tasks to refine to human-accepted
 tasks ready for their cycles and keeps the plan's states consistent with evidence, proposing a
@@ -4658,19 +4151,16 @@ project orchestrator names project closure as the next step and says that no clo
 exists, without performing either work. After a task merges, leading the plan does not recheck
 ready dependent task documents: the task cycle checks and adapts its sources at its own start.
 
-- **Change:** new decision
 - **Scope:** project-level
 - **Based on:** none
-- **Relations:** derives from WAY-106@63eddf70 · derives from WAY-124@4fbad55c · derives from
-  WAY-144@d5802c22
-- **Verification:** level 2 — an agent compares the leading session with the decision:
+- **Relations:** derives from WAY-106 · derives from WAY-124 · derives from
+  WAY-144
+- **Verification:** an agent compares the leading session with the decision:
   - complies: the human changes a proposed round, the project orchestrator coordinates its refinement
     and maintains evidenced states, and the human starts a ready task's cycle separately;
   - violates: leading launches a cycle, closes the project, or re-refines every ready dependent
     task after a merge instead of leaving the cycle's source check to its start.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/19
 
 *Rationale:* the human needs one conversation that keeps a plan moving and its progress visible.
 Keeping task execution and closure separate bounds that conversation, while checking current
@@ -4679,7 +4169,7 @@ sources where implementation begins avoids repeating a check whose inputs can ch
 point where the human starts implementation; automatically reopening ready dependants after each
 merge — repeated refinement can be invalidated again before implementation.
 
-### WAY-153/1 — What evidence supports a task state in a project plan?
+### WAY-153 — What evidence supports a task state in a project plan?
 
 At each leading session's start a Git-only state reader uses existing recorded task provenance
 to establish that cycle traces belong to the current plan's task and proposes, with exact
@@ -4696,23 +4186,20 @@ resolves outcomes Git cannot establish through the product's chosen PR tool or a
 when that tool is absent, and brings a closed-unmerged PR or a trace conflicting with the plan
 to the human without automatically correcting the plan.
 
-- **Change:** new decision
 - **Scope:** project-level
 - **Based on:** none
-- **Relations:** derives from WAY-38@6e10c3fd · derives from WAY-142@e53cd0ac · derives from
-  WAY-147@8cfe543f
-- **Verification:** level 1 — invariants: project-plan-state-evidence ·
-  project-plan-state-subprocesses. Level 2 for applying proposals and resolving PR outcomes —
-  an agent compares the evidence and leading session with the decision:
+- **Relations:** derives from WAY-38 · derives from WAY-142 · derives from
+  WAY-147
+- **Verification:** invariants: project-plan-state-evidence · project-plan-state-subprocesses. For
+  applying proposals and resolving PR outcomes, an agent compares the evidence and leading session
+  with the decision:
   - complies: the project orchestrator applies supported transitions with a reason and evidence
     in the plan's log, resolves an unchecked PR outcome through the product's chosen PR tool,
     and shows a closed-unmerged PR to the human without automatic correction;
   - violates: the project orchestrator treats an unchecked observation as completion without
     resolving it, silently normalizes a conflicting trace, or guesses the PR outcome when the
     product's PR tool is absent instead of asking the human.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/19
 
 *Rationale:* evidence-backed progress prevents a stale plan from hiding delivered work without letting
 an uncertain observation claim delivery. Separating observation from the plan write keeps the
@@ -4721,7 +4208,7 @@ human-facing judgment visible; unresolved host outcomes cost a lookup or a quest
 executable; inferring completion from a local trace — unfinished or abandoned work looks delivered;
 automatically normalizing conflicts — a plausible state hides the discrepancy the human needs.
 
-### WAY-154/1 — How do agents exchange a project task refinement and keep its result?
+### WAY-154 — How do agents exchange a project task refinement and keep its result?
 
 Project refinement resumes from the plan, task documents and one ignored conversation file per
 task at `.runs/project-refinement/<task-name>.md`, through which fresh parallel refiners, the
@@ -4738,19 +4225,16 @@ ready for cycle and removes only that conversation after all settled answers and
 survive in the task document; an explicit wait is logged and its task is proposed again when the
 named prerequisite is done.
 
-- **Change:** new decision
 - **Scope:** project-level
 - **Based on:** none
-- **Relations:** derives from WAY-124@4fbad55c · derives from WAY-142@e53cd0ac · derives from
-  WAY-144@d5802c22 · derives from WAY-147@8cfe543f
-- **Verification:** level 2 — an agent compares the turns, task documents and plan with the decision:
+- **Relations:** derives from WAY-124 · derives from WAY-142 · derives from
+  WAY-144 · derives from WAY-147
+- **Verification:** an agent compares the turns, task documents and plan with the decision:
   - complies: parallel refiners write separate documents, a fresh refiner keeps each settled
     answer and source, and interrupted acceptance resumes without guessing human agreement;
   - violates: the project orchestrator rewrites a task body or carries questions in prompts,
     an agent's readiness stands for human acceptance, or cleanup loses the only settled answer.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/19
 
 *Rationale:* a file-mediated exchange keeps the project orchestrator from becoming a content relay
 and lets another session resume. The retained task document carries the result that later work
@@ -4759,7 +4243,7 @@ needs; ownership and serialized turns cost explicit coordination but prevent com
 answers; retaining the temporary exchange as the task result — later work reconstructs settlements
 from discussion; deleting the exchange before durable transfer — provenance disappears.
 
-### WAY-155/1 — What may the answering agent settle during a refinement round?
+### WAY-155 — What may the answering agent settle during a refinement round?
 
 The answering agent answers a refinement question only with a quotation and source from the
 definition, plan, foundation or other task documents, or with a factual code observation naming
@@ -4772,19 +4256,16 @@ and complete wording, together with every quotation answer as question, quotatio
 quotation answer the human strikes becomes a question to the human, whose answers return to the
 conversations before fresh refiner turns.
 
-- **Change:** new decision
 - **Scope:** project-level
 - **Based on:** none
-- **Relations:** derives from WAY-113@d3e5cbfa · derives from WAY-134@2fc974a9 · derives from
-  WAY-140@6e564611
-- **Verification:** level 2 — an agent compares questions, answers, sources and the human package:
+- **Relations:** derives from WAY-113 · derives from WAY-134 · derives from
+  WAY-140
+- **Verification:** an agent compares questions, answers, sources and the human package:
   - complies: a code observation settles current behavior, a documented choice settles intended
     behavior, and a rejected quotation returns once as a human question for all affected tasks;
   - violates: code or an inference supplies a requirement, a quotation answer is hidden from the
     package, or two tasks ask the human the same choice separately.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/19
 
 *Rationale:* an answer grounded in a source saves the human from restating an existing settlement,
 while distinguishing observation from prescription prevents accidental behavior becoming a rule.
@@ -4794,7 +4275,7 @@ question; one shared question avoids repeated decisions.
 code as authority for intended behavior — an accident becomes a requirement; hiding quotation
 answers until final approval — the human cannot inspect the basis of the refined tasks.
 
-### WAY-156/1 — How does project leading route a plan or definition change?
+### WAY-156 — How does project leading route a plan or definition change?
 
 An in-scope task split, new task, order or dependency change is delegated to a plan-project
 agent and logged with its reason, while a scope change and a reassignment of the task writing a
@@ -4806,20 +4287,17 @@ findings returned to that subagent, and human approval given through the project
 fresh subagent then checks the plan again through plan-project step 0, and no task gains ready
 for cycle while that definition gate remains open.
 
-- **Change:** new decision
 - **Scope:** project-level
 - **Based on:** none
-- **Relations:** derives from WAY-118@5af868b3 · derives from WAY-120@81f84997 · derives from
-  WAY-145@4312fd6b
-- **Verification:** level 2 — an agent compares the edits, gate, critique and rechecked plan:
+- **Relations:** derives from WAY-118 · derives from WAY-120 · derives from
+  WAY-145
+- **Verification:** an agent compares the edits, gate, critique and rechecked plan:
   - complies: a local text edit is made from material already read, a subagent completes the
     full gate, the human approves through the project orchestrator, and a fresh agent checks
     the plan before readiness resumes;
   - violates: a wider definition edit is made without delegation, the project orchestrator runs
     its gate itself, or a task becomes ready against a changed but unapproved definition.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/19
 
 *Rationale:* a project can change direction while refinement proceeds, but its approved definition
 is the basis of every task. Keeping the full gate and fresh plan check costs another review while
@@ -4829,7 +4307,7 @@ for text already available without making leading responsible for wider executio
 additional context; every local edit delegated — a transfer costs more than the already bounded
 edit; bypassing the gate for a small change — size does not establish that its meaning stayed.
 
-### WAY-157/1 — How does the task-cycle orchestrator wait for an agent?
+### WAY-157 — How does the task-cycle orchestrator wait for an agent?
 
 The task-cycle orchestrator waits for an agent's completion through the harness's completion
 notification or one blocking wait set to the longest duration the available tool and active
@@ -4837,20 +4315,17 @@ instructions permit, without repeated status polls or sleeps between checks. It 
 wait only after a genuine timeout or an interruption leaves the agent's work pending, handling any
 returned question or new input before continuing.
 
-- **Change:** new decision
 - **Scope:** task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-125@f3e6afcf
-- **Verification:** level 2 — an agent compares the waiting calls and their results with the
-  tool's contract and active instructions:
+- **Relations:** derives from WAY-125
+- **Verification:** an agent compares the waiting calls and their results with the tool's contract
+  and active instructions:
   - complies: a native completion notification resumes coordination without polling; one blocking
     wait ends on completion; a wait that reaches its permitted limit is
     renewed because the agent is still working; an early question is handled before waiting again;
   - violates: the orchestrator checks status at short intervals, sleeps between polls, or treats
     a timeout as completion; it exceeds an active instruction's wait limit to reach the tool's maximum.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/21
 
 *Rationale:* repeated checks consume coordination steps without advancing the delegated work.
 Blocking until an event or the permitted limit keeps the next action tied to information; a finite
@@ -4858,26 +4333,22 @@ limit still needs renewal when the work outlasts it.
 *Rejected:* short waits followed by status checks or sleeps — they spend attention without new
 evidence; an unlimited wait assumed for every tool — capabilities and active instructions can bound it.
 
-### WAY-158/1 — Who reads the full diff of a task-cycle change or slice?
+### WAY-158 — Who reads the full diff of a task-cycle change or slice?
 
 The independent code reviewer reads the full diff of a one-author change or planned slice, while
 the task-cycle orchestrator uses its changed-file list with added and removed line counts and the
 reviewer's verdict for routine progression. A question, finding or disputed or incomplete evidence
 still calls for the orchestrator's relevant source and report reading under WAY-148.
 
-- **Change:** new decision
 - **Scope:** task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-136@986ff0ac · derives from WAY-148@4c7fab3a
-- **Verification:** level 2 — an agent compares the review range and coordination record with
-  the change:
+- **Relations:** derives from WAY-136 · derives from WAY-148
+- **Verification:** an agent compares the review range and coordination record with the change:
   - complies: the independent reviewer reads the entire committed range and returns its verdict,
     while the orchestrator uses that verdict and the range's file and line-count summary;
   - violates: the reviewer sees only a summary, or the orchestrator reads the full diff again
     for routine progression; an unresolved finding is settled without reading its evidence.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/21
 
 *Rationale:* the independent reviewer already reads the change for correctness, so repeating that
 read in coordination costs attention. The trade-off is that coordination does not catch what the
@@ -4885,7 +4356,7 @@ reviewer misses; independent foundation assessment where required and human revi
 *Rejected:* the orchestrator routinely reading the full diff beside the reviewer — duplicated
 reading dominates coordination; giving the reviewer only a summary — the actual change escapes review.
 
-### WAY-159/1 — When does the task-cycle orchestrator rely on focused-check evidence?
+### WAY-159 — When does the task-cycle orchestrator rely on focused-check evidence?
 
 The author or executor runs the focused checks of a one-author change or planned slice and records
 each command, exit code and full output in the cycle's reports directory; the orchestrator relies
@@ -4893,20 +4364,17 @@ on that evidence instead of rerunning those checks for routine progression. A re
 command, exit code or full output is incomplete and returns to its agent for repair before dependent
 work proceeds, while a change, failure or disputed evidence still calls for affected verification.
 
-- **Change:** new decision
 - **Scope:** task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-148@4c7fab3a · derives from WAY-13@e6c830b7
-- **Verification:** level 2 — an agent compares the executor's check evidence and subsequent
-  coordination with the committed range:
+- **Relations:** derives from WAY-148 · derives from WAY-13
+- **Verification:** an agent compares the executor's check evidence and subsequent coordination with
+  the committed range:
   - complies: the executor records the command, exit code and full output, and the orchestrator
     proceeds without another run; a missing exit code returns for repair; a correction runs its
     affected checks again;
   - violates: a bare claim that tests passed substitutes for an unrecorded check, the orchestrator
     reruns a check solely because the executor returned, or a changed range uses stale evidence.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/21
 
 *Rationale:* repeating a completed check for coordination spends time without checking another
 state. Recorded execution can be inspected when a result is uncertain; a changed state or an
@@ -4915,7 +4383,7 @@ unresolved failure needs new evidence rather than reuse by habit.
 a claim without execution evidence — a check that never ran can appear complete; never rerunning
 after a correction — the evidence would describe an earlier change.
 
-### WAY-160/1 — How does the task-cycle orchestrator run and read the completed change's gate?
+### WAY-160 — How does the task-cycle orchestrator run and read the completed change's gate?
 
 The task-cycle orchestrator itself runs the product's full required gate on the completed change
 and keeps its full output in a file in the cycle's reports directory. Its context receives the
@@ -4923,20 +4391,17 @@ command's exit code, summary, error and failure lines, warnings and every `unche
 while the full output remains available for a question, finding or disputed or incomplete evidence
 under WAY-148.
 
-- **Change:** new decision
 - **Scope:** task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-16@5c1d60d4 · derives from WAY-63@f16348c8 · derives from WAY-148@4c7fab3a
-- **Verification:** level 2 — an agent compares the gate invocation, retained output and the
-  material returned to the orchestrator's context:
+- **Relations:** derives from WAY-16 · derives from WAY-63 · derives from WAY-148
+- **Verification:** an agent compares the gate invocation, retained output and the material returned
+  to the orchestrator's context:
   - complies: the orchestrator runs the full required gate, retains its complete output and reads
     its exit code and summary with all errors, failures, warnings and unchecked results;
   - violates: the focused-check reports replace the completed change's gate, the full output is
     lost, only a green summary is returned despite warnings, or the whole output is loaded for
     routine progression.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/21
 
 *Rationale:* the completed change needs verification across the work that made it, and the
 orchestrator owns that execution. Keeping the complete evidence while bringing its actionable
@@ -4945,7 +4410,7 @@ results into coordination limits context without hiding failed or unchecked work
 needs action; an exit code alone — warnings and unchecked work can remain despite success;
 executor checks in place of the completed change's gate — the combined result is never checked.
 
-### WAY-161/1 — Which findings of the review of the whole change are fixed, and how does the request carry the rest?
+### WAY-161 — Which findings of the review of the whole change are fixed, and how does the request carry the rest?
 
 In the review of the whole change on either route, a finding blocks when the reviewer grades it
 Critical or Important and has not itself marked it as outside the task's scope, and a review that
@@ -4957,7 +4422,6 @@ another, each with the reviewer's words and its place in the code, while the hum
 findings outside the scope become new tasks and creates them. The orchestrator moves no finding
 from one of these kinds to another.
 
-- **Change:** new decision
 - **Scope:** task-cycle
 - **Based on:** observation of installed Superpowers 6.4.1 on 2026-10-17 using `cat -n` in Git Bash
   (GNU bash 5.3.15) on MINGW64_NT-10.0-26300; source root
@@ -4968,9 +4432,9 @@ from one of these kinds to another.
   "Minor (Nice to Have)"; `requesting-code-review/SKILL.md` — "Note Minor issues for later";
   `subagent-driven-development/SKILL.md` — "Point it at the ledger's deferred-minor and parked lines
   so it can triage which must be fixed before merge."
-- **Relations:** derives from WAY-136@986ff0ac · derives from WAY-125@f3e6afcf · derives from
-  WAY-140@6e564611 · derives from WAY-100@e7a74a18
-- **Verification:** level 2 — an agent compares the cycle and its request with the decision:
+- **Relations:** derives from WAY-136 · derives from WAY-125 · derives from
+  WAY-140 · derives from WAY-100
+- **Verification:** an agent compares the cycle and its request with the decision:
   - complies: the review of a one-author change returns only Minor findings, and the change goes
     to its request without a fix, the request listing each of them with the reviewer's words and
     its place in the code; the reviewer sets aside under "Declined to judge" a behaviour the task
@@ -4982,10 +4446,7 @@ from one of these kinds to another.
     declined to judge, or moves an Important finding within the task to the list for new tasks;
     the cycle adds a task to the product's backlog itself; the Minor findings stand only in the
     cycle's reports the request links to.
-- **Review when:** a finding the reviewer graded Minor or marked outside the task's scope has, in a
-  merged change, left a requirement of its task unmet · check by: 2026-12-31
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/22
 
 *Rationale:* the grade a reviewer gives already says how much a finding matters, so taking it as
 the line between what blocks and what does not adds no second label to the borrowed review and
@@ -5011,7 +4472,7 @@ orchestrator would choose which lines the reviewer looks at again, the lever lef
 alone, while a behaviour the task requires that the reviewer set aside still reaches the human in
 the request's list, whose reading is the remedy.
 
-### WAY-162/1 — How does a code review of a task's change end when its findings block?
+### WAY-162 — How does a code review of a task's change end when its findings block?
 
 In the review of the whole change — of a one-author change, or the final review of a planned
 change's whole branch — and in each code review the cycle runs after it, for a settlement of the
@@ -5027,7 +4488,6 @@ after the review of the whole change, the findings that do not block go unfixed 
 lists as WAY-161 gives them; the fix loop of each single slice of a plan stays as WAY-125 and
 WAY-136 adopt it.
 
-- **Change:** new decision
 - **Scope:** task-cycle
 - **Based on:** observation of installed Superpowers 6.4.1 on 2026-10-17 using `cat -n` in Git Bash
   (GNU bash 5.3.15) on MINGW64_NT-10.0-26300; source root
@@ -5037,9 +4497,9 @@ WAY-136 adopt it.
   "There is no second fix wave — residual load-bearing findings surface to your human partner when
   finishing-a-development-branch presents the options." · "New Critical/Important breakage in the
   fix diff joins the open findings list."
-- **Relations:** derives from WAY-161@cddc297e · derives from WAY-136@986ff0ac · derives from
-  WAY-125@f3e6afcf · derives from WAY-100@e7a74a18
-- **Verification:** level 2 — an agent compares the cycle and its request with the decision:
+- **Relations:** derives from WAY-161 · derives from WAY-136 · derives from
+  WAY-125 · derives from WAY-100
+- **Verification:** an agent compares the cycle and its request with the decision:
   - complies: after the review of the fix of a one-author change an Important finding stays open,
     and the cycle runs no further fix and opens a draft request marked `blocked` with that
     finding's place and reason, what the fix tried and the cycle's cost so far; the review of a
@@ -5051,10 +4511,7 @@ WAY-136 adopt it.
     moved into the settlements of the independent assessment; a new Important finding in the fix
     is left out of the blocked request because the findings it set out to fix were fixed; a Minor
     finding of a later code review stands only in that review's report.
-- **Review when:** two of the first five cycles of `implement-task` run under this decision open a
-  request blocked by a finding left after the review of a fix · check by: 2026-12-31
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/22
 
 *Rationale:* one fix and one review of it settle an ordinary task; a finding that survives the
 review of its fix shows a loop that further rounds do not close, and each further round costs as
@@ -5083,7 +4540,7 @@ their reports, which the record links — a list the request only links to is a 
 one more round for a finding the fix introduced — a fix could trade one blocking finding for
 another without end.
 
-### WAY-163/1 — What does the cycle run before it opens a request its code review blocked?
+### WAY-163 — What does the cycle run before it opens a request its code review blocked?
 
 Before the cycle opens a request that a remaining blocking finding blocks (WAY-162), it runs the
 product's full required gate on the change and writes its cycle record with its record of stages,
@@ -5093,12 +4550,11 @@ that has not run on that code. After the human's decision on the request, the wo
 starts with that reconciliation and runs the others on code that has passed review or that the
 human accepted despite the finding.
 
-- **Change:** new decision
 - **Scope:** task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-162@4c6feb35 · derives from WAY-11@e882a9df · derives from
-  WAY-10@db68de1c
-- **Verification:** level 2 — an agent compares the cycle and its request with the decision:
+- **Relations:** derives from WAY-162 · derives from WAY-11 · derives from
+  WAY-10
+- **Verification:** an agent compares the cycle and its request with the decision:
   - complies: a cycle blocked after the review of the final fix runs the full gate, writes its
     record, opens the blocked request naming the reconciliation with the target branch, the return
     step and the independent assessment as not run, and runs them once the human accepts the code
@@ -5108,9 +4564,7 @@ human accepted despite the finding.
     its affected code review run before a request blocked by an earlier review; the blocked request
     opens without a run of the gate on the change; a request whose code the human accepted despite
     the finding is merged without its return step.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/22
 
 *Rationale:* work an agent does on code its review has not accepted is done again once the fix the
 human's decision calls for is made, while a run of the gate costs little and shows the human where
@@ -5126,7 +4580,7 @@ human would not see where the code stands against the rest of the product's chec
 reconciliation with the target branch before the blocked request — its review and assessment would
 run on code the review did not accept, and the merge is made again after the fix.
 
-### WAY-164/1 — What does the author of a change check of its own work before review?
+### WAY-164 — What does the author of a change check of its own work before review?
 
 Before its work goes to review, the author of a one-author change names the requirement of the
 task, and the executor of each slice the requirement of its slice read against the task, that its
@@ -5134,13 +4588,12 @@ work most likely does not meet, writes a check that would catch that, and states
 which requirement, which check and what the check showed. The reviewer reads that report, and the
 request lists what each such check showed among its test evidence.
 
-- **Change:** new decision
 - **Scope:** task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-136@986ff0ac · derives from WAY-148@4c7fab3a · derives from
-  WAY-100@e7a74a18
-- **Verification:** level 2 — an agent compares the author's or executor's report, the review and
-  the request with the decision:
+- **Relations:** derives from WAY-136 · derives from WAY-148 · derives from
+  WAY-100
+- **Verification:** an agent compares the author's or executor's report, the review and the request
+  with the decision:
   - complies: the author of a one-author change names the requirement its work most likely misses,
     writes a test for it, and reports that the test failed and what it changed before review; the
     executor of each slice reports the same for its slice; the reviewer is given those reports, and
@@ -5148,11 +4601,7 @@ request lists what each such check showed among its test evidence.
   - violates: an author reports only that its suite passes; the executor of a slice reports no such
     check; the request leaves out what the checks showed; the author's check stands in for the
     deliberate break of an invariant's check.
-- **Review when:** five cycles of `implement-task` have run under this decision and no check written
-  for the requirement a work most likely does not meet has failed on that work · check by:
-  2026-12-31
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/22
 
 *Rationale:* a suite its author writes passes because it tests what the author meant, so a passing
 suite is no evidence that the work meets the task; turning to the requirement the work most likely
@@ -5165,7 +4614,7 @@ which an agent other than the code's author writes (WAY-69).
 *Rejected:* the author of a one-author change alone — in a larger change made from a plan, no agent
 would attack its own work before review.
 
-### WAY-165/1 — What does each matter of an agent's way to the running product ask?
+### WAY-165 — What does each matter of an agent's way to the running product ask?
 
 Of the matters of an agent's way to the running product, the logs ask where the record of what the
 running product does goes and how an agent reads it, and the interface asks how an agent operates
@@ -5175,11 +4624,10 @@ comes from on which an agent checks the product's behaviour outside production, 
 brings that data to the state a check needs. Data set up from scratch and a dedicated test
 environment that persists are both options of that choice.
 
-- **Change:** new decision
 - **Scope:** project-level, decisions
 - **Based on:** none
-- **Relations:** derives from WAY-121@ed19d693
-- **Verification:** level 2 — an agent compares the work with the decision:
+- **Relations:** derives from WAY-121
+- **Verification:** an agent compares the work with the decision:
   - complies: for a game played in a browser, the logs are answered by an agent reading the output
     of the server's container, the interface by an agent playing the game in a browser on a local
     address and reading what the page shows, and the development data by a script that sets up
@@ -5191,9 +4639,7 @@ environment that persists are both options of that choice.
     application; the development data names where the data comes from but not how an agent reaches
     a save from the middle of a game; the comparison of the development data leaves out a dedicated
     test environment that persists because the data has to be set up from scratch.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/24
 
 *Rationale:* each answer serves an agent that checks behaviour a user sees in the running product.
 The logs tell the agent what the product did, and the answer says where that record lands, since
@@ -5212,19 +4658,18 @@ needs, and the agent of the cycle improvises it; what the product logs and in wh
 same decision — that rule acts where code is written and reviewed, in the task cycle, not where a
 project settles its technology.
 
-### WAY-166/1 — How does whether an agent can use an option weigh in a choice of its way to the running product?
+### WAY-166 — How does whether an agent can use an option weigh in a choice of its way to the running product?
 
 In a choice of an agent's way to the running product, whether an agent can use an option is a
 consequence for the product: an option an agent cannot use stays in the comparison with that lack
 said as "an agent does not check the running product this way", and the recommendation passes over
 it.
 
-- **Change:** new decision
 - **Scope:** project-level, decisions
 - **Based on:** none
-- **Relations:** derives from WAY-121@ed19d693 · narrows WAY-123@f3b45293 · narrows
-  WAY-137@86b2a30d
-- **Verification:** level 2 — an agent compares the work with the decision:
+- **Relations:** derives from WAY-121 · narrows WAY-123 · narrows
+  WAY-137
+- **Verification:** an agent compares the work with the decision:
   - complies: a log service cheaper than the others, whose logs only a human can read, in a panel
     behind the human's login, stays in the comparison of the logs with the lack "an agent does not
     check the running product this way", and the step recommends reading the output of the
@@ -5232,9 +4677,7 @@ it.
   - violates: the step recommends the cheaper service because how well an agent works with an
     option decides only a tie; the service is left out of the comparison because an agent cannot
     read its logs; the table shows the service with no word on whether an agent can use it.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/24
 
 *Rationale:* a choice of an agent's way to the running product exists so that an agent can check
 what a user sees in the running product; an option the agent cannot use leaves that check undone,
@@ -5247,7 +4690,7 @@ product needs from the choice, while here the agent's use of an option is what t
 cheaper service an agent cannot use, since how well an agent works with an option decides only a
 tie, and the choice would pass with an answer that gives the agent nothing.
 
-### WAY-167/1 — Where do a product's guidelines stand, and what are their files named?
+### WAY-167 — Where do a product's guidelines stand, and what are their files named?
 
 A product's guidelines are written by hand and stand outside its foundation, in the directory
 `guidelines/` at the root of its repository: a file `guidelines/<discipline>.md` for each discipline
@@ -5262,12 +4705,11 @@ and its rules, `<kind>` being the identifier of the kind that the decision desig
 gives. The directory `guidelines/` belongs to the part of the product's map whose files direct
 whoever carries out its tasks, as its instruction files and skills do.
 
-- **Change:** new decision
 - **Scope:** product-guidelines, installation
 - **Based on:** none
-- **Relations:** derives from WAY-44@2f2b6227 · derives from WAY-04@29a75d2c
-- **Verification:** level 1 — invariants: guidelines-check-kind-index. Level 2 for where the files
-  stand and how they are named — an agent compares the change with the decision:
+- **Relations:** derives from WAY-44 · derives from WAY-04
+- **Verification:** invariants: guidelines-check-kind-index. For where the files stand and how they
+  are named, an agent compares the change with the decision:
   - complies: a product with screens in a browser and an admin panel added to its backend keeps
     `guidelines/styleguide-web.md` and `guidelines/styleguide-admin.md`, named after the parts
     `web` and `admin` of its map, beside `guidelines/testing.md`, and the pattern `guidelines/**`
@@ -5283,9 +4725,7 @@ whoever carries out its tasks, as its instruction files and skills do.
     and `guidelines/coding-web.md`, one for each part of its map, each repeating the standing
     checks; a file `guidelines/coding-endpoint.md` stands where no decision designates an exemplar
     of that kind.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
 
 *Rationale:* a spec lives as long as its task and holds only what entered it, while guidelines are
 shared by the whole product and outlast every task that uses them. They stand outside the foundation
@@ -5317,7 +4757,7 @@ does not touch; a file of coding guidelines for each part of the map — a kind 
 and the standing checks repeat in several files and drift apart; a file for each kind with no
 general file — the standing checks have no place.
 
-### WAY-168/1 — What does a rule of a product's guidelines hold beside the foundation entries that carry it?
+### WAY-168 — What does a rule of a product's guidelines hold beside the foundation entries that carry it?
 
 A binding rule of a product's guidelines names by identifier the decision of the product's log that
 carries its choice and each invariant that checks it, and says what to do and how, with a use that
@@ -5334,14 +4774,13 @@ empty-history conditions the rule may hold one whole earlier-version file as
 prepared evidence. The two uses are run against that method only when a change adds or alters the
 invariant's sentence or rewrites either use or its prepared base, never on every run of the gate.
 
-- **Change:** new decision
 - **Scope:** product-guidelines, decisions, invariants, gate
 - **Based on:** none
-- **Relations:** derives from WAY-22@dcf291ea · derives from WAY-18@8c477ea2 · derives from
-  WAY-223@6df19670
-- **Verification:** level 1 — invariants: guidelines-check-carrier · guidelines-check-example-files
-  · gate-guidelines-example-evidence. Level 2 for what a rule says, what stands as an example and
-  when the uses are run — an agent compares the change with the decision:
+- **Relations:** derives from WAY-22 · derives from WAY-18 · derives from
+  WAY-223
+- **Verification:** invariants: guidelines-check-carrier · guidelines-check-example-files. For what
+  a rule says, what stands as an example and when the uses are run, an agent compares the change
+  with the decision:
   - complies: a rule of a product's testing guidelines names the decision choosing the product's
     fixtures for test data and the invariant whose script finds a test that writes rows straight
     into the store of data, and gives as its uses a short test file that sets up its data through
@@ -5357,9 +4796,7 @@ invariant's sentence or rewrites either use or its prepared base, never on every
     follows it and none that breaks it; a rule naming an invariant an agent checks gives its uses
     in one line each, and the agent's check flags sound code unseen; every run of the gate runs
     every use of every rule.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/28
 
 *Rationale:* guidelines do not replace the foundation's elements but bring what they hold to the
 work of one discipline: an agent changing a product's screens needs what to do and how, not an
@@ -5390,7 +4827,7 @@ nothing shows it; the uses run on every run of the gate — every task would pay
 run only by the reviewer in a task's cycle, with nothing tracking them — a use rewritten while its
 invariant stays unchanged passes unchecked.
 
-### WAY-169/1 — What happens to a reference of guidelines when the entry it names changes?
+### WAY-169 — What happens to a reference of guidelines when the entry it names changes?
 
 Every reference that a product's guidelines make with a fingerprint to a decision of the product's
 log or to an invariant of its foundation, wherever it stands in their text outside fenced code,
@@ -5401,22 +4838,19 @@ fingerprint reaches the main branch only once the same change has brought the gu
 with the entry's new binding part and given the reference its fingerprint, as WAY-31 has it for a
 relation.
 
-- **Change:** new decision
 - **Scope:** product-guidelines, relation-model
 - **Based on:** none
-- **Relations:** derives from WAY-02@3ffcbd46 · derives from WAY-31@a14c616c
-- **Verification:** level 1 — invariants: guidelines-reference-current ·
-  guidelines-check-reference-target · guidelines-check-stale-reference. Level 2 for bringing the
-  guidelines in line — an agent compares the change with the decision:
+- **Relations:** derives from WAY-02 · derives from WAY-31
+- **Verification:** invariants: guidelines-reference-current · guidelines-check-reference-target ·
+  guidelines-check-stale-reference. For bringing the guidelines in line, an agent compares the
+  change with the decision:
   - complies: a product rewords the decision that gives its `destructive` role its meaning, and the
     same change rewrites that role's meaning in its styleguide's table and carries the decision's
     new fingerprint there;
   - violates: a script gives every reference of a styleguide its new fingerprint with no one reading
     the rules that carry them; a change rewording a decision merges, and the styleguide that
     restates it is left for a later task.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/25
 
 *Rationale:* without a fingerprint a changed decision goes through while the guidelines go on
 telling agents the old rule, with no sign anywhere, and guidelines that say in silence other than
@@ -5432,7 +4866,7 @@ guidelines; only the fields of a rule checked — a reference in a rule's prose 
 unseen; a fingerprint on every mention of an entry — a bare mention relies on nothing and would be
 flagged for nothing (WAY-02).
 
-### WAY-170/1 — What checks the form of a product's guidelines?
+### WAY-170 — What checks the form of a product's guidelines?
 
 A script of the-way, the form check of guidelines, checks before a merge every file of a product's
 guidelines against the template every product's guidelines share and, where the-way gives one, the
@@ -5444,23 +4878,19 @@ methods of a product's invariants, the block the-way's installer writes into the
 `AGENTS.md` names the script's two commands, without and with `--merge-onto`, to run before every
 merge, beside the format guards it names there.
 
-- **Change:** new decision
 - **Scope:** product-guidelines
 - **Based on:** none
-- **Relations:** derives from WAY-04@29a75d2c · narrows WAY-16@5c1d60d4
-- **Verification:** level 1 — invariants: guidelines-form · guidelines-check-form ·
-  guidelines-check-code-path. Level 2 for the invariants a product holds — an agent compares the
-  change with the decision:
+- **Relations:** derives from WAY-04 · narrows WAY-16
+- **Verification:** invariants: guidelines-form · guidelines-check-form ·
+  guidelines-check-code-path. For the invariants a product holds, an agent compares the change with
+  the decision:
   - complies: the task that writes a product's first styleguide writes the two invariants of
     guidelines the template gives, whose methods run the script from the product's pinned the-way;
   - violates: a product writes its styleguide and no invariant of its foundation runs the script; a
     product's instruction file names a command of its own for checking guidelines, beside the gate;
     the installer's block still names the script's commands once a gate runs the product's
     invariants.
-- **Review when:** a gate of the-way runs the methods of a product's invariants on the product's
-  changes · check by: 2027-03-31
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/25
 
 *Rationale:* a rule of form kept by memory holds only while someone remembers it (WAY-04), while a
 script checks every file each time and costs no agent a reading. The templates come from the commit
@@ -5475,7 +4905,7 @@ the product's own named in its instructions beside the gate — of two commands 
 (WAY-16); the installer's block silent on the script until a gate exists — nothing would run the
 check in a product; the form judged by an agent — a script decides it every time.
 
-### WAY-171/1 — What form does a file of a product's guidelines take?
+### WAY-171 — What form does a file of a product's guidelines take?
 
 Every file of a product's guidelines holds, in this order, the header lines *Discipline* and
 *Applies to*, the latter naming parts of the product's map, and the sections `## When to read`,
@@ -5489,23 +4919,18 @@ lines, field names, values of closed lists and the marker `none —` stay in Eng
 the text is in the language the product writes its guidelines in, and a rule of the-way's templates
 of guidelines changes only with a decision of the-way and cites its number.
 
-- **Change:** new decision
 - **Scope:** product-guidelines
 - **Based on:** none
-- **Relations:** derives from WAY-168@2a68d855
-- **Verification:** level 1 — invariants: guidelines-form · guidelines-check-form. Level 2 for the
-  language of the text and the rules of the templates — an agent compares the change with the
-  decision:
+- **Relations:** derives from WAY-168
+- **Verification:** invariants: guidelines-form · guidelines-check-form. For the language of the
+  text and the rules of the templates, an agent compares the change with the decision:
   - complies: a product whose team writes in Polish writes the rules and examples of its styleguide
     in Polish under the English headings and fields; a rule added to the template of the styleguide
     discipline cites the decision of the-way that sets it;
   - violates: a product translates the headings of its guidelines, and they can no longer be read
     mechanically; a styleguide copies the values of its colours under `## Where in code`; a rule
     enters a template of guidelines with no decision of the-way.
-- **Review when:** the first product that writes the text of its guidelines in a language other than
-  English has merged a change to a decision its guidelines restate · check by: 2027-03-31
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/25
 
 *Rationale:* one form lets one script read the guidelines of every discipline, and a discipline's
 template only adds to it, so guidelines of a discipline the-way gives no template of are still
@@ -5527,7 +4952,7 @@ across tasks would change language from one session to the next; guidelines only
 the-way gives templates of — a product could not write guidelines of a discipline of its own; a
 required part left out with no word — a departure would look like an omission.
 
-### WAY-172/1 — How is a new or changed meaning of a product's guidelines approved?
+### WAY-172 — How is a new or changed meaning of a product's guidelines approved?
 
 A new or changed meaning of a product's guidelines is a decision of the product's log, new or
 changed, and the code that uses it is made only once the human who accepts decisions (WAY-14) has
@@ -5538,12 +4963,11 @@ carries takes no approval, and neither does changing a value that keeps its mean
 new and changed meanings of a product's guidelines this decision prevails over WAY-114, under which
 an agent writes such an entry on its own recommendation for the human to accept at the merge.
 
-- **Change:** new decision
 - **Scope:** product-guidelines, decisions, project-level, task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-30@2141bece · derives from WAY-125@f3e6afcf · narrows
-  WAY-114@04b4f599
-- **Verification:** level 2 — an agent compares the work with the decision:
+- **Relations:** derives from WAY-30 · derives from WAY-125 · narrows
+  WAY-114
+- **Verification:** an agent compares the work with the decision:
   - complies: a styleguide task's document carries the meaning "red marks only what deletes", the
     human accepts the document, and its cycle writes the product's decision and then the screens
     that use it; a cycle whose screen needs a role the task did not settle proposes the role's
@@ -5553,9 +4977,7 @@ an agent writes such an entry on its own recommendation for the human to accept 
   - violates: a cycle writes a new role's decision on its own recommendation and leaves it to the
     merge; the orchestrator's go-ahead stands for the approval of a new meaning; a screen that uses
     an existing role waits for the human.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/29
 
 *Rationale:* a meaning of guidelines binds every later screen, and code built on one the human never
 saw is reworked when the human turns it down at the merge, so the approval comes before the code,
@@ -5570,7 +4992,7 @@ built on a meaning the human has not seen, and turning it down reworks the scree
 the plan — in a cycle the human sees the request, not the plan (WAY-125, WAY-136); approval of every
 use of a meaning — every screen would wait for the human.
 
-### WAY-173/1 — Does what the-way's template of the styleguide carries bind a product directly?
+### WAY-173 — Does what the-way's template of the styleguide carries bind a product directly?
 
 The rules the-way's template of the styleguide discipline carries and what the-way's skill
 `maintain-styleguide` proposes bind a product only through a decision of the product's log adopting
@@ -5578,11 +5000,10 @@ them, and the product departs from any of them only by a decision of its log tha
 A decision of the-way on what that template carries or what that skill proposes binds the template
 and the skill, never a product's screens directly.
 
-- **Change:** new decision
 - **Scope:** product-guidelines
 - **Based on:** none
-- **Relations:** derives from WAY-168@2a68d855 · derives from WAY-100@e7a74a18
-- **Verification:** level 2 — an agent compares the work with the decision:
+- **Relations:** derives from WAY-168 · derives from WAY-100
+- **Verification:** an agent compares the work with the decision:
   - complies: a product's styleguide names, at each rule the template requires, the product's
     decision adopting it; a simple admin panel's styleguide drops the page showing its components in
     every state by a decision of the product that gives its reason, the rule reading `none —` with
@@ -5590,9 +5011,7 @@ and the skill, never a product's screens directly.
   - violates: a cycle holds a product's screens to a rule of the template the product never adopted;
     a product leaves out a rule the template requires with no decision of its own; the-way's template
     is edited to fit one product's departure.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/25
 
 *Rationale:* a rule of the template binding every product directly would be as rigid for a simple
 admin panel as for a product's main screens, and it would bind from outside the product's log, where
@@ -5605,7 +5024,7 @@ offers, and the product takes it as a practice from outside is taken (WAY-100).
 *Rejected:* the template's rules binding every product directly — rigid even for a simple admin
 panel, and a binding choice standing outside the product's log.
 
-### WAY-174/1 — How does the-way's styleguide skill ask the human?
+### WAY-174 — How does the-way's styleguide skill ask the human?
 
 The-way's skill `maintain-styleguide` puts to the human every choice it settles for a styleguide, a
 choice it recommends included, and shows each by what someone using the product sees on the
@@ -5614,20 +5033,17 @@ field means before it first uses it. In the area of the questions that skill ask
 prevails over WAY-114, under which a question goes to the human only where the agent has no
 recommendation.
 
-- **Change:** new decision
 - **Scope:** product-guidelines, decisions
 - **Based on:** none
-- **Relations:** derives from WAY-113@d3e5cbfa · narrows WAY-114@04b4f599
-- **Verification:** level 2 — an agent compares the conversation with the decision:
+- **Relations:** derives from WAY-113 · narrows WAY-114
+- **Verification:** an agent compares the conversation with the decision:
   - complies: the skill shows "the button that saves stands out, and the one that deletes is red
     with white text on it", with the ways open, their cost and its recommendation; it asks whether
     to adopt WCAG though it recommends adopting it, after saying in plain words what contrast is;
   - violates: the skill asks the human to choose between two hexadecimal values of a design token;
     it writes into the task a role it recommends without asking; it speaks of focus rings before
     saying what focus is.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/25
 
 *Rationale:* the human who approves a styleguide's meanings is no specialist of user interfaces, so
 a choice shown by the names or values of design tokens is one the human cannot weigh, while what a
@@ -5640,7 +5056,7 @@ WAY-114 gives it — screens are built on meanings the human never saw, and turn
 merge reworks them; questions about the names and values of design tokens — the human cannot weigh
 them.
 
-### WAY-175/1 — What does the-way take from the outside skills its styleguide learned from, and what does it leave?
+### WAY-175 — What does the-way take from the outside skills its styleguide learned from, and what does it leave?
 
 From a course's lesson on building a user interface with an agent and its skill `10x-ui`, the-way's
 template of the styleguide discipline and its skill `maintain-styleguide` take the design tokens
@@ -5661,7 +5077,6 @@ the team can know, describing each screen a product announces (WAY-186) and writ
 was not in the conversation, and they leave out those skills' extractor with its files, their
 guidance on features that use artificial intelligence and their scoring rubric.
 
-- **Change:** new decision
 - **Scope:** product-guidelines
 - **Based on:** observation of the skills on 2026-10-18 using `sed -n` and `grep -n` in Git Bash on
   Microsoft Windows NT 10.0.26300.0, and `git show` for the commit named; `10x-ui` is
@@ -5699,19 +5114,15 @@ guidance on features that use artificial intelligence and their scoring rubric.
   a background with its text, the fix in the component, the theme generators among the lists of
   tools and the links of a design tool to code come, is a private note its readers cannot open, and
   no passage of it is quoted.
-- **Relations:** derives from WAY-100@e7a74a18
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Relations:** derives from WAY-100
+- **Verification:** an agent compares the change with the decision:
   - complies: the template of the styleguide carries the pair of a background and its text and the
     page of every state, and names no library of components; the skill describes the audit's charges
     in its own words, naming neither the course's skill nor a path into it;
   - violates: the skill tells an agent to run the course skill's commands or to take values from a
     named generator of themes; the template's example roles include `surface`; a step of the
     course's skill not named here enters the skill.
-- **Review when:** a product that pins the-way has settled how an agent sees its screens and keeps a
-  page showing its components in every state, so that the comparison of screenshots left out can be
-  weighed · check by: 2026-12-31
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/25
 
 *Rationale:* those skills and their lesson carry steps a styleguide needs beside steps bound to their
 own commands, tools and kind of product; taken whole, their tools and commands would become
@@ -5732,7 +5143,7 @@ could not be told apart (WAY-100); pointers to the skills in place of a descript
 open them (WAY-27); the content of each piece restated here beside the decision that carries it —
 two binding copies drift apart (WAY-19).
 
-### WAY-176/1 — How does a styleguide name its colour roles and pair them?
+### WAY-176 — How does a styleguide name its colour roles and pair them?
 
 The template of the styleguide discipline gives a styleguide a table of roles, each named by what it
 is for and never by a colour, such as `primary` or `muted`, of the kind `background`, `text` or
@@ -5743,12 +5154,11 @@ the kind `text` that stands on it. A role's name avoids a word the glossary of t
 another meaning, unless the product's technology gives the role that name, which the product's
 foundation then writes with a qualifier (WAY-104).
 
-- **Change:** new decision
 - **Scope:** product-guidelines
 - **Based on:** none
-- **Relations:** derives from WAY-173@c423105b
-- **Verification:** level 1 — invariants: guidelines-check-colour-pair. Level 2 for names, meanings
-  and values — an agent compares the change with the decision:
+- **Relations:** derives from WAY-173
+- **Verification:** invariants: guidelines-check-colour-pair. For names, meanings and values, an
+  agent compares the change with the decision:
   - complies: the role `destructive`, of the kind `background`, means "this action deletes something
     for good", carries `destructive-foreground` as the text on it, and names the decision that gives
     that meaning, while its value stands only in the file of design tokens; a product whose library
@@ -5756,9 +5166,7 @@ foundation then writes with a qualifier (WAY-104).
     `surface` colour role";
   - violates: a role is named `red-600`; one role named `green` stands for both "this rule can act"
     and "the game is won"; the table copies the colours' values.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/25
 
 *Rationale:* a name after a shade cannot catch one colour carrying two meanings, while a name after
 a role makes a second meaning visible as a role that does not fit; the sentence of what the user
@@ -5772,7 +5180,7 @@ product's technology already chose it (WAY-104).
 one colour in two meanings; a background role defined with no text role on it — its pair goes
 unchecked; the values written into the table — a copy of the code goes stale.
 
-### WAY-177/1 — What does a styleguide say of shared controls?
+### WAY-177 — What does a styleguide say of shared controls?
 
 The template of the styleguide discipline has a styleguide point by its path to the directory of the
 product's shared components and name the states each shared control has — default, hover, visible
@@ -5780,18 +5188,15 @@ focus, disabled, error, empty and loading — each shown on the page of every st
 applying with its reason. It names a component by its path only where that component departs from
 the list of states, and never copies the list of components the code holds.
 
-- **Change:** new decision
 - **Scope:** product-guidelines
 - **Based on:** none
-- **Relations:** derives from WAY-173@c423105b
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Relations:** derives from WAY-173
+- **Verification:** an agent compares the change with the decision:
   - complies: a styleguide points to `src/components/` and gives the seven states, and names
     `src/components/Toggle.tsx` alone, as a control with no empty state, with that reason;
   - violates: a styleguide describes a button in its default state only; a styleguide lists every
     component of the product with its file.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/25
 
 *Rationale:* the states other than the default are the ones that drift first and that a screenshot
 of a screen with data never shows, so the styleguide names them for every shared control; a state a
@@ -5800,51 +5205,45 @@ already says which components exist, and a copy of that list would go stale (WAY
 *Rejected:* controls described in their default state alone — the other states drift unseen; a list
 of components copied from the code — it goes stale at the next component.
 
-### WAY-178/1 — Where is a fault of one screen fixed?
+### WAY-178 — Where is a fault of one screen fixed?
 
 The template of the styleguide discipline has a styleguide hold that a global design token carries a
 meaning for the whole product, and that a fault of one screen is fixed in that screen's component,
 never by changing a global design token's value for that screen's sake. A change of a global design
 token takes what WAY-172 gives a change of a meaning and a change of a value.
 
-- **Change:** new decision
 - **Scope:** product-guidelines
 - **Based on:** none
-- **Relations:** derives from WAY-173@c423105b · derives from WAY-172@45806b6e
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Relations:** derives from WAY-173 · derives from WAY-172
+- **Verification:** an agent compares the change with the decision:
   - complies: a list whose rows lose their spacing on one screen is fixed in that list's component;
     a change that darkens `primary` for every screen to reach the contrast its decision asks for
     goes without approval;
   - violates: the value of `muted` is changed so that one screen's text reads better, and every other
     screen changes with it; a change of what `primary` means is made as a fix of one screen.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/25
 
 *Rationale:* a global design token is read by every screen, so changing it for one screen changes
 what all the others show, unseen by the task that made the change; a fix in the component stays where
 the fault is. What such a change takes is set once, by WAY-172, so this decision only points to it.
 *Rejected:* a global value adjusted to fix one screen — every other screen moves with it.
 
-### WAY-179/1 — What is a mockup to a styleguide?
+### WAY-179 — What is a mockup to a styleguide?
 
 The template of the styleguide discipline carries among its examples that a mockup is a pattern a
 screen is compared against and not its specification: the meanings on a screen come from the
 product's guidelines and its values from the file of design tokens.
 
-- **Change:** new decision
 - **Scope:** product-guidelines
 - **Based on:** none
-- **Relations:** derives from WAY-173@c423105b
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Relations:** derives from WAY-173
+- **Verification:** an agent compares the change with the decision:
   - complies: an agent building a screen from a mockup takes the role of each colour from the
     styleguide and its value from the file of design tokens, and uses the mockup to compare the
     finished screen;
   - violates: an agent reads the meaning of a colour off the mockup of one screen; the template
     carries the sentence on mockups as a rule with a decision and an invariant.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/25
 
 *Rationale:* a mockup draws one screen at one moment, so meanings taken from it differ from screen to
 screen, while the styleguide and the file of design tokens hold one meaning and one value for the
@@ -5853,24 +5252,21 @@ so the sentence stands as an example (WAY-168).
 *Rejected:* the meaning of a colour taken from the mockup of one screen — the next screen's mockup
 gives it another.
 
-### WAY-180/1 — What is the page that shows a product's components in every state?
+### WAY-180 — What is the page that shows a product's components in every state?
 
 The template of the styleguide discipline has a styleguide name by its path a page of the product
 that shows its shared components and samples in every state, a page the product serves in development
 alone and never in production. The page is code of the product, not part of the styleguide's text.
 
-- **Change:** new decision
 - **Scope:** product-guidelines
 - **Based on:** none
-- **Relations:** derives from WAY-173@c423105b
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Relations:** derives from WAY-173
+- **Verification:** an agent compares the change with the decision:
   - complies: a styleguide names the page at `/states`, which answers "not found" in a production
     build, and each shared control appears there in its seven states;
   - violates: the page is served in production; the styleguide holds drawings of the states in
     place of a page of the product.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/25
 
 *Rationale:* the page is the visual half of the styleguide: it shows in one place what the text says
 of every state, for an agent checking its work and for a reviewer, while a screen with data shows
@@ -5879,24 +5275,21 @@ product it changes with the components it draws, which a picture in a document w
 *Rejected:* no such page — the states other than the default are seen nowhere at once; the page
 served in production — users meet samples; pictures of the states in the document — they go stale.
 
-### WAY-181/1 — Does a styleguide carry an order for the plan of a change to a user interface?
+### WAY-181 — Does a styleguide carry an order for the plan of a change to a user interface?
 
 The template of the styleguide discipline carries among its examples, never as a rule, the order of
 a plan for a change to a user interface: the environment and the library first, then the values in
 their source, then one screen, then its states.
 
-- **Change:** new decision
 - **Scope:** product-guidelines
 - **Based on:** none
-- **Relations:** derives from WAY-173@c423105b · derives from WAY-36@3ee8e19c
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Relations:** derives from WAY-173 · derives from WAY-36
+- **Verification:** an agent compares the change with the decision:
   - complies: the planner of a change to a screen reads the order among the styleguide's examples
     and follows it or says why not;
   - violates: the template carries the order as a rule with a decision and an invariant; a plan is
     rejected because it puts the states before the values.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/25
 
 *Rationale:* an order of steps ends with the piece of work it orders, so it binds no later work and
 stays out of the log as a rule (WAY-36); no test can check a plan's order on a commit. As an example
@@ -5905,24 +5298,21 @@ redoing the one before.
 *Rejected:* the order as a binding rule — a rule of a plan, which a commit cannot make false; no
 order at all — each plan finds it again.
 
-### WAY-182/1 — Where does a value of design tokens say it comes from, and who picks the source?
+### WAY-182 — Where does a value of design tokens say it comes from, and who picks the source?
 
 The template of the styleguide discipline has each value of the product's file of design tokens carry
 beside it where it comes from. The skill `maintain-styleguide` chooses that source for each product,
 and the-way holds no list of tools values are taken from.
 
-- **Change:** new decision
 - **Scope:** product-guidelines
 - **Based on:** none
-- **Relations:** derives from WAY-173@c423105b
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Relations:** derives from WAY-173
+- **Verification:** an agent compares the change with the decision:
   - complies: a line beside the block of colours in the file of design tokens names the theme of the
     product's library and its version they come from;
   - violates: values stand in the file with no word of their source; the template names a theme
     generator every product takes its values from.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/25
 
 *Rationale:* values that live only in a conversation are values the next session invents again, so
 each keeps its source where it stands. Which source fits depends on the product's technology and on
@@ -5932,23 +5322,20 @@ only the products that use them.
 lists of theme generators and presets as sources every product takes — they fit only some
 technologies.
 
-### WAY-183/1 — Which user interfaces of a product get a styleguide?
+### WAY-183 — Which user interfaces of a product get a styleguide?
 
 The skill `maintain-styleguide` proposes a styleguide for every user interface of a product, an admin
 panel added to its backend included, however simple it is. A product whose users reach it only
 through an API or a terminal has no user interface and gets no styleguide.
 
-- **Change:** new decision
 - **Scope:** product-guidelines
 - **Based on:** none
-- **Relations:** derives from WAY-173@c423105b
-- **Verification:** level 2 — an agent compares the work with the decision:
+- **Relations:** derives from WAY-173
+- **Verification:** an agent compares the work with the decision:
   - complies: a backend that gains an admin panel of three screens gets a short styleguide of its
     own; a command-line tool gets none;
   - violates: the skill passes over an admin panel because it is small or used by the team alone.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/25
 
 *Rationale:* an agent left free does something different in every task, and that is what guidelines
 are for; even guidelines of modest quality are consistent, and a product with them does not grow
@@ -5956,25 +5343,21 @@ into chaos, so a weak styleguide is better than none. A screen nobody outside th
 needs one meaning for each colour.
 *Rejected:* no styleguide for a small or helper user interface — each task styles it its own way.
 
-### WAY-184/1 — When does a product's styleguide come into being?
+### WAY-184 — When does a product's styleguide come into being?
 
 The skill `maintain-styleguide` proposes that the styleguide of a user interface comes into being
 before that user interface's first screen, with a set of starting rules wider than what the first
 task that uses it needs.
 
-- **Change:** new decision
 - **Scope:** product-guidelines
 - **Based on:** none
-- **Relations:** derives from WAY-173@c423105b
-- **Verification:** level 2 — an agent compares the work with the decision:
+- **Relations:** derives from WAY-173
+- **Verification:** an agent compares the work with the decision:
   - complies: a product whose plan brings its first screen gets a styleguide task first, whose
     rules cover the roles, states and focus the product's announced screens need;
   - violates: the first screen is built and the styleguide is written from it afterwards; the
     styleguide holds only the roles of the first screen.
-- **Review when:** the first product whose styleguide was written before its first screen has merged
-  the task that brought that screen · check by: 2027-03-31
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/25
 
 *Rationale:* a first screen built with no rules is the screen every later one copies, and a rule that
 blocks a change to a screen until a styleguide exists would need an exception for it. Rules wider
@@ -5985,7 +5368,7 @@ product, so its first use is watched.
 minimal styleguide before the first screen, with only that screen's roles — every next screen adds
 meanings in a hurry.
 
-### WAY-185/1 — What does the styleguide skill look at first?
+### WAY-185 — What does the styleguide skill look at first?
 
 Before anything else, the skill `maintain-styleguide` recognizes which user interface the styleguide
 is for and what the product already has for it — a file of design tokens its screens read, one
@@ -5993,20 +5376,17 @@ nothing reads, shared components, or nothing — and whether it has screens and 
 extends what exists rather than bringing a new system. A new library of components or a new way of
 styling is a choice the skill leaves to the human as a question of the task, never one it settles.
 
-- **Change:** new decision
 - **Scope:** product-guidelines
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 2 — an agent compares the work with the decision:
+- **Verification:** an agent compares the work with the decision:
   - complies: in a product whose file of design tokens holds two colours nothing reads, the skill
     proposes making the screens read that file and adding roles to it; a product with no shared
     components gets them in its existing styling, and the question of a library of components goes
     to the human;
   - violates: the skill sets up a new library of components in a product that has its own design tokens;
     the skill chooses a styling technology itself.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/25
 
 *Rationale:* an existing system, even a worse one, beats a better one brought in, since the screens
 already read it and a second one splits them in two. What the product has decides how the skill
@@ -6015,7 +5395,7 @@ something the product has to keep, a technology choice, and the human makes it.
 *Rejected:* a new system set up on a product whose file of design tokens nothing reads — two systems
 side by side; the skill choosing a new library itself — a dependency the human never chose.
 
-### WAY-186/1 — Where do a styleguide's starting rules come from?
+### WAY-186 — Where do a styleguide's starting rules come from?
 
 The skill `maintain-styleguide` takes the starting rules of a styleguide written before the first
 screen of its user interface from the human's preferences for the technology of that user interface
@@ -6026,11 +5406,10 @@ the screens the product announces — in its definition, plan, specs and mockups
 research finds without imposing it, and researches again whenever a styleguide is refreshed or
 extended.
 
-- **Change:** new decision
 - **Scope:** product-guidelines
 - **Based on:** none
-- **Relations:** derives from WAY-122@b343277a · derives from WAY-120@81f84997
-- **Verification:** level 2 — an agent compares the work with the decision:
+- **Relations:** derives from WAY-122 · derives from WAY-120
+- **Verification:** an agent compares the work with the decision:
   - complies: the human has no preferences for a browser game's styling, research names the pages
     and versions of its library's documentation, a fresh critic strikes a claimed difference no page
     gives, and the starting set adds roles for the states the game's plan announces; a year later an
@@ -6039,9 +5418,7 @@ extended.
   - violates: the starting rules come from the agent's memory; a fixed list of roles from one course
     is used for every product; research reaches the human uncritiqued; an extension reuses the
     first research.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/25
 
 *Rationale:* the value of a styleguide has two layers, consistency and the quality of its rules, and
 research with sources and a critique keeps the second, while preferences of the human come first
@@ -6056,7 +5433,7 @@ research once for each product — later extensions miss current recommendations
 no critique, or rules from the agent's memory — the human cannot tell a sound rule from an invented
 one.
 
-### WAY-187/1 — How does the styleguide skill audit a product that has screens?
+### WAY-187 — How does the styleguide skill audit a product that has screens?
 
 For a product that has screens, the skill `maintain-styleguide` audits the user interface in both
 directions — from the source of values to the screens that read them, and from each value on a
@@ -6068,11 +5445,10 @@ refresh, and it uses the agent's way to the running product where the product's 
 one, otherwise auditing from the code and marking as unchecked what cannot be seen without the
 running product.
 
-- **Change:** new decision
 - **Scope:** product-guidelines
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 2 — an agent compares the work with the decision:
+- **Verification:** an agent compares the work with the decision:
   - complies: an audit charges that one green means both "can act" and "won", with the lines where
     each is drawn and what the player cannot learn from it, and that a screen opened from a link
     shows a blank page before it fills; with no decision on how an agent opens the screens, it marks
@@ -6080,9 +5456,7 @@ running product.
   - violates: the styleguide is written from the idea of the product with no audit of its code; the
     audit checks only screens with data; an audit with no way to the running product says focus is
     visible.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/25
 
 *Rationale:* without an audit a styleguide writes down an idea of the product, not its code; each
 direction finds what the other misses — a file of design tokens nothing reads, and a value no token
@@ -6095,7 +5469,7 @@ way to the running product is audited from its code rather than waiting for a ta
 stopped until the product decides the agent's way to the running product — the product waits for a
 task that does not exist yet; "logged out" in the standing question — not a matter of the styleguide.
 
-### WAY-188/1 — What checks a binding rule of a styleguide?
+### WAY-188 — What checks a binding rule of a styleguide?
 
 Every binding rule of a product's styleguide names at least one invariant that checks it, by a script
 where a script can decide it and otherwise by an agent whose method sets k of n runs, and a rule that
@@ -6103,20 +5477,17 @@ not even an agent can check is an example, not a rule, whatever decision it name
 of the styleguide discipline this decision prevails over WAY-168, under which a rule naming its
 decision binds with no invariant.
 
-- **Change:** new decision
 - **Scope:** product-guidelines, invariants
 - **Based on:** none
-- **Relations:** narrows WAY-168@2a68d855 · derives from WAY-08@2343e09f
-- **Verification:** level 1 — invariants: guidelines-check-carrier. Level 2 for the choice between a
-  script and an agent — an agent compares the change with the decision:
+- **Relations:** narrows WAY-168 · derives from WAY-08
+- **Verification:** invariants: guidelines-check-carrier. For the choice between a script and an
+  agent, an agent compares the change with the decision:
   - complies: the rule against values written in place of design tokens names a script's invariant;
     the rule that each role keeps its meaning names an invariant an agent checks, passing in two of
     three runs; the sentence on mockups stands among the examples;
   - violates: a rule on the meaning of a colour stands with no invariant because no script can check
     it; a rule a script could decide is left to an agent.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/25
 
 *Rationale:* a styleguide is there to keep agents' screens consistent without anyone's memory, and a
 rule only a decision carries is kept by the memory of the agent reading it. A script costs nothing
@@ -6126,7 +5497,7 @@ can flip, and a check that flips is answered as WAY-68 gives it.
 *Rejected:* the decision alone binding a rule of the styleguide — part of the rules is held only by
 an agent's memory, which the styleguide is meant to replace.
 
-### WAY-189/1 — Which invariants does a styleguide start with?
+### WAY-189 — Which invariants does a styleguide start with?
 
 The skill `maintain-styleguide` proposes, and the rules the template of the styleguide discipline
 requires call for, a styleguide's first invariants, each checked by a script the product declares: no
@@ -6136,21 +5507,18 @@ values of the file of design tokens, the contrast that the product's decision ad
 (WAY-191). Beside them it proposes an invariant an agent checks with k of n, that no file of that part
 uses a role in a meaning other than the one its decision gives.
 
-- **Change:** new decision
 - **Scope:** product-guidelines, invariants
 - **Based on:** none
-- **Relations:** derives from WAY-188@73da8ecb · derives from WAY-191@d9fff88e
-- **Verification:** level 1 — invariants: guidelines-check-carrier. Level 2 for what the skill
-  proposes — an agent compares the work with the decision:
+- **Relations:** derives from WAY-188 · derives from WAY-191
+- **Verification:** invariants: guidelines-check-carrier. For what the skill proposes, an agent
+  compares the work with the decision:
   - complies: a styleguide task proposes four invariants — the scan for values written in place of
     design tokens, focus on every control, contrast computed from the file of design tokens and,
     checked by an agent, each role in its meaning — and the product declares the commands of the
     first three;
   - violates: the contrast is judged by an agent looking at screenshots; the focus invariant is left
     out because the browser draws a default outline; no invariant guards the meanings of roles.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/25
 
 *Rationale:* values written in place of design tokens, controls with no visible focus and text that
 cannot be read on its background are the faults a styleguide meets first, and each can be decided by
@@ -6161,7 +5529,7 @@ styleguide's central promise, one meaning for each role, would rest on memory.
 time; no invariants of focus and contrast at the start — the faults the styleguide is for go
 unchecked.
 
-### WAY-190/1 — What keeps a product cleaned gradually from adding values written in place of design tokens?
+### WAY-190 — What keeps a product cleaned gradually from adding values written in place of design tokens?
 
 Where a product cleans its screens as the tasks that touch their styles come, rather than in one
 clean-up of every screen, the skill `maintain-styleguide` proposes, beside the invariant that no file
@@ -6171,20 +5539,17 @@ day: no file of that part holds more such values than on `{fork-point}`, and a f
 `{fork-point}` holds none. The second invariant is withdrawn once the first holds, and for a single
 clean-up of every screen the skill proposes none.
 
-- **Change:** new decision
 - **Scope:** product-guidelines, invariants
 - **Based on:** none
-- **Relations:** derives from WAY-51@8bdac21a · derives from WAY-60@6e862c88
-- **Verification:** level 2 — an agent compares the work with the decision:
+- **Relations:** derives from WAY-51 · derives from WAY-60
+- **Verification:** an agent compares the work with the decision:
   - complies: a product with values written in place of design tokens in nine files lists the full
     invariant as violated by a change the human accepts and adds the second, so a cleaned file that
     gains one value back fails at once, and a new file with one fails too;
   - violates: the full invariant alone stands on the list, and a cleaned file regains values
     unseen; a test lists the files already cleaned and grows the list; a product that cleans every
     screen in one task gets the second invariant.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/25
 
 *Rationale:* a violated invariant stands whole on the list of violated invariants (WAY-51), so until
 the last file is clean it cannot see values come back into a file already cleaned; the second
@@ -6197,7 +5562,7 @@ changes with no change of the foundation, and a new file outside it escapes the 
 list for each file — the same at the price of changing the gate's rule and its scripts; every file a
 task changes cleaned in full — a small change to a large file grows into cleaning a whole screen.
 
-### WAY-191/1 — Where do a styleguide's thresholds of contrast and its demand of visible focus come from?
+### WAY-191 — Where do a styleguide's thresholds of contrast and its demand of visible focus come from?
 
 The skill `maintain-styleguide` takes the thresholds of contrast and the demand of visible focus from
 WCAG through a decision of the product adopting it, which it asks the human for with the
@@ -6207,11 +5572,10 @@ of the user interface the styleguide covers, proposing another way only where th
 human has not accepted. Each success criterion an invariant of the styleguide takes a condition from
 stands as an environment fact the invariant rests on.
 
-- **Change:** new decision
 - **Scope:** product-guidelines, environment-facts
 - **Based on:** none
-- **Relations:** derives from WAY-86@fa2a4251
-- **Verification:** level 2 — an agent compares the work with the decision:
+- **Relations:** derives from WAY-86
+- **Verification:** an agent compares the work with the decision:
   - complies: the skill says in plain words what contrast and focus are, recommends adopting the
     newest edition of WCAG the W3C's page names as a Recommendation that day, at level AA for every
     screen, and on the human's acceptance the task carries the decision and the facts of the contrast and focus
@@ -6219,9 +5583,7 @@ stands as an environment fact the invariant rests on.
   - violates: a contrast invariant writes a ratio with no decision adopting WCAG; the edition is
     named from memory; the skill writes the adopting decision without asking because it recommends
     adopting.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/25
 
 *Rationale:* a threshold written into an invariant with no adopted catalogue is a number from WCAG
 without its source, and a new edition would prompt no review; adopted by a decision naming edition,
@@ -6233,7 +5595,7 @@ or a contract binds without adoption (WAY-86), so it is asked about before.
 from WCAG with no named source, and no review at a new edition; no invariants of contrast and focus
 at the start — the faults of focus seen in the first trial stay unchecked.
 
-### WAY-192/1 — How does a product's instruction file lead to its styleguide?
+### WAY-192 — How does a product's instruction file lead to its styleguide?
 
 A product's root `AGENTS.md`, outside the block the-way's installer writes, points to each styleguide
 by its path in backticks with the condition of changing a file of the part it covers, and the rule
@@ -6241,21 +5603,18 @@ forbidding values written in place of design tokens in that part's files stands 
 `instruction-files` places a rule for some files, saying that the product's invariant is what keeps
 it; both are written as that skill gives them.
 
-- **Change:** new decision
 - **Scope:** product-guidelines, instruction-files
 - **Based on:** none
-- **Relations:** derives from WAY-128@4dca37ca · derives from WAY-129@1336c32b · derives from
-  WAY-133@d4f21514
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Relations:** derives from WAY-128 · derives from WAY-129 · derives from
+  WAY-133
+- **Verification:** an agent compares the change with the decision:
   - complies: `AGENTS.md` reads "Before you change a file of `web`, read
     `guidelines/styleguide-web.md`" below the installer's block, and a rules file loaded with the
     files of `web` forbids values written in place of design tokens and names the invariant that
     checks it;
   - violates: the pointer stands inside the installer's block; the styleguide is imported with `@`;
     the rule names a lint command of its own; the rule stands in `AGENTS.md` for every session.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/25
 
 *Rationale:* a styleguide no instruction leads to is not found by an agent in a new session; a path
 with its condition costs one line and is read when the condition comes (WAY-129), and the pointer
@@ -6269,7 +5628,7 @@ no path a product chooses (WAY-107).
 find it; the rule as a line of every session — it costs context in each and is not followed every
 time without its check.
 
-### WAY-193/1 — Does what the-way's template of coding guidelines carries bind a product directly?
+### WAY-193 — Does what the-way's template of coding guidelines carries bind a product directly?
 
 The rules the-way's template of the coding discipline carries and what the-way's skill
 `maintain-coding-guidelines` proposes bind a product only through a decision of the product's log
@@ -6277,11 +5636,10 @@ adopting them, and the product departs from any of them only by a decision of it
 the reason. A decision of the-way on what that template carries or what that skill proposes binds
 the template and the skill, never a product's code directly.
 
-- **Change:** new decision
 - **Scope:** product-guidelines
 - **Based on:** none
-- **Relations:** derives from WAY-168@2a68d855 · derives from WAY-100@e7a74a18
-- **Verification:** level 2 — an agent compares the work with the decision:
+- **Relations:** derives from WAY-168 · derives from WAY-100
+- **Verification:** an agent compares the work with the decision:
   - complies: a product's coding guidelines name, at each rule the template requires, the product's
     decision adopting it; a product with no dependencies of its own drops the audit of dependencies
     by a decision of its log that gives that reason, the rule reading `none —` with that decision;
@@ -6289,9 +5647,7 @@ the template and the skill, never a product's code directly.
   - violates: a cycle blocks a product's change on a rule of a linter's set the product never
     adopted; a product leaves out a rule the template requires with no decision of its own; the-way's
     template is edited to fit one product's departure.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
 
 *Rationale:* a rule of the template binding every product directly would be as rigid for a small
 script as for a product's main code, and it would bind from outside the product's log, where every
@@ -6305,7 +5661,7 @@ styleguide (WAY-173).
 *Rejected:* the template's rules binding every product directly — rigid for every product alike,
 and a binding choice standing outside the product's log.
 
-### WAY-194/1 — How does the-way's coding-guidelines skill ask the human?
+### WAY-194 — How does the-way's coding-guidelines skill ask the human?
 
 The-way's skill `maintain-coding-guidelines` puts to the human every choice it settles for coding
 guidelines, a choice it recommends included, and shows each by its effect on the product in plain
@@ -6314,11 +5670,10 @@ decisions, never for single rules, so that the human adopts a linter's set of ru
 area of the questions that skill asks this decision prevails over WAY-114, under which a question
 goes to the human only where the agent has no recommendation.
 
-- **Change:** new decision
 - **Scope:** product-guidelines, decisions
 - **Based on:** none
-- **Relations:** derives from WAY-113@d3e5cbfa · narrows WAY-114@04b4f599
-- **Verification:** level 2 — an agent compares the conversation with the decision:
+- **Relations:** derives from WAY-113 · narrows WAY-114
+- **Verification:** an agent compares the conversation with the decision:
   - complies: the skill shows "a change that adds a library with a known security hole does not
     get in" and "every new endpoint checks its input as the exemplar does", each with the ways open,
     their cost and its recommendation; it asks whether to adopt the formatter it recommends; it
@@ -6327,9 +5682,7 @@ goes to the human only where the agent has no recommendation.
   - violates: the skill asks the human to choose between two names of a linter's rules or two values
     of a tool's configuration; it writes into the task a linter it recommends without asking; it
     asks rule by rule which rules of a set to take.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
 
 *Rationale:* the human who approves a product's decisions does not judge its code, so a choice shown
 by the names of rules or by values of configuration is one the human cannot weigh, while what a
@@ -6344,7 +5697,7 @@ WAY-114 gives it — the human meets the choice of an exemplar or a departure fr
 only in the finished document, as a recommendation nobody put to them; the human deciding rule by
 rule — they would judge what they cannot judge.
 
-### WAY-195/1 — What do coding guidelines take from Open Mercato and from Google's lessons on static analysis, and what do they leave?
+### WAY-195 — What do coding guidelines take from Open Mercato and from Google's lessons on static analysis, and what do they leave?
 
 From the repository of Open Mercato, the-way's template of the coding discipline and its skill
 `maintain-coding-guidelines` take the exemplar a decision designates for a kind of code with a table
@@ -6362,7 +5715,6 @@ check blocking a change concerns correctness rather than style and that every ex
 what it reports is fixed across the code before it is turned on (WAY-205), and its threshold of
 fewer than one report in ten leading to no action for checks shown only in code review.
 
-- **Change:** new decision
 - **Scope:** product-guidelines
 - **Based on:** observation of the sources on 2026-10-18 with curl 8.5.0, git 2.43.0 and pdftotext
   24.02.0 on Ubuntu 24.04.5 LTS (Linux 6.18.44): the repository `open-mercato/open-mercato` at
@@ -6404,8 +5756,8 @@ fewer than one report in ten leading to no action for checks shown only in code 
   codebase." (page 62) · "tool writers take on the task of first fixing all the existing issues in
   the codebase" (page 66) · "analysis results shown during code review are allowed to include up to
   10% effective false positives" (page 62).
-- **Relations:** derives from WAY-100@e7a74a18
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Relations:** derives from WAY-100
+- **Verification:** an agent compares the change with the decision:
   - complies: the template of the coding discipline gives a kind's file a table of its files with
     their status and the decision designating the exemplar, and names no catalogue of lessons; the
     skill proposes an audit of dependencies that checks the change against the fork point and puts
@@ -6415,9 +5767,7 @@ fewer than one report in ten leading to no action for checks shown only in code 
     template sets the audit's threshold at high severity for every product; a rule of a linter that
     flagged sound code in the trial run blocks because it concerns correctness; a step of Open
     Mercato not named here enters the skill.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
 
 *Rationale:* that repository and that study carry pieces coding guidelines need beside pieces bound
 to their own tools, scale and kind of product; taken whole, their tools and practices would become
@@ -6442,7 +5792,7 @@ files would bind every product; its steps followed with no decision naming them 
 and a resemblance could not be told apart (WAY-100); the content of each piece restated here beside
 the decision that carries it — two binding copies drift apart (WAY-19).
 
-### WAY-196/1 — What checks a binding rule of coding guidelines?
+### WAY-196 — What checks a binding rule of coding guidelines?
 
 Every binding rule of a product's coding guidelines names at least one invariant that checks it, by
 a script where a script can decide it and otherwise by an agent whose method sets k of n runs, never
@@ -6451,12 +5801,11 @@ script nor such an agent can check is an example, not a rule, whatever decision 
 guidelines of the coding discipline this decision prevails over WAY-168, under which a rule naming
 its decision binds with no invariant.
 
-- **Change:** new decision
 - **Scope:** product-guidelines, invariants
 - **Based on:** none
-- **Relations:** narrows WAY-168@2a68d855 · derives from WAY-08@2343e09f
-- **Verification:** level 1 — invariants: guidelines-check-carrier. Level 2 for the choice between a
-  script and an agent — an agent compares the change with the decision:
+- **Relations:** narrows WAY-168 · derives from WAY-08
+- **Verification:** invariants: guidelines-check-carrier. For the choice between a script and an
+  agent, an agent compares the change with the decision:
   - complies: the rule that an endpoint validates its input as the exemplar does names a script's
     invariant that every file of the kind calls the shared validation; the rule that no error is
     swallowed silently names an invariant an agent checks, passing in two of three runs; how the
@@ -6464,9 +5813,7 @@ its decision binds with no invariant.
   - violates: a rule of a kind's file names an invariant an agent checks by judging whether a new
     endpoint follows the exemplar; a rule stands with no invariant because no script can check it; a
     rule a script could decide is left to an agent.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
 
 *Rationale:* coding guidelines are there to keep agents' code consistent without anyone's memory,
 and a rule only a decision carries is kept by the memory of the agent reading it; its two uses,
@@ -6483,7 +5830,7 @@ warns — it changes what results the gate knows (WAY-63), far beyond guidelines
 of code judging whether new code follows the exemplar — its criterion is vague and its false alarms
 unknown.
 
-### WAY-197/1 — Who writes the use that breaks a rule of guidelines, and does it replace the deliberate break?
+### WAY-197 — Who writes the use that breaks a rule of guidelines, and does it replace the deliberate break?
 
 The use that breaks a rule of a product's guidelines is written by the author of the guidelines and
 stands beside the deliberate break the check of each invariant the rule names is accepted on, never
@@ -6495,14 +5842,11 @@ or alters the invariant's sentence or rewrites either use or its prepared base, 
 it gave with each, applying WAY-223's conditions separately to prepared guideline cases and to the
 reviewer's independently prepared earlier and later inputs for the deliberate break.
 
-- **Change:** new decision
 - **Scope:** product-guidelines, invariants, task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-168@2a68d855 · derives from WAY-69@7051f884 · derives from
-  WAY-223@6df19670
-- **Verification:** level 3 for who writes the use that breaks a rule — the human accepting the change
-  at the merge assesses how the work was handed out, from the record that names who wrote what.
-  Level 2 for what the check is accepted on — an agent compares the change with the decision:
+- **Relations:** derives from WAY-168 · derives from WAY-69 · derives from
+  WAY-223
+- **Verification:** an agent compares the change with the decision:
   - complies: the author of a product's coding guidelines writes, as the use breaking the rule that
     each endpoint validates its input, a short endpoint that reads its input unchecked; the reviewer
     of the script that checks the rule breaks the invariant by removing the validation from the
@@ -6511,10 +5855,7 @@ reviewer's independently prepared earlier and later inputs for the deliberate br
     reviewer writes none; the author of the check writes the use breaking the rule from the check;
     a change rewrites the use breaking a rule or its prepared base and nobody runs the check
     with it; the reviewer reuses the author's prepared pair as the independent deliberate break.
-- **Review when:** a gate of the-way reports for an invariant how its method meets the uses of the
-  rules that name it · check by: 2027-03-31
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/28
 
 *Rationale:* a use written by the author of the guidelines teaches the agent reading them what the
 rule forbids, while the reviewer's break is usually a small, artificial change from which a reader
@@ -6528,7 +5869,7 @@ check.
 teaches the reader little, and the guidelines wait for the end of the review; the author's use in
 place of the reviewer's break — it changes WAY-69 and loses the independence that decision keeps.
 
-### WAY-198/1 — How does a product's exemplar bind?
+### WAY-198 — How does a product's exemplar bind?
 
 A decision of a product's log designates, for a kind of code, the one file of the product that is
 the exemplar of that kind, naming in backticks its path and the kind's identifier, and what of that
@@ -6536,12 +5877,11 @@ exemplar a script can check — where a file of the kind lies, what it calls, ho
 input — stands in the coding guidelines of that kind as rules, each naming an invariant. The rest of
 the exemplar stands there as an example and binds no later code.
 
-- **Change:** new decision
 - **Scope:** product-guidelines
 - **Based on:** none
-- **Relations:** derives from WAY-22@dcf291ea · derives from WAY-193@1ae9ba7c
-- **Verification:** level 1 — invariants: guidelines-check-exemplar. Level 2 for what stands as a rule
-  and what as an example — an agent compares the change with the decision:
+- **Relations:** derives from WAY-22 · derives from WAY-193
+- **Verification:** invariants: guidelines-check-exemplar. For what stands as a rule and what as an
+  example, an agent compares the change with the decision:
   - complies: a product's decision designates `src/api/orders/route.ts` as the exemplar of the kind
     `endpoint`, and the coding guidelines of that kind hold, as rules naming a script's invariant
     each, that every route lies under `src/api/`, calls the shared handler and validates its input
@@ -6549,9 +5889,7 @@ the exemplar stands there as an example and binds no later code.
   - violates: the coding guidelines of a kind name as its exemplar a file no decision designates;
     the whole behaviour of the exemplar is one rule an agent checks by comparing new code with it;
     the exemplar's code is copied into the guidelines.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
 
 *Rationale:* an exemplar left as an example alone lets an agent depart from it with no signal, while
 a choice designated by a decision is one the human approved, and copying from existing code without
@@ -6563,7 +5901,7 @@ kind in the decision's binding sentences let a script tie the guidelines to the 
 each kind judging whether new code follows the exemplar — its criterion is vague and how often it
 flags sound code is unknown.
 
-### WAY-199/1 — What change of a product's exemplar takes approval?
+### WAY-199 — What change of a product's exemplar takes approval?
 
 Designating another file as the exemplar of a kind of code and changing a rule a script checks from
 that exemplar are changes of the product's decisions, approved as WAY-172 gives a changed meaning,
@@ -6571,12 +5909,11 @@ while an edit of the exemplar that keeps those rules takes no approval. The codi
 kind give beside the path of each file of the kind they list its status, `exemplar`, `copy` or
 `do not copy`, and beside the exemplar's path the decision that designates it.
 
-- **Change:** new decision
 - **Scope:** product-guidelines
 - **Based on:** none
-- **Relations:** derives from WAY-172@45806b6e · derives from WAY-198@4dca82c6
-- **Verification:** level 1 — invariants: guidelines-check-exemplar. Level 2 for what takes approval
-  — an agent compares the change with the decision:
+- **Relations:** derives from WAY-172 · derives from WAY-198
+- **Verification:** invariants: guidelines-check-exemplar. For what takes approval, an agent
+  compares the change with the decision:
   - complies: a fix of a typo in the exemplar, and a change of its inner structure that keeps the
     rules a script checks from it, go with no approval; a task that would make another file the
     exemplar proposes the change of the designating decision and waits for its approval; a file that
@@ -6584,9 +5921,7 @@ kind give beside the path of each file of the kind they list its status, `exempl
   - violates: a cycle moves the status `exemplar` to another file on its own; a rule a script checks
     from the exemplar is weakened in the same edit as the exemplar with no change of a decision; the
     status of the files stands only in the decision.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
 
 *Rationale:* the rules a script checks from the exemplar are what binds, so they change only with a
 decision, while an edit that keeps them uses a meaning a decision carries, which takes no approval
@@ -6598,7 +5933,7 @@ agent reading the guidelines what to copy and what not to, as Open Mercato's sta
 cannot judge; the status of the files kept in the decision alone — an agent reading the guidelines
 would not see which files not to copy.
 
-### WAY-200/1 — Who designates a product's exemplar for a kind of code, and when?
+### WAY-200 — Who designates a product's exemplar for a kind of code, and when?
 
 Where a product holds no file of a kind of code, the exemplar of that kind is designated by the task
 that creates its first file. Where it already holds files of that kind, the skill
@@ -6606,20 +5941,17 @@ that creates its first file. Where it already holds files of that kind, the skil
 that comparison, with the status `copy` or `do not copy` of every other file, and the human approves
 the decision that designates it.
 
-- **Change:** new decision
 - **Scope:** product-guidelines
 - **Based on:** none
-- **Relations:** derives from WAY-198@4dca82c6
-- **Verification:** level 2 — an agent compares the work with the decision:
+- **Relations:** derives from WAY-198
+- **Verification:** an agent compares the work with the decision:
   - complies: in a product with nine endpoints the skill judges all nine, proposes the one that
     follows the product's rules best as the exemplar and marks two `do not copy`; a task that creates
     a product's first migration designates that migration as the exemplar of its kind;
   - violates: the oldest endpoint becomes the exemplar with no comparison; the exemplar waits until
     someone asks for it while agents copy what they find; the skill writes the designating decision
     with no approval of the human.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
 
 *Rationale:* who designates the exemplar follows from the state of the product, as the styleguide
 comes before the first screen (WAY-184) and the audit reads a product that has screens (WAY-187): a
@@ -6630,27 +5962,24 @@ is one more way of working for the skill.
 a product that already has several; the exemplar designated after the fact by a separate decision
 once several files exist — until then every agent copies what it finds.
 
-### WAY-201/1 — How does the coding-guidelines skill's audit of a product with code end?
+### WAY-201 — How does the coding-guidelines skill's audit of a product with code end?
 
 The audit the skill `maintain-coding-guidelines` makes of a product that has code ends with a
 proposed exemplar for each kind of code the product holds files of, each with one sentence of what
 the product gains by it, and with the files of that kind marked `do not copy`, each with the file and
 line of the place that breaks a rule.
 
-- **Change:** new decision
 - **Scope:** product-guidelines
 - **Based on:** none
-- **Relations:** derives from WAY-200@02f168d5
-- **Verification:** level 2 — an agent compares the work with the decision:
+- **Relations:** derives from WAY-200
+- **Verification:** an agent compares the work with the decision:
   - complies: the audit proposes for the kind `endpoint` the file `src/api/orders/route.ts`, "every
     new endpoint checks its input as this one does", and marks `src/api/legacy/users.ts` `do not
     copy` at its line 42, where it reads the request's body unchecked;
   - violates: the audit ends with the linter's reports listed by the names of their rules; a file
     stands as `do not copy` with no line; an exemplar is proposed with no word of what the product
     gains.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
 
 *Rationale:* the human who approves the exemplar does not judge code, and a proposal with what the
 product gains, and a fault with its place, can be weighed by someone who is no developer, as the
@@ -6659,7 +5988,7 @@ next agent where not to copy from.
 *Rejected:* what the audit found shown as a comparison of the files' code — the human cannot weigh
 it.
 
-### WAY-202/1 — Which standing checks does the template of coding guidelines require, and from when do they bind a product?
+### WAY-202 — Which standing checks does the template of coding guidelines require, and from when do they bind a product?
 
 The template of the coding discipline requires three standing checks of a product's code — a
 linter, a formatter and an audit of dependencies — and a product departs from any of them only by a
@@ -6667,21 +5996,18 @@ decision of its log that gives the reason. They bind a product from the task tha
 guidelines, which is complete only once it holds, for each of the three, a decision of the product's
 log adopting it or departing from it with the reason.
 
-- **Change:** new decision
 - **Scope:** product-guidelines
 - **Based on:** none
-- **Relations:** derives from WAY-193@1ae9ba7c
-- **Verification:** level 1 — invariants: guidelines-check-form. Level 2 for the decisions the task
-  ends with — an agent compares the work with the decision:
+- **Relations:** derives from WAY-193
+- **Verification:** invariants: guidelines-check-form. For the decisions the task ends with, an
+  agent compares the work with the decision:
   - complies: a product with none of the three gets, in the task that writes its coding guidelines,
     decisions adopting a linter, a formatter and an audit of dependencies, or departing from one of
     them with its reason, and its coding guidelines name each at the rule the template requires;
   - violates: the skill only proposes the standing checks a product lacks, and the task ends with no
     decision on the audit of dependencies; a product's coding guidelines leave out the formatter
     with no decision; the three stand in the template and in no decision of the-way.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
 
 *Rationale:* a product whose code no standing check reads changes its style and takes in a known
 vulnerability with no signal, and a skill that only proposes the checks leaves it so for as long as
@@ -6693,7 +6019,7 @@ these binds it, as with the styleguide.
 of them would still have no signal; the three named in the template alone — nothing would bind the
 refinement to check them.
 
-### WAY-203/1 — Which rules of a linter's set block a change of a product's code?
+### WAY-203 — Which rules of a linter's set block a change of a product's code?
 
 A rule of a linter's set stands among the rules that block a change in the product's decision
 adopting the set, and so is checked by the invariant of the one rule of the product's coding
@@ -6703,11 +6029,10 @@ right or not. A rule of the set that gives a report leading to no such change is
 the product's code: it may stand among the examples of the coding guidelines, and no invariant checks
 it, so the gate does not run it.
 
-- **Change:** new decision
 - **Scope:** product-guidelines
 - **Based on:** none
-- **Relations:** derives from WAY-202@e0fb6a51
-- **Verification:** level 2 — an agent compares the work with the decision:
+- **Relations:** derives from WAY-202
+- **Verification:** an agent compares the work with the decision:
   - complies: a rule on unused variables, every report of which led to removing dead code, stands
     among the rules that block in the decision adopting the set and blocks a change; a rule on the order of imports that flagged two files whose order a generator writes
     stands among the examples under its name in the tool, and the linter's invariant does not run
@@ -6718,9 +6043,7 @@ it, so the gate does not run it.
     rules among the examples as warnings; a rule blocks because fewer than one report in ten led to
     no change; each rule of the set that blocks stands as a rule of its own under `## Rules` of the
     coding guidelines.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
 
 *Rationale:* a change of sound code that a blocking rule stops gets through only by a change of the
 decision adopting the set (WAY-207), put to a human who does not judge code; Google blocks a change
@@ -6737,7 +6060,7 @@ review — the gate sometimes blocks sound code, and only a change of a decision
 that gives such reports kept as a check that only warns — it changes what results the gate knows
 (WAY-63).
 
-### WAY-204/1 — How are the rules of a linter's set split between the rules that block and the examples?
+### WAY-204 — How are the rules of a linter's set split between the rules that block and the examples?
 
 The skill `maintain-coding-guidelines` proposes which rules of a linter's set block and which stand
 among the examples from a trial run of the set on the product's code, each report of which an agent
@@ -6748,11 +6071,10 @@ marks as recommended. The human approves that split in the product's decision ad
 rule on which a later report leads to no change of code worth making goes among the examples by a
 change of that decision, which the human approves.
 
-- **Change:** new decision
 - **Scope:** product-guidelines
 - **Based on:** none
-- **Relations:** derives from WAY-203@45e40683
-- **Verification:** level 2 — an agent compares the work with the decision:
+- **Relations:** derives from WAY-203
+- **Verification:** an agent compares the work with the decision:
   - complies: the skill runs a set in a scratch worktree of a product with code, a fresh agent
     judges each of its reports, the three rules with a report that led to no change worth making
     stand among the examples, and the human adopts the set with that split shown by its effect; a
@@ -6762,11 +6084,7 @@ change of that decision, which the human approves.
   - violates: the agent that wrote the code judges the reports of the trial run; the split comes
     from an agent's memory of which rules are noisy; a cycle turns a rule off in the linter's
     configuration on meeting such a report, with no change of the decision.
-- **Review when:** the first product without code that adopted the rules its linter's documentation
-  marks as recommended has met a report of one of them that leads to no change of code worth making,
-  or has merged ten changes of its code without one · check by: 2027-03-31
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
 
 *Rationale:* whether a rule's reports lead to changes worth making shows only on the product's own
 code, so the split is read off a trial run, and the agent that wrote that code would judge in its
@@ -6789,7 +6107,7 @@ time a set is adopted.
 deciding rule by rule — the human would judge what they cannot judge (WAY-194); an environment fact
 for each rule of the set — many facts with one source and one reason to change (WAY-76).
 
-### WAY-205/1 — How do a linter and a formatter enter a product whose code already breaks their rules?
+### WAY-205 — How do a linter and a formatter enter a product whose code already breaks their rules?
 
 Where a product's code already breaks the rules of its linter's set that block, the skill
 `maintain-coding-guidelines` proposes the linter's invariant over the whole of that code, which
@@ -6799,11 +6117,10 @@ rules than on `{fork-point}`, and a file not on `{fork-point}` holds none; the s
 once the first holds. A formatter enters a product by one reformatting of the whole of its code in
 the task that brings the formatter, with no second invariant.
 
-- **Change:** new decision
 - **Scope:** product-guidelines, invariants
 - **Based on:** none
-- **Relations:** derives from WAY-51@8bdac21a · derives from WAY-60@6e862c88
-- **Verification:** level 2 — an agent compares the work with the decision:
+- **Relations:** derives from WAY-51 · derives from WAY-60
+- **Verification:** an agent compares the work with the decision:
   - complies: a product whose code breaks the blocking rules in forty files lists the linter's
     invariant as violated by a change the human accepts and adds the second invariant, so a cleaned
     file that gains a report back fails at once, and a new file with one fails too; the task that
@@ -6813,9 +6130,7 @@ the task that brings the formatter, with no second invariant.
     the linter cleans every file of the product; the formatter's invariant stands on the list of
     violated invariants beside a second invariant comparing files with the fork point; the full
     invariant alone stands on the list, and a cleaned file gains reports back unseen.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
 
 *Rationale:* a rule weakened until the code meets it describes the accident, not the intent
 (WAY-51), and cleaning the whole of the code in the task that brings the linter grows that task into
@@ -6832,7 +6147,7 @@ that holds reports counts as a new file and is cleaned in the change that rename
 it (WAY-51); the whole of the code cleaned in the task that brings a linter — that task grows into
 cleaning the whole product.
 
-### WAY-206/1 — What does the audit of a product's dependencies check?
+### WAY-206 — What does the audit of a product's dependencies check?
 
 The skill `maintain-coding-guidelines` proposes an audit of dependencies that checks a change and
 fails it only where a version of a dependency that the change brings in against `{fork-point}` has a
@@ -6841,11 +6156,10 @@ gives it when the check runs, of at least the severity that decision sets, every
 among the ways the skill offers. Until the clock runs the methods of a product's invariants, the
 template of the coding discipline carries no audit of the whole tree of a product's dependencies.
 
-- **Change:** new decision
 - **Scope:** product-guidelines, invariants
 - **Based on:** none
-- **Relations:** derives from WAY-202@e0fb6a51 · derives from WAY-60@6e862c88
-- **Verification:** level 2 — an agent compares the work with the decision:
+- **Relations:** derives from WAY-202 · derives from WAY-60
+- **Verification:** an agent compares the work with the decision:
   - complies: a change that adds a library at a version with a known vulnerability of high severity
     fails in a product whose decision sets high; a change to a page's text passes on the morning an
     advisory is published for a dependency the product already holds; a product whose human chose
@@ -6854,9 +6168,7 @@ template of the coding discipline carries no audit of the whole tree of a produc
     dependencies fails on an advisory published that morning; the template sets the threshold at
     high for every product; the audit reads a copy of the database the product committed months
     before; the template carries an audit of the whole tree of dependencies run every day.
-- **Review when:** the clock runs the methods of a product's invariants · check by: 2027-03-31
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
 
 *Rationale:* an audit of the whole tree at every change fails a change that touches no dependency on
 a vulnerability published that morning, so the audit checks what the change brings, against the fork
@@ -6877,7 +6189,7 @@ WAY-68 narrowed so that a later `fail` on the same commit is no check giving dif
 new meaning of WAY-68 for a rare case; a fixed threshold of severity for every product — the
 severity is the product's choice.
 
-### WAY-207/1 — Where is a fault of one file of a product's code fixed?
+### WAY-207 — Where is a fault of one file of a product's code fixed?
 
 The template of the coding discipline has a product's coding guidelines hold that a fault of one
 file is fixed in that file, never by turning a rule of the linter off for the whole product nor by
@@ -6885,20 +6197,17 @@ changing the exemplar for that file's sake, and that turning a rule of the linte
 product is a change of the product's decision adopting the linter's set, which the human approves as
 WAY-172 gives a changed meaning.
 
-- **Change:** new decision
 - **Scope:** product-guidelines
 - **Based on:** none
-- **Relations:** derives from WAY-172@45806b6e · derives from WAY-193@1ae9ba7c
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Relations:** derives from WAY-172 · derives from WAY-193
+- **Verification:** an agent compares the change with the decision:
   - complies: a new endpoint that the linter flags for an unused import loses that import; a team
     that finds a blocking rule wrong for the product changes its decision adopting the set with the
     human's approval, and only then the rule is turned off in the linter's configuration;
   - violates: a rule is turned off in the linter's configuration so that one change gets through;
     the exemplar is changed so that a new file departing from it passes the rules a script checks
     from it.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
 
 *Rationale:* a rule of the linter reads every file of the parts it covers, so turning it off for one
 file's sake changes what binds all the others, unseen by the task that made the change, and the
@@ -6909,25 +6218,22 @@ global design token is for a styleguide (WAY-178).
 *Rejected:* a rule turned off in the linter's configuration so that one change gets through — every
 other file loses the rule unseen.
 
-### WAY-208/1 — Which parts of a product get coding guidelines?
+### WAY-208 — Which parts of a product get coding guidelines?
 
 The skill `maintain-coding-guidelines` proposes coding guidelines for every part of a product's map
 that holds code, the scripts of its build included, however small that part is, and the general file
 of its coding guidelines names each such part in *Applies to*.
 
-- **Change:** new decision
 - **Scope:** product-guidelines
 - **Based on:** none
-- **Relations:** derives from WAY-193@1ae9ba7c
-- **Verification:** level 2 — an agent compares the work with the decision:
+- **Relations:** derives from WAY-193
+- **Verification:** an agent compares the work with the decision:
   - complies: a product with a backend, a client in the browser and a part holding its build scripts
     names all three in *Applies to* of `guidelines/coding.md`, and its standing checks read the code
     of all three;
   - violates: the skill passes over the part of build scripts because it is small; the general file
     names only the backend because its kinds of code live there.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
 
 *Rationale:* an agent left free does something different in every task, and that is what guidelines
 are for; even guidelines of modest quality are consistent, as for the styleguide of every user
@@ -6937,28 +6243,24 @@ standing checks read.
 *Rejected:* no coding guidelines for a small or helper part, such as the scripts of the build — each
 task writes it its own way.
 
-### WAY-209/1 — When do a product's coding guidelines come into being?
+### WAY-209 — When do a product's coding guidelines come into being?
 
 The skill `maintain-coding-guidelines` proposes that, in a product with no code, the general file of
 its coding guidelines, with its standing checks, comes into being before the first task that writes
 the product's code, and that the file of a kind of code comes into being with the task that creates
 the first file of that kind.
 
-- **Change:** new decision
 - **Scope:** product-guidelines
 - **Based on:** none
-- **Relations:** derives from WAY-193@1ae9ba7c
-- **Verification:** level 2 — an agent compares the work with the decision:
+- **Relations:** derives from WAY-193
+- **Verification:** an agent compares the work with the decision:
   - complies: a product whose plan brings its first code gets a task of coding guidelines first,
     which adopts a linter, a formatter and an audit of dependencies before any code exists; the task
     that writes the product's first migration writes `guidelines/coding-migration.md` with that
     migration as its exemplar;
   - violates: the linter and the formatter are brought in once the first code is written; a file of
     the kind `endpoint` is written while the product holds no endpoint.
-- **Review when:** the first product whose coding guidelines were written before its first code has
-  merged the task that brought that code · check by: 2027-03-31
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
 
 *Rationale:* the first code written with no standing check is the code every later change copies,
 and checks brought to it afterwards find code to clean (WAY-205), as a first screen built with no
@@ -6969,7 +6271,7 @@ working has not yet been tried on a product, so its first use is reviewed.
 *Rejected:* the linter and the formatter brought in only after the first code is written — that code
 is written with no standing check, and they meet it as code to clean.
 
-### WAY-210/1 — What does the coding-guidelines skill look at first?
+### WAY-210 — What does the coding-guidelines skill look at first?
 
 Before anything else, the skill `maintain-coding-guidelines` recognizes which parts of a product
 hold code and what the product already has for them — a linter, a formatter, an audit of
@@ -6979,20 +6281,17 @@ formatter or audit of dependencies is a choice the skill leaves to the human as 
 task, never one it settles, recommending by default the tool most used in the product's technology,
 as research with sources shows it.
 
-- **Change:** new decision
 - **Scope:** product-guidelines
 - **Based on:** none
-- **Relations:** derives from WAY-193@1ae9ba7c
-- **Verification:** level 2 — an agent compares the work with the decision:
+- **Relations:** derives from WAY-193
+- **Verification:** an agent compares the work with the decision:
   - complies: in a product whose linter runs with a few rules, the skill proposes adding rules to
     that linter's configuration; a product with no standing check gets three questions, each
     recommending the tool research shows most used in the product's technology, with its sources;
   - violates: the skill sets a second linter beside the one the product runs because it judges it
     better; the skill chooses a formatter itself; the default recommendation is a tool the agent
     prefers, with no source showing its use.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
 
 *Rationale:* an existing tool, even a worse one, beats a better one brought in, since the code and
 the people working on it already follow it, and two linters over one code disagree, as for a
@@ -7006,7 +6305,7 @@ how widely an option is used within its family bears on how well an agent works 
 two tools over one code disagree; the skill choosing a new tool itself — a dependency the human
 never chose.
 
-### WAY-211/1 — Where do the tools of the standing checks and a linter's set of rules come from?
+### WAY-211 — Where do the tools of the standing checks and a linter's set of rules come from?
 
 The skill `maintain-coding-guidelines` takes the tools of the standing checks and a linter's set of
 rules from the human's preferences for the product's technology that the product's foundation
@@ -7015,11 +6314,10 @@ each source named with its page and version and every claim no source supports r
 before the human sees the options, as the options of a technology choice are checked (WAY-122). It
 researches again whenever a product's coding guidelines are refreshed or extended.
 
-- **Change:** new decision
 - **Scope:** product-guidelines
 - **Based on:** none
-- **Relations:** derives from WAY-122@b343277a · derives from WAY-120@81f84997
-- **Verification:** level 2 — an agent compares the work with the decision:
+- **Relations:** derives from WAY-122 · derives from WAY-120
+- **Verification:** an agent compares the work with the decision:
   - complies: the human has no preference for the linter of a product written in TypeScript;
     research names the pages and versions of the tools' documentation and of a record of their use,
     a fresh critic strikes a claimed difference no page gives, and only then the human sees the
@@ -7027,9 +6325,7 @@ researches again whenever a product's coding guidelines are refreshed or extende
   - violates: the tools come from the agent's memory; research reaches the human uncritiqued; an
     extension reuses the first research; the skill researches a tool the human already named as
     preferred and offers another in its place.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/26
 
 *Rationale:* the product is the human's, so their preferences come first; where they have none,
 research with sources and a critique lets a human who cannot judge the tools tell a sound comparison
@@ -7038,7 +6334,7 @@ their recommended sets move, so refreshed coding guidelines are set against them
 *Rejected:* tools and sets proposed from the agent's memory — the human cannot tell a sound proposal
 from an invented one; research once for each product — later extensions miss what has moved.
 
-### WAY-212/1 — How does a product's instruction file lead to its coding guidelines?
+### WAY-212 — How does a product's instruction file lead to its coding guidelines?
 
 A product's root `AGENTS.md`, outside the block the-way's installer writes, points to its coding
 guidelines by one line naming `guidelines/coding.md` by its path in backticks with the condition of
@@ -7047,22 +6343,19 @@ line of it names a file `guidelines/coding-<kind>.md`. Each such file is named i
 the table of `guidelines/coding.md`, by its path in backticks with the condition under which to read
 it, such as adding or changing a file of its kind.
 
-- **Change:** new decision
 - **Scope:** product-guidelines, instruction-files
 - **Based on:** none
-- **Relations:** derives from WAY-128@4dca37ca · derives from WAY-129@1336c32b · derives from
-  WAY-167@052adf27
-- **Verification:** level 1 — invariants: guidelines-check-kind-index. Level 2 for the pointer of
-  `AGENTS.md` — an agent compares the change with the decision:
+- **Relations:** derives from WAY-128 · derives from WAY-129 · derives from
+  WAY-167
+- **Verification:** invariants: guidelines-check-kind-index. For the pointer of `AGENTS.md`, an
+  agent compares the change with the decision:
   - complies: `AGENTS.md` reads "Before you change the product's code, read `guidelines/coding.md`"
     below the installer's block, and the table of `guidelines/coding.md` names
     `guidelines/coding-endpoint.md` with "before adding or changing an endpoint";
   - violates: `AGENTS.md` holds a line for each file of a kind; the pointer stands inside the
     installer's block; the coding guidelines are imported with `@`; the pointer names a lint command
     to run before a change.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/27
 
 *Rationale:* coding guidelines no instruction leads to can be missed by a session outside the task
 cycle; a path with its condition costs one line and is read when the condition comes (WAY-129), and the
@@ -7079,7 +6372,7 @@ styleguide — `AGENTS.md`, loaded into every session, grows with each kind; no 
 way in to the task cycle — a session outside that cycle can miss them.
 
 
-### WAY-213/1 — How do the agents of a task's cycle receive the product's guidelines?
+### WAY-213 — How do the agents of a task's cycle receive the product's guidelines?
 
 The task cycle selects every file of the product's guidelines whose *Applies to* names an affected
 part, a file of a kind of code only where its row's *When to read* in `guidelines/coding.md` also
@@ -7091,20 +6384,17 @@ change on return and reconciliation before dependent work proceeds.
 With the styleguide, the planner and the author working without a plan receive its example of
 the order of work (WAY-181), as an example they follow or explain departing from.
 
-- **Change:** new decision
 - **Scope:** task-cycle, product-guidelines
 - **Based on:** none
-- **Relations:** derives from WAY-167@052adf27 · derives from WAY-171@2bc38c05 · derives from
-  WAY-148@4c7fab3a · derives from WAY-181@fc13a0df
-- **Verification:** level 2 — an agent compares the selection, handoffs and work with the decision:
+- **Relations:** derives from WAY-167 · derives from WAY-171 · derives from
+  WAY-148 · derives from WAY-181
+- **Verification:** an agent compares the selection, handoffs and work with the decision:
   - complies: a change touching screens and endpoints gives every named recipient the applicable
     styleguide, general coding guidelines and matching kind guidelines; a later scope expansion
     refreshes the next handoff; an author without a plan reads the order as an example;
   - violates: only the reviewer gets guidelines; a checklist replaces a whole source; a kind's
     reading condition is ignored; a recipient relies on a stale selection; the order rejects a plan.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/27
 
 *Rationale:* shared guidance reaches the people designing and making a change before review can
 find its absence. Selection by the affected work bounds context without cutting the source into
@@ -7115,7 +6405,7 @@ a review checklist — examples can become obligations and lose their context; d
 to instruction pointers — a stage can miss what the preceding stage read.
 
 
-### WAY-214/1 — How does task refinement find missing product guidelines?
+### WAY-214 — How does task refinement find missing product guidelines?
 
 The skill `refine-task` uses the same reading procedure as the task cycle to find guidelines by
 the affected parts' *Applies to* and a kind of code by its row in the general coding index, with
@@ -7127,22 +6417,19 @@ match.
 An existing general coding file whose *Applies to* omits an affected code part is read for
 extension in the current task, not treated as an absent file.
 
-- **Change:** new decision
 - **Scope:** project-level, product-guidelines, task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-150@3bd9e695 · derives from WAY-167@052adf27 · derives from
-  WAY-171@2bc38c05 · derives from WAY-183@17222226 · derives from WAY-208@ed84e391 · derives from
-  WAY-213@930c9d5a
-- **Verification:** level 2 — an agent compares refinement and its reading with the decision:
+- **Relations:** derives from WAY-150 · derives from WAY-167 · derives from
+  WAY-171 · derives from WAY-183 · derives from WAY-208 · derives from
+  WAY-213
+- **Verification:** an agent compares refinement and its reading with the decision:
   - complies: an announced admin panel is recognized before its files exist; the same lookup
     finds the missing styleguide and an unindexed kind; an omitted part extends existing coding
     guidelines; an absent indexed file is named as a discrepancy;
   - violates: each discipline uses an unrelated lookup; helper code is passed over because it is
     small; an uncertain kind is silently considered covered; an omitted part creates a false wait
     for a new general coding file.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/27
 
 *Rationale:* discovery repeated per discipline drifts from what the later cycle reads. Recognizing
 the work before implementation lets refinement find its missing ground, at the cost of judgment
@@ -7152,7 +6439,7 @@ consistent; classification from names alone — a helper can contain code and a 
 screens without its name saying so.
 
 
-### WAY-215/1 — What happens to a task that needs missing discipline guidelines?
+### WAY-215 — What happens to a task that needs missing discipline guidelines?
 
 Unless a departure under WAY-217 applies, a task changing a user interface with no styleguide or
 writing code in a product with no general coding guidelines, whether or not the product already
@@ -7166,22 +6453,19 @@ After that task merges, refinement resumes, reads the guidelines and settles the
 task needs under WAY-172 before readiness; extension or correction of existing guidelines stays
 in the current task under WAY-172 and WAY-199, unless the human separates it.
 
-- **Change:** new decision
 - **Scope:** project-level, product-guidelines
 - **Based on:** none
-- **Relations:** derives from WAY-124@4fbad55c · derives from WAY-144@d5802c22 · derives from
-  WAY-154@5da992f5 · derives from WAY-172@45806b6e · derives from WAY-199@9d0c758c · derives from
-  WAY-184@cdb363d5 · derives from WAY-209@977f8982 · derives from WAY-217@4334452a
-- **Verification:** level 2 — an agent compares the task, prerequisite and refinement with the decision:
+- **Relations:** derives from WAY-124 · derives from WAY-144 · derives from
+  WAY-154 · derives from WAY-172 · derives from WAY-199 · derives from
+  WAY-184 · derives from WAY-209 · derives from WAY-217
+- **Verification:** an agent compares the task, prerequisite and refinement with the decision:
   - complies: a fix in an existing product without coding guidelines waits for their task's merge,
     then reads them before the complete document is accepted; a plan member returns its missing
     prerequisite to the plan owner; an existing styleguide is extended within the screen task;
   - violates: an absent styleguide is added only to the screen task's To do; readiness is granted
     merely because a dependency was named; a refiner edits the owning plan; the task writing
     guidelines waits for those guidelines; the task's wait is copied into a new plan state.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/27
 
 *Rationale:* guidelines prepared within the work that first needs them shrink to that work's
 needs, whereas separate preparation lets later work share meanings. Existing products accumulate
@@ -7194,7 +6478,7 @@ a wait first imposed in implementation — meanings surface after the task was a
 every extension separated — ordinary corrections wait for unrelated preparation.
 
 
-### WAY-216/1 — What does refinement assign to a task creating an unindexed kind of code?
+### WAY-216 — What does refinement assign to a task creating an unindexed kind of code?
 
 A task that creates the first file of a kind of code whose row the general coding index lacks
 gains in *To do* the designation of that kind's exemplar under WAY-200 and its kind guidelines
@@ -7203,18 +6487,15 @@ Where files of the kind already exist, refinement records that discrepancy and r
 selection through the comparison WAY-200 gives existing code, rather than treating the next file
 as the first.
 
-- **Change:** new decision
 - **Scope:** project-level, product-guidelines
 - **Based on:** none
-- **Relations:** derives from WAY-200@02f168d5 · derives from WAY-209@977f8982
-- **Verification:** level 2 — an agent compares the task and existing code with the decision:
+- **Relations:** derives from WAY-200 · derives from WAY-209
+- **Verification:** an agent compares the task and existing code with the decision:
   - complies: the task adding the first migration also designates its exemplar and writes its
     kind guidelines and index row; existing unindexed endpoints go through comparison;
   - violates: the first migration waits for an exemplar that cannot exist before it; existing
     endpoints are ignored and the next endpoint is called the first.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/27
 
 *Rationale:* the first instance supplies the material an exemplar needs, so separating its
 designation would create a circular wait. Existing instances instead need comparison, or the next
@@ -7223,24 +6504,21 @@ one becomes a model without being judged against what the product already holds.
 designating the next instance regardless of existing code — it bypasses comparison.
 
 
-### WAY-217/1 — Does an approved departure count as missing guidelines?
+### WAY-217 — Does an approved departure count as missing guidelines?
 
 The shared reading of product guidelines treats no absent discipline file as missing for the
 affected part where a current decision of the product's log departs from those guidelines for
 that part, and applies that departure only within the scope the decision gives it.
 
-- **Change:** new decision
 - **Scope:** project-level, product-guidelines, task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-173@c423105b · derives from WAY-193@1ae9ba7c
-- **Verification:** level 2 — an agent compares the selection and departure with the product's decisions:
+- **Relations:** derives from WAY-173 · derives from WAY-193
+- **Verification:** an agent compares the selection and departure with the product's decisions:
   - complies: an approved departure for helper scripts removes their missing-guidelines finding
     while an affected browser interface still needs its own styleguide;
   - violates: a deliberate departure still blocks every task until the rejected guidelines are
     written; a departure for one part silently exempts another.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/27
 
 *Rationale:* a product can knowingly decline guidance through its own decision, and forcing its
 creation afterwards would cancel that choice. The price is that the departure removes the
@@ -7249,7 +6527,7 @@ protection for later work too, which is why its stated scope matters.
 a departure inferred by the agent — absence would authorize itself.
 
 
-### WAY-218/1 — Where does project breakdown place missing guidelines and first-kind work?
+### WAY-218 — Where does project breakdown place missing guidelines and first-kind work?
 
 The skill `plan-project` uses the same reading of product guidelines as refinement and the task
 cycle, and places a task for a missing styleguide or general coding guidelines before the tasks
@@ -7258,20 +6536,17 @@ It places the designation of the exemplar and kind guidelines with the task crea
 first file, under WAY-216, while changes beyond the approved definition follow the existing
 definition and plan approval route.
 
-- **Change:** new decision
 - **Scope:** project-level, product-guidelines
 - **Based on:** none
-- **Relations:** derives from WAY-143@9ae691ca · derives from WAY-144@d5802c22 · derives from
-  WAY-184@cdb363d5 · derives from WAY-209@977f8982 · derives from WAY-214@b5335e6e · derives from
-  WAY-216@31a6b089
-- **Verification:** level 2 — an agent compares the breakdown with the definition and product:
+- **Relations:** derives from WAY-143 · derives from WAY-144 · derives from
+  WAY-184 · derives from WAY-209 · derives from WAY-214 · derives from
+  WAY-216
+- **Verification:** an agent compares the breakdown with the definition and product:
   - complies: the screen tasks depend on the missing styleguide task, while the first migration
     task carries its exemplar work; a suitable existing prerequisite is reused;
   - violates: guidance is discovered only when the first screen task is refined; a preparatory
     task has no consumer; the plan silently enlarges the approved scope.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/27
 
 *Rationale:* discovering the prerequisite during breakdown makes the dependencies visible before
 work is handed out; refinement remains useful for work outside a project and for later omissions.
@@ -7281,7 +6556,7 @@ first consumer reaches refinement.
 own consumers already need; separate exemplar preparation — the material is made by its consumer.
 
 
-### WAY-219/1 — What does an author check before a user-interface change reaches review?
+### WAY-219 — What does an author check before a user-interface change reaches review?
 
 Before review, the author of a one-author change and the executor of a slice changing a user
 interface check the affected components' states required by the product's applicable styleguide,
@@ -7293,20 +6568,17 @@ actual failed or unperformed check rather than that reason.
 The report records what was checked, how, what was observed and the screenshot evidence where
 obtained, without treating a code inspection as evidence of rendered appearance.
 
-- **Change:** new decision
 - **Scope:** task-cycle, product-guidelines
 - **Based on:** none
-- **Relations:** derives from WAY-164@898c9d56 · derives from WAY-177@8c1571e5 · derives from
-  WAY-187@d58726d5 · derives from WAY-165@97bffb69 · derives from WAY-173@c423105b
-- **Verification:** level 2 — an agent compares the author's evidence, review and request with the decision:
+- **Relations:** derives from WAY-164 · derives from WAY-177 · derives from
+  WAY-187 · derives from WAY-165 · derives from WAY-173
+- **Verification:** an agent compares the author's evidence, review and request with the decision:
   - complies: an author checks the states the adopted styleguide requires and inspects a
     screenshot; with no settled way it inspects code and names the unchecked screenshot in both
     places; a failed settled way is reported as that failure;
   - violates: a passing suite replaces the state check; a default-state screenshot stands for all
     required states; code inspection is called proof of visible focus; absent access is hidden.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/27
 
 *Rationale:* states beyond the default are easy to omit, and rendered appearance can differ from
 what source inspection suggests. Looking at both catches different faults before review; where
@@ -7317,24 +6589,21 @@ can catch; stopping the cycle for an unsettled way to the interface — it creat
 after the change is made; code inspection described as rendered evidence — the gap disappears.
 
 
-### WAY-220/1 — How does a code reviewer grade a finding about appearance?
+### WAY-220 — How does a code reviewer grade a finding about appearance?
 
 A code reviewer grades a finding about appearance by its concrete effect on the user, within the
 review's existing severity scale, rather than treating it as Minor merely because it concerns
 appearance; the reviewer retains the grade and scope decisions WAY-161 assigns it.
 
-- **Change:** new decision
 - **Scope:** task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-161@cddc297e
-- **Verification:** level 2 — an agent compares the finding and its grade with the visible consequence:
+- **Relations:** derives from WAY-161
+- **Verification:** an agent compares the finding and its grade with the visible consequence:
   - complies: a colour that makes a destructive action look harmless is judged by that consequence;
     a visual difference with no blocking consequence can remain Minor;
   - violates: an appearance defect is called Minor solely because it is visual; every visual
     difference is automatically blocking; the orchestrator changes the reviewer's grade.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/27
 
 *Rationale:* appearance can carry the meaning by which a person chooses an action, so a visual
 fault can change behaviour as seriously as incorrect code. Its consequence supplies the
@@ -7343,7 +6612,7 @@ distinction without introducing another severity scale or moving judgment to the
 appearance always blocking — harmless differences cost a repair round.
 
 
-### WAY-221/1 — When can departure from a guideline example support a blocking finding?
+### WAY-221 — When can departure from a guideline example support a blocking finding?
 
 Departure from an example in product guidelines or from the part of an exemplar no script checks
 is not by itself grounds for a blocking review finding: the reviewer names the consequence for
@@ -7351,19 +6620,16 @@ the user or for code correctness that warrants the blocking grade under WAY-161.
 Binding rules and their invariants retain their force, and this criterion gives the orchestrator
 no authority to regrade or discard a reviewer's finding.
 
-- **Change:** new decision
 - **Scope:** task-cycle, product-guidelines
 - **Based on:** none
-- **Relations:** derives from WAY-168@2a68d855 · derives from WAY-196@0e714a05 · derives from
-  WAY-198@4dca82c6 · derives from WAY-161@cddc297e
-- **Verification:** level 2 — an agent compares a finding with the guideline and named consequence:
+- **Relations:** derives from WAY-168 · derives from WAY-196 · derives from
+  WAY-198 · derives from WAY-161
+- **Verification:** an agent compares a finding with the guideline and named consequence:
   - complies: a different internal arrangement is not blocking merely because the exemplar uses
     another; a departure causing incorrect input handling is graded by that effect;
   - violates: the reviewer blocks only because the example was not copied; the orchestrator
     discards an Important finding by calling the cited material an example.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/27
 
 *Rationale:* examples teach useful ways without acquiring the force of approved rules, and
 comparison without a concrete consequence turns taste into a blocker. The price is that some
@@ -7373,7 +6639,7 @@ letting the orchestrator decide which findings count — the agent closing the w
 obstacle.
 
 
-### WAY-222/1 — What does the task cycle adopt from the course lesson on building a user interface with an agent?
+### WAY-222 — What does the task cycle adopt from the course lesson on building a user interface with an agent?
 
 From a course lesson on building a user interface with an agent, the task cycle adopts the
 styleguide's order of work as an example delivered to the planner and the author without a plan
@@ -7383,21 +6649,18 @@ This adoption leaves out comparison with reference screenshots, prescribing any 
 styleguide or coding guidelines, and selecting interface technology outside the project
 definition's technology step.
 
-- **Change:** new decision
 - **Scope:** task-cycle, product-guidelines
 - **Based on:** the course lesson on building a user interface with an agent is private material
   its readers cannot open; the adopted practices are described in the binding sentences and no
   passage of the lesson is quoted.
-- **Relations:** derives from WAY-100@e7a74a18 · derives from WAY-213@930c9d5a · derives from
-  WAY-219@a05a1361 · derives from WAY-220@05ec2de0
-- **Verification:** level 2 — an agent compares the cycle with the adoption's boundaries:
+- **Relations:** derives from WAY-100 · derives from WAY-213 · derives from
+  WAY-219 · derives from WAY-220
+- **Verification:** an agent compares the cycle with the adoption's boundaries:
   - complies: the planner receives an example, the author inspects states and a screenshot, and
     the reviewer judges a visual consequence, without requiring a reference image comparison;
   - violates: a further practice of the lesson becomes mandatory merely because it comes from
     that lesson; the cycle dictates a product's visual meanings or styling technology.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/27
 
 *Rationale:* these practices help the cycle catch visible defects while its existing foundation
 keeps meanings and technology choices with the product. Naming the adoption and its boundaries
@@ -7407,27 +6670,24 @@ material or adopting the lesson as a whole.
 explicit authority of their own; the lesson taken whole — unrelated practices bind every product;
 private quotations or pointers in place of the reasoning — readers cannot assess them.
 
-### WAY-223/1 — How is a check accepted when the history it protects contains no elements yet?
+### WAY-223 — How is a check accepted when the history it protects contains no elements yet?
 
 A test protecting elements of an earlier version takes no evidence of its own when that history
 holds no elements yet: it is accepted as every invariant test is, by being seen failing once
 (WAY-08).
 
-- **Change:** new decision
 - **Scope:** invariants, product-guidelines, task-cycle, gate
 - **Based on:** none
-- **Relations:** derives from WAY-08@2343e09f · derives from WAY-61@4804d070 · derives from
-  WAY-69@7051f884
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Relations:** derives from WAY-08 · derives from WAY-61 · derives from
+  WAY-69
+- **Verification:** an agent compares the change with the decision:
   - complies: a test protecting published names, while none is published yet, is seen failing on
     input in which a published name is renamed, and the change records nothing else for its
     acceptance;
   - violates: a change records a read of the historical commit and prepared earlier versions as
     the acceptance of a test; a test is taken as checking its rule without having been seen
     failing, because the history it protects is empty.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/28
 
 *Rationale:* an empty history makes preservation true without exercising detection, and the failure
 seen once, on input in which an element changes, already shows the test detects it; evidence of the
@@ -7437,25 +6697,42 @@ protected set empty, with that evidence recorded apart from the result — a pro
 protecting test; treating the first successful run as acceptance — it can pass without comparing
 any element.
 
-### WAY-224/1 — How does a task cycle bring a candidate failure mode to the human?
+### WAY-224 — How does a task cycle bring a candidate failure mode to the human?
 
 A task cycle brings no candidate failure mode to the human and records none, since the part map
 records no failure modes (WAY-46).
 
-- **Change:** new decision
 - **Scope:** part-map, task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-46@7511b86f
-- **Verification:** level 2 — an agent compares the task, the request and the human's answer with
-  the decision:
+- **Relations:** derives from WAY-46
+- **Verification:** an agent compares the task, the request and the human's answer with the
+  decision:
   - complies: the request's *Questions* hold no question about a failure mode of a part;
   - violates: the cycle records a failure mode at a part, or asks the human to accept one.
-- **Review when:** none
 - **Origin:** none
-- **Approved by:** Mariusz, merge of https://github.com/mariusznazar/the-way/pull/29
 
 *Rationale:* a failure mode of a part would only feed a criticality, and the map computes none
 (WAY-46), so a question about one would settle nothing.
 *Rejected:* a candidate failure mode put to the human in the request's *Questions*, with the agent's
 recommendation and the strongest argument against it, and recorded once the human accepts it — a
 judgment asked for a value nothing reads.
+
+## Withdrawn identifiers
+
+| Identifier | Why | Successors |
+|---|---|---|
+| WAY-06 | folded into WAY-01 when the entries of group 03 were slimmed | WAY-01 |
+| WAY-15 | removed when the entries of group 09 were slimmed (a foundation that does not change with every change of code); the commit names no successor | none |
+| WAY-23 | folded into WAY-18 when the entries of group 04 were slimmed | WAY-18 |
+| WAY-39 | folded into WAY-02 when the entries of group 01 were slimmed | WAY-02 |
+| WAY-50 | folded into WAY-49 when the entries of group 16 were slimmed | WAY-49 |
+| WAY-59 | removed when the entries of group 17 were slimmed (form of entries); the commit names no successor | none |
+| WAY-66 | folded into WAY-31 when the entries of group 01 were slimmed | WAY-31 |
+| WAY-67 | folded into WAY-51 when the entries of group 03 were slimmed | WAY-51 |
+| WAY-70 | folded into WAY-69 when the entries of group 14 were slimmed | WAY-69 |
+| WAY-75 | folded into WAY-64 when the entries of group 02 were slimmed | WAY-64 |
+| WAY-83 | withdrawn: the foundation records no human verdict | none |
+| WAY-87 | folded into WAY-46 when the entries of group 06 were slimmed | WAY-46 |
+| WAY-88 | folded into WAY-73 when the entries of group 07 were slimmed | WAY-73 |
+| WAY-91 | removed when the entries of group 13 were slimmed (a result comes from running the method); the commit names no successor | none |
+| WAY-92 | folded into WAY-95 when the entries of group 05 were slimmed | WAY-95 |

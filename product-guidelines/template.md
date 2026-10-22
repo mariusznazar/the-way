@@ -239,6 +239,6 @@ Every reference outside fenced code in a file `guidelines/<name>.md` — a decis
   invariant's *Part* reads
   `product-guidelines · decisions · invariants · agent-instructions · relation-model`, as
   `foundations/invariants.md` gives it (WAY-62).
-- Before the product has a main branch, the gate fills in `none` for `{merge-onto}`: the check
-  after the merge records `unchecked` beside the verdict of the check on the same commit, and that
-  is the expected state (WAY-61).
+- Before the product has a main branch, `{merge-onto}` reads `none`, as `elements/common/rules.md`
+  says: the check after the merge records `unchecked` beside the verdict of the check on the same
+  commit, and that is the expected state (WAY-61).

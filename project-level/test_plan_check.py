@@ -251,24 +251,24 @@ class Template(unittest.TestCase):
 
 class Header(unittest.TestCase):
     def test_a_missing_status_line_is_reported(self):
-        # invariant: project-plan-form/1
+        # invariant: project-plan-form
         self.assertIn("form", conditions(plan(status="")))
 
     def test_a_status_off_its_forms_is_reported(self):
-        # invariant: project-plan-form/1
+        # invariant: project-plan-form
         for status in ("Status: almost done", "Status: handed over", "Status: handed over 5.10.2026",
                        "Status: Draft"):
             with self.subTest(status=status):
                 self.assertIn("form", conditions(plan(status=status)))
 
     def test_a_handed_over_date_that_is_no_calendar_date_is_reported(self):
-        # invariant: project-plan-form/1
+        # invariant: project-plan-form
         for status in ("Status: handed over 2026-13-45", "Status: handed over 2026-02-30"):
             with self.subTest(status=status):
                 self.assertIn("form", conditions(plan(status=status)))
 
     def test_a_gate_record_without_its_fingerprint_line_is_reported(self):
-        # invariant: project-plan-form/1
+        # invariant: project-plan-form
         line = "\n- Definition fingerprint: %s" % FINGERPRINT
         self.assertIn(line, DEFINITION)
         self.assertIn("form", conditions(PLAN, DEFINITION.replace(line, "")))
@@ -278,7 +278,7 @@ class Header(unittest.TestCase):
         return conditions(plan(fingerprint=fingerprint_of(bodies)), definition(bodies=bodies))
 
     def test_a_definition_whose_in_scope_holds_no_list_item_is_reported(self):
-        # invariant: project-plan-form/1
+        # invariant: project-plan-form
         for body in ("Projekt dostarcza pierwszą mapę, zapis postępu, konta i serwer testowy.",
                      "### Gra\n\nPierwsza mapa i zapis postępu."):
             with self.subTest(body=body):
@@ -315,11 +315,11 @@ class Header(unittest.TestCase):
         self.assertEqual(conditions(plan(status="Status: handed over 2026-10-06")), [])
 
     def test_a_missing_definition_line_is_reported(self):
-        # invariant: project-plan-form/1
+        # invariant: project-plan-form
         self.assertIn("form", conditions(plan(definition_line="")))
 
     def test_a_definition_line_off_its_form_is_reported(self):
-        # invariant: project-plan-form/1
+        # invariant: project-plan-form
         for line in ("Definition: definition.md",
                      "Definition: definition.md — fingerprint %s" % FINGERPRINT[:7],
                      "Definition: definition.md — fingerprint %sz" % FINGERPRINT[:7],
@@ -328,27 +328,27 @@ class Header(unittest.TestCase):
                 self.assertIn("form", conditions(plan(definition_line=line)))
 
     def test_a_fingerprint_in_capitals_is_reported(self):
-        # invariant: project-plan-form/1
+        # invariant: project-plan-form
         line = "Definition: definition.md — fingerprint ABCDEF12"
         self.assertIn("form", conditions(plan(definition_line=line)))
 
     def test_a_definition_that_cannot_be_read_is_reported(self):
-        # invariant: project-plan-form/1
+        # invariant: project-plan-form
         self.assertEqual(set(conditions(PLAN, None)), {"form"})
 
     def test_a_fingerprint_matching_the_gate_record_but_not_the_changed_definition_is_reported(self):
-        # invariant: project-plan-form/1
+        # invariant: project-plan-form
         changed_after_gate = DEFINITION.replace("- edytor map", "- edytor map\n- tryb wieloosobowy")
         self.assertNotEqual(changed_after_gate, DEFINITION)
         self.assertIn("- Definition fingerprint: %s" % FINGERPRINT, changed_after_gate)
         self.assertIn("form", conditions(PLAN, changed_after_gate))
 
     def test_a_fingerprint_other_than_the_one_the_gate_record_and_the_text_hold_is_reported(self):
-        # invariant: project-plan-form/1
+        # invariant: project-plan-form
         self.assertIn("form", conditions(plan(fingerprint=OTHER_FINGERPRINT)))
 
     def test_a_fingerprint_matching_the_text_but_not_the_gate_record_is_reported(self):
-        # invariant: project-plan-form/1
+        # invariant: project-plan-form
         stale_gate = definition(gate_fingerprint=OTHER_FINGERPRINT)
         self.assertIn("form", conditions(PLAN, stale_gate))
 
@@ -360,22 +360,22 @@ class Header(unittest.TestCase):
 
 class Sections(unittest.TestCase):
     def test_a_missing_section_is_reported(self):
-        # invariant: project-plan-form/1
+        # invariant: project-plan-form
         order = [name for name in PLAN_SECTIONS if name != "Phases"]
         self.assertIn("form", conditions(plan(order=order)))
 
     def test_a_section_standing_twice_is_reported(self):
-        # invariant: project-plan-form/1
+        # invariant: project-plan-form
         order = list(PLAN_SECTIONS) + ["Phases"]
         self.assertIn("form", conditions(plan(order=order)))
 
     def test_a_section_outside_the_template_is_reported(self):
-        # invariant: project-plan-form/1
+        # invariant: project-plan-form
         text = PLAN.replace("## Phases", "## Notes\n\nPlan pisany razem z Mariuszem.\n\n## Phases")
         self.assertIn("form", conditions(text))
 
     def test_sections_out_of_order_are_reported(self):
-        # invariant: project-plan-form/1
+        # invariant: project-plan-form
         order = ["Tasks", "Projected entries", "Phases", "Open questions", "Change log"]
         self.assertIn("form", conditions(plan(order=order)))
 
@@ -385,26 +385,26 @@ class Sections(unittest.TestCase):
         self.assertEqual(conditions(plan(bodies={"Phases": phases})), [])
 
     def test_an_empty_section_is_reported(self):
-        # invariant: project-plan-form/1
+        # invariant: project-plan-form
         self.assertIn("form", conditions(plan(bodies={"Phases": ""})))
 
     def test_a_change_log_without_a_dated_item_is_reported(self):
-        # invariant: project-plan-form/1
+        # invariant: project-plan-form
         for log in ("- written from the definition at fingerprint %s" % FINGERPRINT,
                     "Plan napisany z definicji.", "none"):
             with self.subTest(log=log):
                 self.assertIn("form", conditions(plan(bodies={"Change log": log})))
 
     def test_a_tasks_section_without_its_table_is_reported(self):
-        # invariant: project-plan-form/1
+        # invariant: project-plan-form
         self.assertIn("form", conditions(plan(bodies={"Tasks": "none"})))
 
     def test_a_projected_entries_section_without_its_table_is_reported(self):
-        # invariant: project-plan-form/1
+        # invariant: project-plan-form
         self.assertIn("form", conditions(plan(bodies={"Projected entries": "TODO"})))
 
     def test_projected_entries_reading_none_while_the_definition_projects_entries_is_reported(self):
-        # invariant: project-plan-form/1
+        # invariant: project-plan-form
         self.assertIn("form", conditions(plan(bodies={"Projected entries": "none"})))
 
     def test_a_definition_projecting_no_entry_lets_projected_entries_read_none(self):
@@ -418,7 +418,7 @@ class Sections(unittest.TestCase):
 
 class TasksTable(unittest.TestCase):
     def test_a_tasks_header_off_the_template_is_reported(self):
-        # invariant: project-plan-form/1
+        # invariant: project-plan-form
         header = table(TASK_COLUMNS, ()).splitlines()[0]
         for other in (header.replace(" Depends on |", " Depends |"),
                       header.replace(" Document |", ""),
@@ -427,18 +427,18 @@ class TasksTable(unittest.TestCase):
                 self.assertIn("form", conditions(PLAN.replace(header, other)))
 
     def test_a_tasks_table_without_a_task_row_is_reported(self):
-        # invariant: project-plan-form/1
+        # invariant: project-plan-form
         self.assertIn("form", conditions(plan(tasks=())))
 
     def test_a_task_number_off_its_form_is_reported(self):
-        # invariant: project-plan-form/1
+        # invariant: project-plan-form
         for value in ("0", "a", "-1", "1.", ""):
             with self.subTest(value=value):
                 tasks = changed(TASKS, 1, "#", value)
                 self.assertIn("form", conditions(plan(tasks=tasks)))
 
     def test_a_task_name_off_its_form_is_reported(self):
-        # invariant: project-plan-form/1
+        # invariant: project-plan-form
         for value in ("Test-Server", "test_server", "test--server", "-test-server",
                       "test-server-", "test server", ""):
             with self.subTest(value=value):
@@ -450,38 +450,38 @@ class TasksTable(unittest.TestCase):
         self.assertEqual(conditions(plan(tasks=tasks)), [])
 
     def test_an_empty_goal_is_reported(self):
-        # invariant: project-plan-form/1
+        # invariant: project-plan-form
         self.assertIn("form", conditions(plan(tasks=changed(TASKS, 2, "Goal", ""))))
 
     def test_depends_on_off_its_form_is_reported(self):
-        # invariant: project-plan-form/1
+        # invariant: project-plan-form
         for value in ("1,2", "1 2", "1 i 2", "", "-", "0"):
             with self.subTest(value=value):
                 tasks = changed(TASKS, 3, "Depends on", value)
                 self.assertIn("form", conditions(plan(tasks=tasks)))
 
     def test_in_scope_off_its_form_is_reported(self):
-        # invariant: project-plan-form/1
+        # invariant: project-plan-form
         for value in ("2,3", "2 i 3", "", "zapis postępu"):
             with self.subTest(value=value):
                 tasks = changed(TASKS, 3, "In scope", value)
                 self.assertIn("form", conditions(plan(tasks=tasks)))
 
     def test_preparatory_off_its_form_is_reported(self):
-        # invariant: project-plan-form/1
+        # invariant: project-plan-form
         for value in ("tak", "Yes", ""):
             with self.subTest(value=value):
                 tasks = changed(TASKS, 1, "Preparatory", value)
                 self.assertIn("form", conditions(plan(tasks=tasks)))
 
     def test_a_state_off_the_list_is_reported_at_its_row(self):
-        # invariant: project-plan-form/1
+        # invariant: project-plan-form
         text = plan(tasks=changed(TASKS, 3, "State", "blocked"))
         row = line_of(text, "| 3 | player-accounts |")
         self.assertIn(("form", row), [(f.condition, f.line) for f in findings(text)])
 
     def test_states_off_the_list_are_reported(self):
-        # invariant: project-plan-form/1
+        # invariant: project-plan-form
         for value in ("To refine", "done — goal delivered in task", "dropped",
                       "done — goal delivered in task x", ""):
             with self.subTest(value=value):
@@ -489,30 +489,30 @@ class TasksTable(unittest.TestCase):
                 self.assertIn("form", conditions(plan(tasks=tasks)))
 
     def test_a_goal_delivered_in_a_task_the_plan_does_not_hold_is_reported(self):
-        # invariant: project-plan-check/1
+        # invariant: project-plan-check
         tasks = changed(TASKS, 2, "State", "done — goal delivered in task 9")
         self.assertIn("form", conditions(plan(tasks=tasks)))
 
     def test_a_goal_delivered_in_the_task_itself_is_reported(self):
-        # invariant: project-plan-form/1
+        # invariant: project-plan-form
         tasks = changed(TASKS, 2, "State", "done — goal delivered in task 2")
         self.assertIn("form", conditions(plan(tasks=tasks)))
 
     def test_a_task_row_with_an_extra_cell_is_reported(self):
-        # invariant: project-plan-form/1
+        # invariant: project-plan-form
         rows = list(TASKS)
         rows[1] = rows[1] + ("uwaga",)
         self.assertIn("form", conditions(plan(tasks=rows)))
 
     def test_a_separator_row_whose_cell_count_differs_from_the_header_is_reported(self):
-        # invariant: project-plan-form/1
+        # invariant: project-plan-form
         separator = "|" + "---|" * len(TASK_COLUMNS)
         self.assertIn(separator, PLAN)
         text = PLAN.replace(separator, "|" + "---|" * (len(TASK_COLUMNS) - 1), 1)
         self.assertIn("form", conditions(text))
 
     def test_a_number_in_digits_other_than_ascii_is_reported(self):
-        # invariant: project-plan-form/1
+        # invariant: project-plan-form
         for column, value in (("Depends on", "1, ２"), ("In scope", "2, ٣"),
                               ("#", "３")):
             with self.subTest(column=column, value=value):
@@ -524,21 +524,21 @@ class TasksTable(unittest.TestCase):
                "no", "to refine", "—")
 
     def test_a_task_number_with_an_arabic_indic_digit_is_reported(self):
-        # invariant: project-plan-form/1
+        # invariant: project-plan-form
         # Read as 33, `3٣` would be a fresh number and the plan would pass.
         fourth = ("3٣", "map-tutorial", "Gracz przechodzi samouczek przed pierwszą mapą.",
                   "2", "1", "no", "to refine", "—")
         self.assertIn("form", conditions(plan(tasks=list(TASKS) + [fourth])))
 
     def test_depends_on_with_an_arabic_indic_digit_is_reported(self):
-        # invariant: project-plan-form/1
+        # invariant: project-plan-form
         # Read as 23, `2٣` would name the task 23 the plan holds and the plan would pass.
         tasks = changed(list(TASKS) + [self.TASK_23], 3, "Depends on", "1, 2٣")
         self.assertEqual(conditions(plan(tasks=changed(tasks, 3, "Depends on", "1, 23"))), [])
         self.assertIn("form", conditions(plan(tasks=tasks)))
 
     def test_a_goal_delivered_in_a_task_written_with_an_arabic_indic_digit_is_reported(self):
-        # invariant: project-plan-form/1
+        # invariant: project-plan-form
         # Read as 23, `2٣` would name the task 23 the plan holds and the plan would pass.
         tasks = list(TASKS) + [self.TASK_23]
         self.assertEqual(conditions(plan(tasks=changed(
@@ -558,21 +558,21 @@ class TasksTable(unittest.TestCase):
                 self.assertEqual(conditions(plan(tasks=tasks)), [])
 
     def test_an_empty_document_is_reported(self):
-        # invariant: project-plan-form/1
+        # invariant: project-plan-form
         self.assertIn("form", conditions(plan(tasks=changed(TASKS, 2, "Document", ""))))
 
     def test_a_number_held_by_two_tasks_is_reported(self):
-        # invariant: project-plan-form/1
+        # invariant: project-plan-form
         self.assertIn("form", conditions(plan(tasks=changed(TASKS, 3, "#", "2"))))
 
     def test_a_name_held_by_two_tasks_is_reported(self):
-        # invariant: project-plan-form/1
+        # invariant: project-plan-form
         self.assertIn("form", conditions(plan(tasks=changed(TASKS, 3, "Task", "first-map"))))
 
 
 class EntriesTable(unittest.TestCase):
     def test_an_entries_header_off_the_template_is_reported(self):
-        # invariant: project-plan-form/1
+        # invariant: project-plan-form
         header = table(ENTRY_COLUMNS, ()).splitlines()[0]
         for other in ("| Entry | Realized by |", "| Entry | Written by | Realized by |",
                       "| Projected entry | Realized by | Written by |"):
@@ -580,22 +580,22 @@ class EntriesTable(unittest.TestCase):
                 self.assertIn("form", conditions(PLAN.replace(header, other)))
 
     def test_realized_by_off_its_form_is_reported(self):
-        # invariant: project-plan-form/1
-        # invariant: project-plan-check/1
+        # invariant: project-plan-form
+        # invariant: project-plan-check
         for value in ("2,3", "2 i 3", "", "—"):
             with self.subTest(value=value):
                 entries = changed(ENTRIES, 2, "Realized by", value, ENTRY_COLUMNS)
                 self.assertIn("form", conditions(plan(entries=entries)))
 
     def test_written_by_naming_two_tasks_is_reported(self):
-        # invariant: project-plan-form/1
-        # invariant: project-plan-check/1
+        # invariant: project-plan-form
+        # invariant: project-plan-check
         entries = changed(ENTRIES, 2, "Written by", "2, 3", ENTRY_COLUMNS)
         self.assertIn("form", conditions(plan(entries=entries)))
 
     def test_written_by_empty_or_off_its_form_is_reported(self):
-        # invariant: project-plan-form/1
-        # invariant: project-plan-check/1
+        # invariant: project-plan-form
+        # invariant: project-plan-check
         for value in ("", "—", "task 3"):
             with self.subTest(value=value):
                 entries = changed(ENTRIES, 2, "Written by", value, ENTRY_COLUMNS)
@@ -604,17 +604,17 @@ class EntriesTable(unittest.TestCase):
 
 class Entries(unittest.TestCase):
     def test_a_projected_heading_with_no_row_is_reported(self):
-        # invariant: project-plan-check/1
+        # invariant: project-plan-check
         entries = [row for row in ENTRIES if row[0] != TERM_HEADING]
         self.assertEqual(set(conditions(plan(entries=entries))), {"entries"})
 
     def test_two_rows_for_one_projected_heading_are_reported(self):
-        # invariant: project-plan-check/1
+        # invariant: project-plan-check
         entries = list(ENTRIES) + [(TERM_HEADING, "3", "3")]
         self.assertEqual(set(conditions(plan(entries=entries))), {"entries"})
 
     def test_a_row_that_is_no_projected_heading_is_reported_at_its_row(self):
-        # invariant: project-plan-check/1
+        # invariant: project-plan-check
         entries = list(ENTRIES) + [("(new) — Who keeps the map?", "2", "2")]
         text = plan(entries=entries)
         row = line_of(text, "| (new) — Who keeps the map? |")
@@ -622,28 +622,28 @@ class Entries(unittest.TestCase):
         self.assertEqual(found, [("entries", row)])
 
     def test_a_row_naming_the_entry_with_one_word_changed_is_reported(self):
-        # invariant: project-plan-check/1
+        # invariant: project-plan-check
         entries = changed(ENTRIES, 1, "Entry", "(new) — Who may create a player account?",
                           ENTRY_COLUMNS)
         self.assertEqual(set(conditions(plan(entries=entries))), {"entries"})
 
     def test_a_row_naming_the_invariant_without_its_version_is_reported(self):
-        # invariant: project-plan-check/1
+        # invariant: project-plan-check
         entries = changed(ENTRIES, 2, "Entry", "player-save-isolation", ENTRY_COLUMNS)
         self.assertEqual(set(conditions(plan(entries=entries))), {"entries"})
 
     def test_realized_by_naming_a_task_the_plan_does_not_hold_is_reported(self):
-        # invariant: project-plan-check/1
+        # invariant: project-plan-check
         entries = changed(ENTRIES, 3, "Realized by", "2, 9", ENTRY_COLUMNS)
         self.assertEqual(set(conditions(plan(entries=entries))), {"entries"})
 
     def test_written_by_naming_a_task_the_plan_does_not_hold_is_reported(self):
-        # invariant: project-plan-check/1
+        # invariant: project-plan-check
         entries = changed(ENTRIES, 3, "Written by", "9", ENTRY_COLUMNS)
         self.assertEqual(set(conditions(plan(entries=entries))), {"entries"})
 
     def test_written_by_a_task_not_among_realized_by_is_reported(self):
-        # invariant: project-plan-check/1
+        # invariant: project-plan-check
         entries = changed(ENTRIES, 2, "Realized by", "2", ENTRY_COLUMNS)
         self.assertEqual(set(conditions(plan(entries=entries))), {"entries"})
 
@@ -665,12 +665,12 @@ class Entries(unittest.TestCase):
 
 class Scope(unittest.TestCase):
     def test_an_in_scope_item_no_task_names_is_reported(self):
-        # invariant: project-plan-check/1
+        # invariant: project-plan-check
         tasks = changed(TASKS, 3, "In scope", "2")
         self.assertEqual(set(conditions(plan(tasks=tasks))), {"scope"})
 
     def test_an_in_scope_number_above_the_count_of_items_is_reported(self):
-        # invariant: project-plan-check/1
+        # invariant: project-plan-check
         tasks = changed(TASKS, 3, "In scope", "2, 3, 5")
         self.assertEqual(set(conditions(plan(tasks=tasks))), {"scope"})
 
@@ -685,7 +685,7 @@ class Scope(unittest.TestCase):
         self.assertEqual(conditions(plan(fingerprint=fingerprint_of(bodies)), text), [])
 
     def test_a_number_naming_a_nested_detail_is_above_the_count(self):
-        # invariant: project-plan-check/1
+        # invariant: project-plan-check
         bodies = {"In scope": DEFINITION_BODIES["In scope"].replace(
             "- konta graczy", "- konta graczy\n  - logowanie adresem e-mail")}
         text = definition(bodies=bodies)
@@ -702,7 +702,7 @@ class Scope(unittest.TestCase):
                           definition(bodies=bodies))
 
     def test_a_number_naming_a_line_in_a_fenced_block_is_above_the_count(self):
-        # invariant: project-plan-check/1
+        # invariant: project-plan-check
         tasks = changed(TASKS, 3, "In scope", "2, 3, 5")
         self.assertEqual(set(self.with_in_scope(self.FENCED, tasks)), {"scope"})
 
@@ -723,22 +723,22 @@ class Scope(unittest.TestCase):
 
 class Dependencies(unittest.TestCase):
     def test_a_task_depending_on_a_number_the_plan_does_not_hold_is_reported(self):
-        # invariant: project-plan-check/1
+        # invariant: project-plan-check
         tasks = changed(TASKS, 3, "Depends on", "1, 2, 7")
         self.assertEqual(set(conditions(plan(tasks=tasks))), {"dependencies"})
 
     def test_a_task_depending_on_itself_is_reported(self):
-        # invariant: project-plan-check/1
+        # invariant: project-plan-check
         tasks = changed(TASKS, 2, "Depends on", "1, 2")
         self.assertEqual(set(conditions(plan(tasks=tasks))), {"dependencies"})
 
     def test_a_cycle_through_two_tasks_is_reported(self):
-        # invariant: project-plan-check/1
+        # invariant: project-plan-check
         tasks = changed(TASKS, 2, "Depends on", "1, 3")
         self.assertEqual(set(conditions(plan(tasks=tasks))), {"dependencies"})
 
     def test_a_cycle_through_three_tasks_is_reported(self):
-        # invariant: project-plan-check/1
+        # invariant: project-plan-check
         # 1 needs 3, 3 needs 2, 2 needs 1: no two of them depend on each other directly.
         tasks = changed(changed(TASKS, 1, "Depends on", "3"), 3, "Depends on", "2")
         self.assertEqual(set(conditions(plan(tasks=tasks))), {"dependencies"})
@@ -751,12 +751,12 @@ class Dependencies(unittest.TestCase):
 
 class Preparatory(unittest.TestCase):
     def test_a_preparatory_task_no_task_depends_on_is_reported(self):
-        # invariant: project-plan-check/1
+        # invariant: project-plan-check
         tasks = changed(changed(TASKS, 2, "Depends on", "—"), 3, "Depends on", "2")
         self.assertEqual(set(conditions(plan(tasks=tasks))), {"preparatory"})
 
     def test_a_preparatory_task_at_the_end_of_the_plan_is_reported(self):
-        # invariant: project-plan-check/1
+        # invariant: project-plan-check
         tasks = changed(TASKS, 3, "Preparatory", "yes")
         self.assertEqual(set(conditions(plan(tasks=tasks))), {"preparatory"})
 
@@ -771,35 +771,35 @@ class Questions(unittest.TestCase):
                           definition_text)
 
     def test_an_open_question_missing_from_the_plan_is_reported(self):
-        # invariant: project-plan-check/1
+        # invariant: project-plan-check
         body = "\n".join((ANSWER_ITEM, EDITOR_ITEM))
         self.assertEqual(set(self.questions(body)), {"questions"})
 
     def test_an_open_question_reworded_by_one_word_is_reported(self):
-        # invariant: project-plan-check/1
+        # invariant: project-plan-check
         body = QUESTIONS.replace("Jak mierzymy postęp gracza?", "Jak liczymy postęp gracza?")
         self.assertNotEqual(body, QUESTIONS)
         self.assertEqual(set(self.questions(body)), {"questions"})
 
     def test_a_place_of_the_definition_reworded_is_reported(self):
-        # invariant: project-plan-check/1
+        # invariant: project-plan-check
         body = QUESTIONS.replace("— definition: task: edytor map —", "— definition: task: edytor —")
         self.assertNotEqual(body, QUESTIONS)
         self.assertEqual(set(self.questions(body)), {"questions"})
 
     def test_a_question_sent_to_a_task_the_plan_does_not_hold_is_reported(self):
-        # invariant: project-plan-check/1
+        # invariant: project-plan-check
         body = QUESTIONS.replace("— plan: task 3", "— plan: task 9")
         self.assertEqual(set(self.questions(body)), {"questions"})
 
     def test_an_empty_answer_is_reported(self):
-        # invariant: project-plan-check/1
+        # invariant: project-plan-check
         empty = "- %s — definition: breakdown — answer: " % QUESTION_BREAKDOWN
         body = "\n".join((empty, EDITOR_ITEM, SAVES_ITEM))
         self.assertEqual(set(self.questions(body)), {"questions"})
 
     def test_an_item_of_none_of_the_forms_is_reported_at_its_line(self):
-        # invariant: project-plan-check/1
+        # invariant: project-plan-check
         odd = "- %s — breakdown" % QUESTION_BREAKDOWN
         body = "\n".join((ANSWER_ITEM, EDITOR_ITEM, SAVES_ITEM, odd))
         text = plan(bodies={"Open questions": body})
@@ -808,19 +808,19 @@ class Questions(unittest.TestCase):
         self.assertEqual({c for c, _ in found}, {"questions"})
 
     def test_a_question_the_definition_does_not_hold_with_a_place_of_it_is_reported(self):
-        # invariant: project-plan-check/1
+        # invariant: project-plan-check
         extra = "- Czy gra ma tryb nocny? — definition: breakdown — plan: task 2"
         body = "\n".join((ANSWER_ITEM, EDITOR_ITEM, SAVES_ITEM, extra))
         self.assertEqual(set(self.questions(body)), {"questions"})
 
     def test_an_open_question_standing_as_two_items_is_reported(self):
-        # invariant: project-plan-check/1
+        # invariant: project-plan-check
         twice = SAVES_ITEM.replace("— plan: task 3", "— plan: task 2")
         body = "\n".join((ANSWER_ITEM, EDITOR_ITEM, SAVES_ITEM, twice))
         self.assertEqual(set(self.questions(body)), {"questions"})
 
     def test_a_plan_reading_none_while_the_definition_holds_questions_is_reported(self):
-        # invariant: project-plan-check/1
+        # invariant: project-plan-check
         self.assertEqual(set(self.questions("none")), {"questions"})
 
     def test_a_question_the_breakdown_raised_passes(self):
@@ -894,7 +894,7 @@ class Command(unittest.TestCase):
         self.assertEqual((code, out), (0, "plan: nothing found\n"))
 
     def test_findings_exit_one_and_print_sorted_by_line(self):
-        # invariant: project-plan-check/1
+        # invariant: project-plan-check
         tasks = changed(TASKS, 2, "In scope", "1, 7")
         entries = list(ENTRIES) + [("(new) — Who keeps the map?", "2", "2")]
         extra = "- Czy gra ma tryb nocny? — definition: breakdown — plan: task 2"
@@ -923,26 +923,26 @@ class Command(unittest.TestCase):
         self.assertEqual(code, 2)
 
     def test_a_missing_definition_is_a_form_finding(self):
-        # invariant: project-plan-form/1
+        # invariant: project-plan-form
         code, out, _ = self.run_main(PLAN, definition_text=None)
         self.assertEqual(code, 1)
         self.assertEqual({c for c, _ in self.assert_findings_printed(out)}, {"form"})
 
     def test_a_definition_that_is_not_utf_8_is_a_form_finding(self):
-        # invariant: project-plan-form/1
+        # invariant: project-plan-form
         code, out, _ = self.run_main(PLAN, definition_encoding="cp1250")
         self.assertEqual(code, 1)
         self.assertEqual({c for c, _ in self.assert_findings_printed(out)}, {"form"})
 
     def test_a_definition_file_that_is_no_project_definition_is_a_form_finding(self):
-        # invariant: project-plan-form/1
+        # invariant: project-plan-form
         note = "# Notatka o mapie\n\nKilka myśli o pierwszej mapie i o tym, kto w nią zagra.\n"
         code, out, _ = self.run_main(PLAN, definition_text=note)
         self.assertEqual(code, 1)
         self.assertIn("form", {c for c, _ in self.assert_findings_printed(out)})
 
     def test_a_definition_path_the_file_system_rejects_is_a_form_finding(self):
-        # invariant: project-plan-form/1
+        # invariant: project-plan-form
         text = plan(definition_line="Definition: defi\x00nition.md — fingerprint %s" % FINGERPRINT)
         code, out, _ = self.run_main(text)
         self.assertEqual(code, 1)

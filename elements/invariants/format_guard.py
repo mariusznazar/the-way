@@ -1,5 +1,8 @@
 """Format guard of a product's invariants file.
 
+Kept only as a library of product-guidelines/form_check.py until the slimming plan's position P17
+removes both.
+
 Checks the file against the rules of template.md, which lies next to this script, and against the
 rules of form the elements share, in elements/common/rules.md. The fields of an entry and the words
 each may hold, the titles and columns of the lists of quarantined and recovered invariants, the
@@ -462,7 +465,6 @@ def in_force(latest):
 def check_layout(items, rules, report):
     """Entries first, then the lists in the template's order, the last closing the file; a heading
     of an entry carries its version (WAY-57, WAY-64, WAY-68)."""
-    # invariant: invariant-version-number/1
     check, version = "check_layout", "invariant-version-number/1"
     report.ran(check, version)
     titles = [title for title, _ in rules.lists]
@@ -501,7 +503,6 @@ def check_file(path, top, tracked, report):
     The path is compared, letter case included, as git lists it. Another such file is known by its
     content: a tracked Markdown file holding a section `## <identifier>/<version>` with a *Method*
     field and no *Holds for* field."""
-    # invariant: invariants-file/1
     check, one_file = "check_file", "invariants-file/1"
     if top is None or tracked is None:
         if os.path.basename(path) != "invariants.md" or \
@@ -567,9 +568,6 @@ def check_identifiers(entries, withdrawn, foundation, report, columns=()):
     of this file, or `none` (WAY-64). The form of an entry's identifier answers to
     invariant-identifier-form, and that of a withdrawn one to withdrawal-successors. `columns` are
     those of the file's list of withdrawn identifiers."""
-    # invariant: identifier-holders/1
-    # invariant: invariant-identifier-form/1
-    # invariant: withdrawal-successors/1
     check = "check_identifiers"
     holders, form, successors_named = ("identifier-holders/1", "invariant-identifier-form/1",
                                        "withdrawal-successors/1")
@@ -634,8 +632,6 @@ def check_fields(entries, rules, report, facts_have_entries=False):
     """Every field of the form is present, and holds `none` or `TODO` only where the form gives it
     that word; a `TODO` the form gives, in a field the main branch does not hold it in, is a
     warning — *Rests on* included once the environment facts element has entries (WAY-71)."""
-    # invariant: invariant-entry-field-presence/1
-    # invariant: invariant-entry-field-words/1
     check = "check_fields"
     presence, words = "invariant-entry-field-presence/1", "invariant-entry-field-words/1"
     report.ran(check, presence, words)
@@ -669,9 +665,6 @@ def check_fields(entries, rules, report, facts_have_entries=False):
 
 
 def check_sentence(entries, rules, report):
-    # invariant: invariant-sentence-count/1
-    # invariant: sentence-branch-names/1
-    # invariant: sentence-gate-values/1
     check = "check_sentence"
     count, branch_names, gate_values = ("invariant-sentence-count/1", "sentence-branch-names/1",
                                         "sentence-gate-values/1")
@@ -712,8 +705,6 @@ PROGRAM_NAME = re.compile(r"[A-Za-z0-9_][\w.+-]*")
 
 
 def check_method(entries, rules, top, report):
-    # invariant: invariant-method-form/1
-    # invariant: method-gate-values/1
     check, form, gate_values = "check_method", "invariant-method-form/1", "method-gate-values/1"
     report.ran(check, gate_values)
     decided = True
@@ -754,7 +745,6 @@ def check_links(entries, foundation, report):
     """Every name in *Rests on* and *Derives from*, other than `none` or `TODO`, carries a
     fingerprint, and every decision named is one in force (WAY-31). Whether the fingerprint is the
     current one is checked against a merge, in check_fingerprints."""
-    # invariant: link-fingerprint-presence/1
     check, presence = "check_links", "link-fingerprint-presence/1"
     report.ran(check, presence)
     for entry in entries:
@@ -823,8 +813,6 @@ def derives_from_a_decision(entry, prefix):
 
 
 def check_part(entries, foundation, report):
-    # invariant: invariant-part-names/1
-    # invariant: invariant-part-form/1
     check, names, form = "check_part", "invariant-part-names/1", "invariant-part-form/1"
     report.ran(check, form)
     if foundation.map_read:
@@ -871,8 +859,6 @@ def check_recovered(table, entries, foundation, report):
     """Every row of the list of recovered invariants names an entry at its current version and
     holds `searched: <…>` and `found: <…>`; no entry on the list names in *Derives from* a decision
     of the decision log beside the file (WAY-58)."""
-    # invariant: invariant-recovered-form/1
-    # invariant: invariant-recovered-derived/1
     check, form, derived = ("check_recovered", "invariant-recovered-form/1",
                             "invariant-recovered-derived/1")
     report.ran(check, form, derived)
@@ -916,8 +902,6 @@ def check_verifications(entries, foundation, report):
     identifier the level 1 verification of a decision's latest version names is an entry deriving
     from that decision (WAY-12, WAY-17). The names are read from the form the decision template
     gives: `level 1 — invariants: <identifier> · <identifier>.`"""
-    # invariant: level-one-decision-invariants/1
-    # invariant: verification-invariant-derivation/1
     check = "check_verifications"
     derived, named = "level-one-decision-invariants/1", "verification-invariant-derivation/1"
     if not foundation.log_read:
@@ -961,8 +945,6 @@ def check_verifications(entries, foundation, report):
 
 
 def check_quarantine(table, entries, foundation, report):
-    # invariant: quarantine-position-form/1
-    # invariant: quarantine-flow-invariants/1
     check, form, flows = ("check_quarantine", "quarantine-position-form/1",
                           "quarantine-flow-invariants/1")
     positions = table.rows if table else []
@@ -1001,7 +983,6 @@ def violated_positions(text, rules):
 
 
 def check_violated(path, entries, rules, report):
-    # invariant: violated-position-version/1
     check, position_version = "check_violated", "violated-position-version/1"
     violated_path = os.path.join(os.path.dirname(os.path.abspath(path)), rules.violated_file)
     if not os.path.exists(violated_path):
@@ -1037,12 +1018,11 @@ def check_human_verdicts(path, entries, foundation, rules, report, top=None):
     """Every row of the file of human verdicts names an entry of the invariants or of the
     environment facts; a row naming an invariant names an entry whose method is a path, gives
     `pass` or `fail`, names who gave it, when and the commit assessed, and reads `none` in *Until*
-    (WAY-08, WAY-83). The commit assessed is one of the history of the commit being checked —
+    (WAY-08). The commit assessed is one of the history of the commit being checked —
     HEAD or a commit it descends from — since a change since that commit is what lapses the
-    verdict (WAY-83); where the file lies in no git repository, only its form is checked. A row
+    verdict; where the file lies in no git repository, only its form is checked. A row
     naming neither is an invariant row unless it carries a fact's date in *Until*. The rows naming
     a fact are the environment facts guard's to check further."""
-    # invariant: human-verdict-invariant-row/1
     check, invariant_row = "check_human_verdicts", "human-verdict-invariant-row/1"
     verdicts_path = os.path.join(os.path.dirname(os.path.abspath(path)), rules.verdicts_file)
     if not os.path.exists(verdicts_path):
@@ -1143,9 +1123,6 @@ CITATION = re.compile(r"^\s*(?:#|//|--|;|%|\*|/\*|<!--|REM\b)\s*(invariant|data)
 
 
 def check_citations(entries, withdrawn, top, tracked, report, columns=()):
-    # invariant: invariant-citation-version/1
-    # invariant: invariant-citation-target/1
-    # invariant: data-line-target/1
     check = "check_citations"
     version, target, data = ("invariant-citation-version/1", "invariant-citation-target/1",
                              "data-line-target/1")
@@ -1223,7 +1200,6 @@ def check_record_paths(entries, top, report, facts=None, facts_read=True):
     counts: git ignores it where core.ignorecase is set, which git init sets on Windows and macOS,
     and a path would then be ignored there and not on Linux. Where the environment facts could not
     be read, the check records no pass."""
-    # invariant: run-record-path/1
     check, record_path = "check_record_paths", "run-record-path/1"
     commands = [(label_of(entry), value_of(entry, "Method")[1], command_of(entry))
                 for entry in entries] + fact_commands(facts)
@@ -1278,13 +1254,6 @@ def check_against_base(path, entries, withdrawn, violated, rules, base, top, rep
                        no_commit=None):
     """Compares the file and the list of violated invariants with their state on the base. Given
     `no_commit`, which says why there is no base, records the checks unchecked instead."""
-    # invariant: invariant-version-new/1
-    # invariant: invariant-version-changed/1
-    # invariant: invariant-version-unchanged/1
-    # invariant: invariant-earlier-wording/1
-    # invariant: invariant-identifier-persistence/1
-    # invariant: invariant-withdrawal-persistence/1
-    # invariant: violated-list-growth/1
     check = "check_against_base"
     new, changed, unchanged, wording, persistence, withdrawal, growth = BASE_INVARIANTS
     if no_commit:
@@ -1380,7 +1349,6 @@ def check_merge_todo(entries, rules, report, no_commit=None, facts_have_entries=
     (WAY-71); *Rests on* holds it there only until the environment facts element has entries.
     Given `no_commit`, which says why there is no commit to merge onto, records it unchecked
     instead."""
-    # invariant: invariant-entry-merge-todo/1
     check, merge_todo = "check_merge_todo", "invariant-entry-merge-todo/1"
     if no_commit:
         report.unchecked(check, NO_COMMIT_REASON, no_commit, merge_todo)
@@ -1477,7 +1445,6 @@ def check_fingerprints(entries, merged, report, no_commit=None, facts=None):
     commit merged onto holds, as (entry, None or that commit); `facts` maps each fact the merge
     leaves to its fingerprint. Given `no_commit`, which says why there is no commit to merge onto,
     records it unchecked instead."""
-    # invariant: link-fingerprint-value/1
     check, value = "check_fingerprints", "link-fingerprint-value/1"
     if no_commit:
         report.unchecked(check, NO_COMMIT_REASON, no_commit, value)
@@ -1527,7 +1494,6 @@ def check_examples(entries, examples_path, report):
     """Every identifier `examples.md` names is the identifier of an entry of the invariants file: an
     example names an entry of the-way's invariants by its identifier instead of copying it (WAY-09,
     WAY-34). An item of a list names the identifier it opens with."""
-    # invariant: invariant-example-target/1
     check, target = "check_examples", "invariant-example-target/1"
     examples = shared.read_file(examples_path, report, "the examples")
     if examples is None:

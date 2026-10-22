@@ -3,7 +3,8 @@
 This guide applies to work on the-way as the top-level repository while it has no `main` branch.
 It does not govern a product that contains the-way as a `.the-way` submodule. `foundations` is the
 integration branch. It is not a release of the process. The task-cycle skill is available for
-product pilots; the full gate does not yet exist. Changes to the-way itself follow this guide.
+product pilots; one command runs every test of the-way (see "Check the change"). Changes to the-way
+itself follow this guide.
 When `main` is created, replace this guide with the task-cycle instructions before integrating
 another change.
 
@@ -17,8 +18,17 @@ versions, *Approved by* and the request link it waits for, format guards run as 
 the independent assessment, a second search of the foundation before the merge and the record of a
 search. A change to
 the-way does not apply that mechanism, whatever such a file or entry says. Where a test of the-way
-still requires part of it, such as a fingerprint beside a reference in the-way's own foundation,
-the change meets the test with the repository's existing tools and does no more. While the plan is
+still requires part of it, the change meets the test with the repository's existing tools and does
+no more. The foundation of the-way itself is migrated: its entries hold no fingerprint, version,
+*Approved by* or *Review when*, and there is no list of violated, quarantined or recovered
+invariants and no file of human verdicts. No format guard and no probe checks it;
+`elements/common/foundation_check.py` checks its identifiers, references, fields and the part of
+each file, and `elements/common/migrate_foundation.py` brings a foundation of the earlier form to
+the current one. The format guards of the decisions, the invariants and the part map, with
+`elements/common/guard_shared.py`, stay only as a library of `product-guidelines/form_check.py`
+until the plan's position P17 removes both. The block the installer writes into a product's
+`AGENTS.md` and `installation/README.md` still tell a product to run the format guard of each
+foundation file until the plan's positions P26 and P27 rewrite them. While the plan is
 applied, its own rhythm holds: each of its positions is one commit, with every test run on it and
 reviewed as below, and each of its stages is one request.
 
@@ -52,18 +62,19 @@ only for a rule the change, a decision or Mariusz sets.
 
 ## Check the change
 
-Run every test of the-way: from the root, run `python -B gate/run_tests.py <directory>` for each
-directory that holds a `test_*.py` file git tracks, without `--record`. In a POSIX shell this lists
-those directories:
+Run every test of the-way with one command, from the root:
 
 ```
-git ls-files | grep -E '(^|/)test_[^/]*\.py$' | xargs -n1 dirname | sort -u
+python -B gate/run_tests.py
 ```
 
-The whole run takes about 16 minutes. Run the tests on the change as it goes into the request. A
-run passes when its exit code is 0. One run fails for a known reason until the plan removes
-`probes/`: `probes/claude-code-project-skills` looks for a sentence that the documentation it reads
-no longer holds.
+It runs the tests of every directory that holds a `test_*.py` file git tracks, and ends with a line
+counting the tests and naming each directory that failed. A new test file in a new directory runs
+only once it is added to git (`git add`). The whole run takes about 16 minutes. Run it on the
+change as it goes into the request. A run passes when its exit code is 0. While the change is
+made, `python -B gate/run_tests.py <directory>` runs the tests of one directory. A change to
+`gate/run_tests.py` is also checked with `python -B -m unittest discover -s gate -p "test_*.py"`,
+which does not rest on the runner it checks.
 
 The author of the change, or the agent that leads the work, asks an agent that did not make the
 change to review it (WAY-10). The reviewer receives the whole diff, the task or the plan's position

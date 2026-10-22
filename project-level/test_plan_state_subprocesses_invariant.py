@@ -153,7 +153,7 @@ class PlanStateSubprocesses(unittest.TestCase):
             self.assertIn(executable, ("git", "git.exe"), "Non-Git reader subprocess: " + repr(row))
 
     def test_successful_evidence_read_starts_only_git(self):
-        # invariant: project-plan-state-subprocesses/1
+        # invariant: project-plan-state-subprocesses
         # Break caught: an extra non-Git child during a complete successful observation.
         self.assertNotEqual(self.initial, self.delivered)
         result, rows = self.observe_reader()
@@ -172,7 +172,7 @@ class PlanStateSubprocesses(unittest.TestCase):
         self.assertEqual(self.git(self.repo, "rev-parse", "refs/remotes/origin/delivery"), self.delivered)
 
     def test_failed_fetch_read_starts_only_git(self):
-        # invariant: project-plan-state-subprocesses/1
+        # invariant: project-plan-state-subprocesses
         # Break caught: a non-Git fallback program on an operational failure path.
         self.git(self.repo, "remote", "set-url", "origin", str(self.root / "missing.git"))
         result, rows = self.observe_reader()

@@ -12,8 +12,7 @@ The file imports nothing from `instruction-files/` and nothing from
 to git and its own pattern: were it to ask the check script which files to read or what counts as
 an import, a change to that script would move both sides together and the tests would stay green.
 
-Run from the root of the-way:
-python -B gate/run_tests.py agent-instructions --record .runs/agent-instructions-tests.jsonl
+Run from the root of the-way: python -B gate/run_tests.py agent-instructions
 """
 
 import os
@@ -28,7 +27,7 @@ from unittest import mock
 sys.dont_write_bytecode = True
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# The values the sentence of `instruction-file-imports/1` and the glossary entry
+# The values the sentence of `instruction-file-imports` and the glossary entry
 # `repository instruction file` name.
 INSTRUCTION_NAMES = ("AGENTS.md", "CLAUDE.md", "CLAUDE.local.md")
 # The root files whose text names further instruction files.
@@ -45,7 +44,7 @@ FENCES = ("```", "~~~")
 # The one line the root `CLAUDE.md` may open with: the import of the root `AGENTS.md`.
 ROOT_IMPORT_LINE = "@AGENTS.md"
 
-# The values the sentence of `root-claude-md-import/1` names.
+# The values the sentence of `root-claude-md-import` names.
 ROOT_CLAUDE = "CLAUDE.md"
 ROOT_IMPORT = b"@AGENTS.md"
 LINE_BREAKS = (b"\n", b"\r\n")
@@ -150,7 +149,7 @@ def counted_ats(line):
 
 def import_problems(root):
     """One line per `@` that a repository instruction file of the repository at `root` holds
-    against the sentence of `instruction-file-imports/1`, naming its file, line and column."""
+    against the sentence of `instruction-file-imports`, naming its file, line and column."""
     found = []
     for path in population(root):
         try:
@@ -304,7 +303,7 @@ IMPORT_EXPECTED = Counter({
 
 class InstructionFiles(unittest.TestCase):
     def test_no_instruction_file_holds_an_import(self):
-        # invariant: instruction-file-imports/1
+        # invariant: instruction-file-imports
         found_population = population(ROOT)
         for path in CONTROL:
             self.assertIn(path, found_population)
@@ -313,7 +312,7 @@ class InstructionFiles(unittest.TestCase):
                          "tool would take for an import:\n" + "\n".join(found))
 
     def test_the_root_claude_md_begins_with_the_import_of_agents_md(self):
-        # invariant: root-claude-md-import/1
+        # invariant: root-claude-md-import
         found = root_import_problems(ROOT)
         self.assertEqual(found, [], "the root `CLAUDE.md` of the-way does not begin with the "
                          "import of `AGENTS.md`:\n" + "\n".join(found))

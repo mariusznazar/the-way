@@ -1,4 +1,4 @@
-"""End-to-end test of the critical flow `skills-reach-the-way-sessions`.
+"""End-to-end test of the invariant `skill-entry-points`.
 
 Someone adds, renames or moves a skill of the-way, or changes its description; a skill that a
 session on the-way would not find under its `the-way-` name has to be reported before the change
@@ -11,10 +11,8 @@ imports nothing that computes entry points and finds the skills with its own cal
 to ask the generator of the entry points what they should be, a change to that generator would
 move both sides together and the test would stay green.
 
-Run from the root of the-way: python -B gate/run_tests.py gate --record .runs/gate-tests.jsonl
+Run from the root of the-way: python -B gate/run_tests.py gate
 """
-
-# flow: skills-reach-the-way-sessions
 
 import os
 import re
@@ -27,7 +25,7 @@ from unittest import mock
 sys.dont_write_bytecode = True
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# The values the sentence of `skill-entry-points/1` names.
+# The values the sentence of `skill-entry-points` names.
 CLAUDE_SKILLS = ".claude/skills"
 AGENTS_SKILLS = ".agents/skills"
 PREFIX = "the-way-"
@@ -156,7 +154,7 @@ def entry_problems(copy, data, skill_path, name, description, names):
 
 
 def problems(root):
-    """One line per property of the sentence of `skill-entry-points/1` that the repository at
+    """One line per property of the sentence of `skill-entry-points` that the repository at
     `root` fails, naming the file."""
     found = []
     skills = []
@@ -209,7 +207,7 @@ def problems(root):
 
 class SkillsReachTheWaySessions(unittest.TestCase):
     def test_every_skill_reaches_a_session_on_the_way(self):
-        # invariant: skill-entry-points/1
+        # invariant: skill-entry-points
         discovered = discover(ROOT)
         for path in CONTROL:
             self.assertIn(path, discovered)
