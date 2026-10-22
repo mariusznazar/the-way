@@ -2741,41 +2741,46 @@ look complete while naming a structure that does not exist.
 
 The skill of each entry's kind writes its whole proposal under the definition's `Projected
 foundation changes`, in that kind's subsection with the template's projected heading and one
-sentence of its meaning, without writing the product's foundation or running the entry's format guard. A
-new projected decision uses `(new)` without a number or prefix, while a change of a current
-decision and other kinds use the identifiers their templates give; an entry following from it
-remains projected or becomes an open question when its fields await the code.
+sentence of its meaning, without writing the product's foundation or running the foundation check,
+and without searching the whole foundation for the entry: the readiness gate searches it once for
+the whole definition (WAY-118). A new projected decision uses `(new)` without a number or prefix,
+while a change of a current decision and other kinds use the identifiers their templates give,
+with no version; an entry following from it remains projected or becomes an open question when its
+fields await the code.
 
 - **Scope:** project-level, elements-common, decisions, invariants, glossary, environment-facts,
   part-map
 - **Based on:** none
 - **Relations:** none
 - **Verification:** an agent compares the work with the decision:
-  - complies: a new decision carries `(new)`, a revised decision carries its number, and an
-    invariant's method remains `TODO` until a task can write its check;
-  - violates: a projected proposal is written directly into the foundation, or a revised decision
-    loses its identifier in the definition.
+  - complies: a new decision carries `(new)`, a changed decision carries its number, and an
+    invariant's method reads `review` until a task writes its test;
+  - violates: a projected proposal is written directly into the foundation, a changed decision
+    loses its identifier in the definition, or the skill searches the whole foundation for one
+    projected entry.
 - **Origin:** none
 
 *Rationale:* the project's definition keeps a future rule visible without claiming it already
-holds. Code-dependent evidence can be completed when the task writes the entry.
+holds. Code-dependent evidence can be completed when the task writes the entry. One search at the
+gate reads every projected entry once its wording is settled.
 *Rejected:* filling every field with an invented future method or file — it makes the proposal
 look checked before the product exists; leaving the human's reasoning to later tasks — they
-cannot recover what was considered during definition.
+cannot recover what was considered during definition; a search of the whole foundation for each
+projected entry as it is written — the gate repeats it for the whole definition.
 
 ### WAY-118 — What makes a project definition ready for breakdown?
 
 The readiness gate blocks a definition with a missing section, unresolved content, an open
 question without its place of resolution, an unfinished candidate search, or an unsettled
 human-given part of a projected entry: its binding sentence or definition and a decision's
-*Change*, rationale and rejected options; *Approved by* reads `on acceptance` until the gate,
-and only projected fields awaiting code or the world, including an expressly deferred
-*Review when* as WAY-119 permits, may read `TODO`.
-Before approval an agent searches the whole current foundation for unlinked collisions, and the
-human approves the whole projected entries with permitted `TODO`; the gate record then names the
-approver, the foundation commit searched and the fingerprint of the definition's sections from
-Goal through Projected foundation changes. A change to those sections after approval goes through
-the gate again before breakdown relies on it.
+rationale and rejected options; only projected fields awaiting code or the world may read `TODO`.
+Before approval an agent searches the whole current foundation once for what the definition and
+its projected entries touch, linked or not, the only search of the whole foundation on the way to
+the gate, and the human approves the whole projected entries with permitted `TODO`; the gate
+record then names the approver, the foundation commit searched and the fingerprint of the
+definition's sections from Goal through Projected foundation changes, and no projected entry
+carries a field of approval. A change to those sections after approval goes through the gate again
+before breakdown relies on it.
 
 - **Scope:** project-level
 - **Based on:** none
@@ -2783,39 +2788,23 @@ the gate again before breakdown relies on it.
 - **Verification:** invariants: project-readiness-gate. For the foundation search and human
   approval, an agent compares the work with the decision:
   - complies: the script stops an unfinished candidate table, the agent resolves a collision with
-    an existing decision, and the human approves the finished proposals;
-  - violates: a warning-only review lets the breakdown begin with a missing decision reason, or
-    an edit to a fingerprinted section after approval keeps the old gate record.
+    an existing decision found by the one search at the gate, and the human approves the finished
+    proposals;
+  - violates: a warning-only review lets the breakdown begin with a missing decision reason, an
+    edit to a fingerprinted section after approval keeps the old gate record, or the foundation is
+    searched whole for each candidate or projected entry and again at the gate.
 - **Origin:** none
 
 *Rationale:* a warning lets a later step guess precisely what definition was meant to settle;
 blocking exposes the missing answer while the person who can give it is present. The search and
-fingerprint show which foundation and wording were approved.
+fingerprint show which foundation and wording were approved. Once every projected entry is
+written, one search sees them all and the definition's own text; the gate record approves them
+together.
 *Rejected:* a final checklist that only warns — it cannot prevent an unfinished search from
-passing; an approval without a content fingerprint — later edits would still look approved.
-
-### WAY-119 — When may a projected decision leave Review when unresolved at the gate?
-
-At the readiness gate, a projected decision's *Review when* holds a review condition and date, or
-`none` after the human has settled that no such condition applies. It may read `TODO` only when
-the timing depends on later work, the human expressly accepts deferral, and a related open
-question names the breakdown or task that settles it.
-
-- **Scope:** project-level, decisions
-- **Based on:** none
-- **Relations:** derives from WAY-118
-- **Verification:** an agent compares the definition and human approval with the decision:
-  - complies: a prediction's review date depends on the release, so the human accepts `TODO` and
-    an open question names the task that will set the date;
-  - violates: the gate passes a `Review when: TODO` with no related open question, or an agent
-    writes `none` simply because the source said nothing about review.
-- **Origin:** none
-
-*Rationale:* the date for testing a prediction can depend on delivery that has not yet been
-planned. An explicit deferral keeps that uncertainty visible and gives later work a place to
-finish it.
-*Rejected:* blocking every `TODO` — the human would have to guess a date before the plan exists;
-allowing an unexplained `TODO` — no later task would own the missing answer.
+passing; an approval without a content fingerprint — later edits would still look approved; a
+search of the whole foundation when the candidates are named and for each projected entry as well
+as at the gate — it repeats the gate's search on wording not yet settled; *Approved by* in each
+projected decision — it repeats the gate record.
 
 ### WAY-120 — How does the-way critique an agent's proposal?
 
@@ -6634,3 +6623,4 @@ judgment asked for a value nothing reads.
 | WAY-88 | folded into WAY-73 when the entries of group 07 were slimmed | WAY-73 |
 | WAY-91 | removed when the entries of group 13 were slimmed (a result comes from running the method); the commit names no successor | none |
 | WAY-92 | folded into WAY-95 when the entries of group 05 were slimmed | WAY-95 |
+| WAY-119 | withdrawn: no decision carries *Review when* | none |

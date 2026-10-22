@@ -57,7 +57,7 @@ none
 
 ## Technology
 
-- Existing application language — held by: APP-01/1
+- Existing application language — held by: APP-01
 
 ## Projected foundation changes
 
@@ -67,7 +67,7 @@ none
 
 """
 # Independently calculated once from the literal body under WAY-02, not from the reader.
-FINGERPRINT = "a3b6ab99"
+FINGERPRINT = "96de0cfc"
 
 PLAN = """# Report download
 

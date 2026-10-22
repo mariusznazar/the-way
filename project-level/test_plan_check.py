@@ -31,7 +31,7 @@ DEFINITION_SECTIONS = ("Goal", "Background", "In scope", "Out of scope", "Inputs
                        "Touched parts and decisions", "Technology", "Projected foundation changes")
 
 DECISION_HEADING = "(new) — Who can create a player account?"
-INVARIANT_HEADING = "player-save-isolation/1"
+INVARIANT_HEADING = "player-save-isolation"
 TERM_HEADING = "mapa"
 
 PROJECTED = """Candidates: 4 shown, 3 accepted — 2026-10-02
@@ -42,14 +42,11 @@ PROJECTED = """Candidates: 4 shown, 3 accepted — 2026-10-02
 
 Każda osoba z adresem e-mail może założyć jedno konto gracza.
 
-- **Change:** new decision
 - **Scope:** accounts
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 2 — an agent compares the change with the decision
-- **Review when:** none
+- **Verification:** an agent compares the change with the decision
 - **Origin:** none
-- **Approved by:** Mariusz, 2026-10-03
 
 *Rationale:* gra nie ma jeszcze płatności, więc konto nie musi niczego weryfikować.
 *Rejected:* none considered
@@ -58,15 +55,15 @@ Każda osoba z adresem e-mail może założyć jedno konto gracza.
 
 ### Invariants
 
-#### player-save-isolation/1
+#### player-save-isolation
 
 Gracz wczytuje tylko zapisy własnego konta.
 
-- **Method:** TODO
+- **Method:** review
 - **Rests on:** none
 - **Derives from:** TODO — the decision on who can create a player account, projected in this definition
 - **Part:** every
-- **Correction:** none
+- **Violated:** no
 
 > **Meaning (pl):** Gracz nie widzi zapisów innych graczy.
 
@@ -76,7 +73,6 @@ Gracz wczytuje tylko zapisy własnego konta.
 
 Plansza z siatką heksagonalną, którą gracz przechodzi od startu do wyjścia.
 
-- **Avoid:** poziom
 - **Not:** none
 
 > **Meaning (pl):** Mapa to plansza, którą gracz przechodzi od startu do wyjścia."""
@@ -103,7 +99,7 @@ DEFINITION_BODIES = {
                       "- %s — resolved in: task: konta graczy"
                       % (QUESTION_BREAKDOWN, QUESTION_EDITOR, QUESTION_SAVES),
     "Touched parts and decisions": "none",
-    "Technology": "- Język i miejsce działania aplikacji — held by: ARC-01/1",
+    "Technology": "- Język i miejsce działania aplikacji — held by: ARC-01",
     "Projected foundation changes": PROJECTED,
 }
 
@@ -627,9 +623,9 @@ class Entries(unittest.TestCase):
                           ENTRY_COLUMNS)
         self.assertEqual(set(conditions(plan(entries=entries))), {"entries"})
 
-    def test_a_row_naming_the_invariant_without_its_version_is_reported(self):
+    def test_a_row_naming_the_invariant_with_a_version_is_reported(self):
         # invariant: project-plan-check
-        entries = changed(ENTRIES, 2, "Entry", "player-save-isolation", ENTRY_COLUMNS)
+        entries = changed(ENTRIES, 2, "Entry", "player-save-isolation/1", ENTRY_COLUMNS)
         self.assertEqual(set(conditions(plan(entries=entries))), {"entries"})
 
     def test_realized_by_naming_a_task_the_plan_does_not_hold_is_reported(self):

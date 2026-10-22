@@ -56,7 +56,7 @@ none
 
 ## Technology
 
-- Application language — held by: APP-01/1
+- Application language — held by: APP-01
 
 ## Projected foundation changes
 

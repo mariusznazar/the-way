@@ -237,7 +237,7 @@ required section, an open question with no place of resolution, or an unfinished
 
 ## project-technology-record
 
-Before approval, the project readiness check rejects a definition whose Technology section is missing or reads `none`, or holds a line that is no choice item, a choice still open, or a choice that names neither a decision as `<PREFIX>-<NN>/<version>` nor a question a heading of a projected decision holds.
+Before approval, the project readiness check rejects a definition whose Technology section is missing or reads `none`, or holds a line that is no choice item, a choice still open, or a choice that names neither a decision as `<PREFIX>-<NN>` nor a question a heading of a projected decision holds.
 
 - **Method:** test
 - **Rests on:** none
