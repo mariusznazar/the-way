@@ -2363,8 +2363,9 @@ to what.
 - **Based on:** none
 - **Relations:** none
 - **Verification:** an agent compares the change with the decision:
-  - complies: a change of product direction goes through the foundation, and references to affected
-    entries are checked before the change is merged;
+  - complies: a change of product direction goes through the foundation, and its author searches
+    the foundation for the entries the change touches and brings each finding into line in the
+    same change or asks a human;
   - violates: a change of direction relies on the author remembering which decisions and documents
     to update.
 - **Origin:** none
