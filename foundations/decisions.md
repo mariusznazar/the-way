@@ -243,8 +243,8 @@ of the task cycle sets. The entries in
   project-level, product-guidelines, task-cycle
 - **Based on:** none
 - **Relations:** none
-- **Verification:** invariants: repository-file-location · element-directory-contents ·
-  relation-model-directory-contents. For what `elements/common/`, `installation/`,
+- **Verification:** invariants: repository-file-location · element-directory-contents. For what
+  `elements/common/`, `installation/`,
   `agent-instructions/`, `instruction-files/`, `project-level/`, `product-guidelines/` and
   `task-cycle/` hold and for what checks `foundations/`, an agent compares the change with the
   decision:
@@ -551,7 +551,9 @@ the part map's rule for assigning files.
 - **Scope:** decisions, part-map, task-cycle
 - **Based on:** instruction-density-accuracy
 - **Relations:** none
-- **Verification:** invariants: decisions-found-for-change.
+- **Verification:** an agent compares the change with the decision:
+  - complies: a decision governing the part map names `part-map` in its *Scope*;
+  - violates: a *Scope* names `foundations/part_map.md`.
 - **Origin:** none
 
 *Rationale:* an agent can apply only decisions it sees. The part map already assigns files to
@@ -721,14 +723,14 @@ entry; the rationale of a decision an agent takes in a task is the agent's to wr
 - **Scope:** decisions
 - **Based on:** llm-design-rationale-expert-overlap
 - **Relations:** derives from WAY-28
-- **Verification:** invariants: inherited-rationale-source. For *Origin*, an agent compares the
-  change with the decision:
+- **Verification:** for *Origin*, an agent compares the change with the decision:
   - complies: the *Origin* of a decision recovered from a product's saving reads `recovered from
     the code at src/core/save.py, save_game`;
   - violates: *Origin* lists what was searched and what was found.
   For the agent's role, an agent compares the change with the decision:
   - complies: an agent finds the reason in a merged request and quotes it; an agent finds nothing
-    and asks, and the entry gives the reason under the name of the human who knew it;
+    and asks, and the entry gives the reason under the name of the human who knew it; the
+    *Rationale* of a recovered decision whose reason nobody knows reads `unknown`;
   - violates: an agent writes a plausible reason inferred from the code into the entry; an agent
     lists in *Rejected* the options it infers were weighed.
 - **Origin:** none
@@ -943,8 +945,9 @@ the review comes.
 ### WAY-38 — In what are the scripts of the-way written?
 
 Every script of the-way runs on the version of Python the repository declares, with its standard
-library alone, and installs nothing. It calls git, and the commands a product declares in its own
-repository, reading their output through an adapter for the format. Where a product declares no such
+library alone, and installs nothing. It calls git, the Python interpreter running it, and the
+commands a product declares in its own repository, reading their output through an adapter for the
+format. Where a product declares no such
 command, the script reports what it could not check, never agreement.
 
 - **Scope:** elements-common, relation-model, gate, installation, agent-instructions,
@@ -1511,8 +1514,7 @@ main branch from or on the commit being checked.
 - **Based on:** none
 - **Relations:** derives from WAY-03 · derives from WAY-17 ·
   derives from WAY-07 · derives from WAY-61
-- **Verification:** invariants: invariant-tests-of-change. For where a citation stands, an agent
-  compares the change with the decision:
+- **Verification:** for where a citation stands, an agent compares the change with the decision:
   - complies: a test running the check of instruction files on the repository cites
     `instruction-file-imports` at its assertion on imports;
   - violates: a test file cites at its top every invariant its tests serve; a test cites an

@@ -25,7 +25,7 @@ holds what is particular to an invariant (WAY-35).
   entry the file holds its withdrawn identifiers (WAY-64).
 - The identifier names what the sentence constrains, never what it demands, so that a reworded
   sentence leaves it true; where another entry constrains the same thing, it adds the aspect this
-  one protects, as `invariant-part-names` and `invariant-part-form`
+  one protects, as `script-imports` and `script-subprocesses`
   (`TODO — decision pending: which decision sets how an invariant's identifier is named`).
 - An entry is edited in place and holds only its current wording; it carries no version, and its
   earlier wordings are read from git (WAY-07). An entry that takes in a clause of another keeps its

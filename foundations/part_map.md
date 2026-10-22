@@ -21,7 +21,7 @@ the-way itself.
 
 - **Files:** elements/part-map/**
   foundations/part_map.md
-- **Depends on:** elements-common
+- **Depends on:** elements-common · invariants
 - **Trust boundary:** none
 
 ## relation-model
@@ -149,7 +149,7 @@ The part answers for preparing a product repository to use one pinned commit of 
 
 - **Files:** installation/**
 - **Depends on:** decisions · invariants · glossary · part-map · environment-facts ·
-  elements-common · project-level · product-guidelines
+  elements-common · project-level · product-guidelines · task-cycle
 - **Trust boundary:** installation/install.py
 
 ## product-guidelines
@@ -160,7 +160,7 @@ guidelines for a change and recognizes what is missing.
 
 - **Files:** product-guidelines/**
 - **Depends on:** decisions · invariants · glossary · part-map · environment-facts ·
-  elements-common · project-level · instruction-files · task-cycle
+  elements-common · project-level · instruction-files · task-cycle · installation
 - **Trust boundary:** none
 
 ## test-runner-command
@@ -183,6 +183,12 @@ commit lacks; to another existing file of the working tree it adds only the `.th
 
 - **Relied on by:** a product pinned to a commit of the-way
 
+## foundation-check-command
+
+The command that checks a repository's foundation keeps its path, its argument and its exit codes.
+
+- **Relied on by:** a product pinned to a commit of the-way
+
 ## project-plan-state-command
 
 The command that reads a project's plan and product repository keeps its name, positional
@@ -197,7 +203,6 @@ plan and task documents.
 |---|---|---|
 | a product pinned to a commit | both | untrusted |
 | git | them → us | trusted |
-| a command a product declares — a dependency graph, coverage | them → us | untrusted |
 | a repository or a user's files an agent's instructions are read from — instruction files, tool configuration, session records | them → us | untrusted |
 
 ## Files left out on purpose
@@ -212,12 +217,12 @@ plan and task documents.
 |---|---|---|
 | entry-format | withdrawn: the form of an entry is no surface; a product takes it with the commit it pins | none |
 | content-fingerprint | withdrawn: no reference carries a fingerprint | none |
-| decisions-guard-command | withdrawn: no format guard checks a product's foundation | none |
+| decisions-guard-command | withdrawn: no format guard checks a product's foundation | foundation-check-command |
 | run-record-keys | withdrawn: the-way keeps no record of a run | none |
-| part-map-guard-command | withdrawn: no format guard checks a product's foundation | none |
-| invariants-guard-command | withdrawn: no format guard checks a product's foundation | none |
-| environment-facts-guard-command | withdrawn: no format guard checks a product's foundation | none |
-| glossary-guard-command | withdrawn: no format guard checks a product's foundation | none |
+| part-map-guard-command | withdrawn: no format guard checks a product's foundation | foundation-check-command |
+| invariants-guard-command | withdrawn: no format guard checks a product's foundation | foundation-check-command |
+| environment-facts-guard-command | withdrawn: no format guard checks a product's foundation | foundation-check-command |
+| glossary-guard-command | withdrawn: no format guard checks a product's foundation | foundation-check-command |
 | guidelines-form-check-command | withdrawn: no script of the-way checks the form of a product's guidelines (WAY-170) | none |
 | wording-reaches-dependants | withdrawn: a critical flow has no entry in the map, and no reference carries a fingerprint | none |
 | skills-reach-the-way-sessions | withdrawn: a critical flow has no entry in the map; the invariant skill-entry-points and its test hold it | none |

@@ -253,6 +253,7 @@ class TrackedEntryPoints(unittest.TestCase):
         listed = subprocess.run(["git", "-C", str(ROOT), "ls-files", "-z", "--", ".claude/skills",
                                  ".agents/skills"], check=True, capture_output=True).stdout
         tracked = sorted(path for path in listed.decode("utf-8").split("\0") if path)
+        # invariant: derived-file-content
         self.assertEqual(tracked, sorted(produced),
                          "run python -B agent-instructions/skill_entry_points.py --write and "
                          "commit what it writes")
