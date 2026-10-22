@@ -5995,7 +5995,7 @@ becomes the data of some test.
 | WAY-119 | withdrawn: no decision carries *Review when* | none |
 | WAY-149 | withdrawn: it said only that a return-step test takes no deliberate break; every invariant test is seen failing once (WAY-08) | WAY-08 |
 | WAY-157 | withdrawn: how the orchestrator waits for an agent is a step of the task-cycle skill and binds no other work | none |
-| WAY-175 | withdrawn: what the styleguide's template and skill take from outside is no question a decision answers; each piece binds through the decision that carries it, with its source in *Based on* (WAY-100) | WAY-100 |
+| WAY-175 | withdrawn: what the styleguide's template and skill take from outside is no question a decision answers; the sources are private, so each piece binds through the decision that carries it, on that decision's own rationale (WAY-100, WAY-27) | WAY-100 |
 | WAY-179 | withdrawn: an example of a template needs no decision (WAY-168) | none |
 | WAY-181 | withdrawn: the order of a plan is an example the styleguide carries, and WAY-213 says who reads it and how | WAY-213 |
 | WAY-188 | withdrawn: what checks a rule of a styleguide is what WAY-168 gives every rule of guidelines | WAY-168 |
@@ -6005,6 +6005,6 @@ becomes the data of some test.
 | WAY-195 | withdrawn: what coding guidelines take from outside is no question a decision answers; each piece binds through the decision that carries it, with its source in *Based on* (WAY-100) | WAY-100 |
 | WAY-196 | withdrawn: what checks a rule of coding guidelines stands in WAY-168 and WAY-198, and the invariants of a standing check in WAY-202 | WAY-168 · WAY-198 · WAY-202 |
 | WAY-197 | withdrawn: the uses of a rule are optional lines of the rule (WAY-168), and the test of its invariant is seen failing once like every other (WAY-08) | WAY-168 · WAY-08 |
-| WAY-222 | withdrawn: what the task cycle takes from outside is no question a decision answers; each piece binds through the decision that carries it, with its source in *Based on* (WAY-100) | WAY-100 |
+| WAY-222 | withdrawn: what the task cycle takes from outside is no question a decision answers; the sources are private, so each piece binds through the decision that carries it, on that decision's own rationale (WAY-100, WAY-27) | WAY-100 |
 | WAY-223 | withdrawn: it said only that a test protecting a history with no elements takes no evidence of its own; every invariant test is seen failing once (WAY-08) | WAY-08 |
 | WAY-224 | withdrawn: the part map records no failure modes, so no cycle asks the human about one | none |
