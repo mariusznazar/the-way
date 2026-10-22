@@ -37,6 +37,9 @@ particular to a decision (WAY-35).
 *Rejected:* <…> | none considered
 ```
 
+- The question names a choice someone could answer otherwise; "what do we take from X" or "what
+  changed" is no question, and what such a list carries goes to the decisions that carry each rule
+  (WAY-19).
 - *Scope* names parts of the part map, never file paths (WAY-21).
 - *Based on* names every source outside the product that the decision rests on, joined by ` · `:
   once the environment facts element has entries, an environment fact entry, by its identifier
@@ -138,7 +141,7 @@ A field stays in the template only while someone or something reads it (WAY-05).
 
 - *Relations* use a closed list of two types: `derives from` — a higher decision this one serves;
   `narrows` — a decision this one deliberately goes against in a narrower area (WAY-32).
-- A relation names the other decision by its number alone, as `derives from WAY-01` (WAY-31), and
+- A relation names the other decision by its number alone, as `derives from WAY-01` (WAY-02), and
   is written in the entry that depends on the other (WAY-18).
 - Where two decisions both apply and collide, the one that prevails names the other in
   *Relations* as `narrows`, and its binding sentences state the area where it prevails; nothing

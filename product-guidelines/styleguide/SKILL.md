@@ -19,8 +19,7 @@ This skill lives in `product-guidelines/styleguide/` of the-way. In the-way itse
 checkout or worktree the session works in, the directory `git rev-parse --show-toplevel` prints in
 the session's working directory; in a product, it is the product's pinned `.the-way`. The files
 named below lie there, and each skill named below is the project skill of that name with the
-`the-way-` prefix. What it takes from outside practice, and what it leaves, WAY-175 names; the steps
-below describe it in their own words.
+`the-way-` prefix.
 
 ## Where the skill works
 
@@ -106,7 +105,7 @@ starts no child agent and edits only the task document and its turn.
   `update-part-map`.
 - Read off what the product has for it — a file of design tokens its screens read, one nothing
   reads, shared components, or nothing — whether it has screens, and whether a styleguide exists.
-  Say plainly when it has nothing (WAY-185, WAY-175).
+  Say plainly when it has nothing (WAY-185).
 - That gives the mode: no screens, the starting rules of step 2; screens and no styleguide, the
   audit of step 3; an existing styleguide, its refresh or extension — step 2, and step 3 where
   screens changed since the styleguide was written.
@@ -134,7 +133,7 @@ Before the first screen, and at every refresh or extension (WAY-184, WAY-186):
 - Add the product's own meanings: from its definition, plan, specs and mockups, describe each
   screen the product announces — what the user sees, the components it is built from, and its
   states with the messages the user reads. A mockup shows what a screen holds; the meaning of a
-  colour on it is settled with the human, never read off it (WAY-179).
+  colour on it is settled with the human, never read off it (WAY-174).
 - The starting set covers the roles, states and focus the announced screens need, so it is wider
   than the first task that uses it (WAY-184).
 
@@ -153,7 +152,7 @@ Where the user interface has screens (WAY-187):
   user, each in one category: a missing design token, a missing shared component, accidental
   architecture, or a meaning — one colour carrying several. A charge the task does not take up
   stays in *Context*, marked deferred with its reason.
-- A palette read off the code is a proposal, never a rule, until the human settles it (WAY-175). An
+- A palette read off the code is a proposal, never a rule, until the human settles it (WAY-185). An
   existing choice the human keeps becomes a decision whose rationale is the human's words or
   `unknown`, never one the agent infers (WAY-29).
 
@@ -170,7 +169,7 @@ Where the user interface has screens (WAY-187):
   page of every state; the meanings grouped into decisions as that template's section "Pairs and
   meanings" gives; the product's decision adopting the template, and each departure from it by a
   decision with its reason (WAY-173). Ask also what no reading of the code can tell: the names the
-  team uses, the exceptions it keeps on purpose (WAY-175).
+  team uses, the exceptions it keeps on purpose.
 - **Accessibility.** First ask whether a law or a contract binds the accessibility of the user
   interface: what one requires is an environment fact, and no adoption is needed (WAY-86). Then
   propose the decision adopting WCAG, recommending the newest edition that is a W3C Recommendation
@@ -188,7 +187,7 @@ Where the user interface has screens (WAY-187):
   its fact (WAY-60, WAY-191).
 - **Invariants.** Propose an invariant only for a rule a cheap test of the product's suite checks on
   a convention of the product's code; the review compares each change with every other rule, each
-  role in its meaning among them (WAY-168, WAY-188). Propose:
+  role in its meaning among them (WAY-168). Propose:
   - the three first invariants WAY-189 gives, each with its test in the product's suite: no value
     written in place of a design token, visible focus on every control, and the contrast of every
     pair of a background and its text;
@@ -199,7 +198,7 @@ Where the user interface has screens (WAY-187):
     (WAY-60);
   - where the human chooses to clean the screens as tasks touch their styles rather than in one
     clean-up, the invariant against such values marked violated by a foundation change the human
-    accepts, until the cleaning ends (WAY-190, WAY-51); say when proposing it that until then only
+    accepts, until the cleaning ends (WAY-51); say when proposing it that until then only
     the review keeps a cleaned file from gaining such a value back;
   - for any other rule, the template's or the product's, that such a test checks, its invariant.
 - **Critique.** Once the set of proposals is complete, one fresh agent critiques it before it is

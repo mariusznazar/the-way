@@ -19,8 +19,7 @@ This skill lives in `product-guidelines/coding/` of the-way. In the-way itself, 
 checkout or worktree the session works in, the directory `git rev-parse --show-toplevel` prints in
 the session's working directory; in a product, it is the product's pinned `.the-way`. The files
 named below lie there, and each skill named below is the project skill of that name with the
-`the-way-` prefix. What it takes from outside practice, and what it leaves, WAY-195 names; the steps
-below describe it in their own words.
+`the-way-` prefix.
 
 ## Where the skill works
 
@@ -73,7 +72,8 @@ writes there is written for a reader who was not in it.
 - *Questions to settle*: each choice step 4 settles — every standing check adopted or departed
   from with its reason, each tool, set and edition, the parts, the audit's database and severity,
   the split of the set, each kind's exemplar and the status of its files, the rules a script checks
-  of each exemplar, each invariant, and the way the list of rules that block is kept — each with
+  of each exemplar, each invariant, and the flag by which the linter's test makes a comment that
+  turns a rule off have no effect, where the tool has one — each with
   the human's words and date as its source.
 - *Context*: the trial run's evidence — how many reports each rule gave and what the judging
   agent found of them, with the paths of the output and of its verdicts; what the audit found, each
@@ -203,7 +203,7 @@ Where the product has code:
   rules is adopted whole, its split shown as "this many rules will block a change; these few
   flagged sound code here and stay as examples", each of the few shown by what it flagged. Before
   first speaking of a linter, a formatter or an audit of dependencies, say in plain words what it
-  does for the product (WAY-194, WAY-113).
+  does for the product (WAY-174, WAY-113).
 - **What it settles.**
   - for each standing check, the product's decision adopting it or departing from it with its
     reason; the task is not ready without one for each (WAY-202);
@@ -219,25 +219,25 @@ Where the product has code:
     WAY-201);
   - the rule of the product's tests, shown by its effect — "a test writes out the input it feeds and
     the value it expects, so that it fails when the code goes wrong" — adopted with the template or
-    departed from by a decision with its reason (WAY-202);
+    departed from by a decision with its reason (WAY-228);
   - the product's decision adopting the coding template, and each departure from it by a decision
-    with its reason (WAY-193).
+    with its reason (WAY-173).
 - **Invariants.** A binding rule gets an invariant where a cheap test checks it on a convention of
   the product's code, the rule of each standing check always; a rule no such test checks gets none,
-  and the review of each change it reaches compares the change with it (WAY-196, WAY-168). Propose,
+  and the review of each change it reaches compares the change with it (WAY-168, WAY-202). Propose,
   each with a test of the product's suite (WAY-61):
   - for the rule of each standing check, the invariants the coding template's section "What each
     section carries" names for it, with the parts it gives them;
-  - for the linter, which way of keeping the list of rules that block applies — its first invariant
-    passing the list to the tool, or a second invariant keeping the product's configuration to the
-    list — by what the tool allows (WAY-207);
+  - for the linter, the flag or the configuration by which its test makes a comment that turns a
+    rule off have no effect, where the tool has one, and the review of each change to the linter's
+    configuration as what keeps that configuration to the decision (WAY-203, WAY-207);
   - where the code breaks the rules that block, the linter's invariant marked violated by a change
     of the foundation the human accepts, until the code is cleaned (WAY-205, WAY-51); its weak
     point, that until then no test shows a report coming back into a cleaned file or reaching a new
     one and only the review of each change to those files keeps them from gaining one, is said when
     it is proposed;
   - for each rule a script checks of an exemplar, an invariant that checks it (WAY-198), and for
-    each further rule of the whole product, an invariant where a cheap test checks it (WAY-196).
+    each further rule of the whole product, an invariant where a cheap test checks it (WAY-168).
 - **Weak points.** Name each when its choice is proposed:
   - for a product with no code, that the recommended rules block with no evidence from the
     product's code, and that the first report of one that leads to no change worth making takes it

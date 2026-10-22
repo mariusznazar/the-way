@@ -783,6 +783,7 @@ class FoundationCheckTest(unittest.TestCase):
     def test_the_way_foundation_passes(self):
         result = subprocess.run([sys.executable, "-B", SCRIPT, THE_WAY], capture_output=True,
                                 text=True, encoding="utf-8")
+        # invariant: map-reference-target
         self.assertPasses((result.returncode, result.stdout + result.stderr))
 
 

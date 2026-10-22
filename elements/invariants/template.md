@@ -25,10 +25,10 @@ holds what is particular to an invariant (WAY-35).
   entry the file holds its withdrawn identifiers (WAY-64).
 - The identifier names what the sentence constrains, never what it demands, so that a reworded
   sentence leaves it true; where another entry constrains the same thing, it adds the aspect this
-  one protects, as `invariant-part-names` and `invariant-part-form`
+  one protects, as `script-imports` and `script-subprocesses`
   (`TODO — decision pending: which decision sets how an invariant's identifier is named`).
 - An entry is edited in place and holds only its current wording; it carries no version, and its
-  earlier wordings are read from git (WAY-57). An entry that takes in a clause of another keeps its
+  earlier wordings are read from git (WAY-07). An entry that takes in a clause of another keeps its
   identifier, and the other is split
   (`TODO — decision pending: which decision sets that an entry taking in a clause of another keeps
   its identifier`).
@@ -64,15 +64,14 @@ gives (WAY-64).
   input made up for it is the method of a sentence about the check it exercises, never of one about
   the data that check reads (WAY-61).
 - A test cites each invariant it checks, at the test, as a line `invariant: <identifier>` in the
-  comment form of its file's language, and names each file it reads as its data on a line
-  `data: <path>` (WAY-65). A test stands in a file of code; a Markdown file holds no citing test
-  (`TODO — decision pending: which decision sets that a citing test stands in a file of code`).
+  comment form of its file's language (WAY-65). A test stands in a file of code; a Markdown file
+  holds no citing test (`TODO — decision pending: which decision sets that a citing test stands in a
+  file of code`).
 - An invariant's result is `pass` where every test citing it ran and passed, and `fail` where one of
-  them failed; a run in which no test citing it ran gives it no result (WAY-63, WAY-65).
+  them failed; a run in which no test citing it ran gives it no result (WAY-63).
 - An invariant's test is seen failing once, with the command that later shows it passing: run before
   the code that satisfies it, or, where the code already has the behaviour, against that behaviour
-  broken for a moment (WAY-08). No other break is written for it, and it takes no agent of its own
-  (WAY-69).
+  broken for a moment (WAY-08). It takes no agent of its own (WAY-69).
 - A test that gives different verdicts on one commit is fixed as any test of the product is; the
   foundation records no quarantine for it (WAY-68).
 - A change may alter an invariant test in any step of its task, and names in its request each
@@ -152,7 +151,7 @@ gives (WAY-64).
 - A change, against `{fork-point}`, reaches an entry that names `every` or a part the change
   touches, or that a test the change alters cites, and the agent making the change reads every
   entry it reaches (WAY-62).
-- The entry names no failure mode, critical flow or surface (WAY-62).
+- The entry names no critical flow or surface (WAY-62).
 - In the file holding invariant entries, a change of an entry touches the parts that entry names,
   and `every` touches all (WAY-44, WAY-62).
 

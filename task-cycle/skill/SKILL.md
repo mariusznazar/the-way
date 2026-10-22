@@ -113,7 +113,7 @@ findings in the reviewer's words; the fix's range runs from the reviewed head, a
 the fix also gets the fix report. Requirements and values stay in their own files, not restated.
 
 Wait for an agent through the harness's completion notification or one blocking wait at the
-longest duration its live tool contract and active instructions permit (WAY-157). In Codex, use
+longest duration its live tool contract and active instructions permit. In Codex, use
 `collaboration.wait_agent` where exposed, or the harness's equivalent. In Claude Code, a foreground
 `Agent` call blocks where the current mode allows it; a background or resumed agent reports by
 completion notification, so yield the turn when only that result remains and resume on it, without

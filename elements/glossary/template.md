@@ -14,9 +14,9 @@ template holds what is particular to a glossary entry (WAY-35).
 
 - The glossary of the-way holds the words of the process — what its templates, decisions and
   entries name. A product's glossary holds the words of its domain. In the-way, whose product is
-  the process, the two are one file (WAY-95).
+  the process, the two are one file (WAY-226).
 - A product takes the words of the process from the-way at the commit it pins, and its glossary
-  defines none of them again (WAY-95).
+  defines none of them again (WAY-226).
 - A word of the product's domain that the glossary of the-way holds, or the last word of a term
   it holds, in any of its forms, is written in the product's foundation with a qualifier — "castle
   gate" for "gate", or "assembly step" for "step", the last word of "return step". The bare word
@@ -30,8 +30,8 @@ template holds what is particular to a glossary entry (WAY-35).
   title and a paragraph saying what it holds (WAY-93).
 - An entry is headed by its term: the word or words as the foundation writes them in running text,
   which no other entry of the file holds (WAY-93).
-- A sentence depends on a term by using its word (WAY-94, WAY-97). An entry carries no version and
-  is edited in place, its meaning included (WAY-97).
+- A sentence depends on a term by using its word (WAY-97). An entry carries no version and is
+  edited in place, its meaning included (WAY-07, WAY-97).
 - The language of an entry follows `elements/common/rules.md` (WAY-72). How a word the product
   shows the people who use it in another language stands in an entry is
   `TODO — decision pending: how does a word the product shows in another language stand in a

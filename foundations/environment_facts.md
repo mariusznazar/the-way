@@ -93,6 +93,12 @@ Anthropic describes the lifecycle of its models by the states Active, Legacy, De
 
 - **Source:** https://platform.claude.com/docs/en/about-claude/model-deprecations (archived: http://web.archive.org/web/20260926103650/https://platform.claude.com/docs/en/about-claude/model-deprecations, 2026-09-26) § Overview — "Anthropic uses the following terms to describe the model lifecycle:" · § Overview — "Active: The model is fully supported and recommended for use." · § Overview — "Legacy: The model will no longer receive updates and may be deprecated in the future." · § Overview — "Deprecated: The model is still functional but no longer recommended." · § Overview — "Retired: The model is no longer available for use. Requests to retired models will fail."; read 2026-09-26
 
+## openai-model-states
+
+OpenAI lists the models of its API in a catalogue of models; a model it announces as being deprecated is deprecated at once and has a shutdown date after which it is no longer accessible, and a legacy model no longer receives updates.
+
+- **Source:** https://developers.openai.com/api/docs/models (archived: https://web.archive.org/web/20261022015628/https://developers.openai.com/api/docs/models, 2026-10-22) § Models — "Browse our full catalog of models"; read 2026-10-22 · https://developers.openai.com/api/docs/deprecations (archived: https://web.archive.org/web/20261020162442/https://developers.openai.com/api/docs/deprecations, 2026-10-20) § Deprecation vs. legacy — "When we announce that a model or endpoint is being deprecated, it immediately becomes deprecated. All deprecated models and endpoints will also have a shut down date. At the time of the shut down, the model or endpoint will no longer be accessible." · § Deprecation vs. legacy — "We use the term “legacy” to refer to models and endpoints that no longer receive updates."; read 2026-10-22
+
 ## python-314-bugfix-status
 
 Python 3.14 is in the bugfix phase of its release cycle.

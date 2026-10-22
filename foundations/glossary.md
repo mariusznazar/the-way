@@ -2,7 +2,7 @@
 
 The words of the process, each in one meaning: every word that means in the-way something other than
 a reader who knows the field takes it to mean.
-A product takes these words from the-way at the commit it pins (WAY-95).
+A product takes these words from the-way at the commit it pins (WAY-226).
 
 ## agent's way to the running product
 
@@ -90,13 +90,7 @@ An invariant is a sentence about the product that is true or false on every comm
 
 ## invariant test
 
-An invariant test is a file that holds a check citing an invariant, or a file such a check reads and names as its data.
-
-- **Not:** none
-
-## mechanics
-
-Mechanics is the way a test reaches the product under test, as against what the test asserts about it.
+An invariant test is a file that holds a check citing an invariant.
 
 - **Not:** none
 

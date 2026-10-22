@@ -9,7 +9,7 @@ files draw that user interface (WAY-167, WAY-183).
 
 The rules this template carries bind a product only through a decision of the product's log adopting
 them, and the product departs from any of them only by a decision of its log that gives the reason
-(WAY-173). Each rule below cites the decision of the-way that sets it (WAY-171). The rules of form
+(WAY-173). A rule below that a decision of the-way sets cites that decision. The rules of form
 every file of guidelines keeps — the header lines, the fields of a rule, references, code in
 backticks or fenced code, the language of the text, a dropped section or rule — stand in
 `product-guidelines/template.md`; this template holds what is particular to a styleguide.
@@ -60,7 +60,7 @@ the styleguide in their places (WAY-171).
   template of guidelines gives a rule (WAY-171). Its *Invariant* names an invariant only where a
   cheap test of the product's suite checks the rule on a convention of the product's code — the
   items below name the three such invariants the skill proposes — and otherwise reads `none`, and
-  the review of each change the rule reaches compares the change with it (WAY-168, WAY-188).
+  the review of each change the rule reaches compares the change with it (WAY-168).
 - Each required rule stands in the order above, or reads `none — <PREFIX-NN>`, naming the product's
   decision that drops it with its reason (WAY-171, WAY-173). The product's further rules follow the
   required ones.
@@ -91,7 +91,7 @@ decisions and invariants in its own foundation; the styleguide names them.
   gives, and a new or changed meaning is a new or changed decision, approved before the code that
   uses it (WAY-176, WAY-172). *Decision*: every decision the table of `## Roles` names. *Invariant*:
   `none` — the review of each change to the files of the part reads the roles it uses against their
-  decisions (WAY-188, WAY-189).
+  decisions (WAY-168, WAY-189).
 - **Every background with its text** — rule. A role of the kind `background` is always written
   with the role of the kind `text` that stands on it in the table; the contrast rule holds the
   pair's values in code (WAY-176). *Decision*: the product's decision adopting this template.
@@ -102,7 +102,7 @@ decisions and invariants in its own foundation; the styleguide names them.
   what counts as a value written in place of a design token (WAY-60). *Invariant*: one whose test
   in the product's suite finds no such value in any file of the part; where the product cleans its
   screens as tasks touch their styles, it is marked violated until the cleaning ends, with no
-  second invariant beside it (WAY-189, WAY-190).
+  second invariant beside it (WAY-189, WAY-51).
 - **Visible focus** — rule. Every control shows its focus with the style of the focus role
   (WAY-189). *Decision*: the product's decision adopting WCAG (WAY-191), and the product's decision
   that says which elements are controls and how the code marks them — a class, a component, an
@@ -120,32 +120,32 @@ decisions and invariants in its own foundation; the styleguide names them.
   applying with its reason; it names a component by its path only where that component departs from
   the list of states, and never copies the list of components the code holds (WAY-177).
   *Decision*: the product's decision adopting this template. *Invariant*: `none`, unless the
-  product's technology lets a cheap test decide it on a convention of its code (WAY-188).
+  product's technology lets a cheap test decide it on a convention of its code (WAY-168).
 - **A fault of one screen is fixed in its component** — rule. A global design token carries a
   meaning for the whole product, so changing its meaning is a new or changed decision, while a
   change of its value that keeps its meaning is none; a fault of one screen is fixed in that
   screen's component, never by changing a global design token's value for that screen's sake
   (WAY-178, WAY-172). *Decision*: the product's decision adopting this template. *Invariant*:
   `none` — the review of a change to the file of design tokens judges whether it alters what a role
-  means or changes a global value for one screen's sake (WAY-188).
+  means or changes a global value for one screen's sake (WAY-168).
 - **Every value with its source** — rule. Each value of the file of design tokens carries beside it
   where it comes from; the styleguide names the source the skill chose with the human for this
   product, never a list of tools (WAY-182). *Decision*: the product's decision adopting this
   template. *Invariant*: `none`, unless a cheap test decides it on a convention of the file of
-  design tokens (WAY-188).
+  design tokens (WAY-168).
 - **The kitchen-sink page** — rule. It names by its path the page of the product that shows its
   shared components and samples in every state, served in development alone and never in
   production; the page is code of the product, not a piece of the styleguide's text (WAY-180).
   *Decision*: the product's decision adopting this template. *Invariant*: `none`, unless a cheap
   test decides on a convention of the product's code that a production build does not serve the
-  page (WAY-188).
+  page (WAY-168).
 - **Mockups** — example. A mockup is a pattern a screen is compared against, not its
   specification: the meanings on a screen come from the styleguide, and its values from the file of
   design tokens. No check can tell from a commit whether a mockup was read as a specification, so
-  it carries no decision and no invariant (WAY-179).
+  it carries no decision and no invariant.
 - **Plan of a user-interface change** — example. The order of a plan for a change to a user
   interface: the environment and the library first, then the values in their source, then one
-  screen, then its states. It is an example, never a rule (WAY-181).
+  screen, then its states. It is an example, never a rule (WAY-213).
 - **`## Where in code`** — the paths of the file of design tokens, of the directory of shared
   components and of the page of every state, with no value copied from them (WAY-171, WAY-176,
   WAY-177, WAY-180).
@@ -154,7 +154,7 @@ decisions and invariants in its own foundation; the styleguide names them.
 
 - **Pairs in code and in writing.** Which text role stands on which background is a rule, written
   in the decision of the roles and in the table of `## Roles`; the pair's values stand only in the
-  file of design tokens (WAY-176, WAY-04).
+  file of design tokens (WAY-176, WAY-225).
 - **Why the meanings stand twice.** A role's meaning stands in a decision of the product's log,
   where it is approved and weighed against the product's other choices; the table says the same
   meaning for the agent at work, and a change that rewords the decision brings the table in line
@@ -166,7 +166,7 @@ decisions and invariants in its own foundation; the styleguide names them.
   than its decisions, which are in English, *Meaning for the user* and the text of each rule are
   translations of the decisions they restate (WAY-171). No check compares the two: a translation
   that drifts while its decision stands is caught only by a reader or by the review of a change
-  that edits the table or the screens, which reads the roles against their decisions (WAY-188). A
+  that edits the table or the screens, which reads the roles against their decisions (WAY-168). A
   product that wants such a drift caught writes the text of its guidelines in English.
 
 ## Writing the file
@@ -177,7 +177,7 @@ For the author who writes the styleguide in a task's cycle:
   wrote (WAY-172).
 - Take every value, and its source, from the task's *To do*, which names for each role the value
   and its source as the human settled them, or the exact address of the source and the item in it
-  the value is read from; never from memory or from a mockup (WAY-182, WAY-179).
+  the value is read from; never from memory or from a mockup (WAY-182).
 - Point to the values; write none into the styleguide (WAY-176, WAY-171).
 - A meaning the task did not settle is a question that stops the cycle at a blocked draft request,
   never a row of `## Roles` (WAY-172).

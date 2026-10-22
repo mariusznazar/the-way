@@ -22,7 +22,7 @@ holds what is particular to an environment fact (WAY-35).
   new edition leaves it true: `json-text`, not `json-rfc-8259`
   (`TODO — decision pending: which decision sets how an environment fact's identifier is named`).
 - An entry is edited in place and holds only its current wording; it carries no version, and its
-  earlier wordings are read from git (WAY-79).
+  earlier wordings are read from git (WAY-07).
 
 ## Form of an entry
 
@@ -49,8 +49,8 @@ identifiers.
   paper stands in the address of its source, and the models the study measured, by the names it
   gives them, in the sentence or in a passage *Source* quotes. That the agents of this process
   behave the same is no part of the fact; a decision citing a finding none of whose measured models
-  come from the publisher of this process's models says in its rationale that it takes the finding
-  across publishers (WAY-85).
+  comes from a publisher whose models the process's agents run on says in its rationale that it
+  takes the finding across publishers (WAY-85).
 - An invariant names in *Rests on* only the facts holding a condition that decides whether a commit
   makes its sentence true (WAY-73). A fact about what runs an invariant's test — how a tool behaves
   under the runner's configuration, which interpreter runs a script — is no such fact

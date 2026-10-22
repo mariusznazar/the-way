@@ -54,7 +54,7 @@ which word each field takes, how its entries are named — stands in that elemen
   withdrawn identifier and is never reused (WAY-41).
 - A withdrawn identifier stays withdrawn: it never names an entry again (WAY-41, WAY-64).
 - Each of the three files carries its withdrawn identifiers in one list after its last entry, in
-  this form (WAY-41, WAY-64):
+  this form; a file with none leaves the list out (WAY-41, WAY-64):
 
   ```markdown
   ## Withdrawn identifiers
@@ -81,4 +81,4 @@ which word each field takes, how its entries are named — stands in that elemen
 
 - An entry of the decisions, of the invariants, of the environment facts, of the glossary or of the
   part map carries no version: it is edited in place and holds only its current wording, and its
-  earlier wordings are read from git (WAY-07, WAY-43, WAY-57, WAY-79, WAY-97).
+  earlier wordings are read from git (WAY-07).
