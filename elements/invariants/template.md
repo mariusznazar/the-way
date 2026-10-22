@@ -71,8 +71,7 @@ gives (WAY-64).
   them failed; a run in which no test citing it ran gives it no result (WAY-63).
 - An invariant's test is seen failing once, with the command that later shows it passing: run before
   the code that satisfies it, or, where the code already has the behaviour, against that behaviour
-  broken for a moment (WAY-08). No other break is written for it (WAY-08), and it takes no agent of
-  its own (WAY-69).
+  broken for a moment (WAY-08). It takes no agent of its own (WAY-69).
 - A test that gives different verdicts on one commit is fixed as any test of the product is; the
   foundation records no quarantine for it (WAY-68).
 - A change may alter an invariant test in any step of its task, and names in its request each

@@ -90,7 +90,7 @@ An invariant is a sentence about the product that is true or false on every comm
 
 ## invariant test
 
-An invariant test is a file that holds a check citing an invariant, or a file such a check reads and names as its data.
+An invariant test is a file that holds a check citing an invariant.
 
 - **Not:** none
 

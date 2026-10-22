@@ -244,10 +244,9 @@ of the task cycle sets. The entries in
 - **Based on:** none
 - **Relations:** none
 - **Verification:** invariants: repository-file-location · element-directory-contents. For what
-  `elements/common/`, `installation/`,
-  `agent-instructions/`, `instruction-files/`, `project-level/`, `product-guidelines/` and
-  `task-cycle/` hold and for what checks `foundations/`, an agent compares the change with the
-  decision:
+  `elements/common/`, `installation/`, `agent-instructions/`, `instruction-files/`,
+  `project-level/`, `product-guidelines/` and `task-cycle/` hold and for what checks `foundations/`,
+  an agent compares the change with the decision:
   - complies: code two skills of the elements share moves into `elements/common/`, and both read it
     from there; a new rule of form for the entries in `foundations/` is checked by
     `elements/common/foundation_check.py`; the installer, its tests and instructions stand together
@@ -947,8 +946,8 @@ the review comes.
 Every script of the-way runs on the version of Python the repository declares, with its standard
 library alone, and installs nothing. It calls git, the Python interpreter running it, and the
 commands a product declares in its own repository, reading their output through an adapter for the
-format. Where a product declares no such
-command, the script reports what it could not check, never agreement.
+format. Where a product declares no such command, the script reports what it could not check, never
+agreement.
 
 - **Scope:** elements-common, relation-model, gate, installation, agent-instructions,
   instruction-files, project-level, task-cycle
@@ -1168,7 +1167,7 @@ cleared.
 
 - **Scope:** invariants, gate, task-cycle, product-guidelines
 - **Based on:** none
-- **Relations:** derives from WAY-63 · narrows WAY-225
+- **Relations:** derives from WAY-63 · derives from WAY-225
 - **Verification:** an agent compares the change with the decision:
   - complies: an invariant on loading saves that the product breaks today reads `Violated: yes`,
     its test is marked as an expected failure, and the request that sets the mark names it;
@@ -5400,8 +5399,7 @@ The template of the coding discipline has a product's coding guidelines hold tha
 file is fixed in that file, never by turning a rule of the linter off for the whole product nor by
 changing the exemplar for that file's sake, and that turning a rule of the linter off for the whole
 product is a change of the product's decision adopting the linter's set, which the human approves as
-WAY-172 gives a changed meaning. The review of each change to the linter's configuration keeps it to
-that decision, and no invariant compares the configuration with the decision's rules that block.
+WAY-172 gives a changed meaning.
 
 - **Scope:** product-guidelines
 - **Based on:** none
@@ -5414,7 +5412,7 @@ that decision, and no invariant compares the configuration with the decision's r
     the decision;
   - violates: a rule is turned off in the linter's configuration so that one change gets through;
     the exemplar is changed so that a new file departing from it passes the rules a script checks
-    from it; an invariant compares the linter's configuration with the decision's rules that block.
+    from it.
 - **Origin:** none
 
 *Rationale:* a rule of the linter reads every file of the parts it covers, so turning it off for one
@@ -5597,10 +5595,9 @@ touches: every file whose *Applies to* names such a part, a file of a kind of co
 row's *When to read* in `guidelines/coding.md` also matches the work, each read whole and never
 replaced with a review checklist. No one selects the guidelines for another agent; an agent whose
 work reaches a further part reads that part's guidelines.
-With the styleguide, the planner and the author working without a plan read its example of the
-order of work — the environment and the library first, then the values in their source, then one
-screen, then its states — which the template carries among its examples, never as a rule, as an
-example they follow or explain departing from.
+With the styleguide, the planner and the author working without a plan read the order of work the
+template gives, never as a rule — the environment and the library first, then the values in their
+source, then one screen, then its states — and follow it or explain departing from it.
 
 - **Scope:** task-cycle, product-guidelines
 - **Based on:** none
@@ -5814,7 +5811,8 @@ inventing a new technology choice inside the task.
 *Rejected:* state and screenshot checks left to the reviewer — faults reach review that the author
 can catch; stopping the cycle for an unsettled way to the interface — it creates another blocker
 after the change is made; code inspection described as rendered evidence — the gap disappears; a
-comparison with reference screenshots — it needs reference shots that nobody updates blindly.
+comparison with reference screenshots — every intended change of how a screen looks would also
+take new reference shots, a cost the check of states and a screenshot does not bring.
 
 
 ### WAY-220 — How does a code reviewer grade a finding about appearance?
@@ -5902,7 +5900,7 @@ The glossary of the-way holds the words of the process, and a product's glossary
 its domain; a product takes the words of the process from the-way at the commit it pins and defines
 none of them again, and in the-way, whose product is the process, the two are one file.
 
-- **Scope:** glossary
+- **Scope:** glossary, elements-common
 - **Based on:** none
 - **Relations:** none
 - **Verification:** an agent compares the change with the decision:
@@ -5914,7 +5912,8 @@ none of them again, and in the-way, whose product is the process, the two are on
 
 *Rationale:* a definition of a word of the process stands once, in the-way, because copies drift
 between products.
-*Rejected:* none considered
+*Rejected:* each product defining the words of the process in its own glossary — the copies drift
+between products.
 
 ### WAY-227 — Where does the human meet a task cycle's work?
 
@@ -6004,7 +6003,7 @@ becomes the data of some test.
 | WAY-193 | withdrawn: the same rule for every discipline stands in WAY-173 | WAY-173 |
 | WAY-194 | withdrawn: how both skills of guidelines ask the human stands in WAY-174 | WAY-174 |
 | WAY-195 | withdrawn: what coding guidelines take from outside is no question a decision answers; each piece binds through the decision that carries it, with its source in *Based on* (WAY-100) | WAY-100 |
-| WAY-196 | withdrawn: what checks a rule of coding guidelines stands in WAY-168 and WAY-198, and the invariants of a standing check in WAY-202 | WAY-168 · WAY-198 |
+| WAY-196 | withdrawn: what checks a rule of coding guidelines stands in WAY-168 and WAY-198, and the invariants of a standing check in WAY-202 | WAY-168 · WAY-198 · WAY-202 |
 | WAY-197 | withdrawn: the uses of a rule are optional lines of the rule (WAY-168), and the test of its invariant is seen failing once like every other (WAY-08) | WAY-168 · WAY-08 |
 | WAY-222 | withdrawn: what the task cycle takes from outside is no question a decision answers; each piece binds through the decision that carries it, with its source in *Based on* (WAY-100) | WAY-100 |
 | WAY-223 | withdrawn: it said only that a test protecting a history with no elements takes no evidence of its own; every invariant test is seen failing once (WAY-08) | WAY-08 |

@@ -95,7 +95,7 @@ Anthropic describes the lifecycle of its models by the states Active, Legacy, De
 
 ## openai-model-states
 
-OpenAI lists the models of its API in a catalogue of models, in which a model it has announced it is retiring is deprecated and has a shutdown date after which it is no longer accessible, and a legacy model no longer receives updates.
+OpenAI lists the models of its API in a catalogue of models; a model it announces as being deprecated is deprecated at once and has a shutdown date after which it is no longer accessible, and a legacy model no longer receives updates.
 
 - **Source:** https://developers.openai.com/api/docs/models (archived: https://web.archive.org/web/20261022015628/https://developers.openai.com/api/docs/models, 2026-10-22) § Models — "Browse our full catalog of models"; read 2026-10-22 · https://developers.openai.com/api/docs/deprecations (archived: https://web.archive.org/web/20261020162442/https://developers.openai.com/api/docs/deprecations, 2026-10-20) § Deprecation vs. legacy — "When we announce that a model or endpoint is being deprecated, it immediately becomes deprecated. All deprecated models and endpoints will also have a shut down date. At the time of the shut down, the model or endpoint will no longer be accessible." · § Deprecation vs. legacy — "We use the term “legacy” to refer to models and endpoints that no longer receive updates."; read 2026-10-22
 

@@ -38,7 +38,8 @@ particular to a decision (WAY-35).
 ```
 
 - The question names a choice someone could answer otherwise; "what do we take from X" or "what
-  changed" is no question, and what such a list carries goes to the decisions that carry each rule.
+  changed" is no question, and what such a list carries goes to the decisions that carry each rule
+  (WAY-19).
 - *Scope* names parts of the part map, never file paths (WAY-21).
 - *Based on* names every source outside the product that the decision rests on, joined by ` · `:
   once the environment facts element has entries, an environment fact entry, by its identifier
