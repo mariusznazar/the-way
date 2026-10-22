@@ -207,14 +207,11 @@ Before approval, the project readiness check rejects a definition whose Technolo
 
 ## project-plan-form
 
-The project plan check rejects a plan with no valid `Status:` line, a header that names no
-definition it can read or a fingerprint other than the one that definition's gate record holds and
-its text gives, a definition whose In scope is not `none` and holds no top-level list item, a
-second-level section that is missing, repeated, out of order, empty, without the table the template
-puts in it or not one of the template's, a change log with no dated item, a table with no row or
-whose header row, separator row or any cell differs from the form the plan template gives, a number
-or a name held by two tasks, or a task whose state the template's list does not hold or names the
-task itself.
+The project plan check rejects a plan whose `Status:` line, sections, tables, change log or task
+states depart from the form the plan template gives, in which two tasks hold one number or one name
+or a task's state names the task itself, whose header names no definition the check can read or a
+fingerprint other than the one that definition's gate record holds, or whose definition holds an
+In scope that is neither `none` nor a list.
 
 - **Method:** test
 - **Rests on:** none
@@ -225,13 +222,12 @@ task itself.
 ## project-plan-check
 
 The project plan check rejects a plan in which a projected entry of its definition has no task
-realizing it, not exactly one of those tasks writing it into the foundation, or more than one row;
-an item of the definition's In scope has no task; a task depends on itself, directly or through
-other tasks; a preparatory task has no task depending on it; an open question of the definition
-does not stand in the plan exactly once, word for word with the place its definition gives it, with
-a task of the plan or an answer; or a cell or an item
-names a task, a projected entry, an In scope item or an open question that the plan or its
-definition does not hold.
+realizing it, not exactly one task writing it into the foundation or more than one row, an item of
+the definition's In scope has no task, a task depends on itself, directly or through other tasks, a
+preparatory task has no task depending on it, an open question of the definition does not stand in
+the plan once, word for word with the place its definition gives it, with a task of the plan or an
+answer, or a cell names a task, an entry, an item or a question that the plan or its definition does
+not hold.
 
 - **Method:** test
 - **Rests on:** none
@@ -241,7 +237,7 @@ definition does not hold.
 
 ## skill-entry-points
 
-Every file named `SKILL.md` that git tracks, or that stands untracked and not ignored by git, outside the `.claude/` and `.agents/` directories at the repository's root, with `<name>` the name its frontmatter gives, has a file `.claude/skills/the-way-<name>/SKILL.md` and a byte-identical file `.agents/skills/the-way-<name>/SKILL.md`, whose frontmatter names `the-way-<name>` and gives a description starting with the description the frontmatter of that `SKILL.md` gives, whose text contains, in backticks, the path of that `SKILL.md` from the repository's root, and contains `--show-superproject-working-tree`, `git ls-files --stage -- ':/.the-way'`, `git rev-parse --show-toplevel` and the words "If the skill tells you to resolve a link to find the-way, skip that", and whose text holds a sentence that names, each in backticks, the name of every such `SKILL.md` and holds the words "with the `the-way-` prefix, never an unprefixed one"; and every directory in `.claude/skills/` or `.agents/skills/` whose name begins with `the-way-` is named `the-way-<name>` for the `<name>` of such a `SKILL.md`.
+Every file named `SKILL.md` that git tracks, or that stands untracked and not ignored by git, outside the `.claude/` and `.agents/` directories at the repository's root, with `<name>` the name its frontmatter gives, has a byte-identical pair of entry points, `.claude/skills/the-way-<name>/SKILL.md` and `.agents/skills/the-way-<name>/SKILL.md`, whose frontmatter names `the-way-<name>` and gives a description starting with that skill's description, and whose text leads a session to that `SKILL.md` in the checkout or worktree it works in and names every such skill to be called with the `the-way-` prefix, never an unprefixed one; and every directory in `.claude/skills/` or `.agents/skills/` whose name begins with `the-way-` is named `the-way-<name>` for the `<name>` of such a `SKILL.md`.
 
 - **Method:** test
 - **Rests on:** none
@@ -251,7 +247,7 @@ Every file named `SKILL.md` that git tracks, or that stands untracked and not ig
 
 ## instruction-file-imports
 
-No repository instruction file of the-way holds, outside code spans and fenced code blocks, an `@` that stands at the start of a line or right after whitespace, `(`, `[`, `{`, `"`, `'`, `“`, `‘` or `„` and is followed by a character other than whitespace, except the first line of the root `CLAUDE.md` when it reads `@AGENTS.md` and nothing else; the root `AGENTS.md` or `CLAUDE.md` names by its path a Markdown file that git tracks, one whose name ends in `.md` or `.markdown`, when that file's path from the repository's root, written with `/` or with `\` between directories, stands anywhere in its text with no ASCII letter or digit and none of `.`, `-`, `_`, `/` and `\` right before it, a code span runs from a run of backticks to the next run of as many backticks on the same line, and a fenced code block runs from a line whose first characters other than spaces are three backticks or three tildes to the next such line.
+No repository instruction file of the-way holds, outside code spans and fenced code blocks, an `@` that a tool loading the file would take for an import, except the first line of the root `CLAUDE.md` when it reads `@AGENTS.md` and nothing else.
 
 - **Method:** test
 - **Rests on:** none
@@ -281,15 +277,12 @@ For a product with no root `CLAUDE.md`, the installation command creates that fi
 
 ## project-plan-state-evidence
 
-For each task of a valid handed-over plan with an approved definition, the plan-state reader uses
-existing recorded task provenance to establish that cycle traces belong to the current plan's
-task before proposing ready for cycle to in cycle only from a matching working-cycle directory
-in a Git-listed worktree or a commit touching that task's exact archived cycle directory or in
-cycle to done only from a cycle-record commit reachable in freshly fetched product integration
-history, reports both transitions together when both proofs hold for a ready task, reports
-missing or ambiguous task provenance as unchecked and contradictory task provenance for human
-reconciliation without proposing progress from either, and exposes incomplete, failed or
-conflicting observations without unsupported progress or edits to the plan or task documents.
+For each task of a valid handed-over plan with an approved definition, the plan-state reader
+proposes a move to in cycle or to done only from git evidence that the task's recorded provenance
+ties to that task — its working cycle directory, a commit of its archived cycle directory, or a
+cycle record reachable in the product's freshly fetched integration history — proposing both moves
+together where both proofs hold, reports missing, ambiguous, contradictory, incomplete, failed or
+conflicting evidence instead of proposing progress from it, and edits no plan or task document.
 
 - **Method:** test
 - **Rests on:** none
