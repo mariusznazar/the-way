@@ -41,8 +41,8 @@ and source paths; the project orchestrator dispatches it and returns observation
 Verify the observations and correct through the existing element skills in projected mode,
 returning conflicts and additional child-work requests instead of launching children. Missing
 independent critique blocks the gate. Present the approval material through the project
-orchestrator and wait for its recorded human approval before writing Approved by, the fingerprint,
-gate record and approved Status; a provisional agent ruling is not approval.
+orchestrator and wait for its recorded human approval before writing the fingerprint, gate record
+and approved Status; a provisional agent ruling is not approval.
 
 Keep the pending gate and next actor visible in the conversation and the definition's actual
 Status. On completion return its checks, new source identity and next action through the file:
@@ -149,13 +149,18 @@ neither this agent nor the project orchestrator starts task implementation.
    "Technology", goes back to step 6; a finding of condition a inside a projected entry goes to the
    skill of its element in projected mode, which completes that entry's wording; any other finding
    goes back to step 4.
-2. Search the whole foundation for what the definition collides with that no written link joins
-   (WAY-33): a decision whose binding sentences the project would break, an invariant, a glossary
-   term the definition uses in another meaning, a fact the project contradicts. Settle each before
-   the gate: a projected change to the entry through the skill of its element in projected mode
-   (an edit in place before main, otherwise a new version), or the definition brought into line
-   with it. Note the commit of the product's foundation you searched, as `git rev-parse HEAD` in
-   the product prints it.
+2. Search the whole foundation once for what the definition and its projected entries touch
+   (WAY-118), with what each element's skill adds to the search of the foundation: the entries
+   that name an entry the definition projects a change to; an entry that already states what a
+   projected entry settles; and what the definition collides with that no written link joins — a
+   decision whose binding sentences the project would break, an invariant, a glossary term the
+   definition uses in another meaning, a fact the project contradicts. This is the one search of
+   the whole foundation on the way to the gate: neither `find-foundation-entries` nor the skill of
+   an element in projected mode makes one. Settle each finding before the gate: a projected change
+   to the entry through the skill of its element in projected mode, a projected entry struck or
+   turned into a change of the entry that already states it, shown to the human at 7.3, or the
+   definition brought into line with it. Note the commit of the product's foundation you searched,
+   as `git rev-parse HEAD` in the product prints it.
 3. Run `critique` once on all finished projected entries, the definition and its sources
    (WAY-120). Verify its observations, correct proposals through the skills of their elements and
    bring any conflict with a human settlement back to the human. If an independent critic cannot
@@ -166,17 +171,13 @@ neither this agent nor the project orchestrator starts task implementation.
    goes through the skill of its element in projected mode again, and where it changes the
    question of a decision an item of "Technology" names, the item takes the new question.
 4. After the final review changes, run the check of 7.1 again; a finding goes where 7.1 sends it.
-   Then, for each projected decision whose *Review when* reads `TODO`,
-   confirm that the human expressly deferred it and that a related item under "Open questions"
-   names the breakdown or task that will settle it. The readiness script does not establish this
-   relation. On the human's approval, write `<who>, YYYY-MM-DD` into *Approved by* of every projected
-   decision; the other kinds have no field of approval, and the gate record approves them. Then
-   print the fingerprint with
+   On the human's approval, print the fingerprint with
    `python -B <the-way>/project-level/readiness_check.py <definition> --fingerprint`, write the
-   gate record, and set the status line to `approved YYYY-MM-DD`.
+   gate record, and set the status line to `approved YYYY-MM-DD`. The gate record approves every
+   projected entry; no entry carries a field of approval.
 5. Run the check with no option; it must report nothing found. Tell the human what it reported,
-   and that conditions b and c rest on the approval and on the search, which no script checks,
-   and that the breakdown of the approved definition into tasks follows through `plan-project`
+   and that the approval and the search of 7.2 (condition c) rest on no script's check, and that
+   the breakdown of the approved definition into tasks follows through `plan-project`
    (WAY-142).
 
 A change of the definition after the gate goes through the gate again

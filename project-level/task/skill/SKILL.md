@@ -87,10 +87,10 @@ human acceptance of the complete task, even when refinement finds no candidate s
   project member, update its plan through the owning workflow before refining either new item;
   for another task, ask which item to refine first. Read product files to answer factual
   questions before asking the human.
-- Read and apply `product-guidelines/reading.md` to this task's required behaviour, even before
-  its files exist (WAY-214). Record the affected parts and evidence, selected paths and reasons
-  in Context; read the selected guidelines whole. Carry gaps and uncertain classifications to
-  step 3, and refresh this reading when clarification changes the scope or its sources.
+- Read the product's guidelines of the parts this task touches by `product-guidelines/reading.md`,
+  naming the parts from the task's required behaviour even before its files exist (WAY-214).
+  Carry its findings — guidelines missing, malformed or uncertain — to step 3. When clarification
+  brings the task to a part this reading did not cover, read that part's guidelines.
 
 ## 2. Draft from what is known
 
@@ -100,6 +100,11 @@ human acceptance of the complete task, even when refinement finds no candidate s
   for missing information and `Status: refining`. Give its full path to the human. For a task
   already in its cycle, leave its frozen task document intact and route a scope change through
   the cycle's question and record.
+- A task document written before and not yet in its cycle, an accepted one included, is refined
+  from its text: its answers and the accepted rows of *Settlements to record* stand with their
+  sources, and only what the human reopens, and what a reopened answer changes, is settled again.
+  Its status returns to `refining` and is not `ready for cycle` again until the human accepts the
+  whole changed document (WAY-124); steps 4 to 6 run on the whole document.
 - Keep Description to what an implementer needs to take the task. Put likely follow-up answers
   in Context. If a block's place is uncertain, move it to Context. Do not ask questions merely
   to fill Context, and do not invent acceptance criteria.
@@ -164,13 +169,13 @@ human acceptance of the complete task, even when refinement finds no candidate s
 
 ## 4. Carry the foundation decisions
 
-- Search the current foundation for decisions the task touches, including an unlinked
-  collision; quote their current wording and version. If a project definition is a source,
-  bring in its relevant approved projected wording. For a project member, use the plan to
-  identify which entries it is assigned to realize or write. A source-only task takes no plan
-  assignment, but its cycle writes a projected entry its code will make true: mark that entry
-  under *Decisions in play* with the part made true now, also when the plan assigns it to another
-  task (WAY-124, WAY-126).
+- Carry under *Decisions in play* the current decisions the task touches, as "Reading the
+  foundation" of step 1 selects them for the task's scope, each by its identifier with its current
+  wording quoted. If a project definition is a source, bring in its relevant approved projected
+  wording. For a project member, use the plan to identify which entries it is assigned to realize
+  or write. A source-only task takes no plan assignment, but its cycle writes a projected entry
+  its code will make true: mark that entry under *Decisions in play* with the part made true now,
+  also when the plan assigns it to another task (WAY-124, WAY-126).
 - For a project member, compare the numbered work, dependencies and projected entries with its
   plan item. A mismatch returns to the plan, not an unrecorded change in this document.
 - If the task would contradict a current decision or a projected entry, show the conflict and
@@ -187,6 +192,14 @@ human acceptance of the complete task, even when refinement finds no candidate s
   *Settlements to record* (WAY-134). This runs for every task, whatever its project relation: a
   project member and a source-only task add their own settlements beside the projected entries
   they carry.
+- Refinement searches no more of the foundation than step 1 reads and *Decisions in play*
+  carries. The one search of the whole foundation is the cycle's, when it writes each kept row
+  (WAY-33); a kept row that search finds already stated becomes no second entry, and one whose
+  meaning cannot hold against what it finds goes back to the human, as WAY-134 gives both.
+- Where the document already holds accepted rows from an earlier refinement, a row the human
+  reopens, or whose source this refinement changed or removed, is a candidate again; every other
+  accepted row enters the working table `accepted` and is not cut again. The counts of the
+  `Candidates:` line cover this refinement's working table.
 - A candidate that collides with a current decision or a projected entry goes back to step 4 as a
   conflict; one that changes the task's scope goes back to step 3.
 
@@ -197,15 +210,17 @@ human acceptance of the complete task, even when refinement finds no candidate s
   is nothing worth moving, say so and continue.
 - Check that every blocking question has an answer, the numbered work is executable, the
   questions brought into this task are accounted for, the decisions in play are present or
-  explicitly `none` after a search, and *Settlements to record* opens with its `Candidates:` line,
-  no row awaiting the human, and *Human actions* reads `none` or has every human action placed
-  and every human action before the cycle done (WAY-124, WAY-140). For a project member, also
-  check its plan item and assignments; for any task using approved project settlements, check
-  the definition's approval and that every projected entry its code makes true is marked with the
-  part made true. Report an obstacle instead of declaring readiness when a check fails.
-- Recheck the guideline selection against the final scope and sources. A missing-discipline
-  question still awaiting its task's merge, or unresolved classification or metadata, prevents
-  readiness; a recorded dependency or an empty selection does not answer it.
+  `none` where the reading of the foundation found none, *Settlements to record* opens with its
+  `Candidates:` line and holds no row awaiting the human, and *Human actions* reads `none` or has
+  every human action placed and every human action before the cycle done (WAY-124, WAY-140). For
+  a project member, also check its plan item and assignments; for any task using approved project
+  settlements, check the definition's approval and that every projected entry its code makes true
+  is marked with the part made true. Report an obstacle instead of declaring readiness when a
+  check fails.
+- Where the final scope reaches a part the guideline reading of step 1 did not cover, read that
+  part's guidelines. A missing-discipline question still awaiting its task's merge, or unresolved
+  classification or metadata, prevents readiness; a recorded dependency or an empty reading does
+  not answer it.
 - Once these checks pass, show the complete final document and explicitly ask the human to accept
   that document, then wait. Acceptance of candidates, Human-action placement or an earlier draft
   is not this acceptance. Keep `Status: waiting for human` until it is given, including a task

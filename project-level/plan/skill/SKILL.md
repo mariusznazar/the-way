@@ -70,9 +70,9 @@ read all turns and the requested change, and follow this workflow with these rou
   The complete part map's *Depends on* tells which work has to come first.
 - Read the product's files only as far as the cut needs: what is already there, so that no task
   puts in place what exists.
-- Read and apply `product-guidelines/reading.md` to the approved scope (WAY-218). Record its
-  affected parts, selected files and reasons, gaps and questions in the working evidence; read
-  the selected guidelines whole. Refresh this reading if the cut or its sources change.
+- Read the product's guidelines of the parts the approved scope touches by
+  `product-guidelines/reading.md` (WAY-218), each whole, and keep what it finds missing or
+  uncertain in the working evidence.
 
 ## Reading the definition and plan
 
@@ -81,14 +81,14 @@ and plan check on those whole files at their original paths, never on selected e
 reduced copy. Selection is no reading cap; read a small file whole where useful.
 
 - Before choosing work at start or resume, inspect the complete heading structure, status and
-  header, gate record and document versions. Inventory every top-level In scope item in its
+  header, gate record and document revisions. Inventory every top-level In scope item in its
   original order and numbering, every projected-entry heading, and every open question with its
   exact wording and assigned place. For an existing plan, inventory every task's number, name,
   state and dependencies, every projected-entry realizing and writing assignment, every question
   with its placement or answer, and the locations of phases and change-log content.
 - Accumulate the complete inventories in manageable batches with ordinary file/search tools.
   Read table rows and question items as complete units, including wrapped continuations. Keep
-  their source versions and locations in temporary working evidence; this is no second plan or
+  their source revisions and locations in temporary working evidence; this is no second plan or
   maintained product format. Refresh the inventories when either source changes.
 - Use status and unfinished sections to choose where to resume. For that work, read complete
   scope items, task rows, projected entries and questions, with dependency and assignment context.

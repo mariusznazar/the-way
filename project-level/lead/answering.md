@@ -5,7 +5,7 @@ Start from the supplied conversation path. Read `conversation_template.md` besid
 its header, all turns and every round conversation it names before answering. Verify product,
 plan and task identities and the pinned process. Select and read the product's current foundation
 by "Reading the foundation" in `elements/common/way_of_working.md`, including the complete part
-map and whole selected entries; record source versions checked. Expand to the complete source
+map and whole selected entries; record source revisions checked. Expand to the complete source
 units needed for each question. Unreadable sources are obstacles, not negative evidence.
 
 The project orchestrator serializes your writes after refiner turns have ended. Edit only answer
@@ -57,4 +57,4 @@ source for context, and return the question to the human with its affected tasks
 recommendation. Do not re-answer it with the same quotation. The project orchestrator records
 human answers separately before fresh refiners run; only those refiners transfer resolved answers
 with provenance into task documents. On resumption check those recorded answers and source
-versions, never infer agreement from an agent's turn result or silence.
+revisions, never infer agreement from an agent's turn result or silence.

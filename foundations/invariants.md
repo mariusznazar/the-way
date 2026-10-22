@@ -63,16 +63,6 @@ Where {merge-onto} exists, every change against {fork-point} holds, in one of it
 - **Part:** every
 - **Violated:** no
 
-## foundation-change-path
-
-No change that, against {fork-point}, alters a foundation entry runs on the path for tasks that leave the foundation unchanged.
-
-- **Method:** review
-- **Rests on:** none
-- **Derives from:** WAY-13
-- **Part:** every
-- **Violated:** no
-
 ## derived-file-content
 
 Every derived file git tracks that its generator can produce from scratch is identical to what the generator produces on the same commit, except for the values that file declares as varying between runs.
@@ -247,7 +237,7 @@ required section, an open question with no place of resolution, or an unfinished
 
 ## project-technology-record
 
-Before approval, the project readiness check rejects a definition whose Technology section is missing or reads `none`, or holds a line that is no choice item, a choice still open, or a choice that names neither a decision as `<PREFIX>-<NN>/<version>` nor a question a heading of a projected decision holds.
+Before approval, the project readiness check rejects a definition whose Technology section is missing or reads `none`, or holds a line that is no choice item, a choice still open, or a choice that names neither a decision as `<PREFIX>-<NN>` nor a question a heading of a projected decision holds.
 
 - **Method:** test
 - **Rests on:** none
@@ -355,116 +345,6 @@ Every subprocess the plan-state reader starts runs Git.
 - **Rests on:** none
 - **Derives from:** WAY-153
 - **Part:** project-level
-- **Violated:** no
-
-## guidelines-form
-
-Every file `guidelines/<name>.md` holds, in their order, the header lines, sections, rules, rule fields and tables that the template of guidelines and the template of its discipline require at the commit of the-way the repository uses — the commit checked, in the-way itself, and the pinned commit, in a product — each with the values and the links those templates give it, with a name that agrees with its *Discipline*, each section or rule it drops reading `none —` with a decision of the log and that decision's fingerprint, each part it names being a part of the map, and each path under `## Where in code` naming something git tracks.
-
-- **Method:** test
-- **Rests on:** none
-- **Derives from:** WAY-170 · WAY-171
-- **Part:** every
-- **Violated:** no
-
-## guidelines-reference-current
-
-Every reference outside fenced code in a file `guidelines/<name>.md` — a decision number of the log or an identifier of the invariants file followed by `@` and a run of letters and digits, or any identifier followed by `@` and eight lower-case hexadecimal characters — names a decision of the log that is not repealed or an invariant of the file that is not withdrawn, and carries the fingerprint of that entry's binding part in the foundation of the same commit and, where {merge-onto} exists, in the foundation a merge onto {merge-onto} leaves.
-
-- **Method:** test
-- **Rests on:** none
-- **Derives from:** WAY-169
-- **Part:** product-guidelines · decisions · invariants · agent-instructions · relation-model
-- **Violated:** no
-
-## guidelines-check-form
-
-The form check of guidelines, `product-guidelines/form_check.py`, reports as an error every header line, section, rule or rule field that the template of guidelines or the template of a file's discipline requires and a file `guidelines/<name>.md` lacks or holds out of order, every section or rule dropped with a text other than `none —` followed by a decision of the log and a fingerprint, every part named in *Applies to* or in a file's name that the part map does not hold, and every file whose name and *Discipline* disagree.
-
-- **Method:** test
-- **Rests on:** none
-- **Derives from:** WAY-170 · WAY-171 · WAY-202
-- **Part:** product-guidelines · decisions · invariants · part-map · elements-common · relation-model
-- **Violated:** no
-
-## guidelines-check-carrier
-
-The form check of guidelines, `product-guidelines/form_check.py`, reports as an error every rule under `## Rules` of a file `guidelines/<name>.md` whose *Decision* holds no decision number with the log's prefix followed by `@`, every such rule whose *Invariant* holds no identifier of the invariants file followed by `@` in a file whose discipline's template requires an invariant in every rule, and every decision the table of roles of a styleguide names that the rule `### Each role in its meaning` does not name, unless that rule is dropped.
-
-- **Method:** test
-- **Rests on:** none
-- **Derives from:** WAY-168 · WAY-188 · WAY-189 · WAY-196
-- **Part:** product-guidelines · decisions · invariants · part-map · elements-common · relation-model
-- **Violated:** no
-
-## guidelines-check-colour-pair
-
-The form check of guidelines, `product-guidelines/form_check.py`, reports as an error every role of the kind `background` in the table of roles of a styleguide whose *Text on it* is empty or names no role of the kind `text` in that table.
-
-- **Method:** test
-- **Rests on:** none
-- **Derives from:** WAY-176
-- **Part:** product-guidelines · decisions · invariants · part-map · elements-common · relation-model
-- **Violated:** no
-
-## guidelines-check-reference-target
-
-The form check of guidelines, `product-guidelines/form_check.py`, reports as an error every reference outside fenced code in a file `guidelines/<name>.md` — a decision number of the log or an identifier of the invariants file followed by `@` and a run of letters and digits, or any identifier followed by `@` and eight lower-case hexadecimal characters — that names a decision the log does not hold or has repealed, or an invariant the file does not hold or has withdrawn, and every such reference after a decision number or an invariant's identifier whose part after `@` is not eight lower-case hexadecimal characters.
-
-- **Method:** test
-- **Rests on:** none
-- **Derives from:** WAY-169
-- **Part:** product-guidelines · decisions · invariants · part-map · elements-common · relation-model
-- **Violated:** no
-
-## guidelines-check-stale-reference
-
-The form check of guidelines, `product-guidelines/form_check.py`, reports as an error every reference outside fenced code in a file `guidelines/<name>.md` to a decision of the log or an invariant of the file whose fingerprint differs from that entry's current fingerprint on the commit checked and, given "{merge-onto}", every one whose fingerprint differs from that entry's current fingerprint in the foundation a merge onto that commit leaves.
-
-- **Method:** test
-- **Rests on:** none
-- **Derives from:** WAY-169
-- **Part:** product-guidelines · decisions · invariants · part-map · elements-common · relation-model
-- **Violated:** no
-
-## guidelines-check-code-path
-
-The form check of guidelines, `product-guidelines/form_check.py`, reports as an error every path under `## Where in code` of a file `guidelines/<name>.md` that is absolute, holds a `..` segment, a drive or a UNC prefix, or names nothing git tracks.
-
-- **Method:** test
-- **Rests on:** none
-- **Derives from:** WAY-170
-- **Part:** product-guidelines · decisions · invariants · part-map · elements-common · relation-model
-- **Violated:** no
-
-## guidelines-check-kind-index
-
-The form check of guidelines, `product-guidelines/form_check.py`, reports as an error every file `guidelines/coding-<kind>.md` git tracks that no row of the table under `## Kinds of code` in `guidelines/coding.md` names by its path in *File*, every row of that table whose *File* names no file git tracks, whose *Kind* is not the `<kind>` of the file its *File* names or whose *When to read* is empty, and every file `guidelines/coding-<kind>.md` git tracks where git tracks no `guidelines/coding.md`.
-
-- **Method:** test
-- **Rests on:** none
-- **Derives from:** WAY-167 · WAY-212
-- **Part:** product-guidelines · decisions · invariants · part-map · elements-common · relation-model
-- **Violated:** no
-
-## guidelines-check-exemplar
-
-The form check of guidelines, `product-guidelines/form_check.py`, reports as an error every file `guidelines/coding-<kind>.md` whose table under `## Files of this kind` holds no row, or more than one, whose *Status* is `exemplar`, every row of that table whose *Status* is not `exemplar`, `copy` or `do not copy`, whose *File* is absolute, holds a `..` segment, a drive or a UNC prefix or names nothing git tracks, or which is not the `exemplar` row and whose *Decision* is not `—`, and every `exemplar` row whose *Decision* names no decision the log holds and has not repealed, or names one whose binding sentences, their whitespace collapsed, lack its *File* in backticks or the file's `<kind>` in backticks.
-
-- **Method:** test
-- **Rests on:** none
-- **Derives from:** WAY-198 · WAY-199
-- **Part:** product-guidelines · decisions · invariants · part-map · elements-common · relation-model
-- **Violated:** no
-
-## guidelines-check-example-files
-
-The form check of guidelines, `product-guidelines/form_check.py`, reports as an error every rule under `## Rules` of a file `guidelines/<name>.md` whose *Invariant* names an invariant other than `guidelines-form` and whose text after its fields does not hold, for each such invariant, exactly one fenced block whose opening line's info string reads `good <identifier> <path>` and exactly one whose info string reads `bad <identifier> <path>`, optionally with exactly one `base <identifier> <path>` block whose path equals both cases' paths, `<identifier>` being that invariant's, and, in such a rule, every such block whose `<identifier>` its *Invariant* does not name or whose `<path>` is absolute, holds a `..` segment, a drive or a UNC prefix, every line inside such a block that would open a fence, every other fenced block, and every such block left open to the end of the file, and every `base` block under any rule naming no invariant other than `guidelines-form`.
-
-- **Method:** test
-- **Rests on:** none
-- **Derives from:** WAY-168
-- **Part:** product-guidelines · decisions · invariants · part-map · elements-common · relation-model
 - **Violated:** no
 
 ## Withdrawn identifiers
@@ -651,3 +531,15 @@ The form check of guidelines, `product-guidelines/form_check.py`, reports as an 
 | glossary-process-terms | withdrawn: it held a behaviour of a format guard, and no format guard checks the foundation | none |
 | gate-human-verdict | withdrawn: the foundation records no human verdict | none |
 | gate-guidelines-example-evidence | withdrawn: no gate reports how the method of an invariant meets the uses of a rule of guidelines | none |
+| guidelines-form | withdrawn: no script of the-way checks the form of a product's guidelines; the review of a change compares them with the templates, and `elements/common/foundation_check.py` reports a decision, an invariant or a part they name that the foundation does not hold (WAY-170) | none |
+| guidelines-reference-current | withdrawn: no script of the-way checks the form of a product's guidelines; the review of a change compares them with the templates, and `elements/common/foundation_check.py` reports a decision, an invariant or a part they name that the foundation does not hold (WAY-170) | none |
+| guidelines-check-form | withdrawn: no script of the-way checks the form of a product's guidelines; the review of a change compares them with the templates, and `elements/common/foundation_check.py` reports a decision, an invariant or a part they name that the foundation does not hold (WAY-170) | none |
+| guidelines-check-carrier | withdrawn: no script of the-way checks the form of a product's guidelines; the review of a change compares them with the templates, and `elements/common/foundation_check.py` reports a decision, an invariant or a part they name that the foundation does not hold (WAY-170) | none |
+| guidelines-check-colour-pair | withdrawn: no script of the-way checks the form of a product's guidelines; the review of a change compares them with the templates, and `elements/common/foundation_check.py` reports a decision, an invariant or a part they name that the foundation does not hold (WAY-170) | none |
+| guidelines-check-reference-target | withdrawn: no script of the-way checks the form of a product's guidelines; the review of a change compares them with the templates, and `elements/common/foundation_check.py` reports a decision, an invariant or a part they name that the foundation does not hold (WAY-170) | none |
+| guidelines-check-stale-reference | withdrawn: no script of the-way checks the form of a product's guidelines; the review of a change compares them with the templates, and `elements/common/foundation_check.py` reports a decision, an invariant or a part they name that the foundation does not hold (WAY-170) | none |
+| guidelines-check-code-path | withdrawn: no script of the-way checks the form of a product's guidelines; the review of a change compares them with the templates, and `elements/common/foundation_check.py` reports a decision, an invariant or a part they name that the foundation does not hold (WAY-170) | none |
+| guidelines-check-kind-index | withdrawn: no script of the-way checks the form of a product's guidelines; the review of a change compares them with the templates, and `elements/common/foundation_check.py` reports a decision, an invariant or a part they name that the foundation does not hold (WAY-170) | none |
+| guidelines-check-exemplar | withdrawn: no script of the-way checks the form of a product's guidelines; the review of a change compares them with the templates, and `elements/common/foundation_check.py` reports a decision, an invariant or a part they name that the foundation does not hold (WAY-170) | none |
+| guidelines-check-example-files | withdrawn: no script of the-way checks the form of a product's guidelines; the review of a change compares them with the templates, and `elements/common/foundation_check.py` reports a decision, an invariant or a part they name that the foundation does not hold (WAY-170) | none |
+| foundation-change-path | withdrawn: a task's cycle chooses no path by whether its change alters the foundation; every change gets the same tests and review (WAY-13) | none |

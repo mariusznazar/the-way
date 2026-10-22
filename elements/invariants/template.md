@@ -74,10 +74,6 @@ gives (WAY-64).
   broken for a moment (WAY-08). No other break is written for it, and it takes no agent of its own
   (WAY-69). A test protecting elements of an earlier version is accepted the same way when that
   history holds none yet (WAY-223).
-- A test takes the input it asserts on and the value it expects written out, wherever the code its
-  invariant is about would otherwise compute either; only the side it compares against comes from
-  the run (WAY-69). Which files a test names, so that a fixture or a builder of its input cannot be
-  changed underneath it, is not settled.
 - A test that gives different verdicts on one commit is fixed as any test of the product is; the
   foundation records no quarantine for it (WAY-68).
 - A change may alter an invariant test in any step of its task, and names in its request each
@@ -193,68 +189,3 @@ read`).
 `examples.md` names, by identifier, the entries of this repository's own invariants
 (`foundations/invariants.md`) that show the form of an entry; they are read there, in the commit of
 the-way a product pins, instead of being copied (WAY-09, WAY-34).
-
-## The earlier form, read by the format guard
-
-The four sections below hold the earlier form of an entry, which `format_guard.py` beside this file
-reads: a version in the heading, a command, a path or `TODO` as *Method*, a fingerprint beside each
-link, *Correction*, the lists of quarantined and recovered invariants, the derived list of violated
-invariants and the results the guards reported. The guard is kept only as a library of
-`product-guidelines/form_check.py` until the slimming plan's position P17 removes both; these
-sections bind no entry and go with it.
-
-## Entry
-
-Earlier form, read only by the format guard.
-
-```markdown
-## <identifier>/<version>
-
-<one sentence: the invariant>
-
-- **Method:** `<program> <arguments>` | <path of a file a human assesses the product against> | `TODO`
-- **Rests on:** <environment fact>@<fingerprint> · … | TODO — <the fact, with its source> | none
-- **Derives from:** <decision>@<fingerprint> · … | `TODO — <the decision, and where it is expected>` | none
-- **Part:** <parts from the part map> | every
-- **Correction:** none | <fingerprint on the commit the task branch left the main branch from> → <current fingerprint>
-```
-
-```markdown
-## Quarantined invariants
-
-| Identifier | Version | Until |
-```
-
-```markdown
-## Recovered invariants
-
-| Identifier | Version | Searched | Found |
-```
-
-## Method
-
-Earlier form, read only by the format guard. The values the format guard
-accepts in braces in a command: `{fork-point}` and `{merge-onto}`.
-
-## Result, report and debt
-
-Earlier form, read only by the format guard.
-
-- Reasons for `unchecked` the format guards report, word for word:
-  - the method takes a commit the gate filled in as not existing;
-  - the product does not pin the-way, or the commit of the-way it pins does not hold what the
-    method compares with (WAY-34).
-- Which entries the gate reports a result for answers to the invariants of the part `gate`.
-
-An entry's result on the commit being checked is `pass`, `fail`, `unchecked` or `error`.
-
-## Violated invariants
-
-Earlier form, read only by the format guard. The derived list beside the
-invariants, `foundations/violated_invariants.md`:
-
-```markdown
-## Violated invariants
-
-| Identifier | Version |
-```

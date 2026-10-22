@@ -13,27 +13,25 @@ The definition follows `project-level/definition_template.md`. The check reports
 - a — no section holds the word `TODO`, and none is empty (`none` states that nothing is there);
   under "Projected foundation changes" a `TODO` in a field of an entry — a line `- **<Field>:** …`
   and the indented lines that continue it — or in a meaning sentence (lines beginning with `>`) is
-  no gap, except for a decision's *Change* and *Approved by*. The format guard of the element checks
-  fields waiting for code or the world in the task that writes the entry; the binding sentence, a
-  definition, and a decision's *Rationale*, *Rejected* and *Change*, which the human can settle at
-  the project level, stay gaps. A deferred *Review when* requires a related open question and the
-  human's agreement, which this script cannot judge;
+  no gap: the task that writes the entry into the foundation completes the fields waiting for code
+  or the world, and its foundation check reads them. The binding sentence, a definition, and a
+  decision's *Rationale* and *Rejected*, which the human can settle at the project level, stay
+  gaps;
 - d — every item under "Open questions" ends with `— resolved in: breakdown` or
   `— resolved in: task: <name>`;
-- b — no projected decision still reads `**Approved by:** on acceptance`;
 - e — the gate record holds its three lines, and its fingerprint matches the definition;
 - f — "Projected foundation changes" begins with `Candidates: <n> shown, <k> accepted —
   YYYY-MM-DD`, k is no more than n, and no working table `### Candidates in progress` stands in it;
 - g — "Technology" lists the choices the project needs, each item ending
-  `— held by: <PREFIX>-<NN>/<version>` or `— projected: <question>`, whose question a heading
+  `— held by: <PREFIX>-<NN>` or `— projected: <question>`, whose question a heading
   `#### <identifier> — <question>` under "Projected foundation changes" holds; no item still
   reads `— open`, and the section never reads `none`.
 
-With --before-approval the check leaves out b and e and the gate record, since the human has not
+With --before-approval the check leaves out e and the gate record, since the human has not
 approved yet. --fingerprint prints the fingerprint the gate record is to carry, once the
 structure holds. Exit codes: 0 nothing found, 1 findings, 2 the call or the file is wrong. The
-check decides neither condition c (an agent's search of the foundation) nor what the human
-approved.
+check decides neither condition c (the one search of the whole foundation an agent makes at the
+gate) nor what the human approved; no projected entry carries a field of approval.
 """
 
 import argparse
@@ -61,12 +59,11 @@ TODO = re.compile(r"\bTODO\b")
 ITEM = re.compile(r"^- ")
 NESTED_ITEM = re.compile(r"^\s+([-*+]|\d+[.)]) ")
 RESOLVED = re.compile(r"— resolved in: (breakdown|task: \S.*)$")
-PENDING_APPROVAL = re.compile(r"^\s*- \*\*Approved by:\*\* on acceptance\s*$")
 CANDIDATES = re.compile(r"^Candidates: (\d+) shown, (\d+) accepted — \d{4}-\d{2}-\d{2}$")
 WORKING_TABLE = "### Candidates in progress"
 TECHNOLOGY_ITEM = re.compile(r"^\S.*? — (?:held by: (?P<held>\S.*?)|projected: (?P<question>\S.*?)"
                              r"|(?P<open>open))\s*$")
-DECISION_IDENTIFIER = re.compile(r"^[A-Z][A-Z0-9]*-\d+/\d+$")
+DECISION_IDENTIFIER = re.compile(r"^[A-Z][A-Z0-9]*-\d+$")
 PROJECTED_HEADING = re.compile(r"^#### .+? — (.+?)\s*$")
 FIELD = re.compile(r"^- \*\*([^*]+):\*\*")
 MEANING = re.compile(r"^>")
@@ -147,13 +144,11 @@ def content(section):
 
 def field_lines(section):
     """Return the numbers of the lines of a section that belong to a field of an entry — a line
-    `- **<Field>:** …` and the indented lines that continue it — or to a meaning sentence.
-    A decision's Change and Approved by are not exempt."""
+    `- **<Field>:** …` and the indented lines that continue it — or to a meaning sentence."""
     numbers, in_field = set(), False
     for number, line in section.lines:
-        field = FIELD.match(line)
-        if field:
-            in_field = field.group(1) not in {"Change", "Approved by"}
+        if FIELD.match(line):
+            in_field = True
         elif not (in_field and line.startswith((" ", "\t")) and line.strip()):
             in_field = False
         if in_field or MEANING.match(line):
@@ -262,16 +257,11 @@ def check_technology(section, projected_section):
                                     "settles the technology has not ended"))
         elif match.group("held") is not None and not DECISION_IDENTIFIER.match(match.group("held")):
             findings.append(Finding("g", number, "`held by:` names no decision as "
-                                    "`<PREFIX>-<NN>/<version>`"))
+                                    "`<PREFIX>-<NN>`"))
         elif match.group("question") is not None and match.group("question") not in questions:
             findings.append(Finding("g", number, "`projected:` names a question no heading under "
                                     "`## %s` holds" % PROJECTED))
     return findings
-
-
-def check_approvals(section):
-    return [Finding("b", number, "a projected decision still reads `Approved by: on acceptance`")
-            for number, line in section.lines if PENDING_APPROVAL.match(line)]
 
 
 def definition_fingerprint(text):
@@ -315,7 +305,6 @@ def check(text, before_approval=False):
     findings += check_candidates(by_name[PROJECTED])
     findings += check_technology(by_name[TECHNOLOGY], by_name[PROJECTED])
     if not before_approval:
-        findings += check_approvals(by_name[PROJECTED])
         findings += check_gate_record(by_name[GATE_RECORD], text)
     return sorted(findings, key=lambda f: f.line)
 
@@ -338,7 +327,7 @@ def main(argv=None):
     parser.add_argument("definition", help="the project definition, a Markdown file")
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument("--before-approval", action="store_true",
-                      help="leave out the approvals and the gate record")
+                      help="leave out the gate record")
     mode.add_argument("--fingerprint", action="store_true",
                       help="print the fingerprint the gate record is to carry")
     args = parser.parse_args(argv)
@@ -357,7 +346,7 @@ def main(argv=None):
     findings = check(text, before_approval=args.before_approval)
     for finding in findings:
         print(finding)
-    left_out = " (approvals and gate record left out: --before-approval)" \
+    left_out = " (gate record left out: --before-approval)" \
         if args.before_approval else ""
     print("readiness: %s%s" % ("%d finding(s)" % len(findings) if findings else "nothing found",
                                left_out))

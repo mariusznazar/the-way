@@ -119,13 +119,13 @@ the body; the project orchestrator changes only `Status:` after final acceptance
   human actions in the cycle, and the human performs them at the request (WAY-140). `none` means the
   task has no effect outside the repository. A task document written before this section existed
   names no human action.
-- **Decisions in play:** name and quote current foundation decisions this task touches with their
-  identifiers and versions. If the task uses an approved project definition, copy the relevant
+- **Decisions in play:** name each current foundation decision this task touches by its identifier
+  and quote its wording. If the task uses an approved project definition, copy the relevant
   projected wording and identify its heading there. A project plan determines which entries a
   member task is assigned to realize or write; a source-only task takes no assignment, and marks,
   among the projected wording it copies, each entry, or the part of one, that its code makes true,
-  so that its cycle writes it (WAY-124, WAY-126). `none` means the search found no applicable
-  entry; it is not a substitute for the search.
+  so that its cycle writes it (WAY-124, WAY-126). `none` means the reading of the foundation found
+  no applicable decision; it is not a substitute for that reading.
 - **Settlements to record:** what the human settled while the task was refined and what still binds
   after the task's merge, kept for its cycle to write into the foundation (WAY-134). The skill
   `find-foundation-entries` builds the candidates and the human cuts them; only accepted rows stay.
@@ -138,9 +138,11 @@ the body; the project orchestrator changes only `Status:` after final acceptance
   orchestrator presents the candidates and required questions against choices through the round
   package; the refiner records the human's selection without making it itself (WAY-134).
   The last column names a concrete thing the cycle would do or choose without the row. A settlement
-  that an entry of the current foundation or a projected entry under *Decisions in play* already
-  states is no row. The cycle writes each row whole, keeping its meaning and choosing its wording,
-  and asks the human before the request where that meaning cannot hold (WAY-134). Until the
+  that an entry of the current foundation the refinement reads for the task's parts, or a projected
+  entry under *Decisions in play*, already states is no row. The cycle writes each row whole,
+  keeping its meaning and choosing its wording, and asks the human before the request where that
+  meaning cannot hold; a row its search of the whole foundation finds already stated becomes no
+  second entry, and the request names the row with that entry (WAY-134). Until the
   candidates are cut, the section reads `TODO`; with no row accepted, `none` stands below the line.
 - **Out of scope:** only task-bound exclusions. A lasting exclusion belongs in a projected or
   current decision, or in a row of *Settlements to record*, not here.

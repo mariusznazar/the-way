@@ -1,6 +1,6 @@
 ---
 name: the-way-implement-task
-description: Use to take one ready the-way task to a reviewable pull or merge request — through a spec where the task leaves an open design choice, one author without a plan where the change fits one agent or a plan of separately made slices, independent review and testing — or to apply review corrections to its open request. Requires subagents and the Superpowers skills named by this process. The human reviews the request, not intermediate steps. Use this checkout's own the-way.
+description: Use to take one ready the-way task to a reviewable pull or merge request — through a spec where the task leaves an open design choice, one author without a plan where the change fits one agent or a plan of slices made one after another, review by agents that did not make the change and the product's full tests — or to apply corrections for the human's remarks to its open request. Requires subagents. The human reviews the request, not intermediate steps. Use this checkout's own the-way.
 ---
 
 # the-way-implement-task

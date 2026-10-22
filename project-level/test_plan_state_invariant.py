@@ -57,7 +57,7 @@ none
 
 ## Technology
 
-- Existing application language — held by: APP-01/1
+- Existing application language — held by: APP-01
 
 ## Projected foundation changes
 
@@ -67,7 +67,7 @@ none
 
 """
 # Independently calculated once from the literal body under WAY-02, not from the reader.
-FINGERPRINT = "a3b6ab99"
+FINGERPRINT = "96de0cfc"
 
 PLAN = """# Report download
 
@@ -147,14 +147,17 @@ CYCLE_RECORD = """# Cycle record — Download a report
 - Process pin: 0123456789abcdef
 - Target branch and base: delivery, 0123456789abcdef
 - Task branch: task/report-download
-- Foundation route: unchanged
 - Status: complete
 
-## Sharpness at start and after the final diff
+## Two questions at start
 
 none
 
-## Spec and plan
+## Spec and execution route
+
+none
+
+## Slices
 
 none
 
@@ -177,10 +180,6 @@ none
 none
 
 ## Return step
-
-none
-
-## Independent assessment
 
 none
 

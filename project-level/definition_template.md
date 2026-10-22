@@ -156,7 +156,7 @@ that settles it (WAY-121). The skill `settle-technology` writes it before the re
 ```markdown
 ## Technology
 
-- Język i miejsce działania aplikacji — held by: DOC-02/1
+- Język i miejsce działania aplikacji — held by: DOC-02
 - Magazyn dokumentów i ich właścicieli — projected: Where are documents and their owners stored?
 ```
 
@@ -187,7 +187,7 @@ that settles it (WAY-121). The skill `settle-technology` writes it before the re
 
   | Marker | When |
   |---|---|
-  | `— held by: <PREFIX>-<NN>/<version>` | a decision of the product's foundation settles the choice |
+  | `— held by: <PREFIX>-<NN>` | a decision of the product's foundation settles the choice |
   | `— projected: <question>` | a projected decision of this definition settles it; the question reads as in that decision's heading |
   | `— open` | the step is still settling it; the readiness gate stops it |
 
@@ -275,7 +275,7 @@ Candidates: 3 shown, 2 accepted — 2026-01-01
 
 #### (new) — Who owns a document?
 
-<the entry, its *Approved by* reading `on acceptance` until the gate>
+<the entry>
 
 > **Meaning (pl):** <one sentence of the entry's meaning in the definition's language>
 
@@ -287,7 +287,7 @@ Candidates: 3 shown, 2 accepted — 2026-01-01
 
 ### Invariants
 
-#### one-workspace-per-document/1
+#### one-workspace-per-document
 
 <the entry>
 
@@ -306,29 +306,27 @@ Candidates: 3 shown, 2 accepted — 2026-01-01
 
   | Kind | Heading |
   |---|---|
-  | decision | `#### (new) — <question>`; for a new version of a current decision, `#### <PREFIX>-<NN>/<version> — <question>` |
-  | invariant | `#### <identifier>/1`; for a new version, the current identifier and its next version |
+  | decision | `#### (new) — <question>`; for a change of a current decision, `#### <PREFIX>-<NN> — <question>` |
+  | invariant | `#### <identifier>`; for a change of a current invariant, its identifier |
   | glossary term | `#### <term>` |
-  | environment fact | `#### <identifier>/1`; for a new version, the current identifier and its next version |
-  | part map | `#### <identifier> (changed)` with the whole entry as it will read; `#### <identifier> (new)` for a critical flow through existing parts |
+  | environment fact | `#### <identifier>`; for a change of a current fact, its identifier |
+  | part map | `#### <identifier> (changed)` with the whole entry as it will read |
 
-- Before a product has a main branch, a proposed edit of an existing decision keeps its current
-  identifier and version in the heading: the entry is edited in place when written (WAY-07).
+- A projected change of an existing entry keeps its identifier in the heading, with no version:
+  the task that writes it edits the entry in place (WAY-07).
 - A new projected decision needs no number and no prefix: the task that writes it into the
   foundation gives them. Other projected headings keep the identifier their element requires.
 - Below each entry stands one sentence of its meaning in the language of the definition, a line
-  beginning with `>`; the human approves the meaning at the gate, not the wording.
+  beginning with `>`; the human approves the meaning at the gate, not the wording. No entry
+  carries a field of approval: the gate record approves them all.
 - At the gate a projected entry holds whole what only the human gives at the project level: its
-  binding sentence or definition and, for a decision, its *Change*, *Rationale* and *Rejected*
-  (`none considered` being the human's statement). *Review when* holds a condition and date, or
-  `none` when the human knows none; it may read `TODO` when the human expressly defers it because
-  the review timing depends on later work, and an item under "Open questions" names the
-  breakdown or task that resolves it. A field that waits for the code or the world — a source, a
-  verification, a method, the parts, the links, each a line `- **<Field>:** …` with the indented
-  lines that continue it — may read `TODO`, as may a meaning sentence; *Approved by* reads
-  `on acceptance` until the gate, never `TODO`. The format guard of the element checks those
-  deferred fields in the task that writes the entry. `TODO` anywhere else in the section is a gap
-  (WAY-118, WAY-119).
+  binding sentence or definition and, for a decision, its *Rationale* and *Rejected*
+  (`none considered` being the human's statement). A field that waits for the code or the world —
+  a source, a verification, the parts, the links, each a line `- **<Field>:** …` with the indented
+  lines that continue it — may read `TODO`, as may a meaning sentence; the task that writes the
+  entry into the foundation completes those fields, and `elements/common/foundation_check.py`
+  checks the entry there. `TODO` anywhere else in the section is a gap
+  (WAY-118).
 
 A section with no projected entry reads the line and `none`
 (WAY-117).

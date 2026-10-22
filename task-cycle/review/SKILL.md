@@ -6,17 +6,20 @@ description: Use to review the code of one change in a the-way task cycle as an 
 # Review a change
 
 Reviews one range of commits of a task's change for the cycle `implement-task`, which dispatches
-every code review: of a planned slice, of the whole change, of the fix of a review's findings, and
-of each later change to the open request. The reviewer did not make the change. The cycle decides
-what happens after the review; this skill holds only how the review is made and reported.
+every code review: of a planned slice, of the whole change, of the fix of a review's findings, of
+the commits of the return step, and of each later change to the open request. The reviewer did
+not make the change. The cycle decides what happens after the review; this skill holds only how
+the review is made and reported.
 
 This skill lives in `task-cycle/review/` of the-way. In the-way itself, the-way is the checkout or
 worktree the session works in; in a product, it is the product's pinned `.the-way`.
 
 ## 1. Read
 
-- The dispatch: what is reviewed — a slice by its number, the whole change, a fix or a later
-  change — the base and head commits of the range, and the report path.
+- The dispatch: what is reviewed — a slice by its number, the whole change, a fix, the return
+  step's commits or a later change — the base and head commits of the range, and the report path.
+  The return step's commits are reviewed as section 2 gives, against the task and the foundation
+  entries the return step writes or corrects.
 - The frozen task document in full — or, where the dispatch states the requirement in its place,
   that statement — and the spec where the cycle wrote one. For a slice, the plan and that slice;
   the slice is judged against the task, not the plan alone.
@@ -57,8 +60,9 @@ scope are yours.
   would its check catch that requirement unmet?
 - For a user interface, the states the applicable styleguide requires and the author's screenshot
   evidence (WAY-219).
-- Run the checks that tell this change apart from a broken one: focused tests, a scratch run. Run them in a separate worktree of the head commit when they need files changed; never
-  change the reviewed worktree, its index or branch. The full suite is the cycle's own run before
+- Run the checks that tell this change apart from a broken one: focused tests, a scratch run. Run
+  them in a separate worktree of the head commit when they need files changed; never change the
+  reviewed worktree, its index or branch. The full suite is the cycle's own run before
   the request; do not repeat it. A check you could not run is unverified, and says why.
 - Do the whole review yourself. Never dispatch a subagent.
 
@@ -99,8 +103,8 @@ each whether the correction makes it, then review the correction's diff as secti
 Besides section 2, check the change against the whole task: every required outcome and item of
 *To do*, and every row of *Settlements to record* and projected entry the task carries, met by the
 commits; fidelity to the task's sources, with nothing the change takes from them altered or
-invented; foundation entries written before the code that depends on them. Grade each Minor and
-out-of-scope finding of the slice reviews the dispatch lists as a finding of this review.
+invented. Grade each Minor and out-of-scope finding of the slice reviews the dispatch lists as a
+finding of this review.
 
 ## 6. Report
 
