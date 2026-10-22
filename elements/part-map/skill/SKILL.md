@@ -46,7 +46,7 @@ project skill of that name with the `the-way-` prefix. Follow the steps of
   directory or for one kind of file, as the template's "Assigning files" says, and propose it
   together with the files it claims and the files it takes from another part.
 - *Depends on*: write what the part may depend on, not what the code reaches for today, and never
-  rewrite it to fit the code (WAY-04). Where the two differ, the difference goes to the human in
+  rewrite it to fit the code (WAY-225). Where the two differ, the difference goes to the human in
   step 4; a dependency the human accepts as it stands is written through `record-invariant` as an
   invariant that the one part does not depend on the other, marked violated, as the template's
   "Allowed dependencies" says.

@@ -28,7 +28,7 @@ holds what is particular to an invariant (WAY-35).
   one protects, as `invariant-part-names` and `invariant-part-form`
   (`TODO — decision pending: which decision sets how an invariant's identifier is named`).
 - An entry is edited in place and holds only its current wording; it carries no version, and its
-  earlier wordings are read from git (WAY-57). An entry that takes in a clause of another keeps its
+  earlier wordings are read from git (WAY-07). An entry that takes in a clause of another keeps its
   identifier, and the other is split
   (`TODO — decision pending: which decision sets that an entry taking in a clause of another keeps
   its identifier`).
@@ -64,15 +64,15 @@ gives (WAY-64).
   input made up for it is the method of a sentence about the check it exercises, never of one about
   the data that check reads (WAY-61).
 - A test cites each invariant it checks, at the test, as a line `invariant: <identifier>` in the
-  comment form of its file's language, and names each file it reads as its data on a line
-  `data: <path>` (WAY-65). A test stands in a file of code; a Markdown file holds no citing test
-  (`TODO — decision pending: which decision sets that a citing test stands in a file of code`).
+  comment form of its file's language (WAY-65). A test stands in a file of code; a Markdown file
+  holds no citing test (`TODO — decision pending: which decision sets that a citing test stands in a
+  file of code`).
 - An invariant's result is `pass` where every test citing it ran and passed, and `fail` where one of
-  them failed; a run in which no test citing it ran gives it no result (WAY-63, WAY-65).
+  them failed; a run in which no test citing it ran gives it no result (WAY-63).
 - An invariant's test is seen failing once, with the command that later shows it passing: run before
   the code that satisfies it, or, where the code already has the behaviour, against that behaviour
-  broken for a moment (WAY-08). No other break is written for it, and it takes no agent of its own
-  (WAY-69).
+  broken for a moment (WAY-08). No other break is written for it (WAY-08), and it takes no agent of
+  its own (WAY-69).
 - A test that gives different verdicts on one commit is fixed as any test of the product is; the
   foundation records no quarantine for it (WAY-68).
 - A change may alter an invariant test in any step of its task, and names in its request each

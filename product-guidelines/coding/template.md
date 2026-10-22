@@ -12,7 +12,7 @@ kind that the decision designating that exemplar gives (WAY-167).
 The rules this template carries bind a product only through a decision of the product's log adopting
 them, and the product departs from any of them only by a decision of its log that gives the reason;
 a decision of the-way on what this template carries binds the template, never a product's code
-directly (WAY-193). Each rule below cites the decision of the-way that sets it (WAY-171). The rules
+directly (WAY-173). A rule below that a decision of the-way sets cites that decision. The rules
 of form every file of guidelines keeps — the header lines, the fields of a rule, references, code in
 backticks or fenced code, the language of the text, a dropped section or rule — stand in
 `product-guidelines/template.md`; this template holds what is particular to coding guidelines.
@@ -55,11 +55,11 @@ of the coding discipline in their places (WAY-171).
   template of guidelines gives a rule. The rule of each standing check names the invariants of that
   check as the section "What each section carries" gives; any other rule names an invariant where a cheap test checks it on a
   convention of the product's code, and otherwise reads `none`, the review of each change the rule
-  reaches comparing the change with it (WAY-168, WAY-196).
+  reaches comparing the change with it (WAY-168, WAY-202).
 - The three standing checks, `### Linter`, `### Formatter` and `### Dependency audit`, and the rule
   `### Test inputs and expected values` stand in the order above, and each that the product goes
   without reads `none — <PREFIX-NN>`, naming the product's decision that departs from it with its
-  reason (WAY-171, WAY-202). The product's further rules follow them.
+  reason (WAY-171, WAY-202, WAY-228). The product's further rules follow them.
 - *Applies to* names every part of the product's map that holds code, the scripts of its build
   included (WAY-208).
 - `## When to read` gives the condition under which an agent reads the file: before any change of
@@ -100,7 +100,7 @@ WAY-199).
 
 - Each `### ` under `## Rules` carries the fields *Decision*, *Invariant*, *Good* and *Bad* the
   template of guidelines gives a rule, and its *Invariant* names the invariant whose test checks
-  the rule on the files of the kind (WAY-171, WAY-196, WAY-198).
+  the rule on the files of the kind (WAY-171, WAY-198).
 - The file's name holds the identifier of its kind, as the decision designating the kind's exemplar
   gives it: words of lower-case letters and digits joined by single hyphens, as `endpoint` or
   `background-job` (WAY-167).
@@ -130,7 +130,7 @@ those decisions and invariants in its own foundation; the coding guidelines name
      environment fact of the set's edition (WAY-203, WAY-73); an inline suppression of a rule that
      blocks counts as a break, since such a rule gives no report that leads to no change worth
      making, so no suppression of it is sound, and a fault of one file is fixed in that file
-     (WAY-203, WAY-207, WAY-193);
+     (WAY-203, WAY-207, WAY-173);
   2. the rules that block are exactly the list of the adopting decision, so that turning one off
      fails the gate until that decision changes (WAY-207, WAY-60). Where the test of the first
      invariant passes that list to the tool itself, the first invariant already holds it and no
@@ -158,13 +158,13 @@ those decisions and invariants in its own foundation; the coding guidelines name
 - **A standing check the product goes without** reads `none — <PREFIX-NN>`, naming the product's
   decision that departs from it with its reason (WAY-202, WAY-171).
 - **Test inputs and expected values** — rule. *Decision*: the product's decision adopting this
-  template (WAY-193). *Invariant*: `none`; the review of each change compares its tests with the
-  rule (WAY-196). The rule: a test takes the input it asserts on and the value it expects written
+  template (WAY-173). *Invariant*: `none`; the review of each change compares its tests with the
+  rule (WAY-168). The rule: a test takes the input it asserts on and the value it expects written
   out, wherever the code under test would otherwise compute either; only the side it compares
-  against comes from the run (WAY-202). Which files a test names, so that a fixture or a builder of
+  against comes from the run (WAY-228). Which files a test names, so that a fixture or a builder of
   its input cannot be changed underneath it, this template does not settle.
 - **Further rules of the whole product** — rule each, naming an invariant where a cheap test checks
-  it on a convention of the code and otherwise `none` (WAY-196).
+  it on a convention of the code and otherwise `none` (WAY-168).
 - **`## Files of this kind`** — a table of the file of a kind, one row for each file of the kind it
   lists (WAY-199):
   - *File*: the path of the file, in backticks, relative to the root of the repository; it names
@@ -206,7 +206,7 @@ those decisions and invariants in its own foundation; the coding guidelines name
   keeps among the examples (WAY-60, WAY-204); the first or the second invariant of `### Linter`
   keeps them there (WAY-207).
 - **Inline suppressions** of a rule that blocks count as breaks in the first invariant of
-  `### Linter`, as that rule has it above (WAY-203, WAY-193).
+  `### Linter`, as that rule has it above (WAY-203, WAY-173).
 - **The test of each invariant.** Each invariant of a standing check has a test in the product's
   suite, in its language, that runs the pinned tool on the parts the invariant names and fails where
   the tool reports a break or cannot run (WAY-61, WAY-63).

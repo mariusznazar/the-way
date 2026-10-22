@@ -10,9 +10,8 @@ with this template and, where the-way gives one, the template of their disciplin
 `elements/common/foundation_check.py` reports a decision number, a rule's invariant or a part of
 *Applies to* that the foundation does not hold, or holds as withdrawn (WAY-170).
 
-Each rule below cites the decision of the-way that sets it, and a rule of this template changes
-only with such a decision (WAY-171). Nothing of this template is copied into a product: a product's
-guidelines follow it at the commit the product pins (WAY-34).
+A rule below that a decision of the-way sets cites that decision. Nothing of this template is copied
+into a product: a product's guidelines follow it at the commit the product pins (WAY-34).
 
 ## Where guidelines go
 
@@ -96,7 +95,7 @@ sections and required rules to it at the places it names (WAY-171).
 
 - **References.** Guidelines name a decision of the product's log or an invariant of its foundation
   by its identifier alone, with no fingerprint and no version, and name an entry the foundation
-  holds and has not withdrawn (WAY-169); `elements/common/foundation_check.py` reports a decision
+  holds and has not withdrawn (WAY-02); `elements/common/foundation_check.py` reports a decision
   number anywhere in the file, and an invariant of a rule's *Invariant*, that names no entry or a
   withdrawn one (WAY-170).
 - **A changed entry brings its rules along.** A change that changes the binding part of a decision

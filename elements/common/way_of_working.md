@@ -73,7 +73,7 @@ entry is settled (WAY-33).
    the entries these and the decisions of step 2 link to — *Relations*, *Based on*,
    *Verification*, *Derives from*, *Rests on* — as far as the work needs them, each whole.
 4. Read the glossary entries of the terms the work uses: of the product's glossary and, in a
-   product other than the-way, of the-way's glossary at the pinned commit (WAY-95).
+   product other than the-way, of the-way's glossary at the pinned commit (WAY-226).
 
 The selection is not recorded, nor compared with every *Scope* of the log (WAY-150). Where
 relevance is uncertain, read more, up to a whole file where that is the smallest reliable way to

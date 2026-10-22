@@ -81,4 +81,4 @@ which word each field takes, how its entries are named — stands in that elemen
 
 - An entry of the decisions, of the invariants, of the environment facts, of the glossary or of the
   part map carries no version: it is edited in place and holds only its current wording, and its
-  earlier wordings are read from git (WAY-07, WAY-43, WAY-57, WAY-79, WAY-97).
+  earlier wordings are read from git (WAY-07).

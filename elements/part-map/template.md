@@ -4,7 +4,7 @@ This file defines how a product's part map is written. The map holds the parts o
 what joins them: which part may depend on which, where a part takes in what the product does not
 control, and what the product promises to someone outside it (WAY-40). It holds rules and a
 description of the state that the return step compares with the code; a detail that changes with
-every change of the code lives in the code or in a test, never in the map (WAY-04, WAY-44).
+every change of the code lives in the code or in a test, never in the map (WAY-225, WAY-44).
 
 The rules of form the elements share — the language of an entry, every field and the words `none`
 and `TODO`, the form of an identifier, when it stays and when a split or a merge replaces it, its
@@ -20,9 +20,9 @@ to the part map (WAY-35).
   (`TODO — decision pending: which decision sets the lists the map holds besides its entries`).
 - An allowed dependency and a trust boundary are fields of the part they belong to, never entries
   of their own (WAY-40, WAY-48). A critical flow has no entry (WAY-45).
-- An entry is edited in place and carries no version; its history stays in git (WAY-43). A change
+- An entry is edited in place and carries no version; its history stays in git (WAY-07). A change
   of the code that changes what a part answers for, which files are its or what it may depend on,
-  or what a surface promises, rewrites the entry in the same change (WAY-43).
+  or what a surface promises, rewrites the entry in the same change (WAY-11).
 - The forms below give `none` to the fields that take it, and `TODO` to no field
   (`elements/common/rules.md`, WAY-71).
 
@@ -84,14 +84,14 @@ one left behind is withdrawn and never reused stand in `elements/common/rules.md
 ## Allowed dependencies
 
 *Depends on* names the parts this part may depend on, not those its code reaches for today: the map
-holds the rule, and the code shows the state (WAY-04). The return step of a change compares the two
+holds the rule, and the code shows the state (WAY-225). The return step of a change compares the two
 for the parts the change touches (WAY-11).
 
 A dependency the code holds that *Depends on* does not allow goes to the human. Where the human
 accepts it as it stands, it is written as an invariant — "the part `<part>` does not depend on
 `<part>`" — that reads `Violated: yes`, its test standing as an expected failure until the code
 meets it, as the invariants template's "Violated" gives it; *Depends on* is never rewritten to fit
-what the code reaches for today (WAY-04, WAY-51). The map holds no list of such dependencies.
+what the code reaches for today (WAY-225, WAY-51). The map holds no list of such dependencies.
 
 ## Trust boundary
 

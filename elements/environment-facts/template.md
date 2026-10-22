@@ -22,7 +22,7 @@ holds what is particular to an environment fact (WAY-35).
   new edition leaves it true: `json-text`, not `json-rfc-8259`
   (`TODO — decision pending: which decision sets how an environment fact's identifier is named`).
 - An entry is edited in place and holds only its current wording; it carries no version, and its
-  earlier wordings are read from git (WAY-79).
+  earlier wordings are read from git (WAY-07).
 
 ## Form of an entry
 

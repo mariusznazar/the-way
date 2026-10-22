@@ -2,7 +2,7 @@
 
 The words of the process, each in one meaning: every word that means in the-way something other than
 a reader who knows the field takes it to mean.
-A product takes these words from the-way at the commit it pins (WAY-95).
+A product takes these words from the-way at the commit it pins (WAY-226).
 
 ## agent's way to the running product
 

@@ -69,7 +69,7 @@ Every derived file git tracks that its generator can produce from scratch is ide
 
 - **Method:** review
 - **Rests on:** none
-- **Derives from:** WAY-04 · WAY-53
+- **Derives from:** WAY-225 · WAY-53
 - **Part:** every
 - **Violated:** no
 
@@ -358,7 +358,7 @@ Every subprocess the plan-state reader starts runs Git.
 | view-links | withdrawn: the decision log holds one entry for each decision and says what binds today, with no view generated from it (WAY-18) | none |
 | foundation-change-assessment-record | withdrawn: a change to an invariant test or to the foundation has no assessment of its own; the review of the change and the human at the merge read it (WAY-10) | none |
 | invariant-test-break | withdrawn: an invariant's test is seen failing once by the agent that writes it, with no deliberate break accepted apart from that (WAY-08) | none |
-| invariant-correction-confirmation | withdrawn: an invariant carries no version, so no correction keeps one (WAY-57) | none |
+| invariant-correction-confirmation | withdrawn: an invariant carries no version, so no correction keeps one (WAY-07) | none |
 | gate-fork-point-evidence | withdrawn: a recovered invariant names in *Derives from* the place in the code that shows it, with no run on the older commit (WAY-58) | none |
 | gate-method-order | withdrawn: an invariant's method is a test of the product's suite, which reads no other method's run (WAY-61) | none |
 | gate-unchecked-reason | withdrawn: the invariants template keeps no closed list of reasons for `unchecked` (WAY-63) | none |
