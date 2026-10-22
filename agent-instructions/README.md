@@ -3,7 +3,8 @@
 This guide applies to work on the-way as the top-level repository while it has no `main` branch.
 It does not govern a product that contains the-way as a `.the-way` submodule. `foundations` is the
 integration branch. It is not a release of the process. The task-cycle skill is available for
-product pilots; the full gate does not yet exist. Changes to the-way itself follow this guide.
+product pilots; one command runs every test of the-way (see "Check the change"). Changes to the-way
+itself follow this guide.
 When `main` is created, replace this guide with the task-cycle instructions before integrating
 another change.
 
@@ -52,18 +53,22 @@ only for a rule the change, a decision or Mariusz sets.
 
 ## Check the change
 
-Run every test of the-way: from the root, run `python -B gate/run_tests.py <directory>` for each
-directory that holds a `test_*.py` file git tracks, without `--record`. In a POSIX shell this lists
-those directories:
+Run every test of the-way with one command, from the root:
 
 ```
-git ls-files | grep -E '(^|/)test_[^/]*\.py$' | xargs -n1 dirname | sort -u
+python -B gate/run_tests.py
 ```
 
-The whole run takes about 16 minutes. Run the tests on the change as it goes into the request. A
-run passes when its exit code is 0. One run fails for a known reason until the plan removes
-`probes/`: `probes/claude-code-project-skills` looks for a sentence that the documentation it reads
-no longer holds.
+It runs the tests of every directory that holds a `test_*.py` file git tracks, and ends with a line
+counting the tests and naming each directory that failed. A new test file in a new directory runs
+only once it is added to git (`git add`). The whole run takes about 16 minutes. Run it on the
+change as it goes into the request. A run passes when its exit code is 0. While the change is
+made, `python -B gate/run_tests.py <directory>` runs the tests of one directory. A change to
+`gate/run_tests.py` is also checked with `python -B -m unittest discover -s gate -p "test_*.py"`,
+which does not rest on the runner it checks. Until
+the plan removes `probes/`, the run fails for a known reason: `probes/claude-code-project-skills`
+and `probes/anthropic-model-states` look for sentences that the documentation they read no longer
+holds.
 
 The author of the change, or the agent that leads the work, asks an agent that did not make the
 change to review it (WAY-10). The reviewer receives the whole diff, the task or the plan's position

@@ -97,7 +97,7 @@ The foundation step is the step of a task in which the task writes the change of
 
 ## gate
 
-The gate is the program that runs the checks a change calls for.
+The gate is the one command that runs all of a product's tests, the tests of its invariants among them.
 
 - **Avoid:** quality gate — same thing
 - **Not:** none
@@ -223,7 +223,7 @@ A user interface is a set of screens that a product draws and through which a pe
 
 ## verdict
 
-A verdict is a value from a template's closed list that a check records, or a person gives, for one entry of the foundation.
+A verdict is a value from a template's closed list that a person gives for one entry of the foundation.
 
 - **Avoid:** none
 - **Not:** none

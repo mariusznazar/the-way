@@ -502,30 +502,31 @@ changes; lists of decision-makers and of those consulted — nothing reads them.
 
 ### WAY-16/1 — How are the checks of invariants run?
 
-The gate takes its checks from the methods of checking written in the entries, never from a list
-written by hand, and one command runs the checks a change calls for together with the product's own
-tests it calls for — the same command for an agent, for a human and for whatever runs it when a
-change is merged.
+One command runs all of a product's tests, the tests of its invariants among them — the
+same command for an agent, for a human and for whatever runs it when a change is merged —
+and no list of checks written by hand stands beside it.
 
 - **Change:** new decision
-- **Scope:** invariants, agent-instructions, task-cycle
+- **Scope:** invariants, agent-instructions, task-cycle, gate
 - **Based on:** none
 - **Relations:** none
-- **Verification:** level 1 — invariants: ci-checking-commands · gate-check-source. Level 2 for the
-  same command for everyone — an agent compares the change with the decision:
-  - complies: the instructions for agents name the gate's command as the way to check a change;
-  - violates: the instructions for agents list test and lint commands of their own; the product's
-    tests run under a command of their own beside the gate's.
+- **Verification:** level 1 — invariants: ci-checking-commands. Level 2 for the same command for
+  everyone — an agent compares the change with the decision:
+  - complies: the instructions for agents name that one command as the way to check a change;
+  - violates: the instructions for agents list test and lint commands of their own; the tests of
+    the invariants run under a command of their own beside the product's tests.
 - **Review when:** none
 - **Origin:** none
 - **Approved by:** Mariusz, 2026-09-30
 
-*Rationale:* a list of checks written by hand is a second copy of the invariants that drifts: a
-new invariant never runs, a removed one still does. One command for all leaves no doubt which list
-ran.
-*Rejected:* a gate written for each product — it drifts from that product's invariants; separate
-commands for an agent, a human and whatever runs the gate when a change is merged — three lists to
-keep in step; the product's tests under a command of their own — of two commands an agent runs one.
+*Rationale:* a list of checks written by hand is a second copy of the tests that drifts: a new
+test never runs, a removed one still does. One command for all leaves no doubt which tests ran, and
+running all of them leaves nothing to choose.
+*Rejected:* a gate taking its checks from the methods written in the entries and running those a
+change calls for — a second runner beside the product's tests, and a choice of tests that can
+leave out the one a change breaks; separate commands for an agent, a human and whatever runs the
+tests when a change is merged — three lists to keep in step; the tests of the invariants under a
+command of their own — of two commands an agent runs one.
 
 ### WAY-17/1 — Which links between foundation entries are mandatory?
 
@@ -1371,8 +1372,8 @@ crafted input, and its review is aimed at that risk.
 - **Scope:** part-map, task-cycle
 - **Based on:** none
 - **Relations:** derives from WAY-40@3d01f9cd
-- **Verification:** level 1 — invariants: path-pattern-reach · gate-boundary-change. Level 2 for
-  which files are a boundary — an agent compares the change with the decision:
+- **Verification:** level 1 — invariants: path-pattern-reach. Level 2 for which files are a
+  boundary — an agent compares the change with the decision:
   - complies: the file that parses requests from the network and the file that reads a user's saved
     game are the boundaries of their parts; a change to a workflow holding a deployment key gets a
     review aimed at that key;
@@ -1494,8 +1495,8 @@ file itself declares as varying between runs.
 - **Origin:** none
 - **Approved by:** Mariusz, 2026-09-20
 
-*Rationale:* equality with the generator's output catches a hand edit; a record of results the gate
-keeps carries the moment of the run, so only declared values are skipped.
+*Rationale:* equality with the generator's output catches a hand edit; a value such as the moment
+of a run changes with every run, so only declared values are skipped.
 *Rejected:* records of results kept outside the repository — a commit's result readable only from
 whatever ran it; whole files lifted out of the comparison — a hand edit in them goes uncaught; a
 derived file compared as a subset of its version on the commit the branch left the main branch from
@@ -1513,11 +1514,9 @@ template does not hold is a question to the human, never the nearest value on th
 - **Relations:** none
 - **Verification:** level 2 — an agent compares the change with the decision:
   - complies: a part's files are matched by git from its path patterns, never listed by hand
-    beside them; a method names the command the gate runs, and its kind follows
-    from that command;
-  - violates: a template asks the author to name a method's kind, which the command the gate
-    runs already tells; a skill writes the nearest value of a closed list, with a reason why it
-    will do.
+    beside them; an invariant's method reads `test` or `review`, which already tells its kind;
+  - violates: a template asks the author to name a method's kind beside the method; a skill writes
+    the nearest value of a closed list, with a reason why it will do.
 - **Review when:** none
 - **Origin:** none
 - **Approved by:** Mariusz, 2026-09-29
@@ -1736,8 +1735,8 @@ surface.
 - **Based on:** none
 - **Relations:** derives from WAY-16@5c1d60d4 · derives from WAY-44@2f2b6227 ·
   derives from WAY-61@4804d070
-- **Verification:** level 1 — invariants: invariant-part-names · invariant-part-form · change-reach.
-  Level 2 for which parts — an agent compares the change with the decision:
+- **Verification:** level 1 — invariants: invariant-part-names · invariant-part-form. Level 2
+  for which parts — an agent compares the change with the decision:
   - complies: the invariant on the log's fields names `decisions`, and a change to a test citing it
     under `gate/` reaches it too; "every file git tracks matches the patterns of exactly one part"
     names `every`;
@@ -1755,7 +1754,7 @@ and fails silently; an extra one costs a reading, so doubt names more.
 reaches; the invariant naming its failure mode, flow or surface — one link written at both
 ends; the part holding the check — a file added elsewhere never reaches it.
 
-### WAY-63/1 — What results does the gate report for invariants, and which make its command fail?
+### WAY-63/1 — What is an invariant's result, and when does the command running the tests fail?
 
 An invariant's result on the commit being checked is `pass` where every test citing it ran on that
 commit and passed, and `fail` where one of them failed; a run in which no test citing it ran gives
@@ -1768,7 +1767,8 @@ sentence. The command running the product's tests exits non-zero when a test fai
 - **Based on:** none
 - **Relations:** derives from WAY-61@4804d070 · derives from WAY-62@d9c21624 ·
   derives from WAY-08@2343e09f
-- **Verification:** level 2 — an agent compares the change with the decision:
+- **Verification:** level 1 — invariants: gate-exit-code. Level 2 for the rest — an agent compares
+  the change with the decision:
   - complies: an invariant whose two tests pass in a run is `pass`; the reviewer of a change to a
     part reads the invariants of that part whose method is review and compares the change with
     them;
@@ -2019,38 +2019,29 @@ already finds it, in the change that leaves it unnamed.
 
 ### WAY-74/1 — What form does the-way's own record of a run take?
 
-The-way's own record of a run is a JSON Lines file at the one `.jsonl` path the command names,
-which git ignores and the gate clears before the run. It holds a line per verdict a check gives an
-invariant or a fact, and per failure recorded for no entry. A line holds `check`, `verdict` as
-`pass`, `fail` or `unchecked` beside a `reason` the template of the invariants element lists,
-`invariant` or `fact` as `<identifier>/<version>` or `invariant` as `null`, and at most
-`description`.
+None: the-way keeps no record of a run of its own. The report of a run is the one the command
+running the tests prints, and its result is that command's exit code (WAY-63).
 
 - **Change:** new decision
 - **Scope:** invariants, gate, decisions, part-map, repository, environment-facts,
   elements-common
-- **Based on:** JSON Lines holds one JSON value on each line: json-lines@f16c5b84.
-- **Relations:** derives from WAY-61@4804d070 · derives from WAY-63@f16348c8 ·
-  derives from WAY-65@581724fc
-- **Verification:** level 1 — invariants: run-record-form · run-record-path · run-record-lines.
-  Level 2 for the report beside the record — an agent compares the change with the decision:
-  - complies: the decision guard, given a record's path, writes its verdicts there and still
-    prints its report for a person;
-  - violates: a guard writes its verdicts only into its report.
+- **Based on:** none
+- **Relations:** derives from WAY-63@8dcc81b8
+- **Verification:** level 2 — an agent compares the change with the decision:
+  - complies: `python -B gate/run_tests.py` prints the report `unittest` gives, exits 1 when a test
+    fails, and writes no file;
+  - violates: a check writes a verdict for each invariant into a JSON Lines file beside its report;
+    a command names a `.jsonl` path for the record of its run.
 - **Review when:** none
 - **Origin:** none
 - **Approved by:** Mariusz, 2026-09-29
 
-*Rationale:* lines survive a run stopping halfway, and an invariant without one gets no pass
-(WAY-61); the standard library reads JSON, which escapes any description (WAY-38); a stale file
-gives verdicts of a run that never happened, a tracked one changes every run; each key has a
-reader.
-*Rejected:* plain text lines — spaces in a description need their own syntax; JUnit XML — its unit
-is a test case, not an invariant; a product's format — the gate reads it through an adapter
-(WAY-61); the run's output as the record — a person loses the guard's report; `pass` and `fail`
-alone — a check unable to read a coverage file could only stay silent; the commit, moment and tool
-versions in every line — nothing reads them; one key `entry` for both — a rename across every guard
-and test; a fact's verdict under `invariant` — the key would lie.
+*Rationale:* the report a person reads and the exit code already say which test failed; a verdict
+recorded for each entry has no reader once one command runs every test (WAY-16) and a result is
+the outcome of the tests citing an entry (WAY-61).
+*Rejected:* a JSON Lines file at a path git ignores, holding a line per verdict a check gives an
+invariant or a fact — a second report kept for a gate beside the product's own runner; the commit,
+moment and tool versions in every line — nothing reads them.
 
 ### WAY-76/1 — How much does one environment fact entry hold?
 

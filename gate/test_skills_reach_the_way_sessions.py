@@ -11,7 +11,7 @@ imports nothing that computes entry points and finds the skills with its own cal
 to ask the generator of the entry points what they should be, a change to that generator would
 move both sides together and the test would stay green.
 
-Run from the root of the-way: python -B gate/run_tests.py gate --record .runs/gate-tests.jsonl
+Run from the root of the-way: python -B gate/run_tests.py gate
 """
 
 # flow: skills-reach-the-way-sessions

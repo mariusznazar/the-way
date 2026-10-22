@@ -93,8 +93,11 @@ which word each field takes, how its entries are named — stands in that elemen
 ## `{fork-point}`
 
 - `{fork-point}` is the commit the task branch left the main branch from — the last commit of the
-  main branch the branch contains — a value the gate fills in; where that commit does not exist, the
-  gate fills in `none` in its place (WAY-61).
+  main branch the branch contains, which `git merge-base HEAD <main branch>` gives; a test or a
+  review that reads it finds it so, and reads `none` where that commit does not exist (WAY-60).
+- `{merge-onto}` is the tip of the main branch that a merge goes onto, which
+  `git rev-parse <main branch>` gives; a test or a review that reads it finds it so, and reads
+  `none` where the main branch does not exist (WAY-60).
 
 ## No version
 

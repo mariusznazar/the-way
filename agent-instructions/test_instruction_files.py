@@ -12,8 +12,7 @@ The file imports nothing from `instruction-files/` and nothing from
 to git and its own pattern: were it to ask the check script which files to read or what counts as
 an import, a change to that script would move both sides together and the tests would stay green.
 
-Run from the root of the-way:
-python -B gate/run_tests.py agent-instructions --record .runs/agent-instructions-tests.jsonl
+Run from the root of the-way: python -B gate/run_tests.py agent-instructions
 """
 
 import os

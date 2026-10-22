@@ -3,16 +3,6 @@
 What the-way states as true or false on every commit, each with its method of checking. The rules
 of an entry stand in `elements/invariants/template.md`.
 
-## decision-guard-stale-reference/1
-
-The decision guard, given "{merge-onto}", reports every `derives from` or `narrows` relation, in the latest version of a decision in the log a merge onto that commit leaves, whose fingerprint differs from the current fingerprint there of the decision it names.
-
-- **Method:** `python -B gate/run_tests.py gate --record .runs/gate-tests.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-02@3ffcbd46 · WAY-31@a14c616c
-- **Part:** decisions · relation-model
-- **Correction:** none
-
 ## decision-fingerprint-input/1
 
 The fingerprint the decision guard gives a decision version is the fingerprint of its binding sentences alone.
@@ -276,21 +266,11 @@ Every derived file git tracks that its generator can produce from scratch is ide
 
 ## ci-checking-commands/1
 
-No CI configuration git tracks runs a checking command other than the gate's command.
+No CI configuration git tracks runs a checking command other than `python -B gate/run_tests.py`.
 
 - **Method:** `TODO`
 - **Rests on:** none
-- **Derives from:** WAY-16@5c1d60d4
-- **Part:** every
-- **Correction:** none
-
-## gate-check-source/1
-
-Every check the gate runs for an entry of the foundation comes from the method of checking written in that entry.
-
-- **Method:** `TODO`
-- **Rests on:** none
-- **Derives from:** WAY-16@5c1d60d4
+- **Derives from:** WAY-16@40cd4dae
 - **Part:** every
 - **Correction:** none
 
@@ -784,16 +764,6 @@ Every exchange with the external context in the part map records its direction, 
 - **Part:** part-map
 - **Correction:** none
 
-## gate-boundary-change/1
-
-The gate runs the check for crafted input on every change that, against "{fork-point}", touches the files of a trust boundary.
-
-- **Method:** `TODO`
-- **Rests on:** git-path-patterns@1519f3f7
-- **Derives from:** WAY-48@947e51e4
-- **Part:** gate
-- **Correction:** none
-
 ## surface-promise-level/1
 
 Every item declared a surface carries a level of promise.
@@ -1054,26 +1024,6 @@ Every value a command in `foundations/invariants.md` takes from the gate stands 
 - **Part:** invariants
 - **Correction:** none
 
-## gate-verdict-per-entry/1
-
-For every invariant whose command a run of the gate carried out, the gate's report shows the verdict that run recorded for the entry's identifier and current version, and `pass` only where every check of that run citing the entry recorded `pass`.
-
-- **Method:** `TODO`
-- **Rests on:** none
-- **Derives from:** WAY-61@4804d070 · WAY-65@581724fc
-- **Part:** gate
-- **Correction:** none
-
-## gate-pass-without-verdict/1
-
-The gate reports no pass for an invariant for which neither a run of its command recorded a verdict nor a human verdict for it is in force.
-
-- **Method:** `TODO`
-- **Rests on:** none
-- **Derives from:** WAY-61@4804d070
-- **Part:** gate
-- **Correction:** none
-
 ## invariant-part-names/1
 
 Every part an entry of `foundations/invariants.md` names is a part of the part map.
@@ -1094,43 +1044,13 @@ Every entry of `foundations/invariants.md` names `every` or at least one part, n
 - **Part:** invariants
 - **Correction:** none
 
-## change-reach/1
-
-The invariants the gate finds a change against "{fork-point}" reaching include every entry naming `every` or a part the change touches, every entry that a test the change alters cites, and every entry one of whose tests names on a `data:` line a file the change alters.
-
-- **Method:** `TODO`
-- **Rests on:** git-path-patterns@1519f3f7
-- **Derives from:** WAY-62@d9c21624
-- **Part:** gate
-- **Correction:** none
-
-## gate-result-values/1
-
-Every result the gate reports for an invariant is `pass`, `fail`, `unchecked` or `error`.
-
-- **Method:** `TODO`
-- **Rests on:** none
-- **Derives from:** WAY-63@f16348c8
-- **Part:** gate
-- **Correction:** none
-
-## gate-reported-set/1
-
-The gate reports a result for every invariant a change against "{fork-point}" reaches.
-
-- **Method:** `TODO`
-- **Rests on:** none
-- **Derives from:** WAY-63@f16348c8
-- **Part:** gate
-- **Correction:** none
-
 ## gate-exit-code/1
 
-The gate's command exits non-zero when some result it reports is `error`, an invariant on the list of violated invariants results `pass`, an invariant off that list or an environment fact results `fail`, or a run records a failure for no entry, and zero otherwise.
+`gate/run_tests.py` exits non-zero when a test it runs fails or errs, a test module it finds cannot be imported, a test marked as an expected failure passes or a directory it runs holds no test, and zero when every test it runs passes; run without a directory, it runs the tests of every directory holding a `test_*.py` file that git tracks and the working tree holds, and exits non-zero also when no directory holds such a file or a directory's run exits zero without a report that `unittest` ends with OK.
 
-- **Method:** `TODO`
+- **Method:** `python -B gate/run_tests.py gate`
 - **Rests on:** none
-- **Derives from:** WAY-63@f16348c8 · WAY-51@8bdac21a · WAY-82@790a7972
+- **Derives from:** WAY-63@8dcc81b8 · WAY-16@40cd4dae
 - **Part:** gate
 - **Correction:** none
 
@@ -1344,16 +1264,6 @@ Where {merge-onto} exists, no field of an entry of `foundations/invariants.md` o
 - **Part:** invariants · environment-facts
 - **Correction:** none
 
-## run-record-form/1
-
-Every line of the-way's own record of a run is one JSON object holding `check`, `verdict` as `pass` or `fail` or as `unchecked` beside a `reason`, and `invariant` or `fact` as `<identifier>/<version>` or `invariant` as `null`, and beside them at most `description`.
-
-- **Method:** `TODO`
-- **Rests on:** json-text@8141eb36 · json-lines@f16c5b84
-- **Derives from:** WAY-74@1e1c88d7
-- **Part:** decisions · part-map · invariants · glossary · environment-facts · elements-common · gate
-- **Correction:** none
-
 ## run-record-path/1
 
 Every path ending in `.jsonl` that a command in `foundations/invariants.md` or `foundations/environment_facts.md` names is one git ignores, and no such command names two.
@@ -1362,26 +1272,6 @@ Every path ending in `.jsonl` that a command in `foundations/invariants.md` or `
 - **Rests on:** gitignore-paths@3218da8f
 - **Derives from:** WAY-74@1e1c88d7
 - **Part:** invariants · environment-facts · repository
-- **Correction:** none
-
-## run-record-lines/1
-
-The gate reads, from the-way's own record of a run, only the lines the run it started for that command wrote.
-
-- **Method:** `TODO`
-- **Rests on:** none
-- **Derives from:** WAY-74@1e1c88d7
-- **Part:** gate
-- **Correction:** none
-
-## test-runner-pass-line/1
-
-The test runner's record of a run holds a `pass` line for an invariant's identifier and version, and no `fail` line naming them, only when the body of every test method citing them in a `test_*.py` file under the directory the runner was given, as the run starts, executed in that run while its own test ran, and returned, with nothing raised out of that body, its set-up, its tear-down or any of its subtests.
-
-- **Method:** `python -B gate/run_tests.py gate --record .runs/gate-tests.jsonl`
-- **Rests on:** none
-- **Derives from:** WAY-61@4804d070 · WAY-65@581724fc
-- **Part:** gate
 - **Correction:** none
 
 ## python-version-declared/1
@@ -2094,6 +1984,17 @@ For every invariant entry that a rule of a file `guidelines/<name>.md` names wit
 | flow-test-run | withdrawn: a critical flow has no entry in the part map, and its test runs with the rest of the product's suite (WAY-45) | none |
 | generated-pattern-source | withdrawn: no rule file is generated from the part map for an agent (WAY-52) | none |
 | derived-subset-naming | withdrawn: no derived file is compared as a subset of its earlier version (WAY-53) | none |
+| decision-guard-stale-reference | withdrawn: a reference names an entry by its identifier alone, with no fingerprint for a guard to compare with the current wording (WAY-02) | none |
+| gate-check-source | withdrawn: no program picks checks from the methods written in the entries; one command runs all of a product's tests (WAY-16) | none |
+| gate-boundary-change | withdrawn: no program picks the checks of a change; a change touching the files of a trust boundary is checked for crafted input and reviewed for that risk (WAY-48) | none |
+| gate-verdict-per-entry | withdrawn: no run records a verdict for each entry; an invariant's result is the outcome of the tests citing it (WAY-63, WAY-74) | none |
+| gate-pass-without-verdict | withdrawn: no program reports a result for each invariant; a run in which no test citing an invariant ran gives it no pass (WAY-61, WAY-63) | none |
+| change-reach | withdrawn: no program finds the invariants a change reaches; the agent making the change reads them (WAY-62) | none |
+| gate-result-values | withdrawn: no program reports a result for each invariant; an invariant's result is `pass` or `fail` from the tests citing it (WAY-63) | none |
+| gate-reported-set | withdrawn: no program reports a result for each invariant a change reaches; every test runs on every change (WAY-16, WAY-63) | none |
+| run-record-form | withdrawn: the-way keeps no record of a run of its own (WAY-74) | none |
+| run-record-lines | withdrawn: the-way keeps no record of a run of its own (WAY-74) | none |
+| test-runner-pass-line | withdrawn: the test runner records no verdict for each invariant a test cites; its exit code says whether a test failed (WAY-63, WAY-74) | none |
 
 ## Quarantined invariants
 

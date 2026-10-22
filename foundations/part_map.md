@@ -152,19 +152,19 @@ them.
 
 ## gate
 
-The part answers for the gate and the clock, and for the tests of critical flows.
+The part answers for the command that runs every test of the-way, and for the tests of critical
+flows.
 
 - **Files:** gate/**
-- **Depends on:** decisions · relation-model
+- **Depends on:** none
 - **Failure modes:**
-  - the gate reports a check as passed although it never ran — a change that breaks an invariant
-    reaches the main branch — high — not detected
-  - the test runner records a pass, and no fail, for an invariant although a test citing it never
-    ran to its end, or failed — a change that breaks an invariant reaches the main branch — high —
-    detected by test-runner-pass-line
-  - a change to the test runner's own path for recording a failed test records that failure as a
-    pass, its own tests included — a change that breaks an invariant reaches the main branch —
-    high — not detected
+  - the command exits zero although a test it runs failed, or leaves out a directory holding tests
+    — a change that breaks an invariant reaches the main branch — high — detected by
+    gate-exit-code
+  - a change to the command's own path for a failed test exits zero for that failure, its own tests
+    included, where they run only under the command itself, not also under
+    `python -B -m unittest discover -s gate -p "test_*.py"` — a change that breaks an invariant
+    reaches the main branch — high — detected by gate-exit-code
 - **Trust boundary:** none
 
 ## repository
@@ -284,16 +284,6 @@ guidelines for a change and recognizes what is missing, and for the form check o
     through — high — not detected
 - **Trust boundary:** product-guidelines/form_check.py
 
-## wording-reaches-dependants
-
-Someone changes a decision's binding sentences, and every `derives from` or `narrows` relation
-carrying its old fingerprint is reported before the change reaches the main branch.
-
-- **Criticality:** high
-- **Parts:** relation-model · decisions · gate
-- **Invariant:** decision-guard-stale-reference
-- **Coverage:** none
-
 ## skills-reach-the-way-sessions
 
 Someone adds, renames or moves a skill of the-way, or changes its description, and a skill that a
@@ -367,9 +357,8 @@ exit codes.
 
 ## test-runner-command
 
-The command that runs the tests of a directory and records a verdict for each invariant and each
-environment fact they cite keeps its name, its arguments, its exit codes and the verdict it records
-for each outcome of a test.
+The command that runs every test of a repository, or the tests of one directory, keeps its name, its
+argument and its exit codes.
 
 - **Declared at:** gate/run_tests.py · main
 

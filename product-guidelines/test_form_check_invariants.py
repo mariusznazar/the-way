@@ -21,7 +21,7 @@ error a form check without the coding template reports for them — the name of 
 first of all — never stands in for the error a test asks for.
 
 Run from the root of the-way:
-    python -B gate/run_tests.py product-guidelines --record .runs/product-guidelines-tests.jsonl
+    python -B gate/run_tests.py product-guidelines
 """
 
 import json
