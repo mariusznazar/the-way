@@ -43,7 +43,7 @@ Definition: <path of the definition, relative to the plan> — fingerprint <8 he
 | Entry | Realized by | Written by |
 |---|---|---|
 | (new) — Who can create and use a player account? | 3 | 3 |
-| player-save-isolation/1 | 3 | 3 |
+| player-save-isolation | 3 | 3 |
 
 ## Open questions
 
