@@ -10,8 +10,7 @@ same name in two directories never meet. Given DIRECTORY, it runs only the tests
 `python -m unittest discover -s DIRECTORY -p "test_*.py"` finds there. The report for a person is
 the one `unittest` prints; without DIRECTORY, each directory's report follows a line naming it, and
 a last line counts the tests and names each directory that failed. The tests import from the
-working directory first, as under `python -m unittest`. The runner writes no record of a run
-(WAY-74).
+working directory first, as under `python -m unittest`. The runner writes no record of a run.
 
 Exit code: 0 when every test it runs passes; 1 when a test fails or errs, a test module cannot be
 imported, or a directory holds no test (WAY-63), and, without DIRECTORY, when no directory holds

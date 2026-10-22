@@ -58,8 +58,9 @@ writes there is written for a reader who was not in it.
     `AGENTS.md`, outside the block the-way's installer writes, naming
     `guidelines/styleguide-<part>.md` in backticks with the condition of changing a file of
     `<part>`; and the rule against values written in place of design tokens in that part's files,
-    standing where that skill places a rule for some files, saying that the product's invariant is
-    what keeps it and naming no command of its own (WAY-192);
+    standing where that skill places a rule for some files, saying what keeps it — the product's
+    invariant, or the review of each change while that invariant is marked violated — and naming
+    no command of its own (WAY-192);
   - for the product's first guidelines: add `guidelines/**` to the files of the part of the map
     whose files direct whoever carries out its tasks, through `update-part-map` (WAY-167);
   - each item an audit charge calls for (step 3).

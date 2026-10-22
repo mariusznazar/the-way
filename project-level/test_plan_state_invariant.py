@@ -214,7 +214,6 @@ class PlanStateEvidence(unittest.TestCase):
         self.task = self.docs / "tasks/report-download.md"
         self.write(self.definition, "# Report download\n\nStatus: approved 2026-10-01\n\n" +
                    DEFINITION_BODY + "## Gate record\n\n- Approved by: Fixture, 2026-10-01\n"
-                   "- Foundation searched at: 0123456789abcdef\n"
                    "- Definition fingerprint: " + FINGERPRINT + "\n")
         self.write(self.task, TASK)
         self.set_state("ready for cycle")

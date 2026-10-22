@@ -120,7 +120,6 @@ class PlanStateSubprocesses(unittest.TestCase):
         self.write(self.plan.with_name("definition.md"),
                    "# Report download\n\nStatus: approved 2026-10-01\n\n" + DEFINITION_BODY +
                    "## Gate record\n\n- Approved by: Fixture, 2026-10-01\n"
-                   "- Foundation searched at: 0123456789abcdef\n"
                    "- Definition fingerprint: " + FINGERPRINT + "\n")
         self.write(self.plan.parent / "tasks/report-download.md", TASK)
 

@@ -19,7 +19,7 @@ The definition follows `project-level/definition_template.md`. The check reports
   gaps;
 - d — every item under "Open questions" ends with `— resolved in: breakdown` or
   `— resolved in: task: <name>`;
-- e — the gate record holds its three lines, and its fingerprint matches the definition;
+- e — the gate record holds its two lines, and its fingerprint matches the definition;
 - f — "Projected foundation changes" begins with `Candidates: <n> shown, <k> accepted —
   YYYY-MM-DD`, k is no more than n, and no working table `### Candidates in progress` stands in it;
 - g — "Technology" lists the choices the project needs, each item ending
@@ -70,7 +70,6 @@ MEANING = re.compile(r"^>")
 STATUS = re.compile(r"^Status: (definition — open: \S.*|ready for gate|approved \d{4}-\d{2}-\d{2})$")
 GATE_LINES = (
     ("Approved by", re.compile(r"^- Approved by: \S.*, \d{4}-\d{2}-\d{2}$")),
-    ("Foundation searched at", re.compile(r"^- Foundation searched at: [0-9a-f]{7,40}$")),
     ("Definition fingerprint", re.compile(r"^- Definition fingerprint: ([0-9a-f]{8})$")),
 )
 
@@ -279,7 +278,7 @@ def check_gate_record(section, text):
     lines = content(section)
     if len(lines) != len(GATE_LINES):
         return [Finding("e", section.heading_line, "the gate record holds %d lines, not the "
-                        "three: Approved by, Foundation searched at, Definition fingerprint"
+                        "two: Approved by, Definition fingerprint"
                         % len(lines))]
     for (number, line), (name, form) in zip(lines, GATE_LINES):
         match = form.match(line.rstrip())

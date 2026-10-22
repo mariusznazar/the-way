@@ -84,7 +84,7 @@ RESOLVED_IN = " — resolved in: "
 PLAN_QUESTION = re.compile(r"^(?P<question>.+?) — definition: (?P<place>.+?) — "
                            r"(?:plan: task (?P<task>.*)|answer:(?: (?P<answer>.*))?)$")
 RAISED = "none"
-GATE_FINGERPRINT = readiness_check.GATE_LINES[2][1]
+GATE_FINGERPRINT = dict(readiness_check.GATE_LINES)["Definition fingerprint"]
 DEFINITION_NEEDS = ("Goal", "In scope", readiness_check.OPEN_QUESTIONS, readiness_check.PROJECTED,
                     readiness_check.GATE_RECORD)
 

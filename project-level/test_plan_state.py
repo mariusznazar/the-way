@@ -118,7 +118,7 @@ class Command(unittest.TestCase):
         self.task = self.plan.with_name("task.md")
         self.write(self.definition, "# Reports\n\nStatus: approved 2026-10-01\n\n" + BODY +
                    "## Gate record\n\n- Approved by: Fixture, 2026-10-01\n"
-                   "- Foundation searched at: 1234567\n- Definition fingerprint: " + FINGERPRINT + "\n")
+                   "- Definition fingerprint: " + FINGERPRINT + "\n")
         self.write(self.task, "# Reports\n\nStatus: ready for cycle\n"
                    "Project relation: plan item: plan.md — reports\n")
         self.state("ready for cycle")

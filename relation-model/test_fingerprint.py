@@ -7,7 +7,7 @@ the texts below that differ only in spaces and line breaks all normalize to WORD
 digest begins with WORDING_FINGERPRINT.
 
 Run from the root of the-way:
-    python -B gate/run_tests.py relation-model --record .runs/relation-model-tests.jsonl
+    python -B gate/run_tests.py relation-model
 """
 
 import contextlib

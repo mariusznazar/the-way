@@ -26,8 +26,8 @@ the-way itself.
 
 ## relation-model
 
-The part answers for how the fingerprint of an entry is computed from its binding part, and for
-the code that tells whether a string has the form of an identifier or of a version.
+The part answers for how the fingerprint of a text is computed, with which a project plan notices
+that the project definition it was written from has changed.
 
 - **Files:** relation-model/**
 - **Depends on:** none
@@ -40,7 +40,7 @@ and for the invariants of the-way itself.
 
 - **Files:** elements/invariants/**
   foundations/invariants.md
-- **Depends on:** decisions · part-map · relation-model · environment-facts · elements-common
+- **Depends on:** decisions · part-map · environment-facts · elements-common
 - **Trust boundary:** none
 
 ## glossary
@@ -59,7 +59,7 @@ The part answers for a product's environment facts.
 
 - **Files:** elements/environment-facts/**
   foundations/environment_facts.md
-- **Depends on:** decisions · part-map · invariants · relation-model · elements-common
+- **Depends on:** decisions · part-map · invariants · elements-common
 - **Trust boundary:** none
 
 ## elements-common
@@ -96,7 +96,7 @@ them.
 
 - **Files:** task-cycle/**
 - **Depends on:** decisions · invariants · glossary · part-map · environment-facts ·
-  elements-common · project-level · gate · relation-model · product-guidelines
+  elements-common · project-level · gate · product-guidelines
 - **Trust boundary:** none
 
 ## gate

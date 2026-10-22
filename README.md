@@ -57,7 +57,9 @@ The foundation holds rules and a description of the product's state that the ret
 with the code; a detail that changes with every change of the code lives in the code or in a test.
 
 A product uses one pinned commit of this repository, so a new version of the process reaches the
-product only when the product moves the pin; `installation/README.md` describes how.
+product only when the product moves the pin: one command of the installer and one commit, made when
+a task of the product needs a change of the process, or in a step of its own that takes several
+changes at once; `installation/README.md` describes how.
 
 ## The five files of a foundation
 

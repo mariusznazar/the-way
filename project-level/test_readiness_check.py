@@ -93,7 +93,6 @@ def definition(status="Status: approved 2026-10-03", bodies=None, gate=None, ord
     content = body_text(bodies, order)
     if gate is None:
         gate = ("- Approved by: Mariusz, 2026-10-03\n"
-                "- Foundation searched at: 595f839\n"
                 "- Definition fingerprint: %s" % (fingerprint or wording_fingerprint(content)))
     return "# Pierwsza mapa\n\n%s\n\n%s\n\n## Gate record\n\n%s\n" % (status, content, gate)
 
@@ -507,10 +506,19 @@ class GateRecord(unittest.TestCase):
         self.assertIn("e", [c for c, _ in found])
 
     def test_a_gate_line_off_its_form_is_reported(self):
-        gate = ("- Approved by: Mariusz\n- Foundation searched at: 595f839\n"
+        gate = ("- Approved by: Mariusz\n"
                 "- Definition fingerprint: 00000000")
         found = conditions(definition(gate=gate))
         self.assertIn(("e", "the line is not `- Approved by: …` in its form"), found)
+
+    def test_a_gate_record_naming_the_foundation_commit_searched_is_reported(self):
+        content = body_text(BODIES, readiness_check.SECTIONS[:-1])
+        gate = ("- Approved by: Mariusz, 2026-10-03\n"
+                "- Foundation searched at: 595f839\n"
+                "- Definition fingerprint: %s" % wording_fingerprint(content))
+        found = conditions(definition(gate=gate))
+        self.assertEqual(found, [("e", "the gate record holds 3 lines, not the two: Approved by, "
+                                       "Definition fingerprint")])
 
     def test_a_definition_changed_after_the_gate_is_reported(self):
         stale = definition()
