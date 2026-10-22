@@ -94,12 +94,6 @@ An invariant test is a file that holds a check citing an invariant, or a file su
 
 - **Not:** none
 
-## mechanics
-
-Mechanics is the way a test reaches the product under test, as against what the test asserts about it.
-
-- **Not:** none
-
 ## open design choice
 
 An open design choice is a choice that neither a task's document nor a spec written for the task settles and that either sets a foundation entry or takes a way that is costly to turn back once code is written on it, as against a choice of how to make what is already settled.

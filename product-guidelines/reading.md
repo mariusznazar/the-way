@@ -49,7 +49,8 @@ is no list of selected files to keep up to date.
 
 ## Distinguish the gaps
 
-Discovery uses the common form above; the response follows the discipline's creation timing:
+Discovery uses the common form above; the response follows when the discipline's guidelines come
+into being:
 
 - A user interface with no styleguide, or code work in a product with no `guidelines/coding.md`,
   lacks discipline guidelines, whether the product is new or already has screens or code.

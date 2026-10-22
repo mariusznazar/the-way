@@ -60,8 +60,9 @@ author makes of the foundation (WAY-33), not by marks every reference carries an
 renews. The digest is defined once, so a fingerprint recorded anywhere is computed the same way.
 *Rejected:* a fingerprint beside each reference that relies on the entry's binding part — every
 rewording makes its author renew marks that change no meaning, and flags raised for nothing get
-cleared unread; a version beside a reference — a reference relies on what the entry says today; the
-full 64-character digest — unreadable, nothing gained.
+cleared unread; a version beside a reference — a reference relies on what the entry says today;
+flags from the kind of change — a misnamed kind silences them; the full 64-character digest —
+unreadable, nothing gained.
 
 ### WAY-03 — Who may change an invariant test, and when?
 
@@ -122,7 +123,7 @@ paper safety; a hand-written copy of the state goes stale, and code shows only w
 view derived from it shows accidents as architecture, a rule copied from it turns one into law.
 *Rejected:* as elements of their own — tests (a method of an invariant), the "why" (a decision's
 rationale), product identity, principles and non-goals (decisions), classes of task risk
-(inherited from parts), structural code rules and quality scenarios (invariants), the agent's
+(the two questions of WAY-13), structural code rules and quality scenarios (invariants), the agent's
 environment and the return step (the task cycle); external
 constraints as a field of the map — a fact plus the invariant it creates; a hand-written
 architecture document or diagram — a second copy of the map; environment facts as backlog
@@ -239,7 +240,7 @@ files for coding agents, the account of how the tools load them, the skill that 
 the script that checks instruction files with its tests; `product-guidelines/` the template that the
 guidelines of every product share, for each discipline of work whose guidelines the-way gives a
 template of, that template with the skill that leads the work on them; `task-cycle/` what the design
-of the task cycle sets, and until then it does not reach the main branch. The entries in
+of the task cycle sets. The entries in
 `foundations/` are checked by `elements/common/foundation_check.py`.
 
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common,
@@ -265,8 +266,7 @@ of the task cycle sets, and until then it does not reach the main branch. The en
     styleguide discipline stand together in `product-guidelines/`;
   - violates: a `tools/` directory for shared scripts reaches the main branch; a new element comes
     with a script of its own that checks the form of its entries beside
-    `elements/common/foundation_check.py`; `task-cycle/` reaches the main branch before the design
-    of the task cycle sets what it holds.
+    `elements/common/foundation_check.py`.
 - **Origin:** none
 
 *Rationale:* anything brought in on the side makes the repository a store of material; directories
@@ -459,8 +459,8 @@ and no list of checks written by hand stands beside it.
 - **Scope:** invariants, agent-instructions, task-cycle, gate
 - **Based on:** none
 - **Relations:** none
-- **Verification:** invariants: ci-checking-commands. For the same command for everyone, an agent
-  compares the change with the decision:
+- **Verification:** invariants: ci-checking-commands · gate-exit-code. For the same command for
+  everyone, an agent compares the change with the decision:
   - complies: the instructions for agents name that one command as the way to check a change;
   - violates: the instructions for agents list test and lint commands of their own; the tests of
     the invariants run under a command of their own beside the product's tests.
@@ -789,30 +789,6 @@ exception takes the whole decision with it; repeated approval of the same meanin
 answers a question already settled; an implied exception to WAY-114 — competing instructions leave
 the entry writer to choose which one governs.
 
-### WAY-31 — Does a link between entries carry a fingerprint?
-
-A relation `derives from` or `narrows`, and an invariant entry's *Derives from*, *Rests on* and
-*Part*, name each entry by its identifier alone and carry no fingerprint, and no change to the
-named entry flags them; the author's search of the foundation (WAY-33) finds the entries a change
-touches.
-
-- **Scope:** decisions, invariants, environment-facts
-- **Based on:** none
-- **Relations:** derives from WAY-02 · derives from WAY-17
-- **Verification:** an agent compares the change with the decision:
-  - complies: an invariant's *Derives from* reads `WAY-01`; a reworded WAY-01 sends its author to
-    search the foundation for the entries it touches;
-  - violates: a new relation reads `derives from WAY-01@60960941`; a script renews fingerprints
-    across the log.
-- **Origin:** none
-
-*Rationale:* a relation or an invariant's link stands on what the named entry says (WAY-17), and
-what a change to that entry touches is found by its author's search (WAY-33), so a link needs no
-mark that every rewording renews.
-*Rejected:* a fingerprint on every link, flagged when the named entry changes and renewed in the
-same merge — renewing a fingerprint does not lead to a change in the entry that carries it; flags
-from the kind of change — a misnamed kind silences them.
-
 ### WAY-32 — What types of relation can a decision name?
 
 A decision names its relation to another decision with one of two types, and the list is closed:
@@ -854,7 +830,7 @@ question to a human. The search is not repeated before the merge and leaves no r
     merged while an invariant deriving from it still states the old rule.
 - **Origin:** none
 
-*Rationale:* a link names an entry by its identifier and no change flags it (WAY-31), and the
+*Rationale:* a link names an entry by its identifier and no change flags it (WAY-02), and the
 costliest contradictions lie between entries written apart, where nobody thought of a link, so only
 a search of the whole foundation finds what a change touches, linked or not. Its author knows what
 the change settles and makes it once. Two tasks can still contradict each other without a file
@@ -977,8 +953,8 @@ library alone, and installs nothing. It calls git, and the commands a product de
 repository, reading their output through an adapter for the format. Where a product declares no such
 command, the script reports what it could not check, never agreement.
 
-- **Scope:** decisions, invariants, glossary, part-map, environment-facts, relation-model,
-  installation, instruction-files, product-guidelines, task-cycle
+- **Scope:** elements-common, relation-model, gate, installation, agent-instructions,
+  instruction-files, project-level, task-cycle
 - **Based on:** none
 - **Relations:** none
 - **Verification:** invariants: script-language · script-imports · script-subprocesses.
@@ -1334,8 +1310,7 @@ checking and the links that WAY-08 and WAY-17 require stand beside that sentence
 - **Based on:** none
 - **Relations:** derives from WAY-22
 - **Verification:** an agent compares the change with the decision:
-  - complies: "every version and review record in the log has every field of the template" as one
-    entry;
+  - complies: "every entry of the log has every field of the template" as one entry;
   - violates: "binding sentences number one to three and contain no *should*" as one entry; the
     sentence on fields split into one entry per field.
 - **Origin:** none
@@ -1405,7 +1380,7 @@ the task can pass that run too; the mark only where no cause is known — a caus
 a concept document gives the rule two readings; a decision kept outside the log counted as named —
 nothing checks it; the reason quoted beside the mark — a why inside an invariant.
 
-### WAY-60 — Where may a condition that decides an invariant stand?
+### WAY-60 — Where may a condition that decides an invariant stand, and how does its sentence name commits and measured quantities?
 
 A condition deciding an invariant stands in its sentence, or where changing it takes a foundation
 change a human decides, or where a decision in the product's log or the pinned the-way places it.
@@ -1418,7 +1393,7 @@ quantity measured while the product runs names its bound or tolerance, statistic
 - **Based on:** none
 - **Relations:** derives from WAY-22 · derives from WAY-56
 - **Verification:** an agent compares the change with the decision:
-  - complies: "every version and review record in the log has every field of the template";
+  - complies: "every entry of the log has every field of the template";
   - violates: "every request is answered within the limit set in `config.py`"; "every fingerprint
     on `main` equals the current fingerprint of the decision it names"; "a commit that changes
     `template.md` also appends a decision version to the log"; a bound written "~2 seconds"; a
@@ -1481,8 +1456,7 @@ or `every` where a change to any part can. A change, against the commit its bran
 branch from, reaches an invariant that names `every` or a part the change touches, that a test the
 change alters cites, or one of whose tests names on a `data:` line a file the change alters,
 whatever parts a file collecting entries gives that change (WAY-44), and the agent making the
-change reads every invariant it reaches. The entry names no failure mode, critical flow or
-surface.
+change reads every invariant it reaches. The entry names no critical flow or surface.
 
 - **Scope:** invariants, part-map, gate, task-cycle
 - **Based on:** none
@@ -1512,7 +1486,7 @@ it no result, and nothing written by hand stands in for one. An invariant whose 
 takes no result from a run: the review of each change it reaches compares the change with its
 sentence. The command running the product's tests exits non-zero when a test fails.
 
-- **Scope:** invariants, gate, part-map, task-cycle, environment-facts
+- **Scope:** invariants, gate, part-map, task-cycle
 - **Based on:** none
 - **Relations:** derives from WAY-61 · derives from WAY-62 ·
   derives from WAY-08
@@ -1615,13 +1589,12 @@ other fault; a green run again hides the fault instead of answering it.
 — a mechanism and a date a human moves, kept for a rare case; a count of passes in a row — it hides
 the fault.
 
-### WAY-69 — Who writes an invariant's sentence, its check and its deliberate break?
+### WAY-69 — Who writes an invariant's sentence, its test and the code the test covers?
 
-An invariant's sentence, its test and the code the test covers may come from one agent, and no
-deliberate break is written for the test beyond seeing it fail once (WAY-08); the agent reviewing
-the change, which made none of it, reads the test against the sentence.
+An invariant's sentence, its test and the code the test covers may come from one agent; the agent
+reviewing the change, which made none of it, reads the test against the sentence.
 
-- **Scope:** invariants, decisions, part-map, gate, task-cycle
+- **Scope:** invariants, gate, task-cycle
 - **Based on:** visible-scoring-reward-hacking · oracle-in-loop-building
 - **Relations:** derives from WAY-08
 - **Verification:** an agent compares the change with the decision:
@@ -1690,7 +1663,7 @@ every language, and one without a list checked by nothing; the file's language, 
 no entries — word checks go silent on other languages; a guard reporting other languages unchecked
 — recognising a language needs more than the standard library (WAY-38).
 
-### WAY-73 — Which entries name an environment fact?
+### WAY-73 — Which entries name an environment fact, and when does a fact leave the foundation?
 
 An invariant's *Rests on* names every environment fact holding a condition that decides whether a
 commit makes its sentence true, and no other fact. A fact holds such a condition when, read
@@ -1711,8 +1684,8 @@ or a decision's *Based on* names it, and the change that removes the last such n
 - **Origin:** none
 
 *Rationale:* a fact holding a condition changes whether the sentence holds with no commit, so
-*Rests on* is its only path to the invariant; a mere reason reaches it through its decision
-(WAY-31). A link is written at the dependent's end (WAY-17), so a fact nothing names is seen from
+*Rests on* is its only path to the invariant; a mere reason reaches it through its decision. A
+link is written at the dependent's end (WAY-17), so a fact nothing names is seen from
 nowhere; the change that drops its last name names it, so its author's search of the foundation
 finds it (WAY-33).
 *Rejected:* every fact in the *Based on* of the decisions it derives from — flags invariants that
@@ -1828,9 +1801,8 @@ where the edition has an address of its own.
 - **Based on:** none
 - **Relations:** none
 - **Verification:** an agent compares the change with the decision:
-  - complies: the JSON Lines fact quotes "strongly recommended but not required" and says the final
-    terminator may be left out; the git path patterns fact quotes the sentence handing matching to
-    `.gitignore` rules and names that section by place;
+  - complies: the git path patterns fact quotes the sentence handing matching to `.gitignore` rules
+    and names that section by place;
   - violates: the sentence says every line ends in `\n`; the source is the model's recollection of
     a page, a blog post quoting the RFC, or the output of a command the author ran; a fact on a
     pattern syntax quotes its rules one by one, or only the rules the product uses.
@@ -1859,10 +1831,8 @@ citing it names a date or condition for its review.
 - **Based on:** none
 - **Relations:** derives from WAY-60
 - **Verification:** an agent compares the change with the decision:
-  - complies: a fact's entry holds its sentence and *Source* and nothing else; RFC 8259 gaining
-    `obsoleted_by` is found by whoever next reads the fact, who moves it to the new edition and
-    checks the entries naming it in the same change; NIST's notice that it will revise FIPS 180-4
-    changes nothing;
+  - complies: a fact's entry holds its sentence and *Source* and nothing else; NIST's notice that it
+    will revise FIPS 180-4 changes nothing;
   - violates: a fact names a command that tests the behaviour its sentence states or watches its
     source; a test cites a fact on a `fact:` line; a change touching no fact fails on a fact; a
     fact's sentence is rewritten while an invariant resting on it is left as it was; a decision
@@ -1894,9 +1864,8 @@ that one repository.
 - **Based on:** github-private-repository-response
 - **Relations:** none
 - **Verification:** an agent compares the change with the decision:
-  - complies: each repository this one links to has its own fact on whether an anonymous reader can
-    open it; no decision on this repository's visibility is written, as the repository declares
-    none;
+  - complies: a host's access rule is a fact whose source is the page showing it; no decision on
+    this repository's visibility is written, as the repository declares none;
   - violates: one fact lists every repository this one links to; a decision "the repository is
     private" is written where the product declares no visibility; an anonymous 404 is taken to
     show that a repository is private.
@@ -1973,8 +1942,8 @@ The scripts of the-way run on Python 3.14, which the repository declares in `.py
 the declared version moves when the version in use leaves bugfix support, never because a newer
 version comes out.
 
-- **Scope:** decisions, invariants, glossary, part-map, environment-facts, relation-model, gate,
-  installation, instruction-files, repository, task-cycle
+- **Scope:** elements-common, relation-model, gate, installation, agent-instructions,
+  instruction-files, project-level, task-cycle, repository
 - **Based on:** python-314-bugfix-status · python-release-binaries ·
   https://raw.githubusercontent.com/python/peps/b53285d29f16cc743a7a6339c947c49ccf70c525/peps/pep-0745.rst
   § Bugfix releases — "3.14.14: Tuesday, 2027-10-05 (Final regular bugfix release with binary installers)";
@@ -2021,7 +1990,7 @@ event or a finding about people with no lapse date leads to nothing. The address
 the date let a reader find what the decision rests on and see whether it still says so.
 *Rejected:* every citation as an entry — many entries whose change would call no decision into
 question, each a second copy of its quote; a fact named with its fingerprint, renewed when the fact
-changes — the author's search finds the decision without it (WAY-31); the partners of the part
+changes — the author's search finds the decision without it (WAY-33); the partners of the part
 map's external context as linked facts — a new link with no known consumer.
 
 ### WAY-93 — Where do glossary entries stand, and what identifies one?
@@ -2217,7 +2186,7 @@ treating recognition by an agent as adoption — recognition does not settle fit
 The-way's task cycle requires no particular backlog application or service; each product chooses
 where it keeps its roadmap, projects and tasks.
 
-- **Scope:** decisions, elements-common, task-cycle
+- **Scope:** elements-common, project-level, task-cycle
 - **Based on:** none
 - **Relations:** none
 - **Verification:** an agent compares the change with the decision:
@@ -2605,8 +2574,8 @@ foundation changes`, in that kind's subsection with the template's projected hea
 sentence of its meaning, without writing the product's foundation or running the foundation check,
 and without searching the whole foundation for the entry: the readiness gate searches it once for
 the whole definition (WAY-118). A new projected decision uses `(new)` without a number or prefix,
-while a change of a current decision and other kinds use the identifiers their templates give,
-with no version; an entry following from it remains projected or becomes an open question when its
+while a change of a current decision and other kinds use the identifiers their templates give;
+an entry following from it remains projected or becomes an open question when its
 fields await the code.
 
 - **Scope:** project-level, elements-common, decisions, invariants, glossary, environment-facts,
@@ -2923,8 +2892,7 @@ one, the cycle opens a blocked draft request.
 - **Verification:** an agent compares a cycle with the decision:
   - complies: the designer reads `write-spec` and each slice's executor `make-change`, while the
     orchestrator reads `implement-task` alone; the request shows the orchestrator's provisional
-    choices without claiming the owner's approval; the cycle runs in a harness with no plugin
-    installed;
+    choices without claiming the owner's approval;
   - violates: the orchestrator loads `review-change` because a review begins, or a reviewer works
     from its handoff without reading that method; an agent treats its own spec approval as the
     owner's; the cycle requires a method the product's pin of the-way does not carry.
@@ -3049,7 +3017,9 @@ that an agent could not read from the repository or from general knowledge, and 
 agent would go wrong. Any other rule the skill proposes or such a change adds stands where what
 calls for it reaches the agent: a rule for some files in a file the tools load with those files, a
 rule for an activity in the steps of the skill that carries out that activity or in the file that
-leads it, and knowledge needed now and then in a file such a step or line points to.
+leads it, and knowledge needed now and then in a file such a step or line points to. Lines that
+stand unchanged are not bound by it, and the lines of process skills and their entry points answer
+to WAY-35 and WAY-127 instead.
 
 - **Scope:** instruction-files, agent-instructions
 - **Based on:** context-file-effect · claude-code-path-rules ·
@@ -3067,10 +3037,8 @@ leads it, and knowledge needed now and then in a file such a step or line points
 asks, so it earns its place only when each session needs it; descriptions of a repository have not
 helped agents, while the instructions they are given are followed; a rule loaded with the files or
 the activity that call for it costs nothing elsewhere; one tool reads a subdirectory's file only in
-sessions started at or below it, so such a file needs a line that points to it. The decision binds
-what a change adds or rewords from then on; lines that stand unchanged are not bound by it, as the
-process enters an existing product (WAY-28). Process skills and their entry points answer to their
-own decisions (WAY-35, WAY-127), not to this one.
+sessions started at or below it, so such a file needs a line that points to it. Unchanged lines
+stay as they are because the process enters an existing product (WAY-28).
 *Rejected:* a fixed count of lines as the measure of a file — a count says nothing of whether a
 given line is needed, even where a shorter file saves context in every session; a file of pointers
 alone — it leaves reading each rule to the agent's choice; a file of its own for every area with
@@ -3466,8 +3434,7 @@ the choice, a risk can still change it; carried into the decision as a hypothesi
 reader what was accepted without passing for a sourced fact. The tests run on the option
 recommended, the one the human most often takes, and only where this project chooses: a choice a
 decision already holds has been made, and testing it again would reopen it with no reason in the
-project. Every choice the project settles is tested until the tests show they find nothing outside
-a place to run.
+project.
 *Rejected:* tests on every option of a choice — their cost grows with options the human mostly does
 not take; the risks shown after the choice — the human takes them unseen; the risks put through the
 critique as claims — with no source, every one would be struck; the risks in *Based on* — it names
@@ -3928,8 +3895,8 @@ The project orchestrator leads a handed-over project plan from tasks to refine t
 tasks ready for their cycles and keeps the plan's states consistent with evidence, proposing a
 round of refinement first from tasks on which the most other tasks depend for the human to
 confirm or change. The human starts task cycles separately, and when the last task is done the
-project orchestrator names project closure as the next step and says that no closure skill
-exists, without performing either work. After a task merges, leading the plan does not recheck
+project orchestrator names project closure as the next step, performing neither closure nor a task
+cycle. After a task merges, leading the plan does not recheck
 ready dependent task documents: the task cycle checks and adapts its sources at its own start.
 
 - **Scope:** project-level
@@ -4314,8 +4281,7 @@ despite the finding.
 
 - **Scope:** task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-162 · derives from WAY-11 · derives from
-  WAY-10
+- **Relations:** derives from WAY-162 · derives from WAY-11
 - **Verification:** an agent compares the cycle and its request with the decision:
   - complies: a cycle blocked after the review of the final fix runs the gate, writes its record,
     opens the blocked request naming the reconciliation with the target branch and the return step
@@ -4370,7 +4336,9 @@ misses finds what the author can still catch before a reviewer spends a round on
 of each slice does the same against its slice, so that a larger change does not reach review with
 no agent having attacked its own work. The report is the reviewer's material, and the request
 shows the human what the attack found beside the other test evidence. The check does not replace
-an invariant's test, which is seen failing once in its own right (WAY-08).
+an invariant's test, which is seen failing once in its own right (WAY-08). The rule takes from an
+agent harness's practice for its workers the naming of the requirement most likely to be false and
+the check that would catch it.
 *Rejected:* the author of a one-author change alone — in a larger change made from a plan, no agent
 would attack its own work before review.
 
@@ -4427,8 +4395,7 @@ it.
 
 - **Scope:** project-level, decisions
 - **Based on:** none
-- **Relations:** derives from WAY-121 · narrows WAY-123 · narrows
-  WAY-137
+- **Relations:** derives from WAY-121 · narrows WAY-123
 - **Verification:** an agent compares the work with the decision:
   - complies: a log service cheaper than the others, whose logs only a human can read, in a panel
     behind the human's login, stays in the comparison of the logs with the lack "an agent does not
@@ -4804,42 +4771,40 @@ was not in the conversation, and they leave out those skills' extractor with its
 guidance on features that use artificial intelligence and their scoring rubric.
 
 - **Scope:** product-guidelines
-- **Based on:** observation of the skills on 2026-10-18 using `sed -n` and `grep -n` in Git Bash on
-  Microsoft Windows NT 10.0.26300.0, and `git show` for the commit named; `10x-ui` is
-  `.claude/skills/10x-ui/SKILL.md` of the repository `loop2-10x` at commit `e854fef5`, the two
-  others `.agents/skills/om-ux-setup/` and `.agents/skills/om-ux-shape/` of the repository `loop`
-  at commit `715026e`. Taken, from `10x-ui`: "one source of values, with names describing the
-  **role** (`primary`, `surface`, `muted`, `destructive`), never the colour" · "**Importable
-  components that live in the repo**" · "every cell is **shown** (in the kitchen sink) or marked
-  **N/A with a reason**" · "a **kitchen-sink page** rendering the view in all seven states side by
-  side" · "phases in this order: **environment/library → token values → one view → states**" ·
-  "**deposit them in the repo**: the raw values in a file in the change folder, plus a line naming
-  where they came from" · "Extend it; do not fork a second palette … An existing, worse system beats
-  a better one you bring in." · "**Source → views.**" and "**View → source.** For every literal in
-  the view, which token or component should have covered it?" · "write **3–5 charges**. Each charge
-  gets a **file and line**, and **one sentence about the effect on the user**" · "Charges the plan
-  does not address stay in `## Charges` marked **deferred** with a reason" · "*what happens if
-  someone reaches this view logged out, with no data, or straight from a link?*" · "A candidate
-  list, not a verdict — each hit is a possible missing-token charge" · "Add a short UI block to the
-  repo's agent rules file … "no literal colours or arbitrary values in views — use tokens"". Left,
-  from `10x-ui`: "`/10x-new <change-id>` — one view, one token source or motif" · "`npx shadcn add
-  <name>`" and "**Named motif or preset**" · "after the first vertical slice renders with real data"
-  · "**Not now:** a view that does not exist yet" · "One view plus global tokens per change." ·
-  "Route by phase" · "`await expect(page).toHaveScreenshot({ maxDiffPixels: 100 })`" · "a
-  design-tool file as the only source of truth" · `surface` in the passage on roles above. Taken,
-  from `om-ux-setup/SKILL.md`: "degrades honestly when a repository has none" and "a proposed de-facto
-  palette derived from the colors its code already uses as the first draft of a design system"; from
-  its `references/rules.md`: "**Proposed is not enforced.**"; from its `SKILL.md`: "**Ask what only
-  the team knows.**"; from `om-ux-shape/references/report-templates.md`: "For each: what the user
-  sees, the components it is built from … Then the states that must exist for trust (empty,
-  loading, error, permission) with the actual message the user reads"; from its `SKILL.md`:
-  "someone who will build or draw this, does not know the design system, and was not in the
-  conversation". Left: "`npx uxproof@0.3.1 init --no-skills`" (`om-ux-setup/SKILL.md`), the
-  "Human-AI interaction checklist" (`om-ux-shape/references/hai-guidelines.md`) and the "Quality
-  Rubric" (`om-ux-shape/references/quality-rubric.md`). The course's lesson, from which the pairing of
-  a background with its text, the fix in the component, the theme generators among the lists of
-  tools and the links of a design tool to code come, is a private note its readers cannot open, and
-  no passage of it is quoted.
+- **Based on:** observation of the skills on 2026-10-18; the course's skill `10x-ui` and the skills
+  `om-ux-setup` and `om-ux-shape` are private material its readers cannot open. Taken, from
+  `10x-ui`: "one source of values, with names describing the **role** (`primary`, `surface`,
+  `muted`, `destructive`), never the colour" · "**Importable components that live in the repo**" ·
+  "every cell is **shown** (in the kitchen sink) or marked **N/A with a reason**" · "a
+  **kitchen-sink page** rendering the view in all seven states side by side" · "phases in this
+  order: **environment/library → token values → one view → states**" · "**deposit them in the
+  repo**: the raw values in a file in the change folder, plus a line naming where they came from" ·
+  "Extend it; do not fork a second palette … An existing, worse system beats a better one you bring
+  in." · "**Source → views.**" and "**View → source.** For every literal in the view, which token or
+  component should have covered it?" · "write **3–5 charges**. Each charge gets a **file and line**,
+  and **one sentence about the effect on the user**" · "Charges the plan does not address stay in
+  `## Charges` marked **deferred** with a reason" · "*what happens if someone reaches this view
+  logged out, with no data, or straight from a link?*" · "A candidate list, not a verdict — each hit
+  is a possible missing-token charge" · "Add a short UI block to the repo's agent rules file … "no
+  literal colours or arbitrary values in views — use tokens"". Left, from `10x-ui`: "`/10x-new
+  <change-id>` — one view, one token source or motif" · "`npx shadcn add <name>`" and "**Named motif
+  or preset**" · "after the first vertical slice renders with real data" · "**Not now:** a view that
+  does not exist yet" · "One view plus global tokens per change." · "Route by phase" · "`await
+  expect(page).toHaveScreenshot({ maxDiffPixels: 100 })`" · "a design-tool file as the only source
+  of truth" · `surface` in the passage on roles above. Taken, from `om-ux-setup/SKILL.md`: "degrades
+  honestly when a repository has none" and "a proposed de-facto palette derived from the colors its
+  code already uses as the first draft of a design system"; from its `references/rules.md`:
+  "**Proposed is not enforced.**"; from its `SKILL.md`: "**Ask what only the team knows.**"; from
+  `om-ux-shape/references/report-templates.md`: "For each: what the user sees, the components it is
+  built from … Then the states that must exist for trust (empty, loading, error, permission) with
+  the actual message the user reads"; from its `SKILL.md`: "someone who will build or draw this,
+  does not know the design system, and was not in the conversation". Left: "`npx uxproof@0.3.1 init
+  --no-skills`" (`om-ux-setup/SKILL.md`), the "Human-AI interaction checklist"
+  (`om-ux-shape/references/hai-guidelines.md`) and the "Quality Rubric"
+  (`om-ux-shape/references/quality-rubric.md`). The course's lesson, from which the pairing of a
+  background with its text, the fix in the component, the theme generators among the lists of tools
+  and the links of a design tool to code come, is a private note its readers cannot open, and no
+  passage of it is quoted.
 - **Relations:** derives from WAY-100
 - **Verification:** an agent compares the change with the decision:
   - complies: the template of the styleguide carries the pair of a background and its text and the
@@ -5085,8 +5050,7 @@ task that uses it needs.
 *Rationale:* a first screen built with no rules is the screen every later one copies, and a rule that
 blocks a change to a screen until a styleguide exists would need an exception for it. Rules wider
 than the first task mean the next screens find their meanings already there. A styleguide written
-before any screen has no audit to start from; this way of working has not yet been tried on a
-product, so its first use is watched.
+before any screen has no audit to start from.
 *Rejected:* the styleguide written on the first screen — that screen is built with no rules; a
 minimal styleguide before the first screen, with only that screen's roles — every next screen adds
 meanings in a hurry.
@@ -5772,7 +5736,9 @@ is technically right or not, and a rule with one report that leads to no such ch
 examples; for a product with no code it proposes as blocking the rules the tool's documentation
 marks as recommended. The human approves that split in the product's decision adopting the set, and a
 rule on which a later report leads to no change of code worth making goes among the examples by a
-change of that decision, which the human approves.
+change of that decision, which the human approves. The invariant of the linter rests on one
+environment fact, the rules the set holds at the edition the adopting decision names, and that
+decision gives the blocking rules as the set less the rules it keeps among the examples.
 
 - **Scope:** product-guidelines
 - **Based on:** none
@@ -5796,16 +5762,13 @@ favour, so another agent judges each report, as Google weighs a report by what d
 effect (WAY-194), never rule by rule. A product with no code has nothing to try a set on, so it
 takes the rules the tool's documentation recommends; their weak point is that they block with no
 evidence from the product, and the first report of one that leads to no change worth making takes it
-off by a change of the decision. The decision adopting the set names it and its edition (WAY-86),
-and what an invariant of the linter takes from that catalogue is which rules the set holds at that
-edition: one environment fact, which one edition of the tool's documentation states, about one
-thing, with one reason to change, a new edition (WAY-76), as git's rule of path patterns with its
-page's exceptions is one fact. A criterion of WCAG stands as a fact of its own (WAY-191) because
-each is a requirement of its own written in prose, while a rule of a linter's set is one whose
-content the tool itself runs at its pinned version, so the invariant takes from the catalogue its
-membership alone; the blocking rules then stand in the adopting decision as the set less the rules
-it keeps among the examples (WAY-60). The price is a trial run and a judgment of its reports each
-time a set is adopted.
+off by a change of the decision. Which rules a set holds at one edition is one fact, which one
+edition of the tool's documentation states, about one thing, with one reason to change, a new
+edition (WAY-76), as git's rule of path patterns with its page's exceptions is one fact. A
+criterion of WCAG stands as a fact of its own (WAY-191) because each is a requirement of its own
+written in prose, while a rule of a linter's set is one whose content the tool itself runs at its
+pinned version, so the invariant needs the set's membership alone. The price is a trial run and a
+judgment of its reports each time a set is adopted.
 *Rejected:* every rule of the set blocking — the gate blocks sound code (WAY-203); the human
 deciding rule by rule — the human would judge what they cannot judge (WAY-194); an environment fact
 for each rule of the set — many facts with one source and one reason to change (WAY-76).
@@ -5815,7 +5778,9 @@ for each rule of the set — many facts with one source and one reason to change
 Where a product's code already breaks the rules of its linter's set that block, the skill
 `maintain-coding-guidelines` proposes the linter's invariant over the whole of that code, marked
 violated until the code is cleaned (WAY-51). A formatter enters a product by one reformatting of the
-whole of its code in the task that brings the formatter.
+whole of its code in the task that brings the formatter. Until the mark is cleared, the review of
+each change to the named parts' files is what keeps a cleaned file or a new one from gaining such a
+report.
 
 - **Scope:** product-guidelines, invariants
 - **Based on:** none
@@ -5838,8 +5803,7 @@ code is cleaned when a task has it in scope. This takes the place of Google's co
 check is fixed across the whole code before it is turned on (WAY-195). A formatter rewrites the code
 itself without changing what it does, so one reformatting leaves nothing to clean. Its weak point:
 until the last file is clean, no test shows a report coming back into a cleaned file or reaching a
-new one. Until the mark is cleared, the review of each change to the named parts' files is what
-keeps a cleaned file or a new one from gaining such a report.
+new one.
 *Rejected:* only the rules the code already meets adopted — the rule is weakened until the code fits
 it (WAY-51); the whole of the code cleaned in the task that brings a linter — that task grows into
 cleaning the whole product; beside the marked invariant, a second one that holds from its first
@@ -5964,8 +5928,7 @@ the first file of that kind.
 and checks brought to it afterwards find code to clean (WAY-205), as a first screen built with no
 rules is the one every later screen copies (WAY-184). A file of a kind holds its exemplar, which
 exists only once the task that creates the first file of the kind has designated it (WAY-200).
-Coding guidelines written before any code have no trial run to start from (WAY-204); this way of
-working has not yet been tried on a product, so its first use is reviewed.
+Coding guidelines written before any code have no trial run to start from (WAY-204).
 *Rejected:* the linter and the formatter brought in only after the first code is written — that code
 is written with no standing check, and they meet it as code to clean.
 
@@ -6076,9 +6039,8 @@ Each agent of the task cycle that writes or reviews the spec, plans, makes or re
 reads by `product-guidelines/reading.md` the product's guidelines of the parts its own work
 touches: every file whose *Applies to* names such a part, a file of a kind of code only where its
 row's *When to read* in `guidelines/coding.md` also matches the work, each read whole and never
-replaced with a review checklist. No one selects the guidelines for another agent, the selection
-is not recorded with its reasons, and it is not refreshed at every handoff; an agent whose work
-reaches a further part reads that part's guidelines.
+replaced with a review checklist. No one selects the guidelines for another agent; an agent whose
+work reaches a further part reads that part's guidelines.
 With the styleguide, the planner and the author working without a plan read its example of the
 order of work (WAY-181), as an example they follow or explain departing from.
 
@@ -6112,8 +6074,9 @@ reading by the parts its own work touches already reaches what such a record wou
 
 The skill `refine-task` uses the reading the agents of the task cycle use,
 `product-guidelines/reading.md`, to find guidelines by the affected parts' *Applies to* and a kind
-of code by its row in the general coding index, with the consequence of an absence following the
-discipline's creation timing.
+of code by its row in the general coding index, the table of `guidelines/coding.md`, with the
+consequence of an absence following when the discipline's guidelines come into being (WAY-184,
+WAY-209).
 Before a diff exists, it identifies affected parts, user interfaces, code and kinds of code from
 the required behaviour, the responsibilities of the part map and existing product files,
 expanding its reading and exposing unresolved classification or malformed metadata as a question
@@ -6382,12 +6345,13 @@ private quotations or pointers in place of the reasoning — readers cannot asse
 | WAY-15 | removed when the entries of group 09 were slimmed (a foundation that does not change with every change of code); the commit names no successor | none |
 | WAY-20 | withdrawn: it said only that a change names no kind of change; what a change does to an entry's meaning reaches the human as WAY-114 gives it | WAY-114 |
 | WAY-23 | folded into WAY-18 when the entries of group 04 were slimmed | WAY-18 |
+| WAY-31 | withdrawn: a reference names an entry by its identifier alone, with no fingerprint (WAY-02), and the author's search finds what names a changed entry (WAY-33) | WAY-02 |
 | WAY-39 | folded into WAY-02 when the entries of group 01 were slimmed | WAY-02 |
 | WAY-46 | withdrawn: it said only that a part carries no failure modes and no criticality; the part map gives a part no such field | WAY-40 |
 | WAY-47 | withdrawn: it said only that no list of a critical flow's parts is checked; a critical flow has no entry in the part map (WAY-45) | WAY-45 |
 | WAY-50 | folded into WAY-49 when the entries of group 16 were slimmed | WAY-49 |
 | WAY-59 | removed when the entries of group 17 were slimmed (form of entries); the commit names no successor | none |
-| WAY-66 | folded into WAY-31 when the entries of group 01 were slimmed | WAY-31 |
+| WAY-66 | folded into WAY-31 when the entries of group 01 were slimmed | WAY-02 |
 | WAY-67 | folded into WAY-51 when the entries of group 03 were slimmed | WAY-51 |
 | WAY-70 | folded into WAY-69 when the entries of group 14 were slimmed | WAY-69 |
 | WAY-74 | withdrawn: it said only that the-way keeps no record of a run; the exit code of the command running the tests says whether a test failed (WAY-63) | WAY-63 |

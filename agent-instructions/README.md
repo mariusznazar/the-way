@@ -23,8 +23,7 @@ Before editing, use `foundations/part_map.md` to identify the parts touched and 
 whose *Scope* names those parts. Read the affected invariants and the relevant element templates
 and skills. A change to a foundation entry follows the skill for that element.
 
-Until an entry reaches `main`, edit an existing decision in place (WAY-07). Do not manufacture a
-new decision version merely to model the unfinished pre-`main` history.
+Edit an existing decision in place, on `main` as before it (WAY-07).
 
 ## Make the change
 

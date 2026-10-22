@@ -133,7 +133,7 @@ looks for in its element. The search is not repeated before the merge and leaves
    its element
    (`TODO — decision pending: which decision sets that the entries following from one entry are
    written one at a time`): every entry that names this one, when its binding part changes
-   (WAY-31, WAY-33); every link the entry names that the foundation does not
+   (WAY-02, WAY-33); every link the entry names that the foundation does not
    hold yet (WAY-17); and each finding of step 2. The skill names what follows in its element.
 
 ## Projected mode

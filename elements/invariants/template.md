@@ -152,7 +152,7 @@ gives (WAY-64).
 - A change, against `{fork-point}`, reaches an entry that names `every` or a part the change
   touches, or that a test the change alters cites, and the agent making the change reads every
   entry it reaches (WAY-62).
-- The entry names no failure mode, critical flow or surface (WAY-62).
+- The entry names no critical flow or surface (WAY-62).
 - In the file holding invariant entries, a change of an entry touches the parts that entry names,
   and `every` touches all (WAY-44, WAY-62).
 

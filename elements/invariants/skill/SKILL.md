@@ -43,7 +43,7 @@ project skill of that name with the `the-way-` prefix. Follow the steps of
   entries go" gives one; not found — a new identifier.
 - The search of the foundation also looks for a decision whose level 1 verification calls for this
   rule, and an entry it names whose binding part has changed, to check it against that part again
-  (WAY-31).
+  (WAY-33).
 
 ## 3. Draft
 
