@@ -4262,10 +4262,12 @@ review did not accept, and the merge is made again after the fix.
 ### WAY-164 — What does the author of a change check of its own work before review?
 
 Before its work goes to review, the author of a one-author change names the requirement of the
-task, and the executor of each slice the requirement of its slice read against the task, that its
-work most likely does not meet, writes a check that would catch that, and states in its report
-which requirement, which check and what the check showed. The reviewer reads that report, and the
-request lists what each such check showed among its test evidence.
+task, and the executor of each slice the requirement of its slice read against the passages of the
+task its handoff gives, that its work most likely does not meet, writes a check that would catch
+that, and states in its report which requirement, which check and what the check showed. The
+review that judges the work — a slice's own review where it has one, otherwise the review of the
+whole change — reads that report, and the request lists what each such check showed among its test
+evidence.
 
 - **Scope:** task-cycle
 - **Based on:** none
@@ -4275,8 +4277,9 @@ request lists what each such check showed among its test evidence.
   with the decision:
   - complies: the author of a one-author change names the requirement its work most likely misses,
     writes a test for it, and reports that the test failed and what it changed before review; the
-    executor of each slice reports the same for its slice; the reviewer is given those reports, and
-    the request lists each check among its test evidence;
+    executor of each slice reports the same for its slice, read against the passages of the task
+    its handoff gives; the review that judges each slice is given those reports, and the request
+    lists each check among its test evidence;
   - violates: an author reports only that its suite passes; the executor of a slice reports no such
     check; the request leaves out what the checks showed; the author's check stands in for an
     invariant's test seen failing.
