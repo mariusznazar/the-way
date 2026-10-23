@@ -38,7 +38,8 @@ not authorize running it.
   commits, the report's first line and its path, changed files with added and removed line counts;
   coverage of every task item, settlement row and carried projected entry, and source fidelity;
   on the planned route, also the plan review's evidence, and for each blocking finding the slice
-  it comes from, with that slice's class>
+  it comes from, with that slice's class, or none — a gap of the plan, or the plan's *Foundation
+  entries* with their writer's class>
 - Review rounds: <for each code review whose findings blocked — of the whole change, of the
   return step, of the reconciliation with the target branch, of a correction — its range and
   report, the blocking findings, the fix range and the review of that fix; any blocking finding

@@ -99,9 +99,9 @@ one part.
 - `task-cycle/` — takes one ready task to a request for human review on the-way's own methods: a
   spec where the task leaves a design choice open (`write-spec`), a plan of slices where the change
   needs dividing (`plan-task`), the change made by one author or slice by slice (`make-change`),
-  reviewed by an agent that did not make it — a slice on its own only where it touches a trust
-  boundary or holds an operation that cannot be undone, and the whole change always
-  (`review-change`) — the product's full tests and the return step. It keeps the cycle record on the
+  reviewed by an agent that did not make it (`review-change`) — the whole change always, a slice on
+  its own only where it touches a trust boundary or holds an operation that cannot be undone —, then
+  the product's full tests and the return step. It keeps the cycle record on the
   task branch, with the time, models and tokens of each stage counted from the agents' session
   transcripts.
 - `agent-instructions/`, with `AGENTS.md` and `CLAUDE.md` at the root and the skill entry points in

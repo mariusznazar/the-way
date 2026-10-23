@@ -114,11 +114,12 @@ Write the plan in this form; the script reads the slice headings and the fields 
   If the selected planning route yields only one useful
   slice, keep it as one; never add a slice for its own sake or divide inseparable work.
 - *Change* names every file the slice changes or creates. *Read* is the whole reading of the
-  slice's agent besides those files, since its handoff names what *Read* names (WAY-150):
+  slice's agent besides those files, since its handoff carries what *Read* names — the passages
+  copied word for word, the entries and files by their address (WAY-148, WAY-150):
   - the passages of the task, the spec and the plan the slice needs beyond its own section, each as
     `<path>:<first>-<last>` — a whole section, or the lines of the items it needs — followed,
-    outside the backticks, by the section's heading, so that it can be found again once the file
-    changes;
+    outside the backticks, by the section's heading written without backticks, so that it can be
+    found again once the file changes;
   - the foundation entries "Reading the foundation" selects for the parts the slice touches — their
     decisions and part-map entries, the invariants the slice reaches (WAY-62), the entries these
     link to as far as the slice needs and the glossary entries of its terms — and the entries the
@@ -126,8 +127,8 @@ Write the plan in this form; the script reads the slice headings and the fields 
     rationale and rejected options included, since a search hit or paragraph cannot stand for it,
     followed by its identifier outside the backticks, such as `foundations/decisions.md:120-148`
     (WAY-12). The identifier is the entry's address and the range only its size at the plan's base;
-    an entry the plan's *Foundation entries* writes is named by its identifier alone, without
-    backticks, since it does not exist yet;
+    an entry the plan's *Foundation entries* writes is named by its row there, without backticks,
+    since it does not exist yet and a new entry gets its identifier only when written;
   - the guideline files of the parts it touches, each whole, as `product-guidelines/reading.md`
     selects them (WAY-213);
   - a file of code or tests the slice needs, whole or as a range.

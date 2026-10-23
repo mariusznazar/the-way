@@ -115,7 +115,8 @@ the fix also gets the fix report.
 You decide what each agent reads, and its handoff names it (WAY-150, WAY-213): the foundation
 entries by identifier — those of the task's *Decisions in play*, and the decisions, invariants and
 linked entries of the parts the agent's work touches, selected by "Reading the foundation"; the
-guideline files of those parts, each whole; and the passages of the task, spec and plan it needs.
+guideline files of those parts, each whole; and the passages of the task, its sources, the spec
+and the plan it needs.
 The designer and the reviewer of the spec, the planner, the one author and the reviewer of the whole
 change read the whole frozen task, since each works on the whole. A slice's executor gets, copied
 into its handoff, its section of the plan and the passages of the task, spec and plan its *Read*
@@ -124,7 +125,9 @@ selection, which the planner proposes and you check and may add to in the plan's
 When you build a slice's handoff, name each foundation entry of its *Read* by its identifier with
 its range in the worktree as it stands then, since the foundation step and earlier slices may have
 moved it, and an entry the foundation step wrote by its identifier and its new range; find a passage
-of the plan again by its heading where the plan changed. Requirements and values stay in their own
+of the plan again by its heading where the plan changed, and a range of code or tests again where an
+earlier slice changed its file. Give the current ranges beside the copied section; where they differ
+from the plan's, the current ones hold. Requirements and values stay in their own
 files: copy a section of the plan, spec or task into the handoff word for word, never restated in
 other words, and name its file as its address (WAY-148). The reviewer of the whole change selects
 its own foundation and guidelines, by the parts of the change, and an agent writing a foundation
@@ -155,8 +158,8 @@ agent that returns `questions` gets your answers as step 6 answers the designer'
 source, otherwise the smallest reversible reading that fulfils the task, recorded as an autonomous
 choice — and is resumed, with no mechanical check and no review until it returns its work. `blocked`
 is for a missing fact or permission, and for a question the foundation step leaves to the human:
-supply the fact or permission where a source gives it and resume the agent; otherwise, after the one
-retry step 9 gives a slice's executor for a missing fact or permission, open the blocked draft
+supply the fact or permission where a source gives it and resume the agent; for a slice's executor
+that no source can help, step 9 gives one retry and then its stop; otherwise open the blocked draft
 request, holding the question under *Questions* or showing the missing fact or permission as step 13
 gives for an impossible task.
 
@@ -183,14 +186,14 @@ reviews, tests, return step and request.
    as an autonomous choice and resume the designer. Never widen the task. It returns `done` with
    the spec, before any plan or code.
 7. Have a fresh agent other than the designer review the spec with `write-spec` against the frozen
-   task and the foundation. On `FAIL` the designer revises the spec once and the reviewer reviews
-   the revision once. Settle a finding left after that as step 6 settles a question, and record the
-   settlement in `spec.md` under *Decisions*, where the planner and the author read it; a finding
-   that the spec contradicts a decision goes as the foundation step gives (WAY-30).
-   A spec may name the foundation entries the change will write; the foundation step or the return
-   step writes them. Then judge the route again from the task in the light of the spec, as step 4
-   does — one author where the change fits, planning where it needs division — and record the
-   reason; a spec alone requires no plan, and an earlier plan no longer binds.
+   task and the foundation entries its handoff names. On `FAIL` the designer revises the spec once
+   and the reviewer reviews the revision once. Settle a finding left after that as step 6 settles a
+   question, and record the settlement in `spec.md` under *Decisions*, where the planner and the
+   author read it; a finding that the spec contradicts a decision goes as the foundation step gives
+   (WAY-30). A spec may name the foundation entries the change will write; the foundation step or
+   the return step writes them. Then judge the route again from the task in the light of the spec,
+   as step 4 does — one author where the change fits, planning where it needs division — and record
+   the reason; a spec alone requires no plan, and an earlier plan no longer binds.
 8. Only on the planning route, dispatch a fresh planner with `plan-task`, the frozen task and any
    reviewed spec. It writes `plan.md` and its size report `plan-size.md` in the record's directory
    and returns before any slice is made; where it returns an open design choice instead, continue
@@ -280,10 +283,11 @@ it, as step 13 gives under *Questions*.
         An executor of the strongest class that fails, or a retry that fails, stops the cycle:
         record its last commit and reset the branch to the slice's base, run the gate on the
         change as step 10 gives, run `task-cycle/cycle_stages.py` and commit the record and its
-        removal as step 12 gives, and open the request as a draft marked `blocked` that names
-        both failures with the classes tried, each slice made so far that no review judged, and
-        the review of the whole change, the return step and the reconciliation with the target
-        branch as not run;
+        removal as step 12 gives, and open the request as a draft marked `blocked`, linking the
+        record by the SHA of the commit that adds it and giving what step 13 names for a blocked
+        request, that names both failures with the classes tried, each slice made so far that no
+        review judged, and the review of the whole change, the return step and the reconciliation
+        with the target branch as not run;
      5. where the slice's *Risk* names a trust boundary or an operation that cannot be undone,
         dispatch a fresh reviewer with `review-change` on that range and the slice's number, with
         the executor's selection; for slice 1 the handoff names the plan's *Foundation entries* as

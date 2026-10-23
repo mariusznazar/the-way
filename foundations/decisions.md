@@ -3789,13 +3789,13 @@ work's source names, the touched parts' entries of the map and the entries these
 the work needs; and reads each selected entry whole, reading more entries where relevance is
 uncertain and a whole file only where it is short. Outside the task cycle the agent doing the work
 selects its own reading, while in the task cycle the orchestrator selects for its own judgments and
-for each handoff, which names the foundation entries by identifier, the reviewer of the whole
-change and an agent writing a foundation entry through an element's skill select for their own
-work, and every other agent of the cycle reads what its handoff names and reaches for what is
-missing selectively — a search for an identifier or a word and a read of the passage found, never
-of a whole file of the foundation — naming each such reach in its report. The selection is neither
-recorded nor compared with every *Scope* of the log, and the search of the whole foundation (WAY-33)
-and the whole reading of templates, rules and examples keep their domain.
+for each handoff, which names the foundation entries by identifier; the reviewer of the whole change
+selects for its own review, and an agent writing a foundation entry through an element's skill for
+the entry it writes; and every other agent of the cycle reads what its handoff names and reaches for
+what is missing selectively — a search for an identifier or a word and a read of the passage found,
+never of a whole file of the foundation — naming each such reach in its report. The selection is
+neither recorded nor compared with every *Scope* of the log, and the search of the whole foundation
+(WAY-33) and the whole reading of templates, rules and examples keep their domain.
 
 - **Scope:** elements-common, decisions, invariants, glossary, part-map, environment-facts,
   project-level, task-cycle
@@ -5656,17 +5656,18 @@ way in to the task cycle — a session outside that cycle can miss them.
 ### WAY-213 — How do the agents of a task's cycle read the product's guidelines?
 
 In the task cycle the orchestrator selects by `product-guidelines/reading.md` the product's
-guidelines of the parts each agent's work touches — every file whose *Applies to* names such a
-part, a file of a kind of code only where its row's *When to read* in `guidelines/coding.md` also
-matches the work — and names those files in the handoff of every other agent that writes or reviews
-the spec, plans, makes the change or reviews a part of it, for a slice through the *Read* of its
-plan, which the planner proposes and the orchestrator checks; the agent reads each file named
-whole, never excerpts of it or a review checklist in its place, while the reviewer of the whole
-change selects the guidelines of its own review. The orchestrator reads the guidelines of the task's
-parts once and names in each handoff the files of the parts that agent's work touches, with no
-record of its reasons, no check of the selection by the agent that receives it and no step of its
-own revisiting the selection at each handoff; an agent whose work reaches a part the selection did
-not cover reads that part's guidelines itself and names the reach in its report.
+guidelines of the parts each agent's work touches — every file whose *Applies to* names such a part,
+a file of a kind of code only where its row's *When to read* in `guidelines/coding.md` also matches
+the work — and names those files in the handoff of every other agent that writes or reviews the
+spec, plans, makes the change or reviews a part of it, for a slice through the *Read* of its plan,
+which the planner proposes and the orchestrator checks; the agent reads each file named whole, never
+excerpts of it or a review checklist in its place, while the reviewer of the whole change selects
+the guidelines of its own review. The orchestrator reads the guidelines of the task's parts once,
+and those of a part the spec or plan adds when it adds it, and names in each handoff the files of
+the parts that agent's work touches, with no record of its reasons, no check of the selection by the
+agent that receives it and no step of its own revisiting the selection at each handoff; an agent
+whose work reaches a part the selection did not cover reads that part's guidelines itself and names
+the reach in its report.
 With the styleguide, the planner and the author working without a plan read the order of work the
 template gives, never as a rule — the environment and the library first, then the values in their
 source, then one screen, then its states — and follow it or explain departing from it.
@@ -5685,8 +5686,9 @@ source, then one screen, then its states — and follow it or explain departing 
   - violates: only the reviewer reads guidelines; a handoff carries excerpts of a guideline file,
     or a checklist replaces a whole source; a kind's reading condition is ignored; the orchestrator
     records the selection with its reasons, the receiving agent checks it, or each handoff re-runs
-    or re-validates it; an executor runs the reading for itself in place of its handoff, or reads a
-    further part's guidelines without naming the reach in its report; the order rejects a plan.
+    or re-validates it; an agent of the cycle other than the reviewer of the whole change runs the
+    reading for itself in place of its handoff, or reads a further part's guidelines without naming
+    the reach in its report; the order rejects a plan.
 - **Origin:** none
 
 *Rationale:* shared guidance reaches the agents designing and making a change before review can find
@@ -6052,10 +6054,10 @@ slice that carries settled matters into code; the orchestrator's class, for ordi
 that takes decisions of its own; or the strongest class available, for a change across many parts
 or one that needs design — each class other than the default with one sentence of its reason. An
 executor that returns `blocked` for a fact or permission no source supplies, reports a failing
-check of its slice, or fails the orchestrator's mechanical check — no commit in its range, or a
-repair it was sent back for left undone — gets one retry — a fresh executor one class higher, from
-the slice's base, given the failed executor's report and what failed — and an executor of the
-strongest class that fails, or a retry that fails, stops the cycle. The fix of a slice's findings
+check of its slice, or fails the orchestrator's mechanical check (no commit in its range, or a
+repair it was sent back for left undone) gets one retry: a fresh executor one class higher, from the
+slice's base, given the failed executor's report and what failed; and an executor of the strongest
+class that fails, or a retry that fails, stops the cycle. The fix of a slice's findings
 runs on the class of the executor whose work stands, of findings in several slices on the highest of
 their classes and of a finding of no slice on the orchestrator's, while the spec's designer and
 reviewer, the planner, the writer of the plan's foundation entries, the return step and every
@@ -6080,7 +6082,7 @@ reviewer work on no class cheaper than the orchestrator's.
     and the strongest class with its reason for a slice that joins several parts; an executor of
     the cheaper class whose check fails is replaced, from the slice's base, by one of the
     orchestrator's class given its report and the failure; the fix of a reviewed slice's finding
-    runs on the class the slice was made on; the review of the whole change runs on the
+    runs on the class of the executor whose work stands; the review of the whole change runs on the
     orchestrator's class or a stronger one;
   - violates: a plan names a model by its product name; a class other than the default stands
     without its reason; a failed executor is retried on the same class or a second time; an

@@ -6,7 +6,8 @@ the checkout or pinned the-way the calling workflow uses.
 
 Who selects: outside the task cycle, the agent doing the work selects the guidelines of the parts
 its work touches. In the task cycle, the orchestrator of `implement-task` reads by this procedure
-the guidelines of the task's parts once, and names in each other agent's handoff the files of the
+the guidelines of the task's parts once, and those of a part the spec or plan adds when it adds
+it, and names in each other agent's handoff the files of the
 parts that agent's work touches — for a slice, through the *Read* of its plan, which the planner
 proposes and the orchestrator checks; the reviewer of the whole change selects for its own review.
 Every other agent of the cycle reads the files its handoff names (WAY-213). A guideline file goes

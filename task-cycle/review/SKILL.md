@@ -17,10 +17,10 @@ worktree the session works in; in a product, it is the product's pinned `.the-wa
 
 ## 1. Read
 
-- The dispatch: what is reviewed — a slice by its number, the whole change, a fix, the return
-  step's commits or a later change — the base and head commits of the range, and the report path.
-  The return step's commits are reviewed as section 2 gives, against the task and the foundation
-  entries the return step writes or corrects.
+- The dispatch: what is reviewed — a slice by its number, the whole change, a fix, the return step's
+  commits, the reconciliation with the target branch or a later change — the base and head commits
+  of the range, and the report path. The return step's commits are reviewed as section 2 gives,
+  against the task and the foundation entries the return step writes or corrects.
 - For the review of the whole change: the frozen task document whole, the spec where the cycle
   wrote one and, on the planned route, the plan, each slice's range and whether it had a review of
   its own, the reports of the executors of the slices that had none with any mismatch the
@@ -130,7 +130,8 @@ out-of-scope finding of the slice reviews the dispatch lists as a finding of thi
 ## 6. Report
 
 Write the full report to the dispatch's report path. Its first line is `PASS <head sha>` or
-`FAIL <head sha>` and nothing else; `FAIL` means at least one blocking finding. Then:
+`FAIL <head sha>` and nothing else — or `questions` while the review waits for an answer (below);
+`FAIL` means at least one blocking finding. Then:
 
 - the findings by grade, each with its place in the code, reasoning and evidence, and in the
   review of the whole change of a plan, each blocking finding with the slice it comes from, or
