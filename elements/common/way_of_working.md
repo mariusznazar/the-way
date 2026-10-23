@@ -61,23 +61,38 @@ Use this method for the current foundation of the repository being worked on (WA
 selects what the work reads and is no search of the whole foundation, which step 2 makes once the
 entry is settled (WAY-33).
 
+Who selects (WAY-150): outside the task cycle — refining a task, defining, planning or leading a
+project — the agent doing the work selects for itself. In the task cycle, the orchestrator of
+`implement-task` selects by this method for its own judgments and for what each handoff names; the
+reviewer of the whole change selects for its own review; and an agent writing a foundation entry
+through an element's skill, in the cycle's foundation step or return step included, selects as the
+skill's step 1 gives. Every other agent of the cycle reads what its handoff names, as its method
+gives.
+
 1. Name the parts the work touches by the part map's rules for assigning files: the parts of the
    files the work changes or is to change, and, for a file collecting entries about several parts,
    the parts the entries it writes or changes name (WAY-44). Where the work names no file yet — an
    idea, a project's scope — name the parts whose responsibility it changes, and a new part as a
    prospective one. Where a part is uncertain, read each candidate.
-2. Read the decisions whose *Scope* names a touched part (WAY-21), and those the task's *Decisions
-   in play* or the work's source names. Read each whole, with its rationale and *Rejected*: a
-   search hit or a binding sentence locates an entry, never replaces it.
-3. Read the touched parts' entries of the part map, the invariants the work reaches (WAY-62), and
-   the entries these and the decisions of step 2 link to — *Relations*, *Based on*,
-   *Verification*, *Derives from*, *Rests on* — as far as the work needs them, each whole.
+2. Find the decisions whose *Scope* names a touched part (WAY-21) by a search of the decision log:
+   take each `- **Scope:**` line with the indented lines that continue it, and keep the entries
+   where the part's identifier stands as a whole item. *Scope* names parts by identifier alone, as
+   `elements/common/foundation_check.py` holds it to. Add those the task's *Decisions in play* or
+   the work's source names. Read each decision found whole, as the range of lines from its heading
+   to the next heading, with its rationale and *Rejected*: a search hit or a binding sentence
+   locates an entry, never replaces it. The whole log is not read.
+3. Read the touched parts' entries of the part map; the invariants the work reaches (WAY-62) —
+   those whose *Part* names a touched part or `every`, found by the same search of *Part*, and
+   those a test the work alters cites by its line `invariant: <identifier>`; and the entries these
+   and the decisions of step 2 link to — *Relations*, *Based on*, *Verification*, *Derives from*,
+   *Rests on* — as far as the work needs them, each whole.
 4. Read the glossary entries of the terms the work uses: of the product's glossary and, in a
    product other than the-way, of the-way's glossary at the pinned commit (WAY-226).
 
 The selection is not recorded, nor compared with every *Scope* of the log (WAY-150). Where
-relevance is uncertain, read more, up to a whole file where that is the smallest reliable way to
-settle it. The templates, rules and examples of step 1 are read whole whatever the selection.
+relevance is uncertain, read more entries; read a file whole only where it is short, such as the
+part map or the glossary. The templates, rules and examples of step 1 are read whole whatever the
+selection.
 
 ## 2. Search the foundation
 

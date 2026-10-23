@@ -3746,39 +3746,63 @@ compaction — it does not choose the evidence a ruling needs.
 
 ### WAY-150 — How do the-way skills choose which product foundation material to read?
 
-The-way skills read a product's foundation selectively: the agent names the parts its work touches
-from the files it changes through the part map's rules for assigning files, or, where the work names
-no file yet, from the responsibilities it changes, and reads whole the decisions whose *Scope* names
-a touched part, the decisions the task's *Decisions in play* or the work's source names, the touched
-parts' entries of the map, the invariants the work reaches and the entries these link to as far as
-the work needs, reading more where relevance is uncertain. The selection is neither recorded nor
-compared with every *Scope* of the log, and the search of the whole foundation (WAY-33) and the
-whole reading of templates, rules and examples keep their domain.
+The-way skills read a product's foundation selectively: whoever selects names the parts the work
+touches from the files it changes through the part map's rules for assigning files, or, where the
+work names no file yet, from the responsibilities it changes; finds by a touched part's identifier
+the decisions whose *Scope* names it and the invariants whose *Part* names it or `every`, and adds
+the invariants a test the work alters cites, the decisions the task's *Decisions in play* or the
+work's source names, the touched parts' entries of the map and the entries these link to as far as
+the work needs; and reads each selected entry whole, reading more entries where relevance is
+uncertain and a whole file only where it is short. Outside the task cycle the agent doing the work
+selects its own reading, while in the task cycle the orchestrator selects for its own judgments and
+for each handoff, which names the foundation entries by identifier, the reviewer of the whole
+change and an agent writing a foundation entry through an element's skill select for their own
+work, and every other agent of the cycle reads what its handoff names and reaches for what is
+missing selectively — a search for an identifier or a word and a read of the passage found, never
+of a whole file of the foundation — naming each such reach in its report. The selection is neither
+recorded nor compared with every *Scope* of the log, and the search of the whole foundation (WAY-33)
+and the whole reading of templates, rules and examples keep their domain.
 
 - **Scope:** elements-common, decisions, invariants, glossary, part-map, environment-facts,
   project-level, task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-21 · derives from WAY-33
+- **Relations:** derives from WAY-21 · derives from WAY-33 · derives from WAY-148
 - **Verification:** an agent compares the reading with the work and current foundation:
-  - complies: a change to a file of `gate` reads the decisions whose *Scope* names `gate`, those
-    the task names, the invariants naming `gate` or `every` and the entries they link to; a project
-    with no file yet names its parts from the responsibilities it changes; the search of the whole
-    foundation finds a conflict outside those parts and the reading widens;
+  - complies: a change to a file of `gate` reads the decisions whose *Scope* names `gate`, found by
+    searching for `gate`, those the task names, the invariants naming `gate` or `every` and the
+    entries they link to; a project with no file yet names its parts from the responsibilities it
+    changes; the search of the whole foundation finds a conflict outside those parts and the
+    reading widens; in a task cycle the executor of a slice reads the entries its handoff names,
+    searches for a decision it finds missing by its identifier and names that reach in its report,
+    while the reviewer of the whole change selects its own reading;
   - violates: only decisions already named by the task are read; a search hit replaces its whole
     entry; a template is reduced to selected excerpts; the work records its selection and compares
-    it with every *Scope* of the log.
+    it with every *Scope* of the log; the whole decision log is read to find the decisions of a few
+    parts; an invariant a test the change alters cites is left out because its *Part* names another
+    part; an executor of a slice or a reviewer of a slice selects its own foundation reading, or
+    reaches beyond its handoff without naming the reach in its report.
 - **Origin:** none
 
 *Rationale:* a growing foundation contains more material than each piece of work needs, while
 unconditional loading spends attention on unrelated rules. The parts a change's files belong to
 find the decisions that govern it (WAY-21), the task names those it settles, and links lead to the
 rest, so the governing material stays visible; what no link joins, the author's search of the
-whole foundation finds (WAY-33).
+whole foundation finds (WAY-33). In a task cycle the orchestrator reads the foundation of the
+task's parts to coordinate it anyway; selecting once for the handoffs spares each agent a selection
+of its own, which every agent of the cycle would otherwise pay for again. An agent writing a
+foundation entry searches the whole foundation for it anyway (WAY-33), so it keeps the selection
+its element's skill gives. A reach
+named in the report shows where the selection fell short, and the reviewer of the whole change,
+selecting for itself, finds a governing rule the orchestrator missed before the request.
 *Rejected:* unconditional whole-foundation loading — its context cost grows with unrelated work;
 selection only from known links or keywords — a governing decision can remain unseen; a fixed
 reading limit — a difficult case loses needed context; a separate maintained index — a second
 account can drift without resolving semantic relevance; a record of the selection compared with
-every *Scope* of the log — it costs every piece of work and records reading, not understanding.
+every *Scope* of the log — it costs every piece of work and records reading, not understanding;
+each agent of a task cycle selecting for itself — every agent pays for the same reading again;
+the orchestrator's selection with no reach left to the agent — a missing entry is guessed at
+instead of read; the reviewer of the whole change reading only the orchestrator's selection — a
+gap in the selection would reach the request unchecked.
 
 ### WAY-151 — How much of large project definitions and existing plans does plan-project read?
 
