@@ -50,11 +50,12 @@ The process is designed to give a product:
   what is not known stands as unknown or goes to a human as a question;
 - promises to someone outside the product — an API, a file format, a command — named in the part
   map with who relies on them, and named in the request of a change that alters them;
-- an orchestrator that decides what each agent reads — the foundation entries by identifier, the
-  guidelines and the passages of the task, spec and plan it needs — and agents that read only that,
-  search selectively for what is missing and name it in their report; a slice's executor works from
-  its handoff alone, on the class of model its plan sets, by default cheaper than the
-  orchestrator's; and a task that names the decisions concerning it.
+- in the task cycle, an orchestrator that decides what each agent reads — the foundation entries by
+  identifier, the guidelines and the passages of the task, spec and plan it needs — and agents that
+  read only that, search selectively for what is missing and name it in their report; a slice's
+  executor works from its handoff without reading the whole task, on the class of model its plan
+  sets, by default cheaper than the orchestrator's; and a task that names the decisions concerning
+  it.
 
 The foundation holds rules and a description of the product's state that the return step compares
 with the code; a detail that changes with every change of the code lives in the code or in a test.
@@ -99,9 +100,9 @@ one part.
 - `task-cycle/` — takes one ready task to a request for human review on the-way's own methods: a
   spec where the task leaves a design choice open (`write-spec`), a plan of slices where the change
   needs dividing (`plan-task`), the change made by one author or slice by slice (`make-change`),
-  reviewed by an agent that did not make it — a slice on its own only where it touches a trust
-  boundary or holds an operation that cannot be undone, and the whole change always
-  (`review-change`) — the product's full tests and the return step. It keeps the cycle record on the
+  reviewed by an agent that did not make it (`review-change`) — the whole change always, a slice on
+  its own only where it touches a trust boundary or holds an operation that cannot be undone —, then
+  the product's full tests and the return step. It keeps the cycle record on the
   task branch, with the time, models and tokens of each stage counted from the agents' session
   transcripts.
 - `agent-instructions/`, with `AGENTS.md` and `CLAUDE.md` at the root and the skill entry points in
