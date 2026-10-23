@@ -16,18 +16,33 @@ worktree the session works in; in a product, it is the product's pinned `.the-wa
 
 ## 1. Read
 
+Read what your dispatch names; the orchestrator has selected it for your work (WAY-150).
+
 - The dispatch: what you make — the change, a slice by its number, a fix or a correction — the
   worktree, and the report path.
-- The frozen task document in full, and the spec where the cycle wrote one. For a slice, the plan:
-  your slice, its *Read* list and the plan's *Foundation entries*. The task binds where the plan
-  says less.
+- As the one author of a change without a plan, the frozen task document whole, and the spec where
+  the cycle wrote one: you make the whole change. For a slice, your section of the plan and the
+  passages of the task, spec and plan its *Read* names, which the dispatch carries word for word,
+  each with its file as its address; you open neither the whole plan nor the whole task. The task
+  binds where the plan says less: the passages of the task your dispatch gives bind where your
+  section says less.
+- The foundation entries the dispatch names by identifier, each whole, and the guideline files it
+  names, each whole (WAY-213). Where you write a foundation entry through an element's skill, that
+  skill selects the reading the entry needs.
 - For a fix, the findings file — the blocking findings of the review — and the code it names. The
   review's Minor and out-of-scope findings are not yours to fix (WAY-161).
 - For a correction, the human's remarks on the request; each remark binds.
-- The foundation entries and guidelines of the parts your change touches, selected by "Reading the
-  foundation" in `elements/common/way_of_working.md` and `product-guidelines/reading.md`. Read
-  each selected entry and guideline file whole.
+- For the retry of a slice, the failed executor's report and what failed; the branch is back at the
+  slice's base, so its commits are not yours to continue.
 - Every file you change, whole, before you change it.
+
+Where you need something the dispatch does not name — a decision, an invariant, a passage of the
+task, the guidelines of a part it did not cover — reach for it selectively: search for its
+identifier or a word and read the passage found, a foundation entry whole, never a whole file of
+the foundation, and a guideline file whole (WAY-213). Name each such reach in your report — what,
+where and why — so that the orchestrator sees the gap in its selection. Where what is missing
+still changes what the work means after that reach, return with the status `questions` instead of
+guessing (section 6).
 
 When a value in the task, spec or plan does not pass your own reckoning — an example number, a
 boundary, a command — say so in your report instead of bending the code to it. When reading stops
@@ -65,9 +80,9 @@ before you commit.
 
 ## 3. Check your own work
 
-- Name the requirement of the task — for a slice, of your slice read against the task — that your
-  work most likely does not meet, write the check that would catch it, run it and report what it
-  showed (WAY-164).
+- Name the requirement of the task — for a slice, of your slice read against the passages of the
+  task your dispatch gives — that your work most likely does not meet, write the check that would
+  catch it, run it and report what it showed (WAY-164).
 - Changing a user interface, check the states of the affected components that the applicable
   styleguide requires, and inspect a screenshot of the running product by the route its foundation
   settles; where it settles none, check the states in code and mark the screenshot unchecked with
@@ -89,14 +104,15 @@ before you commit.
 Return a report that holds no code and no diff, with the status `returned`, and leave the branch
 for the cycle to reset, when:
 
-- the change needs a choice the task, the spec and the foundation do not settle — the choice,
+- the change needs a choice the task, the spec and the foundation do not settle — for a slice, one
+  you searched the task and spec for, as section 1 gives, and found unsettled — the choice,
   where it shows, the ways open and what you found (WAY-135); a choice of how to make what they
   settle is yours to make and to name in the report;
 - the change or your slice is more than you can hold — where the size lies (WAY-136).
 
 Where the work cannot go on for a missing fact or permission, it is not returned: commit what you
 have made, set the status `blocked` and name the smallest fact or permission missing. The committed
-work stays for the cycle.
+work stays for the cycle to resume or, for a slice's retry, to reset.
 
 ## 6. Commit and report
 
@@ -110,6 +126,9 @@ Write the full report to the dispatch's report path:
 - each check you ran as its command and exit code, the failing run of each test written first and
   of each invariant's test included; each check you did not run, with the reason;
 - the own-work check of section 3: the requirement, the check and what it showed;
+- each reach beyond the dispatch (section 1): what, where and why;
+- with the status `questions`, every question you can already see, each with the answer you
+  recommend;
 - every choice you made with the way rejected and its cost if wrong, every adaptation of section 4,
   and a changed invariant test, named;
 - for a fix, each blocking finding as fixed — how, with the check that shows it — or contested,
@@ -117,8 +136,10 @@ Write the full report to the dispatch's report path:
 - problems as observed, with their evidence; a cause only where you verified it, and how; a guessed
   cause marked as a guess.
 
-Return to the orchestrator the status, the commits, a one-line check result and the report path.
-Where the work cannot proceed without an answer, do not guess: commit what you have, return every
-question you can already see in one batch with the status `questions`, each with the answer you
-recommend, and wait to be resumed with the answers. The status `blocked` is for a missing fact or
-permission (section 5) and for a question the cycle's foundation step leaves to the human.
+Return to the orchestrator only the status, the commits, a one-line check result naming what
+failed or did not run, and the report path (WAY-148). Where the work cannot proceed without an
+answer, do not guess: commit what you have, write every question you can already see into the
+report in one batch, each with the answer you recommend, return with the status `questions`, and
+wait to be resumed with the answers. The questions stand in the report, so they survive an
+interrupted session. The status `blocked` is for a missing fact or permission (section 5) and for a
+question the cycle's foundation step leaves to the human.

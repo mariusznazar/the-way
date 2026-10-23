@@ -37,7 +37,8 @@ not authorize running it.
 - Whole-change review: <reviewer other than the author, by `review-change`; range by base and head
   commits, the report's first line and its path, changed files with added and removed line counts;
   coverage of every task item, settlement row and carried projected entry, and source fidelity;
-  on the planned route, also the plan review's evidence>
+  on the planned route, also the plan review's evidence, and for each blocking finding the slice
+  it comes from, with that slice's class>
 - Review rounds: <for each code review whose findings blocked — of the whole change, of the
   return step, of the reconciliation with the target branch, of a correction — its range and
   report, the blocking findings, the fix range and the review of that fix; any blocking finding
@@ -52,15 +53,18 @@ attempt.
 
 ## Slices
 
-| Slice | Base | Executor and model | Head | Mechanical check | Review, fix and review of the fix |
-|---|---|---|---|---|---|
+| Slice | Base | Class, executor and model | Risk | Head | Mechanical check and retry | Review, fix and review of the fix |
+|---|---|---|---|---|---|---|
 
 Only on the planned route, one row per slice, made in the plan's order. Where the plan lists
 foundation entries, a row `Foundation entries` comes first, with its agent and head; it shares
-slice 1's base, written before that agent is dispatched, so slice 1's review covers the entries.
-Write each base before the slice's executor is dispatched. The mechanical check is the
-orchestrator's after the executor returns: what it compared and any mismatch it passed to the
-reviewer.
+slice 1's base, written before that agent is dispatched, so whichever review judges slice 1 covers
+the entries. Write each base before the slice's executor is dispatched. The class is the one the
+plan's *Model* sets, and *Risk* the plan's mark, which decides whether the slice gets a review of
+its own. The mechanical check is the orchestrator's after the executor returns: what it compared and
+any mismatch it passed to the review that judges the slice; a retry one class higher names the
+failed executor's last commit, the failure and the retry's class (WAY-229). A slice without a review
+of its own reads `judged by the whole-change review` in the last column.
 
 ## Events
 

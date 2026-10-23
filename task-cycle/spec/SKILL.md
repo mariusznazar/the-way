@@ -17,14 +17,20 @@ worktree the session works in; in a product, it is the product's pinned `.the-wa
 
 - The dispatch: whether you write or review, the open choice the cycle found, the spec path —
   normally `.runs/task-cycles/<task-slug>/spec.md` — and the report path.
-- The frozen task document in full, and the sources it names.
+- The frozen task document whole: the spec settles a choice of the whole change.
+- What the dispatch names, as the orchestrator selected it (WAY-150): of the task's sources, the
+  passages it carries or names; of the foundation, the entries by identifier, each whole; and the
+  guideline files, each whole (WAY-213).
 - After a discarded attempt, the report of the agent that met the choice. Its code is gone; the
   report says where the choice showed and what that agent found.
-- The foundation entries and guidelines of the parts the choice touches, selected by "Reading the
-  foundation" in `elements/common/way_of_working.md` and `product-guidelines/reading.md`. Read
-  each selected entry and guideline file whole.
 - The code the choice depends on, as far as needed to see the ways open — read to design, not to
   write.
+
+Where you need something the dispatch does not name — a passage of a source, a decision, an
+invariant, the guidelines of a part it did not cover — reach for it selectively: search for its
+identifier or a word and read the passage found, a foundation entry whole, never a whole file of
+the foundation, and a guideline file whole (WAY-213). Name each such reach in your report — what,
+where and why.
 
 ## 2. Settle the design
 
@@ -32,11 +38,11 @@ worktree the session works in; in a product, it is the product's pinned `.the-wa
   the design is a question.
 - Send your questions to the orchestrator in batches, each question with the answer you recommend
   and what a wrong answer would cost. A batch holds every question you can already see; hold none
-  back for later. Return with each batch, with the status `questions`, and wait to be resumed with
-  the answers; when an answer opens a new question, return with it in the next batch and name the
-  answer that opened it. Write the spec once no question remains. Where no source answers, the
-  orchestrator picks the smallest reversible reading that fulfils the task; never ask the human
-  and never widen the task.
+  back for later. Write each batch into your report, return with the status `questions` and the
+  report's path, and wait to be resumed with the answers (WAY-148); when an answer opens a new
+  question, return with it in the next batch and name the answer that opened it. Write the spec once
+  no question remains. Where no source answers, the orchestrator picks the smallest reversible
+  reading that fulfils the task; never ask the human and never widen the task.
 - Weigh two or three ways with their costs and recommend one. Leave out every feature the task does
   not need.
 - Divide what you design into units that each do one thing, behind an interface that says what the
@@ -82,8 +88,8 @@ Before you return, read the spec again for four things and fix what you find:
 ## 4. Review a spec
 
 As the reviewer, read the spec as the agent who has to plan and build from it without talking to
-its author, against the frozen task and the foundation. Report only what would make the build go
-wrong:
+its author, against the frozen task and the foundation entries the dispatch names. Report only
+what would make the build go wrong:
 
 - a requirement of the task the spec drops or changes;
 - behaviour the spec invents that the task does not ask for;
@@ -99,7 +105,8 @@ broke besides.
 ## 5. Return
 
 The designer writes the spec to its path and the full report to the dispatch's report path: the
-questions sent and their answers, the ways weighed and why the rejected ones lost, and the result
-of the four checks, and returns with the status `done`. The reviewer writes its report to its own
-path and returns its first line. Each gives the orchestrator its paths. The boundary is the
+questions sent and their answers, the ways weighed and why the rejected ones lost, the result of
+the four checks, and each reach beyond the dispatch, and returns with the status `done`. The
+reviewer writes its report, each reach included, to its own path and returns its first line. Each
+gives the orchestrator its paths, and nothing more (WAY-148). The boundary is the
 reviewed spec: return before any plan, slice or code.
