@@ -40,9 +40,9 @@ where and why.
   and what a wrong answer would cost. A batch holds every question you can already see; hold none
   back for later. Write each batch into your report, return with the status `questions` and the
   report's path, and wait to be resumed with the answers (WAY-148); when an answer opens a new
-  question, return with it in the next batch and name the answer that opened it. Write the spec once no question remains. Where no source answers, the
-  orchestrator picks the smallest reversible reading that fulfils the task; never ask the human
-  and never widen the task.
+  question, return with it in the next batch and name the answer that opened it. Write the spec once
+  no question remains. Where no source answers, the orchestrator picks the smallest reversible
+  reading that fulfils the task; never ask the human and never widen the task.
 - Weigh two or three ways with their costs and recommend one. Leave out every feature the task does
   not need.
 - Divide what you design into units that each do one thing, behind an interface that says what the

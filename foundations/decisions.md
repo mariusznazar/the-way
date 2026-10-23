@@ -3240,16 +3240,15 @@ large returns a report without code, its attempt is discarded with the foundatio
 and a planner divides the change. Every other change gets a plan written with the-way's skill
 `plan-task`, which divides it into slices and holds no code; the slices are made one after another
 in the plan's order, each by an agent of its own, and a slice that proves too large for it is
-discarded with its code and goes back to the planner to be split. A one-author change is reviewed
-by an agent that did not make it; of a plan's slices, only one that touches a trust boundary or
-holds an operation that cannot be undone, as the plan marks it, gets a review of its own by such an
-agent, and every other slice goes on after the orchestrator's mechanical check and its own checks;
-a change of more than one slice then gets one review of the whole change, which judges every slice
-that had no review of its own and names, for each blocking finding, the slice it comes from or
-that it comes from none, while
-the review of a one-author change or of a plan's only slice is the review of the whole change; and
-that review also checks coverage of the task, every row of its *Settlements to record* and every
-projected entry it carries.
+discarded with its code and goes back to the planner to be split. A one-author change is reviewed by
+an agent that did not make it; of a plan's slices, only one that touches a trust boundary or holds
+an operation that cannot be undone, as the plan marks it, gets a review of its own by such an agent,
+and every other slice goes on after the orchestrator's mechanical check and its own checks; a change
+of more than one slice then gets one review of the whole change, which judges every slice that had
+no review of its own and names, for each blocking finding, the slice it comes from or that it comes
+from none, while the review of a one-author change or of a plan's only slice is the review of the
+whole change; and that review also checks coverage of the task, every row of its *Settlements to
+record* and every projected entry it carries.
 
 - **Scope:** task-cycle
 - **Based on:**
@@ -3263,12 +3262,12 @@ projected entry it carries.
   - complies: the orchestrator selects one author from a settled task, including its foundation
     entries, without first writing a plan; the author does its return step and another agent's
     whole-change review checks task, settlement and projected-entry coverage; a reviewed spec is
-    followed by the same size judgment; an oversized author's attempt and its foundation entries
-    are discarded before planning; a change of several slices has them made one after another, a
-    slice the plan marks as touching a trust boundary or holding an operation that cannot be undone
-    reviewed on its own and the others checked mechanically, and then one whole-change review that judges those others and names the slice
-    of each blocking finding, while a plan's only slice needs no duplicate review; an outgrown
-    slice is discarded and split;
+    followed by the same size judgment; an oversized author's attempt and its foundation entries are
+    discarded before planning; a change of several slices has them made one after another, a slice
+    the plan marks as touching a trust boundary or holding an operation that cannot be undone
+    reviewed on its own and the others checked mechanically, and then one whole-change review that
+    judges those others and names the slice of each blocking finding, while a plan's only slice
+    needs no duplicate review; an outgrown slice is discarded and split;
   - violates: a small task needs a plan merely because it writes foundation entries or follows a
     spec; the orchestrator writes a plan to decide whether to omit it; an author reviews its own
     work, or its whole-change review omits the coverage checks because there was no plan; an
@@ -3819,16 +3818,16 @@ and the whole reading of templates, rules and examples keep their domain.
 - **Origin:** none
 
 *Rationale:* a growing foundation contains more material than each piece of work needs, while
-unconditional loading spends attention on unrelated rules. The parts a change's files belong to
-find the decisions that govern it (WAY-21), the task names those it settles, and links lead to the
-rest, so the governing material stays visible; what no link joins, the author's search of the
-whole foundation finds (WAY-33). In a task cycle the orchestrator reads the foundation of the
-task's parts to coordinate it anyway; selecting once for the handoffs spares each agent a selection
-of its own, which every agent of the cycle would otherwise pay for again. An agent writing a
-foundation entry searches the whole foundation for it anyway (WAY-33), so it keeps the selection
-its element's skill gives. A reach
-named in the report shows where the selection fell short, and the reviewer of the whole change,
-selecting for itself, finds a governing rule the orchestrator missed before the request.
+unconditional loading spends attention on unrelated rules. The parts a change's files belong to find
+the decisions that govern it (WAY-21), the task names those it settles, and links lead to the rest,
+so the governing material stays visible; what no link joins, the author's search of the whole
+foundation finds (WAY-33). In a task cycle the orchestrator reads the foundation of the task's parts
+to coordinate it anyway; selecting once for the handoffs spares each agent a selection of its own,
+which every agent of the cycle would otherwise pay for again. An agent writing a foundation entry
+searches the whole foundation for it anyway (WAY-33), so it keeps the selection its element's skill
+gives. A reach named in the report shows where the selection fell short, and the reviewer of the
+whole change, selecting for itself, finds a governing rule the orchestrator missed before the
+request.
 *Rejected:* unconditional whole-foundation loading — its context cost grows with unrelated work;
 selection only from known links or keywords — a governing decision can remain unseen; a fixed
 reading limit — a difficult case loses needed context; a separate maintained index — a second
@@ -4038,10 +4037,11 @@ edit; bypassing the gate for a small change — size does not establish that its
 
 The independent code reviewer reads the full diff of the range it reviews — a one-author change, a
 slice with a review of its own, or the whole change, every slice of a plan included, judging each
-slice that had no review of its own as its only review — while the task-cycle orchestrator uses its changed-file list with added and removed line
-counts and the first line of the reviewer's report, `PASS` or `FAIL` with the head commit, for
-routine progression. A question, finding or disputed or incomplete evidence
-still calls for the orchestrator's relevant source and report reading under WAY-148.
+slice that had no review of its own as its only review — while the task-cycle orchestrator uses its
+changed-file list with added and removed line counts and the first line of the reviewer's report,
+`PASS` or `FAIL` with the head commit, for routine progression. A question, finding or disputed or
+incomplete evidence still calls for the orchestrator's relevant source and report reading under
+WAY-148.
 
 - **Scope:** task-cycle
 - **Based on:** none
@@ -5689,15 +5689,15 @@ source, then one screen, then its states — and follow it or explain departing 
     further part's guidelines without naming the reach in its report; the order rejects a plan.
 - **Origin:** none
 
-*Rationale:* shared guidance reaches the agents designing and making a change before review can
-find its absence. Reading by the parts the work touches bounds context without cutting the source
-into instructions detached from their meaning; guidelines are short and hold together only as a
-whole, so a file goes to an agent whole. The orchestrator reads the guidelines of the task's parts
-to select them, as it selects the foundation (WAY-150), which spares each agent a selection of its
-own; the price is that the orchestrator holds the guidelines of every part of the task through the
-cycle, which their shortness keeps small. An agent that reaches further reads for itself, and the
-reviewer of the whole change, selecting for itself, finds a file the selection missed. An order of steps ends with the piece of work it
-orders, so it binds no later work and stays an example (WAY-36).
+*Rationale:* shared guidance reaches the agents designing and making a change before review can find
+its absence. Reading by the parts the work touches bounds context without cutting the source into
+instructions detached from their meaning; guidelines are short and hold together only as a whole, so
+a file goes to an agent whole. The orchestrator reads the guidelines of the task's parts to select
+them, as it selects the foundation (WAY-150), which spares each agent a selection of its own; the
+price is that the orchestrator holds the guidelines of every part of the task through the cycle,
+which their shortness keeps small. An agent that reaches further reads for itself, and the reviewer
+of the whole change, selecting for itself, finds a file the selection missed. An order of steps ends
+with the piece of work it orders, so it binds no later work and stays an example (WAY-36).
 *Rejected:* guidance given only to the reviewer — mistakes are found after they are built;
 a review checklist — examples can become obligations and lose their context; excerpts of a
 guideline file — a rule loses the context that gives it its meaning; discovery left only to

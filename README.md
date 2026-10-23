@@ -101,8 +101,9 @@ one part.
   needs dividing (`plan-task`), the change made by one author or slice by slice (`make-change`),
   reviewed by an agent that did not make it — a slice on its own only where it touches a trust
   boundary or holds an operation that cannot be undone, and the whole change always
-  (`review-change`) — the product's full tests and the return step. It keeps the cycle record on the task branch, with the time, models and tokens
-  of each stage counted from the agents' session transcripts.
+  (`review-change`) — the product's full tests and the return step. It keeps the cycle record on the
+  task branch, with the time, models and tokens of each stage counted from the agents' session
+  transcripts.
 - `agent-instructions/`, with `AGENTS.md` and `CLAUDE.md` at the root and the skill entry points in
   `.claude/skills/` and `.agents/skills/` — instructions for agents working on the-way itself, and
   the script that generates those entry points.
