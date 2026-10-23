@@ -6105,6 +6105,49 @@ same class — the same failure repeats at the same cost; a cheaper class for th
 a review — their errors reach every later step; model names in the process — they age with every
 release.
 
+### WAY-230 — How does a project plan order two tasks that realize the same projected entry?
+
+Two tasks of a project plan that realize the same projected entry go one after the other: one
+depends on the other, directly or through other tasks, unless an item of the plan's change log lets
+the two go side by side on that entry and gives the reason, and the breakdown shows each such item
+to the human when it hands the plan over. The script that checks the plan reports each pair of
+tasks realizing the same entry that neither depends on the other and no such item covers, while
+neither task is done, delivered by another task or dropped.
+
+- **Scope:** project-level
+- **Based on:** none
+- **Relations:** derives from WAY-144 · derives from WAY-146
+- **Verification:** invariants: project-plan-check. For the reasons the change log gives and what
+  reaches the human, an agent compares the plan, or the work on it, with the decision:
+  - complies: two tasks both realize the projected decision on what a saved game state holds, and
+    the plan makes one of them depend on the other; two tasks both realize a projected invariant
+    on who reads a player's saves, an item of the change log lets them go side by side because one
+    makes it true for the server's requests and the other for exported files, which share no code,
+    and the human sees that item when the plan is handed over;
+  - violates: a plan is handed over while the script reports a pair; an item lets two tasks go
+    side by side with no reason, or with "neither depends on the other" as its reason; an item
+    letting two tasks go side by side reaches the human only in the plan's file.
+- **Origin:** none
+
+*Rationale:* two tasks that make the same entry true change the same rules of the product; when
+their cycles run side by side and merge in the wrong order, the later merge can bring back
+behaviour the earlier one replaced, and nothing shows it as a conflict. A dependency is the plan's
+own way of saying "one after the other" (WAY-144), so the rule needs no new field, only fuller
+dependencies. Some pairs touch different parts of one entry and would wait for nothing, so the plan
+can let them go together, but only with a reason the human sees, since going together departs from
+the rule. An item tied to one entry lets the pair be reported again once the two tasks share
+another. A task already done, delivered or dropped leaves no cycle to collide with: the other
+task's cycle starts on code that holds its result. A shared entry is the overlap a plan can see
+before any task is refined; a collision in code outside the entries still meets the end of the
+cycle, where the target branch is pulled in and the product's tests run.
+*Rejected:* a field naming the tasks a task can go beside — WAY-144 rejects it; the plan's critique
+judging which tasks collide — a script decides it (WAY-146); a dependency forced with no way out —
+two tasks making different parts of one entry true would wait for nothing; an item naming the pair
+alone — a second entry the two tasks come to share later would pass unreported; a pair reported as
+a remark that does not fail the check — the plan would reach leading with the pair unsettled, and a
+remark repeated at every run stops being read; judging collisions by the files two tasks change — a
+plan names no files before its tasks are refined.
+
 ## Withdrawn identifiers
 
 | Identifier | Why | Successors |

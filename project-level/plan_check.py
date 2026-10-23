@@ -27,6 +27,11 @@ reports:
 - dependencies — no task depends on a task the plan does not hold, or on itself, directly or
   through other tasks;
 - preparatory — every preparatory task has a task depending on it;
+- order — two tasks that realize the same projected entry, neither of them done, delivered by
+  another task or dropped, go one after the other: one depends on the other, directly or through
+  other tasks, or an item of the change log `- YYYY-MM-DD — side by side: tasks <n>, <m> on
+  "<entry>" — <why>` lets the two go side by side on that entry (WAY-230). Each other pair is
+  reported at the entry's row, once for each entry the two share;
 - questions — every open question of the definition stands once, word for word, with the place
   the definition gives it, followed by a task of the plan or a non-empty answer; every item is in
   one of these forms, and an item naming a place of the definition belongs to a question it holds.
@@ -38,11 +43,13 @@ being the line of the plan (0 where no line applies), sorted by line, and a last
 call is wrong or the plan cannot be read. A definition that cannot be read is a finding of form.
 The check judges nothing the plan's critique judges: whether a goal is checkable in the running
 product, where a technical element enters, whether a moved question has its reason in the change
-log, or whether an answer settles its question.
+log, or whether an answer settles its question; nor whether a reason for two tasks to go side by
+side holds, which the human sees when the plan is handed over (WAY-230).
 """
 
 import argparse
 import datetime
+import itertools
 import os
 import re
 import sys
@@ -76,6 +83,9 @@ NAME = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
 DELIVERED_IN = re.compile(r"^done — goal delivered in task (?P<task>[1-9][0-9]*)$")
 STATES = ("to refine", "waiting for human", "ready for cycle", "in cycle", "done",
           "dropped — approved by human")
+FINISHED = ("done", "dropped — approved by human")  # and a goal delivered in another task
+SIDE_BY_SIDE = re.compile(r'^[0-9]{4}-[0-9]{2}-[0-9]{2} — side by side: tasks '
+                          r'(?P<first>[1-9][0-9]*), (?P<second>[1-9][0-9]*) on "(?P<rest>.*)$')
 NO_NUMBER = "—"
 PROJECTED_ENTRY = re.compile(r"^#### (.+?)\s*$")
 TOP_LEVEL_ITEM = re.compile(r"^([-*+]|[0-9]+[.)])[ \t]+\S")
@@ -554,6 +564,56 @@ def check_preparatory(tasks):
     return findings
 
 
+def depended_on(start, graph):
+    """Every task `start` depends on, directly or through other tasks."""
+    reached, stack = set(), [start]
+    while stack:
+        for following in graph.get(stack.pop(), ()):
+            if following not in reached:
+                reached.add(following)
+                stack.append(following)
+    return reached
+
+
+def check_order(plan):
+    """Report each pair of unfinished tasks realizing one projected entry that neither depends on
+    the other and no item of the change log lets go side by side on that entry (WAY-230)."""
+    tasks = plan.tasks
+    if not plan.numbers_known or any(task.depends is None for task in tasks):
+        return []  # a number or a Depends on off its form leaves unknown who depends on what
+    graph = {task.number: set(task.depends) for task in tasks}
+    below = {number: depended_on(number, graph) for number in graph}
+    open_tasks = {task.number for task in tasks
+                  if task.state not in FINISHED and task.delivered_in is None}
+    allowed = []  # (pair, the item's text after `on "`): a heading may itself hold `" — `
+    if CHANGE_LOG in plan.sections:
+        for _, text in items(plan.sections[CHANGE_LOG]):
+            if text is not None and (match := SIDE_BY_SIDE.match(text)):
+                pair = frozenset((int(match.group("first")), int(match.group("second"))))
+                allowed.append((pair, match.group("rest")))
+
+    def lets(pair, heading):
+        prefix = heading + '" — '
+        return any(other == pair and rest.startswith(prefix) and rest[len(prefix):].strip()
+                   for other, rest in allowed)
+
+    findings, reported = [], set()
+    for entry in plan.entries:
+        realizing = sorted(set(entry.realized or []) & open_tasks)
+        for first, second in itertools.combinations(realizing, 2):
+            key = (frozenset((first, second)), entry.entry)
+            if first in below[second] or second in below[first] or key in reported \
+                    or lets(*key):
+                continue
+            reported.add(key)
+            findings.append(Finding("order", entry.line, "tasks %d and %d both realize `%s`, and "
+                                    "neither depends on the other — make one depend on the other, "
+                                    "or let them go side by side with a change log item "
+                                    "`- YYYY-MM-DD — side by side: tasks %d, %d on \"%s\" — <why>`"
+                                    % (first, second, entry.entry, first, second, entry.entry)))
+    return findings
+
+
 def check_questions(section, definition, tasks, numbers_known):
     findings = []
     held = {task.number for task in tasks} if tasks is not None and numbers_known else None
@@ -621,6 +681,8 @@ def check(plan_text, definition_text, definition_error=None):
             findings += check_scope(plan.tasks, definition, once[TASKS].heading_line)
         findings += check_dependencies(plan.tasks, plan.numbers_known)
         findings += check_preparatory(plan.tasks)
+        if plan.entries is not None:
+            findings += check_order(plan)
     if QUESTIONS in once and content(once[QUESTIONS]):
         findings += check_questions(once[QUESTIONS], definition, plan.tasks, plan.numbers_known)
     return sorted(findings, key=lambda f: f.line)

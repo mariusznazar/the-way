@@ -224,14 +224,17 @@ definition holds an In scope that is neither `none` nor a list.
 The project plan check rejects a plan in which a projected entry of its definition has no task
 realizing it, not exactly one task writing it into the foundation, or more than one row; an item of
 the definition's In scope has no task; a task depends on itself, directly or through other tasks; a
-preparatory task has no task depending on it; an open question of the definition does not stand in
-the plan exactly once, word for word with the place its definition gives it, with a task of the plan
-or an answer; or a cell or an item names a task, an entry, an item or a question that the plan or
-its definition does not hold.
+preparatory task has no task depending on it; two tasks, neither done, delivered by another task
+or dropped, realize the same projected entry while neither depends on the other, directly or
+through other tasks, and no item of the change log lets the two go side by side on that entry with
+a reason; an open question of the definition does not stand in the plan exactly once, word for
+word with the place its definition gives it, with a task of the plan or an answer; or a cell or an
+item of the open questions names a task, an entry, an item or a question that the plan or its
+definition does not hold.
 
 - **Method:** test
 - **Rests on:** none
-- **Derives from:** WAY-143 · WAY-145 · WAY-146
+- **Derives from:** WAY-143 · WAY-145 · WAY-146 · WAY-230
 - **Part:** project-level
 - **Violated:** no
 

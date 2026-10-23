@@ -56,7 +56,9 @@ read all turns and the requested change, and follow this workflow with these rou
   change log records, and a finding that the definition's fingerprint no longer matches means the
   definition changed after its gate: it goes through `define-project` step 7 again, and the plan is
   checked against it from step 1. If the definition has already passed that new gate, verify its
-  approval and proceed with that recheck rather than reopen the same gate.
+  approval and proceed with that recheck rather than reopen the same gate. A finding that two
+  tasks realize one entry with no order between them is settled as step 3 gives it, each item
+  letting them go side by side shown to the human as step 7 gives it (WAY-230).
 - Otherwise begin with step 1.
 
 ## 1. Read
@@ -135,6 +137,12 @@ reduced copy. Selection is no reading cap; read a small file whole where useful.
   the one of them that writes it into the foundation (WAY-142, WAY-126).
 - An entry no task of the cut makes true shows a task missing or an entry the project does not
   need; either is a question for the human in step 5, never an entry left without a row.
+- Two tasks that realize the same entry go one after the other: make one depend on the other,
+  unless one already does, directly or through other tasks. Where the two make parts of the entry
+  true that do not touch, let them go side by side instead with a change log item
+  `- YYYY-MM-DD — side by side: tasks <n>, <m> on "<entry>" — <why>`, the reason saying why their
+  work does not collide; "neither depends on the other" is no reason. A pair with a task done,
+  delivered or dropped needs neither (WAY-230).
 
 ## 4. Place the open questions
 
@@ -182,9 +190,10 @@ reduced copy. Selection is no reading cap; read a small file whole where useful.
 ## 7. Hand over
 
 - Show the human the whole table of tasks, the questions answered or placed in this breakdown, each
-  move from the definition's placement with its reason, and each remark of the critique you
-  rejected with why. The human corrects the plan; apply each correction, with its line in the change
-  log, and run `plan_check.py` again.
+  move from the definition's placement with its reason, each change log item letting two tasks go
+  side by side with its reason (WAY-230), and each remark of the critique you rejected with why.
+  The human corrects the plan; apply each correction, with its line in the change log, and run
+  `plan_check.py` again.
 - On the human's word, set the status to `handed over YYYY-MM-DD` and add the line to the change
   log. Point to `lead-project` as the next step: it proposes human-confirmed rounds, delegates
   member-task refinement through `refine-task` and maintains evidenced plan states (WAY-152).

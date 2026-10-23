@@ -123,6 +123,10 @@ One row for each projected entry of the definition, under its heading as the def
   entry no code makes true (WAY-126). Each realizing task carries the entry as projected in its
   document's *Decisions in play*.
 - A move that changes which task writes an entry is the human's to decide (WAY-145).
+- Two tasks that realize the same entry go one after the other: one depends on the other, directly
+  or through other tasks, unless a change log item lets the two go side by side on that entry and
+  gives the reason. A pair with a task done, delivered by another task or dropped needs neither
+  (WAY-230).
 
 ## Open questions
 
@@ -152,14 +156,27 @@ One item for each change of the plan, oldest first: `- YYYY-MM-DD — <what chan
 first item records that the plan was written and the fingerprint of the definition it was written
 from (WAY-142).
 
+Two tasks that realize the same projected entry go side by side, with no dependency between them,
+only where an item in this form lets them, one item for each entry they share, the entry's heading
+word for word as the definition gives it, a `|` written as itself, and the reason in the
+definition's language (WAY-230):
+
+```markdown
+- YYYY-MM-DD — side by side: tasks <n>, <m> on "<entry>" — <why>
+```
+
+The breakdown shows each such item to the human when it hands the plan over (WAY-230).
+
 ## What the check decides, and what the critique judges
 
 `plan_check.py` rejects a plan whose form it cannot read — the header, the sections, the columns,
 the states, the names — and a plan in which a projected entry has no task realizing it or not
 exactly one of them writing it, an item of In scope has no task, a task depends on a task the plan
-does not hold or on itself through other tasks, a preparatory task has no task depending on it, or
-an open question of the definition does not stand word for word with a task or an answer
-(WAY-146; invariants `project-plan-form` and `project-plan-check`).
+does not hold or on itself through other tasks, a preparatory task has no task depending on it, two
+tasks neither done, delivered nor dropped realize the same projected entry while neither depends on
+the other and no change log item lets them go side by side on it (WAY-230), or an open question of
+the definition does not stand word for word with a task or an answer (WAY-146; invariants
+`project-plan-form` and `project-plan-check`).
 
 The plan's independent critique judges what no script tells apart: whether each task that is not
 preparatory ends with something checkable in the running product, whether each technical element
