@@ -741,7 +741,9 @@ class Dependencies(unittest.TestCase):
     def test_tasks_with_no_dependency_pass(self):
         tasks = changed(changed(TASKS, 1, "Preparatory", "no"), 3, "Depends on", "—")
         tasks = changed(tasks, 2, "Depends on", "—")
-        self.assertEqual(conditions(plan(tasks=tasks)), [])
+        # No two of these tasks realize one entry, which would take a dependency (WAY-230).
+        entries = changed(ENTRIES, 2, "Realized by", "3", ENTRY_COLUMNS)
+        self.assertEqual(conditions(plan(tasks=tasks, entries=entries)), [])
 
 
 class Preparatory(unittest.TestCase):
@@ -758,6 +760,85 @@ class Preparatory(unittest.TestCase):
     def test_a_preparatory_task_one_task_depends_on_passes(self):
         tasks = changed(TASKS, 3, "Depends on", "2")
         self.assertEqual(conditions(plan(tasks=tasks)), [])
+
+
+class Order(unittest.TestCase):
+    # Task 3 depends on task 1 alone, so tasks 2 and 3, which both realize the invariant, can go
+    # side by side.
+    TASKS = changed(TASKS, 3, "Depends on", "1")
+    LOG = "- 2026-10-05 — written from the definition at fingerprint %s" % FINGERPRINT
+
+    def side_by_side(self, item):
+        return plan(tasks=self.TASKS, bodies={"Change log": self.LOG + "\n" + item})
+
+    def test_two_tasks_realizing_one_entry_with_no_dependency_are_reported_at_its_row(self):
+        # invariant: project-plan-check
+        text = plan(tasks=self.TASKS)
+        row = line_of(text, "| %s |" % INVARIANT_HEADING)
+        found = findings(text)
+        self.assertEqual([(f.condition, f.line) for f in found], [("order", row)])
+        self.assertIn('side by side: tasks 2, 3 on "%s"' % INVARIANT_HEADING, found[0].message)
+
+    def test_two_tasks_realizing_one_entry_through_another_task_pass(self):
+        # 3 depends on 2, and 2 on 1: tasks 1 and 3 go one after the other.
+        entries = changed(ENTRIES, 1, "Realized by", "1, 3", ENTRY_COLUMNS)
+        self.assertEqual(conditions(plan(entries=entries)), [])
+
+    def test_a_pair_the_change_log_lets_go_side_by_side_on_the_entry_passes(self):
+        for pair in ("2, 3", "3, 2"):
+            with self.subTest(pair=pair):
+                item = ('- 2026-10-06 — side by side: tasks %s on "%s" — zadanie 2 czyta tylko '
+                        'własne zapisy, zadanie 3 tylko zapisy kont' % (pair, INVARIANT_HEADING))
+                self.assertEqual(conditions(self.side_by_side(item)), [])
+
+    def test_an_item_letting_the_pair_go_side_by_side_on_another_entry_is_reported(self):
+        # invariant: project-plan-check
+        item = ('- 2026-10-06 — side by side: tasks 2, 3 on "%s" — inne zdania wpisu'
+                % TERM_HEADING)
+        self.assertEqual(conditions(self.side_by_side(item)), ["order"])
+
+    def test_an_item_naming_the_entry_with_one_word_changed_is_reported(self):
+        # invariant: project-plan-check
+        item = ('- 2026-10-06 — side by side: tasks 2, 3 on "player-saves-isolation" — inne '
+                'zdania wpisu')
+        self.assertEqual(conditions(self.side_by_side(item)), ["order"])
+
+    def test_an_item_giving_no_reason_is_reported(self):
+        # invariant: project-plan-check
+        for item in ('- 2026-10-06 — side by side: tasks 2, 3 on "%s"' % INVARIANT_HEADING,
+                     '- 2026-10-06 — side by side: tasks 2, 3 on "%s" — ' % INVARIANT_HEADING):
+            with self.subTest(item=item):
+                self.assertEqual(conditions(self.side_by_side(item)), ["order"])
+
+    def test_an_item_letting_another_pair_go_side_by_side_is_reported(self):
+        # invariant: project-plan-check
+        item = ('- 2026-10-06 — side by side: tasks 1, 3 on "%s" — inne zdania wpisu'
+                % INVARIANT_HEADING)
+        self.assertEqual(conditions(self.side_by_side(item)), ["order"])
+
+    def test_a_pair_with_a_finished_task_passes(self):
+        for state in ("done", "done — goal delivered in task 1", "dropped — approved by human"):
+            with self.subTest(state=state):
+                tasks = changed(self.TASKS, 2, "State", state)
+                self.assertEqual(conditions(plan(tasks=tasks)), [])
+
+    def test_a_pair_of_tasks_in_cycle_is_reported(self):
+        # invariant: project-plan-check
+        tasks = changed(changed(self.TASKS, 2, "State", "in cycle"), 3, "State", "in cycle")
+        self.assertEqual(conditions(plan(tasks=tasks)), ["order"])
+
+    def test_a_pair_sharing_two_entries_is_reported_at_each(self):
+        # invariant: project-plan-check
+        entries = changed(ENTRIES, 1, "Realized by", "2, 3", ENTRY_COLUMNS)
+        text = plan(tasks=self.TASKS, entries=entries)
+        rows = [line_of(text, "| %s |" % heading)
+                for heading in (DECISION_HEADING, INVARIANT_HEADING)]
+        self.assertEqual([(f.condition, f.line) for f in findings(text)],
+                         [("order", row) for row in rows])
+
+    def test_a_dependency_off_its_form_leaves_the_order_unchecked(self):
+        tasks = changed(self.TASKS, 3, "Depends on", "one")
+        self.assertEqual(set(conditions(plan(tasks=tasks))), {"form"})
 
 
 class Questions(unittest.TestCase):
