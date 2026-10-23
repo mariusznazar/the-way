@@ -6119,10 +6119,11 @@ neither task is done, delivered by another task or dropped.
 - **Relations:** derives from WAY-144 · derives from WAY-146
 - **Verification:** invariants: project-plan-check. For the reasons the change log gives and what
   reaches the human, an agent compares the plan, or the work on it, with the decision:
-  - complies: tasks 4 and 5 both realize "How does a character act by its program?", and the plan
-    makes 5 depend on 4; tasks 8 and 9 both realize "When does the player learn what the world
-    holds?", an item of the change log lets them go side by side because each makes a different
-    sentence of it true, and the human sees that item when the plan is handed over;
+  - complies: two tasks both realize the projected decision on what a saved game state holds, and
+    the plan makes one of them depend on the other; two tasks both realize a projected invariant
+    on who reads a player's saves, an item of the change log lets them go side by side because one
+    makes it true for the server's requests and the other for exported files, which share no code,
+    and the human sees that item when the plan is handed over;
   - violates: a plan is handed over while the script reports a pair; an item lets two tasks go
     side by side with no reason, or with "neither depends on the other" as its reason; an item
     letting two tasks go side by side reaches the human only in the plan's file.
