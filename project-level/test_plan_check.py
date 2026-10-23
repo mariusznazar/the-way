@@ -836,6 +836,26 @@ class Order(unittest.TestCase):
         self.assertEqual([(f.condition, f.line) for f in findings(text)],
                          [("order", row) for row in rows])
 
+    def test_a_heading_holding_a_quote_a_dash_and_a_bar_is_matched_whole(self):
+        heading = 'mapa "A" — B | C'
+        bodies = {"Projected foundation changes": PROJECTED.replace(
+            "#### mapa\n", "#### %s\n" % heading)}
+        text = definition(bodies=bodies)
+        self.assertIn("#### %s\n" % heading, text)
+        entries = changed(changed(ENTRIES, 3, "Entry", heading.replace("|", "\\|"),
+                                  ENTRY_COLUMNS), 3, "Realized by", "2, 3", ENTRY_COLUMNS)
+        entries = changed(entries, 2, "Realized by", "3", ENTRY_COLUMNS)
+        log = self.LOG.replace(FINGERPRINT, fingerprint_of(bodies))
+        for item, expected in (
+                ('- 2026-10-06 — side by side: tasks 2, 3 on "%s" — inne zdania' % heading, []),
+                ('- 2026-10-06 — side by side: tasks 2, 3 on "mapa "A" — B" — inne zdania',
+                 ["order"])):
+            with self.subTest(item=item):
+                found = conditions(plan(tasks=self.TASKS, entries=entries,
+                                        fingerprint=fingerprint_of(bodies),
+                                        bodies={"Change log": log + "\n" + item}), text)
+                self.assertEqual(found, expected)
+
     def test_a_dependency_off_its_form_leaves_the_order_unchecked(self):
         tasks = changed(self.TASKS, 3, "Depends on", "one")
         self.assertEqual(set(conditions(plan(tasks=tasks))), {"form"})

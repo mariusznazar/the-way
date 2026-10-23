@@ -56,7 +56,9 @@ read all turns and the requested change, and follow this workflow with these rou
   change log records, and a finding that the definition's fingerprint no longer matches means the
   definition changed after its gate: it goes through `define-project` step 7 again, and the plan is
   checked against it from step 1. If the definition has already passed that new gate, verify its
-  approval and proceed with that recheck rather than reopen the same gate.
+  approval and proceed with that recheck rather than reopen the same gate. A finding that two
+  tasks realize one entry with no order between them is settled as step 3 gives it, each item
+  letting them go side by side shown to the human as step 7 gives it (WAY-230).
 - Otherwise begin with step 1.
 
 ## 1. Read

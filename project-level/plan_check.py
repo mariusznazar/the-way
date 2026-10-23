@@ -85,8 +85,7 @@ STATES = ("to refine", "waiting for human", "ready for cycle", "in cycle", "done
           "dropped — approved by human")
 FINISHED = ("done", "dropped — approved by human")  # and a goal delivered in another task
 SIDE_BY_SIDE = re.compile(r'^[0-9]{4}-[0-9]{2}-[0-9]{2} — side by side: tasks '
-                          r'(?P<first>[1-9][0-9]*), (?P<second>[1-9][0-9]*) '
-                          r'on "(?P<entry>.+?)" — \S')
+                          r'(?P<first>[1-9][0-9]*), (?P<second>[1-9][0-9]*) on "(?P<rest>.*)$')
 NO_NUMBER = "—"
 PROJECTED_ENTRY = re.compile(r"^#### (.+?)\s*$")
 TOP_LEVEL_ITEM = re.compile(r"^([-*+]|[0-9]+[.)])[ \t]+\S")
@@ -586,19 +585,25 @@ def check_order(plan):
     below = {number: depended_on(number, graph) for number in graph}
     open_tasks = {task.number for task in tasks
                   if task.state not in FINISHED and task.delivered_in is None}
-    allowed = set()
+    allowed = []  # (pair, the item's text after `on "`): a heading may itself hold `" — `
     if CHANGE_LOG in plan.sections:
         for _, text in items(plan.sections[CHANGE_LOG]):
             if text is not None and (match := SIDE_BY_SIDE.match(text)):
                 pair = frozenset((int(match.group("first")), int(match.group("second"))))
-                allowed.add((pair, match.group("entry")))
+                allowed.append((pair, match.group("rest")))
+
+    def lets(pair, heading):
+        prefix = heading + '" — '
+        return any(other == pair and rest.startswith(prefix) and rest[len(prefix):].strip()
+                   for other, rest in allowed)
+
     findings, reported = [], set()
     for entry in plan.entries:
         realizing = sorted(set(entry.realized or []) & open_tasks)
         for first, second in itertools.combinations(realizing, 2):
             key = (frozenset((first, second)), entry.entry)
-            if first in below[second] or second in below[first] or key in allowed \
-                    or key in reported:
+            if first in below[second] or second in below[first] or key in reported \
+                    or lets(*key):
                 continue
             reported.add(key)
             findings.append(Finding("order", entry.line, "tasks %d and %d both realize `%s`, and "

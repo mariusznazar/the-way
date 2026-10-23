@@ -158,7 +158,8 @@ from (WAY-142).
 
 Two tasks that realize the same projected entry go side by side, with no dependency between them,
 only where an item in this form lets them, one item for each entry they share, the entry's heading
-word for word as its row gives it and the reason in the definition's language (WAY-230):
+word for word as the definition gives it, a `|` written as itself, and the reason in the
+definition's language (WAY-230):
 
 ```markdown
 - YYYY-MM-DD — side by side: tasks <n>, <m> on "<entry>" — <why>

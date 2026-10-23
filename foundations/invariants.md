@@ -229,7 +229,8 @@ or dropped, realize the same projected entry while neither depends on the other,
 through other tasks, and no item of the change log lets the two go side by side on that entry with
 a reason; an open question of the definition does not stand in the plan exactly once, word for
 word with the place its definition gives it, with a task of the plan or an answer; or a cell or an
-item names a task, an entry, an item or a question that the plan or its definition does not hold.
+item of the open questions names a task, an entry, an item or a question that the plan or its
+definition does not hold.
 
 - **Method:** test
 - **Rests on:** none
