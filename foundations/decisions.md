@@ -4036,10 +4036,11 @@ edit; bypassing the gate for a small change — size does not establish that its
 
 ### WAY-158 — Who reads the full diff of a task-cycle change or slice?
 
-The independent code reviewer reads the full diff of a one-author change or planned slice, while
-the task-cycle orchestrator uses its changed-file list with added and removed line counts and the
-first line of the reviewer's report, `PASS` or `FAIL` with the head commit, for routine
-progression. A question, finding or disputed or incomplete evidence
+The independent code reviewer reads the full diff of the range it reviews — a one-author change, a
+slice with a review of its own, or the whole change, every slice of a plan included, judging each
+slice that had no review of its own as its only review — while the task-cycle orchestrator uses its changed-file list with added and removed line
+counts and the first line of the reviewer's report, `PASS` or `FAIL` with the head commit, for
+routine progression. A question, finding or disputed or incomplete evidence
 still calls for the orchestrator's relevant source and report reading under WAY-148.
 
 - **Scope:** task-cycle
@@ -4047,9 +4048,12 @@ still calls for the orchestrator's relevant source and report reading under WAY-
 - **Relations:** derives from WAY-136 · derives from WAY-148
 - **Verification:** an agent compares the review range and coordination record with the change:
   - complies: the independent reviewer reads the entire committed range and returns `PASS` or
-    `FAIL`, while the orchestrator uses that line and the range's file and line-count summary;
+    `FAIL`, while the orchestrator uses that line and the range's file and line-count summary; the
+    reviewer of the whole change of a plan reads the diff of every slice and judges each that had
+    no review of its own;
   - violates: the reviewer sees only a summary, or the orchestrator reads the full diff again
-    for routine progression; an unresolved finding is settled without reading its evidence.
+    for routine progression; an unresolved finding is settled without reading its evidence; a
+    slice without a review of its own is passed over by the review of the whole change.
 - **Origin:** none
 
 *Rationale:* the independent reviewer already reads the change for correctness, so repeating that

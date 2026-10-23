@@ -6,10 +6,11 @@ description: Use to review the code of one change in a the-way task cycle as an 
 # Review a change
 
 Reviews one range of commits of a task's change for the cycle `implement-task`, which dispatches
-every code review: of a planned slice, of the whole change, of the fix of a review's findings, of
-the commits of the return step, and of each later change to the open request. The reviewer did
-not make the change. The cycle decides what happens after the review; this skill holds only how
-the review is made and reported.
+every code review: of a planned slice that touches a trust boundary or holds an operation that
+cannot be undone, of the whole change, of the fix of a review's findings, of the commits of the
+return step, of the reconciliation with the target branch, and of each later change to the open
+request. The reviewer did not make the change. The cycle decides what happens after the review;
+this skill holds only how the review is made and reported.
 
 This skill lives in `task-cycle/review/` of the-way. In the-way itself, the-way is the checkout or
 worktree the session works in; in a product, it is the product's pinned `.the-way`.
@@ -20,22 +21,38 @@ worktree the session works in; in a product, it is the product's pinned `.the-wa
   step's commits or a later change — the base and head commits of the range, and the report path.
   The return step's commits are reviewed as section 2 gives, against the task and the foundation
   entries the return step writes or corrects.
-- The frozen task document in full — or, where the dispatch states the requirement in its place,
-  that statement — and the spec where the cycle wrote one. For a slice, the plan and that slice;
-  the slice is judged against the task, not the plan alone.
+- For the review of the whole change: the frozen task document whole, the spec where the cycle
+  wrote one and, on the planned route, the plan, each slice's range and whether it had a review of
+  its own, the reports of the executors of the slices that had none with any mismatch the
+  orchestrator's mechanical check passed on, the report of the agent that wrote the plan's
+  *Foundation entries* where slice 1 had no review of its own, and the Minor and out-of-scope
+  findings of the slice reviews the dispatch lists. You alone among the reviewers select your own
+  foundation and guidelines: the entries of the parts the change touches by "Reading the
+  foundation" in `elements/common/way_of_working.md`, and the guidelines of those parts by
+  `product-guidelines/reading.md`, each entry and guideline file whole (WAY-150, WAY-213).
+- For any other review — of a slice, a fix, the return step's commits, the reconciliation with the
+  target branch or a correction — what the dispatch names, as the orchestrator selected it
+  (WAY-150): the passages of the task, spec and plan it carries word for word, each with its file
+  as its address, the foundation entries by identifier, each whole, and
+  the guideline files, each whole (WAY-213). A slice's reviewer gets the selection its executor
+  got and judges the slice against the passages of the task the dispatch gives, not the plan
+  alone.
 - The author's report. It is a set of claims to verify, not evidence: a rationale in it — kept
   simple on purpose, left for later — never lowers a finding's grade.
 - For the review of a fix, the findings file — the blocking findings of the review it answers —
   and the fix report. For the review of a correction made for the human's remarks on the request,
   those remarks and the correction report.
-- For the review of the whole change, the Minor and out-of-scope findings of the slice reviews the
-  dispatch lists.
-- The foundation entries and guidelines of the parts the change touches, selected by "Reading the
-  foundation" in `elements/common/way_of_working.md` and `product-guidelines/reading.md`. Read
-  each selected entry and guideline file whole.
 - The diff of the range, computed yourself: `git diff <base>..<head>` and `git log <base>..<head>`.
   Never `HEAD~1`, which drops all but the last commit. Confirm that `git rev-parse HEAD` is the
-  head you were given; on a mismatch, ask the orchestrator which range to review before you go on.
+  head you were given; on a mismatch, ask the orchestrator which range to review, as a question of
+  section 6, before you go on.
+
+Beyond what the dispatch names — and, in the review of the whole change, beyond what you select —
+where you need something more — a decision, an invariant, a passage of the
+task, the guidelines of a part it did not cover — reach for it selectively: search for its
+identifier or a word and read the passage found, a foundation entry whole, never a whole file of
+the foundation, and a guideline file whole (WAY-150, WAY-213). Name each such reach in your report
+— what, where and why.
 
 A dispatch that calls a finding wrong, Minor or outside the scope does not bind you: grade and
 scope are yours.
@@ -103,21 +120,30 @@ each whether the correction makes it, then review the correction's diff as secti
 Besides section 2, check the change against the whole task: every required outcome and item of
 *To do*, and every row of *Settlements to record* and projected entry the task carries, met by the
 commits; fidelity to the task's sources, with nothing the change takes from them altered or
-invented. Grade each Minor and out-of-scope finding of the slice reviews the dispatch lists as a
-finding of this review.
+invented. Judge every slice that had no review of its own as section 2 judges a slice, its
+executor's own-work check included (WAY-164); this review is the only one it gets (WAY-136). In
+the review of the whole change of a plan, name for each blocking finding the slice it comes from,
+by the slice's number and the commit; or say that it spans slices and name them, or that it comes
+from none — a gap of the plan, or the plan's *Foundation entries*. Grade each Minor and
+out-of-scope finding of the slice reviews the dispatch lists as a finding of this review.
 
 ## 6. Report
 
 Write the full report to the dispatch's report path. Its first line is `PASS <head sha>` or
 `FAIL <head sha>` and nothing else; `FAIL` means at least one blocking finding. Then:
 
-- the findings by grade, each with its place in the code, reasoning and evidence;
+- the findings by grade, each with its place in the code, reasoning and evidence, and in the
+  review of the whole change of a plan, each blocking finding with the slice it comes from, or
+  none;
 - for the review of a fix, each finding of the findings file as fixed or remains, and kept or
   withdrawn where contested; for a correction, each remark as made or not;
 - **Declined to judge**;
 - each check you ran, as its command and exit code or, for a manual check, its method and what it
-  showed; each check you could not run, with the reason.
+  showed; each check you could not run, with the reason;
+- each reach beyond the dispatch (section 1): what, where and why.
 
-Return to the orchestrator the first line, the counts of blocking, Minor and out-of-scope
-findings, and the report path. Send a question back instead of guessing where the review cannot
-proceed without an answer.
+Return to the orchestrator only the first line, the counts of blocking, Minor and out-of-scope
+findings, and the report path (WAY-148). Where the review cannot proceed without an answer, do not
+guess: write a report whose first line is `questions`, with each question and the answer you
+recommend, return that line and the report path, and wait to be resumed; the report gets its
+`PASS` or `FAIL` first line when the review is finished.
