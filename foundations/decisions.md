@@ -5613,12 +5613,18 @@ way in to the task cycle — a session outside that cycle can miss them.
 
 ### WAY-213 — How do the agents of a task's cycle read the product's guidelines?
 
-Each agent of the task cycle that writes or reviews the spec, plans, makes or reviews the change
-reads by `product-guidelines/reading.md` the product's guidelines of the parts its own work
-touches: every file whose *Applies to* names such a part, a file of a kind of code only where its
-row's *When to read* in `guidelines/coding.md` also matches the work, each read whole and never
-replaced with a review checklist. No one selects the guidelines for another agent; an agent whose
-work reaches a further part reads that part's guidelines.
+In the task cycle the orchestrator selects by `product-guidelines/reading.md` the product's
+guidelines of the parts each agent's work touches — every file whose *Applies to* names such a
+part, a file of a kind of code only where its row's *When to read* in `guidelines/coding.md` also
+matches the work — and names those files in the handoff of every other agent that writes or reviews
+the spec, plans, makes the change or reviews a part of it, for a slice through the *Read* of its
+plan, which the planner proposes and the orchestrator checks; the agent reads each file named
+whole, never excerpts of it or a review checklist in its place, while the reviewer of the whole
+change selects the guidelines of its own review. The orchestrator reads the guidelines of the task's
+parts once and names in each handoff the files of the parts that agent's work touches, with no
+record of its reasons, no check of the selection by the agent that receives it and no step of its
+own revisiting the selection at each handoff; an agent whose work reaches a part the selection did
+not cover reads that part's guidelines itself and names the reach in its report.
 With the styleguide, the planner and the author working without a plan read the order of work the
 template gives, never as a rule — the environment and the library first, then the values in their
 source, then one screen, then its states — and follow it or explain departing from it.
@@ -5628,27 +5634,37 @@ source, then one screen, then its states — and follow it or explain departing 
 - **Relations:** derives from WAY-167 · derives from WAY-171 · derives from
   WAY-150 · derives from WAY-36
 - **Verification:** an agent compares each agent's reading and work with the decision:
-  - complies: the author of a change touching screens and endpoints reads the styleguide, the
-    general coding guidelines and the matching kind guidelines itself; a reviewer whose review
-    reaches a part the author did not touch reads that part's guidelines; an author without a plan
-    reads the order as an example;
-  - violates: only the reviewer reads guidelines; a checklist replaces a whole source; a kind's
-    reading condition is ignored; the orchestrator selects guidelines for the agents and records
-    the selection with its reasons; the order rejects a plan.
+  - complies: the handoff of the author of a change touching screens and endpoints names the
+    styleguide, the general coding guidelines and the matching kind guidelines, and the author
+    reads each whole; an executor whose slice reaches a part its handoff did not cover reads that
+    part's guidelines and names the reach in its report; the reviewer of the whole change selects
+    the guidelines of the parts the change touches itself; an author without a plan reads the
+    order as an example;
+  - violates: only the reviewer reads guidelines; a handoff carries excerpts of a guideline file,
+    or a checklist replaces a whole source; a kind's reading condition is ignored; the orchestrator
+    records the selection with its reasons, the receiving agent checks it, or each handoff re-runs
+    or re-validates it; an executor runs the reading for itself in place of its handoff, or reads a
+    further part's guidelines without naming the reach in its report; the order rejects a plan.
 - **Origin:** none
 
 *Rationale:* shared guidance reaches the agents designing and making a change before review can
 find its absence. Reading by the parts the work touches bounds context without cutting the source
-into instructions detached from their meaning, and each agent reading for its own work keeps the
-reading where the work is, as the reading of the foundation does (WAY-150). An order of steps ends
-with the piece of work it orders, so it binds no later work and stays an example (WAY-36).
+into instructions detached from their meaning; guidelines are short and hold together only as a
+whole, so a file goes to an agent whole. The orchestrator reads the guidelines of the task's parts
+to select them, as it selects the foundation (WAY-150), which spares each agent a selection of its
+own; the price is that the orchestrator holds the guidelines of every part of the task through the
+cycle, which their shortness keeps small. An agent that reaches further reads for itself, and the
+reviewer of the whole change, selecting for itself, finds a file the selection missed. An order of steps ends with the piece of work it
+orders, so it binds no later work and stays an example (WAY-36).
 *Rejected:* guidance given only to the reviewer — mistakes are found after they are built;
-a review checklist — examples can become obligations and lose their context; discovery left only
-to instruction pointers — with no shared procedure, a stage can miss a file the same parts lead
-another stage to; a selection the orchestrator records with its reasons, each recipient checks
-and every handoff refreshes — it costs every dispatch a record and a check, while each agent
-reading by the parts its own work touches already reaches what such a record would hand it; the
-order of a plan as a binding rule — a rule of a plan, which a commit cannot make false.
+a review checklist — examples can become obligations and lose their context; excerpts of a
+guideline file — a rule loses the context that gives it its meaning; discovery left only to
+instruction pointers — with no shared procedure, a stage can miss a file the same parts lead
+another stage to; each agent of the cycle selecting for itself — every agent pays for the same
+selection again; a selection the orchestrator records with its reasons, each recipient checks and
+every handoff refreshes — it costs every dispatch a record and a check without widening or
+correcting the selection; the order of a plan as a binding rule — a rule of a plan, which a commit
+cannot make false.
 
 
 ### WAY-214 — How does task refinement find missing product guidelines?
