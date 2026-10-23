@@ -3240,14 +3240,23 @@ large returns a report without code, its attempt is discarded with the foundatio
 and a planner divides the change. Every other change gets a plan written with the-way's skill
 `plan-task`, which divides it into slices and holds no code; the slices are made one after another
 in the plan's order, each by an agent of its own, and a slice that proves too large for it is
-discarded with its code and goes back to the planner to be split. A one-author change and every
-slice are reviewed by an agent that did not make them, and a change of more than one slice then gets
-one review of the whole change, while the review of a one-author change or of a plan's only slice is
-the review of the whole change; that review also checks coverage of the task, every row of its
-*Settlements to record* and every projected entry it carries.
+discarded with its code and goes back to the planner to be split. A one-author change is reviewed
+by an agent that did not make it; of a plan's slices, only one that touches a trust boundary or
+holds an operation that cannot be undone, as the plan marks it, gets a review of its own by such an
+agent, and every other slice goes on after the orchestrator's mechanical check and its own checks;
+a change of more than one slice then gets one review of the whole change, which judges every slice
+that had no review of its own and names, for each blocking finding, the slice it comes from or
+that it comes from none, while
+the review of a one-author change or of a plan's only slice is the review of the whole change; and
+that review also checks coverage of the task, every row of its *Settlements to record* and every
+projected entry it carries.
 
 - **Scope:** task-cycle
-- **Based on:** none
+- **Based on:**
+  https://raw.githubusercontent.com/open-mercato/skills/e320bd5e3f0761a6d7249085c42c77a4b37d480d/skills/om-auto-create-pr-loop/references/step-review.md
+  § "Cost" — "`per-step` multiplies review cost by the Step count — reserve it for high-risk work
+  where an early defect propagating into later Steps costs more than the extra reviews."; read
+  2026-10-23
 - **Relations:** derives from WAY-13 · derives from WAY-69 · derives from
   WAY-126 · derives from WAY-134
 - **Verification:** an agent compares the cycle and any plan with the decision:
@@ -3255,14 +3264,18 @@ the review of the whole change; that review also checks coverage of the task, ev
     entries, without first writing a plan; the author does its return step and another agent's
     whole-change review checks task, settlement and projected-entry coverage; a reviewed spec is
     followed by the same size judgment; an oversized author's attempt and its foundation entries
-    are discarded before planning; a change of several slices has them made one after another,
-    each reviewed, and then one whole-change review, while a plan's only slice needs no duplicate
-    review; an outgrown slice is discarded and split;
+    are discarded before planning; a change of several slices has them made one after another, a
+    slice the plan marks as touching a trust boundary or holding an operation that cannot be undone
+    reviewed on its own and the others checked mechanically, and then one whole-change review that judges those others and names the slice
+    of each blocking finding, while a plan's only slice needs no duplicate review; an outgrown
+    slice is discarded and split;
   - violates: a small task needs a plan merely because it writes foundation entries or follows a
     spec; the orchestrator writes a plan to decide whether to omit it; an author reviews its own
     work, or its whole-change review omits the coverage checks because there was no plan; an
     oversized author's entries survive its discarded attempt; a plan holds code; outgrown slice
-    code is kept; two slices are made at once.
+    code is kept; two slices are made at once; a slice holding an operation that cannot be undone
+    goes without a review of its own; a blocking finding of the whole-change review leaves open
+    whether it comes from a slice.
 - **Origin:** none
 
 *Rationale:* a plan earns its cost by dividing a change into work an agent can hold and a reviewer
@@ -3271,7 +3284,12 @@ without adding a check of the finished change. The risk is that the author fits 
 its code; the review by an agent that made none of it keeps that choice open to challenge. An
 incorrect size judgment costs an abandoned attempt, and discarding its entries as well as its code
 keeps the later division from inheriting a failed shape. Slices made one after another each start
-from the work before them, in one worktree, with no shared state to settle between them.
+from the work before them, in one worktree, with no shared state to settle between them. A review
+of every slice multiplies review by the number of slices; it pays where an early defect at a trust
+boundary or in an operation that cannot be undone costs more than the review, and the review of the
+whole change judges the rest. The price is that a defect of an early slice is found only after
+later slices were built on it, and its fix may reach them; naming the slice of each blocking finding
+shows what that price is.
 *Rejected:* a plan for every change, including a small plan used only to choose the route — it
 charges for division where none is needed; lighter preparation only for changes leaving the
 foundation unchanged — foundation work is common and does not itself require division; lighter
@@ -3281,7 +3299,9 @@ writes the code ahead — code written ahead still needs review; a whole-change 
 review of a plan's only slice — it reads the same range again; an outgrown attempt kept and
 completed — its division would be written around unfinished work; slices made side by side — each
 needs a worktree of its own and a ruling on their dependencies and shared state before it runs, a
-cost the change meets without gaining a check.
+cost the change meets without gaining a check; a review of every slice — its cost grows with the
+number of slices, most of which carry settled matters into code, while the review of the whole
+change still reads every slice.
 
 ### WAY-137 — What decides between places to run that the simplest and cheapest option leaves tied?
 
@@ -3702,47 +3722,62 @@ already holds.
 ### WAY-148 — How do task-cycle stages pass their work to the orchestrator?
 
 Every task-cycle stage passes its full handoff and report through files in the cycle's reports
-directory, while its messages carry routing, stage status, paths, commits, a concise check result
-and every unresolved concern affecting the next dispatch. The orchestrator records the event and
-relevant choices before dependent dispatch and reads authoritative sources and relevant report
-evidence before deciding a question, settling a finding, accepting a foundation meaning or
-verifying disputed or incomplete evidence; routine progression uses the short return, record,
-source paths and commits, without loading the material the stage agent reads and checks or its
-full report again, and without requiring prior conversational history. A missing or incomplete
-report is repaired before dependent work proceeds, and this transfer contract preserves required
-whole-source reads by the agent performing the work, and check and review duties with their
-assigned owners. The cycle record is the cycle's only log: no method of the cycle keeps a log of
-its own beside it.
+directory, while its messages carry routing, the stage's status, commits, a one-line check result
+naming what failed or did not run, and the report's path, while the agent's questions, concerns and
+each reach beyond its handoff stand in its report. The handoff names what the agent reads, as the
+orchestrator selects it (WAY-150, WAY-213), and keeps requirements and values in their own files:
+it may carry a section of the plan, spec or task copied word for word, never restated in other
+words, with its file named as its address, so that a slice's executor gets its section of the plan
+and works without opening the plan; and since only the orchestrator reads the cycle record, an
+answer or choice that binds an agent goes into that agent's handoff or the message that resumes it.
+The orchestrator records the event and relevant choices before dependent dispatch and reads
+authoritative sources and relevant report evidence before deciding a question, settling a finding,
+accepting a foundation meaning or verifying disputed or incomplete evidence, while routine
+progression uses the short return, record, source paths and commits, without loading the material
+the stage agent reads and checks or its full report again, and without requiring prior
+conversational history; a missing or incomplete report is repaired before dependent work proceeds,
+check and review duties stay with their assigned owners, and the cycle record is the cycle's only
+log, with no method of the cycle keeping a log of its own beside it.
 
 - **Scope:** task-cycle
-- **Based on:** none
+- **Based on:**
+  https://raw.githubusercontent.com/open-mercato/skills/e320bd5e3f0761a6d7249085c42c77a4b37d480d/skills/om-auto-create-pr-loop/references/executor-dispatch.md
+  § "Model tier (best-effort)", the executor prompt template — "Full description: {paste the
+  Step's bullets from PLAN.md Implementation Plan}"; read 2026-10-23
 - **Relations:** derives from WAY-125
 - **Verification:** an agent compares the stage handoff, return, report and orchestrator's ruling
   with the decision:
-  - complies: a short return names its complete report, commit range and failed or unchecked
-    checks, and the record permits resumption from files; the orchestrator reads the evidence
-    of an unresolved question before deciding it; a missing report is repaired before the next
-    dependent dispatch; a required whole entry is read whole by the agent using it; routine
+  - complies: a short return names its report, commit range and failed or unchecked checks, and
+    the record permits resumption from files; a slice's handoff holds its section of the plan
+    copied word for word and names the plan's path; an agent's questions stand in its report and
+    its return says `questions`; the orchestrator reads the evidence of an unresolved question
+    before deciding it; a missing report is repaired before the next dependent dispatch; routine
     progression does not load the stage agent's sources and full report again;
   - violates: a full report exists only in conversation, a short return conceals a failed check,
     dependent work proceeds on a missing report or mismatched commit range, or a question is
-    settled from the short return alone; a selective read replaces a mandatory whole-source
-    read by the responsible agent; a method keeps a log of the cycle's progress beside the record;
-    the orchestrator reloads completed stage material for routine progression.
+    settled from the short return alone; a handoff restates a requirement or value of the task,
+    spec or plan in other words; an agent other than the orchestrator reads the cycle record to
+    learn an answer; a method keeps a log of the cycle's progress beside the record; the
+    orchestrator reloads completed stage material for routine progression.
 - **Origin:** none
 
 *Rationale:* full material kept outside routine coordination avoids repeated context while
 preserving evidence a ruling needs and a place from which work can resume. Short returns make
 the next action visible, but an omitted failure can hide behind brevity, so relevant evidence
-remains part of a decision and an incomplete report blocks dependent work. Assigning complete
-reads to the agent that uses them keeps coordination from repeating the stage itself.
+remains part of a decision and an incomplete report blocks dependent work. Questions kept in the
+report survive an interrupted session without being copied anywhere. A passage copied word for word
+carries the requirement as its author wrote it, so the agent reads it without opening the whole
+file, while a restatement is a second account of it that drifts from its source unseen. The cycle
+record holds every agent's events; an agent that reads it pays for all of them to learn one answer.
 *Rejected:* full handoffs and reports repeated in messages — coordination accumulates material
 it need not reread; short summaries as the only record — lost evidence cannot be recovered on
 resumption; a second universal brief and report contract — duplicated obligations drift without
 proving completeness; a slice method's own ledger of progress beside the record — it repeats the
 record and has to be copied into it before its workspace is cleaned; rereading every stage's
 evidence during ordinary coordination — it pays again for work already delegated; automatic
-compaction — it does not choose the evidence a ruling needs.
+compaction — it does not choose the evidence a ruling needs; a handoff that restates the plan,
+spec or task in its own words — the restatement drifts from its source unseen; every agent opening
+the whole task, spec, plan and record — each pays to read what only a part of its work needs.
 
 ### WAY-150 — How do the-way skills choose which product foundation material to read?
 
@@ -6001,6 +6036,65 @@ product's code, tests included (WAY-212).
 *Rejected:* the expected value alone written out — the input still moves with the code; a line
 naming each file a test's verdict leans on, in place of values written out — every tracked file
 becomes the data of some test.
+
+### WAY-229 — On which class of model does the executor of a slice work?
+
+The executor of a slice works on the class of model its plan sets at the slice, named in general
+terms and never by the name of a model: by default a class cheaper than the orchestrator's, for a
+slice that carries settled matters into code; the orchestrator's class, for ordinary implementation
+that takes decisions of its own; or the strongest class available, for a change across many parts
+or one that needs design — each class other than the default with one sentence of its reason. An
+executor that returns `blocked` for a fact or permission no source supplies, reports a failing
+check of its slice, or fails the orchestrator's mechanical check — no commit in its range, or a
+repair it was sent back for left undone — gets one retry — a fresh executor one class higher, from
+the slice's base, given the failed executor's report and what failed — and an executor of the
+strongest class that fails, or a retry that fails, stops the cycle. The fix of a slice's findings
+runs on the class of the executor whose work stands, of findings in several slices on the highest of
+their classes and of a finding of no slice on the orchestrator's, while the spec's designer and
+reviewer, the planner, the writer of the plan's foundation entries, the return step and every
+reviewer work on no class cheaper than the orchestrator's.
+
+- **Scope:** task-cycle
+- **Based on:**
+  https://raw.githubusercontent.com/open-mercato/skills/e320bd5e3f0761a6d7249085c42c77a4b37d480d/skills/om-auto-create-pr-loop/references/task-planning.md
+  § "Filling `Exec` and the tier" — "Tier: `:cheap` when the Step is mechanical transcription of a
+  complete spec (boilerplate, renames, applying a documented pattern, tests from an existing
+  example); omit (= the configured default) for typical implementation; `:capable` for
+  cross-cutting integration or design judgment inside the Step." ·
+  https://raw.githubusercontent.com/open-mercato/skills/e320bd5e3f0761a6d7249085c42c77a4b37d480d/skills/om-auto-create-pr-loop/references/executor-dispatch.md
+  § "Escalation before the stop" — "dispatch a **fresh executor for the same Step one tier above**
+  the failed one (`cheap` → `standard`, `standard` → `capable`), with the failed executor's report
+  and the concrete failure appended to its prompt." · § "Escalation before the stop" — "Escalation
+  is bounded: one rescue per Step, never above `capable`"; read 2026-10-23
+- **Relations:** derives from WAY-136 · derives from WAY-148
+- **Verification:** an agent compares the plan, the record of slices and the dispatches with the
+  decision:
+  - complies: the plan sets the default class for a slice that applies a pattern the spec settles,
+    and the strongest class with its reason for a slice that joins several parts; an executor of
+    the cheaper class whose check fails is replaced, from the slice's base, by one of the
+    orchestrator's class given its report and the failure; the fix of a reviewed slice's finding
+    runs on the class the slice was made on; the review of the whole change runs on the
+    orchestrator's class or a stronger one;
+  - violates: a plan names a model by its product name; a class other than the default stands
+    without its reason; a failed executor is retried on the same class or a second time; an
+    executor of the strongest class gets a retry; a review or the spec runs on a class cheaper than
+    the orchestrator's.
+- **Origin:** none
+
+*Rationale:* a slice's handoff carries its settled requirement word for word, so much of a planned
+change is the carrying of settled matters into code, which a cheaper model can do at a fraction of
+the cost. The planner, who cut the slice, knows best what it demands. A failure gets one retry a
+class higher before the cycle stops, which costs less than running every slice on the strongest
+class and less than stopping at the first failure of a cheaper one; the slice's own review where it
+has one, and the review of the whole change, find what a cheaper model got wrong. Classes in
+general terms survive the release of new models and fit any harness.
+*Rejected:* every slice on the orchestrator's model — it pays the strongest price for
+transcription; the class chosen by the orchestrator at each dispatch — it judges again what the
+planner judged when it cut the slice; the orchestrator's class as the default — it leaves the
+cheaper class to a judgment made slice by slice and rarely taken; retries without bound, or on the
+same class — the same failure repeats at the same cost; a cheaper class for the spec, the plan or
+a review — their errors reach every later step; model names in the process — they age with every
+release.
 
 ## Withdrawn identifiers
 

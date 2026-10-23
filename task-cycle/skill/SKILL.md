@@ -15,11 +15,12 @@ intermediate choices to you; never label your answer as that person's approval.
 
 The cycle has one ordinary human contact: the request. Do not pause for design, spec, plan,
 implementation or review questions. Stop early only when the required outcome cannot be made under
-the available evidence, capabilities and binding rules, or when a blocking finding survives the one
-fix a code review allows ("The end of a code review"). A slow step, a failed test or an unclear way
-to make the change is work to resolve, not a reason to ask the human. Where a binding rule reserves
-a decision to a human and the code cannot proceed without it, open a blocked draft request with the
-evidence and stop.
+the available evidence, capabilities and binding rules, when a blocking finding survives the one
+fix a code review allows ("The end of a code review"), or when a slice's executor fails after its
+one retry (step 9). A slow step, a failed test or an unclear way to make the change is work to
+resolve, within that one retry for a slice, not a reason to ask the human. Where a binding rule
+reserves a decision to a human and the code cannot proceed without it, open a blocked draft request
+with the evidence and stop.
 
 ## Inputs and authority
 
@@ -40,12 +41,10 @@ evidence and stop.
    plan's recheck is pending, the task waits without losing its acceptance; start no branch.
 2. Read the product's `AGENTS.md`, verify that the pinned the-way checkout matches the product's
    gitlink, and follow the product's git and test rules. Read the foundation by "Reading the
-   foundation" in `elements/common/way_of_working.md` for the parts the task's required behaviour
-   changes, as far as the judgments of step 4 need (WAY-150). You make and review no change, so you
-   do not read the product's guidelines: each agent that writes or reviews the spec, plans, makes
-   or reviews the change reads those of the parts its own work touches by
-   `product-guidelines/reading.md` (WAY-213), and a finding of that reading takes the route the
-   procedure names.
+   foundation" in `elements/common/way_of_working.md`, and the product's guidelines by
+   `product-guidelines/reading.md`, for the parts the task's required behaviour changes: you select
+   from them what each agent reads (WAY-150, WAY-213), and they serve the judgments of step 4. A
+   finding of the guidelines' reading takes the route the procedure names.
 3. Require a harness that can dispatch subagents, and the methods of the stages in the pinned
    the-way, each a project skill with the `the-way-` prefix: `write-spec`, `plan-task`,
    `make-change` and `review-change`. Each stage agent reads the method of its stage, and what it
@@ -71,7 +70,8 @@ product names (WAY-107), the cycle may add the request link and set the task's s
      rules reserve its authorization to a human; where it is needed to finish the task, the request
      opens blocked.
 
-   Neither answer lightens anything: every change, whatever its size, gets the product's tests and a
+   A yes adds the reviews aimed at that risk, those of the slices the plan marks with it included;
+   neither answer removes anything: every change, whatever its size, gets the product's tests and a
    review by an agent that did not make it. Only a human sets a task to return knowledge instead of
    a change.
    In the same reading, settle whether the task leaves an open design choice (WAY-135). A row of
@@ -110,7 +110,26 @@ step, it names the paragraph or step of this skill that holds that stage, which 
 whole, with the element skills it names. For a review, it gives the range to review and the
 author's report. For a fix, it gives the findings file, which you write from the review's blocking
 findings in the reviewer's words; the fix's range runs from the reviewed head, and the review of
-the fix also gets the fix report. Requirements and values stay in their own files, not restated.
+the fix also gets the fix report.
+
+You decide what each agent reads, and its handoff names it (WAY-150, WAY-213): the foundation
+entries by identifier — those of the task's *Decisions in play*, and the decisions, invariants and
+linked entries of the parts the agent's work touches, selected by "Reading the foundation"; the
+guideline files of those parts, each whole; and the passages of the task, spec and plan it needs.
+The designer and the reviewer of the spec, the planner, the one author and the reviewer of the whole
+change read the whole frozen task, since each works on the whole. A slice's executor gets, copied
+into its handoff, its section of the plan and the passages of the task, spec and plan its *Read*
+names, and the reviewer of a slice the same selection; the plan's *Read* is the source of that
+selection, which the planner proposes and you check and may add to in the plan's review (step 8).
+When you build a slice's handoff, name each foundation entry of its *Read* by its identifier with
+its range in the worktree as it stands then, since the foundation step and earlier slices may have
+moved it, and an entry the foundation step wrote by its identifier and its new range; find a passage
+of the plan again by its heading where the plan changed. Requirements and values stay in their own
+files: copy a section of the plan, spec or task into the handoff word for word, never restated in
+other words, and name its file as its address (WAY-148). The reviewer of the whole change selects
+its own foundation and guidelines, by the parts of the change, and an agent writing a foundation
+entry reads as the element's skill gives. You alone read `cycle.md`: an answer or choice that binds
+an agent goes into its handoff or the message that resumes it.
 
 Wait for an agent through the harness's completion notification or one blocking wait at the
 longest duration its live tool contract and active instructions permit. In Codex, use
@@ -122,19 +141,24 @@ leaves work pending, handling a returned question first. Do not list agents, pol
 sleep between checks. Record the mechanism and any limit.
 
 Each agent writes its full report to its report path as its method gives it and returns its status,
-its paths and commits, a one-line check result naming what failed or did not run, and every question
-or concern the next dispatch depends on. Under `make-change` the status is `done`, `done with
-concerns`, `questions`, `returned` or `blocked`; under `review-change` it is the report's first
-line, `PASS <sha>` or `FAIL <sha>`; under `write-spec` the designer returns `questions` or `done`
-and its reviewer `PASS` or `FAIL`. A check a report says it ran carries its command and exit code; a
-report missing either returns to its agent for repair before dependent work, and a claim that tests
-passed does not repair it (WAY-159). An agent that returns `questions` gets your answers as step 6
-answers the designer's — from an approved source, otherwise the smallest reversible reading that
-fulfils the task, recorded as an autonomous choice — and is resumed, with no mechanical check and no
-review until it returns its work. `blocked` is for a missing fact or permission, and for a question
-the foundation step leaves to the human: supply the fact or permission where a source gives it and
-resume the agent; otherwise open the blocked draft request, holding the question under *Questions*
-or showing the missing fact or permission as step 13 gives for an impossible task.
+its commits, a one-line check result naming what failed or did not run, and the report's path; its
+questions and concerns, and each reach beyond its handoff, stand in the report (WAY-148). In every
+report read its checks and the reaches it names; read the rest of it where the status is other than
+`done`. A reach shows where your selection fell short: add what it found to the handoffs that
+follow. Under `make-change` the status is `done`, `done with concerns`, `questions`, `returned` or
+`blocked`; under `plan-task` it is `done`, `done with concerns`, `questions` or `returned`; under
+`review-change` it is the report's first line, `PASS <sha>`, `FAIL <sha>` or `questions`; under
+`write-spec` the designer returns `questions` or `done` and its reviewer `PASS` or `FAIL`. A check a
+report says it ran carries its command and exit code; a report missing either returns to its agent
+for repair before dependent work, and a claim that tests passed does not repair it (WAY-159). An
+agent that returns `questions` gets your answers as step 6 answers the designer's — from an approved
+source, otherwise the smallest reversible reading that fulfils the task, recorded as an autonomous
+choice — and is resumed, with no mechanical check and no review until it returns its work. `blocked`
+is for a missing fact or permission, and for a question the foundation step leaves to the human:
+supply the fact or permission where a source gives it and resume the agent; otherwise, after the one
+retry step 9 gives a slice's executor for a missing fact or permission, open the blocked draft
+request, holding the question under *Questions* or showing the missing fact or permission as step 13
+gives for an impossible task.
 
 Advance on the short return, the record, the paths and the commits; do not load a stage agent's
 sources, full report or diff again merely to go on (WAY-148). Read the sources and the relevant
@@ -173,7 +197,14 @@ reviews, tests, return step and request.
    at step 6 with its report. Review the plan for coverage of every item of the task, every row of
    *Settlements to record* and every projected entry the task carries, fidelity to the task's
    sources, no code, checks that can actually run and a size report in which every slice fits.
-   Copy its *Choices* into the questions table and record your go-ahead as provisional.
+   Check each slice's *Read* against your own reading of step 2 and add to it in `plan.md` what
+   the slice needs and misses — a decision of a part it touches, an invariant it reaches (WAY-62),
+   a guideline file — then run the size script on the plan again; a slice it now reports too large
+   returns to the planner to be split. Check each slice's *Model* and *Risk*: a class other than
+   the default `cheaper` carries its reason (WAY-229), and a slice whose files the part map names
+   as a trust boundary, or that holds an operation that cannot be undone, is marked so — none
+   where both answers of step 4 are no. Copy its *Choices* into the questions table and record
+   your go-ahead as provisional.
 
 An agent that meets an open design choice while it makes the change or a fix returns `returned`
 with a report and no code: the choice, where it shows, the ways open and what it found (WAY-135). A
@@ -191,7 +222,7 @@ task, any reviewed spec and the report (WAY-136). Record it as a return for size
 
 A slice that proves too large for its executor returns the same way. Record its last commit and
 files, reset the branch to the slice's base and have the planner split that slice; the slices
-already made and reviewed stay. Record it under *Slices returned too large*.
+already made stay. Record it under *Slices returned too large*.
 
 ## Execute, verify and review
 
@@ -223,30 +254,57 @@ it, as step 13 gives under *Questions*.
      author on the same branch takes its place, recorded under *Author*.
    - **Plan.** Where the plan lists *Foundation entries*, write slice 1's base first, then dispatch
      a fresh agent with `make-change` for those entries, recorded in the row `Foundation entries`
-     of *Slices*; slice 1's range starts at that base, so its review covers the entries. Then make
-     the slices one after another, in the plan's order. For each slice:
+     of *Slices*; slice 1's range starts at that base, so whichever review judges slice 1 covers
+     the entries. Then make the slices one after another, in the plan's order. For each slice:
      1. write its base, from `git rev-parse HEAD`, in its row of *Slices* before you dispatch it;
-     2. dispatch a fresh executor with `make-change`, the frozen task, any spec, the plan and the
-        slice's number;
+     2. dispatch a fresh executor with `make-change`, on the class of model the slice's *Model*
+        sets (WAY-229) — `cheaper` than yours, `same` as yours or the `strongest` available, on
+        the harness's model closest to it, recorded in the slice's row; where yours is the
+        strongest, `same` and `strongest` are one class; where the harness cannot choose a model,
+        dispatch as it allows and record that the class was not applied — with the slice's
+        section of the plan copied word for word and what its *Read* names, as the handoff
+        paragraph above gives;
      3. when it returns `done` or `done with concerns`, check mechanically: a clean worktree, a
         non-empty range from the base to its head, the changed files against the slice's *Change*
         and, for slice 1, the plan's *Foundation entries*, and each check of the report with its
         command and exit code. Uncommitted work returns to the executor to commit, and a check
         without its command or exit code returns the report for repair (WAY-159); any other
-        mismatch goes to the reviewer as information and does not return the slice;
-     4. dispatch a fresh reviewer with `review-change` on that range and the slice's number; for
-        slice 1 the handoff names the plan's *Foundation entries* as part of the range and gives
-        the report of the agent that wrote them beside the executor's;
-     5. a `FAIL` gets one fix and one review of the fix, as "The end of a code review" gives;
-     6. keep its Minor and out-of-scope findings in its row for the review of the whole change.
+        mismatch goes as information to the review that judges the slice and does not return it.
+        The mechanical check fails where the range holds no commit, or where a repair the
+        executor was sent back for is left undone;
+     4. an executor that returns `blocked` for a fact or permission no source supplies, reports a
+        failing check of its slice, or fails the mechanical check gets one retry (WAY-229): record
+        its last commit, reset the branch to the slice's base and dispatch a fresh executor one
+        class higher — `cheaper` to `same`, `same` to `strongest` — with the failed executor's
+        report and what failed. The retry goes through sub-steps 3 and 5 as any executor does.
+        An executor of the strongest class that fails, or a retry that fails, stops the cycle:
+        record its last commit and reset the branch to the slice's base, run the gate on the
+        change as step 10 gives, run `task-cycle/cycle_stages.py` and commit the record and its
+        removal as step 12 gives, and open the request as a draft marked `blocked` that names
+        both failures with the classes tried, each slice made so far that no review judged, and
+        the review of the whole change, the return step and the reconciliation with the target
+        branch as not run;
+     5. where the slice's *Risk* names a trust boundary or an operation that cannot be undone,
+        dispatch a fresh reviewer with `review-change` on that range and the slice's number, with
+        the executor's selection; for slice 1 the handoff names the plan's *Foundation entries* as
+        part of the range and gives the report of the agent that wrote them beside the
+        executor's. A `FAIL` gets one fix and one review of the fix, as "The end of a code review"
+        gives; keep its Minor and out-of-scope findings in its row for the review of the whole
+        change. Every other slice goes on after its mechanical check, and the review of the whole
+        change judges it (WAY-136).
 
      A plan of one slice skips the review of the slice: the review of the whole change is its one.
 
    Then the review of the whole change: a fresh reviewer that made none of it, with
    `review-change`, on the range from the task's base to the head, with the frozen task, any spec
-   and plan, and the Minor and out-of-scope findings of the slice reviews. For progression use the
-   changed files with their line counts and the review's first line (WAY-158); read the evidence
-   only when a question about a finding needs it, never to change a reviewer's grade or scope.
+   and plan, each slice's range and whether it had a review of its own, the report of each executor
+   whose slice had none with any mismatch its mechanical check passed on, the report of the agent
+   that wrote the plan's *Foundation entries* where slice 1 had no review of its own, and the Minor
+   and out-of-scope findings of the slice reviews (WAY-164). It selects its own foundation and
+   guidelines, judges every slice that had no review of its own, and names for each blocking finding
+   the slice it comes from, or that it comes from none (WAY-136). For progression use the changed
+   files with their line counts and the review's first line (WAY-158); read the evidence only when
+   a question about a finding needs it, never to change a reviewer's grade or scope.
 10. Run the product's gate yourself on the reviewed change (WAY-160), and record its command, exit
     code and the failures it names under *Verification*, with each check that failed or did not
     run by name; an unrun check is unchecked, never passed. The authors' focused checks are not
@@ -286,7 +344,9 @@ A `FAIL` gets one fix and one review of that fix (WAY-162); you never overrule a
 or skip its fix. The author or executor whose work the findings concern fixes them with
 `make-change`, given the findings file, runs the affected checks again and answers with evidence a
 finding it holds wrong; where the harness cannot resume it, or the findings concern several slices,
-a fresh agent on the same branch, given the task and the findings, fixes them. The same reviewer,
+a fresh agent on the same branch, given the task and the findings, fixes them. The fix of a slice's
+findings runs on the class of the executor whose work stands, of findings in several slices on the
+highest of their classes, and of a finding of no slice on yours (WAY-229). The same reviewer,
 or a fresh one given its report where it cannot be resumed, reviews the fix range once. A new
 Critical or Important finding in the fix counts as one that remains.
 
