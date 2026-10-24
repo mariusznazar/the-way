@@ -41,7 +41,6 @@ of the coding discipline in their places (WAY-171).
 ### Linter
 ### Formatter
 ### Dependency audit
-### Test inputs and expected values
 ### <further rules of the whole product>
 
 ## Examples
@@ -56,17 +55,18 @@ of the coding discipline in their places (WAY-171).
   check as the section "What each section carries" gives; any other rule names an invariant where a cheap test checks it on a
   convention of the product's code, and otherwise reads `none`, the review of each change the rule
   reaches comparing the change with it (WAY-168, WAY-202).
-- The three standing checks, `### Linter`, `### Formatter` and `### Dependency audit`, and the rule
-  `### Test inputs and expected values` stand in the order above, and each that the product goes
-  without reads `none — <PREFIX-NN>`, naming the product's decision that departs from it with its
-  reason (WAY-171, WAY-202, WAY-228). The product's further rules follow them.
+- The three standing checks, `### Linter`, `### Formatter` and `### Dependency audit`, stand in the
+  order above, and each that the product goes without reads `none — <PREFIX-NN>`, naming the
+  product's decision that departs from it with its reason (WAY-171, WAY-202). The product's further
+  rules follow them.
 - *Applies to* names every part of the product's map that holds code, the scripts of its build
   included (WAY-208).
 - `## When to read` gives the condition under which an agent reads the file: before any change of
   the product's code (WAY-212).
 - `## Kinds of code` holds the table of the product's files of a kind, one row for each, with when
   to read it; a product with no exemplar yet keeps the table with its header and no row (WAY-167,
-  WAY-212).
+  WAY-212). A kind is code of the product other than its tests; the rules of the tests stand in the
+  product's testing guidelines (WAY-231).
 
 ## Required form of a kind
 
@@ -103,7 +103,7 @@ WAY-199).
   the rule on the files of the kind (WAY-171, WAY-198).
 - The file's name holds the identifier of its kind, as the decision designating the kind's exemplar
   gives it: words of lower-case letters and digits joined by single hyphens, as `endpoint` or
-  `background-job` (WAY-167).
+  `background-job` (WAY-167). A kind is code of the product other than its tests (WAY-231).
 - *Applies to* names the parts of the product's map that the files of the kind lie in (WAY-171).
 - `## When to read` gives the condition under which an agent reads the file: before adding or
   changing a file of its kind (WAY-212).
@@ -153,12 +153,6 @@ those decisions and invariants in its own foundation; the coding guidelines name
   (WAY-62).
 - **A standing check the product goes without** reads `none — <PREFIX-NN>`, naming the product's
   decision that departs from it with its reason (WAY-202, WAY-171).
-- **Test inputs and expected values** — rule. *Decision*: the product's decision adopting this
-  template (WAY-173). *Invariant*: `none`; the review of each change compares its tests with the
-  rule (WAY-168). The rule: a test takes the input it asserts on and the value it expects written
-  out, wherever the code under test would otherwise compute either; only the side it compares
-  against comes from the run (WAY-228). Which files a test names, so that a fixture or a builder of
-  its input cannot be changed underneath it, this template does not settle.
 - **Further rules of the whole product** — rule each, naming an invariant where a cheap test checks
   it on a convention of the code and otherwise `none` (WAY-168).
 - **`## Files of this kind`** — a table of the file of a kind, one row for each file of the kind it
