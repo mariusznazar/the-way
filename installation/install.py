@@ -41,6 +41,7 @@ SKILLS.update({
     "critique": "elements/common/critique/SKILL.md",
     "maintain-styleguide": "product-guidelines/styleguide/SKILL.md",
     "maintain-coding-guidelines": "product-guidelines/coding/SKILL.md",
+    "maintain-testing-guidelines": "product-guidelines/testing/SKILL.md",
 })
 # Claude Code reads project skills from .claude/skills, Codex from .agents/skills.
 SKILL_DIRECTORIES = (".claude", ".agents")
