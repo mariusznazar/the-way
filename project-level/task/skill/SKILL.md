@@ -181,7 +181,8 @@ human acceptance of the complete task, even when refinement finds no candidate s
 - If the task would contradict a current decision or a projected entry, show the conflict and
   its consequences. The human chooses whether to change the task or reopen the upstream
   settlement. Do not replace approved wording with the agent's paraphrase.
-- An exclusion that survives this task is a decision candidate, not an item under `Out of scope`.
+- An exclusion that survives this task and that later work builds on is a decision candidate,
+  worded as what the product does today, not an item under `Out of scope` (WAY-26).
 
 ## 5. Find what the refinement settles
 

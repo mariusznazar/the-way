@@ -75,7 +75,7 @@ A field stays in the template only while someone or something reads it (WAY-05).
 | Verification | its invariants: whoever looks for the checks of the decision, and `foundation_check.py`, which reports an invariant the foundation does not hold; its pair of examples: an agent comparing a change with the decision (WAY-12) |
 | Origin | whoever wants to change the decision and needs the full reasoning (WAY-29) |
 | Rationale | the agent in a borderline case; a human considering a change |
-| Rejected | the agent, before proposing an option already rejected; the search of the foundation (WAY-33) |
+| Rejected | the agent proposing an option already weighed, who says what has changed since; the search of the foundation (WAY-33) |
 
 ## Binding sentences
 
@@ -89,14 +89,17 @@ A field stays in the template only while someone or something reads it (WAY-05).
   a change.
 - An exception foreseen in advance is written into the binding sentences ("X is allowed when
   Y"); acting on it is then not a contradiction (WAY-30).
+- A binding sentence states what holds today and names no stage of the product, such as "in the
+  MVP": a decision holds until a change replaces, narrows or withdraws it (WAY-01, WAY-22,
+  WAY-24).
 
 ## Decision or invariant
 
 - An **invariant** names its method of checking and says nothing about why, or about what was
   rejected (WAY-22).
-- A **decision** is a choice between options, with a rationale. It binds future choices,
-  including ones that cannot be checked on a commit: direction, trade-off principles,
-  non-goals (WAY-22).
+- A **decision** is a choice between options, with a rationale. It binds later work until a change
+  replaces, narrows or withdraws it, including what cannot be checked on a commit: direction,
+  trade-off principles, non-goals (WAY-22).
 - **Test:** can you point to a commit on which the sentence is false? Yes — it is an invariant.
   It is about a choice or a direction — it is a decision (WAY-22).
 - **Plan test:** does the rule still bind once the change that brings it is merged? No — it
@@ -156,7 +159,8 @@ A field stays in the template only while someone or something reads it (WAY-05).
   them names the decision in *Derives from* (WAY-12, WAY-17).
 - A pair of examples is optional: `complies:` a change that keeps the decision and `violates:` one
   that breaks it, for an agent comparing a change with what no invariant of the decision checks
-  (WAY-12).
+  (WAY-12). The violating example is code that goes against the decision while its entry stays as
+  it is, never a change that replaces the decision together with its code (WAY-12).
 - With neither, *Verification* is `none`. Either part stands alone:
 
 ```markdown
@@ -177,7 +181,9 @@ A field stays in the template only while someone or something reads it (WAY-05).
 - Precedence between principles is recorded pair by pair, as between any two decisions: the one
   that prevails names the other as `narrows`. There is no single ranked list (WAY-25).
 - A non-goal is an ordinary decision, one per non-goal: "The product does not do X", with the
-  reason (WAY-26). Non-goals live only at product level; a task's exclusions live in its plan,
+  reason (WAY-26). What the product does not do only because no work has brought it yet is no
+  non-goal: where later work builds on it, a decision states what the product does today (WAY-26).
+  Non-goals live only at product level; a task's exclusions live in its plan,
   or in the choices of its cycle record where no plan is written (WAY-36).
   A non-goal that can be checked on a commit gets a derived invariant (WAY-22).
 
