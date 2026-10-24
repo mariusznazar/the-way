@@ -162,7 +162,7 @@ A project orchestrator is the agent that leads a handed-over project plan in con
 
 ## exemplar
 
-An exemplar is a file of a product that a decision of the product designates as the model after which later code of its kind is written.
+An exemplar is a file of a product that a decision of the product designates as the model after which later files of its sort are written: code of a kind of code, or tests of a level of tests.
 
 - **Not:** none
 
