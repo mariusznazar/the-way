@@ -112,12 +112,15 @@ reduced copy. Selection is no reading cap; read a small file whole where useful.
   chooses nothing else (WAY-13).
 - Bring a technical element in with the first task that uses it. Write a preparatory task only for
   work that task cannot start without, and make that task depend on it (WAY-143).
-- For each missing styleguide or general coding file found by the shared reading, place a
-  guidelines task before its consumers and make them depend on it; reuse an adequate task the
-  plan already holds. Respect scoped departures and the guidelines-writing task's exemption.
+- For each missing styleguide, general coding file or testing guidelines found by the shared
+  reading, place a guidelines task before its consumers and make them depend on it; reuse an
+  adequate task the plan already holds. One guidelines task may carry both a missing coding and a
+  missing testing file (WAY-247). Respect scoped departures and the guidelines-writing task's exemption.
   Assign a genuinely first kind's exemplar, kind guidelines and index row to the task creating
   its first file, not to a separate prerequisite; an existing unindexed kind needs WAY-200's
-  comparison through `maintain-coding-guidelines`. Keep extensions of existing guidelines with
+  comparison through `maintain-coding-guidelines`. Assign a level's first exemplar test to the task
+  writing that level's first test, through `maintain-testing-guidelines`, not to a separate
+  prerequisite (WAY-242). Keep extensions of existing guidelines with
   their consuming task unless the human separates them. Follow step 5 for questions or work
   beyond the approved definition, never silently enlarge it. Refinement checks these findings
   again and waits for a prerequisite's merge only where its question needs that result.

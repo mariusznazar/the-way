@@ -156,8 +156,9 @@ human acceptance of the complete task, even when refinement finds no candidate s
     rules, which may leave that row `to refine`.
   - After the prerequisite merges, resume here, read its guidelines and settle the meanings
     this task needs under WAY-172 before step 6's complete-document acceptance. Adding the
-    dependency alone gives no readiness. Use `maintain-styleguide` or
-    `maintain-coding-guidelines` for their matters of refinement.
+    dependency alone gives no readiness. Use `maintain-styleguide`, `maintain-coding-guidelines`
+    or `maintain-testing-guidelines` for their matters of refinement. A missing coding and a missing
+    testing guidelines may be one prerequisite task (WAY-247).
   - Keep extension or correction of existing guidelines in this task, including a coding file
     whose *Applies to* omits the affected part, unless the human separates the work. Settle new
     meanings and exemplar changes through those discipline skills under WAY-172 and WAY-199.
@@ -166,6 +167,9 @@ human acceptance of the complete task, even when refinement finds no candidate s
     `maintain-coding-guidelines`, without a separate exemplar wait. Existing unindexed files
     instead need the comparison WAY-200 requires; record the discrepancy and route that work
     within this task's scope and, for a plan member, its plan boundary.
+  - For the first test of a level whose recipe has an empty *Exemplar*, add to *To do* designation of
+    that test as the level's exemplar through `maintain-testing-guidelines`, without a separate
+    exemplar wait (WAY-242).
 
 ## 4. Carry the foundation decisions
 
