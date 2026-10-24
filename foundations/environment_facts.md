@@ -171,6 +171,18 @@ On SWE-Bench-Verified, single-run pass@1 estimates of the agents Bjarnason et al
 
 - **Source:** https://arxiv.org/html/2602.07150v3 § Abstract — "We test this assumption by collecting 60,000 agentic trajectories on SWE-Bench-Verified, spanning three models and two scaffolds." · § Abstract — "We find substantial variance: single-run pass@1 estimates vary by 2.2 to 6.0 percentage points depending on which run is selected, with standard deviations exceeding 1.5 percentage points even at temperature 0." · § 2.1 — "We exhaustively evaluate six different agents, where an agent is defined as a model-scaffold pairs." · § 2.1 — "Qwen/Qwen3-32B" · § 2.1 — "agentica-org/DeepSWE-preview" · § 2.1 — "mistralai/Devstral-2-123B-Instruct-2512" · § 2.1 — "nano-agent is our own minimal scaffold for agentic coding experiments" · § 2.1 — "R2E-Gym is a code agent scaffold"; read 2026-10-08
 
+## llm-test-oracle-actual-behaviour
+
+In Konstantinou et al.'s controlled experiment with GPT-3.5 Turbo on the test oracles of 24 open-source Java repositories, LLM-based test generation approaches are prone to generate oracles that capture the actual program behaviour rather than the expected one.
+
+- **Source:** https://arxiv.org/abs/2410.21136v1 § Abstract — "The study includes developer-written and automatically generated test cases and oracles for 24 open-source Java repositories, and different well tested prompts." · § Abstract — "Our findings show that LLM-based test generation approaches are also prone on generating oracles that capture the actual program behaviour rather than the expected one."; read 2026-10-25 · https://arxiv.org/html/2410.21136v1 § III-A Research Questions — "We chose to use GPT 3.5-turbo [28] for this experiment because it is a state-of-the-art tool and one of the most widely used LLMs."; read 2026-10-25
+
+## computer-use-agent-web-testing
+
+On WebTestBench, none of the models its authors evaluated with their WebTester framework exceeds an F1 score of 30% in end-to-end automated web testing.
+
+- **Source:** https://arxiv.org/abs/2603.25226v1 § Abstract — "To address these gaps, we introduce WebTestBench, a benchmark for evaluating end-to-end automated web testing." · § Abstract — "We decompose the testing process into two cascaded sub-tasks, checklist generation and defect detection, and propose WebTester, a baseline framework for this task."; read 2026-10-25 · https://arxiv.org/html/2603.25226v1 § 4.1 Settings — "We evaluate several closed-source models and open-source models on WebTester, including: Claude Opus/Sonnet 4.5 Anthropic (2025a); Anthropic (2025b), GPT-5.2/5.1 Openai (2025b); Openai (2025a), GLM-5/4.7 Zeng et al. (2026); Zeng et al. (2025), Step-3.5-Flash Huang et al. (2026), Qwen3-Coder-Next Qwen Team (2026), MiMo-V2-Flash Xiao et al. (2026), and Minimax-M2.1 MiniMax (2025)." · § 4.2 Main Results — "All evaluated models failed to achieve an F1 score exceeding 30%."; read 2026-10-25
+
 ## Withdrawn identifiers
 
 | Identifier | Why | Successors |
