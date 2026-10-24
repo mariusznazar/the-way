@@ -359,7 +359,9 @@ can change it without meeting a foundation check.
 A decision names in *Verification* the invariants derived from it, by the identifiers of their
 entries, where such invariants exist, and tests live only with invariants. A decision may also
 carry a pair of examples — a change that complies and one that violates — with which an agent
-compares a change with what no invariant of the decision checks.
+compares a change with what no invariant of the decision checks; the violating example is a change
+whose code goes against the decision while its entry stays as it is, never one that replaces the
+decision together with its code.
 
 - **Scope:** decisions, invariants
 - **Based on:** llm-decision-violation-detection
@@ -368,7 +370,9 @@ compares a change with what no invariant of the decision checks.
   - complies: a decision on the product's direction carries a complying and a violating example
     and names no invariant; a decision with a derived invariant names it after `invariants:`;
   - violates: a decision names an invariant whose *Derives from* names another decision; a
-    decision asks for a human's assessment recorded in its entry.
+    decision asks for a human's assessment recorded in its entry; the violating example of a
+    decision is a change that takes an option the decision did not take and rewrites the decision
+    in the same request.
 - **Origin:** none
 
 *Rationale:* a test checks an invariant on every commit; a decision about direction or trade-offs
@@ -564,10 +568,10 @@ change; no scope — relevant decisions get lost among the rest.
 ### WAY-22 — Is a rule a decision or an invariant?
 
 An invariant says nothing about why or what was rejected; a decision is a choice between
-options, with its rationale, and it binds later choices, including those that cannot be checked on a
-commit — direction, trade-off principles, non-goals. A rule that records a choice is a decision, and
-what of it a commit can make false is written as an invariant derived from it; a rule with no choice
-behind it is an invariant alone.
+options, with its rationale, and it binds later work until a change replaces, narrows or withdraws
+it, including what cannot be checked on a commit — direction, trade-off principles, non-goals. A
+rule that records a choice is a decision, and what of it a commit can make false is written as an
+invariant derived from it; a rule with no choice behind it is an invariant alone.
 
 - **Scope:** decisions, invariants
 - **Based on:** none
@@ -635,7 +639,9 @@ the newest decision wins — the date of a decision is not its weight.
 
 Each trade-off principle is a decision of its own, whose binding sentence says which of two good
 things is chosen when they conflict and whose rationale names the problem it solves. Each
-non-goal is a decision of its own that says what the product does not do and why.
+non-goal is a decision of its own that says what the product does not do and why. What the product
+does not do only because no work has brought it yet is no non-goal: where later work builds on it,
+a decision states what the product does today.
 
 - **Scope:** decisions, task-cycle
 - **Based on:** none
@@ -643,14 +649,19 @@ non-goal is a decision of its own that says what the product does not do and why
 - **Verification:** an agent compares the change with the decision:
   - complies: "When speed of release conflicts with completeness, we choose speed", an entry of its
     own whose rationale names the problem; "The product has no multiplayer", with its reason, as an
-    entry of its own;
+    entry of its own; deleting a character, left out of a first release, written as "A character
+    stays in the team once created", with the invariant derived from it, where later work builds
+    on it;
   - violates: a principle naming one good thing only ("we value quality"); several principles or
-    several non-goals in one entry.
+    several non-goals in one entry; a feature left out of a first release written as "The product
+    does not delete characters".
 - **Origin:** none
 
 *Rationale:* a principle rules later choices only when it names what it gives up; the rationale names
 the problem, so a later reader can tell when the principle stops serving it; one entry each, so each
-changes on its own and precedence is recorded pair by pair (WAY-25).
+changes on its own and precedence is recorded pair by pair (WAY-25). A non-goal names a direction
+the product chose, so a feature not yet built, written as one, reads as that direction and closes a
+path nobody chose to close.
 *Rejected:* several principles or non-goals in one entry — a change to one reopens them all, and no
 precedence can be recorded between them.
 
