@@ -7019,6 +7019,112 @@ preference still belongs to the human, so research informs its use rather than r
 scope receives none; a version change alone treated as an extension — new versions can leave the
 covered scope unchanged.
 
+### WAY-252 — How does a mutation tool check a product's tests?
+
+The template of the testing discipline requires the rule that, for each part whose complexity lies
+in computation, a mutation tool — one that makes copies of the code, each with one small fault, and
+runs the product's tests on each copy — runs on the files of a change that reaches that part, never
+on the whole product, and that the reviewer of the change classifies each copy no test fails as a
+real gap, which gets an assertion, an equivalent mutant, which behaves as the code does and is
+passed over, or a change not worth pinning, which is passed over with its reason. The rule sets no
+threshold on the share of copies the tests fail. A product adopts the rule by a decision naming the
+tool and the parts it runs on, or departs from it by a decision that gives the reason.
+
+- **Scope:** product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-173 · derives from WAY-240
+- **Verification:** an agent compares the work with the decision:
+  - complies: a game's testing guidelines adopt the rule for its simulation, naming its mutation
+    tool, and a change to the rule of heat runs the tool on the changed file alone; the reviewer
+    passes over a copy that changes only which object is returned, not its value, giving that
+    reason; a product whose parts only pass requests on to other services departs from the rule by
+    a decision that gives that reason;
+  - violates: a product's testing guidelines require the tests to fail on nine copies in ten; a
+    reviewer asks for assertions until every copy fails; the tool runs on every file of the product
+    at each change; a product's testing guidelines leave the rule out with no decision.
+- **Origin:** none
+
+*Rationale:* a check of the tests made in an author's head leaves no trace and cannot be confirmed,
+while a tool makes the faults and runs the tests itself, and where a tool can do a check, the tool
+does it rather than an agent. What a surviving copy means still takes judgement: some copies behave
+as the code does, and some change only what no requirement asks for, so the tool replaces making the
+faults, not deciding about the copies that survive. A share of copies the tests fail reads as a
+target, and chasing it writes tests that pin details of the code (WAY-234). The faults such copies
+make — a bound, a sign, a branch — are faults of computation; in a part whose complexity lies in its
+connections, they mostly break what a double replaces, so the tool runs where computation lies
+(WAY-240), and narrowed to the files of a change, a run stays short. Its weak points: every product
+with testing guidelines makes one decision about the rule, even one with nothing to mutate, and a
+product that adopts a tool pays for its configuration.
+*Rejected:* a row of the table that chooses the level of a test — the check of tests is no level of
+test, and a row holds neither the classification nor the choice of a tool, while the product adopts
+the table whole; a threshold on the share of copies the tests fail — a number to chase; a run over
+the whole product at each change — slow, and its surviving copies lie outside the change; the rule
+binding every product directly — rigid for a product with no computation (WAY-173).
+
+### WAY-253 — Who runs a mutation tool in a task's cycle, and what does the author check in its place?
+
+Where a product's testing guidelines adopt a mutation tool for a part (WAY-252), the reviewer of the
+whole change runs the tool on the changed files of that part and classifies itself each copy no test
+fails, and the author of the change does not mutate that part's code in their head. In every other
+part, the author mutates the code in their head before finishing — a wrong constant or branch, a
+missing side effect, an empty return, unchecked empty or hostile input — and treats a mutation no
+test catches as behaviour left unprotected.
+
+- **Scope:** task-cycle, product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-252 · derives from WAY-10
+- **Verification:** an agent compares the work with the decision:
+  - complies: a change to a game's rule of heat reaches its simulation, for which the guidelines
+    adopt a mutation tool; the author makes no mutation in their head there, and the reviewer of the
+    whole change runs the tool on the changed file and classifies each surviving copy; a change to
+    a part no adopted tool covers gets the author's check in the head;
+  - violates: the author runs the tool and hands the reviewer a list of surviving copies; the author
+    both mutates the code in their head and leaves the same part to the tool; the reviewer of the
+    whole change leaves the tool unrun on a part the guidelines adopt it for.
+- **Origin:** none
+
+*Rationale:* the reviewer did not write the tests, so its run and its classification check them as
+an agent apart from the change (WAY-10), from the tool's output rather than from an author's
+summary of it; an author who sees the surviving copies first is drawn to kill each with an assertion
+pinned to a detail. A check in the head where a tool runs repeats the tool's work at the cost of the
+author's effort. One run by the reviewer of the whole change covers every slice of it. Its weak
+point: a real gap the tool finds returns to the author as a finding of the review, one round of
+fixes more than if the author had run the tool.
+*Rejected:* the author runs the tool and passes the surviving copies to the reviewer — the reviewer
+judges a list the author prepared, and the author is drawn to chase the copies; the author's check
+in the head beside the tool — the same check twice.
+
+### WAY-254 — Where does the command of a mutation tool stand?
+
+The command that runs a product's mutation tool stands in the rule of mutation testing of the
+product's testing guidelines (WAY-252), and no CI configuration, recipe of a level or instruction
+file names it: a mutation run is a check the reviewer makes, which admits no change to a merge, so a
+test it leaves out only lets more copies survive. In this area this decision prevails over WAY-16.
+
+- **Scope:** product-guidelines, task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-252 · narrows WAY-16
+- **Verification:** an agent compares the work with the decision:
+  - complies: the rule of mutation testing in a product's testing guidelines gives the command that
+    runs the tool on the files of a change, and the product's `AGENTS.md` names the gate alone;
+  - violates: the product's CI runs the mutation tool on every pull request; a recipe's field of the
+    command gives the mutation tool's command; the product's `AGENTS.md` names the mutation tool's
+    command as a way to check a change.
+- **Origin:** none
+
+*Rationale:* one command runs every test so that no list written by hand drifts from the tests, in
+which a test left out never runs (WAY-16). A mutation run admits no change; it asks whether the
+tests notice faults, so a test it leaves out only lets more copies survive, which the reviewer sees
+and classifies, and the reason of WAY-16 does not reach it. A mode of mutation taught to each product's
+gate would add code to every product that adopts a tool, to keep a rule whose reason does not apply.
+The command stands beside the rule that says when the reviewer runs it. Its weak point: a product's
+guidelines hold a second command, and only the narrow area of this decision keeps other tools from
+claiming the same exception.
+*Rejected:* a mode of mutation in the gate — code in each product's gate for a rule whose reason
+does not apply; the run in CI — a run that admits nothing has no place where changes are admitted;
+commands of the test tool for each level, which WAY-241 rejects, stay rejected, since they run the
+product's tests beside the gate.
+
 ## Withdrawn identifiers
 
 | Identifier | Why | Successors |

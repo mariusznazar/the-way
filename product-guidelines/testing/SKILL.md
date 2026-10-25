@@ -66,8 +66,9 @@ writes there is written for a reader who was not in it.
   departure from it with its reason, the levels and the glossary terms of their names, the
   documents that are sources of expected values, the fields of each recipe that bind, each level's
   exemplar test, each exclusion with its condition of return, the decisions on permissions the rows
-  of the authorization table come from, each AI tool the tests use, and each invariant — each with
-  the human's words and date as its source.
+  of the authorization table come from, each AI tool the tests use, the mutation tool and the parts
+  it runs on or the departure from the rule of mutation testing, and each invariant — each with the
+  human's words and date as its source.
 - *Context*: what the audit found, each charge with its file and line, a charge the task does not
   take up marked deferred with its reason; for each trust boundary, whether a test of its refusal
   exists; the research's sources where research ran, each page with its version; what the audit
@@ -213,7 +214,10 @@ Where the product has tests (WAY-250):
   - the product's decisions on permissions from which the rows of the authorization table come
     (WAY-235);
   - each AI tool the product's tests use, with the environment fact of how it behaves at the version
-    the product uses (WAY-236).
+    the product uses (WAY-236);
+  - for the parts whose complexity lies in computation, whether the product adopts a mutation tool,
+    with the tool, a technology choice as "New tools" gives it, and the parts it runs on, or departs
+    from the rule of mutation testing with its reason (WAY-252).
 - **Invariants.** A binding rule gets an invariant where a cheap test checks it on a convention of
   the product's code; a rule no such test checks gets none, and the review of each change it reaches
   compares the change with it (WAY-168). The rule of trust boundaries always gets its invariants
