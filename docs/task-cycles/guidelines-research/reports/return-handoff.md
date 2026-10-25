@@ -1,0 +1,9 @@
+# Return-step handoff
+
+Resume as author in C:/Storage/repos/the-way-wt/guidelines-research on task/guidelines-research. This handoff will be dispatched only after the orchestrator gate returns; its result will be given in the dispatch. Reviewed commit: a6453b7ba019c6f2c54a503fb62adb4a1ffc84e5. Whole review PASS, no findings, report reports/review-report.md.
+
+Use this worktree's the-way-make-change skill for the return step. Read task-cycle/skill/SKILL.md step 11 and the foundation-step paragraph in Execute, verify and review whole; use element skills for any necessary entry. Read agent-instructions/README.md's return-step rule. Do not read cycle.md. Use the same frozen whole task, foundation entries and sources as your author handoff, plus your report and the review report; no spec or plan.
+
+Compare the entries this change edits, those the task names and those your one foundation search found with the actual skills, and the touched parts of the map. Correct any mismatch in the same branch. Do not repeat the whole-foundation search; no hunt for unrecorded behavior/invariants. Account for all four accepted settlement rows. Write any binding choice not yet represented if authorized by the task; return questions you cannot resolve within it. Trust boundary no, irreversible operation no, human actions none. No product code/tests/UI or discipline-guideline gap applies.
+
+Report to docs/task-cycles/guidelines-research/reports/return-report.md: status, comparisons and result, every settlement mapping, decisions/invariants/facts/glossary/map changes or none, checks with exact command and exit code, reaches/questions/choices and commits if any. If no change is needed, return explicitly no changes/no commit; avoid rerunning already passing focused checks without new evidence. If changes are needed, commit explicitly selected paths and return before review. No push/PR/backlog edit.
