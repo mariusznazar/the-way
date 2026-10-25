@@ -1,7 +1,0 @@
-{
-  "command": "python -B gate/run_tests.py",
-  "commit": "a6453b7ba019c6f2c54a503fb62adb4a1ffc84e5",
-  "started": "2026-10-25T01:31:09.325836+00:00",
-  "finished": "2026-10-25T01:41:57.584759+00:00",
-  "exit_code": 0
-}
