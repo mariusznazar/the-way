@@ -76,7 +76,7 @@ before you commit.
 - Before you finish, mutate the code in your head — a wrong constant or branch, a missing side
   effect, an empty return, unchecked empty or hostile input. A mutation no test catches is behaviour
   left unprotected. Skip this for a part whose mutation tool the product's testing guidelines
-  adopt: the reviewer of the whole change runs the tool there (WAY-253).
+  adopt: the reviewer of your change runs the tool there (WAY-253).
 - Never weaken an assertion, skip a test or relax a lint rule to make a check pass.
 
 ## 3. Check your own work
