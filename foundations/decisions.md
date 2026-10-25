@@ -7068,10 +7068,9 @@ Where a product's testing guidelines adopt a mutation tool for a part (WAY-252),
 reviews a change reaching that part — a slice, the whole change, a fix of findings or a correction
 after the human's remarks — runs the tool on the files of that part the reviewed diff changes and
 classifies itself each copy no test fails, and the author of the change does not mutate that part's
-code in their head. In every other
-part, the author mutates the code in their head before finishing — a wrong constant or branch, a
-missing side effect, an empty return, unchecked empty or hostile input — and treats a mutation no
-test catches as behaviour left unprotected.
+code in their head. In every other part, the author mutates the code in their head before
+finishing — a wrong constant or branch, a missing side effect, an empty return, unchecked empty or
+hostile input — and treats a mutation no test catches as behaviour left unprotected.
 
 - **Scope:** task-cycle, product-guidelines
 - **Based on:** none
