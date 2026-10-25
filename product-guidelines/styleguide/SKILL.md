@@ -67,7 +67,8 @@ writes there is written for a reader who was not in it.
   from the template and answer on accessibility, each with the human's words and date as its
   source.
 - *Context*: the audit's charges with their files and lines, a charge not taken up marked deferred
-  with its reason; the research's sources, each page with its version; what the audit could not see.
+  with its reason; the research's sources where research ran, each page with its version; what the
+  audit could not see.
 - *Settlements to record*: `refine-task` step 5 builds them through `find-foundation-entries` —
   the product's decisions, invariants and the environment facts they rest on. A change of the part
   map is never a row, which is why it stands in *To do*.
@@ -107,29 +108,39 @@ starts no child agent and edits only the task document and its turn.
   reads, shared components, or nothing — whether it has screens, and whether a styleguide exists.
   Say plainly when it has nothing (WAY-185).
 - That gives the mode: no screens, the starting rules of step 2; screens and no styleguide, the
-  audit of step 3; an existing styleguide, its refresh or extension — step 2, and step 3 where
-  screens changed since the styleguide was written.
+  starting rules of step 2 and the audit of step 3; an existing styleguide, its refresh or
+  extension — step 2, and step 3 where screens changed since the styleguide was written.
 - Extend what exists. A new library of components or a new way of styling is a technology choice:
   record it as an open question of the task, never settle it (WAY-185, WAY-121).
 
+A refresh updates or corrects accepted guidelines within the scope they already cover,
+including adapting them to a new version of a tool the product uses. An extension covers something
+new; its research checks whether to use what the product has or something else (WAY-251).
+
 ## 2. Starting rules
 
-Before the first screen, and at every refresh or extension (WAY-184, WAY-186):
+For the first styleguide, with or without screens, and at every refresh or extension
+(WAY-184, WAY-186):
 
 - Ask, as one question of assessment, for the human's preferences for styling in the technology of
-  the user interface that the product's foundation settles; "I do not know" is an answer.
-- Where the human has none, and at every refresh or extension, research the basic rules of a
-  styleguide for that technology. Split it into the questions the starting set must answer there —
-  how the technology names and pairs colour roles, how it draws focus, how its controls show their
-  states — and give each to a fresh agent of its own, all at once, with the technology, the
-  preferences and the binding sentences of the decisions that settle it. Each source is a page with
-  its version, never memory and never a fixed list; each report goes to
-  `.runs/styleguide/<part>/<question>.md`, the question's name in lower case with hyphens.
-- Give one fresh agent, following `critique`, each report with its sources, and ask it to refute
-  every claim no source supports — a rule, or a difference between ways of following one. Verify
-  each observation and give your verdict, correct the report by the verdicts, then end it with the
-  line `critique: passed`. Where no fresh agent can run, the research does not go on: stop and say
-  so (WAY-186, WAY-120). What the research finds is proposed in step 4, never imposed.
+  the user interface that the product's foundation settles; "I do not know" is an answer. A tool
+  the human prefers is the one proposed, and no other is offered in its place (WAY-186).
+- For the first styleguide where the human has no preference, and at every extension, research the
+  basic rules for that technology; at a refresh, do no research and use the accepted styleguide
+  with the update or correction the task calls for. Split research into the questions the starting
+  set or the scope being added must answer there — how the technology names and pairs colour
+  roles, how it draws focus, how its controls show their states — and give each to a fresh agent
+  of its own, all at once, with the technology, the preferences, the scope being added where this
+  is an extension, and the binding sentences of the decisions that settle it. Include any new
+  tool's consequences for the product. Each source is a page with its version, never memory and
+  never a fixed list; each report goes to `.runs/styleguide/<part>/<question>.md`, the question's
+  name in lower case with hyphens.
+- Where research ran, give one fresh agent, following `critique`, each report with its sources,
+  and ask it to refute every claim no source supports — a rule, or a difference between ways of
+  following one. Verify each observation and give your verdict, correct the report by the
+  verdicts, then end it with the line `critique: passed`. Where no fresh agent can run, the
+  research does not go on: stop and say so (WAY-186, WAY-120). What the research finds is proposed
+  in step 4, never imposed.
 - Add the product's own meanings: from its definition, plan, specs and mockups, describe each
   screen the product announces — what the user sees, the components it is built from, and its
   states with the messages the user reads. A mockup shows what a screen holds; the meaning of a
@@ -164,6 +175,12 @@ Where the user interface has screens (WAY-187):
   a choice the skill recommends included, and after a choice that enters a binding part ask the one
   question "How a skill asks" gives. Before first using a term of the field — contrast, focus, a
   state of a control — say in plain words what it means (WAY-174, WAY-113).
+- **New tools.** For each new tool or library left as a technology question of the task,
+  show the options by their consequences for the product: cost, where they run, upkeep and the
+  cost of changing later. Give a recommendation and the weak point of the option recommended;
+  keep the human's preferred tool as the recommendation, and otherwise recommend the simplest
+  and cheapest where no difference with a consequence remains. Leave the choice to the human
+  in this task (WAY-185, WAY-186, WAY-123, WAY-121).
 - **What it settles.** The roles of the table the styleguide template gives, each row settled with
   the human, its value and the value's source among them; the states of the shared controls; the
   page of every state; the meanings grouped into decisions as that template's section "Pairs and
@@ -211,5 +228,5 @@ Where the user interface has screens (WAY-187):
 - Check that the task document holds what "What reaches the task document" names, and that no
   meaning stands settled without the human's words.
 - Hand back to `refine-task` step 4. Its step 5 finds the rows of *Settlements to record* through
-  `find-foundation-entries` in task mode, with the task document, this conversation and the
+  `find-foundation-entries` in task mode, with the task document, this conversation and any
   research reports as its source, and its step 6 asks the human to accept the whole document.

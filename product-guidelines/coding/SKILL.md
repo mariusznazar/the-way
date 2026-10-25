@@ -76,11 +76,11 @@ writes there is written for a reader who was not in it.
   of each exemplar, each invariant, and the flag by which the linter's test makes a comment that
   turns a rule off have no effect, where the tool has one — each with
   the human's words and date as its source.
-- *Context*: the trial run's evidence — how many reports each rule gave and what the judging
-  agent found of them, with the paths of the output and of its verdicts; what the audit found, each
-  `do not copy` file with its file and line, a finding the task does not take up marked deferred
-  with its reason; the research's sources, each page with its version; what the audit or the trial
-  run could not see.
+- *Context*: the trial run's evidence — how many reports each rule gave and what the judging agent
+  found of them, with the paths of the output and of its verdicts; what the audit found, each `do
+  not copy` file with its file and line, a finding the task does not take up marked deferred with
+  its reason; the research's sources where research ran, each page with its version; what the
+  audit or the trial run could not see.
 - *Settlements to record*: `refine-task` step 5 builds them through `find-foundation-entries` —
   the product's decisions, its invariants and the environment facts they rest on, the fact of each
   adopted set's edition among them. A change of the part map is never a row, which is why it stands
@@ -131,41 +131,48 @@ child agent and edits only the task document, its turn and the trial run's outpu
   it. A new linter, formatter or audit of dependencies is a technology choice: record it as a
   question of the task, never settle it (WAY-210, WAY-121).
 
+A refresh updates or corrects accepted guidelines within the scope they already cover,
+including adapting them to a new version of a tool the product uses. An extension covers something
+new; its research checks whether to use what the product has or something else (WAY-251).
+
 ## 2. Starting set
 
 Before the first code, for code that has no coding guidelines yet, and at every refresh or extension
 (WAY-209, WAY-210, WAY-211):
 
-- Ask, as one question of assessment, for the human's preferences for the standing checks and their
-  sets of rules in the technology that the product's foundation settles; "I do not know" is an
-  answer. A tool the human prefers is the one proposed, and no other is offered in its place
+- Ask, as one question of assessment, for the human's preferences for the standing checks and
+  their sets of rules in the technology that the product's foundation settles; "I do not know" is
+  an answer. A tool the human prefers is the one proposed, and no other is offered in its place
   (WAY-211).
-- Where the human has none, and at every refresh or extension, research each standing check for
-  that technology, giving each to a fresh agent of its own, all at once, with the technology, the
-  preferences and the binding sentences of the decisions that settle it: the tools used for it,
-  which of them is most used in that technology — the default recommendation (WAY-210) — the sets
-  of rules a linter offers with the rules its documentation marks as recommended, and the advisory
-  databases an audit reads. Each source is a page with its version, never memory and never a fixed
-  list; each report goes to `.runs/coding/<question>.md`, the question's name in lower case with
-  hyphens.
-- Give one fresh agent, following `critique`, each report with its sources, and ask it to refute
-  every claim no source supports — a tool's use, a rule, a difference between tools. Verify each
-  observation and give your verdict, correct the report by the verdicts, then end it with the line
-  `critique: passed`. Where no fresh agent can run, the research does not go on: stop and say so
-  (WAY-211, WAY-120). What the research finds is proposed in step 4, never imposed.
+- For the first coding guidelines where the human has no preference, and at every extension,
+  research each standing check for that technology; at a refresh, do no research and use the
+  accepted guidelines with the update or correction the task calls for. Give each standing check
+  to a fresh agent of its own, all at once, with the technology, the preferences, the scope being
+  added where this is an extension, and the binding sentences of the decisions that settle it: the
+  tools and their consequences for the product, the sets of rules a linter offers with the rules
+  its documentation marks as recommended, and the advisory databases an audit reads. Each source
+  is a page with its version, never memory and never a fixed list; each report goes to
+  `.runs/coding/<question>.md`, the question's name in lower case with hyphens.
+- Where research ran, give one fresh agent, following `critique`, each report with its sources,
+  and ask it to refute every claim no source supports — a tool's use, a rule, a difference between
+  tools. Verify each observation and give your verdict, correct the report by the verdicts, then
+  end it with the line `critique: passed`. Where no fresh agent can run, the research does not go
+  on: stop and say so (WAY-211, WAY-120). What the research finds is proposed in step 4, never
+  imposed.
 - For a product with no code, the rules proposed to block are those the linter's documentation
-  marks as recommended, as the research reads them: there is no code to try them on (WAY-204).
+  marks as recommended: read that documentation at the proposed version also where preferences
+  supplied the tool and no research ran; there is no code to try them on (WAY-204).
 
 ## 3. Trial run and audit
 
 Where the product has code:
 
-- **Trial run** (WAY-204). Run the linter's set — the one the product runs with the rules the
-  research of step 2 proposes adding, or the one step 2 proposes — at the version the research or
-  the product's files give, on the product's code in a scratch worktree of its commit or in a
-  temporary environment, outside its working tree: the tool is installed only there, never into a
-  file git tracks, and the scratch worktree is removed afterwards. Its output goes to
-  `.runs/coding/`.
+- **Trial run** (WAY-204). Run the linter's set — the one the product runs with the additions or
+  corrections step 2 proposes, or the one step 2 proposes from preferences or research — at the
+  version read from the product's files or the proposed tool's documentation, on the product's
+  code in a scratch worktree of its commit or in a temporary environment, outside its working
+  tree: the tool is installed only there, never into a file git tracks, and the scratch worktree
+  is removed afterwards. Its output goes to `.runs/coding/`.
 - Give one fresh agent that wrote none of that code each report with the code it points to, and
   ask it to judge whether the report leads to a change of code worth making, whether the report is
   technically right or not; its verdicts go beside the output. A rule with one report that leads to
@@ -205,6 +212,12 @@ Where the product has code:
   flagged sound code here and stay as examples", each of the few shown by what it flagged. Before
   first speaking of a linter, a formatter or an audit of dependencies, say in plain words what it
   does for the product (WAY-174, WAY-113).
+- **New tools.** For each new tool or library left as a technology question of the task,
+  show the options by their consequences for the product: cost, where they run, upkeep and the
+  cost of changing later. Give a recommendation and the weak point of the option recommended;
+  keep the human's preferred tool as the recommendation, and otherwise recommend the simplest
+  and cheapest where no difference with a consequence remains. Leave the choice to the human
+  in this task (WAY-210, WAY-211, WAY-123, WAY-121).
 - **What it settles.**
   - for each standing check, the product's decision adopting it or departing from it with its
     reason; the task is not ready without one for each (WAY-202);
@@ -255,6 +268,6 @@ Where the product has code:
   standing check has its adopting or departing decision among the choices settled (WAY-202), and
   that no choice stands settled without the human's words.
 - Hand back to `refine-task` step 4. Its step 5 finds the rows of *Settlements to record* through
-  `find-foundation-entries` in task mode, with the task document, this conversation and the
-  research and trial-run reports as its source, and its step 6 asks the human to accept the whole
-  document.
+  `find-foundation-entries` in task mode, with the task document, this conversation and any
+  research reports and the trial-run reports as its source, and its step 6 asks the human to
+  accept the whole document.
