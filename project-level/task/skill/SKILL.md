@@ -145,7 +145,7 @@ human acceptance of the complete task, even when refinement finds no candidate s
 - Resolve the shared guideline reading's findings by their kind (WAY-215, WAY-216):
   - Missing discipline guidelines keep this task `waiting for human`, with a named question
     in *Questions to settle* awaiting a separate guidelines task's merge, even in a product
-    with screens or code. Continue refinement independent of that answer. A scoped departure
+    with screens, code or tests. Continue refinement independent of that answer. A scoped departure
     applies only where the shared reading establishes it; the task writing the missing
     guidelines does not wait for itself.
   - For an independent or source-only task, propose the prerequisite and, after human approval,

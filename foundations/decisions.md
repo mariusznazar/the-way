@@ -6059,9 +6059,9 @@ The template of the testing discipline requires the rule that a test takes the i
 and the value it expects written out, wherever the code under test would otherwise compute either,
 and only the side it compares against comes from the run; a property test takes its inputs from a
 test library's generator and its expected value from a relation the code under test does not
-compute — undoing the operation, an invariant's sentence, or a simpler version written from the
-requirement, not copied from the code — and a counterexample the library finds is kept as an
-ordinary test with its values written out. A product departs from the rule only by a decision of
+compute — undoing the operation, a condition kept after every step, or a simpler version written
+from the requirement, not copied from the code — and a counterexample the library finds is kept as
+an ordinary test with its values written out. A product departs from the rule only by a decision of
 its log that gives the reason, and the rule binds a product from the task that writes its testing
 guidelines.
 
@@ -6092,7 +6092,7 @@ guidelines.
 unseen; the rule stands in the testing guidelines, which an agent reads before it writes or changes
 a test (WAY-246). A property test checks a relation over many generated inputs, so its expected value
 is that relation, and developers apply such tests where a relation lies at hand — a pair of inverse
-functions, a reference implementation, an invariant kept after every step. The relation holds only
+functions, a reference implementation, a condition kept after every step. The relation holds only
 where the code under test does not compute it: a simpler version copied from the code makes the
 test a mirror of it, which only the reviewer catches. A counterexample written out stays checked on
 every run, whatever the generator draws next. The price: the rule is longer.
