@@ -74,9 +74,12 @@ into being:
 - A kind absent from the general index whose first file this task creates needs its exemplar,
   kind guidelines and index row in that task, without a separate exemplar prerequisite
   (WAY-216). The general file must still exist unless this task writes it or a departure applies.
-- Where the work writes the first test of a level whose recipe in `guidelines/testing.md` has an
-  empty *Exemplar*, designating that test belongs to this task through `maintain-testing-guidelines`,
-  without a separate exemplar wait (WAY-242).
+- Where the work's required outcome is itself the first test of a level whose recipe in
+  `guidelines/testing.md` has an empty *Exemplar*, designating that test belongs to this task
+  through `maintain-testing-guidelines`, without a separate exemplar wait, its document naming the
+  level and no path (WAY-242). Where the level of a test is the cycle's choice, refinement
+  designates nothing: the cycle's author who writes a level's first test proposes its designation
+  at a blocked draft request (WAY-242, WAY-172).
 - Where files of an unindexed kind already exist, name that discrepancy and route their
   comparison and exemplar selection through `maintain-coding-guidelines` under WAY-200. Do not
   call the next file the first or use the finding to authorize an unrelated audit.

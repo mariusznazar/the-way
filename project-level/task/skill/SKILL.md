@@ -167,9 +167,11 @@ human acceptance of the complete task, even when refinement finds no candidate s
     `maintain-coding-guidelines`, without a separate exemplar wait. Existing unindexed files
     instead need the comparison WAY-200 requires; record the discrepancy and route that work
     within this task's scope and, for a plan member, its plan boundary.
-  - For the first test of a level whose recipe has an empty *Exemplar*, add to *To do* designation of
-    that test as the level's exemplar through `maintain-testing-guidelines`, without a separate
-    exemplar wait (WAY-242).
+  - For a task whose required outcome is itself the first test of a level whose recipe has an empty
+    *Exemplar*, add to *To do* that this test becomes the level's exemplar, naming the level and no
+    path, through `maintain-testing-guidelines`, without a separate exemplar wait. Where the task's
+    tests are its cycle's choice, add no designation: the cycle proposes one for a level's first
+    test at a blocked draft request (WAY-242, WAY-238).
 
 ## 4. Carry the foundation decisions
 

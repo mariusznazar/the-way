@@ -5866,9 +5866,9 @@ before the tasks that need it, with those tasks depending on it, reusing an adeq
 already holds, and one guidelines task may carry both missing coding and testing guidelines
 (WAY-247).
 It places the designation of the exemplar and kind guidelines with the task creating that kind's
-first file, under WAY-216, and the designation of a level's exemplar test with the task writing
-that level's first test (WAY-242), while changes beyond the approved definition follow the existing
-definition and plan approval route.
+first file, under WAY-216, and the designation of a level's exemplar test with a task whose required
+outcome is itself that level's first test (WAY-242), while changes beyond the approved definition
+follow the existing definition and plan approval route.
 
 - **Scope:** project-level, product-guidelines
 - **Based on:** none
@@ -5878,11 +5878,13 @@ definition and plan approval route.
 - **Verification:** an agent compares the breakdown with the definition and product:
   - complies: the screen tasks depend on the missing styleguide task, while the first migration
     task carries its exemplar work; a new product's first code task depends on one task writing
-    both its coding and its testing guidelines; the task writing the first end-to-end test carries
-    the designation of that level's exemplar test; a suitable existing prerequisite is reused;
+    both its coding and its testing guidelines; the task whose outcome is the product's first
+    end-to-end test carries the designation of that level's exemplar test; a suitable existing
+    prerequisite is reused;
   - violates: guidance is discovered only when the first screen task is refined; a preparatory
     task has no consumer; the plan silently enlarges the approved scope; a separate task waits to
-    designate a level's exemplar test before any test of that level exists.
+    designate a level's exemplar test before any test of that level exists; the plan assigns a
+    level's exemplar test to a task whose tests its cycle chooses.
 - **Origin:** none
 
 *Rationale:* discovering the prerequisite during breakdown makes the dependencies visible before
@@ -6675,31 +6677,49 @@ stale.
 The exemplar test of a level of a product's tests is designated by a decision of the product, as the
 exemplar of a kind of code is: where the level already has tests, the skill
 `maintain-testing-guidelines` compares them and proposes the exemplar from that comparison, and
-where it has none, the task that writes its first test designates that test, approved in the task's
-refinement. Until a decision designates it, the field of the exemplar in the level's recipe stands
+where it has none, its first test becomes the exemplar. That designation is approved in a task's
+refinement only where the task's required outcome is itself a test of that level, its document
+naming the level and that the task's first test of it becomes the exemplar, with no list of tests
+and no path; where the author of a change chooses in the task's cycle to write a level's first
+test, it is approved at a blocked draft request, as WAY-172 gives a meaning the task's document does
+not settle. Until a decision designates it, the field of the exemplar in the level's recipe stands
 empty, and designating another test is a change of that decision.
 
-- **Scope:** product-guidelines
+- **Scope:** product-guidelines, project-level
 - **Based on:** none
 - **Relations:** derives from WAY-173 · derives from WAY-200 · derives from WAY-172
 - **Verification:** an agent compares the work with the decision:
   - complies: in a product with twelve integration tests the skill compares them and proposes the
     one that sets up its data through the product's fixtures, and the human approves the decision
-    naming its path; the task that writes a product's first end-to-end test designates that test,
-    its document carrying the decision;
+    naming its path; the document of a task whose outcome is the product's first end-to-end test,
+    of the sign-up journey, says that this test becomes the level's exemplar, and its cycle writes
+    the decision with the test's path; a cycle whose author chooses to check a query with the
+    product's first integration test proposes the decision designating that test at a blocked draft
+    request;
   - violates: a recipe names as its exemplar a test no decision designates; the empty field holds a
-    placeholder; a cycle points the field to another test on its own.
+    placeholder; a cycle points the field to another test on its own; the refinement of a task that
+    adds a discount rule designates the task's first unit test as that level's exemplar and gives
+    its path; a cycle designates the first test of a level it chose and leaves the decision to the
+    merge.
 - **Origin:** none
 
 *Rationale:* a test copied from whichever test an agent finds turns an accident into the model of
 every later one, while a test a decision designates is one a human approved. Who designates follows
 the state of the level, as for a kind of code: a comparison where tests exist, and the first test
-where none does, since an exemplar's material is made by its first instance. An empty field says
-plainly that none is designated, where an invented model would be copied, and designating another
-test changes a meaning of the guidelines (WAY-172).
+where none does, since an exemplar's material is made by its first instance. Refinement can approve
+the first test's designation only where the task's required outcome shows the level, as it assigns
+a first kind's exemplar where the requirement shows the kind (WAY-216); elsewhere the level of a
+test is the choice of the change's author and a task's refinement holds no plan of tests (WAY-238),
+so the designation reaches the human where WAY-172 puts a meaning the task's document does not
+settle. An empty field says plainly that none is designated, where an invented model would be
+copied, and designating another test changes a meaning of the guidelines (WAY-172).
 *Rejected:* the exemplar chosen by an agent of the cycle with no approval — a test nobody approved
 becomes the model; an exemplar the template gives every product — it fits no product's tools; a
-placeholder in the empty field — it reads as a designation.
+placeholder in the empty field — it reads as a designation; the designation approved in the
+refinement of every task that is to write a level's first test — the refinement would choose the
+level and the test, which WAY-238 leaves to the change's author; the designation always left to a
+blocked draft request — a task whose outcome is itself a level's first test would stop for what its
+document could carry.
 
 ### WAY-243 — How is a flaky test treated?
 

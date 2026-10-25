@@ -114,7 +114,7 @@ and its turn.
   - no tests: the starting set of step 2, so that the testing guidelines come into being before the
     first task that writes the product's tests (WAY-244);
   - tests and no testing guidelines: step 2, and the audit of step 3;
-  - a task that writes the first test of a level: "A new level" in step 3;
+  - a task whose required outcome is the first test of a level: "A new level" in step 3;
   - existing testing guidelines, refreshed or extended: step 2, and step 3, which audits each level
     again.
 - Extend what exists: the recipes are written for the test tool the product runs, never for a
@@ -159,9 +159,12 @@ Where the product has tests (WAY-250):
     reason.
 - **Trust boundaries** (WAY-250, WAY-235). For each trust boundary of the product's map, say whether
   a test checks its refusal directly, with that test's file and line, or that none does.
-- **A new level.** Where the task writes the first test of a level, that test is the level's
-  exemplar test, and the level's recipe comes into being with it (WAY-242, WAY-241): step 4 settles
-  the level, its recipe and the path the test takes.
+- **A new level.** Where the task's required outcome is itself the first test of a level, that test
+  becomes the level's exemplar test, and the level's recipe comes into being with it (WAY-242,
+  WAY-241): step 4 settles the level, its recipe and that the task's first test of it becomes the
+  exemplar, naming no list of tests and no path (WAY-238). Where the level of a task's tests is
+  its cycle's choice, the refinement designates no exemplar test: the cycle's author who writes a
+  level's first test proposes its designation at a blocked draft request (WAY-242, WAY-172).
 - A choice found in the product's tests — a configuration of the test tool, a habit its tests share
   — is a proposal, never a rule, until the human settles it. An existing choice the human keeps
   becomes a decision whose rationale is the human's words or `unknown`, never one the agent infers
@@ -187,7 +190,8 @@ Where the product has tests (WAY-250):
   - the product's documents that are sources of expected values (WAY-232);
   - for each level, the fields of its recipe that bind, each with the decision that carries it, the
     template's defaults adopted or departed from (WAY-241);
-  - for each level with tests, and each new level, its exemplar test (WAY-242);
+  - for each level with tests, its exemplar test, and for a new level of "A new level", that the
+    task's first test of it becomes the exemplar (WAY-242);
   - each category the product deliberately does not test, with the decision that gives its reason
     and the condition under which it is tested again; a trust boundary is never one (WAY-237);
   - the product's decisions on permissions from which the rows of the authorization table come
