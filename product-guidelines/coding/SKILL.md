@@ -29,9 +29,10 @@ for it (WAY-107). `refine-task` opens or resumes the task through its steps 1 an
 takes over at its step 3 for the matters of the coding guidelines and hands back to its step 4.
 Refinement and the task cycle find applicable and missing guidelines through
 `product-guidelines/reading.md`; this skill owns settling their coding-guideline meanings. The
-task writing the missing general file does not wait for its own output (WAY-215). A product that
-pinned the-way before this skill existed reaches it once a task moves the pin, as
-`installation/README.md` gives it.
+task writing the missing general file does not wait for its own output (WAY-215). One task may carry
+the coding and the testing guidelines together, each skill leading its own matters in that
+refinement (WAY-247). A product that pinned the-way before this skill existed reaches it once a task
+moves the pin, as `installation/README.md` gives it.
 
 | | This skill, in the refinement | The cycle's author, in `implement-task` |
 |---|---|---|
@@ -116,9 +117,9 @@ child agent and edits only the task document, its turn and the trial run's outpu
   the map holds no part for it yet, its identifier is a question of the task, and *To do* gains
   adding that part, with the files the task creates, through `update-part-map`.
 - Find in the product's files what it has for that code — a linter, a formatter, an audit of
-  dependencies, each with its configuration and version; kinds of code it already holds files of,
-  such as endpoints, migrations or modules; or nothing — and whether it has coding guidelines. Say
-  plainly when it has nothing (WAY-210).
+  dependencies, each with its configuration and version; kinds of code it already holds files of
+  other than tests (WAY-231), such as endpoints, migrations or modules; or nothing — and whether it
+  has coding guidelines. Say plainly when it has nothing (WAY-210).
 - That gives the mode, and modes combine:
   - no code: the starting set of step 2, so that the general file with its standing checks comes
     into being before the first task that writes the product's code (WAY-209);
@@ -217,9 +218,6 @@ Where the product has code:
   - for each kind the product holds files of, and each new kind, its exemplar, the status of each
     of its files and the rules a script checks of the exemplar (WAY-198, WAY-199, WAY-200,
     WAY-201);
-  - the rule of the product's tests, shown by its effect — "a test writes out the input it feeds and
-    the value it expects, so that it fails when the code goes wrong" — adopted with the template or
-    departed from by a decision with its reason (WAY-228);
   - the product's decision adopting the coding template, and each departure from it by a decision
     with its reason (WAY-173).
 - **Invariants.** A binding rule gets an invariant where a cheap test checks it on a convention of

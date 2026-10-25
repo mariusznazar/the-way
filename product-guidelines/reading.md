@@ -1,6 +1,6 @@
 # Reading a product's guidelines
 
-Use this procedure whenever an agent's work touches a product's user interface or code: in task
+Use this procedure whenever an agent's work touches a product's user interface, code or tests: in task
 refinement (WAY-214), in project breakdown (WAY-218) and in the task cycle (WAY-213). Read it from
 the checkout or pinned the-way the calling workflow uses.
 
@@ -23,7 +23,8 @@ Name the parts the work touches as step 1 of "Reading the foundation" in
 `elements/common/way_of_working.md` names them: from the files the work changes or is to change,
 or, where the work names no file yet, from the responsibilities it changes. Inspect the
 product's files to establish what is already there. For each part, settle whether the work changes
-a user interface or writes code, and which kinds of code it creates or changes. A backend's admin
+a user interface, writes code or writes or changes a test, and which kinds of code it creates or
+changes. A backend's admin
 panel is a user interface; helper and build scripts are code. Names and file extensions alone do
 not settle the classification. An API or terminal alone is no user interface in the styleguide's
 sense (WAY-183).
@@ -61,8 +62,9 @@ reach does not update a list of selected files; the report names it.
 Discovery uses the common form above; the response follows when the discipline's guidelines come
 into being:
 
-- A user interface with no styleguide, or code work in a product with no `guidelines/coding.md`,
-  lacks discipline guidelines, whether the product is new or already has screens or code.
+- A user interface with no styleguide, code work in a product with no `guidelines/coding.md`, or
+  work that writes or changes a test in a product with no `guidelines/testing.md`, lacks discipline
+  guidelines, whether the product is new or already has screens, code or tests.
   A scoped departure removes that finding only within its scope. A task writing the missing
   guidelines does not wait for its own output; still name what it is to create.
 - An existing general coding file omitting an affected code part is read as the source to
@@ -72,6 +74,12 @@ into being:
 - A kind absent from the general index whose first file this task creates needs its exemplar,
   kind guidelines and index row in that task, without a separate exemplar prerequisite
   (WAY-216). The general file must still exist unless this task writes it or a departure applies.
+- Where the work's required outcome is itself the first test of a level whose recipe in
+  `guidelines/testing.md` has an empty *Exemplar*, designating that test belongs to this task
+  through `maintain-testing-guidelines`, without a separate exemplar wait, its document naming the
+  level and no path (WAY-242). Where the level of a test is the cycle's choice, refinement
+  designates nothing: the cycle's author who writes a level's first test proposes its designation
+  at a blocked draft request (WAY-242, WAY-172).
 - Where files of an unindexed kind already exist, name that discrepancy and route their
   comparison and exemplar selection through `maintain-coding-guidelines` under WAY-200. Do not
   call the next file the first or use the finding to authorize an unrelated audit.

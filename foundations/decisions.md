@@ -4693,15 +4693,16 @@ panel or a small script, and a binding choice standing outside the product's log
 
 ### WAY-174 — How do the-way's skills of guidelines ask the human?
 
-The-way's skills `maintain-styleguide` and `maintain-coding-guidelines` put to the human every
-choice they settle for a product's guidelines, a choice they recommend included, and show each in
-plain words — a styleguide's by what someone using the product sees on the screen, never by the
-names or values of design tokens, and coding guidelines' by their effect on the product, never by
-the names of a linter's rules or the values of a tool's configuration — saying in plain words what a
-term of the field means before they first use it. The coding-guidelines skill asks for decisions,
-never for single rules, so that the human adopts a linter's set of rules whole. In the area of the
-questions these skills ask this decision prevails over WAY-114, under which a question goes to the
-human only where the agent has no recommendation.
+The-way's skills `maintain-styleguide`, `maintain-coding-guidelines` and
+`maintain-testing-guidelines` put to the human every choice they settle for a product's guidelines,
+a choice they recommend included, and show each in plain words — a styleguide's by what someone
+using the product sees on the screen, never by the names or values of design tokens, coding
+guidelines' by their effect on the product, never by the names of a linter's rules or the values of
+a tool's configuration, and testing guidelines' by their effect on the product, never by the name of
+a technique or a tool — saying in plain words what a term of the field means before they first use
+it. The coding-guidelines skill asks for decisions, never for single rules, so that the human adopts
+a linter's set of rules whole. In the area of the questions these skills ask this decision prevails
+over WAY-114, under which a question goes to the human only where the agent has no recommendation.
 
 - **Scope:** product-guidelines, decisions
 - **Based on:** none
@@ -4714,28 +4715,32 @@ human only where the agent has no recommendation.
     security hole does not get in" with the ways open, their cost and its recommendation, asks
     whether to adopt the formatter it recommends, and shows a linter's set as "this many rules will
     block a change, and these few flagged sound code here and stay as examples", and the human
-    adopts the set with that split;
+    adopts the set with that split; the testing-guidelines skill shows "the tests of the account
+    server talk to a real database, so a broken query turns them red, at the price of a slower run",
+    after saying in plain words what an integration test is;
   - violates: the skill asks the human to choose between two hexadecimal values of a design token,
     or between two names of a linter's rules; it writes into the task a role or a linter it
     recommends without asking; it speaks of focus rings before saying what focus is; it asks rule by
-    rule which rules of a set to take.
+    rule which rules of a set to take; the testing-guidelines skill asks whether to mock or to fake
+    the database.
 - **Origin:** none
 
 *Rationale:* the human who approves a product's meanings and standing checks is no specialist of
-user interfaces and does not judge code, so a choice shown by the names or values of design tokens,
-by the names of rules or by values of configuration is one the human cannot weigh, while what a user
-sees or what a choice does to the product can be weighed, as a technology choice reaches a human who
-cannot assess the technology through its consequences (WAY-123). A meaning binds every later screen,
-a standing check or an exemplar every later change of the code, and no decision enters without the
-human's acceptance, so a recommendation the human never heard would be a choice no human made. Asked
-rule by rule, the human would judge each rule's worth in code, which the trial run already shows by
-its effect. The price is a longer conversation in each task that writes guidelines.
+user interfaces and judges neither code nor the tests below end-to-end ones, so a choice shown by the
+names or values of design tokens, by the names of rules, by values of configuration or by the name of
+a testing technique is one the human cannot weigh, while what a user sees or what a choice does to
+the product can be weighed, as a technology choice reaches a human who cannot assess the technology
+through its consequences (WAY-123). A meaning binds every later screen, a standing check or an
+exemplar every later change of the code or of the tests, and no decision enters without the human's
+acceptance, so a recommendation the human never heard would be a choice no human made. Asked rule by
+rule, the human would judge each rule's worth in code, which the trial run already shows by its
+effect. The price is a longer conversation in each task that writes guidelines.
 *Rejected:* the skill writing what it recommends and asking only where it has no recommendation, as
 WAY-114 gives it — screens are built on meanings the human never saw, and turning one down at the
 merge reworks them, and the human meets the choice of an exemplar or a departure from a standing
-check only in the finished document; questions about the names and values of design tokens — the
-human cannot weigh them; the human deciding rule by rule — they would judge what they cannot
-judge.
+check only in the finished document; questions about the names and values of design tokens, or by
+the names of testing techniques and tools — the human cannot weigh them; the human deciding rule by
+rule — they would judge what they cannot judge.
 
 ### WAY-176 — How does a styleguide name its colour roles and pair them?
 
@@ -5728,11 +5733,11 @@ The skill `refine-task` uses the reading the agents of the task cycle use,
 `product-guidelines/reading.md`, to find guidelines by the affected parts' *Applies to* and a kind
 of code by its row in the general coding index, the table of `guidelines/coding.md`, with the
 consequence of an absence following when the discipline's guidelines come into being (WAY-184,
-WAY-209).
-Before a diff exists, it identifies affected parts, user interfaces, code and kinds of code from
-the required behaviour, the responsibilities of the part map and existing product files,
-expanding its reading and exposing unresolved classification or malformed metadata as a question
-rather than an empty match.
+WAY-209, WAY-244).
+Before a diff exists, it identifies affected parts, user interfaces, code, kinds of code and whether
+the work writes or changes tests from the required behaviour, the responsibilities of the part map
+and existing product files, expanding its reading and exposing unresolved classification or
+malformed metadata as a question rather than an empty match.
 An existing general coding file whose *Applies to* omits an affected code part is read for
 extension in the current task, not treated as an absent file.
 
@@ -5744,10 +5749,12 @@ extension in the current task, not treated as an absent file.
 - **Verification:** an agent compares refinement and its reading with the decision:
   - complies: an announced admin panel is recognized before its files exist; the same lookup
     finds the missing styleguide and an unindexed kind; an omitted part extends existing coding
-    guidelines; an absent indexed file is named as a discrepancy;
+    guidelines; an absent indexed file is named as a discrepancy; a fix whose required behaviour
+    needs a new test is recognized as writing tests in a product with no testing guidelines;
   - violates: each discipline uses an unrelated lookup; helper code is passed over because it is
     small; an uncertain kind is silently considered covered; an omitted part creates a false wait
-    for a new general coding file.
+    for a new general coding file; a task that changes a test is classified only by the code it
+    touches.
 - **Origin:** none
 
 *Rationale:* discovery repeated per discipline drifts from what the later cycle reads. Recognizing
@@ -5760,11 +5767,12 @@ screens without its name saying so.
 
 ### WAY-215 — What happens to a task that needs missing discipline guidelines?
 
-Unless a departure under WAY-217 applies, a task changing a user interface with no styleguide or
-writing code in a product with no general coding guidelines, whether or not the product already
-has screens or code, stays in refinement as `waiting for human` with a *Questions to settle*
-question awaiting the merge of a separate guidelines task; refinement independent of that answer
-continues, and a task writing those guidelines does not wait for its own output.
+Unless a departure under WAY-217 applies, a task changing a user interface with no styleguide,
+writing code in a product with no general coding guidelines or writing or changing a test in a
+product with no testing guidelines, whether or not the product already has screens, code or tests,
+stays in refinement as `waiting for human` with a *Questions to settle* question awaiting the merge
+of a separate guidelines task; refinement independent of that answer continues, and a task writing
+those guidelines does not wait for its own output.
 For an independent or source-only task `refine-task` adds the prerequisite to the product's
 backlog after human approval, while for a plan member it returns `plan change` if the plan lacks
 that task or `waits for task <n>` if the plan holds it, keeping the plan's ownership and states.
@@ -5776,11 +5784,14 @@ in the current task under WAY-172 and WAY-199, unless the human separates it.
 - **Based on:** none
 - **Relations:** derives from WAY-124 · derives from WAY-144 · derives from
   WAY-154 · derives from WAY-172 · derives from WAY-199 · derives from
-  WAY-184 · derives from WAY-209 · derives from WAY-217
+  WAY-184 · derives from WAY-209 · derives from WAY-217 · derives from
+  WAY-244
 - **Verification:** an agent compares the task, prerequisite and refinement with the decision:
   - complies: a fix in an existing product without coding guidelines waits for their task's merge,
-    then reads them before the complete document is accepted; a plan member returns its missing
-    prerequisite to the plan owner; an existing styleguide is extended within the screen task;
+    then reads them before the complete document is accepted; a task adding a test to a product
+    whose tests have no testing guidelines waits in the same way for their task; a plan member
+    returns its missing prerequisite to the plan owner; an existing styleguide is extended within
+    the screen task;
   - violates: an absent styleguide is added only to the screen task's To do; readiness is granted
     merely because a dependency was named; a refiner edits the owning plan; the task writing
     guidelines waits for those guidelines; the task's wait is copied into a new plan state.
@@ -5794,7 +5805,8 @@ can settle what could not be known without it.
 *Rejected:* missing guidelines merely added to the consuming task — their scope contracts to its
 needs; a wait only for new products — existing code keeps growing without shared guidance;
 a wait first imposed in implementation — meanings surface after the task was accepted;
-every extension separated — ordinary corrections wait for unrelated preparation.
+every extension separated — ordinary corrections wait for unrelated preparation; testing
+guidelines with no wait — tests written meanwhile set the patterns every later test copies.
 
 
 ### WAY-216 — What does refinement assign to a task creating an unindexed kind of code?
@@ -5849,22 +5861,30 @@ a departure inferred by the agent — absence would authorize itself.
 ### WAY-218 — Where does project breakdown place missing guidelines and first-kind work?
 
 The skill `plan-project` uses the same reading of product guidelines as refinement and the task
-cycle, and places a task for a missing styleguide or general coding guidelines before the tasks
-that need it, with those tasks depending on it, reusing an adequate task the plan already holds.
+cycle, and places a task for a missing styleguide, general coding guidelines or testing guidelines
+before the tasks that need it, with those tasks depending on it, reusing an adequate task the plan
+already holds, and one guidelines task may carry both missing coding and testing guidelines
+(WAY-247).
 It places the designation of the exemplar and kind guidelines with the task creating that kind's
-first file, under WAY-216, while changes beyond the approved definition follow the existing
-definition and plan approval route.
+first file, under WAY-216, and the designation of a level's exemplar test with a task whose required
+outcome is itself that level's first test (WAY-242), while changes beyond the approved definition
+follow the existing definition and plan approval route.
 
 - **Scope:** project-level, product-guidelines
 - **Based on:** none
 - **Relations:** derives from WAY-143 · derives from WAY-144 · derives from
   WAY-184 · derives from WAY-209 · derives from WAY-214 · derives from
-  WAY-216
+  WAY-216 · derives from WAY-244 · derives from WAY-242
 - **Verification:** an agent compares the breakdown with the definition and product:
   - complies: the screen tasks depend on the missing styleguide task, while the first migration
-    task carries its exemplar work; a suitable existing prerequisite is reused;
+    task carries its exemplar work; a new product's first code task depends on one task writing
+    both its coding and its testing guidelines; the task whose outcome is the product's first
+    end-to-end test carries the designation of that level's exemplar test; a suitable existing
+    prerequisite is reused;
   - violates: guidance is discovered only when the first screen task is refined; a preparatory
-    task has no consumer; the plan silently enlarges the approved scope.
+    task has no consumer; the plan silently enlarges the approved scope; a separate task waits to
+    designate a level's exemplar test before any test of that level exists; the plan assigns a
+    level's exemplar test to a task whose tests its cycle chooses.
 - **Origin:** none
 
 *Rationale:* discovering the prerequisite during breakdown makes the dependencies visible before
@@ -6035,27 +6055,53 @@ is the orchestrator's provisional one.
 
 ### WAY-228 — Where does a test take the input it asserts on and the value it expects?
 
-The template of the coding discipline requires one rule of a product's tests: a test takes the
-input it asserts on and the value it expects written out, wherever the code under test would
-otherwise compute either, and only the side it compares against comes from the run. A product
-departs from it only by a decision of its log that gives the reason, and it binds a product from
-the task that writes its coding guidelines.
+The template of the testing discipline requires the rule that a test takes the input it asserts on
+and the value it expects written out, wherever the code under test would otherwise compute either,
+and only the side it compares against comes from the run; a property test takes its inputs from a
+test library's generator and its expected value from a relation the code under test does not
+compute — undoing the operation, an invariant's sentence, or a simpler version written from the
+requirement, not copied from the code — and a counterexample the library finds is kept as an
+ordinary test with its values written out. A product departs from the rule only by a decision of
+its log that gives the reason, and the rule binds a product from the task that writes its testing
+guidelines.
 
 - **Scope:** product-guidelines
-- **Based on:** none
-- **Relations:** derives from WAY-173
+- **Based on:** https://www.cis.upenn.edu/~bcpierce/papers/icse24-pbt-in-practice.pdf § 4.3 Writing
+  Specifications — "These properties check that a pair of functions are inverses of one
+  another—for example, parsing and pretty-printing or encoding and decoding functions." · § 4.3
+  Writing Specifications — "A “differential property” (in sense of differential testing [25])
+  compares the system under test to a reference implementation of the same functionality that
+  serves as a specification; these are often also called model-based properties (c.f. model-based
+  testing [54]), especially when the reference implementation is designed to be an abstract model of
+  the original code."; read 2026-10-25 ·
+  https://raw.githubusercontent.com/HypothesisWorks/hypothesis/5057a16cd98bf2882848a031d3d50f1d25ba8b73/hypothesis/docs/stateful.rst
+  § Invariants — "Often there are invariants that you want to ensure are met after every step in a
+  process."; read 2026-10-25
+- **Relations:** derives from WAY-173 · derives from WAY-231
 - **Verification:** an agent compares the tests of a product with the decision:
-  - complies: a test of a price writes out the basket it feeds in and the total it expects;
+  - complies: a test of a price writes out the basket it feeds in and the total it expects; a
+    property test of saving and loading generates game states and expects each state loaded to equal
+    the state saved; a counterexample the library found stands as an ordinary test with that state
+    written out;
   - violates: a test builds the total it expects by calling the function that computes the price; a
-    test reads the value it expects, at run time, from the file the code under test reads.
+    test reads the value it expects, at run time, from the file the code under test reads; a property
+    test of a sort expects what a copy of the sort's code returns.
 - **Origin:** none
 
 *Rationale:* two sides of a test computed by one code move together, and the test stays green
-unseen; the rule stands in the coding guidelines, which an agent reads before it changes the
-product's code, tests included (WAY-212).
+unseen; the rule stands in the testing guidelines, which an agent reads before it writes or changes
+a test (WAY-246). A property test checks a relation over many generated inputs, so its expected value
+is that relation, and developers apply such tests where a relation lies at hand — a pair of inverse
+functions, a reference implementation, a condition kept after every step. The relation holds only
+where the code under test does not compute it: a simpler version copied from the code makes the
+test a mirror of it, which only the reviewer catches. A counterexample written out stays checked on
+every run, whatever the generator draws next. The price: the rule is longer.
 *Rejected:* the expected value alone written out — the input still moves with the code; a line
 naming each file a test's verdict leans on, in place of values written out — every tracked file
-becomes the data of some test.
+becomes the data of some test; the rule left in the coding guidelines — a test written apart from
+code meets no rule; no property tests — a whole class of tests that check a relation over many
+inputs is barred; the rule left silent on property tests — a generated input breaks its letter, and
+nothing says what holds instead.
 
 ### WAY-229 — On which class of model does the executor of a slice work?
 
@@ -6158,6 +6204,751 @@ alone — a second entry the two tasks come to share later would pass unreported
 a remark that does not fail the check — the plan would reach leading with the pair unsettled, and a
 remark repeated at every run stops being read; judging collisions by the files two tasks change — a
 plan names no files before its tasks are refined.
+
+### WAY-231 — Where do the rules of a product's tests stand?
+
+Testing is a discipline of a product's guidelines of its own: the-way gives a template of the
+testing discipline, from which a product writes its file `guidelines/testing.md`, and the skill
+`maintain-testing-guidelines`, which leads the work that creates and keeps that file. A kind of code
+of a product's coding guidelines is code of the product other than its tests, and the patterns a
+product's tests follow stand in its testing guidelines at the level of test they belong to.
+
+- **Scope:** product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-167 · derives from WAY-173
+- **Verification:** an agent compares the change with the decision:
+  - complies: a product keeps the rules of its tests and the exemplar test of each level in
+    `guidelines/testing.md`, written from the-way's template of the testing discipline, beside
+    `guidelines/coding.md`, whose table of kinds names endpoints and migrations and no kind of
+    test;
+  - violates: a product's coding guidelines name a kind `unit-test` with a file
+    `guidelines/coding-unit-test.md`; the rules of a product's tests stand as a section of
+    `guidelines/coding.md`; the-way's coding-guidelines skill settles where a product's tests take
+    their expected values.
+- **Origin:** none
+
+*Rationale:* writing tests is work of its own: an agent writes either code or tests, and tests are
+written apart from code and on other assumptions than the code, so an agent writing them needs one
+place that says which behaviour gets a test, at which level and how, as an agent changing screens
+finds its styleguide. Rules of tests kept among the coding guidelines would reach that agent only
+through guidelines it reads to change code, and a test taken as a kind of code would have its
+patterns cut by kind of code while its choices — the level, the source of the expected value, what
+is left untested — follow the level and the behaviour. A discipline of its own gives the template
+and the skill room to say what this work needs, as the styleguide and the coding guidelines have
+theirs.
+*Rejected:* the rules of tests added to the coding template as a kind of code named "test" — the
+choices of tests do not follow kinds of code, and an agent writing tests apart from code meets them
+only by way of the coding guidelines; the rules split between a product's guidelines and the steps
+of the author and the reviewer of the-way's cycle — the whole meaning of a rule stands in two places
+read apart; the same rules in both places — two copies drift apart.
+
+### WAY-232 — Where does a test's expected value come from?
+
+The template of the testing discipline requires the rule that the expected value of every test of a
+product comes from a source other than the code under test — a document of the product its testing
+guidelines name as a source, such as its decision log, its glossary or its task descriptions; a
+relation the code under test does not compute; a crash counted as a failure; or a human's judgement
+— and never from what the code gives today, snapshots and characterization tests included. Where a
+test's name does not show the source of a value, a comment in the test names it, by the line of the
+document or by the human and the date, and the review of a change asks of each assertion where its
+value comes from.
+
+- **Scope:** product-guidelines
+- **Based on:** llm-test-oracle-actual-behaviour
+- **Relations:** derives from WAY-173 · derives from WAY-228
+- **Verification:** an agent compares the tests of a product with the decision:
+  - complies: a test of a discount expects 15% and its name gives the decision of the product that
+    sets the discount; a property test of saving and loading expects the loaded state to equal the
+    saved one; a test of how a screen lays out a long name, which no document settles, expects
+    what a human judged, with the human and the date in a comment;
+  - violates: an expected value copied from what the function returns today; a snapshot
+    regenerated when its test fails and accepted because the new output passes; a characterization
+    test kept as a check of what the code does; a reviewer passes an assertion whose value names no
+    source.
+- **Origin:** none
+
+*Rationale:* a test whose expected value is what the code gives today checks only that the code
+still does what it did, a bug included, and a test that mirrors the implementation fixes its error
+in place while it reads as a check; a model writing a test from the code tends to put into the
+assertion what the code does rather than what is required of it. The sources named let an agent find
+each value somewhere other than the code, and a comment shows the source where the name does not. A
+snapshot and a characterization test are what the code gives today by construction, so an
+exception for them would let the whole rule through. The question at each assertion is asked by the
+reviewer, who reads every test of a change anyway (WAY-13), so the rule adds no step for the author.
+Writing values out (WAY-228) leaves a value copied from a run standing; this rule closes that gap.
+*Rejected:* a snapshot accepted once a human has approved it, and a characterization test marked as
+a description — each is the output of the code as it stands, and an exception for them carries back
+the value the rule refuses; the author checking each source as a step of its own beside the
+reviewer — every change pays twice in cost and time for one check; values written out with no rule
+on where they come from — a value copied from today's run meets that rule.
+
+### WAY-233 — What does a change to an existing test need?
+
+The template of the testing discipline requires the rule that changing the expected value of an
+existing test, deleting a test, weakening an assertion, and skipping or disabling a test are one
+kind of change, each made with its cause on the side of the data or of the requirement and a pointer
+to the evidence of that cause, and that the review reads such a change made without them as masking
+a defect. The rule lists the ways a test is weakened: equality loosened to "contains", a count
+removed, a tolerance raised, a skip, a deletion.
+
+- **Scope:** product-guidelines
+- **Based on:** impossiblebench-test-modification ·
+  https://raw.githubusercontent.com/abseil/abseil.github.io/e9e24835cb889fe25251cb9ec6d51b79233e358d/resources/swe-book/html/ch12.html
+  § Strive for Unchanging Tests, Bug fixes — "Again, bug fixes typically shouldn’t require updates
+  to existing tests." · § Strive for Unchanging Tests, Behavior changes — "Changing a test in this
+  case indicates that we’re breaking an explicit contract of the system, whereas changes in the
+  previous cases indicate that we’re breaking an unintended contract."; read 2026-10-25 ·
+  https://raw.githubusercontent.com/open-mercato/skills/e320bd5e3f0761a6d7249085c42c77a4b37d480d/skills/om-code-review/references/review-checklist.md
+  § 4. Tests, line 106 — "Were any assertions weakened to make the suite pass — equality loosened to
+  "contains", exact counts removed, tolerances raised, assertions deleted, tests skipped or marked
+  pending? (major)"; read 2026-10-25
+- **Relations:** derives from WAY-173
+- **Verification:** an agent compares the change with the decision:
+  - complies: a change raises the expected total of an order because the product's decision on its
+    tax changed, and names that decision; a reviewer reads an assertion turned from equality into
+    "contains", with no cause given, as masking a defect;
+  - violates: a test is skipped with "flaky" as its cause and no evidence; a test that turned red is
+    deleted in the change that turned it red, with no cause; a tolerance is raised so that a new
+    result passes.
+- **Origin:** none
+
+*Rationale:* a good test changes only when its requirement does, so a change that moves an expected
+value while neither the data nor the requirement moved says that the code moved, and the move is a
+defect until shown otherwise. An agent that a failing test stands in the way of changes the test,
+and a new value, a looser assertion, a skip and a deletion each turn the build green the same way,
+so one rule covers them all, and the list of weakenings, as Open Mercato's review checklist gives
+it, lets a reviewer recognize them. A test that was wrong may rightly change, so the rule asks for
+the cause and its evidence rather than forbidding the change.
+*Rejected:* existing tests never changed — a wrong test could never be corrected; a cause asked only
+of a changed expected value — a skip or a looser assertion masks the same defect; a test replacing
+an old one required to be seen failing on the code before the fix — a ritual of its own for each
+ordinary test, where only an invariant's test is seen failing once (WAY-08).
+
+### WAY-234 — What may a test's assertion check?
+
+The template of the testing discipline requires the rule that a test's assertions check the
+behaviour its rule or its task requires, a detail of how the code carries it out that the
+requirement does not ask for being no condition of the test passing, and that the review asks of
+each assertion whether the code could change so that the required behaviour stays and the assertion
+breaks, a yes marking a detail. A check of the case's setup is allowed where it stands before the
+action, is marked as a precondition and checks a property of the case that the requirement names,
+never the structure of the data that builds the case.
+
+- **Scope:** product-guidelines
+- **Based on:**
+  https://raw.githubusercontent.com/abseil/abseil.github.io/e9e24835cb889fe25251cb9ec6d51b79233e358d/resources/swe-book/html/ch12.html
+  § Strive for Unchanging Tests — "Therefore, the ideal test is unchanging: after it’s written, it
+  never needs to change unless the requirements of the system under test change." · § Test State,
+  Not Interactions — "Interaction tests tend to be more brittle than state tests for the same reason
+  that it’s more brittle to test a private method than to test a public method: interaction tests
+  check how a system arrived at its result, whereas usually you should care only what the result
+  is."; read 2026-10-25
+- **Relations:** derives from WAY-173
+- **Verification:** an agent compares the tests of a product with the decision:
+  - complies: a test that a running action is not interrupted checks that the action finishes; a
+    test of a refused request checks that it is refused, not the wording of the message; a test of
+    a rule that applies from thirty members first checks, marked as a precondition, that its
+    population has thirty members;
+  - violates: a test compares word for word the record of a running action that holds a rule's
+    index, so that a lasting identifier in place of the index breaks it while no action is
+    interrupted; a test asserts the order of internal calls where only the result counts; a check of
+    the setup reads the private list that the builder of the case filled.
+- **Origin:** none
+
+*Rationale:* a test that breaks under a change keeping the required behaviour has to be fixed by
+every later change, which teaches whoever meets it to rewrite failing tests, and the test stops
+telling a defect from a refactoring; the ideal test changes only with its requirement, and the
+reviewer's question turns that into one asked at each assertion. A test sometimes has to know that
+its case is the one the requirement names, such as that the population a measure counts exists,
+before it acts; a check placed and marked as a precondition says so without making the setup a
+condition of the product, while one written against the structure of the data would bring the
+detail back.
+*Rejected:* every check of the setup barred — a test could not show that it built the case the rule
+applies to; a general exception for comparing a whole state — every detail of that state becomes a
+condition of passing; the rule held for the tests of invariants alone — an ordinary test pins the
+same details.
+
+### WAY-235 — How do a product's tests keep its trust boundaries?
+
+The template of the testing discipline requires, and the skill `maintain-testing-guidelines`
+proposes, for each trust boundary of the product's part map at least one invariant that the
+boundary refuses crafted input or unauthorised access, checked by a permanent test that checks the
+refusal directly, takes the expected refusal from the product's decisions on permissions and is
+seen failing once; a boundary that does not refuse today has that invariant marked violated as
+WAY-51 gives it, and a boundary that is only the configuration of someone else's service stays with
+the review of WAY-48. For authorization, the rule of the product's testing guidelines holds a table
+of who, which resource and which action with the expected result, each row naming the decision on
+permissions it comes from. In the area of trust boundaries this decision prevails over WAY-168: the
+*Invariant* of the rule on trust boundaries names the refusal invariant of each boundary, although
+its test checks the product's behaviour rather than a convention of the product's code.
+
+- **Scope:** product-guidelines, invariants
+- **Based on:**
+  https://raw.githubusercontent.com/OWASP/CheatSheetSeries/cefb3e95ae33162bac8339ed15a265ed738aaf1a/cheatsheets/Authorization_Regression_Testing_Cheat_Sheet.md
+  § Introduction — "Authorization implementation is rarely static." · § Define the Access Policy
+  Model — "Before writing tests, explicitly define the application's access model using the
+  Actor-Resource-Action pattern" · § CI/CD Gating and SDLC Integration — "Blocking PR Builds: The
+  authorization test suite must be a required check in the CI/CD pipeline (e.g., GitHub Actions,
+  GitLab CI)."; read 2026-10-25
+- **Relations:** derives from WAY-173 · derives from WAY-48 · derives from WAY-08 · derives from
+  WAY-51 · narrows WAY-168
+- **Verification:** an agent compares the work with the decision:
+  - complies: the server of a game, the trust boundary of its part `api`, gets the invariant that a
+    player cannot read another player's saved game, whose test sends that request with another
+    player's token, expects the refusal the decision on permissions gives and is seen failing once;
+    the table of the rule gives, for an anonymous visitor reading saved games, a refusal and the
+    decision it comes from; a product whose login is only the settings of an outside provider keeps
+    that boundary with the review;
+  - violates: a boundary is left to the review because its test would take long to write; the test
+    of a boundary checks only that the server does not crash; a boundary that lets a crafted request
+    through today gets no invariant until it is fixed; the rule on trust boundaries reads `none` in
+    *Invariant* because its tests check behaviour rather than a convention of the code; the table of
+    permissions stands in a decision of the product.
+- **Origin:** none
+
+*Rationale:* authorization rarely stays still: a new endpoint or a reworked query breaks a refusal
+that no review of that change looks for, while a permanent test checks it on every change. A refusal
+is behaviour, not a convention of the code, yet a cheap test checks it on every change, so here the
+rule names an invariant where WAY-168 would leave it to the review. An invariant already has its
+test seen failing once and the mark of a rule the product breaks today, so the rule needs no
+mechanism of its own, and the failure seen shows that the refusal comes from the check of
+permissions rather than from a fault elsewhere. The expected refusal is a value like any other, so
+it comes from the product's decision on permissions (WAY-232). The table of who, what and how stands
+in the guidelines, since a decision has no place for a table, and each row names its decision, so
+that the meaning stands once. A boundary that is only someone else's configuration would have its
+test check someone else's code. The price: a product's invariants grow by entries of security, the
+benefit rests on standards rather than on a measurement, and the rule is only as good as the part
+map that names the boundaries.
+*Rejected:* a permanent test of refusal with no invariant — a second rule of a test seen failing
+once beside WAY-08's; the review aimed at the boundary alone, as WAY-48 gives every change touching
+it — a refusal broken by a change to another part passes unseen; the table of permissions held in a
+decision — a decision holds one to three binding sentences and no table.
+
+### WAY-236 — How does AI enter a product's tests?
+
+The template of the testing discipline requires the rule that AI is no level of test: a test an AI
+wrote follows every rule of the testing guidelines, an agent exploring the running product finds
+cases that become ordinary tests, and a tool that heals a test by itself changes only how the test
+finds what it acts on, a changed assertion or a red test turned into a skipped one being a change of
+an existing test (WAY-233). An AI judge enters a permanent test only where the behaviour cannot be
+checked by a plain comparison, its verdict is yes or no, it has been checked on examples a human
+judged and runs on a pinned version of its model, and the testing guidelines say how they treat the
+spread of its verdicts; how each AI tool the product's tests use behaves stands in an environment
+fact of the product, naming the version the product uses, with the date its source was read.
+
+- **Scope:** product-guidelines
+- **Based on:** computer-use-agent-web-testing ·
+  https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents (archived:
+  http://web.archive.org/web/20261017091633/https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents,
+  2026-10-17) § Step 5: Design graders thoughtfully — "We recommend choosing deterministic graders
+  where possible, LLM graders where necessary or for additional flexibility, and using human graders
+  judiciously for additional validation." · § Step 5: Design graders thoughtfully — "LLM-as-judge
+  graders should be closely calibrated with human experts to gain confidence that there is little
+  divergence between the human grading and model grading."; read 2026-10-25
+- **Relations:** derives from WAY-173 · derives from WAY-233
+- **Verification:** an agent compares the tests of a product with the decision:
+  - complies: a test an agent generated from a task's description takes its expected value from the
+    decision that description names; an agent clicking through a new screen finds that a form takes
+    an empty name, and the change adds an ordinary test of that refusal; a judge model says yes or
+    no to whether a generated summary names the items of the order, checked on examples the product
+    owner judged, its model version pinned, and the guidelines require every one of three runs to
+    pass;
+  - violates: a run of an exploring agent stands in the suite as a test; a self-healing tool
+    rewrites an assertion to the new text of a screen; a judge gives a score from one to ten; a
+    judgement of a screenshot by a model stands where a plain comparison of the rendered numbers
+    would do.
+- **Origin:** none
+
+*Rationale:* a test an AI writes is code like any other, and the faults of tests — a value copied
+from the code, an assertion on a detail — reach it the same way, so it needs no rule of its own. An
+agent that tests a running web application from scratch is far from reliable at finding its defects,
+so its run is no permanent test, while a case it finds, written as an ordinary test, gives the same
+verdict on the same code every time. A judge's verdict varies from run to run and costs more, so a
+deterministic check comes first and a judge only where none exists, as Anthropic recommends for the
+evaluation of agents; checked on examples a human judged and pinned to one model, its verdict can be
+trusted as far as those examples reach. A tool that heals a test by changing what it asserts fits
+the test to a state that may be wrong, the masking WAY-233 names. AI tools change faster than the
+rest of what a product runs, so the version and the date read let a reader see what a test stands
+on. The price: checking a judge takes examples a human judged, repeated runs multiply the cost of a
+run, and the conditions are carried over from the evaluation of agents to a product's tests as an
+inference.
+*Rejected:* an AI judge barred from permanent tests — a behaviour no plain comparison can check
+stays untested; guidelines silent on AI — each task lets AI into tests on terms of its own.
+
+### WAY-237 — What does a product deliberately not test, and where is it said?
+
+The template of the testing discipline requires a section `## Not tested on purpose` of a product's
+testing guidelines, in which each item is a category of behaviour or of code, never a single file
+or test, and names the product's decision that excludes it, whose binding sentences give the
+condition under which the category is tested again and whose rationale gives the reason; the
+section reads `none` where nothing is excluded. A trust boundary never stands in it.
+
+- **Scope:** product-guidelines
+- **Based on:** https://www.istqb.org/wp-content/uploads/2024/11/ISTQB_CTFL_Syllabus_v4.0.1.pdf
+  § 1.3. Testing Principles — "Exhaustive testing is impossible. Testing everything is not feasible
+  except in trivial cases (Manna 1978)." · § 5.2.4. Product Risk Control — "With respect to product
+  risk control, once a risk has been analyzed, several response options to risk are possible, e.g.,
+  risk mitigation by testing, risk acceptance, risk transfer, or a contingency plan (Veenendaal
+  2012)."; read 2026-10-25
+- **Relations:** derives from WAY-173
+- **Verification:** an agent compares the guidelines of a product with the decision:
+  - complies: a game's guidelines exclude the exact numbers of its balance, naming the decision
+    whose binding sentences have its balance tests check assumptions only until the balance is
+    settled; a product that excludes nothing reads `none`;
+  - violates: an item names one test file skipped for a deadline; an item gives its reason in the
+    guidelines and names no decision; the product's login stands in the section.
+- **Origin:** none
+
+*Rationale:* with nothing written, a missing test and a choice not to test look the same, and an
+agent treats every absence as a gap to fill; an item turns that silence into a choice a human
+approved. Testing everything is impossible, and accepting a risk is a legitimate answer to one, so a
+product names the risks it accepts. An item by category stays short and cannot be read as leave to
+skip any single test. The reason and the condition stand in a decision, where approval and the
+search of the foundation reach them; the condition is part of what the decision allows, read
+whenever a change reaches the category, not a date of review (WAY-24). A trust boundary is where a
+missing check is the fault itself, so it is never excluded. The 10xDevs course on agentic
+development keeps such a section, what is deliberately not tested, in its plan of tests, each item
+with its reason and the change that calls for its re-evaluation; here it stands in a product's
+guidelines, since a task's refinement holds no plan of tests (WAY-238). The kinds of tests without
+value the template gives among its examples — a duplicate of a stronger test, a test that pins
+trivial constants, a loop over nearly identical inputs — come from how Limen trimmed its own tests
+(https://raw.githubusercontent.com/overment/limen/89ef3786a6c2f893b2d31cd9944ad76c483f7841/spec/features/done/2026-10/F776-trim-low-signal-tests/notes.md
+§ What was cut — "Duplicates. The same rule was proven twice. The stronger, end-to-end test stays." ·
+§ What was cut — "Trivia. Tests that pin constants" · § What was cut — "Variants. Loops over
+near-identical inputs shrank to representative cases"; read 2026-10-25), and as examples they bind
+nothing. The price: each exclusion is a decision to approve, and the section ages where nobody
+checks its conditions.
+*Rejected:* exclusions held only as decisions of the log, with no section in the guidelines — an
+agent writing tests does not find them where it reads; items giving their reasons with no
+decision — an exclusion binds with no approval; a single test as an item — the section becomes a
+list of excuses.
+
+### WAY-238 — At which level does a test stand, and who chooses it?
+
+The template of the testing discipline requires the rule that a test stands at the lowest level at
+which the break it names turns it red, unless going lower would mean replacing with a double exactly
+what can break, and a product's testing guidelines give no proportion of levels. The author of a
+change chooses, in the task's cycle, which behaviour gets a permanent test and at which level,
+naming the break each test catches, and the review checks the choice against the product's testing
+guidelines, while a task's refinement holds no plan of tests.
+
+- **Scope:** product-guidelines, task-cycle, project-level
+- **Based on:** https://martinfowler.com/articles/practical-test-pyramid.html (archived:
+  http://web.archive.org/web/20261014080941/https://martinfowler.com/articles/practical-test-pyramid.html,
+  2026-10-14) § Avoid Test Duplication — "Push your tests as far down the test pyramid as you can" ·
+  § Avoid Test Duplication — "If a higher-level test gives you more confidence that your
+  application works correctly, you should have it."; read 2026-10-25 ·
+  https://learn.microsoft.com/en-us/devops/develop/shift-left-make-testing-fast-reliable (archived:
+  http://web.archive.org/web/20260521141733/https://learn.microsoft.com/en-us/devops/develop/shift-left-make-testing-fast-reliable,
+  2026-05-21) § Write tests at the lowest possible level — "It's not feasible to test every aspect
+  of a service at this level, but the principle is to use lighter unit tests if they can produce
+  the same results as heavier functional tests."; read 2026-10-25
+- **Relations:** derives from WAY-173
+- **Verification:** an agent compares the work with the decision:
+  - complies: the rule of a price gets a unit test, since a break of its arithmetic shows there; a
+    query to the product's own database is tested against a real database, since a double of the
+    database would replace what can break; the author of a change names, for each new test, the
+    break it catches and why no lower level shows it;
+  - violates: a product's guidelines ask for seven unit tests in ten; a task's document lists the
+    tests its change is to add; an end-to-end test checks every branch of a calculation that a unit
+    test shows.
+- **Origin:** none
+
+*Rationale:* a break a lower test shows is found sooner, traced more exactly and run more cheaply,
+and a higher test spends time on what a lower one already shows; a lighter test replaces a heavier
+one only where it gives the same result, so a lower test that replaces what can break no longer
+catches it, and a higher test stays where it adds confidence. A proportion reads as a target, and an
+agent counting it writes tests to even out numbers, while the models of a right mix disagree and
+grew from different kinds of products. Which behaviour gets a permanent test is judged best with the
+change in hand, by the author who names the break, and the reviewer, who reads the change, checks
+the choice against the guidelines; a plan of tests written in refinement, before the change exists,
+would be a guess. The price: naming a break takes judgement that a human who does not read tests
+cannot check.
+*Rejected:* a pyramid or a share of each level — numbers to even out rather than breaks to catch;
+the choice made in the task's refinement — before the code it is a guess, and the task's document
+would carry a plan of tests; a plan of tests or a map of risks for a whole project — the scenarios
+live in the tests themselves, and what gets a permanent test is agreed while the task is made.
+
+### WAY-239 — What does a bug caught only by a high-level test or by a human get?
+
+The template of the testing discipline requires the rule that a bug which only a high-level test or
+a human caught also gets a test at the lowest level that catches it.
+
+- **Scope:** product-guidelines
+- **Based on:** https://martinfowler.com/articles/practical-test-pyramid.html (archived:
+  http://web.archive.org/web/20261014080941/https://martinfowler.com/articles/practical-test-pyramid.html,
+  2026-10-14) § Avoid Test Duplication — "If a higher-level test spots an error and there's no
+  lower-level test failing, you need to write a lower-level test"; read 2026-10-25
+- **Relations:** derives from WAY-173 · derives from WAY-238
+- **Verification:** an agent compares the change with the decision:
+  - complies: an end-to-end test finds a total one cent off, and the fix adds a unit test of the
+    rounding; a player reports a crash on an empty save, and the fix adds a test that loads an empty
+    save;
+  - violates: the fix of a bug an end-to-end test found keeps only that test; a bug a human reported
+    is closed with its fix and no test.
+- **Origin:** none
+
+*Rationale:* a bug that passed every lower test shows a case the lower tests miss; a test at the
+lowest level that catches it traces the next occurrence to its cause, runs fast and stays as a test
+of that regression, while the high test alone says only that something broke somewhere, and a bug a
+human found had no test at all.
+*Rejected:* the bug left with only the high-level test that caught it — the next occurrence is found
+late and traced slowly.
+
+### WAY-240 — How do a product's testing guidelines name its test levels?
+
+The template of the testing discipline requires that a product's testing guidelines name its test
+levels, each with the product's decision that sets it, and that a level whose name means in the
+product something other than in the field, "integration" above all, is a term of the product's
+glossary, defined by the resources a test of that level may touch, such as files, the network or a
+browser. For each part the guidelines apply to, they say in one sentence whether its complexity lies
+in computation or in its connections.
+
+- **Scope:** product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-173 · derives from WAY-226
+- **Verification:** an agent compares the guidelines of a product with the decision:
+  - complies: a game's guidelines name its levels unit, integration and end-to-end, its glossary
+    defines "integration test" as a test that may touch files and a local server and no browser,
+    and the table of levels names that term without copying it; the guidelines say that the
+    simulation's complexity lies in computation and the account server's in its connections;
+  - violates: the guidelines use "integration" with no glossary entry while their integration
+    tests open a browser; the table of levels repeats the definition the glossary holds; a level is
+    defined as "tests several parts together".
+- **Origin:** none
+
+*Rationale:* "unit" and "integration" mean different things to different teams, and much of the
+dispute over the right mix of tests is a dispute over the words; a level defined by what its test
+may touch can be checked without judgement. A word that means something of its own in the product is
+an entry of its glossary (WAY-95), where it is defined once and keeps one meaning in the guidelines
+and in the tests. Where a part's complexity lies tells which level catches its breaks: computation
+shows in tests that touch nothing outside the code, connections only in tests that reach them.
+*Rejected:* each level defined in the guidelines' own table — a second definition beside the
+glossary, and the two drift apart; the meaning of "integration" left to each reader — tests of one
+name touch different things.
+
+### WAY-241 — What does the recipe of a test level hold?
+
+The template of the testing discipline gives a product's testing guidelines, for each level, a
+recipe of the same fields — what the level is for and when not to use it, where its files lie and
+how they are named, the name and build of a test, its doubles, its data, time and randomness, the
+level's exemplar test, the command and the time limit — each field that binds naming the product's
+decision that carries it, a field naming none standing as an example, and a field that repeats
+another level's reading "as in <level>". The field of the command names the gate and how it narrows
+to the level, a file or a test, where the gate can, and otherwise reads `none`; the field of the
+time limit points to the configuration file that holds it; and no recipe lists commands of the test
+tool of its own.
+
+- **Scope:** product-guidelines
+- **Based on:**
+  https://raw.githubusercontent.com/abseil/abseil.github.io/e9e24835cb889fe25251cb9ec6d51b79233e358d/resources/swe-book/html/ch13.html
+  § How to Decide When to Use a Real Implementation — "A real implementation is preferred if it is
+  fast, deterministic, and has simple dependencies." · § TL;DRs — "A fake is often the ideal
+  solution if a real implementation can’t be used in a test." · § Prefer to perform interaction
+  testing only for state-changing functions — "In general, you should perform interaction testing
+  only for functions that are state-changing."; read 2026-10-25
+- **Relations:** derives from WAY-173 · derives from WAY-16 · derives from WAY-168
+- **Verification:** an agent compares the guidelines of a product with the decision:
+  - complies: the recipe of unit tests gives the gate and its narrowing to the directory of unit
+    tests, and points to the configuration file of the test tool for the time limit; the field of
+    doubles of integration tests names the product's decision to run them against a real database;
+    the recipe of end-to-end tests reads "as in unit tests" for its data;
+  - violates: a recipe lists a command of the test tool for its level beside the gate; the field of
+    the time limit reads "5 s"; a field of doubles binds a change while it names no decision.
+- **Origin:** none
+
+*Rationale:* the same fields for every level let an agent find what binds at any level in one place,
+and a small product writes a field once and points to it from the others. A field binds only where a
+decision of the product carries it (WAY-168), so the template's defaults for the build of a test,
+its doubles, its data and its time are proposals a product adopts or departs from. One command runs
+every test (WAY-16), so the recipe gives that command and how far it narrows, and a command of the
+tool beside it would be a second list that drifts; a product whose gate cannot narrow gets narrowing
+only by a change of its code. A time limit copied into the guidelines goes stale beside the
+configuration that holds it. The default order of doubles — the real thing where it is fast,
+deterministic and simple, then a working simpler version, then a stub or a mock — follows the
+preference for real implementations, with a check of a call kept for an effect outside the product.
+*Rejected:* commands of the test tool for each level, as an exception to WAY-16 — a list of checks
+written by hand beside the gate; no field of the command — an agent looking for how to run one level
+finds nothing; the value of the time limit in the recipe — a copy of the configuration that goes
+stale.
+
+### WAY-242 — How is the exemplar test of a level designated?
+
+The exemplar test of a level of a product's tests is designated by a decision of the product, as the
+exemplar of a kind of code is: where the level already has tests, the skill
+`maintain-testing-guidelines` compares them and proposes the exemplar from that comparison, and
+where it has none, its first test becomes the exemplar. That designation is approved in a task's
+refinement only where the task's required outcome is itself a test of that level, its document
+naming the level and that the task's first test of it becomes the exemplar, with no list of tests
+and no path; where the author of a change chooses in the task's cycle to write a level's first
+test, it is approved at a blocked draft request, as WAY-172 gives a meaning the task's document does
+not settle. Until a decision designates it, the field of the exemplar in the level's recipe stands
+empty, and designating another test is a change of that decision.
+
+- **Scope:** product-guidelines, project-level
+- **Based on:** none
+- **Relations:** derives from WAY-173 · derives from WAY-200 · derives from WAY-172
+- **Verification:** an agent compares the work with the decision:
+  - complies: in a product with twelve integration tests the skill compares them and proposes the
+    one that sets up its data through the product's fixtures, and the human approves the decision
+    naming its path; the document of a task whose outcome is the product's first end-to-end test,
+    of the sign-up journey, says that this test becomes the level's exemplar, and its cycle writes
+    the decision with the test's path; a cycle whose author chooses to check a query with the
+    product's first integration test proposes the decision designating that test at a blocked draft
+    request;
+  - violates: a recipe names as its exemplar a test no decision designates; the empty field holds a
+    placeholder; a cycle points the field to another test on its own; the refinement of a task that
+    adds a discount rule designates the task's first unit test as that level's exemplar and gives
+    its path; a cycle designates the first test of a level it chose and leaves the decision to the
+    merge.
+- **Origin:** none
+
+*Rationale:* a test copied from whichever test an agent finds turns an accident into the model of
+every later one, while a test a decision designates is one a human approved. Who designates follows
+the state of the level, as for a kind of code: a comparison where tests exist, and the first test
+where none does, since an exemplar's material is made by its first instance. Refinement can approve
+the first test's designation only where the task's required outcome shows the level, as it assigns
+a first kind's exemplar where the requirement shows the kind (WAY-216); elsewhere the level of a
+test is the choice of the change's author and a task's refinement holds no plan of tests (WAY-238),
+so the designation reaches the human where WAY-172 puts a meaning the task's document does not
+settle. An empty field says plainly that none is designated, where an invented model would be
+copied, and designating another test changes a meaning of the guidelines (WAY-172).
+*Rejected:* the exemplar chosen by an agent of the cycle with no approval — a test nobody approved
+becomes the model; an exemplar the template gives every product — it fits no product's tools; a
+placeholder in the empty field — it reads as a designation; the designation approved in the
+refinement of every task that is to write a level's first test — the refinement would choose the
+level and the test, which WAY-238 leaves to the change's author; the designation always left to a
+blocked draft request — a task whose outcome is itself a level's first test would stop for what its
+document could carry.
+
+### WAY-243 — How is a flaky test treated?
+
+The template of the testing discipline requires the rule that running a flaky test again serves only
+the diagnosis of what makes it flaky, never making a run of the gate pass, and that disabling or
+deleting such a test is a change of an existing test under WAY-233.
+
+- **Scope:** product-guidelines
+- **Based on:**
+  https://raw.githubusercontent.com/abseil/abseil.github.io/e9e24835cb889fe25251cb9ec6d51b79233e358d/resources/swe-book/html/ch11.html
+  § Case Study: Flaky Tests Are Expensive — "Just keep in mind that rerunning a test is only delaying
+  the need to address the root cause of flakiness."; read 2026-10-25
+- **Relations:** derives from WAY-173 · derives from WAY-68 · derives from WAY-233
+- **Verification:** an agent compares the change with the decision:
+  - complies: a test that fails once in ten runs is run again to find that it waits a fixed time,
+    and the change makes it wait for the event; a flaky test is deleted with the cause that the
+    behaviour it checked was removed and a pointer to the decision that removed it;
+  - violates: the configuration of the gate runs a failing test again until it passes; a flaky test
+    is skipped with "flaky" as its only cause; a flaky test stands on a list of quarantined tests.
+- **Origin:** none
+
+*Rationale:* a test that passes on a second run hides the fault that made it fail, in the test or in
+the product, and each run again trades that fault's cause for a green result; a verdict of the gate
+means something only while a red run is answered. A flaky test disabled or deleted loses its check
+as surely as a test skipped for a failing change, so it takes the same cause and evidence. WAY-68
+gives the test of an invariant the same answer.
+*Rejected:* a quarantine of flaky tests, with a limit for fixing them — a second state of tests to
+keep, which ages, as WAY-68 refuses it for the tests of invariants; automatic runs again in the gate
+— the fault stays hidden; every flaky test fixed before the next change — unrelated work stops for
+it.
+
+### WAY-244 — When do a product's testing guidelines come into being?
+
+The skill `maintain-testing-guidelines` proposes that a product's testing guidelines come into being
+before the first task that writes the product's tests.
+
+- **Scope:** product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-173
+- **Verification:** an agent compares the work with the decision:
+  - complies: a product whose plan brings its first code, and with it its first tests, gets a task
+    of testing guidelines first, which settles its levels and the recipe of each before any test
+    exists;
+  - violates: the first tests are written and the testing guidelines are written from them
+    afterwards.
+- **Origin:** none
+
+*Rationale:* the first tests written with no guidelines are the tests every later one copies — the
+level they stand at, where their values come from, what they replace with doubles — as a first
+screen built with no rules is the one every later screen copies (WAY-184), and guidelines brought to
+them afterwards meet tests to rewrite. The price: a pressing fix in a product with no testing
+guidelines waits for them too, and every task with code in such a product waits for the task that
+writes them.
+*Rejected:* the testing guidelines written from the first test — that test is written with no rules;
+the testing guidelines written by the first task that needs them — they shrink to that task's needs.
+
+### WAY-245 — How does a product's instruction file lead to its testing guidelines?
+
+A product's root `AGENTS.md`, outside the block the-way's installer writes, points to its testing
+guidelines by one line naming `guidelines/testing.md` by its path in backticks with the condition of
+writing or changing a test, written as the skill of `instruction-files` gives a pointer, and the
+line names no command.
+
+- **Scope:** product-guidelines, instruction-files
+- **Based on:** none
+- **Relations:** derives from WAY-173 · derives from WAY-128 · derives from WAY-129 · derives from
+  WAY-167 · derives from WAY-16
+- **Verification:** an agent compares the change with the decision:
+  - complies: `AGENTS.md` reads "Before you write or change a test, read `guidelines/testing.md`"
+    below the installer's block;
+  - violates: the pointer stands inside the installer's block; the testing guidelines are imported
+    with `@`; the line names the command that runs the tests; the testing guidelines are reached
+    only through the line that points to the coding guidelines.
+- **Origin:** none
+
+*Rationale:* testing guidelines no instruction leads to can be missed by a session outside the task
+cycle; a path with its condition costs one line and is read when the condition comes (WAY-129), and
+the pointer leads to work an agent would not otherwise find (WAY-128). Its condition is writing or
+changing a test, since an agent that writes a test apart from the code would not meet a condition of
+changing the product's code. The pointer stands outside the installer's block, which holds no path
+a product chooses (WAY-107), and the gate runs the tests, so the line names no command of its own
+(WAY-16).
+*Rejected:* the testing guidelines reached only through the coding guidelines — an agent writing
+tests apart from code does not open them; no pointer, leaving the way in to the task cycle — a
+session outside that cycle can miss them.
+
+### WAY-246 — Which parts do testing guidelines apply to, and when are they read?
+
+The template of the testing discipline has a product's testing guidelines name in *Applies to*
+every part of the product's map whose code the product's tests check and every part that holds test
+files, and, before the product's first test, the parts the product's plan gives tests. Their
+`## When to read` reads: before writing or changing a test.
+
+- **Scope:** product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-173
+- **Verification:** an agent compares the guidelines of a product with the decision:
+  - complies: a product whose tests under `tests/` check the code of its parts `server` and
+    `client` names `server`, `client` and the part that holds `tests/` in *Applies to*; a product
+    with no tests whose plan gives tests to its part `sim` names `sim`;
+  - violates: *Applies to* names only the part that holds the test files, so a change to the code
+    of `server` does not select the testing guidelines; a product with no tests leaves *Applies to*
+    empty.
+- **Origin:** none
+
+*Rationale:* the shared reading selects a file of guidelines by the parts its *Applies to* names
+(WAY-213), so naming both the parts whose code the tests check and the parts that hold the tests
+selects the testing guidelines for a change of either — code whose tests lie in another part, and
+test files alone. Before the first test, the plan is what says which parts will have tests. The
+condition of reading serves the pointer of the instruction file (WAY-245) and an agent outside the
+cycle; the cycle's selection by parts does not turn on it, since a condition judged before a diff
+exists could drop the file from an agent that then writes a test. The price: an agent whose work
+touches a part with tests but writes none reads one more short file.
+*Rejected:* only the parts that hold test files — a change to code whose tests lie in another part
+misses the file; only the parts whose code the tests check — a change to test files alone misses
+it; the selection of the cycle also turning on the condition of reading — a wrong "no" before the
+diff exists drops the file from an agent that writes a test.
+
+### WAY-247 — May one task write a product's coding and testing guidelines together?
+
+One task of a product may write both its coding guidelines and its testing guidelines, the skill of
+each discipline leading that discipline's matters in the task's refinement.
+
+- **Scope:** product-guidelines, project-level
+- **Based on:** none
+- **Relations:** derives from WAY-173 · derives from WAY-215
+- **Verification:** an agent compares the task and the plan with the decision:
+  - complies: a new product's first task of guidelines carries the general coding file and
+    `guidelines/testing.md`, `maintain-coding-guidelines` settling the standing checks and
+    `maintain-testing-guidelines` the levels and their recipes, and the first task with code depends
+    on that one task;
+  - violates: a new product runs two tasks of guidelines one after the other before its first code
+    because each discipline is held to need a task of its own; the coding-guidelines skill settles
+    the levels of the product's tests.
+- **Origin:** none
+
+*Rationale:* a new product needs both before its first code (WAY-209, WAY-244), and two tasks one
+after the other would hold that code back for a second refinement and a second request, while one
+task holds both with each discipline led by the skill that knows it. The price: a larger
+refinement and a larger request.
+*Rejected:* a task of its own for each discipline's guidelines — a new product waits for two tasks
+before its first code.
+
+### WAY-248 — What does the testing-guidelines skill look at first?
+
+Before anything else, the skill `maintain-testing-guidelines` recognizes which parts of a product
+have tests or, before the first test, which parts the product's plan gives tests, and what the
+product already has for them — a test tool, levels, directories of tests, doubles, tests of
+invariants, or nothing — and it extends what exists rather than setting a second tool beside it. A
+new test tool or a library of property tests is a technology choice the skill leaves to the human as
+a question of the task, never one it settles.
+
+- **Scope:** product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-173 · derives from WAY-121
+- **Verification:** an agent compares the work with the decision:
+  - complies: in a product whose tests run under one test runner, the skill proposes recipes for
+    that runner's levels; a product that is to have property tests and holds no library for them
+    gets the choice of that library as a question of the task;
+  - violates: the skill sets a second test runner beside the product's own because it judges it
+    better; the skill adds a library of property tests itself.
+- **Origin:** none
+
+*Rationale:* an existing tool, even a worse one, beats a better one brought in, since the tests and
+the people working on them already follow it, and two runners over one suite split its conventions,
+as for coding guidelines (WAY-210). What the product has decides how the skill works — before the
+first test, an audit, or a refresh — so it is read first. A new tool is something the product has
+to keep, a technology choice, and the human makes it (WAY-121).
+*Rejected:* a second test tool set beside the product's own — two tools over one suite disagree;
+the skill choosing a new tool itself — a dependency the human never chose.
+
+### WAY-249 — Where does the testing-guidelines skill's starting set come from?
+
+The skill `maintain-testing-guidelines` takes the starting set of a product's testing guidelines
+from the human's preferences, and, where the human has none, from research for the product's
+technology, each question of it given to a fresh agent, each source named with its page and version
+and every claim no source supports refuted by a critique before the human sees the set, as the
+options of a technology choice are checked (WAY-122). It proposes what the research finds without
+imposing it.
+
+- **Scope:** product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-173 · derives from WAY-122 · derives from WAY-120
+- **Verification:** an agent compares the work with the decision:
+  - complies: the human answers "I do not know" on how the product's tests are laid out; research
+    of the product's test runner names the pages and versions of its documentation, one fresh agent
+    for each question; a fresh critic strikes a claimed difference no page gives; only then the
+    human sees the set;
+  - violates: the starting set comes from the agent's memory; one agent researches every question;
+    research reaches the human uncritiqued; a convention the research found is written into the
+    task as settled.
+- **Origin:** none
+
+*Rationale:* the product is the human's, so their preferences come first; where they have none,
+research with sources and a critique lets a human who cannot judge tests tell a sound proposal from
+an invented one (WAY-122, WAY-120), as for coding guidelines (WAY-211). A fresh agent for each
+question keeps each research to its question and its report.
+*Rejected:* conventions of tests proposed from the agent's memory — the human cannot tell a sound
+proposal from an invented one; a fixed starting set in the-way's template — it fits no product's
+technology.
+
+### WAY-250 — How does the testing-guidelines skill's audit of a product with tests end?
+
+The audit the skill `maintain-testing-guidelines` makes of a product that has tests ends, for each
+level, with a proposed exemplar test, with one sentence of what the product gains by it, and three to
+five charges, each with its file and line and one sentence of its effect, and, for each trust
+boundary of the product's map, with whether a test of its refusal exists.
+
+- **Scope:** product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-173 · derives from WAY-242
+- **Verification:** an agent compares the work with the decision:
+  - complies: the audit proposes for integration tests `tests/integration/test_orders.py`, "every
+    new integration test sets up its data through the fixtures as this one does", charges that
+    `tests/unit/test_price.py:42` builds the total it expects by calling the function under test, so
+    the test passes whatever the price is, and says that no test of the boundary `api` sends a
+    request with another player's token;
+  - violates: the audit ends with the test tool's warnings listed by name; a charge stands with no
+    line; the audit says nothing of the trust boundaries.
+- **Origin:** none
+
+*Rationale:* the human who approves the exemplar tests does not judge tests below end-to-end ones,
+and a proposal with what the product gains, and a fault with its place and effect, can be weighed by
+someone who is no developer, as the coding-guidelines skill's audit ends (WAY-201) and the
+styleguide's audit ends with charges of a place and an effect (WAY-187); a few charges keep the
+whole weighable. Whether each boundary has a test of refusal shows where the invariant of WAY-235 is
+missing.
+*Rejected:* what the audit found shown as a comparison of the tests' code — the human cannot weigh
+it; every fault the audit found listed — a list too long to weigh.
 
 ## Withdrawn identifiers
 

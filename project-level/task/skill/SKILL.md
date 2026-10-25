@@ -145,7 +145,7 @@ human acceptance of the complete task, even when refinement finds no candidate s
 - Resolve the shared guideline reading's findings by their kind (WAY-215, WAY-216):
   - Missing discipline guidelines keep this task `waiting for human`, with a named question
     in *Questions to settle* awaiting a separate guidelines task's merge, even in a product
-    with screens or code. Continue refinement independent of that answer. A scoped departure
+    with screens, code or tests. Continue refinement independent of that answer. A scoped departure
     applies only where the shared reading establishes it; the task writing the missing
     guidelines does not wait for itself.
   - For an independent or source-only task, propose the prerequisite and, after human approval,
@@ -156,8 +156,9 @@ human acceptance of the complete task, even when refinement finds no candidate s
     rules, which may leave that row `to refine`.
   - After the prerequisite merges, resume here, read its guidelines and settle the meanings
     this task needs under WAY-172 before step 6's complete-document acceptance. Adding the
-    dependency alone gives no readiness. Use `maintain-styleguide` or
-    `maintain-coding-guidelines` for their matters of refinement.
+    dependency alone gives no readiness. Use `maintain-styleguide`, `maintain-coding-guidelines`
+    or `maintain-testing-guidelines` for their matters of refinement. A missing coding and a missing
+    testing guidelines may be one prerequisite task (WAY-247).
   - Keep extension or correction of existing guidelines in this task, including a coding file
     whose *Applies to* omits the affected part, unless the human separates the work. Settle new
     meanings and exemplar changes through those discipline skills under WAY-172 and WAY-199.
@@ -166,6 +167,11 @@ human acceptance of the complete task, even when refinement finds no candidate s
     `maintain-coding-guidelines`, without a separate exemplar wait. Existing unindexed files
     instead need the comparison WAY-200 requires; record the discrepancy and route that work
     within this task's scope and, for a plan member, its plan boundary.
+  - For a task whose required outcome is itself the first test of a level whose recipe has an empty
+    *Exemplar*, add to *To do* that this test becomes the level's exemplar, naming the level and no
+    path, through `maintain-testing-guidelines`, without a separate exemplar wait. Where the task's
+    tests are its cycle's choice, add no designation: the cycle proposes one for a level's first
+    test at a blocked draft request (WAY-242, WAY-238).
 
 ## 4. Carry the foundation decisions
 

@@ -114,14 +114,16 @@ one part.
 - `product-guidelines/` — the form every product's guidelines share, how an agent reads the
   guidelines of the parts it touches, and the template of each discipline of guidelines with the
   skill that leads the work on them (the styleguide's in `product-guidelines/styleguide/`, the
-  coding guidelines' in `product-guidelines/coding/`).
+  coding guidelines' in `product-guidelines/coding/`, the testing guidelines' in
+  `product-guidelines/testing/`).
 
 ## Using the skills
 
 Each element's `skill/` directory, `elements/common/skill/` and `elements/common/critique/`, the
 project level's skill directories, `task-cycle/skill/`, `task-cycle/spec/`, `task-cycle/plan/`,
-`task-cycle/change/`, `task-cycle/review/`, `instruction-files/`, `product-guidelines/styleguide/`
-and `product-guidelines/coding/` hold one skill, named in its `SKILL.md`.
+`task-cycle/change/`, `task-cycle/review/`, `instruction-files/`, `product-guidelines/styleguide/`,
+`product-guidelines/coding/` and `product-guidelines/testing/` hold one skill, named in its
+`SKILL.md`.
 
 A Claude Code or Codex session working in a checkout or worktree of the-way finds each of them as
 the project skill `the-way-<name>`: `.claude/skills/` holds the entry points Claude Code reads and
