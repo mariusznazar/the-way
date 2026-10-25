@@ -155,8 +155,8 @@ those decisions and invariants in its own foundation; the testing guidelines nam
   (WAY-168). A test takes the input it asserts on and the value it expects written out, wherever the
   code under test would otherwise compute either; only the side it compares against comes from the
   run. A property test takes its inputs from a test library's generator and its expected value from
-  a relation the code under test does not compute — undoing the operation, a condition kept after
-  every step, or a simpler version written from the requirement, not copied from the code — and a
+  a relation the code under test does not compute — undoing the operation, an invariant's sentence,
+  or a simpler version written from the requirement, not copied from the code — and a
   counterexample the library finds is kept as an ordinary test with its values written out
   (WAY-228). Which files a test names, so that a fixture or a builder of its input cannot be changed
   underneath it, this template does not settle.

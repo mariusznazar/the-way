@@ -6059,9 +6059,9 @@ The template of the testing discipline requires the rule that a test takes the i
 and the value it expects written out, wherever the code under test would otherwise compute either,
 and only the side it compares against comes from the run; a property test takes its inputs from a
 test library's generator and its expected value from a relation the code under test does not
-compute — undoing the operation, a condition kept after every step, or a simpler version written
-from the requirement, not copied from the code — and a counterexample the library finds is kept as
-an ordinary test with its values written out. A product departs from the rule only by a decision of
+compute — undoing the operation, an invariant's sentence, or a simpler version written from the
+requirement, not copied from the code — and a counterexample the library finds is kept as an
+ordinary test with its values written out. A product departs from the rule only by a decision of
 its log that gives the reason, and the rule binds a product from the task that writes its testing
 guidelines.
 
