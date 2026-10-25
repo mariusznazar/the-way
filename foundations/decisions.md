@@ -4918,71 +4918,86 @@ meanings in a hurry.
 
 ### WAY-185 — What does the styleguide skill look at first?
 
-Before anything else, the skill `maintain-styleguide` recognizes which user interface the styleguide
-is for and what the product already has for it — a file of design tokens its screens read, one
-nothing reads, shared components, or nothing — and whether it has screens and a styleguide, and it
-extends what exists rather than bringing a new system. A new library of components or a new way of
-styling is a choice the skill leaves to the human as a question of the task, never one it settles. A
-palette read from the code is a proposal, never a rule, until the product declares it in a decision.
+Before anything else, the skill `maintain-styleguide` recognizes which user interface the
+styleguide is for and what the product already has for it — a file of design tokens its screens
+read, one nothing reads, shared components, or nothing — and whether it has screens and a
+styleguide, and it extends what exists rather than bringing a new system. A new library of
+components or a new way of styling is a choice the skill leaves to the human as a question of the
+task, never one it settles, showing the options by their consequences for the product — cost,
+where they run, upkeep and the cost of changing later — with a recommendation and the weak point
+of the option recommended, keeping the human's preferred tool as the recommendation (WAY-186) and
+otherwise recommending the simplest and cheapest where no difference with a consequence remains
+(WAY-123). A palette read from the code is a proposal, never a rule, until the product declares it
+in a decision.
 
 - **Scope:** product-guidelines
 - **Based on:** none
-- **Relations:** none
+- **Relations:** derives from WAY-121 · derives from WAY-123
 - **Verification:** an agent compares the work with the decision:
   - complies: in a product whose file of design tokens holds two colours nothing reads, the skill
     proposes making the screens read that file and adding roles to it; a product with no shared
     components gets them in its existing styling, and the question of a library of components goes
-    to the human;
+    to the human with consequences, a recommendation and its weak point;
   - violates: the skill sets up a new library of components in a product that has its own design tokens;
-    the skill chooses a styling technology itself; the colours the code uses become a rule of the
+    the skill chooses a styling technology itself or offers options without a recommendation;
+    the colours the code uses become a rule of the
     styleguide with no decision of the product.
 - **Origin:** none
 
-*Rationale:* an existing system, even a worse one, beats a better one brought in, since the screens
-already read it and a second one splits them in two. What the product has decides how the skill
-works — before the first screen, an audit, or a refresh — so it is read first. A new library is
-something the product has to keep, a technology choice, and the human makes it.
-*Rejected:* a new system set up on a product whose file of design tokens nothing reads — two systems
-side by side; the skill choosing a new library itself — a dependency the human never chose; the
-palette the code uses taken as the product's rule — an accident of the code becomes law (WAY-225).
+*Rationale:* an existing system, even a worse one, beats a better one brought in, since the
+screens already read it and a second one splits them in two. What the product has decides how the
+skill works — before the first screen, an audit, or a refresh — so it is read first. A new library
+is something the product has to keep, a technology choice, and the human makes it. A human who
+cannot judge the library can weigh what it costs and where it fails; the recommendation gives a
+way to take without deciding by technical names alone.
+*Rejected:* a new system set up on a
+product whose file of design tokens nothing reads — two systems side by side; the skill choosing a
+new library itself — a dependency the human never chose; the palette the code uses taken as the
+product's rule — an accident of the code becomes law (WAY-225); options with no recommendation —
+the human is left to judge technology they cannot assess.
 
 ### WAY-186 — Where do a styleguide's starting rules come from?
 
-The skill `maintain-styleguide` takes the starting rules of a styleguide written before the first
-screen of its user interface from the human's preferences for the technology of that user interface
-that the product's foundation settles, and, where the human has none, from research of the basic rules of a styleguide for that technology, each source named with
-its page and version and every difference no source supports refuted by a critique before the human
-sees the rules, as the options of a technology choice are checked (WAY-122). It adds the meanings of
-the screens the product announces — in its definition, plan, specs and mockups — proposes what the
-research finds without imposing it, and researches again whenever a styleguide is refreshed or
-extended.
+The skill `maintain-styleguide` takes the starting rules of a user interface's first styleguide
+from the human's preferences for its technology that the product's foundation settles, and, where
+the human has none, from research of the basic rules for that technology, each source named with
+its page and version and every difference no source supports refuted by a critique before the
+human sees the rules, as the options of a technology choice are checked (WAY-122). It researches
+at every extension and never at a refresh (WAY-251), and a tool the human prefers remains the one
+proposed, never displaced by research. It adds the meanings of the screens the product announces —
+in its definition, plan, specs and mockups — and proposes what the research finds without imposing
+it.
 
 - **Scope:** product-guidelines
 - **Based on:** none
-- **Relations:** derives from WAY-122 · derives from WAY-120
+- **Relations:** derives from WAY-122 · derives from WAY-120 · derives from WAY-251
 - **Verification:** an agent compares the work with the decision:
   - complies: the human has no preferences for a browser game's styling, research names the pages
     and versions of its library's documentation, a fresh critic strikes a claimed difference no page
-    gives, and the starting set adds roles for the states the game's plan announces; a year later an
-    extension runs the research again; a product that has screens and no styleguide starts from the
-    audit of its code, with no research until its styleguide is refreshed or extended;
+    gives, and the starting set adds roles for the states the game's plan announces; a product
+    with screens and no styleguide takes that same starting-set path alongside its audit; an
+    extension runs research with the human's preferred tool kept as the proposal; a correction of
+    existing roles refreshes the styleguide without research;
   - violates: the starting rules come from the agent's memory; a fixed list of roles from one course
     is used for every product; research reaches the human uncritiqued; an extension reuses the
-    first research.
+    first research; a refresh runs research; research offers another tool in place of the human's
+    preferred one.
 - **Origin:** none
 
-*Rationale:* the value of a styleguide has two layers, consistency and the quality of its rules, and
-research with sources and a critique keeps the second, while preferences of the human come first
-because the product is theirs. A fixed list in the-way would need keeping and would fit no
+*Rationale:* the value of a styleguide has two layers, consistency and the quality of its rules,
+and research with sources and a critique keeps the second, while preferences of the human come
+first because the product is theirs. A fixed list in the-way would need keeping and would fit no
 technology well, as the roles of one library and the palette of another differ; without the
-product's own meanings one colour comes back in several meanings. Recommendations move, so a
-refreshed styleguide is set against them again. A product that already has screens starts from what
-its code holds, which the audit reads (WAY-187), so its first styleguide needs no starting set.
-*Rejected:* a fixed starting list in the-way's template — a list to keep, unfitted to the technology;
-preferences and research without the product's meanings — one colour in several meanings again;
-research once for each product — later extensions miss current recommendations; a source named with
-no critique, or rules from the agent's memory — the human cannot tell a sound rule from an invented
-one.
+product's own meanings one colour comes back in several meanings. New scope needs a check of
+whether the existing tools fit it, while correcting accepted rules within their scope needs no new
+comparison. Existing screens supply audit evidence, not preferences or a reason to skip research
+where the human has none.
+*Rejected:* a fixed starting list in the-way's template — a list to
+keep, unfitted to the technology; preferences and research without the product's meanings — one
+colour in several meanings again; research once for each product — later extensions miss current
+recommendations; a source named with no critique, or rules from the agent's memory — the human
+cannot tell a sound rule from an invented one; research at every refresh — an update within
+accepted scope pays for a comparison it does not need.
 
 ### WAY-187 — How does the styleguide skill audit a product that has screens?
 
@@ -5570,61 +5585,72 @@ hold code and what the product already has for them — a linter, a formatter, a
 dependencies, kinds of code that already have files, or nothing — and whether it has coding
 guidelines, and it extends what exists rather than setting a second tool beside it. A new linter,
 formatter or audit of dependencies is a choice the skill leaves to the human as a question of the
-task, never one it settles, recommending by default the tool most used in the product's technology,
-as research with sources shows it.
+task, never one it settles, showing the options by their consequences for the product — cost,
+where they run, upkeep and the cost of changing later — with a recommendation and the weak point
+of the option recommended, keeping the human's preferred tool as the recommendation (WAY-211) and
+otherwise recommending the simplest and cheapest where no difference with a consequence remains
+(WAY-123).
 
 - **Scope:** product-guidelines
 - **Based on:** none
-- **Relations:** derives from WAY-173
+- **Relations:** derives from WAY-173 · derives from WAY-121 · derives from WAY-123
 - **Verification:** an agent compares the work with the decision:
   - complies: in a product whose linter runs with a few rules, the skill proposes adding rules to
     that linter's configuration; a product with no standing check gets three questions, each
-    recommending the tool research shows most used in the product's technology, with its sources;
+    showing the consequences with a recommendation and its weak point, and recommending the
+    simplest and cheapest where no difference with a consequence remains;
   - violates: the skill sets a second linter beside the one the product runs because it judges it
-    better; the skill chooses a formatter itself; the default recommendation is a tool the agent
-    prefers, with no source showing its use.
+    better; the skill chooses a formatter itself; a tool is recommended only because it is the
+    most used, although another has better consequences for the product.
 - **Origin:** none
 
 *Rationale:* an existing tool, even a worse one, beats a better one brought in, since the code and
 the people working on it already follow it, and two linters over one code disagree, as for a
 styleguide's system (WAY-185). What the product has decides how the skill works — before the first
-code, an audit, or a refresh — so it is read first. A new tool is something the product has to keep,
-a technology choice, and the human makes it. The human is no developer, and a product with no
-standing check meets three such choices at once, so the skill recommends the tool most used in the
-technology, which the human can take as offered, as WCAG is recommended for adoption (WAY-191), and
-how widely an option is used within its family bears on how well an agent works with it (WAY-122).
-*Rejected:* a second linter set beside a product's working one because the skill judges it better —
-two tools over one code disagree; the skill choosing a new tool itself — a dependency the human
-never chose.
+code, an audit, or a refresh — so it is read first. A new tool is something the product has to
+keep, a technology choice, and the human makes it. The human is no developer, so a recommendation
+through consequences gives a way they can weigh and take as offered, with its weakness visible.
+Wide use can bear on those consequences (WAY-122), but cannot replace them.
+*Rejected:* a second
+linter set beside a product's working one because the skill judges it better — two tools over one
+code disagree; the skill choosing a new tool itself — a dependency the human never chose; the
+most-used tool as the default recommendation — popularity alone says nothing of whether the
+product benefits; options with no recommendation — the human is left to judge technology they
+cannot assess.
 
 ### WAY-211 — Where do the tools of the standing checks and a linter's set of rules come from?
 
-The skill `maintain-coding-guidelines` takes the tools of the standing checks and a linter's set of
-rules from the human's preferences for the product's technology that the product's foundation
-settles, and, where the human has none, from research of each standing check for that technology,
-each source named with its page and version and every claim no source supports refuted by a critique
-before the human sees the options, as the options of a technology choice are checked (WAY-122). It
-researches again whenever a product's coding guidelines are refreshed or extended.
+The skill `maintain-coding-guidelines` takes the tools of the standing checks and a linter's set
+of rules from the human's preferences for the product's technology that the product's foundation
+settles, and, for the first coding guidelines where the human has none, from research of each
+standing check for that technology, each source named with its page and version and every claim no
+source supports refuted by a critique before the human sees the options, as the options of a
+technology choice are checked (WAY-122). A tool the human prefers remains the one proposed, never
+displaced by research. The skill researches at every extension and never at a refresh (WAY-251).
 
 - **Scope:** product-guidelines
 - **Based on:** none
-- **Relations:** derives from WAY-122 · derives from WAY-120
+- **Relations:** derives from WAY-122 · derives from WAY-120 · derives from WAY-251
 - **Verification:** an agent compares the work with the decision:
   - complies: the human has no preference for the linter of a product written in TypeScript;
     research names the pages and versions of the tools' documentation and of a record of their use,
     a fresh critic strikes a claimed difference no page gives, and only then the human sees the
-    options; a year later an extension of the coding guidelines runs the research again;
+    options; an extension runs research with the human's preferred tool kept as the proposal;
+    adapting the existing guidelines to a new tool version refreshes them without research;
   - violates: the tools come from the agent's memory; research reaches the human uncritiqued; an
-    extension reuses the first research; the skill researches a tool the human already named as
-    preferred and offers another in its place.
+    extension reuses the first research; a refresh runs research; the skill offers another tool
+    in place of one the human named as preferred.
 - **Origin:** none
 
 *Rationale:* the product is the human's, so their preferences come first; where they have none,
-research with sources and a critique lets a human who cannot judge the tools tell a sound comparison
-from an invented one (WAY-122, WAY-120), as for a styleguide's starting rules (WAY-186). Tools and
-their recommended sets move, so refreshed coding guidelines are set against them again.
-*Rejected:* tools and sets proposed from the agent's memory — the human cannot tell a sound proposal
-from an invented one; research once for each product — later extensions miss what has moved.
+research with sources and a critique lets a human who cannot judge the tools tell a sound
+comparison from an invented one (WAY-122, WAY-120), as for a styleguide's starting rules
+(WAY-186). New scope needs a check of whether the existing tools fit it, while updating or
+correcting accepted rules within their scope needs no new comparison.
+*Rejected:* tools and sets
+proposed from the agent's memory — the human cannot tell a sound proposal from an invented one;
+research once for each product — later extensions miss what has moved; research at every refresh —
+an update within accepted scope pays for a comparison it does not need.
 
 ### WAY-212 — How does a product's instruction file lead to its coding guidelines?
 
@@ -6869,57 +6895,73 @@ Before anything else, the skill `maintain-testing-guidelines` recognizes which p
 have tests or, before the first test, which parts the product's plan gives tests, and what the
 product already has for them — a test tool, levels, directories of tests, doubles, tests of
 invariants, or nothing — and it extends what exists rather than setting a second tool beside it. A
-new test tool or a library of property tests is a technology choice the skill leaves to the human as
-a question of the task, never one it settles.
+new test tool or a library of property tests is a technology choice the skill leaves to the human
+as a question of the task, never one it settles, showing the options by their consequences for the
+product — cost, where they run, upkeep and the cost of changing later — with a recommendation and
+the weak point of the option recommended, keeping the human's preferred tool as the recommendation
+(WAY-249) and otherwise recommending the simplest and cheapest where no difference with a
+consequence remains (WAY-123).
 
 - **Scope:** product-guidelines
 - **Based on:** none
-- **Relations:** derives from WAY-173 · derives from WAY-121
+- **Relations:** derives from WAY-173 · derives from WAY-121 · derives from WAY-123
 - **Verification:** an agent compares the work with the decision:
   - complies: in a product whose tests run under one test runner, the skill proposes recipes for
     that runner's levels; a product that is to have property tests and holds no library for them
-    gets the choice of that library as a question of the task;
+    gets the choice of that library as a question of the task, with consequences, a
+    recommendation and its weak point;
   - violates: the skill sets a second test runner beside the product's own because it judges it
-    better; the skill adds a library of property tests itself.
+    better; the skill adds a library of property tests itself or leaves its choice to the human
+    with no recommendation.
 - **Origin:** none
 
-*Rationale:* an existing tool, even a worse one, beats a better one brought in, since the tests and
-the people working on them already follow it, and two runners over one suite split its conventions,
-as for coding guidelines (WAY-210). What the product has decides how the skill works — before the
-first test, an audit, or a refresh — so it is read first. A new tool is something the product has
-to keep, a technology choice, and the human makes it (WAY-121).
+*Rationale:* an existing tool, even a worse one, beats a better one brought in, since the tests
+and the people working on them already follow it, and two runners over one suite split its
+conventions, as for coding guidelines (WAY-210). What the product has decides how the skill works
+— before the first test, an audit, or a refresh — so it is read first. A new tool is something the
+product has to keep, a technology choice, and the human makes it (WAY-121). A human who cannot
+judge test tools can weigh consequences and take a recommendation with its weakness visible.
 *Rejected:* a second test tool set beside the product's own — two tools over one suite disagree;
-the skill choosing a new tool itself — a dependency the human never chose.
+the skill choosing a new tool itself — a dependency the human never chose; options with no
+recommendation — the human is left to judge technology they cannot assess.
 
 ### WAY-249 — Where does the testing-guidelines skill's starting set come from?
 
 The skill `maintain-testing-guidelines` takes the starting set of a product's testing guidelines
-from the human's preferences, and, where the human has none, from research for the product's
-technology, each question of it given to a fresh agent, each source named with its page and version
-and every claim no source supports refuted by a critique before the human sees the set, as the
-options of a technology choice are checked (WAY-122). It proposes what the research finds without
-imposing it.
+from the human's preferences, and, for its first testing guidelines where the human has none, from
+research for the product's technology, each question of it given to a fresh agent, each source
+named with its page and version and every claim no source supports refuted by a critique before
+the human sees the set, as the options of a technology choice are checked (WAY-122). It researches
+at every extension and never at a refresh (WAY-251), and a tool the human prefers remains the one
+proposed, never displaced by research. It proposes what the research finds without imposing it.
 
 - **Scope:** product-guidelines
 - **Based on:** none
-- **Relations:** derives from WAY-173 · derives from WAY-122 · derives from WAY-120
+- **Relations:** derives from WAY-173 · derives from WAY-122 · derives from WAY-120 ·
+  derives from WAY-251
 - **Verification:** an agent compares the work with the decision:
   - complies: the human answers "I do not know" on how the product's tests are laid out; research
     of the product's test runner names the pages and versions of its documentation, one fresh agent
     for each question; a fresh critic strikes a claimed difference no page gives; only then the
-    human sees the set;
+    human sees the set; an extension to a new test level runs research, keeping the human's
+    preferred tool as the proposal; correcting the existing recipes refreshes them without research;
   - violates: the starting set comes from the agent's memory; one agent researches every question;
     research reaches the human uncritiqued; a convention the research found is written into the
-    task as settled.
+    task as settled; an extension reuses the first research; a refresh runs research; research
+    offers another tool in place of the human's preferred one.
 - **Origin:** none
 
 *Rationale:* the product is the human's, so their preferences come first; where they have none,
-research with sources and a critique lets a human who cannot judge tests tell a sound proposal from
-an invented one (WAY-122, WAY-120), as for coding guidelines (WAY-211). A fresh agent for each
-question keeps each research to its question and its report.
-*Rejected:* conventions of tests proposed from the agent's memory — the human cannot tell a sound
-proposal from an invented one; a fixed starting set in the-way's template — it fits no product's
-technology.
+research with sources and a critique lets a human who cannot judge tests tell a sound proposal
+from an invented one (WAY-122, WAY-120), as for coding guidelines (WAY-211). A fresh agent for
+each question keeps each research to its question and its report. New scope needs a check of
+whether the existing tools fit it, while updating or correcting accepted recipes within their
+scope needs no new comparison.
+*Rejected:* conventions of tests proposed from the agent's memory —
+the human cannot tell a sound proposal from an invented one; a fixed starting set in the-way's
+template — it fits no product's technology; research once for each product — later extensions miss
+what has moved; research at every refresh — an update within accepted scope pays for a comparison
+it does not need.
 
 ### WAY-250 — How does the testing-guidelines skill's audit of a product with tests end?
 
@@ -6949,6 +6991,33 @@ whole weighable. Whether each boundary has a test of refusal shows where the inv
 missing.
 *Rejected:* what the audit found shown as a comparison of the tests' code — the human cannot weigh
 it; every fault the audit found listed — a list too long to weigh.
+
+### WAY-251 — What distinguishes a refresh from an extension of guidelines?
+
+For the skills `maintain-coding-guidelines`, `maintain-styleguide` and
+`maintain-testing-guidelines`, a refresh updates or corrects accepted guidelines within the scope
+they already cover, including adapting them to a new version of a tool the product already uses.
+An extension covers something new, and its research checks whether to use what the product already
+has or something else, with the human's preferred tool remaining the proposal.
+
+- **Scope:** product-guidelines
+- **Based on:** none
+- **Relations:** none
+- **Verification:** an agent compares the work with the decision:
+  - complies: adapting the accepted testing guidelines to a new major version of their test tool
+    is a refresh; covering a new level of tests is an extension whose research checks whether the
+    product's existing tool fits it;
+  - violates: a change of a tool's version alone is treated as an extension; a new scope is called
+    a refresh merely because the product already has a tool that might serve it.
+- **Origin:** none
+
+*Rationale:* an update within accepted scope corrects guidance for something the product already
+does; a new scope raises whether the existing tools suit it. Telling them apart by scope gives
+every discipline the same boundary and spends research where it answers a new question. A
+preference still belongs to the human, so research informs its use rather than replacing it.
+*Rejected:* refresh and extension treated alike — routine corrections pay for research, or new
+scope receives none; a version change alone treated as an extension — new versions can leave the
+covered scope unchanged.
 
 ## Withdrawn identifiers
 

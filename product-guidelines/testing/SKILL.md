@@ -70,7 +70,8 @@ writes there is written for a reader who was not in it.
   the human's words and date as its source.
 - *Context*: what the audit found, each charge with its file and line, a charge the task does not
   take up marked deferred with its reason; for each trust boundary, whether a test of its refusal
-  exists; the research's sources, each page with its version; what the audit could not see.
+  exists; the research's sources where research ran, each page with its version; what the audit
+  could not see.
 - *Settlements to record*: `refine-task` step 5 builds them through `find-foundation-entries` —
   the product's decisions, its invariants and the environment facts they rest on, the fact of each
   AI tool its tests use among them. A change of the part map is never a row, which is why it stands
@@ -121,6 +122,10 @@ and its turn.
   second tool beside it. A new test tool or a library of property tests is a technology choice:
   record it as a question of the task, never settle it (WAY-248, WAY-121).
 
+A refresh updates or corrects accepted guidelines within the scope they already cover,
+including adapting them to a new version of a tool the product uses. An extension covers something
+new; its research checks whether to use what the product has or something else (WAY-251).
+
 ## 2. Starting set
 
 Before the first test, for tests that have no testing guidelines yet, and at every refresh or
@@ -128,20 +133,25 @@ extension (WAY-244, WAY-249):
 
 - Ask, as one question of assessment, for the human's preferences for the product's tests in the
   technology that the product's foundation settles — which levels it has, where their files lie,
-  what a test replaces and with what; "I do not know" is an answer.
-- Where the human has none, research the starting set for that technology. Split it into the
-  questions the set must answer there — how the product's test tool lays out and names the tests of
-  each level, what it offers in place of a real dependency, how a test is given the clock and the
-  seed it runs with — and give each to a fresh agent of its own, all at once, with the technology,
-  the preferences and the binding sentences of the decisions that settle it. Each source is a page
-  with its version, never memory and never a fixed list; each report goes to
-  `.runs/testing/<question>.md`, the question's name in lower case with hyphens.
-- Give one fresh agent, following `critique`, each report with its sources, and ask it to refute
-  every claim no source supports — a convention of the tool, a rule, a difference between ways of
-  testing. Verify each observation and give your verdict, correct the report by the verdicts, then
-  end it with the line `critique: passed`. Where no fresh agent can run, the research does not go
-  on: stop and say so (WAY-249, WAY-120). What the research finds is proposed in step 4, never
-  imposed.
+  what a test replaces and with what; "I do not know" is an answer. A tool the human prefers is
+  the one proposed, and no other is offered in its place (WAY-249).
+- For the first testing guidelines where the human has no preference, and at every extension,
+  research the set for that technology; at a refresh, do no research and use the accepted
+  guidelines with the update or correction the task calls for. Split research into the questions
+  the starting set or the scope being added must answer there — how the product's test tool lays
+  out and names the tests of each level, what it offers in place of a real dependency, how a test
+  is given the clock and the seed it runs with — and give each to a fresh agent of its own, all at
+  once, with the technology, the preferences, the scope being added where this is an extension,
+  and the binding sentences of the decisions that settle it. Include any new tool's consequences
+  for the product. Each source is a page with its version, never memory and never a fixed list;
+  each report goes to `.runs/testing/<question>.md`, the question's name in lower case with
+  hyphens.
+- Where research ran, give one fresh agent, following `critique`, each report with its sources,
+  and ask it to refute every claim no source supports — a convention of the tool, a rule, a
+  difference between ways of testing. Verify each observation and give your verdict, correct the
+  report by the verdicts, then end it with the line `critique: passed`. Where no fresh agent can
+  run, the research does not go on: stop and say so (WAY-249, WAY-120). What the research finds is
+  proposed in step 4, never imposed.
 
 ## 3. Audit
 
@@ -180,6 +190,12 @@ Where the product has tests (WAY-250):
   recommends included, and after a choice that enters a binding part ask the one question "How a
   skill asks" gives. Before first using a term of the field — a level of tests, a double, a
   property test — say in plain words what it means (WAY-174, WAY-113).
+- **New tools.** For each new tool or library left as a technology question of the task,
+  show the options by their consequences for the product: cost, where they run, upkeep and the
+  cost of changing later. Give a recommendation and the weak point of the option recommended;
+  keep the human's preferred tool as the recommendation, and otherwise recommend the simplest
+  and cheapest where no difference with a consequence remains. Leave the choice to the human
+  in this task (WAY-248, WAY-249, WAY-123, WAY-121).
 - **What it settles.**
   - the product's decision adopting the testing template, and each departure from it by a decision
     with its reason (WAY-173);
@@ -229,5 +245,5 @@ Where the product has tests (WAY-250):
 - Check that the task document holds what "What reaches the task document" names, and that no
   choice stands settled without the human's words.
 - Hand back to `refine-task` step 4. Its step 5 finds the rows of *Settlements to record* through
-  `find-foundation-entries` in task mode, with the task document, this conversation and the
+  `find-foundation-entries` in task mode, with the task document, this conversation and any
   research reports as its source, and its step 6 asks the human to accept the whole document.
