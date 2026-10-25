@@ -49,6 +49,7 @@ The file `guidelines/testing.md` holds the form of the fenced block of this sect
 ### Behaviour, not implementation
 ### Trust boundaries
 ### AI in tests
+### Mutation testing
 ### Flaky tests
 ### <further rules of the product>
 
@@ -203,6 +204,19 @@ those decisions and invariants in its own foundation; the testing guidelines nam
   skipped one is a change of `### Changing an existing test`. How each AI tool the product's tests
   use behaves stands in an environment fact of the product, naming the version the product uses,
   with the date its source was read (WAY-236).
+- **Mutation testing** — rule. *Decision*: the product's decision adopting this template, and the
+  product's decision adopting a mutation tool, naming the tool and the parts it runs on, chosen
+  among the parts whose complexity lies in computation as the table of parts of `## Levels` gives
+  it. *Invariant*: `none`. A mutation tool makes copies of the code, each with one small fault, such
+  as `>` turned into `>=`, and runs the product's tests on each copy. The agent that reviews a
+  change reaching a part the tool is adopted for — a slice, the whole change, a fix or a correction
+  — runs the tool on the files of that part the reviewed diff changes, never on the whole product,
+  and classifies each copy no test fails: a real gap gets an assertion; an equivalent mutant, which
+  behaves as the code does, is passed over; a change not worth pinning is passed over with its
+  reason. The rule sets no threshold on the share of copies the tests fail (WAY-252, WAY-253). The
+  tool's command stands in the text of this rule, never in a recipe's *Command*, an instruction
+  file or a configuration of CI (WAY-254). In a part the product adopts no mutation tool for, the
+  author of a change checks its tests by mutating the code in their head (WAY-253).
 - **Flaky tests** — rule. *Decision*: the product's decision adopting this template. *Invariant*:
   `none`. Running a flaky test again serves only the diagnosis of what makes it flaky, never making a
   run of the gate pass; disabling or deleting such a test is a change of
