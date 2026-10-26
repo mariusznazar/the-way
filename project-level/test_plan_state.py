@@ -494,11 +494,152 @@ class Command(unittest.TestCase):
     def test_same_source_without_recorded_plan_membership_is_unchecked(self):
         # Break caught: missing historical plan membership is falsely called a foreign task.
         record = self.repo / ".runs/task-cycles/reports/progress.md"
-        for relation in ("source only — definition.md", "independent", "legacy relation"):
+        for relation in ("source only — definition.md", "independent", "legacy relation",
+                         "plan items 1 and 2 of plan.md"):
             with self.subTest(relation=relation):
                 self.cycle(record)
                 self.write(record, record.read_text(encoding="utf-8").replace(
                     "- Task relation: plan item", "- Task relation: " + relation))
+                output = self.run_reader()
+                self.assertIn("unchecked 1 reports:", output)
+                self.assertNotIn("conflict 1 reports:", output)
+                self.assertNotIn("propose ", output)
+
+    def test_annotated_provenance_forms_written_by_cycles_are_read(self):
+        # Break caught: an annotation after the source path, a loose plan-item relation or a note
+        # after the frozen file falsely conflicts with or hides the task's own cycle.
+        record = self.repo / ".runs/task-cycles/reports/progress.md"
+        posix, native = self.task.as_posix(), str(self.task)
+        sources = (posix + "; accepted 2026-10-24; frozen in [accepted.md](accepted.md).",
+                   "`" + native + "`, `Status: ready for cycle`, accepted 2026-10-24 (settlements "
+                   "\"Candidates: 19 shown, 15 accepted\"); frozen copy `accepted.md` beside this record",
+                   "`" + native + "`, `Status: ready for cycle`, accepted by the human 2026-10-24 "
+                   "(„akceptuję”, plan change log); sha256 `d073a6b5…` at freezing",
+                   native + " — Status: ready for cycle, approval 2026-10-13 (file untracked)",
+                   "`" + native + "` accepted 2026-10-24")
+        relations = ("plan item 1, reports, plan.md, handed over 2026-10-24; definition approved",
+                     "plan item reports in plan.md",
+                     "plan item — `plan.md` (handed over 2026-10-24), task 1 `reports`; definition "
+                     "`definition.md`, `Status: approved 2026-10-01`")
+        frozen = ("`accepted.md` (copy of the source document, accepted 2026-10-24)",
+                  "accepted.md (source task.md, identical at resume)", "[accepted.md](accepted.md)")
+        for source, relation, cell in zip(sources, relations * 2, frozen * 2):
+            with self.subTest(source=source, relation=relation, cell=cell):
+                self.cycle(record)
+                text = record.read_text(encoding="utf-8")
+                text = re.sub(r"(?m)^- Task source: .*$", lambda _: "- Task source: " + source, text)
+                text = text.replace("- Task relation: plan item", "- Task relation: " + relation)
+                text = text.replace("[accepted](accepted.md)", cell)
+                self.write(record, text)
+                output = self.run_reader()
+                self.assertIn("propose 1 reports: ready for cycle -> in cycle\n", output)
+                self.assertNotIn("conflict", output)
+
+    def test_task_document_beside_the_plan_folder_names_the_plan_by_file_name(self):
+        # Break caught: a bare plan name in a task kept in a subfolder resolves beside the task
+        # and falsely conflicts with the plan the task belongs to.
+        moved = self.task.parent / "tasks" / "task.md"
+        self.write(moved, self.task.read_text(encoding="utf-8"))
+        self.task = moved
+        self.write(self.plan, self.plan.read_text(encoding="utf-8").replace(
+            "[task](task.md)", "[task](tasks/task.md)"))
+        self.cycle(self.repo / ".runs/task-cycles/reports/progress.md")
+        output = self.run_reader()
+        self.assertIn("propose 1 reports: ready for cycle -> in cycle\n", output)
+        self.assertNotIn("conflict", output)
+
+    def frozen_link(self, commit, path):
+        self.write(self.plan, self.plan.read_text(encoding="utf-8").replace(
+            "[task](task.md)", "[task.md](https://example.invalid/org/app/blob/" + commit + "/" +
+            path + ")"))
+
+    def test_document_linking_the_frozen_copy_anchors_the_done_task(self):
+        # Break caught: a done task whose source document was removed and whose Document links its
+        # frozen copy stays unestablished in every later session.
+        commit = self.archive()
+        self.git(self.repo, "push", "origin", "release")
+        self.state("done")
+        self.frozen_link(commit, "docs/task-cycles/reports/accepted.md")
+        self.task = self.task.rename(self.task.with_name("outside-the-plan.md"))
+        output = self.run_reader()
+        self.assertIn("cycle record docs/task-cycles/reports/record.md commit " + commit, output)
+        self.assertNotIn("unchecked 1 reports:", output)
+        self.assertNotIn("conflict", output)
+
+    def test_document_linking_another_copy_conflicts_and_a_missing_copy_is_unchecked(self):
+        # Break caught: a link to a different document passes as the task's frozen copy, or a copy
+        # absent from the product is treated as either agreement or contradiction.
+        commit = self.archive()
+        self.git(self.repo, "push", "origin", "release")
+        self.state("done")
+        self.frozen_link(commit, "README.md")
+        output = self.run_reader(1)
+        self.assertIn("frozen task differs from the frozen copy the Document links", output)
+        self.state("done")
+        self.frozen_link("0" * 40, "docs/task-cycles/reports/accepted.md")
+        output = self.run_reader()
+        self.assertIn("frozen copy the Document links is absent from the product repository", output)
+        self.assertNotIn("conflict", output)
+        self.state("done")
+        self.frozen_link(commit, "docs/task-cycles/reports/accepted%00.md")
+        output = self.run_reader()
+        self.assertIn("unchecked 1 reports:", output)
+        self.assertNotIn("error:", output)
+
+    def test_frozen_copy_link_keeps_a_relative_plan_reference_of_a_task_in_a_subfolder(self):
+        # Break caught: once the source document is gone, a plan reference relative to its
+        # folder resolves from the plan's folder and falsely conflicts in every later session.
+        moved = self.task.parent / "tasks" / "task.md"
+        self.write(moved, self.task.read_text(encoding="utf-8").replace(
+            "plan.md — reports", "../plan.md — reports"))
+        self.task = moved
+        self.cycle(self.repo / "docs/task-cycles/reports/record.md")
+        self.git(self.repo, "add", "docs/task-cycles/reports")
+        self.git(self.repo, "commit", "-m", "Archive cycle")
+        commit = self.git(self.repo, "rev-parse", "HEAD")
+        self.git(self.repo, "push", "origin", "release")
+        self.state("done")
+        self.frozen_link(commit, "docs/task-cycles/reports/accepted.md")
+        output = self.run_reader()
+        self.assertNotIn("unchecked 1 reports:", output)
+        self.assertNotIn("conflict", output)
+
+    def test_frozen_copy_link_ignores_line_endings(self):
+        # Break caught: a copy committed with CRLF endings contradicts the same frozen task read
+        # from a working cycle.
+        frozen = self.task.read_text(encoding="utf-8")
+        self.write(self.repo / "copies/accepted.md", frozen.replace("\n", "\r\n"))
+        self.git(self.repo, "add", "copies/accepted.md")
+        self.git(self.repo, "commit", "-m", "Copy with CRLF")
+        self.frozen_link(self.git(self.repo, "rev-parse", "HEAD"), "copies/accepted.md")
+        self.cycle(self.repo / ".runs/task-cycles/reports/progress.md")
+        output = self.run_reader()
+        self.assertIn("propose 1 reports: ready for cycle -> in cycle\n", output)
+        self.assertNotIn("conflict", output)
+
+    def test_annotated_foreign_source_still_conflicts(self):
+        # Break caught: tolerating annotations lets another task's source pass as this task's.
+        record = self.repo / ".runs/task-cycles/reports/progress.md"
+        for source in ((self.root / "other/task.md").as_posix() + "; accepted 2026-10-24",
+                       "`" + str(self.task.with_name("task-old.md")) + "`, accepted 2026-10-24",
+                       str(self.task) + "x — approved 2026-10-01"):
+            with self.subTest(source=source):
+                self.cycle(record)
+                self.write(record, re.sub(r"(?m)^- Task source: .*$", lambda _: "- Task source: " +
+                                          source, record.read_text(encoding="utf-8")))
+                output = self.run_reader(1)
+                self.assertIn("conflict 1 reports:", output)
+                self.assertNotIn("propose ", output)
+
+    def test_source_without_a_leading_absolute_path_is_unchecked(self):
+        # Break caught: prose or a placeholder in place of the path is called a foreign task.
+        record = self.repo / ".runs/task-cycles/reports/progress.md"
+        for source in ("private task document; accepted 2026-10-24",
+                       "<notes>/task.md, accepted 2026-10-24"):
+            with self.subTest(source=source):
+                self.cycle(record)
+                self.write(record, re.sub(r"(?m)^- Task source: .*$", lambda _: "- Task source: " +
+                                          source, record.read_text(encoding="utf-8")))
                 output = self.run_reader()
                 self.assertIn("unchecked 1 reports:", output)
                 self.assertNotIn("conflict 1 reports:", output)

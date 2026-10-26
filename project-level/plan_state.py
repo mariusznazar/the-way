@@ -15,6 +15,7 @@ import posixpath
 import re
 import subprocess
 import sys
+from urllib.parse import unquote
 from dataclasses import dataclass, field
 
 sys.dont_write_bytecode = True
@@ -179,6 +180,42 @@ def source_path(value, parent=None):
     return os.path.normcase(os.path.abspath(path))
 
 
+def leading_values(value):
+    """Yield the whole value and each prefix ending where a record annotation may begin."""
+    # Cycles write a path followed by free annotations; separators can also occur inside a path,
+    # so every cut is a candidate and none is chosen before comparing with a known identity.
+    for separator in re.finditer(r"; |, | — | \(|`", value):
+        yield value[:separator.start()]
+    yield value
+
+
+def frozen_link(document):
+    """Read a Document link to a task's frozen copy as a product commit and path, or None."""
+    link = re.fullmatch(r"https?://[^/\s]+/\S*?/(?:-/)?blob/([0-9a-f]{7,40})/([^?#\s]+)(?:[?#]\S*)?",
+                        path_value(document))
+    if not link or any(not char.isprintable() for char in unquote(link[2])):
+        return None
+    return link[1], unquote(link[2])
+
+
+def bare_name(value):
+    name = path_value(value)
+    return "/" not in name and "\\" not in name
+
+
+def names_plan(value, parents, plan_path):
+    """Accept a plan path relative to a task document's folder or the plan's bare file name."""
+    if bare_name(value) and os.path.normcase(path_value(value)) == \
+            os.path.normcase(os.path.basename(plan_path)):
+        return True
+    return any(source_path(value, parent) == source_path(plan_path) for parent in parents)
+
+
+def unsure(value, frozen_copy):
+    """A relative plan path cannot be refuted once only a frozen copy anchors the task."""
+    return frozen_copy is not None and not bare_name(value)
+
+
 def header_fields(text, label):
     fields = []
     for line in text.splitlines():
@@ -190,8 +227,12 @@ def header_fields(text, label):
     return fields
 
 
-def provenance(paths, read, plan_path, task):
-    """Associate each record with its own retained task, anchored at its original source."""
+def provenance(paths, read, plan_path, task, frozen_copy=None):
+    """Associate each record with its own retained task, anchored at its original source.
+
+    A Document linking the task's frozen copy anchors records by that copy's text instead
+    (frozen_copy); False marks a linked copy the product repository cannot supply.
+    """
     document = source_path(task.document, Path(plan_path).parent)
     owned, unresolved, foreign = [], [], []
     for path in paths:
@@ -203,28 +244,37 @@ def provenance(paths, read, plan_path, task):
         if len(sources) != 1 or len(relations) != 1:
             unresolved.append(path + ": missing or ambiguous task provenance fields")
             continue
-        original = source_path(re.split(
-            r"(?: — |; )(?=approved [0-9]{4}-|source commit [0-9a-f]+|Status: |"
-            r"ready for cycle|settlements accepted [0-9]{4}-)",
-            sources[0], maxsplit=1)[0])
-        if original is None or document is None or task.document == "—":
-            unresolved.append(path + ": original Task source or Document cannot be anchored")
+        if frozen_copy is False:
+            unresolved.append(path + ": frozen copy the Document links is absent from the product "
+                              "repository")
             continue
-        if original != document:
-            foreign.append(path + ": Task source " + original + " differs from Document " + document)
-            continue
-        if not re.fullmatch(r"plan item(?: — .+)?", relations[0]):
+        candidates = [candidate for candidate in map(source_path, leading_values(sources[0]))
+                      if candidate is not None]
+        if frozen_copy is None:
+            if not candidates or document is None or task.document == "—":
+                unresolved.append(path + ": original Task source or Document cannot be anchored")
+                continue
+            if document not in candidates:
+                foreign.append(path + ": Task source " + sources[0] + " differs from Document " +
+                               document)
+                continue
+            parents = [Path(document).parent]
+        else:
+            # The source document is gone; any folder its recorded path may name can hold it.
+            parents = [Path(candidate).parent for candidate in candidates]
+        if not re.match(r"plan item(?![\w-])", relations[0]):
             unresolved.append(path + ": same-source Task relation does not establish this plan's membership")
             continue
-        if relations[0] != "plan item":
-            # Existing expanded records retain plan path, source status and item identity.
-            relation = re.fullmatch(r"plan item — (.+?) \([^\n]+\), item ([1-9][0-9]*) "
-                                    r"([a-z0-9]+(?:-[a-z0-9]+)*)(?:; .+)?", relations[0])
-            if not relation:
-                unresolved.append(path + ": expanded Task relation cannot be read unambiguously")
-                continue
-            related_plan = source_path(relation[1], Path(original).parent)
-            if related_plan != source_path(plan_path) or relation[3] != task.name:
+        # The frozen task binds plan and name below; only the one expanded form also names them.
+        relation = re.fullmatch(r"plan item — (.+?) \([^\n]+\), item ([1-9][0-9]*) "
+                                r"([a-z0-9]+(?:-[a-z0-9]+)*)(?:; .+)?", relations[0])
+        if relation:
+            related_plan = source_path(relation[1], parents[0]) if parents else relation[1]
+            if not names_plan(relation[1], parents, plan_path) or relation[3] != task.name:
+                if unsure(relation[1], frozen_copy) and relation[3] == task.name:
+                    unresolved.append(path + ": Task relation's plan cannot be resolved without "
+                                      "the removed source document")
+                    continue
                 foreign.append(path + ": Task relation names plan " + str(related_plan) +
                                " item " + relation[2] + " " + relation[3])
                 continue
@@ -235,15 +285,21 @@ def provenance(paths, read, plan_path, task):
             for line in artifacts[1].splitlines():
                 cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
                 if len(cells) >= 2 and cells[0].lower() == "frozen task":
-                    frozen.append(path_value(cells[1]))
+                    frozen.append(cells[1])
         if len(frozen) != 1:
             unresolved.append(path + ": missing or ambiguous frozen task artifact")
             continue
-        target = posixpath.normpath(posixpath.join(posixpath.dirname(path),
-                                                 frozen[0].replace("\\", "/")))
         # Frozen artifacts must belong to this snapshot, not today's external source or another cycle.
-        if target not in paths:
+        targets = {posixpath.normpath(posixpath.join(posixpath.dirname(path),
+                                                     path_value(value).replace("\\", "/")))
+                   for value in leading_values(frozen[0]) if path_value(value)} & set(paths)
+        if len(targets) != 1:
             unresolved.append(path + ": frozen task artifact absent from this cycle snapshot")
+            continue
+        target = targets.pop()
+        if frozen_copy is not None and \
+                read(target).replace("\r\n", "\n") != frozen_copy.replace("\r\n", "\n"):
+            foreign.append(path + ": frozen task differs from the frozen copy the Document links")
             continue
         memberships = header_fields(read(target), "Project relation")
         if len(memberships) != 1:
@@ -254,8 +310,12 @@ def provenance(paths, read, plan_path, task):
         if not membership:
             unresolved.append(path + ": frozen task membership cannot be read")
             continue
-        member_plan = source_path(membership[1], Path(original).parent)
-        if member_plan != source_path(plan_path) or membership[2] != task.name:
+        member_plan = source_path(membership[1], parents[0]) if parents else membership[1]
+        if not names_plan(membership[1], parents, plan_path) or membership[2] != task.name:
+            if unsure(membership[1], frozen_copy) and membership[2] == task.name:
+                unresolved.append(path + ": frozen task's plan cannot be resolved without the "
+                                  "removed source document")
+                continue
             foreign.append(path + ": frozen task names plan " + str(member_plan) +
                            " task " + membership[2] + ", not the supplied plan/task")
             continue
@@ -277,6 +337,10 @@ def task_report(git, observation, task, plan_path):
     working = ".runs/task-cycles/" + task.name
     archive = "docs/task-cycles/" + task.name + "/"
     try:
+        frozen_copy, link = None, frozen_link(task.document)
+        if link:
+            blob = git.run("cat-file", "blob", "%s:%s" % link, allowed=(0, 128))
+            frozen_copy = not blob.returncode and blob.stdout.decode("utf-8", errors="replace")
         for worktree in observation.worktrees:
             path = worktree / working
             try:
@@ -285,7 +349,7 @@ def task_report(git, observation, task, plan_path):
                              not any(parent.is_symlink() for parent in (file, *file.parents))]
                     paths = [file.relative_to(path).as_posix() for file in files]
                     status, _, reasons = provenance(paths, lambda name: (path / name).read_text(
-                        encoding="utf-8", errors="replace"), plan_path, task)
+                        encoding="utf-8", errors="replace"), plan_path, task, frozen_copy)
                     if status == "owned":
                         active.append(path)
                     else:
@@ -307,7 +371,7 @@ def task_report(git, observation, task, plan_path):
                         "utf-8", errors="replace")
                 return cache[name]
 
-            status, records, reasons = provenance(paths, read, plan_path, task)
+            status, records, reasons = provenance(paths, read, plan_path, task, frozen_copy)
             if status != "owned":
                 destination = contradictions if status == "foreign" else unchecked
                 destination.extend("commit " + commit + ": " + reason for reason in reasons)

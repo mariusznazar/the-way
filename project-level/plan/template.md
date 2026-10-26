@@ -85,7 +85,7 @@ order:
 | `In scope` | the numbers of the items of the definition's In scope the task delivers — its top-level list items in order, the first being 1 — or `—` |
 | `Preparatory` | `yes` for a preparatory task, `no` for any other; a preparatory task stands in the plan only where a task depends on it, and a technical element enters with the first task that uses it or with a preparatory task that task depends on (WAY-143) |
 | `State` | one state of the list below |
-| `Document` | a link to the task's document, or `—` until its refinement writes one |
+| `Document` | a link to the task's document, or `—` until its refinement writes one; once the task is `done` and its document is removed, a link to its frozen copy in the product repository at the commit that archives its cycle record, `…/blob/<commit>/docs/task-cycles/<task>/<frozen task file>`, which the plan-state reader compares with that cycle's frozen task |
 
 The states (WAY-142):
 
