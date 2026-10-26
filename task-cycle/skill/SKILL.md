@@ -40,11 +40,29 @@ with the evidence and stop.
    plan's reconciliation. While a dependency is unfinished, or the definition's approval or its
    plan's recheck is pending, the task waits without losing its acceptance; start no branch.
 2. Read the product's `AGENTS.md`, verify that the pinned the-way checkout matches the product's
-   gitlink, and follow the product's git and test rules. Read the foundation by "Reading the
-   foundation" in `elements/common/way_of_working.md`, and the product's guidelines by
-   `product-guidelines/reading.md`, for the parts the task's required behaviour changes: you select
-   from them what each agent reads (WAY-150, WAY-213), and they serve the judgments of step 4. A
-   finding of the guidelines' reading takes the route the procedure names.
+   gitlink, and follow the product's git and test rules. Where the task moves the pin to a commit
+   it names, move it now, before anything else of the cycle (WAY-34): create the task branch and
+   record its base and the checks failing on it as step 4 gives, clone the-way at that commit into
+   the worktree's ignored `.runs/`, run the installer from that clone as `installation/README.md`
+   gives, and commit the gitlink with everything the installer rewrote, and the removal
+   `installation/README.md` asks for, as the task branch's first commit; then delete the clone. No
+   author makes that commit and no slice holds it. Then read this skill again from the worktree's
+   `.the-way` and go on under the new pin: every later reading, dispatch and script of the cycle
+   comes from it. The skills of the-way read `.the-way` from the directory their agent works in,
+   so each handoff has the agent work from the worktree's root and names its stage's method by its
+   path in the worktree's `.the-way`. Run the product's gate on that commit as step 10 gives; a
+   check that fails there and passed on the base is work the task carries, made under the new
+   pin: step 4's judgment counts those checks, and steps 8 and 9 hand them on with the task and
+   check their coverage as they check its items. Every reset of the task branch to its base stops
+   at that commit. The review of the whole change checks that commit: it holds only the gitlink, at
+   the commit the task names, and what the installer owns: the `the-way-*` entry points in
+   `.claude/skills/` and `.agents/skills/`, in `AGENTS.md` the block between its markers, and the
+   removal of `.claude/rules/the-way.md` where an older pin installed it.
+   Read the foundation by "Reading the foundation" in `elements/common/way_of_working.md`, and the
+   product's guidelines by `product-guidelines/reading.md`, for the parts the task's required
+   behaviour changes: you select from them what each agent reads (WAY-150, WAY-213), and they serve
+   the judgments of step 4. A finding of the guidelines' reading takes the route the procedure
+   names.
 3. Require a harness that can dispatch subagents, and the methods of the stages in the pinned
    the-way, each a project skill with the `the-way-` prefix: `write-spec`, `plan-task`,
    `make-change` and `review-change`. Each stage agent reads the method of its stage, and what it
@@ -78,10 +96,10 @@ product names (WAY-107), the cycle may add the request link and set the task's s
    *Settlements to record* or a projected entry the task carries settles its entry, an invariant's
    included; an entry that follows from the change with no way left open, such as a part-map line
    for a file the change adds, is no choice. Where one stands, the cycle writes a spec (step 6).
-   Otherwise judge from the task document whether one agent can hold the change (WAY-136): if so,
-   select one author without a plan; if it needs division, select planning (step 8). Record the
-   finding, the route and their reasons; write no preliminary plan and run no slice-size script to
-   judge.
+   Otherwise judge from the task document, and from the checks the move of the pin broke where
+   step 2 moved it, whether one agent can hold the change (WAY-136): if so, select one author
+   without a plan; if it needs division, select planning (step 8). Record the finding, the route
+   and their reasons; write no preliminary plan and run no slice-size script to judge.
    An effect outside the product repository is made only by a human, through a human action
    (WAY-140): for those the task document places in the cycle, prepare what the repository allows
    and list them in the request, which opens as a blocked draft; an effect the cycle finds that the
@@ -91,7 +109,8 @@ product names (WAY-107), the cycle may add the request link and set the task's s
    isolated worktree where its instructions and tools allow; only a correction after review reuses
    a branch. Never overwrite another worker's changes or let two writing agents edit one worktree at
    once. Record the base commit and the checks already failing on it, and keep a frozen copy of the
-   task document with its original path and its approval date or source commit.
+   task document with its original path and its approval date or source commit. Where step 2 moved
+   the pin, the branch, its base and those checks already stand.
 5. Name the task `<task-slug>`: for a task of a project plan, its name in the plan (WAY-147); for
    any other, the name the cycle gives it. Create the ignored record
    `.runs/task-cycles/<task-slug>/cycle.md` from `task-cycle/record_template.md` of the pinned
@@ -194,12 +213,14 @@ reviews, tests, return step and request.
    the return step writes them. Then judge the route again from the task in the light of the spec,
    as step 4 does — one author where the change fits, planning where it needs division — and record
    the reason; a spec alone requires no plan, and an earlier plan no longer binds.
-8. Only on the planning route, dispatch a fresh planner with `plan-task`, the frozen task and any
-   reviewed spec. It writes `plan.md` and its size report `plan-size.md` in the record's directory
-   and returns before any slice is made; where it returns an open design choice instead, continue
-   at step 6 with its report. Review the plan for coverage of every item of the task, every row of
-   *Settlements to record* and every projected entry the task carries, fidelity to the task's
-   sources, no code, checks that can actually run and a size report in which every slice fits.
+8. Only on the planning route, dispatch a fresh planner with `plan-task`, the frozen task, any
+   reviewed spec and the checks the move of the pin carried (step 2). It writes `plan.md` and its
+   size report `plan-size.md` in the record's directory and returns before any slice is made;
+   where it returns an open design choice instead, continue at step 6 with its report. Review the
+   plan for coverage of every item of the task, every row of *Settlements to record*, every
+   projected entry the task carries and every check the move of the pin carried, fidelity to the
+   task's sources, no code, checks that can actually run and a size report in which every slice
+   fits.
    Check each slice's *Read* against your own reading of step 2 and add to it in `plan.md` what
    the slice needs and misses — a decision of a part it touches, an invariant it reaches (WAY-62),
    a guideline file — then run the size script on the plan again; a slice it now reports too large
@@ -215,13 +236,14 @@ choice of how to make what the task and the foundation settle is none; the agent
 it, and you enter it in the questions table. Check that the report holds no code and keep it.
 Record the attempt's last commit — a historical name, not a link to follow — and the files it
 changed, then discard the attempt, its foundation entries included, by resetting the task branch to
-the recorded base. Record the discard with its reason and continue at step 6; after the spec's
-review, step 7 chooses the route again.
+the recorded base — to the commit that moved the pin where step 2 moved it. Record the discard
+with its reason and continue at step 6; after the spec's review, step 7 chooses the route again.
 
 A one-author change that proves too large returns `returned` with where the size lies. Keep the
 report, record the attempt's last commit and files, discard the whole attempt and its foundation
-entries by resetting the branch to its base, and dispatch the planner at step 8 with the frozen
-task, any reviewed spec and the report (WAY-136). Record it as a return for size.
+entries by resetting the branch to its base — to the commit that moved the pin where step 2 moved
+it — and dispatch the planner at step 8 with the frozen task, any reviewed spec and the report
+(WAY-136). Record it as a return for size.
 
 A slice that proves too large for its executor returns the same way. Record its last commit and
 files, reset the branch to the slice's base and have the planner split that slice; the slices
@@ -250,11 +272,12 @@ returns such a question with the status `blocked`, and you open the blocked draf
 it, as step 13 gives under *Questions*.
 
 9. Make the change and have it reviewed.
-   - **One author.** Dispatch a fresh author with `make-change`, the frozen task and any reviewed
-     spec. It does the foundation step with its code and returns before review; where the change
-     touches a user interface, it reads the styleguide's example of the order of work as an example
-     (WAY-213). Keep it for the fix and the return step; where the harness cannot resume it, a fresh
-     author on the same branch takes its place, recorded under *Author*.
+   - **One author.** Dispatch a fresh author with `make-change`, the frozen task, any reviewed
+     spec and the checks the move of the pin carried (step 2). It does the foundation step with its
+     code and returns before review; where the change touches a user interface, it reads the
+     styleguide's example of the order of work as an example (WAY-213). Keep it for the fix and
+     the return step; where the harness cannot resume it, a fresh author on the same branch takes
+     its place, recorded under *Author*.
    - **Plan.** Where the plan lists *Foundation entries*, write slice 1's base first, then dispatch
      a fresh agent with `make-change` for those entries, recorded in the row `Foundation entries`
      of *Slices*; slice 1's range starts at that base, so whichever review judges slice 1 covers
@@ -304,7 +327,8 @@ it, as step 13 gives under *Questions*.
    and plan, each slice's range and whether it had a review of its own, the report of each executor
    whose slice had none with any mismatch its mechanical check passed on, the report of the agent
    that wrote the plan's *Foundation entries* where slice 1 had no review of its own, and the Minor
-   and out-of-scope findings of the slice reviews (WAY-164). It selects its own foundation and
+   and out-of-scope findings of the slice reviews (WAY-164); where the task moved the pin, it is
+   told of that commit and given the checks the move carried. It selects its own foundation and
    guidelines, judges every slice that had no review of its own, and names for each blocking finding
    the slice it comes from, or that it comes from none (WAY-136). For progression use the changed
    files with their line counts and the review's first line (WAY-158); read the evidence only when
@@ -384,30 +408,31 @@ has not run on the code that passed review or that the human accepted despite th
     request ready for review, except one the cycle marks `blocked`, one waiting for human actions in
     the cycle included, which stays a draft. Do not merge. Keep the worktree for corrections.
 13. The request states, as the record's *Request handoff* gives it: the task's goal and relation and
-    the source revisions it used; whether a spec was written and why, with its link; the route and
-    its reason, and after a discarded attempt its reason and the agent's report; the plan's link and
-    slices where one was written; what changed and why. *Checks*: the gate's command and exit code,
-    each check that failed or did not run by name, what each own-work check showed (WAY-164), and
-    the user-interface states and screenshot evidence, a screenshot unchecked for no settled way or
-    the failure of a settled one included (WAY-219). The Minor findings of the review of the whole
-    change and of every later review in one item, and the findings their reviewers marked outside
-    the task's scope in another, for the human to choose which become new tasks and to create them
-    (WAY-161). *What this request settles*: each foundation entry the change writes or changes, by
-    its identifier and one sentence of its meaning in the task document's language, the projected
-    entries and those written from rows of *Settlements to record* apart from new ones, and each
-    kept row tied to an entry already stated, with that entry (WAY-134); beside them,
-    each invariant test the change alters (WAY-03), each surface it alters (WAY-49) and each
-    *Violated* mark it sets or clears (WAY-51). *Questions*: only those the foundation step allows,
-    each with its options and a recommendation where one exists, or a line that there are none. The
-    number of other choices with a link to the questions table, and the record's link by SHA. The
-    human actions the request waits for, each as the task document names it, with each effect
-    outside the repository the cycle found that the document does not name, for the human to place
-    (WAY-140). A request a remaining blocking finding blocks is marked `blocked` and lists each such
-    finding with its place in the code and its reason, what the fix tried, the time, models and
-    tokens of the cycle so far from `stages.md` with the number of review rounds, and what has not
-    run on that code (WAY-162, WAY-163). If the task proved impossible, mark the request `blocked`
-    and show the smallest missing fact or authorization and the ways tried; never present partial
-    work as complete.
+    the source revisions it used; the process pin, and where the task moved it, from and to which
+    commit, with the gate on that commit; whether a spec was written and why, with its link; the
+    route and its reason, and after a discarded attempt its reason and the agent's report; the
+    plan's link and slices where one was written; what changed and why. *Checks*: the gate's
+    command and exit code, each check that failed or did not run by name, what each own-work check
+    showed (WAY-164), and the user-interface states and screenshot evidence, a screenshot unchecked
+    for no settled way or the failure of a settled one included (WAY-219). The Minor findings of
+    the review of the whole change and of every later review in one item, and the findings their
+    reviewers marked outside the task's scope in another, for the human to choose which become new
+    tasks and to create them (WAY-161). *What this request settles*: each foundation entry the
+    change writes or changes, by its identifier and one sentence of its meaning in the task
+    document's language, the projected entries and those written from rows of *Settlements to
+    record* apart from new ones, and each kept row tied to an entry already stated, with that entry
+    (WAY-134); beside them, each invariant test the change alters (WAY-03), each surface it alters
+    (WAY-49) and each *Violated* mark it sets or clears (WAY-51). *Questions*: only those the
+    foundation step allows, each with its options and a recommendation where one exists, or a line
+    that there are none. The number of other choices with a link to the questions table, and the
+    record's link by SHA. The human actions the request waits for, each as the task document names
+    it, with each effect outside the repository the cycle found that the document does not name, for
+    the human to place (WAY-140). A request a remaining blocking finding blocks is marked `blocked`
+    and lists each such finding with its place in the code and its reason, what the fix tried, the
+    time, models and tokens of the cycle so far from `stages.md` with the number of review rounds,
+    and what has not run on that code (WAY-162, WAY-163). If the task proved impossible, mark the
+    request `blocked` and show the smallest missing fact or authorization and the ways tried; never
+    present partial work as complete.
 14. Before reporting completion, confirm that the record lists every dispatch, choice, check, fix,
     review round and skipped stage. The final report names any write to the task's backlog entry.
     The request is the human's first decision point.

@@ -78,6 +78,8 @@ the check on its own and to report that the one command leaves it unchecked.
 A later version of the process enters the product only when the product moves its pin (WAY-34).
 The move is one commit, made when a task of the product needs a change of the process, or in a
 step of its own that takes several changes of the-way at once — not after every change of the-way.
+In a task cycle the move is the task branch's first commit, made before the cycle chooses its route,
+so the whole cycle works under the new commit (step 2 of `task-cycle/skill/SKILL.md`).
 It takes one command, run from a checkout of the-way at the commit the product is to use, once
 that commit is published where the URL in `.gitmodules` reaches it:
 
