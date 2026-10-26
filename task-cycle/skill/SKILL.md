@@ -40,11 +40,24 @@ with the evidence and stop.
    plan's reconciliation. While a dependency is unfinished, or the definition's approval or its
    plan's recheck is pending, the task waits without losing its acceptance; start no branch.
 2. Read the product's `AGENTS.md`, verify that the pinned the-way checkout matches the product's
-   gitlink, and follow the product's git and test rules. Read the foundation by "Reading the
-   foundation" in `elements/common/way_of_working.md`, and the product's guidelines by
-   `product-guidelines/reading.md`, for the parts the task's required behaviour changes: you select
-   from them what each agent reads (WAY-150, WAY-213), and they serve the judgments of step 4. A
-   finding of the guidelines' reading takes the route the procedure names.
+   gitlink, and follow the product's git and test rules. Where the task moves the pin to a commit
+   it names, move it now, before anything else of the cycle (WAY-34): create the task branch and
+   record its base and the checks failing on it as step 4 gives, clone the-way at that commit into
+   the worktree's ignored `.runs/`, run the installer from that clone as `installation/README.md`
+   gives, and commit the gitlink with everything the installer rewrote as the task branch's first
+   commit. No author makes that commit and no slice holds it. Then read this skill again from the
+   worktree's `.the-way` and go on under the new pin: every later reading, dispatch and script of
+   the cycle comes from it. Run the product's gate on that commit as step 10 gives; a check that
+   fails there and passed on the base is work the task carries, made under the new pin, and step
+   4's judgment counts it. Every reset of the task branch to its base stops at that commit. The
+   review of the whole change is told of it and checks that it holds only the gitlink, at the
+   commit the task names, and what the installer owns: the `the-way-*` entry points in
+   `.claude/skills/` and `.agents/skills/`, and in `AGENTS.md` the block between its markers.
+   Read the foundation by "Reading the foundation" in `elements/common/way_of_working.md`, and the
+   product's guidelines by `product-guidelines/reading.md`, for the parts the task's required
+   behaviour changes: you select from them what each agent reads (WAY-150, WAY-213), and they serve
+   the judgments of step 4. A finding of the guidelines' reading takes the route the procedure
+   names.
 3. Require a harness that can dispatch subagents, and the methods of the stages in the pinned
    the-way, each a project skill with the `the-way-` prefix: `write-spec`, `plan-task`,
    `make-change` and `review-change`. Each stage agent reads the method of its stage, and what it
@@ -91,7 +104,8 @@ product names (WAY-107), the cycle may add the request link and set the task's s
    isolated worktree where its instructions and tools allow; only a correction after review reuses
    a branch. Never overwrite another worker's changes or let two writing agents edit one worktree at
    once. Record the base commit and the checks already failing on it, and keep a frozen copy of the
-   task document with its original path and its approval date or source commit.
+   task document with its original path and its approval date or source commit. Where step 2 moved
+   the pin, the branch, its base and those checks already stand.
 5. Name the task `<task-slug>`: for a task of a project plan, its name in the plan (WAY-147); for
    any other, the name the cycle gives it. Create the ignored record
    `.runs/task-cycles/<task-slug>/cycle.md` from `task-cycle/record_template.md` of the pinned
