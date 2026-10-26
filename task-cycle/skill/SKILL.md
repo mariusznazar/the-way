@@ -421,19 +421,18 @@ has not run on the code that passed review or that the human accepted despite th
     change writes or changes, by its identifier and one sentence of its meaning in the task
     document's language, the projected entries and those written from rows of *Settlements to
     record* apart from new ones, and each kept row tied to an entry already stated, with that entry
-    (WAY-134); beside them,
-    each invariant test the change alters (WAY-03), each surface it alters (WAY-49) and each
-    *Violated* mark it sets or clears (WAY-51). *Questions*: only those the foundation step allows,
-    each with its options and a recommendation where one exists, or a line that there are none. The
-    number of other choices with a link to the questions table, and the record's link by SHA. The
-    human actions the request waits for, each as the task document names it, with each effect
-    outside the repository the cycle found that the document does not name, for the human to place
-    (WAY-140). A request a remaining blocking finding blocks is marked `blocked` and lists each such
-    finding with its place in the code and its reason, what the fix tried, the time, models and
-    tokens of the cycle so far from `stages.md` with the number of review rounds, and what has not
-    run on that code (WAY-162, WAY-163). If the task proved impossible, mark the request `blocked`
-    and show the smallest missing fact or authorization and the ways tried; never present partial
-    work as complete.
+    (WAY-134); beside them, each invariant test the change alters (WAY-03), each surface it alters
+    (WAY-49) and each *Violated* mark it sets or clears (WAY-51). *Questions*: only those the
+    foundation step allows, each with its options and a recommendation where one exists, or a line
+    that there are none. The number of other choices with a link to the questions table, and the
+    record's link by SHA. The human actions the request waits for, each as the task document names
+    it, with each effect outside the repository the cycle found that the document does not name, for
+    the human to place (WAY-140). A request a remaining blocking finding blocks is marked `blocked`
+    and lists each such finding with its place in the code and its reason, what the fix tried, the
+    time, models and tokens of the cycle so far from `stages.md` with the number of review rounds,
+    and what has not run on that code (WAY-162, WAY-163). If the task proved impossible, mark the
+    request `blocked` and show the smallest missing fact or authorization and the ways tried; never
+    present partial work as complete.
 14. Before reporting completion, confirm that the record lists every dispatch, choice, check, fix,
     review round and skipped stage. The final report names any write to the task's backlog entry.
     The request is the human's first decision point.
