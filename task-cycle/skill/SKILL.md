@@ -48,16 +48,16 @@ with the evidence and stop.
    `installation/README.md` asks for, as the task branch's first commit; then delete the clone. No
    author makes that commit and no slice holds it. Then read this skill again from the worktree's
    `.the-way` and go on under the new pin: every later reading, dispatch and script of the cycle
-   comes from it, and since the session's skills come from the checkout it started in, each
-   handoff names its stage's method by its path in the worktree's `.the-way`. Run
-   the product's gate on that commit as step 10 gives; a check that fails there and passed on the
-   base is work the task carries, made under the new pin: step 4's judgment counts those checks,
-   and steps 8 and 9 hand them on with the task and check their coverage as they check its items.
-   Every reset of the task branch to its base stops at that commit. The review of the whole change
-   checks that commit: it holds only the gitlink, at the commit the task names, and what
-   the installer owns: the `the-way-*` entry points in `.claude/skills/` and `.agents/skills/`, in
-   `AGENTS.md` the block between its markers, and the removal of `.claude/rules/the-way.md` where
-   an older pin installed it.
+   comes from it. The skills of the-way read `.the-way` from the directory their agent works in,
+   so each handoff has the agent work from the worktree's root and names its stage's method by its
+   path in the worktree's `.the-way`. Run the product's gate on that commit as step 10 gives; a
+   check that fails there and passed on the base is work the task carries, made under the new
+   pin: step 4's judgment counts those checks, and steps 8 and 9 hand them on with the task and
+   check their coverage as they check its items. Every reset of the task branch to its base stops
+   at that commit. The review of the whole change checks that commit: it holds only the gitlink, at
+   the commit the task names, and what the installer owns: the `the-way-*` entry points in
+   `.claude/skills/` and `.agents/skills/`, in `AGENTS.md` the block between its markers, and the
+   removal of `.claude/rules/the-way.md` where an older pin installed it.
    Read the foundation by "Reading the foundation" in `elements/common/way_of_working.md`, and the
    product's guidelines by `product-guidelines/reading.md`, for the parts the task's required
    behaviour changes: you select from them what each agent reads (WAY-150, WAY-213), and they serve
@@ -416,9 +416,8 @@ has not run on the code that passed review or that the human accepted despite th
     showed (WAY-164), and the user-interface states and screenshot evidence, a screenshot unchecked
     for no settled way or the failure of a settled one included (WAY-219). The Minor findings of
     the review of the whole change and of every later review in one item, and the findings their
-    reviewers marked outside
-    the task's scope in another, for the human to choose which become new tasks and to create them
-    (WAY-161). *What this request settles*: each foundation entry the change writes or changes, by
+    reviewers marked outside the task's scope in another, for the human to choose which become new
+    tasks and to create them (WAY-161). *What this request settles*: each foundation entry the change writes or changes, by
     its identifier and one sentence of its meaning in the task document's language, the projected
     entries and those written from rows of *Settlements to record* apart from new ones, and each
     kept row tied to an entry already stated, with that entry (WAY-134); beside them,

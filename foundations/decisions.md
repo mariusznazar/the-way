@@ -3223,9 +3223,9 @@ implementation (WAY-136).
     task whose part-map change follows from the file it adds, with no other way
     open, proceeds without a spec; an agent that finds the task needs a decision the task does not
     carry returns a report without code, the branch goes back to its base — to the commit that
-    moved the pin where the task moved it — and a fresh agent writes
-    the spec; a reviewed spec is followed by one author without a plan when the change still
-    fits one agent, or by a new plan when it needs division;
+    moved the pin where the task moved it — and a fresh agent writes the spec; a reviewed spec is
+    followed by one author without a plan when the change still fits one agent, or by a new plan
+    when it needs division;
   - violates: a spec is written for a task whose document carries every entry it writes and that
     leaves no other way open; an agent designs a decision the task does not carry and goes on with
     the code; a spec is written around the code of an attempt that met an open design choice;
@@ -3260,11 +3260,11 @@ divides the change. Every other change gets a plan written with the-way's skill 
 divides it into slices and holds no code; the slices are made one after another in the plan's
 order, each by an agent of its own, and a slice that proves too large for it is discarded with its
 code and goes back to the planner to be split. A one-author change is reviewed by an agent that
-did not make it; of a plan's slices, only one that touches a trust boundary or holds
-an operation that cannot be undone, as the plan marks it, gets a review of its own by such an agent,
-and every other slice goes on after the orchestrator's mechanical check and its own checks; a change
-of more than one slice then gets one review of the whole change, which judges every slice that had
-no review of its own and names, for each blocking finding, the slice it comes from or that it comes
+did not make it; of a plan's slices, only one that touches a trust boundary or holds an operation
+that cannot be undone, as the plan marks it, gets a review of its own by such an agent, and every
+other slice goes on after the orchestrator's mechanical check and its own checks; a change of more
+than one slice then gets one review of the whole change, which judges every slice that had no
+review of its own and names, for each blocking finding, the slice it comes from or that it comes
 from none, while the review of a one-author change or of a plan's only slice is the review of the
 whole change; and that review also checks coverage of the task, every row of its *Settlements to
 record* and every projected entry it carries.
