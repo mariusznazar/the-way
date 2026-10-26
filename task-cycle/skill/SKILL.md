@@ -44,10 +44,12 @@ with the evidence and stop.
    it names, move it now, before anything else of the cycle (WAY-34): create the task branch and
    record its base and the checks failing on it as step 4 gives, clone the-way at that commit into
    the worktree's ignored `.runs/`, run the installer from that clone as `installation/README.md`
-   gives, and commit the gitlink with everything the installer rewrote, and the removal that
-   guide asks for, as the task branch's first commit; then delete the clone. No author makes that
-   commit and no slice holds it. Then read this skill again from the worktree's `.the-way` and go
-   on under the new pin: every later reading, dispatch and script of the cycle comes from it. Run
+   gives, and commit the gitlink with everything the installer rewrote, and the removal
+   `installation/README.md` asks for, as the task branch's first commit; then delete the clone. No
+   author makes that commit and no slice holds it. Then read this skill again from the worktree's
+   `.the-way` and go on under the new pin: every later reading, dispatch and script of the cycle
+   comes from it, and since the session's skills come from the checkout it started in, each
+   handoff names its stage's method by its path in the worktree's `.the-way`. Run
    the product's gate on that commit as step 10 gives; a check that fails there and passed on the
    base is work the task carries, made under the new pin: step 4's judgment counts those checks,
    and steps 8 and 9 hand them on with the task and check their coverage as they check its items.
@@ -94,10 +96,10 @@ product names (WAY-107), the cycle may add the request link and set the task's s
    *Settlements to record* or a projected entry the task carries settles its entry, an invariant's
    included; an entry that follows from the change with no way left open, such as a part-map line
    for a file the change adds, is no choice. Where one stands, the cycle writes a spec (step 6).
-   Otherwise judge from the task document whether one agent can hold the change (WAY-136): if so,
-   select one author without a plan; if it needs division, select planning (step 8). Record the
-   finding, the route and their reasons; write no preliminary plan and run no slice-size script to
-   judge.
+   Otherwise judge from the task document, and from the checks the move of the pin broke where
+   step 2 moved it, whether one agent can hold the change (WAY-136): if so, select one author
+   without a plan; if it needs division, select planning (step 8). Record the finding, the route
+   and their reasons; write no preliminary plan and run no slice-size script to judge.
    An effect outside the product repository is made only by a human, through a human action
    (WAY-140): for those the task document places in the cycle, prepare what the repository allows
    and list them in the request, which opens as a blocked draft; an effect the cycle finds that the
@@ -234,14 +236,14 @@ choice of how to make what the task and the foundation settle is none; the agent
 it, and you enter it in the questions table. Check that the report holds no code and keep it.
 Record the attempt's last commit — a historical name, not a link to follow — and the files it
 changed, then discard the attempt, its foundation entries included, by resetting the task branch to
-the recorded base, or to the commit that moved the pin (step 2). Record the discard with its
-reason and continue at step 6; after the spec's review, step 7 chooses the route again.
+the recorded base — to the commit that moved the pin where step 2 moved it. Record the discard
+with its reason and continue at step 6; after the spec's review, step 7 chooses the route again.
 
 A one-author change that proves too large returns `returned` with where the size lies. Keep the
 report, record the attempt's last commit and files, discard the whole attempt and its foundation
-entries by resetting the branch to its base, or to the commit that moved the pin, and dispatch the
-planner at step 8 with the frozen task, any reviewed spec and the report (WAY-136). Record it as a
-return for size.
+entries by resetting the branch to its base — to the commit that moved the pin where step 2 moved
+it — and dispatch the planner at step 8 with the frozen task, any reviewed spec and the report
+(WAY-136). Record it as a return for size.
 
 A slice that proves too large for its executor returns the same way. Record its last commit and
 files, reset the branch to the slice's base and have the planner split that slice; the slices
@@ -412,9 +414,9 @@ has not run on the code that passed review or that the human accepted despite th
     plan's link and slices where one was written; what changed and why. *Checks*: the gate's
     command and exit code, each check that failed or did not run by name, what each own-work check
     showed (WAY-164), and the user-interface states and screenshot evidence, a screenshot unchecked
-    for no settled way or
-    the failure of a settled one included (WAY-219). The Minor findings of the review of the whole
-    change and of every later review in one item, and the findings their reviewers marked outside
+    for no settled way or the failure of a settled one included (WAY-219). The Minor findings of
+    the review of the whole change and of every later review in one item, and the findings their
+    reviewers marked outside
     the task's scope in another, for the human to choose which become new tasks and to create them
     (WAY-161). *What this request settles*: each foundation entry the change writes or changes, by
     its identifier and one sentence of its meaning in the task document's language, the projected

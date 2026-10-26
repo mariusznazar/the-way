@@ -854,8 +854,8 @@ A product uses the-way at a commit pinned in its own repository: its templates, 
 scripts, and the decisions of the-way that bind its work, all come from that commit. A newer
 version of the process enters a product only in one commit of the product that moves the pin,
 made when a task of the product needs a change of the process, as the first commit of that task's
-branch so that the task's whole cycle works under the new version, or in a step of its own that
-takes several changes of the-way at once.
+branch, under which the task's whole cycle works, or in a step of its own that takes several
+changes of the-way at once.
 
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, relation-model,
   installation, instruction-files, task-cycle
@@ -3222,7 +3222,8 @@ implementation (WAY-136).
     proceeds without a spec, and the review reads the invariant's test against its sentence; a
     task whose part-map change follows from the file it adds, with no other way
     open, proceeds without a spec; an agent that finds the task needs a decision the task does not
-    carry returns a report without code, the branch goes back to its base, and a fresh agent writes
+    carry returns a report without code, the branch goes back to its base — to the commit that
+    moved the pin where the task moved it — and a fresh agent writes
     the spec; a reviewed spec is followed by one author without a plan when the change still
     fits one agent, or by a new plan when it needs division;
   - violates: a spec is written for a task whose document carries every entry it writes and that
@@ -3254,12 +3255,12 @@ A change that, as the orchestrator judges before implementation from the task do
 where the task moves the pin, from the checks the move breaks (WAY-34), one agent can hold is made
 without a plan by one author, who writes its foundation entries, its code and its return step; the
 same judgment follows a reviewed spec, and an author that finds the change too large returns a
-report without code, its attempt is discarded with the foundation entries it wrote,
-and a planner divides the change. Every other change gets a plan written with the-way's skill
-`plan-task`, which divides it into slices and holds no code; the slices are made one after another
-in the plan's order, each by an agent of its own, and a slice that proves too large for it is
-discarded with its code and goes back to the planner to be split. A one-author change is reviewed by
-an agent that did not make it; of a plan's slices, only one that touches a trust boundary or holds
+report without code, its attempt is discarded with the foundation entries it wrote, and a planner
+divides the change. Every other change gets a plan written with the-way's skill `plan-task`, which
+divides it into slices and holds no code; the slices are made one after another in the plan's
+order, each by an agent of its own, and a slice that proves too large for it is discarded with its
+code and goes back to the planner to be split. A one-author change is reviewed by an agent that
+did not make it; of a plan's slices, only one that touches a trust boundary or holds
 an operation that cannot be undone, as the plan marks it, gets a review of its own by such an agent,
 and every other slice goes on after the orchestrator's mechanical check and its own checks; a change
 of more than one slice then gets one review of the whole change, which judges every slice that had
@@ -3286,7 +3287,8 @@ record* and every projected entry it carries.
     reviewed on its own and the others checked mechanically, and then one whole-change review that
     judges those others and names the slice of each blocking finding, while a plan's only slice
     needs no duplicate review; an outgrown slice is discarded and split; a task that moves the pin
-    has the checks the move breaks counted in that judgment and handed to its author or planner;
+    has the checks the move breaks counted in the route judgment and handed to its author or
+    planner;
   - violates: a small task needs a plan merely because it writes foundation entries or follows a
     spec; the orchestrator writes a plan to decide whether to omit it; an author reviews its own
     work, or its whole-change review omits the coverage checks because there was no plan; an
@@ -3322,7 +3324,7 @@ needs a worktree of its own and a ruling on their dependencies and shared state 
 cost the change meets without gaining a check; a review of every slice — its cost grows with the
 number of slices, most of which carry settled matters into code, while the review of the whole
 change still reads every slice; a status by which the planner returns work it cannot divide into
-slices — the pin moved before the route keeps generated work out of every plan.
+slices — the pin moved before the route keeps the installer's output out of every plan.
 
 ### WAY-137 — What decides between places to run that the simplest and cheapest option leaves tied?
 
