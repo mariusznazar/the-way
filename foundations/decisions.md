@@ -853,8 +853,9 @@ repeats the first search, and a record shows that a search ran, not what it miss
 A product uses the-way at a commit pinned in its own repository: its templates, skills and
 scripts, and the decisions of the-way that bind its work, all come from that commit. A newer
 version of the process enters a product only in one commit of the product that moves the pin,
-made when a task of the product needs a change of the process, or in a step of its own that takes
-several changes of the-way at once.
+made when a task of the product needs a change of the process, as the first commit of that task's
+branch so that the task's whole cycle works under the new version, or in a step of its own that
+takes several changes of the-way at once.
 
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, relation-model,
   installation, instruction-files, task-cycle
@@ -864,19 +865,24 @@ several changes of the-way at once.
   belong to each product's foundation, since no commit of the-way decides them:
   - complies: a product's foundation holds the invariants "this repository pins a commit of
     the-way" and "CI runs only that commit's scripts"; a task that needs a newer skill moves the
-    pin in one commit, the entry points and guidance the installer rewrote included, and carries
-    what the newer version changes for the product;
+    pin in its branch's first commit, before its route is judged, the entry points and guidance the
+    installer rewrote included, and carries what the newer version changes for the product;
   - violates: a product's CI fetches the latest the-way on every run; a skill in a product session
     comes from a copy of the-way other than the pinned commit; a product moves its pin after every
-    change of the-way, though none of its tasks needs one.
+    change of the-way, though none of its tasks needs one; a task cycle moves the pin after its
+    route is chosen, or between its slices.
 - **Origin:** none
 
 *Rationale:* a pinned commit turns a change of the process into a change in each product, taken
 in there before it binds, so one change cannot stop every product's checks at once. The price:
-products lag behind the process, and moving a pin is work, like updating a dependency.
+products lag behind the process, and moving a pin is work, like updating a dependency. Moving the
+pin first keeps a task's cycle under one version, so its request is read against the rules it was
+made under.
 *Rejected:* every product on the newest the-way — results change with no change in the product;
 templates and scripts copied into each product — the copies drift; a move after every change of
-the-way — it interrupts the product's own work for changes none of its tasks needs.
+the-way — it interrupts the product's own work for changes none of its tasks needs; a rule naming
+which version binds a cycle after a move made partway through it — a move made first leaves no
+cycle under two versions.
 
 ### WAY-35 — What does an element's skill hold?
 
@@ -3244,10 +3250,11 @@ test against its sentence.
 
 ### WAY-136 — When does a task's change need a plan, and who makes and reviews it?
 
-A change that, as the orchestrator judges from the task document before implementation, one agent
-can hold is made without a plan by one author, who writes its foundation entries, its code and its
-return step; the same judgment follows a reviewed spec, and an author that finds the change too
-large returns a report without code, its attempt is discarded with the foundation entries it wrote,
+A change that, as the orchestrator judges before implementation from the task document and,
+where the task moves the pin, from the checks the move breaks (WAY-34), one agent can hold is made
+without a plan by one author, who writes its foundation entries, its code and its return step; the
+same judgment follows a reviewed spec, and an author that finds the change too large returns a
+report without code, its attempt is discarded with the foundation entries it wrote,
 and a planner divides the change. Every other change gets a plan written with the-way's skill
 `plan-task`, which divides it into slices and holds no code; the slices are made one after another
 in the plan's order, each by an agent of its own, and a slice that proves too large for it is
@@ -3278,14 +3285,16 @@ record* and every projected entry it carries.
     the plan marks as touching a trust boundary or holding an operation that cannot be undone
     reviewed on its own and the others checked mechanically, and then one whole-change review that
     judges those others and names the slice of each blocking finding, while a plan's only slice
-    needs no duplicate review; an outgrown slice is discarded and split;
+    needs no duplicate review; an outgrown slice is discarded and split; a task that moves the pin
+    has the checks the move breaks counted in that judgment and handed to its author or planner;
   - violates: a small task needs a plan merely because it writes foundation entries or follows a
     spec; the orchestrator writes a plan to decide whether to omit it; an author reviews its own
     work, or its whole-change review omits the coverage checks because there was no plan; an
     oversized author's entries survive its discarded attempt; a plan holds code; outgrown slice
     code is kept; two slices are made at once; a slice holding an operation that cannot be undone
     goes without a review of its own; a blocking finding of the whole-change review leaves open
-    whether it comes from a slice.
+    whether it comes from a slice; the route of a task that moves the pin is judged before the
+    move, or without the checks it breaks.
 - **Origin:** none
 
 *Rationale:* a plan earns its cost by dividing a change into work an agent can hold and a reviewer
@@ -3299,7 +3308,8 @@ of every slice multiplies review by the number of slices; it pays where an early
 boundary or in an operation that cannot be undone costs more than the review, and the review of the
 whole change judges the rest. The price is that a defect of an early slice is found only after
 later slices were built on it, and its fix may reach them; naming the slice of each blocking finding
-shows what that price is.
+shows what that price is. The checks a move of the pin breaks are work of the task that its
+document cannot name in advance, so a judgment without them misjudges the change's size.
 *Rejected:* a plan for every change, including a small plan used only to choose the route — it
 charges for division where none is needed; lighter preparation only for changes leaving the
 foundation unchanged — foundation work is common and does not itself require division; lighter
@@ -3311,7 +3321,8 @@ completed — its division would be written around unfinished work; slices made 
 needs a worktree of its own and a ruling on their dependencies and shared state before it runs, a
 cost the change meets without gaining a check; a review of every slice — its cost grows with the
 number of slices, most of which carry settled matters into code, while the review of the whole
-change still reads every slice.
+change still reads every slice; a status by which the planner returns work it cannot divide into
+slices — the pin moved before the route keeps generated work out of every plan.
 
 ### WAY-137 — What decides between places to run that the simplest and cheapest option leaves tied?
 
