@@ -417,10 +417,11 @@ has not run on the code that passed review or that the human accepted despite th
     for no settled way or the failure of a settled one included (WAY-219). The Minor findings of
     the review of the whole change and of every later review in one item, and the findings their
     reviewers marked outside the task's scope in another, for the human to choose which become new
-    tasks and to create them (WAY-161). *What this request settles*: each foundation entry the change writes or changes, by
-    its identifier and one sentence of its meaning in the task document's language, the projected
-    entries and those written from rows of *Settlements to record* apart from new ones, and each
-    kept row tied to an entry already stated, with that entry (WAY-134); beside them,
+    tasks and to create them (WAY-161). *What this request settles*: each foundation entry the
+    change writes or changes, by its identifier and one sentence of its meaning in the task
+    document's language, the projected entries and those written from rows of *Settlements to
+    record* apart from new ones, and each kept row tied to an entry already stated, with that entry
+    (WAY-134); beside them,
     each invariant test the change alters (WAY-03), each surface it alters (WAY-49) and each
     *Violated* mark it sets or clears (WAY-51). *Questions*: only those the foundation step allows,
     each with its options and a recommendation where one exists, or a line that there are none. The
