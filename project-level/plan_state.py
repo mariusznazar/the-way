@@ -186,7 +186,6 @@ def leading_values(value):
     # so every cut is a candidate and none is chosen before comparing with a known identity.
     for separator in re.finditer(r"; |, | — | \(|`", value):
         yield value[:separator.start()]
-        yield value[:separator.end()]
     yield value
 
 
@@ -194,16 +193,27 @@ def frozen_link(document):
     """Read a Document link to a task's frozen copy as a product commit and path, or None."""
     link = re.fullmatch(r"https?://[^/\s]+/\S*?/(?:-/)?blob/([0-9a-f]{7,40})/([^?#\s]+)(?:[?#]\S*)?",
                         path_value(document))
-    return (link[1], unquote(link[2])) if link else None
+    if not link or any(not char.isprintable() for char in unquote(link[2])):
+        return None
+    return link[1], unquote(link[2])
 
 
-def names_plan(value, parent, plan_path):
-    """Accept a plan path relative to the task document or the plan's bare file name."""
+def bare_name(value):
     name = path_value(value)
-    if "/" not in name and "\\" not in name and \
-            os.path.normcase(name) == os.path.normcase(os.path.basename(plan_path)):
+    return "/" not in name and "\\" not in name
+
+
+def names_plan(value, parents, plan_path):
+    """Accept a plan path relative to a task document's folder or the plan's bare file name."""
+    if bare_name(value) and os.path.normcase(path_value(value)) == \
+            os.path.normcase(os.path.basename(plan_path)):
         return True
-    return source_path(value, parent) == source_path(plan_path)
+    return any(source_path(value, parent) == source_path(plan_path) for parent in parents)
+
+
+def unsure(value, frozen_copy):
+    """A relative plan path cannot be refuted once only a frozen copy anchors the task."""
+    return frozen_copy is not None and not bare_name(value)
 
 
 def header_fields(text, label):
@@ -238,9 +248,9 @@ def provenance(paths, read, plan_path, task, frozen_copy=None):
             unresolved.append(path + ": frozen copy the Document links is absent from the product "
                               "repository")
             continue
+        candidates = [candidate for candidate in map(source_path, leading_values(sources[0]))
+                      if candidate is not None]
         if frozen_copy is None:
-            candidates = [candidate for candidate in map(source_path, leading_values(sources[0]))
-                          if candidate is not None]
             if not candidates or document is None or task.document == "—":
                 unresolved.append(path + ": original Task source or Document cannot be anchored")
                 continue
@@ -248,10 +258,10 @@ def provenance(paths, read, plan_path, task, frozen_copy=None):
                 foreign.append(path + ": Task source " + sources[0] + " differs from Document " +
                                document)
                 continue
-            parent = Path(document).parent
+            parents = [Path(document).parent]
         else:
-            # The source document is gone once the plan links its frozen copy.
-            parent = Path(plan_path).parent
+            # The source document is gone; any folder its recorded path may name can hold it.
+            parents = [Path(candidate).parent for candidate in candidates]
         if not re.match(r"plan item(?![\w-])", relations[0]):
             unresolved.append(path + ": same-source Task relation does not establish this plan's membership")
             continue
@@ -259,9 +269,12 @@ def provenance(paths, read, plan_path, task, frozen_copy=None):
         relation = re.fullmatch(r"plan item — (.+?) \([^\n]+\), item ([1-9][0-9]*) "
                                 r"([a-z0-9]+(?:-[a-z0-9]+)*)(?:; .+)?", relations[0])
         if relation:
-            related_plan = source_path(relation[1], parent)
-            if not names_plan(relation[1], parent, plan_path) or \
-                    relation[3] != task.name:
+            related_plan = source_path(relation[1], parents[0]) if parents else relation[1]
+            if not names_plan(relation[1], parents, plan_path) or relation[3] != task.name:
+                if unsure(relation[1], frozen_copy) and relation[3] == task.name:
+                    unresolved.append(path + ": Task relation's plan cannot be resolved without "
+                                      "the removed source document")
+                    continue
                 foreign.append(path + ": Task relation names plan " + str(related_plan) +
                                " item " + relation[2] + " " + relation[3])
                 continue
@@ -297,9 +310,12 @@ def provenance(paths, read, plan_path, task, frozen_copy=None):
         if not membership:
             unresolved.append(path + ": frozen task membership cannot be read")
             continue
-        member_plan = source_path(membership[1], parent)
-        if not names_plan(membership[1], parent, plan_path) or \
-                membership[2] != task.name:
+        member_plan = source_path(membership[1], parents[0]) if parents else membership[1]
+        if not names_plan(membership[1], parents, plan_path) or membership[2] != task.name:
+            if unsure(membership[1], frozen_copy) and membership[2] == task.name:
+                unresolved.append(path + ": frozen task's plan cannot be resolved without the "
+                                  "removed source document")
+                continue
             foreign.append(path + ": frozen task names plan " + str(member_plan) +
                            " task " + membership[2] + ", not the supplied plan/task")
             continue
