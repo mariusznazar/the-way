@@ -44,15 +44,18 @@ with the evidence and stop.
    it names, move it now, before anything else of the cycle (WAY-34): create the task branch and
    record its base and the checks failing on it as step 4 gives, clone the-way at that commit into
    the worktree's ignored `.runs/`, run the installer from that clone as `installation/README.md`
-   gives, and commit the gitlink with everything the installer rewrote as the task branch's first
-   commit. No author makes that commit and no slice holds it. Then read this skill again from the
-   worktree's `.the-way` and go on under the new pin: every later reading, dispatch and script of
-   the cycle comes from it. Run the product's gate on that commit as step 10 gives; a check that
-   fails there and passed on the base is work the task carries, made under the new pin, and step
-   4's judgment counts it. Every reset of the task branch to its base stops at that commit. The
-   review of the whole change is told of it and checks that it holds only the gitlink, at the
-   commit the task names, and what the installer owns: the `the-way-*` entry points in
-   `.claude/skills/` and `.agents/skills/`, and in `AGENTS.md` the block between its markers.
+   gives, and commit the gitlink with everything the installer rewrote, and the removal that
+   guide asks for, as the task branch's first commit; then delete the clone. No author makes that
+   commit and no slice holds it. Then read this skill again from the worktree's `.the-way` and go
+   on under the new pin: every later reading, dispatch and script of the cycle comes from it. Run
+   the product's gate on that commit as step 10 gives; a check that fails there and passed on the
+   base is work the task carries, made under the new pin: step 4's judgment counts those checks,
+   and steps 8 and 9 hand them on with the task and check their coverage as they check its items.
+   Every reset of the task branch to its base stops at that commit. The review of the whole change
+   checks that commit: it holds only the gitlink, at the commit the task names, and what
+   the installer owns: the `the-way-*` entry points in `.claude/skills/` and `.agents/skills/`, in
+   `AGENTS.md` the block between its markers, and the removal of `.claude/rules/the-way.md` where
+   an older pin installed it.
    Read the foundation by "Reading the foundation" in `elements/common/way_of_working.md`, and the
    product's guidelines by `product-guidelines/reading.md`, for the parts the task's required
    behaviour changes: you select from them what each agent reads (WAY-150, WAY-213), and they serve
@@ -208,12 +211,14 @@ reviews, tests, return step and request.
    the return step writes them. Then judge the route again from the task in the light of the spec,
    as step 4 does — one author where the change fits, planning where it needs division — and record
    the reason; a spec alone requires no plan, and an earlier plan no longer binds.
-8. Only on the planning route, dispatch a fresh planner with `plan-task`, the frozen task and any
-   reviewed spec. It writes `plan.md` and its size report `plan-size.md` in the record's directory
-   and returns before any slice is made; where it returns an open design choice instead, continue
-   at step 6 with its report. Review the plan for coverage of every item of the task, every row of
-   *Settlements to record* and every projected entry the task carries, fidelity to the task's
-   sources, no code, checks that can actually run and a size report in which every slice fits.
+8. Only on the planning route, dispatch a fresh planner with `plan-task`, the frozen task, any
+   reviewed spec and the checks the move of the pin carried (step 2). It writes `plan.md` and its
+   size report `plan-size.md` in the record's directory and returns before any slice is made;
+   where it returns an open design choice instead, continue at step 6 with its report. Review the
+   plan for coverage of every item of the task, every row of *Settlements to record*, every
+   projected entry the task carries and every check the move of the pin carried, fidelity to the
+   task's sources, no code, checks that can actually run and a size report in which every slice
+   fits.
    Check each slice's *Read* against your own reading of step 2 and add to it in `plan.md` what
    the slice needs and misses — a decision of a part it touches, an invariant it reaches (WAY-62),
    a guideline file — then run the size script on the plan again; a slice it now reports too large
@@ -229,13 +234,14 @@ choice of how to make what the task and the foundation settle is none; the agent
 it, and you enter it in the questions table. Check that the report holds no code and keep it.
 Record the attempt's last commit — a historical name, not a link to follow — and the files it
 changed, then discard the attempt, its foundation entries included, by resetting the task branch to
-the recorded base. Record the discard with its reason and continue at step 6; after the spec's
-review, step 7 chooses the route again.
+the recorded base, or to the commit that moved the pin (step 2). Record the discard with its
+reason and continue at step 6; after the spec's review, step 7 chooses the route again.
 
 A one-author change that proves too large returns `returned` with where the size lies. Keep the
 report, record the attempt's last commit and files, discard the whole attempt and its foundation
-entries by resetting the branch to its base, and dispatch the planner at step 8 with the frozen
-task, any reviewed spec and the report (WAY-136). Record it as a return for size.
+entries by resetting the branch to its base, or to the commit that moved the pin, and dispatch the
+planner at step 8 with the frozen task, any reviewed spec and the report (WAY-136). Record it as a
+return for size.
 
 A slice that proves too large for its executor returns the same way. Record its last commit and
 files, reset the branch to the slice's base and have the planner split that slice; the slices
@@ -264,11 +270,12 @@ returns such a question with the status `blocked`, and you open the blocked draf
 it, as step 13 gives under *Questions*.
 
 9. Make the change and have it reviewed.
-   - **One author.** Dispatch a fresh author with `make-change`, the frozen task and any reviewed
-     spec. It does the foundation step with its code and returns before review; where the change
-     touches a user interface, it reads the styleguide's example of the order of work as an example
-     (WAY-213). Keep it for the fix and the return step; where the harness cannot resume it, a fresh
-     author on the same branch takes its place, recorded under *Author*.
+   - **One author.** Dispatch a fresh author with `make-change`, the frozen task, any reviewed
+     spec and the checks the move of the pin carried (step 2). It does the foundation step with its
+     code and returns before review; where the change touches a user interface, it reads the
+     styleguide's example of the order of work as an example (WAY-213). Keep it for the fix and
+     the return step; where the harness cannot resume it, a fresh author on the same branch takes
+     its place, recorded under *Author*.
    - **Plan.** Where the plan lists *Foundation entries*, write slice 1's base first, then dispatch
      a fresh agent with `make-change` for those entries, recorded in the row `Foundation entries`
      of *Slices*; slice 1's range starts at that base, so whichever review judges slice 1 covers
@@ -318,7 +325,8 @@ it, as step 13 gives under *Questions*.
    and plan, each slice's range and whether it had a review of its own, the report of each executor
    whose slice had none with any mismatch its mechanical check passed on, the report of the agent
    that wrote the plan's *Foundation entries* where slice 1 had no review of its own, and the Minor
-   and out-of-scope findings of the slice reviews (WAY-164). It selects its own foundation and
+   and out-of-scope findings of the slice reviews (WAY-164); where the task moved the pin, it is
+   told of that commit and given the checks the move carried. It selects its own foundation and
    guidelines, judges every slice that had no review of its own, and names for each blocking finding
    the slice it comes from, or that it comes from none (WAY-136). For progression use the changed
    files with their line counts and the review's first line (WAY-158); read the evidence only when
@@ -398,11 +406,13 @@ has not run on the code that passed review or that the human accepted despite th
     request ready for review, except one the cycle marks `blocked`, one waiting for human actions in
     the cycle included, which stays a draft. Do not merge. Keep the worktree for corrections.
 13. The request states, as the record's *Request handoff* gives it: the task's goal and relation and
-    the source revisions it used; whether a spec was written and why, with its link; the route and
-    its reason, and after a discarded attempt its reason and the agent's report; the plan's link and
-    slices where one was written; what changed and why. *Checks*: the gate's command and exit code,
-    each check that failed or did not run by name, what each own-work check showed (WAY-164), and
-    the user-interface states and screenshot evidence, a screenshot unchecked for no settled way or
+    the source revisions it used; the process pin, and where the task moved it, from and to which
+    commit, with the gate on that commit; whether a spec was written and why, with its link; the
+    route and its reason, and after a discarded attempt its reason and the agent's report; the
+    plan's link and slices where one was written; what changed and why. *Checks*: the gate's
+    command and exit code, each check that failed or did not run by name, what each own-work check
+    showed (WAY-164), and the user-interface states and screenshot evidence, a screenshot unchecked
+    for no settled way or
     the failure of a settled one included (WAY-219). The Minor findings of the review of the whole
     change and of every later review in one item, and the findings their reviewers marked outside
     the task's scope in another, for the human to choose which become new tasks and to create them

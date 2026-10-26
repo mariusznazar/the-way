@@ -3,8 +3,8 @@
 - Task source: <absolute path and approval date or source commit>
 - Task relation: <independent | plan item | source only>
 - Product repository: <path>
-- Process pin: <commit | commit at start; moved to <commit> by the task branch's first commit
-  <sha>>
+- Process pin: `<commit>`, or `<commit> at start; moved to <commit> by the task branch's first
+  commit <sha>`
 - Target branch and base: <branch and commit>
 - Task branch: <branch>
 - Status: running | blocked | request open | complete
@@ -152,6 +152,8 @@ invariant covers it.
 
 - Request URL and status: <URL and draft/ready/blocked>
 - Cycle and its reasons: <as the request states them>
+- Process pin: <the pin, or where the task moved it, from and to which commit and the gate on the
+  commit that moved it>
 - What this request settles: <identifier and meaning sentence for each entry, and each kept row
   tied to an entry already stated, with that entry (WAY-134)>
 - What the foundation puts in front of the human at the merge: <each invariant test the change
