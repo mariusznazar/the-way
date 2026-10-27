@@ -46,15 +46,17 @@ the project skill of that name with the `the-way-` prefix. Follow the steps of
 
 ## 3. Draft
 
-- *Source*: open the address and copy the passage as the template's "Source" gives it; missing
-  there, it is a question in step 4. For a page without editions, find the archived copy through
-  the archive's CDX index of captures, not its availability lookup, which misses captures that
-  exist.
+- *Source*: open the address and copy the passage as the template's "Source" gives it; for a
+  reading, run the command on the host and copy its output; missing there, it is a question in
+  step 4. A reading only the human can run is a question in step 4 naming the command. For a page
+  without editions, find the archived copy through the archive's CDX index of captures, not its
+  availability lookup, which misses captures that exist.
 
 ## 4. Check, ask, show, write
 
 - Before step 4.1, check mechanically: the address opens and the passage stands there word for
-  word. A failure sends the draft back to step 3.
+  word; for a reading, the output quoted is the output of the run the entry names. A failure sends
+  the draft back to step 3.
 - Step 4.2: for a changed entry, show the wording on `{fork-point}` beside the new one, with the
   invariants and decisions that name it.
 - Step 4.4: what follows is each invariant this fact serves, or whose *Rests on* names it, through

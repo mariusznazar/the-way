@@ -2,7 +2,8 @@
 
 This file defines how an environment fact entry is written. Facts are about such things as a
 platform, a format, a licence, a law, the behaviour of a tool or a finding of a study. An entry is a
-sentence and its source: the address, the passage word for word and the date it was read (WAY-80).
+sentence and its source: the address, the passage word for word and the date it was read, or, for a
+host the product's people run, the command, its output word for word and the date it ran (WAY-80).
 Nothing runs to check a fact and no status stands beside it (WAY-82), and nothing its sentence says
 is an invariant (WAY-76). An invariant names the facts holding a condition of its sentence in
 *Rests on* (WAY-73), and a decision names the facts it rests on in *Based on* (WAY-90).
@@ -31,7 +32,7 @@ holds what is particular to an environment fact (WAY-35).
 
 <one sentence: the fact>
 
-- **Source:** <address of the edition> § <place> — "<passage, word for word>"; read <YYYY-MM-DD> · … | <address of the page> (archived: <address of the archived copy>, <YYYY-MM-DD>) § <place> — "<passage, word for word>"; read <YYYY-MM-DD>
+- **Source:** <address of the edition> § <place> — "<passage, word for word>"; read <YYYY-MM-DD> · … | <address of the page> (archived: <address of the archived copy>, <YYYY-MM-DD>) § <place> — "<passage, word for word>"; read <YYYY-MM-DD> | reading: `<command>` on <host>, <tool and its version> — "<output, word for word>"; run <YYYY-MM-DD>
 ```
 
 The form above gives the entry its one field: *Source* takes neither `none` nor `TODO`, since a fact
@@ -96,14 +97,19 @@ identifiers.
 
 - Every entry has a source; a fact without one is not written (WAY-80), and finding it is a task
   (`TODO — decision pending: which decision sets that finding a missing source is a task`).
-- A source takes one of two forms (WAY-80):
+- A source takes one of three forms (WAY-80):
   - an edition with its publisher's own address, the place in it, the passage the fact rests on word
     for word, and the date read. An address the publisher moves to newer text is no edition,
     whatever version its path names: cite the frozen address, and where there is none, the page is
     one without editions;
   - a page without editions, with the closest archived copy that already exists and its date — never
     one made for the entry, since that writes to someone else's service — and the place, the passage
-    and the date read.
+    and the date read;
+  - a reading, only for a state of a host the product's people run that no page shows and only
+    those with access to the host can read — a file on a server, a key's forced command, the swap a
+    host reports: the command run, the host and the tool with its version it ran on, its output word
+    for word, or the lines of it the sentence rests on, and the date run. The output stands where
+    the passage stands; nothing reruns the command (WAY-82).
 - A further page of the same edition names its address and place. Another place of the same page
   follows that page's last passage as `§ <place> — "<passage, word for word>"`, joined by ` · `,
   and shares the page's address and date read. Several addresses stand in one entry only as pages
@@ -124,9 +130,8 @@ identifiers.
   since each has its own owner and changes on its own (WAY-84); where an invariant rests on the
   visibility of the repositories linked, each new link adds such a fact, named in its *Rests on*
   (WAY-84, WAY-73).
-- The source of a setting only its setter can read is
-  `TODO — decision pending: which form of Source a setting read only with its setter's credentials
-  takes, since WAY-80 gives none`.
+- A setting only its setter can read has a page showing it as its source where the host gives one
+  (WAY-84), and a reading where it does not (WAY-80).
 
 ## Changing a fact
 
