@@ -81,9 +81,9 @@ scope are yours.
   them in a separate worktree of the head commit when they need files changed; never change the
   reviewed worktree, its index or branch. The full suite is the cycle's own run before
   the request; do not repeat it. A check you could not run is unverified, and says why.
-- A command that may run longer than your harness keeps its prompt cache — five minutes for a
-  subagent in Claude Code — runs in the background, and you wait for it in stretches of under about
-  four minutes, reading its output between them (WAY-255).
+- A command that may run longer than your harness keeps its prompt cache — five minutes by default
+  for a subagent in Claude Code — runs in the background, and you wait for it in stretches of under
+  about four minutes, reading its output between them (WAY-255).
 - Do the whole review yourself. Never dispatch a subagent.
 
 ## 3. Grade

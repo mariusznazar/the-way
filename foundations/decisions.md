@@ -4130,10 +4130,9 @@ report naming a failure says what failed.
 
 The task-cycle orchestrator itself runs the product's gate on the tree that goes into the request,
 and the request gives its command and exit code and names each check that failed or did not run; a
-check that did not run is unchecked, never passed. The gate's run is the orchestrator's alone: an
-author, an executor and a reviewer run only the focused checks of their work — the tests they
-write and those of the code and invariants it reaches — and neither a plan's *Checks* nor a handoff
-names a run of the gate.
+check that did not run is unchecked, never passed. The gate's run is the orchestrator's alone: no
+author, executor or reviewer runs it, and neither a plan's *Checks* nor a handoff names a run of
+it.
 
 - **Scope:** task-cycle
 - **Based on:** none
@@ -6199,7 +6198,8 @@ orchestrator's.
   - complies: the plan sets the default class for a slice that applies a pattern the spec settles
     and for one of ordinary implementation that takes decisions of its own, the orchestrator's
     class with its reason for a slice that joins several parts, and the strongest with its reason
-    for one that needs design; the record gives the one author's class with its reason, and the
+    for one that needs design; the record gives the one author's class, with its reason where it is not
+    the default, and the
     author writes its foundation entries, its return step and its fix on that class; an executor of
     the cheaper class whose check fails is replaced, from the slice's base, by one of the
     orchestrator's class given its report and the failure; the fix of a reviewed slice's finding
@@ -6213,7 +6213,8 @@ orchestrator's.
 
 *Rationale:* a slice's handoff carries its settled requirement word for word, so much of a planned
 change is the carrying of settled matters into code, which a cheaper model can do at a fraction of
-the cost. Ordinary implementation within a settled task, spec and plan is within that reach too, and
+the cost. Ordinary implementation within a settled task, spec and plan is within that reach too —
+unlike the source, which keeps typical implementation on the default tier — and
 the one author's change is bound by the same settled task; the reviews of the whole change and of
 the return step, on the orchestrator's class, are what finds a cheaper model's error in code, in a
 foundation entry or in the return step. The planner, who cut the slice, knows best what it demands,
@@ -7182,8 +7183,8 @@ product's tests beside the gate.
 An agent the orchestrator dispatches waits for a command that may run longer than its harness keeps
 its prompt cache — a container build, a mutation run, a test suite a check names — by running it in
 the background and reading its output between waits each shorter than that lifetime, never in one
-wait past it; in Claude Code a subagent's cache lives five minutes, so each wait stays under about
-four. Where the harness states no cache lifetime, the agent waits as the harness allows.
+wait past it; in Claude Code a subagent's cache lives five minutes by default, so each wait stays
+under about four. Where the harness states no cache lifetime, the agent waits as the harness allows.
 
 - **Scope:** task-cycle
 - **Based on:** https://code.claude.com/docs/en/prompt-caching.md § "Cache lifetime" — "Cached
@@ -7195,8 +7196,8 @@ four. Where the harness states no cache lifetime, the agent waits as the harness
 - **Relations:** none
 - **Verification:** an agent compares an agent's waits in the cycle's transcripts with the
   decision:
-  - complies: an executor in Claude Code starts the product's tests in the background and reads
-    their output every four minutes until they end;
+  - complies: a reviewer in Claude Code starts the mutation run its review needs in the background
+    and reads its output every four minutes until it ends;
   - violates: a subagent in Claude Code waits ten minutes in one command for a test suite to end; an
     agent's next step after a wait past its cache's lifetime writes its whole context to the cache
     again.

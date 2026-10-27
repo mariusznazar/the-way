@@ -136,13 +136,11 @@ Write the plan in this form; the script reads the slice headings and the fields 
   The orchestrator checks *Read* in its review of the plan and may add to it. Paths are relative to
   the repository root; none, written without backticks, stands for an empty field.
 - *Model* sets the class of model the slice's executor works on (WAY-229): `cheaper` than the
-  orchestrator's — the default, for a slice that carries settled matters into code, such as
-  applying a pattern the spec or the guidelines settle, a rename, or tests from an existing
-  example, and for ordinary implementation that takes decisions of its own; `same` as the
-  orchestrator's — for a change across many parts; `strongest` available — for one that needs
-  design. A class
-  other than `cheaper` carries one sentence of its reason after a dash. Name a class, never a
-  model.
+  orchestrator's — the default, for a slice that carries settled matters into code, such as applying
+  a pattern the spec or the guidelines settle, a rename, or tests from an existing example, and for
+  ordinary implementation that takes decisions of its own; `same` as the orchestrator's — for a
+  change across many parts; `strongest` available — for one that needs design. A class other than
+  `cheaper` carries one sentence of its reason after a dash. Name a class, never a model.
 - *Risk* says whether the slice touches a trust boundary — files the part map names as one
   (WAY-48) — or holds an operation that cannot be undone (WAY-13), naming which, both on one line
   where both hold; `none` where it does neither. A slice with a risk gets a review of its own,
