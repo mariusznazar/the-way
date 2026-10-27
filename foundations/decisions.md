@@ -1748,8 +1748,9 @@ anchor.
 Every environment fact entry names its source: an edition with its publisher's own address, or a
 page without editions with its closest archived copy, giving the place, the passage word for word
 and the date read. A state of a host the product's people run, which no page shows and only those
-with access to the host can read, has for its source a reading: the command, the host and the tool
-it ran on, its output word for word and the date run. The sentence says no more than its source,
+with access to the host can read, has for its source a reading: the command, the host it ran on and
+the tool with its version, its output word for word or the lines of it the sentence rests on, and
+the date run. The sentence says no more than its source,
 and a model's memory, an agent's paraphrase or a text quoting the source is no source. A fact
 resting on a whole section of rules quotes the sentence of its source that sets those rules and
 names the section by its place alone, where the edition has an address of its own.
@@ -1760,7 +1761,8 @@ names the section by its place alone, where the edition has an address of its ow
 - **Verification:** an agent compares the change with the decision:
   - complies: the git path patterns fact quotes the sentence handing matching to `.gitignore` rules
     and names that section by place; the mode of a script installed on the product's test server
-    cites the `stat` command run there, the host and tool, its output `755 root:root` and the date;
+    cites the `stat` command run there, the host, the tool and its version, its output
+    `755 root:root` and the date;
   - violates: the sentence says every line ends in `\n`; the source is the model's recollection of
     a page, a blog post quoting the RFC, or the output of a command the author ran about a tool or a
     format some page documents; a reading names the command and the date but not its output; a fact
@@ -1772,7 +1774,7 @@ for word lets a reader compare it with what the source says now, and the date sa
 a recollection or a quoting text carries a paraphrase's drift. A host the product's people run
 shows its state on no page, so the output of the command that reads it stands where the passage
 stands: one reading, quoted, which a reader with access compares with the host as another compares
-a passage with its page; nothing reruns it (WAY-82).
+a passage with its page; no check reruns it, on a change or by a clock (WAY-82).
 *Rejected:* a source named by its work alone — a new edition changes what the citation says; a
 summary in place of the passage — the drift this decision exists to stop; an observation naming a
 command, its tool and the date it ran without its output — a reader has nothing to compare the host

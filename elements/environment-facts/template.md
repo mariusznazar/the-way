@@ -3,7 +3,8 @@
 This file defines how an environment fact entry is written. Facts are about such things as a
 platform, a format, a licence, a law, the behaviour of a tool or a finding of a study. An entry is a
 sentence and its source: the address, the passage word for word and the date it was read, or, for a
-host the product's people run, the command, its output word for word and the date it ran (WAY-80).
+host the product's people run, the command, the host and tool it ran on, its output word for word
+and the date it ran (WAY-80).
 Nothing runs to check a fact and no status stands beside it (WAY-82), and nothing its sentence says
 is an invariant (WAY-76). An invariant names the facts holding a condition of its sentence in
 *Rests on* (WAY-73), and a decision names the facts it rests on in *Based on* (WAY-90).
@@ -107,9 +108,10 @@ identifiers.
     and the date read;
   - a reading, only for a state of a host the product's people run that no page shows and only
     those with access to the host can read — a file on a server, a key's forced command, the swap a
-    host reports: the command run, the host and the tool with its version it ran on, its output word
-    for word, or the lines of it the sentence rests on, and the date run. The output stands where
-    the passage stands; nothing reruns the command (WAY-82).
+    host reports: the command run, the host it ran on and the tool with its version, its output word
+    for word, or the lines of it the sentence rests on, joined by ` · `, and the date run. The
+    output stands where the passage stands; no check reruns the command, on a change or by a clock
+    (WAY-82).
 - A further page of the same edition names its address and place. Another place of the same page
   follows that page's last passage as `§ <place> — "<passage, word for word>"`, joined by ` · `,
   and shares the page's address and date read. Several addresses stand in one entry only as pages
@@ -130,8 +132,11 @@ identifiers.
   since each has its own owner and changes on its own (WAY-84); where an invariant rests on the
   visibility of the repositories linked, each new link adds such a fact, named in its *Rests on*
   (WAY-84, WAY-73).
-- A setting only its setter can read has a page showing it as its source where the host gives one
-  (WAY-84), and a reading where it does not (WAY-80).
+- A setting on a host the product's people run that only its setter can read has a reading for its
+  source (WAY-80). The source of a setting read with its setter's credentials on a service they do
+  not run is
+  `TODO — decision pending: which form of Source a setting read only with its setter's credentials
+  takes, since WAY-80 gives none`.
 
 ## Changing a fact
 

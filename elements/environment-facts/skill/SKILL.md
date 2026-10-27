@@ -46,11 +46,12 @@ the project skill of that name with the `the-way-` prefix. Follow the steps of
 
 ## 3. Draft
 
-- *Source*: open the address and copy the passage as the template's "Source" gives it; for a
-  reading, run the command on the host and copy its output; missing there, it is a question in
-  step 4. A reading only the human can run is a question in step 4 naming the command. For a page
-  without editions, find the archived copy through the archive's CDX index of captures, not its
-  availability lookup, which misses captures that exist.
+- *Source*: open the address and copy the passage as the template's "Source" gives it; a passage
+  missing there is a question in step 4. For a reading, run on the host a command that only reads
+  its state, and copy its output and the version of the tool; a reading only the human can run is a
+  question in step 4 naming the command. For a page without editions, find the archived copy
+  through the archive's CDX index of captures, not its availability lookup, which misses captures
+  that exist.
 
 ## 4. Check, ask, show, write
 
