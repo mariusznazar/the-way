@@ -90,7 +90,11 @@ before you commit.
   that reason (WAY-219). Where the settled route fails, report the failed or unperformed check
   itself, not the missing-route reason. Reading code shows no rendered appearance.
 - Run the focused checks of your change: the slice's *Checks*, the tests you wrote and the tests of
-  the code you touched. The full suite is the cycle's run before the request; do not run it.
+  the code you touched. The full suite is the cycle's run before the request; do not run it, also
+  where a plan's *Checks* or your handoff names it — report that as a mismatch (WAY-160).
+- A command that may run longer than your harness keeps its prompt cache — five minutes for a
+  subagent in Claude Code — runs in the background, and you wait for it in stretches of under about
+  four minutes, reading its output between them (WAY-255).
 
 ## 4. When the plan and the code disagree
 
