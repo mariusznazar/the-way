@@ -4130,7 +4130,9 @@ report naming a failure says what failed.
 
 The task-cycle orchestrator itself runs the product's gate on the tree that goes into the request,
 and the request gives its command and exit code and names each check that failed or did not run; a
-check that did not run is unchecked, never passed.
+check that did not run is unchecked, never passed. The gate's run is the orchestrator's alone: no
+author, executor or reviewer runs it, and neither a plan's *Checks* nor a handoff names a run of
+it.
 
 - **Scope:** task-cycle
 - **Based on:** none
@@ -4139,17 +4141,21 @@ check that did not run is unchecked, never passed.
   - complies: the orchestrator runs the gate after the review of the whole change and again after
     the return step changed the tree, and the request gives the command and its exit code;
   - violates: the focused-check reports replace the gate on the finished change; the request calls
-    a check that did not run passed; the gate ran on a tree other than the one the request holds.
+    a check that did not run passed; the gate ran on a tree other than the one the request holds; a
+    plan's *Checks* or a handoff tells an executor to run the gate after its slice.
 - **Origin:** none
 
 *Rationale:* the finished change needs verification across the work that made it, which no
 author's focused checks give, and the orchestrator owns that run. The command and its exit code
 tell the human what passed; the checks that failed or did not run, named, keep what stayed
-unchecked in view.
+unchecked in view. A gate run after every slice repeats for each slice a run the finished change
+needs once and holds the next slice until it ends, while the focused checks of the code and
+invariants a slice reaches find what it breaks there.
 *Rejected:* the gate's full output kept in a file of the cycle, with its failure lines brought into
 the orchestrator's context — the exit code and the failures named settle the same; executor checks
 in place of the gate on the finished change — the combined result is never checked; an exit code
-alone — a check that did not run would pass unseen.
+alone — a check that did not run would pass unseen; the gate after every slice — it multiplies the
+gate's run by the number of slices and holds each slice for it.
 
 ### WAY-161 — Which findings of the review of the whole change are fixed, and how does the request carry the rest?
 
@@ -6152,22 +6158,27 @@ code meets no rule; no property tests — a whole class of tests that check a re
 inputs is barred; the rule left silent on property tests — a generated input breaks its letter, and
 nothing says what holds instead.
 
-### WAY-229 — On which class of model does the executor of a slice work?
+### WAY-229 — On which class of model do the executor of a slice and the one author work?
 
-The executor of a slice works on the class of model its plan sets at the slice, named in general
-terms and never by the name of a model: by default a class cheaper than the orchestrator's, for a
-slice that carries settled matters into code; the orchestrator's class, for ordinary implementation
-that takes decisions of its own; or the strongest class available, for a change across many parts
-or one that needs design — each class other than the default with one sentence of its reason. An
-executor that returns `blocked` for a fact or permission no source supplies, reports a failing
-check of its slice, or fails the orchestrator's mechanical check (no commit in its range, or a
-repair it was sent back for left undone) gets one retry: a fresh executor one class higher, from the
-slice's base, given the failed executor's report and what failed; and an executor of the strongest
-class that fails, or a retry that fails, stops the cycle. The fix of a slice's findings
-runs on the class of the executor whose work stands, of findings in several slices on the highest of
-their classes and of a finding of no slice on the orchestrator's, while the spec's designer and
-reviewer, the planner, the writer of the plan's foundation entries, the return step and every
-reviewer work on no class cheaper than the orchestrator's.
+The executor of a slice, and the one author of a change without a plan, work on the class of model
+set for them, named in general terms and never by the name of a model: by default a class cheaper
+than the orchestrator's, for code that carries settled matters into the product, ordinary
+implementation that takes decisions of its own included; the orchestrator's class, for a change
+across many parts; or the strongest class available, for one that needs design — each class other
+than the default with one sentence of its reason. The planner sets each slice's class in the plan;
+the orchestrator sets the one author's when it selects that route (WAY-136), by the same measure,
+and records it with its reason. The one author writes its foundation entries, takes its return step
+and fixes its findings on its own class. An executor that returns `blocked` for a fact or permission
+no source supplies, reports a failing check of its slice, or fails the orchestrator's mechanical
+check (no commit in its range, or a repair it was sent back for left undone) gets one retry: a fresh
+executor one class higher, from the slice's base, given the failed executor's report and what
+failed; and an executor of the strongest class that fails, or a retry that fails, stops the cycle.
+The fix of a slice's findings runs on the class of the executor whose work stands, of findings in
+several slices on the highest of their classes and of a planned change's finding of no slice on the
+orchestrator's, while the spec's designer and reviewer, the planner, the writer of the plan's
+foundation entries, the return step of a planned change and every reviewer — the review of the whole
+change and the review of the return step included — work on no class cheaper than the
+orchestrator's.
 
 - **Scope:** task-cycle
 - **Based on:**
@@ -6184,8 +6195,12 @@ reviewer work on no class cheaper than the orchestrator's.
 - **Relations:** derives from WAY-136 · derives from WAY-148
 - **Verification:** an agent compares the plan, the record of slices and the dispatches with the
   decision:
-  - complies: the plan sets the default class for a slice that applies a pattern the spec settles,
-    and the strongest class with its reason for a slice that joins several parts; an executor of
+  - complies: the plan sets the default class for a slice that applies a pattern the spec settles
+    and for one of ordinary implementation that takes decisions of its own, the orchestrator's
+    class with its reason for a slice that joins several parts, and the strongest with its reason
+    for one that needs design; the record gives the one author's class, with its reason where it is not
+    the default, and the
+    author writes its foundation entries, its return step and its fix on that class; an executor of
     the cheaper class whose check fails is replaced, from the slice's base, by one of the
     orchestrator's class given its report and the failure; the fix of a reviewed slice's finding
     runs on the class of the executor whose work stands; the review of the whole change runs on the
@@ -6193,22 +6208,32 @@ reviewer work on no class cheaper than the orchestrator's.
   - violates: a plan names a model by its product name; a class other than the default stands
     without its reason; a failed executor is retried on the same class or a second time; an
     executor of the strongest class gets a retry; a review or the spec runs on a class cheaper than
-    the orchestrator's.
+    the orchestrator's; the one author works on the orchestrator's model with no class recorded.
 - **Origin:** none
 
 *Rationale:* a slice's handoff carries its settled requirement word for word, so much of a planned
 change is the carrying of settled matters into code, which a cheaper model can do at a fraction of
-the cost. The planner, who cut the slice, knows best what it demands. A failure gets one retry a
-class higher before the cycle stops, which costs less than running every slice on the strongest
-class and less than stopping at the first failure of a cheaper one; the slice's own review where it
-has one, and the review of the whole change, find what a cheaper model got wrong. Classes in
-general terms survive the release of new models and fit any harness.
-*Rejected:* every slice on the orchestrator's model — it pays the strongest price for
-transcription; the class chosen by the orchestrator at each dispatch — it judges again what the
-planner judged when it cut the slice; the orchestrator's class as the default — it leaves the
-cheaper class to a judgment made slice by slice and rarely taken; retries without bound, or on the
-same class — the same failure repeats at the same cost; a cheaper class for the spec, the plan or
-a review — their errors reach every later step; model names in the process — they age with every
+the cost. Ordinary implementation within a settled task, spec and plan is within that reach too —
+unlike the source, which keeps typical implementation on the default tier — and
+the one author's change is bound by the same settled task; the reviews of the whole change and of
+the return step, on the orchestrator's class, are what finds a cheaper model's error in code, in a
+foundation entry or in the return step. The planner, who cut the slice, knows best what it demands,
+and on the route without a plan the orchestrator, who judged that one agent can hold the change,
+knows what that agent faces. A failure gets one retry a class higher before the cycle stops, which
+costs less than running every slice on the strongest class and less than stopping at the first
+failure of a cheaper one; the slice's own review where it has one, and the review of the whole
+change, find what a cheaper model got wrong. Classes in general terms survive the release of new
+models and fit any harness.
+*Rejected:* every slice on the orchestrator's model — it pays the strongest price for transcription;
+the orchestrator's class for ordinary implementation, or for the one author by inheritance — it pays
+the strongest price for code whose decisions the task, the spec and the plan already bound; the
+class chosen by the orchestrator at each dispatch of a slice — it judges again what the planner
+judged when it cut the slice; the return step of the one author handed to a fresh agent of the
+orchestrator's class — it pays a second agent to read the foundation again, while the review of the
+return step judges it on that class; the orchestrator's class as the default — it leaves the cheaper
+class to a judgment made slice by slice and rarely taken; retries without bound, or on the same
+class — the same failure repeats at the same cost; a cheaper class for the spec, the plan or a
+review — their errors reach every later step; model names in the process — they age with every
 release.
 
 ### WAY-230 — How does a project plan order two tasks that realize the same projected entry?
@@ -7152,6 +7177,39 @@ command, and only the area this decision names keeps other tools from claiming t
 assertion; the run in CI — a run that admits nothing has no place where changes are admitted;
 commands of the test tool for each level, which WAY-241 rejects, stay rejected, since they run the
 product's tests beside the gate.
+
+### WAY-255 — How does an agent of a task's cycle wait for a command that runs long?
+
+An agent the orchestrator dispatches waits for a command that may run longer than its harness keeps
+its prompt cache — a container build, a mutation run, a test suite a check names — by running it in
+the background and reading its output between waits each shorter than that lifetime, never in one
+wait past it; in Claude Code a subagent's cache lives five minutes by default, so each wait stays
+under about four. Where the harness states no cache lifetime, the agent waits as the harness allows.
+
+- **Scope:** task-cycle
+- **Based on:** https://code.claude.com/docs/en/prompt-caching.md § "Cache lifetime" — "Cached
+  prefixes expire after a period of inactivity. Each request that hits the cache resets the timer,
+  so the cache stays warm as long as you keep working." · § "Cache lifetime" — "a one-hour TTL
+  that keeps the cache warm through longer breaks but charges a higher rate for cache writes" ·
+  § "Subagents and the cache" — "Subagents fall outside the main-conversation TTL bucket, so they
+  get five minutes even on a subscription until you choose a longer one."; read 2026-10-27
+- **Relations:** none
+- **Verification:** an agent compares an agent's waits in the cycle's transcripts with the
+  decision:
+  - complies: a reviewer in Claude Code starts the mutation run its review needs in the background
+    and reads its output every four minutes until it ends;
+  - violates: a subagent in Claude Code waits ten minutes in one command for a test suite to end; an
+    agent's next step after a wait past its cache's lifetime writes its whole context to the cache
+    again.
+- **Origin:** none
+
+*Rationale:* an agent whose cache has expired pays at its next step to write its whole context
+again, while a check between waits reads that context from the cache at a fraction of that price;
+a longer cache, where a harness offers one, costs more at every write, also in work that never
+waits.
+*Rejected:* one wait to the command's end — it writes the whole context again after every wait past
+the lifetime; a longer cache lifetime for every agent — it raises the price of each step to spare
+the few that wait.
 
 ## Withdrawn identifiers
 

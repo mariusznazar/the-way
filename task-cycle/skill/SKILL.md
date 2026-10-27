@@ -96,10 +96,14 @@ product names (WAY-107), the cycle may add the request link and set the task's s
    *Settlements to record* or a projected entry the task carries settles its entry, an invariant's
    included; an entry that follows from the change with no way left open, such as a part-map line
    for a file the change adds, is no choice. Where one stands, the cycle writes a spec (step 6).
-   Otherwise judge from the task document, and from the checks the move of the pin broke where
-   step 2 moved it, whether one agent can hold the change (WAY-136): if so, select one author
-   without a plan; if it needs division, select planning (step 8). Record the finding, the route
-   and their reasons; write no preliminary plan and run no slice-size script to judge.
+   Otherwise judge from the task document, and from the checks the move of the pin broke where step
+   2 moved it, whether one agent can hold the change (WAY-136): if so, select one author without a
+   plan and set its class of model by the measure a planner uses for a slice (WAY-229) — `cheaper`
+   than yours by default, ordinary implementation that takes decisions of its own included; `same`
+   as yours for a change across many parts; the `strongest` available for one that needs design —
+   recording a class other than `cheaper` with its reason under *Author*; if it needs division,
+   select planning (step 8). Record the finding, the route and their reasons; write no preliminary
+   plan and run no slice-size script to judge.
    An effect outside the product repository is made only by a human, through a human action
    (WAY-140): for those the task document places in the cycle, prepare what the repository allows
    and list them in the request, which opens as a blocked draft; an effect the cycle finds that the
@@ -129,7 +133,8 @@ step, it names the paragraph or step of this skill that holds that stage, which 
 whole, with the element skills it names. For a review, it gives the range to review and the
 author's report. For a fix, it gives the findings file, which you write from the review's blocking
 findings in the reviewer's words; the fix's range runs from the reviewed head, and the review of
-the fix also gets the fix report.
+the fix also gets the fix report. No handoff tells an agent to run the product's gate; its run is
+yours (step 10, WAY-160).
 
 You decide what each agent reads, and its handoff names it (WAY-150, WAY-213): the foundation
 entries by identifier — those of the task's *Decisions in play*, and the decisions, invariants and
@@ -221,14 +226,14 @@ reviews, tests, return step and request.
    projected entry the task carries and every check the move of the pin carried, fidelity to the
    task's sources, no code, checks that can actually run and a size report in which every slice
    fits.
-   Check each slice's *Read* against your own reading of step 2 and add to it in `plan.md` what
-   the slice needs and misses — a decision of a part it touches, an invariant it reaches (WAY-62),
-   a guideline file — then run the size script on the plan again; a slice it now reports too large
-   returns to the planner to be split. Check each slice's *Model* and *Risk*: a class other than
-   the default `cheaper` carries its reason (WAY-229), and a slice whose files the part map names
-   as a trust boundary, or that holds an operation that cannot be undone, is marked so — none
-   where both answers of step 4 are no. Copy its *Choices* into the questions table and record
-   your go-ahead as provisional.
+   Check each slice's *Read* against your own reading of step 2 and add to it in `plan.md` what the
+   slice needs and misses — a decision of a part it touches, an invariant it reaches (WAY-62), a
+   guideline file — then run the size script on the plan again; a slice it now reports too large
+   returns to the planner to be split. Check each slice's *Model* and *Risk*: a class other than the
+   default `cheaper` carries its reason (WAY-229), its *Checks* name focused checks and no run of
+   the gate (WAY-160), and a slice whose files the part map names as a trust boundary, or that holds
+   an operation that cannot be undone, is marked so — none where both answers of step 4 are no. Copy
+   its *Choices* into the questions table and record your go-ahead as provisional.
 
 An agent that meets an open design choice while it makes the change or a fix returns `returned`
 with a report and no code: the choice, where it shows, the ways open and what it found (WAY-135). A
@@ -272,12 +277,14 @@ returns such a question with the status `blocked`, and you open the blocked draf
 it, as step 13 gives under *Questions*.
 
 9. Make the change and have it reviewed.
-   - **One author.** Dispatch a fresh author with `make-change`, the frozen task, any reviewed
-     spec and the checks the move of the pin carried (step 2). It does the foundation step with its
+   - **One author.** Dispatch a fresh author with `make-change`, on the class of model you set
+     for it (step 4) and the harness's model closest to it, as sub-step 2 of the planned route
+     gives for a slice, recorded under *Author* — with the frozen task, any reviewed spec and the
+     checks the move of the pin carried (step 2). It does the foundation step with its
      code and returns before review; where the change touches a user interface, it reads the
      styleguide's example of the order of work as an example (WAY-213). Keep it for the fix and
-     the return step; where the harness cannot resume it, a fresh author on the same branch takes
-     its place, recorded under *Author*.
+     the return step, on its class (WAY-229); where the harness cannot resume it, a fresh author
+     of the same class on the same branch takes its place, recorded under *Author*.
    - **Plan.** Where the plan lists *Foundation entries*, write slice 1's base first, then dispatch
      a fresh agent with `make-change` for those entries, recorded in the row `Foundation entries`
      of *Slices*; slice 1's range starts at that base, so whichever review judges slice 1 covers
@@ -322,37 +329,39 @@ it, as step 13 gives under *Questions*.
 
      A plan of one slice skips the review of the slice: the review of the whole change is its one.
 
-   Then the review of the whole change: a fresh reviewer that made none of it, with
-   `review-change`, on the range from the task's base to the head, with the frozen task, any spec
-   and plan, each slice's range and whether it had a review of its own, the report of each executor
-   whose slice had none with any mismatch its mechanical check passed on, the report of the agent
-   that wrote the plan's *Foundation entries* where slice 1 had no review of its own, and the Minor
-   and out-of-scope findings of the slice reviews (WAY-164); where the task moved the pin, it is
-   told of that commit and given the checks the move carried. It selects its own foundation and
-   guidelines, judges every slice that had no review of its own, and names for each blocking finding
-   the slice it comes from, or that it comes from none (WAY-136). For progression use the changed
-   files with their line counts and the review's first line (WAY-158); read the evidence only when
-   a question about a finding needs it, never to change a reviewer's grade or scope.
+   Then the review of the whole change: a fresh reviewer that made none of it, on no class cheaper
+   than yours (WAY-229), with `review-change`, on the range from the task's base to the head, with
+   the frozen task, any spec and plan, each slice's range and whether it had a review of its own,
+   the report of each executor whose slice had none with any mismatch its mechanical check passed
+   on, the report of the agent that wrote the plan's *Foundation entries* where slice 1 had no
+   review of its own, and the Minor and out-of-scope findings of the slice reviews (WAY-164); where
+   the task moved the pin, it is told of that commit and given the checks the move carried. It
+   selects its own foundation and guidelines, judges every slice that had no review of its own, and
+   names for each blocking finding the slice it comes from, or that it comes from none (WAY-136).
+   For progression use the changed files with their line counts and the review's first line
+   (WAY-158); read the evidence only when a question about a finding needs it, never to change a
+   reviewer's grade or scope.
 10. Run the product's gate yourself on the reviewed change (WAY-160), and record its command, exit
     code and the failures it names under *Verification*, with each check that failed or did not
     run by name; an unrun check is unchecked, never passed. The authors' focused checks are not
     rerun merely to go on (WAY-159); a change, a failure or disputed evidence calls for the affected
     checks again, by the agent that owns them.
-11. Take the return step: the author resumes for it, or on the planned route a fresh agent with
-    `make-change` takes it. It compares with the code the entries the change writes or changes,
-    those the task names and those the search of the foundation found, and the part map
-    of the touched parts, and corrects in the same change whatever no longer matches (WAY-11). It
-    writes, as the foundation step writes, each source outside the product that the change rests on
-    and the foundation does not hold, as an environment fact; a word the change uses in a meaning
-    other than the usual one, or a term used against its entry, through `record-glossary-term`; a
-    row of *Settlements to record* or a projected entry the code makes true that the foundation step
-    missed; and a choice that binds after the merge (WAY-36). It writes an invariant only for a rule
-    the task, a decision or the human sets, never for behaviour merely because no invariant covers
-    it; every other choice stays a row of the questions table. No entry is deferred: one this
-    request does not write is neither proposed nor listed for later, and the review findings of the
-    request are no foundation entries. Where the return step commits anything, a fresh reviewer
-    reviews its range with `review-change`, against the task and the entries the return step writes
-    or corrects. Record the result under *Return step*.
+11. Take the return step: the author resumes for it, on its class (WAY-229), or on the planned route
+    a fresh agent with `make-change` takes it, on no class cheaper than yours. It compares with the
+    code the entries the change writes or changes, those the task names and those the search of the
+    foundation found, and the part map of the touched parts, and corrects in the same change
+    whatever no longer matches (WAY-11). It writes, as the foundation step writes, each source
+    outside the product that the change rests on and the foundation does not hold, as an environment
+    fact; a word the change uses in a meaning other than the usual one, or a term used against its
+    entry, through `record-glossary-term`; a row of *Settlements to record* or a projected entry the
+    code makes true that the foundation step missed; and a choice that binds after the merge
+    (WAY-36). It writes an invariant only for a rule the task, a decision or the human sets, never
+    for behaviour merely because no invariant covers it; every other choice stays a row of the
+    questions table. No entry is deferred: one this request does not write is neither proposed nor
+    listed for later, and the review findings of the request are no foundation entries. Where the
+    return step commits anything, a fresh reviewer on no class cheaper than yours (WAY-229) reviews
+    its range with `review-change`, against the task and the entries the return step writes or
+    corrects. Record the result under *Return step*.
 
 ## The end of a code review
 
@@ -368,15 +377,16 @@ finding the reviewer marks outside the task's scope are not fixed; outside the s
 goes to the request's lists (step 13) with the reviewer's words and its place in the code, or a
 note that the reviewer names none.
 
-A `FAIL` gets one fix and one review of that fix (WAY-162); you never overrule a blocking finding
-or skip its fix. The author or executor whose work the findings concern fixes them with
-`make-change`, given the findings file, runs the affected checks again and answers with evidence a
-finding it holds wrong; where the harness cannot resume it, or the findings concern several slices,
-a fresh agent on the same branch, given the task and the findings, fixes them. The fix of a slice's
-findings runs on the class of the executor whose work stands, of findings in several slices on the
-highest of their classes, and of a finding of no slice on yours (WAY-229). The same reviewer,
-or a fresh one given its report where it cannot be resumed, reviews the fix range once. A new
-Critical or Important finding in the fix counts as one that remains.
+A `FAIL` gets one fix and one review of that fix (WAY-162); you never overrule a blocking finding or
+skip its fix. The author or executor whose work the findings concern fixes them with `make-change`,
+given the findings file, runs the affected checks again and answers with evidence a finding it holds
+wrong; where the harness cannot resume it, or the findings concern several slices, a fresh agent on
+the same branch, given the task and the findings, fixes them. The fix of a slice's findings runs on
+the class of the executor whose work stands, of findings in several slices on the highest of their
+classes, of a planned change's finding of no slice on yours, and of the one author's findings on the
+one author's class (WAY-229). The same reviewer, or a fresh one given its report where it cannot be
+resumed, reviews the fix range once. A new Critical or Important finding in the fix counts as one
+that remains.
 
 When a blocking finding remains after the review of its fix — in any of these reviews, a slice's
 included — the change is blocked: run no third round and do not rule on the finding. Run the gate on

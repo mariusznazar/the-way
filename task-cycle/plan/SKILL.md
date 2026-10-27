@@ -84,8 +84,8 @@ Write the plan in this form; the script reads the slice headings and the fields 
 - **Model:** cheaper | same — <reason> | strongest — <reason>
 - **Risk:** none | trust boundary — <which> | cannot be undone — <what> | trust boundary — <which> ·
   cannot be undone — <what>
-- **Checks:** <the commands that show the goal holds; the failing test written first where the
-  slice changes behaviour>
+- **Checks:** <the focused commands that show the goal holds, never the gate; the failing test
+  written first where the slice changes behaviour>
 - **Depends on:** none | Slice <id> · <entry>
 
 ## Coverage
@@ -136,19 +136,20 @@ Write the plan in this form; the script reads the slice headings and the fields 
   The orchestrator checks *Read* in its review of the plan and may add to it. Paths are relative to
   the repository root; none, written without backticks, stands for an empty field.
 - *Model* sets the class of model the slice's executor works on (WAY-229): `cheaper` than the
-  orchestrator's — the default, for a slice that carries settled matters into code, such as
-  applying a pattern the spec or the guidelines settle, a rename, or tests from an existing
-  example; `same` as the orchestrator's — for ordinary implementation that takes decisions of its
-  own; `strongest` available — for a change across many parts or one that needs design. A class
-  other than `cheaper` carries one sentence of its reason after a dash. Name a class, never a
-  model.
+  orchestrator's — the default, for a slice that carries settled matters into code, such as applying
+  a pattern the spec or the guidelines settle, a rename, or tests from an existing example, and for
+  ordinary implementation that takes decisions of its own; `same` as the orchestrator's — for a
+  change across many parts; `strongest` available — for one that needs design. A class other than
+  `cheaper` carries one sentence of its reason after a dash. Name a class, never a model.
 - *Risk* says whether the slice touches a trust boundary — files the part map names as one
   (WAY-48) — or holds an operation that cannot be undone (WAY-13), naming which, both on one line
   where both hold; `none` where it does neither. A slice with a risk gets a review of its own,
   except a plan's only slice, whose review is the review of the whole change; every other slice is
   judged by the review of the whole change (WAY-136).
 - *Checks* are commands that can actually run in the product, named with their arguments. A slice
-  that changes behaviour names the test it starts from.
+  that changes behaviour names the test it starts from. They are the slice's focused checks — its
+  tests and those of the code and invariants it reaches — never the product's gate, which the
+  orchestrator runs once on the finished change (WAY-160).
 - Order the slices so that each comes after what it depends on; the slices are made one after
   another in that order. Two slices change the same file only where one depends on the other.
 - No code: no function body, no test body, no text a file will hold. Name what is to exist — a

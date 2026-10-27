@@ -54,8 +54,8 @@ The process is designed to give a product:
   identifier, the guidelines and the passages of the task, spec and plan it needs — and agents that
   read only that, search selectively for what is missing and name it in their report; a slice's
   executor works from its handoff without reading the whole task, on the class of model its plan
-  sets, by default cheaper than the orchestrator's; and a task that names the decisions concerning
-  it.
+  sets, and the one author of a change without a plan on the class the orchestrator sets, by
+  default cheaper than the orchestrator's; and a task that names the decisions concerning it.
 
 The foundation holds rules and a description of the product's state that the return step compares
 with the code; a detail that changes with every change of the code lives in the code or in a test.
