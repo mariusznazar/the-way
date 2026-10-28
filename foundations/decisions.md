@@ -2839,28 +2839,39 @@ candidate rows alone — neither accepts the complete task the cycle takes.
 The task cycle `implement-task` uses the-way's own methods: `write-spec` for a spec and its review,
 `plan-task` for a plan, `make-change` for each change an author, a slice's executor or a fix makes,
 and `review-change` for each code review; the orchestrator conducts the cycle and its loop of
-slices itself. Each agent reads the method of its stage, and what it names, whole, while the
-orchestrator reads no method it does not conduct.
+slices itself. Each agent reads the `SKILL.md` of its stage's method whole, and a file the method
+names, one beside that `SKILL.md` included, only when the step or variant that names the file
+comes, while the orchestrator reads no method it does not conduct.
 
 - **Scope:** task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-13
+- **Relations:** derives from WAY-13 · derives from WAY-256
 - **Verification:** an agent compares a cycle with the decision:
   - complies: the designer reads `write-spec` and each slice's executor `make-change`, while the
-    orchestrator reads `implement-task` alone;
+    orchestrator reads `implement-task` alone; a slice's executor reads the file its variant's step
+    names when that step comes, and never the file only a fix's variant names;
   - violates: the orchestrator loads `review-change` because a review begins, or a reviewer works
     from its handoff without reading that method; the cycle requires a method the product's pin of
-    the-way does not carry.
+    the-way does not carry; a handoff tells a stage agent to read its method and every file the
+    method names before its work begins.
 - **Origin:** none
 
 *Rationale:* the-way pinned in a product carries every method its cycle uses, so the cycle runs the
-same in every harness and its methods change only with the pin. The agent doing the work needs its
-whole method, while loading it again for coordination spends attention without doing that work.
+same in every harness and its methods change only with the pin. The agent doing the work needs the
+picture of its whole method and the rules that hold across its steps, while loading a method again
+for coordination spends attention without doing that work. A fragment that only one step or variant
+needs stands beside the method (WAY-256); read at the start, it would stay in play through the
+other steps and in the variants the agent does not take, so its place would spare the agent
+nothing. The gain is largest in the variants an agent does not take, since a file read at an earlier
+step stays in context. An agent may pass by the moment its step names a file; the judgment that
+moves a fragment beside a skill asks whether an agent recognises that moment (WAY-257).
 *Rejected:* methods of an outside plugin, with or without a required version — the cycle overrides
 their steps, keeps their log beside its record, and a product meets whichever version its harness
 has installed; every method written into the one cycle skill — the orchestrator would read every
 stage's method; reading every method in the orchestrator too — it repeats context the agent
-applying it already holds.
+applying it already holds; each agent reading its method and every file the method names at the
+start — a fragment moved beside a stage's method would still be read at once, so the move would
+change nothing for the agent.
 
 ### WAY-126 — How does a projected entry enter the foundation?
 
@@ -2909,20 +2920,26 @@ once and read by the review of the change, guards it without a second implementa
 A session working on the-way itself reaches each skill of the-way as the project skill
 `the-way-<name>` through two identical tracked entry points, `.claude/skills/the-way-<name>/SKILL.md`
 and `.agents/skills/the-way-<name>/SKILL.md`, which a script of `agent-instructions` generates from
-the skill's `SKILL.md`. An entry point reads its skill and the files it names from the checkout or
-worktree the session works in — where it was started, or where it was last moved — stops itself
-in a product, and hands another the-way skill on under the `the-way-` prefix. No global link
-reaches a skill of the-way other than one to `instruction-files/`, whose skill, judging a repository
-that pins the-way, follows that repository's pinned copy instead, and the-way is not installed in
-itself.
+the skill's `SKILL.md`. An entry point reads its skill, and each file the skill names when the step
+that names that file comes rather than all of them at the start, from the checkout or worktree the
+session works in — where it was started, or where it was last moved — stops itself in a product, and
+hands another the-way skill on under the `the-way-` prefix. No global link reaches a skill of the-way
+other than one to `instruction-files/`, whose skill, judging a repository that pins the-way, follows
+that repository's pinned copy instead, and the-way is not installed in itself.
 
 - **Scope:** agent-instructions, elements-common, project-level, task-cycle, decisions, invariants,
   glossary, part-map, environment-facts, installation, instruction-files
 - **Based on:** claude-code-project-skills · claude-code-nested-skills ·
   codex-repository-skills · codex-skill-paths
-- **Relations:** derives from WAY-44
-- **Verification:** invariants: skill-entry-points. For the paragraphs of the skills that say where
-  the-way lies, an agent compares the change with the decision:
+- **Relations:** derives from WAY-44 · derives from WAY-256
+- **Verification:** invariants: skill-entry-points. For when an entry point has the files a skill
+  names read, an agent compares the change with the decision:
+  - complies: an entry point has the session read the skill's `SKILL.md` whole and a file the skill
+    names from the same worktree when the step that names it comes;
+  - violates: an entry point has the session read the skill and every file it names before the
+    skill's first step.
+  For the paragraphs of the skills that say where the-way lies, an agent compares the change with
+  the decision:
   - complies: a skill's paragraph names, as the place of the-way, the checkout or worktree the
     session works in for the-way itself and the pinned `.the-way` for a product, and names
     another the-way skill it hands to as the project skill with the `the-way-` prefix;
@@ -2951,14 +2968,18 @@ for one of the-way's. The skill of instruction files serves repositories outside
 products too, where no entry point exists and the copy a global link reads is the one wanted; in a
 product the pinned copy governs (WAY-34), so the skill follows it there; a session on the-way still
 reaches its branch's copy through its entry point, and the-way's repository instruction files keep
-it to the prefixed skill.
+it to the prefixed skill. A fragment that only one step or variant of a skill needs stands beside
+the skill so that it leaves the text read at the other steps (WAY-256); an entry point that had
+every file a skill names read at the start would bring each such fragment back into play at once.
 *Rejected:* a mode of the installer without a pin writing the same entry points into the-way — its
 generated files would belong to `installation`, outside that part's directory, and its trust
 boundary would grow; entry points written per checkout and ignored by git — a fresh worktree or
 cloud session has none until someone writes them; global links, one per worktree, or links tracked
 by git — a global link reads one checkout whatever branch the session works on, and tracked links
 need a git setting and extra rights on Windows; names without the prefix — which skill a session
-gets would rest on how Claude Code and Codex settle two skills of one name.
+gets would rest on how Claude Code and Codex settle two skills of one name; an entry point that has
+the skill and every file it names read at the start — the fragments placed beside a skill for one
+step would load with the skill.
 
 ### WAY-128 — What may a line of an instruction file that a tool loads into every session hold, and where does any other rule stand?
 
@@ -7229,9 +7250,11 @@ the-way's process included, or one a change to a skill of the-way adds or reword
 step or one variant of the skill needs stands in a file beside the skill that the step names, or,
 where it is a rule or a way of working WAY-35 places in an element's template or in the part the
 elements share, there. The skill's `SKILL.md` keeps the picture of the whole, the rules of working
-that hold across its steps and the pointers, and a fragment's place follows from whether a use of
-the skill needs it at that step, never from the count of words or lines of the file. Fragments
-that stand unchanged are not bound by it.
+that hold across its steps and the pointers, and a fragment of one step or variant that is one
+instruction, which would otherwise stand in a file beside the skill, stays in `SKILL.md` where its
+pointer would stand, since the pointer is an instruction too; beyond that, a fragment's place
+follows from whether a use of the skill needs it at that step, never from the count of words or
+lines of the file. Fragments that stand unchanged are not bound by it.
 
 - **Scope:** instruction-files, decisions, invariants, glossary, part-map, environment-facts,
   elements-common, project-level, product-guidelines, task-cycle
@@ -7242,10 +7265,13 @@ that stand unchanged are not bound by it.
     in a file beside the skill that the step names, and a line in its `SKILL.md` pointing to it;
     the skill of `instruction-files`, judging a skill with a mode only some uses take, proposes to
     move that mode's checklist into a file the mode's step names; a rule of an element's entries a
-    change adds stands in the element's template;
+    change adds stands in the element's template; the one sentence only one variant of a skill
+    needs stands in that variant's row of the skill's `SKILL.md`, where a pointer to it would stand;
   - violates: a change adds to a skill's `SKILL.md` a page of rules only its review step uses; the
     skill of `instruction-files` proposes to cut a skill to a number of lines; a change puts a rule
-    of an element's entries into a file beside the element's skill.
+    of an element's entries into a file beside the element's skill; a file beside a skill holds one
+    instruction and its step names it by a pointer; a step keeps several instructions only one
+    variant needs in `SKILL.md` because each of them is short.
 - **Origin:** none
 
 *Rationale:* a single rule is not lost in a longer file, while the more instructions an agent has
@@ -7262,13 +7288,19 @@ since no measurement stands behind it. The rules of an element's entries stay wh
 them, since every writer and check reaches them there, and this decision orders what else a skill
 holds. A change to a skill of the-way is bound because a fragment it adds would otherwise go
 anywhere until the skill is judged; fragments standing unchanged are left until each skill is
-rebuilt, since binding them would make every skill a breach on the day of the merge.
+rebuilt, since binding them would make every skill a breach on the day of the merge. A fragment
+that is one instruction, moved out, leaves a pointer in its place, which is an instruction too: the
+instructions in play stay as many, and a file is added to keep. The exception reaches no further
+than one instruction against the one pointer that would replace it, so a fragment of more
+instructions cannot stay on the ground that each of them is short.
 *Rejected:* a short skill as the aim, after the course's claim — no measurement stands behind it; a
 threshold of words or lines for a skill — a count says nothing of whether a step needs a fragment;
 the skills of the-way's process left to WAY-35 alone — what neither a template nor the shared part
 holds would follow no rule of place; binding only what the skill of `instruction-files` proposes —
 a new fragment of a skill of the-way could land in its `SKILL.md` until the skill is judged;
-binding the fragments that stand today — every skill would breach it on the day of the merge.
+binding the fragments that stand today — every skill would breach it on the day of the merge;
+every fragment one step or variant needs moved out, one instruction included — it trades an
+instruction for a pointer and adds a file.
 
 ### WAY-257 — What does the skill of `instruction-files` show as the ground of each verdict?
 

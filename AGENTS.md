@@ -7,8 +7,9 @@ When this checkout is a product's `.the-way` submodule, follow the product's ins
 ## Skills
 
 A session on this repository finds each skill of the-way as the project skill `the-way-<name>`,
-in `.claude/skills/` for Claude Code and `.agents/skills/` for Codex, and each reads its skill and
-the files it names from the checkout or worktree the session works in. Use only these: a
+in `.claude/skills/` for Claude Code and `.agents/skills/` for Codex, and each reads its skill, and
+each file the skill names when the step that names it comes, from the checkout or worktree the
+session works in. Use only these: a
 personal skill of the same name without the prefix — `refine-task`, `critique` or another — is not
 the-way's. A change that adds, renames or moves a skill, or changes its description, runs
 `python -B agent-instructions/skill_entry_points.py --write` and commits what it writes; the gate's

@@ -16,24 +16,22 @@ worktree the session works in; in a product, it is the product's pinned `.the-wa
 
 ## 1. Read
 
+Your dispatch says which of these you make; read for it as its row gives.
+
+| You make | Read |
+|---|---|
+| the whole change as the one author | As the one author of a change without a plan, the frozen task document whole, and the spec where the cycle wrote one: you make the whole change. |
+| a slice, or the retry of a slice | `slice.md`, for how to read the plan and the task, how to read the failed executor's report, and what to do when the plan and the code disagree. |
+| the fix of a review's findings | `fix.md`, for the findings file, what is not yours to fix, and what the report of a fix holds. |
+| a correction for the human's remarks | For a correction, the human's remarks on the request; each remark binds. For a correction, the report holds each remark as made, and how. |
+
 Read what your dispatch names; the orchestrator has selected it for your work (WAY-150).
 
 - The dispatch: what you make — the change, a slice by its number, a fix or a correction — the
   worktree, and the report path.
-- As the one author of a change without a plan, the frozen task document whole, and the spec where
-  the cycle wrote one: you make the whole change. For a slice, your section of the plan and the
-  passages of the task, spec and plan its *Read* names, which the dispatch carries word for word,
-  each with its file as its address; you open neither the whole plan nor the whole task. The task
-  binds where the plan says less: the passages of the task your dispatch gives bind where your
-  section says less.
 - The foundation entries the dispatch names by identifier, each whole, and the guideline files it
   names, each whole (WAY-213). Where you write a foundation entry through an element's skill, that
   skill selects the reading the entry needs.
-- For a fix, the findings file — the blocking findings of the review — and the code it names. The
-  review's Minor and out-of-scope findings are not yours to fix (WAY-161).
-- For a correction, the human's remarks on the request; each remark binds.
-- For the retry of a slice, the failed executor's report and what failed; the branch is back at the
-  slice's base, so its commits are not yours to continue.
 - Every file you change, whole, before you change it.
 
 Where you need something the dispatch does not name — a decision, an invariant, a passage of the
@@ -84,11 +82,7 @@ before you commit.
 - Name the requirement of the task — for a slice, of your slice read against the passages of the
   task your dispatch gives — that your work most likely does not meet, write the check that would
   catch it, run it and report what it showed (WAY-164).
-- Changing a user interface, check the states of the affected components that the applicable
-  styleguide requires, and inspect a screenshot of the running product by the route its foundation
-  settles; where it settles none, check the states in code and mark the screenshot unchecked with
-  that reason (WAY-219). Where the settled route fails, report the failed or unperformed check
-  itself, not the missing-route reason. Reading code shows no rendered appearance.
+- Before you finish a change that alters what a screen shows, read `ui_check.md`.
 - Run the focused checks of your change: the slice's *Checks*, the tests you wrote and the tests of
   the code you touched. The full suite is the cycle's run before the request; do not run it, also
   where a plan's *Checks* or your handoff names it — report that as a mismatch (WAY-160).
@@ -98,11 +92,7 @@ before you commit.
 
 ## 4. When the plan and the code disagree
 
-- A small mismatch — a name, a path, a signature that moved — adapt to the code and report it in
-  one line.
-- A structural one — the plan assumes something that is not there, or the change needs a different
-  shape — stop and report what the plan expected, what you found and why it matters.
-- When unsure which it is, treat it as structural.
+Where you make a slice, this section stands in `slice.md`.
 
 ## 5. When you return without code
 
@@ -136,8 +126,6 @@ Write the full report to the dispatch's report path:
   recommend;
 - every choice you made with the way rejected and its cost if wrong, every adaptation of section 4,
   and a changed invariant test, named;
-- for a fix, each blocking finding as fixed — how, with the check that shows it — or contested,
-  with the evidence; for a correction, each remark as made, and how;
 - problems as observed, with their evidence; a cause only where you verified it, and how; a guessed
   cause marked as a guess.
 

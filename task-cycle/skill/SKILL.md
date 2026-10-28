@@ -33,12 +33,7 @@ with the evidence and stop.
    the foundation (WAY-134). If a source changed since the task was accepted, reconcile the task
    against it and record the effect; stop only when the required outcome can no longer be
    established.
-   Before a plan member's cycle starts, verify that its definition's approval still holds and that
-   every task in its `Depends on` is done (WAY-144), from the delivering task's evidence and never
-   from a label alone: `done — goal delivered in task <n>` counts only through that task's
-   delivery, and `dropped — approved by human` delivers nothing, so the mismatch returns to the
-   plan's reconciliation. While a dependency is unfinished, or the definition's approval or its
-   plan's recheck is pending, the task waits without losing its acceptance; start no branch.
+   Before a plan member's cycle starts, read `task-cycle/skill/plan_member.md` and follow it.
 2. Read the product's `AGENTS.md`, verify that the pinned the-way checkout matches the product's
    gitlink, and follow the product's git and test rules. Where the task moves the pin to a commit
    it names, move it now, before anything else of the cycle (WAY-34): create the task branch and
@@ -65,9 +60,10 @@ with the evidence and stop.
    names.
 3. Require a harness that can dispatch subagents, and the methods of the stages in the pinned
    the-way, each a project skill with the `the-way-` prefix: `write-spec`, `plan-task`,
-   `make-change` and `review-change`. Each stage agent reads the method of its stage, and what it
-   names, whole; you read this skill and no method you do not conduct. Without subagents this cycle
-   cannot run in that harness.
+   `make-change` and `review-change`. Each stage agent reads the `SKILL.md` of its stage's method
+   whole, and a file the method names, one beside that `SKILL.md` included, only when the step or
+   variant that names the file comes; you read this skill and no method you do not conduct. Without
+   subagents this cycle cannot run in that harness.
 
 The cycle writes only in the task's worktree and changes nothing outside the product repository;
 reading outside it stays with the agent (WAY-140). A remark about the-way, the user's agent
@@ -126,14 +122,26 @@ product names (WAY-107), the cycle may add the request link and set the task's s
    no hidden reasoning and no output bearing secrets. The record stays out of commits until step 12.
 
 Write each dispatch's full handoff to a file in `reports/`; the message names that file and only
-what routing needs (WAY-148). The handoff gives the user's delegation, the worktree, the method, the
-stage and its boundary, the paths and commits of the frozen task and of the spec and plan where
-they exist, the answers of step 4, and the report path. For the foundation step and the return
-step, it names the paragraph or step of this skill that holds that stage, which the agent reads
-whole, with the element skills it names. For a review, it gives the range to review and the
-author's report. For a fix, it gives the findings file, which you write from the review's blocking
-findings in the reviewer's words; the fix's range runs from the reviewed head, and the review of
-the fix also gets the fix report. No handoff tells an agent to run the product's gate; its run is
+what routing needs (WAY-148). The handoff gives the user's delegation, the worktree, the method of
+the stage by the path of its `SKILL.md` in the pinned the-way, the stage and its boundary, the paths
+and commits of the frozen task and of the spec and plan where they exist, the answers of step 4,
+and the report path. The agent reads that `SKILL.md` whole, and a file it names, one beside it
+included, only when the step or variant that names the file comes (WAY-125); no handoff tells it to
+read at the start every file its method names. Where that `SKILL.md` opens with a table of
+variants, the handoff names the agent's variant in the words of its row: under `make-change`,
+"the whole change as the one author", for the one author;
+"a slice, or the retry of a slice", for a slice's executor and its retry;
+"the fix of a review's findings", for a fix;
+"a correction for the human's remarks", for a correction.
+The agent of the plan's *Foundation entries* and a fresh agent of the return step take none of its
+rows, and their handoff names their stage instead. For the foundation step, the handoff names
+`task-cycle/skill/foundation_step.md`, and for the return step `task-cycle/skill/return_step.md`
+with it, since the return step writes as the foundation step writes, each by its path in the
+pinned the-way; the agent reads each whole, and the skill of an element when it writes an entry of
+that element. For a review, it gives the range to review and the author's report. For a fix, it
+gives the findings file, which you write from the review's blocking findings in the reviewer's
+words; the fix's range runs from the reviewed head, and the review of the fix also gets the fix
+report. No handoff tells an agent to run the product's gate; its run is
 yours (step 10, WAY-160).
 
 You decide what each agent reads, and its handoff names it (WAY-150, WAY-213): the foundation
@@ -142,21 +150,13 @@ linked entries of the parts the agent's work touches, selected by "Reading the f
 guideline files of those parts, each whole; and the passages of the task, its sources, the spec
 and the plan it needs.
 The designer and the reviewer of the spec, the planner, the one author and the reviewer of the whole
-change read the whole frozen task, since each works on the whole. A slice's executor gets, copied
-into its handoff, its section of the plan and the passages of the task, spec and plan its *Read*
-names, and the reviewer of a slice the same selection; the plan's *Read* is the source of that
-selection, which the planner proposes and you check and may add to in the plan's review (step 8).
-When you build a slice's handoff, name each foundation entry of its *Read* by its identifier with
-its range in the worktree as it stands then, since the foundation step and earlier slices may have
-moved it, and an entry the foundation step wrote by its identifier and its new range; find a passage
-of the plan again by its heading where the plan changed, and a range of code or tests again where an
-earlier slice changed its file. Give the current ranges beside the copied section; where they differ
-from the plan's, the current ones hold. Requirements and values stay in their own
-files: copy a section of the plan, spec or task into the handoff word for word, never restated in
-other words, and name its file as its address (WAY-148). The reviewer of the whole change selects
-its own foundation and guidelines, by the parts of the change, and an agent writing a foundation
-entry reads as the element's skill gives. You alone read `cycle.md`: an answer or choice that binds
-an agent goes into its handoff or the message that resumes it.
+change read the whole frozen task, since each works on the whole. What a slice's executor and the
+reviewer of a slice get stands in `task-cycle/skill/planning.md`, which step 8 names. Requirements
+and values stay in their own files: copy a section of the plan, spec or task into the handoff word
+for word, never restated in other words, and name its file as its address (WAY-148). The reviewer
+of the whole change selects its own foundation and guidelines, by the parts of the change, and an
+agent writing a foundation entry reads as the element's skill gives. You alone read `cycle.md`: an
+answer or choice that binds an agent goes into its handoff or the message that resumes it.
 
 Wait for an agent through the harness's completion notification or one blocking wait at the
 longest duration its live tool contract and active instructions permit. In Codex, use
@@ -209,31 +209,10 @@ reviews, tests, return step and request.
    reversible reading that fulfils the task, note the ways and the price of being wrong, record it
    as an autonomous choice and resume the designer. Never widen the task. It returns `done` with
    the spec, before any plan or code.
-7. Have a fresh agent other than the designer review the spec with `write-spec` against the frozen
-   task and the foundation entries its handoff names. On `FAIL` the designer revises the spec once
-   and the reviewer reviews the revision once. Settle a finding left after that as step 6 settles a
-   question, and record the settlement in `spec.md` under *Decisions*, where the planner and the
-   author read it; a finding that the spec contradicts a decision goes as the foundation step gives
-   (WAY-30). A spec may name the foundation entries the change will write; the foundation step or
-   the return step writes them. Then judge the route again from the task in the light of the spec,
-   as step 4 does — one author where the change fits, planning where it needs division — and record
-   the reason; a spec alone requires no plan, and an earlier plan no longer binds.
-8. Only on the planning route, dispatch a fresh planner with `plan-task`, the frozen task, any
-   reviewed spec and the checks the move of the pin carried (step 2). It writes `plan.md` and its
-   size report `plan-size.md` in the record's directory and returns before any slice is made;
-   where it returns an open design choice instead, continue at step 6 with its report. Review the
-   plan for coverage of every item of the task, every row of *Settlements to record*, every
-   projected entry the task carries and every check the move of the pin carried, fidelity to the
-   task's sources, no code, checks that can actually run and a size report in which every slice
-   fits.
-   Check each slice's *Read* against your own reading of step 2 and add to it in `plan.md` what the
-   slice needs and misses — a decision of a part it touches, an invariant it reaches (WAY-62), a
-   guideline file — then run the size script on the plan again; a slice it now reports too large
-   returns to the planner to be split. Check each slice's *Model* and *Risk*: a class other than the
-   default `cheaper` carries its reason (WAY-229), its *Checks* name focused checks and no run of
-   the gate (WAY-160), and a slice whose files the part map names as a trust boundary, or that holds
-   an operation that cannot be undone, is marked so — none where both answers of step 4 are no. Copy
-   its *Choices* into the questions table and record your go-ahead as provisional.
+7. When the designer returns `done` with the spec, read `task-cycle/skill/spec_review.md` and
+   follow it: the spec's review by a fresh agent, and the route judged again after it.
+8. Only on the planning route, read `task-cycle/skill/planning.md` and follow it: the planner's
+   dispatch, the review of its plan, and what each slice's handoff carries.
 
 An agent that meets an open design choice while it makes the change or a fix returns `returned`
 with a report and no code: the choice, where it shows, the ways open and what it found (WAY-135). A
@@ -256,25 +235,11 @@ already made stay. Record it under *Slices returned too large*.
 
 ## Execute, verify and review
 
-The foundation step writes the entries the task carries: each row of *Settlements to record* whole,
-as an entry of its kind, one no code makes true included — its meaning the row's and its wording the
-writer's (WAY-134); each projected entry of the task's sources that its code makes true or its plan
-item assigns, whole as the readiness gate approved it, or the part the code makes true (WAY-126);
-and each entry a reviewed spec or the plan names. Each is written through the pinned skill of its
-element, on the task branch, to reach the main branch with the code in the request, and none is left
-for later (WAY-01). A row whose settlement the writer's search of the whole foundation (WAY-33)
-finds already stated becomes no second entry: the writer ties the row to that entry, and the request
-names both under *What this request settles* (WAY-134). A plan member writes only the projected
-entries its plan item assigns; one that falls to another item returns to the plan through a blocked
-draft request. The writer keeps for the request one sentence of each entry's meaning in the task
-document's language (WAY-114). A question for the human arises only where the writer has no
-recommendation, an entry would change the meaning of an approved decision beyond what the accepted
-task document or plan carries (WAY-30), a row's meaning cannot hold — the code shows an exception
-the row does not allow, or the row collides with a current entry other than as the task commands —
-or a row's entry needs a value neither the row nor the work gives; two decisions colliding with no
-precedence recorded raise one too (WAY-25). The writer never writes a row with another meaning: it
-returns such a question with the status `blocked`, and you open the blocked draft request holding
-it, as step 13 gives under *Questions*.
+The foundation step writes the entries the task carries, as `task-cycle/skill/foundation_step.md`
+gives: its agent — the one author with its code, or on the planned route the agent of the plan's
+*Foundation entries* — reads that file, which its handoff names. Read it yourself when an agent
+returns `blocked` with a question for the human, and at step 7 for a finding that the spec
+contradicts a decision.
 
 9. Make the change and have it reviewed.
    - **One author.** Dispatch a fresh author with `make-change`, on the class of model you set
@@ -296,7 +261,7 @@ it, as step 13 gives under *Questions*.
         strongest, `same` and `strongest` are one class; where the harness cannot choose a model,
         dispatch as it allows and record that the class was not applied — with the slice's
         section of the plan copied word for word and what its *Read* names, as the handoff
-        paragraph above gives;
+        paragraph above and `task-cycle/skill/planning.md` give;
      3. when it returns `done` or `done with concerns`, check mechanically: a clean worktree, a
         non-empty range from the base to its head, the changed files against the slice's *Change*
         and, for slice 1, the plan's *Foundation entries*, and each check of the report with its
@@ -347,18 +312,8 @@ it, as step 13 gives under *Questions*.
     rerun merely to go on (WAY-159); a change, a failure or disputed evidence calls for the affected
     checks again, by the agent that owns them.
 11. Take the return step: the author resumes for it, on its class (WAY-229), or on the planned route
-    a fresh agent with `make-change` takes it, on no class cheaper than yours. It compares with the
-    code the entries the change writes or changes, those the task names and those the search of the
-    foundation found, and the part map of the touched parts, and corrects in the same change
-    whatever no longer matches (WAY-11). It writes, as the foundation step writes, each source
-    outside the product that the change rests on and the foundation does not hold, as an environment
-    fact; a word the change uses in a meaning other than the usual one, or a term used against its
-    entry, through `record-glossary-term`; a row of *Settlements to record* or a projected entry the
-    code makes true that the foundation step missed; and a choice that binds after the merge
-    (WAY-36). It writes an invariant only for a rule the task, a decision or the human sets, never
-    for behaviour merely because no invariant covers it; every other choice stays a row of the
-    questions table. No entry is deferred: one this request does not write is neither proposed nor
-    listed for later, and the review findings of the request are no foundation entries. Where the
+    a fresh agent with `make-change` takes it, on no class cheaper than yours. What it compares and
+    writes stands in `task-cycle/skill/return_step.md`, which its handoff names. Where the
     return step commits anything, a fresh reviewer on no class cheaper than yours (WAY-229) reviews
     its range with `review-change`, against the task and the entries the return step writes or
     corrects. Record the result under *Return step*.
@@ -389,13 +344,7 @@ resumed, reviews the fix range once. A new Critical or Important finding in the 
 that remains.
 
 When a blocking finding remains after the review of its fix — in any of these reviews, a slice's
-included — the change is blocked: run no third round and do not rule on the finding. Run the gate on
-the change as step 10 gives, and make no further slice, no return step and no reconciliation with
-the target branch on code its review has not accepted (WAY-163). Run `task-cycle/cycle_stages.py` as
-step 12 gives, write the record and commit its copy and its removal as step 12 gives them, then open
-the request as a draft marked `blocked`, link the record by the SHA of the commit that adds it, and
-give what step 13 names for it. After the human's decision, the correction after review runs what
-has not run on the code that passed review or that the human accepted despite the finding.
+included — read `task-cycle/skill/blocked_finding.md` and follow it.
 
 ## Request and handoff
 
@@ -449,16 +398,5 @@ has not run on the code that passed review or that the human accepted despite th
 
 ## Correction after review
 
-Take a link to the request, or to a comment holding the human's remarks, as the input. Work on that
-request's branch and in its worktree. First merge, never rebase, the current target branch, the
-the-way pin included, and verify that the pinned checkout matches the product's gitlink. The remarks
-bind; record them as new events. Keep the recorded route for the affected work: dispatch the
-correction with `make-change`, resuming the author where possible, and have it reviewed with
-`review-change`, the remarks in place of a findings file; the review ends as "The end of a code
-review" gives. A new open design choice or an oversized attempt follows the recovery above, with its
-reset base recorded. Repeat only what the remarks touch — the return step included — run the gate on
-the corrected tree as step 10 gives, and repeat the record's pair of commits from step 12. For a
-request a remaining blocking finding blocked, the human's decision is the input: make the fix it
-calls for, or keep the code the human accepted despite the finding, then run what has not run on
-that code (WAY-163). Update the request's description: its record link, its lists of findings and
-*What this request settles*.
+When your input is a link to a request, or to a comment holding the human's remarks, read
+`task-cycle/skill/correction.md` and follow it.

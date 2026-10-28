@@ -44,9 +44,12 @@ asks the human.
   report: what, where and why.
 - The code and the tests the change touches, as far as is needed to name each slice's files and
   what each slice's agent has to read. Read to cut slices, not to design the code.
-- After a one-author attempt proved too large, its report; the whole attempt, foundation entries
-  included, has been discarded. After a planned slice proved too large, its report and plan;
-  the slices already made remain, reviewed where their *Risk* called for it.
+- After a reviewed spec, only if the orchestrator selects planning again: write a new plan from
+  the spec and task; nothing of an earlier plan binds. The same size judgment can instead send
+  the settled change to one author without a plan.
+- After a one-author attempt or a planned slice proved too large, read `too_large.md` and follow
+  it: whose report you read, what of the attempt or of the plan stands, and how you write the plan
+  again.
 
 ## 2. Find an open design choice
 
@@ -182,15 +185,3 @@ status is `done`; `done with concerns` where the report holds a concern, a reach
 found missing or uncertain; `questions` where the plan waits for answers, written in the report;
 or `returned` for an open design choice (section 2). The boundary is the finished plan: return
 before any slice is made.
-
-## Writing the plan again
-
-- After a reviewed spec, only if the orchestrator selects planning again: write a new plan from
-  the spec and task; nothing of an earlier plan binds. The same size judgment can instead send
-  the settled change to one author without a plan.
-- After a one-author attempt proved too large: its whole attempt, including its foundation
-  entries, is gone (WAY-136). Divide the change from the task, any reviewed spec and its report;
-  there is no completed slice to preserve from that attempt.
-- After a slice proved too large: its code is gone (WAY-136). Split that slice in the plan, keep
-  the slices already made, and run the script again; the report of the slice's agent
-  says where the size lay.
