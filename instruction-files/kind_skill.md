@@ -13,6 +13,13 @@ variant of the skill (WAY-256):
 - **only one step or one variant needs it** — it stands in a file beside the skill, which that
   step tells the agent to read.
 
+The exception is a fragment of one step or one variant that is one instruction and would otherwise
+stand in a file beside the skill: it stays in `SKILL.md`, where its pointer would stand, since the
+pointer is an instruction too (WAY-256). Moving it out would leave the instructions in play as
+many and add a file to keep. The exception reaches no further than one instruction against the one
+pointer that would replace it: a fragment of several instructions does not stay because each of
+them is short.
+
 Where the repository's decisions place some rules of its skills elsewhere — as the-way places
 every rule of an element's entries in the element's template and the way of working its skills
 share in one common part (WAY-35) — those rules stand there, and the skill reads them from there.
