@@ -27,6 +27,8 @@ Output, in this order:
    the step of an activity that the file leads, named.
 3. Contradictions between files that load together.
 
+The table is a batch of decisions; edit nothing until it is accepted.
+
 A proposal to add or reword a rule, or to add a mechanism, is recommended only for a mistake found
 more than once; one found once or not at all is listed as not recommended, with the search named,
 unless the rule carries a decision the repository records or a step of the activity its file

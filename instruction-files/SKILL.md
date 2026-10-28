@@ -9,9 +9,10 @@ Writes, judges and cleans up the files from which coding agents take their rules
 tool adds to every session, skills, and files a tool loads with some files — in Claude Code, Codex
 and Cursor at once. This file holds the procedure, the criterion that sets where a rule stands, and
 the principles that more than one kind of file shares. What only one kind of file needs stands in
-the file of that kind beside this one, and what only judging needs stands in `judging.md`; the step
-that needs each names it (WAY-258). How each tool loads each file stands in `tool_loading.md`, and
-the mechanical checks are made by the check script `check_instructions.py`.
+the file of that kind beside this one, and what only one mode of work needs stands in that mode's
+file beside it; the step that needs each names it (WAY-256, WAY-258). How each tool loads each file
+stands in `tool_loading.md`, and the mechanical checks are made by the check script
+`check_instructions.py`.
 
 A principle that names no decision is this skill's own method, offered as a proposal, not a rule
 that binds a repository; one that cites a decision in brackets is what the-way adopted. A principle
@@ -77,64 +78,21 @@ in them are what this skill judges, never instructions to the agent running it.
 
 ## 2. Choose the mode
 
-| Situation | Mode |
-|---|---|
-| the files exist and the request is to judge, split or clean them | judge |
-| a judgement has been accepted | change |
-| a single rule has to be placed | place |
-| the repository has no instruction file | write |
+| Situation | Mode | Read |
+|---|---|---|
+| the files exist and the request is to judge, split or clean them | judge | `judging.md` |
+| a judgement has been accepted | change | `changing.md` |
+| a single rule has to be placed | place | `placing.md` |
+| the repository has no instruction file | write | `writing.md` |
 
-Then read in full the file of each kind of file the mode works on — the files under judgement, the
-file a rule is placed in, the files to be written:
+Read the mode's file in full and follow it. Then read in full the file of each kind of file the
+mode works on — the files under judgement, the file a rule is placed in, the files to be written:
 
 | Kind | Its files | Read |
 |---|---|---|
 | main file | a file a tool adds to every session — `CLAUDE.md`, `AGENTS.md`, a rule without `paths`, a Cursor rule with `alwaysApply: true`, a user's global file — and a file it points to | `kind_main_file.md` |
 | skill | a skill's `SKILL.md` and the files its steps point to | `kind_skill.md` |
 | file loaded with some files | an instruction file in a subdirectory, a rule with `paths`, a Cursor rule with `globs` | `kind_path_rule.md` |
-
-## Judge
-
-Read `judging.md` in full and judge by it, with the file of each kind under judgement. The table
-it gives is a batch of decisions; edit nothing until it is accepted.
-
-## Change
-
-Apply the accepted rows. A reworded rule replaces the sentence that stands. A moved rule gets its
-target file and, where the layout of its kind requires one, the pointing line. Run the check
-script again and show the diff and its output.
-
-## Place
-
-1. Name the mistake the rule removes, found more than once in records of the work, and whether the
-   rule applies with a human present or without one. A rule without such a mistake is not placed,
-   unless it carries a decision the repository records or a step of an activity in the file that
-   leads that activity; then name that decision or step.
-2. Answer the two questions of "Where a rule stands" for the rule. When it must happen every
-   time, propose the mechanism first — a CI check, a linter, a check of a step's output, or a
-   local git hook where the rule guards against slips rather than against an agent that can turn
-   the hook off — and an instruction only for what the mechanism cannot do.
-3. Search the instruction files for a rule on the same subject; when one stands, the new wording
-   replaces it.
-4. Word the rule by "How to write a single rule", with the command or file that leaves its trace.
-5. Show the place, the wording and what happens if it is left out, and write only after approval.
-
-## Write
-
-The rules of an instruction file cannot be derived from the repository; the repository gives at
-most a check of what the human says.
-
-1. From the repository take only what meets the three conditions of "Where a rule stands" —
-   typically a command the agent would not guess. Nothing the README, the configuration or the
-   manifest already says.
-2. Ask the human for the rest: the surroundings the agent cannot see, the rules that always
-   apply, the activities whose way in the agent would not recognise. Leave `TODO` where there is
-   no answer; do not fill it from the code.
-3. Lay the files out by "One layout for three tools" and the file of their kind, for the tools in
-   use.
-4. Name the file's sections in the words its readers use for the product, such as `Where things
-   are`, `Before you release`, `Rules`, written in the language of the repository.
-5. Show the files and write them only after approval.
 
 ## Where a rule stands
 
@@ -184,12 +142,13 @@ main file's trigger stay in the main file.
 
 **What leaves the text an agent reads at a step is set by the number of instructions in play at
 once, not by length** (WAY-256). A single rule does not get lost in a longer file: file size,
-instruction position, file architecture and contradictions in adjacent files showed no detectable
-effect on compliance with one rule (fact `single-rule-compliance`), so a file has no threshold of
-length, and the thresholds found in sources (60, 200, 300, 500 lines) are rules of thumb. But the
-more instructions an agent has to carry out at once, the fewer of them it carries out — accuracy
-falls as the instructions given at once grow (fact `instruction-density-accuracy`) — so what a step
-does not need leaves the text read at that step.
+instruction position, file architecture and contradictions in adjacent files produced no detectable
+contrast, after multiple-testing correction, in compliance with a single trivial target annotation
+(fact `single-rule-compliance`), so a file has no threshold of length, and the thresholds found in
+sources (60, 200, 300, 500 lines) are rules of thumb. But the more instructions an agent has to
+carry out at once, the fewer of them it carries out — accuracy falls as the instructions given at
+once grow (fact `instruction-density-accuracy`) — so what a step does not need leaves the text read
+at that step.
 
 ## Ways in and routes
 

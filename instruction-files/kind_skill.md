@@ -12,8 +12,7 @@ variant of the skill (WAY-256):
 - **every use needs it** — it stays in `SKILL.md`, which keeps the picture of the whole, the rules
   of working that hold across the steps, and the pointers;
 - **only one step or one variant needs it** — it stands in a file beside the skill, which that
-  step tells the agent to read; the step names the file directly, and that file points to no
-  further file.
+  step tells the agent to read.
 
 What sets the place is whether a use of the skill needs the fragment at that step, never the count
 of the skill's words or lines. Where the repository's decisions place some rules of its skills
