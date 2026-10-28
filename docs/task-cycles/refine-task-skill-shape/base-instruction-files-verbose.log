@@ -1,0 +1,213 @@
+python : test_agents_import_alone_on_its_line_is_sound (test_check_instructions.AtImport.test_agents_import_alone_on_it
+s_line_is_sound) ... ok
+At line:2 char:1
++ python -B -m unittest discover -s instruction-files -p 'test_*.py' -v ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (test_agents_imp...s_sound) ... ok:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+
+test_at_inside_code_and_in_addresses_is_ignored (test_check_instructions.AtImport.test_at_inside_code_and_in_addresses_
+is_ignored) ... ok
+test_import_followed_by_punctuation_is_an_error (test_check_instructions.AtImport.test_import_followed_by_punctuation_i
+s_an_error) ... ok
+test_import_used_as_a_pointer_is_a_warning (test_check_instructions.AtImport.test_import_used_as_a_pointer_is_a_warning
+) ... ok
+test_a_file_that_is_not_a_readable_regular_file_exits_with_2 (test_check_instructions.CommandLine.test_a_file_that_is_n
+ot_a_readable_regular_file_exits_with_2) ... ok
+test_a_network_path_given_as_root_or_file_exits_with_2_without_a_lookup (test_check_instructions.CommandLine.test_a_net
+work_path_given_as_root_or_file_exits_with_2_without_a_lookup) ... ok
+test_a_root_that_is_not_a_directory_exits_with_2 (test_check_instructions.CommandLine.test_a_root_that_is_not_a_directo
+ry_exits_with_2) ... ok
+test_md_in_cursor_rules_is_an_error (test_check_instructions.CursorRules.test_md_in_cursor_rules_is_an_error) ... ok
+test_mdc_with_header_is_sound (test_check_instructions.CursorRules.test_mdc_with_header_is_sound) ... ok
+test_mdc_without_header_is_an_error (test_check_instructions.CursorRules.test_mdc_without_header_is_an_error) ... ok
+test_a_line_number_after_an_existing_path_is_sound (test_check_instructions.DeadPath.test_a_line_number_after_an_existi
+ng_path_is_sound) ... ok
+test_commands_globs_placeholders_and_urls_are_not_paths (test_check_instructions.DeadPath.test_commands_globs_placehold
+ers_and_urls_are_not_paths) ... ok
+test_existing_paths_relative_to_root_or_file_are_sound (test_check_instructions.DeadPath.test_existing_paths_relative_t
+o_root_or_file_are_sound) ... ok
+test_missing_path_in_backticks_is_reported (test_check_instructions.DeadPath.test_missing_path_in_backticks_is_reported
+) ... ok
+test_slash_commands_versions_keys_domains_and_ellipses_are_not_paths (test_check_instructions.DeadPath.test_slash_comma
+nds_versions_keys_domains_and_ellipses_are_not_paths) ... ok
+test_a_tree_deeper_than_the_recursion_limit_does_not_stop_the_run (test_check_instructions.DeepTree.test_a_tree_deeper_
+than_the_recursion_limit_does_not_stop_the_run) ... ok
+test_dependency_and_git_directories_are_skipped (test_check_instructions.Discovery.test_dependency_and_git_directories_
+are_skipped) ... ok
+test_files_alone_are_checked_without_scanning_a_repository (test_check_instructions.Discovery.test_files_alone_are_chec
+ked_without_scanning_a_repository) ... ok
+test_nested_repositories_and_submodules_are_skipped (test_check_instructions.Discovery.test_nested_repositories_and_sub
+modules_are_skipped) ... ok
+test_more_than_one_emphasised_rule_is_a_warning (test_check_instructions.Emphasis.test_more_than_one_emphasised_rule_is
+_a_warning) ... ok
+test_one_emphasised_rule_is_sound (test_check_instructions.Emphasis.test_one_emphasised_rule_is_sound) ... ok
+test_a_character_cut_at_the_limit_does_not_make_the_text_invalid (test_check_instructions.LargeAndOddFiles.test_a_chara
+cter_cut_at_the_limit_does_not_make_the_text_invalid) ... ok
+test_a_fifo_named_like_an_instruction_file_does_not_stop_the_run (test_check_instructions.LargeAndOddFiles.test_a_fifo_
+named_like_an_instruction_file_does_not_stop_the_run) ... skipped 'no FIFO on this platform'
+test_a_file_that_is_not_regular_is_not_opened (test_check_instructions.LargeAndOddFiles.test_a_file_that_is_not_regular
+_is_not_opened) ... ok
+test_a_utf8_byte_order_mark_is_stripped_before_every_check (test_check_instructions.LargeAndOddFiles.test_a_utf8_byte_o
+rder_mark_is_stripped_before_every_check) ... ok
+test_an_invalid_byte_near_the_limit_is_not_taken_for_a_split_character (test_check_instructions.LargeAndOddFiles.test_a
+n_invalid_byte_near_the_limit_is_not_taken_for_a_split_character) ... ok
+test_only_the_first_mebibyte_is_read (test_check_instructions.LargeAndOddFiles.test_only_the_first_mebibyte_is_read) ..
+. ok
+test_text_that_is_not_utf8_is_reported_and_its_content_not_checked (test_check_instructions.LargeAndOddFiles.test_text_
+that_is_not_utf8_is_reported_and_its_content_not_checked) ... ok
+test_a_chain_longer_than_the_hop_limit_is_not_read (test_check_instructions.LinkChains.test_a_chain_longer_than_the_hop
+_limit_is_not_read) ... ok
+test_a_chain_of_two_links_that_leaves_the_repository_is_not_read (test_check_instructions.LinkChains.test_a_chain_of_tw
+o_links_that_leaves_the_repository_is_not_read) ... ok
+test_a_chain_that_ends_inside_the_repository_is_read (test_check_instructions.LinkChains.test_a_chain_that_ends_inside_
+the_repository_is_read) ... ok
+test_a_dot_dot_after_a_directory_link_is_resolved_as_the_system_does (test_check_instructions.LinkChains.test_a_dot_dot
+_after_a_directory_link_is_resolved_as_the_system_does) ... skipped 'needs the real path of a link, as on POSIX'
+test_a_link_loop_is_reported_as_unreadable_and_the_run_goes_on (test_check_instructions.LinkChains.test_a_link_loop_is_
+reported_as_unreadable_and_the_run_goes_on) ... skipped 'needs the real path of a link, as on POSIX'
+test_an_absolute_link_out_of_the_repository_is_not_read (test_check_instructions.LinkChains.test_an_absolute_link_out_o
+f_the_repository_is_not_read) ... skipped 'needs the real path of a link, as on POSIX'
+test_every_directory_link_is_reported_wherever_it_points (test_check_instructions.LinkChains.test_every_directory_link_
+is_reported_wherever_it_points) ... skipped 'needs the real path of a link, as on POSIX'
+test_a_directory_link_or_junction_is_not_followed (test_check_instructions.Links.test_a_directory_link_or_junction_is_n
+ot_followed) ... ok
+test_a_file_given_with_file_is_read_through_its_link (test_check_instructions.Links.test_a_file_given_with_file_is_read
+_through_its_link) ... ok
+test_a_file_link_out_of_the_repository_is_neither_read_nor_listed (test_check_instructions.Links.test_a_file_link_out_o
+f_the_repository_is_neither_read_nor_listed) ... ok
+test_a_file_given_with_file_through_a_link_above_it_is_still_checked (test_check_instructions.NamesThroughLinks.test_a_
+file_given_with_file_through_a_link_above_it_is_still_checked) ... ok
+test_a_repository_reached_through_a_link_above_its_root_is_still_checked (test_check_instructions.NamesThroughLinks.tes
+t_a_repository_reached_through_a_link_above_its_root_is_still_checked) ... ok
+test_a_token_naming_a_link_to_a_network_path_is_not_looked_up (test_check_instructions.NamesThroughLinks.test_a_token_n
+aming_a_link_to_a_network_path_is_not_looked_up) ... ok
+test_a_token_naming_nothing_is_still_a_dead_path (test_check_instructions.NamesThroughLinks.test_a_token_naming_nothing
+_is_still_a_dead_path) ... ok
+test_a_token_through_a_directory_link_is_not_looked_up_through_it (test_check_instructions.NamesThroughLinks.test_a_tok
+en_through_a_directory_link_is_not_looked_up_through_it) ... ok
+test_no_spelling_of_a_path_through_a_link_to_a_network_path_is_looked_up (test_check_instructions.NamesThroughLinks.tes
+t_no_spelling_of_a_path_through_a_link_to_a_network_path_is_looked_up) ... ok
+test_nested_agents_md_with_pointer_is_sound (test_check_instructions.NestedAgents.test_nested_agents_md_with_pointer_is
+_sound) ... ok
+test_nested_agents_md_without_pointer (test_check_instructions.NestedAgents.test_nested_agents_md_without_pointer) ...
+ok
+test_a_chain_that_reaches_a_network_path_through_a_link_is_not_followed (test_check_instructions.NetworkPaths.test_a_ch
+ain_that_reaches_a_network_path_through_a_link_is_not_followed) ... ok
+test_a_link_to_a_network_path_is_never_looked_up (test_check_instructions.NetworkPaths.test_a_link_to_a_network_path_is
+_never_looked_up) ... ok
+test_a_nested_repository_whose_git_is_a_link_is_skipped_without_a_lookup (test_check_instructions.NetworkPaths.test_a_n
+ested_repository_whose_git_is_a_link_is_skipped_without_a_lookup) ... ok
+test_a_network_path_given_as_root_or_file_exits_with_2_without_a_lookup (test_check_instructions.NetworkPaths.test_a_ne
+twork_path_given_as_root_or_file_exits_with_2_without_a_lookup) ... ok
+test_a_mapped_drive_letter_is_looked_up (test_check_instructions.NetworkShapesOffWindows.test_a_mapped_drive_letter_is_
+looked_up) ... ok
+test_a_network_shaped_root_or_file_is_a_usage_error (test_check_instructions.NetworkShapesOffWindows.test_a_network_sha
+ped_root_or_file_is_a_usage_error) ... ok
+test_cygwin_and_msys_are_judged_like_windows (test_check_instructions.NetworkShapesOffWindows.test_cygwin_and_msys_are_
+judged_like_windows) ... ok
+test_net_and_network_are_mount_points_of_macos_only (test_check_instructions.NetworkShapesOffWindows.test_net_and_netwo
+rk_are_mount_points_of_macos_only) ... ok
+test_three_leading_slashes_or_one_are_not (test_check_instructions.NetworkShapesOffWindows.test_three_leading_slashes_o
+r_one_are_not) ... ok
+test_two_leading_slashes_are_a_network_path_on_linux (test_check_instructions.NetworkShapesOffWindows.test_two_leading_
+slashes_are_a_network_path_on_linux) ... ok
+test_no_spelling_of_a_network_path_reaches_the_file_system (test_check_instructions.NetworkTokens.test_no_spelling_of_a
+_network_path_reaches_the_file_system) ... ok
+test_a_dead_path_of_two_segments_is_a_warning (test_check_instructions.OutsideRepository.test_a_dead_path_of_two_segmen
+ts_is_a_warning) ... ok
+test_a_name_of_one_segment_is_only_noted (test_check_instructions.OutsideRepository.test_a_name_of_one_segment_is_only_
+noted) ... ok
+test_a_path_that_exists_from_the_home_directory_or_the_root_is_sound (test_check_instructions.OutsideRepository.test_a_
+path_that_exists_from_the_home_directory_or_the_root_is_sound) ... ok
+test_a_windows_path_of_two_segments_is_a_warning (test_check_instructions.OutsideRepository.test_a_windows_path_of_two_
+segments_is_a_warning) ... ok
+test_files_alone_are_checked_from_the_home_directory_too (test_check_instructions.OutsideRepository.test_files_alone_ar
+e_checked_from_the_home_directory_too) ... ok
+test_a_file_named_by_a_pointed_file_is_not_followed (test_check_instructions.PointedFiles.test_a_file_named_by_a_pointe
+d_file_is_not_followed) ... ok
+test_a_file_named_by_both_root_files_is_checked_once (test_check_instructions.PointedFiles.test_a_file_named_by_both_ro
+ot_files_is_checked_once) ... ok
+test_a_file_that_is_a_link_into_a_nested_repository_is_not_read (test_check_instructions.PointedFiles.test_a_file_that_
+is_a_link_into_a_nested_repository_is_not_read) ... ok
+test_a_file_that_is_a_link_into_a_skipped_directory_is_not_read (test_check_instructions.PointedFiles.test_a_file_that_
+is_a_link_into_a_skipped_directory_is_not_read) ... ok
+test_a_git_link_counts_as_a_nested_repository_without_being_followed (test_check_instructions.PointedFiles.test_a_git_l
+ink_counts_as_a_nested_repository_without_being_followed) ... ok
+test_a_link_out_of_the_root_is_not_read (test_check_instructions.PointedFiles.test_a_link_out_of_the_root_is_not_read)
+... ok
+test_a_markdown_file_the_root_agents_md_names_is_checked (test_check_instructions.PointedFiles.test_a_markdown_file_the
+_root_agents_md_names_is_checked) ... ok
+test_a_path_with_a_nul_is_skipped_without_a_traceback (test_check_instructions.PointedFiles.test_a_path_with_a_nul_is_s
+kipped_without_a_traceback) ... ok
+test_a_pointed_file_that_is_a_link_to_a_network_path_is_not_followed (test_check_instructions.PointedFiles.test_a_point
+ed_file_that_is_a_link_to_a_network_path_is_not_followed) ... ok
+test_a_pointed_network_path_is_noted_and_never_looked_up (test_check_instructions.PointedFiles.test_a_pointed_network_p
+ath_is_noted_and_never_looked_up) ... ok
+test_a_pointed_path_with_a_line_number_or_an_upper_case_suffix_is_checked (test_check_instructions.PointedFiles.test_a_
+pointed_path_with_a_line_number_or_an_upper_case_suffix_is_checked) ... ok
+test_an_instruction_file_it_names_is_checked_once (test_check_instructions.PointedFiles.test_an_instruction_file_it_nam
+es_is_checked_once) ... ok
+test_files_outside_the_root_are_not_read (test_check_instructions.PointedFiles.test_files_outside_the_root_are_not_read
+) ... ok
+test_files_that_are_not_markdown_or_lie_in_nested_repositories_are_not_read (test_check_instructions.PointedFiles.test_
+files_that_are_not_markdown_or_lie_in_nested_repositories_are_not_read) ... ok
+test_control_and_bidirectional_characters_are_escaped_and_long_values_cut (test_check_instructions.PrintedValues.test_c
+ontrol_and_bidirectional_characters_are_escaped_and_long_values_cut) ... ok
+test_agents_import_under_a_heading_is_one_warning_of_the_layout (test_check_instructions.RootLayout.test_agents_import_
+under_a_heading_is_one_warning_of_the_layout) ... ok
+test_agents_import_with_no_agents_md_beside_it_is_a_warning_on_any_line (test_check_instructions.RootLayout.test_agents
+_import_with_no_agents_md_beside_it_is_a_warning_on_any_line) ... ok
+test_claude_local_md_beside_agents_md (test_check_instructions.RootLayout.test_claude_local_md_beside_agents_md) ... ok
+test_claude_md_beside_agents_md_without_import (test_check_instructions.RootLayout.test_claude_md_beside_agents_md_with
+out_import) ... ok
+test_claude_md_importing_agents_md_is_sound (test_check_instructions.RootLayout.test_claude_md_importing_agents_md_is_s
+ound) ... ok
+test_crlf_line_ends_keep_the_first_line_sound (test_check_instructions.RootLayout.test_crlf_line_ends_keep_the_first_li
+ne_sound) ... ok
+test_a_file_path_in_a_sentence_wrapped_over_two_lines_is_only_noted (test_check_instructions.SentenceSaysNotLoaded.test
+_a_file_path_in_a_sentence_wrapped_over_two_lines_is_only_noted) ... ok
+test_a_near_miss_of_a_phrase_keeps_a_dead_path_a_warning (test_check_instructions.SentenceSaysNotLoaded.test_a_near_mis
+s_of_a_phrase_keeps_a_dead_path_a_warning) ... ok
+test_a_sentence_in_one_list_item_does_not_reach_the_next (test_check_instructions.SentenceSaysNotLoaded.test_a_sentence
+_in_one_list_item_does_not_reach_the_next) ... ok
+test_crlf_line_ends_still_join_a_wrapped_sentence (test_check_instructions.SentenceSaysNotLoaded.test_crlf_line_ends_st
+ill_join_a_wrapped_sentence) ... ok
+test_dead_paths_in_sentences_without_the_phrases_stay_warnings (test_check_instructions.SentenceSaysNotLoaded.test_dead
+_paths_in_sentences_without_the_phrases_stay_warnings) ... ok
+test_each_sentence_is_tested_once_whatever_the_number_of_paths (test_check_instructions.SentenceSaysNotLoaded.test_each
+_sentence_is_tested_once_whatever_the_number_of_paths) ... ok
+test_the_memory_sentence_is_only_noted (test_check_instructions.SentenceSaysNotLoaded.test_the_memory_sentence_is_only_
+noted) ... ok
+test_the_prefix_phrase_still_matches_every_ending (test_check_instructions.SentenceSaysNotLoaded.test_the_prefix_phrase
+_still_matches_every_ending) ... ok
+test_every_instruction_file_gets_its_size (test_check_instructions.Size.test_every_instruction_file_gets_its_size) ...
+ok
+test_extra_file_outside_the_repository_is_checked (test_check_instructions.Size.test_extra_file_outside_the_repository_
+is_checked) ... ok
+test_a_copy_without_skill_md_or_under_another_name_leaves_the_skill_unpointed (test_check_instructions.Skills.test_a_co
+py_without_skill_md_or_under_another_name_leaves_the_skill_unpointed) ... ok
+test_a_skill_with_its_copy_in_agents_skills_needs_no_pointer (test_check_instructions.Skills.test_a_skill_with_its_copy
+_in_agents_skills_needs_no_pointer) ... ok
+test_skill_only_in_agents_skills_is_invisible_to_claude_code (test_check_instructions.Skills.test_skill_only_in_agents_
+skills_is_invisible_to_claude_code) ... ok
+test_skill_pointed_to_from_agents_md_is_sound (test_check_instructions.Skills.test_skill_pointed_to_from_agents_md_is_s
+ound) ... ok
+test_skills_in_claude_skills_without_pointer_get_one_note_for_codex (test_check_instructions.Skills.test_skills_in_clau
+de_skills_without_pointer_get_one_note_for_codex) ... ok
+test_the_agents_skills_warning_says_the_tool_does_not_document_it (test_check_instructions.Skills.test_the_agents_skill
+s_warning_says_the_tool_does_not_document_it) ... ok
+test_a_broken_link_is_reported (test_check_instructions.UnreadableFiles.test_a_broken_link_is_reported) ... ok
+test_a_directory_named_agents_md_is_reported_and_the_run_goes_on (test_check_instructions.UnreadableFiles.test_a_direct
+ory_named_agents_md_is_reported_and_the_run_goes_on) ... ok
+test_a_directory_that_cannot_be_listed_is_reported (test_check_instructions.UnreadableFiles.test_a_directory_that_canno
+t_be_listed_is_reported) ... ok
+test_a_file_gone_mid_run_is_reported_and_the_run_goes_on (test_check_instructions.UnreadableFiles.test_a_file_gone_mid_
+run_is_reported_and_the_run_goes_on) ... ok
+test_a_file_without_permission_is_reported (test_check_instructions.UnreadableFiles.test_a_file_without_permission_is_r
+eported) ... ok
+
+----------------------------------------------------------------------
+Ran 104 tests in 4.524s
+
+OK (skipped=5)
