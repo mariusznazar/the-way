@@ -5,10 +5,7 @@ Use this file only when the task uses a project's settlements but is not a membe
 ## Step 1: read the project source
 
 Read the definition in full but take no plan assignment or dependency from it. Select the goal,
-scope, technology, projected entries and open questions relevant to the stated task. Whenever an
-approved definition is used, run
-`python -B <the-way>/project-level/readiness_check.py <definition>` before relying on its approval;
-a finding returns to `define-project`.
+scope, technology, projected entries and open questions relevant to the stated task.
 
 ## Step 3: reconcile brought-in questions
 
