@@ -78,7 +78,7 @@ Judging in operation is three separate questions, each with a different cost (WA
 - it points to a path, skill or command that does not exist;
 - it was added for a mistake that can no longer be named — it is proposed for removal; when the
   mistake is named but may no longer happen, it is proposed as a removal test. A rule that carries
-  a decision or a step of an activity goes with that decision or that step, not by this test.
+  a decision or a step leaves by the way out "When to add a rule" gives it, not by this test.
 
 A long absence of the mistake does not prove the rule is unnecessary — it may mean the rule works.
 A removal test settles it, not the calendar.

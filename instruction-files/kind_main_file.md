@@ -16,9 +16,9 @@ The main file sketches the surroundings and points to the ways in. It holds thre
   repository in such files have not helped agents, while the instructions in them are followed
   (fact `context-file-effect`), and the agent reads the repository itself
   (https://code.claude.com/docs/en/best-practices § What you can stop doing).
-- **Pointers to ways in**, in the form of the shared layout or "X is done by the skill `name`" —
-  for activities whose way in the agent will not recognise from the request alone, with the
-  condition worded as the criterion asks; a concise main file references task-specific files
+- **Pointers to ways in**, where condition 1 of the criterion allows one, in the form of the
+  shared layout or "X is done by the skill `name`", with the condition worded as the criterion asks;
+  a concise main file references task-specific files
   (https://learn.chatgpt.com/guides/best-practices § Make guidance reusable with AGENTS.md).
 - **Rules that always apply**, short: a convention absent from the tools' configuration, a command
   the agent will not guess, a pitfall it trips on.

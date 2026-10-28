@@ -114,7 +114,7 @@ Rules with the same trigger live together; rules with different triggers do not 
 | in every session | in the main file | the three conditions below |
 | when working with certain files | in an instruction file in a subdirectory or in a rule pinned to paths | the layout of that kind of file |
 | during an activity — starting the environment, committing, reviewing, releasing | on the route of that activity: in the skill that leads it, or in a file that skill tells the agent to read at the step that needs it | when the activity has no obvious way in, the main file points to it in one sentence |
-| every time, without exception | in a CI check, a linter or a check of a step's output; in a local git hook only against slips | an instruction may explain what the check is for, but does not replace it (WAY-133) |
+| every time, without exception | in a CI check, a linter or a check of a step's output; in a local git hook only against slips | an instruction says what the check is for, or carries what the check cannot catch; it does not replace the check (WAY-133) |
 | as knowledge needed sometimes (documentation, patterns, data) | in a file pointed to from a step of a route or from the main file | one level deep; a model file is pointed to, not pasted |
 
 **A line of the main file stays when it meets three conditions at once** (WAY-128):
@@ -200,7 +200,7 @@ two layers serve every kind:
 
 | Layer | Shared carrier | Why it reaches every tool | Addition of a single tool |
 |---|---|---|---|
-| ways in and steps of routes | a pointer as a path in backticks: "Before X, read `path`" (WAY-129) | it is an instruction, not a loading mechanism — every tool carries it out the same way | — |
+| ways in and steps of routes | a pointer as a path in backticks with the condition under which to read it: "Before X, read `path`" (WAY-129) | it is an instruction, not a loading mechanism — every tool carries it out the same way | — |
 | what must happen every time | CI, a linter, a check of a step's output; a git hook against slips | they work outside the agent (WAY-133) | a Claude Code hook (text injected when a command is run), against slips |
 
 Pitfalls:
@@ -266,11 +266,11 @@ Pitfalls:
 The check script settles, without reading the content:
 
 - every path, skill and command pointed to exists;
-- `@path` appears only as `@AGENTS.md` alone on the first line of `CLAUDE.md`;
+- the two pitfalls of the main file, `@path` and `CLAUDE.local.md`;
 - every `.mdc` rule has a YAML header;
-- a repository relying on `AGENTS.md` has no `CLAUDE.local.md`;
-- every `AGENTS.md` in a subdirectory has a pointing line in the main file;
-- a skill needed in Codex has a pointer in `AGENTS.md` or a copy in `.agents/skills/`;
+- the pointing line the layout of files loaded with some files gives an `AGENTS.md` in a
+  subdirectory;
+- the pointer or copy the layout of skills gives a skill needed in Codex;
 - the Markdown files the root `AGENTS.md` or `CLAUDE.md` names in backticks pass the same checks
   (the script follows only those; the glossary term and the invariant count a file named by its
   path anywhere in the text).
