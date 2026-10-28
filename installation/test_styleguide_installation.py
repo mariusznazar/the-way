@@ -84,7 +84,9 @@ class StyleguideInstallationTest(unittest.TestCase):
         wrapper = claude.read_text(encoding="utf-8")
         self.assertTrue(wrapper.startswith("---\nname: the-way-maintain-styleguide\n"), wrapper)
         self.assertNotIn(self.commit, wrapper)
-        self.assertIn(f"Read `.the-way/{SKILL_SOURCE}` in full and follow it.", wrapper)
+        self.assertIn(f"Read `.the-way/{SKILL_SOURCE}` in full and follow it, and read a file it names "
+                      "inside `.the-way` when the step or variant that names it comes, not all "
+                      "of them at the start.", wrapper)
         self.assertIn(f"If `.the-way/{SKILL_SOURCE}` is absent", wrapper)
         siblings = [path for directory in (".claude", ".agents")
                     for path in (self.product / directory / "skills").glob("the-way-*/SKILL.md")]
