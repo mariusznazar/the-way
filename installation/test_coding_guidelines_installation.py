@@ -90,7 +90,9 @@ class CodingGuidelinesInstallationTest(unittest.TestCase):
             f"---\nname: {NAME}\ndescription: {description} "
             "Use this product's pinned the-way commit.\n---\n"), wrapper)
         self.assertNotIn(self.commit, wrapper)
-        self.assertIn(f"Read `.the-way/{SKILL_SOURCE}` in full and follow it.", wrapper)
+        self.assertIn(f"Read `.the-way/{SKILL_SOURCE}` in full and follow it, and read a file it names "
+                      "inside `.the-way` when the step or variant that names it comes, not all "
+                      "of them at the start.", wrapper)
         self.assertIn(f"If `.the-way/{SKILL_SOURCE}` is absent", wrapper)
         siblings = [path for directory in (".claude", ".agents")
                     for path in (self.product / directory / "skills").glob("the-way-*/SKILL.md")]

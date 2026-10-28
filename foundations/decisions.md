@@ -7361,6 +7361,27 @@ rule repeated in the file of each kind that needs it — the copies drift; a cap
 skill's main file, as the same guide recommends — a count says nothing of whether a step needs a
 rule (WAY-256).
 
+### WAY-259 — What does an installed skill entry point tell an agent to read from the pinned the-way?
+
+An entry point written into a product tells an agent to read the skill at `.the-way/<path>` in full.
+It tells the agent to read a file the skill names inside `.the-way` when the step or variant that
+names the file comes, not all named files at the start.
+
+- **Scope:** installation
+- **Based on:** none
+- **Relations:** derives from WAY-256
+- **Verification:** an agent compares a product's entry point with the decision:
+  - complies: the entry point tells the agent to read the full skill first and a named file when
+    the step or variant that names it comes;
+  - violates: the entry point tells the agent to read every named file before starting the skill.
+- **Origin:** none
+
+*Rationale:* reading the full skill gives the agent the picture of the work, its shared rules and
+its pointers. Reading each named file when its step or variant comes keeps rules for other work out
+of the instructions in play, at the cost of recognizing the named moment and opening the file then.
+*Rejected:* reading every named file at the start — the agent carries instructions for steps or
+variants it may not take; reading only the skill — an agent at a named step lacks its detailed rules.
+
 ## Withdrawn identifiers
 
 | Identifier | Why | Successors |

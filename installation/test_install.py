@@ -16,23 +16,7 @@ INSTALL = SOURCE / "installation" / "install.py"
 sys.path.insert(0, str(SOURCE / "installation"))
 import install  # noqa: E402
 
-NAMES = (("elements/decisions/skill/SKILL.md", "record-decision"),
-         ("elements/invariants/skill/SKILL.md", "record-invariant"),
-         ("elements/glossary/skill/SKILL.md", "record-glossary-term"),
-         ("elements/part-map/skill/SKILL.md", "update-part-map"),
-         ("elements/environment-facts/skill/SKILL.md", "record-environment-fact"),
-         ("elements/common/skill/SKILL.md", "find-foundation-entries"),
-         ("project-level/skill/SKILL.md", "define-project"),
-         ("project-level/plan/skill/SKILL.md", "plan-project"),
-         ("project-level/technology/SKILL.md", "settle-technology"),
-         ("project-level/task/skill/SKILL.md", "refine-task"),
-         ("task-cycle/skill/SKILL.md", "implement-task"),
-         ("task-cycle/plan/SKILL.md", "plan-task"),
-         ("task-cycle/spec/SKILL.md", "write-spec"),
-         ("task-cycle/change/SKILL.md", "make-change"),
-         ("task-cycle/review/SKILL.md", "review-change"),
-         ("elements/common/critique/SKILL.md", "critique"),
-         ("product-guidelines/coding/SKILL.md", "maintain-coding-guidelines"))
+NAMES = tuple((path, name) for name, path in install.SKILLS.items())
 BLOCK = install.agents_block()
 
 
@@ -94,7 +78,11 @@ class InstallTest(unittest.TestCase):
             # The gitlink records the commit; an entry point that named it would change with
             # every move of the pin.
             self.assertIsNone(re.search(r"\b[0-9a-f]{7,40}\b", text), text)
-            self.assertIn(f".the-way/{path}", text)
+            sentence = (f"Read `.the-way/{path}` in full and follow it, and read a file it names "
+                        "inside `.the-way` when the step or variant that names it comes, not all "
+                        "of them at the start.")
+            self.assertIn(sentence, text)
+            self.assertNotIn("Read the files it references", text)
             self.assertIn("git ls-files --stage -- .the-way", text)
             self.assertIn("git -C .the-way rev-parse HEAD", text)
             self.assertIn("use this product's project skill of the same name with the "
