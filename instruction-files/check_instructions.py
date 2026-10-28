@@ -1,13 +1,13 @@
 """Mechanical checks of a repository's instruction files for agents.
 
 Settles, without reading what the rules say, the checks that "What the check script settles" in
-SKILL.md, which lies next to this script, lists: paths that do not exist, `@path` imports that Claude Code loads into every
-session or silently skips, Cursor rules that Cursor ignores, a root layout that hides `AGENTS.md`
-from Claude Code, subdirectory `AGENTS.md` files Codex will not reach, skills one of the tools
-cannot discover, emphasis spread over several rules, and the size of every file. The Markdown
-files that the root `AGENTS.md` or `CLAUDE.md` names in backticks are checked as well; a file
-named by its path elsewhere in the text is not followed, though the glossary term and the invariant
-count it.
+SKILL.md, which lies next to this script, lists: paths that do not exist, `@path` imports that
+Claude Code loads into every session or silently skips, Cursor rules that Cursor ignores, a root
+layout that hides `AGENTS.md` from Claude Code, subdirectory `AGENTS.md` files Codex will not
+reach, skills one of the tools cannot discover, emphasis spread over several rules, and the size
+of every file. The Markdown files that the root `AGENTS.md` or `CLAUDE.md` names in backticks are
+checked as well; a file named by its path elsewhere in the text is not followed, though the
+glossary term and the invariant count it.
 
 Usage, from anywhere:
 

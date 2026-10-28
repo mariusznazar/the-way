@@ -1,10 +1,8 @@
 # The main file
 
-The main file is the file the tool adds to every session: `CLAUDE.md`, `AGENTS.md`, a Cursor rule
-with `alwaysApply: true`, the user's global file. Each of its lines costs context in every session
-and — when it is a requirement — extra steps of the agent, because agents carry out instructions;
-that is why each line meets the three conditions of the criterion. A file the main file points to
-holds knowledge needed now and then.
+The main file is the file the tool adds to every session. Each of its lines costs context in every
+session and — when it is a requirement — extra steps of the agent, because agents carry out
+instructions; that is why each line meets the three conditions of the criterion.
 
 ## What it holds
 
@@ -16,22 +14,20 @@ The main file sketches the surroundings and points to the ways in. It holds thre
   of the repository: directory structure, architecture and stack can be read from the code, and
   descriptions of a repository do not shorten the agent's way to the right files; overviews of a
   repository in such files have not helped agents, while the instructions in them are followed
-  (fact `context-file-effect`).
-- **Pointers to ways in.** "Before X, read `path`" or "X is done by the skill `name`" — for
-  activities whose way in the agent will not recognise from the request alone, with the condition
-  worded as the criterion asks.
-- **Rules that always apply**, short and not derivable from the repository: a convention absent
-  from the tools' configuration, a command the agent will not guess, a pitfall it trips on.
+  (fact `context-file-effect`), and the agent reads the repository itself
+  (https://code.claude.com/docs/en/best-practices § What you can stop doing).
+- **Pointers to ways in**, in the form of the shared layout or "X is done by the skill `name`" —
+  for activities whose way in the agent will not recognise from the request alone, with the
+  condition worded as the criterion asks; a concise main file references task-specific files
+  (https://learn.chatgpt.com/guides/best-practices § Make guidance reusable with AGENTS.md).
+- **Rules that always apply**, short: a convention absent from the tools' configuration, a command
+  the agent will not guess, a pitfall it trips on.
 
-What the main file does not hold:
+Besides what the criterion places elsewhere, the main file does not hold:
 
 - repetitions of the README, configuration, the linter or the framework's documentation — a tool
   enforces them or the agent knows them without the file;
-- multi-step procedures — they belong in a skill, and the main file at most points to its way in;
-- rules for one part of the code — they belong in a rule pinned to paths or in a file in a
-  subdirectory;
-- content that changes often — the main file points to its source;
-- the history of a rule: dates, the course of an incident, abandoned variants.
+- content that changes often — the main file points to its source.
 
 **The global file has the highest bar.** Its line costs context in every session in every
 repository, so it keeps only what concerns work regardless of the repository. A rule true for one

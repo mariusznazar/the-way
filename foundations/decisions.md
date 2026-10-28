@@ -3006,9 +3006,8 @@ given line is needed, even where a shorter file saves context in every session; 
 alone — it leaves reading each rule to the agent's choice; a file of its own for every area with
 rules of its own — a split changes nothing unless it changes when the rule loads; a rule kept whole
 in the file whenever an agent might miss its moment — any rule could be kept on that ground; rules
-drawn from the repository's code — the agent reads the code itself; binding the lines that
-stand today — every
-unchanged line would become a breach on the day of the merge.
+drawn from the repository's code — the agent reads the code itself; binding the lines that stand
+today — every unchanged line would become a breach on the day of the merge.
 
 ### WAY-129 — How does an instruction file point an agent to another file?
 

@@ -2,8 +2,7 @@
 
 An instruction file in a subdirectory, a rule pinned to paths in `.claude/rules/` and a Cursor rule
 with `globs` hold the rules for one part of the code. They load when an agent works with the files
-they cover and cost nothing elsewhere, but each tool reaches them its own way, so a rule meant for
-every tool takes the shared carrier below.
+they cover and cost nothing elsewhere, but each tool reaches them its own way.
 
 ## Its layout
 
