@@ -124,6 +124,6 @@ and these files read it as one.
 - Code a rule or an example shows stays in fenced code, where that script reads no path and no
   import. That script switches between code and text on every line that starts, after any leading
   whitespace, with three backticks or three tildes.
-- `instruction-files/principles.md` puts emphasis — words written in capitals to make a rule stand
+- `instruction-files/SKILL.md` puts emphasis — words written in capitals to make a rule stand
   out — on one rule per file at most, and `instruction-files/check_instructions.py` warns where more
   than one line of a file carries such words.

@@ -1,6 +1,6 @@
 ---
 name: the-way-maintain-instruction-files
-description: Use when an instruction file for coding agents — AGENTS.md, CLAUDE.md, .claude/rules, .cursor/rules/*.mdc, a user's global instruction file — has to be written, judged, split or cleaned up, or when a rule has to be placed in one, such as a rule settled in a review of agent sessions. Use this checkout's own the-way.
+description: Use when an instruction file for coding agents — AGENTS.md, CLAUDE.md, .claude/rules, .cursor/rules/*.mdc, a user's global instruction file — or a skill, the skills of a process included, has to be written, judged, split or cleaned up, or when a rule has to be placed in one, such as a rule settled in a review of agent sessions. Use this checkout's own the-way.
 ---
 
 # the-way-maintain-instruction-files
