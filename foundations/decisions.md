@@ -2966,12 +2966,14 @@ A line for a file that an agent's tool loads into every session — one the skil
 `instruction-files` proposes, or one a change to the-way's repository instruction files adds or
 rewords — is one that every session needs or that points to work an agent would not otherwise find,
 that an agent could not read from the repository or from general knowledge, and without which an
-agent would go wrong. Any other rule the skill proposes or such a change adds stands where what
-calls for it reaches the agent: a rule for some files in a file the tools load with those files, a
-rule for an activity in the steps of the skill that carries out that activity or in the file that
-leads it, and knowledge needed now and then in a file such a step or line points to. Lines that
-stand unchanged are not bound by it, and the lines of process skills and their entry points answer
-to WAY-35 and WAY-127 instead.
+agent would go wrong; where an agent may not recognise the moment such a pointer is for, its
+condition is worded as an agent meets that moment, and the rule it points to stands whole in that
+file only once records of agents' work show they missed the reworded pointer. Any other rule the
+skill proposes or such a change adds stands where what calls for it reaches the agent: a rule for
+some files in a file the tools load with those files, a rule for an activity in the steps of the
+skill that carries out that activity or in the file that leads it, and knowledge needed now and
+then in a file such a step or line points to. Lines that stand unchanged are not bound by it, and
+the lines of process skills and their entry points answer to WAY-35, WAY-127 and WAY-256 instead.
 
 - **Scope:** instruction-files, agent-instructions
 - **Based on:** context-file-effect · claude-code-path-rules ·
@@ -2980,22 +2982,32 @@ to WAY-35 and WAY-127 instead.
 - **Verification:** an agent compares the change with the decision:
   - complies: a change adds to the-way's root `AGENTS.md` a line pointing, with its condition, to a
     guide no session would find otherwise; the skill proposes to move a rule for one directory's
-    files into a file loaded with them;
+    files into a file loaded with them; the skill, finding that agents passed by a pointer whose
+    condition named the work otherwise than they meet it, proposes to reword that condition;
   - violates: the skill proposes a line describing a repository's directories and stack; a change
-    adds to the-way's root `AGENTS.md` the test command its guide already gives.
+    adds to the-way's root `AGENTS.md` the test command its guide already gives; the skill proposes
+    to keep a rule for one activity whole in the root `AGENTS.md` only because an agent might not
+    recognise its moment.
 - **Origin:** none
 
 *Rationale:* a line loaded into every session costs context in each, and agents carry out what it
 asks, so it earns its place only when each session needs it; descriptions of a repository have not
 helped agents, while the instructions they are given are followed; a rule loaded with the files or
 the activity that call for it costs nothing elsewhere; one tool reads a subdirectory's file only in
-sessions started at or below it, so such a file needs a line that points to it. Unchanged lines
-stay as they are because the process enters an existing product (WAY-28).
+sessions started at or below it, so such a file needs a line that points to it. An agent that does
+not recognise the moment a rule is for does not reach for its pointer, so moving such a rule out
+switches it off without a sign; a reworded condition costs one line where the whole rule costs its
+length in every session, so the rule comes back whole only on proof from records of the work, as a
+new rule enters (WAY-130). A skill loads with its activity, not into every session, so where its
+fragments stand follows the decisions on skills. Unchanged lines stay as they are because the
+process enters an existing product (WAY-28).
 *Rejected:* a fixed count of lines as the measure of a file — a count says nothing of whether a
 given line is needed, even where a shorter file saves context in every session; a file of pointers
 alone — it leaves reading each rule to the agent's choice; a file of its own for every area with
-rules of its own — a split changes nothing unless it changes when the rule loads; rules drawn from
-the repository's code — the agent reads the code itself; binding the lines that stand today — every
+rules of its own — a split changes nothing unless it changes when the rule loads; a rule kept whole
+in the file whenever an agent might miss its moment — any rule could be kept on that ground; rules
+drawn from the repository's code — the agent reads the code itself; binding the lines that
+stand today — every
 unchanged line would become a breach on the day of the merge.
 
 ### WAY-129 — How does an instruction file point an agent to another file?
@@ -7210,6 +7222,113 @@ waits.
 *Rejected:* one wait to the command's end — it writes the whole context again after every wait past
 the lifetime; a longer cache lifetime for every agent — it raises the price of each step to spare
 the few that wait.
+
+### WAY-256 — Where does a fragment of a skill stand?
+
+A fragment of a skill — one the skill of `instruction-files` proposes for any skill, the skills of
+the-way's process included, or one a change to a skill of the-way adds or rewords — that only one
+step or one variant of the skill needs stands in a file beside the skill that the step names, or,
+where it is a rule or a way of working WAY-35 places in an element's template or in the part the
+elements share, there. The skill's `SKILL.md` keeps the picture of the whole, the rules of working
+that hold across its steps and the pointers, and a fragment's place follows from whether a use of
+the skill needs it at that step, never from the count of words or lines of the file. Fragments
+that stand unchanged are not bound by it.
+
+- **Scope:** instruction-files, decisions, invariants, glossary, part-map, environment-facts,
+  elements-common, project-level, product-guidelines, task-cycle
+- **Based on:** single-rule-compliance · instruction-density-accuracy
+- **Relations:** derives from WAY-100 · derives from WAY-128
+- **Verification:** an agent compares the change with the decision:
+  - complies: a change adds to a skill of the-way the form of a report only its last step writes,
+    in a file beside the skill that the step names, and a line in its `SKILL.md` pointing to it;
+    the skill of `instruction-files`, judging a skill with a mode only some uses take, proposes to
+    move that mode's checklist into a file the mode's step names; a rule of an element's entries a
+    change adds stands in the element's template;
+  - violates: a change adds to a skill's `SKILL.md` a page of rules only its review step uses; the
+    skill of `instruction-files` proposes to cut a skill to a number of lines; a change puts a rule
+    of an element's entries into a file beside the element's skill.
+- **Origin:** none
+
+*Rationale:* a single rule is not lost in a longer file, while the more instructions an agent has
+to carry out at once, the fewer it carries out; a fragment the step at hand does not need adds to
+the instructions in play without being used, so it leaves the text read at that step, and the
+measure is the instructions in play, not the words. The finding on density measured single prompts
+dense with instructions to include keywords, not an agent's work through a skill, and a file read
+at an earlier step stays in context, so only the instructions of steps not yet reached leave; no
+one has measured it on a skill. The shape — a main part holding the picture of the whole, the rules
+of working and the pointers, with each step's guidance in a file beside it — is borrowed from a
+course on steering models through context, and only that shape is adopted (WAY-100); the course's
+claim that a model follows all of a long skill's instructions with a chance close to zero is not,
+since no measurement stands behind it. The rules of an element's entries stay where WAY-35 places
+them, since every writer and check reaches them there, and this decision orders what else a skill
+holds. A change to a skill of the-way is bound because a fragment it adds would otherwise go
+anywhere until the skill is judged; fragments standing unchanged are left until each skill is
+rebuilt, since binding them would make every skill a breach on the day of the merge.
+*Rejected:* a short skill as the aim, after the course's claim — no measurement stands behind it; a
+threshold of words or lines for a skill — a count says nothing of whether a step needs a fragment;
+the skills of the-way's process left to WAY-35 alone — what neither a template nor the shared part
+holds would follow no rule of place; binding only what the skill of `instruction-files` proposes —
+a new fragment of a skill of the-way could land in its `SKILL.md` until the skill is judged;
+binding the fragments that stand today — every skill would breach it on the day of the merge.
+
+### WAY-257 — What does the skill of `instruction-files` show as the ground of each verdict?
+
+For every rule and fragment it judges, the skill of `instruction-files` asks when an agent needs it
+and whether an agent recognises that moment when it comes, and every row of its judgement,
+whatever its verdict, shows both answers beside the verdict.
+
+- **Scope:** instruction-files
+- **Based on:** none
+- **Relations:** derives from WAY-128
+- **Verification:** an agent compares the skill, or a judgement it gave, with the decision:
+  - complies: a row keeping a line of a root `AGENTS.md` says the line is needed in every session
+    and that no moment has to be recognised for it; a row moving a rule into a skill's step says
+    the rule is needed at that step and whether the agent at that step recognises it;
+  - violates: a row reads "keep — meets the three conditions" and nothing more; only the rows that
+    move a rule say when it is needed.
+- **Origin:** none
+
+*Rationale:* a human disputes what a row shows: a verdict shown with its criterion can be disputed
+on the criterion, a verdict alone only as a whole. The second question finds the rule whose pointer
+an agent would pass by, which the first question alone would move out of the agent's reach and
+switch off without a sign (WAY-128).
+*Rejected:* the reason particular to each verdict alone — for keep and remove it names conditions
+and defects, never when the rule is needed; the criterion stated once above the table — a row could
+not be disputed on its own.
+
+### WAY-258 — How are the files of the skill of `instruction-files` laid out?
+
+The skill of `instruction-files` keeps beside its `SKILL.md` one file for each kind of text it
+works on — a file a tool adds to every session, a skill, a file a tool loads with some files — and
+its step that works on a kind names that kind's file. No rule stands in two of its files, and no
+file of a kind holds a rule another kind needs: such a rule stands in its `SKILL.md`, or in a file
+a step names as WAY-256 gives, or, once such rules are so many that the work on one kind reads
+mostly the rules of others, in one shared file each such step names directly. No file of a kind
+points to another file.
+
+- **Scope:** instruction-files
+- **Based on:** claude-skill-nested-references
+- **Relations:** derives from WAY-256
+- **Verification:** an agent compares the change with the decision:
+  - complies: the step that judges a skill names the file of skills, and the rule on emphasis,
+    which every kind needs, stands once in `SKILL.md`;
+  - violates: the file of skills tells the agent to read the file of the main file for its rule on
+    pointers; the rule on emphasis stands both in the file of skills and in the file of the main
+    file.
+- **Origin:** none
+
+*Rationale:* the work on one kind reads the rules of that kind and those all kinds share, not the
+rules of the others, which keeps fewer instructions in play at once (WAY-256); a full judgement of
+a repository still reads every kind's file, so the gain lies in work on one kind. A rule kept in two
+files drifts. Anthropic's guide for skill authors warns that a file reached through another
+referenced file may be read only in part, and recommends references one level deep from the
+skill's main file; it speaks of Claude alone, and the decision keeps the same depth for Codex and
+Cursor on that word, since a route one level deep costs nothing in any tool.
+*Rejected:* one `SKILL.md` with a section for each kind — every use reads the rules of every kind;
+a pointer from one kind's file to another for a rule both need — a reference two levels deep; a
+rule repeated in the file of each kind that needs it — the copies drift; a cap on the lines of a
+skill's main file, as the same guide recommends — a count says nothing of whether a step needs a
+rule (WAY-256).
 
 ## Withdrawn identifiers
 

@@ -1,7 +1,7 @@
 """Mechanical checks of a repository's instruction files for agents.
 
-Settles, without reading what the rules say, the checks of section 6 of principles.md, which lies
-next to this script: paths that do not exist, `@path` imports that Claude Code loads into every
+Settles, without reading what the rules say, the checks that "What the check script settles" in
+SKILL.md, which lies next to this script, lists: paths that do not exist, `@path` imports that Claude Code loads into every
 session or silently skips, Cursor rules that Cursor ignores, a root layout that hides `AGENTS.md`
 from Claude Code, subdirectory `AGENTS.md` files Codex will not reach, skills one of the tools
 cannot discover, emphasis spread over several rules, and the size of every file. The Markdown
