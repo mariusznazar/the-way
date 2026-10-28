@@ -1,0 +1,16 @@
+	- For the review of a fix, or of a correction made for the human's remarks on the request, read `fix.md` and follow it: what you read and what bounds the review.
+- For the review of a fix, the findings file — the blocking findings of the review it answers — and the fix report.
+	- For the review of the whole change, read `whole_change.md` and follow it: what you read and what you check besides section 2.
+- For the review of the whole change: the frozen task document whole, the spec where the cycle wrote one and, on the planned route, the plan, each slice's range and whether it had a review of its own, the reports of the executors of the slices that had none with any mismatch the orchestrator's mechanical check passed on, the report of the agent that wrote the plan's *Foundation entries* where slice 1 had no review of its own, and the Minor and out-of-scope findings of the slice reviews the dispatch lists.
+	# Reviewing a fix or a correction What the review of a fix of a review's findings, or of a correction made for the human's remarks on the request, reads and what bounds it.
+	# Reviewing the whole change What the review of the whole change reads and what it checks besides section 2.
+## 5.
+## 6.
+	## Read - For the review of a fix, the findings file — the blocking findings of the review it answers — and the fix report.
+	## Read - For the review of the whole change: the frozen task document whole, the spec where the cycle wrote one and, on the planned route, the plan, each slice's range and whether it had a review of its own, the reports of the executors of the slices that had none with any mismatch the orchestrator's mechanical check passed on, the report of the agent that wrote the plan's *Foundation entries* where slice 1 had no review of its own, and the Minor and out-of-scope findings of the slice reviews the dispatch lists.
+	## Review of a fix The findings file bounds this review; it holds the blocking findings only, since Minor and out-of-scope findings are not fixed (WAY-161).
+	## Review of the whole change Besides section 2, check the change against the whole task: every required outcome and item of *To do*, and every row of *Settlements to record* and projected entry the task carries, met by the commits; fidelity to the task's sources, with nothing the change takes from them altered or invented.
+	Confirm that `git rev-parse HEAD` is the head you were given; on a mismatch, ask the orchestrator which range to review, as a question of section 4, before you go on.
+Confirm that `git rev-parse HEAD` is the head you were given; on a mismatch, ask the orchestrator which range to review, as a question of section 6, before you go on.
+Review of a fix The findings file bounds this review; it holds the blocking findings only, since Minor and out-of-scope findings are not fixed (WAY-161).
+Review of the whole change Besides section 2, check the change against the whole task: every required outcome and item of *To do*, and every row of *Settlements to record* and projected entry the task carries, met by the commits; fidelity to the task's sources, with nothing the change takes from them altered or invented.

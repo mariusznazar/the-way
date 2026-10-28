@@ -1,0 +1,8 @@
+	- After a one-author attempt or a planned slice proved too large, read `too_large.md` and follow it: whose report you read, what of the attempt or of the plan stands, and how you write the plan again.
+- After a one-author attempt proved too large, its report; the whole attempt, foundation entries included, has been discarded.
+- After a one-author attempt proved too large: its whole attempt, including its foundation entries, is gone (WAY-136).
+	- After a reviewed spec, only if the orchestrator selects planning again: write a new plan from the spec and task; nothing of an earlier plan binds.
+	# Planning after a change proved too large What the planner reads, and how it writes the plan again, after a one-author attempt or a planned slice proved too large.
+	## Read - After a one-author attempt proved too large, its report; the whole attempt, foundation entries included, has been discarded.
+	## Writing the plan again - After a one-author attempt proved too large: its whole attempt, including its foundation entries, is gone (WAY-136).
+## Writing the plan again - After a reviewed spec, only if the orchestrator selects planning again: write a new plan from the spec and task; nothing of an earlier plan binds.
