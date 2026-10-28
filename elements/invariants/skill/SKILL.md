@@ -25,37 +25,16 @@ project skill of that name with the `the-way-` prefix. Follow the steps of
 
 ## 2. Decide what the entry is
 
-- Find the rule and where it is said: the conversation, a decision's verification, the list a
-  task's return step made, a ticket or a requirement of the product, or the product's code when
-  the process enters an existing product.
-- Recovering from what a product does: list what the part does, each item as a candidate
-  sentence with the place in the code that shows it, and let the human choose; only what the
-  human chooses becomes an entry (WAY-28).
-- Apply the test in the decision template's section "Decision or invariant": a rule that records
-  a choice goes through `record-decision` first, and the invariant is written as derived from it.
-  A reason found behind recovered behaviour is not recovered as a decision in this change (WAY-28);
-  one the human gives is (`TODO — decision pending: which decision sets that a reason the human
-  gives for recovered behaviour is written as a decision`).
-- When the rule holds more than one sentence can state, propose one entry per sentence; the
-  template says what one sentence may join.
-- Search the file, including its withdrawn identifiers, for an entry this rule would change:
-  found — a change, split, merge or withdrawal, or an entry of its own where the template's "Where
-  entries go" gives one; not found — a new identifier.
-- The search of the foundation also looks for a decision whose level 1 verification calls for this
-  rule, and an entry it names whose binding part has changed, to check it against that part again
-  (WAY-33).
+At step 2, read `decide_entry.md` beside this skill to decide what the entry is and what
+the search of the foundation adds for this element.
 
 ## 3. Draft
 
 - *Method*: `test` where a cheap test can check the sentence on the product, `review` otherwise,
   as the template's "Method and test" gives it; tell the human which and why, and never write a test
   only so that *Method* can read `test`.
-- *Part*: for each part named, say which change there could make the sentence false.
-- *Rests on*: put through the test in the template's section "Links" every fact quoted in the
-  *Based on* of the decisions it derives from, and every fact that neither the product nor the-way
-  at the commit it pins writes, such as a standard, a library or a law, found behind what the
-  sentence names, a value it copies, or a meaning the product's rules hand elsewhere, as the part
-  map hands the matching of a pattern to git.
+- At step 3, read `draft.md` beside this skill to check the parts and the facts the invariant
+  rests on.
 - An entry taken from a source outside the log, such as a ticket or a requirement of the product,
   which no decision of the log carries: *Derives from* quotes that source with its address, place,
   passage and date read, as the template's "Links" says.
@@ -67,17 +46,12 @@ project skill of that name with the `the-way-` prefix. Follow the steps of
 
 ## 4. Ask, show, write
 
-- Step 4.2: for a changed entry, show the wording on `{fork-point}` beside the new one, with the
-  tests that cite it, and check each of those tests against the new wording.
-- Step 4.4: what follows from this entry is a decision whose level 1 verification gains, loses or
-  renames it, through `record-decision`.
-- After step 4.4 nothing is handed to another agent. Where *Method* reads `test`, the test is
-  written in the change that brings the entry and seen failing once, as the template's "Method and
-  test" says; the change names in its request each invariant test it alters (WAY-03).
+At step 4, read `write.md` beside this skill for what to check, show and write, and what
+follows from the entry.
 
 ## Projected mode
 
-Projected mode runs as `elements/common/way_of_working.md` gives it, with these differences for an
+In projected mode, read `elements/common/projected_mode.md`, with these differences for an
 invariant (WAY-117):
 
 - Step 3: *Method* reads `review`; the task that writes the invariant turns it to `test` with the

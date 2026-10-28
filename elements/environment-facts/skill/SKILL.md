@@ -19,62 +19,31 @@ the project skill of that name with the `the-way-` prefix. Follow the steps of
 
 ## 1. Read
 
-- Select and read facts and their actual decision and invariant dependents by "Reading the
-  foundation" in `elements/common/way_of_working.md`, using the complete part map where it exists.
-- A product that starts its facts here writes every fact an invariant's *Rests on* or a decision's
-  *Based on* waits for (WAY-37, WAY-90) — one reaching a pending line going to the human first.
+At step 1, read `read.md` beside this skill for the reading this entry needs.
 
 ## 2. Decide what the entry is
 
-- Find what asks for the fact: a `TODO` in an invariant's *Rests on*, a citation in a decision's
-  *Based on*, a source a task's return step listed (WAY-11), the conversation, or a source found no
-  longer saying what a fact's sentence says.
-- Put it through the template's "Which facts are written" and "The sentence", and send what
-  fails them where they say — into an invariant through `record-invariant`, into a decision
-  through `record-decision`.
-- A requirement of a catalogue nothing has adopted goes to the human with the question the
-  template's "Catalogues and obligations" gives, before any entry; for a binding rule, that
-  question is asked in step 4.
-- Search the file, withdrawn identifiers included, for an entry on the same thing: found — a
-  change, split, merge or withdrawal; found among the withdrawn — show the human why it went: one
-  shown false comes back under a new identifier only if the world has changed since, one withdrawn
-  for want of dependants may come back under a new identifier; not found — a new identifier.
-- For a changed fact, the search of the foundation finds every invariant whose *Rests on* and
-  every decision whose *Based on* names the fact, as the template's "Changing a fact" says.
-- A case needing a pending line to fill a field stops the entry, for the human and
-  `record-decision`, before it is written.
+At step 2, read `decide_entry.md` beside this skill to decide what the entry is and what
+the search of the foundation adds for this element.
 
 ## 3. Draft
 
-- *Source*: open the address and copy the passage as the template's "Source" gives it; a passage
-  missing there is a question in step 4. For a reading, run on the host a command that only reads
-  its state, and copy its output and the version of the tool; a reading only the human can run is a
-  question in step 4 naming the command. For a page without editions, find the archived copy
-  through the archive's CDX index of captures, not its availability lookup, which misses captures
-  that exist.
+At step 3, read `draft.md` beside this skill to obtain and check the source material.
 
 ## 4. Check, ask, show, write
 
-- Before step 4.1, check mechanically: the address opens and the passage stands there word for
-  word; for a reading, the output quoted is the output of the run the entry names. A failure sends
-  the draft back to step 3.
-- Step 4.2: for a changed entry, show the wording on `{fork-point}` beside the new one, with the
-  invariants and decisions that name it.
-- Step 4.4: what follows is each invariant this fact serves, or whose *Rests on* names it, through
-  `record-invariant`; and each decision naming it, through `record-decision`, each checked against
-  the new sentence. A fact left with nothing naming it goes as WAY-73 and the template's "Withdrawn
-  identifiers" say.
-- After step 4.4 nothing is handed to another agent: no check is written for a fact.
+At step 4, read `write.md` beside this skill for what to check, show and write, and what
+follows from the entry.
 
 ## Projected mode
 
-Projected mode runs as `elements/common/way_of_working.md` gives it, with these differences for a
+In projected mode, read `elements/common/projected_mode.md`, with these differences for a
 fact (WAY-117):
 
 - Step 2: a fact is projected only where a projected decision's *Based on* or a projected
   invariant's *Rests on* names it (WAY-73, WAY-90).
-- Step 3: the entry is written whole; its source exists today and is read now.
-- Step 4: the mechanical check before step 4.1 runs as above.
+- In projected mode, read `projected.md` beside this skill for reading the source and
+  checking the proposal.
 - Step 4.3: the heading reads `#### <identifier>`.
 
 ## A withdrawal

@@ -42,6 +42,8 @@ When the section already holds a working table, resume from the first row whose 
   the section "Projected foundation changes" in full; for a task, in
   `project-level/task/template.md` the section "Settlements to record" and its rule under "What each
   section carries" in full.
+  For a project definition, also read `elements/common/projected_mode.md` for the mode in which
+  the element skills write the accepted rows.
 - Read the source in full.
 - Select and read the product's foundation by "Reading the foundation" in
   `elements/common/way_of_working.md`: the parts the source touches, and the entries they and the
