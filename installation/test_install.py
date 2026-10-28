@@ -95,6 +95,9 @@ class InstallTest(unittest.TestCase):
             # every move of the pin.
             self.assertIsNone(re.search(r"\b[0-9a-f]{7,40}\b", text), text)
             self.assertIn(f".the-way/{path}", text)
+            self.assertIn("and read a file it names inside `.the-way` when the step or variant "
+                          "that names it comes, not all of them at the start", text)
+            self.assertNotIn("Read the files it references", text)
             self.assertIn("git ls-files --stage -- .the-way", text)
             self.assertIn("git -C .the-way rev-parse HEAD", text)
             self.assertIn("use this product's project skill of the same name with the "
