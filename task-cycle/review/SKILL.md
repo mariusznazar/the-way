@@ -21,13 +21,9 @@ worktree the session works in; in a product, it is the product's pinned `.the-wa
   commits, the reconciliation with the target branch or a later change — the base and head commits
   of the range, and the report path. The return step's commits are reviewed as section 2 gives,
   against the task and the foundation entries the return step writes or corrects.
-- For the review of the whole change: the frozen task document whole, the spec where the cycle
-  wrote one and, on the planned route, the plan, each slice's range and whether it had a review of
-  its own, the reports of the executors of the slices that had none with any mismatch the
-  orchestrator's mechanical check passed on, the report of the agent that wrote the plan's
-  *Foundation entries* where slice 1 had no review of its own, and the Minor and out-of-scope
-  findings of the slice reviews the dispatch lists. You alone among the reviewers select your own
-  foundation and guidelines: the entries of the parts the change touches by "Reading the
+- For the review of the whole change, read `whole_change.md` and follow it: what you read and
+  what you check besides section 2. You alone among the reviewers select your
+  own foundation and guidelines: the entries of the parts the change touches by "Reading the
   foundation" in `elements/common/way_of_working.md`, and the guidelines of those parts by
   `product-guidelines/reading.md`, each entry and guideline file whole (WAY-150, WAY-213).
 - For any other review — of a slice, a fix, the return step's commits, the reconciliation with the
@@ -39,13 +35,12 @@ worktree the session works in; in a product, it is the product's pinned `.the-wa
   alone.
 - The author's report. It is a set of claims to verify, not evidence: a rationale in it — kept
   simple on purpose, left for later — never lowers a finding's grade.
-- For the review of a fix, the findings file — the blocking findings of the review it answers —
-  and the fix report. For the review of a correction made for the human's remarks on the request,
-  those remarks and the correction report.
+- For the review of a fix, or of a correction made for the human's remarks on the request, read
+  `fix.md` and follow it: what you read and what bounds the review.
 - The diff of the range, computed yourself: `git diff <base>..<head>` and `git log <base>..<head>`.
   Never `HEAD~1`, which drops all but the last commit. Confirm that `git rev-parse HEAD` is the
   head you were given; on a mismatch, ask the orchestrator which range to review, as a question of
-  section 6, before you go on.
+  section 4, before you go on.
 
 Beyond what the dispatch names — and, in the review of the whole change, beyond what you select —
 where you need something more — a decision, an invariant, a passage of the
@@ -106,31 +101,7 @@ beyond the task says so in its own words and counts as out of scope, whatever it
 each line of Declined to judge. Each finding carries its place in the code, what is wrong, why it
 matters and the evidence: the test, check or line that shows it.
 
-## 4. Review of a fix
-
-The findings file bounds this review; it holds the blocking findings only, since Minor and
-out-of-scope findings are not fixed (WAY-161). For each finding in it, say whether it is **fixed**
-— the defect no longer exists on the new head; tried is not fixed — or **remains**, with evidence.
-For a finding the author contests with evidence, say whether you keep it. Inspect the fix diff for
-what the fix itself broke: a new Critical or Important finding there counts as one that remains.
-An issue outside the fix diff is a Minor or out-of-scope note; it does not reopen the review.
-
-For a correction made for the human's remarks, the remarks take the findings file's place: say for
-each whether the correction makes it, then review the correction's diff as section 2 gives.
-
-## 5. Review of the whole change
-
-Besides section 2, check the change against the whole task: every required outcome and item of
-*To do*, and every row of *Settlements to record* and projected entry the task carries, met by the
-commits; fidelity to the task's sources, with nothing the change takes from them altered or
-invented. Judge every slice that had no review of its own as section 2 judges a slice, its
-executor's own-work check included (WAY-164); this review is the only one it gets (WAY-136). In
-the review of the whole change of a plan, name for each blocking finding the slice it comes from,
-by the slice's number and the commit; or say that it spans slices and name them, or that it comes
-from none — a gap of the plan, or the plan's *Foundation entries*. Grade each Minor and
-out-of-scope finding of the slice reviews the dispatch lists as a finding of this review.
-
-## 6. Report
+## 4. Report
 
 Write the full report to the dispatch's report path. Its first line is `PASS <head sha>` or
 `FAIL <head sha>` and nothing else — or `questions` while the review waits for an answer (below);
