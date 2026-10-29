@@ -122,8 +122,14 @@ records its method, actor, observed result and evidence, with `not applicable` f
 exit code. Focused checks are not rerun merely to advance the cycle. The orchestrator runs the gate
 on the tree that goes into the request and records its command, exit code and the failures it
 names. Name every check that failed or did not run, with the reason; an unrun check is unchecked,
-never passed. For an invariant's test the change writes, record its failing run and its passing
-run as the author reports them.
+never passed. Each failing run of a check remains in the record with its command and result, even
+if the check passes when run again. When a check has both a failing and a passing run during the
+cycle, the request lists it under *Checks* as failed, with the result of its rerun and the number
+of cycle runs in which it failed and passed. When preparing the request, recover the task's parts
+from its frozen task and changed files through the part map; if the check's file belongs to a
+different part, list it beside findings outside the task's scope (WAY-260). Keep that classification
+as evidence with the check, not as a separate record of selected parts. For an invariant's test the
+change writes, record its failing run and its passing run as the author reports them.
 For a UI change, record the author's or executor's state check and screenshot inspection: affected
 components and states, method, observed result and evidence. Carry a screenshot unchecked for no
 settled route, or a failed settled route with its actual result, to the request; code inspection
@@ -167,7 +173,9 @@ invariant covers it.
 - Questions: <only those the cycle allows to reach the human, or none>
 - Review findings listed: <unfixed Minor findings and findings the reviewer marked outside the
   task's scope, from the review of the whole change and every later code review, each with the
-  reviewer's words and its place in the code or a note that none is named, or none>
+  reviewer's words and its place in the code or a note that none is named; checks outside the
+  task's parts that failed in a cycle run and passed again, with their file paths, rerun results
+  and failure/pass counts (WAY-260), or none>
 - Blocked by review: <each blocking finding left after the review of its fix with its place and
   reason, what the fix tried, the cycle's time, models and tokens from `stages.md` with the number
   of review rounds, and the reconciliation and return step not run on that code, or none>
