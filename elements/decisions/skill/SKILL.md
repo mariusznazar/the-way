@@ -33,7 +33,6 @@ the search of the foundation adds for this element.
 - *Verification*: name the invariants the invariants file holds that derive from this decision,
   and those step 4.4 writes; add a pair of examples where the human gives one or accepts one you
   propose.
-- `none considered` in *Rejected* is the human's statement.
 
 ## 4. Ask, show, write
 
