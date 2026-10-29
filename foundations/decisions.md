@@ -7488,6 +7488,44 @@ gives the command and exit code of both runs.
 report instead of rerunning focused checks for routine progression.
 *Rejected:* unknown.
 
+### WAY-263 — How does a task plan represent output written together by one command?
+
+A deterministic command that writes multiple files as one unit is represented in a slice's
+*Change* by one path pattern for each directory it writes into, each counted as one file. Every
+slice that changes an input to the command runs it at the end of its work and commits all of its
+output, handling any obsolete output paths the command reports for removal; its *Goal* names the
+command and says not to edit the output by hand. *Change* names the command's source only when
+that slice changes it. At the orchestrator's mechanical check, each
+path pattern in *Change* covers every changed file it matches.
+
+- **Scope:** task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-136 · derives from WAY-148
+- **Verification:** an agent compares the plan and cycle with the decision:
+  - complies: slices that change inputs to a command writing several files each run it, handle its
+    reported obsolete outputs, commit all of its output and name one pattern for each output
+    directory; the plan's *Goal* names the command and says not to edit its output by hand; the
+    orchestrator's mechanical check accepts
+    every changed file matched by a pattern in *Change*;
+  - violates: only the last slice changing the command's inputs runs it; a generator's files are
+    listed individually in *Change*; its unchanged source is listed there; or a changed file
+    matched by a *Change* pattern fails the mechanical check.
+- **Origin:** none
+
+*Rationale:* running the command in each slice that changes its inputs keeps that slice's generated
+files present for its review and keeps the committed output consistent with its sources. Handling
+obsolete outputs reported by the command keeps stale generated files from remaining in the tree.
+One path pattern per output directory lets the plan count a group of files as one unit without
+hiding matching paths from the orchestrator's check. The cost is a generation run for each such
+slice, and slices whose changes affect the same output must depend on one another.
+*Rejected:* only the last slice that changes inputs runs the command — generated files are absent or
+stale in earlier slices; leaving it to the planner to choose which slice runs it — the plan may
+leave the same gap; one pattern for all output directories — it may be too broad or fail to name
+each output location; listing multiple patterns for one output directory — each pattern is meant to
+stand for a single output group; always listing the command's source — slices that do not change it
+would claim an unchanged file; putting the mechanical pattern rule in the plan skill — the
+orchestrator would not read it; repeating that rule in both skills — the copies could diverge.
+
 ## Withdrawn identifiers
 
 | Identifier | Why | Successors |
