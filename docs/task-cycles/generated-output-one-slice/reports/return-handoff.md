@@ -1,9 +1,0 @@
-# Return-step handoff
-
-Resume the same one author in `C:/Storage/repos/the-way/.runs/worktrees/generated-output-one-slice`, branch `task/generated-output-one-slice`, head `d02e9adfe5ac26e0ac0e6acc8e1f25598afaacdb`. The user's delegation, frozen task, empty guidelines selection under Q5 and both no-risk answers from [author-handoff.md](author-handoff.md) remain in force. Use only this worktree's project methods.
-
-Stage: **return step**, not one of make-change's implementation variants. Read `task-cycle/skill/return_step.md` and `task-cycle/skill/foundation_step.md` whole, using the project make-change entry point as the cycle names, and the skill of each element you write. This is the pre-main the-way route under `agent-instructions/README.md`. Read the task and relevant foundation as those methods require, including WAY-263 and the entries reached during your foundation step; compare them and the part map with the actual files. Do not repeat the whole-foundation search. No invariant is added merely because code behaviour is unprotected.
-
-Evidence: original review [review.md](review.md), your fix [fix.md](fix.md), independent fix review [fix-review.md](fix-review.md): PASS at d02e9ad, no open findings. Orchestrator's `python -B gate/run_tests.py` exited 0 on that commit: 614 tests in 8 directories, every directory passed, 5 Windows platform skips in instruction-files. Do not rerun the full gate. If you must change anything, commit by explicit paths and report the range so it gets fresh review and the required checks; otherwise report no change. Do not push or open a request.
-
-Return the foundation comparison and the meaning sentence for every changed entry in Polish, settled-row mapping, invariant tests/surfaces/Violated marks changed or none, all commands and exit codes, reaches and **Searches not found or unclear**. Do not read cycle.md. Full report: `.runs/task-cycles/generated-output-one-slice/reports/return.md`.
