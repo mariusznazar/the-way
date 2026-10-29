@@ -7521,10 +7521,9 @@ slice, and slices whose changes affect the same output must depend on one anothe
 *Rejected:* only the last slice that changes inputs runs the command — generated files are absent or
 stale in earlier slices; leaving it to the planner to choose which slice runs it — the plan may
 leave the same gap; one pattern for all output directories — it may be too broad or fail to name
-each output location; listing multiple patterns for one output directory — each pattern is meant to
-stand for a single output group; always listing the command's source — slices that do not change it
-would claim an unchanged file; putting the mechanical pattern rule in the plan skill — the
-orchestrator would not read it; repeating that rule in both skills — the copies could diverge.
+each output location; always listing the command's source — slices that do not change it would claim
+an unchanged file; putting the mechanical pattern rule in the plan skill — the orchestrator would
+not read it; repeating that rule in both skills — the copies could diverge.
 
 ## Withdrawn identifiers
 
