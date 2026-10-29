@@ -102,14 +102,13 @@ Write the plan in this form; the script reads the slice headings and the fields 
 |---|---|---|
 ```
 
-- *Foundation entries* lists every entry the foundation step writes before the code: each row of
-  *Settlements to record*, as its row number; each projected entry the task's code makes true or
-  its plan item assigns; each entry the spec names; and an entry the change makes follow, such as a
-  part-map change for a file the change adds. *From* names the row, the projected entry or the
-  spec; *What depends on it* names the slices whose code needs it. An invariant's row names its
-  check too; one agent may write the sentence, its test and the code the test covers (WAY-69).
-  Write `none` under the table where the change writes no entry. The plan names entries; it never
-  words them.
+- *Foundation entries* lists every projected entry the task carries in full, or the part its code
+  makes true, including where the project plan assigns the entry to another task, and every entry
+  its plan item assigns; each row of *Settlements to record*, as its row number; and each entry the
+  spec names. *From* names the row, the projected entry or the spec; *What depends on it* names the
+  slices whose code needs it. An invariant's row names its check too; one agent may write the
+  sentence, its test and the code the test covers (WAY-69). Write `none` under the table where the
+  change writes no entry. The plan names entries; it never words them.
 - A slice is narrow: one goal, the files that goal changes, and checks that run when it is made. Cut
   along what a reviewer can judge alone. Its section is what its agent gets of the plan: the
   orchestrator copies it into the handoff word for word, and the agent does not open the plan
@@ -125,6 +124,7 @@ Write the plan in this form; the script reads the slice headings and the fields 
   input, run the command, handle any obsolete output paths it reports for removal, and commit all
   of its output; it also says not to edit the output by hand. *Change* names the command's source
   only when that slice changes it.
+  A change to the part map needed for a file the change adds belongs to the slice that adds that file.
   *Read* is the whole reading of the slice's agent besides those files, since its handoff carries
   what *Read* names — the passages
   copied word for word, the entries and files by their address (WAY-148, WAY-150):
