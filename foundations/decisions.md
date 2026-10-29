@@ -7431,8 +7431,10 @@ copying each item unchanged leaves the later reader able to compare the record w
 while it is stuck, and some reports are lost; extending the reach account — routine reads would add
 noise and change what that account means; collecting reports only from authors and reviewers — gaps
 from designers and planners would disappear; combining repeated items — one may be hidden by an
-incorrect match; making this temporary or conditional — the reports would not provide a steady basis
-for reducing the process's cost.
+incorrect match; adding the rule to the existing handoff decision — that decision is already long,
+and a second purpose would make the reason for collecting gaps point to a decision chiefly about
+something else; a condition for revisiting the scope — it needs a measure to be settled and an
+obligation to check it in the decision.
 
 ## Withdrawn identifiers
 
