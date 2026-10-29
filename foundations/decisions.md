@@ -7405,6 +7405,35 @@ of the instructions in play, at the cost of recognizing the named moment and ope
 *Rejected:* reading every named file at the start — the agent carries instructions for steps or
 variants it may not take; reading only the skill — an agent at a named step lacks its detailed rules.
 
+### WAY-260 — What does each task-cycle stage report about what it could not find or understand?
+
+Every task-cycle stage's report states each thing the agent looked for and did not find, or found
+unclear, wherever it arose, or `none`; it keeps this separate from the report's account of each
+reach beyond the dispatch. The orchestrator copies every such item other than `none` word for word,
+with the stage name and full report path, into the cycle record's *Process remarks on the-way*,
+without combining repeated items.
+
+- **Scope:** task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-148
+- **Verification:** an agent compares a stage report and cycle record with the decision:
+  - complies: each stage reports its unsuccessful searches and unclear points, or `none`, and the
+    orchestrator copies each item word for word with its stage and report path, keeping repeats;
+  - violates: the report omits unsuccessful searches or unclear points, or the orchestrator omits,
+    edits or combines a reported item.
+- **Origin:** none
+
+*Rationale:* a stage can resolve a gap itself without asking the orchestrator, but the next person
+working on the process still needs to see where the work could not find or understand something.
+Keeping this account beside the report's existing reach account preserves both kinds of evidence;
+copying each item unchanged leaves the later reader able to compare the record with its source.
+*Rejected:* recording only gaps in the-way's instructions — an agent must decide whose gap it is
+while it is stuck, and some reports are lost; extending the reach account — routine reads would add
+noise and change what that account means; collecting reports only from authors and reviewers — gaps
+from designers and planners would disappear; combining repeated items — one may be hidden by an
+incorrect match; making this temporary or conditional — the reports would not provide a steady basis
+for reducing the process's cost.
+
 ## Withdrawn identifiers
 
 | Identifier | Why | Successors |

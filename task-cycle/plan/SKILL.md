@@ -178,7 +178,10 @@ Keep the last report beside the plan as `plan-size.md`.
 
 Write the full report to the dispatch's report path, including the final size-report path,
 guidelines found missing or uncertain, the chosen order's relation to the styleguide example, each
-reach beyond the dispatch, and any questions still open with proposed answers and evidence. Return
+reach beyond the dispatch, **Searches not found or unclear:** each thing you looked for and did not
+find or that was unclear — in the instructions, handoff, task, foundation or product code — or
+`none`, and any questions still open
+with proposed answers and evidence. Return
 under the cycle's file-transfer contract (WAY-148): the status, the plan's path, a one-line check
 result naming failed or unchecked work, and the report's path; concerns stand in the report. The
 status is `done`; `done with concerns` where the report holds a concern, a reach or a guideline

@@ -173,4 +173,5 @@ invariant covers it.
   of review rounds, and the reconciliation and return step not run on that code, or none>
 - Choices within the request: <count and link to the questions table>
 - Writes to the task's backlog entry: <request link and state, or none>
-- Process remarks on the-way: <observed friction and evidence, or none>
+- Process remarks on the-way: <each item from a stage report other than `none`, copied word for
+  word, with the stage name and full report path; keep repeated items separate, or none>
