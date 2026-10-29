@@ -130,7 +130,7 @@ the product has no *Flaky tests* section in its guidelines. When a check has bot
 passing run during the cycle, the request lists it under *Checks* as failed, with the rerun result
 and the number of cycle runs in which it failed and passed. When preparing the request, recover the
 task's parts from its frozen task and changed files through the part map; if the check's file belongs
-to a different part, list it beside findings outside the task's scope (WAY-260). Keep that classification
+to a different part, list it beside findings outside the task's scope (WAY-261). Keep that classification
 as evidence with the check, not as a separate record of selected parts. For an invariant's test the
 change writes, record its failing run and its passing run as the author reports them.
 For a UI change, record the author's or executor's state check and screenshot inspection: affected
@@ -178,10 +178,11 @@ invariant covers it.
   task's scope, from the review of the whole change and every later code review, each with the
   reviewer's words and its place in the code or a note that none is named; checks outside the
   task's parts that failed in a cycle run and passed again, with their file paths, rerun results
-  and failure/pass counts (WAY-260), or none>
+  and failure/pass counts (WAY-261), or none>
 - Blocked by review: <each blocking finding left after the review of its fix with its place and
   reason, what the fix tried, the cycle's time, models and tokens from `stages.md` with the number
   of review rounds, and the reconciliation and return step not run on that code, or none>
 - Choices within the request: <count and link to the questions table>
 - Writes to the task's backlog entry: <request link and state, or none>
-- Process remarks on the-way: <observed friction and evidence, or none>
+- Process remarks on the-way: <each item from a stage report other than `none`, copied word for
+  word, with the stage name and full report path; keep repeated items separate, or none>

@@ -116,6 +116,9 @@ Write the full report to the dispatch's report path. Its first line is `PASS <he
 - each check you ran, as its command and exit code or, for a manual check, its method and what it
   showed; each check you could not run, with the reason;
 - each reach beyond the dispatch (section 1): what, where and why.
+- **Searches not found or unclear:** each thing you looked for and did not find, or that was
+  unclear, wherever it arose — in the
+  instructions, handoff, task, foundation or product code — or `none`.
 
 Return to the orchestrator only the first line, the counts of blocking, Minor and out-of-scope
 findings, and the report path (WAY-148). Where the review cannot proceed without an answer, do not

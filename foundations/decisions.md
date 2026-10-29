@@ -7405,7 +7405,38 @@ of the instructions in play, at the cost of recognizing the named moment and ope
 *Rejected:* reading every named file at the start — the agent carries instructions for steps or
 variants it may not take; reading only the skill — an agent at a named step lacks its detailed rules.
 
-### WAY-260 — What does a task cycle report about a check that fails and passes when run again?
+### WAY-260 — What does each task-cycle stage report about what it could not find or understand?
+
+Every task-cycle stage's report states each thing the agent looked for and did not find, or found
+unclear, wherever it arose, or `none`; it keeps this separate from the report's account of each
+reach beyond the dispatch. The orchestrator copies every such item other than `none` word for word,
+with the stage name and full report path, into the cycle record's *Process remarks on the-way*,
+without combining repeated items.
+
+- **Scope:** task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-148
+- **Verification:** an agent compares a stage report and cycle record with the decision:
+  - complies: each stage reports its unsuccessful searches and unclear points, or `none`, and the
+    orchestrator copies each item word for word with its stage and report path, keeping repeats;
+  - violates: the report omits unsuccessful searches or unclear points, or the orchestrator omits,
+    edits or combines a reported item.
+- **Origin:** none
+
+*Rationale:* a stage can resolve a gap itself without asking the orchestrator, but the next person
+working on the process still needs to see where the work could not find or understand something.
+Keeping this account beside the report's existing reach account preserves both kinds of evidence;
+copying each item unchanged leaves the later reader able to compare the record with its source.
+*Rejected:* recording only gaps in the-way's instructions — an agent must decide whose gap it is
+while it is stuck, and some reports are lost; extending the reach account — routine reads would add
+noise and change what that account means; collecting reports only from authors and reviewers — gaps
+from designers and planners would disappear; combining repeated items — one may be hidden by an
+incorrect match; adding the rule to the existing handoff decision — that decision is already long,
+and a second purpose would make the reason for collecting gaps point to a decision chiefly about
+something else; a condition for revisiting the scope — it needs a measure to be settled and an
+obligation to check it in the decision.
+
+### WAY-261 — What does a task cycle report about a check that fails and passes when run again?
 
 Each failing run of a check remains in the cycle record with its command and result, even if the
 check later passes. When a check has both a failing and a passing run during the cycle, the request
@@ -7440,14 +7471,14 @@ only in products whose testing guidelines name flaky tests — products without 
 the gap; omitting counts — a one-off environment failure and a repeated product defect would look
 the same.
 
-### WAY-261 — What does an author report when a check fails and passes when run again?
+### WAY-262 — What does an author report when a check fails and passes when run again?
 
 When an author's or executor's check fails in a cycle run and passes when run again, the report
 gives the command and exit code of both runs.
 
 - **Scope:** task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-159 · derives from WAY-148 · derives from WAY-260
+- **Relations:** derives from WAY-159 · derives from WAY-148 · derives from WAY-261
 - **Verification:** an agent compares the author's report with the decision:
   - complies: the report gives the command and exit code for the failed run and the passing rerun;
   - violates: the report gives only the successful rerun and leaves the earlier failure out.

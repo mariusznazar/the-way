@@ -121,8 +121,11 @@ Write the full report to the dispatch's report path:
 - each check you ran as its command and exit code, the failing run of each test written first and
   of each invariant's test included; each check you did not run, with the reason;
 - the own-work check of section 3: the requirement, the check and what it showed; when a check
-  failed and passed when run again, both runs as command and exit code (WAY-261);
+  failed and passed when run again, both runs as command and exit code (WAY-262);
 - each reach beyond the dispatch (section 1): what, where and why;
+- **Searches not found or unclear:** each thing you looked for and did not find, or that was
+  unclear, wherever it arose — in the
+  instructions, handoff, task, foundation or product code — or `none`;
 - with the status `questions`, every question you can already see, each with the answer you
   recommend;
 - every choice you made with the way rejected and its cost if wrong, every adaptation of section 4,
