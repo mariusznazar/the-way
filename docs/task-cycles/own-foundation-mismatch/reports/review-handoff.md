@@ -1,0 +1,11 @@
+# Whole-change review handoff
+
+The user invoked the-way-implement-task and delegated intermediate choices. Work in C:/Storage/repos/the-way/.runs/worktrees/own-foundation-mismatch. Read its AGENTS.md and agent-instructions/README.md; this is the-way itself, not a product submodule. Do not read cycle.md.
+
+Stage: whole-change review by a fresh agent that authored none of it. Use this worktree's .agents/skills/the-way-review-change/SKILL.md, following task-cycle/review/SKILL.md in full; read each named file only at its applicable step. Select your own foundation and guidelines as the method gives. Read the complete frozen task docs/task-cycles/own-foundation-mismatch/task.md and the author report docs/task-cycles/own-foundation-mismatch/reports/author-report.md. No spec or plan: one-author route. Review the entire range 76cbe0ea4e766eb9561052355e370d6424c1d32f..876482ee4545749f7e3daa8e8c3a3c607f1682fc. Two files: foundations/decisions.md (+27), task-cycle/review/SKILL.md (+4).
+
+Trust boundary: no. Irreversible operation: no. Human actions: none. Q4 of frozen task authorizes the repository's integration route with empty guidelines selection. No UI. Author's reaches: WAY-07, WAY-35, WAY-64, WAY-135, WAY-145, WAY-148, WAY-169, WAY-171. New entry WAY-263.
+
+Read the user's review playbook before review: C:/Storage/The Brain/The Brain/Notes/Areas/(A) Claude code/playbook_code_review.md (Obsidian rulebook first); search.md before selection or absence claims; scripts.md before scripts. Follow project-prefixed skills only. Grade and scope independently. Make no code changes and run no whole gate; orchestrator owns it. The task's d115159 source remains semantically applicable at base 76cbe0e (only reviewer report requirements changed).
+
+Write full report to docs/task-cycles/own-foundation-mismatch/reports/review-report.md: first line PASS <head>, FAIL <head>, or questions; cover complete task and settlement, source fidelity, checks with commands and exit codes/manual method and result, reaches, and separate Searches not found or unclear. Return the first line, counts of blocking/Minor/out-of-scope findings, and absolute report path. Questions go to orchestrator, not human.
