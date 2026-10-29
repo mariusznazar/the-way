@@ -123,11 +123,14 @@ exit code. Focused checks are not rerun merely to advance the cycle. The orchest
 on the tree that goes into the request and records its command, exit code and the failures it
 names. Name every check that failed or did not run, with the reason; an unrun check is unchecked,
 never passed. Each failing run of a check remains in the record with its command and result, even
-if the check passes when run again. When a check has both a failing and a passing run during the
-cycle, the request lists it under *Checks* as failed, with the result of its rerun and the number
-of cycle runs in which it failed and passed. When preparing the request, recover the task's parts
-from its frozen task and changed files through the part map; if the check's file belongs to a
-different part, list it beside findings outside the task's scope (WAY-260). Keep that classification
+if the check passes when run again. A check that fails in a cycle run and passes when run again
+follows the product's rule on flaky tests (the testing guidelines' *Flaky tests*, WAY-243): rerunning
+serves only to diagnose what makes it flaky, never to make a gate run pass. Apply this rule even when
+the product has no *Flaky tests* section in its guidelines. When a check has both a failing and a
+passing run during the cycle, the request lists it under *Checks* as failed, with the rerun result
+and the number of cycle runs in which it failed and passed. When preparing the request, recover the
+task's parts from its frozen task and changed files through the part map; if the check's file belongs
+to a different part, list it beside findings outside the task's scope (WAY-260). Keep that classification
 as evidence with the check, not as a separate record of selected parts. For an invariant's test the
 change writes, record its failing run and its passing run as the author reports them.
 For a UI change, record the author's or executor's state check and screenshot inspection: affected

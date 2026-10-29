@@ -7455,7 +7455,7 @@ gives the command and exit code of both runs.
 
 *Rationale:* the successful rerun alone hides the failure from the orchestrator, which uses the
 report instead of rerunning focused checks for routine progression.
-*Rejected:* reporting only the successful rerun — the earlier failure disappears from the evidence.
+*Rejected:* unknown.
 
 ## Withdrawn identifiers
 

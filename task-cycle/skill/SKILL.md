@@ -310,7 +310,10 @@ contradicts a decision.
     code and the failures it names under *Verification*, with each check that failed or did not
     run by name; an unrun check is unchecked, never passed. The authors' focused checks are not
     rerun merely to go on (WAY-159); a change, a failure or disputed evidence calls for the affected
-    checks again, by the agent that owns them.
+    checks again, by the agent that owns them. A check that fails in a cycle run and passes when run
+    again follows the product's rule on flaky tests (the testing guidelines' *Flaky tests*,
+    WAY-243): rerunning serves only to diagnose what makes it flaky, never to make a gate run pass.
+    Apply this rule even when the product has no *Flaky tests* section in its guidelines.
 11. Take the return step: the author resumes for it, on its class (WAY-229), or on the planned route
     a fresh agent with `make-change` takes it, on no class cheaper than yours. What it compares and
     writes stands in `task-cycle/skill/return_step.md`, which its handoff names. Where the
