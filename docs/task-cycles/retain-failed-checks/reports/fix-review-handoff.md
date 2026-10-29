@@ -1,7 +1,0 @@
-# Fix review handoff
-
-Resume the independent reviewer in C:/Storage/repos/the-way/.runs/worktrees/retain-failed-checks. Apply the same worktree's the-way-review-change method, review of the fix. User delegation, no spec/plan, frozen task, risk answers (both no), empty product guideline selection and ownership boundaries are unchanged from review-handoff.md. Read the method and relevant files at their steps. Reviewer retains grading and scope authority.
-
-Fix range: 2a46aecaf1c1afdc88eacc2d96ff15256a6274ee..3191d42583d75033b4978ccc6608de8e7dc11e8f. Task base d115159. Read the full fix diff, original review reports/review-report.md, blocking findings reports/blocking-findings.md and reports/fix-report.md, all under docs/task-cycles/retain-failed-checks/. Determine whether either blocking finding remains and whether the fix introduces a Critical or Important finding. The earlier Minor finding remains for the request under WAY-161; do not require it to be fixed merely because a fix occurred. No gate run; no tracked writes; no cycle.md read.
-
-Full report path: docs/task-cycles/retain-failed-checks/reports/fix-review-report.md, first line PASS <sha>, FAIL <sha> or questions. Name all commands and exit codes, unresolved findings in your words and any new reaches. Return first line, commits, one-line checks result and report path. Questions to parent only. This is the one review of the fix allowed by the cycle.
