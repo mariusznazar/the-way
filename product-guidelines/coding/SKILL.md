@@ -75,7 +75,8 @@ writes there is written for a reader who was not in it.
   the split of the set, each kind's exemplar and the status of its files, the rules a script checks
   of each exemplar, each invariant, and the flag by which the linter's test makes a comment that
   turns a rule off have no effect, where the tool has one — each with
-  the human's words and date as its source.
+  the human's words and date as its source, and the ways the human did not choose under it as the
+  task template gives (WAY-134).
 - *Context*: the trial run's evidence — how many reports each rule gave and what the judging agent
   found of them, with the paths of the output and of its verdicts; what the audit found, each `do
   not copy` file with its file and line, a finding the task does not take up marked deferred with

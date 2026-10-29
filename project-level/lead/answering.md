@@ -41,8 +41,9 @@ Read all round questions before choosing canonical IDs. When the same question w
 scope affects several tasks, choose one canonical question, list all affected task numbers,
 conversation paths and IDs, and cross-reference it from the others. Do not merge questions whose
 scope or consequences differ. Store the answer and original provenance under the canonical ID;
-make its affected tasks explicit so fresh refiners can copy that answer and source into each
-of their documents. A cross-reference alone is not a durable answer after conversation cleanup.
+make its affected tasks explicit so fresh refiners can copy that answer, its source and the ways
+the human did not choose into each of their documents. A cross-reference alone is not a durable
+answer after conversation cleanup.
 
 Prepare the project orchestrator's single round package in the files: unresolved questions,
 complete candidate tables and Human-action placement proposals supplied by refiners, complete
@@ -56,5 +57,6 @@ A quotation struck by the human is no longer a settled answer: mark it struck, p
 source for context, and return the question to the human with its affected tasks and ways/costs/
 recommendation. Do not re-answer it with the same quotation. The project orchestrator records
 human answers separately before fresh refiners run; only those refiners transfer resolved answers
-with provenance into task documents. On resumption check those recorded answers and source
-revisions, never infer agreement from an agent's turn result or silence.
+with provenance and the ways the human did not choose into task documents (WAY-134). On
+resumption check those recorded answers and source revisions, never infer agreement from an
+agent's turn result or silence.

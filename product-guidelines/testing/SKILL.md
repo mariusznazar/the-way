@@ -68,7 +68,8 @@ writes there is written for a reader who was not in it.
   exemplar test, each exclusion with its condition of return, the decisions on permissions the rows
   of the authorization table come from, each AI tool the tests use, the mutation tool and the parts
   it runs on or the departure from the rule of mutation testing, and each invariant — each with the
-  human's words and date as its source.
+  human's words and date as its source, and the ways the human did not choose under it as the task
+  template gives (WAY-134).
 - *Context*: what the audit found, each charge with its file and line, a charge the task does not
   take up marked deferred with its reason; for each trust boundary, whether a test of its refusal
   exists; the research's sources where research ran, each page with its version; what the audit

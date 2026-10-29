@@ -65,7 +65,7 @@ writes there is written for a reader who was not in it.
   - each item an audit charge calls for (step 3).
 - *Questions to settle*: each meaning, role, pair, value with its source, rule of states, departure
   from the template and answer on accessibility, each with the human's words and date as its
-  source.
+  source, and the ways the human did not choose under it as the task template gives (WAY-134).
 - *Context*: the audit's charges with their files and lines, a charge not taken up marked deferred
   with its reason; the research's sources where research ran, each page with its version; what the
   audit could not see.
