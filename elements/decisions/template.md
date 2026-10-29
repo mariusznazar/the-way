@@ -34,7 +34,7 @@ particular to a decision (WAY-35).
 - **Origin:** <where the full reasoning lives> | recovered from the code at <place> | none
 
 *Rationale:* <…>
-*Rejected:* <…> | none considered
+*Rejected:* <…> | none considered | unknown
 ```
 
 - The question names a choice someone could answer otherwise; "what do we take from X" or "what
@@ -54,6 +54,14 @@ particular to a decision (WAY-35).
   quotes a source, names no file, script or count, nor what the process's own tools do or lack
   today, and does not tell how the decision was reached (WAY-05, WAY-29). What a decision forces on
   later work stands in a binding sentence or a field, never in prose (WAY-05).
+- `none considered` in *Rejected* says the human weighed no other way; `unknown` says nobody knows
+  what was weighed.
+- The *Rejected* of a decision written from a row of a task's *Settlements to record* holds the
+  ways not chosen that the row's source keeps — under the answer in *Questions to settle* that the
+  row's *Source* names, or in that *Source* itself — each with the cost or the reason kept beside
+  it; `none considered` where the human said so; or `unknown`, written with no question to the
+  human. A way the writer derives — from what the cycle would otherwise guess, from the cost of
+  the way chosen, or from the foundation — never enters it (WAY-134).
 - In the decision of a technology choice a project settles, the lacks of the option chosen and the
   risks the human took with it stand in *Rationale*, each risk marked as a hypothesis, never in
   *Based on* (WAY-138).

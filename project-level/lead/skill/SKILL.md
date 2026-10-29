@@ -123,8 +123,9 @@ project skill with the `the-way-` prefix, never a personal copy.
    before fresh refiner turns. A struck quotation is marked struck and its question returns to
    the human, once for all affected tasks, with ways/costs/recommendation; it cannot be reused as
    a settled answer. Only fresh refiners transfer resolved answers with their original provenance
-   into Questions to settle and change task bodies. Verify this transfer, including canonical
-   answers in every affected task, before advancing or removing a conversation.
+   and the ways the human did not choose into Questions to settle and change task bodies. Verify
+   this transfer, including canonical answers in every affected task, before advancing or removing
+   a conversation.
 
 Read each refiner's exact result and evidence using the companion contract's routing table:
 `questions` repeats answerer/human/refiner turns as needed; `waits for task <n>` records a real
@@ -154,7 +155,8 @@ do not repeat an already settled human choice unless its meaning or source chang
   that acceptance still applies and the readiness checks still hold. A changed body needs renewed
   acceptance, not a reconstructed approval.
 - Before deleting the exact conversation file, verify all resolved answers, original sources,
-  accepted candidate meanings and required information survive in the task document; canonical
+  the ways the human did not choose, accepted candidate meanings and required information survive
+  in the task document (WAY-134); canonical
   answers must survive in every affected task and no remaining conversation may need an answer
   available only here. If transfer is incomplete, resume a fresh refiner first. Delete only this
   file after successful acceptance/transfer, never a directory sweep or recursive cleanup.

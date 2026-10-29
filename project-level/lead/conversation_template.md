@@ -18,7 +18,8 @@ examples and recommendations are never human decisions. Sections without materia
   actor/stage routing; all source paths, questions and previous answers are read here.
 - A refiner follows `project-level/task/skill/SKILL.md` in orchestrated mode. Only it creates or
   changes this task document's body. It writes its numbered turn, questions and human material,
-  checks sources and copies resolved answers with provenance into the task's Questions to settle.
+  checks sources and copies resolved answers with provenance and the ways the human did not choose
+  into the task's Questions to settle.
   It never writes the shared plan, definition or foundation, asks the human, starts a child agent,
   launches implementation or records its own recommendation as acceptance.
 - The answering agent follows `project-level/lead/answering.md`. It fills answers below questions
@@ -37,7 +38,8 @@ Append numbered turns; never erase an unanswered question or replace a human ans
 agent's inference. IDs such as `Q1` are stable within this file; identify a cross-file question by
 its absolute conversation path and ID. For a duplicate choice, keep one canonical question and
 list every affected task/ID in both files. Keep distinct scopes separate. Copy the canonical
-answer itself and its original source into every affected task, not only a link to this file.
+answer itself, its original source and its ways not chosen into every affected task, not only a
+link to this file.
 
 On resumption, read the header and all turns, check source revisions and pending human material,
 then continue from the recorded next actor. An unfinished write, missing source/capability,
@@ -102,7 +104,7 @@ Child-work requests: <needed critique or other delegated work and full paths of 
 
 ### Transfer and final acceptance
 
-Transferred: <question IDs, durable task locations and original sources; or none>
+Transferred: <question IDs, durable task locations, original sources and ways not chosen; or none>
 Final document acceptance: <pending, rejected with requested changes, or human/date/exact words
   accepting the complete document identified by path and revision/content identity>
 Evidence and next step: <reason for result; exact blocking question/task, requested change or
@@ -134,8 +136,9 @@ State/Document cells and logs acceptance; it changes no task body. A requested c
 to a fresh refiner and a changed document needs renewed complete-document acceptance. No task
 becomes ready while a definition gate is open or a required refinement check remains unmet.
 
-Before removing this exact file, verify that all resolved answers and original sources, accepted
-candidate meanings and necessary task information live in the task document. Verify transfer of
+Before removing this exact file, verify that all resolved answers and original sources, the ways
+the human did not choose, accepted candidate meanings and necessary task information live in the
+task document. Verify transfer of
 canonical answers into every affected task and that no surviving conversation relies on an
 answer available only here. Delete only this conversation, never sweep its directory. If transfer
 is incomplete, resume a refiner first. After interruption, reconcile the recorded acceptance,

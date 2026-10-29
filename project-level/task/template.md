@@ -33,6 +33,8 @@ Project relation: independent | plan item: <the project plan's file name> — <t
 
 - <question whose answer is needed to take the task>
   - Answer: TODO
+  - Not chosen:
+    - <a way shown and not chosen> — <the cost the question gave it, or the human's reason>
   - Source: <document location and revision, code file:line and revision, or human/date/words>
 
 ## Context
@@ -96,7 +98,11 @@ the body; the project orchestrator changes only `Status:` after final acceptance
   including answers transferred from a refinement conversation:
   exact document quotation and location/revision, factual code observation and `file:line`/revision,
   or the human's words and date. Code answers only how the product currently is, never how it is
-  to be. A canonical answer shared by tasks is copied with its source into each affected task;
+  to be. Where the human chose among ways a question of decision showed (WAY-113), *Not chosen*
+  keeps under the answer each way shown and not chosen, one line each, with the cost the question
+  gave it or the human's reason in the human's words; an answer transferred from a conversation
+  brings them with it, and an answer with no ways shown has no *Not chosen* (WAY-134). A canonical
+  answer shared by tasks is copied with its source and its ways not chosen into each affected task;
   a link to an ignored conversation or another question alone is insufficient. A struck quotation
   remains unresolved until answered again. This section also keeps a question/reason explicitly
   waiting for another task's result; plan dependencies alone do not delay refinement.
@@ -133,10 +139,14 @@ the body; the project orchestrator changes only `Status:` after final acceptance
   `decision`, `invariant`, `glossary term` or `environment fact`; an environment fact stands only
   where a kept decision or invariant rests on it, and a change of the part map is never a row.
   *Source* names the human's answer, or the line of this document, that carries the settlement.
-  Keep enough of that answer and provenance in this document to survive removal of a temporary
-  conversation; no accepted row may rely only on a deleted file. In orchestrated mode the project
-  orchestrator presents the candidates and required questions against choices through the round
-  package; the refiner records the human's selection without making it itself (WAY-134).
+  For a settlement the human chose among ways shown, *Source* names the question whose *Not
+  chosen* keeps the other ways, or, for a choice made outside *Questions to settle* — such as at a
+  question against a choice while the candidates are cut — holds those ways itself, each with its
+  cost or the human's reason; a decision's *Rejected* is taken from them (WAY-134). Keep enough of
+  that answer, its provenance and its ways not chosen in this document to survive removal of a
+  temporary conversation; no accepted row may rely only on a deleted file. In orchestrated mode the
+  project orchestrator presents the candidates and required questions against choices through the
+  round package; the refiner records the human's selection without making it itself (WAY-134).
   The last column names a concrete thing the cycle would do or choose without the row. A settlement
   that an entry of the current foundation the refinement reads for the task's parts, or a projected
   entry under *Decisions in play*, already states is no row. The cycle writes each row whole,

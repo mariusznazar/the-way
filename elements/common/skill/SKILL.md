@@ -96,8 +96,10 @@ For a task, this step does not run: an accepted row stays a row, and the task's 
 entry (WAY-134). In its place, a row that carries a choice the human made in the task's
 refinement, which the cycle will bring into a binding part without asking, gets the question
 against the answer that "How a skill asks" in `way_of_working.md` gives, unless an exception there
-covers it, at most three questions at a time; write each answer into the row before the next
-question (WAY-113). For a project definition, for each accepted row, in the table's order:
+covers it, at most three questions at a time; write each answer into the row, with the ways that
+question showed and the human did not take in the row's *Source* as
+`project-level/task/template.md` gives, before the next question (WAY-113, WAY-134). For a project
+definition, for each accepted row, in the table's order:
 
 1. Ask what the entry needs and the source does not give, as `way_of_working.md` gives the asking.
    A question that challenges the settlement stands only where both hold: its anchor can be quoted

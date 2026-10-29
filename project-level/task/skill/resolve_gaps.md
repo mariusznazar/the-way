@@ -1,7 +1,9 @@
 # Resolve the gaps
 
 Ask about the most consequential missing answer first, with one sentence explaining what it blocks.
-Put each answer under its question and update the document before asking the next. If the answer is
+Put each answer under its question, with the ways not chosen where the human chose among ways
+shown, as the template's *Questions to settle* gives (WAY-134), and update the document before
+asking the next. If the answer is
 in the approved project definition or foundation, quote the exact wording with its location
 instead of asking the human; an inference is not an approved answer.
 

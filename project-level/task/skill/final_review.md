@@ -4,7 +4,8 @@ When the draft is complete, show it whole. Propose any block to move from Descri
 or remove, with a short reason for each; apply the moves the human accepts. If there is nothing
 worth moving, say so and continue.
 
-Check that every blocking question has an answer, the numbered work is executable, the questions
+Check that every blocking question has an answer, with its ways not chosen where the human chose
+among ways shown (WAY-134), the numbered work is executable, the questions
 brought into this task are accounted for, the decisions in play are present or `none` where the
 reading of the foundation found none, *Settlements to record* opens with its `Candidates:` line
 and holds no row awaiting the human, and *Human actions* reads `none` or has every human action

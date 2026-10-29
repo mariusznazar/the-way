@@ -19,7 +19,9 @@ document's language (WAY-114). A question for the human arises only where the wr
 recommendation, an entry would change the meaning of an approved decision beyond what the accepted
 task document or plan carries (WAY-30), a row's meaning cannot hold — the code shows an exception
 the row does not allow, or the row collides with a current entry other than as the task commands —
-or a row's entry needs a value neither the row nor the work gives; two decisions colliding with no
+or a row's entry needs a value neither the row nor the work gives — save a decision's *Rejected*,
+which takes the ways not chosen that the row's source keeps, `none considered` where the human
+said so, or `unknown`, as the decisions' template gives (WAY-134); two decisions colliding with no
 precedence recorded raise one too (WAY-25). The writer never writes a row with another meaning: it
 returns such a question with the status `blocked`, and the orchestrator opens the blocked draft
 request holding it, as step 13 of `implement-task` gives under *Questions*.
