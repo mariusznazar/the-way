@@ -7488,7 +7488,34 @@ gives the command and exit code of both runs.
 report instead of rerunning focused checks for routine progression.
 *Rejected:* unknown.
 
-### WAY-263 — How does a task plan represent output written together by one command?
+### WAY-263 — Which foundation mismatches are Important findings?
+
+A reviewer grades as Important a finding that a change departs from a foundation
+entry it writes or changes: the change's files do what the entry forbids, fail to
+do what it requires, or restate it differently, including more broadly or
+without a qualification.
+
+- **Scope:** task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-161
+- **Verification:** an agent compares a review finding with the entry the change writes or changes:
+  - complies: the reviewer grades as Important a finding that the changed code does what the entry forbids, omits what it requires, or that another changed file repeats the entry while broadening it or dropping a qualification;
+  - violates: the reviewer grades such a finding as Minor because the code or repeated account says something different from the entry.
+- **Origin:** none
+
+*Rationale:* work that contradicts its own entry, or gives agents a second
+account that changes that entry, leaves the request carrying incompatible rules.
+Treating the second account as Minor allows later work to follow the broader rule
+and keep the conflict alive.
+*Rejected:* only work that directly departs from the entry — a repeated account
+that drops a qualification can still guide later work by a broader rule; only
+entries the change writes, not ones it changes — a changed entry can still
+contradict the part whose wording remains; add the criterion to WAY-161 — its
+general rule would carry a longer, more specific grading criterion; leave the
+criterion only in the skill — the foundation would not hold it and a later
+change could remove it without contradicting an entry.
+
+### WAY-264 — How does a task plan represent output written together by one command?
 
 A deterministic command that writes multiple files as one unit is represented in a slice's
 *Change* by one path pattern for each directory it writes into, each counted as one file. Every
