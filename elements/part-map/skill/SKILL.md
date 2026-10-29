@@ -24,18 +24,8 @@ project skill of that name with the `the-way-` prefix. Follow the steps of
 
 ## 2. Decide what the entry is
 
-- Find what changed in the product and where it is said: the conversation, a document the human
-  names, or the code itself.
-- Name the kind of entry from those the template's "Where entries go" lists; what it lists as no
-  entry of its own is written where that section says.
-- Search the map for an entry that already records the same part or surface: found — a change to
-  it; not found — a new identifier.
-- A part that splits or merges takes identifiers as the template's "Identifiers" says, and every
-  reference to the identifier left behind is rewritten in the same change — the *Scope* of a
-  decision, the *Part* of an invariant, the *Depends on* of another part.
-- The search of the foundation also looks for a decision resting on a boundary this change moves,
-  an invariant naming the part, and a sentence that waits for the map. An entry of the map carries
-  no link to another entry, so each finding becomes a change to an entry or a question in step 4.
+At step 2, read `decide_entry.md` beside this skill to decide what the entry is and what
+the search of the foundation adds for this element.
 
 ## 3. Draft
 
@@ -59,15 +49,12 @@ project skill of that name with the `the-way-` prefix. Follow the steps of
 
 ## 4. Ask, show, write
 
-- Step 4.2: show the entry with the files its patterns claim and the files they take from another
-  part.
-- Step 4.4: what follows from this entry is every entry that names it, when its binding sentence
-  changes, the renames an identifier left behind leaves, and the entries of the foundation found
-  in step 2. A decision that has to change goes through `record-decision`.
+At step 4, read `write.md` beside this skill for what to check, show and write, and what
+follows from the entry.
 
 ## Projected mode
 
-Projected mode runs as `elements/common/way_of_working.md` gives it, with these differences for
+In projected mode, read `elements/common/projected_mode.md`, with these differences for
 the part map (WAY-116):
 
 - Step 2: project only an entry whose every field is known before the code: a change to an
@@ -79,8 +66,4 @@ the part map (WAY-116):
 
 ## The first map of a product
 
-A product with no map gets its parts written one at a time, by the steps above. After the human
-accepts the first part, the current invocation writes it in the new map without invoking
-`update-part-map` again to create that map. Continue until `elements/common/foundation_check.py`
-reports no file git tracks that no part claims and that the map does not leave out on purpose
-(WAY-28).
+When writing the first map of a product, read `first_map.md` beside this skill.

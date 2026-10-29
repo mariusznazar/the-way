@@ -19,25 +19,12 @@ project skill of that name with the `the-way-` prefix. Follow the steps of
 
 ## 1. Read
 
-- Select and read current log entries by "Reading the foundation" in
-  `elements/common/way_of_working.md`. Read the existing entry this operation changes, and inspect
-  the log's numbers and its withdrawn numbers before assigning one. When the log has no entries,
-  ask the human for the product's prefix — except in projected mode, where a new decision has no
-  prefix yet.
+At step 1, read `read.md` beside this skill for the reading this entry needs.
 
 ## 2. Decide what the entry is
 
-- Find what was decided and where it is said: the conversation, a document the human names, or
-  existing code — then the template's section on recovered decisions applies.
-- Apply the template's plan test. When the rule ends with the work, stop and name its place:
-  the plan, or the choices of the cycle record where no plan is written; no entry is written.
-- Name the one question the binding sentences answer. When they answer two independent
-  questions, propose two entries, or keep the question the rest serves.
-- Search the log for that question. A question the log already answers takes an edit of that entry
-  in place, and a new one takes the next number, as the template's "Changing a decision" gives it.
-- The search of the foundation also looks for a collision with another decision, which is a
-  question in step 4 (WAY-25), and for a sentence of another decision that answered this question
-  in passing, which moves as "Changing a decision" says.
+At step 2, read `decide_entry.md` beside this skill to decide what the entry is and what
+the search of the foundation adds for this element.
 
 ## 3. Draft
 
@@ -58,18 +45,13 @@ project skill of that name with the `the-way-` prefix. Follow the steps of
 
 ## Projected mode
 
-Projected mode runs as `elements/common/way_of_working.md` gives it, with these differences for a
+In projected mode, read `elements/common/projected_mode.md`, with these differences for a
 decision (WAY-117):
 
 - Step 1: ask for no prefix for a new decision; the task that writes it into the log asks for the
   prefix when the log has no entries. A projected change of an existing decision keeps its
   number.
-- Step 2: apply the plan test first. An exclusion or a rule that ends with the project stays in the
-  definition, under "Out of scope", and no entry is written (WAY-36, WAY-26).
+In projected mode, read `projected.md` beside this skill for the plan test and
+what follows from the decision.
 - Step 3: the heading reads `#### (new) — <question>` for a new decision, or
   `#### <PREFIX>-<NN> — <question>` for a change of a current one.
-- Step 3: for a technology choice `settle-technology` hands over, the lacks of the option chosen
-  and the risks the human took with it stand where the template's "Decision entry" puts them,
-  beside its rule for *Rationale*.
-- Step 4.4: an invariant the verification names is a projected invariant, which follows from this
-  entry as `way_of_working.md` gives it for projected mode.

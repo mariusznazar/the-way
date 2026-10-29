@@ -19,27 +19,12 @@ project skill of that name with the `the-way-` prefix. Follow the steps of
 
 ## 1. Read
 
-- Select and read foundation context by "Reading the foundation" in
-  `elements/common/way_of_working.md`. Search the files where the word stands rather than recall
-  its uses.
+At step 1, read `read.md` beside this skill for the reading this entry needs.
 
 ## 2. Decide what the entry is
 
-- Find what asks for the entry: a word met in the work — writing an entry, the search of the
-  foundation, a task's return step (WAY-11) — that means in the product something other than a
-  reader who knows its field takes it to mean; a word used in two meanings; a definition to change;
-  a `TODO` in *Not* whose word the human has chosen.
-- Choose the glossary by the template's "Two glossaries". A product session does not edit its
-  pinned copy of the-way; a word of the process it needs goes to the human as a change for the-way
-  (WAY-34).
-- List the word's uses before judging it: search every file git tracks for each form of the word,
-  with line breaks read as spaces so that a multi-word term split across lines is found
-  (`git grep -i -w`, or `rg -U -i -w` over the files `git ls-files` lists, with `\s+` between its
-  words). Read every use; the uses, never a sense of the word, settle what follows.
-- Put the word through the template's "Which words take an entry". A word that takes none: show
-  the human why, with the uses, and stop once they agree.
-- Search the glossary — the-way's too, in a product — for the same meaning: found under this word,
-  a change to that entry; found under another term, a question in step 4; not found, a new entry.
+At step 2, read `decide_entry.md` beside this skill to decide what the entry is and what
+the search of the foundation adds for this element.
 
 ## 3. Draft
 
@@ -52,24 +37,14 @@ project skill of that name with the `the-way-` prefix. Follow the steps of
 
 ## 4. Ask, show, write
 
-- Step 4.1 asks about what the uses leave open: which of two meanings keeps the word and which word
-  the other takes, and which of two terms holds a meaning found under both.
-- Step 4.2: show the entry with its list of uses; for a changed definition, the old definition
-  beside the new one, with the uses whose meaning moves.
-- Step 4.4: what follows, in the same change, is every use whose meaning a changed definition
-  moves, and every use of a meaning moved to another word, rewritten as the template's "A changed
-  meaning" and "Which words take an entry" say. Each goes through the skill of the element its entry
-  belongs to; a sentence of an element's template or of `elements/common/` is rewritten there, as a
-  fix to a rule is. In a product, a use in the-way's files goes to the human as a change for the-way
-  (WAY-34).
+At step 4, read `write.md` beside this skill for what to check, show and write, and what
+follows from the entry.
 
 ## Projected mode
 
-Projected mode runs as `elements/common/way_of_working.md` gives it, with these differences for a
+In projected mode, read `elements/common/projected_mode.md`, with these differences for a
 term (WAY-117):
 
-- Step 2: the candidate words are those the binding sentences of the definition's projected
-  entries use, weighed by the template's "Which words take an entry"; a projected term has no uses
-  on the main branch.
+In projected mode, read `projected.md` beside this skill for choosing the words and
+rewriting their uses.
 - Step 4.3: the heading reads `#### <term>`.
-- Step 4.4 rewrites to the term only the projected entries of the same definition.
