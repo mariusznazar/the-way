@@ -313,7 +313,10 @@ contradicts a decision.
     code and the failures it names under *Verification*, with each check that failed or did not
     run by name; an unrun check is unchecked, never passed. The authors' focused checks are not
     rerun merely to go on (WAY-159); a change, a failure or disputed evidence calls for the affected
-    checks again, by the agent that owns them.
+    checks again, by the agent that owns them. A check that fails in a cycle run and passes when run
+    again follows the product's rule on flaky tests (the testing guidelines' *Flaky tests*,
+    WAY-243): rerunning serves only to diagnose what makes it flaky, never to make a gate run pass.
+    Apply this rule even when the product has no *Flaky tests* section in its guidelines.
 11. Take the return step: the author resumes for it, on its class (WAY-229), or on the planned route
     a fresh agent with `make-change` takes it, on no class cheaper than yours. What it compares and
     writes stands in `task-cycle/skill/return_step.md`, which its handoff names. Where the
@@ -374,12 +377,21 @@ included — read `task-cycle/skill/blocked_finding.md` and follow it.
     commit, with the gate on that commit; whether a spec was written and why, with its link; the
     route and its reason, and after a discarded attempt its reason and the agent's report; the
     plan's link and slices where one was written; what changed and why. *Checks*: the gate's
-    command and exit code, each check that failed or did not run by name, what each own-work check
-    showed (WAY-164), and the user-interface states and screenshot evidence, a screenshot unchecked
-    for no settled way or the failure of a settled one included (WAY-219). The Minor findings of
+    command and exit code, each check that failed or did not run by name, and for a check that
+    failed and passed when rerun the number of cycle runs in which it failed and passed, its rerun
+    result, and (when its file belongs to a part outside the task's parts recovered from its frozen
+    task and changed files through the part map) its listing with its file path beside findings
+    outside the task's scope (WAY-261); what each own-work
+    check showed (WAY-164), and the user-interface states and screenshot evidence, a screenshot
+    unchecked for no settled way or the failure of a settled one included (WAY-219). The Minor findings of
     the review of the whole change and of every later review in one item, and the findings their
     reviewers marked outside the task's scope in another, for the human to choose which become new
-    tasks and to create them (WAY-161). *What this request settles*: each foundation entry the
+    tasks and to create them; that item also names the file paths of checks outside the task's parts
+    that failed in a cycle run and passed again, with their rerun results and failure/pass counts
+    (WAY-261). Recover the task's parts from its frozen task and changed files through the part map
+    when preparing the request, and keep that classification as evidence with the check, not as a
+    separate record of the selected parts.
+    *What this request settles*: each foundation entry the
     change writes or changes, by its identifier and one sentence of its meaning in the task
     document's language, the projected entries and those written from rows of *Settlements to
     record* apart from new ones, and each kept row tied to an entry already stated, with that entry

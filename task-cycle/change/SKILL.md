@@ -120,7 +120,8 @@ Write the full report to the dispatch's report path:
 - the files changed, with added and removed line counts, and the commits;
 - each check you ran as its command and exit code, the failing run of each test written first and
   of each invariant's test included; each check you did not run, with the reason;
-- the own-work check of section 3: the requirement, the check and what it showed;
+- the own-work check of section 3: the requirement, the check and what it showed; when a check
+  failed and passed when run again, both runs as command and exit code (WAY-262);
 - each reach beyond the dispatch (section 1): what, where and why;
 - **Searches not found or unclear:** each thing you looked for and did not find, or that was
   unclear, wherever it arose — in the

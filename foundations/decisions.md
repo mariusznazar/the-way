@@ -7436,6 +7436,58 @@ and a second purpose would make the reason for collecting gaps point to a decisi
 something else; a condition for revisiting the scope — it needs a measure to be settled and an
 obligation to check it in the decision.
 
+### WAY-261 — What does a task cycle report about a check that fails and passes when run again?
+
+Each failing run of a check remains in the cycle record with its command and result, even if the
+check later passes. When a check has both a failing and a passing run during the cycle, the request
+lists it under *Checks* as failed, with the result of its rerun and the number of cycle runs in which
+it failed and passed; when preparing the request, the orchestrator recovers the task's parts from
+the frozen task and its changed files using the part map, and lists the check beside findings
+outside the task's scope when its file belongs to a different part. This applies in every product,
+whether or not its testing guidelines name flaky tests.
+
+- **Scope:** task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-243 · derives from WAY-160 · derives from WAY-161
+- **Verification:** an agent compares a cycle record and request with the decision:
+  - complies: a check that fails during the cycle and passes when run again keeps its failing run
+    in the cycle record, appears in *Checks* with the rerun result and counts of its failing and
+    passing cycle runs, and appears beside out-of-scope findings when its file's part, assigned
+    through the part map, differs from the task's parts recovered from its frozen document and
+    changed files;
+  - violates: a successful rerun erases a prior failure from the record or request; a check is
+    listed as outside the task's parts without the part map; a check's run counts are omitted.
+- **Origin:** none
+
+*Rationale:* a later pass does not undo a failure, and reporting every failure keeps the gate's
+result visible under WAY-243. The counts let the human distinguish an occasional failure from a
+repeated one, while naming an outside check beside out-of-scope findings puts it before the person
+who can decide whether it needs separate work. The cost is that an outside check appears twice in
+the request.
+*Rejected:* listing only checks outside the task's parts as failed — a check in a touched part can
+still expose a defect and would have no route to the request; listing an outside check only beside
+out-of-scope findings — a mistaken part assignment could remove it from *Checks*; applying the rule
+only in products whose testing guidelines name flaky tests — products without that rule would keep
+the gap; omitting counts — a one-off environment failure and a repeated product defect would look
+the same.
+
+### WAY-262 — What does an author report when a check fails and passes when run again?
+
+When an author's or executor's check fails in a cycle run and passes when run again, the report
+gives the command and exit code of both runs.
+
+- **Scope:** task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-159 · derives from WAY-148 · derives from WAY-261
+- **Verification:** an agent compares the author's report with the decision:
+  - complies: the report gives the command and exit code for the failed run and the passing rerun;
+  - violates: the report gives only the successful rerun and leaves the earlier failure out.
+- **Origin:** none
+
+*Rationale:* the successful rerun alone hides the failure from the orchestrator, which uses the
+report instead of rerunning focused checks for routine progression.
+*Rejected:* unknown.
+
 ## Withdrawn identifiers
 
 | Identifier | Why | Successors |
