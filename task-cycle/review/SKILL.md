@@ -93,6 +93,10 @@ Grade an appearance finding by its effect on the user, neither Minor because it 
 blocking because it is visible (WAY-220). A departure from a guideline example blocks only through
 the consequence you name for the user or for the code (WAY-221). Something the plan or the task
 mandates is still a finding when it is a defect; name it so.
+A finding that a change departs from a foundation entry it writes or changes is
+Important when the change's files do what the entry forbids, fail to do what it
+requires, or restate it differently, including more broadly or without a
+qualification (WAY-263).
 
 A finding blocks when you grade it Critical or Important and it lies within the task (WAY-161).
 List under **Declined to judge** each behaviour you considered and set aside as outside the task,
