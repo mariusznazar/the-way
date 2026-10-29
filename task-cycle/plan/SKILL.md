@@ -115,9 +115,18 @@ Write the plan in this form; the script reads the slice headings and the fields 
   (WAY-148); write it so that the agent can make the slice from that section and its *Read* alone.
   If the selected planning route yields only one useful
   slice, keep it as one; never add a slice for its own sake or divide inseparable work.
-- *Change* names every file the slice changes or creates. A change to the part map needed for a
-  file the change adds belongs to the slice that adds that file. *Read* is the whole reading of the
-  slice's agent besides those files, since its handoff carries what *Read* names — the passages
+- *Change* names every file the slice changes or creates. When a deterministic command writes
+  multiple files as one unit, list one path pattern per output directory in *Change*, each counted
+  as one file; for skill entry points, the patterns are `.claude/skills/the-way-*/SKILL.md` and
+  `.agents/skills/the-way-*/SKILL.md`. Every slice that changes an input to the command runs it at
+  the end of its work, handles any obsolete output paths it reports for removal, and commits all
+  of its output; its *Goal* names the command and carries the complete action: after changing an
+  input, run the command, handle any obsolete output paths it reports for removal, and commit all
+  of its output; it also says not to edit the output by hand. *Change* names the command's source
+  only when that slice changes it.
+  A change to the part map needed for a file the change adds belongs to the slice that adds that file.
+  *Read* is the whole reading of the slice's agent besides those files, since its handoff carries
+  what *Read* names — the passages
   copied word for word, the entries and files by their address (WAY-148, WAY-150):
   - the passages of the task, the spec and the plan the slice needs beyond its own section, each as
     `<path>:<first>-<last>` — a whole section, or the lines of the items it needs — followed,

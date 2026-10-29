@@ -93,6 +93,20 @@ class SliceSizeTest(unittest.TestCase):
         self.assertEqual(self.row(output, "2")[4:6], [
             "too large", "changes 11 files, more than 10"])
 
+    def test_change_patterns_each_count_as_one_file(self) -> None:
+        self.file("agent-instructions/skill_entry_points.py", "x")
+        for number in range(6):
+            self.file(f".claude/skills/the-way-skill-{number}/SKILL.md", "a")
+            self.file(f".agents/skills/the-way-skill-{number}/SKILL.md", "b")
+        code, output, _ = self.run_plan(
+            "### Slice 1 — Update generated skill entries\n"
+            "- **Change:** `agent-instructions/skill_entry_points.py` · "
+            "`.claude/skills/the-way-*/SKILL.md` · "
+            "`.agents/skills/the-way-*/SKILL.md`\n")
+        self.assertEqual(code, 0)
+        self.assertEqual(self.row(output, "1")[1], "3")
+        self.assertEqual(self.row(output, "1")[4], "fits")
+
     def test_missing_read_file_leaves_the_slice_unchecked(self) -> None:
         code, output, _ = self.run_plan("### Slice 1\n- **Read:** `absent.md`\n")
         self.assertEqual(code, 1)

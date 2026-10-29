@@ -13,7 +13,8 @@ creates and a field `- **Read:**` naming the files its agent reads, each path in
 fields' lines continued on lines indented below them, and `none` for an empty field. A path in
 *Read* may end in `:<first>-<last>` to count only those lines of the file. Paths are relative to
 DIR, the repository the plan is for, which defaults to the current directory. A path of *Change*
-that names nothing under DIR is a file the slice creates, with nothing to read.
+that names nothing under DIR is a file the slice creates, with nothing to read. A path pattern in
+*Change* counts as one file and is not expanded against files under DIR.
 
 A slice reads every file of *Read* and every file of *Change* that exists, each counted once: a
 whole file where either field names it whole, otherwise the lines its ranges name. Its size to read

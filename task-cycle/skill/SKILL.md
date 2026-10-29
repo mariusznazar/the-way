@@ -267,6 +267,7 @@ contradicts a decision.
         paragraph above and `task-cycle/skill/planning.md` give;
      3. when it returns `done` or `done with concerns`, check mechanically: a clean worktree, a
         non-empty range from the base to its head, the changed files against the slice's *Change*
+        (each path pattern there covers every changed file it matches)
         and, for slice 1, the plan's *Foundation entries*, and each check of the report with its
         command and exit code. Uncommitted work returns to the executor to commit, and a check
         without its command or exit code returns the report for repair (WAY-159); any other
