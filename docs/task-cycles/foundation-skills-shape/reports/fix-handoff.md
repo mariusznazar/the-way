@@ -1,7 +1,0 @@
-# Fix of the whole-change review
-
-Continue in C:/Storage/repos/the-way/.runs/worktrees/foundation-skills-shape, same branch, head 78e47ee9350fdbfcafd014c3317b1e79cfad9ab3. Use this worktree's .agents/skills/the-way-make-change/SKILL.md, variant "the fix of a review's findings". Read the underlying method whole and the named fix file when directed. Do not read cycle.md.
-
-The user has delegated intermediate work through implement-task. Frozen whole task remains .runs/task-cycles/foundation-skills-shape/task.md. No spec/plan. Two starting answers remain no trust boundary and no irreversible action. Same model/class as author. All original sources, selected foundation entries and empty guideline selection still apply. The prior report's additional reaches are WAY-128–133 and facts instruction-density-accuracy, single-rule-compliance and claude-skill-nested-references.
-
-Blocking findings, in reviewer's words: .runs/task-cycles/foundation-skills-shape/reports/findings.md. Full review: reports/review.md under same run directory. Fix only these blocking findings; none are Minor or out-of-scope findings. This is the one permitted fix. Update the required assessment/count materials and their ignored verification helpers along with the correction, and run affected focused checks with command/exit evidence. Do not run full gate. Commit tracked fix with explicit paths. Report to reports/fix.md. Short return names status, commit, one-line checks and absolute report path. Questions to orchestrator.
