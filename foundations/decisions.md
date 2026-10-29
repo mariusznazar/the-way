@@ -3189,19 +3189,22 @@ only by failing it; a local hook as the keeper of every rule — one switch skip
 
 Before a task is ready for its cycle, the human sees a table of candidates found in the task
 document and the conversation that refined it, in the form WAY-115 gives with each settlement in
-the human's words, and the task document keeps the rows the human accepts; the agent refining the
-task presents the table, or, in orchestrated refinement, the project orchestrator as WAY-154 and
-WAY-155 give. A candidate is a decision, an invariant, a glossary term, or an environment fact a
-candidate decision or invariant rests on, and a settlement that a current entry the refinement
-reads for the parts the task touches, or a projected entry the task carries, already states is no
-candidate. The task's cycle writes each kept row whole into the foundation in its foundation step,
-or in its return step where the foundation step missed it, one that no code makes true included,
-keeping its meaning and choosing its wording; where that meaning cannot hold, or the entry needs a
-value neither the row nor the cycle's work gives, the cycle asks the human through a blocked draft
-request rather than write another entry, and otherwise the human accepts the entry's meaning at the
-merge (WAY-114); a kept row whose settlement the cycle's search of the whole foundation (WAY-33)
-finds already stated becomes no second entry, the cycle tying the row to that entry and naming
-both in the request.
+the human's words, and the task document keeps the rows the human accepts and, where the human
+chose among ways shown, each way not chosen, under the answer to its question or, for a choice made
+outside the task's questions, in the source of the row it settles; the agent refining the task
+presents the table, or, in orchestrated refinement, the project orchestrator as WAY-154 and WAY-155
+give. A candidate is a decision, an invariant, a glossary term, or an environment fact a candidate
+decision or invariant rests on, and a settlement that a current entry the refinement reads for the
+parts the task touches, or a projected entry the task carries, already states is no candidate. The
+task's cycle writes each kept row whole into the foundation in its foundation step, or in its
+return step where the foundation step missed it, one that no code makes true included, keeping its
+meaning and choosing its wording, and gives a decision written from a row as its rejected options
+only the ways not chosen that the row's source keeps, `none considered` where the human said so, or
+`unknown`; where that meaning cannot hold, or the entry needs any other value neither the row nor
+the cycle's work gives, the cycle asks the human through a blocked draft request rather than write
+another entry, and otherwise the human accepts the entry's meaning at the merge (WAY-114); a kept
+row whose settlement the cycle's search of the whole foundation (WAY-33) finds already stated
+becomes no second entry, the cycle tying the row to that entry and naming both in the request.
 
 - **Scope:** project-level, task-cycle, elements-common, decisions, invariants, glossary,
   environment-facts
@@ -3214,12 +3217,17 @@ both in the request.
     line with none below it; in an orchestrated round the project orchestrator shows the candidate
     table and required challenge questions while the refiner records the human's answers; the
     cycle's search finds a decision of an untouched part that already states a kept row, and the
-    request names the row with that decision instead of a new one;
+    request names the row with that decision instead of a new one; a decision row whose question
+    keeps two ways the human did not choose gives its decision those two as rejected options, and
+    one whose source keeps none gives `unknown` with no question to the human;
   - violates: the cycle writes the entry with another meaning, or leaves out a kept settlement
     because no code makes it true; the refinement writes whole entries into the task document; a
     kept row repeats a rule a current decision the refinement read states; the cycle writes a
     second entry for a rule its search found already stated; an orchestrated refiner asks the human
-    directly about candidates or substitutes its own acceptance.
+    directly about candidates or substitutes its own acceptance; a task document keeps the human's
+    choice among ways shown without the ways not chosen; the cycle fills a decision's rejected
+    options with ways it derives from what the cycle would otherwise guess, or blocks the request
+    to ask the human for them.
 - **Origin:** none
 
 *Rationale:* a settlement the human makes while a task is refined binds after the merge as much as
@@ -3234,7 +3242,11 @@ finds once the cycle has settled the entry (WAY-33), and a rule already stated k
 meaning that cannot hold goes back to the human before the request because the human settled it,
 and finding the change only at the merge would leave code already written for another meaning. In
 an orchestrated round a single human-facing agent keeps these choices together without making the
-refiner a second channel to the human.
+refiner a second channel to the human. The ways the human saw and did not choose outlive the
+conversation that showed them only in the task document. A rejected option the writer of an entry
+derives reads as one the human weighed, and an agent that proposes it later has to say what has
+changed for a way nobody turned down, so a way kept from the refinement is written and a missing
+one is `unknown`, which tells the reader nobody knows what was weighed.
 *Rejected:* whole entries written while the task is refined, as a project definition projects
 them — a task has no gate to approve their wording, and refining a task would weigh as much as
 defining a project; noting a settlement only when the human states one — a settlement said in
@@ -3242,7 +3254,16 @@ passing in the request is missed, and the agent alone decides what binds; lettin
 or drop a settlement and show the difference in the request — the human's settlement could be
 reversed and seen only once the code is written; decisions and invariants alone — a word whose
 meaning the human settled would be defined by the cycle; a search of the whole foundation when a
-task's candidates are named — it repeats the cycle's search on wording not yet settled.
+task's candidates are named — it repeats the cycle's search on wording not yet settled; the ways
+not chosen of every choice kept in the source of its row — they would have to be carried from the
+question to the building of the table, a cell of the table takes no line break, and an
+orchestrated refiner transfers answers into the task's questions, not into its table; the rule of
+rejected options in the templates alone — this decision would still have the cycle ask the human
+where the template has it write `unknown`, and an agent comparing a change with this decision would
+take `unknown` for a breach; the rule as part of WAY-29 — its question is a decision recovered from
+code, a new rule beside an existing one is a new question (WAY-19), and with this decision still
+having the cycle ask, the two would need a precedence; a decision of its own — one more entry,
+while this one has to be corrected anyway.
 
 ### WAY-135 — When does a task's cycle write a spec?
 
@@ -4006,14 +4027,15 @@ answering agent and the project orchestrator take serialized turns on each file;
 orchestrator hands agents only its path and routing, never relays its contents, and each refiner
 ends its turn as `questions`, `waits for task <n>`, `ready for approval`, `plan change` or
 `obstacle`. Only a refiner changes the task document's body and transfers settled answers with
-their sources into Questions to settle; the project orchestrator records human answers in
+their sources and the ways the human did not choose (WAY-134) into Questions to settle; the project
+orchestrator records human answers in
 conversations, owns ordinary plan updates and their log, and changes only the task document's
 Status line after the human has accepted that complete document, one document at a time. Agent
 turns, questions and explicit waits keep the plan task to refine, a presented human package or
 ready for approval makes it waiting for human, and final acceptance makes both document and plan
-ready for cycle and removes only that conversation after all settled answers and their sources
-survive in the task document; an explicit wait is logged and its task is proposed again when the
-named prerequisite is done.
+ready for cycle and removes only that conversation after all settled answers, their sources and
+the ways not chosen survive in the task document; an explicit wait is logged and its task is
+proposed again when the named prerequisite is done.
 
 - **Scope:** project-level
 - **Based on:** none
@@ -4023,7 +4045,8 @@ named prerequisite is done.
   - complies: parallel refiners write separate documents, a fresh refiner keeps each settled
     answer and source, and interrupted acceptance resumes without guessing human agreement;
   - violates: the project orchestrator rewrites a task body or carries questions in prompts,
-    an agent's readiness stands for human acceptance, or cleanup loses the only settled answer.
+    an agent's readiness stands for human acceptance, or cleanup loses the only settled answer or
+    the only record of the ways the human did not choose.
 - **Origin:** none
 
 *Rationale:* a file-mediated exchange keeps the project orchestrator from becoming a content relay

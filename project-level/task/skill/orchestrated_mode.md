@@ -23,7 +23,8 @@ to guess or overwrite another task.
   as `plan change`, with evidence and the requested change. An unavailable source/capability or
   conflict preventing a valid next step is `obstacle`, with what resolves it.
 - Transfer every resolved answer, including canonical answers shared across tasks, with its
-  original source into Questions to settle before relying on it. Preserve human words separately
+  original source and the ways the human did not choose into Questions to settle before relying
+  on it (WAY-134). Preserve human words separately
   from document quotations and factual code observations; code cannot prescribe required product
   behavior. A human-struck quotation returns as a human question, never a settled requirement.
 - Carry human-accepted candidates whole; remove rejected rows only on the recorded human answer,
