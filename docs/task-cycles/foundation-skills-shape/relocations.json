@@ -1,0 +1,238 @@
+[
+  {
+    "path": "elements/decisions/skill/SKILL.md",
+    "start": 30,
+    "end": 40,
+    "target": "elements/decisions/skill/decide_entry.md",
+    "pointer": "At step 2, read `decide_entry.md` beside this skill to decide what the entry is and what\nthe search of the foundation adds for this element.",
+    "reason": "Several instructions for deciding and searching at step 2; WAY-256. Template references keep entry rules at their source (WAY-35).",
+    "quote": "- Find what was decided and where it is said: the conversation, a document the human names, or\n  existing code — then the template's section on recovered decisions applies.\n- Apply the template's plan test. When the rule ends with the work, stop and name its place:\n  the plan, or the choices of the cycle record where no plan is written; no entry is written.\n- Name the one question the binding sentences answer. When they answer two independent\n  questions, propose two entries, or keep the question the rest serves.\n- Search the log for that question. A question the log already answers takes an edit of that entry\n  in place, and a new one takes the next number, as the template's \"Changing a decision\" gives it.\n- The search of the foundation also looks for a collision with another decision, which is a\n  question in step 4 (WAY-25), and for a sentence of another decision that answered this question\n  in passing, which moves as \"Changing a decision\" says."
+  },
+  {
+    "path": "elements/invariants/skill/SKILL.md",
+    "start": 28,
+    "end": 46,
+    "target": "elements/invariants/skill/decide_entry.md",
+    "pointer": "At step 2, read `decide_entry.md` beside this skill to decide what the entry is and what\nthe search of the foundation adds for this element.",
+    "reason": "Several instructions for deciding and searching at step 2; WAY-256. Template references keep entry rules at their source (WAY-35).",
+    "quote": "- Find the rule and where it is said: the conversation, a decision's verification, the list a\n  task's return step made, a ticket or a requirement of the product, or the product's code when\n  the process enters an existing product.\n- Recovering from what a product does: list what the part does, each item as a candidate\n  sentence with the place in the code that shows it, and let the human choose; only what the\n  human chooses becomes an entry (WAY-28).\n- Apply the test in the decision template's section \"Decision or invariant\": a rule that records\n  a choice goes through `record-decision` first, and the invariant is written as derived from it.\n  A reason found behind recovered behaviour is not recovered as a decision in this change (WAY-28);\n  one the human gives is (`TODO — decision pending: which decision sets that a reason the human\n  gives for recovered behaviour is written as a decision`).\n- When the rule holds more than one sentence can state, propose one entry per sentence; the\n  template says what one sentence may join.\n- Search the file, including its withdrawn identifiers, for an entry this rule would change:\n  found — a change, split, merge or withdrawal, or an entry of its own where the template's \"Where\n  entries go\" gives one; not found — a new identifier.\n- The search of the foundation also looks for a decision whose level 1 verification calls for this\n  rule, and an entry it names whose binding part has changed, to check it against that part again\n  (WAY-33)."
+  },
+  {
+    "path": "elements/glossary/skill/SKILL.md",
+    "start": 28,
+    "end": 42,
+    "target": "elements/glossary/skill/decide_entry.md",
+    "pointer": "At step 2, read `decide_entry.md` beside this skill to decide what the entry is and what\nthe search of the foundation adds for this element.",
+    "reason": "Several instructions for deciding and searching at step 2; WAY-256. Template references keep entry rules at their source (WAY-35).",
+    "quote": "- Find what asks for the entry: a word met in the work — writing an entry, the search of the\n  foundation, a task's return step (WAY-11) — that means in the product something other than a\n  reader who knows its field takes it to mean; a word used in two meanings; a definition to change;\n  a `TODO` in *Not* whose word the human has chosen.\n- Choose the glossary by the template's \"Two glossaries\". A product session does not edit its\n  pinned copy of the-way; a word of the process it needs goes to the human as a change for the-way\n  (WAY-34).\n- List the word's uses before judging it: search every file git tracks for each form of the word,\n  with line breaks read as spaces so that a multi-word term split across lines is found\n  (`git grep -i -w`, or `rg -U -i -w` over the files `git ls-files` lists, with `\\s+` between its\n  words). Read every use; the uses, never a sense of the word, settle what follows.\n- Put the word through the template's \"Which words take an entry\". A word that takes none: show\n  the human why, with the uses, and stop once they agree.\n- Search the glossary — the-way's too, in a product — for the same meaning: found under this word,\n  a change to that entry; found under another term, a question in step 4; not found, a new entry."
+  },
+  {
+    "path": "elements/environment-facts/skill/SKILL.md",
+    "start": 29,
+    "end": 45,
+    "target": "elements/environment-facts/skill/decide_entry.md",
+    "pointer": "At step 2, read `decide_entry.md` beside this skill to decide what the entry is and what\nthe search of the foundation adds for this element.",
+    "reason": "Several instructions for deciding and searching at step 2; WAY-256. Template references keep entry rules at their source (WAY-35).",
+    "quote": "- Find what asks for the fact: a `TODO` in an invariant's *Rests on*, a citation in a decision's\n  *Based on*, a source a task's return step listed (WAY-11), the conversation, or a source found no\n  longer saying what a fact's sentence says.\n- Put it through the template's \"Which facts are written\" and \"The sentence\", and send what\n  fails them where they say — into an invariant through `record-invariant`, into a decision\n  through `record-decision`.\n- A requirement of a catalogue nothing has adopted goes to the human with the question the\n  template's \"Catalogues and obligations\" gives, before any entry; for a binding rule, that\n  question is asked in step 4.\n- Search the file, withdrawn identifiers included, for an entry on the same thing: found — a\n  change, split, merge or withdrawal; found among the withdrawn — show the human why it went: one\n  shown false comes back under a new identifier only if the world has changed since, one withdrawn\n  for want of dependants may come back under a new identifier; not found — a new identifier.\n- For a changed fact, the search of the foundation finds every invariant whose *Rests on* and\n  every decision whose *Based on* names the fact, as the template's \"Changing a fact\" says.\n- A case needing a pending line to fill a field stops the entry, for the human and\n  `record-decision`, before it is written."
+  },
+  {
+    "path": "elements/part-map/skill/SKILL.md",
+    "start": 27,
+    "end": 38,
+    "target": "elements/part-map/skill/decide_entry.md",
+    "pointer": "At step 2, read `decide_entry.md` beside this skill to decide what the entry is and what\nthe search of the foundation adds for this element.",
+    "reason": "Several instructions for deciding and searching at step 2; WAY-256. Template references keep entry rules at their source (WAY-35).",
+    "quote": "- Find what changed in the product and where it is said: the conversation, a document the human\n  names, or the code itself.\n- Name the kind of entry from those the template's \"Where entries go\" lists; what it lists as no\n  entry of its own is written where that section says.\n- Search the map for an entry that already records the same part or surface: found — a change to\n  it; not found — a new identifier.\n- A part that splits or merges takes identifiers as the template's \"Identifiers\" says, and every\n  reference to the identifier left behind is rewritten in the same change — the *Scope* of a\n  decision, the *Part* of an invariant, the *Depends on* of another part.\n- The search of the foundation also looks for a decision resting on a boundary this change moves,\n  an invariant naming the part, and a sentence that waits for the map. An entry of the map carries\n  no link to another entry, so each finding becomes a change to an entry or a question in step 4."
+  },
+  {
+    "path": "elements/decisions/skill/SKILL.md",
+    "start": 22,
+    "end": 26,
+    "target": "elements/decisions/skill/read.md",
+    "pointer": "At step 1, read `read.md` beside this skill for the reading this entry needs.",
+    "reason": "Several reading or initialisation actions at step 1; WAY-256.",
+    "quote": "- Select and read current log entries by \"Reading the foundation\" in\n  `elements/common/way_of_working.md`. Read the existing entry this operation changes, and inspect\n  the log's numbers and its withdrawn numbers before assigning one. When the log has no entries,\n  ask the human for the product's prefix — except in projected mode, where a new decision has no\n  prefix yet."
+  },
+  {
+    "path": "elements/glossary/skill/SKILL.md",
+    "start": 22,
+    "end": 24,
+    "target": "elements/glossary/skill/read.md",
+    "pointer": "At step 1, read `read.md` beside this skill for the reading this entry needs.",
+    "reason": "Several reading or initialisation actions at step 1; WAY-256.",
+    "quote": "- Select and read foundation context by \"Reading the foundation\" in\n  `elements/common/way_of_working.md`. Search the files where the word stands rather than recall\n  its uses."
+  },
+  {
+    "path": "elements/environment-facts/skill/SKILL.md",
+    "start": 22,
+    "end": 25,
+    "target": "elements/environment-facts/skill/read.md",
+    "pointer": "At step 1, read `read.md` beside this skill for the reading this entry needs.",
+    "reason": "Several reading or initialisation actions at step 1; WAY-256.",
+    "quote": "- Select and read facts and their actual decision and invariant dependents by \"Reading the\n  foundation\" in `elements/common/way_of_working.md`, using the complete part map where it exists.\n- A product that starts its facts here writes every fact an invariant's *Rests on* or a decision's\n  *Based on* waits for (WAY-37, WAY-90) — one reaching a pending line going to the human first."
+  },
+  {
+    "path": "elements/invariants/skill/SKILL.md",
+    "start": 70,
+    "end": 76,
+    "target": "elements/invariants/skill/write.md",
+    "pointer": "At step 4, read `write.md` beside this skill for what to check, show and write, and what\nfollows from the entry.",
+    "reason": "Several actions at step 4 and its handoff; WAY-256. Rules stay referred to their template.",
+    "quote": "- Step 4.2: for a changed entry, show the wording on `{fork-point}` beside the new one, with the\n  tests that cite it, and check each of those tests against the new wording.\n- Step 4.4: what follows from this entry is a decision whose level 1 verification gains, loses or\n  renames it, through `record-decision`.\n- After step 4.4 nothing is handed to another agent. Where *Method* reads `test`, the test is\n  written in the change that brings the entry and seen failing once, as the template's \"Method and\n  test\" says; the change names in its request each invariant test it alters (WAY-03)."
+  },
+  {
+    "path": "elements/glossary/skill/SKILL.md",
+    "start": 55,
+    "end": 64,
+    "target": "elements/glossary/skill/write.md",
+    "pointer": "At step 4, read `write.md` beside this skill for what to check, show and write, and what\nfollows from the entry.",
+    "reason": "Several actions at step 4 and its handoff; WAY-256. Rules stay referred to their template.",
+    "quote": "- Step 4.1 asks about what the uses leave open: which of two meanings keeps the word and which word\n  the other takes, and which of two terms holds a meaning found under both.\n- Step 4.2: show the entry with its list of uses; for a changed definition, the old definition\n  beside the new one, with the uses whose meaning moves.\n- Step 4.4: what follows, in the same change, is every use whose meaning a changed definition\n  moves, and every use of a meaning moved to another word, rewritten as the template's \"A changed\n  meaning\" and \"Which words take an entry\" say. Each goes through the skill of the element its entry\n  belongs to; a sentence of an element's template or of `elements/common/` is rewritten there, as a\n  fix to a rule is. In a product, a use in the-way's files goes to the human as a change for the-way\n  (WAY-34)."
+  },
+  {
+    "path": "elements/environment-facts/skill/SKILL.md",
+    "start": 58,
+    "end": 67,
+    "target": "elements/environment-facts/skill/write.md",
+    "pointer": "At step 4, read `write.md` beside this skill for what to check, show and write, and what\nfollows from the entry.",
+    "reason": "Several actions at step 4 and its handoff; WAY-256. Rules stay referred to their template.",
+    "quote": "- Before step 4.1, check mechanically: the address opens and the passage stands there word for\n  word; for a reading, the output quoted is the output of the run the entry names. A failure sends\n  the draft back to step 3.\n- Step 4.2: for a changed entry, show the wording on `{fork-point}` beside the new one, with the\n  invariants and decisions that name it.\n- Step 4.4: what follows is each invariant this fact serves, or whose *Rests on* names it, through\n  `record-invariant`; and each decision naming it, through `record-decision`, each checked against\n  the new sentence. A fact left with nothing naming it goes as WAY-73 and the template's \"Withdrawn\n  identifiers\" say.\n- After step 4.4 nothing is handed to another agent: no check is written for a fact."
+  },
+  {
+    "path": "elements/part-map/skill/SKILL.md",
+    "start": 62,
+    "end": 66,
+    "target": "elements/part-map/skill/write.md",
+    "pointer": "At step 4, read `write.md` beside this skill for what to check, show and write, and what\nfollows from the entry.",
+    "reason": "Several actions at step 4 and its handoff; WAY-256. Rules stay referred to their template.",
+    "quote": "- Step 4.2: show the entry with the files its patterns claim and the files they take from another\n  part.\n- Step 4.4: what follows from this entry is every entry that names it, when its binding sentence\n  changes, the renames an identifier left behind leaves, and the entries of the foundation found\n  in step 2. A decision that has to change goes through `record-decision`."
+  },
+  {
+    "path": "elements/invariants/skill/SKILL.md",
+    "start": 53,
+    "end": 58,
+    "target": "elements/invariants/skill/draft.md",
+    "pointer": "- At step 3, read `draft.md` beside this skill to check the parts and the facts the invariant\n  rests on.",
+    "reason": "Two drafting actions: justify each part and apply the template test to facts; WAY-256.",
+    "quote": "- *Part*: for each part named, say which change there could make the sentence false.\n- *Rests on*: put through the test in the template's section \"Links\" every fact quoted in the\n  *Based on* of the decisions it derives from, and every fact that neither the product nor the-way\n  at the commit it pins writes, such as a standard, a library or a law, found behind what the\n  sentence names, a value it copies, or a meaning the product's rules hand elsewhere, as the part\n  map hands the matching of a pattern to git."
+  },
+  {
+    "path": "elements/environment-facts/skill/SKILL.md",
+    "start": 49,
+    "end": 54,
+    "target": "elements/environment-facts/skill/draft.md",
+    "pointer": "At step 3, read `draft.md` beside this skill to obtain and check the source material.",
+    "reason": "Source retrieval, host reading and archive selection are distinct drafting actions; WAY-256.",
+    "quote": "- *Source*: open the address and copy the passage as the template's \"Source\" gives it; a passage\n  missing there is a question in step 4. For a reading, run on the host a command that only reads\n  its state, and copy its output and the version of the tool; a reading only the human can run is a\n  question in step 4 naming the command. For a page without editions, find the archived copy\n  through the archive's CDX index of captures, not its availability lookup, which misses captures\n  that exist."
+  },
+  {
+    "path": "elements/decisions/skill/SKILL.md",
+    "start": 67,
+    "end": 68,
+    "target": "elements/decisions/skill/projected.md",
+    "pointer": "In projected mode, read `projected.md` beside this skill for the plan test and\nwhat follows from the decision.",
+    "reason": "Prefix handling and the plan-test workflow are steps of projected writing; WAY-117, WAY-256.",
+    "quote": "- Step 2: apply the plan test first. An exclusion or a rule that ends with the project stays in the\n  definition, under \"Out of scope\", and no entry is written (WAY-36, WAY-26)."
+  },
+  {
+    "path": "elements/decisions/skill/SKILL.md",
+    "start": 71,
+    "end": 75,
+    "target": "elements/decisions/skill/projected.md",
+    "pointer": "",
+    "reason": "Technology handover follows the template and sends the following invariant through the projected workflow; WAY-117, WAY-256.",
+    "quote": "- Step 3: for a technology choice `settle-technology` hands over, the lacks of the option chosen\n  and the risks the human took with it stand where the template's \"Decision entry\" puts them,\n  beside its rule for *Rationale*.\n- Step 4.4: an invariant the verification names is a projected invariant, which follows from this\n  entry as `way_of_working.md` gives it for projected mode."
+  },
+  {
+    "path": "elements/glossary/skill/SKILL.md",
+    "start": 71,
+    "end": 73,
+    "target": "elements/glossary/skill/projected.md",
+    "pointer": "In projected mode, read `projected.md` beside this skill for choosing the words and\nrewriting their uses.",
+    "reason": "Choose candidate words and rewrite uses within the definition, projected workflow; WAY-117, WAY-256.",
+    "quote": "- Step 2: the candidate words are those the binding sentences of the definition's projected\n  entries use, weighed by the template's \"Which words take an entry\"; a projected term has no uses\n  on the main branch."
+  },
+  {
+    "path": "elements/glossary/skill/SKILL.md",
+    "start": 75,
+    "end": 75,
+    "target": "elements/glossary/skill/projected.md",
+    "pointer": "",
+    "reason": "Same projected workflow file as candidate selection; the two actions share the mode trigger.",
+    "quote": "- Step 4.4 rewrites to the term only the projected entries of the same definition."
+  },
+  {
+    "path": "elements/environment-facts/skill/SKILL.md",
+    "start": 76,
+    "end": 77,
+    "target": "elements/environment-facts/skill/projected.md",
+    "pointer": "- In projected mode, read `projected.md` beside this skill for reading the source and\n  checking the proposal.",
+    "reason": "Reading the source and mechanical check are two actions of projected writing; WAY-117, WAY-256.",
+    "quote": "- Step 3: the entry is written whole; its source exists today and is read now.\n- Step 4: the mechanical check before step 4.1 runs as above."
+  },
+  {
+    "path": "elements/part-map/skill/SKILL.md",
+    "start": 82,
+    "end": 86,
+    "target": "elements/part-map/skill/first_map.md",
+    "pointer": "When writing the first map of a product, read `first_map.md` beside this skill.",
+    "reason": "The first-map variant has a first-entry write, no recursive invocation and repetition to complete coverage; WAY-28, WAY-256.",
+    "quote": "A product with no map gets its parts written one at a time, by the steps above. After the human\naccepts the first part, the current invocation writes it in the new map without invoking\n`update-part-map` again to create that map. Continue until `elements/common/foundation_check.py`\nreports no file git tracks that no part claims and that the map does not leave out on purpose\n(WAY-28)."
+  },
+  {
+    "path": "elements/common/way_of_working.md",
+    "start": 156,
+    "end": 185,
+    "target": "elements/common/projected_mode.md",
+    "pointer": "When writing an entry projected into a project definition, read `projected_mode.md` beside\nthis file for the differences from the steps above (WAY-117).",
+    "reason": "Only projected writing needs these changes to the shared steps; WAY-117, WAY-256.",
+    "quote": "A project definition projects entries of the foundation before the project is broken into tasks.\nThe skill `find-foundation-entries`, or `define-project` at the readiness gate, hands an entry to\nthe skill of its element in projected mode, naming the definition. The steps above run with these\ndifferences, and each element's skill adds its own\n(WAY-117):\n\n- Step 1: select and read the product's foundation where it exists by \"Reading the foundation\";\n  ask about no file to start and write no part map first — nothing is written into `foundations/`.\n- Step 2: no search of the whole foundation runs for the entry: `define-project` searches it once\n  for the whole definition at the readiness gate (WAY-118). What the element's skill adds within its\n  own file — a search of that file for the same question, entry or part — still applies; what it\n  adds to the search of the whole foundation runs in the search at the gate.\n- Step 4.2: prepare the whole entry and one sentence of its meaning, but do not ask for acceptance\n  before writing the proposal into the definition. Candidate selection accepts what is worth\n  projecting, not the proposal's meaning. The readiness gate shows each projected entry's meaning\n  sentence with the entry beside it and approves the meaning (WAY-114).\n- Step 4.3: write the entry under \"Projected foundation changes\" of the definition, in the\n  subsection of its kind and with the heading `project-level/definition_template.md` gives,\n  followed by its meaning sentence; write nothing into `foundations/`. Run no foundation check, and\n  tell the human that no script checked the entry: the check runs in the task that writes the entry\n  into the foundation.\n- Step 4.4: what follows from the entry is another projected entry, or, where it cannot be written\n  before the code exists, an open question of the definition with its place of resolution. Where\n  `find-foundation-entries` called the skill, report what follows to it, which adds it to its\n  table, and write nothing; otherwise write it through the skill of its element in projected\n  mode. What a skill hands to other agents after step 4.4, such as a check, waits for the task that\n  writes the entry.\n- In every step, a skill this one hands to runs in projected mode on the same definition, and no\n  step writes into `foundations/`: neither an entry nor a row of a list or a scale the element's\n  file holds. Such a row is an open question of the definition, `— resolved in: breakdown`."
+  },
+  {
+    "path": "elements/common/critique/SKILL.md",
+    "start": 23,
+    "end": 25,
+    "target": "elements/common/critique/prepare.md",
+    "pointer": "When invoking a critique, read `prepare.md` beside this skill to start a fresh critic and\nhandle the case where none is available.",
+    "reason": "Only the invoking author prepares an independent critic; WAY-120, WAY-256.",
+    "quote": "If a fresh agent cannot be started without the author's conversation context, say so and perform\nthe same checks yourself as interim work. Do not describe that as an independent review. A set\nintended for collective human review must then wait for an independent critic."
+  },
+  {
+    "path": "elements/common/critique/SKILL.md",
+    "start": 29,
+    "end": 34,
+    "target": "elements/common/critique/prepare.md",
+    "pointer": "When giving the critic its material, follow `prepare.md` beside this skill.",
+    "reason": "Handoff actions are performed by the invoking author; WAY-120, WAY-256.",
+    "quote": "Give the fresh agent the complete proposal or set, its intended moment of use, the full relevant\nsources and applicable rules, and the target file or directory. Ask it to read the target in full\nand inspect the history of an existing knowledge rule before proposing another layer. Do not give\nit the author's defense or a preferred verdict. Ask for each observation to name what it checked,\nwhere the evidence stands and what would have to change. Ask it to state explicitly when a check\nfinds no concern. The critic reports observations; the author makes the verdict."
+  },
+  {
+    "path": "elements/common/critique/SKILL.md",
+    "start": 38,
+    "end": 61,
+    "target": "elements/common/critique/check.md",
+    "pointer": "At the independent check, the author and the critic each read `check.md` beside this skill.",
+    "reason": "Both roles use these checks at the independent-check step; WAY-120, WAY-256.",
+    "quote": "The author and critic each ask:\n\n1. Who benefits, and at what moment would the proposal act? Would it act in the case that prompted\n   it?\n2. How often has the problem occurred? Measure from available cases or records where possible;\n   distinguish real cases from mentions. If it cannot be measured, say so. A future case with a\n   concrete recorded example still deserves review even when past frequency is zero.\n3. What error might the proposed rule or tool create when applied too widely? Does it repair the\n   original problem or move it elsewhere?\n4. Is there a cheaper way to achieve the same effect, including an existing rule, a check, a\n   template change or a conversation at the point of use? Count the cost of running and maintaining\n   the proposal, not only the cost of writing it.\n\nFor a change to instructions, a rule, a playbook or another knowledge file, read the whole target,\nfind when the existing rule entered, and check whether the problem recurred after that rule began\nto apply. A recently added rule is a reason to seek evidence before adding another layer.\nFor a claim about agent behavior, search available session transcripts or run logs, report the\nperiod and count examined, separate true cases from mentions, and give dated examples. If no such\nrecords are accessible, name what you tried; never replace the measurement with an estimate.\n\nFor a proposal derived from sources, also check every substantive claim against its source; name\nmissing answers rather than completing them from memory. For a set, check each item against its\nrequired form and compare items with one another for contradictions and duplicated or missing\nsettlements. Automated format checks may help, but they do not establish fidelity to a source."
+  },
+  {
+    "path": "elements/common/critique/SKILL.md",
+    "start": 65,
+    "end": 70,
+    "target": "elements/common/critique/settle.md",
+    "pointer": "When settling the review, the author reads `settle.md` beside this skill.",
+    "reason": "Only the author verifies observations and settles the verdict; WAY-120, WAY-256.",
+    "quote": "Verify each observation against the source, target and the human's settled answers. State what\nyou accept, reject or could not verify. Never silently change a human settlement because a critic\ndisagrees with it; take the conflict back to the human with the relevant text. Give one explicit\nverdict: apply, rewrite (with the full revised wording), or reject. Show the human the corrected\nproposal and any remaining open questions. The critic does not write files; the workflow that\ncalled this skill makes accepted changes."
+  },
+  {
+    "path": "elements/common/way_of_working.md",
+    "start": 47,
+    "end": 56,
+    "target": "elements/common/missing_element_file.md",
+    "pointer": "- Outside projected mode, where the product has no file of the element's entries, read\n  `missing_element_file.md` beside this file before continuing.",
+    "reason": "Only a missing element file outside projected mode needs the start-file choice, stop on refusal, map assignment and map-first ordering. These are several actions, not the one-instruction exception (WAY-256; task To do 2). The existing TODOs and first-map route remain unchanged.",
+    "need": "At step 1, only when writing to the foundation and the product has no file of this element; never in projected mode",
+    "recognise": "Yes: the step-1 pointer names both the missing-file condition and the projected-mode exclusion; the shared projected override remains unchanged",
+    "quote": "- Where the product has no file of the element's entries, ask whether it starts that file here; if\n  not, stop\n  (`TODO — decision pending: which decision sets that a product starts an element's file only on\n  the human's word`). If so, the same change gives the new file to a part of the map through\n  `update-part-map` (WAY-44). Where the missing file is the part map itself, the current\n  `update-part-map` invocation writes the first map directly, using its \"The first map of a\n  product\" section. Where another element's file is missing and the product has no part map,\n  `update-part-map` writes the map first (WAY-28, for a product the process enters;\n  `TODO — decision pending: which decision sets that the part map is written before another\n  element's first file`)."
+  }
+]

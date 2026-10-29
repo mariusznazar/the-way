@@ -1,0 +1,7 @@
+- Assessment 1: https://github.com/mariusznazar/the-way/pull/52#issuecomment-6484032328
+- Assessment 2: https://github.com/mariusznazar/the-way/pull/52#issuecomment-6484032718
+- Assessment 3: https://github.com/mariusznazar/the-way/pull/52#issuecomment-6484033124
+- Assessment 4: https://github.com/mariusznazar/the-way/pull/52#issuecomment-6484033538
+- Assessment 5: https://github.com/mariusznazar/the-way/pull/52#issuecomment-6484033985
+- Assessment 6: https://github.com/mariusznazar/the-way/pull/52#issuecomment-6484034377
+- Assessment 7: https://github.com/mariusznazar/the-way/pull/52#issuecomment-6484034729

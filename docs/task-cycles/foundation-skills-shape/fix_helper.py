@@ -1,0 +1,12 @@
+﻿from pathlib import Path
+p=Path('.runs/task-cycles/foundation-skills-shape/reshape.py')
+s=p.read_text(encoding='utf-8-sig')
+s=s.replace("cut('elements/decisions/skill/SKILL.md',64,68", "cut('elements/decisions/skill/SKILL.md',67,68")
+s=s.replace('for the prefix, plan test and', 'for the plan test and')
+s=s.replace("cut('elements/common/critique/SKILL.md',16,30", "cut('elements/common/critique/SKILL.md',23,25")
+s=s.replace("cut('elements/common/critique/SKILL.md',34,40", "cut('elements/common/critique/SKILL.md',29,34")
+s=s.replace("cut('elements/common/critique/SKILL.md',44,65", "cut('elements/common/critique/SKILL.md',38,61")
+s=s.replace("cut('elements/common/critique/SKILL.md',69,75", "cut('elements/common/critique/SKILL.md',65,70")
+s=s.replace("body=body.replace('`way_of_working.md` gives it for projected mode'", "body=body.replace('`way_of_working.md` gives it for projected mode'")
+s=s.replace("if target.endswith('environment-facts/skill/projected.md'):", "if target.endswith('part-map/skill/first_map.md'):\n        body=body.replace('by the steps above', 'by the steps of this skill')\n    if target.endswith('environment-facts/skill/projected.md'):")
+p.write_text(s,encoding='utf-8',newline='\n')
