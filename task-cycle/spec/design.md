@@ -60,4 +60,6 @@ Before you return, read the spec again for four things and fix what you find:
 
 The designer writes the spec to its path and the full report to the dispatch's report path: the
 questions sent and their answers, the ways weighed and why the rejected ones lost, the result of
-the four checks, and each reach beyond the dispatch, and returns with the status `done`.
+the four checks, each reach beyond the dispatch, and **Searches not found or unclear:** each thing
+it looked for and did not find or that was unclear — in the instructions, handoff, task, foundation
+or product code — or `none`; it returns with the status `done`.

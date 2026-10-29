@@ -21,4 +21,6 @@ broke besides.
 
 ## Return
 
-The reviewer writes its report, each reach included, to its own path and returns its first line.
+The reviewer writes its report, each reach included, and **Searches not found or unclear:** each
+thing it looked for and did not find or that was unclear — in the instructions, handoff, task,
+foundation or product code — or `none`, to its own path and returns its first line.

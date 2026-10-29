@@ -68,6 +68,8 @@ with the evidence and stop.
 The cycle writes only in the task's worktree and changes nothing outside the product repository;
 reading outside it stays with the agent (WAY-140). A remark about the-way, the user's agent
 instructions or another repository goes into the record's process remarks, never into the request.
+For each stage report, copy every item under **Searches not found or unclear** that is not `none` word for word into
+those remarks, with the stage name and full report path; keep repeated items separate (WAY-260).
 The one exception is the cycle's own account of its request: in the task's entry in the backlog the
 product names (WAY-107), the cycle may add the request link and set the task's state.
 
@@ -169,9 +171,10 @@ sleep between checks. Record the mechanism and any limit.
 
 Each agent writes its full report to its report path as its method gives it and returns its status,
 its commits, a one-line check result naming what failed or did not run, and the report's path; its
-questions and concerns, and each reach beyond its handoff, stand in the report (WAY-148). In every
-report read its checks and the reaches it names; read the rest of it where the status is other than
-`done`. A reach shows where your selection fell short: add what it found to the handoffs that
+questions and concerns, each reach beyond its handoff, and **Searches not found or unclear** — each
+thing looked for and not found or unclear, or `none` — stand in the report (WAY-148, WAY-260). In
+every report read its checks, reaches and searches; read the rest of it where the status is other
+than `done`. A reach shows where your selection fell short: add what it found to the handoffs that
 follow. Under `make-change` the status is `done`, `done with concerns`, `questions`, `returned` or
 `blocked`; under `plan-task` it is `done`, `done with concerns`, `questions` or `returned`; under
 `review-change` it is the report's first line, `PASS <sha>`, `FAIL <sha>` or `questions`; under
