@@ -1,2 +1,0 @@
-pieces exact=50 listed=20 problems=1
-unmatched: **Choose.** The human chooses each; never choose alone (WAY-123).

@@ -1,1 +1,0 @@
-pieces exact=51 listed=20 problems=0
