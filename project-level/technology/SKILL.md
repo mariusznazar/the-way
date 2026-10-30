@@ -13,157 +13,42 @@ technologies
 (WAY-123). The form and rules of the Technology section — which choices it lists, its markers, the
 weighing and the tests of options — stand in `definition_template.md`; how a skill asks stands in
 `elements/common/way_of_working.md`; the critique stands in `elements/common/critique/SKILL.md`;
-this skill holds the order of the work.
+this skill holds the order of the work and the rules that hold across it, and a file beside it
+holds the work of each step.
 
 This skill lives in `project-level/technology/` of the-way. In the-way itself, the-way is the
 checkout or worktree the session works in, the directory `git rev-parse --show-toplevel`
 prints in the session's working directory; in a product, it is the product's pinned `.the-way`. The
-project level's directory, `project-level/`, is there, and each skill named below is the project
-skill of that name with the `the-way-` prefix.
+project level's directory, `project-level/`, is there, and each skill named in this skill or in a
+file beside it is the project skill of that name with the `the-way-` prefix.
 
 The step writes into the definition only, never into the product's foundation
 (WAY-106).
 
+The comparison of a choice is written to `.runs/technology/<choice>.md`, the choice's name in lower
+case with hyphens for spaces, which the product's Git ignores.
+
 ## 0. Start or resume
 
-- Read the definition whole, `definition_template.md` in full, the section "How a skill asks" of
-  `elements/common/way_of_working.md` and `elements/common/critique/SKILL.md`.
-- Where "Projected foundation changes" reads `TODO` or holds its working table, the step that finds
-  entries has not ended: return to `define-project` step 5.
-- Select and read the product's current foundation by "Reading the foundation" in
-  `elements/common/way_of_working.md` (WAY-150). Include every current decision that holds or
-  constrains a listed technology choice; refresh the selection as the list takes shape.
-- Where "Technology" reads `TODO`, begin with step 1.
-- Where it holds a list, first take the look step 1 gives at the logs, the interface and the
-  development data, add each matter it finds missing as an item ending `— open`, and, where it adds
-  one, show the list again as step 1 does before going on (WAY-121). A definition the gate has
-  approved does not come back to this step for these matters.
-- Where it holds an item ending `— open`, look first under "Projected foundation changes" for a
-  decision written for that choice; where one stands, end the item `— projected: <its question>`.
-  Then show the list, ask whether it still holds, and resume step 2 with the open items and the
-  preferences written under them; a report of an open choice under `.runs/technology/` that reads
-  `critique: passed` is reused, and the research of the others starts again.
-- Where it holds a list with no open item, go to step 3.
+Read `start.md` beside this skill. Where the Technology section holds a list, read
+`running_product.md` beside this skill too, and `list.md` beside this skill when the look it gives
+adds an item to the list.
 
 ## 1. List the choices
 
-- From "In scope", "Deliverables", "Inputs and constraints", "Open questions" and the projected
-  decisions, list the technology and architecture choices the project needs, by the rule of the
-  template's Technology section: a choice whose later settling could change how the work is cut
-  into tasks, or that adds something the product has to run, pay for or back up
-  (WAY-121).
-- Then, where the project brings behaviour a user sees in the running product, look at the three
-  matters of an agent's way to the running product — its logs, its interface and its development
-  data — by the exception the template's Technology section gives. For each, look for a decision of
-  the foundation that settles it for that behaviour, reading what the matter asks as the template
-  gives it (WAY-165): where one stands, the matter is not listed; otherwise list it as a choice of
-  its own, even where its answer adds nothing to run, pay for or back up, or the product has none of
-  what the matter names. A matter listed is settled like any other choice from here on
-  (WAY-121).
-- Name each choice in the language of the definition by what the product needs it for — "where
-  the accounts and saved games are kept" — never by a technology. A way of logging in is listed as
-  its method; the library that implements it, where the code needs one and the rule takes it, is a
-  choice of its own.
-- For each, find what settles it: a decision of the product's foundation, `held by`; a projected
-  decision of this definition, `projected`; nothing, `open`. A decision that settles the choice in
-  a sentence about something else still holds it; name that decision. A decision of the foundation
-  the project changes no longer holds the choice: where the definition projects its edit, the item
-  is `projected` with that heading's question; otherwise it is `open`.
-- Write the list into "Technology" in the form the template gives, and set the status line to
-  `definition — open: Technology`, before asking.
-- Show the list, with one sentence for each item saying why the project needs it, and ask the
-  human to confirm it, add to it or strike from it. In the same message ask, as one question of
-  assessment for the whole list, whether the human has a preference or a constraint for any open
-  choice; "I do not know" is an answer. Write the answers, a preference as a nested item under its
-  choice.
-- With no open item, say so in one sentence and go to step 3.
+Where the Technology section reads `TODO`, read `list.md` beside this skill, and `running_product.md`
+beside this skill where the project brings behaviour a user sees in the running product.
 
 ## 2. Settle the open choices
 
-The research of every open choice that depends on no open choice starts as soon as the list is
-confirmed, all at once, as one wave; a choice that depends on another — the library a server's code
-calls for logging in, on the language of that server — starts in a later wave, once every choice it
-depends on is settled (WAY-122). Write each dependency as a nested item under the choice that
-waits, so that a resumed step finds it.
-
-1. **Research.** Give each choice of the wave to a fresh agent of its own, all at once, with the
-   definition, the choice and the preferences under it, the template's Technology section, and the
-   binding sentences of every decision the Technology list names `held by`. Each finds the options
-   in their documentation, starting from what the definition needs of the choice, never from a fixed
-   list of stacks, not even as a hint, and gives each option its source: a page of its documentation
-   with its version (WAY-122). An option the human named enters the comparison. Where the definition
-   already settles the choice in the human's words — a constraint under "Inputs and constraints" —
-   that settlement is the only option sought, and it is weighed like any other.
-2. **Weigh.** For each option the project's code is written in or against, the agent reads off
-   its documentation and its public record of use the properties the template's Technology section
-   lists, citing for each the page it was read from. An option lacking one stays in the comparison,
-   each lack said as what it means for the product; an option with no documentation or with a
-   project no longer maintained is left out with one line saying which, unless the human named it
-   or the definition holds it as a constraint — then it stays, with that line said as a lack
-   (WAY-122).
-3. **Consequences.** For each option kept, the agent says what it costs, where it runs, what
-   keeping it running takes and what changing it later costs; every difference claimed between the
-   options cites its source (WAY-123). In a choice of an agent's way to the running product, it also
-   says for each option whether an agent can use it, and an option an agent cannot use stays in the
-   comparison with the lack "an agent does not check the running product this way" (WAY-166). It
-   writes the comparison to
-   `.runs/technology/<choice>.md`, the choice's name in lower case with hyphens for spaces, which
-   the product's Git ignores, and ends.
-4. **Critique.** Give one fresh agent, following `critique`, the whole comparison of a choice, its
-   sources and the definition, as soon as that comparison is written, and ask it to refute every
-   claimed difference no source supports. Verify each observation and give your verdict; correct the
-   comparison by the verdicts, then end the report with the line `critique: passed`. Where no fresh
-   agent can run, neither the research nor the comparison goes on: stop and say so (WAY-122,
-   WAY-120).
-5. **Show.** Once every comparison of the wave reads `critique: passed`, form the recommendation
-   of each choice and the weak point of the option recommended, anchored in the definition or a
-   source of the comparison. A difference with no consequence for the product decides nothing;
-   where none remains, recommend the simplest and cheapest option (WAY-123). For a place to run,
-   where more than one option is the simplest and cheapest, recommend of those the one an agent
-   works with best, by the template's rule (WAY-137). In a
-   choice of an agent's way to the running product, the recommendation passes over an option an
-   agent cannot use (WAY-166). Then give one
-   fresh agent for the wave the option recommended for every choice of the wave, one a constraint
-   of the definition settles included, with the definition and the comparisons, and ask it to run
-   on each a devil's advocate, a pre-mortem and a search for unknown unknowns: what choosing that
-   option could break. A choice the list names `held by` is never tested (WAY-138). Write the
-   risks the tests give into the choice's report, `.runs/technology/<choice>.md`, so that a
-   resumed step finds them, as step 6 needs.
-   Then give one fresh agent, following `critique`, the whole table with the
-   risks and the definition, telling it that the risks are hypotheses with no source rather than
-   differences claimed between options, so it does not strike them, and ask it for what one choice
-   of the table contradicts in another; verify each observation (WAY-120, WAY-138). Then show the
-   wave together, in one table: for each choice, the options by their consequences, the lines of
-   the options left out, a recommendation, the weak point of the option recommended, and beside
-   that option the risks the tests gave, each marked as a hypothesis
-   (WAY-123, WAY-138, WAY-113).
-6. **Choose.** The human chooses each; never choose alone (WAY-123). The human who chooses the
-   option recommended takes the risks shown beside it (WAY-138). A human who answers "you
-   choose" or "I do not know" takes the recommendation; write it as the human's choice. The
-   recommended option taken as offered passes without a further question; any other answer — an
-   option whose weak point the table did not name, an answer in the human's own words, one that
-   adds a reason or a condition — gets one question against it, anchored in those words or the
-   material, the question `way_of_working.md` asks after a choice, asked here and not again
-   (WAY-113). A choice the human leaves unanswered goes into the next table with the risks
-   already shown beside its option recommended, and is not tested again unless that option
-   changes, when the new one is tested (WAY-138).
-7. **Write.** Hand each choice to `record-decision` in projected mode, naming the definition, with
-   the consequences that decided it, the other options with theirs, the source of each claimed
-   difference for its *Based on*, the lacks of a chosen option and the risks taken with it for its
-   *Rationale*, each risk marked as a hypothesis (WAY-138), and whether a question was asked
-   against it; what its step 4.1 would still ask goes into the next table rather than a round of
-   its own. The `Candidates:` line stays as it is. Then end the item with
-   `— projected: <the decision's question>`, narrow under "Open questions" the question the choice
-   settles to what it still asks, removing it once nothing remains, and write both before the next
-   table. Start the next wave: every choice whose every dependency is now settled.
+Where the list holds an open choice, read `settle.md` beside this skill. The research agent's work
+stands in `research.md` beside this skill: you give its path to each research agent, as `settle.md`
+says, and need not read it. Read `elements/common/critique/SKILL.md` when the first critique of a
+comparison or of a table comes.
 
 ## 3. Close
 
-- No item of "Technology" ends `— open`.
-- Run `python -B <the-way>/project-level/readiness_check.py <definition> --before-approval`. A
-  finding of condition g on an item still open goes back to step 2, any other finding of
-  condition g to step 1; any other finding goes back to `define-project`, which names where.
-- Return to `define-project`, which sets the status line to `ready for gate` and leads the gate.
+Where the list holds no open choice, read `close.md` beside this skill.
 
 A definition approved before this step changes in the sections its fingerprint covers, and goes
 through the gate again
