@@ -17,8 +17,9 @@ The step "Start or resume" of the skill `settle-technology`, whose `SKILL.md` li
   not come back to this step for these matters.
 - Where it holds an item ending `— open`, look first under "Projected foundation changes" for a
   decision written for that choice; where one stands, end the item `— projected: <its question>`.
-  Then show the list, ask whether it still holds, and resume the step "Settle the open choices"
-  (`settle.md` beside this file) with the open items and the preferences written
+  Then show the list and ask whether it still holds; where the human adds or changes an item,
+  follow the step "List the choices" (`list.md` beside this file) for it. Then resume the step
+  "Settle the open choices" (`settle.md` beside this file) with the open items and the preferences written
   under them; a report of an open choice under `.runs/technology/` that reads `critique: passed` is
   reused, and the research of the others starts again.
 - Where it holds a list with no open item, go to the step "Close" (`close.md` beside this file).

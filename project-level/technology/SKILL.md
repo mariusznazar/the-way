@@ -32,7 +32,7 @@ case with hyphens for spaces, which the product's Git ignores.
 
 Read `start.md` beside this skill. Where the Technology section holds a list, read
 `running_product.md` beside this skill too, and `list.md` beside this skill when the look it gives
-adds an item to the list.
+adds an item to the list or the human adds or changes one.
 
 ## 1. List the choices
 
