@@ -75,7 +75,7 @@ its steps 1 and 2 — its own `project-level/task/skill/SKILL.md`, the task temp
 `elements/common/way_of_working.md`, the product's foundation as it selected it, and the guidelines
 of the parts the task touches — is not read again. A session that has not read them in this
 conversation — it opened this skill directly, or resumed the work in a new one — goes through
-`refine-task` steps 1 and 2 first (WAY-267).
+`refine-task` steps 1 and 2 first (WAY-266).
 
 ## 1. Recognize
 
@@ -86,7 +86,7 @@ At step 1, read `recognize.md` beside this skill.
 At step 2, which step 1 gives for tests with no testing guidelines yet and for a refresh or an
 extension, read `product-guidelines/testing/template.md` in full and `starting_set.md` beside this
 skill. Where the human has no preference at the first guidelines, and at every extension,
-`starting_set.md` sends you to `research.md`, also beside this skill (WAY-266).
+`starting_set.md` sends you to `research.md`, also beside this skill (WAY-265).
 
 ## 3. Audit
 
@@ -94,7 +94,7 @@ At step 3, where the product has tests and step 1 gave the audit — tests and n
 guidelines, or guidelines refreshed or extended — read `audit.md` beside this skill. Where the
 task's required outcome is itself the first test of a level, or its tests are at a level its cycle
 chooses, read `new_level.md` beside this skill. For either, read
-`product-guidelines/testing/template.md` in full unless step 2 did (WAY-265). Otherwise there is no
+`product-guidelines/testing/template.md` in full unless step 2 did (WAY-256). Otherwise there is no
 step 3.
 
 ## 4. Settle with the human
@@ -102,7 +102,7 @@ step 3.
 At step 4, read `product-guidelines/template.md` in full, `product-guidelines/testing/template.md`
 in full unless an earlier step did, and `settle.md` and `task_document.md` beside this skill. For
 each new tool or library left as a technology question of the task, `settle.md` sends you to
-`new_tools.md`, also beside this skill (WAY-266).
+`new_tools.md`, also beside this skill (WAY-265).
 
 ## 5. Hand back
 
