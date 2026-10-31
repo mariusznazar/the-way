@@ -2635,7 +2635,9 @@ project brings behaviour a user sees in the running product, the step looks at t
 agent's way to the running product — its logs, its interface and its development data — and lists
 as a choice of its own each matter that no decision of the foundation settles for that behaviour,
 even where its answer adds nothing to run, pay for or back up, and even where the product has none
-of what the matter names, whose answer then says what an agent uses in its place.
+of what the matter names, whose answer then says what an agent uses in its place; how a human
+learns of a failure of the running product is no such matter and has an exception of its own
+(WAY-270).
 
 - **Scope:** project-level, decisions
 - **Based on:** none
@@ -2645,15 +2647,17 @@ of what the matter names, whose answer then says what an agent uses in its place
   agent compares the work with the decision:
   - complies: a project that adds an account server lists its store of data and its way of
     logging in, and the definition projects a decision on each; a project that changes only how a
-    screen looks, in a product whose foundation already says how an agent reaches its screens,
-    records that the foundation holds every choice it needs; the first project of a game played in
-    a browser lists the game's logs, its interface and its development data, each as a choice of
-    its own, and projects a decision on each although reading the server's output and opening the
-    game on a local address add nothing to run; a later project of that game, whose new screens
-    an agent reaches as those decisions say, lists none of the three; a command-line tool that
-    keeps no data lists its development data, answered by sample input files kept with its code; a
-    task of a plan needs a store of data its definition missed, and the human settles it in a run
-    at that task's document, the approved definition untouched;
+    screen looks, in a product whose foundation already says how an agent reaches its screens and,
+    where the product runs outside the machine it is made on, how a human learns of a failure,
+    records that the foundation holds every choice it needs; a project that moves a product to a
+    server lists, besides its place to run, how a human learns of a failure, as WAY-270 gives; the
+    first project of a game played in a browser lists the game's logs, its interface and its
+    development data, each as a choice of its own, and projects a decision on each although reading
+    the server's output and opening the game on a local address add nothing to run; a later project
+    of that game, whose new screens an agent reaches as those decisions say, lists none of the
+    three; a command-line tool that keeps no data lists its development data, answered by sample
+    input files kept with its code; a task of a plan needs a store of data its definition missed,
+    and the human settles it in a run at that task's document, the approved definition untouched;
   - violates: the first task of the breakdown chooses the database; a definition reaches the gate
     with a store of data in its scope and no choice of it projected or found in the foundation; a
     project that brings a product's first screen leaves out how an agent operates it because a
@@ -3497,22 +3501,36 @@ foundation hold — they reopen what was settled.
 
 The-way holds no skill of a product, only the list of what a product's deployment skill covers: a
 preview of deployments; where the secrets lie and how they are rotated; rollback, with its number of
-steps and what happens to the data; what the agent does and what the human does; and how to read the
-logs. When a task's outcome deploys the product or changes how or where it runs, the-way's skill
+steps and what happens to the data; what the agent does and what the human does; how to read the
+logs and how long the record lives, between deployments too; and how a human learns of a failure.
+When a task's outcome deploys the product or changes how or where it runs, the-way's skill
 `refine-task` checks, while it refines the task, that the product has a deployment skill covering
 every item of the list, and where it has none or an item is missing, the task gains an item of its
-To do for that work or the human splits that work into a task of its own.
+To do for that work or the human splits that work into a task of its own. For the last two items,
+the check quotes the answer a decision of the foundation or an approved definition the task carries
+already gives, and the task gains the item that writes it into the skill; otherwise it asks the
+human whether to run the step that settles technology at the task (WAY-267), with a note on what
+the skill leaves unsaid, instead of filling the item in, and a skill that records the human's
+refusal covers the item, so the question does not return.
 
 - **Scope:** project-level
 - **Based on:** none
-- **Relations:** derives from WAY-100
+- **Relations:** derives from WAY-100 · derives from WAY-267 · derives from WAY-270
 - **Verification:** an agent compares the work with the decision:
   - complies: refining a task that moves the product to another host finds that the product's
     deployment skill says nothing of rollback, and the task gains an item of its To do that adds
     it; a task that sets up the product's first deployment finds no deployment skill, and the human
-    splits writing one into a task of its own; a task that changes the text of a page is refined
+    splits writing one into a task of its own; a task that moves the product to a server, whose
+    deployment skill says nothing of how long the record lives, finds that a decision of the
+    foundation already answers it, quotes the decision and asks nothing, and the task gains the
+    item that writes the answer into the skill; the same task, with no decision or approved
+    definition answering how a human learns of a failure, asks the human once whether to run the
+    step that settles technology at the task, and a refusal is recorded in the skill, which then
+    covers the item at every later deployment; a task that changes the text of a page is refined
     without the check;
-  - violates: the-way carries a deployment skill for one kind of host; a task that changes where
+  - violates: the-way carries a deployment skill for one kind of host; the check fills in how a
+    human learns of a failure with no choice of the human's and no entry that answers it; the
+    question returns at each later deployment after a refusal recorded in the skill; a task that changes where
     the product runs reaches its cycle with a deployment skill that does not say where the secrets
     lie, and with no item or task for it; the list stands only in a template, and the decision
     points to it.
@@ -3524,10 +3542,21 @@ answer is the same for every product, and a list in a binding sentence gives the
 to check. Knowledge of operating a product written in a document no step reads goes unread however
 concrete it is, while a skill of the product reaches the agent when it prepares a deployment. The
 check comes when a task first needs that knowledge, so the first task that deploys a product grows
-by its deployment skill, unless the human splits that work off.
+by its deployment skill, unless the human splits that work off. The record's life and the way a
+human learns of a failure are two items of the list because a skill that says only where the logs
+are leaves a product whose record dies with each deployment, and whose maker learns of a failure
+from its users, looking complete; the choice stays the human's, so the check asks the human before
+the step runs and does not fill the item in, and where an entry already holds the answer the human
+meets it as a quotation in the task document. The step's own look at the logs stays as it is
+(WAY-121): this list reaches a product whose definition is already approved, when a task deploys it.
 *Rejected:* a deployment skill carried by the-way — what to run and where differs for every
 product; a document of operations kept beside the product — no step reads it, so it goes stale
-unread; the list in a template alone — nothing binds the refinement to check it.
+unread; the list in a template alone — nothing binds the refinement to check it; adding the logs
+and the failure choice to the step at a task that chooses a place to run — the question comes in
+the step with no extra stop, but WAY-267 gains an exception, rules are needed on an agent opening a
+decision and on waiting for the place to run, and a product still needs the human's note; the
+question at every later deployment after a refusal — one question each time, and an exception to
+this decision.
 
 ### WAY-140 — How does a task change something outside the product's repository?
 
@@ -4421,35 +4450,48 @@ would attack its own work before review.
 ### WAY-165 — What must an answer to each matter of an agent's way to the running product settle?
 
 Of the matters of an agent's way to the running product, the logs ask where the record of what the
-running product does goes and how an agent reads it, and the interface asks how an agent operates
-the product as its user does — through a screen in a browser, a call to its API or a command in a
-terminal — and how it sees what the product answers. The development data asks where the data
-comes from on which an agent checks the product's behaviour outside production, and how an agent
-brings that data to the state a check needs. Data set up from scratch and a dedicated test
-environment that persists are both options of that choice.
+running product does goes, how long that record lives, between deployments too, and how an agent
+reads it, and the interface asks how an agent operates the product as its user does — through a
+screen in a browser, a call to its API or a command in a terminal — and how it sees what the
+product answers. The development data asks where the data comes from on which an agent checks the
+product's behaviour outside production, and how an agent brings that data to the state a check
+needs. Data set up from scratch and a dedicated test
+environment that persists are both options of that choice, and an entry, a decision of the
+foundation or a projected decision of a definition, that leaves part of what a matter asks
+unanswered does not settle that matter.
 
 - **Scope:** project-level, decisions
 - **Based on:** none
-- **Relations:** derives from WAY-121
+- **Relations:** derives from WAY-121 · derives from WAY-270
 - **Verification:** an agent compares the work with the decision:
   - complies: for a game played in a browser, the logs are answered by an agent reading the output
-    of the server's container, the interface by an agent playing the game in a browser on a local
-    address and reading what the page shows, and the development data by a script that sets up
-    test accounts with a fresh save, a save from the middle of a game and a password reset waiting;
-    for a shop with a large store of data, the comparison of its development data weighs data a
-    script generates, a copy of production without personal data that a human fetches, and a
-    dedicated test environment that persists, each by its consequences;
+    of the server's container, kept in a store that outlives a redeployment, the interface by an
+    agent playing the game in a browser on a local address and reading what the page shows, and the
+    development data by a script that sets up test accounts with a fresh save, a save from the
+    middle of a game and a password reset waiting; for a shop with a large store of data, the
+    comparison of its development data weighs data a script generates, a copy of production without
+    personal data that a human fetches, and a dedicated test environment that persists, each by its
+    consequences; a list written before the record's life was asked, whose logs item stands
+    `— held by` a decision silent on it, has the item end `— open` with that decision nested under
+    it, and the list is shown again with one sentence on what the decision leaves unsaid;
   - violates: the interface is answered by an agent reading the store of data past the
-    application; the development data names where the data comes from but not how an agent reaches
-    a save from the middle of a game; the comparison of the development data leaves out a dedicated
-    test environment that persists because the data has to be set up from scratch.
+    application; the logs are answered by where the record goes and how an agent reads it, with
+    nothing said of whether it outlives a redeployment, and the answer stands as settling the
+    matter; a logs item stays `— held by` or `— projected` on a decision silent on the record's
+    life; an approved definition is sent back to the step because its logs decision is silent on
+    it; the development data names where the data comes from but not how an agent reaches a save
+    from the middle of a game; the comparison of the development data leaves out a dedicated test
+    environment that persists because the data has to be set up from scratch.
 - **Origin:** none
 
 *Rationale:* each answer serves an agent that checks behaviour a user sees in the running product.
-The logs tell the agent what the product did, and the answer says where that record lands, since
-an agent reads only what it can reach. Operating the product as its user does lets the check see
-what a user sees, while reading the store of data past the application shows a state no user meets
-and skips the code in between. A check needs the data in a given state, so the answer says both
+The logs tell the agent what the product did, and the answer says where that record lands and how
+long it lives, since an agent reads only what it can reach: a record that dies with each deployment
+serves a check made right after one and no diagnosis of a failure from before it. An entry that
+answers part of what a matter asks leaves the rest to be improvised in the cycle, so it settles
+nothing, whether its answer is good or not (WAY-270). Operating the product as its user does lets
+the check see what a user sees, while reading the store of data past the application shows a state
+no user meets and skips the code in between. A check needs the data in a given state, so the answer says both
 where the data comes from and how the agent brings it to that state; otherwise the agent of the
 cycle improvises it. A dedicated test environment that persists is in many cases better than data
 set up from scratch for every change, though it brings costs of its own, so neither is ruled out
@@ -7852,6 +7894,86 @@ returned cycle kept elsewhere, out of the reader's sight — the trail to the re
 second place for records has to be kept; the earlier branch reused — its history stays in one
 place, but only a correction reuses a branch, and the discarded cycle's commits enter the new
 request.
+
+### WAY-270 — When does the step that settles technology ask how a human learns of a failure of the running product?
+
+Where a project runs the product outside the machine on which it is made, which holds unless the
+definition or a decision of the foundation keeps the product on that machine, and no decision of the
+foundation settles it, the step that settles technology lists how a human learns of a failure of
+the running product as a choice of its own, even where its answer adds nothing to run, pay for or
+back up; in a run at a task (WAY-267) it enters the list only where the note touches it. No
+definition has to hold this choice, the readiness gate does not check it and an approved definition
+does not come back to the step for it; it is no matter of an agent's way to the running product, so
+whether an agent can read an option is a consequence like any other, and a change to it does not
+open the decision on the logs. A deliberate absence always enters the comparison of this choice,
+though it has no page of documentation, its consequences anchored in the document and in the pages
+of the other options; in the area of this choice this decision prevails over WAY-121, which lists a
+choice by its rule of belonging and the three matters of an agent's way alone, and over WAY-122,
+which leaves out an option with no documentation.
+
+- **Scope:** project-level, decisions
+- **Based on:** none
+- **Relations:** derives from WAY-100 · narrows WAY-121 · narrows WAY-122
+- **Verification:** an agent compares the work with the decision:
+  - complies: a project that moves a product from the developer's machine to a server, whose
+    foundation holds no decision on it, lists how a human learns of a failure as a choice of its
+    own beside its place to run; a definition silent on where the product runs lists it; the
+    comparison holds "no tool for now" beside the tools found, its consequences — the failure
+    learned of from users, and what adding a tool later costs — anchored in the definition and in
+    the pages of the other options, and a deliberate absence the human is shown as the option
+    recommended is tested like any other recommended option (WAY-138); a service whose panel only a
+    human reads is recommended where it wins by consequences, with no lack "an agent does not
+    check the running product this way"; the code a tool's hook-up takes shows as what changing the
+    choice later costs (WAY-123); a product kept on the developer's machine, and a product whose
+    foundation holds a decision on the matter, list nothing, and a definition without the item
+    passes the readiness gate;
+  - violates: the choice is folded into the logs item; the comparison leaves out the deliberate
+    absence for want of a page of documentation; the step passes over an option because an agent
+    cannot read its panel (WAY-166); the readiness gate rejects a definition for lacking the item,
+    or an approved definition is sent back to the step for it; a product kept on the developer's
+    machine gets the item; a run at a task adds the item though its note does not touch it.
+- **Origin:** none
+
+*Rationale:* a record good enough to check a change right after a deployment is not good enough to
+diagnose a failure from before it, and a human who learns of a failure only from users has chosen
+that without knowing it; asking puts the choice before a human who can weigh what it costs. The
+criterion is that the product runs outside the machine on which it is made: a product kept on that
+machine has no user who meets a failure before its maker, and a first deployment needs a place to
+run, a choice that goes through the step whenever nothing settles it, so the question comes with it.
+A definition silent on where the product runs meets the criterion, because the first project of a
+product, whose place to run is not yet chosen, is the case the question exists for; a wrong yes
+costs one item answered by a deliberate absence, once for the product, and a wrong no leaves the
+question to the check of the deployment skill (WAY-139), which reaches only a task that deploys the
+product. The choice stands apart from the logs and from the matters of an agent's way to the running
+product (WAY-165, WAY-166): a change of the tool that collects failures then does not reopen the
+decision on the logs, which WAY-121 rejects, and whether an agent reads an option is an ordinary
+consequence, since a panel only a human reads can be the right choice here. A deliberate absence
+enters every comparison because it costs nothing to run and is a real option, though no page of
+documentation describes it and WAY-122 would leave it out. The step keeps its ordinary mechanism — a
+fresh agent for the choice, options from documentation with a version, consequences, the simplest
+and cheapest option recommended (WAY-122, WAY-123) — with no research skill of its own, so one way
+of researching a choice stays to keep current. The step adopts from lesson m3l5 of the 10xDEVS course
+two questions, how long the record of the running product lives and how a human learns of a failure;
+they bind by this decision, by WAY-165 and by WAY-139, and nowhere else (WAY-100). What the code
+writes to the record and in what form is a question of the code, not of this step; what a tool's
+hook-up takes in code shows as the cost of changing the choice later.
+*Rejected:* the matter as part of the logs item — one item fewer, but a change to the tool that
+collects failures reopens the whole decision on the logs, which WAY-121 already rejects ("it binds
+independent choices together, and a later change to one reopens them all"), and an exception to
+WAY-166 is needed; a fourth matter in the family of an agent's way to the running product — the
+existing mechanism and criterion of entry work, but WAY-166 would pass over a panel only a human
+reads, so an exception is needed anyway, and the family's definition stops fitting, since the matter
+does not speak of an agent checking behaviour; the criterion of the agent's way, that the project
+brings behaviour a user sees — it asks also for products kept on one machine; the first user from
+outside the team as the criterion — a definition records no such moment, and a product can get
+outside users with no new project, so the step does not move and the human learns of a failure from
+them; no new criterion, WAY-121's ordinary rule — a deliberate absence adds nothing to run, so the
+question is not asked until someone thinks of a tool; a research skill of its own for the matter — the
+step already has a mechanism of research, and a second skill would repeat it and drift from it at
+each change; the logs and the failure choice added to the step at a task that chooses a place to
+run — the question comes in the step with no extra stop, but WAY-267 gains an exception, rules are
+needed on an agent opening a decision and on waiting for the place to run, and a product still
+needs the human's note.
 
 ## Withdrawn identifiers
 

@@ -36,8 +36,9 @@ The bullet of `start.md` on reading the foundation stands. In place of its other
   head is reused, and any other starts its research again.
 - Where the list holds no open item, go to *Close* below.
 
-The look of `running_product.md` is not taken, here or at *List*: a matter of an agent's way to the
-running product enters the list only where the note touches it.
+The looks of `running_product.md` and `failure_notice.md` are not taken, here or at *List*: a matter
+of an agent's way to the running product, or the matter of how a human learns of a failure, enters
+the list only where the note touches it.
 
 ## List
 
@@ -59,7 +60,9 @@ running product enters the list only where the note touches it.
 
 Sub-steps 1 to 6 of `settle.md` stand, and:
 
-- WAY-165 and WAY-166 apply where the note touches the logs, the interface or the development data.
+- WAY-165 and WAY-166 apply where the note touches the logs, the interface or the development data,
+  and WAY-270 where it touches how a human learns of a failure; WAY-166 binds the three matters
+  only.
 - A choice the human opened is no longer held, so it is tested.
 - A constraint the task document states counts as a definition's constraint does.
 - Where one run serves several tasks, each research agent also gets the path of each affected task's
