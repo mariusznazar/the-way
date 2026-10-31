@@ -1,7 +1,8 @@
 # What reaches the task document
 
-On the route of one kind, write into the task document only what "The route of one kind" in
-`SKILL.md` gives, of the items below.
+On the route of one kind, take from the items below what concerns that kind, as "The route of one
+kind" in `SKILL.md` gives: its file with the index row, the test of each new invariant it settles,
+its choices and what the comparison found.
 
 - *To do*:
   - write or extend `guidelines/coding.md`, and `guidelines/coding-<kind>.md` for each kind whose

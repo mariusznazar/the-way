@@ -5966,10 +5966,10 @@ trial run of a linter's set and is no audit under WAY-201.
 
 *Rationale:* the first instance supplies the material an exemplar needs, so separating its
 designation would create a circular wait. Existing instances instead need comparison, or the next
-one becomes a model without being judged against what the product already holds. Research and a
-trial run answer a new scope, and neither a first file of a kind nor the comparison of a kind's
-existing files brings one by itself; a task that is an extension for another reason keeps its
-research (WAY-211).
+one becomes a model without being judged against what the product already holds. Without the
+third sentence every task that creates a kind's first file could pull research of all the standing
+checks, and an agent on the comparison goes on improvising and may make a full audit; a task that
+is an extension for another reason keeps its research (WAY-211).
 *Rejected:* blocking every unindexed kind — a genuinely first instance could never arrive;
 designating the next instance regardless of existing code — it bypasses comparison; four modes of
 the coding-guidelines skill left as they were, with the gap described as a proposal — an agent on

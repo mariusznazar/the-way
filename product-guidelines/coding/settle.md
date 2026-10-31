@@ -1,7 +1,7 @@
 # Settle with the human
 
-On the route of one kind, settle only what "The route of one kind" in `SKILL.md` gives, of the
-items below.
+On the route of one kind, settle of the choices and invariants below only what "The route of one
+kind" in `SKILL.md` gives; the critique below stands.
 
 - **New tools.** For each new tool or library left as a technology question of the task, read
   `new_tools.md` beside this skill.
