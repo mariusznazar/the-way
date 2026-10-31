@@ -13,7 +13,9 @@
   - for each level, the fields of its recipe that bind, each with the decision that carries it, the
     template's defaults adopted or departed from (WAY-241);
   - for each level with tests, its exemplar test, and for a new level of step 3 (`new_level.md`),
-    that the task's first test of it becomes the exemplar (WAY-242);
+    that the task's first test of it becomes the exemplar (WAY-242). Where the level of a task's tests
+    is its cycle's choice, the refinement designates no exemplar test: the cycle's author who writes
+    a level's first test proposes its designation at a blocked draft request (WAY-242, WAY-172);
   - each category the product deliberately does not test, with the decision that gives its reason
     and the condition under which it is tested again; a trust boundary is never one (WAY-237);
   - the product's decisions on permissions from which the rows of the authorization table come

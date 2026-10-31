@@ -57,6 +57,9 @@ WAY-124). Using a meaning that a decision of the product's log already carries t
   recommends included, and after a choice that enters a binding part ask the one question "How a
   skill asks" gives. Before first using a term of the field — a level of tests, a double, a
   property test — say in plain words what it means (WAY-174, WAY-113).
+- Extend what exists: the recipes are written for the test tool the product runs, never for a
+  second tool beside it. A new test tool or a library of property tests is a technology choice:
+  record it as a question of the task, never settle it (WAY-248, WAY-121).
 - Write each answer under its question in the task document before asking the next, as
   `refine-task` step 3 gives.
 
@@ -92,10 +95,9 @@ skill. Where the human has no preference at the first guidelines, and at every e
 
 At step 3, where the product has tests and step 1 gave the audit — tests and no testing
 guidelines, or guidelines refreshed or extended — read `audit.md` beside this skill. Where the
-task's required outcome is itself the first test of a level, or its tests are at a level its cycle
-chooses, read `new_level.md` beside this skill. For either, read
-`product-guidelines/testing/template.md` in full unless step 2 did (WAY-256). Otherwise there is no
-step 3.
+task's required outcome is itself the first test of a level, read `new_level.md` beside this skill.
+For either, read `product-guidelines/testing/template.md` in full unless step 2 did (WAY-256).
+Otherwise there is no step 3.
 
 ## 4. Settle with the human
 

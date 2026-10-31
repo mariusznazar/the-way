@@ -19,14 +19,10 @@
     first task that writes the product's tests (WAY-244);
   - tests and no testing guidelines: step 2, and the audit of step 3;
   - a task whose required outcome is the first test of a level whose recipe already stands in
-    `guidelines/testing.md` with an empty *Exemplar*, or whose tests are at a level its cycle
-    chooses: the new-level case of step 3, and no step 2; a level with no recipe yet is an extension
-    (WAY-251), which takes step 2 as well;
+    `guidelines/testing.md` with an empty *Exemplar*: the new-level case of step 3, and no step 2;
+    a level with no recipe yet is an extension (WAY-251), which takes step 2 as well;
   - existing testing guidelines, refreshed or extended: step 2, and step 3, which audits each level
     again.
-- Extend what exists: the recipes are written for the test tool the product runs, never for a
-  second tool beside it. A new test tool or a library of property tests is a technology choice:
-  record it as a question of the task, never settle it (WAY-248, WAY-121).
 
 A refresh updates or corrects accepted guidelines within the scope they already cover,
 including adapting them to a new version of a tool the product uses. An extension covers something

@@ -7281,7 +7281,7 @@ lines of the file. A fragment that some steps of the skill need, not all, stands
 rule of working that the agent has to keep during those steps stays in the skill's `SKILL.md`, and
 text the agent reads or consults, such as a procedure, a list or a template, stands in a file beside
 the skill that each of those steps names, a step after the first having that file read unless an
-earlier step did. Fragments that stand unchanged are not bound by it.
+earlier step did; fragments that stand unchanged are not bound by it.
 
 - **Scope:** instruction-files, decisions, invariants, glossary, part-map, environment-facts,
   elements-common, project-level, product-guidelines, task-cycle
@@ -7578,7 +7578,8 @@ not read it; repeating that rule in both skills — the copies could diverge.
 
 In a skill rebuilt or changed according to WAY-256, the file of a variant that a step's file
 points to is named in the skill's `SKILL.md` at that step as well, with the condition under which
-it is read. Skills whose files stand unchanged are not bound by it.
+it is read. A step's file that stands unchanged, with the variant file it points to, is not bound
+by it.
 
 - **Scope:** instruction-files, decisions, invariants, glossary, part-map, environment-facts,
   elements-common, project-level, product-guidelines, task-cycle
@@ -7594,8 +7595,8 @@ it is read. Skills whose files stand unchanged are not bound by it.
 
 *Rationale:* an agent that reads a skill's `SKILL.md` then sees every file its use may reach and the
 condition of each, and a file reached through another file, which Claude may read in part, is not
-the only way to it. The cost is a file named in two places that must be kept equal, and a skill
-whose files stand unchanged differs from one rebuilt.
+the only way to it. The cost is a file named in two places that must be kept equal, and a step's
+file that stands unchanged, with the variant file it points to, differs from one rebuilt.
 *Rejected:* the variant named only in the step's file, as in a layout with two levels — the layout
 stays at odds with the rule of references one level deep, and the rule has to change or a reviewer
 reports it in every later skill; the variant left in the step's file — every use reads variants it
