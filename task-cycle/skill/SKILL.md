@@ -215,7 +215,9 @@ No stage of the cycle settles a reserved choice, you included (WAY-268), and no 
 one (WAY-135). Where an agent returns `reserved`, or where the task at step 4, an agent's question
 or a report of `returned` needs a language, a framework, a library, a store of data, a way of
 logging in or a place to run that the task, the spec and the foundation do not settle, read
-`task-cycle/skill/reserved_return.md` and follow it before you answer or go on.
+`task-cycle/skill/reserved_return.md`, which checks the choice against
+`project-level/technology/reserved_choices.md` of the pinned the-way, and follow it before you
+answer or go on.
 
 6. Where step 4 found an open design choice, or an agent returned one (below), dispatch a fresh
    designer with `write-spec`, the frozen task, the choice and, after a discarded attempt, that
