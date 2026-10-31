@@ -8,7 +8,8 @@ its plan, and what each slice's handoff carries.
 Only on the planning route, dispatch a fresh planner with `plan-task`, the frozen task, any
 reviewed spec and the checks the move of the pin carried (step 2). It writes `plan.md` and its
 size report `plan-size.md` in the record's directory and returns before any slice is made;
-where it returns an open design choice instead, continue at step 6 with its report. Review the
+where it returns an open design choice instead, continue at step 6 with its report, and where it
+returns `reserved`, read `task-cycle/skill/reserved_return.md` and follow it. Review the
 plan for coverage of every item of the task, every row of *Settlements to record*, every
 projected entry the task carries and every check the move of the pin carried, fidelity to the
 task's sources, no code, checks that can actually run and a size report in which every slice

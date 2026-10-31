@@ -23,15 +23,17 @@ not authorize running it.
 
 - Open design choice at start: <none — the entries and ways weighed and why each is settled |
   the choice, where it shows and the ways open>
+- Reserved choice: <none | the choice, where it showed and the limb of the rule that takes it>
 - Execution route and reason: <one author without a plan | planned slices; orchestrator's
   judgment from the task at the start, and repeated after any reviewed spec>
 - Author: <agent, class and model of the one author, for its code, foundation entries and return
   step, a class other than `cheaper` with its reason; its resumptions; any replacement during a fix
   and its reason; planned executors appear in Slices>
 - Plan: <none on the one-author route | number of slices and size-report verdicts>
-- Discarded attempt: <time, open design choice or oversized one-author change, report, last
-  commit and changed files including foundation entries, reset base, discard confirmation and
-  next route; after an open choice, spec review and renewed judgment; after size, planning | none>
+- Discarded attempt: <time, open design choice, reserved choice or oversized one-author change,
+  report, last commit and changed files including foundation entries, reset base, discard
+  confirmation and next route; after an open choice, spec review and renewed judgment; after a
+  reserved choice, the blocked draft request; after size, planning | none>
 - Slices returned too large: <for each, the slice, its agent's report, its last commit and files,
   reset commit, earlier completed/reviewed slices retained, and slices it was split into | none>
 - Agent waiting: <native completion notification or blocking tool; live-contract limit and any

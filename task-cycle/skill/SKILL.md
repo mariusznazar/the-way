@@ -93,7 +93,10 @@ product names (WAY-107), the cycle may add the request link and set the task's s
    In the same reading, settle whether the task leaves an open design choice (WAY-135). A row of
    *Settlements to record* or a projected entry the task carries settles its entry, an invariant's
    included; an entry that follows from the change with no way left open, such as a part-map line
-   for a file the change adds, is no choice. Where one stands, the cycle writes a spec (step 6).
+   for a file the change adds, is no choice. Judge first whether such a choice is a reserved choice,
+   as "Design and execution choice" gives: then no spec is written, no route is judged, and once
+   this step and step 5 have set up the branch and the record, `task-cycle/skill/reserved_return.md`
+   takes over. Where any other open design choice stands, the cycle writes a spec (step 6).
    Otherwise judge from the task document, and from the checks the move of the pin broke where step
    2 moved it, whether one agent can hold the change (WAY-136): if so, select one author without a
    plan and set its class of model by the measure a planner uses for a slice (WAY-229) — `cheaper`
@@ -177,15 +180,16 @@ questions and concerns, each reach beyond its handoff, and **Searches not found 
 thing looked for and not found or unclear, or `none` — stand in the report (WAY-148, WAY-260). In
 every report read its checks, reaches and searches; read the rest of it where the status is other
 than `done`. A reach shows where your selection fell short: add what it found to the handoffs that
-follow. Under `make-change` the status is `done`, `done with concerns`, `questions`, `returned` or
-`blocked`; under `plan-task` it is `done`, `done with concerns`, `questions` or `returned`; under
-`review-change` it is the report's first line, `PASS <sha>`, `FAIL <sha>` or `questions`; under
-`write-spec` the designer returns `questions` or `done` and its reviewer `PASS` or `FAIL`. A check a
-report says it ran carries its command and exit code; a report missing either returns to its agent
-for repair before dependent work, and a claim that tests passed does not repair it (WAY-159). An
-agent that returns `questions` gets your answers as step 6 answers the designer's — from an approved
-source, otherwise the smallest reversible reading that fulfils the task, recorded as an autonomous
-choice — and is resumed, with no mechanical check and no review until it returns its work. `blocked`
+follow. Under `make-change` the status is `done`, `done with concerns`, `questions`, `returned`,
+`reserved` or `blocked`; under `plan-task` it is `done`, `done with concerns`, `questions`,
+`returned` or `reserved`; under `review-change` it is the report's first line, `PASS <sha>`,
+`FAIL <sha>` or `questions`; under `write-spec` the designer returns `questions`, `done` or
+`reserved` and its reviewer `PASS` or `FAIL`. A check a report says it ran carries its command and
+exit code; a report missing either returns to its agent for repair before dependent work, and a
+claim that tests passed does not repair it (WAY-159). An agent that returns `questions` gets your
+answers as step 6 answers the designer's — from an approved source, otherwise, except for a reserved
+choice, the smallest reversible reading that fulfils the task, recorded as an autonomous choice —
+and is resumed, with no mechanical check and no review until it returns its work. `blocked`
 is for a missing fact or permission, and for a question the foundation step leaves to the human:
 supply the fact or permission where a source gives it and resume the agent; for a slice's executor
 that no source can help, step 9 gives one retry and then its stop; otherwise open the blocked draft
@@ -207,13 +211,19 @@ author without a plan, also when it writes foundation entries or follows a revie
 needing division gets a plan (WAY-136). Both routes reach the same outcome through the same
 reviews, tests, return step and request.
 
+No stage of the cycle settles a reserved choice, you included (WAY-266), and no spec is written for
+one (WAY-135). Where an agent returns `reserved`, or where the task at step 4, an agent's question
+or a report of `returned` needs a language, a framework, a library, a store of data, a way of
+logging in or a place to run that the task, the spec and the foundation do not settle, read
+`task-cycle/skill/reserved_return.md` and follow it before you answer or go on.
+
 6. Where step 4 found an open design choice, or an agent returned one (below), dispatch a fresh
    designer with `write-spec`, the frozen task, the choice and, after a discarded attempt, that
    attempt's report. It writes `spec.md` in the record's directory. While it returns `questions`,
-   answer each from an approved source where one answers it; otherwise choose the smallest
-   reversible reading that fulfils the task, note the ways and the price of being wrong, record it
-   as an autonomous choice and resume the designer. Never widen the task. It returns `done` with
-   the spec, before any plan or code.
+   answer each from an approved source where one answers it; otherwise, except for a reserved
+   choice, choose the smallest reversible reading that fulfils the task, note the ways and the price
+   of being wrong, record it as an autonomous choice and resume the designer. Never widen the task.
+   It returns `done` with the spec, before any plan or code.
 7. When the designer returns `done` with the spec, read `task-cycle/skill/spec_review.md` and
    follow it: the spec's review by a fresh agent, and the route judged again after it.
 8. Only on the planning route, read `task-cycle/skill/planning.md` and follow it: the planner's
@@ -400,16 +410,17 @@ included — read `task-cycle/skill/blocked_finding.md` and follow it.
     record* apart from new ones, and each kept row tied to an entry already stated, with that entry
     (WAY-134); beside them, each invariant test the change alters (WAY-03), each surface it alters
     (WAY-49) and each *Violated* mark it sets or clears (WAY-51). *Questions*: only those the
-    foundation step allows, each with its options and a recommendation where one exists, or a line
-    that there are none. The number of other choices with a link to the questions table, and the
-    record's link by SHA. The human actions the request waits for, each as the task document names
-    it, with each effect outside the repository the cycle found that the document does not name, for
-    the human to place (WAY-140). A request a remaining blocking finding blocks is marked `blocked`
-    and lists each such finding with its place in the code and its reason, what the fix tried, the
-    time, models and tokens of the cycle so far from `stages.md` with the number of review rounds,
-    and what has not run on that code (WAY-162, WAY-163). If the task proved impossible, mark the
-    request `blocked` and show the smallest missing fact or authorization and the ways tried; never
-    present partial work as complete.
+    foundation step allows and a reserved choice, each with its options and a recommendation where
+    one exists, or a line that there are none. The number of other choices with a link to the
+    questions table, and the record's link by SHA. The human actions the request waits for, each as
+    the task document names it, with each effect outside the repository the cycle found that the
+    document does not name, for the human to place (WAY-140). A request a remaining blocking finding
+    blocks is marked `blocked` and lists each such finding with its place in the code and its
+    reason, what the fix tried, the time, models and tokens of the cycle so far from `stages.md`
+    with the number of review rounds, and what has not run on that code (WAY-162, WAY-163). A
+    request a reserved choice blocks opens and states what `task-cycle/skill/reserved_return.md`
+    gives (WAY-267). If the task proved impossible, mark the request `blocked` and show the smallest
+    missing fact or authorization and the ways tried; never present partial work as complete.
 14. Before reporting completion, confirm that the record lists every dispatch, choice, check, fix,
     review round and skipped stage. The final report names any write to the task's backlog entry.
     The request is the human's first decision point.
