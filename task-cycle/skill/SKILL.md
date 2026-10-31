@@ -110,9 +110,11 @@ product names (WAY-107), the cycle may add the request link and set the task's s
    Create a task branch from the current target branch under the product's git rules, in an
    isolated worktree where its instructions and tools allow; only a correction after review reuses
    a branch. Never overwrite another worker's changes or let two writing agents edit one worktree at
-   once. Record the base commit and the checks already failing on it, and keep a frozen copy of the
-   task document with its original path and its approval date or source commit. Where step 2 moved
-   the pin, the branch, its base and those checks already stand.
+   once. Record the base commit and the checks already failing on it. Run those checks on the base
+   alone: finish them before anything changes a tracked file of the worktree, or run them in a
+   separate checkout of the base commit under the worktree's ignored `.runs/`, deleted when they
+   end. Keep a frozen copy of the task document with its original path and its approval date or
+   source commit. Where step 2 moved the pin, the branch, its base and those checks already stand.
 5. Name the task `<task-slug>`: for a task of a project plan, its name in the plan (WAY-147); for
    any other, the name the cycle gives it. Create the ignored record
    `.runs/task-cycles/<task-slug>/cycle.md` from `task-cycle/record_template.md` of the pinned
