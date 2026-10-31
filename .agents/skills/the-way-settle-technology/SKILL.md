@@ -1,6 +1,6 @@
 ---
 name: the-way-settle-technology
-description: Use when a project definition of a product that uses the-way has to settle the technology and architecture choices its project needs before the readiness gate — a language, a framework, a library, a store of data, a way of logging in, a place to run — or to resume that step from the definition's Technology section. Use this checkout's own the-way.
+description: Use when a project definition of a product that uses the-way has to settle the technology and architecture choices its project needs before the readiness gate — a language, a framework, a library, a store of data, a way of logging in, a place to run — or to resume that step from the definition's Technology section. Also runs at a task document, with a note saying what for, for a choice no definition settles or one the human opens, and resumes from that document's Technology section. Use this checkout's own the-way.
 ---
 
 # the-way-settle-technology

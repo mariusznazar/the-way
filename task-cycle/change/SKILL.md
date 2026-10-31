@@ -22,7 +22,7 @@ Your dispatch says which of these you make; read for it as its row gives.
 |---|---|
 | the whole change as the one author | As the one author of a change without a plan, the frozen task document whole, and the spec where the cycle wrote one: you make the whole change. |
 | a slice, or the retry of a slice | `slice.md`, for how to read the plan and the task, how to read the failed executor's report, and what to do when the plan and the code disagree. |
-| the fix of a review's findings | `fix.md`, for the findings file, what is not yours to fix, and what the report of a fix holds. |
+| the fix of a review's findings | `fix.md`, for the findings file, what is not yours to fix, a finding of a reserved choice, and what the report of a fix holds. |
 | a correction for the human's remarks | For a correction, the human's remarks on the request; each remark binds. For a correction, the report holds each remark as made, and how. |
 
 Read what your dispatch names; the orchestrator has selected it for your work (WAY-150).
@@ -96,6 +96,15 @@ Where you make a slice, this section stands in `slice.md`.
 
 ## 5. When you return without code
 
+Where the work needs a language, a framework, a library, a store of data, a way of logging in or a
+place to run that the task, the spec and the foundation do not settle, read
+`project-level/technology/reserved_choices.md` (in a product,
+`.the-way/project-level/technology/reserved_choices.md`) and follow it before the cases below, also
+where the need looks like a choice of how to make the change. A reserved choice is no such choice:
+take no part of it and return the status `reserved`, with a report that holds the choice, where it
+shows, the limb of the rule that reserves it, what you searched and the ways you saw, and no code
+and no diff. Leave the branch for the cycle to reset, the commits of earlier slices included.
+
 Return a report that holds no code and no diff, with the status `returned`, and leave the branch
 for the cycle to reset, when:
 
@@ -116,7 +125,8 @@ never dispatch a subagent.
 
 Write the full report to the dispatch's report path:
 
-- **Status:** `done`, `done with concerns`, `questions`, `returned` or `blocked` (section 5);
+- **Status:** `done`, `done with concerns`, `questions`, `returned`, `reserved` or `blocked`
+  (section 5); the report of `reserved` holds what section 5 gives and no code;
 - the files changed, with added and removed line counts, and the commits;
 - each check you ran as its command and exit code, the failing run of each test written first and
   of each invariant's test included; each check you did not run, with the reason;

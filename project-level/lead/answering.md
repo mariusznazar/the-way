@@ -37,10 +37,15 @@ record what is needed and return, without making up the result.
 
 ## Once per human choice
 
-Read all round questions before choosing canonical IDs. When the same question with the same
+Read all round questions, and the *Child-work requests* that ask for a run of the step that
+settles technology, before choosing canonical IDs. When the same question with the same
 scope affects several tasks, choose one canonical question, list all affected task numbers,
-conversation paths and IDs, and cross-reference it from the others. Do not merge questions whose
-scope or consequences differ. Store the answer and original provenance under the canonical ID;
+conversation paths and IDs, and cross-reference it from the others. Where two members
+name one choice in such requests with the same scope, mark one request canonical and list its
+affected tasks, conversation paths and request IDs, as for a question. Answer no such request and
+prepare no human question for it: the run does that, with research, critique and tests that this
+agent does not do, and for a choice the human opened it would only quote the decision reopened.
+Do not merge questions or requests whose scope or consequences differ. Store the answer and original provenance under the canonical ID;
 make its affected tasks explicit so fresh refiners can copy that answer, its source and the ways
 the human did not choose into each of their documents. A cross-reference alone is not a durable
 answer after conversation cleanup.

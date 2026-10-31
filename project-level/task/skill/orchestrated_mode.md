@@ -18,6 +18,19 @@ to guess or overwrite another task.
   its human-presentation steps and required critique/child-work requests through this file.
   Start no child agent. The project orchestrator performs dispatches and presents the round
   package, candidates and required WAY-113 questions; you approve nothing on its behalf.
+- A run of the step that settles technology (WAY-267), whether `refine-task` starts it for a
+  reserved choice or the human asked for it, is led through this file by
+  `project-level/technology/task_run.md`.
+  Write the request for it as a *Child-work request* in your turn, never as a question: it names
+  the choice, the note the run is for and the path of this task document. Every question the run
+  would address to the human (the list to confirm, the table of choices, the choice itself) goes
+  into the turn as human material, and you end the turn. Only you write the document: the
+  section *Technology*, the settled question and its three fields are written by you, from the
+  research, the critique and the tests the project orchestrator brings back and from the human
+  answers recorded in the file. Where the answerer marked another member's request canonical,
+  wait for that run, then copy its settled question whole, with *Answer*, *Not chosen*, *Source* and
+  the three fields, into your document and end your item `— settled: <question>`. The result stays
+  one of the five; `questions` carries the run.
 - Edit only your task document and your conversation turn. Do not write the shared plan,
   definition or foundation, nor launch implementation. Record a mismatch requiring upstream work
   as `plan change`, with evidence and the requested change. An unavailable source/capability or

@@ -12,4 +12,6 @@ this document.
 
 If the task would contradict a current decision or a projected entry, show the conflict and its
 consequences. The human chooses whether to change the task or reopen the upstream settlement. Do
-not replace approved wording with the agent's paraphrase.
+not replace approved wording with the agent's paraphrase. The exception is the decision a run of
+`settle-technology` changes at the human's word (WAY-267): *Decisions in play* quotes it, and the
+human is not asked again.

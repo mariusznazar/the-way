@@ -60,6 +60,14 @@ Where one stands, write no plan: return to the orchestrator a report of the choi
 and the ways open, so that a spec is written first. A choice of how to make what the task and the
 foundation settle is no such choice: make it in the plan and list it under *Choices*.
 
+Where the change needs a language, a framework, a library, a store of data, a way of logging in or
+a place to run that the task, the spec and the foundation do not settle, read
+`project-level/technology/reserved_choices.md` (in a product,
+`.the-way/project-level/technology/reserved_choices.md`) and follow it before the case above. A
+reserved choice is no open design choice for a spec: write no plan and return the status `reserved`
+with a report of the choice, where it shows, the limb of the rule that reserves it, what you
+searched and the ways you saw.
+
 ## 3. Write the plan
 
 Write the plan in this form; the script reads the slice headings and the fields *Change* and
@@ -195,5 +203,6 @@ under the cycle's file-transfer contract (WAY-148): the status, the plan's path,
 result naming failed or unchecked work, and the report's path; concerns stand in the report. The
 status is `done`; `done with concerns` where the report holds a concern, a reach or a guideline
 found missing or uncertain; `questions` where the plan waits for answers, written in the report;
-or `returned` for an open design choice (section 2). The boundary is the finished plan: return
+`returned` for an open design choice (section 2); or `reserved` for a reserved choice (section 2),
+with the report that section gives. The boundary is the finished plan: return
 before any slice is made.

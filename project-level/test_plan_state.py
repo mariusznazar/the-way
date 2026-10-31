@@ -305,6 +305,27 @@ class Command(unittest.TestCase):
                 self.assertIn("conflict 1 reports:", output)
                 self.assertNotIn("propose ", output)
 
+    def test_returned_task_trace_stays_until_its_remote_tracking_ref_is_removed(self):
+        # Break caught: a reader that forgets a cycle once its host branch is gone would hide the
+        # conflict early; one that never forgets would leave a returned row in conflict for good.
+        self.git(self.repo, "switch", "-c", "feature")
+        self.archive()
+        self.git(self.repo, "push", "origin", "feature")
+        self.git(self.repo, "switch", "release")
+        self.git(self.repo, "branch", "-D", "feature")
+        self.state("to refine")
+        self.assertIn("conflict 1 reports:", self.run_reader(1))
+        # The branch is deleted on the host; the remote-tracking ref still stands.
+        self.git(self.remote, "branch", "-D", "feature")
+        output = self.run_reader(1)
+        self.assertIn("conflict 1 reports:", output)
+        self.assertNotIn("propose ", output)
+        # Removing that one ref by name leaves the row with no trace.
+        self.git(self.repo, "branch", "-dr", "origin/feature")
+        output = self.run_reader()
+        self.assertNotIn("conflict", output)
+        self.assertNotIn("propose ", output)
+
     def test_done_row_with_unmerged_archive_is_conflicting(self):
         # Break caught: a positively unmerged archive silently agrees with a final plan state.
         self.git(self.repo, "switch", "-c", "feature")

@@ -13,7 +13,15 @@ returns.
   report's path, and wait to be resumed with the answers (WAY-148); when an answer opens a new
   question, return with it in the next batch and name the answer that opened it. Write the spec once
   no question remains. Where no source answers, the orchestrator picks the smallest reversible
-  reading that fulfils the task; never ask the human and never widen the task.
+  reading that fulfils the task, except for a reserved choice; never ask the human and never widen
+  the task.
+- Where the design needs a language, a framework, a library, a store of data, a way of logging in
+  or a place to run that the task and the foundation do not settle, read
+  `project-level/technology/reserved_choices.md` (in a product,
+  `.the-way/project-level/technology/reserved_choices.md`) and follow it. A reserved choice is
+  settled by no answer and no smallest reversible reading: write no spec and return the status
+  `reserved`, with a report that holds the choice, where it shows, the limb of the rule that
+  reserves it, what you searched and the ways you saw.
 - Weigh two or three ways with their costs and recommend one. Leave out every feature the task does
   not need.
 - Divide what you design into units that each do one thing, behind an interface that says what the
@@ -62,4 +70,4 @@ The designer writes the spec to its path and the full report to the dispatch's r
 questions sent and their answers, the ways weighed and why the rejected ones lost, the result of
 the four checks, each reach beyond the dispatch, and **Searches not found or unclear:** each thing
 it looked for and did not find or that was unclear — in the instructions, handoff, task, foundation
-or product code — or `none`; it returns with the status `done`.
+or product code — or `none`; it returns with the status `done`, or `reserved` as above.

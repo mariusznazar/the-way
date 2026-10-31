@@ -36,7 +36,10 @@ where and why.
 
 As the designer, writing the spec or revising it, read `design.md` and follow it: how to settle the
 design and send your questions, the form of `spec.md`, the four checks before you return, and what
-your report holds.
+your report holds. Where the design needs a language, a framework, a library, a store of data, a
+way of logging in or a place to run that the task and the foundation do not settle, it points to
+`project-level/technology/reserved_choices.md` (in a product,
+`.the-way/project-level/technology/reserved_choices.md`).
 
 ## 3. Review a spec
 

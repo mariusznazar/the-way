@@ -17,7 +17,9 @@ Another the-way skill named here is the project skill with the `the-way-` prefix
 
 When a project orchestrator dispatches you with a conversation-file path, read and follow
 [`orchestrated_mode.md`](orchestrated_mode.md) before the common workflow below (WAY-134, WAY-154,
-WAY-155).
+WAY-155). For a run of the step that settles technology (WAY-267), whether `refine-task` starts it
+for a reserved choice or the human asked for it, that file points to
+`project-level/technology/task_run.md`.
 
 Manual refinement uses the direct conversation in the steps below. Both modes require final
 human acceptance of the complete task, even when refinement finds no candidate settlements.
@@ -38,8 +40,10 @@ Follow [`draft.md`](draft.md) when setting up or resuming the task document.
 ## 3. Resolve the gaps
 
 Follow [`resolve_gaps.md`](resolve_gaps.md) for questions, choices, human actions and deployment
-coverage. Resolve findings from the shared guideline reading by kind in
-[`guideline_findings.md`](guideline_findings.md) (WAY-215, WAY-216).
+coverage. When the task's outcome needs a language, a framework, a library, a store of data, a way
+of logging in or a place to run that no decision, approved definition or accepted answer settles,
+it points to `project-level/technology/reserved_choices.md`. Resolve findings from the shared
+guideline reading by kind in [`guideline_findings.md`](guideline_findings.md) (WAY-215, WAY-216).
 
 ## 4. Carry the foundation decisions
 

@@ -9,13 +9,31 @@ instead of asking the human; an inference is not an approved answer.
 
 If two answers conflict, show both and ask which holds. If the answer changes the approved project
 definition or a current foundation decision, route that change to its own process; do not silently
-settle it inside the task.
+settle it inside the task. The exception is a choice the human opened though a decision holds it,
+by a note or a change to the list of a run of `settle-technology`: that run is the process of the
+change, and its result is an edit of that decision in this document (WAY-30, WAY-267).
 
 Settle known product choices needed to state the task's outcome before the cycle. A choice of
 implementation method stays with the cycle's plan, or with the choices of its cycle record where
 no plan is written. An unanswered question that blocks taking the task keeps `Status: waiting for
 human`; never turn it into an apparently executable `To do` item. A new choice discovered during
-the cycle belongs in its decision record for the PR.
+the cycle belongs in its decision record for the PR, except a reserved choice, which no cycle
+settles.
+
+Run `settle-technology` at this document, with a note saying what the run is for, in three cases;
+only the first is decided by the rule of `project-level/technology/reserved_choices.md`, which you
+read when the task's outcome needs a language, a framework, a library, a store of data, a way of
+logging in or a place to run that no decision, approved definition or accepted answer settles:
+
+- the task's outcome needs a reserved choice;
+- the refinement started from a note, carried in the request or given by the named choice of a
+  closed draft request (`draft.md`), whether the choice is under the rule or a decision holds it;
+- the human asks for a run while the task is refined.
+
+The document keeps `Status: waiting for human` until the human has settled what the run lists. In
+orchestrated refinement you ask for the run through your conversation file and start no agent
+(`orchestrated_mode.md`). A choice not under the rule stays with the cycle, and the tools of the
+skills of guidelines stay on those skills' routes.
 
 For a plan member or source-only task, reconcile the questions assigned to it as described in the
 corresponding file named in step 1. Answer a question that determines required product behavior in
