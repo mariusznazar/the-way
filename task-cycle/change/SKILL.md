@@ -105,6 +105,16 @@ for the cycle to reset, when:
   settle is yours to make and to name in the report;
 - the change or your slice is more than you can hold — where the size lies (WAY-136).
 
+Before you return `returned`, check the first case for a reserved choice: the work needs a
+language, a framework, a library, a store of data, a way of logging in or a place to run that the
+task, the spec and the foundation do not settle. Then read
+`project-level/technology/reserved_choices.md` (in a product,
+`.the-way/project-level/technology/reserved_choices.md`) and follow it. Where the choice is a
+reserved choice, take no part of it: return the status `reserved` instead of `returned`, with a
+report that holds the choice, where it shows, the limb of the rule that reserves it, what you
+searched and the ways you saw, and no code and no diff. Leave the branch for the cycle to reset,
+the commits of earlier slices included.
+
 Where the work cannot go on for a missing fact or permission, it is not returned: commit what you
 have made, set the status `blocked` and name the smallest fact or permission missing. The committed
 work stays for the cycle to resume or, for a slice's retry, to reset.
@@ -116,7 +126,8 @@ never dispatch a subagent.
 
 Write the full report to the dispatch's report path:
 
-- **Status:** `done`, `done with concerns`, `questions`, `returned` or `blocked` (section 5);
+- **Status:** `done`, `done with concerns`, `questions`, `returned`, `reserved` or `blocked`
+  (section 5); the report of `reserved` holds what section 5 gives and no code;
 - the files changed, with added and removed line counts, and the commits;
 - each check you ran as its command and exit code, the failing run of each test written first and
   of each invariant's test included; each check you did not run, with the reason;
