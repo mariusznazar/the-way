@@ -37,7 +37,9 @@ examples and recommendations are never human decisions. Sections without materia
 Append numbered turns; never erase an unanswered question or replace a human answer with an
 agent's inference. IDs such as `Q1` are stable within this file; identify a cross-file question by
 its absolute conversation path and ID. For a duplicate choice, keep one canonical question and
-list every affected task/ID in both files. Keep distinct scopes separate. Copy the canonical
+list every affected task/ID in both files. A request for a run of the step that settles technology
+is no question: where two members name one choice with the same scope, one request is marked
+canonical with its affected tasks, as for a question. Keep distinct scopes separate. Copy the canonical
 answer itself, its original source and its ways not chosen into every affected task, not only a
 link to this file.
 
@@ -96,7 +98,11 @@ Human actions: <each action, proposed placement and reason, human placement/comp
 Wording: <complete current task document for wording/final review, or exact proposals; or none>
 Questions against choices: <choice ID, quoted anchor, complete WAY-113 question and answer,
   or the applicable exception with its reason; or none>
-Child-work requests: <needed critique or other delegated work and full paths of material; or none>
+Technology run: <the list of choices to confirm and the table of choices with consequences, once
+  a run has produced them, each choice with its stable ID and waiting/chosen state; or none>
+Child-work requests: <needed critique or other delegated work and full paths of material; for a
+  run of the step that settles technology, the choice, the note the run is for and the path of this
+  task document; or none>
 
 ### Human answers
 

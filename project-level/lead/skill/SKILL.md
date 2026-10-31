@@ -93,6 +93,12 @@ project skill with the `the-way-` prefix, never a personal copy.
    actor/stage routing. Requirements and answers travel through files, never relayed in prompts.
    Permit one writer per file; refiners edit no shared plan, definition or foundation and launch
    no children. You perform all child dispatches their borrowed workflows request.
+   For a refiner's *Child-work request* for a run of the step that settles technology (WAY-265),
+   dispatch the research agents, the critiques and the tests of risks that
+   `project-level/technology/task_run.md` and `settle.md` give, one run per canonical request, at
+   the document of the affected task with the lowest number; its report's head names every
+   affected task's document. Put their results in the conversation files; the refiner writes the
+   documents.
 2. Wait for refiner turns to finish, then dispatch exactly one answering agent for the round
    through one conversation path whose header names the others. It follows
    `project-level/lead/answering.md`, reads all round questions and alone writes their answer
@@ -106,7 +112,9 @@ project skill with the `the-way-` prefix, never a personal copy.
    document quotation answer as question, full quotation and source (WAY-155). Keep code facts
    separately identified. Preserve the answerer's canonical question and affected tasks so an
    identical choice is asked once; distinct scopes remain distinct. Do not hide quotation answers
-   behind a summary or offer recommendations as accepted decisions.
+   behind a summary or offer recommendations as accepted decisions. A run's list to confirm and
+   its table of choices go in the package once, and each choice the human makes is recorded as a
+   human answer (step 6); a canonical request's run is presented once for all its affected tasks.
 4. Before presenting the completed proposed set, dispatch one fresh independent `critique` on
    the whole set, its sources and applicable rules through `elements/common/critique/SKILL.md`
    (WAY-120). Put material and the critic's observations in the conversation files; prompts carry
