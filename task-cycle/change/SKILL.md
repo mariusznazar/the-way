@@ -22,7 +22,7 @@ Your dispatch says which of these you make; read for it as its row gives.
 |---|---|
 | the whole change as the one author | As the one author of a change without a plan, the frozen task document whole, and the spec where the cycle wrote one: you make the whole change. |
 | a slice, or the retry of a slice | `slice.md`, for how to read the plan and the task, how to read the failed executor's report, and what to do when the plan and the code disagree. |
-| the fix of a review's findings | `fix.md`, for the findings file, what is not yours to fix, and what the report of a fix holds. |
+| the fix of a review's findings | `fix.md`, for the findings file, what is not yours to fix, a finding of a reserved choice, and what the report of a fix holds. |
 | a correction for the human's remarks | For a correction, the human's remarks on the request; each remark binds. For a correction, the report holds each remark as made, and how. |
 
 Read what your dispatch names; the orchestrator has selected it for your work (WAY-150).
@@ -96,6 +96,15 @@ Where you make a slice, this section stands in `slice.md`.
 
 ## 5. When you return without code
 
+Where the work needs a language, a framework, a library, a store of data, a way of logging in or a
+place to run that the task, the spec and the foundation do not settle, read
+`project-level/technology/reserved_choices.md` (in a product,
+`.the-way/project-level/technology/reserved_choices.md`) and follow it before the cases below, also
+where the need looks like a choice of how to make the change. A reserved choice is no such choice:
+take no part of it and return the status `reserved`, with a report that holds the choice, where it
+shows, the limb of the rule that reserves it, what you searched and the ways you saw, and no code
+and no diff. Leave the branch for the cycle to reset, the commits of earlier slices included.
+
 Return a report that holds no code and no diff, with the status `returned`, and leave the branch
 for the cycle to reset, when:
 
@@ -104,16 +113,6 @@ for the cycle to reset, when:
   where it shows, the ways open and what you found (WAY-135); a choice of how to make what they
   settle is yours to make and to name in the report;
 - the change or your slice is more than you can hold — where the size lies (WAY-136).
-
-Before you return `returned`, check the first case for a reserved choice: the work needs a
-language, a framework, a library, a store of data, a way of logging in or a place to run that the
-task, the spec and the foundation do not settle. Then read
-`project-level/technology/reserved_choices.md` (in a product,
-`.the-way/project-level/technology/reserved_choices.md`) and follow it. Where the choice is a
-reserved choice, take no part of it: return the status `reserved` instead of `returned`, with a
-report that holds the choice, where it shows, the limb of the rule that reserves it, what you
-searched and the ways you saw, and no code and no diff. Leave the branch for the cycle to reset,
-the commits of earlier slices included.
 
 Where the work cannot go on for a missing fact or permission, it is not returned: commit what you
 have made, set the status `blocked` and name the smallest fact or permission missing. The committed

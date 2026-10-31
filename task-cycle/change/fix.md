@@ -1,11 +1,17 @@
 # Fixing a review's findings
 
-What the fix of a review's findings reads and reports.
+What the fix of a review's findings reads and reports, and what it does with a finding of a reserved
+choice.
 
 ## Read
 
 - For a fix, the findings file — the blocking findings of the review — and the code it names. The
   review's Minor and out-of-scope findings are not yours to fix (WAY-161).
+
+## A finding of a reserved choice
+
+- For a finding that the change takes a reserved choice, the fix removes the choice from the change.
+  Where you cannot remove it, return the status `reserved`, as section 5 of `SKILL.md` gives.
 
 ## Report
 
