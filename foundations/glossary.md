@@ -130,6 +130,12 @@ A repository instruction file is an instruction file for coding agents that a re
 
 - **Not:** none
 
+## reserved choice
+
+A reserved choice is a technology choice that WAY-266 keeps for the human: unlike another decision reserved to a human, a task's cycle ends on it, and unlike another open design choice, no spec is written for it.
+
+- **Not:** none
+
 ## return step
 
 The return step is the step of a task that carries back to the foundation what the task's change holds and the foundation does not yet say.

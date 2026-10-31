@@ -2628,13 +2628,14 @@ of data or a place to run — and, for each, either names the decision of the fo
 already holds it or settles it as a projected decision of the definition; a project whose every
 choice the foundation holds thus settles nothing. A choice belongs on the list when settling it
 later could change how the work is cut into tasks, or when it adds something the product has to
-run, pay for or back up; a choice one task can make and change alone stays with that task. As an
-exception to that rule, where the project brings behaviour a user sees in the running product, the
-step looks at three matters of an agent's way to the running product — its logs, its interface and
-its development data — and lists as a choice of its own each matter that no decision of the
-foundation settles for that behaviour, even where its answer adds nothing to run, pay for or back
-up, and even where the product has none of what the matter names, whose answer then says what an
-agent uses in its place.
+run, pay for or back up; a choice one task can make and change alone stays with that task, while a
+choice under this rule that a definition missed, or that no definition holds, is settled through a
+run of the step at a task document (WAY-265, WAY-266). As an exception to that rule, where the
+project brings behaviour a user sees in the running product, the step looks at three matters of an
+agent's way to the running product — its logs, its interface and its development data — and lists
+as a choice of its own each matter that no decision of the foundation settles for that behaviour,
+even where its answer adds nothing to run, pay for or back up, and even where the product has none
+of what the matter names, whose answer then says what an agent uses in its place.
 
 - **Scope:** project-level, decisions
 - **Based on:** none
@@ -2650,7 +2651,9 @@ agent uses in its place.
     its own, and projects a decision on each although reading the server's output and opening the
     game on a local address add nothing to run; a later project of that game, whose new screens
     an agent reaches as those decisions say, lists none of the three; a command-line tool that
-    keeps no data lists its development data, answered by sample input files kept with its code;
+    keeps no data lists its development data, answered by sample input files kept with its code; a
+    task of a plan needs a store of data its definition missed, and the human settles it in a run
+    at that task's document, the approved definition untouched;
   - violates: the first task of the breakdown chooses the database; a definition reaches the gate
     with a store of data in its scope and no choice of it projected or found in the foundation; a
     project that brings a product's first screen leaves out how an agent operates it because a
@@ -2664,9 +2667,11 @@ by someone who does not know the technologies, so the choice is settled before t
 its own keeps the comparison of technologies out of the talk about the project's goal and scope,
 while its agent still knows the whole project. Settled before the gate, the choices are approved
 with the rest of the definition, and an exit for a project whose choices the foundation already
-holds keeps the step from being an empty run. A task cycle checks behaviour a user sees in the
-running product as well, and an agent with no way to the running product either leaves that check
-undone or improvises its access in the middle of the cycle. The commonest answers — logs read from
+holds keeps the step from being an empty run. A choice a definition missed, or that no definition
+holds, still goes to the human through the step, and at a task document it changes no approved
+section, so no gate returns. A task cycle checks behaviour a user sees in the running product as
+well, and an agent with no way to the running product either leaves that check undone or improvises
+its access in the middle of the cycle. The commonest answers — logs read from
 the output of the product's container, the product opened in a browser on a local address — add
 nothing to run, pay for or back up and change no cut of the work, so the rule of belonging alone
 would never list them; the exception lists each matter as a choice of its own, weighed apart, and
@@ -2695,20 +2700,21 @@ machine alone would leave an agent with no way to it.
 
 ### WAY-122 — How are the options of a technology choice found and checked before a human sees them?
 
-The options of each technology choice a project needs come from research of that choice against
-the project definition, rather than from a fixed list of bundled stacks, and the research of every
-choice that depends on no unsettled choice starts once the list of choices is confirmed, each in a
-report of its own. An option the project's code is written in or against — a language, a
-framework, a library, a store of data — is weighed by whether its documentation shows that it uses
+The options of each technology choice a project or a task needs come from research of that choice
+against the project definition or, in a run at a task (WAY-265), against the task document and the
+run's note, rather than from a fixed list of bundled stacks, and the research of every choice that
+depends on no unsettled choice starts once the list of choices is confirmed, each in a report of
+its own. An option the product's code is written in or against — a language, a framework, a
+library, a store of data — is weighed by whether its documentation shows that it uses
 explicit types, follows conventions of layout and naming and has current, versioned documentation,
 and whether a public record of its use, such as a package registry or a survey, shows it widely
 used within its language family; for a store of data, its types are those it declares for what it
 stores, and its family is that of its query language. An option lacking one of these properties is
 offered with what each lack means for the product, which the decision records if the human chooses
 it; an option with no documentation or with a project no longer maintained is left out with that
-reason, unless the human named it or the definition holds it as a constraint, and then it is offered
-with that reason as such a lack; and every option is offered only after a critique that refutes
-every claimed difference between the options which no source supports.
+reason, unless the human named it or the definition or the task document holds it as a constraint,
+and then it is offered with that reason as such a lack; and every option is offered only after a
+critique that refutes every claimed difference between the options which no source supports.
 
 - **Scope:** project-level, decisions
 - **Based on:** none
@@ -2717,7 +2723,10 @@ every claimed difference between the options which no source supports.
   - complies: research for a store of data compares a file kept beside the application with a
     database server, each typed and documented, and the critique strikes a claimed difference in
     speed that no source gives; a built-in module with no record of wide use stays in the
-    comparison beside a widely used library, its lack said as what it means for the product;
+    comparison beside a widely used library, its lack said as what it means for the product; a
+    run at a task compares error trackers against the task document and the run's note, and a
+    service the document names as a constraint, its project no longer maintained, is offered with
+    that lack;
   - violates: the step offers a framework, a database and a host as one bundle from a fixed list;
     a comparison reaches the human with a difference no source supports; an option with
     documentation and a maintained project disappears from the comparison because it lacks one of
@@ -2728,9 +2737,9 @@ every claimed difference between the options which no source supports.
 *Rationale:* a fixed list of stacks, each bundling a framework, a store of data and a place to run,
 settles several choices at once and without the project, so a bundle can run against choices the
 project already holds and leave others unsettled; research for each choice starts from what the
-project needs. Research of independent choices run side by side and kept in reports lets the
-conversation settle one choice while the next is researched, and nothing found is lost to a long
-conversation. An agent can read each of the properties off an option's documentation or its public
+project or the task needs. Research of independent choices run side by side and kept in reports
+lets the conversation settle one choice while the next is researched, and nothing found is lost to
+a long conversation. An agent can read each of the properties off an option's documentation or its public
 record of use without the human knowing the technology, and each bears on how well an agent works in
 the stack; a lack of one is a cost to weigh, not proof the option fails the product, while an option
 with no documentation or no maintenance leaves nothing to weigh. A place to run or a way of logging
@@ -2751,15 +2760,15 @@ research in turn.
 
 ### WAY-123 — How does a technology choice reach a human who cannot assess the technology?
 
-The step that settles a project's technology shows the options of each choice by their
-consequences for the product — what it costs, where it runs, what keeping it running takes and
-what changing it later costs — and the human chooses between those consequences. A difference with
-no consequence for the product decides nothing, and where no difference with a consequence
-remains, the step recommends the simplest and cheapest option. The choices whose research started
-together reach the human together, in one table, once every one of their comparisons has passed
-the critique, each with its recommendation and the weak point of the option recommended; in the
-area of the choices this step settles, this decision prevails over WAY-114, under which a question
-goes to the human only where the agent has no recommendation.
+The step that settles technology, at a project definition or at a task (WAY-265), shows the options
+of each choice by their consequences for the product — what it costs, where it runs, what keeping
+it running takes and what changing it later costs — and the human chooses between those
+consequences. A difference with no consequence for the product decides nothing, and where no
+difference with a consequence remains, the step recommends the simplest and cheapest option. The
+choices whose research started together reach the human together, in one table, once every one of
+their comparisons has passed the critique, each with its recommendation and the weak point of the
+option recommended; in the area of the choices this step settles, this decision prevails over
+WAY-114, under which a question goes to the human only where the agent has no recommendation.
 
 - **Scope:** project-level, decisions
 - **Based on:** none
@@ -3274,12 +3283,14 @@ leaves none. An agent that meets an open design choice while it makes the change
 that holds no code, the attempt is discarded with the foundation entries the cycle wrote for it,
 and a fresh agent given the report writes the spec, after whose review the orchestrator chooses
 again whether one author can hold the change or it needs a plan, using the same judgment as before
-implementation (WAY-136).
+implementation (WAY-136). Where the open design choice is a reserved choice, no spec is written: an
+agent's report without code and the discard of its attempt stay the same, and the cycle stops
+(WAY-266, WAY-267).
 
 - **Scope:** task-cycle
 - **Based on:** none
 - **Relations:** derives from WAY-13 · derives from WAY-69 · derives from
-  WAY-126 · derives from WAY-134
+  WAY-126 · derives from WAY-134 · derives from WAY-266
 - **Verification:** an agent compares a cycle with the decision:
   - complies: a task whose rows of *Settlements to record* carry its two decisions and its invariant
     proceeds without a spec, and the review reads the invariant's test against its sentence; a
@@ -3288,11 +3299,12 @@ implementation (WAY-136).
     carry returns a report without code, the branch goes back to its base — to the commit that
     moved the pin where the task moved it — and a fresh agent writes the spec; a reviewed spec is
     followed by one author without a plan when the change still fits one agent, or by a new plan
-    when it needs division;
+    when it needs division; an agent that finds the task needs a reserved choice returns a report
+    without code, the branch goes back in the same way, and the cycle stops with no spec;
   - violates: a spec is written for a task whose document carries every entry it writes and that
     leaves no other way open; an agent designs a decision the task does not carry and goes on with
     the code; a spec is written around the code of an attempt that met an open design choice;
-    a plan is required merely because a spec was written.
+    a plan is required merely because a spec was written; a spec is written for a reserved choice.
 - **Origin:** none
 
 *Rationale:* a spec and its review earn their cost where an agent designs a foundation entry itself,
@@ -3303,14 +3315,20 @@ fitting the code by the review that reads its test against its sentence (WAY-69)
 choice found while the code is made cannot be weighed apart from that code, so the attempt goes,
 its slices already made among them, since the spec may change what they made, and a fresh agent
 designs from the task and the report. Settling the design does not itself create work to
-divide; the extent of the settled change decides whether a plan earns its cost.
+divide; the extent of the settled change decides whether a plan earns its cost. A reserved choice
+is the human's, so a designer given the report would settle what no agent may, and the cycle stops
+instead.
 *Rejected:* a spec for every task that changes the foundation — almost every task changes it, and
 the spec would restate entries the human settled at a large share of the cycle's cost; no spec for
 any task — an entry an agent designs would reach the code unchecked against the current entries;
 an attempt that met an open design choice kept and completed — a spec would be written around
 partial code; the agent of that attempt writing the spec — the spec would carry the shape of the
 abandoned code; a spec for every task that writes an invariant — the review already reads its
-test against its sentence.
+test against its sentence; for a reserved choice, the work going on in the same request with the
+result of the step that settles technology as a remark on it — the choice lands in a comment and not
+in the task document, the frozen copy of the task parts from what the cycle does, and a new
+mechanism is needed; for a reserved choice, a pause in the cycle with a question to the human — it
+goes against WAY-227, which would have to change, and the cycle would stop working unattended.
 
 ### WAY-136 — When does a task's change need a plan, and who makes and reviews it?
 
@@ -3392,11 +3410,11 @@ slices — the pin moved before the route keeps the installer's output out of ev
 ### WAY-137 — What decides between places to run that the simplest and cheapest option leaves tied?
 
 Where the options of a place to run differ in no consequence for the product and more than one of
-them is the simplest and cheapest, the step that settles a project's technology recommends, of
-those, the one an agent works with best: operated from a terminal, deployed by a script and
-documented in pages an agent can read. For a place to run, how well an agent works with an option
-decides nothing else: it leaves no option out of the comparison and is weighed against no
-consequence for the product.
+them is the simplest and cheapest, the step that settles technology, at a project definition or at
+a task (WAY-265), recommends, of those, the one an agent works with best: operated from a terminal,
+deployed by a script and documented in pages an agent can read. For a place to run, how well an
+agent works with an option decides nothing else: it leaves no option out of the comparison and is
+weighed against no consequence for the product.
 
 - **Scope:** project-level, decisions
 - **Based on:** none
@@ -3428,14 +3446,16 @@ through the properties WAY-122 weighs.
 
 ### WAY-138 — Which option of a technology choice is tested for what choosing it could break, and where do the risks found go?
 
-The step that settles a project's technology tests the option it recommends for each choice it
-settles, one a constraint of the definition settles included, with a devil's advocate, a pre-mortem
-and a search for unknown unknowns; it tests no choice a decision of the foundation holds, and no
-decision already written is tested afterwards. The risks these tests give are hypotheses with no
-source, not differences claimed between options, so the critique of the comparison does not strike
-them, and they stand in the table beside the option recommended before the human chooses. The human
-who chooses that option takes its risks, and each risk taken reaches the decision of that choice in
-its *Rationale*, beside the lacks of the option chosen, marked as a hypothesis.
+The step that settles technology, at a project definition or at a task (WAY-265), tests the option
+it recommends for each choice it settles, one a constraint of the definition or of the task document
+settles included, with a devil's advocate, a pre-mortem and a search for unknown unknowns; it tests
+no choice a decision of the foundation holds, a choice the human opened being held by no decision,
+and no other decision already written is tested afterwards. The risks these tests give are
+hypotheses with no source, not differences claimed between options, so the critique of the
+comparison does not strike them, and they stand in the table beside the option recommended before
+the human chooses. The human who chooses that option takes its risks, and each risk taken reaches
+the decision of that choice in its *Rationale*, beside the lacks of the option chosen, marked as a
+hypothesis, through the task document where the step ran at a task.
 
 - **Scope:** project-level, decisions
 - **Based on:** none
@@ -3446,7 +3466,9 @@ its *Rationale*, beside the lacks of the option chosen, marked as a hypothesis.
     option recommended the risks the three tests gave, each marked as a hypothesis, and the human
     who takes the recommended host finds those risks in the *Rationale* of its decision beside its
     lacks; a framework the definition names as a constraint is tested; a language a decision of the
-    foundation holds is not;
+    foundation holds is not; a run at a task tests a service the task document names as a
+    constraint, and a way of logging in the human opened though a decision held it, each risk taken
+    standing in the task document until the cycle writes the decision;
   - violates: the critique strikes a risk from the table for want of a source; the risks are shown
     only after the human has chosen; every option of a choice is tested; an agent tests a decision
     written before the project and adds risks to it; a risk taken reaches the decision's *Based on*
@@ -3461,9 +3483,9 @@ Such a risk has no source yet, so the human weighs it as a hypothesis and takes 
 instead of the critique striking it as an unsupported claim or the agent dropping it. Shown before
 the choice, a risk can still change it; carried into the decision as a hypothesis, it tells a later
 reader what was accepted without passing for a sourced fact. The tests run on the option
-recommended, the one the human most often takes, and only where this project chooses: a choice a
-decision already holds has been made, and testing it again would reopen it with no reason in the
-project.
+recommended, the one the human most often takes, and only where this project or task chooses: a
+choice a decision already holds has been made, and testing it again would reopen it with no reason
+in the work, while a choice the human opens has that reason and is chosen anew.
 *Rejected:* tests on every option of a choice — their cost grows with options the human mostly does
 not take; the risks shown after the choice — the human takes them unseen; the risks put through the
 critique as claims — with no source, every one would be struck; the risks in *Based on* — it names
@@ -7551,6 +7573,197 @@ leave the same gap; one pattern for all output directories — it may be too bro
 each output location; always listing the command's source — slices that do not change it would claim
 an unchanged file; putting the mechanical pattern rule in the plan skill — the orchestrator would
 not read it; repeating that rule in both skills — the copies could diverge.
+
+### WAY-265 — How does the step that settles technology run outside a project definition?
+
+Besides its run at a project definition, the step that settles technology runs at a task document,
+with a note saying what the run is for, and a run with no task document starts by creating one
+through `refine-task`. A run at a task settles what the note and the task name, looks at the matters
+of an agent's way to the running product only where the note touches them, does the rest of its work
+as a run at a definition does and ends back in the task's refinement, with no readiness gate; a
+human may run it for any choice save one a projected decision of an approved definition settles,
+which no run reopens, and a choice a decision of the foundation holds opens only on the human's
+word, the result then being a change of that decision. The run writes each settled choice into the
+task document, with the options not chosen, the source of each difference claimed between the
+options, the lacks of the option chosen and the risks the human took with it, and the task's cycle
+writes the decision with the code that uses it.
+
+- **Scope:** project-level, task-cycle, decisions
+- **Based on:** none
+- **Relations:** derives from WAY-01 · derives from WAY-30 · derives from WAY-106 ·
+  derives from WAY-121 · derives from WAY-134
+- **Verification:** an agent compares the run and the task document with the decision:
+  - complies: a human runs the step at a task with the note "where the product's error reports go";
+    the run compares the options with their sources, tests the option it recommends and shows the
+    table, the task document then holds the answer with the options not chosen, their sources, the
+    lacks and the risks, and the decision enters the log in the merge of the code that uses it; a
+    note that comes with no task document starts `refine-task`, which creates the document; a human
+    names in the note a way of logging in that a decision holds, and the result stands in the task
+    document as a change of that decision; a run whose note speaks of a store of data, at a task
+    that brings a first screen, lists nothing on how an agent reaches that screen; in a refinement a
+    project orchestrator leads, the refiner asks for the run through its conversation file, the
+    orchestrator dispatches the run's agents and the table goes in the round package;
+  - violates: a run writes the option chosen into the decision log before its code exists; a run
+    changes an approved definition or reopens a choice one of its projected decisions settles; an
+    agent opens a choice a decision holds on its own; a run adds the logs, the interface or the
+    development data to its list though the note does not touch them; the comparison stands only
+    in a report the task document does not hold.
+- **Origin:** none
+
+*Rationale:* a task can need a technology choice that no definition settles, and an independent task
+has no definition at all, so the step needs a place every such choice has: a task document, which
+the human accepts whole and which goes with the task if the work is dropped. Written into the log
+before its code, the choice would describe what the product does not hold (WAY-01); kept in the task
+document, it reaches the log as every settlement does (WAY-134), and an approved definition stays
+untouched, so no gate returns (WAY-118). The price is that even a small choice takes a task document,
+a choice with no code takes a full cycle, and the document has to hold the comparison and its
+sources, since what a run keeps elsewhere does not last with the task. Settling only what the note
+and the task name keeps a task about something else from growing by choices nobody asked for, at the
+price that an independent task bringing a first screen gets no answer on how an agent reaches it
+unless the note asks, and its agent improvises. Opening a choice a decision holds takes the human's
+word because a change of a decision is the human's (WAY-14, WAY-30), and going through the step gives
+that change research and a critique, at the price that a decision held is no longer final and a
+hurried run could reach further ones.
+*Rejected:* the choice written into the decision log at once, in a request of its own with no task —
+it goes against WAY-01: the log would describe what the product does not yet hold, and dropped work
+would leave the entry false; the choice written into the approved definition — one choice means the
+readiness gate and the check of the plan again (WAY-118, WAY-156), and an independent task has no
+definition, so a second way would be needed anyway; the note and the matters of an agent's way to
+the running product together, where a task brings something a user sees — a task about something
+else can gain up to three further choices, each with research and a critique, close to the question
+in the refinement of every task that WAY-121 rejects; a run limited to what nothing holds — a simpler
+rule, but a change of technology would go through ordinary refinement with no research or critique,
+and a choice of where a product's logs go could not pass through the step.
+
+### WAY-266 — Who settles a technology choice that no decision or definition settles?
+
+A technology choice whose later settling could change how the work is cut into tasks, or that adds
+something the product has to run, pay for or back up, and that no decision of the foundation, no
+approved definition the task carries and no accepted answer of its task document settles, is a
+reserved choice: the human settles it at the step that settles technology (WAY-265), so that it
+rests on a source that can be checked rather than on a model's memory, and in the area of these
+choices this decision prevails over WAY-114, under which an agent writes an entry on its own
+recommendation for the human to accept at the merge. Refinement that sees a reserved choice runs
+that step at the task, which is not ready until the human has settled it; in a task's cycle no agent
+settles one, its orchestrator included: the agent that meets it returns a report with no code and
+the status `reserved`, the attempt is discarded, the cycle opens a blocked draft request naming the
+choice and the task returns to refinement (WAY-267). Every other choice stays in the cycle, made by
+the agent that meets it and entered in the cycle record's questions table, and the tools the skills
+of guidelines choose stay on those skills' routes; whether a choice falls under this rule rests on
+the agent's judgment, helped by the examples of `project-level/technology/reserved_choices.md`.
+
+- **Scope:** project-level, task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-100 · derives from WAY-121 · derives from WAY-227 ·
+  narrows WAY-114
+- **Verification:** an agent compares the refinement, the cycle and its request with the decision:
+  - complies: a task whose outcome needs a store of data or an error tracker nothing settles runs
+    the step while it is refined and reads `waiting for human` until the human settles it; an
+    executor whose slice needs a framework nothing settles returns a report with no code, the
+    attempt goes with the slices already made, and a blocked draft request names the choice; a
+    small library for formatting dates, a test double used only by tests and an override of one
+    dependency stay with the task and enter the questions table; a source of icons that adds no fee
+    and that one task can change alone stays with the task, and one that adds something to pay for
+    stops it; a missing way to the running product alone stops no cycle (WAY-219); a new linter
+    stays on the route of the coding-guidelines skill;
+  - violates: an orchestrator picks a database as the smallest reversible reading and the cycle goes
+    on; the human first sees a way of logging in in the request, with code standing on it; a small
+    library stops a cycle; a new linter is sent to the step that settles technology; a choice an
+    agent cannot place stops the cycle as a third kind, on doubt alone.
+- **Origin:** none
+
+*Rationale:* a technology choice the human first sees in the request has code standing on it, so
+changing it means reworking what is written, while the choice decides what the product has to keep.
+The test that puts a choice on a project's list (WAY-121) also marks what one task does not settle
+alone: a choice one task can make and change alone costs little to turn back, and stopping for it
+would cost a cycle, research, a critique and a table for the human. The rule takes from lesson m2l4
+of the 10xDevs course one thing, for these choices: a technical decision that rests on a source that
+can be checked, not on a model's memory. A run of the step gives a choice that source, with a
+critique and tests of its risks. The request is the cycle's point of human review (WAY-227), so a
+choice met in the cycle leaves it through a blocked draft request and reaches the human in
+refinement, where the step can run. Without the precedence, a cycle meeting such a choice would face
+this decision and WAY-114 with nothing to choose between them (WAY-25). The price is that a small
+library still comes from a model's memory; that the boundary rests on an agent's judgment, so a
+doubtful choice judged not under the rule reaches the human in the request with code on it; that a
+choice met late in a planned task costs the slices already made, and refinement can miss one; and
+that the tools of guidelines keep a route with no tests of risks (WAY-138).
+*Rejected:* every new element of the stack, the smallest dependency included — every small library
+is a stopped cycle with research, a critique, tests of risks and a table for the human, and WAY-121
+would have to narrow, since it leaves such choices to the task; the same rule with each new
+dependency also listed on a line of its own in the request — one more line in the request, an
+agent's mistake seen only there with the code standing, and one more rule for a problem nobody has
+recorded; the work going on in the same request, with the step's result as a remark on it — the
+choice lands in a comment and not in the task document, the frozen copy of the task parts from what
+the cycle does, and a new mechanism is needed; a pause in the cycle with a question to the human — it
+goes against WAY-227, which would have to change, and the cycle would stop working unattended; the
+tools of the skills of guidelines sent to the step as well — one way for every choice, but those
+skills and the decisions on their routes (WAY-185, WAY-186, WAY-210, WAY-211, WAY-248, WAY-249)
+would have to change, and a task choosing several tools at once takes a longer way, with no recorded
+case of the present route failing.
+
+### WAY-267 — How does a task leave a cycle that met a reserved choice, and how does it come back?
+
+A cycle that meets a reserved choice before its request opens ends with its attempt discarded, its
+task branch holding only the commit that adds its record and the commit that removes it, and a draft
+request marked `blocked` that names the choice, says that nothing else ran and why, and settles
+nothing; one that meets it in a correction takes back only that correction's commits and returns the
+request to draft marked `blocked`. Once the human closes the request, the task returns to refinement
+with its accepted answers and rows, the named choice being the note of a run of the step that
+settles technology (WAY-265), and a new cycle starts only after the human accepts the whole changed
+document, under the same name and on a new branch. For a task of a project plan, on the human's word,
+the project orchestrator removes by name that one cycle's worktree or working directory, its local
+branch, its branch on the host and that branch's remote-tracking ref, and then moves the plan's row
+back to `to refine`, with a line in the plan's log of changes naming the request.
+
+- **Scope:** project-level, task-cycle
+- **Based on:**
+  https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-branches-in-your-repository/deleting-and-restoring-branches-in-a-pull-request
+  § "Restoring a deleted branch" — "You can restore the head branch of a closed pull request."; read
+  2026-10-31
+- **Relations:** derives from WAY-147 · derives from WAY-153 · derives from WAY-227 ·
+  derives from WAY-266
+- **Verification:** an agent compares the cycle, its request and the plan with the decision:
+  - complies: the task branch goes back to its base, or to the commit that moved the pin, the commit
+    that adds the record is pushed and the draft opens on it, and the commit that removes the record
+    follows; the request links the record by the commit that adds it, gives the ways seen as not
+    researched, and names as not run the spec, the plan, the reviews, the return step, the
+    reconciliation with the target branch and the gate; the human closes it, `refine-task` runs with
+    the named choice as its note, and the new cycle keeps the task's name on a new branch; the
+    project orchestrator, told that the task returns to refinement, removes that one cycle's trace
+    by name, and the plan-state reader reports no conflict on the row;
+  - violates: a remark on the request continues the cycle; an option picked in a remark stands as
+    the settled choice; the new cycle reuses the earlier branch or numbers its name; a row moves
+    back with no word from the human; `git fetch --prune` takes away the evidence of other tasks'
+    closed requests.
+- **Origin:** none
+
+*Rationale:* a discarded attempt leaves no code to show, so what the human needs stands in the
+request: the choice in plain words, where it showed and what was searched. The request is where the
+human meets the cycle (WAY-227), and closing it hands the choice to refinement, where the step can
+run and the human accepts the whole changed document, rather than to a remark that would stand
+outside that document. Nothing else runs because nothing is left to check: the tree equals the base
+the cycle started from, so the request holds no finished change for a gate to run on (WAY-160). The
+new cycle keeps the name because a plan's task and its record meet
+through it (WAY-147), and the earlier record never reached the target branch, so the name is free
+there; a new branch keeps the discarded commits out of the new request. The earlier cycle's trace
+goes on the human's word because a conflicting trace is brought to the human (WAY-153), and left in
+place it would show as a conflict at every session, or as a false proposal that the new cycle has
+started; it goes by name so that the evidence of other tasks' closed cycles stays. The cost is that
+the removal relies on a host that keeps a closed request's commits; where one does not, the earlier
+record is lost, while the task document and the request's description still carry what the next step
+needs.
+*Rejected:* the pair of commits pushed first and the request opened after them, as for other blocked
+requests — no new order, but it rests on a host accepting a request with no changes, which no host's
+documentation gives; the record left on the branch, with no removal — the request shows it on every
+host, but a request merged by mistake would bring a record to the target branch; no request, the stop
+reported only in the record or the conversation — the request is where the human meets the cycle's
+work; the plan-state reader taught to skip a cycle whose record says it returned — the branch and
+worktree could stay, but it stops bringing a conflicting trace to the human, a change to the meaning
+of WAY-153; a numbered name for the new cycle — it breaks WAY-147, and the reader looks for a record
+under the task's name, so the task could never read as done; the record of a returned cycle kept
+elsewhere, out of the reader's sight — the trail to the request is lost, and a second place for
+records has to be kept; the earlier branch reused — its history stays in one place, but only a
+correction reuses a branch, and the discarded cycle's commits enter the new request.
 
 ## Withdrawn identifiers
 
