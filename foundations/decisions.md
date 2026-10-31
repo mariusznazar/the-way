@@ -4455,10 +4455,11 @@ reads it, and the interface asks how an agent operates the product as its user d
 screen in a browser, a call to its API or a command in a terminal — and how it sees what the
 product answers. The development data asks where the data comes from on which an agent checks the
 product's behaviour outside production, and how an agent brings that data to the state a check
-needs. Data set up from scratch and a dedicated test
-environment that persists are both options of that choice, and an entry, a decision of the
-foundation or a projected decision of a definition, that leaves part of what a matter asks
-unanswered does not settle that matter.
+needs. Data set up from scratch and a dedicated test environment that persists are both options
+of that choice, and an entry, a decision of the foundation or a projected decision of a definition,
+that leaves part of what a matter asks unanswered does not settle that matter at a project
+definition, while in a run at a task (WAY-267) it holds the choice like any decision, which opens
+only on the human's word.
 
 - **Scope:** project-level, decisions
 - **Based on:** none
@@ -4473,12 +4474,14 @@ unanswered does not settle that matter.
     personal data that a human fetches, and a dedicated test environment that persists, each by its
     consequences; a list written before the record's life was asked, whose logs item stands
     `— held by` a decision silent on it, has the item end `— open` with that decision nested under
-    it, and the list is shown again with one sentence on what the decision leaves unsaid;
+    it, and the list is shown again with one sentence on what the decision leaves unsaid; in a run at
+    a task, the item over such a decision stays `— held by` until the human's word opens it;
   - violates: the interface is answered by an agent reading the store of data past the
     application; the logs are answered by where the record goes and how an agent reads it, with
     nothing said of whether it outlives a redeployment, and the answer stands as settling the
-    matter; a logs item stays `— held by` or `— projected` on a decision silent on the record's
-    life; an approved definition is sent back to the step because its logs decision is silent on
+    matter; a logs item of a definition's list stays `— held by` or `— projected` on a decision
+    silent on the record's life; an agent opens, in a run at a task, a logs decision silent on the
+    record's life with no word of the human; an approved definition is sent back to the step because its logs decision is silent on
     it; the development data names where the data comes from but not how an agent reaches a save
     from the middle of a game; the comparison of the development data leaves out a dedicated test
     environment that persists because the data has to be set up from scratch.
@@ -4489,10 +4492,11 @@ The logs tell the agent what the product did, and the answer says where that rec
 long it lives, since an agent reads only what it can reach: a record that dies with each deployment
 serves a check made right after one and no diagnosis of a failure from before it. An entry that
 answers part of what a matter asks leaves the rest to be improvised in the cycle, so it settles
-nothing, whether its answer is good or not (WAY-270). Operating the product as its user does lets
+nothing at a definition, whether its answer is good or not (WAY-270); at a task no gate follows, and
+opening a decision stays the human's (WAY-267). Operating the product as its user does lets
 the check see what a user sees, while reading the store of data past the application shows a state
-no user meets and skips the code in between. A check needs the data in a given state, so the answer says both
-where the data comes from and how the agent brings it to that state; otherwise the agent of the
+no user meets and skips the code in between. A check needs the data in a given state, so the answer
+says both where the data comes from and how the agent brings it to that state; otherwise the agent of the
 cycle improvises it. A dedicated test environment that persists is in many cases better than data
 set up from scratch for every change, though it brings costs of its own, so neither is ruled out
 and the step weighs them by their consequences (WAY-123).
