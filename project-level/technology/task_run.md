@@ -24,13 +24,16 @@ In place of the first two bullets of `start.md`:
 The bullet of `start.md` on reading the foundation stands. In place of its other bullets:
 
 - Where the document has no section *Technology*, begin with *List* below.
+- Where the section holds a list and the run has a note the section does not yet hold, write the
+  note and follow *List* below for it first, whatever the items already there end with. Only then do
+  the bullets below apply.
 - Where the section holds a list, read its notes and items. An item ending `— open` is looked for
   under *Questions to settle* first; where a question written for that choice stands, the item ends
-  `— settled: <question>`. Then show the list and ask whether it still holds; where the human adds
-  or changes an item, follow *List* below for it. Then resume the step "Settle the open choices"
-  with the open items, their preferences and what they wait for. A report
-  `.runs/technology/<choice>.md` that reads `critique: passed` and names this document at its head
-  is reused, and any other starts its research again.
+  `— settled: <question>`. Then, unless *List* has just shown it, show the list and ask whether it
+  still holds; where the human adds or changes an item, follow *List* below for it. Then resume the
+  step "Settle the open choices" with the open items, their preferences and what they wait for. A
+  report `.runs/technology/<choice>.md` that reads `critique: passed` and names this document at its
+  head is reused, and any other starts its research again.
 - Where the list holds no open item, go to *Close* below.
 
 The look of `running_product.md` is not taken, here or at *List*: a matter of an agent's way to the
