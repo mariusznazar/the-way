@@ -7552,6 +7552,95 @@ each output location; always listing the command's source — slices that do not
 an unchanged file; putting the mechanical pattern rule in the plan skill — the orchestrator would
 not read it; repeating that rule in both skills — the copies could diverge.
 
+### WAY-265 — Where does a fragment of a skill stand that some of its steps need, but not all?
+
+Where WAY-256 binds a fragment of a skill that some of the skill's steps need, not all, a rule of
+working that the agent has to keep during those steps stays in the skill's `SKILL.md`, and text the
+agent reads or consults, such as a procedure, a list or a template, stands in a file beside the
+skill that each of those steps names; a step after the first has that file read unless an earlier
+step did. Fragments that stand unchanged are not bound by it.
+
+- **Scope:** instruction-files, decisions, invariants, glossary, part-map, environment-facts,
+  elements-common, project-level, product-guidelines, task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-256
+- **Verification:** an agent compares the change with the decision:
+  - complies: a template that three of a skill's five steps use stands in a file beside the skill,
+    each of the three steps names it, and the second and third have it read unless an earlier step
+    did; the manner of asking the human, which the agent keeps at every step that asks, stands in
+    `SKILL.md`;
+  - violates: a list that two steps consult is pasted whole into `SKILL.md` and carried through the
+    steps that do not use it; a rule of working that three steps keep stands only in the file of the
+    first, so the other two never reach it; a step names the file and has it read again though an
+    earlier step read it.
+- **Origin:** none
+
+*Rationale:* what an agent keeps while it works must be present at every step where it works, so it
+cannot stand in the file of one step; what it only consults is needed at the steps that consult it,
+so it leaves the text read at the other steps (WAY-256). A rule on how to read it twice keeps the
+file from being read again where the agent already holds it, at the price that the later step
+depends on what an earlier one did; a session that skipped the earlier step reads the file there.
+The boundary between a rule of working and text to consult is a judgement, and the judgement of a
+fragment that is both is made in the row of the judgement that places it.
+*Rejected:* no rule, each case settled by the table of a judgement — every later skill settles the
+same question anew, and a reviewer may block each choice; everything that more than one step needs
+stays in `SKILL.md` — the main file grows by text carried through steps that do not use it, and the
+layout of files already made for skills with such fragments stops matching the rule.
+
+### WAY-266 — Where is the file of a variant named, when a step's file points to it?
+
+In a skill rebuilt or changed according to WAY-256, the file of a variant that a step's file
+points to is named in the skill's `SKILL.md` at that step as well, with the condition under which
+it is read. Skills whose files stand unchanged are not bound by it.
+
+- **Scope:** instruction-files, decisions, invariants, glossary, part-map, environment-facts,
+  elements-common, project-level, product-guidelines, task-cycle
+- **Based on:** claude-skill-nested-references
+- **Relations:** derives from WAY-256
+- **Verification:** an agent compares the change with the decision:
+  - complies: the file of a skill's second step says research is read from a file beside the skill
+    when research runs, and the skill's `SKILL.md` at that step names the same file and the same
+    condition;
+  - violates: the research file is named only in the second step's file, so an agent that read the
+    skill's `SKILL.md` cannot see that the file exists.
+- **Origin:** none
+
+*Rationale:* an agent that reads a skill's `SKILL.md` then sees every file its use may reach and the
+condition of each, and a file reached through another file, which Claude may read in part, is not
+the only way to it. The cost is a file named in two places that must be kept equal, and a skill
+whose files stand unchanged differs from one rebuilt.
+*Rejected:* the variant named only in the step's file, as in a layout with two levels — the layout
+stays at odds with the rule of references one level deep, and the rule has to change or a reviewer
+reports it in every later skill; the variant left in the step's file — every use reads variants it
+does not need, against the aim of WAY-256.
+
+### WAY-267 — What does a session do that did not read the refinement steps a skill of guidelines relies on?
+
+In a skill that leads a product's guidelines matters, a session that has not read steps 1 and 2 of
+`refine-task` in the conversation, because it opened the skill directly or resumed the work in a
+new conversation, goes through those steps before the skill's first step. Skills of guidelines
+whose text stands unchanged are not bound by it until they are rebuilt.
+
+- **Scope:** product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-214
+- **Verification:** an agent compares the change with the decision:
+  - complies: the step that says what a guidelines skill reads ends with a sentence sending a
+    session that has not read the first two steps of `refine-task` to them first;
+  - violates: that step has every session read again what `refine-task` reads, or a rebuilt skill
+    of guidelines lacks the sentence, so a session that opened it directly works without the task
+    template.
+- **Origin:** none
+
+*Rationale:* a skill of guidelines takes over inside the refinement of a task, whose template and
+sources `refine-task` has read, and a session that did not pass through that refinement lacks them.
+The sentence costs a few words in every use; it does not reach a session whose conversation was
+summarised during the work, which holds a summary of the reading in its place.
+*Rejected:* no sentence — a session opened directly or resumed works without the task template, and
+the same remark returns for each skill; the sentence only in the testing skill — the styleguide
+skill keeps the same gap; the first step reads those files again in every use — most of the gain
+of reading each file at its step is lost.
+
 ## Withdrawn identifiers
 
 | Identifier | Why | Successors |
