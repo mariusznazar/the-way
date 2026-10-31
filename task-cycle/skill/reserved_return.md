@@ -5,9 +5,9 @@ or where the task at step 4, an agent's question or a report of `returned` needs
 framework, a library, a store of data, a way of logging in or a place to run that the task, the
 spec and the foundation do not settle.
 
-No stage of the cycle settles a reserved choice, you included (WAY-266): the human settles it at
+No stage of the cycle settles a reserved choice, you included (WAY-268): the human settles it at
 `settle-technology`, so the cycle ends in a blocked draft request and the task returns to refinement
-(WAY-267).
+(WAY-269).
 
 ## Check the choice
 

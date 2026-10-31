@@ -132,7 +132,7 @@ A repository instruction file is an instruction file for coding agents that a re
 
 ## reserved choice
 
-A reserved choice is a technology choice that WAY-266 keeps for the human: unlike another decision reserved to a human, a task's cycle ends on it, and unlike another open design choice, no spec is written for it.
+A reserved choice is a technology choice that WAY-268 keeps for the human: unlike another decision reserved to a human, a task's cycle ends on it, and unlike another open design choice, no spec is written for it.
 
 - **Not:** none
 

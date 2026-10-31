@@ -58,7 +58,7 @@ project skill with the `the-way-` prefix, never a personal copy.
   `ready for cycle` to `in cycle` from the exact working/archived cycle trace, and `in cycle` to
   `done` from the record commit reachable in freshly fetched integration history. Both may be
   supported together for a stale ready row; log both without requiring an intervening run.
-- One more transition is supported, only on the human's word (WAY-267): a task whose blocked
+- One more transition is supported, only on the human's word (WAY-269): a task whose blocked
   request the human closed returns to refinement, and its row reading `in cycle` or still
   `ready for cycle` goes to `to refine`, with a change-log line naming the request. The document
   cell stays. Before moving the row, remove that one cycle's trace, naming what goes to the human
@@ -110,7 +110,7 @@ project skill with the `the-way-` prefix, never a personal copy.
    actor/stage routing. Requirements and answers travel through files, never relayed in prompts.
    Permit one writer per file; refiners edit no shared plan, definition or foundation and launch
    no children. You perform all child dispatches their borrowed workflows request.
-   For a refiner's *Child-work request* for a run of the step that settles technology (WAY-265),
+   For a refiner's *Child-work request* for a run of the step that settles technology (WAY-267),
    dispatch the research agents, the critiques and the tests of risks that
    `project-level/technology/task_run.md` and `settle.md` give, one run per canonical request, at
    the document of the affected task with the lowest number; its report's head names every

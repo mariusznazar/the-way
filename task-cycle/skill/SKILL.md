@@ -211,7 +211,7 @@ author without a plan, also when it writes foundation entries or follows a revie
 needing division gets a plan (WAY-136). Both routes reach the same outcome through the same
 reviews, tests, return step and request.
 
-No stage of the cycle settles a reserved choice, you included (WAY-266), and no spec is written for
+No stage of the cycle settles a reserved choice, you included (WAY-268), and no spec is written for
 one (WAY-135). Where an agent returns `reserved`, or where the task at step 4, an agent's question
 or a report of `returned` needs a language, a framework, a library, a store of data, a way of
 logging in or a place to run that the task, the spec and the foundation do not settle, read
@@ -419,7 +419,7 @@ included — read `task-cycle/skill/blocked_finding.md` and follow it.
     reason, what the fix tried, the time, models and tokens of the cycle so far from `stages.md`
     with the number of review rounds, and what has not run on that code (WAY-162, WAY-163). A
     request a reserved choice blocks opens and states what `task-cycle/skill/reserved_return.md`
-    gives (WAY-267). If the task proved impossible, mark the request `blocked` and show the smallest
+    gives (WAY-269). If the task proved impossible, mark the request `blocked` and show the smallest
     missing fact or authorization and the ways tried; never present partial work as complete.
 14. Before reporting completion, confirm that the record lists every dispatch, choice, check, fix,
     review round and skipped stage. The final report names any write to the task's backlog entry.

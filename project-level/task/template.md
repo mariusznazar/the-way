@@ -126,7 +126,7 @@ the body; the project orchestrator changes only `Status:` after final acceptance
   gave it or the human's reason in the human's words; an answer transferred from a conversation
   brings them with it, and an answer with no ways shown has no *Not chosen* (WAY-134). A question a
   run of `settle-technology` settles holds, after these and only there, what the cycle needs to
-  write its decision (WAY-265): *Based on*, the source of each difference claimed between the
+  write its decision (WAY-267): *Based on*, the source of each difference claimed between the
   options — its address, the place in it, the passage word for word and the date read, the form the
   template of decisions gives; *Lacks*, each lack of the option chosen, as what it means for the
   product; and *Risks taken*, each risk the human took with it, marked as a hypothesis (WAY-138).
@@ -138,7 +138,7 @@ the body; the project orchestrator changes only `Status:` after final acceptance
   question/reason explicitly waiting for another task's result; plan dependencies alone do not delay
   refinement.
 - **Technology:** the notes and the list of choices of the runs of `settle-technology` at this task,
-  from which a run resumes (WAY-265). The section holds one item for each run's note, as it was
+  from which a run resumes (WAY-267). The section holds one item for each run's note, as it was
   given, with its date, and one item per choice, named in the document's language by what the
   product needs it for and ending with one marker in English:
 

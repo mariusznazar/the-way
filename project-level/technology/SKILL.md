@@ -7,7 +7,7 @@ description: Use when a project definition of a product that uses the-way has to
 
 Leads the step of the project level that settles technology. It runs at a document: a project
 definition, before the readiness gate (WAY-121) and after the step that finds the definition's
-foundation entries, or a task document, with a note saying what the run is for (WAY-265). "The
+foundation entries, or a task document, with a note saying what the run is for (WAY-267). "The
 document", here and in the files beside this skill, is the definition or, in a run at a task, the
 task document with its note. The step lists the choices the document needs, finds the entry that
 already settles each, and settles every other one with the human: at a definition as a projected

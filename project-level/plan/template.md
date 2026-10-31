@@ -100,7 +100,7 @@ The states (WAY-142):
 | `dropped — approved by human` | the human gave the task up |
 
 A row goes back to `to refine` from `in cycle` or `ready for cycle` only as `lead-project` gives,
-on the human's word (WAY-267).
+on the human's word (WAY-269).
 
 During leading, agent turns, `questions` and question-specific `waits for task <n>` leave the row
 `to refine`; a presented human package or `ready for approval` makes it `waiting for human`.

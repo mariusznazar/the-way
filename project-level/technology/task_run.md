@@ -1,7 +1,7 @@
 # A run at a task
 
 What a run of the skill `settle-technology`, whose `SKILL.md` lies beside this file, does at a task
-document (WAY-265). The file is read at step 0 of such a run and holds only what differs from a run
+document (WAY-267). The file is read at step 0 of such a run and holds only what differs from a run
 at a definition: a step it does not change stands as it is, the task document and its note being
 "the document". The form of the section *Technology* and of a settled question stands in
 `project-level/task/template.md`.

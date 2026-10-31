@@ -11,7 +11,7 @@ If two answers conflict, show both and ask which holds. If the answer changes th
 definition or a current foundation decision, route that change to its own process; do not silently
 settle it inside the task. The exception is a choice the human opened though a decision holds it,
 by a note or a change to the list of a run of `settle-technology`: that run is the process of the
-change, and its result is an edit of that decision in this document (WAY-30, WAY-265).
+change, and its result is an edit of that decision in this document (WAY-30, WAY-267).
 
 Settle known product choices needed to state the task's outcome before the cycle. A choice of
 implementation method stays with the cycle's plan, or with the choices of its cycle record where

@@ -18,7 +18,7 @@ to guess or overwrite another task.
   its human-presentation steps and required critique/child-work requests through this file.
   Start no child agent. The project orchestrator performs dispatches and presents the round
   package, candidates and required WAY-113 questions; you approve nothing on its behalf.
-- A run of the step that settles technology (WAY-265), whether `refine-task` starts it for a
+- A run of the step that settles technology (WAY-267), whether `refine-task` starts it for a
   reserved choice or the human asked for it, is led through this file by
   `project-level/technology/task_run.md`.
   Write the request for it as a *Child-work request* in your turn, never as a question: it names

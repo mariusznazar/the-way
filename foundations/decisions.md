@@ -2630,7 +2630,7 @@ choice the foundation holds thus settles nothing. A choice belongs on the list w
 later could change how the work is cut into tasks, or when it adds something the product has to
 run, pay for or back up; a choice one task can make and change alone stays with that task, while a
 choice under this rule that a definition missed, or that no definition holds, is settled through a
-run of the step at a task document (WAY-265, WAY-266). As an exception to that rule, where the
+run of the step at a task document (WAY-267, WAY-268). As an exception to that rule, where the
 project brings behaviour a user sees in the running product, the step looks at three matters of an
 agent's way to the running product — its logs, its interface and its development data — and lists
 as a choice of its own each matter that no decision of the foundation settles for that behaviour,
@@ -2701,7 +2701,7 @@ machine alone would leave an agent with no way to it.
 ### WAY-122 — How are the options of a technology choice found and checked before a human sees them?
 
 The options of each technology choice a project or a task needs come from research of that choice
-against the project definition or, in a run at a task (WAY-265), against the task document and the
+against the project definition or, in a run at a task (WAY-267), against the task document and the
 run's note, rather than from a fixed list of bundled stacks, and the research of every choice that
 depends on no unsettled choice starts once the list of choices is confirmed, each in a report of
 its own. An option the product's code is written in or against — a language, a framework, a
@@ -2760,7 +2760,7 @@ research in turn.
 
 ### WAY-123 — How does a technology choice reach a human who cannot assess the technology?
 
-The step that settles technology, at a project definition or at a task (WAY-265), shows the options
+The step that settles technology, at a project definition or at a task (WAY-267), shows the options
 of each choice by their consequences for the product — what it costs, where it runs, what keeping
 it running takes and what changing it later costs — and the human chooses between those
 consequences. A difference with no consequence for the product decides nothing, and where no
@@ -3285,12 +3285,12 @@ and a fresh agent given the report writes the spec, after whose review the orche
 again whether one author can hold the change or it needs a plan, using the same judgment as before
 implementation (WAY-136). Where the open design choice is a reserved choice, no spec is written: an
 agent's report without code and the discard of its attempt stay the same, and the cycle stops
-(WAY-266, WAY-267).
+(WAY-268, WAY-269).
 
 - **Scope:** task-cycle
 - **Based on:** none
 - **Relations:** derives from WAY-13 · derives from WAY-69 · derives from
-  WAY-126 · derives from WAY-134 · derives from WAY-266
+  WAY-126 · derives from WAY-134 · derives from WAY-268
 - **Verification:** an agent compares a cycle with the decision:
   - complies: a task whose rows of *Settlements to record* carry its two decisions and its invariant
     proceeds without a spec, and the review reads the invariant's test against its sentence; a
@@ -3411,7 +3411,7 @@ slices — the pin moved before the route keeps the installer's output out of ev
 
 Where the options of a place to run differ in no consequence for the product and more than one of
 them is the simplest and cheapest, the step that settles technology, at a project definition or at
-a task (WAY-265), recommends, of those, the one an agent works with best: operated from a terminal,
+a task (WAY-267), recommends, of those, the one an agent works with best: operated from a terminal,
 deployed by a script and documented in pages an agent can read. For a place to run, how well an
 agent works with an option decides nothing else: it leaves no option out of the comparison and is
 weighed against no consequence for the product.
@@ -3446,7 +3446,7 @@ through the properties WAY-122 weighs.
 
 ### WAY-138 — Which option of a technology choice is tested for what choosing it could break, and where do the risks found go?
 
-The step that settles technology, at a project definition or at a task (WAY-265), tests the option
+The step that settles technology, at a project definition or at a task (WAY-267), tests the option
 it recommends for each choice it settles, one a constraint of the definition or of the task document
 settles included, with a devil's advocate, a pre-mortem and a search for unknown unknowns; it tests
 no choice a decision of the foundation holds, a choice the human opened being held by no decision,
@@ -7574,7 +7574,7 @@ each output location; always listing the command's source — slices that do not
 an unchanged file; putting the mechanical pattern rule in the plan skill — the orchestrator would
 not read it; repeating that rule in both skills — the copies could diverge.
 
-### WAY-265 — How does the step that settles technology run outside a project definition?
+### WAY-267 — How does the step that settles technology run outside a project definition?
 
 Besides its run at a project definition, the step that settles technology runs at a task document,
 with a note saying what the run is for, and a run with no task document starts by creating one
@@ -7635,19 +7635,19 @@ in the refinement of every task that WAY-121 rejects; a run limited to what noth
 rule, but a change of technology would go through ordinary refinement with no research or critique,
 and a choice of where a product's logs go could not pass through the step.
 
-### WAY-266 — Who settles a technology choice that no decision or definition settles?
+### WAY-268 — Who settles a technology choice that no decision or definition settles?
 
 A technology choice whose later settling could change how the work is cut into tasks, or that adds
 something the product has to run, pay for or back up, and that no decision of the foundation, no
 approved definition the task carries and no accepted answer of its task document settles, is a
-reserved choice: the human settles it at the step that settles technology (WAY-265), so that it
+reserved choice: the human settles it at the step that settles technology (WAY-267), so that it
 rests on a source that can be checked rather than on a model's memory, and in the area of these
 choices this decision prevails over WAY-114, under which an agent writes an entry on its own
 recommendation for the human to accept at the merge. Refinement that sees a reserved choice runs
 that step at the task, which is not ready until the human has settled it; in a task's cycle no agent
 settles one, its orchestrator included: the agent that meets it returns a report with no code and
 the status `reserved`, the attempt is discarded, the cycle opens a blocked draft request naming the
-choice and the task returns to refinement (WAY-267). Every other choice stays in the cycle, made by
+choice and the task returns to refinement (WAY-269). Every other choice stays in the cycle, made by
 the agent that meets it and entered in the cycle record's questions table, and the tools the skills
 of guidelines choose stay on those skills' routes; whether a choice falls under this rule rests on
 the agent's judgment, helped by the examples of `project-level/technology/reserved_choices.md`.
@@ -7701,7 +7701,7 @@ skills and the decisions on their routes (WAY-185, WAY-186, WAY-210, WAY-211, WA
 would have to change, and a task choosing several tools at once takes a longer way, with no recorded
 case of the present route failing.
 
-### WAY-267 — How does a task leave a cycle that met a reserved choice, and how does it come back?
+### WAY-269 — How does a task leave a cycle that met a reserved choice, and how does it come back?
 
 A cycle that meets a reserved choice before its request opens ends with its attempt discarded, its
 task branch holding, above its base or the commit that moved the pin, only the commit that adds its
@@ -7709,7 +7709,7 @@ record and the commit that removes it, and a draft request marked `blocked` that
 says what did not run and why, and settles nothing; one that meets it in a correction takes back
 only that correction's commits and returns the request to draft marked `blocked`. Once the human
 closes the request, the task returns to refinement with its accepted answers and rows, the named
-choice being the note of a run of the step that settles technology (WAY-265), and a new cycle starts
+choice being the note of a run of the step that settles technology (WAY-267), and a new cycle starts
 only after the human accepts the whole changed document, on a new branch and, for a task of a
 project plan, under the same name. For a task of a project plan, on the human's word, the project
 orchestrator removes by name that one cycle's worktree or working directory, its local branch, its
@@ -7719,7 +7719,7 @@ branch on the host and that branch's remote-tracking ref, and then moves the pla
 - **Scope:** project-level, task-cycle
 - **Based on:** github-closed-pull-request-branch
 - **Relations:** derives from WAY-147 · derives from WAY-153 · derives from WAY-227 ·
-  derives from WAY-266
+  derives from WAY-268
 - **Verification:** an agent compares the cycle, its request and the plan with the decision:
   - complies: the task branch goes back to its base, or to the commit that moved the pin, the commit
     that adds the record is pushed and the draft opens on it, and the commit that removes the record

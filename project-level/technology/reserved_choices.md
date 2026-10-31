@@ -1,10 +1,10 @@
 # Reserved choices
 
 Which technology choices the human settles at the step `settle-technology` and which the agent that
-meets them makes itself (WAY-266). Read it when the work needs a language, a framework, a library, a
+meets them makes itself (WAY-268). Read it when the work needs a language, a framework, a library, a
 store of data, a way of logging in or a place to run that the task, the spec and the foundation do
 not settle. The rule says only what stops a task on its own: a human may run the step for any
-choice (WAY-265).
+choice (WAY-267).
 
 ## The rule
 

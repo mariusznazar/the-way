@@ -23,5 +23,5 @@ run writes no row, and the cycle writes no decision of the choice otherwise.
 
 A candidate that collides with a current decision or a projected entry goes back to step 4 as a
 conflict; one that changes the task's scope goes back to step 3. The candidate of a question that
-changes a decision the human opened (WAY-265) is no conflict with that decision, and its row names
+changes a decision the human opened (WAY-267) is no conflict with that decision, and its row names
 the decision it changes.
