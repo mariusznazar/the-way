@@ -5,13 +5,17 @@ included.
 
 ## Where a fragment of a skill stands
 
-For each fragment of a skill, ask whether every step of the skill needs it, or only one step or one
-variant of the skill (WAY-256):
+For each fragment of a skill, ask whether every step of the skill needs it, or some steps but not
+all, or only one step or one variant of the skill (WAY-256):
 
 - **every step needs it** — it stays in `SKILL.md`, which keeps the picture of the whole, the rules
   of working that hold across the steps, and the pointers;
 - **only one step or one variant needs it** — it stands in a file beside the skill, which that
-  step tells the agent to read, also where every use of the skill comes to that step.
+  step tells the agent to read, also where every use of the skill comes to that step;
+- **some steps need it, not all** — a rule of working the agent has to keep during those steps stays
+  in `SKILL.md`; text it reads or consults, such as a procedure, a list or a template, stands in a
+  file beside the skill, each of those steps names that file, and a step after the first has it read
+  unless an earlier step did (WAY-256).
 
 The exception is a fragment of one step or one variant that is one instruction and would otherwise
 stand in a file beside the skill: it stays in `SKILL.md`, where its pointer would stand, since the

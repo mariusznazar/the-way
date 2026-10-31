@@ -7277,7 +7277,11 @@ that hold across its steps and the pointers, and a fragment of one step or varia
 instruction, which would otherwise stand in a file beside the skill, stays in `SKILL.md` where its
 pointer would stand, since the pointer is an instruction too; beyond that, a fragment's place
 follows from whether a use of the skill needs it at that step, never from the count of words or
-lines of the file. Fragments that stand unchanged are not bound by it.
+lines of the file. A fragment that some steps of the skill need, not all, stands by what it is: a
+rule of working that the agent has to keep during those steps stays in the skill's `SKILL.md`, and
+text the agent reads or consults, such as a procedure, a list or a template, stands in a file beside
+the skill that each of those steps names, a step after the first having that file read unless an
+earlier step did; fragments that stand unchanged are not bound by it.
 
 - **Scope:** instruction-files, decisions, invariants, glossary, part-map, environment-facts,
   elements-common, project-level, product-guidelines, task-cycle
@@ -7290,11 +7294,18 @@ lines of the file. Fragments that stand unchanged are not bound by it.
     move that mode's checklist into a file the mode's step names; a rule of an element's entries a
     change adds stands in the element's template; the one sentence only one variant of a skill
     needs stands in that variant's row of the skill's `SKILL.md`, where a pointer to it would stand;
+    a template that three of a skill's five steps use stands in a file beside the skill, each of the
+    three steps names it, and the second and third have it read unless an earlier step did, while
+    the manner of asking the human, which the agent keeps at every step that asks, stands in
+    `SKILL.md`;
   - violates: a change adds to a skill's `SKILL.md` a page of rules only its review step uses; the
     skill of `instruction-files` proposes to cut a skill to a number of lines; a change puts a rule
     of an element's entries into a file beside the element's skill; a file beside a skill holds one
     instruction and its step names it by a pointer; a step keeps several instructions only one
-    variant needs in `SKILL.md` because each of them is short.
+    variant needs in `SKILL.md` because each of them is short; a list that two steps consult is
+    pasted whole into `SKILL.md` and carried through the steps that do not use it; a rule of working
+    that three steps keep stands only in the file of the first, so the other two never reach it; a
+    step names a file and has it read again though an earlier step read it.
 - **Origin:** none
 
 *Rationale:* a single rule is not lost in a longer file, while the more instructions an agent has
@@ -7315,7 +7326,14 @@ rebuilt, since binding them would make every skill a breach on the day of the me
 that is one instruction, moved out, leaves a pointer in its place, which is an instruction too: the
 instructions in play stay as many, and a file is added to keep. The exception reaches no further
 than one instruction against the one pointer that would replace it, so a fragment of more
-instructions cannot stay on the ground that each of them is short.
+instructions cannot stay on the ground that each of them is short. What an agent keeps while it
+works must be present at every step where it works, so it cannot stand in the file of one step,
+while what it only consults is needed at the steps that consult it and leaves the text read at the
+others; the rule that a later step has the file read unless an earlier step did keeps the file from
+being read again where the agent already holds it, at the price that the later step depends on what
+an earlier one did, and a session that skipped the earlier step reads the file there. The boundary
+between a rule of working and text to consult is a judgement, made in the row of the judgement that
+places the fragment.
 *Rejected:* a short skill as the aim, after the course's claim — no measurement stands behind it; a
 threshold of words or lines for a skill — a count says nothing of whether a step needs a fragment;
 the skills of the-way's process left to WAY-35 alone — what neither a template nor the shared part
@@ -7323,7 +7341,11 @@ holds would follow no rule of place; binding only what the skill of `instruction
 a new fragment of a skill of the-way could land in its `SKILL.md` until the skill is judged;
 binding the fragments that stand today — every skill would breach it on the day of the merge;
 every fragment one step or variant needs moved out, one instruction included — it trades an
-instruction for a pointer and adds a file.
+instruction for a pointer and adds a file. For a fragment that some steps need, not all: no rule,
+each case settled by the table of a judgement — every later skill settles the same question anew,
+and a reviewer may block each choice; everything that more than one step needs stays in `SKILL.md`
+— the main file grows by text carried through steps that do not use it, and the layout of files
+already made for skills with such fragments stops matching the rule.
 
 ### WAY-257 — What does the skill of `instruction-files` show as the ground of each verdict?
 
@@ -7551,6 +7573,61 @@ leave the same gap; one pattern for all output directories — it may be too bro
 each output location; always listing the command's source — slices that do not change it would claim
 an unchanged file; putting the mechanical pattern rule in the plan skill — the orchestrator would
 not read it; repeating that rule in both skills — the copies could diverge.
+
+### WAY-265 — Where is the file of a variant named, when a step's file points to it?
+
+In a skill rebuilt or changed according to WAY-256, the file of a variant that a step's file
+points to is named in the skill's `SKILL.md` at that step as well, with the condition under which
+it is read. A step's file that stands unchanged, with the variant file it points to, is not bound
+by it.
+
+- **Scope:** instruction-files, decisions, invariants, glossary, part-map, environment-facts,
+  elements-common, project-level, product-guidelines, task-cycle
+- **Based on:** claude-skill-nested-references
+- **Relations:** derives from WAY-256
+- **Verification:** an agent compares the change with the decision:
+  - complies: the file of a skill's second step says research is read from a file beside the skill
+    when research runs, and the skill's `SKILL.md` at that step names the same file and the same
+    condition;
+  - violates: the research file is named only in the second step's file, so an agent that read the
+    skill's `SKILL.md` cannot see that the file exists.
+- **Origin:** none
+
+*Rationale:* an agent that reads a skill's `SKILL.md` then sees every file its use may reach and the
+condition of each, and a file reached through another file, which Claude may read in part, is not
+the only way to it. The cost is a file named in two places that must be kept equal, and a step's
+file that stands unchanged, with the variant file it points to, differs from one rebuilt.
+*Rejected:* the variant named only in the step's file, as in a layout with two levels — the layout
+stays at odds with the rule of references one level deep, and the rule has to change or a reviewer
+reports it in every later skill; the variant left in the step's file — every use reads variants it
+does not need, against the aim of WAY-256.
+
+### WAY-266 — What does a session do that did not read the refinement steps a skill of guidelines relies on?
+
+In a skill that leads a product's guidelines matters, a session that has not read steps 1 and 2 of
+`refine-task` in the conversation, because it opened the skill directly or resumed the work in a
+new conversation, goes through those steps before the skill's first step. Skills of guidelines
+whose text stands unchanged are not bound by it until they are rebuilt.
+
+- **Scope:** product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-214
+- **Verification:** an agent compares the change with the decision:
+  - complies: the step that says what a guidelines skill reads ends with a sentence sending a
+    session that has not read the first two steps of `refine-task` to them first;
+  - violates: that step has every session read again what `refine-task` reads, or a rebuilt skill
+    of guidelines lacks the sentence, so a session that opened it directly works without the task
+    template.
+- **Origin:** none
+
+*Rationale:* a skill of guidelines takes over inside the refinement of a task, whose template and
+sources `refine-task` has read, and a session that did not pass through that refinement lacks them.
+The sentence costs a few words in every use; it does not reach a session whose conversation was
+summarised during the work, which holds a summary of the reading in its place.
+*Rejected:* no sentence — a session opened directly or resumed works without the task template, and
+the same remark returns for each skill; the sentence only in the testing skill — the styleguide
+skill keeps the same gap; the first step reads those files again in every use — most of the gain
+of reading each file at its step is lost.
 
 ## Withdrawn identifiers
 

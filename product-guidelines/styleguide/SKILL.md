@@ -66,7 +66,8 @@ Nothing is read at the start: each step below names the files it needs. What `re
 its steps 1 and 2 — its own `project-level/task/skill/SKILL.md`, the task template
 `project-level/task/template.md`, the section "How a skill asks" of
 `elements/common/way_of_working.md`, and the product's foundation as it selected it — is not read
-again.
+again. A session that has not read them in this conversation — it opened this skill directly, or
+resumed the work in a new one — goes through `refine-task` steps 1 and 2 first (WAY-266).
 
 ## 1. Recognize
 
