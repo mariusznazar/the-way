@@ -7704,16 +7704,17 @@ case of the present route failing.
 ### WAY-267 — How does a task leave a cycle that met a reserved choice, and how does it come back?
 
 A cycle that meets a reserved choice before its request opens ends with its attempt discarded, its
-task branch holding only the commit that adds its record and the commit that removes it, and a draft
-request marked `blocked` that names the choice, says that nothing else ran and why, and settles
-nothing; one that meets it in a correction takes back only that correction's commits and returns the
-request to draft marked `blocked`. Once the human closes the request, the task returns to refinement
-with its accepted answers and rows, the named choice being the note of a run of the step that
-settles technology (WAY-265), and a new cycle starts only after the human accepts the whole changed
-document, under the same name and on a new branch. For a task of a project plan, on the human's word,
-the project orchestrator removes by name that one cycle's worktree or working directory, its local
-branch, its branch on the host and that branch's remote-tracking ref, and then moves the plan's row
-back to `to refine`, with a line in the plan's log of changes naming the request.
+task branch holding, above its base or the commit that moved the pin, only the commit that adds its
+record and the commit that removes it, and a draft request marked `blocked` that names the choice,
+says what did not run and why, and settles nothing; one that meets it in a correction takes back
+only that correction's commits and returns the request to draft marked `blocked`. Once the human
+closes the request, the task returns to refinement with its accepted answers and rows, the named
+choice being the note of a run of the step that settles technology (WAY-265), and a new cycle starts
+only after the human accepts the whole changed document, on a new branch and, for a task of a
+project plan, under the same name. For a task of a project plan, on the human's word, the project
+orchestrator removes by name that one cycle's worktree or working directory, its local branch, its
+branch on the host and that branch's remote-tracking ref, and then moves the plan's row back to
+`to refine`, with a line in the plan's log of changes naming the request.
 
 - **Scope:** project-level, task-cycle
 - **Based on:**
@@ -7726,15 +7727,16 @@ back to `to refine`, with a line in the plan's log of changes naming the request
   - complies: the task branch goes back to its base, or to the commit that moved the pin, the commit
     that adds the record is pushed and the draft opens on it, and the commit that removes the record
     follows; the request links the record by the commit that adds it, gives the ways seen as not
-    researched, and names as not run the spec, the plan, the reviews, the return step, the
-    reconciliation with the target branch and the gate; the human closes it, `refine-task` runs with
-    the named choice as its note, and the new cycle keeps the task's name on a new branch; the
-    project orchestrator, told that the task returns to refinement, removes that one cycle's trace
-    by name, and the plan-state reader reports no conflict on the row;
+    researched, and names as not run, with why, the gate and each of the spec, the plan, the
+    reviews, the return step and the reconciliation with the target branch that did not run; the
+    human closes it, `refine-task` runs with the named choice as its note, and the new cycle starts
+    on a new branch, a task of a project plan keeping its name; the project orchestrator, told that
+    the task returns to refinement, removes that one cycle's trace by name, and the plan-state
+    reader reports no conflict on the row;
   - violates: a remark on the request continues the cycle; an option picked in a remark stands as
-    the settled choice; the new cycle reuses the earlier branch or numbers its name; a row moves
-    back with no word from the human; `git fetch --prune` takes away the evidence of other tasks'
-    closed requests.
+    the settled choice; the new cycle reuses the earlier branch; the new cycle of a task of a
+    project plan numbers its name; a row moves back with no word from the human; `git fetch --prune`
+    takes away the evidence of other tasks' closed requests.
 - **Origin:** none
 
 *Rationale:* a discarded attempt leaves no code to show, so what the human needs stands in the
@@ -7742,12 +7744,12 @@ request: the choice in plain words, where it showed and what was searched. The r
 human meets the cycle (WAY-227), and closing it hands the choice to refinement, where the step can
 run and the human accepts the whole changed document, rather than to a remark that would stand
 outside that document. Nothing else runs because nothing is left to check: the tree equals the base
-the cycle started from, so the request holds no finished change for a gate to run on (WAY-160). The
-new cycle keeps the name because a plan's task and its record meet
-through it (WAY-147), and the earlier record never reached the target branch, so the name is free
-there; a new branch keeps the discarded commits out of the new request. The earlier cycle's trace
-goes on the human's word because a conflicting trace is brought to the human (WAY-153), and left in
-place it would show as a conflict at every session, or as a false proposal that the new cycle has
+the cycle started from, so the request holds no finished change for a gate to run on (WAY-160). A
+plan's task keeps its name in the new cycle because the task and its record meet through it
+(WAY-147), and the earlier record never reached the target branch, so the name is free there; a new
+branch keeps the discarded commits out of the new request. The earlier cycle's trace goes on the
+human's word because a conflicting trace is brought to the human (WAY-153), and left in place it
+would show as a conflict at every session, or as a false proposal that the new cycle has
 started; it goes by name so that the evidence of other tasks' closed cycles stays. The cost is that
 the removal relies on a host that keeps a closed request's commits; where one does not, the earlier
 record is lost, while the task document and the request's description still carry what the next step
@@ -7759,11 +7761,12 @@ host, but a request merged by mistake would bring a record to the target branch;
 reported only in the record or the conversation — the request is where the human meets the cycle's
 work; the plan-state reader taught to skip a cycle whose record says it returned — the branch and
 worktree could stay, but it stops bringing a conflicting trace to the human, a change to the meaning
-of WAY-153; a numbered name for the new cycle — it breaks WAY-147, and the reader looks for a record
-under the task's name, so the task could never read as done; the record of a returned cycle kept
-elsewhere, out of the reader's sight — the trail to the request is lost, and a second place for
-records has to be kept; the earlier branch reused — its history stays in one place, but only a
-correction reuses a branch, and the discarded cycle's commits enter the new request.
+of WAY-153; a numbered name for the new cycle of a plan's task — it breaks WAY-147, and the reader
+looks for a record under the task's name, so the task could never read as done; the record of a
+returned cycle kept elsewhere, out of the reader's sight — the trail to the request is lost, and a
+second place for records has to be kept; the earlier branch reused — its history stays in one
+place, but only a correction reuses a branch, and the discarded cycle's commits enter the new
+request.
 
 ## Withdrawn identifiers
 
