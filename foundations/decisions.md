@@ -7717,10 +7717,7 @@ branch on the host and that branch's remote-tracking ref, and then moves the pla
 `to refine`, with a line in the plan's log of changes naming the request.
 
 - **Scope:** project-level, task-cycle
-- **Based on:**
-  https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-branches-in-your-repository/deleting-and-restoring-branches-in-a-pull-request
-  § "Restoring a deleted branch" — "You can restore the head branch of a closed pull request."; read
-  2026-10-31
+- **Based on:** github-closed-pull-request-branch
 - **Relations:** derives from WAY-147 · derives from WAY-153 · derives from WAY-227 ·
   derives from WAY-266
 - **Verification:** an agent compares the cycle, its request and the plan with the decision:
@@ -7744,7 +7741,8 @@ request: the choice in plain words, where it showed and what was searched. The r
 human meets the cycle (WAY-227), and closing it hands the choice to refinement, where the step can
 run and the human accepts the whole changed document, rather than to a remark that would stand
 outside that document. Nothing else runs because nothing is left to check: the tree equals the base
-the cycle started from, so the request holds no finished change for a gate to run on (WAY-160). A
+the cycle started from or the commit that moved the pin, so the request holds no finished change for
+a gate to run on (WAY-160), and after a correction it is the tree the request already holds. A
 plan's task keeps its name in the new cycle because the task and its record meet through it
 (WAY-147), and the earlier record never reached the target branch, so the name is free there; a new
 branch keeps the discarded commits out of the new request. The earlier cycle's trace goes on the

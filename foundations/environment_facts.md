@@ -189,6 +189,12 @@ Anthropic's guide for authors of Agent Skills says that Claude might read only p
 
 - **Source:** https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices (archived: http://web.archive.org/web/20261022015600/https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices, 2026-10-22) § Avoid deeply nested references — "Claude might partially read files when they’re referenced from other referenced files." · § Avoid deeply nested references — "When encountering nested references, Claude might use commands such as head -100 to preview content rather than reading entire files, resulting in incomplete information." · § Avoid deeply nested references — "Keep references one level deep from SKILL.md."; read 2026-10-28
 
+## github-closed-pull-request-branch
+
+On GitHub, the deleted head branch of a closed pull request can be restored.
+
+- **Source:** https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-branches-in-your-repository/deleting-and-restoring-branches-in-a-pull-request (archived: https://web.archive.org/web/20261016024619/https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-branches-in-your-repository/deleting-and-restoring-branches-in-a-pull-request, 2026-10-16) § Restoring a deleted branch — "You can restore the head branch of a closed pull request."; read 2026-10-31
+
 ## Withdrawn identifiers
 
 | Identifier | Why | Successors |
