@@ -19,10 +19,12 @@ own, even where its answer adds nothing to run, pay for or back up, or the produ
 the matter names. A matter listed is settled like any other choice from here on
 (WAY-121).
 
-## A list already written
+## The entry nested under an item
 
-An item of one of the three matters ends with the marker it was given, and the marker may no longer
-be true when the entry it names is read as above:
+A new list nests the entry too: an item `— open` over a decision silent on part of the matter holds
+that decision as `Changes: <PREFIX>-<NN>`, or `Changes: <its question>` for a projected decision. For
+a list already written, an item of one of the three matters ends with the marker it was given, and
+the marker may no longer be true when the entry it names is read as above:
 
 - An item `— held by: <PREFIX>-<NN>` whose decision is silent on part of what the matter asks ends
   `— open`, with that decision nested under it as `Changes: <PREFIX>-<NN>`.

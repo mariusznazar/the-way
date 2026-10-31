@@ -3502,16 +3502,16 @@ foundation hold — they reopen what was settled.
 The-way holds no skill of a product, only the list of what a product's deployment skill covers: a
 preview of deployments; where the secrets lie and how they are rotated; rollback, with its number of
 steps and what happens to the data; what the agent does and what the human does; how to read the
-logs and how long the record lives, between deployments too; and how a human learns of a failure.
-When a task's outcome deploys the product or changes how or where it runs, the-way's skill
-`refine-task` checks, while it refines the task, that the product has a deployment skill covering
-every item of the list, and where it has none or an item is missing, the task gains an item of its
-To do for that work or the human splits that work into a task of its own. For the last two items,
-the check quotes the answer a decision of the foundation or an approved definition the task carries
-already gives, and the task gains the item that writes it into the skill; otherwise it asks the
-human whether to run the step that settles technology at the task (WAY-267), with a note on what
-the skill leaves unsaid, instead of filling the item in, and a skill that records the human's
-refusal covers the item, so the question does not return.
+logs; how long the record lives, between deployments too; and how a human learns of a failure. When
+a task's outcome deploys the product or changes how or where it runs, the-way's skill `refine-task`
+checks, while it refines the task, that the product has a deployment skill covering every item of
+the list, and where it has none or an item is missing, the task gains an item of its To do for that
+work or the human splits that work into a task of its own. For the two items on the record's life
+and on a failure, the check quotes the answer a decision of the foundation or an approved
+definition the task carries already gives, and the task gains the item that writes it into the
+skill; otherwise it asks the human whether to run the step that settles technology at the task
+(WAY-267), with a note on what the skill leaves unsaid, instead of filling the item in, and a skill
+that records the human's refusal covers the item, so the question does not return.
 
 - **Scope:** project-level
 - **Based on:** none
@@ -7900,8 +7900,8 @@ request.
 Where a project runs the product outside the machine on which it is made, which holds unless the
 definition or a decision of the foundation keeps the product on that machine, and no decision of the
 foundation settles it, the step that settles technology lists how a human learns of a failure of
-the running product as a choice of its own, even where its answer adds nothing to run, pay for or
-back up; in a run at a task (WAY-267) it enters the list only where the note touches it. No
+the running product as a choice of its own, answered by a tool that collects failures, an alert or a
+deliberate absence, even where its answer adds nothing to run, pay for or back up; in a run at a task (WAY-267) it enters the list only where the note touches it. No
 definition has to hold this choice, the readiness gate does not check it and an approved definition
 does not come back to the step for it; it is no matter of an agent's way to the running product, so
 whether an agent can read an option is a consequence like any other, and a change to it does not
@@ -7918,10 +7918,10 @@ which leaves out an option with no documentation.
   - complies: a project that moves a product from the developer's machine to a server, whose
     foundation holds no decision on it, lists how a human learns of a failure as a choice of its
     own beside its place to run; a definition silent on where the product runs lists it; the
-    comparison holds "no tool for now" beside the tools found, its consequences — the failure
-    learned of from users, and what adding a tool later costs — anchored in the definition and in
-    the pages of the other options, and a deliberate absence the human is shown as the option
-    recommended is tested like any other recommended option (WAY-138); a service whose panel only a
+    comparison holds an alert and "no tool for now" beside the tools that collect failures, the
+    consequences of the absence — the failure learned of from users, and what adding a tool later
+    costs — anchored in the definition and in the pages of the other options, and a deliberate
+    absence shown to the human as the option recommended is tested like any other recommended option (WAY-138); a service whose panel only a
     human reads is recommended where it wins by consequences, with no lack "an agent does not
     check the running product this way"; the code a tool's hook-up takes shows as what changing the
     choice later costs (WAY-123); a product kept on the developer's machine, and a product whose
@@ -7939,12 +7939,13 @@ diagnose a failure from before it, and a human who learns of a failure only from
 that without knowing it; asking puts the choice before a human who can weigh what it costs. The
 criterion is that the product runs outside the machine on which it is made: a product kept on that
 machine has no user who meets a failure before its maker, and a first deployment needs a place to
-run, a choice that goes through the step whenever nothing settles it, so the question comes with it.
+run, a choice that goes through the step whenever nothing settles it, so at a definition the question
+comes with it; at a task the deployment skill's check carries it (WAY-139).
 A definition silent on where the product runs meets the criterion, because the first project of a
 product, whose place to run is not yet chosen, is the case the question exists for; a wrong yes
 costs one item answered by a deliberate absence, once for the product, and a wrong no leaves the
 question to the check of the deployment skill (WAY-139), which reaches only a task that deploys the
-product. The choice stands apart from the logs and from the matters of an agent's way to the running
+product. An alert built on the logs may come in a table of its own, after the logs are settled. The choice stands apart from the logs and from the matters of an agent's way to the running
 product (WAY-165, WAY-166): a change of the tool that collects failures then does not reopen the
 decision on the logs, which WAY-121 rejects, and whether an agent reads an option is an ordinary
 consequence, since a panel only a human reads can be the right choice here. A deliberate absence

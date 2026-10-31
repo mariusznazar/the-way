@@ -21,8 +21,9 @@ file.
 - For each, find what settles it: a decision of the product's foundation, `held by`; a projected
   decision of this definition, `projected`; nothing, `open`. A decision that settles the choice in
   a sentence about something else still holds it; name that decision. A decision that leaves part
-  of what one of the three matters of `running_product.md` asks unanswered does not hold it. A
-  decision of the foundation
+  of what one of the three matters of `running_product.md` asks unanswered does not hold it: the
+  item stands `— open`, with that decision nested under it as `running_product.md` gives. A decision
+  of the foundation
   the project changes no longer holds the choice: where the definition projects its edit, the item
   is `projected` with that heading's question; otherwise it is `open`.
 - Write the list into "Technology" in the form the template gives, and set the status line to
