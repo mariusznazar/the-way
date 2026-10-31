@@ -22,6 +22,13 @@ Use the plan to identify which entries the task is assigned to realize or write.
 work, dependencies and projected entries with its plan item. A mismatch returns to the plan, not an
 unrecorded change in the task document.
 
+## A run of `settle-technology`
+
+A run at the member's task stands at the member's own document, and the approved definition stays
+untouched, so no gate returns (WAY-265). A choice that changes the cut of the work returns to the
+plan as step 4 gives. A human who wants a projected decision of the definition changed goes the way
+`resolve_gaps.md` gives for a change of an approved definition (WAY-118).
+
 ## Step 6: check the assignment
 
 Check the plan item and assignments before readiness. A mismatch is an obstacle to readiness and
