@@ -62,9 +62,13 @@ particular to a decision (WAY-35).
   it; `none considered` where the human said so; or `unknown`, written with no question to the
   human. A way the writer derives — from what the cycle would otherwise guess, from the cost of
   the way chosen, or from the foundation — never enters it (WAY-134).
-- In the decision of a technology choice a project settles, the lacks of the option chosen and the
-  risks the human took with it stand in *Rationale*, each risk marked as a hypothesis, never in
-  *Based on* (WAY-138).
+- In the decision of a technology choice a project or a task settles, the lacks of the option chosen
+  and the risks the human took with it stand in *Rationale*, each risk marked as a hypothesis, never
+  in *Based on* (WAY-138). The writer of a decision from a row whose *Source* names a question a run
+  of the step that settles technology settled reads that question: its *Not chosen* gives *Rejected*,
+  its *Based on* gives *Based on*, and its *Lacks* and *Risks taken* give *Rationale*. Where the
+  choice changes a decision, the writer edits that decision in place (WAY-30), the human's
+  acceptance of the task document being its approval.
 - Every field of a decision takes `none` and `TODO` as `elements/common/rules.md` gives them
   (WAY-71).
 

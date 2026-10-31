@@ -36,6 +36,28 @@ Project relation: independent | plan item: <the project plan's file name> — <t
   - Not chosen:
     - <a way shown and not chosen> — <the cost the question gave it, or the human's reason>
   - Source: <document location and revision, code file:line and revision, or human/date/words>
+- <question a run of `settle-technology` settled>
+  - Answer: <the option chosen, with the consequences that decided it>
+  - Not chosen:
+    - <an option shown and not chosen, or left out with its line> — <its consequences as the table gave them>
+  - Source: <human/date/words>
+  - Based on:
+    - <a difference claimed between the options> — <its address>, <the place in it>, "<the passage word for word>"; read <date>
+  - Lacks:
+    - <a lack of the option chosen, as what it means for the product>
+  - Risks taken:
+    - <a risk the human took with it> (hypothesis)
+
+### Technology
+
+- Note, YYYY-MM-DD: <the run's note, as it was given>
+- <a choice, by what the product needs it for> — open
+  - Preference: <the human's preference for this choice>
+  - Waits for: <the choice it waits for>
+  - Changes: <PREFIX>-<NN>
+- <a choice> — held by: <PREFIX>-<NN>
+- <a choice> — projected: <question>
+- <a choice> — settled: <question>
 
 ## Context
 
@@ -68,7 +90,8 @@ Candidates: <rows shown> shown, <rows accepted> accepted — YYYY-MM-DD
 <exclusions that end with this task, or none>
 ```
 
-`Acceptance criteria` and `Questions to settle` appear only when they have content. The other
+`Acceptance criteria` and `Questions to settle` appear only when they have content, and `Technology`
+only once a run of `settle-technology` has begun at the task, staying after the run ends. The other
 sections always appear. `Status:` reads `refining`, `waiting for human`, or `ready for cycle`.
 `Project relation:` records whether the task is independent, belongs to an item of an approved
 project plan, or only uses an approved project definition as a source. A task that uses a
@@ -101,11 +124,34 @@ the body; the project orchestrator changes only `Status:` after final acceptance
   to be. Where the human chose among ways a question of decision showed (WAY-113), *Not chosen*
   keeps under the answer each way shown and not chosen, one line each, with the cost the question
   gave it or the human's reason in the human's words; an answer transferred from a conversation
-  brings them with it, and an answer with no ways shown has no *Not chosen* (WAY-134). A canonical
-  answer shared by tasks is copied with its source and its ways not chosen into each affected task;
-  a link to an ignored conversation or another question alone is insufficient. A struck quotation
-  remains unresolved until answered again. This section also keeps a question/reason explicitly
-  waiting for another task's result; plan dependencies alone do not delay refinement.
+  brings them with it, and an answer with no ways shown has no *Not chosen* (WAY-134). A question a
+  run of `settle-technology` settles holds, after these and only there, what the cycle needs to
+  write its decision (WAY-265): *Based on*, the source of each difference claimed between the
+  options — its address, the place in it, the passage word for word and the date read, the form the
+  template of decisions gives; *Lacks*, each lack of the option chosen, as what it means for the
+  product; and *Risks taken*, each risk the human took with it, marked as a hypothesis (WAY-138).
+  Its *Not chosen* holds every option shown and not chosen, the options left out of the comparison
+  with their line included, each with its consequences as the table gave them. A canonical answer
+  shared by tasks is copied with its source, its ways not chosen and these three fields into each
+  affected task; a link to an ignored conversation or another question alone is insufficient. A
+  struck quotation remains unresolved until answered again. This section also keeps a
+  question/reason explicitly waiting for another task's result; plan dependencies alone do not delay
+  refinement.
+- **Technology:** the notes and the list of choices of the runs of `settle-technology` at this task,
+  from which a run resumes (WAY-265). The section holds one item for each run's note, as it was
+  given, with its date, and one item per choice, named in the document's language by what the
+  product needs it for and ending with one marker in English:
+
+  | Marker | When |
+  |---|---|
+  | `— open` | the run is still settling it; like an unanswered question, it keeps the task from being ready (WAY-124) |
+  | `— held by: <PREFIX>-<NN>` | a decision of the product's foundation settles the choice |
+  | `— projected: <question>` | a projected decision of the approved definition the task carries settles it; the question reads as in that decision's heading |
+  | `— settled: <question>` | a run settled it; the question reads as under *Questions to settle*, where what it settled stands |
+
+  Items nested under a choice hold the human's preference, the choice it waits for and, for a choice
+  the human opened though a decision holds it, the decision it changes; they are no choices of the
+  list.
 - **Context:** concise provenance, constraints, links and code entry points that a reader is
   likely to ask about. Never repeat Description or prove the writer's own inference here.
 - **Questions carried to cycle:** name implementation questions taken from the task's sources.
