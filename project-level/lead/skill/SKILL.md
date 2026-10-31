@@ -58,6 +58,23 @@ project skill with the `the-way-` prefix, never a personal copy.
   `ready for cycle` to `in cycle` from the exact working/archived cycle trace, and `in cycle` to
   `done` from the record commit reachable in freshly fetched integration history. Both may be
   supported together for a stale ready row; log both without requiring an intervening run.
+- One more transition is supported, only on the human's word (WAY-267): a task whose blocked
+  request the human closed returns to refinement, and its row reading `in cycle` or still
+  `ready for cycle` goes to `to refine`, with a change-log line naming the request. The document
+  cell stays. Before moving the row, remove that one cycle's trace, naming what goes to the human
+  and removing it on the same word, in this order:
+  1. its worktree, where it ran in one of its own; where it ran in a checkout that stays, only
+     that checkout's ignored `.runs/task-cycles/<task-name>` directory;
+  2. its local branch, by name, which git refuses while a worktree holds it;
+  3. its branch on the host, by name, where the human has not deleted it;
+  4. the remote-tracking ref of that branch alone, by name, with `git branch -dr`, after step 3,
+     since a fetch would otherwise bring it back.
+
+  Never run `git fetch --prune`: it removes every remote-tracking ref whose branch is gone, and
+  with them the evidence of other tasks' closed-unmerged cycles that the human never named.
+  Left in place, the trace shows as a conflict on a `to refine` row, and on a `ready for cycle` row
+  as a false proposal that the new cycle has started. Should a removal fail, the reader reports the
+  conflict, which goes to the human as before. The new cycle keeps the task's name on a new branch.
 - Resolve outcomes Git leaves unchecked through the PR route the product chose. A verified
   merged PR supplies its actual link and completion evidence; an open PR proves no completion.
   If the tool is unavailable, ask the human with the collected evidence. A closed-unmerged PR or

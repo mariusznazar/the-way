@@ -99,6 +99,9 @@ The states (WAY-142):
 | `done — goal delivered in task <n>` | another task delivered this task's goal |
 | `dropped — approved by human` | the human gave the task up |
 
+A row goes back to `to refine` from `in cycle` or `ready for cycle` only as `lead-project` gives,
+on the human's word (WAY-267).
+
 During leading, agent turns, `questions` and question-specific `waits for task <n>` leave the row
 `to refine`; a presented human package or `ready for approval` makes it `waiting for human`.
 The latter is a conversation result, never a new task-document Status. A wait names the question
