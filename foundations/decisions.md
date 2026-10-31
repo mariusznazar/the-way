@@ -5948,23 +5948,34 @@ gains in *To do* the designation of that kind's exemplar under WAY-200 and its k
 with their index row, without waiting for a separate exemplar task.
 Where files of the kind already exist, refinement records that discrepancy and routes exemplar
 selection through the comparison WAY-200 gives existing code, rather than treating the next file
-as the first.
+as the first. Neither a kind's first file nor that comparison alone makes a task an extension under
+WAY-251 or takes research of the standing checks; the comparison covers that kind alone, takes no
+trial run of a linter's set and is no audit under WAY-201.
 
 - **Scope:** project-level, product-guidelines
 - **Based on:** none
-- **Relations:** derives from WAY-200 · derives from WAY-209
+- **Relations:** derives from WAY-200 · derives from WAY-209 · narrows WAY-251
 - **Verification:** an agent compares the task and existing code with the decision:
   - complies: the task adding the first migration also designates its exemplar and writes its
-    kind guidelines and index row; existing unindexed endpoints go through comparison;
+    kind guidelines and index row; existing unindexed endpoints go through comparison, which
+    researches no standing check and runs no linter's set on the product's code;
   - violates: the first migration waits for an exemplar that cannot exist before it; existing
-    endpoints are ignored and the next endpoint is called the first.
+    endpoints are ignored and the next endpoint is called the first; the comparison of the
+    existing endpoints is run as an audit of every kind the product holds.
 - **Origin:** none
 
 *Rationale:* the first instance supplies the material an exemplar needs, so separating its
 designation would create a circular wait. Existing instances instead need comparison, or the next
-one becomes a model without being judged against what the product already holds.
+one becomes a model without being judged against what the product already holds. Research and a
+trial run answer a new scope, and neither a first file of a kind nor the comparison of a kind's
+existing files brings one by itself; a task that is an extension for another reason keeps its
+research (WAY-211).
 *Rejected:* blocking every unindexed kind — a genuinely first instance could never arrive;
-designating the next instance regardless of existing code — it bypasses comparison.
+designating the next instance regardless of existing code — it bypasses comparison; four modes of
+the coding-guidelines skill left as they were, with the gap described as a proposal — an agent on
+the comparison goes on improvising and may make a full audit; the wording "Neither task is an
+extension under WAY-251, and neither takes research of the standing checks" — it takes research
+from a task that is an extension for another reason, against WAY-211.
 
 
 ### WAY-217 — Does an approved departure count as missing guidelines?
@@ -7628,8 +7639,7 @@ does not need, against the aim of WAY-256.
 
 In a skill that leads a product's guidelines matters, a session that has not read steps 1 and 2 of
 `refine-task` in the conversation, because it opened the skill directly or resumed the work in a
-new conversation, goes through those steps before the skill's first step. Skills of guidelines
-whose text stands unchanged are not bound by it until they are rebuilt.
+new conversation, goes through those steps before the skill's first step.
 
 - **Scope:** product-guidelines
 - **Based on:** none

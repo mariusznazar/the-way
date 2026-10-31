@@ -19,7 +19,8 @@ This skill lives in `product-guidelines/coding/` of the-way. In the-way itself, 
 checkout or worktree the session works in, the directory `git rev-parse --show-toplevel` prints in
 the session's working directory; in a product, it is the product's pinned `.the-way`. The files
 named below lie there, and each skill named below is the project skill of that name with the
-`the-way-` prefix.
+`the-way-` prefix. The files beside this `SKILL.md` hold what one step or one variant of the work
+needs; each is read when the step or variant that names it comes, not at the start.
 
 ## Where the skill works
 
@@ -44,165 +45,10 @@ document before the cycle approves every new or changed meaning it carries, and 
 has not settled stays a question of the task, never a line the cycle could build on (WAY-172,
 WAY-124). Using a meaning that a decision of the product's log already carries takes no approval.
 
-## What reaches the task document
+## Rules that hold across the steps
 
-The cycle's author was not in the conversation and reads only the document, so what the skill
-writes there is written for a reader who was not in it.
-
-- *To do*:
-  - write or extend `guidelines/coding.md`, and `guidelines/coding-<kind>.md` for each kind whose
-    exemplar the task settles, from `.the-way/product-guidelines/coding/template.md`, as its section
-    "Writing the files" gives;
-  - install and configure the tool of each standing check the task adopts, at the version, with the
-    set and for the parts the task settles, as the coding template's section "The tools of the
-    standing checks" gives;
-  - where the task brings a formatter to code it would rewrite, reformat the whole of the code once
-    (WAY-205);
-  - write the test of each new invariant in the product's suite, seen failing once (WAY-08,
-    WAY-61);
-  - apply `maintain-instruction-files` for the pointer in the product's root `AGENTS.md`, outside
-    the block the-way's installer writes: one line naming `guidelines/coding.md` in backticks with
-    the condition of changing the product's code, naming no file of a kind and no command of its
-    own (WAY-212, WAY-16);
-  - through `update-part-map`, give the configuration files of the standing checks to the part of
-    the product's map that holds its build configuration, and add each part step 1 found missing
-    for code the task brings (WAY-44);
-  - for the product's first guidelines: add `guidelines/**` to the files of the part of the map
-    whose files direct whoever carries out its tasks, through `update-part-map` (WAY-167);
-  - each item the audit calls for (step 3).
-- *Questions to settle*: each choice step 4 settles — every standing check adopted or departed
-  from with its reason, each tool, set and edition, the parts, the audit's database and severity,
-  the split of the set, each kind's exemplar and the status of its files, the rules a script checks
-  of each exemplar, each invariant, and the flag by which the linter's test makes a comment that
-  turns a rule off have no effect, where the tool has one — each with
-  the human's words and date as its source, and the ways the human did not choose under it as the
-  task template gives (WAY-134).
-- *Context*: the trial run's evidence — how many reports each rule gave and what the judging agent
-  found of them, with the paths of the output and of its verdicts; what the audit found, each `do
-  not copy` file with its file and line, a finding the task does not take up marked deferred with
-  its reason; the research's sources where research ran, each page with its version; what the
-  audit or the trial run could not see.
-- *Settlements to record*: `refine-task` step 5 builds them through `find-foundation-entries` —
-  the product's decisions, its invariants and the environment facts they rest on, the fact of each
-  adopted set's edition among them. A change of the part map is never a row, which is why it stands
-  in *To do*.
-
-## Orchestrated mode
-
-When `refine-task` runs in orchestrated mode — a coding-guidelines task of a project plan led by
-`lead-project` (WAY-154, WAY-155) — this skill follows that mode's routing. Every question and
-every choice shown by its effect go into the conversation turn as `refine-task` routes them, and
-the skill ends the turn rather than asking the human. The research agents, the critiques and the
-fresh agent that judges the trial run's reports are requested from the project orchestrator, which
-starts them, the turn naming the paths of their reports under `.runs/coding/`. The skill starts no
-child agent and edits only the task document, its turn and the trial run's output under
-`.runs/coding/`.
-
-## 0. Read
-
-- Read both templates of guidelines in full, `product-guidelines/template.md` and
-  `product-guidelines/coding/template.md`; `project-level/task/skill/SKILL.md` and
-  `project-level/task/template.md`, whose steps and sections this skill drives; the sections "How
-  a skill asks" and "Critique before collective review" of `elements/common/way_of_working.md`; and
-  `elements/common/critique/SKILL.md`.
-- Read the product's root `AGENTS.md` and every file under `guidelines/`.
-- Select and read the product's foundation by "Reading the foundation" in
-  `elements/common/way_of_working.md` (WAY-150), including the decisions that settle the product's
-  technology, and every decision that already adopts a standing check, a set of rules or an
-  exemplar, or departs from one.
-
-## 1. Recognize
-
-- Name the parts of the product's map that hold code, the scripts of its build included, however
-  small (WAY-208). Before the first code, name the parts the product's plan gives that code; where
-  the map holds no part for it yet, its identifier is a question of the task, and *To do* gains
-  adding that part, with the files the task creates, through `update-part-map`.
-- Find in the product's files what it has for that code — a linter, a formatter, an audit of
-  dependencies, each with its configuration and version; kinds of code it already holds files of
-  other than tests (WAY-231), such as endpoints, migrations or modules; or nothing — and whether it
-  has coding guidelines. Say plainly when it has nothing (WAY-210).
-- That gives the mode, and modes combine:
-  - no code: the starting set of step 2, so that the general file with its standing checks comes
-    into being before the first task that writes the product's code (WAY-209);
-  - code and no coding guidelines: step 2, and the trial run and the audit of step 3;
-  - a task that creates the first file of a kind of code: "A new kind" in step 3;
-  - existing coding guidelines, refreshed or extended: step 2, and step 3, which tries the set and
-    audits each kind again.
-- Extend what exists: rules are added to the linter the product runs, never a second linter beside
-  it. A new linter, formatter or audit of dependencies is a technology choice: record it as a
-  question of the task, never settle it (WAY-210, WAY-121).
-
-A refresh updates or corrects accepted guidelines within the scope they already cover,
-including adapting them to a new version of a tool the product uses. An extension covers something
-new; its research checks whether to use what the product has or something else (WAY-251).
-
-## 2. Starting set
-
-Before the first code, for code that has no coding guidelines yet, and at every refresh or extension
-(WAY-209, WAY-210, WAY-211):
-
-- Ask, as one question of assessment, for the human's preferences for the standing checks and
-  their sets of rules in the technology that the product's foundation settles; "I do not know" is
-  an answer. A tool the human prefers is the one proposed, and no other is offered in its place
-  (WAY-211).
-- For the first coding guidelines where the human has no preference, and at every extension,
-  research each standing check for that technology; at a refresh, do no research and use the
-  accepted guidelines with the update or correction the task calls for. Give each standing check
-  to a fresh agent of its own, all at once, with the technology, the preferences, the scope being
-  added where this is an extension, and the binding sentences of the decisions that settle it: the
-  tools and their consequences for the product, the sets of rules a linter offers with the rules
-  its documentation marks as recommended, and the advisory databases an audit reads. Each source
-  is a page with its version, never memory and never a fixed list; each report goes to
-  `.runs/coding/<question>.md`, the question's name in lower case with hyphens.
-- Where research ran, give one fresh agent, following `critique`, each report with its sources,
-  and ask it to refute every claim no source supports — a tool's use, a rule, a difference between
-  tools. Verify each observation and give your verdict, correct the report by the verdicts, then
-  end it with the line `critique: passed`. Where no fresh agent can run, the research does not go
-  on: stop and say so (WAY-211, WAY-120). What the research finds is proposed in step 4, never
-  imposed.
-- For a product with no code, the rules proposed to block are those the linter's documentation
-  marks as recommended: read that documentation at the proposed version also where preferences
-  supplied the tool and no research ran; there is no code to try them on (WAY-204).
-
-## 3. Trial run and audit
-
-Where the product has code:
-
-- **Trial run** (WAY-204). Run the linter's set — the one the product runs with the additions or
-  corrections step 2 proposes, or the one step 2 proposes from preferences or research — at the
-  version read from the product's files or the proposed tool's documentation, on the product's
-  code in a scratch worktree of its commit or in a temporary environment, outside its working
-  tree: the tool is installed only there, never into a file git tracks, and the scratch worktree
-  is removed afterwards. Its output goes to `.runs/coding/`.
-- Give one fresh agent that wrote none of that code each report with the code it points to, and
-  ask it to judge whether the report leads to a change of code worth making, whether the report is
-  technically right or not; its verdicts go beside the output. A rule with one report that leads to
-  no such change goes among the examples, and the rest of the set blocks. Where the set cannot run
-  there, or no fresh agent can judge, no split is proposed: stop and say so. The split goes to
-  step 4 with its evidence.
-- In the same place, count the files that break the rules that block and the files the formatter
-  would rewrite: where the code breaks those rules, step 4 proposes the linter's invariant marked
-  violated; where the formatter would rewrite it, the one reformatting of the whole of the code
-  (WAY-205).
-- **Kinds** (WAY-200, WAY-201). Name the kinds of code the product already holds files of, each
-  with its files; the audit covers every one of them. For each kind, judge every file of it the
-  product holds, compare them, and propose:
-  - its exemplar, with one sentence of what the product gains by it, such as "every new endpoint
-    checks its input as this one does";
-  - what a script can check of that exemplar — where a file of the kind lies, what it calls, how it
-    validates its input — as the kind's rules, the rest of the exemplar standing as an example
-    (WAY-198);
-  - `do not copy` for each file that breaks a rule the product holds or the task settles, with the
-    file and line of the place that breaks it, and `copy` for every other file of the kind.
-- **A new kind.** Where the task creates the first file of a kind of code, that file is the kind's
-  exemplar, and its file of guidelines comes into being with it (WAY-200, WAY-209): step 4 settles
-  the kind's identifier, the path the file takes and the rules a script checks of it.
-- A choice found in the product's files — a tool's configuration, a habit its files share — is a
-  proposal, never a rule, until the human settles it. An existing choice the human keeps becomes a
-  decision whose rationale is the human's words or `unknown`, never one the agent infers (WAY-29).
-
-## 4. Settle with the human
-
+- The cycle's author was not in the conversation and reads only the task document, so what the
+  skill writes there is written for a reader who was not in it.
 - **How to show.** Show each choice by its effect on the product in plain words — "a change that
   adds a library with a known security hole does not get in", "every new endpoint checks its input
   as the exemplar does" — never by the name of a linter's rule or a value of a tool's
@@ -213,62 +59,71 @@ Where the product has code:
   flagged sound code here and stay as examples", each of the few shown by what it flagged. Before
   first speaking of a linter, a formatter or an audit of dependencies, say in plain words what it
   does for the product (WAY-174, WAY-113).
-- **New tools.** For each new tool or library left as a technology question of the task,
-  show the options by their consequences for the product: cost, where they run, upkeep and the
-  cost of changing later. Give a recommendation and the weak point of the option recommended;
-  keep the human's preferred tool as the recommendation, and otherwise recommend the simplest
-  and cheapest where no difference with a consequence remains. Leave the choice to the human
-  in this task (WAY-210, WAY-211, WAY-123, WAY-121).
-- **What it settles.**
-  - for each standing check, the product's decision adopting it or departing from it with its
-    reason; the task is not ready without one for each (WAY-202);
-  - for the linter, its tool, its set, the set's edition, the parts it reads and the split of the
-    set, said together with what the split means later: a fault of one file is fixed in that file,
-    and turning a rule off for the whole product takes a change of this decision, approved by the
-    human (WAY-203, WAY-204, WAY-207);
-  - for the formatter, its tool and its configuration;
-  - for the audit of dependencies, its tool, the advisory database it reads and the severity from
-    which a vulnerability counts, every severity among the ways (WAY-206);
-  - for each kind the product holds files of, and each new kind, its exemplar, the status of each
-    of its files and the rules a script checks of the exemplar (WAY-198, WAY-199, WAY-200,
-    WAY-201);
-  - the product's decision adopting the coding template, and each departure from it by a decision
-    with its reason (WAY-173).
-- **Invariants.** A binding rule gets an invariant where a cheap test checks it on a convention of
-  the product's code, the rule of each standing check always; a rule no such test checks gets none,
-  and the review of each change it reaches compares the change with it (WAY-168, WAY-202). Propose,
-  each with a test of the product's suite (WAY-61):
-  - for the rule of each standing check, the invariants the coding template's section "What each
-    section carries" names for it, with the parts it gives them;
-  - for the linter, the flag or the configuration by which its test makes a comment that turns a
-    rule off have no effect, where the tool has one, and the review of each change to the linter's
-    configuration as what keeps that configuration to the decision (WAY-203, WAY-207);
-  - where the code breaks the rules that block, the linter's invariant marked violated by a change
-    of the foundation the human accepts, until the code is cleaned (WAY-205, WAY-51); its weak
-    point, that until then no test shows a report coming back into a cleaned file or reaching a new
-    one and only the review of each change to those files keeps them from gaining one, is said when
-    it is proposed;
-  - for each rule a script checks of an exemplar, an invariant that checks it (WAY-198), and for
-    each further rule of the whole product, an invariant where a cheap test checks it (WAY-168).
-- **Weak points.** Name each when its choice is proposed:
-  - for a product with no code, that the recommended rules block with no evidence from the
-    product's code, and that the first report of one that leads to no change worth making takes it
-    among the examples by a change of the decision, which the human approves (WAY-204);
-  - for the audit of dependencies, that a vulnerability found in a dependency the product already
-    holds gives no signal while no change brings in a version of it, and that a later run on the
-    same commit can fail where an earlier one passed, once an advisory is published for a version
-    that commit brings in (WAY-206).
-- **Critique.** Once the set of proposals is complete, one fresh agent critiques it before it is
-  shown together, as "Critique before collective review" gives (WAY-120).
+- Extend what exists: rules are added to the linter the product runs, never a second linter beside
+  it. A new linter, formatter or audit of dependencies is a technology choice: record it as a
+  question of the task, never settle it (WAY-210, WAY-121).
+- A choice found in the product's files — a tool's configuration, a habit its files share — is a
+  proposal, never a rule, until the human settles it. An existing choice the human keeps becomes a
+  decision whose rationale is the human's words or `unknown`, never one the agent infers (WAY-29).
 - Write each answer under its question in the task document before asking the next, as
   `refine-task` step 3 gives.
+- **The route of one kind** (step 1's mode of one kind whose files the product already has).
+  Steps 4 and 5 settle and check only what concerns that kind: its identifier, its exemplar, the
+  status of its files and the rules a script checks of it with their invariants; the task's *To do*
+  gains `guidelines/coding-<kind>.md` with its row in the index of `guidelines/coding.md`
+  (WAY-216).
+
+## Orchestrated mode
+
+When `refine-task` runs in orchestrated mode — a coding-guidelines task of a project plan led by
+`lead-project` (WAY-154, WAY-155), which a project orchestrator dispatched with a
+conversation-file path — read `orchestrated_mode.md` beside this skill before step 1 and follow it
+at every step.
+
+## 0. Read
+
+Nothing is read at the start: each step below names the files it needs. What `refine-task` read at
+its steps 1 and 2 — its own `project-level/task/skill/SKILL.md`, the task template
+`project-level/task/template.md`, the section "How a skill asks" of
+`elements/common/way_of_working.md`, the product's foundation as it selected it, and the guidelines
+of the parts the task touches — is not read again. A session that has not read them in this
+conversation — it opened this skill directly, or resumed the work in a new one — goes through
+`refine-task` steps 1 and 2 first (WAY-266).
+
+## 1. Recognize
+
+At step 1, read `recognize.md` beside this skill. It gives the mode of the work.
+
+## 2. Starting set
+
+At step 2, which step 1 gives before the first code, for the product's code that has no coding
+guidelines yet — no `guidelines/coding.md`; a kind of code without a file of its own is not that
+case — and at every refresh or extension, read `product-guidelines/coding/template.md` in full and
+`starting_set.md` beside this skill; the question of preferences is worded as "How to show" gives.
+Where the human has no preference at the first coding guidelines, and at every extension,
+`starting_set.md` sends you to `research.md`, also beside this skill (WAY-265).
+
+## 3. Trial run and audit
+
+At step 3, where the product has code and step 1 gave the trial run and the audit — code and no
+coding guidelines, or coding guidelines refreshed or extended — read
+`product-guidelines/coding/template.md` in full unless step 2 did, and `trial_run.md` and
+`kinds.md` beside this skill. Where step 1 gave the mode of one kind whose files the product
+already has, and not the trial run and the audit, read the template in full unless an earlier step
+did, and `kinds.md` alone, for that kind; there is no trial run on that route.
+
+- **A new kind.** Where the task creates the first file of a kind of code, that file is the kind's
+  exemplar, and its file of guidelines comes into being with it (WAY-200, WAY-209): step 4 settles
+  the kind's identifier, the path the file takes and the rules a script checks of it.
+
+## 4. Settle with the human
+
+At step 4, read `product-guidelines/template.md` in full, `product-guidelines/coding/template.md`
+in full unless an earlier step did, and `settle.md` and `task_document.md` beside this skill. For
+each new tool or library left as a technology question of the task, `settle.md` sends you to
+`new_tools.md`, also beside this skill (WAY-265). On the route of one kind, "The route of one kind"
+above limits what these files settle.
 
 ## 5. Hand back
 
-- Check that the task document holds what "What reaches the task document" names, that each
-  standing check has its adopting or departing decision among the choices settled (WAY-202), and
-  that no choice stands settled without the human's words.
-- Hand back to `refine-task` step 4. Its step 5 finds the rows of *Settlements to record* through
-  `find-foundation-entries` in task mode, with the task document, this conversation and any
-  research reports and the trial-run reports as its source, and its step 6 asks the human to
-  accept the whole document.
+At step 5, read `hand_back.md` beside this skill, and `task_document.md` unless step 4 did.
