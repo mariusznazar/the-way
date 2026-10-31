@@ -170,17 +170,31 @@ that settles it (WAY-121). The skill `settle-technology` writes it before the re
   that behaviour stands on the list as a choice of its own, even where its answer adds nothing to
   run, pay for or back up, and even where the product has none of what the matter names, whose
   answer then says what an agent uses in its place; a matter a decision of the foundation already
-  settles for that behaviour is not listed. No definition has to hold these matters; a matter
-  listed is an ordinary choice of the list, with its marker as the table below gives it
-  (WAY-121).
-- The logs ask where the record of what the running product does goes and how an agent reads it;
-  the interface asks how an agent operates the product as its user does — through a screen in a
-  browser, a call to its API or a command in a terminal — and how it sees what the product answers;
+  settles for that behaviour is not listed, and a decision of the foundation or a projected decision
+  that leaves part of what the matter asks unanswered does not settle it. No definition has to hold
+  these matters; a matter listed is an ordinary choice of the list, with its marker as the table
+  below gives it (WAY-121, WAY-165).
+- The logs ask where the record of what the running product does goes, how long that record lives,
+  between deployments too, and how an agent reads it; the interface asks how an agent operates the
+  product as its user does — through a screen in a browser, a call to its API or a command in a
+  terminal — and how it sees what the product answers;
   the development data asks where the data comes from on which an agent checks the product's
   behaviour outside production, and how an agent brings that data to the state a check needs. Data
   set up from scratch and a dedicated test environment that persists are both options of that
   choice
   (WAY-165).
+- A further choice stands apart from those three matters: how a human learns of a failure of the
+  running product. It stands on the list as a choice of its own where the project runs the product
+  outside the machine on which it is made, which holds unless the definition, or a decision of the
+  foundation, keeps the product on that machine, and no decision of the foundation settles it, even
+  where its answer adds nothing to run, pay for or back up. No definition has to hold it, the
+  readiness gate does not check it, and an approved definition does not come back to the step for
+  it. It is no matter of an agent's way to the running product, so whether an agent can read an
+  option is a consequence like any other. A deliberate absence always enters its comparison, though
+  it has no page of documentation, and the comparison anchors its consequences in the definition and
+  in the pages of the other options; here this bullet prevails over the bullet below on the
+  research of options, which would leave out an option with no documentation
+  (WAY-270).
 - Each item names one choice in the language of the definition, by what the product needs it
   for, and ends with one marker in English
   (WAY-121; WAY-108 for the English form):
@@ -191,8 +205,9 @@ that settles it (WAY-121). The skill `settle-technology` writes it before the re
   | `— projected: <question>` | a projected decision of this definition settles it; the question reads as in that decision's heading |
   | `— open` | the step is still settling it; the readiness gate stops it |
 
-- An item may hold nested items under it, such as the human's preference for the choice; they
-  are no choices of the list
+- An item may hold nested items under it, such as the human's preference for the choice, or the
+  entry that a choice standing open over a silent entry changes, as `Changes: <PREFIX>-<NN>` or
+  `Changes: <the question of a projected decision>`; they are no choices of the list
   (WAY-112).
 - The section never reads `none`: it records the decision that holds each choice, and a project
   whose choices the foundation already holds lists each of them `held by`

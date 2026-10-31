@@ -40,13 +40,15 @@ document, start `refine-task` with the note as the request: it creates the docum
 step from its step 3, the note passing to the run whether or not the choice is a reserved choice.
 
 At a definition, read `start.md` beside this skill. Where the Technology section holds a list, read
-`running_product.md` beside this skill too, and `list.md` beside this skill when the look it gives
-adds an item to the list or the human adds or changes one.
+`running_product.md` and `failure_notice.md` beside this skill too, and `list.md` beside this skill
+when a look adds or changes an item of the list or the human adds or changes one.
 
 ## 1. List the choices
 
-Where the Technology section reads `TODO`, read `list.md` beside this skill, and `running_product.md`
-beside this skill where the project brings behaviour a user sees in the running product.
+Where the Technology section reads `TODO`, read `list.md` beside this skill, `running_product.md`
+beside this skill where the project brings behaviour a user sees in the running product, and
+`failure_notice.md` beside this skill unless the definition, or a decision of the foundation, keeps
+the product on the machine on which it is made.
 
 ## 2. Settle the open choices
 

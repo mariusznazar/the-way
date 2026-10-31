@@ -10,15 +10,18 @@ worktree the leader works in or, in a product, its pinned `.the-way` — and
 The leader gives you the document, with its note in a run at a task, the choice and the preferences
 under it, the template's Technology section — the section "Technology" of
 `definition_template.md` — and the binding sentences of every decision that the list in the
-document's section "Technology" names `held by`; where one run serves several tasks, also the path
-of each affected task's document. The step writes into the document only, never into the product's
+document's section "Technology" names `held by` and of the decision nested under the choice, if
+any; where one run serves several tasks, also the path of each affected task's document. The step writes into the document only, never into the product's
 foundation (WAY-106); your own output is the one report below. A reference such as (WAY-122) names the decision of the-way that sets
 the rule beside it; you need not open it.
 
 1. **Research.** Find the options in their documentation, starting from what the document needs
    of the choice, never from a fixed list of stacks, not even as a hint, and give each option its
    source: a page of its documentation with its version (WAY-122). An option the human named enters
-   the comparison. Where the document already settles the choice in the human's words — a
+   the comparison, and so does the answer of the decision nested under the choice. The choice of how
+   a human learns of a failure always has a deliberate absence among its options, which has no page
+   of documentation: its consequences are anchored in the document and in the pages of the options
+   it is compared with (WAY-270). Where the document already settles the choice in the human's words — a
    constraint under "Inputs and constraints" of a definition, or one a task document states — that
    settlement is the only option sought, and it is weighed like any other.
 2. **Weigh.** For each option the project's code is written in or against, read off its

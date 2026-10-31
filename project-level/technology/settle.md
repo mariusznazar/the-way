@@ -11,7 +11,8 @@ waits, so that a resumed step finds it.
 
 1. **Research.** Give each choice of the wave to a fresh agent of its own, all at once, with the
    document, the choice and the preferences under it, the template's Technology section, the
-   binding sentences of every decision the Technology list names `held by`, and the path of the
+   binding sentences of every decision the Technology list names `held by` and of the decision
+   nested under the choice, if any, and the path of the
    file `research.md`, beside this file, which holds the agent's work. The agent finds the options,
    weighs them, compares their consequences and writes the comparison to the choice's report.
 2. **Weigh.** The research agent's work, in `research.md`.
@@ -64,7 +65,11 @@ waits, so that a resumed step finds it.
    difference for its *Based on*, the lacks of a chosen option and the risks taken with it for its
    *Rationale*, each risk marked as a hypothesis (WAY-138), and whether a question was asked
    against it; what its step 4.1 would still ask goes into the next table rather than a round of
-   its own. The `Candidates:` line stays as it is. Then end the item with
-   `— projected: <the decision's question>`, narrow under "Open questions" the question the choice
+   its own. Where an entry is nested under the choice, name it in the hand-over as the entry the
+   result rewrites, so that one question keeps one projected entry: a projected decision of the
+   definition is replaced under its heading, its meaning sentence with it, and a decision of the
+   foundation is projected as its change, under `#### <PREFIX>-<NN> — <question>`. The
+   `Candidates:` line stays as it is. Then end the item with
+   `— projected: <the decision's question>`, remove the nested line, narrow under "Open questions" the question the choice
    settles to what it still asks, removing it once nothing remains, and write both before the next
    table. Start the next wave: every choice whose every dependency is now settled.
