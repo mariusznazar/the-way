@@ -10,9 +10,9 @@
   decisions that settle the product's technology and every decision that already adopts a standing
   check, a set of rules or an exemplar, or departs from one (WAY-150).
 - Find in the product's files what it has for that code — a linter, a formatter, an audit of
-  dependencies, each with its configuration and version; kinds of code it already holds files of
-  other than tests (WAY-231), such as endpoints, migrations or modules; or nothing — and whether it
-  has coding guidelines. Say plainly when it has nothing (WAY-210).
+  dependencies, each with its configuration and version; what writes its log lines; kinds of code it
+  already holds files of other than tests (WAY-231), such as endpoints, migrations or modules; or
+  nothing — and whether it has coding guidelines. Say plainly when it has nothing (WAY-210).
 - That gives the mode, and modes combine:
   - no code: the starting set of step 2, so that the general file with its standing checks comes
     into being before the first task that writes the product's code (WAY-209);
@@ -24,6 +24,12 @@
     it combines with another mode, the wider mode governs (WAY-216);
   - existing coding guidelines, refreshed or extended: step 2, and step 3, which tries the set and
     audits each kind again.
+- At a refresh, before step 2, look in `guidelines/coding.md` for the required headings of the rules
+  on failures and logs, which stay in English in every product; a heading holding `none —` is no
+  absence. Where they are missing, propose the rules as `settle.md` beside this skill words them. The
+  human's yes makes the task an extension, so steps 2 and 3 run as for one; the human's no is a
+  departure with its reason, which the same task writes as the coding template gives (WAY-278,
+  WAY-279).
 
 A refresh updates or corrects accepted guidelines within the scope they already cover,
 including adapting them to a new version of a tool the product uses. An extension covers something
