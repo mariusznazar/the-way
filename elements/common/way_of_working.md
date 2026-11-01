@@ -71,7 +71,8 @@ gives.
    where the part's identifier stands as a whole item. *Scope* names parts by identifier alone, as
    `elements/common/foundation_check.py` holds it to. Add those the task's *Decisions in play* or
    the work's source names. Read each decision found whole, as the range of lines from its heading
-   to the next heading, with its rationale and *Rejected*: a search hit or a binding sentence
+   to the next heading (`###` in the decision log, `##` in the other foundation files), with its
+   rationale and *Rejected*: a search hit or a binding sentence
    locates an entry, never replaces it. The whole log is not read.
 3. Read the touched parts' entries of the part map; the invariants the work reaches (WAY-62) —
    those whose *Part* names a touched part or `every`, found by the same search of *Part*, and
