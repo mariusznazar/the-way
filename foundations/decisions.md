@@ -8140,10 +8140,10 @@ without the human's approval.
 
 The template of the coding discipline holds that each business event a product's logging scope lists
 leaves a log line. It holds that a line of a case flow, which is what the product does for one case
-from a request or a background job to its end, carries the identifiers that join the events of that
-case flow, each under the same name in every line so that a search finds the whole case, one from the
-last-resort handler apart, and that a line outside a case flow carries none. The product's decision
-chooses the form of a line.
+from a request or a background job to its end, carries those of the identifiers the logging scope
+lists that join the events of that case flow, each under the same name in every line, the name the
+list gives it, so that a search finds the whole case, one from the last-resort handler apart, and
+that a line outside a case flow carries none. The product's decision chooses the form of a line.
 
 - **Scope:** product-guidelines
 - **Based on:** none

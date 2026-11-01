@@ -192,9 +192,10 @@ those decisions and invariants in its own foundation; the coding guidelines name
   where a task sets it, recording it as a decision of the product, and it always leaves a line in
   the logs (WAY-273).
 - **Identifiers in log lines** — rule. A line of a case flow, which is what the product does for one
-  case from a request or a background job to its end, carries the identifiers that join the events
-  of that case flow, each under the same name in every line, so that a search finds the whole case,
-  in the form of a line the product's decision gives. A line outside a case flow, such as one at the
+  case from a request or a background job to its end, carries those of the identifiers
+  `### Logging scope` lists that join the events of that case flow, each under the same name in every
+  line, the name the list gives it, so that a search finds the whole case, in the form of a line the
+  product's decision gives. A line outside a case flow, such as one at the
   start of a program or one of a build script, carries none. A line from the last-resort handler
   need carry none, since that handler usually does not know what the case was (WAY-275).
 - **Business events** — rule. Each business event `### Logging scope` lists leaves a log line
