@@ -4619,7 +4619,7 @@ names an invariant only where a cheap test of the product's suite checks the rul
 the product's code; a rule no such test can check names none, and the review of each change the rule
 reaches compares the change with it.
 
-- **Scope:** product-guidelines, decisions, invariants
+- **Scope:** product-guidelines, decisions, invariants, task-cycle
 - **Based on:** none
 - **Relations:** derives from WAY-22 · derives from WAY-18 · derives from WAY-08
 - **Verification:** an agent compares the change with the decision:
@@ -4699,7 +4699,7 @@ gives one, the template of their discipline, at the commit of the-way the produc
 guidelines, every invariant a rule's *Invariant* names and every part *Applies to* names that the
 product's foundation does not hold, or holds as withdrawn.
 
-- **Scope:** product-guidelines, elements-common
+- **Scope:** product-guidelines, elements-common, task-cycle
 - **Based on:** none
 - **Relations:** derives from WAY-10 · derives from WAY-34
 - **Verification:** an agent compares the change with the decision:
@@ -7979,6 +7979,347 @@ each change; the logs and the failure choice added to the step at a task that ch
 run — the question comes in the step with no extra stop, but WAY-267 gains an exception, rules are
 needed on an agent opening a decision and on waiting for the place to run, and a product still
 needs the human's note.
+
+### WAY-271 — Which rules on failures and logs does the template of the coding discipline require?
+
+The template of the coding discipline requires six rules on failures and logs in the general file of
+a product's coding guidelines, after the rules of its standing checks, each under a heading of its
+own: `### Recording a failure`, `### Hiding a failure`, `### Identifiers in log lines`,
+`### Business events`, `### Secrets and personal data` and `### Logging scope`. Each reads `none` in
+*Invariant* unless a cheap test checks the whole rule on a convention of the product's code, and none
+of them is a standing check.
+
+- **Scope:** product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-173 · derives from WAY-168
+- **Verification:** an agent compares the template with the decision:
+  - complies: the required form of the general file holds the six headings after
+    `### Dependency audit`, and the product's further rules follow them; a test that finds an empty
+    block catching an error covers a fragment of a rule, so it goes to the product's linter and no
+    rule of these names it;
+  - violates: the template gives the six as examples; it folds them under one heading; it places them
+    in a file of a kind; it makes them a fourth standing check with a tool to adopt.
+- **Origin:** none
+
+*Rationale:* an agent that reaches a running product's logs finds there only what the code wrote, so
+what the code writes decides whether a failure can be diagnosed at all. With no rule shared by the
+agent writing a change and the agent reviewing it, neither can judge whether the change leaves a
+trace of a failure, and a product grows with no such trace, which costs little while its maker is its
+only user and starts to cost with the first user from outside. The rules are required so that a
+product goes without them only by a decision (WAY-173). A rule is one because a decision adopts it,
+not because a script can check it (WAY-168): the review of each change reads those only a reading can
+judge, and a test of a fragment of a rule stands in the linter's set, where a trial decides whether
+it blocks (WAY-203). These rules say how code writes and what the product promises to log; where the
+logs go, how long they live and how a human learns of a failure stay with the step that settles
+technology (WAY-165, WAY-270).
+*Rejected:* unknown
+
+### WAY-272 — What counts as a failure, and where is it written?
+
+The template of the coding discipline holds that a failure is a situation in which the product did
+not do what it was asked to do or what it was to do on its own, for a reason other than an expected
+refusal, a failed outside service included, and that an expected refusal, such as a wrong password,
+is an ordinary answer the rule does not reach. It holds that a failure is written always with its
+cause, the original error and not a bare string, once, where code handles it. It holds that each
+separately running program of the product has one last-resort handler, which writes what no code
+handled and whose line may carry no identifiers.
+
+- **Scope:** product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-271
+- **Verification:** an agent compares the template with the decision:
+  - complies: the rule holds a payment provider that does not answer as a failure and a wrong
+    password as an ordinary answer; it has the failure written with the original error at the place
+    that handles it, and one last-resort handler for a server and one for a worker that runs apart
+    from it;
+  - violates: the rule has each layer a failure passes through write its own line; it accepts a
+    message written in place of the error; it asks for one last-resort handler for the whole product
+    whatever it runs; it demands the identifiers of a case from the last-resort handler.
+- **Origin:** none
+
+*Rationale:* whoever asked the product for something meets a failed outside service as the product
+not doing it, so the definition reaches that service, and it reaches what the product was to do on
+its own, which nobody asked for at that moment. A refusal the product means to give is the product
+working. A line written once, where code handles the failure, keeps one failure from reading as
+several, and the original error keeps the cause a string loses. A failure no code handled would leave
+no trace at all, which is what a last-resort handler is for. Its weak points: it usually writes
+without the identifiers of a case, a program that dies whole writes only what it manages to, and the
+line between a failure and a refusal is judged by an agent and a reviewer.
+*Rejected:* the rule taken literally, every error written and none hidden — nothing to judge, but the
+logs fill with wrong passwords and repeats, and with a degraded mode forbidden one function going down
+takes a whole page with it; each product defining a failure for itself — the definition fits the
+product, but it is one more item in its decision, most products write the same one, and audits stop
+being comparable; the wider definition with no last-resort handler — less to do, and outside services
+are covered, but a failure nobody handled can still leave no trace, which is the symptom the rule
+exists for.
+
+### WAY-273 — May a product hide a failure?
+
+The template of the coding discipline holds that a failure is not hidden: code turns it neither into
+an "all fine" answer nor into an empty list. A degraded mode, in which the product goes on without
+one function, is allowed only where a task sets it, recording it as a decision of the product, and it
+always leaves a line in the logs.
+
+- **Scope:** product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-271 · derives from WAY-100
+- **Verification:** an agent compares the template with the decision:
+  - complies: the rule has a list whose source failed answer with a failure, not with no items; it
+    lets a page show without its recommendations where a task set that as a decision of the product,
+    with a line in the logs each time;
+  - violates: the rule lets code catch an error and answer as if all went well; it lets an agent add
+    a degraded mode of its own accord; it lets a degraded mode leave no line.
+- **Origin:** none
+
+*Rationale:* the-way takes this one rule from lesson m3l5 of the 10xDEVS course, because the cause of
+a failure nobody sees cannot be found; the lesson says that one first stops hiding what happens in
+the system and only then fixes the cause. An empty list after a failure reads as a true answer, so
+neither a user nor an agent has anything to act on. A degraded mode can serve a user better than a
+page that falls with one of its functions, so it is allowed; set by a task and recorded as a decision
+it is known later to be deliberate, and its line keeps it from being a hidden failure. Its weak
+point: it leaves a line while the user sees a working page, so nobody learns of it unless someone
+reads the logs, and how a human learns of a failure stays with the step that settles technology
+(WAY-270).
+*Rejected:* the rule taken literally, every error written and none hidden — nothing to judge, but the
+logs fill with wrong passwords and repeats, and with a degraded mode forbidden one function going down
+takes a whole page with it; each product defining a failure for itself — the definition fits the
+product, but it is one more item in its decision, most products write the same one, and audits stop
+being comparable.
+
+### WAY-274 — Where does a product's logging scope stand, and who adds to it?
+
+The principle of a product's logging scope stands in the product's decision on the rules on failures
+and logs, and the list of today of the identifiers and business events it logs, at adoption from what
+the product has in its code or in its plan, stands in a rule of its guidelines, as the product's
+promise and no inventory of its code. An agent adds an item that fits the principle, any identifier
+of a thing included, in the change that brings it, and the human sees it at the merge. Whatever
+points to a person, an email, a name, a telephone number, a home address and an IP address among
+them, takes the human's consent, and the number the product gives a user is settled by the human when
+the list is accepted and takes that consent if added later.
+
+- **Scope:** product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-271 · derives from WAY-172 · derives from WAY-225
+- **Verification:** an agent compares the change with the decision:
+  - complies: a change that brings refunds adds the refund's identifier and the event of a refund to
+    the list in the same change, and no cycle stops for it; a change that wants the email of a user
+    in its lines stops for the human's consent; the list names a business event the product has in
+    its plan and no code writes yet;
+  - violates: the list stands in the product's decision, so that each item changes it; an agent adds
+    an IP address as one more identifier; an agent adds the number the product gives a user with no
+    consent because it means nothing outside the product; the list is regenerated from the code.
+- **Origin:** none
+
+*Rationale:* a principle with a list lets the human see what the product logs while new items keep
+coming with every function and stop no cycle. The list stands in a rule, so adding an item changes no
+decision (WAY-30), and the principle and the boundary, which are choices, stand in the decision. What
+the product promises to log is what code cannot show (WAY-225), so the list is written by hand and a
+gap between it and the code is a finding, not a reason to copy the code. The boundary is drawn at
+persons, since an identifier of a thing costs nothing to add and stopping for it would hold up a cycle
+for nothing. Its weak points: a list written by hand can drift from the code; an agent judges whether
+an item fits the principle and whether a number points to a person, and the number of an order can be
+tied to a person through the product's data; a reviewer has to watch that an added item keeps the
+boundary; and the list does not stand among the entries searched when the foundation changes.
+*Rejected:* the list alone — the human sees each item, but each new one changes the decision and goes
+through the guidelines skill, and one that shows only in a cycle stops it for the human, while new
+events come with every function; the principle alone — a new item takes no consent and stops no
+cycle, but the human does not see the list, the reviewer judges everything by reading, and which
+identifiers are meant keeps changing; literally no personal data — the simplest wording, but it rules
+out a user's number, so one user's actions cannot be followed over time; only what the list names of
+a person's data, with the agent adding to the list alone — the contradiction goes with no further
+rule, but the agent could add an email too and the rule would protect nothing; the boundary taken
+literally, only a number given inside the product — the sharpest, and the agent judges almost
+nothing, but the number of a transaction or an order stops the cycle for the human; the list in the
+decision with nothing further written — the choice of a principle with a list stays as it is, but the
+dispute over changing a decision stays and two cycles can settle it differently; the list in the
+decision with a new decision of the-way narrowing WAY-30 — the list stays among the decisions and the
+precedence is written, but it is a standing exception to the rule that a decision does not change
+without the human's approval.
+
+### WAY-275 — Which lines do a product's logs hold, and what joins them?
+
+The template of the coding discipline holds that each business event a product's logging scope lists
+leaves a log line. It holds that a line of a case flow, which is what the product does for one case
+from a request or a background job to its end, carries those of the identifiers the logging scope
+lists that join the events of that case flow, each under the same name in every line, the name the
+list gives it, so that a search finds the whole case, one from the last-resort handler apart, and
+that a line outside a case flow carries none. The product's decision chooses the form of a line.
+
+- **Scope:** product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-271
+- **Verification:** an agent compares the template with the decision:
+  - complies: the rule has every line of an order's case flow carry the order's number under one
+    name, and leaves to the product whether a line is text or named fields; a line at a program's
+    start and a line of a build script carry no such identifier;
+  - violates: the template imposes named fields on every product; it lets one line say `order` and
+    another `orderId` for the same identifier; it asks for a line only for events the agent finds
+    worth one, whatever the list says.
+- **Origin:** none
+
+*Rationale:* by the number of an order, the id of a user and the id of a request one follows an
+order's whole history, a user's actions over time and the calls between applications, and that holds
+only if a search finds every line, so the name stays the same. The events give what happened before a
+failure, which lines of failures alone do not. A line outside a case flow has no case to join. Its
+weak points: a reviewer checks the sameness of names by reading code, so a difference in a file seldom
+changed can pass, and the rule covers only listed events, which an agent adds, so a function nobody
+lists leaves no line.
+*Rejected:* the template imposing one form — every product looks alike and tools for logs read such
+lines well, but it binds small products too, often takes a library, and a departure has to be
+justified where there is no harm; the template silent on the form — the least text, but the rule on
+identifiers is met even where the names differ and a search loses lines, and nobody reports it; no
+rule on events, only the product's decision — fewer rules and the list binds anyway, but the
+guidelines are silent, so the list acts only when someone happens on that decision; no events in the
+scope — a list of identifiers alone and the least work, but the logs show failures and not what went
+on before them.
+
+### WAY-276 — What do a product's logs not hold?
+
+The template of the coding discipline holds that the logs hold no secret, and no personal data, the
+identifiers on the list of the product's logging scope being an exception to this second ban alone,
+and no whole object or request body, which does not touch the error itself. Where an original error
+quotes such values this rule prevails over WAY-272, and the error is written without them, with its
+kind, code and place in the code; an identifier on that list that is a secret stays out of a line,
+this rule prevailing over WAY-275. The ban on personal data is the template's choice and no
+restatement of law, so a product may depart from that ban with a reason, the rest of the rule
+standing and the law binding the product regardless.
+
+- **Scope:** product-guidelines
+- **Based on:** General Data Protection Regulation, https://gdpr-info.eu/art-4-gdpr/ § Article 4(1) —
+  "in particular by reference to an identifier such as a name, an identification number, location
+  data, an online identifier"; read 2026-11-01 · https://gdpr-info.eu/recitals/no-26/ § Recital 26 —
+  "by the use of additional information should be considered to be information on an identifiable
+  natural person."; read 2026-11-01 · https://gdpr-info.eu/art-5-gdpr/ § Article 5(1)(c) — "adequate,
+  relevant and limited to what is necessary in relation to the purposes for which they are
+  processed"; read 2026-11-01
+- **Relations:** derives from WAY-271 · derives from WAY-86 · narrows WAY-272 · narrows WAY-275
+- **Verification:** an agent compares the template with the decision:
+  - complies: the rule lets the number of a user stand in a line where the list names it, and keeps
+    out an access token that stands on the list as an identifier; a database error that quotes a
+    customer's email is written with its kind, code and place; a product departs from the ban on
+    personal data and keeps the ban on secrets;
+  - violates: the rule lets the list except a secret; it bans the error itself with the request
+    bodies; it lets the original error win over the ban; it presents the ban on personal data as what
+    the law requires.
+- **Origin:** none
+
+*Rationale:* a line outlives the request that wrote it and reaches whoever reads the logs, so a
+secret in it is a leak, and a whole object or a request body brings in values nobody chose to write.
+Without the exception a user's number would have to go, and one user's actions could not be followed
+over time. The regulation counts an identification number among what identifies a person, treats
+what can be tied to a person by additional information as information on that person, and limits data
+to what is necessary; that it does not forbid logging personal data is an agent's reading of it and
+no legal opinion, so the ban stands as a choice of the template, which a product may leave for a
+reason, and what the law requires of the product stands apart from it (WAY-86). Where an error quotes
+such values, its kind, code and place keep enough of the cause. Its weak points: a reviewer sees code
+and not what an error holds at run time, so an unusual leak can pass, and whether a user's number in
+the logs is lawful stays the product's to judge.
+*Rejected:* literally no personal data — the simplest wording, but it rules out a user's number, so
+one user's actions cannot be followed over time; only what the list names of a person's data, with
+the agent adding to the list alone — the contradiction goes with no further rule, but the agent could
+add an email too and the rule would protect nothing; the boundary taken literally, only a number
+given inside the product — the sharpest, and the agent judges almost nothing, but the number of a
+transaction or an order stops the cycle for the human.
+
+### WAY-277 — Who chooses a library that writes a product's log lines?
+
+The human chooses a library that writes a product's log lines, on the route of the skill
+`maintain-coding-guidelines`, in the task that adopts the rules on failures and logs, and a library
+so chosen is a decision of its own in the product's log. The step that settles technology runs for
+that choice only where it is a reserved choice (WAY-268), and a cycle that needs such a library
+chooses none alone.
+
+- **Scope:** product-guidelines, project-level
+- **Based on:** none
+- **Relations:** derives from WAY-271 · derives from WAY-268 · derives from WAY-210
+- **Verification:** an agent compares the work with the decision:
+  - complies: a product whose language already writes the form of a line it chose gets no question
+    of a library; a product whose form needs a library gets the question from the guidelines skill,
+    with its cost and a recommendation; a library that adds a service to run goes to the step that
+    settles technology, and the task waits for the human;
+  - violates: an agent of a cycle picks a library as a small library that stays with the task; the
+    skill chooses a library it recommends with no question; a library that adds nothing to run or pay
+    for is sent to the step that settles technology.
+- **Origin:** none
+
+*Rationale:* a library that writes log lines reaches every file that writes one, so its choice is met
+once, by the human who adopts the rules, beside the form of a line that shows the need for it. A way
+the product or its language already gives raises no question, as rules go to the linter a product
+runs (WAY-210). Whether a library is reserved is asked first, so only one that is not stands on the
+route of the skill, which takes nothing from WAY-268; a tool that collects failures and the code that
+hooks it up stay with the step (WAY-270). The price: the options come from a model's memory, for a
+choice one task can change, as with any small library.
+*Rejected:* unknown
+
+### WAY-278 — How do the rules on failures and logs reach a product that has coding guidelines?
+
+The rules on failures and logs reach a product that has coding guidelines by an ordinary extension,
+with no route of their own. A refresh that finds them missing proposes them: the human's yes makes
+the task an extension, and the human's no is a departure with its reason.
+
+- **Scope:** product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-271 · derives from WAY-251 · derives from WAY-211 · derives from
+  WAY-173
+- **Verification:** an agent compares the work with the decision:
+  - complies: a refresh of a product's guidelines finds the required headings missing and proposes
+    the rules; on a yes the task researches and audits as an extension, and on a no it writes the
+    departure with its reason; a refresh that finds the headings holding `none —` proposes nothing;
+  - violates: a refresh writes the rules itself with no research; a refresh passes over their absence
+    in silence; a product's task adds them by a narrower route of its own.
+- **Origin:** none
+
+*Rationale:* adding these rules covers something new, so it is an extension (WAY-251), and a refresh,
+which stays within what the guidelines cover, can only notice the absence and put it to the human. A
+no stays on record as a departure, so the absence does not read as an oversight (WAY-173). The rules
+bind a product from its own decision, and the review of the first change of its coding guidelines
+after it moves its pin notices their absence (WAY-170). The price: a product learns of them only at a
+change of its guidelines or when it opens an extension, and the extension researches each standing
+check though these rules bring no tool, where a report that a tool has nothing for them is a sound
+result.
+*Rejected:* a narrow route for these rules alone — cheaper for each product, but WAY-211 has to
+change, the skill gains one more standing mode, and the linter gains no rules on the way; the rules
+optional for a product that has guidelines — no remark in any review, but it leaves "adopts or
+departs with a reason", the absence looks like an oversight, and the product that adopts them first
+can stay the only one that has them.
+
+### WAY-279 — What does a product's decision on the rules on failures and logs hold?
+
+A product's decision on the rules on failures and logs is one entry of its log, apart from the
+decision adopting the coding template, which does not carry them. It says which of the rules the
+product adopts and what it departs from with the reason, the form of a log line, the principle of
+its logging scope and the boundary of WAY-274, and it keeps only what a rule it keeps still reads. A
+task of the first coding guidelines, of an extension or of a refresh that found the rules missing is
+complete only once the product's log holds that entry.
+
+- **Scope:** product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-271 · derives from WAY-173 · derives from WAY-171
+- **Verification:** an agent compares the work with the decision:
+  - complies: a product with no guidelines ends its task with this entry beside the decision adopting
+    the template; a product that adds the rules leaves that decision as it stands; a product that
+    turns the rules down holds this entry with its reason and no principle, boundary, form or list; a
+    product that departs from `### Logging scope` writes it here, with the two rules that go with it;
+  - violates: the decision adopting the template is reworded to carry the rules; a general wording of
+    that decision is read as pulling them in at a later pin; the form of a line and the scope stand
+    in two entries; a task of an extension ends with no such entry.
+- **Origin:** none
+
+*Rationale:* one entry gives the same shape whichever way the rules reach a product, and a product
+that adds them leaves its older decision alone; the rules bind only through this entry (WAY-173),
+which a wording of the adopting decision at an earlier pin cannot replace. Which of the rules a
+product takes is one question (WAY-19), so a departure from one rule is this entry, a later one edits
+it in place as WAY-30 and WAY-172 give, and each dropped rule names it. A product that turns the rules
+down has nothing to hold beside its reason, and what a dropped rule leaves behind goes with it, so no
+principle stands with no rule to read it. The list stands in a rule and not here (WAY-274). A task
+that could end with no decision would make these rules optional, and the absence would read as an
+oversight (WAY-278).
+*Rejected:* part of the decision adopting the coding template — one entry fewer for a product with no
+guidelines, but adoption and what this entry holds do not fit the binding sentences of one decision,
+a product that adds the rules edits an old decision, and a general wording could be read as pulling
+in rules at a later pin, against their binding from the product's own decision; several entries, for
+adoption, scope and form — each changes alone, but the three are settled as one decision, and a
+departure has to drop each.
 
 ## Withdrawn identifiers
 

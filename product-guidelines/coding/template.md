@@ -41,6 +41,12 @@ of the coding discipline in their places (WAY-171).
 ### Linter
 ### Formatter
 ### Dependency audit
+### Recording a failure
+### Hiding a failure
+### Identifiers in log lines
+### Business events
+### Secrets and personal data
+### Logging scope
 ### <further rules of the whole product>
 
 ## Examples
@@ -57,8 +63,11 @@ of the coding discipline in their places (WAY-171).
   reaches comparing the change with it (WAY-168, WAY-202).
 - The three standing checks, `### Linter`, `### Formatter` and `### Dependency audit`, stand in the
   order above, and each that the product goes without reads `none — <PREFIX-NN>`, naming the
-  product's decision that departs from it with its reason (WAY-171, WAY-202). The product's further
-  rules follow them.
+  product's decision that departs from it with its reason (WAY-171, WAY-202).
+- The six required rules on failures and logs, from `### Recording a failure` to `### Logging scope`,
+  follow the standing checks in the order above, and the product's further rules follow those; a
+  product that already has further rules takes the six in between when it adds them (WAY-271). A
+  file of a kind holds none of the six.
 - *Applies to* names every part of the product's map that holds code, the scripts of its build
   included (WAY-208).
 - `## When to read` gives the condition under which an agent reads the file: before any change of
@@ -153,6 +162,57 @@ those decisions and invariants in its own foundation; the coding guidelines name
   (WAY-62).
 - **A standing check the product goes without** reads `none — <PREFIX-NN>`, naming the product's
   decision that departs from it with its reason (WAY-202, WAY-171).
+- **The rules on failures and logs** — the six rules below. They are no standing checks: no tool
+  comes with them, and each is a rule of the whole of the code (WAY-271). They say how code writes to
+  the product's logs and what the product promises to log; where the logs go, how long they live and
+  how a human learns of a failure stay with the step that settles technology (WAY-165, WAY-270).
+  Each carries:
+  - *Decision*: the product's one decision on these rules, apart from the decision adopting this
+    template, which holds in at most three binding sentences which of the rules it adopts and what it
+    departs from, the form of a log line, the principle of its logging scope and the boundary of what
+    an agent adds alone (WAY-279). The decision a degraded mode takes is not named here, or the rule
+    would change with every such decision;
+  - *Invariant*: `none`, unless a cheap test checks the whole rule on a convention of the product's
+    code. A test that catches only a fragment, such as an empty block that catches an error, is a
+    rule of the product's linter under that linter's invariant, once it passes the trial WAY-203
+    gives, and not a rule of these (WAY-271);
+  - *Good* and *Bad*: this template proposes none; the product writes them or `none`, and neither
+    copies the list of `### Logging scope`.
+
+  Below, each rule's bullet gives what the product's text says of how to apply it. A rule carries no
+  reason: the reasons stand in the decisions it names (WAY-168).
+- **Recording a failure** — rule. A failure is a situation in which the product did not do what it
+  was asked to do or what it was to do on its own, for a reason other than an expected refusal, a
+  failed outside service included; an expected refusal, such as a wrong password, is an ordinary
+  answer, which the rule does not reach. A failure is written always with its cause, the original
+  error and not a bare string, once, where code handles it. Each separately running program of the
+  product has one last-resort handler, which writes what no code handled (WAY-272).
+- **Hiding a failure** — rule. A failure is turned neither into an "all fine" answer nor into an
+  empty list. A degraded mode, in which the product goes on without one function, is allowed only
+  where a task sets it, recording it as a decision of the product, and it always leaves a line in
+  the logs (WAY-273).
+- **Identifiers in log lines** — rule. A line of a case flow, which is what the product does for one
+  case from a request or a background job to its end, carries those of the identifiers
+  `### Logging scope` lists that join the events of that case flow, each under the same name in every
+  line, the name the list gives it, so that a search finds the whole case, in the form of a line the
+  product's decision gives. A line outside a case flow, such as one at the
+  start of a program or one of a build script, carries none. A line from the last-resort handler
+  need carry none, since that handler usually does not know what the case was (WAY-275).
+- **Business events** — rule. Each business event `### Logging scope` lists leaves a log line
+  (WAY-275).
+- **Secrets and personal data** — rule. The logs hold no secret, with no exception, so an identifier
+  that is a secret stays out even where it stands on the list. They hold no personal data, the
+  identifiers `### Logging scope` lists being the one exception, to this ban alone. Code writes no
+  whole object and no request body, which does not touch the error itself. An original error that
+  quotes such values is written without them, with its kind, code and place in the code, this rule
+  prevailing over `### Recording a failure` (WAY-276).
+- **Logging scope** — rule. After the rule's fields, in no field, stands the list of today: the
+  identifiers the product logs, each with the name it takes in every line, and its business events,
+  at adoption from what the product has in its code or in its plan. The text says that the list is
+  the product's promise and no inventory of its code, and how an item is added: where it fits the
+  principle of the product's decision, in the change that brings it; where it points to a person,
+  the number the product gives a user included, only with the human's consent, as a new meaning
+  (WAY-274, WAY-172).
 - **Further rules of the whole product** — rule each, naming an invariant where a cheap test checks
   it on a convention of the code and otherwise `none` (WAY-168).
 - **`## Files of this kind`** — a table of the file of a kind, one row for each file of the kind it
@@ -175,6 +235,44 @@ those decisions and invariants in its own foundation; the coding guidelines name
 - **`## Where in code`** — in the general file, the configuration files of the standing checks and
   the product's tests of their invariants; in a file of a kind, the directories its files lie in;
   no value is copied from them (WAY-171).
+
+## Departing from the rules on failures and logs
+
+A product departs from these rules only by its one decision on them, which gives the reason; a later
+departure edits that decision in place, approved as WAY-30 and WAY-172 give (WAY-173, WAY-279). The
+ways below stand in the order they are taken: the first that does what the product wants is the one
+it takes.
+
+1. **What points to a person, wanted in the logs.** Where the thing is an identifier, it is first an
+   item of `### Logging scope`, with the human's consent. That is no departure, and nothing else
+   changes (WAY-274).
+2. **From the ban on personal data alone.** The rule stays, with its heading and fields, *Decision*
+   naming the product's decision. In the rule's text the one line `Personal data: none — <PREFIX-NN>`
+   stands in place of the ban, and the rest of the rule stands as it is: the ban on secrets, the ban
+   on whole objects and request bodies, and its precedence over `### Recording a failure` for a
+   secret. An original error that quotes a secret is written without it, with its kind, code and
+   place; one that quotes personal data is written as it stands. The line stays in English in
+   whatever language the product writes its guidelines, as the marker `none —` does, since this
+   template names it and a reviewer compares the file with this template. Only this ban departs in
+   this way, because WAY-276 names it alone.
+3. **From one rule.** That heading holds only `none — <PREFIX-NN>`, naming the product's decision,
+   and the others stay. A rule whose subject has gone reads `none —` too, with the same decision, so
+   a departure from `### Logging scope` puts the marker on three headings (WAY-171, WAY-279).
+4. **From all of them.** Each of the six headings stands, holding only `none — <PREFIX-NN>`, and the
+   list goes; the product's decision says so with its reason and holds nothing else, no principle,
+   boundary or form of a line, and no question of a library comes (WAY-171, WAY-279).
+
+Text the decision keeps as an example may stand under `## Examples` (WAY-168). What a kept rule still
+needs:
+
+| Departed from | Goes with it | Stays |
+|---|---|---|
+| `### Logging scope` | `### Identifiers in log lines` and `### Business events`, which have nothing left to read and read `none —` with the same decision; the principle, the boundary, the form of a line | `### Secrets and personal data`, with no exception |
+| `### Identifiers in log lines` | the form of a line | the identifiers of the list, as the exception to the ban on personal data, while that rule stands |
+| `### Business events` | the events of the list and of the principle | the rest |
+| `### Secrets and personal data`, the rule whole | the ban on secrets and the ban on whole objects and request bodies; `### Recording a failure` is no longer narrowed, so an original error may write what it quotes, secrets included | the boundary, while `### Logging scope` stands |
+| the ban on personal data alone | the exception of the list, which has nothing left to except; the precedence as to personal data | everything else of the rule; the list and the boundary, while `### Logging scope` stands |
+| `### Recording a failure` or `### Hiding a failure` | nothing else | the rest |
 
 ## The tools of the standing checks
 
@@ -207,8 +305,11 @@ those decisions and invariants in its own foundation; the coding guidelines name
 
 For the author who writes the coding guidelines in a task's cycle:
 
-- Take every tool, set of rules, exemplar, status and departure from the task's settlements and
-  from the decisions the task's foundation step wrote, never from memory (WAY-172, WAY-211).
-- Point to the configuration and to the code; copy no value into the guidelines (WAY-171).
+- Take every tool, library, set of rules, exemplar, status and departure from the task's settlements
+  and from the decisions the task's foundation step wrote, never from memory (WAY-172, WAY-211,
+  WAY-277).
+- Point to the configuration and to the code; copy no value into the guidelines (WAY-171). The list
+  of `### Logging scope` is no such copy: it is the product's promise, written from the task's
+  settlements (WAY-274).
 - A choice the task did not settle is a question that stops the cycle at a blocked draft request,
   never a rule or a row (WAY-172).

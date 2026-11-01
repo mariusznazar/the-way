@@ -63,6 +63,14 @@ scope are yours.
 - Against the foundation: the decisions and invariants of the touched parts, and the foundation
   entries the change itself writes or changes — do they say what the code does? A changed
   invariant test is named in your report.
+- Against the guidelines: compare a change of code with each rule of the guidelines you read that
+  has no invariant and that the change reaches (WAY-168).
+- Where the change writes or changes a product's guidelines, compare them with
+  `product-guidelines/template.md` (in a product, `.the-way/product-guidelines/template.md`) and,
+  where the-way gives one, the template of their discipline,
+  `product-guidelines/<discipline>/template.md` (in a product,
+  `.the-way/product-guidelines/<discipline>/template.md`), at the commit of the-way the product pins
+  (WAY-170).
 - A reserved choice: does the change settle a language, a framework, a library, a store of data, a
   way of logging in or a place to run that the task, the spec and the foundation do not settle?
   Read `project-level/technology/reserved_choices.md` (in a product,

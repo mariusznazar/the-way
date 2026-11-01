@@ -7,8 +7,9 @@ description: Use when a product's code needs coding guidelines written before it
 
 Leads the matters of coding guidelines in a task's refinement: it recognizes what the product's code
 already has, gathers the starting set of standing checks or audits the code, and settles with the
-human every standing check, exemplar and invariant the coding guidelines are to carry, so that the
-task's cycle can write them from the task document alone. What every file of guidelines holds
+human every standing check, exemplar and invariant the coding guidelines are to carry, and the
+product's decision on the rules on failures and logs, so that the task's cycle can write them from
+the task document alone. What every file of guidelines holds
 stands in `product-guidelines/template.md`; what coding guidelines add, and how the cycle's author
 writes their files, in `product-guidelines/coding/template.md`, each rule citing its decision; how
 a skill asks stands in `elements/common/way_of_working.md`; the critique in
@@ -60,8 +61,10 @@ WAY-124). Using a meaning that a decision of the product's log already carries t
   first speaking of a linter, a formatter or an audit of dependencies, say in plain words what it
   does for the product (WAY-174, WAY-113).
 - Extend what exists: rules are added to the linter the product runs, never a second linter beside
-  it. A new linter, formatter or audit of dependencies is a technology choice: record it as a
-  question of the task, never settle it (WAY-210, WAY-121).
+  it, and a way of writing log lines the product or its language already gives raises no question.
+  A new linter, formatter or audit of dependencies, or a library a chosen form of a log line needs,
+  is a technology choice: record it as a question of the task, never settle it (WAY-210, WAY-121,
+  WAY-277).
 - A choice found in the product's files — a tool's configuration, a habit its files share — is a
   proposal, never a rule, until the human settles it. An existing choice the human keeps becomes a
   decision whose rationale is the human's words or `unknown`, never one the agent infers (WAY-29).
