@@ -28,7 +28,8 @@ needs; each is read when the step or variant that names it comes, not at the sta
 It runs inside the refinement of one task whose outcome is coding guidelines — written, refreshed
 or extended — or the exemplar of a kind of code, a task the product's backlog holds or one opened
 for it (WAY-107). `refine-task` opens or resumes the task through its steps 1 and 2; this skill
-takes over at its step 3 for the matters of the coding guidelines and hands back to its step 4.
+takes over at its step 3 for the matters of the coding guidelines and hands back to its step 4, or,
+where its audit stops for the testing skill's, to its step 3, as `hand_back.md` gives.
 Refinement and the task cycle find applicable and missing guidelines through
 `product-guidelines/reading.md`; this skill owns settling their coding-guideline meanings. The
 task writing the missing general file does not wait for its own output (WAY-215). One task may carry
@@ -110,10 +111,14 @@ Where the human has no preference at the first coding guidelines, and at every e
 
 At step 3, where the product has code and step 1 gave the trial run and the audit — code and no
 coding guidelines, or coding guidelines refreshed or extended — read
-`product-guidelines/coding/template.md` in full unless step 2 did, and `trial_run.md` and
-`kinds.md` beside this skill. Where step 1 gave the mode of one kind whose files the product
-already has, and not the trial run and the audit, read the template in full unless an earlier step
-did, and `kinds.md` alone, for that kind; there is no trial run on that route.
+`product-guidelines/coding/template.md` in full unless step 2 did, `trial_run.md` and `kinds.md`
+beside this skill, and then `product-guidelines/audit_end.md`, which ends the audit. In that audit,
+where the task carries the testing guidelines too (WAY-247), read also
+`product-guidelines/testing/recognize.md`, that skill's step 1, before the audit ends:
+`audit_end.md` says what it decides (WAY-265). Where step 1 gave the mode of one kind whose files
+the product already has, and not the trial run and the audit, read the template in full unless an
+earlier step did, and `kinds.md` alone, for that kind; there is no trial run on that route, and
+that comparison, being no audit, has no such end.
 
 - **A new kind.** Where the task creates the first file of a kind of code, that file is the kind's
   exemplar, and its file of guidelines comes into being with it (WAY-200, WAY-209): step 4 settles
@@ -122,11 +127,16 @@ did, and `kinds.md` alone, for that kind; there is no trial run on that route.
 ## 4. Settle with the human
 
 At step 4, read `product-guidelines/template.md` in full, `product-guidelines/coding/template.md`
-in full unless an earlier step did, and `settle.md` and `task_document.md` beside this skill. For
+in full unless an earlier step did, and `settle.md` and `task_document.md` beside this skill, and,
+where step 3's audit ran, `product-guidelines/audit_end.md` unless an earlier step did. For
 each new tool or library left as a technology question of the task, `settle.md` sends you to
 `new_tools.md`, also beside this skill (WAY-265). On the route of one kind, "The route of one kind"
 above limits what these files settle.
 
 ## 5. Hand back
 
-At step 5, read `hand_back.md` beside this skill, and `task_document.md` unless step 4 did.
+At step 5, read `hand_back.md` beside this skill, `task_document.md` unless step 4 did, and, where
+step 3's audit ran, `product-guidelines/audit_end.md` unless an earlier step did. Where the human
+answered yes to a backlog task for a deferred `grave` cause, read
+`project-level/task/skill/guideline_findings.md` for its section "A deferred cause of an audit"
+(WAY-265).

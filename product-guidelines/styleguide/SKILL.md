@@ -82,13 +82,18 @@ beside this skill.
 
 At step 3, where the user interface has screens — a first styleguide of a product with screens, or
 an existing styleguide whose screens changed since it was written — read `audit.md` beside this
-skill. Otherwise there is no step 3.
+skill and then `product-guidelines/audit_end.md`, which ends the audit. Otherwise there is no
+step 3.
 
 ## 4. Settle with the human
 
-At step 4, read `product-guidelines/template.md` in full, and `settle.md` and `task_document.md`
-beside this skill.
+At step 4, read `product-guidelines/template.md` in full, `settle.md` and `task_document.md` beside
+this skill, and, where step 3's audit ran, `product-guidelines/audit_end.md` unless an earlier step
+did.
 
 ## 5. Hand back
 
-At step 5, read `hand_back.md` beside this skill.
+At step 5, read `hand_back.md` beside this skill, and, where step 3's audit ran,
+`product-guidelines/audit_end.md` unless an earlier step did. Where the human answered yes to a
+backlog task for a deferred `grave` cause, read `project-level/task/skill/guideline_findings.md` for
+its section "A deferred cause of an audit" (WAY-265).

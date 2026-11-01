@@ -93,6 +93,9 @@ kind" in `SKILL.md` gives; the critique below stands.
     function nobody lists leaves no line (WAY-275);
   - for the last-resort handler, that it usually writes without identifiers, and that a program that
     dies whole writes only what it manages to (WAY-272).
+- **The top of the audit's list.** Where step 3's audit ran, the proposal of which causes of the top
+  the task takes joins the set, and the human decides on it, as "At step 4" in
+  `product-guidelines/audit_end.md` gives (WAY-284).
 - **Critique.** Once the set of proposals is complete, one fresh agent critiques it before it is
   shown together, as "Critique before collective review" in `elements/common/way_of_working.md`
   gives (WAY-120). Read that section and, unless step 2 did, `elements/common/critique/SKILL.md`.
