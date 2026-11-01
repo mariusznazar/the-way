@@ -8369,8 +8369,8 @@ the audit at an extension of guidelines.
 An audit under WAY-280 merges its findings into causes: several violations from one source are one
 cause and one fix, each finding belongs to one cause, and a cause carries the places where it occurs.
 The list of causes also holds a trust boundary at which a test of refusal is due under WAY-235 and
-none exists, and the rules of a linter's set broken for one reason, as one cause told by its effect,
-with a number of files and no rule's name. A reformatting of the code is no finding.
+none exists, and the rules of a linter's set that block, broken for one reason, as one cause told by
+its effect, with a number of files and no rule's name. A reformatting of the code is no finding.
 
 - **Scope:** product-guidelines
 - **Based on:** none
