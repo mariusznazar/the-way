@@ -42,7 +42,7 @@ kind" in `SKILL.md` gives; the critique below stands.
       Say first what goes with it, as "Departing from the rules on failures and logs" in the coding
       template gives: a human who leaves `### Logging scope` hears that two more rules go, and one who
       drops `### Secrets and personal data` hears that the ban on secrets goes. A wish to log what
-      points to a person is put first as an item of the list (WAY-174, WAY-273, WAY-274, WAY-276);
+      points to a person is put first as an item of the list (WAY-174, WAY-274, WAY-276);
     - the form of a log line (WAY-275). The human hears a case flow as everything the product did
       for one order or one request;
     - the principle of the logging scope: which identifiers and which business events the product
