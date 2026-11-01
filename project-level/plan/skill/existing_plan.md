@@ -12,5 +12,5 @@ by `reading_definition_and_plan.md` beside this skill (WAY-151).
 - A finding that two tasks realize one entry with no order between them is settled as step 3 gives
   it (`assign_entries.md` beside this skill), each item letting them go side by side shown to the
   human as step 7 gives it (`hand_over.md` beside this skill) (WAY-230).
-- Whichever step the plan goes on from, a session that has not read `read.md` beside this skill
-  (step 1) yet reads it before it goes on.
+- Whichever step the plan goes on from, a session that has not been through `read.md` beside this
+  skill (step 1) yet goes through it before it goes on.
