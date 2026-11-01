@@ -4619,7 +4619,7 @@ names an invariant only where a cheap test of the product's suite checks the rul
 the product's code; a rule no such test can check names none, and the review of each change the rule
 reaches compares the change with it.
 
-- **Scope:** product-guidelines, decisions, invariants
+- **Scope:** product-guidelines, decisions, invariants, task-cycle
 - **Based on:** none
 - **Relations:** derives from WAY-22 · derives from WAY-18 · derives from WAY-08
 - **Verification:** an agent compares the change with the decision:
@@ -4699,7 +4699,7 @@ gives one, the template of their discipline, at the commit of the-way the produc
 guidelines, every invariant a rule's *Invariant* names and every part *Applies to* names that the
 product's foundation does not hold, or holds as withdrawn.
 
-- **Scope:** product-guidelines, elements-common
+- **Scope:** product-guidelines, elements-common, task-cycle
 - **Based on:** none
 - **Relations:** derives from WAY-10 · derives from WAY-34
 - **Verification:** an agent compares the change with the decision:
@@ -8179,7 +8179,8 @@ The template of the coding discipline holds that the logs hold no secret, and no
 identifiers on the list of the product's logging scope being an exception to this second ban alone,
 and no whole object or request body, which does not touch the error itself. Where an original error
 quotes such values this rule prevails over WAY-272, and the error is written without them, with its
-kind, code and place in the code. The ban on personal data is the template's choice and no
+kind, code and place in the code; an identifier on that list that is a secret stays out of a line,
+this rule prevailing over WAY-275. The ban on personal data is the template's choice and no
 restatement of law, so a product may depart from that ban with a reason, the rest of the rule
 standing and the law binding the product regardless.
 
@@ -8191,7 +8192,7 @@ standing and the law binding the product regardless.
   natural person."; read 2026-11-01 · https://gdpr-info.eu/art-5-gdpr/ § Article 5(1)(c) — "adequate,
   relevant and limited to what is necessary in relation to the purposes for which they are
   processed"; read 2026-11-01
-- **Relations:** derives from WAY-271 · derives from WAY-86 · narrows WAY-272
+- **Relations:** derives from WAY-271 · derives from WAY-86 · narrows WAY-272 · narrows WAY-275
 - **Verification:** an agent compares the template with the decision:
   - complies: the rule lets the number of a user stand in a line where the list names it, and keeps
     out an access token that stands on the list as an identifier; a database error that quotes a

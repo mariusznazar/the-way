@@ -310,6 +310,6 @@ For the author who writes the coding guidelines in a task's cycle:
   WAY-277).
 - Point to the configuration and to the code; copy no value into the guidelines (WAY-171). The list
   of `### Logging scope` is no such copy: it is the product's promise, written from the task's
-  settlements, never read off the code (WAY-274).
+  settlements (WAY-274).
 - A choice the task did not settle is a question that stops the cycle at a blocked draft request,
   never a rule or a row (WAY-172).
