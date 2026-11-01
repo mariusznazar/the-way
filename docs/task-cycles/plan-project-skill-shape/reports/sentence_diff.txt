@@ -1,0 +1,64 @@
+BASE sentences not verbatim in the rebuilt files: 3
+  - When the human names an existing plan, run `python -B <the-way>/project-level/plan_check.py <plan>` on the original whole file and read it by "Reading the definition and plan" below (WAY-151).
+  - A finding that two tasks realize one entry with no order between them is settled as step 3 gives it, each item letting them go side by side shown to the human as step 7 gives it (WAY-230).
+  - Read the definition by "Reading the definition and plan" below (WAY-151).
+
+SKILL.md: sentences not verbatim in the base: 15
+  + When `lead-project` dispatches you through a refinement conversation path, read `delegated_mode.md` beside this skill first (WAY-156):
+  + it holds what that path changes in the workflow below, and the files of steps 5, 6 and 7 point back to it.
+  + When an existing plan is named, by the human or in a dispatched turn by its conversation file, read `existing_plan.md` beside this skill, and `reading_definition_and_plan.md` beside it.
+  + Read `read.md` beside this skill, and `reading_definition_and_plan.md` beside it, each unless step 0 had you read it.
+  + Read `cut_tasks.md` beside this skill.
+  + Where the reading of the product's guidelines in step 1 found a styleguide, general coding file or testing guidelines missing or uncertain, or the approved scope has a task create the first file of a kind of code, work on a kind that has files but no entry in the guidelines index, make the first test of a level, or extend existing guidelines, read `guideline_tasks.md` beside this skill too;
+  + `cut_tasks.md` points to it at the same place.
+  + Read `assign_entries.md` beside this skill.
+  + Read `place_questions.md` beside this skill.
+  + Read `write_and_check.md` beside this skill;
+  + in a turn dispatched through a refinement conversation path it points to `delegated_mode.md` for what changes.
+  + Read `critique_plan.md` beside this skill;
+  + in a turn dispatched through a refinement conversation path it points to `delegated_mode.md` for what changes.
+  + Read `hand_over.md` beside this skill;
+  + in a turn dispatched through a refinement conversation path it points to `delegated_mode.md` for what changes.
+
+delegated_mode.md: sentences not verbatim in the base: 0
+
+existing_plan.md: sentences not verbatim in the base: 3
+  + Run `python -B <the-way>/project-level/plan_check.py <plan>` on the original whole file and read it by `reading_definition_and_plan.md` beside this skill (WAY-151).
+  + A finding that two tasks realize one entry with no order between them is settled as step 3 gives it (`assign_entries.md` beside this skill), each item letting them go side by side shown to the human as step 7 gives it (`hand_over.md` beside this skill) (WAY-230).
+  + Whichever step the plan goes on from, a session that has not been through `read.md` beside this skill (step 1) yet goes through it before it goes on.
+
+read.md: sentences not verbatim in the base: 1
+  + Read the definition by `reading_definition_and_plan.md` beside this skill (WAY-151).
+
+reading_definition_and_plan.md: sentences not verbatim in the base: 1
+  + The original definition and plan remain authoritative, and every check runs on them whole, as `SKILL.md` gives under "Rules that hold across the steps" (WAY-151).
+
+cut_tasks.md: sentences not verbatim in the base: 1
+  + Where the reading of the product's guidelines in step 1 found a styleguide, general coding file or testing guidelines missing or uncertain, or the approved scope has a task create the first file of a kind of code, work on a kind that has files but no entry in the guidelines index, make the first test of a level, or extend existing guidelines, read `guideline_tasks.md` beside this skill before the next bullet.
+
+guideline_tasks.md: sentences not verbatim in the base: 0
+
+assign_entries.md: sentences not verbatim in the base: 1
+  + A finding of `plan_check.py` that two tasks realize one entry with no order between them is settled by the bullet above, each item letting them go side by side shown to the human as step 7 gives it (`hand_over.md` beside this skill) (WAY-230).
+
+place_questions.md: sentences not verbatim in the base: 0
+
+write_and_check.md: sentences not verbatim in the base: 9
+  + In a turn dispatched through a refinement conversation path, ask nothing of the human yourself:
+  + each question below goes through the conversation, as `delegated_mode.md` beside this skill gives.
+  + What steps 2–4 send here:
+  + from step 2:
+  + something the definition leaves out that the cut seems to need, and questions or work beyond the approved definition that its guidelines tasks raise, which are never silently enlarged into the plan (WAY-145);
+  + from step 3:
+  + an entry no task of the cut makes true, which shows a task missing or an entry the project does not need, never an entry left without a row;
+  + from step 4:
+  + a move that changes which task writes a projected entry, and a question that arises only in the breakdown, which stands with `— definition:
+
+critique_plan.md: sentences not verbatim in the base: 2
+  + In a turn dispatched through a refinement conversation path, do not run `critique` yourself:
+  + request it through the conversation file, as `delegated_mode.md` beside this skill gives, and verify and settle its observations as this step requires.
+
+hand_over.md: sentences not verbatim in the base: 3
+  + In a turn dispatched through a refinement conversation path, show the human nothing yourself:
+  + return the handover material through the conversation, as `delegated_mode.md` beside this skill gives.
+  + A finding of `plan_check.py` that two tasks realize one entry with no order between them is settled as step 3 gives it (`assign_entries.md` beside this skill), each item letting them go side by side shown to the human as the first bullet gives (WAY-230).
