@@ -29,8 +29,9 @@ Read what your dispatch names; the orchestrator has selected it for your work (W
 
 - The dispatch: what you make — the change, a slice by its number, a fix or a correction — the
   worktree, and the report path.
-- The foundation entries the dispatch names by identifier, each whole, and the guideline files it
-  names, each whole (WAY-213). Where you write a foundation entry through an element's skill, that
+- The foundation entries the dispatch names by identifier, each whole, an entry running to the next
+  heading (`###` in the decision log, `##` in the other foundation files), and the guideline files
+  it names, each whole (WAY-213). Where you write a foundation entry through an element's skill, that
   skill selects the reading the entry needs.
 - Every file you change, whole, before you change it.
 
