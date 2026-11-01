@@ -25,6 +25,14 @@ def module(*tests):
 
 
 PASSING = module("self.assertTrue(True)")
+SKIPPING = "\n".join((
+    "import unittest", "", "",
+    "class Checks(unittest.TestCase):",
+    "    def test_passing(self):",
+    "        self.assertTrue(True)", "",
+    "    @unittest.skip('no network here')",
+    "    def test_skipped(self):",
+    "        self.fail('a skipped test ran')", ""))
 
 
 class RunnerTestCase(unittest.TestCase):
@@ -113,6 +121,18 @@ class OneDirectory(RunnerTestCase):
         self.assertEqual(code, 2, output)
         self.assertIn("missing is not a directory", output)
 
+    def test_a_skipped_test_is_named_with_its_reason_before_the_closing_lines(self):
+        self.write("tests/test_sample.py", SKIPPING)
+        code, output = self.runner("tests")
+        self.assertEqual(code, 0, output)
+        lines = [line for line in output.splitlines() if line.strip()]
+        self.assertEqual(lines[-4:], [
+            "skipped: test_sample.Checks.test_skipped: no network here",
+            "-" * 70,
+            lines[-2],
+            "OK (skipped=1)"], output)
+        self.assertTrue(lines[-2].startswith("Ran 2 tests in "), output)
+
     def test_tests_import_from_the_working_directory(self):
         self.write("helper_at_root.py", "VALUE = 7\n")
         self.write("tests/test_sample.py", "import helper_at_root\n"
@@ -180,6 +200,18 @@ class EveryDirectory(RunnerTestCase):
         self.assertIn("printed after the report", output)
         self.assertTrue(output.rstrip().endswith("1 tests in 1 directories; failed: a (exit "
                                                  "code 0 without unittest's OK)"), output)
+
+    def test_a_directory_with_a_skipped_test_still_passes_and_the_report_names_it(self):
+        # invariant: gate-exit-code
+        self.write("a/test_one.py", PASSING)
+        self.write("b/test_sample.py", SKIPPING)
+        self.track("a/test_one.py", "b/test_sample.py")
+        code, output = self.runner()
+        self.assertEqual(code, 0, output)
+        self.assertIn("skipped: test_sample.Checks.test_skipped: no network here\n", output)
+        self.assertLess(output.index("skipped: test_sample"), output.index("OK (skipped=1)"))
+        self.assertTrue(output.rstrip().endswith("3 tests in 2 directories; every directory "
+                                                 "passed"), output)
 
     def test_a_repository_without_a_tracked_test_file_exits_one(self):
         # invariant: gate-exit-code

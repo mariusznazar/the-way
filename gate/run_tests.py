@@ -8,7 +8,8 @@ Without DIRECTORY, it runs the tests of every directory that holds a `test_*.py`
 and the working tree still has, each directory in a process of its own, so that test modules of the
 same name in two directories never meet. Given DIRECTORY, it runs only the tests
 `python -m unittest discover -s DIRECTORY -p "test_*.py"` finds there. The report for a person is
-the one `unittest` prints; without DIRECTORY, each directory's report follows a line naming it, and
+the one `unittest` prints. A skipped test is named there, with its reason, before the closing
+lines. Without DIRECTORY, each directory's report follows a line naming it, and
 a last line counts the tests and names each directory that failed. The tests import from the
 working directory first, as under `python -m unittest`. The runner writes no record of a run.
 
@@ -34,6 +35,15 @@ PATTERN = "test_*.py"
 RAN = re.compile(rb"^Ran (\d+) tests? in ")
 
 
+class NamingSkipsResult(unittest.TextTestResult):
+    """A test result that names each skipped test and its reason before the closing lines."""
+
+    def printErrors(self):
+        super().printErrors()
+        for test, reason in self.skipped:
+            self.stream.writeln("skipped: %s: %s" % (test.id(), reason))
+
+
 def run(directory, stream=None):
     """Runs the tests of one directory; returns the exit code."""
     stream = stream or sys.stderr
@@ -44,7 +54,7 @@ def run(directory, stream=None):
     if not suite.countTestCases():
         stream.write("no test found in %s\n" % directory)
         return 1
-    result = unittest.TextTestRunner(stream=stream).run(suite)
+    result = unittest.TextTestRunner(stream=stream, resultclass=NamingSkipsResult).run(suite)
     return 0 if result.wasSuccessful() else 1
 
 
