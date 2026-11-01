@@ -12,9 +12,9 @@ more findings, which one fix removes; a single finding can make a cause.
 
 Each discipline's audit comes first and brings here its findings, each with its place and effect:
 the styleguide's with the category of each cause, coding's with the files marked `do not copy` and
-the trial run's reports, testing's with the trust boundaries at which a test of refusal is due and
-none exists. Step 3 takes the sections below in their order, up to and including "The list"; steps 4
-and 5 take the last two.
+the trial run's reports of the rules that block, testing's with the trust boundaries at which a test
+of refusal is due and none exists. Step 3 takes the sections below in their order, up to and
+including "The list"; steps 4 and 5 take the last two.
 
 ## Merge into causes
 
