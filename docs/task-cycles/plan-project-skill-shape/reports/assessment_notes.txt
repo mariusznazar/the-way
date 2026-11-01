@@ -1,3 +1,0 @@
-lines 52-58: reworded: When the human names an existing plan, run `python -B <the-way>/project-level/pl
-lines 59-61: reworded: A finding that two tasks realize one entry with no order between them is settled
-lines 64-69: reworded: Read the definition by "Reading the definition and plan" below (WAY-151).
