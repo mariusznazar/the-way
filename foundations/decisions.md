@@ -5155,19 +5155,18 @@ accepted scope pays for a comparison it does not need.
 
 For a product that has screens, the skill `maintain-styleguide` audits the user interface in both
 directions — from the source of values to the screens that read them, and from each value on a
-screen to the design token or component meant to cover it — and ends with three to five charges, each
-with its file and line and one sentence of its effect on the user, in four categories: a missing
-design token, a missing shared component, accidental architecture, and a meaning, one colour
-carrying several. The audit always asks what someone sees without data, straight from a link, after a
-refresh, and it uses the agent's way to the running product where the product's foundation settles
-one, otherwise auditing from the code and marking as unchecked what cannot be seen without the
-running product.
+screen to the design token or component meant to cover it — and ends with the list WAY-283 gives,
+each cause in one of four categories: a missing design token, a missing shared component, accidental
+architecture, and a meaning, one colour carrying several. The audit always asks what someone sees
+without data, straight from a link, after a refresh, and it uses the agent's way to the running
+product where the product's foundation settles one, otherwise auditing from the code and marking as
+unchecked what cannot be seen without the running product.
 
 - **Scope:** product-guidelines
 - **Based on:** none
-- **Relations:** none
+- **Relations:** derives from WAY-283
 - **Verification:** an agent compares the work with the decision:
-  - complies: an audit charges that one green means both "can act" and "won", with the lines where
+  - complies: an audit finds that one green means both "can act" and "won", with the lines where
     each is drawn and what the player cannot learn from it, and that a screen opened from a link
     shows a blank page before it fills; with no decision on how an agent opens the screens, it marks
     the focus outline as not seen;
@@ -5178,8 +5177,7 @@ running product.
 
 *Rationale:* without an audit a styleguide writes down an idea of the product, not its code; each
 direction finds what the other misses — a file of design tokens nothing reads, and a value no token
-covers. A few charges with a place and an effect can be weighed by a human who is no specialist,
-and the category of meaning holds the charge the other three miss, one colour in several meanings.
+covers. The category of meaning holds the cause the other three miss, one colour in several meanings.
 The standing question catches what a screenshot with data never shows. Logging in is a matter of the
 product's behaviour, not of its styleguide, so the question leaves it out; a product with no decided
 way to the running product is audited from its code rather than waiting for a task that settles it.
@@ -5391,12 +5389,12 @@ once several files exist — until then every agent copies what it finds.
 
 The audit the skill `maintain-coding-guidelines` makes of a product that has code ends with a
 proposed exemplar for each kind of code the product holds files of, each with one sentence of what
-the product gains by it, and with the files of that kind marked `do not copy`, each with the file and
-line of the place that breaks a rule.
+the product gains by it, with the files of that kind marked `do not copy`, each with the file and
+line of the place that breaks a rule, and with the list WAY-283 gives.
 
 - **Scope:** product-guidelines
 - **Based on:** none
-- **Relations:** derives from WAY-200
+- **Relations:** derives from WAY-200 · derives from WAY-283
 - **Verification:** an agent compares the work with the decision:
   - complies: the audit proposes for the kind `endpoint` the file `src/api/orders/route.ts`, "every
     new endpoint checks its input as this one does", and marks `src/api/legacy/users.ts` `do not
@@ -5408,7 +5406,7 @@ line of the place that breaks a rule.
 
 *Rationale:* the human who approves the exemplar does not judge code, and a proposal with what the
 product gains, and a fault with its place, can be weighed by someone who is no developer, as the
-styleguide's audit ends with charges of a place and an effect (WAY-187); the place also shows the
+styleguide's audit ends with causes of a place and an effect (WAY-187); the place also shows the
 next agent where not to copy from.
 *Rejected:* what the audit found shown as a comparison of the files' code — the human cannot weigh
 it.
@@ -7148,31 +7146,30 @@ it does not need.
 ### WAY-250 — How does the testing-guidelines skill's audit of a product with tests end?
 
 The audit the skill `maintain-testing-guidelines` makes of a product that has tests ends, for each
-level, with a proposed exemplar test, with one sentence of what the product gains by it, and three to
-five charges, each with its file and line and one sentence of its effect, and, for each trust
-boundary of the product's map, with whether a test of its refusal exists.
+level, with a proposed exemplar test, with one sentence of what the product gains by it, for each
+trust boundary of the product's map, with whether a test of its refusal exists, and, over the whole
+audit and not for each level, with the list WAY-283 gives.
 
 - **Scope:** product-guidelines
 - **Based on:** none
-- **Relations:** derives from WAY-173 · derives from WAY-242
+- **Relations:** derives from WAY-173 · derives from WAY-242 · derives from WAY-283
 - **Verification:** an agent compares the work with the decision:
   - complies: the audit proposes for integration tests `tests/integration/test_orders.py`, "every
-    new integration test sets up its data through the fixtures as this one does", charges that
+    new integration test sets up its data through the fixtures as this one does", finds that
     `tests/unit/test_price.py:42` builds the total it expects by calling the function under test, so
     the test passes whatever the price is, and says that no test of the boundary `api` sends a
     request with another player's token;
-  - violates: the audit ends with the test tool's warnings listed by name; a charge stands with no
+  - violates: the audit ends with the test tool's warnings listed by name; a finding stands with no
     line; the audit says nothing of the trust boundaries.
 - **Origin:** none
 
 *Rationale:* the human who approves the exemplar tests does not judge tests below end-to-end ones,
 and a proposal with what the product gains, and a fault with its place and effect, can be weighed by
 someone who is no developer, as the coding-guidelines skill's audit ends (WAY-201) and the
-styleguide's audit ends with charges of a place and an effect (WAY-187); a few charges keep the
-whole weighable. Whether each boundary has a test of refusal shows where the invariant of WAY-235 is
-missing.
+styleguide's audit ends with causes of a place and an effect (WAY-187). Whether each boundary has a
+test of refusal shows where the invariant of WAY-235 is missing.
 *Rejected:* what the audit found shown as a comparison of the tests' code — the human cannot weigh
-it; every fault the audit found listed — a list too long to weigh.
+it.
 
 ### WAY-251 — What distinguishes a refresh from an extension of guidelines?
 
@@ -8320,6 +8317,225 @@ a product that adds the rules edits an old decision, and a general wording could
 in rules at a later pin, against their binding from the product's own decision; several entries, for
 adoption, scope and form — each changes alone, but the three are settled as one decision, and a
 departure has to drop each.
+
+### WAY-280 — On what scale does an audit of the skills of guidelines weigh what it found?
+
+An audit of the skills `maintain-coding-guidelines`, `maintain-styleguide` and
+`maintain-testing-guidelines` gives each cause of what it found one weight, `grave`, `heavy`,
+`medium` or `light`, on one scale described once in a file the three skills share. A weight is
+measured by the effect on the user or the owner of the product and follows from what is at stake,
+never from how many places break a rule. The-way adopts weight, merging and order from a course's
+skill for auditing observability, for these audits, and not the audit as a skill of its own.
+
+- **Scope:** product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-100 · derives from WAY-173
+- **Verification:** an agent compares the work with the decision:
+  - complies: an endpoint that reads the request unchecked and lets a user reach someone else's
+    order weighs `grave`, though it is one file; a test of a payment that passes whatever the code
+    computes weighs `grave`, since the fault reaches a customer and nobody learns of it; a delete
+    button that looks like any other weighs `heavy`, and forty spacings written by hand weigh
+    `light`;
+  - violates: each skill keeps a scale of its own; forty small breaks of a rule weigh `grave` for
+    their number; a cause weighs `grave` only because it stands inside a critical flow; a weight
+    blocks a change; the audit runs from time to time as a skill of its own.
+- **Origin:** none
+
+*Rationale:* the human who approves a product's guidelines judges neither its code nor its tests,
+and an audit that ended with places alone would leave that human to judge what is urgent and an
+agent planning the repairs with no ground for its order, and on a long list small things would come
+first while a serious one drowned in the middle. A weight read off the effect says what a repair is
+worth in terms anyone can judge, and one scale lets causes of different disciplines stand in one
+order (WAY-282). Many small breaks stay small and one open way to someone else's data stays open, so
+what is at stake sets the weight and the number of places does not. A weight is no grade of the
+review of a change: a grade says whether a change can be trusted and blocks it, and a weight says
+what is at stake and blocks nothing, so the words differ. From the skill for auditing observability
+of lesson m3l5 of the 10xDEVS course the-way adopts a weight for each problem by its effect, the
+merging of what comes from one source into one cause, and an order of repair, for the audits of its
+skills of guidelines, for the reasons above (WAY-100). Its weak points: the text of the scale is
+general, so the agent judges how serious a harm would be, and screens seldom reach `grave`, so the
+top of a list comes more often from code and tests.
+*Rejected:* a scale of its own for each discipline — it fits the differences between the disciplines
+better, but it is one more text to keep for each, and where code and tests stand in one task their
+weights cannot be compared, so a common order of repair has no ground; the scale of the review of a
+change, Critical, Important and Minor, with no new words — nothing new to learn, but that scale
+judges whether a change can be trusted and not the effect on the user, and such a grade in an audit
+would suggest a blocking that does not stand here; the audit as a skill of its own, run from time to
+time — logging is to be kept by a guideline on the code a change touches, and a look at the whole is
+the audit at an extension of guidelines.
+
+### WAY-281 — What does an audit of the skills of guidelines merge, and what does its list hold?
+
+An audit under WAY-280 merges its findings into causes: several violations from one source are one
+cause and one fix, each finding belongs to one cause, and a cause carries the places where it occurs.
+The list of causes also holds a trust boundary at which a test of refusal is due under WAY-235 and
+none exists, and the rules of a linter's set broken for one reason, as one cause told by its effect,
+with a number of files and no rule's name. A reformatting of the code is no finding.
+
+- **Scope:** product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-280
+- **Verification:** an agent compares the work with the decision:
+  - complies: eleven endpoints that read the request unchecked through one shared helper are one
+    cause and one fix, with eleven places; the boundary `api`, which no test refuses at, stands in
+    the list by its name; the reports of two rules stand as one cause, "a failed call to the payment
+    provider goes unnoticed", in thirty files; a boundary that is only the configuration of someone
+    else's service is said to be so beside it and is no cause;
+  - violates: one source stands as eleven causes; a finding stands in two causes; a cause stands
+    with no place; the list names a linter's rules; what a formatter would rewrite stands as a cause.
+- **Origin:** none
+
+*Rationale:* one fix removes a source and not a place, so violations of one source listed one by one
+read as many problems and hide what to repair; a cause with no place can be neither checked nor
+repaired. A missing test at a trust boundary and a wide debt a linter reports are among the things an
+audit finds, and outside the list the order of repair would not see them, though one fix of the
+second often closes the most. They keep what they set off, the invariants of WAY-205 and WAY-235
+being proposed whatever becomes of the cause. A boundary that is only the configuration of someone
+else's service has no test due (WAY-235), so it has no fix and is no cause, and a reformatting is one
+act that leaves nothing to weigh (WAY-205). Its weak point: small rules of a linter can swell the
+lower part of the list, though they do not reach its top.
+*Rejected:* only the trust boundaries, the linter staying a number beside the list — a shorter list,
+but the order of repair does not see the widest debt in the code, where one fix often closes the
+most; neither of them, only what the audit names as faults and `do not copy` going on the scale — the
+fewest changes, but the top of the list can pass over a missing test at a trust boundary.
+
+### WAY-282 — In what order do the causes of an audit of the skills of guidelines stand?
+
+An audit under WAY-280 ends with an order of repair from `grave` down, and within one weight the fix
+that removes most of the problem for the least work stands first. A task joining a product's coding
+and testing guidelines has one list and one order, made at the end of the audit that runs last, which
+may lower or withdraw a cause of either discipline and changes nothing the human settled for a
+discipline.
+
+- **Scope:** product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-280 · derives from WAY-281 · derives from WAY-247
+- **Verification:** an agent compares the work with the decision:
+  - complies: a long repair of a `grave` cause stands before a cheap one that removes thirty `light`
+    findings; within `heavy`, the fix of one file that removes twelve places stands before the fix of
+    several parts that removes two; in a task joining code and tests the audit of tests runs last,
+    orders the causes of both, and withdraws a cause of code whose effect does not occur, while the
+    `do not copy` status the human settled for its file stands until the human answers again;
+  - violates: a `light` cause stands before a `grave` one because its fix is cheap; a task joining
+    code and tests shows the human two orders; the audit that runs last changes a status the human
+    settled for a file because it withdrew the cause behind it.
+- **Origin:** none
+
+*Rationale:* the weight says what is at stake, so it comes first, and within one weight what is left
+to ask is where the work goes furthest. Trading a weight against work would turn weights into
+numbers, a measure the scale does not give. Causes of code and of tests bear on one product and
+compete for the same work, so they stand in one order. That end of an audit belongs to neither
+discipline, so the audit that runs last makes it, and it moves a cause by what it sees, whichever
+discipline found it. A weight is no matter of a discipline under WAY-247: it is no meaning of the
+guidelines and binds only the skill (WAY-173), so nothing a skill settles for its discipline is
+moved, and an answer of the human goes back to the human. Its weak points: a cheap fix that removes
+many `light` findings waits behind a costly `grave` one, and where two audits follow each other the
+human meets the first skill's choices and the top of the list in two rounds.
+*Rejected:* literally the gain for each unit of work, whatever the weight — problems fall fastest in
+sum, but small things return to the head of the queue, and the agent would have to turn weights into
+numbers, which the scale does not give; `grave` first and all the rest literally by gain — the order
+stays simple at its head and gain counts below it, but a cheap `light` cause can pass a `heavy` one
+that keeps a user from an important task.
+
+### WAY-283 — What of an audit's list of causes does the human decide on?
+
+The full list of an audit under WAY-280 stays in the task document, each cause with its weight and
+its place in the order, and the human gets for decision the top of the list, the start of that order:
+three to five causes for the whole audit and not for each level of tests, always every `grave` one,
+every `grave` one and nothing more where there are over five, and every cause where there are fewer
+than three. The list of files marked `do not copy` stands apart from this limit.
+
+- **Scope:** product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-282
+- **Verification:** an agent compares the work with the decision:
+  - complies: of forty causes the human gets four, two `grave` and two `heavy`, and the other
+    thirty-six stand in the document with their weights and places; seven `grave` causes all reach
+    the human and no other; an audit of two causes shows both;
+  - violates: an audit of tests counts three to five for each level; a `grave` cause is left out to
+    keep to five; the causes past the fifth are cut down to a count; the `do not copy` list is
+    shortened to fit the limit.
+- **Origin:** none
+
+*Rationale:* a few causes with a place and an effect can be weighed by a human who is no specialist,
+and a whole list, even merged, cannot, so the audit judges everything and the limit reaches only
+what the human gets. What stands below the top keeps its weight and its place, so the order of repair
+stays whole. A `grave` cause always stands in the top, since the limit exists to keep what matters
+from drowning. The `do not copy` list tells the next agent what not to copy, so a limit on the
+human's attention does not reach it. Its weak point: lighter causes stand in a document nobody may
+open once the task is done.
+*Rejected:* a hard limit that counts causes, the rest one line of how many there are and of their
+highest weight — the shortest and cheapest, but the weight covers only what fit and the content of
+the rest is lost, so the order of repair stays incomplete; no limit, the human settling every cause
+in turn — nothing is lost, but the list is too long to weigh, even merged.
+
+### WAY-284 — What decides which causes of an audit a task takes?
+
+The weight proposes and the human decides: the agent proposes which causes of the top of an audit's
+list (WAY-283) a task takes and which it defers, and the human settles it. On deferring a `grave`
+cause the agent asks whether to open a task for it in the product's backlog, and a yes takes the
+route WAY-215 gives a prerequisite, with nothing waiting for that task. The causes below the top are
+deferred together, for standing below the top, unless the human takes one.
+
+- **Scope:** product-guidelines, project-level
+- **Based on:** none
+- **Relations:** derives from WAY-283 · derives from WAY-174 · derives from WAY-215
+- **Verification:** an agent compares the work with the decision:
+  - complies: the human defers a `grave` cause, the agent asks, and on a yes `refine-task` adds the
+    task to the backlog of an independent task, or returns `plan change` for a plan member, and the
+    refinement goes on with no wait; on a no the cause stays deferred in the document with its
+    reason; the causes below the top reach the human as one choice;
+  - violates: every `grave` cause enters the task with no question; the agent defers a cause of the
+    top alone; a `grave` cause is deferred with no question of a backlog task; the task waits for the
+    backlog task; the human is asked about each cause below the top; a skill of guidelines writes the
+    backlog itself.
+- **Origin:** none
+
+*Rationale:* the repair of a `grave` cause can be large, so a weight deciding alone would swell a task
+of guidelines into cleaning the product, while a `grave` cause left in a document with no further
+word ends as if no audit had named it, so its deferral takes a question of its own. The human hears
+the proposal with its weights in plain words (WAY-174). The route is that of a prerequisite because
+who writes a backlog or a plan is settled there, and nothing waits because the task being refined does
+not need the fix. Asking about each cause below the top would bring back the list the limit took
+away (WAY-283). Its weak point: the human can answer no, the `grave` cause stays in the document, and
+nothing forces a return to it.
+*Rejected:* the weight deciding alone, all that is `grave` entering the task and the rest deferred —
+less to settle, but the repair of a `grave` cause can be large, so a task of guidelines swells, which
+WAY-205 keeps from happening; the weight only ordering the list and the human deferring alone, with
+no further question — the fewest changes in the skills, but a deferred `grave` cause ends as it does
+with no weight, and the problem returns later.
+
+### WAY-285 — How is a cause of the top of an audit's list checked?
+
+Before it reaches the human, each cause of the top of an audit's list (WAY-283) is gone back to by
+the agent leading the audit, which returns to the places the cause names and sees whether the effect
+it describes occurs, and what does not hold is lowered or withdrawn. Each check is recorded with its
+cause, the check of a cause it lowers or withdraws included, and what cannot be seen without the
+running product stays marked unchecked.
+
+- **Scope:** product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-283
+- **Verification:** an agent compares the work with the decision:
+  - complies: the agent follows the lines from a request to another user's order, finds a check that
+    refuses it on the way, withdraws the cause and keeps it in the list with what it saw; a cause on
+    focus, with no way to the running product, stays unchecked with its weight, and the human hears
+    so;
+  - violates: the top reaches the human with no check; only a check that confirmed a cause is
+    recorded; a withdrawn cause leaves no line; an agent that read the code alone says what a screen
+    shows.
+- **Origin:** none
+
+*Rationale:* the human spends attention on the top and a repair may follow it, so each of its causes
+is read again with one aim, to see whether its effect occurs, which listing it did not ask. What the
+check did is recorded whatever it did, or the record would stand only where it confirmed, and the
+critic could not see what the author dropped. Its weak point: the author still checks its own
+conclusion, and independence comes only from the critique of a fresh agent (WAY-120).
+*Rejected:* the check made by a fresh agent, as a linter's trial run is judged — true independence,
+but it takes the check from the agent leading the audit, adds an agent to every audit, and the
+critique follows it anyway; a check only where helper agents made the audit, as the course has it —
+it costs nothing, since one agent leads the audit and the rule would never apply, so the check would
+have no effect.
 
 ## Withdrawn identifiers
 
