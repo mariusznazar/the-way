@@ -37,6 +37,9 @@
   - where the human chooses to clean the screens as tasks touch their styles rather than in one
     clean-up, read `staged_cleaning.md` beside this skill;
   - for any other rule, the template's or the product's, that such a test checks, its invariant.
+- **The top of the audit's list.** Where step 3's audit ran, the proposal of which causes of the top
+  the task takes joins the set, and the human decides on it, as "At step 4" in
+  `product-guidelines/audit_end.md` gives (WAY-284).
 - **Critique.** Once the set of proposals is complete, one fresh agent critiques it before it is
   shown together, as "Critique before collective review" gives (WAY-120): read that section of
   `elements/common/way_of_working.md` and, unless step 2 read it, `elements/common/critique/SKILL.md`.

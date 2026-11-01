@@ -18,3 +18,7 @@ Where the product has code:
   would rewrite: where the code breaks those rules, step 4 proposes the linter's invariant marked
   violated; where the formatter would rewrite it, the one reformatting of the whole of the code
   (WAY-205).
+- Group the reports of the rules that block by one reason: each reason is a cause of the audit's
+  list, told by its effect, its place the number of files, with no rule's name, and the output's
+  path stays in *Context* (WAY-281). The rules that went among the examples flagged sound code and
+  yield no cause. The formatter's count never enters the list: a reformatting is no finding.

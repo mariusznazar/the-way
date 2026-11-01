@@ -1,7 +1,8 @@
 # Respond to guideline findings
 
 Read this file in step 3 of `SKILL.md` when the shared guideline reading reports findings
-(WAY-215, WAY-216).
+(WAY-215, WAY-216), and, for its section "A deferred cause of an audit", at step 5 of a skill of
+guidelines, where the human answered yes to a backlog task for a deferred `grave` cause (WAY-284).
 
 ## Missing discipline guidelines
 
@@ -39,6 +40,18 @@ For a task whose required outcome is itself the first test of a level whose reci
 through `maintain-testing-guidelines`, without a separate exemplar wait. Where the task's tests are
 its cycle's choice, add no designation: the cycle proposes one for a level's first test at a blocked
 draft request (WAY-242, WAY-238).
+
+## A deferred cause of an audit
+
+A `grave` cause of an audit's list that the human defers, with a yes to a task for it in the
+backlog, takes the prerequisite's route under "Missing discipline guidelines", with nothing waiting:
+the task refined does not need the fix, so it gains no `waits for task <n>` and no dependency, and
+stays out of `waiting for human` for this (WAY-284). The write is `refine-task`'s, as for a
+prerequisite, so it comes with the hand-back and the skill of guidelines writes no backlog itself.
+For an independent or source-only task, add the task to the product backlog using step 1's document
+conventions, holding the cause's effect, weight and places. For a plan member, return `plan change`
+naming the cause; where the plan holds such a task, the cause's `Deferred:` names it as its reason.
+The owning project workflow writes the plan.
 
 ## Step 6: readiness after a scope change
 

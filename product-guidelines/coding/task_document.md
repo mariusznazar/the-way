@@ -28,7 +28,8 @@ its choices and what the comparison found.
     for code the task brings (WAY-44);
   - for the product's first guidelines: add `guidelines/**` to the files of the part of the map
     whose files direct whoever carries out its tasks, through `update-part-map` (WAY-167);
-  - each item the audit calls for (step 3).
+  - one item for the fix of each cause of the audit's list the task takes, naming the cause by its
+    number (step 3).
 - *Questions to settle*: each choice step 4 settles — every standing check adopted or departed
   from with its reason, each tool, set and edition, the parts, the audit's database and severity,
   the split of the set, each kind's exemplar and the status of its files, the rules a script checks
@@ -38,12 +39,14 @@ its choices and what the comparison found.
   boundary of what an agent adds alone, the list of today with the number the product gives a user,
   and the library that writes a line, where one is chosen — each with
   the human's words and date as its source, and the ways the human did not choose under it as the
-  task template gives (WAY-134).
+  task template gives (WAY-134). The human's decision on the top of the audit's list and each answer
+  on a backlog task stand here too, with the human's words and date.
 - *Context*: the trial run's evidence — how many reports each rule gave and what the judging agent
-  found of them, with the paths of the output and of its verdicts; what the audit found, each `do
-  not copy` file with its file and line, a finding the task does not take up marked deferred with
-  its reason; the research's sources where research ran, each page with its version; what the
-  audit or the trial run could not see.
+  found of them, with the paths of the output and of its verdicts; the audit's list, in the form
+  `product-guidelines/audit_end.md` gives, with the weights, the causes with their places, the order
+  and the deferred causes with their reasons; apart from it each `do not copy` file with its file and
+  line and, in an audit, the number of its cause; the research's sources where research ran, each
+  page with its version; what the audit or the trial run could not see.
 - *Settlements to record*: `refine-task` step 5 builds them through `find-foundation-entries` —
   the product's decisions, its invariants and the environment facts they rest on, the fact of each
   adopted set's edition among them. A change of the part map is never a row, which is why it stands

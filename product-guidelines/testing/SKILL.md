@@ -27,7 +27,8 @@ needs; each is read when the step or variant that names it comes, not at the sta
 It runs inside the refinement of one task whose outcome is testing guidelines — written, refreshed
 or extended — or the exemplar test of a level, a task the product's backlog holds or one opened for
 it (WAY-107). `refine-task` opens or resumes the task through its steps 1 and 2; this skill takes
-over at its step 3 for the matters of the testing guidelines and hands back to its step 4.
+over at its step 3 for the matters of the testing guidelines and hands back to its step 4, or, where
+its audit stops for the coding skill's, to its step 3, as `hand_back.md` gives.
 Refinement and the task cycle find applicable and missing guidelines through
 `product-guidelines/reading.md`; this skill owns settling their testing-guideline meanings. The task
 writing the missing file does not wait for its own output (WAY-215). One task may carry the coding
@@ -94,18 +95,26 @@ skill. Where the human has no preference at the first guidelines, and at every e
 ## 3. Audit
 
 At step 3, where the product has tests and step 1 gave the audit — tests and no testing
-guidelines, or guidelines refreshed or extended — read `audit.md` beside this skill. Where the
-task's required outcome is itself the first test of a level, read `new_level.md` beside this skill.
-For either, read `product-guidelines/testing/template.md` in full unless step 2 did (WAY-256).
-Otherwise there is no step 3.
+guidelines, or guidelines refreshed or extended — read `audit.md` beside this skill and then
+`product-guidelines/audit_end.md`, which ends the audit. In that audit, where the task carries the
+coding guidelines too (WAY-247), read also `product-guidelines/coding/recognize.md`, that skill's
+step 1, before the audit ends: `audit_end.md` says what it decides (WAY-265). Where the task's
+required outcome is itself the first test of a level, read `new_level.md` beside this skill; a new
+level is no audit and has no such end. For either, read `product-guidelines/testing/template.md` in
+full unless step 2 did (WAY-256). Otherwise there is no step 3.
 
 ## 4. Settle with the human
 
 At step 4, read `product-guidelines/template.md` in full, `product-guidelines/testing/template.md`
-in full unless an earlier step did, and `settle.md` and `task_document.md` beside this skill. For
+in full unless an earlier step did, and `settle.md` and `task_document.md` beside this skill, and,
+where step 3's audit ran, `product-guidelines/audit_end.md` unless an earlier step did. For
 each new tool or library left as a technology question of the task, `settle.md` sends you to
 `new_tools.md`, also beside this skill (WAY-265).
 
 ## 5. Hand back
 
-At step 5, read `hand_back.md` beside this skill, and `task_document.md` unless step 4 did.
+At step 5, read `hand_back.md` beside this skill, `task_document.md` unless step 4 did, and, where
+step 3's audit ran, `product-guidelines/audit_end.md` unless an earlier step did. Where the human
+answered yes to a backlog task for a deferred `grave` cause, read
+`project-level/task/skill/guideline_findings.md` for its section "A deferred cause of an audit"
+(WAY-265).

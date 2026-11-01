@@ -14,3 +14,10 @@ Where the product has code:
     (WAY-198);
   - `do not copy` for each file that breaks a rule the product holds or the task settles, with the
     file and line of the place that breaks it, and `copy` for every other file of the kind.
+- **Findings** (WAY-281), in the audit and not on the route of one kind. Each place marked
+  `do not copy` is a finding, with one sentence of its effect, and a file with two breaks holds two
+  findings. The `do not copy` list stays apart, whole, under no limit, and tells the next agent what
+  not to copy; each of its places also stands in the `Places:` of its one cause, which says what to
+  fix. In the task document each `do not copy` line gains the number of that cause, so that a reader
+  sees one fact seen twice and not two problems; the mark stands there alone, and the table of a
+  kind's files in the product's guidelines takes none.
