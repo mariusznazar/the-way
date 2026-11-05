@@ -297,9 +297,10 @@ contradicts a decision.
         An executor of the strongest class that fails, or a retry that fails, stops the cycle:
         record its last commit and reset the branch to the slice's base, run the gate on the
         change as step 10 gives, run `task-cycle/cycle_stages.py` and commit the record and its
-        removal as step 12 gives, then write the description as step 13 gives, in its variant for
-        a slice failed twice, linking the record by the SHA of the commit that adds it, and open
-        the request from it as a draft marked `blocked`;
+        removal as step 12 gives, then write the description by
+        `task-cycle/skill/request_template.md` as step 13 gives, in its variant for a slice failed
+        twice, linking the record by the SHA of the commit that adds it, and open the request from
+        it as a draft marked `blocked`;
      5. where the slice's *Risk* names a trust boundary or an operation that cannot be undone,
         dispatch a fresh reviewer with `review-change` on that range and the slice's number, with
         the executor's selection; for slice 1 the handoff names the plan's *Foundation entries* as
@@ -376,8 +377,8 @@ included — read `task-cycle/skill/blocked_finding.md` and follow it.
     many tokens it used: run `task-cycle/cycle_stages.py` of the pinned the-way with `--output
     .runs/task-cycles/<task-slug>/stages.md`, naming every session of this cycle's orchestrator, a
     correction's included, by its transcript path or id; Claude Code holds the current session's id
-    in `CLAUDE_CODE_SESSION_ID` and Codex in `CODEX_SESSION_ID`. Write and check the description as
-    step 13 gives, and open the request from it as a draft by the pull or merge request route the
+    in `CLAUDE_CODE_SESSION_ID` and Codex in `CODEX_SESSION_ID`. Write and check the description by
+    `task-cycle/skill/request_template.md` as step 13 gives, and open the request from it as a draft by the pull or merge request route the
     user already chose. Write its URL into the record, copy the whole record directory to
     `docs/task-cycles/<task-slug>/` on the task branch, rewrite its links to the committed copies,
     commit it, commit its removal immediately after and push, so that the request's changed files

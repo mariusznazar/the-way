@@ -8642,7 +8642,7 @@ A request's description is written in English, and its top part stands a second 
 language of the task document, in a collapsed block of the description.
 
 - **Scope:** task-cycle, agent-instructions
-- **Based on:** none
+- **Based on:** github-collapsed-section
 - **Relations:** derives from WAY-286
 - **Verification:** an agent compares the request's description with the decision:
   - complies: a request of a task written in Polish reads in English, and its collapsed block holds
@@ -8761,8 +8761,8 @@ would set it itself.
 ### WAY-292 — What does the collapsed block of a request's description hold where the task document is in English?
 
 Where the task document of a request is in English, the collapsed block of the request's description
-holds `none` in place of a second English copy of the top part, and the form check holds the block
-to `none` there.
+holds `none` in place of a second English copy of the top part, and the form check, wherever it
+reads the task document as English, holds the block to `none`.
 
 - **Scope:** task-cycle, agent-instructions
 - **Based on:** none
