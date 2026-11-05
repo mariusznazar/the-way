@@ -169,5 +169,16 @@ invariant covers it.
   with the form check's last command and exit code and the number of its runs; in a copy committed
   before the description was written or rewritten, `written and checked after this commit`>
 - Writes to the task's backlog entry: <request link and state, or none>
-- Process remarks on the-way: <each item from a stage report other than `none`, copied word for
-  word, with the stage name and full report path; keep repeated items separate, or none>
+- Process remarks on the-way: <`none`, or the entries under this line>
+  - <stage name>, <full report path>: <an item of that report's **Searches not found or unclear**
+    other than `none`, copied word for word>
+  - <the orchestrator>: <a remark of its own about the-way, such as a listing of
+    `task-cycle/remarks_check.py` the cycle holds wrong>
+
+The remarks stand in this form only: the item that opens with `Process remarks on the-way`, the
+entries indented under it, one for each item of each stage report, repeated items kept apart, and
+every line of an entry indented under the entry; not in a section or a file of their own. It is the
+last item of the record, and nothing at the level of its marker follows it. `cycle_remarks_digest.py`
+of the nightly review and `task-cycle/remarks_check.py` cut the block as that item and the lines
+under it. Before the record is committed, `task-cycle/skill/SKILL.md` ("The process remarks check")
+has the check run until it lists nothing.
