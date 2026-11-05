@@ -48,5 +48,7 @@ to skip, and the first line of your report.
 
 ## 4. Return
 
-The designer and the reviewer each give the orchestrator their paths, and nothing more (WAY-148).
-The boundary is the reviewed spec: return before any plan, slice or code.
+The designer returns its status, the spec path and its report path, and the reviewer its report's
+first line and its report path (WAY-148); neither runs a test or another check of the product, so
+neither returns a check result. The boundary is the reviewed spec: return before any plan, slice or
+code.
