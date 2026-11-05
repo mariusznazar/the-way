@@ -53,29 +53,19 @@ changed files, and the branch still ends with only the pair of step 12.
 1. Set the record's status to `blocked` and run `task-cycle/cycle_stages.py` as step 12 gives.
 2. Copy the record directory, commit it as step 12 gives and push that commit. The request does not
    exist yet, so *Request URL and status* in the copy reads `blocked draft, opened on this commit`.
-3. Open the request as a draft on that commit, marked `blocked`, while the record is its changed
-   files, and link the record in its description by the SHA of that commit.
-4. Commit the removal of the copy and push it. A host that closes the request when its diff empties
+3. Write the description as step 13 gives, in its variant for a reserved choice, linking the record
+   by the SHA of that commit, and check it.
+4. Open the request from it as a draft on that commit, marked `blocked`, while the record is its
+   changed files.
+5. Commit the removal of the copy and push it. A host that closes the request when its diff empties
    changes nothing: the closed request keeps its description and its link.
 
 Keep the worktree, take step 14 and end the cycle with the status `blocked`.
 
 ## What the request states
 
-Beyond what step 13 gives any request — the goal, the relation, the sources, the pin, the discarded
-attempt and the agent's report — the request states:
-
-- under *Questions*, the choice in plain words, by what the product needs it for; where it showed,
-  by the stage and the item of the task; which limb of the rule takes it; and what was searched and
-  found not to settle it;
-- the ways the agent saw, marked as not researched and carrying no recommendation, since
-  `settle-technology` does that research;
-- *Checks*: the checks failing on the base and, as not run, each of the stages above that did not
-  run, the gate among them, and why;
-- the time, models and tokens so far, from `stages.md`;
-- *What this request settles*: none;
-- what happens next: the human closes the request, and `refine-task` takes the named choice as the
-  note. A remark on this request is no correction, and the cycle does not continue on it.
+The description takes the variant for a reserved choice of `task-cycle/skill/request_template.md`.
+A remark on this request is no correction, and the cycle does not continue on it.
 
 ## After a correction
 
@@ -85,8 +75,8 @@ when the correction began, the correction's merge of the target branch included,
 pushed yet, and record that reset base. The tree is then the one the request already holds, so
 neither the gate nor a review runs on it.
 
-Set *Reserved choice* in the record, repeat the record's pair of commits as `correction.md` gives
-and update the request's link to the record. Return the request to draft marked `blocked`, with the
-choice, the ways seen and what happens next as above, its *What this request settles* unchanged. Its
-code stands until the human closes the request or changes the remark, and `correction.md` takes a
-remark on it.
+Set *Reserved choice* in the record and repeat the record's pair of commits as `correction.md`
+gives. Rewrite the description by the template's variant for a correction that met a reserved
+choice, with the link to the record's new commit, check it, return the request to draft marked
+`blocked` and edit its description from it. Its code stands until the human closes the request or
+changes the remark, and `correction.md` takes a remark on it.

@@ -118,8 +118,8 @@ the task has none>
 ## The two parts and the language
 
 - The whole description is in English. Its **top part** — the state line through *How to merge* —
-  is written for the human in plain words, with no file names and no identifiers of entries,
-  commits or findings (WAY-286). The **block** repeats the top part in the task document's
+  is written for the human in plain words, with no file names and no identifiers of entries
+  (WAY-286). The **block** repeats the top part in the task document's
   language, the headings translated, directly after *How to merge*; where the task document is in
   English, the block holds only `none` after its summary (WAY-288).
 - The **lower part** — *Technical changes* through *Course of the cycle* — holds the evidence for

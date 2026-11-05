@@ -12,10 +12,12 @@ and each entry a reviewed spec or the plan names. Each is written through the pi
 element, on the task branch, to reach the main branch with the code in the request, and none is left
 for later (WAY-01). A row whose settlement the writer's search of the whole foundation (WAY-33)
 finds already stated becomes no second entry: the writer ties the row to that entry, and the request
-names both under *What this request settles* (WAY-134). A plan member writes only the projected
-entries its plan item assigns; one that falls to another item returns to the plan through a blocked
-draft request. The writer keeps for the request one sentence of each entry's meaning in the task
-document's language (WAY-114). A question for the human arises only where the writer has no
+names both, as `task-cycle/skill/request_template.md` gives (WAY-134). A plan member writes only the
+projected entries its plan item assigns; one that falls to another item returns to the plan through
+a blocked draft request. The writer keeps in its report, for each entry, one sentence of its meaning
+in English and one in the task document's language, and marks the entry `row <n>`, `projected` or
+`the cycle's` — the last for an entry no row and no projected entry carries whole, which the request
+puts before the human (WAY-114). A question for the human arises only where the writer has no
 recommendation, an entry would change the meaning of an approved decision beyond what the accepted
 task document or plan carries (WAY-30), a row's meaning cannot hold — the code shows an exception
 the row does not allow, or the row collides with a current entry other than as the task commands —
@@ -24,4 +26,4 @@ which takes the ways not chosen that the row's source keeps, `none considered` w
 said so, or `unknown`, as the decisions' template gives (WAY-134); two decisions colliding with no
 precedence recorded raise one too (WAY-25). The writer never writes a row with another meaning: it
 returns such a question with the status `blocked`, and the orchestrator opens the blocked draft
-request holding it, as step 13 of `implement-task` gives under *Questions*.
+request holding it, as `task-cycle/skill/request_template.md` gives.
