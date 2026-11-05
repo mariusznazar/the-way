@@ -8758,6 +8758,31 @@ before the human; opening the request as a blocked draft — the cycle needs not
 `blocked` would misstate its state; a switch on the script that silences the check — the orchestrator
 would set it itself.
 
+### WAY-292 — What does the collapsed block of a request's description hold where the task document is in English?
+
+Where the task document of a request is in English, the collapsed block of the request's description
+holds `none` in place of a second English copy of the top part, and the form check holds the block
+to `none` there.
+
+- **Scope:** task-cycle, agent-instructions
+- **Based on:** none
+- **Relations:** narrows WAY-288 · narrows WAY-114 · narrows WAY-290
+- **Verification:** an agent compares the request's description with the decision:
+  - complies: a request of a task written in English keeps the block, its summary followed by
+    `none`, and the form check passes it; the form check reports a block that repeats the top part
+    for an English task;
+  - violates: a request of an English task drops the block; its block repeats the top part in
+    English; a request of a Polish task holds `none` in its block.
+- **Origin:** none
+
+*Rationale:* the block exists for a human who reads a long English text line by line; where the task
+document is in English, that human reads the top part above it, so a second English copy only
+doubles what the request shows. The block keeps its place with `none`, so the skeleton stays the same
+for every request and the form check can tell a block left out from one that has nothing to repeat.
+*Rejected:* the top part repeated in English in the block — a copy that buys the reader nothing;
+the block left out for an English task — the skeleton would differ by the task's language, and a
+missing block could not be told from one that was forgotten.
+
 ## Withdrawn identifiers
 
 | Identifier | Why | Successors |

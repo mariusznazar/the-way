@@ -121,7 +121,7 @@ the task has none>
   is written for the human in plain words, with no file names and no identifiers of entries
   (WAY-286). The **block** repeats the top part in the task document's
   language, the headings translated, directly after *How to merge*; where the task document is in
-  English, the block holds only `none` after its summary (WAY-288).
+  English, the block holds only `none` after its summary (WAY-288, WAY-292).
 - The **lower part** — *Technical changes* through *Course of the cycle* — holds the evidence for
   agents and for a human who checks closely. Each of its items opens with a sentence a human
   understands without the code: what it concerns, what was not checked or what can break, and how

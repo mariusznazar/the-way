@@ -32,8 +32,8 @@ reaches ENGLISH_THRESHOLD is English. TASK is measured on its title line and the
 `### Need` and `### To do`, or, where it holds neither heading, as a project plan: on the *Goal*
 cells of its `## Tasks` table and the question text of each item of its `## Open questions`, the
 text before its first ` — `, since a plan keeps every other marker and state in English. Where TASK
-is English, the block reads `none`; where it is not, the block does not read `none` and its text is
-not English. Where TASK or the block is not judged, no error follows from its language.
+is English, the block reads `none` (WAY-292); where it is not, the block does not read `none` and
+its text is not English. Where TASK or the block is not judged, no error follows from its language.
 
 The script judges no content: not whether the decision section is complete or true, not the plain
 words of the top part, not whether the block says what the top part says or which language other
