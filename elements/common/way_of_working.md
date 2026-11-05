@@ -132,8 +132,9 @@ looks for in its element. The search is not repeated before the merge and leaves
 2. Show the whole entry with what the skill adds beside it, and one sentence of its meaning in the
    human's language. Write it on your recommendation; ask before writing only where you have no
    recommendation or the entry would change the meaning of an approved decision beyond what the
-   approved task document or plan carries (WAY-30). The human accepts the meaning at the merge,
-   or at the readiness gate for a projected entry (WAY-114).
+   approved task document or plan carries (WAY-30). The human accepts the meaning at the readiness
+   gate for a projected entry, with the task document for an entry written whole from an accepted
+   row of its *Settlements to record*, and at the merge for any other entry (WAY-114).
 3. Write the entry in its place in the file and run `elements/common/foundation_check.py` with
    `python -B` from the product's repository root. Fix what the entry broke and run it again; an
    error the entry did not cause goes to the human.

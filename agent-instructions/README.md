@@ -61,18 +61,27 @@ change to review it (WAY-10). The reviewer receives the whole diff, the task or 
 the change carries out, and the foundation entries the change touches, and reviews the change
 against them. The reviewer decides which of its remarks block. The author makes one fix for them,
 and an agent that did not make the change reviews that fix once. A blocking remark still open after
-that stops the change and goes to Mariusz; the other remarks go into the request.
+that stops the change and goes to Mariusz; the other remarks go into the lists of the request's
+lower part, as `task-cycle/skill/request_template.md` gives.
 
 ## Integrate into `foundations`
 
-Open a request to merge the task branch into `foundations`. It holds:
+Open a request to merge the task branch into `foundations`. Its description follows
+`task-cycle/skill/request_template.md` (WAY-286). Where no task cycle ran, *Cost* reads `none` and
+*Course of the cycle* holds **Task and sources** alone, its other labels reading `none`; the agent
+leading the work judges which findings the user of a product or a person working with the process
+will feel (WAY-289). Before the request opens, and before each later edit of its description, check
+the description and correct it as the template gives, an error you hold wrong included (WAY-290,
+WAY-291):
 
-- every foundation entry the change alters, each with one sentence on what it changes in meaning;
-- every test command run and its exit code;
-- what was not checked;
-- every remark of the review still open, in the reviewer's words;
-- every invariant test the change alters.
+```
+python -B task-cycle/request_check.py <description file> --task <document the change carries out>
+```
 
-Mariusz merges the request; the merge is the acceptance of the change and of every entry it alters.
+`--task` is the task document the change carries out, or, for a change that carries out a position
+of a project plan, the plan that holds that position.
+
+Mariusz merges the request; the merge accepts the change and each entry he did not see at the task
+document, those its section for the human's decisions puts before him (WAY-114).
 Creating `main` is a separate release decision that Mariusz makes; it is not part of integrating a
 change.

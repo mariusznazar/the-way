@@ -189,6 +189,12 @@ Anthropic's guide for authors of Agent Skills says that Claude might read only p
 
 - **Source:** https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices (archived: http://web.archive.org/web/20261022015600/https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices, 2026-10-22) § Avoid deeply nested references — "Claude might partially read files when they’re referenced from other referenced files." · § Avoid deeply nested references — "When encountering nested references, Claude might use commands such as head -100 to preview content rather than reading entire files, resulting in incomplete information." · § Avoid deeply nested references — "Keep references one level deep from SKILL.md."; read 2026-10-28
 
+## github-collapsed-section
+
+In the Markdown GitHub's web interface shows, what stands inside a `<details>` element stays collapsed until the reader expands it.
+
+- **Source:** https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/organizing-information-with-collapsed-sections (archived: https://web.archive.org/web/20261010140709/https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/organizing-information-with-collapsed-sections, 2026-10-10) § Creating a collapsed section — "You can temporarily obscure sections of your Markdown by creating a collapsed section that the reader can choose to expand." · § Creating a collapsed section — "Any Markdown within the <details> block will be collapsed until the reader clicks to expand the details."; read 2026-11-05
+
 ## github-closed-pull-request-branch
 
 On GitHub, the deleted head branch of a closed pull request can be restored.

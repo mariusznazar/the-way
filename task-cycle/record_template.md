@@ -84,8 +84,8 @@ names failed and unchecked checks and unresolved concerns. Repair an incomplete 
 before dependent work, and record corrections to stale paths or commit ranges. Record the evidence
 read for a question or finding in the questions table, rather than loading every stage's full
 report and sources again. This record is the cycle's only log; no method keeps one beside it.
-During work this file, the frozen task, `stages.md`, `spec.md`, `plan.md`, `plan-size.md` and
-`reports/` live under the ignored `.runs/task-cycles/<task-slug>/` directory. At the request, copy
+During work this file, the frozen task, `stages.md`, `spec.md`, `plan.md`, `plan-size.md`,
+`request.md` and `reports/` live under the ignored `.runs/task-cycles/<task-slug>/` directory. At the request, copy
 that whole directory to `docs/task-cycles/<task-slug>/`, link the reports from these rows, commit
 the copy and commit its removal immediately after; the request links the record by the SHA of the
 commit that adds it. A correction after review repeats this pair.
@@ -107,8 +107,9 @@ nothing else.
 Include the frozen task, `spec.md` where one was written, `plan.md` and `plan-size.md` only where
 planning ran, code commits, tests and full agent reports, the report of a discarded attempt or
 of a slice returned too large among them. Name commits and commit ranges instead of copying diffs
-or files that git holds. A foundation entry the cycle writes lives in its commits; the record
-keeps its meaning sentence for the request.
+or files that git holds. A foundation entry the cycle writes lives in its commits; the report of
+the agent that wrote it keeps its meaning sentences and its mark, and `request.md` takes them from
+there.
 
 ## Verification
 
@@ -163,28 +164,9 @@ invariant covers it.
 ## Request handoff
 
 - Request URL and status: <URL and draft/ready/blocked>
-- Cycle and its reasons: <as the request states them>
-- Process pin: <the pin, or where the task moved it, from and to which commit and the gate on the
-  commit that moved it>
-- What this request settles: <identifier and meaning sentence for each entry, and each kept row
-  tied to an entry already stated, with that entry (WAY-134)>
-- What the foundation puts in front of the human at the merge: <each invariant test the change
-  alters (WAY-03), each surface it alters (WAY-49) and each *Violated* mark it sets or clears
-  (WAY-51), or none>
-- Checks: <the gate's command and exit code, and each check that failed or did not run, named,
-  or none>
-- Human actions the request waits for: <each action the task document places in the cycle, and
-  each effect outside the repository the cycle found that the document does not name, or none>
-- Questions: <only those the cycle allows to reach the human, or none>
-- Review findings listed: <unfixed Minor findings and findings the reviewer marked outside the
-  task's scope, from the review of the whole change and every later code review, each with the
-  reviewer's words and its place in the code or a note that none is named; checks outside the
-  task's parts that failed in a cycle run and passed again, with their file paths, rerun results
-  and failure/pass counts (WAY-261), or none>
-- Blocked by review: <each blocking finding left after the review of its fix with its place and
-  reason, what the fix tried, the cycle's time, models and tokens from `stages.md` with the number
-  of review rounds, and the reconciliation and return step not run on that code, or none>
-- Choices within the request: <count and link to the questions table>
+- Description: <`request.md` beside this record, written by `task-cycle/skill/request_template.md`,
+  with the form check's last command and exit code and the number of its runs; in a copy committed
+  before the description was written or rewritten, `written and checked after this commit`>
 - Writes to the task's backlog entry: <request link and state, or none>
 - Process remarks on the-way: <each item from a stage report other than `none`, copied word for
   word, with the stage name and full report path; keep repeated items separate, or none>

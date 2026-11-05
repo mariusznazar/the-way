@@ -45,8 +45,9 @@ template holds what is particular to a glossary entry (WAY-35).
   (WAY-95).
 - The agent that meets such a word in its work — writing an entry, searching the foundation, in a
   task's return step — writes its entry; no search of every binding sentence looks for candidates
-  (WAY-95, WAY-11). The human accepting the change at the merge accepts the meaning of each entry
-  (WAY-114).
+  (WAY-95, WAY-11). The human accepts the meaning of each entry at the merge of the change, of a
+  projected entry at the readiness gate, and of a term written whole from an accepted row of a
+  task's *Settlements to record* with the task document (WAY-114).
 - Two uses carry two meanings when a definition true of one is false of the other
   (`TODO — decision pending: which decision sets when two uses of a word carry two meanings`).
 - Where a word carries two meanings in the files git tracks, and one of them is a meaning a reader

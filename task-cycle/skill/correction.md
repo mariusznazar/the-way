@@ -27,5 +27,7 @@ recovery "Design and execution choice" gives, with its reset base recorded. Repe
 remarks touch — the return step included — run the gate on the corrected tree as step 10 gives, and
 repeat the record's pair of commits from step 12. For a request a remaining blocking finding
 blocked, the human's decision is the input: make the fix it calls for, or keep the code the human
-accepted despite the finding, then run what has not run on that code (WAY-163). Update the request's
-description: its record link, its lists of findings and *What this request settles*.
+accepted despite the finding, then run what has not run on that code (WAY-163). Rewrite
+`request.md` by `task-cycle/skill/request_template.md`, in its variant for a correction, for the
+state after the correction and with the link to the record's new commit, check it as the template
+gives, and edit the request's description from it.

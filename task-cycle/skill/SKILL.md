@@ -193,16 +193,17 @@ and is resumed, with no mechanical check and no review until it returns its work
 is for a missing fact or permission, and for a question the foundation step leaves to the human:
 supply the fact or permission where a source gives it and resume the agent; for a slice's executor
 that no source can help, step 9 gives one retry and then its stop; otherwise open the blocked draft
-request, holding the question under *Questions* or showing the missing fact or permission as step 13
-gives for an impossible task.
+request, the question or the missing fact or permission in its section for the human's decisions,
+as step 13 gives.
 
 Advance on the short return, the record, the paths and the commits; do not load a stage agent's
 sources, full report or diff again merely to go on (WAY-148). Read the sources and the relevant
 report before you answer a question or verify disputed or incomplete evidence, and correct a stale
 path or commit range against the worktree, recording the correction. An agent sends its questions to
 you and returns at its boundary, never starting the next stage or seeking human approval. Each
-go-ahead you give a stage is provisional, never the human's approval; the human accepts the
-foundation entries the cycle writes by merging the request (WAY-114).
+go-ahead you give a stage is provisional, never the human's approval; by merging the request, the
+human accepts the foundation entries the cycle writes that were not accepted with the task document
+or at the readiness gate, which the request puts before the human (WAY-114).
 
 ## Design and execution choice
 
@@ -296,11 +297,10 @@ contradicts a decision.
         An executor of the strongest class that fails, or a retry that fails, stops the cycle:
         record its last commit and reset the branch to the slice's base, run the gate on the
         change as step 10 gives, run `task-cycle/cycle_stages.py` and commit the record and its
-        removal as step 12 gives, and open the request as a draft marked `blocked`, linking the
-        record by the SHA of the commit that adds it and giving what step 13 names for a blocked
-        request, that names both failures with the classes tried, each slice made so far that no
-        review judged, and the review of the whole change, the return step and the reconciliation
-        with the target branch as not run;
+        removal as step 12 gives, then write the description by
+        `task-cycle/skill/request_template.md` as step 13 gives, in its variant for a slice failed
+        twice, linking the record by the SHA of the commit that adds it, and open the request from
+        it as a draft marked `blocked`;
      5. where the slice's *Risk* names a trust boundary or an operation that cannot be undone,
         dispatch a fresh reviewer with `review-change` on that range and the slice's number, with
         the executor's selection; for slice 1 the handoff names the plan's *Foundation entries* as
@@ -350,8 +350,8 @@ evidence on a contested finding, and you move no finding from one kind to anothe
 
 A review whose first line is `PASS` sends the change on without a fix. A Minor finding and a
 finding the reviewer marks outside the task's scope are not fixed; outside the slice reviews, each
-goes to the request's lists (step 13) with the reviewer's words and its place in the code, or a
-note that the reviewer names none.
+goes to its list in the lower part of the request's description (step 13) with the reviewer's words
+and its place in the code, or a note that the reviewer names none.
 
 A `FAIL` gets one fix and one review of that fix (WAY-162); you never overrule a blocking finding or
 skip its fix. The author or executor whose work the findings concern fixes them with `make-change`,
@@ -373,56 +373,29 @@ included — read `task-cycle/skill/blocked_finding.md` and follow it.
     Otherwise merge the current target branch into the task branch; where that changes the reviewed
     code, have a fresh reviewer review the merge with `review-change`, and have the agents that own
     the affected checks run them. Where the final tree differs from the one step 10 checked, run the
-    gate again on it as step 10 gives. Open the request as a draft by the pull or merge request
-    route the user already chose. Then record how long each stage took, which models did it and how
+    gate again on it as step 10 gives. Record how long each stage took, which models did it and how
     many tokens it used: run `task-cycle/cycle_stages.py` of the pinned the-way with `--output
     .runs/task-cycles/<task-slug>/stages.md`, naming every session of this cycle's orchestrator, a
     correction's included, by its transcript path or id; Claude Code holds the current session's id
-    in `CLAUDE_CODE_SESSION_ID` and Codex in `CODEX_SESSION_ID`. Copy the whole record directory to
+    in `CLAUDE_CODE_SESSION_ID` and Codex in `CODEX_SESSION_ID`. Write and check the description by
+    `task-cycle/skill/request_template.md` as step 13 gives, and open the request from it as a draft by the pull or merge request route the
+    user already chose. Write its URL into the record, copy the whole record directory to
     `docs/task-cycles/<task-slug>/` on the task branch, rewrite its links to the committed copies,
     commit it, commit its removal immediately after and push, so that the request's changed files
     show only the change and the target branch never holds the record. Never force-push: a rejected
-    push is investigated. Link the record in the request's description by the SHA of the commit that
-    adds it, never by branch name, and ask for a merge that keeps its commits, since the link
-    survives only then; where the product's rules squash or rebase, name that limitation. Mark the
-    request ready for review, except one the cycle marks `blocked`, one waiting for human actions in
-    the cycle included, which stays a draft. Do not merge. Keep the worktree for corrections.
-13. The request states, as the record's *Request handoff* gives it: the task's goal and relation and
-    the source revisions it used; the process pin, and where the task moved it, from and to which
-    commit, with the gate on that commit; whether a spec was written and why, with its link; the
-    route and its reason, and after a discarded attempt its reason and the agent's report; the
-    plan's link and slices where one was written; what changed and why. *Checks*: the gate's
-    command and exit code, each check that failed or did not run by name, and for a check that
-    failed and passed when rerun the number of cycle runs in which it failed and passed, its rerun
-    result, and (when its file belongs to a part outside the task's parts recovered from its frozen
-    task and changed files through the part map) its listing with its file path beside findings
-    outside the task's scope (WAY-261); what each own-work
-    check showed (WAY-164), and the user-interface states and screenshot evidence, a screenshot
-    unchecked for no settled way or the failure of a settled one included (WAY-219). The Minor findings of
-    the review of the whole change and of every later review in one item, and the findings their
-    reviewers marked outside the task's scope in another, for the human to choose which become new
-    tasks and to create them; that item also names the file paths of checks outside the task's parts
-    that failed in a cycle run and passed again, with their rerun results and failure/pass counts
-    (WAY-261). Recover the task's parts from its frozen task and changed files through the part map
-    when preparing the request, and keep that classification as evidence with the check, not as a
-    separate record of the selected parts.
-    *What this request settles*: each foundation entry the
-    change writes or changes, by its identifier and one sentence of its meaning in the task
-    document's language, the projected entries and those written from rows of *Settlements to
-    record* apart from new ones, and each kept row tied to an entry already stated, with that entry
-    (WAY-134); beside them, each invariant test the change alters (WAY-03), each surface it alters
-    (WAY-49) and each *Violated* mark it sets or clears (WAY-51). *Questions*: only those the
-    foundation step allows and a reserved choice, each with its options and a recommendation where
-    one exists, or a line that there are none. The number of other choices with a link to the
-    questions table, and the record's link by SHA. The human actions the request waits for, each as
-    the task document names it, with each effect outside the repository the cycle found that the
-    document does not name, for the human to place (WAY-140). A request a remaining blocking finding
-    blocks is marked `blocked` and lists each such finding with its place in the code and its
-    reason, what the fix tried, the time, models and tokens of the cycle so far from `stages.md`
-    with the number of review rounds, and what has not run on that code (WAY-162, WAY-163). A
-    request a reserved choice blocks opens and states what `task-cycle/skill/reserved_return.md`
-    gives (WAY-269). If the task proved impossible, mark the request `blocked` and show the smallest
-    missing fact or authorization and the ways tried; never present partial work as complete.
+    push is investigated. Put the link to the record, by the SHA of the commit that adds it, never
+    by branch name, into the description, check it again and edit the request with it. Mark the
+    request ready for review unless the description's first line reads `blocked` or `draft`; a
+    request waiting for human actions in the cycle stays a draft marked `blocked`. Do not merge.
+    Keep the worktree for corrections.
+13. Write the request's description into `.runs/task-cycles/<task-slug>/request.md` by
+    `task-cycle/skill/request_template.md` of the pinned the-way, which holds its sections, where each
+    takes its content from and the variants of a blocked, reserved or corrected request; check its
+    form with `task-cycle/request_check.py` and correct it until the check passes, as the template
+    gives, and publish it from that file (WAY-286, WAY-290). Recover the task's parts from its
+    frozen task and changed files through the part map when preparing the request, and keep that
+    classification as evidence with the check, not as a separate record of the selected parts
+    (WAY-261). Never present partial work as complete.
 14. Before reporting completion, confirm that the record lists every dispatch, choice, check, fix,
     review round and skipped stage. The final report names any write to the task's backlog entry.
     The request is the human's first decision point.
