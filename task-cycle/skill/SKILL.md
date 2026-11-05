@@ -175,7 +175,8 @@ leaves work pending, handling a returned question first. Do not list agents, pol
 sleep between checks. Record the mechanism and any limit.
 
 Each agent writes its full report to its report path as its method gives it and returns its status,
-its commits, a one-line check result naming what failed or did not run, and the report's path; its
+its commits, a one-line check result naming what failed or did not run (an agent of `write-spec`
+runs no test or other check of the product and returns no check result), and the report's path; its
 questions and concerns, each reach beyond its handoff, and **Searches not found or unclear** — each
 thing looked for and not found or unclear, or `none` — stand in the report (WAY-148, WAY-260). In
 every report read its checks, reaches and searches; read the rest of it where the status is other
@@ -186,10 +187,13 @@ follow. Under `make-change` the status is `done`, `done with concerns`, `questio
 `FAIL <sha>` or `questions`; under `write-spec` the designer returns `questions`, `done` or
 `reserved` and its reviewer `PASS` or `FAIL`. A check a report says it ran carries its command and
 exit code; a report missing either returns to its agent for repair before dependent work, and a
-claim that tests passed does not repair it (WAY-159). An agent that returns `questions` gets your
-answers as step 6 answers the designer's — from an approved source, otherwise, except for a reserved
-choice, the smallest reversible reading that fulfils the task, recorded as an autonomous choice —
-and is resumed, with no mechanical check and no review until it returns its work. `blocked`
+claim that tests passed does not repair it (WAY-159). A report that lacks its **Searches not found
+or unclear** (WAY-260), save one returning `questions`, or a `make-change` report of `done` or
+`done with concerns` without its own-work check (WAY-164), returns to its agent for repair the same
+way (WAY-148); `none` is an answer, a missing section is not. An agent that returns `questions`
+gets your answers as step 6 answers the designer's — from an approved source, otherwise, except for
+a reserved choice, the smallest reversible reading that fulfils the task, recorded as an autonomous
+choice — and is resumed, with no mechanical check and no review until it returns its work. `blocked`
 is for a missing fact or permission, and for a question the foundation step leaves to the human:
 supply the fact or permission where a source gives it and resume the agent; for a slice's executor
 that no source can help, step 9 gives one retry and then its stop; otherwise open the blocked draft
@@ -284,9 +288,11 @@ contradicts a decision.
         non-empty range from the base to its head, the changed files against the slice's *Change*
         (each path pattern there covers every changed file it matches)
         and, for slice 1, the plan's *Foundation entries*, and each check of the report with its
-        command and exit code. Uncommitted work returns to the executor to commit, and a check
-        without its command or exit code returns the report for repair (WAY-159); any other
-        mismatch goes as information to the review that judges the slice and does not return it.
+        command and exit code, its **Searches not found or unclear** and its own-work check.
+        Uncommitted work returns to the executor to commit, and a check without its command or exit
+        code, or a report missing either section, returns the report for repair (WAY-148, WAY-159,
+        WAY-164, WAY-260); any other mismatch goes as information to the review that judges the
+        slice and does not return it.
         The mechanical check fails where the range holds no commit, or where a repair the
         executor was sent back for is left undone;
      4. an executor that returns `blocked` for a fact or permission no source supplies, reports a

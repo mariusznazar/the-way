@@ -138,7 +138,8 @@ Write the full report to the dispatch's report path. Its first line is `PASS <he
   instructions, handoff, task, foundation or product code — or `none`.
 
 Return to the orchestrator only the first line, the counts of blocking, Minor and out-of-scope
-findings, and the report path (WAY-148). Where the review cannot proceed without an answer, do not
+findings, a one-line check result naming what failed or did not run, and the report path
+(WAY-148). Where the review cannot proceed without an answer, do not
 guess: write a report whose first line is `questions`, with each question and the answer you
 recommend, return that line and the report path, and wait to be resumed; the report gets its
 `PASS` or `FAIL` first line when the review is finished.

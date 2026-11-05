@@ -96,8 +96,9 @@ commit that adds it. A correction after review repeats this pair.
 |---|---|---|---|---|---|---|
 
 Include questions answered by a binding source as well as new micro decisions. A choice that binds
-after the merge is written into the foundation (WAY-36); every other choice is its row here and
-nothing else.
+after the merge is written into the foundation (WAY-36), unless the task or its spec excludes the
+entry, as `task-cycle/skill/return_step.md` gives; every other choice is its row here and nothing
+else.
 
 ## Artifacts
 
