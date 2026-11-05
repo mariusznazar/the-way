@@ -8642,8 +8642,9 @@ new items entering without the human, and it changes the meaning of a decision a
 C. Leave the rule as it is. Additions to the logging scope keep entering without the human's
 knowledge, and WAY-274 describes a mechanism the product does not have; a reviewer comparing a
 change with WAY-274 would count its complies as met. A general item for everything a decision asks
-the human to see at the merge. No other decision asks for that, and such an item would turn this
-section into a list the human reads in full, so that its `none` says less.
+the human to see at the merge. It would encourage moving everything into the section, though its
+`none` is to mean the request can be merged. A search of the log by the words "at the merge",
+"sees" and "merges" found no second such case; that is a word search, not proof.
 
 ### WAY-288 — In what language is a request's description written?
 
