@@ -18,8 +18,8 @@ case use one fresh agent as a second reader. For a set, start after it is comple
 proposals added as consequences of earlier ones, and before presenting it to the human.
 One critic reads the whole set, not one proposal at a time.
 The diff of a change to an invariant test or to the foundation takes no critique of its own: the
-review of the change by an agent that did not make it reads it, and the human reads it at the merge
-(WAY-10).
+review of the change by an agent that did not make it reads it, and the human reads the request's
+section for the human's decisions at the merge (WAY-10).
 
 When invoking a critique, read `prepare.md` beside this skill to start a fresh critic and
 handle the case where none is available.

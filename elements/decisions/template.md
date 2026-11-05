@@ -128,7 +128,9 @@ A field stays in the template only while someone or something reads it (WAY-05).
   next free number.
 - A change to a decision edits its entry in place: the binding sentences, the fields, *Rationale*
   and *Rejected* describe the decision as it then stands, never the change (WAY-07, WAY-19).
-- A human accepts the changed meaning by merging the request that carries the change (WAY-14).
+- A human accepts the changed meaning by merging the request that carries the change (WAY-14),
+  unless the change was written whole from an accepted row of a task's *Settlements to record*,
+  whose meaning the human accepted with the task document (WAY-114).
 - When a new decision answers a question that an older one answered in passing, the sentence moves
   to the new decision, and the older one loses it in the same change (WAY-19).
 - A decision no longer needed leaves the log in the change that ends it: its number goes to the

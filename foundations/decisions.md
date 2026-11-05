@@ -289,7 +289,8 @@ differ.
 A change to an invariant test or to the foundation has no assessment of its own, in a product as in
 the-way itself: an agent that did not make the change reviews the whole change, its foundation
 entries and invariant tests included, against its task and the foundation, and a human reads the
-diff of the foundation and accepts the change by merging its request.
+section of the request's description for the human's decisions and accepts the change by merging
+the request.
 
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common,
   task-cycle, agent-instructions
@@ -297,8 +298,9 @@ diff of the foundation and accepts the change by merging its request.
 - **Relations:** derives from WAY-03
 - **Verification:** an agent compares the change with the decision:
   - complies: a change that rewords a decision and the invariant test deriving from it is reviewed
-    on its whole diff by an agent that did not make it, and the human merges it with no other
-    assessment;
+    on its whole diff by an agent that did not make it, and the human, reading what the section for
+    the human's decisions puts before the human, the reworded decision in plain words and the
+    changed test among it, merges it with no other assessment;
   - violates: the author reviews its own change to the foundation; a cycle requires an assessment
     of its own of a change's foundation entries before the merge; a change merges whose foundation
     entries no reviewer read.
@@ -308,8 +310,9 @@ diff of the foundation and accepts the change by merging its request.
 favours it, so an agent that did not make the change reads it. An error of the product shows where
 the code and the foundation meet, and the review of the whole change reads both against the task;
 an assessment of the foundation apart from the code sees only entries, so what it finds beyond the
-review are faults of form and of checks, which the tests and the human reading the diff of the
-foundation at the merge also meet.
+review are faults of form and of checks, which the tests and the review of the whole change also
+meet. The reviewer reads the whole diff, while the human reads the section that holds what the human
+has not yet accepted, since a diff the human does not read accepts nothing.
 *Rejected:* one independent assessor on a model other than the author's, which sees the diff
 without the author's reasoning and names what of the change can be cut — a stage of its own in
 every cycle that writes entries, reading entries without the code the review reads with them; a
@@ -840,8 +843,9 @@ question to a human. The search is not repeated before the merge and leaves no r
 costliest contradictions lie between entries written apart, where nobody thought of a link, so only
 a search of the whole foundation finds what a change touches, linked or not. Its author knows what
 the change settles and makes it once. Two tasks can still contradict each other without a file
-conflict (WAY-01); the change accepts that risk, since the review and the human who sees every
-entry it alters in its request read it against the foundation.
+conflict (WAY-01); the change accepts that risk, since the review, which reads every entry the
+change alters, and the human, who sees in its request each entry not accepted with the task
+document (WAY-114), read it against the foundation.
 *Rejected:* marks on links flagged by a change — they see only written links, and renewing a mark
 does not lead to a change in the entry that carries it; a search within overlapping scopes —
 contradictions between parts go unseen; a search of linked entries only — entries written apart go
@@ -2077,8 +2081,8 @@ texts that use the word and rewrites each use whose meaning the new definition m
 
 *Rationale:* a sentence relies on a term by its word, so a search for the word finds the sentences
 a changed meaning reaches, and the author who changed the meaning knows what moved. The review of
-the change, by an agent that did not make it (WAY-10), and the human at the merge see the changed
-definition and the rewritten sentences in one diff.
+the change, by an agent that did not make it (WAY-10), sees the changed definition and the rewritten
+sentences in one diff, and the human sees the changed meaning in the request (WAY-114).
 *Rejected:* a version as for invariants and facts — nothing reads it; a review of every use by
 another agent, putting the new definition in place of the word — a second reading of what the
 author has just searched; a term used on the main branch keeping its meaning, a new meaning taking
@@ -2449,29 +2453,49 @@ weighed.
 
 ### WAY-114 — What does a human accept of an entry, and when?
 
-A human accepts the meaning of a foundation entry, shown as one sentence in the human's language with
-the entry beside it, while its wording is the agent's: an agent writes the entry and the human accepts
-it at the merge of the change that holds it, or, for a projected entry, at the readiness gate. Before
-that, a question goes to the human only where the agent has no recommendation or the entry would
-change the meaning of an approved decision; a translation never enters the foundation.
+A human accepts the meaning of a foundation entry while its wording is the agent's: the meaning of a
+projected entry at the readiness gate, shown as one sentence in the human's language with the entry
+beside it; that of an entry written whole from an accepted row of a task's *Settlements to record*
+with the task document, the row being the human's own settlement; and that of every other entry at
+the merge of the change that holds it, where the section of the request's description for the
+human's decisions gives one plain sentence of its meaning with no identifier, repeated in the
+human's language in the description's collapsed block, while the full list of the change's entries,
+each by its identifier with one English sentence of its meaning, stands in the description's lower
+part. Before that, a question goes to the human only where the agent has no recommendation or the
+entry would change the meaning of an approved decision; a translation never enters the foundation.
 
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common,
-  project-level
+  project-level, task-cycle
 - **Based on:** none
 - **Relations:** none
 - **Verification:** an agent compares the work with the decision:
-  - complies: the request lists each entry it writes with one sentence of its meaning in Polish, and
-    the human reads the entries before merging;
+  - complies: the readiness gate shows each projected entry's meaning as one sentence in Polish with
+    the entry beside it; the request's section for the human's decisions gives a plain sentence of
+    the meaning of each entry the cycle wrote with no row or projected entry carrying it — from the
+    spec, a correction the search of the foundation made, the part of a projected entry — repeated
+    in Polish in the collapsed block, while every entry, those from rows and projected ones
+    included, stands by its identifier in English in the lower part; the human reads that section
+    and merges;
   - violates: an agent asks the human to confirm a choice it already recommends; a translation is
     written into the foundation; an entry changes the meaning of an approved decision without a
-    question.
+    question; an entry written from the spec stands only in the lower part; the section for the
+    human's decisions lists the entries written from accepted rows.
 - **Origin:** none
 
-*Rationale:* the human judges what an entry settles; its wording rarely changes that, and the human
-who merges reads what the change holds and answers for it.
+*Rationale:* the human judges what an entry settles, and its wording rarely changes that. A row is
+the human's own settlement, accepted with the task document, and a projected entry is wording the
+gate approved; asking again at the merge buries the entries the human has not seen among those
+already accepted, and a list the human does not read accepts nothing. The price is that an entry
+whose wording drifts from its row reaches the merge unseen by the human, and the review of the whole
+change, which reads the entry against the row, is what catches it (WAY-134, WAY-10).
 *Rejected:* acceptance of the whole wording before an entry is written — attention goes to wording
 while the meaning rarely moves, and each acceptance costs a round; storing a translation in the
-foundation — two binding wordings could drift apart.
+foundation — two binding wordings could drift apart; every entry of the change at the top of the
+request with its sentence in Polish, as before — a wall of text the human does not read; the full
+list in the lower part and nothing about the entries at the top — the entries the cycle adds enter
+without the human's knowledge; at the top also an entry from a row whose wording the cycle wrote,
+where it differs from the human's sentence by more than words — asked again, the human chose to be
+shown only the entries no row carries.
 
 ### WAY-115 — How are foundation entries found in a project's source?
 
@@ -2909,11 +2933,12 @@ writes a new entry only for a rule none of them states.
   - complies: a source-only task whose code adds the store a projected decision chooses writes
     that decision whole in its foundation step, and the task the plan assigns later finds it and
     writes nothing; a task whose code makes one of a projected decision's two sentences true writes
-    that sentence and lists its meaning in the request;
+    that sentence and puts its meaning before the human in the request's section for the human's
+    decisions;
     a plan member whose code would make another item's entry true returns to the plan first;
   - violates: the return step writes a new decision for a rule a projected entry of the
     task's source states; a shortened projected entry is written as the gate approved it, its
-    meaning left out of the request;
+    meaning left out of the request's section for the human's decisions;
     the code a late-found projected invariant covers is set aside and rewritten.
 - **Origin:** none
 
@@ -3215,8 +3240,8 @@ meaning and choosing its wording, and gives a decision written from a row as its
 only the ways not chosen that the row's source keeps, `none considered` where the human said so, or
 `unknown`; where that meaning cannot hold, or the entry needs any other value neither the row nor
 the cycle's work gives, the cycle asks the human through a blocked draft request rather than write
-another entry, and otherwise the human accepts the entry's meaning at the merge (WAY-114); a kept
-row whose settlement the cycle's search of the whole foundation (WAY-33) finds already stated
+another entry, and otherwise the entry's meaning is the one the human accepted with the row in the
+task document (WAY-114); a kept row whose settlement the cycle's search of the whole foundation (WAY-33) finds already stated
 becomes no second entry, the cycle tying the row to that entry and naming both in the request.
 
 - **Scope:** project-level, task-cycle, elements-common, decisions, invariants, glossary,
@@ -3226,7 +3251,7 @@ becomes no second entry, the cycle tying the row to that entry and naming both i
 - **Verification:** an agent compares the task document, or the cycle, with the decision:
   - complies: a task whose human settled in refinement that an exported record keeps its owner
     carries that row, and its cycle writes a decision with that meaning in the same change as its
-    code and names it in the request; a task whose refinement found nothing carries the counting
+    code and lists it in the lower part of the request's description; a task whose refinement found nothing carries the counting
     line with none below it; in an orchestrated round the project orchestrator shows the candidate
     table and required challenge questions while the refiner records the human's answers; the
     cycle's search finds a decision of an untouched part that already states a kept row, and the
@@ -3247,7 +3272,9 @@ becomes no second entry, the cycle tying the row to that entry and naming both i
 one a project settles, yet with no place in the task document it reaches the cycle as an answer to
 a question, where it reads as one more choice the cycle may make otherwise. A row in the human's
 words carries the meaning into the cycle without a second point of acceptance: the wording stays
-the agent's, as for every entry a cycle writes, and the human judges the meaning at the merge. A
+the agent's, as for every entry a cycle writes, the human judged the meaning when accepting the row,
+and the merge does not ask again, while the review of the whole change reads the entry against the
+row. A
 table read from the whole document finds a settlement said in passing, and its column of what the
 cycle would guess drops one no reader would miss. Refinement compares the candidates with the
 entries it reads for the task's parts; what no link joins, the one search of the whole foundation
@@ -4298,8 +4325,10 @@ from one of these kinds to another.
 the line between what blocks and what does not adds no second label to the review and
 leaves no finding without a place; a label given against the task would let a finding tied to no
 requirement of the task pass as non-blocking. A minor finding fixed in a round of its own spends
-that round on polish, while one listed in the request with the reviewer's words stays in front of
-the human who merges; a list the request only links to is a list nobody reads. A finding that
+that round on polish, while one listed in the request with the reviewer's words stays within reach
+of the human who merges, and one the product's user or the human working with the process will feel
+is put before the human in plain words (WAY-289); a list the request only links to is a list nobody
+reads. A finding that
 widens the work is a new piece of work rather than a repair of this one, and the reviewer, who has
 no stake in closing the cycle, is the one to say which findings lie outside the task, since an
 orchestrator sorting them could move an inconvenient finding out of the way of the blocked request.
@@ -8536,6 +8565,198 @@ but it takes the check from the agent leading the audit, adds an agent to every 
 critique follows it anyway; a check only where helper agents made the audit, as the course has it —
 it costs nothing, since one agent leads the audit and the rule would never apply, so the check would
 have no effect.
+
+### WAY-286 — What form does the description of a request a task cycle opens take?
+
+The description of a request a task cycle opens follows one template whose headings stand in a
+fixed order and at a fixed level: first a top part written for the human in plain words, with no
+file names and no identifiers of entries, that gives the request's state in its first sentence,
+then what the human will see once the change is in — the whole change, what the task announced
+included — with a word on what lies underneath, the human's decisions, the cycle's cost and how to
+merge; then a lower part that holds, in a fixed order, the technical changes, the checks, the full
+list of foundation entries, the Minor findings, the findings outside the task's scope, the task's
+own sections under their own headings, and the course of the cycle. Each item of the lower part
+opens with a sentence a human understands without knowing the code, before the places in the code
+and the identifiers an agent needs, and a section with no content reads `none` rather than being
+left out.
+
+- **Scope:** task-cycle, agent-instructions
+- **Based on:** none
+- **Relations:** derives from WAY-227
+- **Verification:** an agent compares the request's description with the decision:
+  - complies: a request opens with its state and why, says how working with the process changes,
+    lists what waits for the human's yes, its cost and how to merge, and below them gives its
+    checks, its entries and its findings, each item opening with what it means for the product and
+    how much that matters; a request with no Minor finding keeps the section and reads `none`
+    there; a task's own section of proposals stands under its own heading after the findings;
+  - violates: the top part names the files changed or the entries by number; a section with nothing
+    in it is left out; a request's checks stand above what the human will see; an item of the lower
+    part opens with a file and a line, and no sentence says what was left unchecked.
+- **Origin:** none
+
+*Rationale:* the human who merges a request reads whether something waits for an answer and what the
+cycle cost, and reads no long text; names of files and numbers of decisions tell that reader nothing.
+A fixed skeleton puts the same thing in the same place in every request, so it is found without
+reading the rest, and a section that reads `none` says that nothing is there rather than leaving the
+reader to wonder whether it was lost. The lower part keeps the evidence an agent and a human checking
+closely need, and an item that opens in plain words lets the human see what was not checked and how
+much it matters before the place in the code.
+*Rejected:* unknown
+
+### WAY-287 — What does a request put before the human for a decision?
+
+The section of a request's description for the human's decisions holds everything whose merge needs
+the human's yes — the cycle's choices beyond the task's content, the steps skipped and the checks not
+run, the unfixed findings the product's user or the human working with the process will feel, the
+decisions of the task's own sections, in a blocked request what the cycle needs to go on, the human
+actions, the changed invariant tests, surfaces and *Violated* marks, and the foundation entries the
+human did not see at the task document — and its `none` says that nothing else in the request waits
+for the human's yes. A blocked request keeps the same skeleton, with `blocked` in its first sentence
+and what the cycle needs, in plain words, in that section, while each remaining finding stands with
+its place in the code in the lower part.
+
+- **Scope:** task-cycle, agent-instructions
+- **Based on:** none
+- **Relations:** derives from WAY-227 · derives from WAY-286
+- **Verification:** an agent compares the request's description with the decision:
+  - complies: a request whose cycle chose the place of a new file the task left open, skipped the
+    return step on the human's word and left a finding a player would feel puts all three in the
+    section, each with its question, and the lower part keeps their evidence; a request a remaining
+    finding blocks says in that section, in plain words, what the human is to decide about it, while
+    the finding's place and reason stand in the lower part;
+  - violates: the section reads `none` while a choice beyond the task stands only among the
+    foundation entries; a skipped step is named only in the last line of the checks; a blocked
+    request is written in a shape of its own.
+- **Origin:** none
+
+*Rationale:* the human merges once the section that asks for decisions reads `none`, so a matter that
+needs a yes and stands in another section passes without the human's knowledge. One section that
+holds every such matter makes its `none` a statement the human can merge on. A blocked request that
+keeps the skeleton is read the way every other request is read, and what the cycle needs is the
+question it asks.
+*Rejected:* unknown
+
+### WAY-288 — In what language is a request's description written?
+
+A request's description is written in English, and its top part stands a second time, in the
+language of the task document, in a collapsed block of the description.
+
+- **Scope:** task-cycle, agent-instructions
+- **Based on:** none
+- **Relations:** derives from WAY-286
+- **Verification:** an agent compares the request's description with the decision:
+  - complies: a request of a task written in Polish reads in English, and its collapsed block holds
+    its state, what the human will see, the human's decisions, the cost and how to merge in Polish;
+  - violates: a request opens in Polish; the human's decisions stand in English alone; the block
+    holds the lower part as well, or a summary of the top part instead of the top part.
+- **Origin:** none
+
+*Rationale:* the repositories are public, so what anyone may read is in English, while the human
+reads a long English text line by line and so not at all; the part the human reads stands a second
+time in the language the task was written in, and stays collapsed, so the request opens in English
+for every other reader.
+*Rejected:* the whole description in English, as before — a long English text the human reads line
+by line, so not at all; the top part in Polish and the lower part in English — a public request
+opens in Polish; a report in Polish in the human's notes — the cycle writes nothing outside the
+repository, and the human would look in two places.
+
+### WAY-289 — Which unfixed findings does a request put before the human for a decision?
+
+Writing a request's description, the orchestrator of the cycle judges each Minor finding and each
+finding outside the task's scope, from the whole cycle record, the reports of the walk through the
+running product and its screenshots included, by whether the product's user or the human working
+with the process will feel it, and restates each that will be felt, in plain words, in the section
+for the human's decisions as a question whether it becomes a task. Every finding stays in its list of
+the lower part with the reviewer's words and its place in the code, and the judgment changes no
+finding's kind or grade and decides no fix and no block.
+
+- **Scope:** task-cycle, agent-instructions
+- **Based on:** none
+- **Relations:** derives from WAY-161 · derives from WAY-287
+- **Verification:** an agent compares the request's description with the decision:
+  - complies: a Minor finding that a button stays enabled while a save runs is restated as "a
+    player can press save twice while the game saves; make a task of it?", and stays in the list of
+    Minor findings with the reviewer's words; a finding on the name of a helper stays in its list
+    alone;
+  - violates: the orchestrator moves a finding it judges felt to the blocking ones, or leaves out of
+    its list one it judges not felt; a finding a player would feel stands only in the lower part;
+    the restatement names a file and a line instead of what the player meets.
+- **Origin:** none
+
+*Rationale:* the reviewer's words name the code, and the human cannot tell from them what was left
+unchecked and how much it matters, so a finding the user or the human will feel is lost unseen in the
+lower part. The orchestrator holds the whole record, the walk through the running product included,
+while the reviewer reads the code and the task, so the orchestrator sees the effect a finding has.
+WAY-161 warns that an orchestrator sorting findings could move an inconvenient one out of the way of
+a blocked request; this judgment only adds a line before the human, and a finding judged not felt
+stays where WAY-161 puts it, so nothing WAY-161 keeps in front of the human leaves it. The clean-ups
+stay in the lower part for a reading of the lower parts of many requests together.
+*Rejected:* every finding in the lower part alone — the findings a player would feel are lost unseen,
+since neither the human nor the nightly review reads them; the nightly review of the layer of agent
+instructions extended to the review findings — that review would start carrying the product's bugs,
+and the clean-ups would flood its ledger; the reviewer who reports the finding judging it — it looks
+with fresh eyes, but reads the code and the task and does not run the product.
+
+### WAY-290 — How is the form of a request's description checked?
+
+Before a request opens, the cycle runs the-way's script that checks the form of the request's
+description — the order and level of its headings, content or `none` in each section, and the
+collapsed block in the task document's language — and corrects the description until the script
+reports no error. The script judges no content.
+
+- **Scope:** task-cycle, agent-instructions
+- **Based on:** none
+- **Relations:** derives from WAY-286 · derives from WAY-288
+- **Verification:** an agent compares the cycle and its request with the decision:
+  - complies: the script reports that the section of Minor findings is missing, and the
+    orchestrator writes it with `none` and runs the script again before the request opens; a request
+    whose description the script passed opens from that very file;
+  - violates: a request opens with a description the script was not run on; the orchestrator
+    corrects one of two reported errors and opens the request; the script is taught to judge whether
+    the decision section is complete.
+- **Origin:** none
+
+*Rationale:* an agent writing from a template can lose or move a section, and nobody notices until
+the human reads the request; a check of the form run before the request opens catches that while
+the description can still be corrected. Whether the content is complete and true stays with the
+agent writing it, since a script cannot judge it, and whether decisions still slip into the lower
+part is seen by reading many requests later.
+*Rejected:* the template alone — an agent can lose or move a section, and nobody notices until the
+reading; the script and a second agent comparing the description with the record — one more agent
+call in every cycle, before it is known whether decisions slip into the lower part at all.
+
+### WAY-291 — What does the cycle do with an error of the form check that it holds wrong?
+
+Where the orchestrator of a cycle holds an error the form check reports wrong, with evidence it can
+name, it does not change the description to silence the error — it never empties the collapsed block
+and never puts it into English — and the request opens, or stays, a draft whose section for the
+human's decisions names the error and the cycle's reason, while its checks name the check as failed;
+a request blocked for another cause stays blocked.
+
+- **Scope:** task-cycle, agent-instructions
+- **Based on:** none
+- **Relations:** narrows WAY-290
+- **Verification:** an agent compares the cycle and its request with the decision:
+  - complies: the script reads a correct Polish block full of quoted English names as English, and
+    the request opens as a draft that keeps the block, says in the human's section that the check
+    reported it and why the cycle holds it wrong, and names the check, its exit code and its line
+    among the checks;
+  - violates: the orchestrator writes `none` into the block so that the script passes; the request
+    opens as ready while the script reports an error; the orchestrator holds an error wrong with no
+    evidence it can name.
+- **Origin:** none
+
+*Rationale:* the check of the block's language counts words, and a correct block can be misread; a
+cycle that corrects until the script passes would then remove the block the human reads, with nothing
+saying so, or never open the request. A draft that keeps the block and names the error puts the
+case before the human, who decides by merging or not. The cycle needs nothing to go on, so the
+request is a draft, not a blocked one, and only the human's yes to its description waits.
+*Rejected:* correcting the description until the script passes in every case — a measure that
+misreads a correct block would end with the block lost or the request never opening; asking the human
+through a blocked draft before the request is written — a round for a case the draft already puts
+before the human; opening the request as a blocked draft — the cycle needs nothing to go on, so
+`blocked` would misstate its state; a switch on the script that silences the check — the orchestrator
+would set it itself.
 
 ## Withdrawn identifiers
 
