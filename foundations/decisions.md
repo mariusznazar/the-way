@@ -126,8 +126,10 @@ checking.
 A decision entry opens with one to three binding sentences — in the present tense, describing
 a state that is to be true, concrete enough to check — followed by fields a script or an agent
 reads, then rationale and rejected options in prose, which, where the entry's author writes it
-rather than quotes a source, names no file, script or count, nor what the process's own tools do or
-lack today, and does not tell how the decision was reached. A field stays in the template only
+rather than quotes a source, names no file, script or count — a count being how many files, tests or
+entries of its foundation the product holds; a measurement the choice rests on may stand, with what
+was measured and under which conditions, never as a general bound — nor what the process's own tools
+do or lack today, and does not tell how the decision was reached. A field stays in the template only
 while someone or something reads it, and what a decision forces on later work stands in a binding
 sentence or a field, never in prose. An example in `elements/decisions/` names a decision of the
 log by its number instead of copying it.
@@ -136,13 +138,18 @@ log by its number instead of copying it.
 - **Based on:** none
 - **Relations:** none
 - **Verification:** an agent compares the change with the decision:
-  - complies: a new field enters the template together with the reader named in its table;
-  - violates: a "notes" or "related artifacts" field that nothing reads.
+  - complies: a new field enters the template together with the reader named in its table; a
+    rationale gives '12 loops fit in a save with the longest program, 16 and 19 with shorter ones';
+  - violates: a "notes" or "related artifacts" field that nothing reads; a rationale gives 'at most
+    12 loops' with no conditions, or how many entries the log held when the decision was taken.
 - **Origin:** none
 
 *Rationale:* a record written like a legal code is followed worse, and agents generalise from the
 reasons they are given, so what binds stays short and checkable, reasoning below; a field
-nobody reads goes empty, and long lists of fields stop people recording decisions.
+nobody reads goes empty, and long lists of fields stop people recording decisions. The prose gives
+only what a reader needs to understand the choice: the history of the product or of the decision —
+what the product held, how the choice was reached — is information the reader does not need, while a
+measurement the choice rests on is a reason for the choice.
 *Rejected:* prose without fields — nothing a script can read reliably; many fields and relations —
 fields without a reader; a hand-written status — every entry of the log binds; a one-sentence
 entry — no reasoning beside the rule; "will" or "should" — an intent, not a state; capitals such as
@@ -3887,8 +3894,9 @@ already holds.
 
 Every task-cycle stage passes its full handoff and report through files in the cycle's reports
 directory, while its messages carry routing, the stage's status, commits, a one-line check result
-naming what failed or did not run, and the report's path, while the agent's questions, concerns and
-each reach beyond its handoff stand in its report. The handoff names what the agent reads, as the
+naming what failed or did not run, where the stage runs a test or another check of the product,
+and the report's path, while the agent's questions, concerns and each reach beyond its handoff stand
+in its report. The handoff names what the agent reads, as the
 orchestrator selects it (WAY-150, WAY-213), and keeps requirements and values in their own files:
 it may carry a section of the plan, spec or task copied word for word, never restated in other
 words, with its file named as its address, so that a slice's executor gets its section of the plan
@@ -8782,6 +8790,47 @@ for every request and the form check can tell a block left out from one that has
 *Rejected:* the top part repeated in English in the block — a copy that buys the reader nothing;
 the block left out for an English task — the skeleton would differ by the task's language, and a
 missing block could not be told from one that was forgotten.
+
+### WAY-293 — What prevails where a task or its spec excludes the entry for a choice?
+
+Where a task or its spec explicitly excludes an entry in the foundation for a choice, that exclusion
+prevails over the rule that a choice binding after the merge is written into the foundation, and the
+choice stays a row of the cycle record's questions table; without such an exclusion the rule applies
+as before. In the area of choices that a task or its spec explicitly excludes from the foundation,
+this decision prevails over WAY-22 and WAY-18. A candidate left out of a task's *Settlements to
+record* is no exclusion.
+
+- **Scope:** decisions, task-cycle
+- **Based on:** none
+- **Relations:** narrows WAY-22 · narrows WAY-18
+- **Verification:** an agent compares the task, its spec, the cycle and its record with the
+  decision:
+  - complies: a spec that says the choice of a form gets no entry in the foundation leaves that
+    choice as a row of the questions table, and the cycle writes no entry for it; a task that
+    excludes nothing has each choice that binds after the merge written as an entry;
+  - violates: the cycle writes an entry for a choice the task or its spec excludes; a choice is
+    left out of the foundation because it looks small, with no exclusion in the task or its spec; a
+    candidate the human did not accept into the task's *Settlements to record* is taken for an
+    exclusion.
+- **Origin:** none
+
+*Rationale:* without a recorded precedence, a cycle meets a task or spec that says "no entry" beside
+a rule that a choice binding after the merge becomes an entry, and beside WAY-22 and WAY-18, which
+give every choice that records a rule a place in the one log; the agent that meets the collision
+may not settle it (WAY-25). A task or spec that excludes an entry says so in words, so the exception
+is limited to what was said and the default stays: a choice that binds after the merge enters the
+log. The choice is not lost, since its row stays in the questions table, and the request puts it
+before the human in the section for the human's decisions where it changes what the human meets when
+working with the process. The price is that the reasons for rejecting the other ways of such a
+choice go with the spec; that a later change can rework its rule without contradicting any entry;
+and that the human sees, at the merge, the choice itself but no line saying it has no entry.
+*Rejected:* an exception for every choice written in the text of a skill or template, with no entry,
+unless the task or spec asks for one — the reasons and rejected ways of such a choice are lost with
+the spec, a later change can rework the rule without contradicting any entry, and the exception goes
+against WAY-22 and WAY-18; no change, which withdraws the rule — small remarks keep coming in
+requests and the choice is weighed again at each stage that meets it, with no harm to the product;
+letting only the task exclude an entry, not its spec — where a spec excludes the entry for each of
+several choices, the cycle writes a decision for every one of them and the log grows.
 
 ## Withdrawn identifiers
 
