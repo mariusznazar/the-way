@@ -8832,6 +8832,101 @@ requests and the choice is weighed again at each stage that meets it, with no ha
 letting only the task exclude an entry, not its spec — where a spec excludes the entry for each of
 several choices, the cycle writes a decision for every one of them and the log grows.
 
+### WAY-294 — How does the cycle make sure its process remarks hold every item its stage reports give?
+
+Before every commit that adds the cycle record to the product's repository, the orchestrator runs
+the-way's script that lists each item other than `none` under **Searches not found or unclear** in
+the record's stage reports that the record's process remarks do not hold word for word, appends each
+listed item word for word with its stage name and full report path, and runs the script again until
+it lists nothing. The commits that add the record are its copy for a request, the repetition of that
+copy in a correction after review, and the copy of a request blocked for any cause. The script only
+lists, and an item that two reports give is listed again until the remarks hold it twice.
+
+- **Scope:** task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-260
+- **Verification:** an agent compares a cycle and its record with the decision:
+  - complies: a stage report that works after the request opened gives one item beside three lines
+    reading `none found`; the script lists that item with its report path, the orchestrator appends
+    it and runs the script again, which lists nothing, and only then the record is committed; a
+    correction runs the script over the reports of the correction too;
+  - violates: a record is committed without the script having been run on it; the orchestrator
+    stops after a run that listed items; it appends an item in other words, or leaves it out
+    because it looks small; an item that two reports give stands once in the remarks.
+- **Origin:** none
+
+*Rationale:* the orchestrator copies an item when it has a report in front of it, and in the cycles
+examined when this was settled items were still missing from the remarks, from two causes: a stage
+that works after the request has opened, which no step of the cycle told the orchestrator to copy,
+and an item standing beside lines that read `none`, which a reading that stops at `none` passes
+over. A comparison made by a script reads every report to its end every time, and a cycle with
+dozens of reports is where a reader's care already failed. The nightly review of cycles makes its
+cases from the record alone, so an item that is not in the record never reaches the human who
+improves the process. The price is a script with tests, a longer end of every cycle, a section the
+script must recognise in the two forms reports give it, and a literal reading of "other than
+`none`": a line that reads `none found` enters the remarks, so the review gets more noise.
+*Rejected:* the orchestrator appends items to the remarks right after each report, a correction
+included — a few sentences in the skill, but it does not close the gaps for items standing beside
+`none` lines, which arose while the orchestrator had the report in front of it; a pass of the
+orchestrator through all reports before every archive, skipping only a section that reads `none`
+throughout — a few sentences that close both causes, but it still rests on a model reading with
+care, which already failed in a cycle with dozens of reports.
+
+### WAY-295 — What does the cycle do with a listing of the remarks check that it holds wrong?
+
+Where the orchestrator of a cycle holds a listing of the remarks check of WAY-294 to be an error of
+the script, with evidence it can name, the record is archived all the same and the script is not
+changed in that cycle: the orchestrator enters the case in the record's process remarks as a case of
+the script, not as an item of its stage, and names it in the request's section for the human's
+decisions. In that case the repeated run of WAY-294 does not hold the archive back.
+
+- **Scope:** task-cycle
+- **Based on:** none
+- **Relations:** narrows WAY-294
+- **Verification:** an agent compares a cycle and its request with the decision:
+  - complies: the script lists a line of a report that is no item, the orchestrator names the
+    passage of the report that shows it, the record is archived, the process remarks hold the case
+    as a case of the script, and the request's section for the human's decisions names it;
+  - violates: the orchestrator changes the script in the same cycle; it holds the archive back until
+    the script stops listing; it appends the listed line as an item of its stage to silence the
+    script; it leaves the case out of the request; it holds a listing wrong with no evidence it can
+    name.
+- **Origin:** none
+
+*Rationale:* a script that does not stop listing leaves the orchestrator either stuck or judging the
+listing wrong itself, with a quiet return to the reading by a model that the script replaced. A case
+named in the record and in the request reaches both readers: the nightly review of cycles, which
+reads the record, and the human, who reads the request and decides by merging. The script is not
+changed in the cycle that meets the case, so a cycle never loosens the check that judges it. The
+price is that a real item the orchestrator wrongly holds wrong reaches the remarks only as a case of
+the script, and the review does not see it as an item of its stage.
+*Rejected:* no separate rule — the orchestrator gets stuck because the script does not stop listing,
+or holds the listing wrong itself and quietly returns to reading by a model; the item the script
+points at goes into the remarks as an item of its stage whatever the orchestrator judges — the
+source of the decision keeps no reason beside it.
+
+### WAY-296 — In what form does the cycle record hold its process remarks?
+
+The cycle record holds its process remarks in the one form its template gives, which the check of
+WAY-294 reads, and in no section or file of their own.
+
+- **Scope:** task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-260
+- **Verification:** an agent compares a cycle record with the decision:
+  - complies: the remarks stand as the list item that opens with `Process remarks on the-way`, with
+    an entry under it for each remark;
+  - violates: the remarks stand in a section of their own, in a file beside the record, or
+    scattered over the record's events.
+- **Origin:** none
+
+*Rationale:* the check compares the reports with a block it must find, and a record that kept its
+remarks in a list item, a section or a file of their own gave it three places to look and a form it
+would not know. One form is found without reading the rest of the record. The price is that records
+already archived stay in their earlier form, so the check reads them only as far as that form is
+one it cuts.
+*Rejected:* unknown
+
 ## Withdrawn identifiers
 
 | Identifier | Why | Successors |

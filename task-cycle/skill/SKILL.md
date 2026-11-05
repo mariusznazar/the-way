@@ -70,6 +70,9 @@ reading outside it stays with the agent (WAY-140). A remark about the-way, the u
 instructions or another repository goes into the record's process remarks, never into the request.
 For each stage report, copy every item under **Searches not found or unclear** that is not `none` word for word into
 those remarks, with the stage name and full report path; keep repeated items separate (WAY-260).
+The remarks stand in the one form `task-cycle/record_template.md` gives (WAY-296), and before every
+commit that adds the record, "The process remarks check" below compares them with the reports
+(WAY-294).
 The one exception is the cycle's own account of its request: in the task's entry in the backlog the
 product names (WAY-107), the cycle may add the request link and set the task's state.
 
@@ -302,8 +305,9 @@ contradicts a decision.
         report and what failed. The retry goes through sub-steps 3 and 5 as any executor does.
         An executor of the strongest class that fails, or a retry that fails, stops the cycle:
         record its last commit and reset the branch to the slice's base, run the gate on the
-        change as step 10 gives, run `task-cycle/cycle_stages.py` and commit the record and its
-        removal as step 12 gives, then write the description by
+        change as step 10 gives, run `task-cycle/cycle_stages.py`, run the process remarks check
+        as its section gives and commit the record and its removal as step 12 gives, then write
+        the description by
         `task-cycle/skill/request_template.md` as step 13 gives, in its variant for a slice failed
         twice, linking the record by the SHA of the commit that adds it, and open the request from
         it as a draft marked `blocked`;
@@ -383,7 +387,10 @@ included — read `task-cycle/skill/blocked_finding.md` and follow it.
     many tokens it used: run `task-cycle/cycle_stages.py` of the pinned the-way with `--output
     .runs/task-cycles/<task-slug>/stages.md`, naming every session of this cycle's orchestrator, a
     correction's included, by its transcript path or id; Claude Code holds the current session's id
-    in `CLAUDE_CODE_SESSION_ID` and Codex in `CODEX_SESSION_ID`. Write and check the description by
+    in `CLAUDE_CODE_SESSION_ID` and Codex in `CODEX_SESSION_ID`. Run the process remarks check on
+    the record as "The process remarks check" gives, before the description is written, so that a
+    listing you hold wrong reaches the description, and again before the commit that adds the
+    record if a report or a remark changed in between. Write and check the description by
     `task-cycle/skill/request_template.md` as step 13 gives, and open the request from it as a draft by the pull or merge request route the
     user already chose. Write its URL into the record, copy the whole record directory to
     `docs/task-cycles/<task-slug>/` on the task branch, rewrite its links to the committed copies,
@@ -405,6 +412,43 @@ included — read `task-cycle/skill/blocked_finding.md` and follow it.
 14. Before reporting completion, confirm that the record lists every dispatch, choice, check, fix,
     review round and skipped stage. The final report names any write to the task's backlog entry.
     The request is the human's first decision point.
+
+## The process remarks check
+
+Before every commit that adds the record to `docs/task-cycles/<task-slug>/` — step 12, its
+repetition in a correction (`correction.md`), the stop of a slice failed twice at step 9
+sub-step 4 and the blocked requests of `blocked_finding.md` and `reserved_return.md` — run, from
+the worktree's root (in a product, the path starts with `.the-way/`), the-way's script (WAY-294):
+
+```
+python -B task-cycle/remarks_check.py .runs/task-cycles/<task-slug>
+```
+
+It reads the **Searches not found or unclear** section of every report in the record's `reports/`,
+in either of the forms the reports give it, and lists each item other than `none` that the record's
+process remarks do not hold word for word, with the path of its report. It only lists, and it
+judges no content. Exit 1 lists each item as `<report path>: <item>`:
+
+1. Append each listed item to the process remarks word for word, as an entry in the form
+   `task-cycle/record_template.md` gives, with the stage name from the Events and the full report
+   path; never in other words, never with the item left out for being trivial, and with a repeated
+   item as an entry of its own for each report that gives it.
+2. Run the script again, and go on until it exits 0 and lists nothing.
+3. Record the last run, its command and exit code, with the number of runs, under *Verification*.
+
+Exit 2 is no listing: fix the call, or the file that could not be read.
+
+**A listing you hold wrong.** Where you hold a listed line to be an error of the script, with
+evidence you can name — the line is text of the report that is no item, say — the script is not
+changed in this cycle and the archive is not held back (WAY-295):
+
+1. Do not append the listed line as an item of its stage.
+2. Enter the case in the process remarks as an entry of your own: the script, the line it listed,
+   and why you hold it wrong. It is a matter of the-way's script, not of the product.
+3. Commit the record as usual. In the request's description, *For you to decide* gets one item
+   naming what the script listed, in plain words, why the cycle holds it wrong and "Merge as it
+   stands?", and *Checks* names the check with its command, its exit code and its listed line, as
+   `task-cycle/skill/request_template.md` gives.
 
 ## Correction after review
 
