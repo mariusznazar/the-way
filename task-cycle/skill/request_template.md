@@ -100,8 +100,8 @@ translated; none where the task document is in English>
 
 ## <…>
 
-<each of the task's own sections under its own heading, here and only here; none of them where
-the task has none>
+<each of the task's own sections under its own heading, here and only here. Where the task has no
+sections of its own, omit this heading altogether: it is not written with `none`>
 
 ## Course of the cycle
 
@@ -188,6 +188,9 @@ order:
    in its list below, with its kind and grade; the judgment decides no fix and no block.
 9. *Decisions of the task's own sections*: each item of those sections that waits on a yes, such as
    a proposal not applied.
+10. *Additions to a product's logging scope*: each item the change adds to the list of what the
+    product logs, in plain words — what it is and which log line carries it — with "Accept it?".
+    A change that adds nothing to that list has no such item.
 
 **Cost.** The time, the models and the tokens from `stages.md`, the number of review rounds, and
 the link to the table of stages in the committed record. For a blocked request, the cost so far.
