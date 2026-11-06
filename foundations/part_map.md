@@ -99,6 +99,17 @@ them.
   elements-common · project-level · gate · product-guidelines
 - **Trust boundary:** none
 
+## foundation-review
+
+The part answers for the review of a product's foundation against the product: the skill that reads
+the foundation and the unfixed remarks of merged requests, lists what to change and marks the
+review done.
+
+- **Files:** foundation-review/**
+- **Depends on:** decisions · invariants · glossary · part-map · environment-facts ·
+  elements-common · project-level
+- **Trust boundary:** none
+
 ## gate
 
 The part answers for the command that runs every test of the-way, and for the tests of critical
@@ -149,7 +160,7 @@ The part answers for preparing a product repository to use one pinned commit of 
 
 - **Files:** installation/**
 - **Depends on:** decisions · invariants · glossary · part-map · environment-facts ·
-  elements-common · project-level · product-guidelines · task-cycle
+  elements-common · project-level · product-guidelines · task-cycle · foundation-review
 - **Trust boundary:** installation/install.py
 
 ## product-guidelines
