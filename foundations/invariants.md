@@ -307,7 +307,7 @@ Every subprocess the plan-state reader starts runs Git.
 
 ## cross-part-imports
 
-No Python file git tracks imports, by an `import` or `from … import` statement and through a directory it adds to `sys.path` as well, a Python file git tracks of another part that the *Depends on* of its own part does not name, unless the importing file is a test, named `test_*.py`, and the imported file belongs to a part of test helpers, or an invariant "the part `<X>` does not depend on `<Y>`" naming the two parts reads `Violated: yes`.
+No Python file git tracks imports, by an `import` or `from … import` statement and through a directory it adds to `sys.path` as well, a Python file git tracks of another part that the *Depends on* of its own part does not name, unless the importing file is a test, named `test_*.py`, and the imported file belongs to a part of test helpers, or an invariant "the part `<X>` does not depend on `<Y>`" reads `Violated: yes`, where `<X>` is the part of the importing file and `<Y>` the part of the imported one.
 
 - **Method:** test
 - **Rests on:** git-path-patterns

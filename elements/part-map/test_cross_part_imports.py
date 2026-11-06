@@ -451,6 +451,17 @@ class Check(unittest.TestCase):
         self.assertEqual(([("core/engine.py", 7, "shell/screen.py", "core", "shell")], []),
                          unmarked.check())
 
+    def test_marked_invariant_of_the_other_direction_lets_no_import_pass(self):
+        reversed_text = MARKED_TEXT.format(violated="yes").replace(
+            "The part `core` does not depend on `shell`.",
+            "The part `shell` does not depend on `core`.")
+        repository = Repository(self, {
+            "core/engine.py": HEADER + (
+                "sys.path.insert(0, os.path.join(HERE, '..', 'shell'))\nimport screen\n"),
+            "foundations/invariants.md": reversed_text})
+        self.assertEqual(([("core/engine.py", 7, "shell/screen.py", "core", "shell")], []),
+                         repository.check())
+
 
 if __name__ == "__main__":
     unittest.main()
