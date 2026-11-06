@@ -45,7 +45,8 @@ error wrong, with evidence you can name (WAY-291):
 ## The skeleton
 
 The headings stand in this order and at this level; the script holds the same list. A section
-with no content reads `none`, and never disappears.
+with no content reads `none`, and never disappears. The one exception is the heading of the task's
+own sections, which is omitted where the task has none (the skeleton's `## <…>` heading).
 
 ```markdown
 **State: <ready|draft|blocked>** — <why, in one sentence>
@@ -241,7 +242,8 @@ here; what in it waits on a yes also stands in *For you to decide*.
 
 ## The variants
 
-Every variant keeps every heading; a section with no content reads `none`.
+Every variant keeps every heading, save the heading of the task's own sections where the task has
+none; a section with no content reads `none`.
 
 | Variant | First line | *For you to decide* | Lower part |
 |---|---|---|---|
