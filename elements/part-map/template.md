@@ -91,11 +91,11 @@ one left behind is withdrawn and never reused stand in `elements/common/rules.md
 holds the rule, and the code shows the state (WAY-225). The return step of a change compares the two
 for the parts the change touches (WAY-11).
 
-Every product whose parts import code from other parts holds one invariant of allowed
-dependencies, with its test in the product's suite, that a file of a part imports only files of its
-own part, of the parts its *Depends on* names, of a part of test helpers where the importing file
-is a test (see "Assigning files"), and of a part that an invariant "the part `<part>` does not depend on `<part>`" reading
-`Violated: yes` says it depends on today (WAY-299):
+Every product whose parts import code from other parts holds one invariant of allowed dependencies,
+with its test in the product's suite, that a file of a part imports only files of its own part, of
+the parts its *Depends on* names, of a part of test helpers where the importing file is a test (see
+"Assigning files"), and of a part that an invariant "the part `<part>` does not depend on `<part>`"
+reading `Violated: yes` says it depends on today (WAY-299):
 
 - the test reads this map and the imports of the product's own languages, and names the parts of
   test helpers by identifier; how it tells a test from other code is settled by the task that

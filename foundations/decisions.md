@@ -1076,13 +1076,12 @@ claim, is an error of the check of the foundation, unless the map lists that fil
 purpose, and so is a pattern of a part's *Files* or *Trust boundary* that matches no file git
 tracks. Tests belong to the part they test and generated files to the part of their generator; the
 files that serve the whole repository — the lockfile and the build configuration — are a part of
-their own; the files that serve the tests of several parts are another, which its sentence
-describes as such with no field of its own, and which the tests of every part may import while code
-that is no test may not; and the files that only direct whoever carries out its tasks —
-instructions for agents, skills, hooks and the configuration of agents' tools and of CI — are
-another. For a file that
-collects entries about many parts, the parts a change touches follow from the entries it adds or
-changes, not from the part the file itself belongs to.
+their own; the files that serve the tests of several parts are another, which its sentence describes
+as such with no field of its own, and which the tests of every part may import while code that is no
+test may not; and the files that only direct whoever carries out its tasks — instructions for
+agents, skills, hooks and the configuration of agents' tools and of CI — are another. For a file
+that collects entries about many parts, the parts a change touches follow from the entries it adds
+or changes, not from the part the file itself belongs to.
 
 - **Scope:** part-map, agent-instructions, task-cycle
 - **Based on:** git-path-patterns
