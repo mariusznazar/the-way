@@ -68,6 +68,10 @@ one left behind is withdrawn and never reused stand in `elements/common/rules.md
   (`TODO — decision pending: which decision lets a part hold no files`).
 - Tests belong to the part they test. Generated files belong to the part of their generator
   (WAY-44).
+- The files that serve the tests of several parts — a helper the tests of two parts import, say —
+  are a part of their own, whose sentence says that it holds them; its entry takes no field of its
+  own for it. The tests of every part may import from that part, and code that is no test may not
+  (WAY-44).
 - The files that serve the whole repository — the lockfile and the build configuration — are a
   part of their own (WAY-44).
 - The files that only direct whoever carries out the repository's tasks — instructions for agents,
@@ -87,11 +91,28 @@ one left behind is withdrawn and never reused stand in `elements/common/rules.md
 holds the rule, and the code shows the state (WAY-225). The return step of a change compares the two
 for the parts the change touches (WAY-11).
 
+Every product whose parts import code from other parts holds one invariant of allowed dependencies,
+with its test in the product's suite, that a file of a part imports only files of its own part, of
+the parts its *Depends on* names, of a part of test helpers where the importing file is a test (see
+"Assigning files"), and of a part that an invariant "the part `<part>` does not depend on `<part>`"
+reading `Violated: yes` says it depends on today (WAY-299):
+
+- the test reads this map and the imports of the product's own languages, and names the parts of
+  test helpers by identifier; how it tells a test from other code is settled by the task that
+  writes it;
+- the product writes the invariant and its test in the change that brings into the map a second
+  part holding such code, and a product that already holds such parts writes them in a task of its
+  own (WAY-299);
+- the-way's own is `cross-part-imports`, named in `elements/invariants/examples.md`.
+
 A dependency the code holds that *Depends on* does not allow goes to the human. Where the human
 accepts it as it stands, it is written as an invariant — "the part `<part>` does not depend on
 `<part>`" — that reads `Violated: yes`, its test standing as an expected failure until the code
-meets it, as the invariants template's "Violated" gives it; *Depends on* is never rewritten to fit
-what the code reaches for today (WAY-225, WAY-51). The map holds no list of such dependencies.
+meets it, as the invariants template's "Violated" gives it, while the invariant of allowed
+dependencies above lets that import pass and keeps every other boundary; *Depends on* is never
+rewritten to fit what the code reaches for today (WAY-225, WAY-51). Each such invariant is a whole
+entry a human accepted, not a list of known violations, and the map holds no list of such
+dependencies (WAY-299, WAY-40).
 
 ## Trust boundary
 
@@ -154,8 +175,8 @@ read`).
 |---|---|
 | identifier (heading) | `elements/common/foundation_check.py`, which finds every *Scope*, *Part* and *Depends on* naming it; whoever follows such a reference |
 | sentence | the agent making a change to the part's files or to what the surface promises; the search of the foundation, when the sentence changes |
-| Files | the agent naming the parts its work touches; `foundation_check.py`, which finds each tracked file in one part |
-| Depends on | the agent making a change, which keeps the code within it; the return step, which compares it with the code; `foundation_check.py` |
+| Files | the agent naming the parts its work touches; `foundation_check.py`, which finds each tracked file in one part; the test of the invariant of allowed dependencies, which finds the part of each file |
+| Depends on | the agent making a change, which keeps the code within it; the return step, which compares it with the code; `foundation_check.py`; the test of the invariant of allowed dependencies, which compares it with the imports |
 | Trust boundary | the agent making a change that touches its files, and the agent reviewing it, who check crafted input |
 | Relied on by | the agent making a change to the surface, and the human merging its request, who see whom the change reaches |
 | external context | whoever records a trust boundary at the part that handles an exchange (WAY-48) |
