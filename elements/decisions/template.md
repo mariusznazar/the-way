@@ -51,8 +51,10 @@ particular to a decision (WAY-35).
 - *Relations* and *Verification* follow "Relations and precedence" and "Verification" below;
   *Origin* follows "Origin" and "Recovered decisions".
 - *Rationale* and *Rejected* are prose which, where the entry's author writes it rather than
-  quotes a source, names no file, script or count, nor what the process's own tools do or lack
-  today, and does not tell how the decision was reached (WAY-05, WAY-29). What a decision forces on
+  quotes a source, names no file, script or count — a count being how many files, tests or entries
+  of its foundation the product holds; a measurement the choice rests on may stand, with what was
+  measured and under which conditions, never as a general bound — nor what the process's own tools
+  do or lack today, and does not tell how the decision was reached (WAY-05, WAY-29). What a decision forces on
   later work stands in a binding sentence or a field, never in prose (WAY-05).
 - `none considered` in *Rejected* says the human weighed no other way; `unknown` says nobody knows
   what was weighed.

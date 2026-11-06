@@ -405,6 +405,13 @@ class HeadingTest(unittest.TestCase):
         self.assertEqual(Checked(description, POLISH_TASK).lines,
                          [line_of(description, "## Summary")])
 
+    def test_the_placeholder_heading_is_reported_even_with_none_under_it(self) -> None:
+        for anchor in ("## Foundation entries\n", "## Course of the cycle"):
+            description = VALID.replace(anchor, "## <…>\n\nnone\n\n" + anchor, 1)
+            checked = Checked(description, POLISH_TASK)
+            self.assertEqual(checked.lines, [line_of(description, "## <…>")], anchor)
+            self.assertIn("omit", checked.text)
+
     def test_a_heading_after_the_course_of_the_cycle_is_reported(self) -> None:
         description = VALID + "\n## Proposals for the skills\n\nA proposal.\n"
         self.assertEqual(Checked(description, POLISH_TASK).lines,
@@ -623,6 +630,16 @@ class CommandTest(unittest.TestCase):
         code, out, _ = run_main([self.write(VALID), "--task", str(self.task)])
         self.assertEqual(code, 0)
         self.assertEqual(len(out.splitlines()), 1)
+        self.assertIn("task: not English", out)
+
+    def test_files_saved_with_a_byte_order_mark_exit_as_without_it(self) -> None:
+        bom = b"\xef\xbb\xbf"
+        description = self.root / "bom_request.md"
+        description.write_bytes(bom + VALID.encode("utf-8"))
+        task = self.root / "bom_task.md"
+        task.write_bytes(bom + POLISH_TASK.encode("utf-8"))
+        code, out, _ = run_main([str(description), "--task", str(task)])
+        self.assertEqual(code, 0, out)
         self.assertIn("task: not English", out)
 
     def test_problems_exit_one_each_on_its_line_in_file_order(self) -> None:

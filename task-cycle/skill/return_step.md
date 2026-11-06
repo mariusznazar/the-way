@@ -10,7 +10,9 @@ outside the product that the change rests on and the foundation does not hold, a
 fact; a word the change uses in a meaning for which WAY-95 gives it an entry, or a term used against
 its entry, through `record-glossary-term`; a row of *Settlements to record* or a projected entry the
 code makes true that the foundation step missed; and a choice that binds after the merge
-(WAY-36). It writes an invariant only for a rule the task, a decision or the human sets, never
-for behaviour merely because no invariant covers it; every other choice stays a row of the
+(WAY-36). Where the task or its spec explicitly excludes an entry for a choice, that exclusion
+prevails over the rule for a choice that binds after the merge: the choice stays a row of the
+questions table. It writes an invariant only for a rule the task, a decision or the human sets,
+never for behaviour merely because no invariant covers it; every other choice stays a row of the
 questions table. No entry is deferred: one this request does not write is neither proposed nor
 listed for later, and the review findings of the request are no foundation entries.
