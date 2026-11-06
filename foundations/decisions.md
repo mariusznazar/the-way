@@ -8614,14 +8614,15 @@ much it matters before the place in the code.
 ### WAY-287 — What does a request put before the human for a decision?
 
 The section of a request's description for the human's decisions holds everything whose merge needs
-the human's yes — the cycle's choices beyond the task's content, the steps skipped and the checks not
-run, the unfixed findings the product's user or the human working with the process will feel, the
-decisions of the task's own sections, in a blocked request what the cycle needs to go on, the human
-actions, the changed invariant tests, surfaces and *Violated* marks, and the foundation entries the
-human did not see at the task document — and its `none` says that nothing else in the request waits
-for the human's yes. A blocked request keeps the same skeleton, with `blocked` in its first sentence
-and what the cycle needs, in plain words, in that section, while each remaining finding stands with
-its place in the code in the lower part.
+the human's yes — the cycle's choices beyond the task's content, the steps skipped and the checks
+not run, the unfixed findings the product's user or the human working with the process will feel,
+the decisions of the task's own sections, in a blocked request what the cycle needs to go on, the
+human actions, the changed invariant tests, surfaces and *Violated* marks, the additions a change
+makes to a product's logging scope, and the foundation entries the human did not see at the task
+document — and its `none` says that nothing else in the request waits for the human's yes. A blocked
+request keeps the same skeleton, with `blocked` in its first sentence and what the cycle needs, in
+plain words, in that section, while each remaining finding stands with its place in the code in the
+lower part.
 
 - **Scope:** task-cycle, agent-instructions
 - **Based on:** none
@@ -8641,8 +8642,17 @@ its place in the code in the lower part.
 needs a yes and stands in another section passes without the human's knowledge. One section that
 holds every such matter makes its `none` a statement the human can merge on. A blocked request that
 keeps the skeleton is read the way every other request is read, and what the cycle needs is the
-question it asks.
-*Rejected:* unknown
+question it asks. Additions to a product's logging scope come here because WAY-274 counts on the
+human seeing them at the merge, and this section is where the merge shows them.
+*Rejected:* B. Change WAY-274 so that it does not count on the human seeing additions at the merge.
+That brings back the option WAY-274 itself rejected, the principle alone, with the list unseen and
+new items entering without the human, and it changes the meaning of a decision already accepted.
+C. Leave the rule as it is. Additions to the logging scope keep entering without the human's
+knowledge, and WAY-274 describes a mechanism the product does not have; a reviewer comparing a
+change with WAY-274 would count its complies as met. A general item for everything a decision asks
+the human to see at the merge. It would encourage moving everything into the section, though its
+`none` is to mean the request can be merged. A search of the log by the words "at the merge",
+"sees" and "merges" found no second such case; that is a word search, not proof.
 
 ### WAY-288 — In what language is a request's description written?
 

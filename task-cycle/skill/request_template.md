@@ -45,7 +45,8 @@ error wrong, with evidence you can name (WAY-291):
 ## The skeleton
 
 The headings stand in this order and at this level; the script holds the same list. A section
-with no content reads `none`, and never disappears.
+with no content reads `none`, and never disappears. The one exception is the heading of the task's
+own sections, which is omitted where the task has none (the skeleton's `## <…>` heading).
 
 ```markdown
 **State: <ready|draft|blocked>** — <why, in one sentence>
@@ -100,8 +101,8 @@ translated; none where the task document is in English>
 
 ## <…>
 
-<each of the task's own sections under its own heading, here and only here; none of them where
-the task has none>
+<each of the task's own sections under its own heading, here and only here. Where the task has no
+sections of its own, omit this heading altogether: it is not written with `none`>
 
 ## Course of the cycle
 
@@ -193,6 +194,9 @@ order:
     it wrong, and "Merge as it stands?". The script is not changed in the cycle, and the archive is
     written; the case also stands in the record's process remarks, as `SKILL.md` ("The process
     remarks check") gives.
+11. *Additions to a product's logging scope*: each item the change adds to the list of what the
+    product logs, in plain words — what it is and which log line carries it — with "Accept it?".
+    A change that adds nothing to that list has no such item.
 
 **Cost.** The time, the models and the tokens from `stages.md`, the number of review rounds, and
 the link to the table of stages in the committed record. For a blocked request, the cost so far.
@@ -245,7 +249,8 @@ here; what in it waits on a yes also stands in *For you to decide*.
 
 ## The variants
 
-Every variant keeps every heading; a section with no content reads `none`.
+Every variant keeps every heading, save the heading of the task's own sections where the task has
+none; a section with no content reads `none`.
 
 | Variant | First line | *For you to decide* | Lower part |
 |---|---|---|---|

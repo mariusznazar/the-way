@@ -17,6 +17,9 @@ The description is read as the template gives it:
 - the sections are the `##` headings of TOP_HEADINGS and LOWER_HEADINGS, once each and in that
   order, the task's own sections, any number of `##` headings of their own, standing only between
   the last two headings of LOWER_HEADINGS; `### Underneath` stands in `## What you will see`;
+- the heading `## <…>`, the template's placeholder for the task's own sections, is no heading of
+  the task's own: it fails the check wherever it stands, with its content or `none`;
+- a UTF-8 byte order mark at the start of either file is no part of its text;
 - the block is the one `<details>` element whose opening line comes after `## How to merge` and
   before `## Technical changes`; its content is the text after its `</summary>` up to the
   `</details>` that closes it, nested elements counted;
@@ -347,6 +350,12 @@ def check(description: str, task: str) -> Result:
     last = -1
     for heading in sections:
         name = display(heading.text)
+        if heading.text == OWN_SECTIONS_PLACEHOLDER:
+            problems.append((heading.number, f"`## {name}` is the template's placeholder for the "
+                                             f"task's own sections; omit the heading where the "
+                                             f"task has no sections of its own, or write in its "
+                                             f"place the heading of the task's own section"))
+            continue
         if heading.text in HEADINGS:
             index = HEADINGS.index(heading.text)
             if heading.text in seen:
@@ -458,8 +467,9 @@ def summary(result: Result) -> str:
 
 
 def read(path: Path) -> str:
+    # utf-8-sig reads a UTF-8 byte order mark, which PowerShell may write, as no part of the text.
     try:
-        return path.read_text(encoding="utf-8")
+        return path.read_text(encoding="utf-8-sig")
     except (OSError, UnicodeDecodeError) as error:
         raise RequestCheckError(f"cannot read {display(path)} as UTF-8: {display(error)}") from error
 
