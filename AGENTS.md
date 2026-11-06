@@ -20,3 +20,6 @@ tests report a skill a session would not see.
 - Tasks: `C:\Storage\The Brain\The Brain\Notes\Projects\(P) Proces pracy nad produktem\_tasks_active.md`.
   A task's description is a document in the `_zadania\` folder beside it, linked from the task's
   line. Both are in the author's private notes; an agent that cannot open them asks the human.
+- When a task document first reaches `Status: ready for cycle`, set the task's line to Ready,
+  [/], and remove its date, as the section "Zadania agentowe" of
+  `C:\Storage\The Brain\The Brain\Notes\Resources\(R) Obsidian\obsidian_rulebook.md` gives.
