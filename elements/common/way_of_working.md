@@ -96,8 +96,9 @@ finds whole (WAY-150): a decision's *Rejected* holds an option already weighed a
 nowhere else says so. The search also asks:
 
 - whether the entry uses a glossary term in another meaning than its entry gives, or a word in a
-  meaning a reader who knows the product's field would not give it, which the glossary does not
-  yet hold: such a word goes through `record-glossary-term` (WAY-95, WAY-99);
+  meaning a reader who knows the product's field would not give it, for which WAY-95 gives the word
+  an entry and which the glossary does not yet hold: such a word goes through
+  `record-glossary-term` (WAY-95, WAY-99);
 - whether the change brings what entries of the foundation wait for — an element's template, the
   part map, a script; each such entry is fixed in the same change (WAY-37).
 

@@ -334,10 +334,10 @@ foundation entries the change writes or changes, those its task names and those 
 foundation found, and the part map of the parts the task touched, and corrects in the same change
 whatever no longer matches. In the same change it writes the sources outside the product that the
 change rests on and the foundation does not yet hold, as environment facts, a word the change uses
-in a meaning other than the usual one, as a glossary term, and the accepted settlements (WAY-134)
-and projected entries (WAY-126) the task carries that are not yet written. It writes an invariant
-only for a rule the task, a decision or a human sets, never for code behaviour merely because no
-invariant covers it.
+in a meaning for which WAY-95 gives it an entry, as a glossary term, and the accepted settlements
+(WAY-134) and projected entries (WAY-126) the task carries that are not yet written. It writes an
+invariant only for a rule the task, a decision or a human sets, never for code behaviour merely
+because no invariant covers it.
 
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, task-cycle
 - **Based on:** none
@@ -2023,9 +2023,11 @@ field for a definition's source or the decision that set it — no entry needs o
 ### WAY-95 — Which words take a glossary entry?
 
 A word takes a glossary entry when it means, in the product, something other than a reader who knows
-the product's field takes it to mean; an agent that meets such a word in its work — writing an
-entry, searching the foundation, in a task's return step — writes its entry, no sweep of every
-binding sentence looks for candidates, and a human accepts the meaning (WAY-114).
+the product's field takes it to mean; a word the product uses more narrowly than the field takes an
+entry only where a reader who takes the field's meaning would read a sentence of the product's
+English files wrongly. An agent that meets such a word in its work — writing an entry, searching the
+foundation, in a task's return step — writes its entry, no sweep of every binding sentence looks for
+candidates, and a human accepts the meaning (WAY-114).
 
 - **Scope:** glossary, decisions, invariants, part-map, environment-facts
 - **Based on:** none
@@ -2033,21 +2035,31 @@ binding sentence looks for candidates, and a human accepts the meaning (WAY-114)
 - **Verification:** an agent compares the change with the decision:
   - complies: "gate", used for the one command that runs all of a product's tests, takes an entry;
     "digest", used only as SHA-256 uses it, takes none; "run", used for running a command and for
-    text running across lines, takes none;
+    text running across lines, takes none; a game's "secondary action", used for an action under a
+    form drawn as underlined text with no border, where the field reads a second, less prominent
+    button, takes an entry because "the form holds no secondary action" reads differently in the
+    two meanings; a game's "map", used for the map of a level, takes none where no sentence reads
+    differently for the field's meaning;
   - violates: every noun of the decision log takes an entry; an agent reads every binding sentence
-    of the foundation for candidates before it writes an entry.
+    of the foundation for candidates before it writes an entry; every narrower meaning of a word
+    takes an entry whether or not a sentence reads differently for it.
 - **Origin:** none
 
 *Rationale:* a glossary of every relevant word grows without bound, kept by memory, while a word
 used as the field uses it needs no entry. A word whose meaning is unclear shows where an agent works
-with it.
+with it. A meaning narrower than the field's moves what a sentence says only where a reader who
+takes the field's meaning would read that sentence otherwise, and an entry for a narrower meaning no
+sentence reads differently adds a word to keep for a reader no one misleads.
 *Rejected:* every term relevant to the system — no bound; a word defined where it is used, when used
 in one place — nearly nothing is; a script counting places — it cannot tell a definition from
 another sentence; a sweep of every binding sentence for candidates with each entry written — a
 ritual every change pays for; a word's definition moved out of every sentence that says what it is,
 into the glossary — a rewrite of sentences the reader already understands; every term with a use
 outside the glossary checked at the merge — a check of the glossary's bookkeeping, not of what a
-word means.
+word means; an entry for every narrower meaning — more certain, but the glossary grows by words no
+one mistakes, the direction of the first rejected way; the rule left as it stands — whether a
+narrower meaning is "something other than" the field's stays open, the dispute returns with the next
+change and costs a blocking remark and a round of fixes.
 
 ### WAY-96 — How is a glossary definition written?
 
@@ -2073,23 +2085,26 @@ something other than sentences; a field naming neighbouring terms — nothing re
 
 A sentence relies on a glossary term by using its word. A glossary entry is edited in place, its
 meaning included, and the author of a change to a definition searches, in the same change, the
-texts that use the word and rewrites each use whose meaning the new definition moves.
+English text of every file git tracks for the word and rewrites each use whose meaning the new
+definition moves; a text in another language is not searched (WAY-99).
 
 - **Scope:** glossary, decisions, invariants, part-map, environment-facts, elements-common
 - **Based on:** none
 - **Relations:** narrows WAY-02
 - **Verification:** an agent compares the change with the decision:
-  - complies: the definition of "slice" is reworded, its author searches every file git tracks
-    for the word and its forms, and rewrites, in the same change, the two sentences whose meaning
-    moves;
+  - complies: the definition of "slice" is reworded, its author searches the English text of every
+    file git tracks for the word and its forms, and rewrites, in the same change, the two sentences
+    whose meaning moves, and leaves a Polish guideline file that holds the Polish word alone;
   - violates: a definition is reworded and no uses are looked at; a use whose meaning moved is left
-    for a later change.
+    for a later change; a Polish file is searched for the Polish word that stands for the term and
+    its sentences are rewritten.
 - **Origin:** none
 
 *Rationale:* a sentence relies on a term by its word, so a search for the word finds the sentences
 a changed meaning reaches, and the author who changed the meaning knows what moved. The review of
 the change, by an agent that did not make it (WAY-10), sees the changed definition and the rewritten
-sentences in one diff, and the human sees the changed meaning in the request (WAY-114).
+sentences in one diff, and the human sees the changed meaning in the request (WAY-114). A text in
+another language is left out of the search for the reason WAY-99 gives.
 *Rejected:* a version as for invariants and facts — nothing reads it; a review of every use by
 another agent, putting the new definition in place of the word — a second reading of what the
 author has just searched; a term used on the main branch keeping its meaning, a new meaning taking
@@ -2101,30 +2116,50 @@ nobody knows what it missed (WAY-02).
 
 ### WAY-99 — How does one word keep one meaning in the foundation?
 
-Where a word carries two meanings in the files git tracks and one of them is a meaning a reader who
-knows the product's field would not give it, one of the two is renamed, and the glossary entry of
-the word names in *Not* each such meaning it no longer carries, with the term, identifier,
-closed-list value or quoted word — holding neither the term nor its forms — that carries it now. A
-meaning whose word a human has not yet chosen reads `TODO` in *Not*, which a task branch may hold
-and the main branch never does.
+Two uses of a word in the English text of the files git tracks carry two meanings when a sentence
+those files hold is true in the meaning of one use and false in the meaning of the other, whichever
+of the two the sentence uses, and a sentence made up for the test does not count; where one of the
+two meanings is a meaning a reader who knows the product's field would not give the word, one of the
+two is renamed, and the glossary entry of the word names in *Not* each such meaning it no longer
+carries, with the term, identifier, closed-list value or quoted word — holding neither the term nor
+its forms — that carries it now. A meaning whose word a human has not yet chosen reads `TODO` in
+*Not*, which a task branch may hold and the main branch never does. A file of a product in another
+language uses its words in the meaning they have in that language, and the rules of the glossary do
+not reach it.
 
 - **Scope:** glossary, decisions, invariants, part-map, environment-facts
 - **Based on:** none
 - **Relations:** none
 - **Verification:** an agent compares the change with the decision:
-  - complies: a game's "shard" carries a currency and a level's piece, the piece becomes "fragment",
-    and *Not* of "shard" names it;
+  - complies: a game's "shard" carries a currency and a level's piece, and "the shard drops from a
+    chest" is true of the currency and false of the piece, so the piece becomes "fragment" and *Not*
+    of "shard" names it; a game's "map" is the map of a level in every sentence that holds it, no
+    sentence is true of one use and false of another, so it keeps one meaning with no rename; the
+    Polish guidelines of a game use "program" in its Polish sense and no rename follows;
   - violates: "shard (currency)" and "shard (piece)" stand side by side in the foundation; *Not* of
-    "shard" names "level shard", a phrase holding the word itself.
+    "shard" names "level shard", a phrase holding the word itself; two meanings are found by a
+    sentence written for the purpose that the files do not hold; a word of a Polish file is replaced
+    because its English counterpart is a term of the glossary of the-way.
 - **Origin:** none
 
 *Rationale:* a sentence a test cites carries its words as they stand, so a word read in two meanings
-makes it true and false at once. A carrier holding the word itself would keep the homonym under a
-new label. The word is the human's choice, accepted at the merge (WAY-114).
+makes it true and false at once. The same sentences decide whether a word has two meanings, so the
+test needs no definition of each use written first and no judgment beyond the sentences the files
+hold. A carrier holding the word itself would keep the homonym under a new label. The word is the
+human's choice, accepted at the merge (WAY-114). The glossary and its terms are English, so a word
+of a file in another language has no entry to be held against, and which word of that language
+stands for which term would be the agent's judgment at every use, with no list and with the
+inflection of the language.
 *Rejected:* two meanings told apart by an area — the sentence carries no area; a note beside the
 word — nobody citing the sentence reads it; renaming two meanings a reader of the field tells apart —
 neither is the product's own; a *Not* that always names a word — the author would choose before the
-human sees the case.
+human sees the case; a test of whether a definition true of one use is false of the other — a
+definition of each use must be written before it can be applied, which opens a dispute over its
+wording; the criterion left open — each agent invents its own; the rules covering files in another
+language, held against the English glossary — the agent decides which word corresponds to which term,
+and the judgment and the disputes return; one meaning per word inside a language, with no comparison
+with the English glossary — no glossary of that language exists to record the meaning, and every
+rename rests on the agent's judgment; the question left open — each cycle guesses.
 
 ### WAY-100 — When does a method or practice borrowed from elsewhere bind a product?
 
@@ -2220,42 +2255,59 @@ conventions; prose addressed only to humans — an agent could not take its assi
 
 ### WAY-104 — How does a product write a word of its domain that the glossary of the-way holds?
 
-A word of a product's domain that the glossary of the-way holds at the commit the product pins, or
-the last word of a term it holds, in any of its forms, is written in the files of the product's
-`foundations/` with a qualifier — a phrase holding the word — and the bare word keeps there the
-meaning of the process; the qualified word takes a glossary entry only where WAY-95 gives a word
-one, and where the bare word itself has an entry in the glossary of the-way, that entry records no
-*Not* for its domain meaning. The product's code, its interface and talk about the product use the
-word of the domain unchanged.
+A word that the glossary of the-way holds at the commit a product pins, or the last word of a term
+it holds, in any of its forms, takes a qualifier — a phrase holding the word — in a sentence of the
+files of the product's `foundations/` that could otherwise be read in the other meaning: a sentence
+that uses the word for the product's domain and could be read as the process's, or one that uses it
+for the process and could be read as the domain's, and a bare use that no sentence of those files
+reads in the other meaning keeps the meaning it has there. A qualified word takes a glossary entry
+only where WAY-95 gives a word one, and where the bare word itself has an entry in the glossary of
+the-way, that entry records no *Not* for its domain meaning. The product's code, its interface and
+talk about the product use the word of the domain unchanged.
 
 - **Scope:** glossary, decisions, invariants, part-map, environment-facts
 - **Based on:** none
 - **Relations:** derives from WAY-226 · narrows WAY-99
 - **Verification:** an agent compares the change with the decision:
-  - complies: a game's invariants say "castle gate" for the way into a castle, and a factory's say
-    "assembly step" for an operation, while their code and interfaces use `Gate` and "Step";
-  - violates: a game's invariant says "gate" for the way into a castle or a factory's says "step"
-    for an operation; a game's glossary defines "gate" as the way into a castle.
+  - complies: a game's invariants say "castle gate" for the way into a castle where "the gate opens"
+    could be read as the command that runs the tests, and a factory's say "assembly step" for an
+    operation, while their code and interfaces use `Gate` and "Step"; a game's decision says "the
+    map" for the map of a level, which no sentence of its foundation reads as the part map, and
+    leaves it bare; a decision of a game says "dialogue sentence" for a message shown to a player
+    where the bare "sentence" could be read as a sentence of a decision;
+  - violates: a game's invariant says "gate" for the way into a castle in a sentence that reads as
+    the command, or a factory's says "step" for an operation where it reads as a step of a task; a
+    game's glossary defines "gate" as the way into a castle; every bare "map" of a game's decisions
+    is rewritten to a phrase though no sentence reads it as the part map.
 - **Origin:** none
 
 *Rationale:* a word of the process written bare in a product's foundation for something of its
-domain carries two meanings for an agent that reads the-way's rules beside the product's, and a
-qualifier keeps each word in one meaning where the rules are read; the people who build and use the
-product keep the words of its domain, since the rule protects the reading of the foundation alone.
-A product cannot edit the glossary of the-way, so the *Not* that WAY-99 asks of the word's entry has
-nowhere to stand, and a phrase holding the word, which WAY-99 refuses as a carrier, here keeps the
-word of the field recognizable. A term's last word can stand for the process term in short form, so
-the qualifier also keeps a domain use of that word apart.
+domain, or a word of the domain beside it, lets a sentence be read two ways by an agent that reads
+the-way's rules beside the product's, and a qualifier on the use that sentence leaves open keeps each
+sentence in one reading where the rules are read; a bare use no sentence reads two ways costs the
+reader nothing, and qualifying it would only add words. The people who build and use the product keep
+the words of its domain, since the rule protects the reading of the foundation alone. A product
+cannot edit the glossary of the-way, so the *Not* that WAY-99 asks of the word's entry has nowhere to
+stand, and a phrase holding the word, which WAY-99 refuses as a carrier, here keeps the word of the
+field recognizable. A term's last word can stand for the process term in short form, so the same
+test applies to a domain use of that word.
 *Rejected:* the bare word of the process in a product's glossary, its meaning of the domain marked
-beside it and reported as a warning rather than an error — one word carries two meanings in the
-repository, and whoever reads the foundation tells at every use which one it carries; the words of
-the process written in a fixed form in the-way, such as in backticks, leaving the plain word free
-for the domain — a plain word in a product's sentence may still carry either meaning, so the form
-keeps nothing apart, and every entry of the-way is rewritten to it; a word holding neither the word
-of the process nor its forms, as WAY-99 asks of a carrier — for words the field uses daily, such as
-"part", "entry" or "element", the foundation drifts from the words the product's people and code
-use; qualifying a domain word only when it is a whole process term — a short use of a multiword term
-can still collide with the domain meaning.
+beside it and reported as a warning rather than an error — one word carrying two meanings in the
+repository is a cost now accepted where no sentence reads in the other meaning, but the variant stays
+refused where a sentence can be read both ways, since a mark beside the word tells the reader nothing
+at the use; the words of the process written in a fixed form in the-way, such as in backticks,
+leaving the plain word free for the domain — a plain word in a product's sentence may still carry
+either meaning, so the form keeps nothing apart, and every entry of the-way is rewritten to it; a
+word holding neither the word of the process nor its forms, as WAY-99 asks of a carrier — for words
+the field uses daily, such as "part", "entry" or "element", the foundation drifts from the words the
+product's people and code use; qualifying a domain word only when it is a whole process term — a
+short use of a multiword term can still collide with the domain meaning; the rule kept as it was,
+with the bare uses of a product tidied by a separate task of the product — a sweep of many lines and
+a cost of writing that grows with each term of the glossary of the-way, and a rule applied only
+selectively; the rule removed — a sentence that reads as the process's stays unprotected; the bare
+last word of a term, written as plain English in a phrase that bounds it, released from the rule — a
+collision stays, and such a phrase is a qualifier already; the question left unsettled — each return
+step qualifies words piece by piece and the inconsistency grows with every cycle.
 
 ### WAY-106 — What does the project level write before tasks exist?
 
@@ -8936,6 +8988,42 @@ would not know. One form is found without reading the rest of the record. The pr
 already archived stay in their earlier form, so the check reads them only as far as that form is
 one it cuts.
 *Rejected:* unknown
+
+### WAY-297 — How does a reviewer grade a finding about a missing glossary entry or a missing qualifier?
+
+A reviewer grades as Minor a finding that a word needs a glossary entry, or that a word of the
+process lacks the qualifier WAY-104 gives it in a product's foundation, unless the finding cites a
+sentence the files hold that a reader would read wrongly for lack of it; a finding that cites such a
+sentence is graded as any other. The renaming of a word with two meanings (WAY-99) is graded as
+before, and a finding that a glossary entry the change writes or changes departs from a foundation
+entry stays Important (WAY-263).
+
+- **Scope:** task-cycle, glossary
+- **Based on:** none
+- **Relations:** narrows WAY-161
+- **Verification:** an agent compares a review finding with the decision:
+  - complies: a reviewer who thinks "secondary action" needs an entry and cites no sentence grades
+    the finding Minor, and the request lists it for the human; a reviewer who cites "the form holds
+    no secondary action" as a sentence read wrongly by a reader of the field grades it as any other
+    finding; a finding that two meanings of a word are not renamed is graded as it was before this
+    decision; a finding that a new glossary entry broadens a rule of a decision stays Important;
+  - violates: a finding that a word lacks an entry, citing no sentence, is graded Important and
+    blocks the change; a finding that cites a sentence read wrongly is graded Minor for being about a
+    word; a finding that a glossary entry the change writes contradicts a decision is graded Minor.
+- **Origin:** none
+
+*Rationale:* whether a word needs an entry or a qualifier depends on which reader the foundation is
+read by, and a remark with no sentence behind it cannot be checked, so as a blocking finding it
+sends the change through a round of fixes for a matter the reviewer cannot show; as a Minor finding
+it stays in front of the human at the merge. A finding that cites a sentence a reader would read
+wrongly can be checked like any other, and a glossary entry the change writes is a second account of
+a rule that can broaden it, which WAY-263 already grades.
+*Rejected:* the grade left to the reviewer without this limit — a dispute over a word returns as a
+blocking finding and a round of fixes; every narrower meaning taking an entry, so that no dispute
+arises — the glossary grows by words no one mistakes, the direction WAY-95 refused; a script naming
+the candidates for an entry — WAY-95 refused it, since it cannot tell a definition from another
+sentence; Minor always, also with a cited sentence — a collision shown on a sentence is then never
+repaired in the cycle and reaches the merge.
 
 ## Withdrawn identifiers
 

@@ -7,10 +7,10 @@
 - Choose the glossary by the template's "Two glossaries". A product session does not edit its
   pinned copy of the-way; a word of the process it needs goes to the human as a change for the-way
   (WAY-34).
-- List the word's uses before judging it: search every file git tracks for each form of the word,
-  with line breaks read as spaces so that a multi-word term split across lines is found
-  (`git grep -i -w`, or `rg -U -i -w` over the files `git ls-files` lists, with `\s+` between its
-  words). Read every use; the uses, never a sense of the word, settle what follows.
+- List the word's uses before judging it: search the English text of every file git tracks for each
+  form of the word, with line breaks read as spaces so that a multi-word term split across lines is
+  found (`git grep -i -w`, or `rg -U -i -w` over the files `git ls-files` lists, with `\s+` between
+  its words). Read every use; the uses, never a sense of the word, settle what follows.
 - Put the word through the template's "Which words take an entry". A word that takes none: show
   the human why, with the uses, and stop once they agree.
 - Search the glossary — the-way's too, in a product — for the same meaning: found under this word,
