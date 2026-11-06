@@ -28,11 +28,11 @@ it and its sub-items, and, where it is no list, its paragraphs; a sub-heading is
 reads `none` when, with emphasis marks, backticks and a final full stop taken off, it is `none` in
 any case; every other item is listed, `none found` and `None unresolved. Unclear: ...` among them.
 
-The process remarks are the blocks of `cycle.md` that open as `cycle_remarks_digest.py`, which the
-nightly review of cycles runs, cuts them: a list item, a heading or a paragraph that begins with
-`Process remark`, `Process improvements`, `Other process remarks` or `Searches not found`, with the
-lines under it as that script cuts them. An item is in the remarks when its words, with each run of
-whitespace taken as one space, stand in them word for word and in the same case. An item that two
+The process remarks are the blocks of `cycle.md` that open as the nightly review of cycles cuts
+them: a list item, a heading or a paragraph that begins with `Process remark`,
+`Process improvements`, `Other process remarks` or `Searches not found`, with the lines under it
+as that review cuts them. An item is in the remarks when its words, with each run of whitespace
+taken as one space, stand in them word for word and in the same case. An item that two
 reports give stands once for each report that gives it: the remarks hold it as many times as the
 reports do, since repeated items are kept apart.
 
@@ -67,7 +67,7 @@ LABEL = re.compile(r"(?P<indent>[ \t]*)(?:(?P<marker>[-*+]|\d+[.)])[ \t]+)?"
 MARKER = re.compile(r"(?P<indent>[ \t]*)(?P<marker>[-*+]|\d+[.)])[ \t]+(?P<text>.*)")
 RULE = re.compile(r" {0,3}([-*_])(?:[ \t]*\1){2,}[ \t]*")
 BOLD_START = re.compile(r"[ \t]{0,3}\*\*")
-# The opening and the cutting of a block of remarks, as `cycle_remarks_digest.py` has them.
+# The opening and the cutting of a block of remarks, as the nightly review of cycles has them.
 DIGEST_MARKER = re.compile(r"^(?:[-*]|\d+\.)\s+")
 DIGEST_HEADING = re.compile(r"^(#{1,6})\s")
 BLOCK_SEPARATOR = "\x00"
