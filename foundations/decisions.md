@@ -1076,31 +1076,48 @@ claim, is an error of the check of the foundation, unless the map lists that fil
 purpose, and so is a pattern of a part's *Files* or *Trust boundary* that matches no file git
 tracks. Tests belong to the part they test and generated files to the part of their generator; the
 files that serve the whole repository — the lockfile and the build configuration — are a part of
-their own, and the files that only direct whoever carries out its tasks — instructions for agents,
-skills, hooks and the configuration of agents' tools and of CI — are another. For a file that
+their own; the files that serve the tests of several parts are another, which its sentence
+describes as such with no field of its own, and which the tests of every part may import while code
+that is no test may not; and the files that only direct whoever carries out its tasks —
+instructions for agents, skills, hooks and the configuration of agents' tools and of CI — are
+another. For a file that
 collects entries about many parts, the parts a change touches follow from the entries it adds or
 changes, not from the part the file itself belongs to.
 
 - **Scope:** part-map, agent-instructions, task-cycle
 - **Based on:** git-path-patterns
 - **Relations:** derives from WAY-40
-- **Verification:** an agent compares the change with the decision:
+- **Verification:** invariants: cross-part-imports. For the rest, an agent compares the change with
+  the decision:
   - complies: a change renaming `net/` to `network/` rewrites the *Trust boundary* `net/*.py` of
-    its part, and `elements/common/foundation_check.py` reports no pattern matching no file;
+    its part, and `elements/common/foundation_check.py` reports no pattern matching no file; a
+    helper that the tests of two parts import stands in a part whose sentence says it serves the
+    tests of several parts;
   - violates: the *Trust boundary* still names `net/*.py`, which matches no file git tracks, and
-    the change is merged with that error of the check.
+    the change is merged with that error of the check; a part whose tests use a helper of another
+    part names that part in its *Depends on*; code that is no test imports a part of test helpers.
 - **Origin:** none
 
 *Rationale:* a change is read against the decisions and the invariants of the parts it touches
 (WAY-21, WAY-62), so every file yields one part. git matches, because a second dialect could resolve
 the same map differently. A pattern for a directory or a kind of file leaves the map as it is when a
 file is added or moved inside it. A test changes what its part promises; files directing whoever
-carries out tasks change every later task.
+carries out tasks change every later task. A helper serving the tests of several parts tests
+nothing, so a part of its own takes no test away from the part it tests, and the tests importing
+it need no *Depends on* that would let the code of their part import it too; its sentence says
+what it is, so the form of an entry stays as it is.
 *Rejected:* a file in several parts — two answers, no rule to pick; patterns matched by a script
 (fnmatch) — a second dialect beside git's; a pattern for each file — the map changes with every file
-added or removed; tests as a part of their own — a test change stops counting against what it tests;
-files left unassigned in silence — the map passes while saying less and less; a ledger file's part
-taken from its path — every recorded decision counts against the decisions part alone.
+added or removed; tests as a part of their own — a test change stops counting against what it tests,
+while a helper serving the tests of several parts tests nothing; files left unassigned in silence —
+the map passes while saying less and less; a ledger file's part taken from its path — every recorded
+decision counts against the decisions part alone; a helper serving the tests of several parts left
+in the part it stands in, each part whose tests use it naming that part in its *Depends on* —
+nothing in the process changes, but the code of those parts may then import that part as well, the
+rule loosening for a whole part to let its tests through; imports from tests left unchecked — the
+simplest check of the boundaries, but a test of one part reaching into the code of another goes
+unseen; a field or a mark in the entry of a part of test helpers — it changes the form of the map in
+every product while nothing needs it, and would serve only a script of the process reading the map.
 
 ### WAY-45 — How is a critical flow recorded and tested?
 
@@ -9080,6 +9097,60 @@ correction as in a new cycle, on the target branch only — a correction started
 worktree, on the task branch, would stop at its start; the remote target branch named only in the
 sentence for the-way itself — products keep the unclear current target branch, which can mean a
 stale local branch.
+
+### WAY-299 — How does a product keep the code of its parts within the dependencies its part map allows?
+
+A product whose parts import code from other parts holds one invariant, whose test in the product's
+suite reads the part map and the imports of the product's own languages, that a file of a part
+imports only files of its own part, of the parts its part's *Depends on* names, of a part of test
+helpers where the importing file is a test (WAY-44), and of a part that an invariant "the part
+`<X>` does not depend on `<Y>`" reading `Violated: yes` says part X depends on today. The product
+writes that invariant and its test in the change that brings into its map a second part holding
+such code, and a product that already holds such parts writes them in a task of its own. Each
+invariant "the part `<X>` does not depend on `<Y>`" that the shared invariant lets an import pass
+by is a whole entry of the foundation that a human accepted, and no list of known violations.
+
+- **Scope:** part-map, invariants
+- **Based on:** none
+- **Relations:** derives from WAY-225 · derives from WAY-51
+- **Verification:** invariants: cross-part-imports. For the rest, an agent compares the change with
+  the decision:
+  - complies: the change that adds to a product's map a second part holding code adds the
+    invariant and its test; a dependency a human accepts although the map does not allow it stands
+    as the invariant "the part `ui` does not depend on `storage`", marked violated, and the test of
+    the shared invariant lets that import pass while it fails on an import of `ui` from another
+    part its *Depends on* does not name;
+  - violates: a product whose two parts hold code that imports across them has no such invariant;
+    the shared invariant is marked violated for one accepted dependency; the test of the shared
+    invariant keeps a list of its own of the imports it lets pass; an implementer marks "the part
+    `ui` does not depend on `storage`" violated so that the shared test passes.
+- **Origin:** none
+
+*Rationale:* the check lives in the product because the product's own tests read its own
+languages and run with the rest of its suite (WAY-16, WAY-61), with no command whose contract the
+process would keep towards every product; the part map's template states the duty, which every
+product reads. It is a duty rather than advice, since a step nothing enforces is the step an agent
+leaves out, and an import from outside the map then passes merge after merge unseen. A dependency a
+human accepts stays an invariant of its own, its test an expected failure (WAY-51), so the shared
+invariant goes on keeping every other boundary instead of being marked violated as a whole. Such an
+invariant is no list of known violations (WAY-40): each pair is a whole entry of the foundation,
+marked only by a change a human accepts and read where its reader sees it, and the shared test only
+reads what those entries say, so it holds no record of its own to go stale beside them. The price is
+a test that reads the invariants, which a reviewer may take for such a list.
+*Rejected:* a script of the process reading an import graph from a command each product declares —
+a contract of that command the process keeps towards every product, designed with a single
+consumer, with an empty output not told apart from no dependency and a command given as a string
+running differently on Windows and on Linux still to be closed, and the most work of the three ways
+weighed; the boundaries left to the agent of the return step — nothing to pay today, but a
+dependency outside the map that came in stays, and the next ones pass the same way; the invariant
+as advice of the part map's template, applied where the human of a product decides — the smallest
+change, but nothing enforces it, so an agent of the next product most likely leaves it out and a
+dependency outside the map passes many merges unseen; the template unchanged and the invariant
+written in one product alone — the cost of advice, with no trace in the template; one invariant for
+each part holding code — an accepted dependency switches the check off for its whole part, and a
+product holds several entries instead of one; the shared invariant marked violated for an accepted
+dependency, as WAY-51 has it alone — one accepted dependency switches the check off in the whole
+product until someone corrects it.
 
 ## Withdrawn identifiers
 

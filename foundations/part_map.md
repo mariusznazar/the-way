@@ -16,8 +16,8 @@ log of the-way itself.
 
 ## part-map
 
-The part answers for the part map: the form of an entry, the skill that writes one and the map of
-the-way itself.
+The part answers for the part map: the form of an entry, the skill that writes one, the map of
+the-way itself and the test that holds the imports of the-way's code to the dependencies it allows.
 
 - **Files:** elements/part-map/**
   foundations/part_map.md
