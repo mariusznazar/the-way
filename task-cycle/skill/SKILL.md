@@ -407,7 +407,14 @@ included — read `task-cycle/skill/blocked_finding.md` and follow it.
     request ready for review unless the description's first line reads `blocked` or `draft`; a
     request waiting for human actions in the cycle stays a draft marked `blocked`. Do not merge.
     Keep the worktree for corrections.
-13. Write the request's description into `.runs/task-cycles/<task-slug>/request.md` by
+13. Before you write the description, count the merges since the last review of the foundation: in
+    the worktree's root (in a product, the path starts with `.the-way/`), after a fetch, run
+    `python -B task-cycle/review_reminder.py origin/<target branch>`. When its last line reads
+    `reminder: yes`, the description's *How to merge* carries the reminder as
+    `task-cycle/skill/request_template.md` gives; it blocks nothing, and every request the cycle
+    writes or rewrites gets it while the count stands (WAY-300). Record the output under
+    *Verification*.
+    Write the request's description into `.runs/task-cycles/<task-slug>/request.md` by
     `task-cycle/skill/request_template.md` of the pinned the-way, which holds its sections, where each
     takes its content from and the variants of a blocked, reserved or corrected request; check its
     form with `task-cycle/request_check.py` and correct it until the check passes, as the template
