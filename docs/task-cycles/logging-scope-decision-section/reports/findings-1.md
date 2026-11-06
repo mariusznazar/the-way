@@ -1,0 +1,14 @@
+# Blocking findings of the review of the whole change, in the reviewer's words
+
+Source: `reports/03-whole-review-report.md`, `FAIL fa445fd10d8ddc3af9126bf2873b61c1029746c2`, range `61c72fb..fa445fd`.
+
+### Important (blocking, within the task)
+
+**I-1. WAY-287 *Rejected* states as fact what the task gives as an unproven search result, and rewrites one reason.**
+Place: `foundations/decisions.md`, WAY-287, *Rejected*, last sentences ("A general item for everything a decision asks the human to see at the merge. No other decision asks for that, and such an item would turn this section into a list the human reads in full, so that its `none` says less.").
+The task's *Questions to settle* 1, third *Not chosen*, gives: "przeszukanie dziennika nie znalazło drugiego takiego przypadku, a taka pozycja zachęcałaby do zrzucania do sekcji wszystkiego, choć jej `none` ma znaczyć 'można scalić'". The task's *Context* adds that this was a word search ("at the merge", "sees", "merges") and "to wyszukiwanie po słowach, nie dowód". The entry drops that qualification and says flatly "No other decision asks for that". Two further departures:
+- the reason "encourage dumping everything into the section, though its `none` is to mean 'can merge'" becomes "a list the human reads in full, so that its `none` says less". "Reads in full" is not in the source; it is the author's own reason.
+- the template's rule for *Rejected* (`elements/decisions/template.md`, "*Rationale* and *Rejected* are prose which ... names no ... count ... and does not tell how the decision was reached", and the *Settlements to record* paragraph: ways the row's source keeps, "each with the cost or the reason kept beside it") is not met by a sentence that reports the outcome of a search.
+Why it matters: the entry is the log's statement of what was weighed. A reader (or a later critic) takes "No other decision asks for that" as established. It is not: the task calls it a word search and not proof. In the log itself, WAY-114 (about line 2085, "the human sees the changed meaning in the request") and WAY-172 (about line 4808, "for the human to accept at the merge") also have the human see something at the merge, so the categorical sentence is at best ambiguous. A restatement that drops a qualification is a WAY-263 departure, and the dispatch asks that nothing taken from the sources be altered or invented. The other half of the sentence (B and C) is faithful.
+Evidence: the diff of `fa445fd`; the task text above; `grep -n "at the merge" foundations/decisions.md`.
+Fix, small: state the third option with the source's reason ("it would encourage moving everything into the section, though its `none` is to mean the request can be merged"), and either drop "No other decision asks for that" or qualify it as the task does (a search of the log by words found no second case; not proof).
