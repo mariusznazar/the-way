@@ -9028,13 +9028,14 @@ repaired in the cycle and reaches the merge.
 ### WAY-298 — How does a cycle on the-way itself start from the current rules?
 
 In the-way itself, the cycle brings the checkout the session works in up to the remote target branch
-before it creates the task branch: it fetches, fast-forwards the checkout where it stands behind
-that branch with a clean tree and no local commits, and then starts again from the entry point that
-started the cycle; where it cannot fast-forward, it stops and says so. A correction after review
-begins the same way in the-way itself — it fast-forwards the checkout, or, where the session works
-in the request's worktree, merges the remote target branch into it, and starts again from the entry
-point — and the merge of the target branch it makes takes the remote branch, in a product as well.
-The fast-forward is the one change the cycle makes outside the task's worktree.
+before it creates the task branch: it fetches and, where the checkout stands behind that branch,
+fast-forwards it when it is on that branch with a clean tree and no local commits, and then starts
+again from the entry point that started the cycle; where it cannot fast-forward, it stops and says
+so. A correction after review begins the same way in the-way itself — it fast-forwards the
+checkout, or, where the session works in the request's worktree, merges the remote target branch
+into it, and, where something came in, starts again from the entry point — and the merge of the
+target branch it makes takes the remote branch, in a product as well. The fast-forward is the one
+change the cycle makes outside the task's worktree.
 
 - **Scope:** task-cycle
 - **Based on:** none
@@ -9045,11 +9046,13 @@ The fast-forward is the one change the cycle makes outside the task's worktree.
     entry point and creates the task branch from the updated branch; a cycle started in a checkout
     with a local commit stops and says that it cannot fast-forward; a correction started in the
     request's worktree merges the remote target branch into it before it reads the request's
-    record, and starts again from the entry point;
+    record, and starts again from the entry point where the merge brought something in; a
+    correction that fetched and found nothing new goes on without starting again;
   - violates: a cycle on the-way creates its task branch from a checkout that stands behind the
     remote and reads the skill from it; a cycle that cannot fast-forward goes on from the stale
     copy; a correction merges the local target branch, or runs in the request's worktree without
-    the remote branch merged in.
+    the remote branch merged in; a correction that found nothing new starts again from the entry
+    point all the same, and so never ends.
 - **Origin:** none
 
 *Rationale:* a cycle started from a copy that stands behind its remote reads the skill and the entry
