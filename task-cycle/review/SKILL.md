@@ -110,6 +110,11 @@ A finding that a change departs from a foundation entry it writes or changes is
 Important when the change's files do what the entry forbids, fail to do what it
 requires, or restate it differently, including more broadly or without a
 qualification (WAY-263).
+A finding that a word should have a glossary entry, or that a word of the process lacks the
+qualifier WAY-104 gives it in a product's foundation, is Minor unless it cites a sentence the files
+hold that a reader would read wrongly for lack of it; with such a sentence it is graded as any other
+finding. This does not reach the renaming of a word with two meanings (WAY-99), and a glossary entry
+the change writes or changes is graded as the paragraph above gives (WAY-293).
 
 A finding blocks when you grade it Critical or Important and it lies within the task (WAY-161).
 List under **Declined to judge** each behaviour you considered and set aside as outside the task,

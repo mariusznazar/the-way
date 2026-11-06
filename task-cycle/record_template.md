@@ -151,8 +151,8 @@ does not establish rendered appearance.
   its rule, or none>
 - Environment facts: <sources outside the product the change rests on that the foundation did not
   hold, written as facts, or none>
-- Glossary terms: <a word the change uses in a meaning other than the usual one, or a term used in
-  another meaning than its entry gives, written or corrected, or none>
+- Glossary terms: <a word the change uses in a meaning for which WAY-95 gives it an entry, or a term
+  used in another meaning than its entry gives, written or corrected, or none>
 - Part-map changes: <identifiers or none>
 - Projected entries written whole or in part: <identifiers or none>
 - Rows of *Settlements to record* written: <row number and identifier for each row, or none>

@@ -17,12 +17,16 @@ template holds what is particular to a glossary entry (WAY-35).
   the process, the two are one file (WAY-226).
 - A product takes the words of the process from the-way at the commit it pins, and its glossary
   defines none of them again (WAY-226).
-- A word of the product's domain that the glossary of the-way holds, or the last word of a term
-  it holds, in any of its forms, is written in the product's foundation with a qualifier — "castle
-  gate" for "gate", or "assembly step" for "step", the last word of "return step". The bare word
-  there keeps the meaning of the process. The qualified word takes an entry only as "Which words
-  take an entry" says. The product's code, its interface and talk about the product use the word
-  of the domain unchanged (WAY-104).
+- A word that the glossary of the-way holds, or the last word of a term it holds, in any of its
+  forms, takes a qualifier in a sentence of the product's foundation that could otherwise be read in
+  the other meaning — "castle gate" for "gate" where "the gate opens" could be read as the command
+  that runs the tests, or "assembly step" for "step", the last word of "return step". The sentence
+  may use the word for the domain and be readable as the process's, or use it for the process and be
+  readable as the domain's; either way the use takes a qualifier, a phrase holding the word. A bare
+  use that no sentence of the foundation reads in the other meaning stays bare and keeps the meaning
+  it has there — "map" in a game's decisions for the map of a level. The qualified word takes an
+  entry only as "Which words take an entry" says. The product's code, its interface and talk about
+  the product use the word of the domain unchanged (WAY-104).
 
 ## Where entries go
 
@@ -43,19 +47,29 @@ template holds what is particular to a glossary entry (WAY-35).
   product's field takes it to mean. A word whose every meaning is one such a reader gives takes
   none, however many meanings it has — "run", for a command and for text running across lines
   (WAY-95).
+- A word the product uses more narrowly than its field takes an entry only where a reader who takes
+  the field's meaning would read a sentence of the product's English files wrongly — "secondary
+  action", drawn as underlined text with no border where the field reads a second, less prominent
+  button, in "the form holds no secondary action". Where no sentence reads differently for the
+  field's meaning, the word takes none (WAY-95).
 - The agent that meets such a word in its work — writing an entry, searching the foundation, in a
   task's return step — writes its entry; no search of every binding sentence looks for candidates
   (WAY-95, WAY-11). The human accepts the meaning of each entry at the merge of the change, of a
   projected entry at the readiness gate, and of a term written whole from an accepted row of a
   task's *Settlements to record* with the task document (WAY-114).
-- Two uses carry two meanings when a definition true of one is false of the other
-  (`TODO — decision pending: which decision sets when two uses of a word carry two meanings`).
-- Where a word carries two meanings in the files git tracks, and one of them is a meaning a reader
-  who knows the product's field would not give it, one of the two is renamed, the human choosing
-  the new word, and the uses of the meaning that moves are rewritten to that word; a note beside
-  the word, or a paraphrase, is no renaming (WAY-99). In a product, none of this applies to a word
-  of its domain that the glossary of the-way holds: the word is written as "Two glossaries" says
-  (WAY-104).
+- Two uses of a word carry two meanings when a sentence the files hold is true in the meaning of one
+  use and false in the meaning of the other, whichever of the two the sentence uses; only a sentence
+  the files already hold counts, never one made up for the test (WAY-99).
+- Where a word carries two meanings in the English text of the files git tracks, and one of them is
+  a meaning a reader who knows the product's field would not give it, one of the two is renamed, the
+  human choosing the new word, and the uses of the meaning that moves are rewritten to that word; a
+  note beside the word, or a paraphrase, is no renaming (WAY-99). In a product, none of this applies
+  to a word of its domain that the glossary of the-way holds: the word is written as "Two
+  glossaries" says (WAY-104).
+- The rules above bind English text. A file of a product in another language, such as guidelines
+  written in Polish, uses its words in the meaning they have in that language and is not searched,
+  renamed or held against the glossary; a product that wants its words checked writes that file in
+  English (WAY-99).
 
 ## Form of an entry
 
@@ -78,9 +92,9 @@ template holds what is particular to a glossary entry (WAY-35).
 
 ## A changed meaning
 
-- The author of a change to a term's definition searches, in the same change, every file git tracks
-  for the word in each of its forms, and rewrites each use whose meaning the new definition moves,
-  so that every use left carries the new meaning (WAY-97).
+- The author of a change to a term's definition searches, in the same change, the English text of
+  every file git tracks for the word in each of its forms, and rewrites each use whose meaning the
+  new definition moves, so that every use left carries the new meaning (WAY-97).
 
 ## Fields and their readers
 
