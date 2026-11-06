@@ -3,36 +3,47 @@ part and of the parts its part's *Depends on* names, but for the two exceptions 
 running another file as a script counts as importing it.
 
 The check reads with `ast` every Python file git tracks, so that what a string holds — a fixture a
-test writes out — is neither an import nor a run. It reads:
+test writes out — is neither an import nor a run, unless the file runs it as code. It reads:
 
-- every `import` and `from ... import` statement. A module name resolves to the Python files git
-  tracks that it names against the importing file's own directory, the repository's root and each
-  directory the file adds to `sys.path`; a relative import, against the file's package. A name of
-  the standard library (`sys.stdlib_module_names`) that resolves to no such file is no dependency;
-  any other name that resolves to none fails the check, since the import reaches a file the check
-  does not see;
-- every run of a file as a script: `runpy.run_path(<path>)` and `runpy.run_module(<name>)`, and a
+- every `import` and `from ... import` statement, and every call of `importlib.import_module`
+  and `__import__` with a name the check can work out. A module name resolves to the Python files
+  git tracks that it names against the importing file's own directory, the repository's root and
+  each directory the file adds to `sys.path`; a relative import, against the file's package. A
+  name of the standard library (`sys.stdlib_module_names`) that resolves to no such file is no
+  dependency; any other name that resolves to none fails the check, since the import reaches a
+  file the check does not see;
+- every run of a file as a script: `runpy.run_path(<path>)` and `runpy.run_module(<name>)`; a
   command line of the running interpreter, `sys.executable`, written out as a list, a list joined
-  with `+` to more elements, or the arguments of a call, given a script's path or `-m <module>`. A
-  path resolves as an expression of the file (below); a path in a directory made at run time by
-  `tempfile` lies outside the repository and is no dependency, and so is a path outside the
-  repository's root. Code given with `-c` runs no file. A use of `sys.executable` the check cannot
-  read as a command line fails it, and so does a command line whose script, code or module is not
-  written out where the check reads it — joined on later, or by `+` of what is no list.
+  with `+` to more elements, or the arguments of a call, given a script's path, `-m <module>` or
+  `-c <code>`; and `exec`, `eval` and `compile` given the text of a file, read with
+  `open(<path>).read()` or `<path>.read_text()`. A path resolves as an expression of the file
+  (below); a path in a directory made at run time by `tempfile` lies outside the repository and is
+  no dependency, and so is a path outside the repository's root;
+- code given as a string — to `-c`, or to `exec`, `eval` or `compile` — parsed as the code of a
+  file and read as above: code given to `-c` from the repository's root, the working directory of
+  the gate and the scripts, with `sys.argv` taken from the command line; code given to `exec`,
+  `eval` or `compile` from the directories of the file that runs it.
+
+A use of `sys.executable` the check cannot read as a command line fails it, and so does a command
+line whose script, code or module is not written out where the check reads it — joined on later,
+by `+` of what is no list, or given on standard input — and code, a module name or a file to run
+that the check cannot work out.
 
 An expression naming a path is worked out from string constants, `__file__`, `os.getcwd()` (the
 repository's root, from which the tests and scripts run), `os.path` joins and parents, `Path` and
 its `/`, `.parent`, `.resolve()`, `.absolute()` and `.with_name()`, and the names and `self.<name>`
-attributes the file assigns, where every plain assignment of the name gives the same value.
-Parameters and names bound by unpacking, loops or `with` are not read. A directory added to
-`sys.path` or a file run that the check cannot work out fails the check, as does a file that no
-part or two parts claim: a check that quietly sees less would pass.
+attributes the file assigns, where every plain assignment of the name gives the same value; in
+code given to `-c`, also the names it assigns from `sys.argv`. Parameters and names bound by
+unpacking, loops or `with` are not read. A directory added to `sys.path` or a file run that the
+check cannot work out fails the check, as does a Python file that no part or two parts claim and
+the map does not leave out on purpose: a check that quietly sees less would pass.
 
-A file belongs to the part whose *Files* claims it, by patterns git matches (WAY-44). A test is a
-file named `test_*.py`, the files the gate runs. The parts of test helpers are named by identifier
-in `TEST_HELPER_PARTS`; the-way has none. An import from a file of part X to a file of part Y also
-passes where `foundations/invariants.md` holds an invariant "the part `X` does not depend on `Y`"
-that reads `Violated: yes`.
+A file belongs to the part whose *Files* claims it, by patterns git matches (WAY-44); a file the
+map lists under "Files left out on purpose" belongs to none, and its imports cross no boundary the
+map draws. A test is a file named `test_*.py`, the files the gate runs. The parts of test helpers
+are named by identifier in `TEST_HELPER_PARTS`; the-way has none. An import from a file of part X
+to a file of part Y also passes where `foundations/invariants.md` holds an invariant "the part `X`
+does not depend on `Y`" that reads `Violated: yes`.
 
 Run from the root of the-way: python -B gate/run_tests.py elements/part-map
 """
@@ -50,8 +61,8 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 THE_WAY = os.path.dirname(os.path.dirname(HERE))
 sys.path.insert(0, os.path.join(HERE, "..", "common"))
 
-from foundation_check import (EMPTY, ENTRY, INVARIANTS, PART_MAP, WORDS, blocks,  # noqa: E402
-                              fields, git, items, read)
+from foundation_check import (EMPTY, ENTRY, INVARIANTS, LEFT_OUT, PART_MAP,  # noqa: E402
+                              WORDS, blocks, fields, git, items, read, table)
 
 # The parts of the-way's map that hold the files serving the tests of several parts.
 TEST_HELPER_PARTS = ()
@@ -59,22 +70,31 @@ TEST_HELPER_PARTS = ()
 MARKED = re.compile(r"^[Tt]he part `(%s)` does not depend on `(%s)`\.?$" % (WORDS, WORDS))
 # The calls on `sys.path` that add a directory, and the position of the argument naming it.
 ADDING = {"insert": 1, "append": 0}
-# A directory made at run time in the system's temporary directory, outside the repository.
-TEMPORARY = "\0temporary"
+# A directory made at run time in the system's temporary directory, outside the repository: no
+# path, so that a step taking it for one fails.
+TEMPORARY = type("Temporary", (), {"__repr__": lambda self: "TEMPORARY"})()
 TEMPORARY_CALLS = ("tempfile.mkdtemp", "tempfile.TemporaryDirectory", "tempfile.gettempdir")
-# The functions of `runpy` that run a file, and what their first argument names.
-RUNPY = {"run_path": "path", "run_module": "module"}
-RUNPY_KEYWORDS = {"path": "path_name", "module": "mod_name"}
+# The functions that import a module or run a file or code, by the modules that hold them, and
+# the keyword that may give their first argument.
+FUNCTIONS = {"runpy": ("run_path", "run_module"), "importlib": ("import_module", "__import__"),
+             "builtins": ("exec", "eval", "compile", "__import__")}
+BUILTINS = ("exec", "eval", "compile", "__import__")
+KEYWORDS = {"run_path": "path_name", "run_module": "mod_name", "import_module": "name",
+            "__import__": "name", "compile": "source"}
 INTERPRETER = "sys.executable"
 # The options of the interpreter that take the next argument as their value.
 VALUED_OPTIONS = ("-W", "-X")
+# How deep code given as a string may hold code given as a string.
+NESTING = 5
 
 
 def parts(root, tracked):
     """({path: part} of every tracked file one part claims, {part: allowed parts}, [problems]),
-    the files matched to the patterns of *Files* by git."""
+    the files matched to the patterns of *Files* by git, as `foundation_check.check_files`
+    matches them, and the files the map leaves out on purpose left out."""
+    lines = read(root, PART_MAP)
     wanted, owner, allowed = [], {}, {}
-    for _, heading, body in blocks(read(root, PART_MAP), "## "):
+    for _, heading, body in blocks(lines, "## "):
         match = ENTRY.match(heading)
         found = fields(body)
         if not match or "Files" not in found:
@@ -88,6 +108,7 @@ def parts(root, tracked):
                 attribute = "the-way-part-%d" % len(wanted)
                 wanted.append("%s %s\n" % (pattern, attribute))
                 owner[attribute] = name
+    left_out = {cells[0] for _, cells in table(lines, LEFT_OUT)[1:]}
     handle, attributes = tempfile.mkstemp(suffix=".attributes", text=True)
     try:
         with os.fdopen(handle, "w", encoding="utf-8", newline="\n") as stream:
@@ -108,6 +129,8 @@ def parts(root, tracked):
     assigned, problems = {}, []
     for path in tracked:
         claimed = claims.get(path, set())
+        if path in left_out and not claimed:
+            continue
         if len(claimed) == 1:
             assigned[path] = next(iter(claimed))
         elif path.endswith(".py"):
@@ -137,35 +160,62 @@ def marked_dependencies(root):
 def passing(operation, *values):
     """None where a value is unknown, TEMPORARY where one lies in a temporary directory, and
     otherwise what the operation gives."""
-    if None in values:
+    if any(value is None for value in values):
         return None
-    if TEMPORARY in values:
+    if any(value is TEMPORARY for value in values):
         return TEMPORARY
     return operation(*values)
 
 
 class Resolver:
-    """Works out, without running it, the path an expression of one file names."""
+    """Works out, without running it, the path or text an expression of one file or of code given
+    as a string names.
 
-    def __init__(self, root, path, tree):
-        self.root, self.file = root, os.path.normpath(os.path.join(root, *path.split("/")))
-        self.assigned = {}
-        self.runpy = {"runpy." + name: kind for name, kind in RUNPY.items()}
+    `file` is the file's path, or None for code given to `-c`; `argv` is, for such code, the
+    values of its command line from `-c` on, None standing for one the check cannot work out."""
+
+    def __init__(self, root, file, tree, argv=None):
+        self.root, self.file = root, file
+        self.assigned, self.known = {}, {}
+        self.functions = {name: name for name in BUILTINS}
+        for module, names in FUNCTIONS.items():
+            self.functions.update({"%s.%s" % (module, name): name for name in names})
         for node in ast.walk(tree):
             if isinstance(node, ast.Assign):
                 for target in node.targets:
                     key = self.key(target)
                     if key:
                         self.assigned.setdefault(key, []).append(node.value)
+                    if argv is not None:
+                        self.from_argv(target, node.value, argv)
             elif isinstance(node, ast.Import):
                 for alias in node.names:
-                    if alias.name == "runpy" and alias.asname:
-                        self.runpy.update({alias.asname + "." + name: kind
-                                           for name, kind in RUNPY.items()})
-            elif isinstance(node, ast.ImportFrom) and node.module == "runpy" and not node.level:
+                    if alias.name in FUNCTIONS and alias.asname:
+                        self.functions.update({"%s.%s" % (alias.asname, name): name
+                                               for name in FUNCTIONS[alias.name]})
+            elif isinstance(node, ast.ImportFrom) and node.module in FUNCTIONS and not node.level:
                 for alias in node.names:
-                    if alias.name in RUNPY:
-                        self.runpy[alias.asname or alias.name] = RUNPY[alias.name]
+                    if alias.name in FUNCTIONS[node.module]:
+                        self.functions[alias.asname or alias.name] = alias.name
+
+    def from_argv(self, target, value, argv):
+        """Records the names code given to `-c` assigns from `sys.argv[<i>]` or
+        `sys.argv[<i>:]`."""
+        if not (isinstance(value, ast.Subscript) and ast.unparse(value.value) == "sys.argv"):
+            return
+        index = value.slice
+        if isinstance(index, ast.Constant) and isinstance(index.value, int) and \
+                isinstance(target, ast.Name):
+            self.known[target.id] = argv[index.value] if 0 <= index.value < len(argv) else None
+        elif isinstance(index, ast.Slice) and index.upper is None and index.step is None and \
+                isinstance(target, (ast.Tuple, ast.List)):
+            start = index.lower.value if isinstance(index.lower, ast.Constant) else 0 \
+                if index.lower is None else None
+            if isinstance(start, int):
+                for offset, element in enumerate(target.elts):
+                    if isinstance(element, ast.Name):
+                        position = start + offset
+                        self.known[element.id] = argv[position] if position < len(argv) else None
 
     @staticmethod
     def key(target):
@@ -178,13 +228,31 @@ class Resolver:
         return None
 
     def named(self, key, depth):
-        values = {self.value(value, depth + 1) for value in self.assigned.get(key, [])}
-        return values.pop() if len(values) == 1 else None
+        if key in self.known:
+            return self.known[key]
+        values = [self.value(value, depth + 1) for value in self.assigned.get(key, [])]
+        if not values or any(value is None for value in values):
+            return None
+        first = values[0]
+        return first if all(value is first or value == first for value in values) else None
+
+    def follow(self, node):
+        """The expression a name stands for, where every plain assignment of it is the same
+        expression; the node itself where it is no name."""
+        for _ in range(20):
+            key = self.key(node) if isinstance(node, (ast.Name, ast.Attribute)) else None
+            if not key or key in self.known:
+                return node
+            values = self.assigned.get(key, [])
+            if not values or len({ast.dump(value) for value in values}) != 1:
+                return None
+            node = values[0]
+        return None
 
     def value(self, node, depth=0):
-        """The path an expression names, TEMPORARY for one in a temporary directory, or None
-        where it cannot be worked out."""
-        if depth > 20:
+        """The path or text an expression names, TEMPORARY for a path in a temporary directory, or
+        None where it cannot be worked out."""
+        if depth > 20 or node is None:
             return None
         if isinstance(node, ast.Constant) and isinstance(node.value, str):
             return node.value
@@ -197,7 +265,7 @@ class Resolver:
             inner = self.value(node.value, depth + 1)
             if node.attr == "parent":
                 return passing(lambda path: os.path.dirname(self.absolute(path)), inner)
-            if node.attr == "name" and inner == TEMPORARY:
+            if node.attr == "name" and inner is TEMPORARY:
                 return TEMPORARY
             return None
         if isinstance(node, ast.BinOp) and isinstance(node.op, ast.Div):
@@ -230,11 +298,18 @@ class Resolver:
                     os.path.dirname(self.absolute(path)), other), inner, *arguments)
         return None
 
+    def text(self, node):
+        """The string an expression names — a module name, code — or None."""
+        value = self.value(node)
+        return value if isinstance(value, str) else None
+
     def absolute(self, path):
-        return path if path == TEMPORARY else os.path.normpath(os.path.join(self.root, path))
+        if path is TEMPORARY:
+            return path
+        return os.path.normpath(os.path.join(self.root, path))
 
     def added(self, tree):
-        """([directory], [line of each addition it cannot work out]) the file adds to
+        """([directory], [line of each addition it cannot work out]) the code adds to
         `sys.path`."""
         directories, unknown = [], []
         for node in ast.walk(tree):
@@ -259,7 +334,7 @@ class Resolver:
                 directory = None if expression is None else self.value(expression)
                 if directory is None:
                     unknown.append(node.lineno)
-                elif directory != TEMPORARY:
+                elif directory is not TEMPORARY:
                     directories.append(self.absolute(directory))
         return directories, unknown
 
@@ -270,9 +345,16 @@ class Resolver:
             return list(node.elts)
         return [None]
 
+    @staticmethod
+    def argument(node, position, keyword):
+        if len(node.args) > position:
+            return node.args[position]
+        return next((given.value for given in node.keywords if given.arg == keyword), None)
+
     def runs(self, tree):
-        """([(line, "path" or "module", path or module name)] of each file the file runs as a
-        script, [(line, why)] of each run it cannot work out)."""
+        """([(line, kind, what)] of each file, module or code the code imports by a function or
+        runs — kind "path" with a path, "module" with a module name, "code" with (text, argv,
+        mode) — and [(line, why)] of each it cannot work out)."""
         found, unknown, read_as_command, joined = [], [], set(), set()
 
         def interpreter(node):
@@ -293,18 +375,55 @@ class Resolver:
             return None
 
         def target(line, kind, node):
-            if node is None:
-                unknown.append((line, "runs a file the check cannot work out"))
-                return
-            if kind == "path":
-                path = self.value(node)
-            else:
-                path = node.value if isinstance(node, ast.Constant) and \
-                    isinstance(node.value, str) else None
-            if path is None:
+            what = self.value(node) if kind == "path" else self.text(node)
+            if what is None:
                 unknown.append((line, "runs a file the check cannot work out"))
             else:
-                found.append((line, kind, path))
+                found.append((line, kind, what))
+
+        def module(line, call, function):
+            """An import by `importlib.import_module` or `__import__`."""
+            name = self.text(self.argument(call, 0, KEYWORDS[function]))
+            if function == "import_module":
+                package = self.argument(call, 1, "package")
+                if name and name.startswith("."):
+                    base = self.text(package) if package is not None else None
+                    level = len(name) - len(name.lstrip("."))
+                    pieces = base.split(".") if base else []
+                    name = ".".join(pieces[:len(pieces) - level + 1] + [name.lstrip(".")]) \
+                        if base and level <= len(pieces) else None
+            else:
+                level = self.argument(call, 4, "level")
+                if level is not None and not (isinstance(level, ast.Constant) and
+                                              level.value == 0):
+                    name = None
+            if name is None:
+                unknown.append((line, "imports a module the check cannot work out"))
+            else:
+                found.append((line, "module", name))
+
+        def source(line, node, mode):
+            """Code given to `exec`, `eval` or `compile`."""
+            node = self.follow(node)
+            if isinstance(node, ast.Call) and self.functions.get(ast.unparse(node.func)) == \
+                    "compile":
+                return  # read at the call of `compile`
+            if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):
+                opened = node.func.value
+                if node.func.attr == "read" and isinstance(opened, ast.Call) and \
+                        ast.unparse(opened.func) in ("open", "io.open") and opened.args:
+                    target(line, "path", opened.args[0])
+                    return
+                if node.func.attr in ("read_text", "read_bytes") and not node.args:
+                    target(line, "path", opened)
+                    return
+            text = node.value if isinstance(node, ast.Constant) else None
+            if isinstance(text, bytes):
+                text = text.decode("utf-8", "replace")
+            if isinstance(text, str):
+                found.append((line, "code", (text, None, mode)))
+            else:
+                unknown.append((line, "runs code the check cannot read"))
 
         def command_line(line, elements):
             index = 0
@@ -320,8 +439,18 @@ class Resolver:
                     return
                 if text in VALUED_OPTIONS:
                     index += 2
-                elif text.startswith("-c") or text == "-":
-                    return  # code or standard input, no file
+                elif text.startswith("-c"):
+                    given = elements[index + 1] if len(text) == 2 and index + 1 < len(elements) \
+                        else None
+                    code = text[2:] if len(text) > 2 else self.text(given)
+                    rest = elements[index + (1 if len(text) > 2 else 2):]
+                    if code is None:
+                        unknown.append((line, "runs code the check cannot read"))
+                    else:
+                        argv = ["-c"] + [None if part is None or isinstance(part, ast.Starred)
+                                         else self.value(part) for part in rest]
+                        found.append((line, "code", (code, argv, "exec")))
+                    return
                 elif text.startswith("-m"):
                     if len(text) > 2:
                         found.append((line, "module", text[2:]))
@@ -329,9 +458,11 @@ class Resolver:
                         following = elements[index + 1] if index + 1 < len(elements) else None
                         target(line, "module", following)
                     return
+                elif text == "-":
+                    break  # code on standard input
                 else:
                     index += 1
-            # No script, no code and no module written out: what it runs is added elsewhere.
+            # No script, code or module written out: what it runs is given elsewhere.
             unknown.append((line, "runs a command line the check cannot read"))
 
         for node in ast.walk(tree):
@@ -347,12 +478,24 @@ class Resolver:
                 command_line(node.lineno, elements[1:])
             if not isinstance(node, ast.Call):
                 continue
-            kind = self.runpy.get(ast.unparse(node.func))
-            if kind:
-                argument = node.args[0] if node.args else next(
-                    (keyword.value for keyword in node.keywords
-                     if keyword.arg == RUNPY_KEYWORDS[kind]), None)
-                target(node.lineno, kind, argument)
+            function = self.functions.get(ast.unparse(node.func))
+            if function == "run_path":
+                target(node.lineno, "path", self.argument(node, 0, KEYWORDS[function]))
+            elif function == "run_module":
+                target(node.lineno, "module", self.argument(node, 0, KEYWORDS[function]))
+            elif function in ("import_module", "__import__"):
+                module(node.lineno, node, function)
+            elif function in ("exec", "eval", "compile"):
+                mode = {"exec": "exec", "eval": "eval"}.get(function)
+                if function == "compile":
+                    given = self.argument(node, 2, "mode")
+                    mode = given.value if isinstance(given, ast.Constant) and \
+                        given.value in ("exec", "eval", "single") else None
+                if mode is None:
+                    unknown.append((node.lineno, "runs code the check cannot read"))
+                else:
+                    source(node.lineno, self.argument(node, 0, KEYWORDS.get(function, "")),
+                           mode)
             for position, argument in enumerate(node.args):
                 if not interpreter(argument):
                     continue
@@ -375,78 +518,121 @@ def imports(root, path, tracked):
             tree = ast.parse(handle.read(), path)
     except (OSError, UnicodeDecodeError, SyntaxError) as error:
         return [], ["%s: cannot be read as Python: %s" % (path, error)]
-    resolver = Resolver(root, path, tree)
-    added, unknown = resolver.added(tree)
-    problems = [(line, "adds to sys.path a directory the check cannot work out")
-                for line in unknown]
-    own = os.path.dirname(resolver.file)
-    directories = list(dict.fromkeys([own, os.path.normpath(root)] + added))
-    found = []
+    file = os.path.normpath(os.path.join(root, *path.split("/")))
+    found, problems = [], []
+    Reading(root, tracked, found, problems).code(tree, Resolver(root, file, tree),
+                                                 [os.path.dirname(file), os.path.normpath(root)])
+    return sorted(set(found)), ["%s:%d: %s" % (path, line, why) for line, why in sorted(problems)]
 
-    def relative(candidate):
+
+class Reading:
+    """What one file imports and runs, the code it runs as a string included."""
+
+    def __init__(self, root, tracked, found, problems):
+        self.root, self.tracked, self.found, self.problems = root, tracked, found, problems
+
+    def relative(self, candidate):
         """The path of a file below the root, written with `/`, or None for one outside it."""
         try:
-            written = os.path.relpath(candidate, root).replace(os.sep, "/")
+            written = os.path.relpath(candidate, self.root).replace(os.sep, "/")
         except ValueError:  # another drive
             return None
         return None if written == ".." or written.startswith("../") else written
 
-    def resolve(line, name, bases):
+    def resolve(self, line, name, bases):
         """Adds each tracked file the module name names below a base; True where one does."""
-        before = len(found)
+        before = len(self.found)
         for base in bases:
             stem = os.path.join(base, *name.split("."))
             for candidate in (stem + ".py", os.path.join(stem, "__init__.py")):
-                if relative(candidate) in tracked:
-                    found.append((line, relative(candidate)))
-        return len(found) > before
+                if self.relative(candidate) in self.tracked:
+                    self.found.append((line, self.relative(candidate)))
+        return len(self.found) > before
 
+    @staticmethod
     def prefixes(name):
         pieces = name.split(".")
         return [".".join(pieces[:end]) for end in range(1, len(pieces) + 1)]
 
-    def unseen(line, name, standard):
+    def unseen(self, line, name, standard):
         if not standard or name.split(".")[0] not in sys.stdlib_module_names:
-            problems.append((line, "imports `%s`, which is neither a module of the standard "
-                                   "library nor a file the check sees" % name))
+            self.problems.append((line, "imports `%s`, which is neither a module of the standard "
+                                        "library nor a file the check sees" % name))
 
-    for node in ast.walk(tree):
-        if isinstance(node, ast.Import):
-            for alias in node.names:
-                seen = [resolve(node.lineno, name, directories) for name in prefixes(alias.name)]
+    def code(self, tree, resolver, bases, at=None, depth=0):
+        """Reads the imports and runs of one file's code, or of code it runs as a string, which
+        counts at the line `at` of the file."""
+
+        def where(line):
+            return line if at is None else at
+
+        added, unknown = resolver.added(tree)
+        self.problems.extend((where(line), "adds to sys.path a directory the check cannot work "
+                                           "out") for line in unknown)
+        own = bases[0]
+        directories = list(dict.fromkeys(bases + added))
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Import):
+                for alias in node.names:
+                    seen = [self.resolve(where(node.lineno), name, directories)
+                            for name in self.prefixes(alias.name)]
+                    if not any(seen):
+                        self.unseen(where(node.lineno), alias.name, True)
+            elif isinstance(node, ast.ImportFrom):
+                bases_of_node = directories
+                if node.level:
+                    base = own
+                    for _ in range(node.level - 1):
+                        base = os.path.dirname(base)
+                    bases_of_node = [base]
+                names = self.prefixes(node.module) if node.module else []
+                seen = [self.resolve(where(node.lineno), name, bases_of_node) for name in names]
+                seen += [self.resolve(where(node.lineno), ".".join(names[-1:] + [alias.name]),
+                                      bases_of_node)
+                         for alias in node.names if alias.name != "*"]
                 if not any(seen):
-                    unseen(node.lineno, alias.name, True)
-        elif isinstance(node, ast.ImportFrom):
-            bases = directories
-            if node.level:
-                base = own
-                for _ in range(node.level - 1):
-                    base = os.path.dirname(base)
-                bases = [base]
-            names = prefixes(node.module) if node.module else []
-            seen = [resolve(node.lineno, name, bases) for name in names]
-            seen += [resolve(node.lineno, ".".join(names[-1:] + [alias.name]), bases)
-                     for alias in node.names if alias.name != "*"]
-            if not any(seen):
-                written = node.module or ", ".join(alias.name for alias in node.names)
-                unseen(node.lineno, "." * node.level + written, not node.level)
-    runs, trouble = resolver.runs(tree)
-    problems += trouble
-    for line, kind, target in runs:
-        if kind == "module":
-            if not any([resolve(line, name, directories) for name in prefixes(target)]):
-                unseen(line, target, True)
-        elif target != TEMPORARY:
-            written = relative(resolver.absolute(target))
-            if written is None:
-                continue  # a file outside the repository is no file git tracks
-            if written in tracked:
-                found.append((line, written))
-            elif written + "/__main__.py" in tracked:
-                found.append((line, written + "/__main__.py"))
-            else:
-                problems.append((line, "runs `%s`, which is no Python file git tracks" % written))
-    return sorted(set(found)), ["%s:%d: %s" % (path, line, why) for line, why in sorted(problems)]
+                    written = node.module or ", ".join(alias.name for alias in node.names)
+                    self.unseen(where(node.lineno), "." * node.level + written, not node.level)
+        runs, trouble = resolver.runs(tree)
+        self.problems.extend((where(line), why) for line, why in trouble)
+        for line, kind, what in runs:
+            line = where(line)
+            if kind == "module":
+                if not any([self.resolve(line, name, directories)
+                            for name in self.prefixes(what)]):
+                    self.unseen(line, what, True)
+            elif kind == "code":
+                self.given(line, what, resolver, directories, depth)
+            elif what is not TEMPORARY:
+                written = self.relative(resolver.absolute(what))
+                if written is None:
+                    continue  # a file outside the repository is no file git tracks
+                if written in self.tracked:
+                    self.found.append((line, written))
+                elif written + "/__main__.py" in self.tracked:
+                    self.found.append((line, written + "/__main__.py"))
+                else:
+                    self.problems.append((line, "runs `%s`, which is no Python file git tracks"
+                                          % written))
+
+    def given(self, line, what, resolver, directories, depth):
+        """Reads code given as a string: to `-c` from the root, to `exec`, `eval` or `compile`
+        from the directories of the file that runs it."""
+        text, argv, mode = what
+        try:
+            tree = ast.parse(text, "<code>", mode)
+        except (SyntaxError, ValueError):
+            self.problems.append((line, "runs code the check cannot read"))
+            return
+        if depth >= NESTING:
+            self.problems.append((line, "runs code given as a string nested too deep for the "
+                                        "check"))
+        elif argv is not None:
+            self.code(tree, Resolver(self.root, None, tree, argv), [os.path.normpath(self.root)],
+                      line, depth + 1)
+        else:
+            self.code(tree, Resolver(self.root, resolver.file, tree), directories, line,
+                      depth + 1)
 
 
 def check(root, helper_parts):
@@ -469,7 +655,7 @@ def check(root, helper_parts):
         for line, imported in found:
             part, other = assigned[path], assigned.get(imported)
             if other is None:
-                continue  # reported among the problems of `parts`
+                continue  # left out on purpose, or reported among the problems of `parts`
             if other == part or other in allowed.get(part, set()) or \
                     (test and other in helper_parts) or (part, other) in marked:
                 continue
@@ -798,20 +984,26 @@ class Runs(unittest.TestCase):
             "import runpy\nrunpy.run_path(os.path.join(HERE, '..', 'core', 'rules.py'))\n")})
         self.assertEqual(([], []), repository.check())
 
-    def test_code_and_standard_modules_run_no_file_of_a_part(self):
-        for line in ("subprocess.run([sys.executable, '-c', 'import shell.screen'])",
+    def test_standard_modules_and_code_of_them_run_no_file_of_a_part(self):
+        for line in ("subprocess.run([sys.executable, '-c', 'import json; print(1)'])",
                      "subprocess.run([sys.executable, '-m', 'unittest'])",
                      "runpy.run_module('json.tool')"):
             with self.subTest(line=line):
                 self.assertEqual(([], []), self.run_from_core(line))
 
     def test_run_of_a_file_in_a_temporary_directory_is_no_dependency(self):
+        # Taken for a path, the temporary directory would fail the check.
         for line in ("subprocess.run([sys.executable, os.path.join(tempfile.mkdtemp(), "
                      "'shell', 'screen.py')])",
                      "subprocess.run([sys.executable, str(Path(tempfile.TemporaryDirectory()"
                      ".name) / 'screen.py')])"):
             with self.subTest(line=line):
                 self.assertEqual(([], []), self.run_from_core(line))
+
+    def test_run_of_a_file_outside_the_root_is_no_dependency(self):
+        # Taken for a file below the root, `../outside/screen.py` would be one git does not track.
+        self.assertEqual(([], []), self.run_from_core(
+            "runpy.run_path(os.path.join(HERE, '..', '..', 'outside', 'screen.py'))"))
 
     def test_run_inside_a_string_is_no_run(self):
         self.assertEqual(([], []), self.run_from_core(
@@ -836,9 +1028,132 @@ class Runs(unittest.TestCase):
                 ("subprocess.run([sys.executable, 'shell/missing.py'])",
                  "runs `shell/missing.py`, which is no Python file git tracks"),
                 ("runpy.run_module('missing')", "imports `missing`, which is neither a module of "
-                                                "the standard library nor a file the check sees")):
+                                                "the standard library nor a file the check sees"),
+                ("subprocess.run([sys.executable, '-'], input=b'')",
+                 "runs a command line the check cannot read")):
             with self.subTest(line=line):
                 self.assertEqual(([], ["core/engine.py:7: " + why]), self.run_from_core(line))
+
+
+class Code(unittest.TestCase):
+    """Code given as a string — to `-c`, `exec`, `eval` or `compile` — and Python's import
+    functions, each form on a small repository of its own."""
+
+    run_from_core = Runs.run_from_core
+
+    def assertEachFails(self, cases):
+        for line, why in cases:
+            with self.subTest(line=line):
+                self.assertEqual(([], ["core/engine.py:7: " + why]), self.run_from_core(line))
+
+    def test_each_form_of_code_given_to_the_interpreter_is_read(self):
+        for line in (
+                "subprocess.run([sys.executable, '-c', 'import shell.screen'])",
+                "subprocess.run([sys.executable, '-cimport shell.screen'])",
+                "subprocess.run([sys.executable, '-B', '-c', "
+                "'import runpy; runpy.run_path(\"shell/screen.py\")'])",
+                "subprocess.run([sys.executable, '-c', 'import sys; sys.path.insert(0, "
+                "\"shell\"); import screen'])",
+                "CODE = 'import runpy, sys; script = sys.argv[1]; runpy.run_path(script)'; "
+                "subprocess.run([sys.executable, '-c', CODE, "
+                "os.path.join(HERE, '..', 'shell', 'screen.py')])",
+                "subprocess.run([sys.executable, '-c', 'import runpy, sys; first, script = "
+                "sys.argv[1:]; runpy.run_path(script)', 'x', "
+                "os.path.join(HERE, '..', 'shell', 'screen.py')])",
+        ):
+            with self.subTest(line=line):
+                self.assertEqual(([FORBIDDEN], []), self.run_from_core(line))
+
+    def test_code_given_to_the_interpreter_the_check_cannot_read_fails(self):
+        self.assertEachFails((
+            ("subprocess.run([sys.executable, '-c', os.environ['CODE']])",
+             "runs code the check cannot read"),
+            ("subprocess.run([sys.executable, '-c'])", "runs code the check cannot read"),
+            ("subprocess.run([sys.executable, '-c', 'import ('])",
+             "runs code the check cannot read"),
+            ("subprocess.run([sys.executable, '-c', 'import runpy, sys; "
+             "runpy.run_path(sys.argv[3])', 'x'])", "runs a file the check cannot work out")))
+
+    def test_each_import_function_is_read(self):
+        for line in (
+                "importlib.import_module('shell.screen')",
+                "importlib.import_module(name='shell.screen')",
+                "importlib.import_module('.screen', 'shell')",
+                "importlib.import_module('.screen', package='shell')",
+                "from importlib import import_module as load; load('shell.screen')",
+                "import importlib as il; il.import_module('shell.screen')",
+                "MODULE = 'shell.screen'; importlib.import_module(MODULE)",
+                "__import__('shell.screen')",
+                "builtins.__import__('shell.screen', globals(), locals(), [], 0)",
+        ):
+            with self.subTest(line=line):
+                self.assertEqual(([FORBIDDEN], []), self.run_from_core(line))
+
+    def test_import_function_of_the_standard_library_is_no_dependency(self):
+        self.assertEqual(([], []), self.run_from_core("importlib.import_module('json')"))
+
+    def test_import_function_the_check_cannot_work_out_fails(self):
+        self.assertEachFails((
+            ("importlib.import_module(os.environ['MODULE'])",
+             "imports a module the check cannot work out"),
+            ("importlib.import_module('.screen')", "imports a module the check cannot work out"),
+            ("__import__('screen', globals(), locals(), [], 1)",
+             "imports a module the check cannot work out"),
+            ("importlib.import_module('missing')", "imports `missing`, which is neither a module "
+                                                   "of the standard library nor a file the check "
+                                                   "sees")))
+
+    def test_each_form_of_code_run_by_exec_eval_or_compile_is_read(self):
+        screen = "os.path.join(HERE, '..', 'shell', 'screen.py')"
+        for line in (
+                "exec('import shell.screen')",
+                "exec(b'import shell.screen')",
+                "exec(compile('import shell.screen', 'shell', 'exec'))",
+                "eval(\"__import__('shell.screen')\")",
+                "exec(open(%s).read())" % screen,
+                "exec(open(%s, encoding='utf-8').read(), {})" % screen,
+                "exec((Path(HERE) / '..' / 'shell' / 'screen.py').read_text())",
+                "code = open(%s).read(); exec(code)" % screen,
+                "compile(open(%s).read(), 'screen', mode='exec')" % screen,
+        ):
+            with self.subTest(line=line):
+                self.assertEqual(([FORBIDDEN], []), self.run_from_core(line))
+
+    def test_code_given_as_a_string_is_read_down_to_its_limit(self):
+        def nested(times):
+            code = "import shell.screen"
+            for _ in range(times):
+                code = "exec(%r)" % code
+            return code
+        self.assertEqual(([FORBIDDEN], []), self.run_from_core(nested(NESTING)))
+        self.assertEqual(([], ["core/engine.py:7: runs code given as a string nested too deep for "
+                               "the check"]), self.run_from_core(nested(NESTING + 1)))
+
+    def test_code_of_the_standard_library_run_by_exec_is_no_dependency(self):
+        for line in ("eval('1 + 1')", "exec('import json')"):
+            with self.subTest(line=line):
+                self.assertEqual(([], []), self.run_from_core(line))
+
+    def test_code_run_by_exec_eval_or_compile_the_check_cannot_read_fails(self):
+        self.assertEachFails((
+            ("exec(os.environ['CODE'])", "runs code the check cannot read"),
+            ("exec(sys.stdin.read())", "runs code the check cannot read"),
+            ("compile('import json', 'x', MODE)", "runs code the check cannot read"),
+            ("exec('import (')", "runs code the check cannot read"),
+            ("exec(open(os.environ['SCRIPT']).read())", "runs a file the check cannot work out")))
+
+
+class LeftOut(unittest.TestCase):
+
+    def test_python_file_left_out_on_purpose_is_no_failure(self):
+        # Without the list, `tools/build.py` would be a file no part claims.
+        repository = Repository(self, {
+            "foundations/part_map.md": PART_MAP_TEXT + (
+                "\n## Files left out on purpose\n\n| File | Why |\n|---|---|\n"
+                "| tools/build.py | a script of one person's set-up |\n"),
+            "tools/build.py": "import json\n",
+            "core/engine.py": "from tools import build\n"})
+        self.assertEqual(([], []), repository.check())
 
 
 if __name__ == "__main__":
