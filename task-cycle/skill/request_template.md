@@ -189,7 +189,12 @@ order:
    in its list below, with its kind and grade; the judgment decides no fix and no block.
 9. *Decisions of the task's own sections*: each item of those sections that waits on a yes, such as
    a proposal not applied.
-10. *Additions to a product's logging scope*: each item the change adds to the list of what the
+10. *A listing of the remarks check held wrong*, where the cycle holds an item the check listed to
+    be an error of the script (WAY-295): in plain words what the script listed, why the cycle holds
+    it wrong, and "Merge as it stands?". The script is not changed in the cycle, and the archive is
+    written; the case also stands in the record's process remarks, as `SKILL.md` ("The process
+    remarks check") gives.
+11. *Additions to a product's logging scope*: each item the change adds to the list of what the
     product logs, in plain words — what it is and which log line carries it — with "Accept it?".
     A change that adds nothing to that list has no such item.
 
@@ -208,7 +213,9 @@ instead of merging.
 for a check that failed and passed when run again the number of cycle runs in which it failed and
 passed and its rerun's result (WAY-160, WAY-261); what each own-work check showed (WAY-164); the
 user-interface states and the screenshot evidence, a screenshot unchecked for no settled way or the
-failure of a settled one included (WAY-219); the form check's last run.
+failure of a settled one included (WAY-219); the form check's last run; the remarks check's last
+run, and where it listed an item the cycle holds wrong, its command, exit code and listed line
+(WAY-295).
 
 **Foundation entries.** Each foundation entry the change writes or changes, by its identifier and
 one English sentence of its meaning, marked `row <n>`, `projected` or `the cycle's`; each kept row
@@ -256,4 +263,5 @@ none; a section with no content reads `none`.
 | A correction (`correction.md`) | the state after the correction, with "corrected for your remarks" in the why | the items as they stand after the correction, its new choices included; a remark is no item, since it binds | *Course of the cycle*: each correction with the link to its remarks and its reset base; *Cost* across all sessions |
 | A correction met a reserved choice | `**State: blocked**`, as for a reserved choice | as for a reserved choice | *Foundation entries* as in the request's previous description |
 | A form error held wrong (above) | `**State: draft** — the form check reports an error the cycle holds wrong`; a request blocked for another cause stays `blocked` and gains only the item | the reported error in plain words, why the cycle holds it wrong, and "Merge as it stands?" | *Checks*: the form check's command, exit code and reported line |
+| A remarks listing held wrong (`SKILL.md`, "The process remarks check", WAY-295) | unchanged: the state the request has for its other causes | the listing as an item, with "Merge as it stands?" | *Checks*: the remarks check's command, exit code and listed line |
 | A draft for another reason | `**State: draft** — <reason>` | the reason as an item, such as "the return step was skipped on your instruction; merge without it?" | as an ordinary request |
