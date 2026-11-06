@@ -39,6 +39,7 @@ SKILLS.update({
     "make-change": "task-cycle/change/SKILL.md",
     "review-change": "task-cycle/review/SKILL.md",
     "critique": "elements/common/critique/SKILL.md",
+    "review-foundation": "foundation-review/SKILL.md",
     "maintain-styleguide": "product-guidelines/styleguide/SKILL.md",
     "maintain-coding-guidelines": "product-guidelines/coding/SKILL.md",
     "maintain-testing-guidelines": "product-guidelines/testing/SKILL.md",
