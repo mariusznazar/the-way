@@ -4369,48 +4369,66 @@ gate's run by the number of slices and holds each slice for it.
 ### WAY-161 — Which findings of the review of the whole change are fixed, and how does the request carry the rest?
 
 In the review of the whole change on either route, a finding blocks when the reviewer grades it
-Critical or Important and has not itself marked it as outside the task's scope, and a review that
-leaves no blocking finding sends the change to its request without a fix. A finding the reviewer
-has marked as outside the task's scope — a line of its list of what it declined to judge, or a
-finding it describes as going beyond the task — is not fixed, whatever its grade, nor is a Minor
-finding, and the request lists those findings in an item of their own and the Minor findings in
-another, each with the reviewer's words and its place in the code, while the human decides which
-findings outside the scope become new tasks and creates them. The orchestrator moves no finding
-from one of these kinds to another.
+Critical or Important and has not itself marked it as outside the task's scope, and a Minor finding
+that the review lists and the reviewer has not marked so is fixed before the request opens — in the
+fix that runs for the blocking findings or, where none blocks, in one fix of its own that WAY-162
+bounds. A finding the reviewer has marked as outside the task's scope — a line of its list of what
+it declined to judge, or a finding it describes as going beyond the task — is not fixed, whatever
+its grade, and the request lists those findings in an item of their own and, in another, the Minor
+findings that no fix made — those of the code reviews after the review of the whole change, those
+of a slice review that the review of the whole change does not list, those a fix left, and those of
+a fix that WAY-162 reverted — each with the reviewer's words and its place in the code, while the
+human decides which findings outside the scope become new tasks and creates them. The orchestrator
+moves no finding from one of these kinds to another.
 
 - **Scope:** task-cycle
 - **Based on:** none
 - **Relations:** derives from WAY-136 · derives from WAY-227 · derives from
   WAY-140
 - **Verification:** an agent compares the cycle and its request with the decision:
-  - complies: the review of a one-author change returns only Minor findings, and the change goes
-    to its request without a fix, the request listing each of them with the reviewer's words and
-    its place in the code; the reviewer sets aside under "Declined to judge" a behaviour the task
-    does not ask for, the request lists it in an item of its own, and the human creates a task for
-    it; the final review of a planned change returns an Important finding within the task, and a
-    fix follows;
-  - violates: a fix runs for Minor findings alone; the fix after the whole-change review of a
-    planned change takes in the Minor findings of its slice reviews; the orchestrator rules on a
-    line the reviewer
-    declined to judge, or moves an Important finding within the task to the list for new tasks;
-    the cycle adds a task to the product's backlog itself; the Minor findings stand only in the
-    cycle's reports the request links to.
+  - complies: the review of a one-author change returns only Minor findings within the task, one
+    fix takes them in, one review of that fix follows, and the request lists each Minor finding
+    that fix left with the reviewer's words and its place in the code; the reviewer sets aside
+    under "Declined to judge" a behaviour the task does not ask for, the request lists it in an
+    item of its own, and the human creates a task for it; the final review of a planned change
+    returns an Important finding and a Minor finding within the task, and one fix takes in both;
+  - violates: the review of the whole change lists a Minor finding within the task and the request
+    opens with it unfixed and no fix having run; a fix takes in a Minor finding the reviewer marked
+    as outside the task's scope, one that only a slice review gave and the review of the whole
+    change does not list, or one of a code review after the review of the whole change; the
+    orchestrator rules on a line the reviewer declined to judge, or moves an Important finding
+    within the task to the list for new tasks; the cycle adds a task to the product's backlog
+    itself; the Minor findings no fix made stand only in the cycle's reports the request links to.
 - **Origin:** none
 
 *Rationale:* the grade a reviewer gives already says how much a finding matters, so taking it as
 the line between what blocks and what does not adds no second label to the review and
 leaves no finding without a place; a label given against the task would let a finding tied to no
-requirement of the task pass as non-blocking. A minor finding fixed in a round of its own spends
-that round on polish, while one listed in the request with the reviewer's words stays within reach
-of the human who merges, and one the product's user or the human working with the process will feel
-is put before the human in plain words (WAY-289); a list the request only links to is a list nobody
-reads. A finding that
+requirement of the task pass as non-blocking. A minor finding left in the request costs the human
+who merges a turn of conversation and a round of correction, each with a fix and a review of its
+own, or a task of its own with a session of its own, to do work the cycle has the code open for;
+fixed before the request opens, it costs a fix that runs anyway where a finding blocks, or one fix
+and one review of it where none does. The price of that is a round that goes to polish, and a new
+serious finding in a fix made for polish alone, which would block a request that was ready
+without it; WAY-162 bounds the price by giving that fix up whole, so that the request opens on
+the code the review accepted. A minor finding that no fix made stays within reach of the human who
+merges, with the reviewer's words, and one the product's user or the human working with the process
+will feel is put before the human in plain words (WAY-289); a list the request only links to is a
+list nobody reads. A finding that
 widens the work is a new piece of work rather than a repair of this one, and the reviewer, who has
 no stake in closing the cycle, is the one to say which findings lie outside the task, since an
 orchestrator sorting them could move an inconvenient finding out of the way of the blocked request.
 The human creates the new task because each product keeps its backlog where it chooses (WAY-101),
 and where that is outside the repository, only a human makes an effect there (WAY-140).
-*Rejected:* a label of its own, blocking or not, that the reviewer gives each finding against the
+*Rejected:* the cycle leaving the small findings in the request, which asks in its section for the
+human's decisions whether to fix them in the request or make a task of them — every request with
+such findings then costs the human a turn of conversation and a round of correction, and a small
+finding that nobody will feel never reaches the question; the small findings joining a fix only
+where one runs anyway for a blocking finding, and the request asking as above where none does —
+the same cost in every cycle without a blocking finding, and two behaviours of the cycle that
+depend on the result of the review; the rule left as it was, no fix for Minor findings — it costs
+nothing today, and every later request with small findings goes through the same turn and round;
+a label of its own, blocking or not, that the reviewer gives each finding against the
 task — a second scale beside the grade, and a finding tied to no requirement of the task would
 pass as non-blocking; the orchestrator ruling on each finding — the agent that wants the cycle
 closed decides to skip a repair; the Minor findings kept only in the cycle's reports the request
@@ -4433,9 +4451,15 @@ that remains. Where a blocking finding remains after that review of the fix, no 
 the orchestrator does not rule on it, no further slice is made, and the cycle opens a draft request
 marked `blocked` that lists each remaining blocking finding with its place in the code and its
 reason, what the fix tried, and the time, models and tokens the cycle has used so far, from its
-record of stages, with the number of review rounds. In the code reviews after the review of the
-whole change, the findings that do not block go unfixed to the request's lists as WAY-161 gives
-them.
+record of stages, with the number of review rounds. Where the review of the whole change leaves no
+blocking finding and lists Minor findings that WAY-161 has fixed, one fix takes them in and one
+review of that fix follows, and where that review finds a new Critical or Important finding in the
+fix, the cycle reverts the fix's commits with a commit of its own, so that they stay in history,
+runs no third round and opens the request, not blocked, on the code the review of the whole change
+accepted, the request listing the Minor findings the fix tried and the new finding with its grade
+and as the review of the fix found it, while in the code reviews after the review of the whole
+change, and for a Minor finding that remains after a fix, the findings that do not block go unfixed
+to the request's lists as WAY-161 gives them.
 
 - **Scope:** task-cycle
 - **Based on:** none
@@ -4447,11 +4471,19 @@ them.
     finding's place and reason, what the fix tried and the cycle's cost so far; a slice whose fix
     leaves a blocking finding ends the cycle the same way, and its later slices are not made; a
     Minor finding of the review of the reconciliation with the target branch is listed in the
-    request;
+    request; the review of a one-author change returns two Minor findings only, one fix takes them
+    in, the review of that fix finds an Important finding in the fix, and the cycle reverts the fix
+    with a revert commit, runs the gate on the code the revert leaves, and opens a request that is
+    not blocked and lists the two Minor findings and the Important finding with its grade; a fix
+    that ran for an Important finding and carried a Minor one ends with a blocked request when the
+    review of the fix finds a new Important finding;
   - violates: the orchestrator rules on a finding left after the review of the fix and marks the
     request ready; a third round of fixes runs, on a slice or on the whole change; a new Important
     finding in the fix is left out of the blocked request because the findings it set out to fix
-    were fixed; a Minor finding of a later code review stands only in that review's report.
+    were fixed; a Minor finding of a later code review stands only in that review's report; a
+    request opens blocked for a new Important finding in a fix made for Minor findings alone; the
+    commits of such a fix are taken off the branch by a reset instead of a revert, or part of the
+    fix is kept; the new finding of a reverted fix is left out of the request's lists.
 - **Origin:** none
 
 *Rationale:* one fix and one review of it settle an ordinary piece of work; a finding that survives
@@ -4464,9 +4496,18 @@ in the fix is one the fix made, and counting it as remaining keeps a fix from tr
 finding for another. The bound holds for a slice as for the whole change: rounds cost the same
 there, and a later slice built on one its review did not accept would carry the finding forward.
 The findings of later reviews that do not block reach the request as WAY-161's do, because a list
-the request only links to is a list nobody reads.
-*Rejected:* the orchestrator ruling on the findings left after the review of the final fix — a
-change the reviewer did not accept reaches the request as ready; up to five rounds of fixes on a
+the request only links to is a list nobody reads. A fix made for Minor findings alone is polish on
+a change the review has already accepted, and a serious finding of its own in that fix puts at risk
+what was ready without it; giving the fix up whole, by a revert that leaves it in history, returns
+the request to the code that was accepted at the price of the fix's work, and the Minor findings and
+the new finding reach the human in the request's lists, who can make a task of them. A Minor
+finding that remains after a fix leaves the change as acceptable as it was, so it does not block.
+*Rejected:* a request blocked by the new serious finding in a fix made for Minor findings alone —
+polish turns a request that was ready into a blocked one, and the decision and a turn of
+conversation fall on the human; the cycle keeping the part of such a fix that the review accepted
+and reverting the rest — the orchestrator would decide what stays, which WAY-161 forbids it; the
+orchestrator ruling on the findings left after the review of the final fix — a change the reviewer
+did not accept reaches the request as ready; up to five rounds of fixes on a
 slice, the orchestrator ruling on what remains after them — each round costs as much as the last,
 and the orchestrator rules in the end after all; a report of the remaining findings without a
 request, in conversation or in the cycle record — the request is the one place where the human
@@ -8748,40 +8789,61 @@ repository, and the human would look in two places.
 
 ### WAY-289 — Which unfixed findings does a request put before the human for a decision?
 
-Writing a request's description, the orchestrator of the cycle judges each Minor finding and each
-finding outside the task's scope, from the whole cycle record, the reports of the walk through the
-running product and its screenshots included, by whether the product's user or the human working
-with the process will feel it, and restates each that will be felt, in plain words, in the section
-for the human's decisions as a question whether it becomes a task. Every finding stays in its list of
-the lower part with the reviewer's words and its place in the code, and the judgment changes no
-finding's kind or grade and decides no fix and no block.
+Writing a request's description, the orchestrator of the cycle judges each unfixed finding — a Minor
+finding that no fix made, a finding outside the task's scope and the new Critical or Important
+finding of a fix that WAY-162 reverted — from the whole cycle record, the reports of the walk
+through the running product and its screenshots included, by whether the product's user or the human
+working with the process will feel it, and restates each that will be felt, in plain words, in the
+section for the human's decisions as one question with two answers, to fix it in this request or to
+make a task of it, which one answer may settle for the whole list. The answer to fix it runs a
+correction with one fix and one review of that fix, and the findings it leaves unfixed are put by
+the request only with the question whether they become a task, or stay in the lower part, so that
+the loop ends after one correction. Every finding stays in its list of the lower part with the
+reviewer's words and its place in the code, and the judgment changes no finding's kind or grade and
+decides no fix and no block.
 
 - **Scope:** task-cycle, agent-instructions
 - **Based on:** none
 - **Relations:** derives from WAY-161 · derives from WAY-287
 - **Verification:** an agent compares the request's description with the decision:
-  - complies: a Minor finding that a button stays enabled while a save runs is restated as "a
-    player can press save twice while the game saves; make a task of it?", and stays in the list of
-    Minor findings with the reviewer's words; a finding on the name of a helper stays in its list
-    alone;
+  - complies: a Minor finding that a button stays enabled while a save runs and that no fix made is
+    restated as "a player can press save twice while the game saves; fix it in this request, or
+    make a task of it?", and stays in the list of Minor findings with the reviewer's words; a
+    finding on the name of a helper stays in its list alone; after the human answers that the
+    findings are to be fixed, a correction makes one fix and has it reviewed once, and a Minor
+    finding of that review is put with the question of a task alone;
   - violates: the orchestrator moves a finding it judges felt to the blocking ones, or leaves out of
     its list one it judges not felt; a finding a player would feel stands only in the lower part;
-    the restatement names a file and a line instead of what the player meets.
+    the restatement names a file and a line instead of what the player meets; a finding left
+    unfixed by the correction that the answer to fix it ran asks again for a fix, or the correction
+    runs a second fix for it.
 - **Origin:** none
 
 *Rationale:* the reviewer's words name the code, and the human cannot tell from them what was left
-unchecked and how much it matters, so a finding the user or the human will feel is lost unseen in the
-lower part. The orchestrator holds the whole record, the walk through the running product included,
-while the reviewer reads the code and the task, so the orchestrator sees the effect a finding has.
-WAY-161 warns that an orchestrator sorting findings could move an inconvenient one out of the way of
-a blocked request; this judgment only adds a line before the human, and a finding judged not felt
-stays where WAY-161 puts it, so nothing WAY-161 keeps in front of the human leaves it. The clean-ups
-stay in the lower part for a reading of the lower parts of many requests together.
-*Rejected:* every finding in the lower part alone — the findings a player would feel are lost unseen,
-since neither the human nor the nightly review reads them; the nightly review of the layer of agent
-instructions extended to the review findings — that review would start carrying the product's bugs,
-and the clean-ups would flood its ledger; the reviewer who reports the finding judging it — it looks
-with fresh eyes, but reads the code and the task and does not run the product.
+unchecked and how much it matters, so a finding the user or the human will feel is lost unseen in
+the lower part. The orchestrator holds the whole record, the walk through the running product
+included, while the reviewer reads the code and the task, so the orchestrator sees the effect a
+finding has. WAY-161 warns that an orchestrator sorting findings could move an inconvenient one out
+of the way of a blocked request; this judgment only adds a line before the human, and a finding
+judged not felt stays where WAY-161 puts it, so nothing WAY-161 keeps in front of the human leaves
+it. The clean-ups stay in the lower part for a reading of the lower parts of many requests together.
+A human who wants a finding fixed at once has an answer for it in the question, where without one he
+answers against the question and the cycle has no rule for it; one answer may cover the whole list,
+so that a human who wants all of it fixed answers once. The correction that answer runs brings
+findings of its own, and a second fix for them would raise the same question without end, so what
+the correction leaves goes only with the question of a task, or stays below. The findings nobody
+will feel stay out of the question, since the `none` of the human's section says that nothing waits
+for a yes (WAY-287), and those within the task have been fixed already (WAY-161).
+*Rejected:* the question as it was, only whether the finding becomes a task — a human who wants the
+fix at once answers against the question, and the cycle has no rule for the answer; the same
+question for the findings nobody will feel as well — the human's section swells with cosmetics,
+though its `none` is to mean that nothing waits for a yes (WAY-287), and the cycle fixes the
+cosmetics within the task anyway; every finding in the lower part alone — the findings a player
+would feel are lost unseen, since neither the human nor the nightly review reads them; the nightly
+review of the layer of agent instructions extended to the review findings — that review would start
+carrying the product's bugs, and the clean-ups would flood its ledger; the reviewer who reports the
+finding judging it — it looks with fresh eyes, but reads the code and the task and does not run the
+product.
 
 ### WAY-290 — How is the form of a request's description checked?
 
@@ -9019,10 +9081,11 @@ entry stays Important (WAY-263).
 - **Relations:** narrows WAY-161
 - **Verification:** an agent compares a review finding with the decision:
   - complies: a reviewer who thinks "secondary action" needs an entry and cites no sentence grades
-    the finding Minor, and the request lists it for the human; a reviewer who cites "the form holds
-    no secondary action" as a sentence read wrongly by a reader of the field grades it as any other
-    finding; a finding that two meanings of a word are not renamed is graded as it was before this
-    decision; a finding that a new glossary entry broadens a rule of a decision stays Important;
+    the finding Minor, and the fix for Minor findings (WAY-161) or the request's list takes it; a
+    reviewer who cites "the form holds no secondary action" as a sentence read wrongly by a reader
+    of the field grades it as any other finding; a finding that two meanings of a word are not
+    renamed is graded as it was before this decision; a finding that a new glossary entry broadens a
+    rule of a decision stays Important;
   - violates: a finding that a word lacks an entry, citing no sentence, is graded Important and
     blocks the change; a finding that cites a sentence read wrongly is graded Minor for being about a
     word; a finding that a glossary entry the change writes contradicts a decision is graded Minor.
@@ -9031,15 +9094,17 @@ entry stays Important (WAY-263).
 *Rationale:* whether a word needs an entry or a qualifier depends on which reader the foundation is
 read by, and a remark with no sentence behind it cannot be checked, so as a blocking finding it
 sends the change through a round of fixes for a matter the reviewer cannot show; as a Minor finding
-it stays in front of the human at the merge. A finding that cites a sentence a reader would read
-wrongly can be checked like any other, and a glossary entry the change writes is a second account of
-a rule that can broaden it, which WAY-263 already grades.
+it goes to the fix for Minor findings, where the author may contest it with evidence, and to the
+request's list when the author contests it or no fix repairs it. A finding that cites a sentence a
+reader would read wrongly can be checked like any other, and a glossary entry the change writes is a
+second account of a rule that can broaden it, which WAY-263 already grades.
 *Rejected:* the grade left to the reviewer without this limit — a dispute over a word returns as a
 blocking finding and a round of fixes; every narrower meaning taking an entry, so that no dispute
 arises — the glossary grows by words no one mistakes, the direction WAY-95 refused; a script naming
 the candidates for an entry — WAY-95 refused it, since it cannot tell a definition from another
-sentence; Minor always, also with a cited sentence — a collision shown on a sentence is then never
-repaired in the cycle and reaches the merge.
+sentence; Minor always, also with a cited sentence — a collision shown on a sentence is then
+repaired only by the fix for Minor findings, which the cycle gives up whole when the review of that
+fix finds a new serious finding, so the collision reaches the merge.
 
 ### WAY-298 — How does a cycle on the-way itself start from the current rules?
 
