@@ -13,7 +13,9 @@ the-way itself, those of the checkout or worktree the session works in.
 When an agent has finished a set of proposals that the human will review together, one fresh
 agent critiques the complete set before it is shown. This includes entries added as consequences
 of earlier proposals. The agent follows `elements/common/critique/SKILL.md` for the critique and for
-an independently requested critique (WAY-120).
+an independently requested critique (WAY-120). Foundation entries a change writes are no such set:
+the review of the change reads them, and the human accepts them at the readiness gate, with the task
+document or at the merge (WAY-10, WAY-114).
 
 ## How a skill asks
 

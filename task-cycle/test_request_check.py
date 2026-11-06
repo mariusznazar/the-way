@@ -269,6 +269,39 @@ with a sentence that a human understands without reading the code.
 """
 
 
+QUOTING_POLISH_TASK = """\
+# Skrypt liczy język zadania bez zacytowanych zdań
+
+Status: ready for cycle
+Project relation: independent
+
+## Description
+
+### Need
+
+- Mariusz przy scaleniu widzi fałszywy błąd, bo skrypt liczy angielskie zdania zacytowane w zadaniu: \
+„the human accepts the meaning of a foundation entry at the merge of the change that holds it, and \
+the request is not ready until the check of the form has passed”.
+- W uwagach cyklu stoi zdanie “the script reads the quoted sentences of the task as if they were the \
+words of the task itself, and so it reports the block as wrong”, które nie jest zdaniem zadania.
+
+### To do
+
+1. Skrypt pomija tekst w cudzysłowach oraz linie cytatu i liczy tylko to, co zadanie mówi własnymi
+   słowami.
+> The block quote that stands here is in English too, and the script does not count it either, since
+> it is a quotation of another text and not a sentence of the task.
+2. Opis miary mówi, że tekst w cudzysłowach nie jest liczony, a znak bez pary nie wycina reszty.
+3. Cytat w prostych cudzysłowach, "which the script does not count either, as it is a quoted \
+sentence of English that the task only shows", też nie jest liczony.
+"""
+
+# An English summary of more than twenty words that stands wholly in quotation marks, on one line.
+QUOTED_BLOCK = (
+    '"The top part of the description in English, which is a long quoted sentence that stands alone '
+    'in the block, and which has more than twenty words so that the measure could judge it."\n')
+
+
 def line_of(text: str, needle: str, occurrence: int = 1) -> int:
     """The number of the line of `text` holding `needle` for the `occurrence`-th time."""
     seen = 0
@@ -595,6 +628,35 @@ class LanguageTest(unittest.TestCase):
         self.assertGreaterEqual(min(english_words, polish_words), request_check.MINIMUM_WORDS)
         self.assertGreaterEqual(english_share, request_check.ENGLISH_THRESHOLD * 1.5)
         self.assertLessEqual(polish_share, request_check.ENGLISH_THRESHOLD / 2)
+
+    def test_quoted_text_and_quoted_lines_are_not_counted(self) -> None:
+        # With the quotations counted its English words pass the threshold; without them they do not.
+        measured = request_check.task_text(QUOTING_POLISH_TASK)
+        share, words = request_check.english_share(measured)
+        self.assertGreaterEqual(words, request_check.MINIMUM_WORDS)
+        self.assertLess(share, request_check.ENGLISH_THRESHOLD / 2)
+        unquoted = QUOTING_POLISH_TASK.replace("„", "").replace("”", "").replace("“", "") \
+            .replace('"', "").replace("\n> ", "\n")
+        self.assertGreaterEqual(request_check.english_share(request_check.task_text(unquoted))[0],
+                                request_check.ENGLISH_THRESHOLD)
+        checked = Checked(VALID, QUOTING_POLISH_TASK)
+        self.assertEqual(checked.result.task_language, "not English")
+        self.assertEqual(checked.result.problems, [])
+
+    def test_a_block_wholly_in_quotation_marks_is_not_judged(self) -> None:
+        # The known gap: an English summary put in quotation marks is no longer judged.
+        checked = Checked(with_block(VALID, "\n" + QUOTED_BLOCK + "\n"), POLISH_TASK)
+        self.assertEqual(checked.result.block_language, "not judged")
+        self.assertEqual(checked.result.problems, [])
+
+    def test_a_quotation_mark_without_a_pair_cuts_nothing_beyond_its_line(self) -> None:
+        share, words = request_check.english_share(
+            "Zdanie po polsku z jednym znakiem „ bez pary.\n"
+            "The text of the next line is English and the script counts all of it.\n"
+            "Zdanie z cudzysłowem \" bez pary i tekst ” też bez pary.\n")
+        # 8 + 15 + 10 words, 9 of them English function words, written out by hand.
+        self.assertEqual(words, 33)
+        self.assertAlmostEqual(share, 9 / 33)
 
     def test_code_urls_and_tags_are_not_counted(self) -> None:
         share, words = request_check.english_share(

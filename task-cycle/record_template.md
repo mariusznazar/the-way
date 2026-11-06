@@ -178,7 +178,6 @@ invariant covers it.
 The remarks stand in this form only: the item that opens with `Process remarks on the-way`, the
 entries indented under it, one for each item of each stage report, repeated items kept apart, and
 every line of an entry indented under the entry; not in a section or a file of their own. It is the
-last item of the record, and nothing at the level of its marker follows it. `cycle_remarks_digest.py`
-of the nightly review and `task-cycle/remarks_check.py` cut the block as that item and the lines
-under it. Before the record is committed, `task-cycle/skill/SKILL.md` ("The process remarks check")
+last item of the record, and nothing at the level of its marker follows it. The nightly review of
+cycles and `task-cycle/remarks_check.py` cut the block as that item and the lines under it. Before the record is committed, `task-cycle/skill/SKILL.md` ("The process remarks check")
 has the check run until it lists nothing.
