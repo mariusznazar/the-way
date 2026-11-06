@@ -2252,11 +2252,11 @@ A word that the glossary of the-way holds at the commit a product pins, or the l
 it holds, in any of its forms, takes a qualifier — a phrase holding the word — in a sentence of the
 files of the product's `foundations/` that could otherwise be read in the other meaning: a sentence
 that uses the word for the product's domain and could be read as the process's, or one that uses it
-for the process and could be read as the domain's. A bare use that no sentence of those files reads
-in the other meaning keeps the meaning it has there. A qualified word takes a glossary entry only
-where WAY-95 gives a word one, and where the bare word itself has an entry in the glossary of the-way,
-that entry records no *Not* for its domain meaning. The product's code, its interface and talk about
-the product use the word of the domain unchanged.
+for the process and could be read as the domain's, and a bare use that no sentence of those files
+reads in the other meaning keeps the meaning it has there. A qualified word takes a glossary entry
+only where WAY-95 gives a word one, and where the bare word itself has an entry in the glossary of
+the-way, that entry records no *Not* for its domain meaning. The product's code, its interface and
+talk about the product use the word of the domain unchanged.
 
 - **Scope:** glossary, decisions, invariants, part-map, environment-facts
 - **Based on:** none
@@ -8837,7 +8837,7 @@ missing block could not be told from one that was forgotten.
 
 ### WAY-293 — How does a reviewer grade a finding about a missing glossary entry or a missing qualifier?
 
-A reviewer grades as Minor a finding that a word should have a glossary entry, or that a word of the
+A reviewer grades as Minor a finding that a word needs a glossary entry, or that a word of the
 process lacks the qualifier WAY-104 gives it in a product's foundation, unless the finding cites a
 sentence the files hold that a reader would read wrongly for lack of it; a finding that cites such a
 sentence is graded as any other. The renaming of a word with two meanings (WAY-99) is graded as
