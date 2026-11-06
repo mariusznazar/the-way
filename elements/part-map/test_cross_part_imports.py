@@ -12,11 +12,13 @@ test writes out — is neither an import nor a run. It reads:
   any other name that resolves to none fails the check, since the import reaches a file the check
   does not see;
 - every run of a file as a script: `runpy.run_path(<path>)` and `runpy.run_module(<name>)`, and a
-  command line of the running interpreter, `sys.executable`, written out as a list or as the
-  arguments of a call, given a script's path or `-m <module>`. A path resolves as an expression of
-  the file (below); a path in a directory made at run time by `tempfile` lies outside the
-  repository and is no dependency, and so is a path outside the repository's root. Code given with
-  `-c` runs no file. A use of `sys.executable` the check cannot read as a command line fails it.
+  command line of the running interpreter, `sys.executable`, written out as a list, a list joined
+  with `+` to more elements, or the arguments of a call, given a script's path or `-m <module>`. A
+  path resolves as an expression of the file (below); a path in a directory made at run time by
+  `tempfile` lies outside the repository and is no dependency, and so is a path outside the
+  repository's root. Code given with `-c` runs no file. A use of `sys.executable` the check cannot
+  read as a command line fails it, and so does a command line whose script, code or module is not
+  written out where the check reads it — joined on later, or by `+` of what is no list.
 
 An expression naming a path is worked out from string constants, `__file__`, `os.getcwd()` (the
 repository's root, from which the tests and scripts run), `os.path` joins and parents, `Path` and
@@ -271,14 +273,23 @@ class Resolver:
     def runs(self, tree):
         """([(line, "path" or "module", path or module name)] of each file the file runs as a
         script, [(line, why)] of each run it cannot work out)."""
-        found, unknown, read_as_command = [], [], set()
+        found, unknown, read_as_command, joined = [], [], set(), set()
 
         def interpreter(node):
             return isinstance(node, ast.Attribute) and ast.unparse(node) == INTERPRETER
 
         def command(node):
+            """The elements of a command line of the interpreter written out — a list, or a list
+            joined with `+` to more elements, None standing for those not written out — or None
+            where the node holds none."""
             if isinstance(node, (ast.List, ast.Tuple)) and node.elts and interpreter(node.elts[0]):
-                return node.elts
+                return list(node.elts)
+            if isinstance(node, ast.BinOp) and isinstance(node.op, ast.Add):
+                left = command(node.left)
+                if left is not None:
+                    right = node.right
+                    return left + (list(right.elts) if isinstance(right, (ast.List, ast.Tuple))
+                                   else [None])
             return None
 
         def target(line, kind, node):
@@ -299,7 +310,7 @@ class Resolver:
             index = 0
             while index < len(elements):
                 element = elements[index]
-                if isinstance(element, ast.Starred):
+                if element is None or isinstance(element, ast.Starred):
                     unknown.append((line, "runs a command line the check cannot read"))
                     return
                 text = element.value if isinstance(element, ast.Constant) and \
@@ -320,9 +331,17 @@ class Resolver:
                     return
                 else:
                     index += 1
+            # No script, no code and no module written out: what it runs is added elsewhere.
+            unknown.append((line, "runs a command line the check cannot read"))
 
         for node in ast.walk(tree):
-            elements = command(node)
+            if isinstance(node, ast.BinOp) and command(node) is not None:
+                inner = node.left
+                while isinstance(inner, ast.BinOp):
+                    joined.add(id(inner))
+                    inner = inner.left
+                joined.add(id(inner))  # read here, with what is joined to it
+            elements = None if id(node) in joined else command(node)
             if elements is not None:
                 read_as_command.add(id(elements[0]))
                 command_line(node.lineno, elements[1:])
@@ -733,6 +752,8 @@ class Runs(unittest.TestCase):
                 "subprocess.run([sys.executable, '-m', 'shell.screen'])",
                 "subprocess.run([sys.executable, '-mshell.screen'])",
                 "subprocess.run([sys.executable, '-B', %s] + list(sys.argv))" % screen,
+                "subprocess.run([sys.executable, '-B'] + [%s])" % screen,
+                "subprocess.run(([sys.executable] + ['-B']) + [%s, '--apply'])" % screen,
                 "command(sys.executable, '-B', %s, cwd=HERE)" % screen,
                 "os.execv(sys.executable, [sys.executable, %s])" % screen,
                 "os.execl(sys.executable, sys.executable, %s)" % screen,
@@ -780,7 +801,6 @@ class Runs(unittest.TestCase):
     def test_code_and_standard_modules_run_no_file_of_a_part(self):
         for line in ("subprocess.run([sys.executable, '-c', 'import shell.screen'])",
                      "subprocess.run([sys.executable, '-m', 'unittest'])",
-                     "subprocess.run([sys.executable])",
                      "runpy.run_module('json.tool')"):
             with self.subTest(line=line):
                 self.assertEqual(([], []), self.run_from_core(line))
@@ -804,6 +824,12 @@ class Runs(unittest.TestCase):
                  "runs a file the check cannot work out"),
                 ("subprocess.run([sys.executable, *sys.argv])",
                  "runs a command line the check cannot read"),
+                ("subprocess.run([sys.executable])", "runs a command line the check cannot read"),
+                ("subprocess.run([sys.executable, '-B'] + sys.argv[1:])",
+                 "runs a command line the check cannot read"),
+                ("cmd = [sys.executable]; cmd.append(os.path.join(HERE, '..', 'shell', "
+                 "'screen.py')); subprocess.run(cmd)", "runs a command line the check cannot read"),
+                ("command(sys.executable, '-B')", "runs a command line the check cannot read"),
                 ("runpy.run_module(sys.argv[1])", "runs a file the check cannot work out"),
                 ("python = sys.executable", "uses sys.executable where the check cannot read what "
                                             "it runs"),
