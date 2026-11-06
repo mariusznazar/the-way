@@ -113,6 +113,11 @@ product names (WAY-107), the cycle may add the request link and set the task's s
    and list them in the request, which opens as a blocked draft; an effect the cycle finds that the
    document does not name joins that list for the human to place, and opens the request the same
    way.
+   In the-way itself, first bring the checkout the session works in up to the remote target branch,
+   the one change the cycle makes outside the task's worktree: fetch, and where it stands behind,
+   fast-forward it when it is on that branch with a clean tree and no local commits, then start
+   again from the entry point that started the cycle; where it cannot fast-forward, stop and say
+   so.
    Create a task branch from the current target branch under the product's git rules, in an
    isolated worktree where its instructions and tools allow; only a correction after review reuses
    a branch. Never overwrite another worker's changes or let two writing agents edit one worktree at
@@ -123,13 +128,14 @@ product names (WAY-107), the cycle may add the request link and set the task's s
    source commit. Where step 2 moved the pin, the branch, its base and those checks already stand.
 5. Name the task `<task-slug>`: for a task of a project plan, its name in the plan (WAY-147); for
    any other, the name the cycle gives it. Create the ignored record
-   `.runs/task-cycles/<task-slug>/cycle.md` from `task-cycle/record_template.md` of the pinned
-   the-way and fill it as its sections give; it is the cycle's only log (WAY-148). Keep each full
-   handoff and report beside it in `reports/`, with secrets and personal data removed; never copy
-   diffs or files git holds — name the commits. Append each event before the dispatch that depends
-   on it, so that another session can resume from the record, the worktree and the commits. Record
-   every question, answer and choice with the option rejected, its cost if wrong and what used it;
-   no hidden reasoning and no output bearing secrets. The record stays out of commits until step 12.
+   `.runs/task-cycles/<task-slug>/cycle.md` in the task's worktree from
+   `task-cycle/record_template.md` of the pinned the-way and fill it as its sections give; it is
+   the cycle's only log (WAY-148). Keep each full handoff and report beside it in `reports/`, with
+   secrets and personal data removed; never copy diffs or files git holds — name the commits.
+   Append each event before the dispatch that depends on it, so that another session can resume
+   from the record, the worktree and the commits. Record every question, answer and choice with the
+   option rejected, its cost if wrong and what used it; no hidden reasoning and no output bearing
+   secrets. The record stays out of commits until step 12.
 
 Write each dispatch's full handoff to a file in `reports/`; the message names that file and only
 what routing needs (WAY-148). The handoff gives the user's delegation, the worktree, the method of

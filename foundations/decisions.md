@@ -8807,10 +8807,10 @@ a request blocked for another cause stays blocked.
 - **Based on:** none
 - **Relations:** narrows WAY-290
 - **Verification:** an agent compares the cycle and its request with the decision:
-  - complies: the script reads a correct Polish block full of quoted English names as English, and
-    the request opens as a draft that keeps the block, says in the human's section that the check
-    reported it and why the cycle holds it wrong, and names the check, its exit code and its line
-    among the checks;
+  - complies: the script reads a correct Polish block full of English names outside quotes as
+    English, and the request opens as a draft that keeps the block, says in the human's section that
+    the check reported it and why the cycle holds it wrong, and names the check, its exit code and
+    its line among the checks;
   - violates: the orchestrator writes `none` into the block so that the script passes; the request
     opens as ready while the script reports an error; the orchestrator holds an error wrong with no
     evidence it can name.
@@ -9024,6 +9024,59 @@ arises — the glossary grows by words no one mistakes, the direction WAY-95 ref
 the candidates for an entry — WAY-95 refused it, since it cannot tell a definition from another
 sentence; Minor always, also with a cited sentence — a collision shown on a sentence is then never
 repaired in the cycle and reaches the merge.
+
+### WAY-298 — How does a cycle on the-way itself start from the current rules?
+
+In the-way itself, the cycle brings the checkout the session works in up to the remote target branch
+before it creates the task branch: it fetches, fast-forwards the checkout where it stands behind
+that branch with a clean tree and no local commits, and then starts again from the entry point that
+started the cycle; where it cannot fast-forward, it stops and says so. A correction after review
+begins the same way in the-way itself — it fast-forwards the checkout, or, where the session works
+in the request's worktree, merges the remote target branch into it, and starts again from the entry
+point — and the merge of the target branch it makes takes the remote branch, in a product as well.
+The fast-forward is the one change the cycle makes outside the task's worktree.
+
+- **Scope:** task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-127
+- **Verification:** an agent compares a cycle with the decision:
+  - complies: a cycle started in a checkout of the-way that stands behind the remote target
+    branch, on that branch with a clean tree, fetches, fast-forwards, starts again from the
+    entry point and creates the task branch from the updated branch; a cycle started in a checkout
+    with a local commit stops and says that it cannot fast-forward; a correction started in the
+    request's worktree merges the remote target branch into it before it reads the request's
+    record, and starts again from the entry point;
+  - violates: a cycle on the-way creates its task branch from a checkout that stands behind the
+    remote and reads the skill from it; a cycle that cannot fast-forward goes on from the stale
+    copy; a correction merges the local target branch, or runs in the request's worktree without
+    the remote branch merged in.
+- **Origin:** none
+
+*Rationale:* a cycle started from a copy that stands behind its remote reads the skill and the entry
+point of an older commit, so a correction to the process merged shortly before does not apply to it
+and nothing shows that. Fetching and fast-forwarding makes the cycle read the current rules, and
+stopping where the copy cannot be brought up to date shows the human the stale copy instead of
+working from it. The entry point is read again, not only the skill, since the fetched commits may
+have changed the entry point itself. A correction may run in the request's worktree as well as in a
+copy of the target branch, and a worktree on the task branch has no target branch to fast-forward,
+so there it merges the remote branch; merging the remote branch and not the local one holds in a
+product too, where a stale local branch would otherwise be merged. The price is one write to the
+checkout outside the task's worktree, and a stop where the checkout holds local commits or stands on
+another branch.
+*Rejected:* reading the skill and the files it names from the commit the task is based on — a
+session reads a skill from the directory it works in (WAY-127), since a change to a skill is
+checked with the skill of its own branch, every file read that way is one more command of git, and
+an agent could reach for the copy the author already changed out of convenience; a habit of
+`git pull` in the main checkout before each cycle on the-way, or a hook at the start of a session,
+kept outside the-way — it protects against old rules but does not settle where the cycle's record is
+written; reading the skill again after the fetch, without the entry point — when the fetched commits
+change the entry point, the cycle goes on by its old version of it with nothing to show it; the
+new rule for a new cycle only — a correction after review goes on by the old rules and merges a stale
+copy of the target branch, unseen until the next remark from a cycle; fast-forwarding in a
+correction as in a new cycle, on the target branch only — a correction started in the request's
+worktree, on the task branch, would stop at its start; the remote target branch named only in the
+sentence for the-way itself — products keep the unclear current target branch, which can mean a
+stale local branch.
 
 ## Withdrawn identifiers
 

@@ -3,9 +3,15 @@
 Read when the input of `implement-task` is a link to its open request, or to a comment holding the
 human's remarks.
 
-Before anything else, read the field *Reserved choice* of the request's record, in the kept worktree
-or in the commit the request links. Where it reads `none`, or the record holds no such field, go on
-below. Where it names a choice, a reserved choice blocked the request, and a remark settles no such
+In the-way itself, before anything else, fetch, and bring what the session works in up to the remote
+target branch. Where the session works in a copy of the target branch, fast-forward it as step 4 of
+`implement-task` gives, or stop and say so; where it works in the request's worktree, merge the
+remote target branch into it. In both cases, where something came in, start again from the entry
+point that started the cycle.
+
+Then read the field *Reserved choice* of the request's record, in the kept worktree or in the
+commit the request links. Where it reads `none`, or the record holds no such field, go on below.
+Where it names a choice, a reserved choice blocked the request, and a remark settles no such
 choice:
 
 - With no code on the branch, nothing is corrected: dispatch no one, change nothing, and tell the
@@ -17,7 +23,7 @@ choice:
   or that picks an option, is answered as above.
 
 Take a link to the request, or to a comment holding the human's remarks, as the input. Work on that
-request's branch and in its worktree. First merge, never rebase, the current target branch, the
+request's branch and in its worktree. First merge, never rebase, the remote target branch, the
 the-way pin included, and verify that the pinned checkout matches the product's gitlink. The remarks
 bind; record them as new events. Keep the recorded route for the affected work: dispatch the
 correction with `make-change`, resuming the author where possible, and have it reviewed with
