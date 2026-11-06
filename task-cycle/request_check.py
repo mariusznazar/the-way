@@ -29,14 +29,18 @@ The description is read as the template gives it:
   only an HTML comment, `none` included.
 
 The language of a text is measured by the share of its words that are English function words, from
-a list that leaves out every word that is also a common Polish word; code, URLs, link targets and
-HTML tags are not counted. A text of fewer than MINIMUM_WORDS words is not judged; one whose share
-reaches ENGLISH_THRESHOLD is English. TASK is measured on its title line and the content of its
-`### Need` and `### To do`, or, where it holds neither heading, as a project plan: on the *Goal*
-cells of its `## Tasks` table and the question text of each item of its `## Open questions`, the
-text before its first ` — `, since a plan keeps every other marker and state in English. Where TASK
-is English, the block reads `none` (WAY-292); where it is not, the block does not read `none` and
-its text is not English. Where TASK or the block is not judged, no error follows from its language.
+a list that leaves out every word that is also a common Polish word; code, URLs, link targets,
+HTML tags and quoted text are not counted. Quoted text is text between „ and ”, between “ and ”
+or between two straight quotation marks, found within one line so that a mark without its pair cuts
+nothing beyond its line, and the lines that start with `>`; a block that stands wholly in quotation
+marks is therefore not judged. A text of fewer than MINIMUM_WORDS words is not judged; one whose
+share reaches ENGLISH_THRESHOLD is English. TASK is measured on its title line and the content of
+its `### Need` and `### To do`, or, where it holds neither heading, as a project plan: on the
+*Goal* cells of its `## Tasks` table and the question text of each item of its `## Open questions`,
+the text before its first ` — `, since a plan keeps every other marker and state in English. Where
+TASK is English, the block reads `none` (WAY-292); where it is not, the block does not read `none`
+and its text is not English. Where TASK or the block is not judged, no error follows from its
+language.
 
 The script judges no content: not whether the decision section is complete or true, not the plain
 words of the top part, not whether the block says what the top part says or which language other
@@ -97,6 +101,10 @@ FENCED_TEXT = re.compile(r"^ {0,3}(`{3,}|~{3,}).*?(?:^ {0,3}\1[`~]*[ \t]*$|\Z)",
 URL = re.compile(r"<?https?://\S+")
 LINK_TARGET = re.compile(r"\]\([^)]*\)")
 TAG = re.compile(r"<[^>]*>")
+# A line of a block quote, and text in quotation marks, matched within one line so that a mark
+# without its pair cuts nothing beyond its line.
+BLOCK_QUOTE = re.compile(r"^[ \t]*>.*$", re.M)
+QUOTED = re.compile(r"„[^”\n]*”|“[^”\n]*”|\"[^\"\n]*\"")
 WORD = re.compile(r"[^\W\d_]+(?:['’][^\W\d_]+)?")
 
 
@@ -260,8 +268,11 @@ def reads_none(text: str) -> bool:
 
 
 def english_share(text: str) -> tuple[float, int]:
-    """The share of the words of `text` that are English function words, and its count of words."""
-    for pattern in (COMMENT, FENCED_TEXT, CODE_SPAN, URL, LINK_TARGET, TAG):
+    """The share of the words of `text` that are English function words, and its count of words.
+
+    Code, URLs, link targets, HTML tags, quoted text and the lines of block quotes are not counted.
+    """
+    for pattern in (COMMENT, FENCED_TEXT, BLOCK_QUOTE, CODE_SPAN, URL, LINK_TARGET, TAG, QUOTED):
         text = pattern.sub(" ", text)
     words = [word.lower() for word in WORD.findall(text)]
     if not words:
