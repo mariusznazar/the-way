@@ -5,8 +5,13 @@ choice.
 
 ## Read
 
-- For a fix, the findings file — the blocking findings of the review — and the code it names. The
-  review's Minor and out-of-scope findings are not yours to fix (WAY-161).
+- For a fix, the findings file — the blocking findings of the review, and after them, in the fix
+  after the review of the whole change, its Minor findings within the task — and the code it names.
+  A finding the file does not hold is not yours to fix: the review's out-of-scope findings and its
+  other Minor findings (WAY-161).
+- Make the fix of a Minor finding as small as the finding asks. A fix that grows beyond its
+  findings is the likeliest to draw a new serious finding, and a new Critical or Important finding
+  in a fix made for Minor findings alone gives the whole fix up.
 
 ## A finding of a reserved choice
 
@@ -15,5 +20,6 @@ choice.
 
 ## Report
 
-- For a fix, the report holds each blocking finding as fixed — how, with the check that shows it —
-  or contested, with the evidence.
+- For a fix, the report holds each finding of the file as fixed — how, with the check that shows
+  it — or contested, with the evidence. A Minor finding you hold wrong, or cannot fix within the
+  task, is contested the same way; it blocks nothing and goes to the request's list.

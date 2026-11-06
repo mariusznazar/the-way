@@ -39,3 +39,10 @@ accepted despite the finding, then run what has not run on that code (WAY-163). 
 `request.md` by `task-cycle/skill/request_template.md`, in its variant for a correction, for the
 state after the correction and with the link to the record's new commit, check it as the template
 gives, and edit the request's description from it.
+
+An answer to the item of the request's *For you to decide* on unfixed findings (item 8 of
+`request_template.md`) that asks for the fix makes the findings it names the remarks the correction
+binds; an answer that names none makes of them the findings the item listed (WAY-289). The
+correction's review ends as every review does. The findings that remain unfixed after it are put by
+the request only with the question of a task, or stay in the lower part, and no second correction
+is asked for them. An answer to make a task needs no correction.

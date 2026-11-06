@@ -47,7 +47,9 @@ not authorize running it.
 - Review rounds: <for each code review whose findings blocked — of the whole change, of the
   return step, of the reconciliation with the target branch, of a correction — its range and
   report, the blocking findings, the fix range and the review of that fix; any blocking finding
-  that remained after it; a slice's rounds stand in its row of Slices; or none>
+  that remained after it; for the whole-change review also the fix for its Minor findings within
+  the task, whether it ran alone or with a blocking fix, its review and, where the cycle reverted
+  it, the revert commit and the new finding; a slice's rounds stand in its row of Slices; or none>
 - Weakest-point checks: <for the author and each executor: the requirement named, the check, what
   it showed and the report that states it>
 
