@@ -14,4 +14,4 @@ copied here.
   which review keeps
 - `cross-part-imports` — a sentence holding the code of every part to the dependencies the part
   map allows, with the two exceptions every such invariant takes, kept by a test that reads the
-  map and the imports of the product's language
+  map, the imports of the product's language and the runs of one file as a script by another
