@@ -400,8 +400,8 @@ on its class, as it would fix a blocking finding; on the planned route a fresh a
 its report, reviews the fix range once, as above. Only a new Critical or Important finding in the
 fix fails that review. When it does, revert the fix's commits, in a revert commit on the branch so
 that they stay in history, and run no third round: the code is then the code the review of the
-whole change accepted, and the request opens on it, not blocked, with no further review of that
-code. The Minor findings the fix tried and the new finding stand in the request's list of Minor
+whole change accepted, and the request opens on it, not blocked, with no review of the revert
+itself. The Minor findings the fix tried and the new finding stand in the request's list of Minor
 findings, the new finding marked with its grade and as found by the review of the reverted fix, with
 the reviewer's words and its place in the code; step 13 judges it like any unfixed finding
 (WAY-289). Where the fix passes its review, the Minor findings it fixed are no longer unfixed, and

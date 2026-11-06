@@ -4452,12 +4452,12 @@ the orchestrator does not rule on it, no further slice is made, and the cycle op
 marked `blocked` that lists each remaining blocking finding with its place in the code and its
 reason, what the fix tried, and the time, models and tokens the cycle has used so far, from its
 record of stages, with the number of review rounds. Where the review of the whole change leaves no
-blocking finding and lists Minor findings that WAY-161 has fixed, one fix takes them in and one
-review of that fix follows, and where that review finds a new Critical or Important finding in the
-fix, the cycle reverts the fix's commits with a commit of its own, so that they stay in history,
-runs no third round and opens the request, not blocked, on the code the review of the whole change
-accepted, the request listing the Minor findings the fix tried and the new finding with its grade
-and as the review of the fix found it, while in the code reviews after the review of the whole
+blocking finding and lists Minor findings that WAY-161 has the cycle fix, one fix takes them in and
+one review of that fix follows, and where that review finds a new Critical or Important finding in
+the fix, the cycle reverts the fix's commits with a commit of its own, so that they stay in
+history, runs no third round and opens the request, not blocked, on the code the review of the whole
+change accepted, the request listing the Minor findings the fix tried and the new finding with its
+grade and as the review of the fix found it. In the code reviews after the review of the whole
 change, and for a Minor finding that remains after a fix, the findings that do not block go unfixed
 to the request's lists as WAY-161 gives them.
 
@@ -8833,17 +8833,18 @@ so that a human who wants all of it fixed answers once. The correction that answ
 findings of its own, and a second fix for them would raise the same question without end, so what
 the correction leaves goes only with the question of a task, or stays below. The findings nobody
 will feel stay out of the question, since the `none` of the human's section says that nothing waits
-for a yes (WAY-287), and those within the task have been fixed already (WAY-161).
+for a yes (WAY-287), and those within the task that the review of the whole change lists have been
+fixed already (WAY-161).
 *Rejected:* the question as it was, only whether the finding becomes a task — a human who wants the
 fix at once answers against the question, and the cycle has no rule for the answer; the same
 question for the findings nobody will feel as well — the human's section swells with cosmetics,
 though its `none` is to mean that nothing waits for a yes (WAY-287), and the cycle fixes the
-cosmetics within the task anyway; every finding in the lower part alone — the findings a player
-would feel are lost unseen, since neither the human nor the nightly review reads them; the nightly
-review of the layer of agent instructions extended to the review findings — that review would start
-carrying the product's bugs, and the clean-ups would flood its ledger; the reviewer who reports the
-finding judging it — it looks with fresh eyes, but reads the code and the task and does not run the
-product.
+cosmetics within the task that the review of the whole change lists anyway; every finding in the
+lower part alone — the findings a player would feel are lost unseen, since neither the human nor the
+nightly review reads them; the nightly review of the layer of agent instructions extended to the
+review findings — that review would start carrying the product's bugs, and the clean-ups would flood
+its ledger; the reviewer who reports the finding judging it — it looks with fresh eyes, but reads
+the code and the task and does not run the product.
 
 ### WAY-290 — How is the form of a request's description checked?
 
@@ -9103,8 +9104,9 @@ blocking finding and a round of fixes; every narrower meaning taking an entry, s
 arises — the glossary grows by words no one mistakes, the direction WAY-95 refused; a script naming
 the candidates for an entry — WAY-95 refused it, since it cannot tell a definition from another
 sentence; Minor always, also with a cited sentence — a collision shown on a sentence is then
-repaired only by the fix for Minor findings, which the cycle gives up whole when the review of that
-fix finds a new serious finding, so the collision reaches the merge.
+repaired only by the fix for Minor findings of the review of the whole change, which the cycle gives
+up whole when the review of that fix finds a new serious finding, so that in those cases, and for a
+finding of a later review, the collision reaches the merge.
 
 ### WAY-298 — How does a cycle on the-way itself start from the current rules?
 
