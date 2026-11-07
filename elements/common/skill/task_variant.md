@@ -35,7 +35,7 @@ and no entry is written.
 
 ## Step 4 — in place of row by row
 
-An accepted row stays a row, and the task's cycle writes its entry (WAY-134). In its place, a row
+An accepted row stays a row, and the task's cycle writes its entry (WAY-134). In place of step 4, a row
 that carries a choice the human made in the task's refinement, which the cycle will bring into a
 binding part without asking, gets the question against the answer that "How a skill asks" in
 `way_of_working.md` gives, unless an exception there covers it, at most three questions at a time;

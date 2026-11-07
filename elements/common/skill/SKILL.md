@@ -29,8 +29,8 @@ else changes with the caller at steps 1, 2, 4 and 5, stand in the file of your v
 | `define-project`, with a project definition as the source and projected entries into its section "Projected foundation changes" as the mode | project definition | `definition_variant.md` |
 | `refine-task`, with a task document as the source and rows of its section "Settlements to record" as the mode — "task mode" to `refine-task` and to the skills of guidelines that hand back to it | task | `task_variant.md` |
 
-Read the file of your variant in full once, at step 1; where you start at step 2, 4 or 5 and have
-not read it, read it first.
+Read the file of your variant in full once, at step 1; where you come to step 2, 4 or 5 without
+having read it, read it first.
 
 When the section already holds a working table, resume from the first row whose state is neither
 `rejected` nor `written`, or, for a task, from the first row still `waiting`.
