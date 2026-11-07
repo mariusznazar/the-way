@@ -30,9 +30,12 @@ Edit an existing decision in place, on `main` as before it (WAY-07).
 Once a foundation entry the change writes or rewords is settled, its author searches the whole
 foundation once for the entries the change touches and corrects them in the same change (WAY-33).
 A finding the author cannot settle by correcting an entry, such as two decisions colliding with no
-precedence written, and a correction that would change the meaning of an approved decision beyond
-what the task or the plan's position settles (WAY-114), go to Mariusz before the change goes on.
-There is no second search before the merge.
+precedence written where what Mariusz accepted does not give the outcome, and a correction that
+would change the meaning of an approved decision beyond what the task or the plan's position settles
+(WAY-114), go to Mariusz before the change goes on. Where what Mariusz accepted does give the
+outcome, the change records the precedence in the decision that prevails, and its request names it
+with the passages of what he accepted that give the outcome (WAY-25). There is no second search
+before the merge.
 
 When the change is made, take the return step: compare the foundation entries the change edits,
 those the task or the plan's position names and those the search found, and the part map, with the

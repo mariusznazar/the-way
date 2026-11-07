@@ -24,6 +24,9 @@ the row does not allow, or the row collides with a current entry other than as t
 or a row's entry needs a value neither the row nor the work gives — save a decision's *Rejected*,
 which takes the ways not chosen that the row's source keeps, `none considered` where the human
 said so, or `unknown`, as the decisions' template gives (WAY-134); two decisions colliding with no
-precedence recorded raise one too (WAY-25). The writer never writes a row with another meaning: it
-returns such a question with the status `blocked`, and the orchestrator opens the blocked draft
-request holding it, as `task-cycle/skill/request_template.md` gives.
+precedence recorded raise one too, unless what the human accepted gives the outcome and the change
+may write the decision that prevails: then the writer records the precedence in that decision, marks
+it `the cycle's`, and keeps in its report the passages of what the human accepted that give the
+outcome, quoted (WAY-25). The writer never writes a row with another meaning: it returns such a
+question with the status `blocked`, and the orchestrator opens the blocked draft request holding
+it, as `task-cycle/skill/request_template.md` gives.

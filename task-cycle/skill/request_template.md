@@ -191,9 +191,11 @@ order:
    its meaning, repeated in the block in the task document's language (WAY-114) — those the
    foundation step's and return step's reports mark `the cycle's`: entries written from the spec or
    by the return step, corrections the search of the whole foundation made, the part of a projected
-   entry the code makes true. Entries written whole from rows of *Settlements to record*, and
-   projected entries written whole as approved, are not here; they stand under *Foundation
-   entries*.
+   entry the code makes true, and a precedence between two decisions the cycle recorded, which
+   gives beside its sentence the passages of what the human accepted that give the outcome, quoted
+   from the report of the step that wrote it (WAY-25). Entries written whole from rows of *Settlements to
+   record*, and projected entries written whole as approved, are not here; they stand under
+   *Foundation entries*.
 7. *Changed invariant tests, surfaces and Violated marks*, in plain words (WAY-03, WAY-49,
    WAY-51), from the changed files read against the invariants file and the part map, and from the
    record's *Return step*.

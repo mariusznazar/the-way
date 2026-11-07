@@ -165,8 +165,12 @@ A field stays in the template only while someone or something reads it (WAY-05).
 - Where two decisions both apply and collide, the one that prevails names the other in
   *Relations* as `narrows`, and its binding sentences state the area where it prevails; nothing
   follows along a chain, and two decisions that narrow each other are an error (WAY-25).
-- A collision between two decisions with no precedence recorded stops the work: the agent that
-  meets it never settles it, and a human records the precedence by an edit (WAY-25).
+- A collision between two decisions with no precedence recorded is never settled silently by the
+  agent that meets it. Where what the human accepted gives the outcome and the change may write
+  the decision that prevails, the change records the precedence in that decision and its request
+  names it with the passages of what the human accepted that give the outcome, for the human to
+  accept at the merge; otherwise the work stops and a human records the precedence by an edit
+  (WAY-25).
 
 ## Verification
 
