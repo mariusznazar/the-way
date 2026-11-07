@@ -14,11 +14,12 @@ holds no list of words that are private, and it neither judges nor rewrites anyt
 
 - an absolute path on Windows: a single letter, a colon and a slash or a backslash, as `C:\\dir`
   and `C:/dir`, which also covers the home directory `C:\\Users\\<name>`; a letter that ends a word
-  (`https:` in a URL, `Note:` in prose) starts none;
+  (`https:` in a URL, `Note:` in prose) starts none, and neither does a letter after a slash in a
+  URL (`https://host/C:/x`), while `file:///C:/dir` is a path on a disk and is listed;
 - the POSIX form of a drive that some shells and Windows layers show: `/c/dir`, `/mnt/c/dir` and
   `/cygdrive/c/dir`;
 - the home directory of a user on Linux and macOS: `/home/<name>` and `/Users/<name>`, and
-  `\\Users\\<name>` with a backslash;
+  `\\Users\\<name>` with a backslash; each of them also behind `file://`;
 - a link to a note, `[[Title]]`, with an alias, a heading or an embed (`![[file]]`) in it. A
   `[[` followed by a space, as in the shell's `[[ -f x ]]`, and a `[[...]]` that holds no letter or
   digit, the form for writing about the link, are no link.
@@ -29,11 +30,14 @@ publishes it too. Not listed: a path that starts at `~`, a relative path (`../x`
 
 Each hit is printed on stdout as `<file>:<line>: <kind>: <text>`, in the order of the files (sorted
 by their paths) and of the lines, the text being the path up to the next space, quote or bracket
-with a closing full stop, comma, colon or semicolon taken off, or the whole link; then a last line,
-`checked: ...`. Exit code: 0 when nothing is listed; 1 with the hits listed; 2 with
-`Error: <message>` on stderr when the argument is wrong or a file cannot be read as UTF-8. A file
-with a NUL byte near its start is binary and is not read; the last line counts such files. The
-script writes no file and runs nothing.
+with a closing full stop, comma, colon or semicolon taken off, or the whole link; a path with a
+space in it is therefore shown only up to the space, and what follows is still part of the path;
+then a last line, `checked: ...`. Exit code: 0 when nothing is listed; 1 with the hits listed; 2
+with `Error: <message>` on stderr when the argument is wrong or a file cannot be read as UTF-8. A
+file that starts with a UTF-16 byte order mark, as a shell may write it, is read as UTF-16. Any
+other file with a NUL byte near its start is binary and is not read; the last line counts such
+files, and one of them that is text has to be saved as UTF-8 or read by hand. The script writes no
+file and runs nothing.
 
 Standard library only.
 """
@@ -41,15 +45,17 @@ Standard library only.
 from __future__ import annotations
 
 import argparse
+import codecs
 import re
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path
 
 # Where an absolute path may start: not inside a word, a URL or a longer path.
-WINDOWS_DRIVE = r"(?<!\w)[A-Za-z]:[\\/]"
-POSIX_DRIVE = r"(?<![\w.~/\\:-])(?:/mnt|/cygdrive)?/[A-Za-z]/(?=[\w.~-])"
-HOME_DIRECTORY = r"(?<![\w.~/\\-])(?:/home|[\\/]Users)[\\/][\w.-]+"
+# A path in a `file://` URL is a path on a disk, so it may start right after `file://`.
+WINDOWS_DRIVE = r"(?:(?<![\w/])|(?<=file:///))[A-Za-z]:[\\/]"
+POSIX_DRIVE = r"(?:(?<![\w.~/\\:-])|(?<=file://))(?:/mnt|/cygdrive)?/[A-Za-z]/(?=[\w.~-])"
+HOME_DIRECTORY = r"(?:(?<![\w.~/\\-])|(?<=file://))(?:/home|[\\/]Users)[\\/][\w.-]+"
 # What a path runs through after its start, for showing it: up to a space, a quote or a bracket.
 PATH_TAIL = r"""[^\s"'`<>|*?()\[\]{}]*"""
 # `[[` followed by a first character that is no space, a letter or digit somewhere inside, and
@@ -103,11 +109,12 @@ def check_file(path: Path, result: Result) -> None:
         data = path.read_bytes()
     except OSError as error:
         raise PrivatePathsError(f"cannot read {display(path)}: {display(error)}") from error
-    if b"\0" in data[:BINARY_PROBE]:
+    utf16 = data.startswith((codecs.BOM_UTF16_LE, codecs.BOM_UTF16_BE))
+    if b"\0" in data[:BINARY_PROBE] and not utf16:
         result.binary += 1
         return
     try:
-        text = data.decode("utf-8-sig")
+        text = data.decode("utf-16" if utf16 else "utf-8-sig")
     except UnicodeDecodeError as error:
         raise PrivatePathsError(
             f"cannot read {display(path)} as UTF-8: {display(error)}") from error

@@ -57,13 +57,13 @@ class WindowsPathTest(unittest.TestCase):
                 ('"C:/Work/proj/a.md"', "C:/Work/proj/a.md"),
                 ("see C:/Work/proj/a.md.", "C:/Work/proj/a.md"),
                 ("C:/Work/proj, then", "C:/Work/proj"),
-                ("C:/Work/The Brain/x", "C:/Work/The")):
+                ("C:/Work/Team Notes/x", "C:/Work/Team")):
             self.assertEqual(shown(text), [expected], text)
 
     def test_a_letter_that_ends_a_word_starts_no_drive(self) -> None:
         # A match there would list every URL and every `Note:` of prose.
         for text in ("https://example.com/a/b", "http://host/c/d", "ftp://h/x", "Status: ok",
-                     "Note: a / b", "see Q: and A: b","key:" + BS + "n and ab:" + BS + "x"):
+                     "Note: a / b", "see Q: and A: b", "https://host/C:/x", "key:" + BS + "n and ab:" + BS + "x"):
             self.assertEqual(hits(text), [], text)
 
 
@@ -88,6 +88,13 @@ class PosixPathTest(unittest.TestCase):
                      "https://example.com/home/alice", "x/home/alice", "../home/alice",
                      "~/home/alice", "src/c/main.py", "a /cd/x", "/ab/x"):
             self.assertEqual(hits(text), [], text)
+
+    def test_a_path_in_a_file_url_is_listed(self) -> None:
+        # A file URL names a place on a disk, unlike a letter after a slash in a web address.
+        self.assertEqual(shown("file:///C:/Work/proj/a.md and file:///home/alice/x"),
+                         ["C:/Work/proj/a.md", "/home/alice/x"])
+        self.assertEqual(shown("file:///Users/alice/x and file:///mnt/c/Work"),
+                         ["/Users/alice/x", "/mnt/c/Work"])
 
     def test_a_home_path_reached_through_tilde_or_a_relative_path_is_not_listed(self) -> None:
         for text in ("~/.claude/x", "../x/y", "./a/b", "task-cycle/remarks_check.py",
@@ -211,6 +218,17 @@ class CommandTest(unittest.TestCase):
         code, out, _ = run_main([str(self.root / "record")])
         self.assertEqual(code, 0)
         self.assertEqual(out, "checked: 1 files, 0 listed, 1 binary files not read\n")
+
+    def test_a_utf16_file_with_a_byte_order_mark_is_read(self) -> None:
+        # A shell may write a report as UTF-16; it must not pass as a binary file.
+        record = self.root / "record"
+        record.mkdir()
+        (record / "report.md").write_bytes("see C:/Work/x\n".encode("utf-16"))
+        code, out, _ = run_main([str(record)])
+        self.assertEqual(code, 1)
+        self.assertEqual(self.listing(out),
+                         [f"{record.as_posix()}/report.md:1: absolute path: C:/Work/x"])
+        self.assertEqual(out.splitlines()[-1], "checked: 1 files, 1 listed")
 
     def test_a_directory_with_no_file_lists_nothing(self) -> None:
         (self.root / "empty").mkdir()
