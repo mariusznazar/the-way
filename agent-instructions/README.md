@@ -81,6 +81,13 @@ python -B task-cycle/request_check.py <description file> --task <document the ch
 `--task` is the task document the change carries out, or, for a change that carries out a position
 of a project plan, the plan that holds that position.
 
+Check the same file for absolute paths and note links as well, and correct what it lists until it
+lists nothing, the block in the language of the task document included (WAY-308, WAY-309):
+
+```
+python -B task-cycle/private_paths_check.py <description file>
+```
+
 Mariusz merges the request; the merge accepts the change and each entry he did not see at the task
 document, those its section for the human's decisions puts before him (WAY-114).
 Creating `main` is a separate release decision that Mariusz makes; it is not part of integrating a

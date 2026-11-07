@@ -7,9 +7,9 @@ When a blocking finding remains after the review of its fix — in any of the cy
 slice's included — the change is blocked: run no third round and do not rule on the finding. Run
 the gate on the change as step 10 gives, and make no further slice, no return step and no
 reconciliation with the target branch on code its review has not accepted (WAY-163). Run
-`task-cycle/cycle_stages.py` as step 12 gives and the process remarks check as "The process
-remarks check" of `implement-task` gives, write the record and commit its copy and its removal
-as step 12 gives them, then write the description by `task-cycle/skill/request_template.md` as
+`task-cycle/cycle_stages.py` as step 12 gives, write the record, prepare its copy as "The record
+before it is committed" of `implement-task` gives and commit the copy and its removal as step 12
+gives them, then write the description by `task-cycle/skill/request_template.md` as
 step 13 gives, in its variant for a remaining blocking finding, linking the record by the SHA of the
 commit that adds it, and open the request from it as a draft marked `blocked`. After the human's
 decision, the correction after review runs what has not run on the code that passed review or that

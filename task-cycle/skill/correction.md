@@ -31,8 +31,8 @@ correction with `make-change`, resuming the author where possible, and have it r
 review" gives. A new open design choice, a reserved choice or an oversized attempt follows the
 recovery "Design and execution choice" gives, with its reset base recorded. Repeat only what the
 remarks touch — the return step included — run the gate on the corrected tree as step 10 gives, and
-repeat the record's pair of commits from step 12, running before it the process remarks check of
-`implement-task` ("The process remarks check") on the record with every report of the cycle, the
+repeat the record's pair of commits from step 12, preparing the copy before it as `implement-task`
+("The record before it is committed") gives, with every report of the cycle in the record, the
 correction's own among them. For a request a remaining blocking finding
 blocked, the human's decision is the input: make the fix it calls for, or keep the code the human
 accepted despite the finding, then run what has not run on that code (WAY-163). Rewrite

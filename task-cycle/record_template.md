@@ -1,8 +1,10 @@
 # Cycle record — <task title>
 
-- Task source: <absolute path and approval date or source commit>
+- Task source: <the task document and its approval date or source commit; in the working record its
+  absolute path, by which the plan-state reader ties the record of a plan item to its task (WAY-153);
+  the committed copy is cleaned of it and names the document by what it is>
 - Task relation: <independent | plan item | source only>
-- Product repository: <path>
+- Product repository: <the repository's name or remote address, never its path on a disk>
 - Process pin: `<commit>`, or `<commit> at start; moved to <commit> by the task branch's first
   commit <sha>`
 - Target branch and base: <branch and commit>
@@ -172,8 +174,8 @@ invariant covers it.
   before the description was written or rewritten, `written and checked after this commit`>
 - Writes to the task's backlog entry: <request link and state, or none>
 - Process remarks on the-way: <`none`, or the entries under this line>
-  - <stage name>, <full report path>: <an item of that report's **Searches not found or unclear**
-    other than `none`, copied word for word>
+  - <stage name>, <full report path from the repository's root>: <an item of that report's
+    **Searches not found or unclear** other than `none`, copied word for word>
   - <the orchestrator>: <a remark of its own about the-way, such as a listing of
     `task-cycle/remarks_check.py` the cycle holds wrong>
 
@@ -181,5 +183,6 @@ The remarks stand in this form only: the item that opens with `Process remarks o
 entries indented under it, one for each item of each stage report, repeated items kept apart, and
 every line of an entry indented under the entry; not in a section or a file of their own. It is the
 last item of the record, and nothing at the level of its marker follows it. The nightly review of
-cycles and `task-cycle/remarks_check.py` cut the block as that item and the lines under it. Before the record is committed, `task-cycle/skill/SKILL.md` ("The process remarks check")
-has the check run until it lists nothing.
+cycles and `task-cycle/remarks_check.py` cut the block as that item and the lines under it. Before
+the record is committed, `task-cycle/skill/SKILL.md` ("The record before it is committed") has the
+check run on the original and on the cleaned copy until it lists nothing.
