@@ -9206,7 +9206,7 @@ review every 2–8 weeks in the-way.
 
 A review of the foundation ends with an annotated tag `foundation-review/YYYY-MM-DD` on the commit
 of the main branch it checked, with `-2` added to the name of a second review on the same day, put
-also when the review changed nothing; the tag's message gives the number of entries checked and no
+also when the review changed nothing; the tag's message gives the number of items checked and no
 title of a task or of a private note. The last review is the nearest such tag that the main branch
 contains, found from the main branch and not from a task branch.
 
@@ -9218,14 +9218,14 @@ contains, found from the main branch and not from a task branch.
     review of a day is tagged `foundation-review/2026-11-06-2`; the count starts at the nearest
     tag found from the main branch;
   - violates: the tag stands on a commit of a task branch or on the merge of the review's own
-    change; the message names the tasks the review made; a review that changed nothing leaves no
-    tag.
+    change; the message gives more than the number of items checked, such as the titles of the
+    tasks the review made; a review that changed nothing leaves no tag.
 - **Origin:** none
 
 *Rationale:* a tag stays where the review was made also when the review changes nothing, and gives
 the count a starting point in git itself, with no file kept in step by hand. The weak point taken:
 the tag is seen by everyone with access to the repository, which may be public, so its message
-holds counts and no titles from private notes.
+holds the number of items checked and no titles from private notes.
 *Rejected:* the merge of the review's own change as the marker instead of a tag — a review that
 changes nothing leaves none, and the count goes back to the start of the history.
 

@@ -1,8 +1,8 @@
 # What the review looks for in the foundation
 
 Read at step 2 of `SKILL.md`. For each file of the foundation, judge every entry whole and write one
-of two results: it holds, or a proposal. An entry that holds takes no line beyond the count the tag
-message gives.
+of two results: it holds, or a proposal. An entry that holds takes no line beyond the number of items
+checked that the tag message gives.
 
 ## Decisions
 

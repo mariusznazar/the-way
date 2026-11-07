@@ -84,8 +84,8 @@ The review is done when the human has decided on every proposal and every group.
   already, add `-2`, then `-3`. Put it on the checked commit of step 1, annotated, with
   `git tag -a <name> -m "<message>" <checked commit>`, also when the review changed nothing
   (WAY-301).
-- The message gives the number of entries and remarks checked, and no title of a task, of a note or
-  of a person: the repository may be public.
+- The message gives the number of items checked and no title of a task or of a private note: the
+  repository may be public.
 - Show the human the name, the commit and the message, and push the tag with
   `git push origin <name>` on the human's yes: everyone with access to the repository sees a pushed
   tag, and only a human removes it.
