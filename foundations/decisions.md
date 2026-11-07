@@ -9497,11 +9497,12 @@ orchestrator writing the path of the copy into the dispatch.
 A task cycle commits its record and publishes the description of its request only cleaned, in every
 repository, public or private: each absolute path becomes a path relative to the repository (a place
 outside the repository, a description of what the place is), and the path or the title of a private
-note becomes a description of what the note is, while the line `Task relation:` of the record and the
-line `Project relation:` of the copy of the task document stay unchanged. The cleaning comes before each commit that adds the record — its copy
-for a request, the repetition of that copy in a correction after review and the copy of a request
-blocked for any cause — and before each publication of the description, the first and every later
-edit; the messages of the commits are not cleaned.
+note becomes a description of what the note is. The line `Task relation:` of the record and the line
+`Project relation:` of the copy of the task document stay as they are unless the check of WAY-309
+lists them, and a line it lists is cleaned like any other. The cleaning comes before each commit
+that adds the record — its copy for a request, the repetition of that copy in a correction after
+review and the copy of a request blocked for any cause — and before each publication of the
+description, the first and every later edit; the messages of the commits are not cleaned.
 
 - **Scope:** task-cycle, agent-instructions, project-level
 - **Based on:** none
@@ -9510,34 +9511,40 @@ edit; the messages of the commits are not cleaned.
   - complies: the copy of a record for a request names a worktree by its path from the root of the
     repository, a private note by "the task's note in the author's backlog", and keeps the
     `Task relation:` line of the record and the `Project relation:` line of the task document as
-    they were; the copy of a request blocked for a
-    reserved choice is cleaned the same way; a private repository gets the same cleaning as a
-    public one;
+    they were when the check does not list them; a relation line the check lists is cleaned, and
+    the request tells the human that the reader of a plan's state may report a conflict for the
+    task; the copy of a request blocked for a reserved choice is cleaned the same way; a private
+    repository gets the same cleaning as a public one;
   - violates: a copy of the record is committed with the path of the author's notes or of a
-    directory on the author's disk; the cleaning is skipped because the repository is private; the
-    `Task relation:` or `Project relation:` line is rewritten; a description is published with a link to a note in it;
-    the record is not committed at all so that nothing needs cleaning.
+    directory on the author's disk, a relation line the check lists included; the cleaning is
+    skipped because the repository is private; a relation line the check does not list is
+    rewritten; a cleaned relation line is left out of what the request tells the human; a
+    description is published with a link to a note in it; the record is not committed at all so
+    that nothing needs cleaning.
 - **Origin:** none
 
 *Rationale:* the copy of a record stays in the history of the repository after the merge, and that
-history is read by people the author never chose, so what the record says of the author's disk, notes
-and private work is published with it. A search of every commit that had added a record in the
+history is read by people the author never chose, so what the record says of the author's disk,
+notes and private work is published with it. A search of every commit that had added a record in the
 repositories where cycles had run, on 2026-11-07, found that nearly all that leaked was absolute
 paths, directory names of worktrees and titles of notes in links. Cleaning keeps the record, so
 three of its readers go on reading it as before: the human, who follows the link from the request;
 the plan's link to the task's document; and the nightly review of process remarks. The fourth, the
 reader of a project plan's state, which proves from the record that a task entered its cycle and was
 finished (WAY-153), reads it with one loss. It ties the record to the plan's task by the
-`Task relation:` and `Project relation:` lines, which stay as they are; but until the plan row's
-document link names the frozen copy of the task, it anchors the record by the absolute path in the
-record's `Task source:` line, which the cleaning replaces. For a task of a project plan the reader
-then reports the copy as unchecked and proposes no move to done from it until a human links the
-frozen copy; it fails closed and proposes nothing it cannot prove. A task that belongs to no plan is
-not read this way. The same rule in every repository spares the cycle a question only the hosting
-service can answer, the visibility of a repository. The price taken: one more step in every cycle;
-the published copy of the task document differs from the document in the author's notes; the
-reader's loss above; the messages of commits stay unchecked; a private name written as plain words is
-not seen by the check of WAY-309.
+`Task relation:` and `Project relation:` lines, which stay as they are unless the check lists them;
+but until the plan row's document link names the frozen copy of the task, it anchors the record by
+the absolute path in the record's `Task source:` line, which the cleaning replaces. For a task of a
+project plan the reader then reports the copy as unchecked and proposes no move to done from it
+until a human links the frozen copy; it fails closed and proposes nothing it cannot prove. A task
+that belongs to no plan is not read this way. A relation line the check lists is cleaned like any
+other, since nothing the check lists is published, and the reader may then report a conflict for
+that task; the request tells the human, who sees it. The same rule in every repository spares the
+cycle a question only the hosting service can answer, the visibility of a repository. The price
+taken: one more step in every cycle; the published copy of the task document differs from the
+document in the author's notes; the reader's loss above; a cleaned relation line that can make the
+reader report a conflict, visible in the request; the messages of commits stay unchecked; a private
+name written as plain words is not seen by the check of WAY-309.
 *Rejected:* committing no record, which leaves it on the disk — the reader of a project plan's state
 loses its proof that a task entered a cycle and was finished (WAY-153 and the plan's template would
 be rewritten), the nightly review would read directories that vanish with their worktrees, and the

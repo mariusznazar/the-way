@@ -217,6 +217,11 @@ order:
 11. *Additions to a product's logging scope*: each item the change adds to the list of what the
     product logs, in plain words — what it is and which log line carries it — with "Accept it?".
     A change that adds nothing to that list has no such item.
+12. *A relation line the cleaning rewrote* (`SKILL.md`, "The record before it is committed",
+    WAY-308), where the check of private paths listed the `Task relation:` line of the record or the
+    `Project relation:` line of the task copy and the cycle cleaned it: in plain words which of the
+    two lines it was, never its text, that the reader of a project plan's state may now report a
+    conflict for this task, and "Merge as it stands?".
 
 **Cost.** The time, the models and the tokens from `stages.md`, the number of review rounds, and
 the link to the table of stages in the committed record. For a blocked request, the cost so far.
@@ -298,4 +303,4 @@ none; a section with no content reads `none`.
 | A correction met a reserved choice | `**State: blocked**`, as for a reserved choice | as for a reserved choice | *Foundation entries* as in the request's previous description |
 | A form error held wrong (above) | `**State: draft** — the form check reports an error the cycle holds wrong`; a request blocked for another cause stays `blocked` and gains only the item | the reported error in plain words, why the cycle holds it wrong, and "Merge as it stands?" | *Checks*: the form check's command, exit code and reported line |
 | A remarks listing held wrong (`SKILL.md`, "The process remarks check", WAY-295) | unchanged: the state the request has for its other causes | the listing as an item, with "Merge as it stands?" | *Checks*: the remarks check's command, exit code and listed line |
-| A draft for another reason | `**State: draft** — <reason>` | the reason as an item, such as "the return step was skipped on your instruction; merge without it?", or "the check of private paths lists a line of the record the cycle may not rewrite (`SKILL.md`, the section on the record before it is committed); merge as it stands?", naming the file and the line and never the text | as an ordinary request; for the second, *Checks* names the check, its exit code and its listed line by file and line |
+| A draft for another reason | `**State: draft** — <reason>` | the reason as an item, such as "the return step was skipped on your instruction; merge without it?" | as an ordinary request |

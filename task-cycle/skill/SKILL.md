@@ -524,9 +524,11 @@ starts with `.the-way/`):
    - the path and the title of a private note become a description of what the note is, such as
      "the task's note in the author's backlog", not a new name for the note;
    - the lines `Task relation:` of `cycle.md` and `Project relation:` of the copy of the task
-     document stay as they are, because the plan-state reader ties the record to the plan's task
-     by them (WAY-153). Their form names the plan by its file name, so neither is expected to
-     hold a path;
+     document stay as they are unless the check of step 4 lists them, because the plan-state
+     reader ties the record to the plan's task by them (WAY-153). Their form names the plan by its
+     file name, so neither is expected to hold a path. A line the check lists is cleaned like any
+     other, and the reader may then report a conflict with exit 1 for this task, which the human
+     sees in the request (step 4);
    - the line `Task source:` is cleaned like any other. For a plan item this costs the reader part
      of its proof until the plan row's *Document* links the frozen copy: it cannot anchor the
      copy, reports it `unchecked` and proposes no move to `done` from it. An independent task is
@@ -544,14 +546,13 @@ starts with `.the-way/`):
    wherever the text stands, and run the check again until it exits 0. A path is replaced whole,
    to the end of the phrase that names it, not only up to the part the check prints: a path with
    a space in it is printed to the space. A listed text that is neither kind, such as a code
-   sample, is written so that the pattern does not list it, and no listing is left in place. If
-   the check lists a `Task relation:` or a `Project relation:` line, do not rewrite it: commit
-   the copy with that line as it is, and put it to the human in the request, as the row "A draft
-   for another reason" of `task-cycle/skill/request_template.md` gives. Exit 2 is no listing: fix
-   the call, or the file that could not be read. The last line counts the files not read: a text
-   file among them, such as one a shell saved in an encoding other than UTF-8 or UTF-16, is read
-   by hand or saved as UTF-8 and checked again; an image or another file that is no text needs no
-   reading.
+   sample, is written so that the pattern does not list it. No listing is left in place, a
+   `Task relation:` or `Project relation:` line included; where such a line had to be cleaned, the
+   request tells the human, as item 12 of *For you to decide* in
+   `task-cycle/skill/request_template.md` gives. Exit 2 is no listing: fix the call, or the file
+   that could not be read. The last line counts the files not read: a text file among them, such
+   as one a shell saved in an encoding other than UTF-8 or UTF-16, is read by hand or saved as
+   UTF-8 and checked again; an image or another file that is no text needs no reading.
 5. Run the process remarks check on the cleaned copy. It lists nothing when step 3 was one
    rewriting. An item it lists has different words in a report and in the remarks of the copy:
    make the two read the same in the copy, and append no second entry for it, since step 1 has

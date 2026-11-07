@@ -705,8 +705,8 @@ class Command(unittest.TestCase):
         self.assertNotIn("conflict", output)
 
     def test_task_relation_naming_the_plan_by_a_description_conflicts_when_the_copy_is_linked(self):
-        # Break caught: a cleaning that rewrites the `Task relation:` line is read as a task of
-        # another plan; the rule of the cycle leaves that line to the human.
+        # Break caught: a cleaned `Task relation:` line is read as a task of another plan, or
+        # passes unseen; the reader reports a conflict, which the request shows the human.
         commit = self.archive_cleaned(
             relation_line="- Task relation: plan item — the plan in the author's backlog (fingerprint "
                           "abcd1234), item 1 reports")

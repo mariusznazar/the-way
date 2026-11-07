@@ -5,7 +5,8 @@
   the committed copy is cleaned of it and names the document by what it is, so that for a plan item
   the reader cannot anchor the copy until the plan row's *Document* links the frozen copy>
 - Task relation: <independent | plan item | source only; for a plan item, the plan named by its file
-  name, never by a path: the cleaning leaves this line as it is>
+  name, never by a path: the cleaning leaves this line as it is unless the check of private paths
+  lists it>
 - Product repository: <the repository's name or remote address, never its path on a disk>
 - Process pin: `<commit>`, or `<commit> at start; moved to <commit> by the task branch's first
   commit <sha>`
