@@ -3,8 +3,9 @@
 Step 7 of `implement-task`, read when the designer returns `done` with the spec.
 
 Have a fresh agent other than the designer review the spec with `write-spec` against the frozen
-task and the foundation entries its handoff names. On `FAIL` the designer revises the spec once
-and the reviewer reviews the revision once. Settle a finding left after that as step 6 settles a
+task and the foundation entries its handoff names. On `FAIL` keep the spec as `spec-reviewed.md`
+beside it; the designer revises the spec once and the reviewer reviews the revision once,
+comparing the two. Settle a finding left after that as step 6 settles a
 question, and record the settlement in `spec.md` under *Decisions*, where the planner and the
 author read it; a finding that the spec contradicts a decision goes as the foundation step gives
 (WAY-30). A spec may name the foundation entries the change will write; the foundation step or
