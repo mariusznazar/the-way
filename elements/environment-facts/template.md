@@ -142,9 +142,8 @@ identifiers.
 
 - A fact changes when someone finds that its source no longer says what its sentence says, or that
   a newer edition the product stands on says otherwise — the author of a change that reads the
-  fact, a task's return step, or the review of the foundation against the product, a task of the
-  product's backlog (WAY-82, WAY-24). The entry is then changed in place, or withdrawn as shown
-  false.
+  fact, a task's return step, or the review of the foundation against the product (WAY-82,
+  WAY-24). The entry is then changed in place, or withdrawn as shown false.
 - A change of a fact's sentence reaches every invariant whose *Rests on* and every decision whose
   *Based on* names it: the author's search of the foundation finds them, and each is checked against
   the new sentence and corrected in the same change (WAY-33).

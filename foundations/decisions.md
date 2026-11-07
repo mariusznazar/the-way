@@ -222,14 +222,14 @@ On the main branch, this repository holds `foundations/` with the entries of the
 directory for each part of the process other than `repository` — `elements/<element>/` for each
 foundation element, `elements/common/` for what the elements share, `relation-model/`, `gate/`,
 `installation/`, `agent-instructions/`, `instruction-files/`, `project-level/`,
-`product-guidelines/` and `task-cycle/` — the files that configure the whole repository, which its
-part map gives to the `repository` part (WAY-44), the root agent instruction files and the project
-skill entry points under `.claude/skills/` and `.agents/skills/`, which the map gives to
-`agent-instructions` (WAY-44), and a `README.md` that describes the repository. A directory reaches
-the main branch only once it holds what its part requires: an element its template and rules,
-examples or a pointer to entries of the-way that serve as its examples, and a skill that writes its
-entries; `elements/common/` the rules of form and the way of working the elements' templates and
-skills share, the script that checks a foundation, the script that migrates a foundation from the
+`product-guidelines/`, `foundation-review/` and `task-cycle/` — the files that configure the whole
+repository, which its part map gives to the `repository` part (WAY-44), the root agent instruction
+files and the project skill entry points under `.claude/skills/` and `.agents/skills/`, which the
+map gives to `agent-instructions` (WAY-44), and a `README.md` that describes the repository. A
+directory reaches the main branch only once it holds what its part requires: an element its
+template and rules, examples or a pointer to entries of the-way that serve as its examples, and a
+skill that writes its entries; `elements/common/` the rules of form and the way of working the
+elements' templates and skills share, the script that checks a foundation, the script that migrates a foundation from the
 earlier form, and the skills that find entries and that critique proposals; `project-level/` the
 templates of a project definition, a project plan and a task document, the skills that write them
 and lead a handed-over plan, the readiness check, the plan check, the reader of task-cycle evidence
@@ -241,19 +241,20 @@ led to from the root agent instruction files; `instruction-files/` the principle
 files for coding agents, the account of how the tools load them, the skill that applies them, and
 the script that checks instruction files with its tests; `product-guidelines/` the template that the
 guidelines of every product share, for each discipline of work whose guidelines the-way gives a
-template of, that template with the skill that leads the work on them; `task-cycle/` what the design
-of the task cycle sets. The entries in
+template of, that template with the skill that leads the work on them; `foundation-review/` the
+skill that reviews a product's foundation against the product, with the files it names;
+`task-cycle/` what the design of the task cycle sets. The entries in
 `foundations/` are checked by `elements/common/foundation_check.py`.
 
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common,
   relation-model, gate, installation, agent-instructions, instruction-files, repository,
-  project-level, product-guidelines, task-cycle
+  project-level, product-guidelines, foundation-review, task-cycle
 - **Based on:** none
 - **Relations:** none
 - **Verification:** invariants: repository-file-location · element-directory-contents. For what
   `elements/common/`, `installation/`, `agent-instructions/`, `instruction-files/`,
-  `project-level/`, `product-guidelines/` and `task-cycle/` hold and for what checks `foundations/`,
-  an agent compares the change with the decision:
+  `project-level/`, `product-guidelines/`, `foundation-review/` and `task-cycle/` hold and for what
+  checks `foundations/`, an agent compares the change with the decision:
   - complies: code two skills of the elements share moves into `elements/common/`, and both read it
     from there; a new rule of form for the entries in `foundations/` is checked by
     `elements/common/foundation_check.py`; the installer, its tests and instructions stand together
@@ -264,7 +265,8 @@ of the task cycle sets. The entries in
     the script that generates them stands with its test in `agent-instructions/`; the principles,
     the loading account, the skill and the check script of instruction files stand together in
     `instruction-files/`; the template of guidelines and the template and the skill of the
-    styleguide discipline stand together in `product-guidelines/`;
+    styleguide discipline stand together in `product-guidelines/`; the skill of the review of a
+    foundation and the files it reads beside it stand together in `foundation-review/`;
   - violates: a `tools/` directory for shared scripts reaches the main branch; a new element comes
     with a script of its own that checks the form of its entries beside
     `elements/common/foundation_check.py`.
@@ -278,7 +280,8 @@ different questions; the principles of instruction files serve any repository, s
 from this repository's own agent instructions; a product's guidelines stand outside its foundation
 and answer to no element, so their templates stand apart from the elements, and their failures — a
 product's screens built on a meaning nobody approved, guidelines telling agents an old rule — are
-not those of instruction files.
+not those of instruction files; the review of a product's foundation answers neither the question
+of a task cycle nor that of an element, so its skill stands apart from both.
 *Rejected:* material merged as soon as it is written — a store from the first day; an element whose
 only tool is a skill — the form holds only while someone remembers to run it; one `tools/` directory
 for everything shared — it matches no part and grows into a store; one set of template, skill and
@@ -603,22 +606,31 @@ moving a checkable sentence out of its decision — the rule would be cut off fr
 ### WAY-24 — How is a decision that rests on a prediction reviewed?
 
 A decision names no date or condition for its review, the log holds no record of a review, and
-the review of the foundation against the product is a task of the product's backlog.
+the review of the foundation against the product is a run of the skill `review-foundation`, which a
+human starts in a session with an agent when the reminder of a request asks for it (WAY-300), and
+no task of the product's backlog.
 
-- **Scope:** decisions
+- **Scope:** decisions, foundation-review
 - **Based on:** none
 - **Relations:** none
 - **Verification:** an agent compares the change with the decision:
-  - complies: a decision's entry holds no field for its review; a task of the backlog reviews the
-    foundation against the product;
-  - violates: an entry carries a check-by date; a record of a review is appended to the log.
+  - complies: a decision's entry holds no field for its review; a request that says the
+    foundation waits for a review names the skill, and the human starts it in a session;
+  - violates: an entry carries a check-by date; a record of a review is appended to the log; the
+    review is set as a task of the product's backlog with a date.
 - **Origin:** none
 
 *Rationale:* a date in an entry asks for a look nobody is sent to make, and passes unseen; a review
-of the whole foundation, set as a task, looks at all of it at once.
+of the whole foundation, run as a skill in a session with the human, looks at all of it at once and
+brings each result to the human as a proposal to decide on, where a task of the backlog waits for
+someone to found and date it.
 *Rejected:* *Review when* in each entry, with an observable state and a check-by date, and a review
 record appended on the date — the dates pass with nobody looking; a decision that expires on a date
-— the date gets extended.
+— the date gets extended; the review set as a task of the backlog, run by a cycle that ends in a
+request of corrections — the judgments of whether an assumption stands arrive whole as ready
+changes with no talk, and refusing one is another round; a ready task of the review copied into the
+backlog — three steps where one command does; a script — it does not judge whether the assumption
+of a decision stands.
 
 ### WAY-25 — What settles a collision between two decisions?
 
@@ -1835,8 +1847,8 @@ decision citing it names a date or condition for its review (WAY-24).
 would give a verdict that follows the date (WAY-60). The passage with its address and the date read
 lets whoever reads the fact see at once whether the source still says so, with nothing kept
 running. A moved source is found by whoever reads the fact — the author of a change resting on it,
-a task's return step, or the review of the foundation against the product, a task of the product's
-backlog (WAY-24) — and that change then reaches what rests on the fact (WAY-33).
+a task's return step, or the review of the foundation against the product (WAY-24) — and that
+change then reaches what rests on the fact (WAY-33).
 *Rejected:* a method for each fact — a command testing the behaviour or watching the source, run
 on every change that enters or rewords the fact and by a clock on the main branch, or the path of
 a file a person re-reads with a dated verdict — a program, a run and a record for every fact, whose
@@ -9217,6 +9229,201 @@ each part holding code — an accepted dependency switches the check off for its
 product holds several entries instead of one; the shared invariant marked violated for an accepted
 dependency, as WAY-51 has it alone — one accepted dependency switches the check off in the whole
 product until someone corrects it.
+
+### WAY-300 — When does a request tell the human that the foundation waits for a review?
+
+At the end of every task cycle the orchestrator counts the merges to the main branch since the last
+review tag (WAY-301), and from 30 merges on the description of each request the cycle writes says,
+in its part for the human who merges, that the foundation waits for a review, with the number of
+merges, the tag of the last review and the skill that starts the review. The reminder blocks
+nothing, the number 30 is one for every product, and a repository with no review tag counts from
+the start of its history.
+
+- **Scope:** task-cycle, foundation-review
+- **Based on:** none
+- **Relations:** derives from WAY-24
+- **Verification:** an agent compares the cycle and its request with the decision:
+  - complies: a cycle that ends with 31 merges since the last review tag opens its request with a
+    reminder that names 31, the tag and the skill, and the request merges like any other; a cycle
+    in a repository with no review tag and 12 merges writes no reminder; the count leaves out the
+    merges of the main branch into task branches;
+  - violates: the reminder stops the merge or fails a check of the gate; a product sets a number of
+    its own; the count starts at the merge of the review's own change; the reminder is written
+    only in the first request after the number is reached.
+- **Origin:** none
+
+*Rationale:* the end of the cycle is the point every product passes, and the request is where the
+human already reads before a merge, so the reminder asks the human for no habit of their own and
+needs no memory or ritual that a product may lack. A reminder that stops nothing is read, where a
+failing check would stop changes that have nothing to do with it. Weak points taken: everyone with
+access to the repository sees the tag, and the reminder repeats in each request until a review is
+made, also while the human puts it off on purpose. At 30 merges the review falls in the-way every
+1–4 weeks and in the first product every 1.5–7 weeks, by the history of weeks 40–45 of 2026 (6–26
+merges a week in the-way, 4–21 in the product).
+*Rejected:* a check in the gate — the gate stops or lets through, a stop would block unrelated
+changes, and a warning that stops nothing is not read there; a script the human runs, in a weekly
+review say — it depends on a memory or a ritual that another product does not have; the merge of
+the review's own change as the marker instead of a tag — a review that changes nothing leaves none,
+and the count goes back to the start of the history; 10 merges, as an outside harness runs its
+quality review — a review session of the human every week in the-way, running into the daily scan,
+where there the ten concern a cheap review of quality and no session of a human; 50 merges — a
+review every 2–8 weeks in the-way.
+
+### WAY-301 — What marks the last review of a repository's foundation?
+
+A review of the foundation ends with an annotated tag `foundation-review/YYYY-MM-DD` on the commit
+of the main branch it checked, with `-2` added to the name of a second review on the same day, put
+also when the review changed nothing; the tag's message gives the number of items checked and no
+title of a task or of a private note. The last review is the nearest such tag that the main branch
+contains, found from the main branch and not from a task branch.
+
+- **Scope:** foundation-review, task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-24
+- **Verification:** an agent compares the review and the count of WAY-300 with the decision:
+  - complies: a review that changed nothing puts the tag on the commit it checked; the second
+    review of a day is tagged `foundation-review/2026-11-06-2`; the count starts at the nearest
+    tag found from the main branch;
+  - violates: the tag stands on a commit of a task branch or on the merge of the review's own
+    change; the message gives more than the number of items checked, such as the titles of the
+    tasks the review made; a review that changed nothing leaves no tag.
+- **Origin:** none
+
+*Rationale:* a tag stays where the review was made also when the review changes nothing, and gives
+the count a starting point in git itself, with no file kept in step by hand. The weak point taken:
+the tag is seen by everyone with access to the repository, which may be public, so its message
+holds the number of items checked and no titles from private notes.
+*Rejected:* the merge of the review's own change as the marker instead of a tag — a review that
+changes nothing leaves none, and the count goes back to the start of the history.
+
+### WAY-302 — How does a review of the foundation go, and what does it change?
+
+A review of the foundation goes in a session with a human, in the rhythm of an analysis, a list of
+proposals, the critique of the whole set by one fresh agent (WAY-120), then one proposal after
+another with the human and the unfixed remarks of merged requests in groups. A proposal on which the
+human decides a change becomes a task of the product's backlog; the remarks that still stand and
+break something gather into a few collective tasks of the repository, notes to tasks already in the
+backlog and a list to leave, kept in one data file of the review; the review itself changes nothing
+in the foundation or the code.
+
+- **Scope:** foundation-review
+- **Based on:** none
+- **Relations:** derives from WAY-14 · derives from WAY-24
+- **Verification:** an agent compares the review with the decision:
+  - complies: the review finds a decision whose assumption no longer holds, shows it with the
+    evidence and one question, and makes a task in the backlog on the human's yes; the remarks
+    about one guide gather into one collective task whose section of the data file lists them;
+  - violates: the review edits the decision in the session; the human sees the proposals before
+    the critique; each theme of remarks becomes a task of its own; the human is asked to decide on
+    each remark.
+- **Origin:** none
+
+*Rationale:* a change to a decision passes the review of an agent that did not make it (WAY-10) and
+the search of the foundation (WAY-33), so a review that made the change itself would turn into a
+small task cycle; the task keeps both. The human decides on a group of remarks, since the fate of
+one remark is settled when the task that carries it is refined, and small remarks fixed together
+cost one cycle. In one data file the remarks stay out of the task documents, which point at it.
+*Rejected:* the change made at once in the session — it skips the review of the change and the
+search of the foundation, and turns the skill into a small task cycle; a task for each theme of
+remarks — as many cycles as themes, some redoing what a planned task rewrites, and more small tasks
+than the human wants; a decision on each remark — one decision for each remark in a single session.
+
+### WAY-303 — Which unfixed remarks of merged requests does a review of the foundation check?
+
+A review of the foundation checks every unfixed remark in the descriptions of the repository's own
+requests merged since the last review tag — a Minor finding, a finding outside the task's scope, a
+question to the human, a check left unrun — for whether it still stands and whether it breaks
+anything, the question a request put to the human at the merge included, and it raises again no
+remark whose answer is written in a comment or in a later request. No other periodic review reads
+these remarks.
+
+- **Scope:** foundation-review
+- **Based on:** none
+- **Relations:** derives from WAY-161 · derives from WAY-289
+- **Verification:** an agent compares the review with the decision:
+  - complies: the review reads a Minor finding of a request merged since the tag, finds its place
+    unchanged and lists it with what it does to whom; a question a request put to the human at the
+    merge, with no answer written anywhere, is read again; a remark that a later comment answers
+    with "leave" is not;
+  - violates: the review skips a remark because the request already asked the human about it; a
+    remark with a written answer is raised again; a weekly review of the same remarks runs beside
+    the review of the foundation.
+- **Origin:** none
+
+*Rationale:* the remarks a cycle leaves in a request's description are read by no one once the
+request merges: the human cannot decide on them from the reviewer's words, and no check of a later
+change reads them, so what they point at, such as a defect nobody has met, stays. One review reads
+them together with the foundation, which rules out two judgments of the same remarks in two places
+that can disagree. A question put to the human at the merge is read again because the merge answers
+nothing: the human merged the change, not the question, and no answer written down means none was
+given. The price: a remark waits until the count of WAY-300 reaches its number, and one session of
+review is longer than a weekly portion.
+*Rejected:* a weekly review of the remarks beside the review of the foundation — two sessions, one
+of them tied to the calendar, and the review of the foundation loses the part that finds what
+nothing else finds; both reviews reading the remarks — two judgments of the same remarks in two
+places that can disagree; deciding nothing — the weekly review enters refinement and a second
+mechanism arises beside the one nobody chose; skipping the remarks a request already asked the
+human about — what nobody answered is lost.
+
+### WAY-304 — Which skill reviews a repository's foundation, and whose requests does it read?
+
+One skill reviews the foundation of every product, and a review is made for each repository
+separately: it reads the unfixed remarks of its own repository's requests, and the review of the-way
+reaches into a product's requests only for evidence about the decisions of the-way, never for the
+product's unfixed remarks. The first review of a repository with no review tag starts after the last
+request that a review of another repository has already read, when the human names it.
+
+- **Scope:** foundation-review
+- **Based on:** none
+- **Relations:** derives from WAY-303
+- **Verification:** an agent compares the review with the decision:
+  - complies: the review of a product reads the product's requests merged since its last tag; the
+    review of the-way reads a product's request to see whether a decision of the-way held in that
+    cycle; the first review of a product starts after the request the human names;
+  - violates: the review of the-way judges a product's Minor findings; each product has a skill of
+    its own for the review; the first review of a product reads requests that the review of the-way
+    has already read although the human named the point.
+- **Origin:** none
+
+*Rationale:* each review reads the remarks of the repository it answers for, so none of them judges
+a remark twice and the review of the-way does not grow with each product. The weak point taken: a
+remark in a product's request about a text of the-way waits for the review of that product. The
+safeguard against a product that never reviews is the reminder in its requests (WAY-300).
+*Rejected:* the review of the-way reading the remarks of every product's requests — the review of a
+product judges the same remarks again, and the review of the-way grows with each product; each
+review reading only its own repository with no exception for the first review of a product — the
+first review of a product, counted from the start of the history, reads again the requests that
+another review has already read; the review of the-way checking that each product had a review in
+its last 30 merges and reporting it — one more step of the review of the-way, where the reminder
+already stands in the requests of the product.
+
+### WAY-305 — What does a review of the foundation do with the weak points that decisions name?
+
+A review of the foundation lists the weak points, prices, gaps and accepted risks that the
+rationales of the decisions name, compares each with the product's state today, and runs the
+missing check wherever the check is cheap and by reading alone, that is, changes nothing in the
+repository and acts on no account or server.
+
+- **Scope:** foundation-review
+- **Based on:** none
+- **Relations:** derives from WAY-24
+- **Verification:** an agent compares the review with the decision:
+  - complies: a rationale names the vulnerability found in a held dependency as giving no signal
+    while no change brings in a version of it, and the review audits the lock file, which only
+    reads; a weak point whose check needs a running server is listed as not run, with the check
+    named;
+  - violates: the review lists the weak points without comparing them with today's state; it runs
+    a check that writes into the repository or acts on an account; it passes over a weak point
+    because no cycle has shown its cost.
+- **Origin:** none
+
+*Rationale:* a weak point that a rationale accepts shows its cost only when someone reads today's
+state of the product, and no cycle does, since none changes what the weak point concerns. A check
+that reads only is cheap enough to run each time, where a check that acts costs more than the
+review. The price taken: a list of weak points at every review, most of them unchanged.
+*Rejected:* listing the weak points without running a check — cheaper, but a vulnerability present
+today is not found; changing nothing, since the rationale judged against what cycles showed is
+enough — the next such gap passes unseen.
 
 ## Withdrawn identifiers
 

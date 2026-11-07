@@ -116,14 +116,17 @@ one part.
   skill that leads the work on them (the styleguide's in `product-guidelines/styleguide/`, the
   coding guidelines' in `product-guidelines/coding/`, the testing guidelines' in
   `product-guidelines/testing/`).
+- `foundation-review/` — the skill that reviews a repository's foundation against the repository
+  with a human: the whole foundation, the unfixed remarks of merged requests, a list of proposals,
+  and a tag that marks the review. A request's description reminds the human of it after 30 merges.
 
 ## Using the skills
 
 Each element's `skill/` directory, `elements/common/skill/` and `elements/common/critique/`, the
 project level's skill directories, `task-cycle/skill/`, `task-cycle/spec/`, `task-cycle/plan/`,
-`task-cycle/change/`, `task-cycle/review/`, `instruction-files/`, `product-guidelines/styleguide/`,
-`product-guidelines/coding/` and `product-guidelines/testing/` hold one skill, named in its
-`SKILL.md`.
+`task-cycle/change/`, `task-cycle/review/`, `foundation-review/`, `instruction-files/`,
+`product-guidelines/styleguide/`, `product-guidelines/coding/` and `product-guidelines/testing/`
+hold one skill, named in its `SKILL.md`.
 
 A Claude Code or Codex session working in a checkout or worktree of the-way finds each of them as
 the project skill `the-way-<name>`: `.claude/skills/` holds the entry points Claude Code reads and
