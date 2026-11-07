@@ -414,8 +414,10 @@ included — read `task-cycle/skill/blocked_finding.md` and follow it.
 
 12. A request that a remaining blocking finding blocks follows "The end of a code review" instead.
     Otherwise merge the current target branch into the task branch; where that changes the reviewed
-    code, have a fresh reviewer review the merge with `review-change`, and have the agents that own
-    the affected checks run them. Where the final tree differs from the one step 10 checked, run the
+    code, have a fresh reviewer review the merge with `review-change`, with a dispatch that asks
+    whether the two sides still hold together and names the foundation entries the merge brought in
+    that bear on the parts the change touches (WAY-150), and have the agents that own the affected
+    checks run them. Where the final tree differs from the one step 10 checked, run the
     gate again on it as step 10 gives. Record how long each stage took, which models did it and how
     many tokens it used: run `task-cycle/cycle_stages.py` of the pinned the-way with `--output
     .runs/task-cycles/<task-slug>/stages.md`, naming every session of this cycle's orchestrator, a

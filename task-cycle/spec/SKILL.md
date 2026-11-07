@@ -16,7 +16,8 @@ worktree the session works in; in a product, it is the product's pinned `.the-wa
 ## 1. Read
 
 - The dispatch: whether you write or review, the open choice the cycle found, the spec path —
-  normally `.runs/task-cycles/<task-slug>/spec.md` — and the report path.
+  normally `.runs/task-cycles/<task-slug>/spec.md` —, for the review of a revision also the spec as
+  reviewed, `spec-reviewed.md` beside it, and the report path.
 - The frozen task document whole: the spec settles a choice of the whole change.
 - What the dispatch names, as the orchestrator selected it (WAY-150): of the task's sources, the
   passages it carries or names; of the foundation, the entries by identifier, each whole; and the

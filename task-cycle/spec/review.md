@@ -16,8 +16,8 @@ what would make the build go wrong:
 
 Skip wording, style and what the spec leaves to the maker. The first line of your report is
 `PASS` or `FAIL`; `FAIL` means at least one finding of the list above. For the review of a revised
-spec, say for each earlier finding whether it is resolved, and report only what the revision
-broke besides.
+spec, compare it with the spec as reviewed, say for each earlier finding whether it is resolved,
+and report only what the revision broke besides.
 
 ## Return
 

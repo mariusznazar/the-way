@@ -9425,6 +9425,73 @@ review. The price taken: a list of weak points at every review, most of them unc
 today is not found; changing nothing, since the rationale judged against what cycles showed is
 enough — the next such gap passes unseen.
 
+### WAY-306 — What does the review of the merge of the target branch ask?
+
+Where merging the current target branch into the task branch changes the code the cycle reviewed,
+the dispatch of the fresh reviewer of the merge asks whether the two sides, the task branch and what
+the merge brought in, still hold together, and names by identifier the foundation entries the merge
+brought in that bear on the parts the change touches. The orchestrator chooses those entries
+(WAY-150), the reviewer's range is the commits of the merge the dispatch gives, and the review ends
+as WAY-162 gives.
+
+- **Scope:** task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-150 · derives from WAY-162
+- **Verification:** an agent compares the cycle with the decision:
+  - complies: a merge brings in a decision whose *Scope* names a part the change touches, and the
+    dispatch of the merge review asks whether the two sides still hold together and names that
+    decision by its identifier; a merge that brings in only entries of parts the change does not
+    touch has a dispatch that asks the same question and names none of them;
+  - violates: the dispatch asks only whether the merge conflicted; the dispatch leaves the reviewer
+    to choose the foundation entries; the dispatch names every entry the merge brought in, whatever
+    part it concerns; the reviewer takes the merge as a reason to review the whole change again.
+- **Origin:** none
+
+*Rationale:* a merge can bring in a rule or code that the change goes against, or that meets the
+change at a seam neither side shows alone. The question whether the two sides still hold together
+covers a change that breaks what has just arrived and an error where the code of one side meets
+what the code of the other produces. The orchestrator names the
+entries because WAY-150 gives the reviewer a selection of its own only for the whole change, and a
+reviewer choosing among the entries of a large merge would take in some that do not bear on the
+change. The price taken: a question this broad invites the reviewer to judge the change from the
+beginning, and the commits of the merge it is given are the boundary that holds it back; a fault
+missed at this review costs a correction after the request opens, while a remark made in excess
+costs at most one round of a fix (WAY-162).
+*Rejected:* the reviewer of the merge choosing the foundation entries — WAY-150 gives its own
+selection to the reviewer of the whole change only, and for a large merge the list would include
+entries that do not bear on the change; a question whether the merge changed anything beyond
+conflicts — a renumbering of decisions is such a change, and the question would raise a false alarm
+for it; the narrower question whether the change still holds against what the merge brought in — it
+leaves no less code to read and covers an error at the seam of the two sides less well, such as a
+loading of saved state on the task branch that rejected a state which the code of another task,
+merged from the target branch, created.
+
+### WAY-307 — What happens to a spec whose review fails?
+
+Where the review of a spec fails, the spec as reviewed stays beside it as `spec-reviewed.md`, and
+the reviewer of the designer's revision compares the revision with the spec as reviewed.
+
+- **Scope:** task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-135
+- **Verification:** an agent compares the cycle with the decision:
+  - complies: a review of a spec returns `FAIL`, the spec stays beside the revision as
+    `spec-reviewed.md`, and the reviewer of the revision compares the revision with it and says for
+    each earlier finding whether the revision resolves it;
+  - violates: the designer revises the spec in place and no copy of the spec as reviewed is kept;
+    the reviewer of the revision judges it without comparing it with the spec as reviewed.
+- **Origin:** none
+
+*Rationale:* the designer revises the spec in its own file, which no commit holds, so a reviewer of
+the revision without a copy compares it with the earlier text from memory. The copy spares that work
+and makes the check of each earlier finding certain; it adds no finding that a reviewer without it
+would miss. The price taken: the cost of keeping the copy.
+*Rejected:* the designer told to change only what the findings ask — it goes against the designer's
+duty to remove the contradictions a finding exposes elsewhere in the spec; the method of the spec's
+reviewer left without the copy — a fresh reviewer can read the spec afresh with no harm, but the
+saving of work for which the copy exists is no longer certain, since it then depends on the
+orchestrator writing the path of the copy into the dispatch.
+
 ## Withdrawn identifiers
 
 | Identifier | Why | Successors |
