@@ -9,5 +9,8 @@
 - Search the log for that question. A question the log already answers takes an edit of that entry
   in place, and a new one takes the next number, as the template's "Changing a decision" gives it.
 - The search of the foundation also looks for a collision with another decision, which is a
-  question in step 4 (WAY-25), and for a sentence of another decision that answered this question
-  in passing, which moves as "Changing a decision" says.
+  question in step 4 only where what the human accepted does not give which decision prevails, or
+  the change may not write the decision that prevails; otherwise the entry records the precedence
+  and the request names it with the passages that give the outcome (WAY-25). It looks too for a
+  sentence of another decision that answered this question in passing, which moves as "Changing a
+  decision" says.

@@ -637,25 +637,50 @@ of a decision stands.
 Where two decisions both apply and collide, the one that prevails names the other in *Relations*
 as `narrows`, and its binding sentences state the area where it prevails; nothing follows along a
 chain, and two decisions that narrow each other are an error. A collision between two decisions
-with no precedence recorded is never settled by the agent that meets it; a human records the
-precedence in the decision that prevails.
+with no precedence recorded is never settled silently by the agent that meets it. Where what the
+human accepted gives the outcome and the change may write the decision that prevails, the change
+records the precedence in that decision, and its request names it with the passages of what the
+human accepted that give the outcome, for the human to accept at the merge (WAY-114); otherwise
+the agent stops and asks.
 
 - **Scope:** decisions, task-cycle
 - **Based on:** none
 - **Relations:** none
 - **Verification:** an agent compares the change with the decision:
   - complies: an agent meets two applicable decisions that pull opposite ways, finds no
-    precedence between them, stops and asks for it;
+    precedence between them, and finds that the task document the human accepted gives the
+    outcome, in one passage or in two read together: it records the `narrows` and the area in the
+    decision that prevails, and its request quotes those passages for the human to accept at the
+    merge; an agent meets two such decisions and finds that what the human accepted does not give
+    the outcome, or that the change may not write the decision that prevails, stops and asks for
+    the precedence;
   - violates: an agent settles the collision in favour of the newer decision; an agent infers
-    that A prevails over C because A narrows B and B narrows C.
+    that A prevails over C because A narrows B and B narrows C; the change records a precedence
+    that no passage of what the human accepted gives, or one its request does not name with those
+    passages.
 - **Origin:** none
 
 *Rationale:* pairs record only what someone actually weighed; nothing follows along a chain, because
 A over B and B over C were weighed in different situations; an agent that settles an unrecorded
-collision makes a trade-off no human made, and the human who records it answers for it.
+collision silently makes a trade-off no human made. Where what the human accepted already gives the
+outcome, the trade-off is the human's and the agent only writes it down; the request quotes the
+passages that give it, so the human at the merge tells an entry that follows from a settlement the
+human made from one the agent invented, and strikes the latter. Whether the accepted passages give
+the outcome stays the agent's judgment, and the quoted passages are what that judgment is checked
+by. The decision that prevails holds the record, so a collision whose prevailing decision the change
+cannot write, such as one outside its own repository, still goes to a human.
 *Rejected:* one ranked list of principles (AWS tenets) — an order claimed for pairs nobody weighed;
 levels of authority over whole groups of decisions — a collision inside a level stays unresolved;
-the newest decision wins — the date of a decision is not its weight.
+the newest decision wins — the date of a decision is not its weight; every precedence recorded by
+a human alone, the agent stopping at each collision — a nearly finished cycle stops for an entry
+whose content the human has already accepted; an exception only for a settlement that says which
+decision prevails — the outcome often follows from settlements that do not say so; the wording that
+the change writes the `narrows` and its request names it — it reads as the line of *Relations*
+alone, and an entry named without the passages it follows from leaves the human to open the task to
+judge it; the precedence recorded in the decision that prevails with no passages in the request —
+the entry is stated, but not where its outcome comes from; one passage of what the human accepted
+in the singular — an outcome can come only from two passages read together, and an agent reading
+the wording literally would stop where the outcome is given.
 
 ### WAY-26 — How are trade-off principles and non-goals written?
 
@@ -3344,7 +3369,8 @@ becomes no second entry, the cycle tying the row to that entry and naming both i
     cycle's search finds a decision of an untouched part that already states a kept row, and the
     request names the row with that decision instead of a new one; a decision row whose question
     keeps two ways the human did not choose gives its decision those two as rejected options, and
-    one whose source keeps none gives `unknown` with no question to the human;
+    one whose source keeps none, or keeps only ways that answer another part of the question,
+    gives `unknown` with no question to the human;
   - violates: the cycle writes the entry with another meaning, or leaves out a kept settlement
     because no code makes it true; the refinement writes whole entries into the task document; a
     kept row repeats a rule a current decision the refinement read states; the cycle writes a
