@@ -9448,9 +9448,9 @@ as WAY-162 gives.
 - **Origin:** none
 
 *Rationale:* a merge can bring in a rule or code that the change goes against, or that meets the
-change at a seam neither side shows alone, and no automatic check finds that. The question whether
-the two sides still hold together covers a change that breaks what has just arrived and an error
-where the code of one side meets what the code of the other produces. The orchestrator names the
+change at a seam neither side shows alone. The question whether the two sides still hold together
+covers a change that breaks what has just arrived and an error where the code of one side meets
+what the code of the other produces. The orchestrator names the
 entries because WAY-150 gives the reviewer a selection of its own only for the whole change, and a
 reviewer choosing among the entries of a large merge would take in some that do not bear on the
 change. The price taken: a question this broad invites the reviewer to judge the change from the
@@ -9476,18 +9476,16 @@ the reviewer of the designer's revision compares the revision with the spec as r
 - **Relations:** derives from WAY-135
 - **Verification:** an agent compares the cycle with the decision:
   - complies: a review of a spec returns `FAIL`, the spec stays beside the revision as
-    `spec-reviewed.md`, and the dispatch of the review of the revision names both and the reviewer
-    says for each earlier finding whether the revision resolves it;
-  - violates: the designer revises the spec in place and the reviewer of the revision has no copy of
-    the spec as reviewed; the dispatch of the review of a revision leaves the reviewer to find the
-    earlier version.
+    `spec-reviewed.md`, and the reviewer of the revision compares the revision with it and says for
+    each earlier finding whether the revision resolves it;
+  - violates: the designer revises the spec in place and no copy of the spec as reviewed is kept;
+    the reviewer of the revision judges it without comparing it with the spec as reviewed.
 - **Origin:** none
 
 *Rationale:* the designer revises the spec in its own file, which no commit holds, so a reviewer of
 the revision without a copy compares it with the earlier text from memory. The copy spares that work
 and makes the check of each earlier finding certain; it adds no finding that a reviewer without it
-would miss. The price taken: one more file kept with the spec, which reaches the record of the cycle
-with the rest of its directory.
+would miss. The price taken: the cost of keeping the copy.
 *Rejected:* the designer told to change only what the findings ask — it goes against the designer's
 duty to remove the contradictions a finding exposes elsewhere in the spec; the method of the spec's
 reviewer left without the copy — a fresh reviewer can read the spec afresh with no harm, but the
