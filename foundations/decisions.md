@@ -9497,24 +9497,25 @@ orchestrator writing the path of the copy into the dispatch.
 A task cycle commits its record and publishes the description of its request only cleaned, in every
 repository, public or private: each absolute path becomes a path relative to the repository (a place
 outside the repository, a description of what the place is), and the path or the title of a private
-note becomes a description of what the note is, while the line `Project relation:` of the copy of the
-task document stays unchanged. The cleaning comes before each commit that adds the record — its copy
+note becomes a description of what the note is, while the line `Task relation:` of the record and the
+line `Project relation:` of the copy of the task document stay unchanged. The cleaning comes before each commit that adds the record — its copy
 for a request, the repetition of that copy in a correction after review and the copy of a request
 blocked for any cause — and before each publication of the description, the first and every later
 edit; the messages of the commits are not cleaned.
 
-- **Scope:** task-cycle, agent-instructions
+- **Scope:** task-cycle, agent-instructions, project-level
 - **Based on:** none
 - **Relations:** derives from WAY-27
 - **Verification:** an agent compares a cycle, its record and its request with the decision:
   - complies: the copy of a record for a request names a worktree by its path from the root of the
     repository, a private note by "the task's note in the author's backlog", and keeps the
-    `Project relation:` line of the task document as it was; the copy of a request blocked for a
+    `Task relation:` line of the record and the `Project relation:` line of the task document as
+    they were; the copy of a request blocked for a
     reserved choice is cleaned the same way; a private repository gets the same cleaning as a
     public one;
   - violates: a copy of the record is committed with the path of the author's notes or of a
     directory on the author's disk; the cleaning is skipped because the repository is private; the
-    `Project relation:` line is rewritten; a description is published with a link to a note in it;
+    `Task relation:` or `Project relation:` line is rewritten; a description is published with a link to a note in it;
     the record is not committed at all so that nothing needs cleaning.
 - **Origin:** none
 
@@ -9522,15 +9523,21 @@ edit; the messages of the commits are not cleaned.
 history is read by people the author never chose, so what the record says of the author's disk, notes
 and private work is published with it. A search of every commit that had added a record in the
 repositories where cycles had run, on 2026-11-07, found that nearly all that leaked was absolute
-paths, directory names of worktrees and titles of notes in links. Cleaning keeps the record, so its
-readers go on reading it: the human, who follows the link from the request; the reader of a project
-plan's state, which proves from the record that a task entered its cycle and was finished (WAY-153)
-and ties the record to the plan's task by the `Project relation:` line; the plan's link to the task's
-document; and the nightly review of process remarks. The same rule in every repository spares the
-cycle a question only the hosting service can answer, the visibility of a repository. The price
-taken: one more step in every cycle; the published copy of the task document differs from the
-document in the author's notes; the messages of commits stay unchecked; a private name written as
-plain words is not seen by the check of WAY-309.
+paths, directory names of worktrees and titles of notes in links. Cleaning keeps the record, so
+three of its readers go on reading it as before: the human, who follows the link from the request;
+the plan's link to the task's document; and the nightly review of process remarks. The fourth, the
+reader of a project plan's state, which proves from the record that a task entered its cycle and was
+finished (WAY-153), reads it with one loss. It ties the record to the plan's task by the
+`Task relation:` and `Project relation:` lines, which stay as they are; but until the plan row's
+document link names the frozen copy of the task, it anchors the record by the absolute path in the
+record's `Task source:` line, which the cleaning replaces. For a task of a project plan the reader
+then reports the copy as unchecked and proposes no move to done from it until a human links the
+frozen copy; it fails closed and proposes nothing it cannot prove. A task that belongs to no plan is
+not read this way. The same rule in every repository spares the cycle a question only the hosting
+service can answer, the visibility of a repository. The price taken: one more step in every cycle;
+the published copy of the task document differs from the document in the author's notes; the
+reader's loss above; the messages of commits stay unchecked; a private name written as plain words is
+not seen by the check of WAY-309.
 *Rejected:* committing no record, which leaves it on the disk — the reader of a project plan's state
 loses its proof that a task entered a cycle and was finished (WAY-153 and the plan's template would
 be rewritten), the nightly review would read directories that vanish with their worktrees, and the
@@ -9551,21 +9558,25 @@ included, the block in the language of the task document among its text, the orc
 the-way's script that lists, with the file and the line of each, every absolute path (a drive
 letter, a home directory) and every note link written `[[...]]`, and corrects what it lists until
 it lists nothing. The script finds them by pattern, holds no list of private words and rewrites
-nothing.
+nothing. The check of WAY-294 runs once more on the cleaned copy, and there an item it lists is made
+to read the same in the report and in the remarks, not appended again.
 
-- **Scope:** task-cycle, agent-instructions
+- **Scope:** task-cycle, agent-instructions, project-level
 - **Based on:** none
-- **Relations:** derives from WAY-308
+- **Relations:** derives from WAY-308 · narrows WAY-294
 - **Verification:** an agent compares a cycle, its record and its request with the decision:
   - complies: the script lists the path of a worktree in a report of the copy, the orchestrator
     replaces it by the same words in every file of the copy where it stands, the script lists
     nothing on the next run, and only then the copy is committed; the edit of a description that
     adds the link to the record is checked again before it is published, its block in Polish
-    included;
+    included; the check of WAY-294 lists an item of a report on the cleaned copy because the report
+    and the remarks were cleaned in different words, and the orchestrator makes the two read the same
+    and appends no entry;
   - violates: a copy of the record is committed with no run of the script on it; a description is
     published after a run that came before the link to the record was added; the script is given a
     list of private words, or rewrites a file; the orchestrator stops after a run that listed
-    something.
+    something; the orchestrator appends a second entry to the remarks for an item that the check of
+    WAY-294 lists only on the cleaned copy.
 - **Origin:** none
 
 *Rationale:* what a pattern sees is the form of a path or of a link, and the same search of

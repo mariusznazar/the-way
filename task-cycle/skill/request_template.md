@@ -29,12 +29,15 @@ sends here. Every request of a cycle, blocked, reserved or corrected, has this o
    It lists, as `<file>:<line>: <kind>: <text>`, each absolute path (a drive letter, a home
    directory) and each note link written in double square brackets, the block in the task
    document's language included, and judges nothing else. Exit 1: replace each listed place by the
-   path from the repository's root, or by a description of what the note or the place is, and run
-   both checks again, until both exit 0. Exit 2 is no listing: fix the call, or the file that could
+   path from the repository's root, or by a description of what the note or the place is, the whole
+   path to the end of the phrase that names it (a path with a space in it is printed to the
+   space), and run both checks again, until both exit 0. Exit 2 is no listing: fix the call, or the file that could
    not be read. Commit messages are not checked.
 5. Publish the file that passed, with `gh pr create --body-file` or `gh pr edit --body-file`, or the
    host's equivalent. Each later edit of the description — the record's link by its SHA, a
-   correction — is checked again by both checks before it is published. Record the last run of
+   correction — is checked again by both checks before it is published. The edit that adds the
+   record's link also fills in *Checks* with the runs of the two checks on the copy of the record,
+   which did not exist when the description was first written. Record the last run of
    each, command and exit code, with the number of runs, in the record's *Request handoff*
    (*Description*).
 
@@ -295,4 +298,4 @@ none; a section with no content reads `none`.
 | A correction met a reserved choice | `**State: blocked**`, as for a reserved choice | as for a reserved choice | *Foundation entries* as in the request's previous description |
 | A form error held wrong (above) | `**State: draft** — the form check reports an error the cycle holds wrong`; a request blocked for another cause stays `blocked` and gains only the item | the reported error in plain words, why the cycle holds it wrong, and "Merge as it stands?" | *Checks*: the form check's command, exit code and reported line |
 | A remarks listing held wrong (`SKILL.md`, "The process remarks check", WAY-295) | unchanged: the state the request has for its other causes | the listing as an item, with "Merge as it stands?" | *Checks*: the remarks check's command, exit code and listed line |
-| A draft for another reason | `**State: draft** — <reason>` | the reason as an item, such as "the return step was skipped on your instruction; merge without it?" | as an ordinary request |
+| A draft for another reason | `**State: draft** — <reason>` | the reason as an item, such as "the return step was skipped on your instruction; merge without it?", or "the check of private paths lists a line of the record the cycle may not rewrite (`SKILL.md`, the section on the record before it is committed); merge as it stands?", naming the file and the line and never the text | as an ordinary request; for the second, *Checks* names the check, its exit code and its listed line by file and line |

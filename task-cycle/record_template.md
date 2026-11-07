@@ -2,8 +2,10 @@
 
 - Task source: <the task document and its approval date or source commit; in the working record its
   absolute path, by which the plan-state reader ties the record of a plan item to its task (WAY-153);
-  the committed copy is cleaned of it and names the document by what it is>
-- Task relation: <independent | plan item | source only>
+  the committed copy is cleaned of it and names the document by what it is, so that for a plan item
+  the reader cannot anchor the copy until the plan row's *Document* links the frozen copy>
+- Task relation: <independent | plan item | source only; for a plan item, the plan named by its file
+  name, never by a path: the cleaning leaves this line as it is>
 - Product repository: <the repository's name or remote address, never its path on a disk>
 - Process pin: `<commit>`, or `<commit> at start; moved to <commit> by the task branch's first
   commit <sha>`
@@ -90,9 +92,10 @@ read for a question or finding in the questions table, rather than loading every
 report and sources again. This record is the cycle's only log; no method keeps one beside it.
 During work this file, the frozen task, `stages.md`, `spec.md`, `plan.md`, `plan-size.md`,
 `request.md` and `reports/` live under the ignored `.runs/task-cycles/<task-slug>/` directory. At the request, copy
-that whole directory to `docs/task-cycles/<task-slug>/`, link the reports from these rows, commit
-the copy and commit its removal immediately after; the request links the record by the SHA of the
-commit that adds it. A correction after review repeats this pair.
+that whole directory to `docs/task-cycles/<task-slug>/`, link the reports from these rows, clean
+the copy and check it as `task-cycle/skill/SKILL.md` ("The record before it is committed") gives,
+commit the copy and commit its removal immediately after; the request links the record by the SHA of
+the commit that adds it. A correction after review repeats this pair.
 
 ## Questions and autonomous choices
 

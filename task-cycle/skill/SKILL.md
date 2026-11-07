@@ -431,9 +431,10 @@ included — read `task-cycle/skill/blocked_finding.md` and follow it.
     the task branch and cleans and checks the copy. Commit it, commit its removal immediately after
     and push, so that the request's changed files show only the change and the target branch never
     holds the record. Never force-push: a rejected push is investigated. Put the link to the
-    record, by the SHA of the commit that adds it, never by branch name, into the description,
-    check it again by the template's checks, which include the check of private paths, and edit
-    the request with it. Mark the
+    record, by the SHA of the commit that adds it, never by branch name, into the description, and
+    in the same edit fill in under *Checks* the runs of the two checks on the copy; check it again
+    by the template's checks, which include the check of private paths, and edit the request with
+    it. Mark the
     request ready for review unless the description's first line reads `blocked` or `draft`; a
     request waiting for human actions in the cycle stays a draft marked `blocked`. Do not merge.
     Keep the worktree for corrections.
@@ -522,8 +523,14 @@ starts with `.the-way/`):
      what the place is, since no relative path reaches it;
    - the path and the title of a private note become a description of what the note is, such as
      "the task's note in the author's backlog", not a new name for the note;
-   - the line `Project relation:` of the copy of the task document stays as it is, because the
-     plan-state reader ties the record to the plan's task by it (WAY-153).
+   - the lines `Task relation:` of `cycle.md` and `Project relation:` of the copy of the task
+     document stay as they are, because the plan-state reader ties the record to the plan's task
+     by them (WAY-153). Their form names the plan by its file name, so neither is expected to
+     hold a path;
+   - the line `Task source:` is cleaned like any other. For a plan item this costs the reader part
+     of its proof until the plan row's *Document* links the frozen copy: it cannot anchor the
+     copy, reports it `unchecked` and proposes no move to `done` from it. An independent task is
+     not touched.
 4. Run the-way's check of private paths on the copy:
 
    ```
@@ -534,15 +541,22 @@ starts with `.the-way/`):
    letter, a home directory) and each note link written in double square brackets, as
    `<file>:<line>: <kind>: <text>`; it holds no list of private words, judges nothing else and
    rewrites nothing. Exit 1: correct each listed place in the copy by step 3, with the same words
-   wherever the text stands, and run the check again until it exits 0. A listed text that is
-   neither kind, such as a code sample, is written so that the pattern does not list it, and no
-   listing is left in place. Exit 2 is no listing: fix the call, or the file that could not be
-   read.
+   wherever the text stands, and run the check again until it exits 0. A path is replaced whole,
+   to the end of the phrase that names it, not only up to the part the check prints: a path with
+   a space in it is printed to the space. A listed text that is neither kind, such as a code
+   sample, is written so that the pattern does not list it, and no listing is left in place. If
+   the check lists a `Task relation:` or a `Project relation:` line, do not rewrite it: commit
+   the copy with that line as it is, and put it to the human in the request, as the row "A draft
+   for another reason" of `task-cycle/skill/request_template.md` gives. Exit 2 is no listing: fix
+   the call, or the file that could not be read. The last line counts the files not read: a text
+   file among them, such as one a shell saved in an encoding other than UTF-8 or UTF-16, is read
+   by hand or saved as UTF-8 and checked again; an image or another file that is no text needs no
+   reading.
 5. Run the process remarks check on the cleaned copy. It lists nothing when step 3 was one
    rewriting. An item it lists has different words in a report and in the remarks of the copy:
    make the two read the same in the copy, and append no second entry for it, since step 1 has
-   the remarks hold it already. After any correction of the copy, run the check of step 4 and this
-   check again until both exit 0.
+   the remarks hold it already (WAY-309 gives this run its place beside WAY-294). After any
+   correction of the copy, run the check of step 4 and this check again until both exit 0.
 6. Record the last run of each of the two checks on the copy, its command and exit code, with the
    number of runs, under *Verification* of the original record; the description names them under
    *Checks*.
