@@ -193,7 +193,7 @@ order:
    by the return step, corrections the search of the whole foundation made, the part of a projected
    entry the code makes true, and a precedence between two decisions the cycle recorded, which
    gives beside its sentence the passages of what the human accepted that give the outcome, quoted
-   from the foundation step's report (WAY-25). Entries written whole from rows of *Settlements to
+   from the report of the step that wrote it (WAY-25). Entries written whole from rows of *Settlements to
    record*, and projected entries written whole as approved, are not here; they stand under
    *Foundation entries*.
 7. *Changed invariant tests, surfaces and Violated marks*, in plain words (WAY-03, WAY-49,

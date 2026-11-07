@@ -674,13 +674,13 @@ levels of authority over whole groups of decisions — a collision inside a leve
 the newest decision wins — the date of a decision is not its weight; every precedence recorded by
 a human alone, the agent stopping at each collision — a nearly finished cycle stops for an entry
 whose content the human has already accepted; an exception only for a settlement that says which
-decision prevails — the outcome often follows from settlements that do not say so; the wording that
+decision prevails — the outcome can follow from settlements that do not say so; the wording that
 the change writes the `narrows` and its request names it — it reads as the line of *Relations*
 alone, and an entry named without the passages it follows from leaves the human to open the task to
 judge it; the precedence recorded in the decision that prevails with no passages in the request —
 the entry is stated, but not where its outcome comes from; one passage of what the human accepted
-in the singular — an outcome can come only from two passages read together, and an agent reading
-the wording literally would stop where the outcome is given.
+in the singular — an outcome can come from two passages read together, and an agent reading the
+wording literally would stop where the outcome is given.
 
 ### WAY-26 — How are trade-off principles and non-goals written?
 
@@ -8996,7 +8996,7 @@ record* is no exclusion.
 *Rationale:* without a recorded precedence, a cycle meets a task or spec that says "no entry" beside
 a rule that a choice binding after the merge becomes an entry, and beside WAY-22 and WAY-18, which
 give every choice that records a rule a place in the one log; the agent that meets the collision
-may not settle it (WAY-25). A task or spec that excludes an entry says so in words, so the exception
+may not settle it silently (WAY-25). A task or spec that excludes an entry says so in words, so the exception
 is limited to what was said and the default stays: a choice that binds after the merge enters the
 log. The choice is not lost, since its row stays in the questions table, and the request puts it
 before the human in the section for the human's decisions where it changes what the human meets when
