@@ -666,6 +666,59 @@ class Command(unittest.TestCase):
                 self.assertNotIn("conflict 1 reports:", output)
                 self.assertNotIn("propose ", output)
 
+    def archive_cleaned(self, source="the task document in the author's backlog",
+                        relation_line=None):
+        """Commit a record whose `Task source:` the cycle's cleaning replaced by a description."""
+        record = self.repo / "docs/task-cycles/reports/record.md"
+        self.cycle(record, source=source)
+        if relation_line is not None:
+            self.write(record, re.sub(r"(?m)^- Task relation: .*$", lambda _: relation_line,
+                                      record.read_text(encoding="utf-8")))
+        self.git(self.repo, "add", "docs/task-cycles/reports")
+        self.git(self.repo, "commit", "-m", "Archive cycle")
+        return self.git(self.repo, "rev-parse", "HEAD")
+
+    def test_cleaned_copy_of_an_unfinished_plan_item_is_unchecked_until_the_copy_is_linked(self):
+        # Break caught: a copy cleaned of its absolute `Task source:` is taken as proof the cycle
+        # was done (a proposal nothing anchors), or is reported as a contradiction, while the plan's
+        # Document still names the task document; WAY-308 states what the reader does here.
+        self.archive_cleaned()
+        self.git(self.repo, "push", "origin", "release")
+        self.state("in cycle")
+        output = self.run_reader()
+        self.assertIn("unchecked 1 reports:", output)
+        self.assertIn("original Task source or Document cannot be anchored", output)
+        self.assertNotIn(" -> done", output)
+        self.assertNotIn("conflict", output)
+
+    def test_cleaned_copy_anchors_a_done_task_once_the_document_links_the_frozen_copy(self):
+        # Break caught: the cleaned copy stays unusable after the human links it, so a task whose
+        # record was cleaned is never read as done.
+        commit = self.archive_cleaned()
+        self.git(self.repo, "push", "origin", "release")
+        self.state("done")
+        self.frozen_link(commit, "docs/task-cycles/reports/accepted.md")
+        self.task = self.task.rename(self.task.with_name("outside-the-plan.md"))
+        output = self.run_reader()
+        self.assertIn("cycle record docs/task-cycles/reports/record.md commit " + commit, output)
+        self.assertNotIn("unchecked 1 reports:", output)
+        self.assertNotIn("conflict", output)
+
+    def test_task_relation_naming_the_plan_by_a_description_conflicts_when_the_copy_is_linked(self):
+        # Break caught: a cleaned `Task relation:` line is read as a task of another plan, or
+        # passes unseen; the reader reports a conflict, which the request shows the human.
+        commit = self.archive_cleaned(
+            relation_line="- Task relation: plan item — the plan in the author's backlog (fingerprint "
+                          "abcd1234), item 1 reports")
+        self.git(self.repo, "push", "origin", "release")
+        self.state("done")
+        self.frozen_link(commit, "docs/task-cycles/reports/accepted.md")
+        self.task = self.task.rename(self.task.with_name("outside-the-plan.md"))
+        output = self.run_reader(1)
+        self.assertIn("conflict 1 reports:", output)
+        self.assertIn("human reconciliation required", output)
+        self.assertNotIn("propose ", output)
+
     def test_later_owned_snapshot_cannot_borrow_foreign_integration_or_pointer(self):
         # Break caught: ownership at a local tip validates a foreign integrated snapshot.
         self.archive(content="Request: https://example.invalid/org/app/pull/99\n")

@@ -71,8 +71,8 @@ instructions or another repository goes into the record's process remarks, never
 For each stage report, copy every item under **Searches not found or unclear** that is not `none` word for word into
 those remarks, with the stage name and full report path; keep repeated items separate (WAY-260).
 The remarks stand in the one form `task-cycle/record_template.md` gives (WAY-296), and before every
-commit that adds the record, "The process remarks check" below compares them with the reports
-(WAY-294).
+commit that adds the record, "The record before it is committed" below compares them with the
+reports (WAY-294) and cleans and checks the copy it commits (WAY-308, WAY-309).
 The one exception is the cycle's own account of its request: in the task's entry in the backlog the
 product names (WAY-107), the cycle may add the request link and set the task's state.
 
@@ -312,9 +312,9 @@ contradicts a decision.
         report and what failed. The retry goes through sub-steps 3 and 5 as any executor does.
         An executor of the strongest class that fails, or a retry that fails, stops the cycle:
         record its last commit and reset the branch to the slice's base, run the gate on the
-        change as step 10 gives, run `task-cycle/cycle_stages.py`, run the process remarks check
-        as its section gives and commit the record and its removal as step 12 gives, then write
-        the description by
+        change as step 10 gives, run `task-cycle/cycle_stages.py`, prepare the record's copy as
+        "The record before it is committed" gives and commit it and its removal as step 12 gives,
+        then write the description by
         `task-cycle/skill/request_template.md` as step 13 gives, in its variant for a slice failed
         twice, linking the record by the SHA of the commit that adds it, and open the request from
         it as a draft marked `blocked`;
@@ -424,15 +424,17 @@ included — read `task-cycle/skill/blocked_finding.md` and follow it.
     correction's included, by its transcript path or id; Claude Code holds the current session's id
     in `CLAUDE_CODE_SESSION_ID` and Codex in `CODEX_SESSION_ID`. Run the process remarks check on
     the record as "The process remarks check" gives, before the description is written, so that a
-    listing you hold wrong reaches the description, and again before the commit that adds the
-    record if a report or a remark changed in between. Write and check the description by
+    listing you hold wrong reaches the description. Write and check the description by
     `task-cycle/skill/request_template.md` as step 13 gives, and open the request from it as a draft by the pull or merge request route the
-    user already chose. Write its URL into the record, copy the whole record directory to
-    `docs/task-cycles/<task-slug>/` on the task branch, rewrite its links to the committed copies,
-    commit it, commit its removal immediately after and push, so that the request's changed files
-    show only the change and the target branch never holds the record. Never force-push: a rejected
-    push is investigated. Put the link to the record, by the SHA of the commit that adds it, never
-    by branch name, into the description, check it again and edit the request with it. Mark the
+    user already chose. Write its URL into the record, then take "The record before it is
+    committed" below: it copies the whole record directory to `docs/task-cycles/<task-slug>/` on
+    the task branch and cleans and checks the copy. Commit it, commit its removal immediately after
+    and push, so that the request's changed files show only the change and the target branch never
+    holds the record. Never force-push: a rejected push is investigated. Put the link to the
+    record, by the SHA of the commit that adds it, never by branch name, into the description, and
+    in the same edit fill in under *Checks* the runs of the two checks on the copy; check it again
+    by the template's checks, which include the check of private paths, and edit the request with
+    it. Mark the
     request ready for review unless the description's first line reads `blocked` or `draft`; a
     request waiting for human actions in the cycle stays a draft marked `blocked`. Do not merge.
     Keep the worktree for corrections.
@@ -446,8 +448,9 @@ included — read `task-cycle/skill/blocked_finding.md` and follow it.
     Write the request's description into `.runs/task-cycles/<task-slug>/request.md` by
     `task-cycle/skill/request_template.md` of the pinned the-way, which holds its sections, where each
     takes its content from and the variants of a blocked, reserved or corrected request; check its
-    form with `task-cycle/request_check.py` and correct it until the check passes, as the template
-    gives, and publish it from that file (WAY-286, WAY-290). Recover the task's parts from its
+    form with `task-cycle/request_check.py` and its text for private paths with
+    `task-cycle/private_paths_check.py`, and correct it until both checks pass, as the template
+    gives, and publish it from that file (WAY-286, WAY-290, WAY-309). Recover the task's parts from its
     frozen task and changed files through the part map when preparing the request, and keep that
     classification as evidence with the check, not as a separate record of the selected parts
     (WAY-261). Never present partial work as complete.
@@ -457,19 +460,21 @@ included — read `task-cycle/skill/blocked_finding.md` and follow it.
 
 ## The process remarks check
 
-Before every commit that adds the record to `docs/task-cycles/<task-slug>/` — step 12, its
-repetition in a correction (`correction.md`), the stop of a slice failed twice at step 9
-sub-step 4 and the blocked requests of `blocked_finding.md` and `reserved_return.md` — run, from
-the worktree's root (in a product, the path starts with `.the-way/`), the-way's script (WAY-294):
+Before every commit that adds the record, "The record before it is committed" below has this check
+run twice: on the original in `.runs/`, and again on the cleaned copy. Run, from the worktree's root
+(in a product, the path starts with `.the-way/`), the-way's script (WAY-294):
 
 ```
 python -B task-cycle/remarks_check.py .runs/task-cycles/<task-slug>
 ```
 
+The copy is given in the place of the original, `docs/task-cycles/<task-slug>`, and is read the
+same way.
+
 It reads the **Searches not found or unclear** section of every report in the record's `reports/`,
 in either of the forms the reports give it, and lists each item other than `none` that the record's
 process remarks do not hold word for word, with the path of its report. It only lists, and it
-judges no content. Exit 1 lists each item as `<report path>: <item>`:
+judges no content. On the original, exit 1 lists each item as `<report path>: <item>`:
 
 1. Append each listed item to the process remarks word for word, as an entry in the form
    `task-cycle/record_template.md` gives, with the stage name from the Events and the full report
@@ -491,6 +496,73 @@ changed in this cycle and the archive is not held back (WAY-295):
    naming what the script listed, in plain words, why the cycle holds it wrong and "Merge as it
    stands?", and *Checks* names the check with its command, its exit code and its listed line, as
    `task-cycle/skill/request_template.md` gives.
+
+## The record before it is committed
+
+The record's copy stays in the repository's history, and the repository may be read by anyone.
+Before every commit that adds the record to `docs/task-cycles/<task-slug>/` — step 12, its
+repetition in a correction (`correction.md`), the stop of a slice failed twice at step 9
+sub-step 4 and the blocked requests of `blocked_finding.md` and `reserved_return.md` — the copy is
+cleaned of what only its author may see and checked, in every repository, public or private
+(WAY-308, WAY-309). The original in `.runs/` is never cleaned; each commit adds a fresh copy of it,
+cleaned again. The steps stand in this order, run from the worktree's root (in a product, the path
+starts with `.the-way/`):
+
+1. Run the process remarks check on the original, as "The process remarks check" gives, until it
+   lists nothing. It runs on the original first, because the original holds the words the reports
+   gave: each item reaches the remarks once, before any word is changed, and the cleaning below
+   meets it in both places.
+2. Copy the whole record directory to `docs/task-cycles/<task-slug>/` on the task branch and
+   rewrite its links to the committed copies.
+3. Clean the copy by one rewriting, applied to every text file of it — `cycle.md`, the handoffs
+   and reports, the copy of the task document, `stages.md`, `request.md` — so that a text standing
+   in two files is replaced by the same words in both. An item of a report and the same item in
+   the process remarks must still read the same, word for word:
+   - an absolute path to a place inside the repository, such as the worktree, becomes the path
+     from the repository's root; an absolute path to a place outside it becomes a description of
+     what the place is, since no relative path reaches it;
+   - the path and the title of a private note become a description of what the note is, such as
+     "the task's note in the author's backlog", not a new name for the note;
+   - the lines `Task relation:` of `cycle.md` and `Project relation:` of the copy of the task
+     document stay as they are unless the check of step 4 lists them, because the plan-state
+     reader ties the record to the plan's task by them (WAY-153). Their form names the plan by its
+     file name, so neither is expected to hold a path. A line the check lists is cleaned like any
+     other, and the reader may then report a conflict with exit 1 for this task, which the human
+     sees in the request (step 4);
+   - the line `Task source:` is cleaned like any other. For a plan item this costs the reader part
+     of its proof until the plan row's *Document* links the frozen copy: it cannot anchor the
+     copy, reports it `unchecked` and proposes no move to `done` from it. An independent task is
+     not touched.
+4. Run the-way's check of private paths on the copy:
+
+   ```
+   python -B task-cycle/private_paths_check.py docs/task-cycles/<task-slug>
+   ```
+
+   It reads every file below the directory and lists, by pattern, each absolute path (a drive
+   letter, a home directory) and each note link written in double square brackets, as
+   `<file>:<line>: <kind>: <text>`; it holds no list of private words, judges nothing else and
+   rewrites nothing. Exit 1: correct each listed place in the copy by step 3, with the same words
+   wherever the text stands, and run the check again until it exits 0. A path is replaced whole,
+   to the end of the phrase that names it, not only up to the part the check prints: a path with
+   a space in it is printed to the space. A listed text that is neither kind, such as a code
+   sample, is written so that the pattern does not list it. No listing is left in place, a
+   `Task relation:` or `Project relation:` line included; where such a line had to be cleaned, the
+   request tells the human, as item 12 of *For you to decide* in
+   `task-cycle/skill/request_template.md` gives. Exit 2 is no listing: fix the call, or the file
+   that could not be read. The last line counts the files not read: a text file among them, such
+   as one a shell saved in an encoding other than UTF-8 or UTF-16, is read by hand or saved as
+   UTF-8 and checked again; an image or another file that is no text needs no reading.
+5. Run the process remarks check on the cleaned copy. It lists nothing when step 3 was one
+   rewriting. An item it lists has different words in a report and in the remarks of the copy:
+   make the two read the same in the copy, and append no second entry for it, since step 1 has
+   the remarks hold it already (WAY-309 gives this run its place beside WAY-294). After any
+   correction of the copy, run the check of step 4 and this check again until both exit 0.
+6. Record the last run of each of the two checks on the copy, its command and exit code, with the
+   number of runs, under *Verification* of the original record; the description names them under
+   *Checks*.
+
+Then commit the copy. Commit messages are not checked (WAY-308).
 
 ## Correction after review
 

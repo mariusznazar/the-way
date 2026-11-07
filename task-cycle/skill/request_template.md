@@ -18,12 +18,28 @@ sends here. Every request of a cycle, blocked, reserved or corrected, has this o
    `--task` is the frozen task document of the record. The script checks the headings, content or
    `none` in each section and the block's language, and judges no content (WAY-290).
 3. Exit 1 lists each problem as `line <n>: <what is wrong and what to write>`. Correct the file at
-   each line and run the script again, until it exits 0. Exit 2 is no error of the form: fix the
-   call, or the file that could not be read.
-4. Publish the file that passed, with `gh pr create --body-file` or `gh pr edit --body-file`, or the
+   each line and run the form check again, until it exits 0. Exit 2 is no error of the form: fix
+   the call, or the file that could not be read.
+4. Check the same file for private paths (WAY-308, WAY-309):
+
+   ```
+   python -B task-cycle/private_paths_check.py .runs/task-cycles/<task-slug>/request.md
+   ```
+
+   It lists, as `<file>:<line>: <kind>: <text>`, each absolute path (a drive letter, a home
+   directory) and each note link written in double square brackets, the block in the task
+   document's language included, and judges nothing else. Exit 1: replace each listed place by the
+   path from the repository's root, or by a description of what the note or the place is, the whole
+   path to the end of the phrase that names it (a path with a space in it is printed to the
+   space), and run both checks again, until both exit 0. Exit 2 is no listing: fix the call, or the file that could
+   not be read. Commit messages are not checked.
+5. Publish the file that passed, with `gh pr create --body-file` or `gh pr edit --body-file`, or the
    host's equivalent. Each later edit of the description — the record's link by its SHA, a
-   correction — is checked again before it is published. Record the last run, command and exit
-   code, with the number of runs, in the record's *Request handoff* (*Description*).
+   correction — is checked again by both checks before it is published. The edit that adds the
+   record's link also fills in *Checks* with the runs of the two checks on the copy of the record,
+   which did not exist when the description was first written. Record the last run of
+   each, command and exit code, with the number of runs, in the record's *Request handoff*
+   (*Description*).
 
 **An error you hold wrong.** The language measure can read a correct block, or a task document
 full of quoted English names, as English, and the script itself can err. Where you hold a reported
@@ -201,6 +217,11 @@ order:
 11. *Additions to a product's logging scope*: each item the change adds to the list of what the
     product logs, in plain words — what it is and which log line carries it — with "Accept it?".
     A change that adds nothing to that list has no such item.
+12. *A relation line the cleaning rewrote* (`SKILL.md`, "The record before it is committed",
+    WAY-308), where the check of private paths listed the `Task relation:` line of the record or the
+    `Project relation:` line of the task copy and the cycle cleaned it: in plain words which of the
+    two lines it was, never its text, that the reader of a project plan's state may now report a
+    conflict for this task, and "Merge as it stands?".
 
 **Cost.** The time, the models and the tokens from `stages.md`, the number of review rounds, and
 the link to the table of stages in the committed record. For a blocked request, the cost so far.
@@ -226,8 +247,10 @@ findings among them, and where the cycle reverted it, its commits and the revert
 for a check that failed and passed when run again the number of cycle runs in which it failed and
 passed and its rerun's result (WAY-160, WAY-261); what each own-work check showed (WAY-164); the
 user-interface states and the screenshot evidence, a screenshot unchecked for no settled way or the
-failure of a settled one included (WAY-219); the form check's last run; the remarks check's last
-run, and where it listed an item the cycle holds wrong, its command, exit code and listed line
+failure of a settled one included (WAY-219); the form check's last run; the check of private
+paths' last run on the description and its last run on the copy of the record, each with its
+command and exit code (WAY-309); the remarks check's last run on the original and on the copy,
+and where it listed an item the cycle holds wrong, its command, exit code and listed line
 (WAY-295).
 
 **Foundation entries.** Each foundation entry the change writes or changes, by its identifier and

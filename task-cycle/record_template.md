@@ -1,8 +1,13 @@
 # Cycle record — <task title>
 
-- Task source: <absolute path and approval date or source commit>
-- Task relation: <independent | plan item | source only>
-- Product repository: <path>
+- Task source: <the task document and its approval date or source commit; in the working record its
+  absolute path, by which the plan-state reader ties the record of a plan item to its task (WAY-153);
+  the committed copy is cleaned of it and names the document by what it is, so that for a plan item
+  the reader cannot anchor the copy until the plan row's *Document* links the frozen copy>
+- Task relation: <independent | plan item | source only; for a plan item, the plan named by its file
+  name, never by a path: the cleaning leaves this line as it is unless the check of private paths
+  lists it>
+- Product repository: <the repository's name or remote address, never its path on a disk>
 - Process pin: `<commit>`, or `<commit> at start; moved to <commit> by the task branch's first
   commit <sha>`
 - Target branch and base: <branch and commit>
@@ -88,9 +93,10 @@ read for a question or finding in the questions table, rather than loading every
 report and sources again. This record is the cycle's only log; no method keeps one beside it.
 During work this file, the frozen task, `stages.md`, `spec.md`, `plan.md`, `plan-size.md`,
 `request.md` and `reports/` live under the ignored `.runs/task-cycles/<task-slug>/` directory. At the request, copy
-that whole directory to `docs/task-cycles/<task-slug>/`, link the reports from these rows, commit
-the copy and commit its removal immediately after; the request links the record by the SHA of the
-commit that adds it. A correction after review repeats this pair.
+that whole directory to `docs/task-cycles/<task-slug>/`, link the reports from these rows, clean
+the copy and check it as `task-cycle/skill/SKILL.md` ("The record before it is committed") gives,
+commit the copy and commit its removal immediately after; the request links the record by the SHA of
+the commit that adds it. A correction after review repeats this pair.
 
 ## Questions and autonomous choices
 
@@ -172,8 +178,8 @@ invariant covers it.
   before the description was written or rewritten, `written and checked after this commit`>
 - Writes to the task's backlog entry: <request link and state, or none>
 - Process remarks on the-way: <`none`, or the entries under this line>
-  - <stage name>, <full report path>: <an item of that report's **Searches not found or unclear**
-    other than `none`, copied word for word>
+  - <stage name>, <full report path from the repository's root>: <an item of that report's
+    **Searches not found or unclear** other than `none`, copied word for word>
   - <the orchestrator>: <a remark of its own about the-way, such as a listing of
     `task-cycle/remarks_check.py` the cycle holds wrong>
 
@@ -181,5 +187,6 @@ The remarks stand in this form only: the item that opens with `Process remarks o
 entries indented under it, one for each item of each stage report, repeated items kept apart, and
 every line of an entry indented under the entry; not in a section or a file of their own. It is the
 last item of the record, and nothing at the level of its marker follows it. The nightly review of
-cycles and `task-cycle/remarks_check.py` cut the block as that item and the lines under it. Before the record is committed, `task-cycle/skill/SKILL.md` ("The process remarks check")
-has the check run until it lists nothing.
+cycles and `task-cycle/remarks_check.py` cut the block as that item and the lines under it. Before
+the record is committed, `task-cycle/skill/SKILL.md` ("The record before it is committed") has the
+check run on the original and on the cleaned copy until it lists nothing.
