@@ -9499,7 +9499,8 @@ repository, public or private: each absolute path becomes a path relative to the
 outside the repository, a description of what the place is), and the path or the title of a private
 note becomes a description of what the note is. The line `Task relation:` of the record and the line
 `Project relation:` of the copy of the task document stay as they are unless the check of WAY-309
-lists them, and a line it lists is cleaned like any other. The cleaning comes before each commit
+lists them; a line it lists is cleaned like any other, and the request tells the human, since the
+reader of a plan's state may then report a conflict. The cleaning comes before each commit
 that adds the record — its copy for a request, the repetition of that copy in a correction after
 review and the copy of a request blocked for any cause — and before each publication of the
 description, the first and every later edit; the messages of the commits are not cleaned.
@@ -9565,8 +9566,9 @@ included, the block in the language of the task document among its text, the orc
 the-way's script that lists, with the file and the line of each, every absolute path (a drive
 letter, a home directory) and every note link written `[[...]]`, and corrects what it lists until
 it lists nothing. The script finds them by pattern, holds no list of private words and rewrites
-nothing. The check of WAY-294 runs once more on the cleaned copy, and there an item it lists is made
-to read the same in the report and in the remarks, not appended again.
+nothing. The check of WAY-294 runs on the original before the copy is made, the cleaning is one
+rewriting of every text file of the copy, and the check runs once more on the cleaned copy, where an
+item it lists is made to read the same in the report and in the remarks, not appended again.
 
 - **Scope:** task-cycle, agent-instructions, project-level
 - **Based on:** none
@@ -9577,8 +9579,8 @@ to read the same in the report and in the remarks, not appended again.
     nothing on the next run, and only then the copy is committed; the edit of a description that
     adds the link to the record is checked again before it is published, its block in Polish
     included; the check of WAY-294 lists an item of a report on the cleaned copy because the report
-    and the remarks were cleaned in different words, and the orchestrator makes the two read the same
-    and appends no entry;
+    and the remarks were cleaned in different words, and the orchestrator makes the two read the
+    same and appends no entry;
   - violates: a copy of the record is committed with no run of the script on it; a description is
     published after a run that came before the link to the record was added; the script is given a
     list of private words, or rewrites a file; the orchestrator stops after a run that listed
@@ -9591,10 +9593,12 @@ to read the same in the report and in the remarks, not appended again.
 words has no mark a pattern could use. A script reads every file of the copy every time, where a
 model reading a long record for what looks private misses an item without a trace, and it reads the
 description, whose block in another language is the part a reader checking by eye covers least. The
-price taken: a private name in plain words passes, and a list of such names can be added by a task
-of its own when one appears; the pattern lists some text that is neither a path nor a link, such as a
-code sample, which the orchestrator writes so that the pattern passes it; one more check in every
-cycle.
+check of WAY-294 runs first on the original because the original holds the words the reports gave,
+so each item reaches the remarks once before any word changes; the cleaning is one rewriting so that
+a report's item and its entry in the remarks keep reading alike. The price taken: a private name in
+plain words passes, and a list of such names can be added by a task of its own when one appears; the
+pattern lists some text that is neither a path nor a link, such as a code sample, which the
+orchestrator writes so that the pattern passes it; one more check in every cycle.
 *Rejected:* patterns and a list of private words in a file in the home directory — accepted first,
 then given up after the search of the history: almost nothing was left to put on the list, and it
 costs a file to remember, a step of the human before a cycle and code that today catches almost
