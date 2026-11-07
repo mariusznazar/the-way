@@ -181,11 +181,15 @@ order:
 7. *Changed invariant tests, surfaces and Violated marks*, in plain words (WAY-03, WAY-49,
    WAY-51), from the changed files read against the invariants file and the part map, and from the
    record's *Return step*.
-8. *Unfixed findings the user or the human will feel* (WAY-289): read each Minor finding and each
-   finding outside the task's scope, of the review of the whole change and of every later review,
-   and judge from the whole record — the reports of the walk through the running product and the
-   screenshots included — whether the product's user or the human working with the process will
-   feel it. Restate each such finding in plain words, with "Make a task of it?". The finding stays
+8. *Unfixed findings the user or the human will feel* (WAY-289): read each Minor finding that no fix
+   made and each finding outside the task's scope, of the review of the whole change and of every
+   later review, and each Minor finding and new serious finding of a reverted fix, and judge from
+   the whole record — the reports of the walk through the running product and the screenshots
+   included — whether the product's user or the human working with the process will feel it.
+   Restate each such finding in plain words, with "Fix it in this request, or make a task of it?";
+   one answer may cover the whole list. The answer to fix it runs a correction with one fix and one
+   review of that fix (`correction.md`). In the description after that correction, a finding it
+   left unfixed carries only "Make a task of it?", or stays in the lower part. The finding stays
    in its list below, with its kind and grade; the judgment decides no fix and no block.
 9. *Decisions of the task's own sections*: each item of those sections that waits on a yes, such as
    a proposal not applied.
@@ -207,7 +211,8 @@ instead of merging.
 
 ## The lower part
 
-**Technical changes.** What changed and why, by commit or by group of files.
+**Technical changes.** What changed and why, by commit or by group of files; the fix for Minor
+findings among them, and where the cycle reverted it, its commits and the revert commit (WAY-162).
 
 **Checks.** The gate's command and exit code, each check that failed or did not run by name, and
 for a check that failed and passed when run again the number of cycle runs in which it failed and
@@ -222,9 +227,12 @@ one English sentence of its meaning, marked `row <n>`, `projected` or `the cycle
 tied to an entry already stated, with that entry (WAY-134); each invariant test the change alters
 (WAY-03), each surface it alters (WAY-49) and each *Violated* mark it sets or clears (WAY-51).
 
-**Minor findings.** The Minor findings of the review of the whole change and of every later review,
+**Minor findings.** The Minor findings that no fix made — those of the review of the whole change
+that its fix left or did not take in, those of every later review, and those a reverted fix tried —
 each with the reviewer's words and its place in the code, or a note that the reviewer names none
-(WAY-161).
+(WAY-161). Beside them, the new Critical or Important finding of a reverted fix, marked with its
+grade and as found by the review of the reverted fix, with the reviewer's words and its place in
+the code (WAY-162).
 
 **Findings outside the task's scope.** The findings the reviewers marked outside the task's scope,
 each the same way, for the human to choose which become new tasks and to create them (WAY-161);
@@ -260,7 +268,7 @@ none; a section with no content reads `none`.
 | Human actions in the cycle (WAY-140) | `**State: blocked** — waits for your actions outside the repository` | each action as the task names it; each found effect, for the human to place | as an ordinary request |
 | A question from the foundation step | `**State: blocked** — needs your answer` | the question with its options and a recommendation where one exists | as an ordinary request |
 | An impossible task | `**State: blocked** — <the smallest missing fact or permission>` | that fact or permission; never partial work presented as complete | **Route**: the ways tried |
-| A correction (`correction.md`) | the state after the correction, with "corrected for your remarks" in the why | the items as they stand after the correction, its new choices included; a remark is no item, since it binds | *Course of the cycle*: each correction with the link to its remarks and its reset base; *Cost* across all sessions |
+| A correction (`correction.md`) | the state after the correction, with "corrected for your remarks" in the why | the items as they stand after the correction, its new choices included; a remark is no item, since it binds; the findings left unfixed by a correction that ran on an answer to item 8 carry only "Make a task of it?" | *Course of the cycle*: each correction with the link to its remarks and its reset base; *Cost* across all sessions |
 | A correction met a reserved choice | `**State: blocked**`, as for a reserved choice | as for a reserved choice | *Foundation entries* as in the request's previous description |
 | A form error held wrong (above) | `**State: draft** — the form check reports an error the cycle holds wrong`; a request blocked for another cause stays `blocked` and gains only the item | the reported error in plain words, why the cycle holds it wrong, and "Merge as it stands?" | *Checks*: the form check's command, exit code and reported line |
 | A remarks listing held wrong (`SKILL.md`, "The process remarks check", WAY-295) | unchanged: the state the request has for its other causes | the listing as an item, with "Merge as it stands?" | *Checks*: the remarks check's command, exit code and listed line |

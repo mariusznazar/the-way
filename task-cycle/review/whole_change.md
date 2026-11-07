@@ -21,4 +21,7 @@ executor's own-work check included (WAY-164); this review is the only one it get
 the review of the whole change of a plan, name for each blocking finding the slice it comes from,
 by the slice's number and the commit; or say that it spans slices and name them, or that it comes
 from none — a gap of the plan, or the plan's *Foundation entries*. Grade each Minor and
-out-of-scope finding of the slice reviews the dispatch lists as a finding of this review.
+out-of-scope finding of the slice reviews the dispatch lists as a finding of this review. List
+each Minor finding with its place in the code and its own words, and say in them where a Minor
+finding lies outside the task, so that the cycle can cut the Minor findings within the task from
+the report into the findings file of the fix that follows them (WAY-161).

@@ -155,9 +155,10 @@ rows, and their handoff names their stage instead. For the foundation step, the 
 with it, since the return step writes as the foundation step writes, each by its path in the
 pinned the-way; the agent reads each whole, and the skill of an element when it writes an entry of
 that element. For a review, it gives the range to review and the author's report. For a fix, it
-gives the findings file, which you write from the review's blocking findings in the reviewer's
-words; the fix's range runs from the reviewed head, and the review of the fix also gets the fix
-report. No handoff tells an agent to run the product's gate; its run is
+gives the findings file, which you write in the reviewer's words from the review's blocking
+findings and, after them, the Minor findings of the review of the whole change within the task
+("The end of a code review"); the fix's range runs from the reviewed head, and the review of the
+fix also gets the fix report. No handoff tells an agent to run the product's gate; its run is
 yours (step 10, WAY-160).
 
 You decide what each agent reads, and its handoff names it (WAY-150, WAY-213): the foundation
@@ -339,8 +340,10 @@ contradicts a decision.
    names for each blocking finding the slice it comes from, or that it comes from none (WAY-136).
    For progression use the changed files with their line counts and the review's first line
    (WAY-158); read the evidence only when a question about a finding needs it, never to change a
-   reviewer's grade or scope.
-10. Run the product's gate yourself on the reviewed change (WAY-160), and record its command, exit
+   reviewer's grade or scope. The Minor findings of this review within the task are fixed before
+   step 10, as "The end of a code review" gives (WAY-161).
+10. Run the product's gate yourself on the reviewed change (WAY-160), the fix for its Minor findings
+    included, or the code a revert of that fix leaves, and record its command, exit
     code and the failures it names under *Verification*, with each check that failed or did not
     run by name; an unrun check is unchecked, never passed. The authors' focused checks are not
     rerun merely to go on (WAY-159); a change, a failure or disputed evidence calls for the affected
@@ -364,10 +367,18 @@ guideline examples (WAY-220, WAY-221), and what blocks. The reviewer alone grade
 handoff names no finding wrong, Minor or outside the scope, though it may carry the author's
 evidence on a contested finding, and you move no finding from one kind to another (WAY-161).
 
-A review whose first line is `PASS` sends the change on without a fix. A Minor finding and a
-finding the reviewer marks outside the task's scope are not fixed; outside the slice reviews, each
-goes to its list in the lower part of the request's description (step 13) with the reviewer's words
-and its place in the code, or a note that the reviewer names none.
+A review whose first line is `PASS` sends the change on without a fix, save for the Minor findings
+of the review of the whole change (below). A finding the reviewer marks outside the task's scope is
+not fixed, whatever its grade, and a Minor finding of a slice review, of the return step, of the
+reconciliation with the target branch or of a correction is not fixed either; outside the slice
+reviews, each goes to its list in the lower part of the request's description (step 13) with the
+reviewer's words and its place in the code, or a note that the reviewer names none.
+
+The review of the whole change differs in its Minor findings (WAY-161). Each that its report lists
+and the reviewer has not marked outside the task's scope is fixed before the request opens; a Minor
+finding of a slice review that the report does not list is not, and stays in the request's list. Cut
+these Minor findings from the report in the reviewer's words, and write them into the findings file
+after the blocking findings, if any.
 
 A `FAIL` gets one fix and one review of that fix (WAY-162); you never overrule a blocking finding or
 skip its fix. The author or executor whose work the findings concern fixes them with `make-change`,
@@ -376,9 +387,25 @@ wrong; where the harness cannot resume it, or the findings concern several slice
 the same branch, given the task and the findings, fixes them. The fix of a slice's findings runs on
 the class of the executor whose work stands, of findings in several slices on the highest of their
 classes, of a planned change's finding of no slice on yours, and of the one author's findings on the
-one author's class (WAY-229). The same reviewer, or a fresh one given its report where it cannot be
-resumed, reviews the fix range once. A new Critical or Important finding in the fix counts as one
-that remains.
+one author's class (WAY-229). A Minor finding names no slice, so it changes neither the agent nor
+the class that the blocking findings set. The same reviewer, or a fresh one given its report where
+it cannot be resumed, reviews the fix range once. A new Critical or Important finding in the fix
+counts as one that remains; a Minor finding that remains after the fix, or that the review of the
+fix finds new, does not block, and goes to the request's list.
+
+A `PASS` of the review of the whole change that lists Minor findings within the task gets one fix
+for them alone and one review of that fix (WAY-161, WAY-162). The one author, resumed, fixes them
+on its class, as it would fix a blocking finding; on the planned route a fresh agent with
+`make-change` fixes them on yours, since they name no slice. The same reviewer, or a fresh one given
+its report, reviews the fix range once, as above. Only a new Critical or Important finding in the
+fix fails that review. When it does, revert the fix's commits, in a revert commit on the branch so
+that they stay in history, and run no third round: the code is then the code the review of the
+whole change accepted, and the request opens on it, not blocked, with no review of the revert
+itself. The Minor findings the fix tried and the new finding stand in the request's list of Minor
+findings, the new finding marked with its grade and as found by the review of the reverted fix, with
+the reviewer's words and its place in the code; step 13 judges it like any unfixed finding
+(WAY-289). Where the fix passes its review, the Minor findings it fixed are no longer unfixed, and
+those it left, or that its review found, go to the list.
 
 When a blocking finding remains after the review of its fix — in any of these reviews, a slice's
 included — read `task-cycle/skill/blocked_finding.md` and follow it.
