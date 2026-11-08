@@ -273,7 +273,7 @@ needs:
 | `### Business events` | the events of the list and of the principle | the rest |
 | `### Secrets and personal data`, the rule whole | the ban on secrets and the ban on whole objects and request bodies; `### Recording a failure` and `### Identifiers in log lines` are no longer narrowed, so an original error may write what it quotes, secrets included, and an identifier of the list that is a secret may stand in a line | the boundary, while `### Logging scope` stands |
 | the ban on personal data alone | the exception of the list, which has nothing left to except; the precedence as to personal data | everything else of the rule; the list and the boundary, while `### Logging scope` stands |
-| `### Recording a failure` | nothing else; each rule that stays keeps the meaning of every word it takes from this one, in its own text, as `### Hiding a failure` keeps what a failure is and that an expected refusal is no failure | the rest |
+| `### Recording a failure` | the way a failure is written, with its cause, once, where code handles it, and the last-resort handler | the rest; each rule that stays keeps the meaning of every word it takes from this one, in its own text, as `### Hiding a failure` keeps what a failure is and that an expected refusal is no failure |
 | `### Hiding a failure` | nothing else | the rest |
 
 ## The tools of the standing checks

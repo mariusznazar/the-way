@@ -11,11 +11,11 @@ Missing discipline guidelines keep this task `waiting for human`, with a named q
 code or tests. Continue refinement independent of that answer. A scoped departure applies only where
 the shared reading establishes it; the task writing the missing guidelines does not wait for itself.
 For an independent or source-only task, propose the prerequisite and, after human approval, add its
-task to the product backlog by the rules of `read_sources.md` for the backlog and its task
-documents. For a plan member, return `plan change` if the plan lacks it, or `waits for task <n>` for
-the named question if the plan holds it; the owning project workflow writes the plan. The task
-document's `waiting for human` does not set the plan row's state: preserve the question-specific
-waiting rules, which may leave that row `to refine`.
+task to the product backlog by the rules of `project-level/task/skill/read_sources.md` for the
+backlog and its task documents. For a plan member, return `plan change` if the plan lacks it, or
+`waits for task <n>` for the named question if the plan holds it; the owning project workflow writes
+the plan. The task document's `waiting for human` does not set the plan row's state: preserve the
+question-specific waiting rules, which may leave that row `to refine`.
 
 After the prerequisite merges, resume here, read its guidelines and settle the meanings this task
 needs under WAY-172 before step 6's complete-document acceptance. Adding the dependency alone gives
@@ -55,9 +55,10 @@ the task refined does not need the fix, so it gains no `waits for task <n>` and 
 stays out of `waiting for human` for this (WAY-284). The write is `refine-task`'s, as for a
 prerequisite, so it comes with the hand-back and the skill of guidelines writes no backlog itself.
 For an independent or source-only task, add the task to the product backlog by the rules of
-`read_sources.md` for the backlog and its task documents, holding the cause's effect, weight and
-places. For a plan member, return `plan change` naming the cause; where the plan holds such a task,
-the cause's `Deferred:` names it as its reason. The owning project workflow writes the plan.
+`project-level/task/skill/read_sources.md` for the backlog and its task documents, holding the
+cause's effect, weight and places. For a plan member, return `plan change` naming the cause; where
+the plan holds such a task, the cause's `Deferred:` names it as its reason. The owning project
+workflow writes the plan.
 
 ## Step 6: readiness after a scope change
 

@@ -35,7 +35,7 @@ writing a missing styleguide does not wait for its own output (WAY-215).
 | | This skill, in the refinement | The cycle's author, in `implement-task` |
 |---|---|---|
 | Writes | the task document, through `refine-task`'s steps, and the research reports under `.runs/styleguide/<part>/`, which the product's git ignores | the product's entries, through the skill of each element, in the foundation step; the styleguide's file; the values of design tokens with their sources; the page of every state; the test of each invariant (WAY-69); the changes to the instruction files and to the part map |
-| Never writes | the foundation, the styleguide's file, the product's code (WAY-01, WAY-28) | a meaning the task did not settle (WAY-172) |
+| Never writes | the foundation, the styleguide's file, the product's code (WAY-01, WAY-28) | a meaning the task did not settle, except as a decision proposed at a blocked draft request (WAY-172) |
 
 A meaning reaches the code by one of two ways. The first is the task document: the human's
 acceptance of the whole document before the cycle approves every new or changed meaning it carries,

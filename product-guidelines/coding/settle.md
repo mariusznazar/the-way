@@ -26,7 +26,8 @@ guidelines, settle of the standing checks only those the kind touches, as "A new
     and turning a rule off for the whole product takes a change of this decision, approved by the
     human (WAY-203, WAY-204, WAY-207). The split rests on the trial run of the set the human
     chooses: where the human chooses a tool or a set other than the one the trial run tried, run the
-    trial again on the chosen one, as `trial_run.md` gives, before the split is proposed;
+    trial again on the chosen one, as `trial_run.md` gives, for the split alone and before it is
+    proposed;
   - for the formatter, its tool and its configuration;
   - for the audit of dependencies, its tool, the advisory database it reads and the severity from
     which a vulnerability counts, every severity among the ways (WAY-206);

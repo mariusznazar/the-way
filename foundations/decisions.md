@@ -7014,7 +7014,7 @@ in computation or in its connections. In the area of the names of test levels th
 prevails over WAY-95: a level named in the product otherwise than in the field, a narrower meaning
 included, takes a glossary entry whether or not a sentence would be read wrongly.
 
-- **Scope:** product-guidelines
+- **Scope:** product-guidelines, glossary
 - **Based on:** none
 - **Relations:** derives from WAY-173 · derives from WAY-226 · narrows WAY-95
 - **Verification:** an agent compares the guidelines of a product with the decision:
@@ -9732,8 +9732,9 @@ and gives each proposal to add a rule or to change one a row of its own.
 
 *Rationale:* a human disputes a judgement row by row (WAY-257), and a row that holds two verdicts,
 or a proposal folded into another row's reason, can be disputed only as a whole. With a row for
-each part and for each proposal the human accepts or rejects each separately. Its weak point: the
-table grows by a row for every part and every proposal, in a file read at every judgement.
+each part and for each proposal the human accepts or rejects each separately. Its weak points: two
+more sentences in what is read at every judgement, and a departure from the order of the sections
+stays as it is.
 *Rejected:* leaving the judgement as its text stood — the reports of later judgements go on
 departing from the format, and a reviewer reports each departure again; a script that checks the
 shape of a judgement — it would catch the order of sections as well, but it is a new script with

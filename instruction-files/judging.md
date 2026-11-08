@@ -27,7 +27,7 @@ Output, in this order:
    A fragment that goes to several places when judged, one part kept and another moved, gets a row
    for each part, each with one of the four verdicts and none of its own, such as a split. A
    proposal to add a rule or to change one stands in the table in a row of its own, never inside
-   the reason of another row.
+   the reason of another row (WAY-311).
 3. Contradictions between files that load together.
 
 The table is a batch of decisions; edit nothing until it is accepted.

@@ -127,10 +127,9 @@ route, and that comparison, being no audit, has no such end.
   exemplar, and its file of guidelines comes into being with it (WAY-200, WAY-209): step 4 settles
   the kind's identifier, the path the file takes and the rules a script checks of it. In a product
   that has coding guidelines, step 4 settles and step 5 checks, of the standing checks, only those
-  the kind touches, which are those whose tool reads the language of the kind's files, and no check
-  anew that the kind does not touch. A kind in a language that none of the product's standing
-  checks reads makes the task an extension of the coding guidelines (WAY-251), so that step 2's
-  research and step 3's trial run and audit run as for one (WAY-216).
+  the kind touches, and no check anew that the kind does not touch. A kind in a language that none
+  of the product's standing checks reads makes the task an extension of the coding guidelines
+  (WAY-251), so that step 2's research and step 3's trial run and audit run as for one (WAY-216).
 
 ## 4. Settle with the human
 
