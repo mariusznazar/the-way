@@ -109,10 +109,11 @@ those decisions and invariants in its own foundation; the testing guidelines nam
   - the table of levels, one row for each level of the product's tests: *Level*, the name the
     product uses for it; *Decision*, the product's decision that sets the level. The table has no
     column for a definition. A level whose name means in the product something other than in the
-    field — "integration" above all — is a term of the product's glossary, defined there by the
-    resources a test of that level may touch, such as files, the network or a browser; the table
-    names that term and copies no definition, so that the meaning stands once (WAY-240, WAY-226). A
-    level whose name means what the field means takes no definition;
+    field, a narrower meaning included — "integration" above all — is a term of the product's
+    glossary, defined there by the resources a test of that level may touch, such as files, the
+    network or a browser, whether or not a sentence would be read wrongly; the table names that term
+    and copies no definition, so that the meaning stands once (WAY-240, WAY-226). A level whose name
+    means what the field means takes no definition;
   - the table of parts, one row for each part *Applies to* names: *Part*, its identifier; *Where its
     complexity lies*, one sentence of whether the part's complexity lies in computation or in its
     connections (WAY-240).

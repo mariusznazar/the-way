@@ -6,9 +6,10 @@
   - the product's decision adopting the testing template, and each departure from it by a decision
     with its reason (WAY-173);
   - the levels of the product's tests, each with the decision that sets it; for a level whose name
-    means in the product something other than in the field, the entry of the product's glossary
-    that defines it by the resources its test may touch; and, for each part the guidelines apply to,
-    whether its complexity lies in computation or in its connections (WAY-240, WAY-226);
+    means in the product something other than in the field, a narrower meaning included whether or
+    not a sentence would be read wrongly, the entry of the product's glossary that defines it by the
+    resources its test may touch; and, for each part the guidelines apply to, whether its complexity
+    lies in computation or in its connections (WAY-240, WAY-226);
   - the product's documents that are sources of expected values (WAY-232);
   - for each level, the fields of its recipe that bind, each with the decision that carries it, the
     template's defaults adopted or departed from (WAY-241);

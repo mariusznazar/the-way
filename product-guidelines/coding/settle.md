@@ -1,7 +1,9 @@
 # Settle with the human
 
 On the route of one kind, settle of the choices and invariants below only what "The route of one
-kind" in `SKILL.md` gives; the critique below stands.
+kind" in `SKILL.md` gives; the critique below stands. For a new kind in a product that has coding
+guidelines, settle of the standing checks only those the kind touches, as "A new kind" in step 3 of
+`SKILL.md` gives.
 
 - **New tools.** For each new tool or library left as a technology question of the task, read
   `new_tools.md` beside this skill.
@@ -16,10 +18,15 @@ kind" in `SKILL.md` gives; the critique below stands.
 - **What it settles.**
   - for each standing check, the product's decision adopting it or departing from it with its
     reason; the task is not ready without one for each (WAY-202);
+  - for each standing check, the version of its tool, at which the task's cycle installs and pins
+    it (the coding template's section "The tools of the standing checks"), beside the edition of
+    the linter's set;
   - for the linter, its tool, its set, the set's edition, the parts it reads and the split of the
     set, said together with what the split means later: a fault of one file is fixed in that file,
     and turning a rule off for the whole product takes a change of this decision, approved by the
-    human (WAY-203, WAY-204, WAY-207);
+    human (WAY-203, WAY-204, WAY-207). The split rests on the trial run of the set the human
+    chooses: where the human chooses a tool or a set other than the one the trial run tried, run the
+    trial again on the chosen one, as `trial_run.md` gives, before the split is proposed;
   - for the formatter, its tool and its configuration;
   - for the audit of dependencies, its tool, the advisory database it reads and the severity from
     which a vulnerability counts, every severity among the ways (WAY-206);
@@ -32,7 +39,9 @@ kind" in `SKILL.md` gives; the critique below stands.
     whatever else the task is about, and at a refresh `recognize.md` sends here, the product's one
     decision on the rules on failures and logs, adopting them or departing from them with its reason,
     apart from the decision adopting the coding template; the task is not ready without it
-    (WAY-271, WAY-278, WAY-279). It takes:
+    (WAY-271, WAY-278, WAY-279). A heading of `guidelines/coding.md` holding `none —` is no absence,
+    at the first guidelines and at an extension as at a refresh: that departure is already decided,
+    and the product is asked nothing of those rules anew. It takes:
     - the rules, asked of as a whole. First say in plain words what logs are: the running record of
       what the product does, which someone reads when something has gone wrong. Then show the rules
       by their effect: when something goes wrong for a user the logs say what broke and why, the

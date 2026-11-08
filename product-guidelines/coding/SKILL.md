@@ -97,42 +97,51 @@ conversation — it opened this skill directly, or resumed the work in a new one
 
 ## 1. Recognize
 
-At step 1, read `recognize.md` beside this skill. It gives the mode of the work.
+At step 1, read `recognize.md` beside this skill. It gives the mode of the work. At a refresh it
+also has you look for the required headings of the rules on failures and logs, which stand in
+`product-guidelines/coding/template.md`: read that template in full for it.
 
 ## 2. Starting set
 
 At step 2, which step 1 gives before the first code, for the product's code that has no coding
 guidelines yet — no `guidelines/coding.md`; a kind of code without a file of its own is not that
-case — and at every refresh or extension, read `product-guidelines/coding/template.md` in full and
-`starting_set.md` beside this skill; the question of preferences is worded as "How to show" gives.
-Where the human has no preference at the first coding guidelines, and at every extension,
-`starting_set.md` sends you to `research.md`, also beside this skill (WAY-265).
+case — and at every refresh or extension, read `product-guidelines/coding/template.md` in full,
+unless step 1 did, and `starting_set.md` beside this skill; the question of preferences is worded as
+"How to show" gives. Where the human has no preference at the first coding guidelines, and at every
+extension, read `research.md` beside this skill too (WAY-265).
 
 ## 3. Trial run and audit
 
 At step 3, where the product has code and step 1 gave the trial run and the audit — code and no
 coding guidelines, or coding guidelines refreshed or extended — read
-`product-guidelines/coding/template.md` in full unless step 2 did, `trial_run.md` and `kinds.md`
-beside this skill, and then `product-guidelines/audit_end.md`, which ends the audit. In that audit,
-where the task carries the testing guidelines too (WAY-247), read also
-`product-guidelines/testing/recognize.md`, that skill's step 1, before the audit ends:
-`audit_end.md` says what it decides (WAY-265). Where step 1 gave the mode of one kind whose files
-the product already has, and not the trial run and the audit, read the template in full unless an
-earlier step did, and `kinds.md` alone, for that kind; there is no trial run on that route, and
-that comparison, being no audit, has no such end.
+`product-guidelines/coding/template.md` in full unless an earlier step did, `trial_run.md` and
+`kinds.md` beside this skill, and then `product-guidelines/audit_end.md`, which ends the audit. In
+that audit, where the task carries the testing guidelines too (WAY-247), read also
+`product-guidelines/testing/recognize.md`, that skill's step 1, for the mode it gives alone, before
+the audit ends: `audit_end.md` says what it decides (WAY-265). Where step 1 gave the mode of one
+kind whose files the product already has, and not the trial run and the audit, read the template in
+full unless an earlier step did, and `kinds.md` alone, for that kind; there is no trial run on that
+route, and that comparison, being no audit, has no such end.
 
 - **A new kind.** Where the task creates the first file of a kind of code, that file is the kind's
   exemplar, and its file of guidelines comes into being with it (WAY-200, WAY-209): step 4 settles
-  the kind's identifier, the path the file takes and the rules a script checks of it.
+  the kind's identifier, the path the file takes and the rules a script checks of it. In a product
+  that has coding guidelines, step 4 settles and step 5 checks, of the standing checks, only those
+  the kind touches, which are those whose tool reads the language of the kind's files, and no check
+  anew that the kind does not touch. A kind in a language that none of the product's standing
+  checks reads makes the task an extension of the coding guidelines (WAY-251), so that step 2's
+  research and step 3's trial run and audit run as for one (WAY-216).
 
 ## 4. Settle with the human
 
 At step 4, read `product-guidelines/template.md` in full, `product-guidelines/coding/template.md`
 in full unless an earlier step did, and `settle.md` and `task_document.md` beside this skill, and,
 where step 3's audit ran, `product-guidelines/audit_end.md` unless an earlier step did. For
-each new tool or library left as a technology question of the task, `settle.md` sends you to
-`new_tools.md`, also beside this skill (WAY-265). On the route of one kind, "The route of one kind"
-above limits what these files settle.
+each new tool or library left as a technology question of the task, read `new_tools.md` beside this
+skill too; where the human chooses a linter or a set other than the one the trial run tried, read
+`trial_run.md` beside this skill again (WAY-265). On the route of one kind, "The route of one kind"
+above limits what these files settle, and for a new kind in a product that has coding guidelines,
+"A new kind" in step 3 does.
 
 ## 5. Hand back
 

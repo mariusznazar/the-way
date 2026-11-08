@@ -197,7 +197,7 @@ those decisions and invariants in its own foundation; the coding guidelines name
   line, the name the list gives it, so that a search finds the whole case, in the form of a line the
   product's decision gives. A line outside a case flow, such as one at the
   start of a program or one of a build script, carries none. A line from the last-resort handler
-  need carry none, since that handler usually does not know what the case was (WAY-275).
+  need carry none (WAY-275).
 - **Business events** — rule. Each business event `### Logging scope` lists leaves a log line
   (WAY-275).
 - **Secrets and personal data** — rule. The logs hold no secret, with no exception, so an identifier
@@ -211,8 +211,8 @@ those decisions and invariants in its own foundation; the coding guidelines name
   at adoption from what the product has in its code or in its plan. The text says that the list is
   the product's promise and no inventory of its code, and how an item is added: where it fits the
   principle of the product's decision, in the change that brings it; where it points to a person,
-  the number the product gives a user included, only with the human's consent, as a new meaning
-  (WAY-274, WAY-172).
+  the number the product gives a user included, only with the human's consent; adding an item
+  changes no decision (WAY-274).
 - **Further rules of the whole product** — rule each, naming an invariant where a cheap test checks
   it on a convention of the code and otherwise `none` (WAY-168).
 - **`## Files of this kind`** — a table of the file of a kind, one row for each file of the kind it
@@ -251,10 +251,11 @@ it takes.
    stands in place of the ban, and the rest of the rule stands as it is: the ban on secrets, the ban
    on whole objects and request bodies, and its precedence over `### Recording a failure` for a
    secret. An original error that quotes a secret is written without it, with its kind, code and
-   place; one that quotes personal data is written as it stands. The line stays in English in
-   whatever language the product writes its guidelines, as the marker `none —` does, since this
-   template names it and a reviewer compares the file with this template. Only this ban departs in
-   this way, because WAY-276 names it alone.
+   place; one that quotes personal data is written as it stands. The line `Personal data` is a field
+   of the rule `### Secrets and personal data` that this template adds to the rule's four fields
+   (WAY-171), so its name stays in English in whatever language the product writes its guidelines,
+   as the names of fields do (WAY-310). Only this ban departs in this way, because WAY-276 names it
+   alone.
 3. **From one rule.** That heading holds only `none — <PREFIX-NN>`, naming the product's decision,
    and the others stay. A rule whose subject has gone reads `none —` too, with the same decision, so
    a departure from `### Logging scope` puts the marker on three headings (WAY-171, WAY-279).
@@ -270,9 +271,10 @@ needs:
 | `### Logging scope` | `### Identifiers in log lines` and `### Business events`, which have nothing left to read and read `none —` with the same decision; the principle, the boundary, the form of a line | `### Secrets and personal data`, with no exception |
 | `### Identifiers in log lines` | the form of a line | the identifiers of the list, as the exception to the ban on personal data, while that rule stands |
 | `### Business events` | the events of the list and of the principle | the rest |
-| `### Secrets and personal data`, the rule whole | the ban on secrets and the ban on whole objects and request bodies; `### Recording a failure` is no longer narrowed, so an original error may write what it quotes, secrets included | the boundary, while `### Logging scope` stands |
+| `### Secrets and personal data`, the rule whole | the ban on secrets and the ban on whole objects and request bodies; `### Recording a failure` and `### Identifiers in log lines` are no longer narrowed, so an original error may write what it quotes, secrets included, and an identifier of the list that is a secret may stand in a line | the boundary, while `### Logging scope` stands |
 | the ban on personal data alone | the exception of the list, which has nothing left to except; the precedence as to personal data | everything else of the rule; the list and the boundary, while `### Logging scope` stands |
-| `### Recording a failure` or `### Hiding a failure` | nothing else | the rest |
+| `### Recording a failure` | nothing else; each rule that stays keeps the meaning of every word it takes from this one, in its own text, as `### Hiding a failure` keeps what a failure is and that an expected refusal is no failure | the rest |
+| `### Hiding a failure` | nothing else | the rest |
 
 ## The tools of the standing checks
 

@@ -7,10 +7,12 @@ Where the user interface has screens (WAY-187):
 - Audit in both directions: from the source of values to the screens that read it — a file of
   design tokens nothing reads is a finding — and from each value on a screen to the design token or
   shared component meant to cover it.
-- Ask every time what someone sees without data, straight from a link, after a refresh.
+- Check for every screen what someone sees without data, straight from a link and after a refresh,
+  and ask the human about none of them: the next item says how it is checked.
 - Where the product's foundation settles the agent's way to the running product, open the screens
-  that way; otherwise audit from the code and mark as unchecked what cannot be seen without the
-  running product, such as whether focus shows.
+  that way, each with no data, straight from its link and after a refresh; otherwise audit from the
+  code and mark as unchecked what cannot be seen without the running product, such as whether focus
+  shows and what a screen shows in those three cases.
 - Give each finding its file and line and one sentence of its effect on the user. Each cause takes
   one category: a missing design token, a missing shared component, accidental architecture, or a
   meaning — one colour carrying several.

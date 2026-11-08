@@ -50,13 +50,25 @@ top, made once, at the end of the audit that runs last (WAY-282). Which discipli
 free.
 
 - **Whether this audit stops.** Run the other skill's step 1 now, by the file this skill's step 3
-  names. This audit stops here where that step gives the other skill the audit in this task and that
-  audit has not yet run. The test is the audit that runs, never what the product has: the route of
-  one kind of code and a new level of tests are no audit, so with either of them this audit ends as
-  any other.
+  names, and take from it its mode alone: the check of the required headings of the rules on
+  failures and logs, with the question to the human it brings at a refresh, waits for the turn of
+  the skill whose step it is. This audit stops here where the mode gives the other skill the audit
+  in this task and that audit has not yet run. The test is the audit that runs, never what the
+  product has: the route of one kind of code and a new level of tests are no audit, so with either
+  of them this audit does not stop and closes the list here, as the audit that runs last.
+- **Who hands back to step 4.** Closing the list and handing back are two things. The audit that
+  runs last closes the list. The skill that leads its matters last hands back to `refine-task`
+  step 4. A skill hands back to step 3 while the other discipline's skill has not led its matters
+  in this task, also where that discipline has no audit: the route of one kind of code and a new
+  level of tests are led by their skill as any other matters are.
 - **The audit that stops** writes its causes into *Context* in the form of "The list", weighed, with
   no number and no top. Its step 4 settles all it settles except the top, and its skill hands back to
   `refine-task` step 3, as its `hand_back.md` gives.
+- **An audit that stopped, with no audit to follow.** Where the human separates the work after this
+  audit stopped, so that the other discipline's audit will not run in this task, the skill of the
+  stopped audit returns and closes the list as the audit that runs last does: it numbers the causes,
+  makes the top and goes back to each cause of the top, and puts the top to the human as "At step 4"
+  gives (WAY-282).
 - **The audit that runs last** takes up the causes standing in *Context*, which carry the first
   audit's work over where the two skills run in separate sessions. From here they are the list's,
   whichever discipline found them. Merge causes of the two audits only where one fix removes both,
@@ -192,4 +204,4 @@ Check that every cause stands `Taken:` or `Deferred:`, every cause of the top st
 `Unchecked:`, a cause the check moved out of the top keeps its `Checked:`, a withdrawn cause stands
 as a `Withdrawn:` item, every deferred `grave` cause has its answer, and every settled status put
 back to the human has its answer. An audit that stopped for the other discipline's checks only that
-its causes stand weighed.
+its causes stand weighed, unless it has returned to close the list, which it checks as above.

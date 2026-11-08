@@ -2,7 +2,9 @@
 
 On the route of one kind, take from the items below what concerns that kind, as "The route of one
 kind" in `SKILL.md` gives: its file with the index row, the test of each new invariant it settles,
-its choices and what the comparison found.
+its choices and what the comparison found. For a new kind in a product that has coding guidelines,
+take of the standing checks only those the kind touches, as "A new kind" in step 3 of `SKILL.md`
+gives.
 
 - *To do*:
   - write or extend `guidelines/coding.md`, and `guidelines/coding-<kind>.md` for each kind whose
@@ -31,13 +33,13 @@ its choices and what the comparison found.
   - one item for the fix of each cause of the audit's list the task takes, naming the cause by its
     number (step 3).
 - *Questions to settle*: each choice step 4 settles — every standing check adopted or departed
-  from with its reason, each tool, set and edition, the parts, the audit's database and severity,
-  the split of the set, each kind's exemplar and the status of its files, the rules a script checks
-  of each exemplar, each invariant, the flag by which the linter's test makes a comment that
-  turns a rule off have no effect, where the tool has one, the rules on failures and logs adopted or
-  each departure with its reason, the form of a log line, the principle of the logging scope, the
-  boundary of what an agent adds alone, the list of today with the number the product gives a user,
-  and the library that writes a line, where one is chosen — each with
+  from with its reason, each tool and its version, set and edition, the parts, the audit's
+  database and severity, the split of the set, each kind's exemplar and the status of its files,
+  the rules a script checks of each exemplar, each invariant, the flag by which the linter's test
+  makes a comment that turns a rule off have no effect, where the tool has one, the rules on
+  failures and logs adopted or each departure with its reason, the form of a log line, the principle
+  of the logging scope, the boundary of what an agent adds alone, the list of today with the number
+  the product gives a user, and the library that writes a line, where one is chosen — each with
   the human's words and date as its source, and the ways the human did not choose under it as the
   task template gives (WAY-134). The human's decision on the top of the audit's list and each answer
   on a backlog task stand here too, with the human's words and date.

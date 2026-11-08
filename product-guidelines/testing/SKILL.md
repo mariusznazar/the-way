@@ -62,6 +62,10 @@ WAY-124). Using a meaning that a decision of the product's log already carries t
 - Extend what exists: the recipes are written for the test tool the product runs, never for a
   second tool beside it. A new test tool or a library of property tests is a technology choice:
   record it as a question of the task, never settle it (WAY-248, WAY-121).
+- A choice found in the product's tests — a configuration of the test tool, a habit its tests
+  share — is a proposal, never a rule, until the human settles it. An existing choice the human
+  keeps becomes a decision whose rationale is the human's words or `unknown`, never one the agent
+  infers (WAY-29).
 - Write each answer under its question in the task document before asking the next, as
   `refine-task` step 3 gives.
 
@@ -88,21 +92,22 @@ At step 1, read `recognize.md` beside this skill.
 
 ## 2. Starting set
 
-At step 2, which step 1 gives for tests with no testing guidelines yet and for a refresh or an
-extension, read `product-guidelines/testing/template.md` in full and `starting_set.md` beside this
-skill. Where the human has no preference at the first guidelines, and at every extension,
-`starting_set.md` sends you to `research.md`, also beside this skill (WAY-265).
+At step 2, which step 1 gives for a product with no tests, for tests with no testing guidelines yet
+and for a refresh or an extension, read `product-guidelines/testing/template.md` in full and
+`starting_set.md` beside this skill. Where the human has no preference at the first guidelines, and
+at every extension, `starting_set.md` sends you to `research.md`, also beside this skill (WAY-265).
 
 ## 3. Audit
 
-At step 3, where the product has tests and step 1 gave the audit — tests and no testing
-guidelines, or guidelines refreshed or extended — read `audit.md` beside this skill and then
+At step 3, where the product has tests and step 1 gave the audit — tests and no testing guidelines,
+or guidelines refreshed or extended — read `audit.md` beside this skill and then
 `product-guidelines/audit_end.md`, which ends the audit. In that audit, where the task carries the
 coding guidelines too (WAY-247), read also `product-guidelines/coding/recognize.md`, that skill's
-step 1, before the audit ends: `audit_end.md` says what it decides (WAY-265). Where the task's
-required outcome is itself the first test of a level, read `new_level.md` beside this skill; a new
-level is no audit and has no such end. For either, read `product-guidelines/testing/template.md` in
-full unless step 2 did (WAY-256). Otherwise there is no step 3.
+step 1, for the mode it gives alone, before the audit ends: `audit_end.md` says what it decides
+(WAY-265). Where the task's required outcome is itself the first test of a level whose recipe
+already stands with an empty *Exemplar*, read `new_level.md` beside this skill; a new level is no
+audit and has no such end. For either, read `product-guidelines/testing/template.md` in full unless
+step 2 did (WAY-256). Otherwise there is no step 3.
 
 ## 4. Settle with the human
 
