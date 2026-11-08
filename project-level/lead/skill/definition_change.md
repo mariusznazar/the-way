@@ -20,4 +20,4 @@ pending.
   corrections. Keep readiness writes blocked until that recheck and its required checks/critique/
   human decisions finish. Record completion and the new source identities in the conversations
   and plan's change log before fresh affected refiners resume. A check passing the old fingerprint
-  or approval alone does not complete this route.
+  or approval alone does not complete the definition change.

@@ -175,7 +175,7 @@ do not repeat an already settled human choice unless its meaning or source chang
 
 ## 5. Route plan and definition changes
 
-On reaching this step, from a refiner's result `plan change` or from a changed definition in step
-0, read `route_changes.md` beside this skill. For a change of the definition, its gate or the plan
-recheck after it, a gate or recheck found pending in step 0 included, read `definition_change.md`
-beside this skill too.
+On reaching this step, from a refiner's result `plan change`, from a changed definition in step 0 or
+from a gate or recheck found pending there, read `route_changes.md` beside this skill. For a change
+of the definition, its gate or the plan recheck after it, a gate or recheck found pending in step 0
+included, read `definition_change.md` beside this skill too.

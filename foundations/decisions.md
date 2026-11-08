@@ -7643,38 +7643,37 @@ the instructions in play without being used, so it leaves the text read at that 
 pass the step by, and the measure is the instructions in play over the uses of the skill, not the
 words. A step that every use of the skill comes to is in play in every use wherever it stands, so a
 file of its own spares no use anything and adds a pointer and an opening sentence to what each use
-reads; estimated from the files of one skill, that shape reads five to fifteen percent more words
-in a typical session than keeping its steps in `SKILL.md`. A step therefore stays in `SKILL.md`
-until records of sessions a person can open show that part of the uses pass it by, while a variant,
-which the text of the skill shows, goes to a file beside it as before. With no record the step
-stays, since a skill given a file for each step before any record exists may be rebuilt back after
-its first use, one session deciding the shape. The weak point: a step often passed by and not yet
-measured is carried until someone counts the records, and skills already rebuilt with a file for a
-step every use reaches stop matching the rule, though they do not breach it, since fragments
-standing unchanged are not bound.
-The finding on density measured single prompts dense with instructions to include keywords, not an
-agent's work through a skill, and a file read at an earlier step stays in context, so only the
-instructions of steps not yet reached leave; no one has measured it on a skill. The shape — a main
-part holding the picture of the whole, the rules of working, the pointers and the steps every use
-comes to, with the guidance of each variant and of each step some uses pass by in a file beside it —
-is borrowed from a course on steering models through context, and only that shape is adopted
-(WAY-100); the course's claim that a model follows all of a long skill's instructions with a chance
-close to zero is not, since no measurement stands behind it. The rules of an element's entries stay where WAY-35 places
-them, since every writer and check reaches them there, and this decision orders what else a skill
-holds. A change to a skill of the-way is bound because a fragment it adds would otherwise go
-anywhere until the skill is judged; fragments standing unchanged are left until each skill is
-rebuilt, since binding them would make every skill a breach on the day of the merge. A fragment
-that is one instruction, moved out, leaves a pointer in its place, which is an instruction too: the
-instructions in play stay as many, and a file is added to keep. The exception reaches no further
-than one instruction against the one pointer that would replace it, so a fragment of more
-instructions cannot stay on the ground that each of them is short. What an agent keeps while it
-works must be present at every step where it works, so it cannot stand in the file of one step,
-while what it only consults is needed at the steps that consult it and leaves the text read at the
-others; the rule that a later step has the file read unless an earlier step did keeps the file from
-being read again where the agent already holds it, at the price that the later step depends on what
-an earlier one did, and a session that skipped the earlier step reads the file there. The boundary
-between a rule of working and text to consult is a judgement, made in the row of the judgement that
-places the fragment.
+reads; estimated before any rebuild from the word counts of the files of one skill, that shape
+reads five to fifteen percent more words in a typical session than keeping its steps in `SKILL.md`.
+A step therefore stays in `SKILL.md` until records of sessions a person can open show that part of
+the uses pass it by, while a variant, which the text of the skill shows, goes to a file beside it as
+before. With no record the step stays, since a skill given a file for each step before any record
+exists may be rebuilt back after its first use, one session deciding the shape. The weak point: a
+step often passed by and not yet measured is carried until someone counts the records, and skills
+already rebuilt with a file for a step every use reaches stop matching the rule, though they do not
+breach it, since fragments standing unchanged are not bound. The finding on density measured single
+prompts dense with instructions to include keywords, not an agent's work through a skill, and a file
+read at an earlier step stays in context, so only the instructions of steps not yet reached leave;
+no one has measured it on a skill. The shape — a main part holding the picture of the whole, the
+rules of working, the pointers and the steps every use comes to, with the guidance of each variant
+and of each step some uses pass by in a file beside it — is borrowed from a course on steering
+models through context, and only that shape is adopted (WAY-100); the course's claim that a model
+follows all of a long skill's instructions with a chance close to zero is not, since no measurement
+stands behind it. The rules of an element's entries stay where WAY-35 places them, since every
+writer and check reaches them there, and this decision orders what else a skill holds. A change to a
+skill of the-way is bound because a fragment it adds would otherwise go anywhere until the skill is
+judged; fragments standing unchanged are left until each skill is rebuilt, since binding them would
+make every skill a breach on the day of the merge. A fragment that is one instruction, moved out,
+leaves a pointer in its place, which is an instruction too: the instructions in play stay as many,
+and a file is added to keep. The exception reaches no further than one instruction against the one
+pointer that would replace it, so a fragment of more instructions cannot stay on the ground that
+each of them is short. What an agent keeps while it works must be present at every step where it
+works, so it cannot stand in the file of one step, while what it only consults is needed at the
+steps that consult it and leaves the text read at the others; the rule that a later step has the
+file read unless an earlier step did keeps the file from being read again where the agent already
+holds it, at the price that the later step depends on what an earlier one did, and a session that
+skipped the earlier step reads the file there. The boundary between a rule of working and text to
+consult is a judgement, made in the row of the judgement that places the fragment.
 *Rejected:* a short skill as the aim, after the course's claim — no measurement stands behind it; a
 threshold of words or lines for a skill — a count says nothing of whether a step needs a fragment;
 the skills of the-way's process left to WAY-35 alone — what neither a template nor the shared part
@@ -7684,20 +7683,22 @@ binding the fragments that stand today — every skill would breach it on the da
 every fragment one step or variant needs moved out, one instruction included — it trades an
 instruction for a pointer and adds a file; a file beside the skill for every step, one that every
 use of the skill comes to included — in such a skill it adds a pointer and an opening sentence to
-each use and spares none, an estimated five to fifteen percent more words read in a typical session;
+each use and spares none, an estimate of five to fifteen percent more words read in a typical
+session, made before any rebuild from the word counts of that skill's files;
 an exception named for one skill alone — the smallest change, but the next skill of the same profile
 raises the question again, and an exception named after a skill, not after its files, leaves the
 question to each skill; no change to the decision, the exception kept only in the document of the
-work that rebuilds the skill — a change that breaks a binding decision is reported by a reviewer, and
-the next session takes the skill as breaching it; for a skill with no records, the rule as it stood, with the
-measurement deciding from the first recorded use — the smallest change, but a new skill is given a
-file for each step and may be rebuilt back after its first use, one session deciding its shape; the
-same with a threshold of recorded uses — one session decides nothing, but the number is arbitrary
-and unmeasured, and until it the skill carries a file for each step. For a fragment that some steps need, not all: no rule,
-each case settled by the table of a judgement — every later skill settles the same question anew,
-and a reviewer may block each choice; everything that more than one step needs stays in `SKILL.md`
-— the main file grows by text carried through steps that do not use it, and the layout of files
-already made for skills with such fragments stops matching the rule.
+work that rebuilds the skill — a change that breaks a binding decision is reported by a reviewer,
+and the next session takes the skill as breaching it; for a skill with no records, the rule as it
+stood, with the measurement deciding from the first recorded use — the smallest change, but a new
+skill is given a file for each step and may be rebuilt back after its first use, one session
+deciding its shape; the same with a threshold of recorded uses — one session decides nothing, but
+the number is arbitrary and unmeasured, and until it the skill carries a file for each step. For a
+fragment that some steps need, not all: no rule, each case settled by the table of a judgement —
+every later skill settles the same question anew, and a reviewer may block each choice; everything
+that more than one step needs stays in `SKILL.md` — the main file grows by text carried through
+steps that do not use it, and the layout of files already made for skills with such fragments stops
+matching the rule.
 
 ### WAY-257 — What does the skill of `instruction-files` show as the ground of each verdict?
 
