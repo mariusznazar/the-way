@@ -42,12 +42,15 @@ moves the pin, as `installation/README.md` gives it.
 | | This skill, in the refinement | The cycle's author, in `implement-task` |
 |---|---|---|
 | Writes | the task document, through `refine-task`'s steps, and the reports of the research and of the trial run under `.runs/coding/`, which the product's git ignores | the product's entries, through the skill of each element, in the foundation step; the files of the coding guidelines; each adopted tool, installed and configured; the one reformatting of the code where the task settles it; the test of each new invariant (WAY-08); the changes to the instruction files and to the part map |
-| Never writes | the foundation, the coding guidelines, the product's code or any other file git tracks, which it leaves as it found them (WAY-01, WAY-28) | a meaning the task did not settle (WAY-172) |
+| Never writes | the foundation, the coding guidelines, the product's code or any other file git tracks, which it leaves as it found them (WAY-01, WAY-28) | a meaning the task did not settle, except as a decision proposed at a blocked draft request (WAY-172) |
 
-A meaning reaches the code only through the task document: the human's acceptance of the whole
-document before the cycle approves every new or changed meaning it carries, and a meaning the human
-has not settled stays a question of the task, never a line the cycle could build on (WAY-172,
-WAY-124). Using a meaning that a decision of the product's log already carries takes no approval.
+A meaning reaches the code by one of two ways. The first is the task document: the human's
+acceptance of the whole document before the cycle approves every new or changed meaning it carries,
+and a meaning the human has not settled stays a question of the task, never a line the cycle could
+build on (WAY-172, WAY-124). The second is for a meaning the document does not settle: the cycle
+proposes the decision on the branch of a blocked draft request and builds on it only once the human
+has approved it there (WAY-172). Using a meaning that a decision of the product's log already
+carries takes no approval.
 
 ## Rules that hold across the steps
 

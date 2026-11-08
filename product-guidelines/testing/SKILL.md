@@ -41,12 +41,15 @@ pin, as `installation/README.md` gives it.
 | | This skill, in the refinement | The cycle's author, in `implement-task` |
 |---|---|---|
 | Writes | the task document, through `refine-task`'s steps, and the reports of the research under `.runs/testing/`, which the product's git ignores | the product's entries, through the skill of each element, in the foundation step; the file `guidelines/testing.md`; the test of each new invariant, seen failing once (WAY-08); the changes to the instruction files and to the part map |
-| Never writes | the foundation, the testing guidelines, the product's tests, its code or any other file git tracks, which it leaves as it found them (WAY-01, WAY-28) | a meaning the task did not settle (WAY-172) |
+| Never writes | the foundation, the testing guidelines, the product's tests, its code or any other file git tracks, which it leaves as it found them (WAY-01, WAY-28) | a meaning the task did not settle, except as a decision proposed at a blocked draft request (WAY-172) |
 
-A meaning reaches the code only through the task document: the human's acceptance of the whole
-document before the cycle approves every new or changed meaning it carries, and a meaning the human
-has not settled stays a question of the task, never a line the cycle could build on (WAY-172,
-WAY-124). Using a meaning that a decision of the product's log already carries takes no approval.
+A meaning reaches the code by one of two ways. The first is the task document: the human's
+acceptance of the whole document before the cycle approves every new or changed meaning it carries,
+and a meaning the human has not settled stays a question of the task, never a line the cycle could
+build on (WAY-172, WAY-124). The second is for a meaning the document does not settle: the cycle
+proposes the decision on the branch of a blocked draft request and builds on it only once the human
+has approved it there (WAY-172). Using a meaning that a decision of the product's log already
+carries takes no approval.
 
 ## Rules that hold across the steps
 
@@ -96,7 +99,7 @@ At step 1, read `recognize.md` beside this skill.
 At step 2, which step 1 gives for a product with no tests, for tests with no testing guidelines yet
 and for a refresh or an extension, read `product-guidelines/testing/template.md` in full and
 `starting_set.md` beside this skill. Where the human has no preference at the first guidelines, and
-at every extension, `starting_set.md` sends you to `research.md`, also beside this skill (WAY-265).
+at every extension, read `research.md` beside this skill too (WAY-265).
 
 ## 3. Audit
 
@@ -115,8 +118,8 @@ step 2 did (WAY-256). Otherwise there is no step 3.
 At step 4, read `product-guidelines/template.md` in full, `product-guidelines/testing/template.md`
 in full unless an earlier step did, and `settle.md` and `task_document.md` beside this skill, and,
 where step 3's audit ran, `product-guidelines/audit_end.md` unless an earlier step did. For
-each new tool or library left as a technology question of the task, `settle.md` sends you to
-`new_tools.md`, also beside this skill (WAY-265).
+each new tool or library left as a technology question of the task, read `new_tools.md` beside this
+skill too (WAY-265).
 
 ## 5. Hand back
 
