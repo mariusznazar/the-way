@@ -6173,37 +6173,55 @@ guidelines with no wait — tests written meanwhile set the patterns every later
 
 A task that creates the first file of a kind of code whose row the general coding index lacks
 gains in *To do* the designation of that kind's exemplar under WAY-200 and its kind guidelines
-with their index row, without waiting for a separate exemplar task.
+with their index row, without waiting for a separate exemplar task, and in a product that has
+coding guidelines it settles and checks, of the standing checks, only those the kind touches.
 Where files of the kind already exist, refinement records that discrepancy and routes exemplar
 selection through the comparison WAY-200 gives existing code, rather than treating the next file
 as the first. Neither a kind's first file nor that comparison alone makes a task an extension under
-WAY-251 or takes research of the standing checks; the comparison covers that kind alone, takes no
-trial run of a linter's set and is no audit under WAY-201.
+WAY-251 or takes research of the standing checks, except that a first file of a kind in a language
+that none of the product's standing checks reads makes the task an extension; the comparison covers
+that kind alone, takes no trial run of a linter's set and is no audit under WAY-201.
 
 - **Scope:** project-level, product-guidelines
 - **Based on:** none
-- **Relations:** derives from WAY-200 · derives from WAY-209 · narrows WAY-251
+- **Relations:** derives from WAY-200 · derives from WAY-209 · narrows WAY-251 · narrows WAY-202
 - **Verification:** an agent compares the task and existing code with the decision:
   - complies: the task adding the first migration also designates its exemplar and writes its
-    kind guidelines and index row; existing unindexed endpoints go through comparison, which
-    researches no standing check and runs no linter's set on the product's code;
+    kind guidelines and index row, and in a product whose formatter reads only the application's
+    language it settles the checks that read the language of migrations and leaves the formatter's
+    decision as it stands; existing unindexed endpoints go through comparison, which researches no
+    standing check and runs no linter's set on the product's code; the first file of a kind of
+    shell scripts, in a product whose three standing checks read no shell, makes its task an
+    extension, with the research of the standing checks for shell and a trial run of the set;
   - violates: the first migration waits for an exemplar that cannot exist before it; existing
     endpoints are ignored and the next endpoint is called the first; the comparison of the
-    existing endpoints is run as an audit of every kind the product holds.
+    existing endpoints is run as an audit of every kind the product holds; the first file of a
+    kind settles each of the three standing checks anew although the kind touches one; the first
+    file of a kind of shell scripts enters a product whose standing checks read no shell, with no
+    research and no tool for it.
 - **Origin:** none
 
 *Rationale:* the first instance supplies the material an exemplar needs, so separating its
 designation would create a circular wait. Existing instances instead need comparison, or the next
 one becomes a model without being judged against what the product already holds. Without the
-third sentence every task that creates a kind's first file could pull research of all the standing
-checks, and an agent on the comparison goes on improvising and may make a full audit; a task that
-is an extension for another reason keeps its research (WAY-211).
+limit on research every task that creates a kind's first file could pull research of all the
+standing checks, and an agent on the comparison goes on improvising and may make a full audit; a
+task that is an extension for another reason keeps its research (WAY-211). In a product that has
+coding guidelines each standing check already stands decided (WAY-202), so a kind settles only
+where a check reads its code. A kind in a language no standing check reads has no tool whose
+decision could extend to it, and choosing a tool is a technology choice that needs the research of
+an extension, so that kind makes the task one. Its weak points: whether a check reads a kind's
+language is the agent's judgement from the product's decisions, and a first file in a new language
+costs its task the research and the trial run of an extension.
 *Rejected:* blocking every unindexed kind — a genuinely first instance could never arrive;
 designating the next instance regardless of existing code — it bypasses comparison; four modes of
 the coding-guidelines skill left as they were, with the gap described as a proposal — an agent on
 the comparison goes on improvising and may make a full audit; the wording "Neither task is an
 extension under WAY-251, and neither takes research of the standing checks" — it takes research
-from a task that is an extension for another reason, against WAY-211.
+from a task that is an extension for another reason, against WAY-211; only the checks the kind
+touches, with no exception for a new language — the tool for that language would be chosen on a
+route without research of tools; no standing check for the kind, the exemption from research read
+literally — a script in a new language would enter without a linter.
 
 
 ### WAY-217 — Does an approved departure count as missing guidelines?
@@ -6992,30 +7010,43 @@ levels, each with the product's decision that sets it, and that a level whose na
 product something other than in the field, "integration" above all, is a term of the product's
 glossary, defined by the resources a test of that level may touch, such as files, the network or a
 browser. For each part the guidelines apply to, they say in one sentence whether its complexity lies
-in computation or in its connections.
+in computation or in its connections. In the area of the names of test levels this decision
+prevails over WAY-95: a level named in the product otherwise than in the field, a narrower meaning
+included, takes a glossary entry whether or not a sentence would be read wrongly.
 
 - **Scope:** product-guidelines
 - **Based on:** none
-- **Relations:** derives from WAY-173 · derives from WAY-226
+- **Relations:** derives from WAY-173 · derives from WAY-226 · narrows WAY-95
 - **Verification:** an agent compares the guidelines of a product with the decision:
   - complies: a game's guidelines name its levels unit, integration and end-to-end, its glossary
     defines "integration test" as a test that may touch files and a local server and no browser,
     and the table of levels names that term without copying it; the guidelines say that the
-    simulation's complexity lies in computation and the account server's in its connections;
+    simulation's complexity lies in computation and the account server's in its connections; a
+    level the game names more narrowly than the field takes its glossary entry although no
+    sentence of its guidelines reads differently for the field's meaning;
   - violates: the guidelines use "integration" with no glossary entry while their integration
     tests open a browser; the table of levels repeats the definition the glossary holds; a level is
-    defined as "tests several parts together".
+    defined as "tests several parts together"; a level named more narrowly than the field takes no
+    entry because no sentence would be read wrongly.
 - **Origin:** none
 
 *Rationale:* "unit" and "integration" mean different things to different teams, and much of the
 dispute over the right mix of tests is a dispute over the words; a level defined by what its test
 may touch can be checked without judgement. A word that means something of its own in the product is
 an entry of its glossary (WAY-95), where it is defined once and keeps one meaning in the guidelines
-and in the tests. Where a part's complexity lies tells which level catches its breaks: computation
-shows in tests that touch nothing outside the code, connections only in tests that reach them.
+and in the tests. For the name of a level this decision prevails over WAY-95, since under WAY-95 a
+level named more narrowly than the field would take an entry only where a sentence reads wrongly,
+and a level without an entry stays without any definition, the table of levels carrying none. Its
+weak point: the glossary takes an entry for every such level, also where no sentence misleads a
+reader. Where a part's complexity lies tells which level catches its breaks: computation shows in
+tests that touch nothing outside the code, connections only in tests that reach them.
 *Rejected:* each level defined in the guidelines' own table — a second definition beside the
 glossary, and the two drift apart; the meaning of "integration" left to each reader — tests of one
-name touch different things.
+name touch different things; this decision narrowed to WAY-95's rule, an agent judging at each
+level whether a sentence misleads — a level without an entry stays without any definition, and the
+dispute over "integration", for which this decision was made, returns; the two decisions left
+without a precedence — the first task to write a product's testing guidelines meets two rules with
+none between them (WAY-25), which costs a blocking remark and a round of fixes.
 
 ### WAY-241 — What does the recipe of a test level hold?
 
@@ -8589,7 +8620,9 @@ An audit under WAY-280 ends with an order of repair from `grave` down, and withi
 that removes most of the problem for the least work stands first. A task joining a product's coding
 and testing guidelines has one list and one order, made at the end of the audit that runs last, which
 may lower or withdraw a cause of either discipline and changes nothing the human settled for a
-discipline.
+discipline. Where the human separates the work after one audit of such a task stopped, so that the
+other discipline's audit will not run in it, the skill of the stopped audit closes the list as the
+audit that runs last does.
 
 - **Scope:** product-guidelines
 - **Based on:** none
@@ -8599,10 +8632,14 @@ discipline.
     findings; within `heavy`, the fix of one file that removes twelve places stands before the fix of
     several parts that removes two; in a task joining code and tests the audit of tests runs last,
     orders the causes of both, and withdraws a cause of code whose effect does not occur, while the
-    `do not copy` status the human settled for its file stands until the human answers again;
+    `do not copy` status the human settled for its file stands until the human answers again; when
+    the human splits the work after the audit of code stopped, the skill of that audit returns,
+    numbers the causes, makes the top, goes back to each cause of it and puts it to the human;
   - violates: a `light` cause stands before a `grave` one because its fix is cheap; a task joining
     code and tests shows the human two orders; the audit that runs last changes a status the human
-    settled for a file because it withdrew the cause behind it.
+    settled for a file because it withdrew the cause behind it; the list of a stopped audit waits
+    for an audit in another task, and its own task goes to the cycle with causes that have no
+    order.
 - **Origin:** none
 
 *Rationale:* the weight says what is at stake, so it comes first, and within one weight what is left
@@ -8612,14 +8649,19 @@ compete for the same work, so they stand in one order. That end of an audit belo
 discipline, so the audit that runs last makes it, and it moves a cause by what it sees, whichever
 discipline found it. A weight is no matter of a discipline under WAY-247: it is no meaning of the
 guidelines and binds only the skill (WAY-173), so nothing a skill settles for its discipline is
-moved, and an answer of the human goes back to the human. Its weak points: a cheap fix that removes
-many `light` findings waits behind a costly `grave` one, and where two audits follow each other the
-human meets the first skill's choices and the top of the list in two rounds.
+moved, and an answer of the human goes back to the human. Where the work is separated, the task no
+longer joins the two disciplines, so the audit that stopped is the last one the task has and
+closes the list itself. Its weak points: a cheap fix that removes many `light` findings waits
+behind a costly `grave` one, where two audits follow each other the human meets the first skill's
+choices and the top of the list in two rounds, and after a separation the causes of the two
+disciplines are no longer merged into one order, which is the price of separating them.
 *Rejected:* literally the gain for each unit of work, whatever the weight — problems fall fastest in
 sum, but small things return to the head of the queue, and the agent would have to turn weights into
 numbers, which the scale does not give; `grave` first and all the rest literally by gain — the order
 stays simple at its head and gain counts below it, but a cheap `light` cause can pass a `heavy` one
-that keeps a user from an important task.
+that keeps a user from an important task; the list of the stopped audit waiting for the audit of the
+other discipline in another task — the causes of one task travel into another, and the first goes to
+its cycle with a list that has no order.
 
 ### WAY-283 — What of an audit's list of causes does the human decide on?
 
@@ -9633,6 +9675,69 @@ environment variable — the same costs and a variable to set on every machine, 
 script checks the patterns alone; patterns and the orchestrator's own judgment, which replaces what
 it takes to be private — one more reading of the whole record in every cycle, an omission passes
 silently, and the names of a public and of a private repository look alike in text.
+
+### WAY-310 — How does a product's rule on secrets and personal data show a departure from the ban on personal data alone?
+
+The template of the coding discipline holds that a departure from the ban on personal data alone
+stands in the rule `### Secrets and personal data` as the one line `Personal data: none —
+<PREFIX-NN>` in place of the ban, naming the product's decision that departs from it. That line is
+a field of the rule which the template adds to the fields of every rule, as WAY-171 lets the
+template of a discipline add at the places it names, and the name of that field, `Personal data`,
+stays in English in whatever language the product writes its guidelines, as the names of fields do
+under WAY-171.
+
+- **Scope:** product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-171 · derives from WAY-276
+- **Verification:** an agent compares the template and a product's guidelines with the decision:
+  - complies: a product that writes its guidelines in Polish and leaves the ban on personal data
+    keeps the line `Personal data: none — ACME-12` in the rule `### Secrets and personal data`
+    under the English heading, with the rest of the rule in Polish; the template names the line as
+    a field it adds to that rule, and the list of what stays in English in WAY-171 is as it was;
+  - violates: the line reads `Dane osobowe: none — ACME-12` in a Polish product; the template
+    leaves the line to be recognised by its meaning; the line stands in the guidelines of a product
+    that has not departed from the ban.
+- **Origin:** none
+
+*Rationale:* WAY-171 gives each rule four fields and lets the template of a discipline add to them
+at the places it names, and a field name is among the words that stay in English because the
+templates and skills name them and a reviewer compares a file with its template word for word. The
+line is such a field, since the template of the coding discipline adds it to one rule and names it,
+so it follows the field names without a change to the list in WAY-171. Its weak points: one rule
+has a field that the others lack, and the field appears only at a departure.
+*Rejected:* the line added to the list of what stays in English in WAY-171 — the decision on the
+form of all files of guidelines gets an exception for one label of one template, and each later
+label of that kind changes it again; the label following the language of the product's guidelines,
+with the template's sentence on it removed — a reviewer cannot compare the line with the template
+word for word and has to recognise it by its meaning; the label left as it stood — the first
+product to depart from the ban and write its guidelines in Polish meets two contradictory rules,
+and two cycles may settle it differently.
+
+### WAY-311 — How do the rows of a judgement of instruction files stand for a fragment that goes to several places and for a proposal?
+
+The table of a judgement of the skill of `instruction-files` gives a fragment that goes to several
+places a row for each part, each row with one of the four verdicts — keep, move, remove or reword —
+and gives each proposal to add a rule or to change one a row of its own.
+
+- **Scope:** instruction-files
+- **Based on:** none
+- **Relations:** derives from WAY-257
+- **Verification:** an agent compares a judgement it gave, or the skill, with the decision:
+  - complies: a paragraph of a skill of which one sentence stays and another moves to a file beside
+    the skill stands in two rows, one `keep` and one `move`, each with its criterion, reason and
+    ground; a proposal to add a rule of working to a skill stands in a row of its own;
+  - violates: the paragraph stands in one row with the verdict `split`; a proposal to add a rule
+    appears only in the reason of the row of the fragment next to which it would stand.
+- **Origin:** none
+
+*Rationale:* a human disputes a judgement row by row (WAY-257), and a row that holds two verdicts,
+or a proposal folded into another row's reason, can be disputed only as a whole. With a row for
+each part and for each proposal the human accepts or rejects each separately. Its weak point: the
+table grows by a row for every part and every proposal, in a file read at every judgement.
+*Rejected:* leaving the judgement as its text stood — the reports of later judgements go on
+departing from the format, and a reviewer reports each departure again; a script that checks the
+shape of a judgement — it would catch the order of sections as well, but it is a new script with
+tests for a report that lives one cycle.
 
 ## Withdrawn identifiers
 
