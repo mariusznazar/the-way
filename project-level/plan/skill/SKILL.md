@@ -14,8 +14,8 @@ this skill holds the order of the work. The decisions that set its rules are cit
 This skill lives in `project-level/plan/skill/` of the-way. In the-way itself, the-way is the
 checkout or worktree the session works in, the directory `git rev-parse --show-toplevel` prints in
 the session's working directory; in a product, it is the product's pinned `.the-way`. The project
-level's directory, `project-level/`, is there, and each skill named below is the project skill of
-that name with the `the-way-` prefix.
+level's directory, `project-level/`, is there, and each skill named below or in the files beside
+this skill is the project skill of that name with the `the-way-` prefix.
 
 The breakdown reads the product's foundation and the definition and writes nothing in either
 (WAY-106). It writes no task document; each task is refined later through `refine-task`.

@@ -16,8 +16,8 @@ call it too, each adding what it needs (WAY-115, WAY-134).
 This skill lives in `elements/common/skill/` of the-way. In the-way itself, the-way is the
 checkout or worktree the session works in, the directory `git rev-parse --show-toplevel`
 prints in the session's working directory; in a product, it is the product's pinned `.the-way`.
-`elements/common/` is there, and each skill named below is the project skill of that name with the
-`the-way-` prefix.
+`elements/common/` is there, and each skill named below or in the files beside this skill is the
+project skill of that name with the `the-way-` prefix.
 
 ## What the caller gives
 

@@ -10,14 +10,15 @@ readiness gate; the settling of the project's technology, between them, it hands
 `settle-technology`. A definition records what is settled about the product before the project is
 broken into tasks — as projected entries of the foundation — so that the breakdown and the tasks
 guess as little as they can. The form of a definition and the rule of each section stand in
-`definition_template.md`; how a skill asks stands in `elements/common/way_of_working.md`; this
-skill holds the order of the work. The decisions that set its rules are cited below.
+`project-level/definition_template.md`; how a skill asks stands in
+`elements/common/way_of_working.md`; this skill holds the order of the work. The decisions that set
+its rules are cited below and in the files beside this skill.
 
 This skill lives in `project-level/skill/` of the-way. In the-way itself, the-way is the checkout
 or worktree the session works in, the directory `git rev-parse --show-toplevel` prints in
 the session's working directory; in a product, it is the product's pinned `.the-way`. The project
-level's directory, `project-level/`, is there, and each skill named below is the project skill of
-that name with the `the-way-` prefix.
+level's directory, `project-level/`, is there, and each skill named below or in the files beside
+this skill is the project skill of that name with the `the-way-` prefix.
 
 The project level reads the product's foundation and writes nothing in it
 (WAY-106).
@@ -25,159 +26,55 @@ The project level reads the product's foundation and writes nothing in it
 ## Delegated definition change and gate
 
 When `lead-project` dispatches a definition edit or step 7 through a refinement conversation
-path, read that file and `project-level/lead/conversation_template.md` first, verify its sources
-and process pin, and use this same workflow with file-mediated routing (WAY-156). Edit only the
-definition and your conversation turn; write no task body, shared plan or product foundation.
-Every question or presentation this workflow or a borrowed skill addresses to the human returns
-through the conversation, with complete material and the ways/costs/recommendation required by
-"How a skill asks". End the turn for the project orchestrator to obtain and record the answer;
-never speak to the human directly, approve for them or start a child agent.
+path, read `delegated_mode.md` beside this skill first (WAY-156): it holds what that path changes
+in the workflow below, and the file of step 7 points back to it.
 
-The project orchestrator may make the initial text edit only when that full text is already
-before it and needs no other definition-section or foundation reading; otherwise it delegates
-the edit. A subagent always performs step 7, including the whole-foundation collision search and
-all checks. At 7.3 request the independent critique through the conversation with full proposal
-and source paths; the project orchestrator dispatches it and returns observations through files.
-Verify the observations and correct through the existing element skills in projected mode,
-returning conflicts and additional child-work requests instead of launching children. Missing
-independent critique blocks the gate. Present the approval material through the project
-orchestrator and wait for its recorded human approval before writing the fingerprint, gate record
-and approved Status; a provisional agent ruling is not approval.
+## Rules that hold across the steps
 
-Keep the pending gate and next actor visible in the conversation and the definition's actual
-Status. On completion return its checks, new source identity and next action through the file:
-a fresh plan-project subagent starts at step 0 against this newly approved definition. No task
-receives `ready for cycle` while that gate or the subsequent plan recheck remains pending;
-neither this agent nor the project orchestrator starts task implementation.
+- Speak the language the human opened in; the definition is written in it, as the template gives.
+- What the files can answer, read yourself instead of asking
+  (WAY-112).
+- Once the definition is written (step 3), write each answer into it, with its status line, before
+  the next question, so that a fresh agent reading only the file knows where the work stands
+  (WAY-112).
+- A change of the definition after the readiness gate goes through the readiness gate again
+  (WAY-118).
 
 ## 0. Start or resume
 
-- Read `definition_template.md` in full, and the section "How a skill asks" of
+- Read `project-level/definition_template.md` in full, and the section "How a skill asks" of
   `elements/common/way_of_working.md`.
-- When the human names an existing definition, read it whole and go on from where its status line
-  says; a working table under "Projected foundation changes" means step 5 is under way, and an
-  item of "Technology" ending `— open` that step 6 is. A definition whose status reads `approved`
-  is checked first:
-  `python -B <the-way>/project-level/readiness_check.py <definition>`. A finding that its
-  fingerprint no longer matches means the definition changed after the gate, and it goes through
-  step 7 again.
-- A definition with no `## Technology` section was written before the step that settles the
-  technology. Say so, and ask whether the project is reopened, with the cost of each way:
-  reopening settles the technology at step 6 and takes the definition through the gate again
-  (WAY-118); leaving it leaves the choices to the breakdown, and the check keeps reporting the
-  missing section. On reopening, add `## Technology` reading `TODO` before "Projected foundation
-  changes", set the status line to `definition — open: Technology`, and go on at step 6
-  (WAY-121).
+- When the human names an existing definition — in a dispatched turn, the definition its
+  conversation file names — read `existing_definition.md` beside this skill.
 - Otherwise begin with step 1.
 
 ## 1. The idea
 
-- Read in full what the human brings: an idea, a note, a concept, a link.
-- Settle four things with the human: what the project is to achieve; what is done today without it
-  and where that hurts; what changes once it succeeds; why now.
-- Give back your understanding in two or three sentences, and wait for the human to confirm or
-  correct it.
-- Speak the language the human opened in; the definition is written in it, as the template gives.
+Read `idea.md` beside this skill.
 
 ## 2. Read the foundation for the idea
 
-- Select and read the product's current foundation by "Reading the foundation" in
-  `elements/common/way_of_working.md`, starting from the idea's proposed responsibilities,
-  behaviour, flows and surfaces before a diff exists (WAY-111, WAY-150).
-- Bring what you find into the conversation as material: a decision the project would change, an
-  invariant it may break, a trust boundary it crosses, a surface it changes. For a decision, ask
-  whether the decision changes or the project fits it (WAY-30).
-- When the foundation holds no entries, say so in one sentence and go on.
+Read `read_foundation.md` beside this skill.
 
 ## 3. The first write
 
-- Find where the product keeps its projects: the `## Backlog` section of the product's root
-  `AGENTS.md`. Where it does not name the place, ask once, and offer to add the answer as the
-  template gives it.
-- Once the human has confirmed the goal, write the definition there without asking: the confirmed
-  goal, `TODO` in every other section but the gate record, which the template gives, and the
-  status line. Give the definition's full path in the same message
-  (WAY-112).
+Read `first_write.md` beside this skill.
 
 ## 4. Rounds through the sections
 
-- Ask about the largest unknowns first: what is in and out of scope, what success looks like and
-  what would show it false, the risks, the inputs and constraints.
-- Write each answer into the definition, with its status line, before the next question, so that a
-  fresh agent reading only the file knows where the work stands
-  (WAY-112).
-- Background, Success and Risks hold what the human answered: ask for them, as the template gives.
-- Three moves run through the rounds
-  (WAY-112):
-  - where two sentences of the human contradict each other, quote both and ask which holds; both
-    are quoted from the human's words or material, never invented as a risk;
-  - "I do not know" to a question of assessment is a result, written as an open question with its
-    place of resolution; to a question of decision, give a recommendation, with what each way
-    costs;
-  - what the files can answer, read yourself instead of asking.
-- Never ask for a deadline; the template says how one enters.
-- A settlement that binds beyond the project stays in the text of its section for now; step 5 makes
-  it an entry. "Projected foundation changes" reads `TODO` until then.
-- A technology choice the human cannot settle stays in the text or as an open question for now;
-  step 6 settles it. "Technology" reads `TODO` until then.
-- What is not yet known goes to one of the three places the template names.
-- Once no section but "Technology" and "Projected foundation changes" holds `TODO`, step 5
-  begins.
+Read `rounds.md` beside this skill.
 
 ## 5. Find the entries
 
-- Run `find-foundation-entries` with this definition, the conversation and the material it started
-  from as the source, the breakdown of the project as the next reader, and projected entries into
-  "Projected foundation changes" as the mode.
-- A new projected decision needs no number and no prefix: ask for none. Keep the identifiers that
-  other projected headings require.
-- A technology choice the human has not settled is no candidate: step 6 settles it.
-- Once the step ends, set the status line to `definition — open: Technology`; step 6 begins.
+Read `find_entries.md` beside this skill.
 
 ## 6. Settle the technology
 
-- Run `settle-technology` with this definition
-  (WAY-121).
-- Once `python -B <the-way>/project-level/readiness_check.py <definition> --before-approval`
-  reports nothing — a `TODO` in a projected field awaiting code or the world is no machine gap —
-  set the status line to `ready for gate`, as the template gives it; step 7 begins.
+Read `technology.md` beside this skill. Where the readiness check reports a finding at this step,
+in the run `technology.md` gives or handed back by `settle-technology`, read `readiness_gate.md`
+beside this skill: the finding goes where its 7.1 sends it.
 
 ## 7. The readiness gate
 
-1. Run `python -B <the-way>/project-level/readiness_check.py <definition> --before-approval`. A
-   finding of condition f goes back to step 5; a finding of condition g, or of condition a in
-   "Technology", goes back to step 6; a finding of condition a inside a projected entry goes to the
-   skill of its element in projected mode, which completes that entry's wording; any other finding
-   goes back to step 4.
-2. Search the whole foundation once for what the definition and its projected entries touch
-   (WAY-118), with what each element's skill adds to the search of the foundation: the entries
-   that name an entry the definition projects a change to; an entry that already states what a
-   projected entry settles; and what the definition collides with that no written link joins — a
-   decision whose binding sentences the project would break, an invariant, a glossary term the
-   definition uses in another meaning, a fact the project contradicts. This is the one search of
-   the whole foundation on the way to the gate: neither `find-foundation-entries` nor the skill of
-   an element in projected mode makes one. Settle each finding before the gate: a projected change
-   to the entry through the skill of its element in projected mode, a projected entry struck or
-   turned into a change of the entry that already states it, shown to the human at 7.3, or the
-   definition brought into line with it.
-3. Run `critique` once on all finished projected entries, the definition and its sources
-   (WAY-120). Verify its observations, correct proposals through the skills of their elements and
-   bring any conflict with a human settlement back to the human. If an independent critic cannot
-   run, say so and wait; the author's self-check does not meet this condition. Then show the
-   projected entries as a list, each as its identifier and one sentence of its meaning in the
-   human's language, with the whole entries in the definition for the human to read (WAY-114). The
-   human approves their meaning, and may strike an entry or change its meaning; a changed meaning
-   goes through the skill of its element in projected mode again, and where it changes the
-   question of a decision an item of "Technology" names, the item takes the new question.
-4. After the final review changes, run the check of 7.1 again; a finding goes where 7.1 sends it.
-   On the human's approval, print the fingerprint with
-   `python -B <the-way>/project-level/readiness_check.py <definition> --fingerprint`, write the
-   gate record, and set the status line to `approved YYYY-MM-DD`. The gate record approves every
-   projected entry; no entry carries a field of approval.
-5. Run the check with no option; it must report nothing found. Tell the human what it reported,
-   and that the approval and the search of 7.2 (condition c) rest on no script's check, and that
-   the breakdown of the approved definition into tasks follows through `plan-project`
-   (WAY-142).
-
-A change of the definition after the gate goes through the gate again
-(WAY-118).
+Read `readiness_gate.md` beside this skill unless step 6 had you read it; in a turn dispatched
+through a refinement conversation path it points to `delegated_mode.md` for what changes.
