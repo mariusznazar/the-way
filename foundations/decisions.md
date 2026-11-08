@@ -2552,14 +2552,15 @@ refinement it is asked as above, the looser rule holding only before the cycle s
   - complies: a choice is presented in text with the costs of both ways and a recommendation,
     followed by a source-anchored question against the answer when it enters a binding entry,
     unless the person took a way offered whose weak point the question named; in the refinement of
-    a task, an answer that changes a decision, or that follows a loose remark, is written as given,
-    while an answer that contradicts a sentence the person said earlier gets one question quoting
-    that sentence;
+    a task or a project definition, the entries written during it included, an answer that changes
+    a decision, or that follows a loose remark, is written as given, while an answer that
+    contradicts a sentence the person said earlier gets one question quoting that sentence;
   - violates: the choice appears only in a separate option panel, an agent asks a generic
     challenge unrelated to the person's answer, or an agent asks against a way offered whose weak
-    point the question already named and the person took as offered; in the refinement of a task,
-    an agent asks against an answer because it changes a decision or follows a loose remark, with
-    no earlier sentence of the person that the answer contradicts.
+    point the question already named and the person took as offered; in the refinement of a task or
+    a project definition, an agent asks against an answer, for an entry written during it too,
+    because it changes a decision or follows a loose remark, with no earlier sentence of the person
+    that the answer contradicts.
 - **Origin:** none
 
 *Rationale:* the person sees the trade-off where they make the choice. A challenge grounded in
@@ -2570,9 +2571,12 @@ did not weigh. While a document is refined an answer is no commitment yet, since
 the whole document at its acceptance and anything in it may change, so a question after every
 answer, or after a loose remark, spends attention on what that reading covers; only a
 contradiction with the person's own earlier sentence is both real and quotable, and only the person
-can resolve it. Where an entry is written or a cycle runs, the answer is about to bind, so the
-question stays. The price at refinement: an answer that contradicts the material, such as a
-product description or a note, and no sentence of the person, passes with no question.
+can resolve it. Where an entry is written outside such a refinement or a cycle runs, the answer is
+about to bind, so the question stays; the entries written during a refinement, such as the projected
+entries of a definition, wait for the person's acceptance of the whole document or at the gate, so
+they follow the rule of the refinement. The price at refinement: an answer that contradicts the
+material, such as a product description or a note, and no sentence of the person, passes with no
+question.
 *Rejected:* a panel of options separate from the conversation — its context is detached from the
 material; a challenge to every choice, including one that ends with the work — repeated questions
 would add no later protection; a challenge to every choice entering a binding entry, even a way
