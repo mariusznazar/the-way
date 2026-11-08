@@ -23,8 +23,8 @@ to guess or overwrite another task.
   `project-level/technology/task_run.md`.
   Write the request for it as a *Child-work request* in your turn, never as a question: it names
   the choice, the note the run is for and the path of this task document. Every question the run
-  would address to the human (the list to confirm, the table of choices, the choice itself) goes
-  into the turn as human material, and you end the turn. Only you write the document: the
+  would address to the human (the list to confirm, the message on the choices, the choice itself)
+  goes into the turn as human material, and you end the turn. Only you write the document: the
   section *Technology*, the settled question and its three fields are written by you, from the
   research, the critique and the tests the project orchestrator brings back and from the human
   answers recorded in the file. Where the answerer marked another member's request canonical,

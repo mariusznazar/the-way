@@ -130,8 +130,8 @@ project skill with the `the-way-` prefix, never a personal copy.
    separately identified. Preserve the answerer's canonical question and affected tasks so an
    identical choice is asked once; distinct scopes remain distinct. Do not hide quotation answers
    behind a summary or offer recommendations as accepted decisions. A run's list to confirm and
-   its table of choices go in the package once, and each choice the human makes is recorded as a
-   human answer (step 6); a canonical request's run is presented once for all its affected tasks.
+   its message on the choices go in the package once, and each choice the human makes is recorded as
+   a human answer (step 6); a canonical request's run is presented once for all its affected tasks.
 4. Before presenting the completed proposed set, dispatch one fresh independent `critique` on
    the whole set, its sources and applicable rules through `elements/common/critique/SKILL.md`
    (WAY-120). Put material and the critic's observations in the conversation files; prompts carry

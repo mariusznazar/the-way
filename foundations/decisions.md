@@ -2900,15 +2900,20 @@ research in turn.
 
 ### WAY-123 — How does a technology choice reach a human who cannot assess the technology?
 
-The step that settles technology, at a project definition or at a task (WAY-267), shows the options
-of each choice by their consequences for the product — what it costs, where it runs, what keeping
-it running takes and what changing it later costs — and the human chooses between those
-consequences. A difference with no consequence for the product decides nothing, and where no
-difference with a consequence remains, the step recommends the simplest and cheapest option. The
-choices whose research started together reach the human together, in one table, once every one of
-their comparisons has passed the critique, each with its recommendation and the weak point of the
-option recommended; in the area of the choices this step settles, this decision prevails over
-WAY-114, under which a question goes to the human only where the agent has no recommendation.
+The step that settles technology, at a project definition or at a task (WAY-267), shows each choice
+in plain text, in words a person who does not know the technology can follow: the options that
+decide it, each under its own name, by their consequences for the product — what it costs, where
+it runs, what keeping it running takes and what changing it later costs — the other options one
+line each, and the lines of the options left out; the human chooses between those consequences. A
+difference with no consequence for the product decides nothing, and where no difference with a
+consequence remains, the step recommends the simplest and cheapest option. The choices whose
+research started together reach the human together, in one message, one choice after another, once
+every one of their comparisons has passed the critique and a fresh agent has checked, in the first
+message, before it is shown, that no option stands there by figures or features instead of what it
+changes for the product and that no word stays that a person who does not know the technology cannot
+follow without an explanation, each choice with its recommendation and the weak point of the option
+recommended; in the area of the choices this step settles, this decision prevails over WAY-114,
+under which a question goes to the human only where the agent has no recommendation.
 
 - **Scope:** project-level, decisions
 - **Based on:** none
@@ -2917,10 +2922,13 @@ WAY-114, under which a question goes to the human only where the agent has no re
   - complies: two stores of data are shown as "a file kept with the application and copied with
     it for a backup" against "a server to keep running in the container, with backups of its
     own", and the human picks one;
-  - violates: the options are shown as lists of technical features; two options with no
-    difference in consequences are offered as a matter of taste instead of the simpler one being
-    recommended; two choices whose research started together reach the human in separate
-    tables.
+  - violates: the options are shown as lists of technical features or as columns of figures; every
+    option of a choice, those that do not decide it too, is described at full length; a consequence
+    is described with a word such as "bundler" that a person who does not know the technology cannot
+    follow without an explanation; the first message reaches the human before a fresh agent has
+    checked it; two options with no difference in consequences are offered as a matter of taste
+    instead of the simpler one being recommended; two choices whose research started together reach
+    the human in separate messages.
 - **Origin:** none
 
 *Rationale:* a human who cannot assess the technology can still weigh what an option costs and
@@ -2928,13 +2936,28 @@ where it fails, so a technical difference reaches the decision only through a co
 options differ in nothing the product feels, a choice between them is blind, and the simplest and
 cheapest keeps cost and upkeep lowest. Independent choices shown together are settled in one
 answer, and the weak point stated with the recommendation lets the choice stand without a question
-asked after it (WAY-113).
+asked after it (WAY-113). Plain text, one choice after another, is what such a human reads: a table
+puts every datum of every option side by side, and a human who cannot weigh it takes the
+recommendation as offered. Only the options that decide a choice are described at length, which
+keeps the message short enough to read. The check by a fresh agent catches what the author no longer
+sees in its own text — figures or features standing for a consequence, a word of the technology's
+trade — and it is a judgement, not a mechanical rule, so it sometimes flags a word the human
+knows, and the author adds an explanation nobody needed. The price of the form is a longer message,
+and the loss of the comparison of the options across one page; the check covers the first message
+alone, so a word of a later follow-up goes unchecked.
 *Rejected:* technical differences shown as they stand — the human cannot weigh them; falling back
 on a default bundle when the human cannot judge — with no fixed list (WAY-122) there is no default;
 the agent choosing alone — the choice binds the product, and a human approves decisions (WAY-14);
 every choice shown on its own, followed by a question against it — the human waits between choices,
 and each choice costs two exchanges; each comparison shown as soon as its critique passes — the
-tables come one choice at a time.
+choices reach the human one at a time; the options in one table as before — nothing breaks at
+once, but a table invites taking the recommendation as offered, and a recommendation can pass that
+the human would not have chosen; the table with a paragraph in plain words beneath it — the fewest
+changes, but the longest message, and the table is still not read; a sentence that names a tool only
+where its name carries a consequence — a bare product name stands where two forms of one tool
+differ, and the human has to ask for the difference; the check for figures and features alone — it
+costs nothing, but a word of the technology's trade in a consequence still reaches the human and
+costs a further exchange.
 
 ### WAY-124 — When is a task ready for its cycle?
 
@@ -3570,8 +3593,8 @@ weighed against no consequence for the product.
     than the others;
   - violates: a host whose deployment cannot be scripted is left out of the comparison for that
     reason; a host is recommended over a cheaper one because an agent can operate it from a
-    terminal; the table of consequences scores how well an agent works with each host beside its
-    cost.
+    terminal; the consequences shown to the human score how well an agent works with each host
+    beside its cost.
 - **Origin:** none
 
 *Rationale:* an agent writes the deployment for a place to run and reads what it reports, yet a
@@ -3596,7 +3619,7 @@ settles included, with a devil's advocate, a pre-mortem and a search for unknown
 no choice a decision of the foundation holds, a choice the human opened being held by no decision,
 and no other decision already written is tested afterwards. The risks these tests give are
 hypotheses with no source, not differences claimed between options, so the critique of the
-comparison does not strike them, and they stand in the table beside the option recommended before
+comparison does not strike them, and they stand in the message beside the option recommended before
 the human chooses. The human who chooses that option takes its risks, and each risk taken reaches
 the decision of that choice in its *Rationale*, beside the lacks of the option chosen, marked as a
 hypothesis, through the task document where the step ran at a task.
@@ -3606,14 +3629,14 @@ hypothesis, through the task document where the step ran at a task.
 - **Relations:** derives from WAY-100 · derives from WAY-122 · derives from
   WAY-123
 - **Verification:** an agent compares the work with the decision:
-  - complies: a project settles its store of data and its place to run, the table shows beside each
+  - complies: a project settles its store of data and its place to run, the message puts beside each
     option recommended the risks the three tests gave, each marked as a hypothesis, and the human
     who takes the recommended host finds those risks in the *Rationale* of its decision beside its
     lacks; a framework the definition names as a constraint is tested; a language a decision of the
     foundation holds is not; a run at a task tests a service the task document names as a
     constraint, and a way of logging in the human opened though a decision held it, each risk taken
     standing in the task document until the cycle writes the decision;
-  - violates: the critique strikes a risk from the table for want of a source; the risks are shown
+  - violates: the critique strikes a risk from the message for want of a source; the risks are shown
     only after the human has chosen; every option of a choice is tested; an agent tests a decision
     written before the project and adds risks to it; a risk taken reaches the decision's *Based on*
     as a fact.
@@ -4643,7 +4666,8 @@ needs. Data set up from scratch and a dedicated test environment that persists a
 of that choice, and an entry, a decision of the foundation or a projected decision of a definition,
 that leaves part of what a matter asks unanswered does not settle that matter at a project
 definition, while in a run at a task (WAY-267) it holds the choice like any decision, which opens
-only on the human's word.
+only on the human's word, the list shown to the human then keeping the item `— held by` with one
+sentence saying what that decision leaves unsaid.
 
 - **Scope:** project-level, decisions
 - **Based on:** none
@@ -4659,7 +4683,8 @@ only on the human's word.
     consequences; a list written before the record's life was asked, whose logs item stands
     `— held by` a decision silent on it, has the item end `— open` with that decision nested under
     it, and the list is shown again with one sentence on what the decision leaves unsaid; in a run at
-    a task, the item over such a decision stays `— held by` until the human's word opens it;
+    a task, the item over such a decision stays `— held by` on the list shown to the human, with
+    one sentence on what the decision leaves unsaid, until the human's word opens it;
   - violates: the interface is answered by an agent reading the store of data past the
     application; the logs are answered by where the record goes and how an agent reads it, with
     nothing said of whether it outlives a redeployment, and the answer stands as settling the
@@ -4668,7 +4693,9 @@ only on the human's word.
     record's life with no word of the human; an approved definition is sent back to the step because its logs decision is silent on
     it; the development data names where the data comes from but not how an agent reaches a save
     from the middle of a game; the comparison of the development data leaves out a dedicated test
-    environment that persists because the data has to be set up from scratch.
+    environment that persists because the data has to be set up from scratch; in a run at a task,
+    the list shown to the human keeps the item over such a decision `— held by` with no word of
+    what the decision leaves unsaid.
 - **Origin:** none
 
 *Rationale:* each answer serves an agent that checks behaviour a user sees in the running product.
@@ -4683,7 +4710,10 @@ no user meets and skips the code in between. A check needs the data in a given s
 says both where the data comes from and how the agent brings it to that state; otherwise the agent of the
 cycle improvises it. A dedicated test environment that persists is in many cases better than data
 set up from scratch for every change, though it brings costs of its own, so neither is ruled out
-and the step weighs them by their consequences (WAY-123).
+and the step weighs them by their consequences (WAY-123). In a run at a task the item over a
+silent decision stays held, and the list shown to the human says in one sentence what that
+decision leaves unsaid, since an item that reads as settled gives the human no sign that something
+is left for them to say.
 *Rejected:* the interface without "as its user does" — access to the store of data past the
 application would count as an interface; the development data asked as data rebuilt from scratch —
 it rules out a dedicated test environment that persists, in many cases the better option; the
@@ -4709,7 +4739,7 @@ it.
     server's container;
   - violates: the step recommends the cheaper service because how well an agent works with an
     option decides only a tie; the service is left out of the comparison because an agent cannot
-    read its logs; the table shows the service with no word on whether an agent can use it.
+    read its logs; the message shows the service with no word on whether an agent can use it.
 - **Origin:** none
 
 *Rationale:* a choice of an agent's way to the running product exists so that an agent can check
@@ -7940,14 +7970,14 @@ writes the decision with the code that uses it.
 - **Verification:** an agent compares the run and the task document with the decision:
   - complies: a human runs the step at a task with the note "where the product's error reports go";
     the run compares the options with their sources, tests the option it recommends and shows the
-    table, the task document then holds the answer with the options not chosen, their sources, the
+    message, the task document then holds the answer with the options not chosen, their sources, the
     lacks and the risks, and the decision enters the log in the merge of the code that uses it; a
     note that comes with no task document starts `refine-task`, which creates the document; a human
     names in the note a way of logging in that a decision holds, and the result stands in the task
     document as a change of that decision; a run whose note speaks of a store of data, at a task
     that brings a first screen, lists nothing on how an agent reaches that screen; in a refinement a
     project orchestrator leads, the refiner asks for the run through its conversation file, the
-    orchestrator dispatches the run's agents and the table goes in the round package;
+    orchestrator dispatches the run's agents and the message goes in the round package;
   - violates: a run writes the option chosen into the decision log before its code exists; a run
     changes an approved definition or reopens a choice one of its projected decisions settles; an
     agent opens a choice a decision holds on its own; a run adds the logs, the interface or the
@@ -8021,9 +8051,9 @@ the agent's judgment, helped by the examples of `project-level/technology/reserv
 changing it means reworking what is written, while the choice decides what the product has to keep.
 The test that puts a choice on a project's list (WAY-121) also marks what one task does not settle
 alone: a choice one task can make and change alone costs little to turn back, and stopping for it
-would cost a cycle, research, a critique and a table for the human. The rule takes from lesson m2l4
-of the 10xDevs course one thing, for these choices: a technical decision that rests on a source that
-can be checked, not on a model's memory. A run of the step gives a choice that source, with a
+would cost a cycle, research, a critique and a message for the human. The rule takes from lesson
+m2l4 of the 10xDevs course one thing, for these choices: a technical decision that rests on a source
+that can be checked, not on a model's memory. A run of the step gives a choice that source, with a
 critique and tests of its risks. The request is the cycle's point of human review (WAY-227), so a
 choice met in the cycle leaves it through a blocked draft request and reaches the human in
 refinement, where the step can run. Without the precedence, a cycle meeting such a choice would face
@@ -8033,8 +8063,8 @@ doubtful choice judged not under the rule reaches the human in the request with 
 choice met late in a planned task costs the slices already made, and refinement can miss one; and
 that the tools of guidelines keep a route with no tests of risks (WAY-138).
 *Rejected:* every new element of the stack, the smallest dependency included — every small library
-is a stopped cycle with research, a critique, tests of risks and a table for the human, and WAY-121
-would have to narrow, since it leaves such choices to the task; the same rule with each new
+is a stopped cycle with research, a critique, tests of risks and a message for the human, and
+WAY-121 would have to narrow, since it leaves such choices to the task; the same rule with each new
 dependency also listed on a line of its own in the request — one more line in the request, an
 agent's mistake seen only there with the code standing, and one more rule for a problem nobody has
 recorded; the work going on in the same request, with the step's result as a remark on it — the

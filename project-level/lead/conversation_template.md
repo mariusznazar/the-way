@@ -98,8 +98,9 @@ Human actions: <each action, proposed placement and reason, human placement/comp
 Wording: <complete current task document for wording/final review, or exact proposals; or none>
 Questions against choices: <choice ID, quoted anchor, complete WAY-113 question and answer,
   or the applicable exception with its reason; or none>
-Technology run: <the list of choices to confirm and the table of choices with consequences, once
-  a run has produced them, each choice with its stable ID and waiting/chosen state; or none>
+Technology run: <the list of choices to confirm and the message on the choices with their
+  consequences, once a run has produced them, each choice with its stable ID and waiting/chosen
+  state; or none>
 Child-work requests: <needed critique or other delegated work and full paths of material; for a
   run of the step that settles technology, the choice, the note the run is for and the path of this
   task document; or none>

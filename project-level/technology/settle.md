@@ -40,23 +40,26 @@ waits, so that a resumed step finds it.
    risks the tests give into the choice's report, `.runs/technology/<choice>.md`, so that a
    resumed step finds them, as sub-step 6, Choose, needs.
    Then give one fresh agent, following `critique`, whose file is
-   `elements/common/critique/SKILL.md`, the whole table with the
+   `elements/common/critique/SKILL.md`, the whole message with the
    risks and the document, telling it that the risks are hypotheses with no source rather than
    differences claimed between options, so it does not strike them, and ask it for what one choice
-   of the table contradicts in another; verify each observation (WAY-120, WAY-138). Then show the
-   wave together, in one table: for each choice, the options by their consequences, the lines of
-   the options left out, a recommendation, the weak point of the option recommended, and beside
-   that option the risks the tests gave, each marked as a hypothesis
-   (WAY-123, WAY-138, WAY-113).
+   of the message contradicts in another and any option shown by figures or features instead of
+   what it changes for the product, or a word a person who does not know the technology cannot
+   follow without an explanation (WAY-123); verify each observation (WAY-120, WAY-138). Then show
+   the wave together, in one message, one choice after another: what the choice decides, in words a
+   person who does not know the technology can follow; the options that decide it, each under its
+   own name and by what it changes for the product; the other options, one line each, and the lines
+   of the options left out; a recommendation, the weak point of the option recommended and beside
+   it the risks the tests gave, each marked as a hypothesis (WAY-123, WAY-138, WAY-113).
 6. **Choose.** The human chooses each; never choose alone (WAY-123). The human who chooses the
    option recommended takes the risks shown beside it (WAY-138). A human who answers "you
    choose" or "I do not know" takes the recommendation; write it as the human's choice. The
    recommended option taken as offered passes without a further question; any other answer — an
-   option whose weak point the table did not name, an answer in the human's own words, one that
+   option whose weak point the message did not name, an answer in the human's own words, one that
    adds a reason or a condition — gets one question against it, anchored in those words or the
    material, the question the section "How a skill asks" of `elements/common/way_of_working.md`
    asks after a choice, asked here and not again
-   (WAY-113). A choice the human leaves unanswered goes into the next table with the risks
+   (WAY-113). A choice the human leaves unanswered goes into the next message with the risks
    already shown beside its option recommended, and is not tested again unless that option
    changes, when the new one is tested (WAY-138).
 7. **Write.** In a run at a task, `task_run.md` beside this file holds this sub-step. Hand each
@@ -64,7 +67,7 @@ waits, so that a resumed step finds it.
    the consequences that decided it, the other options with theirs, the source of each claimed
    difference for its *Based on*, the lacks of a chosen option and the risks taken with it for its
    *Rationale*, each risk marked as a hypothesis (WAY-138), and whether a question was asked
-   against it; what its step 4.1 would still ask goes into the next table rather than a round of
+   against it; what its step 4.1 would still ask goes into the next message rather than a round of
    its own. Where an entry is nested under the choice, name it in the hand-over as the entry the
    result rewrites, so that one question keeps one projected entry: a projected decision of the
    definition is replaced under its heading, its meaning sentence with it, and a decision of the
@@ -72,4 +75,4 @@ waits, so that a resumed step finds it.
    `Candidates:` line stays as it is. Then end the item with
    `— projected: <the decision's question>`, remove the nested line, narrow under "Open questions" the question the choice
    settles to what it still asks, removing it once nothing remains, and write both before the next
-   table. Start the next wave: every choice whose every dependency is now settled.
+   message. Start the next wave: every choice whose every dependency is now settled.
