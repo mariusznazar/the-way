@@ -2537,7 +2537,10 @@ of each and a recommendation, while a question of assessment stays open; neither
 question panel. After a human choice enters an entry's binding part, the agent asks one question
 against that choice anchored in the human's words or supplied material, unless the choice ends
 with the work, or the human took one of the ways offered and the decision question named, anchored
-in the material, the weak point of that way.
+in the material, the weak point of that way. While a project definition or a task document is
+refined, the technology step included, that question is asked only where the choice contradicts a
+sentence the human said earlier, which the question quotes; in a task's cycle and where an entry is
+written it is asked as above, the looser rule holding only before the cycle starts (WAY-315).
 
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common,
   project-level
@@ -2546,22 +2549,35 @@ in the material, the weak point of that way.
 - **Verification:** an agent compares the exchange with the decision:
   - complies: a choice is presented in text with the costs of both ways and a recommendation,
     followed by a source-anchored question against the answer when it enters a binding entry,
-    unless the person took a way offered whose weak point the question named;
+    unless the person took a way offered whose weak point the question named; in the refinement of
+    a task, an answer that changes a decision, or that follows a loose remark, is written as given,
+    while an answer that contradicts a sentence the person said earlier gets one question quoting
+    that sentence;
   - violates: the choice appears only in a separate option panel, an agent asks a generic
     challenge unrelated to the person's answer, or an agent asks against a way offered whose weak
-    point the question already named and the person took as offered.
+    point the question already named and the person took as offered; in the refinement of a task,
+    an agent asks against an answer because it changes a decision or follows a loose remark, with
+    no earlier sentence of the person that the answer contradicts.
 - **Origin:** none
 
 *Rationale:* the person sees the trade-off where they make the choice. A challenge grounded in
 their own material can expose a contradiction without inventing one. Where the question already
 named the weak point of a way and the person took that way as offered, a challenge asks again what
 was weighed at the choice; it is kept for an answer in the person's own words, which the question
-did not weigh.
+did not weigh. While a document is refined an answer is no commitment yet, since the person reads
+the whole document at its acceptance and anything in it may change, so a question after every
+answer, or after a loose remark, spends attention on what that reading covers; only a
+contradiction with the person's own earlier sentence is both real and quotable, and only the person
+can resolve it. Where an entry is written or a cycle runs, the answer is about to bind, so the
+question stays. The price at refinement: an answer that contradicts the material, such as a
+product description or a note, and no sentence of the person, passes with no question.
 *Rejected:* a panel of options separate from the conversation — its context is detached from the
 material; a challenge to every choice, including one that ends with the work — repeated questions
 would add no later protection; a challenge to every choice entering a binding entry, even a way
 taken as offered whose weak point the question named — it asks again what the choice already
-weighed.
+weighed; at refinement no question at all — a contradiction with the person's own earlier sentence
+passes unnoticed too; at refinement no question only where the answer changes a decision, otherwise
+as before — a loose remark still draws a question.
 
 ### WAY-114 — What does a human accept of an entry, and when?
 
@@ -2615,8 +2631,10 @@ The agent reads the project's sources in full and selects and reads the product'
 WAY-150, then shows the human a complete candidate table with each proposed settlement, its kind,
 its source and the concrete
 choice or action the next reader would otherwise have to guess; a row without such a consequence
-is shown as rejected. The human accepts or rejects rows before they are handed to the skills of
-their kinds, and each accepted row is recorded as it is worked through. The definition keeps the
+is shown as rejected. The human accepts or rejects the rows the agent derived before they are
+handed to the skills of their kinds, while a row that repeats a choice the human made between ways
+shown enters the table accepted, marked as the human's choice, and stays unless the human strikes
+it; each accepted row is recorded as it is worked through. The definition keeps the
 working table until the step ends, then replaces it with a `Candidates:` line recording how many
 rows were shown and accepted.
 
@@ -2625,17 +2643,27 @@ rows were shown and accepted.
 - **Relations:** derives from WAY-150
 - **Verification:** an agent compares the work with the decision:
   - complies: the human sees every column of the candidate table, rejects an exclusion whose
-    absence would make no task guess, and the completed definition carries the candidates line;
+    absence would make no task guess, and the completed definition carries the candidates line; a
+    row that repeats the choice the human made between two ways shown stands in the table
+    accepted and marked, and the human leaves it or strikes it;
   - violates: the conversation hides the source and the next reader's guess while a file holds
-    them, or entries are written before the human has cut the table.
+    them, or entries are written before the human has cut the table; a row that repeats the
+    human's choice between ways shown waits for the human's acceptance as a row the agent derived.
 - **Origin:** none
 
 *Rationale:* the source distinguishes a human settlement from material offered for consideration;
 the concrete guess filters noise before it becomes a rule. A table with row states lets work
-resume, and a final line shows that the search occurred even when it yields no entry.
+resume, and a final line shows that the search occurred even when it yields no entry. A row that
+only restates a choice the human has made between ways shown needs no second consent, so it enters
+accepted and the human's attention goes to the rows the agent derived; the price is that the row is
+the agent's summary of a choice the human did not read when making it, so a wrong summary is
+caught only by reading the table, which the marked rows stay in for.
 *Rejected:* turning every scope line into a foundation entry — exclusions that nobody would
 misread become permanent noise; showing a shortened table — the human cannot judge provenance or
-the reason a candidate matters.
+the reason a candidate matters; every row accepted separately, as before — a second consent to the
+same choice; such rows left out of the table, the entry written straight from the answer — the
+sieve of choices that bind no longer after the merge goes, the writer judges which choice to enter,
+and the decision on how a task keeps its settlements (WAY-134) needs a stronger rebuild.
 
 ### WAY-116 — Which foundation entries may a project definition project?
 
@@ -2967,8 +2995,10 @@ task's scope, temporary exclusions, relevant current foundation decisions, any a
 projected wording it uses and the settlements its refinement keeps for the foundation (WAY-134).
 It is ready when the human has seen and accepted its complete document, its required outcome is
 stated, every known question blocking that outcome is answered, the human has accepted or
-rejected every candidate settlement its refinement found, every human action it places before
-the cycle is done (WAY-140), and implementation questions carried into the cycle are named. A
+rejected every candidate settlement its refinement derived, a row that repeats a choice the human
+made between ways shown standing accepted until the human strikes it (WAY-134), every human action
+it places before the cycle is done (WAY-140), and implementation questions carried into the cycle
+are named. A
 project member also matches its plan item's scope, dependencies and assigned entries; any task
 using an approved definition checks that its approval still holds and names each projected
 entry, or the part of it, that its code makes true, while source-only use takes no other
@@ -2984,7 +3014,9 @@ assignment or dependency from the plan.
     code makes true with the part made true, a project member matches its plan item, and a task
     whose document places opening an external account before the cycle becomes ready once the
     human has opened it and accepted the complete document; a manually refined task with no
-    candidate settlements likewise waits for acceptance of its complete document;
+    candidate settlements likewise waits for acceptance of its complete document; a task whose
+    only candidate row repeats the human's choice between ways shown is ready once the human has
+    accepted the complete document, the row standing accepted unless the human struck it;
   - violates: a source-only task is blocked for lack of a plan item, a project member is ready
     despite a mismatch with its assigned work, a task leaves out a projected entry its code
     makes true, so its cycle writes a second entry for the same rule, a task is ready while a
@@ -3364,9 +3396,10 @@ only by failing it; a local hook as the keeper of every rule — one switch skip
 
 Before a task is ready for its cycle, the human sees a table of candidates found in the task
 document and the conversation that refined it, in the form WAY-115 gives with each settlement in
-the human's words, and the task document keeps the rows the human accepts and, where the human
-chose among ways shown, each way not chosen, under the answer to its question or, for a choice made
-outside the task's questions, in the source of the row it settles; the agent refining the task
+the human's words, and the task document keeps the rows the human accepts, those that repeat a
+choice the human made between ways shown included unless the human struck them, and, where the
+human chose among ways shown, each way not chosen, under the answer to its question or, for a
+choice made outside the task's questions, in the source of the row it settles; the agent refining the task
 presents the table, or, in orchestrated refinement, the project orchestrator as WAY-154 and WAY-155
 give. A candidate is a decision, an invariant, a glossary term, or an environment fact a candidate
 decision or invariant rests on, and a settlement that a current entry the refinement reads for the
@@ -3395,7 +3428,9 @@ becomes no second entry, the cycle tying the row to that entry and naming both i
     request names the row with that decision instead of a new one; a decision row whose question
     keeps two ways the human did not choose gives its decision those two as rejected options, and
     one whose source keeps none, or keeps only ways that answer another part of the question,
-    gives `unknown` with no question to the human;
+    gives `unknown` with no question to the human; the row that repeats the choice the human made
+    between two ways shown stands in the table accepted and marked, while the rows the agent
+    derived from the material wait for the human;
   - violates: the cycle writes the entry with another meaning, or leaves out a kept settlement
     because no code makes it true; the refinement writes whole entries into the task document; a
     kept row repeats a rule a current decision the refinement read states; the cycle writes a
@@ -3403,7 +3438,8 @@ becomes no second entry, the cycle tying the row to that entry and naming both i
     directly about candidates or substitutes its own acceptance; a task document keeps the human's
     choice among ways shown without the ways not chosen; the cycle fills a decision's rejected
     options with ways it derives from what the cycle would otherwise guess, or blocks the request
-    to ask the human for them.
+    to ask the human for them; a row that repeats the human's choice between ways shown waits for
+    the human's acceptance like a row the agent derived.
 - **Origin:** none
 
 *Rationale:* a settlement the human makes while a task is refined binds after the merge as much as
@@ -3412,7 +3448,11 @@ a question, where it reads as one more choice the cycle may make otherwise. A ro
 words carries the meaning into the cycle without a second point of acceptance: the wording stays
 the agent's, as for every entry a cycle writes, the human judged the meaning when accepting the row,
 and the merge does not ask again, while the review of the whole change reads the entry against the
-row. A
+row. A row that repeats a choice the human made between ways shown carries that choice already, so
+it enters accepted and the human cuts only the rows the agent derived; asked again, the human
+would answer what the choice settled, and the price is that the row is the agent's summary of a
+choice the human did not read at the choice, so a wrong summary is caught only by reading the table
+when the document is accepted. A
 table read from the whole document finds a settlement said in passing, and its column of what the
 cycle would guess drops one no reader would miss. Refinement compares the candidates with the
 entries it reads for the task's parts; what no link joins, the one search of the whole foundation
@@ -3441,7 +3481,11 @@ where the template has it write `unknown`, and an agent comparing a change with 
 take `unknown` for a breach; the rule as part of WAY-29 — its question is a decision recovered from
 code, a new rule beside an existing one is a new question (WAY-19), and with this decision still
 having the cycle ask, the two would need a precedence; a decision of its own — one more entry,
-while this one has to be corrected anyway.
+while this one has to be corrected anyway; every row accepted separately, as before — a second
+consent to the same choice; rows that repeat a choice kept out of the table, the cycle writing the
+decision straight from the answer under the question — the sieve of choices that bind no longer
+after the merge goes (the column of what the cycle would otherwise guess), the cycle itself judges
+which choice to enter, and this decision needs a stronger rebuild.
 
 ### WAY-135 — When does a task's cycle write a spec?
 
@@ -3618,7 +3662,7 @@ through the properties WAY-122 weighs.
 The step that settles technology, at a project definition or at a task (WAY-267), tests the option
 it recommends for each choice it settles, one a constraint of the definition or of the task document
 settles included, with a devil's advocate, a pre-mortem and a search for unknown unknowns; it tests
-no choice a decision of the foundation holds, a choice the human opened being held by no decision,
+no choice a decision of the foundation holds, a choice the step opened being held by no decision,
 and no other decision already written is tested afterwards. The risks these tests give are
 hypotheses with no source, not differences claimed between options, so the critique of the
 comparison does not strike them, and they stand in the message beside the option recommended before
@@ -3636,7 +3680,7 @@ hypothesis, through the task document where the step ran at a task.
     who takes the recommended host finds those risks in the *Rationale* of its decision beside its
     lacks; a framework the definition names as a constraint is tested; a language a decision of the
     foundation holds is not; a run at a task tests a service the task document names as a
-    constraint, and a way of logging in the human opened though a decision held it, each risk taken
+    constraint, and a way of logging in the step opened though a decision held it, each risk taken
     standing in the task document until the cycle writes the decision;
   - violates: the critique strikes a risk from the message for want of a source; the risks are shown
     only after the human has chosen; every option of a choice is tested; an agent tests a decision
@@ -3654,7 +3698,7 @@ the choice, a risk can still change it; carried into the decision as a hypothesi
 reader what was accepted without passing for a sourced fact. The tests run on the option
 recommended, the one the human most often takes, and only where this project or task chooses: a
 choice a decision already holds has been made, and testing it again would reopen it with no reason
-in the work, while a choice the human opens has that reason and is chosen anew.
+in the work, while a choice the step opens has that reason and is chosen anew.
 *Rejected:* tests on every option of a choice — their cost grows with options the human mostly does
 not take; the risks shown after the choice — the human takes them unseen; the risks put through the
 critique as claims — with no source, every one would be struck; the risks in *Based on* — it names
@@ -4667,9 +4711,9 @@ product's behaviour outside production, and how an agent brings that data to the
 needs. Data set up from scratch and a dedicated test environment that persists are both options
 of that choice, and an entry, a decision of the foundation or a projected decision of a definition,
 that leaves part of what a matter asks unanswered does not settle that matter at a project
-definition, while in a run at a task (WAY-267) it holds the choice like any decision, which opens
-only on the human's word, the list shown to the human then keeping the item `— held by` with one
-sentence saying what that decision leaves unsaid.
+definition; in a run at a task (WAY-267) the step opens a decision of the foundation that leaves
+part of it unanswered as it opens any such decision (WAY-313), the list shown to the human saying
+in one sentence what that decision leaves unsaid.
 
 - **Scope:** project-level, decisions
 - **Based on:** none
@@ -4685,19 +4729,19 @@ sentence saying what that decision leaves unsaid.
     consequences; a list written before the record's life was asked, whose logs item stands
     `— held by` a decision silent on it, has the item end `— open` with that decision nested under
     it, and the list is shown again with one sentence on what the decision leaves unsaid; in a run at
-    a task, the item over such a decision stays `— held by` on the list shown to the human, with
-    one sentence on what the decision leaves unsaid, until the human's word opens it;
+    a task, the item over such a decision ends `— open` with that decision nested under it, and the
+    list shown to the human says in one sentence what the decision leaves unsaid;
   - violates: the interface is answered by an agent reading the store of data past the
     application; the logs are answered by where the record goes and how an agent reads it, with
     nothing said of whether it outlives a redeployment, and the answer stands as settling the
     matter; a logs item of a definition's list stays `— held by` or `— projected` on a decision
-    silent on the record's life; an agent opens, in a run at a task, a logs decision silent on the
-    record's life with no word of the human; an approved definition is sent back to the step because its logs decision is silent on
-    it; the development data names where the data comes from but not how an agent reaches a save
+    silent on the record's life; an agent leaves, in a run at a task, a logs decision silent on the
+    record's life `— held by` until the human says a word; an approved definition is sent back to
+    the step because its logs decision is silent on it; the development data names where the data comes from but not how an agent reaches a save
     from the middle of a game; the comparison of the development data leaves out a dedicated test
     environment that persists because the data has to be set up from scratch; in a run at a task,
-    the list shown to the human keeps the item over such a decision `— held by` with no word of
-    what the decision leaves unsaid.
+    the list shown to the human has the item over such a decision with no word of what the
+    decision leaves unsaid.
 - **Origin:** none
 
 *Rationale:* each answer serves an agent that checks behaviour a user sees in the running product.
@@ -4705,17 +4749,18 @@ The logs tell the agent what the product did, and the answer says where that rec
 long it lives, since an agent reads only what it can reach: a record that dies with each deployment
 serves a check made right after one and no diagnosis of a failure from before it. An entry that
 answers part of what a matter asks leaves the rest to be improvised in the cycle, so it settles
-nothing at a definition, whether its answer is good or not (WAY-270); at a task no gate follows, and
-opening a decision stays the human's (WAY-267). Operating the product as its user does lets
+nothing at a definition, whether its answer is good or not (WAY-270); at a task the step opens
+such a decision as it opens any decision before the cycle starts (WAY-313), and the human's choice
+among the options, the decision's present answer among them, is the consent to the change
+(WAY-314). Operating the product as its user does lets
 the check see what a user sees, while reading the store of data past the application shows a state
 no user meets and skips the code in between. A check needs the data in a given state, so the answer
 says both where the data comes from and how the agent brings it to that state; otherwise the agent of the
 cycle improvises it. A dedicated test environment that persists is in many cases better than data
 set up from scratch for every change, though it brings costs of its own, so neither is ruled out
-and the step weighs them by their consequences (WAY-123). In a run at a task the item over a
-silent decision stays held, and the list shown to the human says in one sentence what that
-decision leaves unsaid, since an item that reads as settled gives the human no sign that something
-is left for them to say.
+and the step weighs them by their consequences (WAY-123). In a run at a task the list shown to the
+human says in one sentence what a silent decision leaves unsaid, since an item that reads as
+settled gives the human no sign that something is left for them to say.
 *Rejected:* the interface without "as its user does" — access to the store of data past the
 application would count as an interface; the development data asked as data rebuilt from scratch —
 it rules out a dedicated test environment that persists, in many cases the better option; the
@@ -7989,8 +8034,9 @@ through `refine-task`. A run at a task settles what the note and the task name, 
 of an agent's way to the running product only where the note touches them, does the rest of its work
 as a run at a definition does and ends back in the task's refinement, with no readiness gate; a
 human may run it for any choice save one a projected decision of an approved definition settles,
-which no run reopens, and a choice a decision of the foundation holds opens only on the human's
-word, the result then being a change of that decision. The run writes each settled choice into the
+which no run reopens, and the step opens a choice a decision of the foundation holds where it sees
+a reason to change the decision (WAY-313), the result then being a change of that decision. The run
+writes each settled choice into the
 task document, with the options not chosen, the source of each difference claimed between the
 options, the lacks of the option chosen and the risks the human took with it, and the task's cycle
 writes the decision with the code that uses it.
@@ -8005,14 +8051,16 @@ writes the decision with the code that uses it.
     message, the task document then holds the answer with the options not chosen, their sources, the
     lacks and the risks, and the decision enters the log in the merge of the code that uses it; a
     note that comes with no task document starts `refine-task`, which creates the document; a human
-    names in the note a way of logging in that a decision holds, and the result stands in the task
-    document as a change of that decision; a run whose note speaks of a store of data, at a task
+    names in the note a way of logging in that a decision holds, or the step sees a reason to change
+    it and shows it open with the reason, and the result stands in the task document as a change of
+    that decision; a run whose note speaks of a store of data, at a task
     that brings a first screen, lists nothing on how an agent reaches that screen; in a refinement a
     project orchestrator leads, the refiner asks for the run through its conversation file, the
     orchestrator dispatches the run's agents and the message goes in the round package;
   - violates: a run writes the option chosen into the decision log before its code exists; a run
-    changes an approved definition or reopens a choice one of its projected decisions settles; an
-    agent opens a choice a decision holds on its own; a run adds the logs, the interface or the
+    changes an approved definition or reopens a choice one of its projected decisions settles; a run
+    leaves a choice a decision holds out of its list for want of the human's word, though it sees a
+    reason to change the decision; a run adds the logs, the interface or the
     development data to its list though the note does not touch them; the comparison stands only
     in a report the task document does not hold.
 - **Origin:** none
@@ -8027,10 +8075,13 @@ a choice with no code takes a full cycle, and the document has to hold the compa
 sources, since what a run keeps elsewhere does not last with the task. Settling only what the note
 and the task name keeps a task about something else from growing by choices nobody asked for, at the
 price that an independent task bringing a first screen gets no answer on how an agent reaches it
-unless the note asks, and its agent improvises. Opening a choice a decision holds takes the human's
-word because a change of a decision is the human's (WAY-14, WAY-30), and going through the step gives
-that change research and a critique, at the price that a decision held is no longer final and a
-hurried run could reach further ones.
+unless the note asks, and its agent improvises. A decision held is material of the step before the cycle
+starts (WAY-313), so the step opens it where it sees a reason; a change of a decision is the human's
+(WAY-14, WAY-30), and the human's choice among the options, the present answer of the decision among
+them, is the consent (WAY-314), while going through the step gives that change research and a
+critique. The price is that a decision held is no longer final in refinement and a hurried run
+could open further ones, which the list shown to the human, with the reason beside each item it
+opens, lets the human strike.
 *Rejected:* the choice written into the decision log at once, in a request of its own with no task —
 it goes against WAY-01: the log would describe what the product does not yet hold, and dropped work
 would leave the entry false; the choice written into the approved definition — one choice means the
@@ -9859,6 +9910,106 @@ searches existing guidelines for such sentences — a change to several skills a
 refresh mode of coding guidelines has heavy prerequisites; a separate task for the template, this
 change writing only the decision — until that task, agents writing guidelines by the template keep
 adding sentences the decision says to remove.
+
+### WAY-313 — What is a decision of the foundation to the refinement of a project or a task?
+
+While a project definition or a task document is refined, the technology step included, a decision
+of the foundation describes what the product does today and is material for revision, not a limit
+on the options: refinement shows an option that changes a decision as it shows any other, with the
+decision it changes named by its identifier, and may recommend it, asking no leave to open the
+decision first. This holds only before the cycle starts (WAY-315). A projected decision of an
+approved definition is no such material: a change of it goes through the definition and its
+readiness gate (WAY-118).
+
+- **Scope:** project-level, elements-common, decisions
+- **Based on:** none
+- **Relations:** derives from WAY-14 · derives from WAY-30
+- **Verification:** an agent compares the work with the decision:
+  - complies: refining a task, an agent finds that a decision keeps the records of a service for a
+    week while the task needs a month, shows the month as one option beside the week with the
+    decision it changes named, recommends it and asks nothing before showing it; the technology step
+    at a definition shows a way of logging in that a decision holds as an open choice, the decision's
+    present answer among the options, when it sees a reason to change it; a refinement of a task
+    that would change a projected decision of an approved definition sends the human to the
+    definition and its readiness gate;
+  - violates: a refinement leaves an option out of its comparison because a decision holds the
+    choice; an agent asks the human for leave to show an option that changes a decision; a
+    refinement of a task changes a projected decision of an approved definition in the task's
+    document.
+- **Origin:** none
+
+*Rationale:* a decision records what the product does today. Refinement settles what a project or a
+task will change, where anything may still change, so a decision that kept the agent from showing a
+better option would hide from the human the very option the refinement exists to weigh; the human
+still decides every change (WAY-14). A projected decision of an approved definition stays outside
+because the definition and the plan of its tasks rest on it, and a change made for one task would
+leave them saying the old thing with no sign (WAY-118). The price is that refinement reaches
+decisions more often, and a hurried one could open decisions nobody needed to open, which the
+human's choice among the options answers (WAY-314).
+*Rejected:* unknown.
+
+### WAY-314 — Which act of the human consents to a change of a decision that refinement shows?
+
+Where refinement shows an option that changes a decision of the foundation (WAY-313), the option says
+in its line which decision it changes, and the human's choice of that option is the human's consent
+to the change (WAY-14); the acceptance of the complete task document, or the approval of the
+projected entries at the readiness gate of a definition, asks nothing about that change a second
+time. A task document carries the change and its cycle writes it with the code that needs it
+(WAY-30), and a definition carries it as a projected change of the decision.
+
+- **Scope:** project-level, elements-common, decisions
+- **Based on:** none
+- **Relations:** derives from WAY-14 · derives from WAY-30 · derives from WAY-313
+- **Verification:** an agent compares the work with the decision:
+  - complies: a comparison of two ways to keep a record shows the option that changes a decision
+    with the line "changes WAY-xx: the record lives a month, not a week"; the human chooses it, the
+    task document holds the choice under its question and the decision under its *Decisions in
+    play*, and the acceptance of the document asks nothing about that change beyond the reading of
+    the document;
+  - violates: the acceptance of the document carries a separate point asking the human to approve
+    the change of the decision again; an option that changes a decision does not name it in its
+    line; the choice of such an option is treated as preliminary until the document is accepted.
+- **Origin:** none
+
+*Rationale:* the human sees what a change costs where they choose between the options, so the choice
+is the moment of consent; a second consent to the same change asks again what was weighed and spends
+the attention that the acceptance of the whole document needs for the rest of it (WAY-114). The
+option names the decision it changes so that the change does not hide in an answer that reads as a
+plain one. The price is that a change missed at the choice stands in the document with no separate
+question, and only the reading of the document at its acceptance catches it.
+*Rejected:* the acceptance of the whole document as the consent, the choice among the options
+preliminary and the change a separate point at the acceptance — a second consent to the same change:
+its effects are seen at the choice, and the consent is given later.
+
+### WAY-315 — From when does a decision of the foundation bind the work on a task?
+
+A decision of the foundation binds the work on a task from the start of the task's cycle, the
+writing of a spec in the cycle included. In the cycle no agent departs from a decision on its own and
+returns with the question, as WAY-30 gives, and the looser rules that refinement follows for
+decisions (WAY-313, WAY-314), for the rows of its settlements (WAY-115, WAY-134) and for the question
+against an answer (WAY-113) hold only before that point.
+
+- **Scope:** task-cycle, project-level, decisions
+- **Based on:** none
+- **Relations:** derives from WAY-14 · derives from WAY-30
+- **Verification:** an agent compares the work with the decision:
+  - complies: the author of a spec who sees a better variant than a decision on the life of a record
+    does not take it and returns with the question for the human, as WAY-30 gives, while the
+    refinement of the same task showed that variant as an option beside the decision;
+  - violates: the author of a spec writes a design that departs from a decision on its own; an agent
+    of a cycle treats a decision as material because a spec, not code, is being written.
+- **Origin:** none
+
+*Rationale:* a spec fixes the design the code is made to, so a decision that gave way in a spec
+would give way in the code, and the cycle runs from its start to its request with no human between;
+the decision therefore binds from the start of the cycle. Before it, a human reads and accepts the
+document that frames the work, which is the place to weigh a change. The price is that the author of
+a spec who sees a better variant than a decision cannot take it alone, which costs one round through
+the human.
+*Rejected:* binding only from the writing of code, the spec of the cycle treating a decision as
+material and the consent given at the request — a change of a decision reaches the human at the
+request with code already built on it, and the cycle no longer goes from its start to its request
+without a human.
 
 ## Withdrawn identifiers
 
