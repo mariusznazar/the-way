@@ -2482,8 +2482,9 @@ deriving a deadline from background material — it mistakes context for a settl
 Before drafting, the agent selects and reads the current foundation under WAY-150, identifying
 touched parts from the proposed project's responsibilities, behaviour, flows and surfaces. It
 brings a touched part, a decision the project may change, an invariant it may break or a boundary
-it crosses to the human as material and asks
-whether the project changes an existing decision or fits it.
+it crosses to the human as material and asks whether the project is meant to change an existing
+decision or to fit it, a question that only frames the conversation: the consent to a change is the
+human's choice of the option that changes the decision (WAY-314).
 
 - **Scope:** project-level
 - **Based on:** none
@@ -2539,8 +2540,9 @@ against that choice anchored in the human's words or supplied material, unless t
 with the work, or the human took one of the ways offered and the decision question named, anchored
 in the material, the weak point of that way. While a project definition or a task document is
 refined, the technology step included, that question is asked only where the choice contradicts a
-sentence the human said earlier, which the question quotes; in a task's cycle and where an entry is
-written it is asked as above, the looser rule holding only before the cycle starts (WAY-315).
+sentence the human said earlier, which the question quotes, and that holds as well for the entries
+written during that refinement; in a task's cycle and where an entry is written outside such a
+refinement it is asked as above, the looser rule holding only before the cycle starts (WAY-315).
 
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common,
   project-level
@@ -3399,11 +3401,12 @@ document and the conversation that refined it, in the form WAY-115 gives with ea
 the human's words, and the task document keeps the rows the human accepts, those that repeat a
 choice the human made between ways shown included unless the human struck them, and, where the
 human chose among ways shown, each way not chosen, under the answer to its question or, for a
-choice made outside the task's questions, in the source of the row it settles; the agent refining the task
-presents the table, or, in orchestrated refinement, the project orchestrator as WAY-154 and WAY-155
-give. A candidate is a decision, an invariant, a glossary term, or an environment fact a candidate
-decision or invariant rests on, and a settlement that a current entry the refinement reads for the
-parts the task touches, or a projected entry the task carries, already states is no candidate. The
+choice made outside the task's questions, in the source of the row it settles; the agent refining
+the task presents the table, or, in orchestrated refinement, the project orchestrator as WAY-154
+and WAY-155 give. A candidate is a decision, an invariant, a glossary term, or an environment fact
+a candidate decision or invariant rests on, and a settlement that a current entry the refinement
+reads for the parts the task touches, or a projected entry the task carries, already states is no
+candidate. The
 task's cycle writes each kept row whole into the foundation in its foundation step, or in its
 return step where the foundation step missed it, one that no code makes true included, keeping its
 meaning and choosing its wording, and gives a decision written from a row as its rejected options
@@ -4711,8 +4714,8 @@ product's behaviour outside production, and how an agent brings that data to the
 needs. Data set up from scratch and a dedicated test environment that persists are both options
 of that choice, and an entry, a decision of the foundation or a projected decision of a definition,
 that leaves part of what a matter asks unanswered does not settle that matter at a project
-definition; in a run at a task (WAY-267) the step opens a decision of the foundation that leaves
-part of it unanswered as it opens any such decision (WAY-313), the list shown to the human saying
+definition; in a run at a task (WAY-267) the step may open a decision of the foundation that leaves
+part of it unanswered as it may open any such decision (WAY-313), the list shown to the human saying
 in one sentence what that decision leaves unsaid.
 
 - **Scope:** project-level, decisions
@@ -4728,20 +4731,21 @@ in one sentence what that decision leaves unsaid.
     personal data that a human fetches, and a dedicated test environment that persists, each by its
     consequences; a list written before the record's life was asked, whose logs item stands
     `— held by` a decision silent on it, has the item end `— open` with that decision nested under
-    it, and the list is shown again with one sentence on what the decision leaves unsaid; in a run at
-    a task, the item over such a decision ends `— open` with that decision nested under it, and the
-    list shown to the human says in one sentence what the decision leaves unsaid;
+    it, and the list is shown again with one sentence on what the decision leaves unsaid; in a run
+    at a task, the item over such a decision ends `— open` with that decision nested under it
+    where the step opens it, and the list shown to the human says in one sentence what the decision
+    leaves unsaid;
   - violates: the interface is answered by an agent reading the store of data past the
     application; the logs are answered by where the record goes and how an agent reads it, with
     nothing said of whether it outlives a redeployment, and the answer stands as settling the
     matter; a logs item of a definition's list stays `— held by` or `— projected` on a decision
-    silent on the record's life; an agent leaves, in a run at a task, a logs decision silent on the
-    record's life `— held by` until the human says a word; an approved definition is sent back to
-    the step because its logs decision is silent on it; the development data names where the data comes from but not how an agent reaches a save
-    from the middle of a game; the comparison of the development data leaves out a dedicated test
-    environment that persists because the data has to be set up from scratch; in a run at a task,
-    the list shown to the human has the item over such a decision with no word of what the
-    decision leaves unsaid.
+    silent on the record's life; an agent waits, in a run at a task, for a word of the human before
+    it opens a logs decision silent on the record's life; an approved definition is sent back to the
+    step because its logs decision is silent on it; the development data names where the data comes
+    from but not how an agent reaches a save from the middle of a game; the comparison of the
+    development data leaves out a dedicated test environment that persists because the data has to
+    be set up from scratch; in a run at a task, the list shown to the human has the item over such a
+    decision with no word of what the decision leaves unsaid.
 - **Origin:** none
 
 *Rationale:* each answer serves an agent that checks behaviour a user sees in the running product.
@@ -4749,10 +4753,13 @@ The logs tell the agent what the product did, and the answer says where that rec
 long it lives, since an agent reads only what it can reach: a record that dies with each deployment
 serves a check made right after one and no diagnosis of a failure from before it. An entry that
 answers part of what a matter asks leaves the rest to be improvised in the cycle, so it settles
-nothing at a definition, whether its answer is good or not (WAY-270); at a task the step opens
-such a decision as it opens any decision before the cycle starts (WAY-313), and the human's choice
-among the options, the decision's present answer among them, is the consent to the change
-(WAY-314). Operating the product as its user does lets
+nothing at a definition, whether its answer is good or not (WAY-270); at a task the step may open
+such a decision as it may open any decision before the cycle starts (WAY-313), the silence being
+reason enough, and the human's choice among the options, the decision's present answer among them,
+is the consent to the change (WAY-314). The word is "may" on purpose, as in WAY-313: the step is
+not made to add an item over every silent decision, which would grow the list of every run at a
+task that touches a matter, and the list still says in one sentence what the decision leaves
+unsaid, so that the human can open the item. Operating the product as its user does lets
 the check see what a user sees, while reading the store of data past the application shows a state
 no user meets and skips the code in between. A check needs the data in a given state, so the answer
 says both where the data comes from and how the agent brings it to that state; otherwise the agent of the
@@ -8036,10 +8043,9 @@ as a run at a definition does and ends back in the task's refinement, with no re
 human may run it for any choice save one a projected decision of an approved definition settles,
 which no run reopens, and the step opens a choice a decision of the foundation holds where it sees
 a reason to change the decision (WAY-313), the result then being a change of that decision. The run
-writes each settled choice into the
-task document, with the options not chosen, the source of each difference claimed between the
-options, the lacks of the option chosen and the risks the human took with it, and the task's cycle
-writes the decision with the code that uses it.
+writes each settled choice into the task document, with the options not chosen, the source of each
+difference claimed between the options, the lacks of the option chosen and the risks the human took
+with it, and the task's cycle writes the decision with the code that uses it.
 
 - **Scope:** project-level, task-cycle, decisions
 - **Based on:** none

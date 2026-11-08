@@ -7,5 +7,7 @@ Step 2 of the skill `define-project`, whose `SKILL.md` lies beside this file.
   behaviour, flows and surfaces before a diff exists (WAY-111, WAY-150).
 - Bring what you find into the conversation as material: a decision the project would change, an
   invariant it may break, a trust boundary it crosses, a surface it changes. For a decision, ask
-  whether the decision changes or the project fits it (WAY-30).
+  whether the project is meant to change it or to fit it (WAY-30); the question only frames the
+  conversation, and the consent to a change is the human's choice of the option that changes the
+  decision, not the answer to it (WAY-314).
 - When the foundation holds no entries, say so in one sentence and go on.

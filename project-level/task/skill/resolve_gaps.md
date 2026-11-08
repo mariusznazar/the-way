@@ -15,11 +15,10 @@ may be that option, and ask no leave first. The option says in its line which de
 and the human's choice of it is the one consent to the change (WAY-314); no step asks about it again
 before the acceptance of the complete document, which reads the document as for any task. The task
 document then carries the change as WAY-30 gives, in *Decisions in play*, and the cycle writes it
-with the code. All this
-holds only until the cycle starts, where no agent departs from a decision on its own (WAY-315). A
-change of a choice of technology that a decision holds goes through a run of `settle-technology`,
-which is the process of that change and whose result is an edit of that decision in this document
-(WAY-267).
+with the code. All this holds only until the cycle starts, where no agent departs from a decision
+on its own (WAY-315). A change of a choice of technology that a decision holds goes through a run
+of `settle-technology`, which is the process of that change and whose result is an edit of that
+decision in this document (WAY-267).
 
 If the answer changes the approved project definition or a projected decision of it, route that
 change to the definition and its readiness gate (WAY-118); do not settle it inside the task.

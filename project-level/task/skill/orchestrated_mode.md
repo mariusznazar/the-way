@@ -45,7 +45,8 @@ to guess or overwrite another task.
 - Carry human-accepted candidates whole; remove rejected rows only on the recorded human answer,
   keeping the shown/accepted counts. A row that repeats a choice the human made between ways shown
   is carried accepted and marked, and stays unless the human strikes it. Pending selection of a row
-  you derived or a required unanswered challenge keeps the task unfinished. Likewise, only the human places Human actions and confirms completion.
+  you derived or a required unanswered challenge keeps the task unfinished. Likewise, only the human
+  places Human actions and confirms completion.
 - `Depends on` alone does not prevent refinement. Use `waits for task <n>` only for a named question
   that needs the result of task n held by the plan; keep that question/reason in both documents.
 - Finish by recording evidence and one exact result: `questions`, `waits for task <n>`,

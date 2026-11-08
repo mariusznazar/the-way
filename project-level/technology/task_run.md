@@ -52,9 +52,10 @@ the list only where the note touches it.
   of the human to the list names it, and also when you see a reason to change the decision; you ask
   no leave first, and the list shown to the human says the reason in one sentence, as `list.md`
   gives. A decision silent on part of what a matter of the logs, the interface or the development
-  data asks (`running_product.md`) is such a reason: its item stands `— open` here as at a
-  definition, with that decision nested under it as `Changes:`, and the list says in one sentence
-  what the decision leaves unsaid. The decision's present answer enters the comparison as one
+  data asks (`running_product.md`) is such a reason: you may open its item `— open` here as at a
+  definition, with that decision nested under it as `Changes:`; the list, with the item open or
+  still `— held by`, says in one sentence what the decision leaves unsaid, and the human may open
+  it by a change to the list. The decision's present answer enters the comparison as one
   option; the option that changes the decision says in its line which decision it changes, and the
   human's choice among the options is the one consent to the change (WAY-314). This holds only
   until the task's cycle starts, where no agent departs from a decision on its own (WAY-315).

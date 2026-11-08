@@ -37,7 +37,7 @@ the marker may no longer be true when the entry it names is read as above:
 
 The item changes because the decision does not settle the matter, and the decision changes only
 through the projected edit that the human's choice among the options settles and the gate approves
-(WAY-313, WAY-314), which holds only until the task's cycle starts (WAY-315). The nested entry's present answer enters the comparison as an option, so a
-human who wants to keep it picks it, its missing part now said. The result rewrites the nested
-entry (`settle.md`, sub-step 7). A definition the gate has approved does not come back to the step
-for these matters.
+(WAY-313, WAY-314), which holds only until the task's cycle starts (WAY-315). The nested entry's
+present answer enters the comparison as an option, so a human who wants to keep it picks it, its
+missing part now said. The result rewrites the nested entry (`settle.md`, sub-step 7). A definition
+the gate has approved does not come back to the step for these matters.
