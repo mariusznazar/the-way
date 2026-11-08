@@ -9781,7 +9781,7 @@ its existing guidelines of the sentences the first sentence rules out, and the s
 carry no step that searches for them.
 
 - **Scope:** product-guidelines
-- **Based on:** none
+- **Based on:** shorter-guidelines-trial
 - **Relations:** derives from WAY-168 · derives from WAY-225 · derives from WAY-173
 - **Verification:** an agent compares the change with the decision:
   - complies: a rule on the dependency audit says that the audit runs in the product's standing
@@ -9801,17 +9801,16 @@ changes (WAY-225), and a sentence that repeats a decision or a value of a config
 second copy that drifts from the first (WAY-168, WAY-171); every agent of a cycle reads the guidelines
 it is named whole (WAY-213), so each such sentence is read again at every cycle and checked against
 nothing. What the author of the code is to do stays, which is what a rule of guidelines is for
-(WAY-168). A trial on the coding guidelines of one product gave no ground for going further: on three
-tasks with hidden tests, five runs each of the model Sonnet 5.5, the tests passed 45 of 45 times with
-the guidelines as they stood, with a shorter text that named practices and left out the derivable
-cases, and with no guidelines at all, so the measurement told neither text from the other nor from
-none. The tests do not see the guidelines file, much of the behaviour the trial watched is carried by
-the code itself, and five runs of five agree even with a pass rate near 55%, so the trial settles
-nothing about a name of a practice or a case that follows from the purpose, and WAY-100 lets a
-practice bind only through a decision that adopts it. The template guards new text; the existing
-text is cleaned by the product's task, since only that task can judge sentence by sentence whether a
-meaning changes (WAY-172); and the skills stay as they are.
-Its weak points: the part that keeps known practices and derivable cases stands on reasoning, not on
+(WAY-168). A trial on the guidelines of one product gave no ground for going further: on three tasks
+with hidden tests, five runs each of the model Sonnet 5.5, the tests passed 45 of 45 times with the
+old guidelines file, with a shorter one and with no guidelines file at all, so the measurement told
+none of the three arms from another. Where the arm with no file passes too, the tests cannot see
+whether the file is followed; and with five runs, a pass rate near 55% still gives five of five once
+in twenty sets, so five of five shows no equivalence. The trial thus settles nothing about a name of
+a practice or a case that follows from the purpose, and WAY-100 lets a practice bind only through a
+decision that adopts it. The template guards new text; the existing text is cleaned by the product's
+task, since only that task can judge sentence by sentence whether a meaning changes (WAY-172); and
+the skills stay as they are. Its weak points: the part that keeps known practices and derivable cases stands on reasoning, not on
 a measurement; only the rules for which a task was written were tried, and only today's model; the
 existing guidelines of a product stay as they are until its task is ordered.
 *Rejected:* waiting for a stronger trial, with rules the agent breaks without the guidelines and more
