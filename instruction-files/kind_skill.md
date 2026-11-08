@@ -6,12 +6,19 @@ included.
 ## Where a fragment of a skill stands
 
 For each fragment of a skill, ask whether every step of the skill needs it, or some steps but not
-all, or only one step or one variant of the skill (WAY-256):
+all, or only one variant of the skill or only one step (WAY-256). Whether a use of the skill comes
+to a step is read from records of sessions a person can open — those of Claude Code and Codex, the
+uses since the step stood in the skill — which the search before the table covers:
 
 - **every step needs it** — it stays in `SKILL.md`, which keeps the picture of the whole, the rules
   of working that hold across the steps, and the pointers;
-- **only one step or one variant needs it** — it stands in a file beside the skill, which that
-  step tells the agent to read, also where every use of the skill comes to that step;
+- **only one variant needs it, or only one step that the records show some uses pass by** — it
+  stands in a file beside the skill, which that step tells the agent to read; the row that moves a
+  step names the records in which a use passed it by;
+- **only one step needs it, and the records show every use coming to that step, or show none** — it
+  stays in `SKILL.md` in its step: a step every use comes to is in play in every use wherever it
+  stands, so a file of its own spares no use anything and adds a pointer and an opening sentence to
+  each; a skill with no record keeps every step in `SKILL.md`, a variant excepted;
 - **some steps need it, not all** — a rule of working the agent has to keep during those steps stays
   in `SKILL.md`; text it reads or consults, such as a procedure, a list or a template, stands in a
   file beside the skill, each of those steps names that file, and a step after the first has it read

@@ -42,7 +42,8 @@ project skill with the `the-way-` prefix, never a personal copy.
   not be overwritten. Read all turns and source identities, pending human answers, final
   acceptance and next actor. Resume the recorded actor; an interrupted write is unfinished work.
   Reconcile an interrupted final acceptance by step 4, not by inferring agreement from a status.
-  Recover a pending definition gate or plan recheck before permitting any readiness writes.
+  Recover a pending definition gate or plan recheck before permitting any readiness writes. Step 5
+  gives that recovery.
 - Require child-agent capability for fresh refiners, the round answerer, independent critique,
   plan changes and definition gates. If unavailable, name the capability and blocked next step
   and wait; do not impersonate these actors, claim an independent review or launch task cycles.
@@ -59,22 +60,11 @@ project skill with the `the-way-` prefix, never a personal copy.
   `done` from the record commit reachable in freshly fetched integration history. Both may be
   supported together for a stale ready row; log both without requiring an intervening run.
 - One more transition is supported, only on the human's word (WAY-269): a task whose blocked
-  request the human closed returns to refinement, and its row reading `in cycle` or still
-  `ready for cycle` goes to `to refine`, with a change-log line naming the request. The document
-  cell stays. Before moving the row, remove that one cycle's trace, naming what goes to the human
-  and removing it on the same word, in this order:
-  1. its worktree, where it ran in one of its own; where it ran in a checkout that stays, only
-     that checkout's ignored `.runs/task-cycles/<task-name>` directory;
-  2. its local branch, by name, which git refuses while a worktree holds it;
-  3. its branch on the host, by name, where the human has not deleted it;
-  4. the remote-tracking ref of that branch alone, by name, with `git branch -dr`, after step 3,
-     since a fetch would otherwise bring it back.
-
-  Never run `git fetch --prune`: it removes every remote-tracking ref whose branch is gone, and
+  request the human closed returns to refinement. Each time you reach this step, at the session
+  start or after a merge in the middle of it, read `task_return.md` beside this skill when the
+  human has said so.
+- Never run `git fetch --prune`: it removes every remote-tracking ref whose branch is gone, and
   with them the evidence of other tasks' closed-unmerged cycles that the human never named.
-  Left in place, the trace shows as a conflict on a `to refine` row, and on a `ready for cycle` row
-  as a false proposal that the new cycle has started. Should a removal fail, the reader reports the
-  conflict, which goes to the human as before. The new cycle keeps the task's name on a new branch.
 - Resolve outcomes Git leaves unchecked through the PR route the product chose. A verified
   merged PR supplies its actual link and completion evidence; an open PR proves no completion.
   If the tool is unavailable, ask the human with the collected evidence. A closed-unmerged PR or
@@ -111,11 +101,8 @@ project skill with the `the-way-` prefix, never a personal copy.
    Permit one writer per file; refiners edit no shared plan, definition or foundation and launch
    no children. You perform all child dispatches their borrowed workflows request.
    For a refiner's *Child-work request* for a run of the step that settles technology (WAY-267),
-   dispatch the research agents, the critiques and the tests of risks that
-   `project-level/technology/task_run.md` and `settle.md` give, one run per canonical request, at
-   the document of the affected task with the lowest number; its report's head names every
-   affected task's document. Put their results in the conversation files; the refiner writes the
-   documents.
+   in any turn of a round, one resumed from the conversation files included, read
+   `technology_run.md` beside this skill.
 2. Wait for refiner turns to finish, then dispatch exactly one answering agent for the round
    through one conversation path whose header names the others. It follows
    `project-level/lead/answering.md`, reads all round questions and alone writes their answer
@@ -129,9 +116,9 @@ project skill with the `the-way-` prefix, never a personal copy.
    document quotation answer as question, full quotation and source (WAY-155). Keep code facts
    separately identified. Preserve the answerer's canonical question and affected tasks so an
    identical choice is asked once; distinct scopes remain distinct. Do not hide quotation answers
-   behind a summary or offer recommendations as accepted decisions. A run's list to confirm and
-   its message on the choices go in the package once, and each choice the human makes is recorded as
-   a human answer (step 6); a canonical request's run is presented once for all its affected tasks.
+   behind a summary or offer recommendations as accepted decisions. A run of the step that settles
+   technology in the conversations enters the package as `technology_run.md` gives; read it
+   unless 3.1 did.
 4. Before presenting the completed proposed set, dispatch one fresh independent `critique` on
    the whole set, its sources and applicable rules through `elements/common/critique/SKILL.md`
    (WAY-120). Put material and the critic's observations in the conversation files; prompts carry
@@ -188,32 +175,7 @@ do not repeat an already settled human choice unless its meaning or source chang
 
 ## 5. Route plan and definition changes
 
-- Record the source mismatch, requested change and next actor in the originating conversation.
-  An in-scope split, new task within approved scope, ordering or dependency change goes to a fresh
-  `plan-project` agent in delegated mode (WAY-156). Stop your shared-plan writes until it returns;
-  it follows all existing plan checks and logs each change/reason. Human questions and required
-  critique requests return through the file, for you to dispatch/present and record. Read its
-  result and rerun the whole-plan check before resuming state updates or affected refinement.
-- A scope change or changing which task writes a projected entry is the human's decision
-  (WAY-145). Present the complete proposed change, sources, consequences, ways/costs and
-  recommendation; record the answer before the owning agent applies it. Moving a question
-  within approved scope with its logged reason alone needs no definition gate; changing the
-  definition does. Do not let a refiner expand its task to conceal either mismatch.
-- Before a definition edit, record in the conversation that its gate and subsequent plan recheck
-  are pending; make that block visible in every affected pending task conversation. A newly
-  created conversation checks the same definition and pending change. These files, the definition
-  Status/gate record and plan log retain resumption evidence; introduce no second state store.
-  You may edit definition text only when its full text is already before you and no reading of
-  other definition sections or foundation is needed. Otherwise delegate the edit. In both cases
-  a subagent always performs `define-project` step 7 in delegated mode.
-- You dispatch the gate's independent critique and pass observations back through the files;
-  the gate agent performs the whole foundation collision search, checks and corrections required
-  by that step. Present its human approval material yourself and record the human's approval
-  before the gate agent writes approval/fingerprint/record. Never approve on the human's behalf
-  or replace the delegated gate with your own check. Missing child/critic capability blocks it.
-- After the gate succeeds, dispatch a fresh `plan-project` agent from step 0 to recheck the plan
-  against the newly approved definition, with serialized shared-plan ownership and logged
-  corrections. Keep readiness writes blocked until that recheck and its required checks/critique/
-  human decisions finish. Record completion and the new source identities in the conversations
-  and plan's change log before fresh affected refiners resume. A check passing the old fingerprint
-  or approval alone does not complete this route.
+On reaching this step, from a refiner's result `plan change`, from a changed definition in step 0 or
+from a gate or recheck found pending there, read `route_changes.md` beside this skill. For a change
+of the definition, its gate or the plan recheck after it, a gate or recheck found pending in step 0
+included, read `definition_change.md` beside this skill too.
