@@ -84,7 +84,10 @@ scope are yours.
 - The author's own-work check: does the requirement it names fit where this change is weakest, and
   would its check catch that requirement unmet?
 - For a user interface, the states the applicable styleguide requires and the author's screenshot
-  evidence (WAY-219); a screenshot file among the commits of the range is a finding (WAY-316).
+  evidence (WAY-219); a screenshot file among the commits of the range is a finding (WAY-316). A
+  screenshot you take to show the human lies in the place the foundation settles for screenshots,
+  outside the product's repository, and your report names its address; where the foundation settles
+  none, keep none (WAY-316, WAY-317).
 - Run the checks that tell this change apart from a broken one: focused tests, a scratch run. Run
   them in a separate worktree of the head commit when they need files changed; never change the
   reviewed worktree, its index or branch. The full suite is the cycle's own run before

@@ -11,14 +11,14 @@ The step "Start or resume" of the skill `settle-technology`, whose `SKILL.md` li
   constrains a listed technology choice; refresh the selection as the list takes shape.
 - Where "Technology" reads `TODO`, begin with the step "List the choices" (`list.md` beside this file).
 - Where it holds a list, first take the look at the logs, the interface, the development data and
-  the place of the screenshots that `running_product.md` beside this file gives, and the look at
-  how a human learns of a failure that `failure_notice.md` beside this file gives. Add each matter they find missing as an item
-  ending `— open`; end `— open` each item of the four matters whose entry, held or projected, the
-  first look finds silent on part of what the matter asks, with that entry nested under it. Where a
-  look adds or changes an item, show the list again as the step "List the choices" does (`list.md`
-  beside this file) before going on, with one sentence for each changed item saying what the entry
-  named leaves unsaid (WAY-121, WAY-165). A definition the gate has approved does not come back to
-  this step for these matters or for the failure matter.
+  the place of the screenshots that `running_product.md` beside this file gives, and the look at how
+  a human learns of a failure that `failure_notice.md` beside this file gives. Add each matter they
+  find missing as an item ending `— open`; end `— open` each item of the four matters whose entry,
+  held or projected, the first look finds silent on part of what the matter asks, with that entry
+  nested under it. Where a look adds or changes an item, show the list again as the step "List the
+  choices" does (`list.md` beside this file) before going on, with one sentence for each changed
+  item saying what the entry named leaves unsaid (WAY-121, WAY-165). A definition the gate has
+  approved does not come back to this step for these matters or for the failure matter.
 - Where it holds an item ending `— open`, look first under "Projected foundation changes" for a
   decision written for that choice that answers everything the template asks of the choice, so that
   a silent one nested under the item does not count; where one stands, end the item

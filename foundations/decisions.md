@@ -2803,11 +2803,11 @@ choice under this rule that a definition missed, or that no definition holds, is
 run of the step at a task document (WAY-267, WAY-268). As an exception to that rule, where the
 project brings behaviour a user sees in the running product, the step looks at four matters of an
 agent's way to the running product — its logs, its interface, its development data and the place of
-its screenshots — and lists as a choice of its own each matter that no decision of the foundation settles for that behaviour,
-even where its answer adds nothing to run, pay for or back up, and even where the product has none
-of what the matter names, whose answer then says what an agent uses in its place; how a human
-learns of a failure of the running product is no such matter and has an exception of its own
-(WAY-270).
+its screenshots — and lists as a choice of its own each matter that no decision of the foundation
+settles for that behaviour, even where its answer adds nothing to run, pay for or back up, and even
+where the product has none of what the matter names, whose answer then says what an agent uses in
+its place; how a human learns of a failure of the running product is no such matter and has an
+exception of its own (WAY-270).
 
 - **Scope:** project-level, decisions
 - **Based on:** none
@@ -2815,19 +2815,20 @@ learns of a failure of the running product is no such matter and has an exceptio
   WAY-100
 - **Verification:** invariants: project-technology-record. For what the step lists and settles, an
   agent compares the work with the decision:
-  - complies: a project that adds an account server lists its store of data and its way of
-    logging in, and the definition projects a decision on each; a project that changes only how a
-    screen looks, in a product whose foundation already says how an agent reaches its screens, where
-    its screenshots lie and, where the product runs outside the machine it is made on, how a human
-    learns of a failure, records that the foundation holds every choice it needs; a project that moves a product to a
-    server lists, besides its place to run, how a human learns of a failure, as WAY-270 gives; the
-    first project of a game played in a browser lists the game's logs, its interface, its
-    development data and the place of its screenshots, each as a choice of its own, and projects a
-    decision on each although reading the server's output and opening the game on a local address
-    add nothing to run; a later project of that game, whose new screens an agent reaches and whose
-    screenshots lie as those decisions say, lists none of the four; a command-line tool that keeps no data lists its development data, answered by sample
-    input files kept with its code; a task of a plan needs a store of data its definition missed,
-    and the human settles it in a run at that task's document, the approved definition untouched;
+  - complies: a project that adds an account server lists its store of data and its way of logging
+    in, and the definition projects a decision on each; a project that changes only how a screen
+    looks, in a product whose foundation already says how an agent reaches its screens, where its
+    screenshots lie and, where the product runs outside the machine it is made on, how a human
+    learns of a failure, records that the foundation holds every choice it needs; a project that
+    moves a product to a server lists, besides its place to run, how a human learns of a failure, as
+    WAY-270 gives; the first project of a game played in a browser lists the game's logs, its
+    interface, its development data and the place of its screenshots, each as a choice of its own,
+    and projects a decision on each although reading the server's output and opening the game on a
+    local address add nothing to run; a later project of that game, whose new screens an agent
+    reaches and whose screenshots lie as those decisions say, lists none of the four; a command-line
+    tool that keeps no data lists its development data, answered by sample input files kept with its
+    code; a task of a plan needs a store of data its definition missed, and the human settles it in
+    a run at that task's document, the approved definition untouched;
   - violates: the first task of the breakdown chooses the database; a definition reaches the gate
     with a store of data in its scope and no choice of it projected or found in the foundation; a
     project that brings a product's first screen leaves out how an agent operates it because a
@@ -8091,9 +8092,9 @@ with it, and the task's cycle writes the decision with the code that uses it.
   - violates: a run writes the option chosen into the decision log before its code exists; a run
     changes an approved definition or reopens a choice one of its projected decisions settles; a run
     leaves a choice a decision holds out of its list for want of the human's word, though it sees a
-    reason to change the decision; a run adds the logs, the interface or the
-    development data to its list though the note does not touch them; the comparison stands only
-    in a report the task document does not hold.
+    reason to change the decision; a run adds the logs, the interface, the development data or the
+    place of the screenshots to its list though the note does not touch them; the comparison stands
+    only in a report the task document does not hold.
 - **Origin:** none
 
 *Rationale:* a task can need a technology choice that no definition settles, and an independent task
@@ -10054,8 +10055,8 @@ clear its place after a long time, and the images of old requests then stop show
 - **Scope:** task-cycle, project-level
 - **Based on:** none
 - **Relations:** derives from WAY-219 · derives from WAY-286 · derives from WAY-308
-- **Verification:** invariants: record-copy-image-check. An agent compares a change, its record and
-  its request with the decision:
+- **Verification:** invariants: record-copy-image-check · record-copy-image-files. An agent
+  compares a change, its record and its request with the decision:
   - complies: the author of a change to a screen, in a product whose foundation settles a place for
     screenshots, puts the screenshot it shows there, and the request embeds it as an image under
     what the human will see; the copy of the record that a commit adds holds no image file, and the
@@ -10082,9 +10083,10 @@ once its place is cleared; a product with no place settled shows no screenshot (
 to the commit — the files stay in the history for good, which is the problem the rule exists to
 end; nothing kept, the agent describing the screen in words — at acceptance the screen still cannot
 be seen, the problem the rule started from; the attachments of a release in the product's
-repository — in a private repository an image may not show (not checked), and the list of releases
-fills with files that are no release; an external file store — a new tool with keys and an action
-of the human, a technology choice to be settled on its own; the screenshots only on the human's
+repository, as the place the-way would name — in a private repository an image may not show (not
+checked), and the list of releases fills with files that are no release; an external file store, as
+the place the-way would name — a new tool with keys and an action of the human, a technology choice
+to be settled on its own; the screenshots only on the human's
 disk, in the ignored directory of the cycle — the description cannot link to a local file; a place
 never cleared, the matter returning when it grows — the evidence is looked at once, when the request
 is accepted.
@@ -10156,22 +10158,16 @@ can show a smoothness the product does not have.
 
 The way to the running product that the foundation of a product settles for its interface lets two
 task cycles working in separate worktrees of the product check at the same time without a browser
-they share, and an agent closes the browser it opened when its check ends. In the step that settles
-technology an option that cannot meet this stays in the comparison with that lack said, as WAY-166
-gives for an option an agent cannot use.
+they share, and an agent closes the browser it opened when its check ends.
 
 - **Scope:** task-cycle, project-level
 - **Based on:** none
-- **Relations:** derives from WAY-121 · derives from WAY-166 · derives from WAY-219
-- **Verification:** an agent compares the foundation of a product, the step that settles technology
-  and a cycle with the decision:
+- **Relations:** derives from WAY-121 · derives from WAY-219
+- **Verification:** an agent compares the foundation of a product and a cycle with the decision:
   - complies: a product settles a way in which each worktree drives a browser of its own, two
-    cycles check at once, and each author closes its browser at the end of its check; the step
-    compares two options for the interface and says, for the one that gives two sessions one
-    browser, that two cycles cannot check at once with it;
+    cycles check at once, and each author closes its browser at the end of its check;
   - violates: a way in which the second session started in another worktree takes over the page of
-    the first; an author leaves its browser open at the end of its check; an option for the interface
-    is compared with no word on whether two cycles can check at once.
+    the first; an author leaves its browser open at the end of its check.
 - **Origin:** none
 
 *Rationale:* two cycles in separate worktrees of one product both look at the running product, and a
@@ -10179,8 +10175,7 @@ way that gives them one browser makes the second check fail or take over the fir
 author that leaves its browser open blocks the next check the same way. Between 20 and 31 October
 2026, before one of two products changed its way, 13 errors of a busy browser profile stood in 9
 conversation files of the sessions on those two products. Stated once for every way, the condition
-reaches a product before it meets the conflict, and a way that fails it is seen as a lack in the
-comparison, where the human can weigh it.
+reaches a product before it meets the conflict.
 *Rejected:* the-way saying nothing, the matter staying with the product — each product finds the
 conflict itself, by its errors, and a product whose main way keeps one browser profile for a
 directory returns to the busy profile.

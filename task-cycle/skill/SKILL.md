@@ -501,12 +501,12 @@ changed in this cycle and the archive is not held back (WAY-295):
 
 The record's copy stays in the repository's history, and the repository may be read by anyone.
 Before every commit that adds the record to `docs/task-cycles/<task-slug>/` — step 12, its
-repetition in a correction (`correction.md`), the stop of a slice failed twice at step 9
-sub-step 4 and the blocked requests of `blocked_finding.md` and `reserved_return.md` — the copy is
-cleaned of what only its author may see and checked, in every repository, public or private
-(WAY-308, WAY-309), and checked for image files, which no copy holds (WAY-316). The original in `.runs/` is never cleaned; each commit adds a fresh copy of it,
-cleaned again. The steps stand in this order, run from the worktree's root (in a product, the path
-starts with `.the-way/`):
+repetition in a correction (`correction.md`), the stop of a slice failed twice at step 9 sub-step 4
+and the blocked requests of `blocked_finding.md` and `reserved_return.md` — the copy is cleaned of
+what only its author may see and checked, in every repository, public or private (WAY-308, WAY-309),
+and checked for image files, which no copy holds (WAY-316). The original in `.runs/` is never
+cleaned; each commit adds a fresh copy of it, cleaned again. The steps stand in this order, run from
+the worktree's root (in a product, the path starts with `.the-way/`):
 
 1. Run the process remarks check on the original, as "The process remarks check" gives, until it
    lists nothing. It runs on the original first, because the original holds the words the reports

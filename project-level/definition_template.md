@@ -166,14 +166,14 @@ that settles it (WAY-121). The skill `settle-technology` writes it before the re
   (WAY-121).
 - As an exception to that rule, where the project brings behaviour a user sees in the running
   product, four matters of an agent's way to the running product — its logs, its interface, its
-  development data and the place of its screenshots — are looked at, and each matter that no decision of the foundation settles for
-  that behaviour stands on the list as a choice of its own, even where its answer adds nothing to
-  run, pay for or back up, and even where the product has none of what the matter names, whose
-  answer then says what an agent uses in its place; a matter a decision of the foundation already
-  settles for that behaviour is not listed, and a decision of the foundation or a projected decision
-  that leaves part of what the matter asks unanswered does not settle it. No definition has to hold
-  these matters; a matter listed is an ordinary choice of the list, with its marker as the table
-  below gives it (WAY-121, WAY-165).
+  development data and the place of its screenshots — are looked at, and each matter that no
+  decision of the foundation settles for that behaviour stands on the list as a choice of its own,
+  even where its answer adds nothing to run, pay for or back up, and even where the product has none
+  of what the matter names, whose answer then says what an agent uses in its place; a matter a
+  decision of the foundation already settles for that behaviour is not listed, and a decision of the
+  foundation or a projected decision that leaves part of what the matter asks unanswered does not
+  settle it. No definition has to hold these matters; a matter listed is an ordinary choice of the
+  list, with its marker as the table below gives it (WAY-121, WAY-165).
 - The logs ask where the record of what the running product does goes, how long that record lives,
   between deployments too, and how an agent reads it; the interface asks how an agent operates the
   product as its user does — through a screen in a browser, a call to its API or a command in a

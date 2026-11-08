@@ -324,3 +324,13 @@ The script of `task-cycle` that checks the copy of a cycle record for image file
 - **Derives from:** WAY-316
 - **Part:** task-cycle
 - **Violated:** no
+
+## record-copy-image-files
+
+Where {merge-onto} exists, no commit of a change against {fork-point} adds a file below `docs/task-cycles/` whose name ends in an image extension that `record-copy-image-check` names.
+
+- **Method:** review
+- **Rests on:** none
+- **Derives from:** WAY-316
+- **Part:** every
+- **Violated:** no
