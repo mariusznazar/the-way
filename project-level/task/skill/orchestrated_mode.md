@@ -17,7 +17,9 @@ to guess or overwrite another task.
 - Use `find-foundation-entries` in task mode for its source search and candidate table, but return
   its human-presentation steps and required critique/child-work requests through this file.
   Start no child agent. The project orchestrator performs dispatches and presents the round
-  package, candidates and required WAY-113 questions; you approve nothing on its behalf.
+  package, candidates and the WAY-113 questions it requires, which at refinement are those for an
+  answer that contradicts a sentence the human said earlier, quoted; you approve nothing on its
+  behalf.
 - A run of the step that settles technology (WAY-267), whether `refine-task` starts it for a
   reserved choice or the human asked for it, is led through this file by
   `project-level/technology/task_run.md`.
@@ -41,8 +43,9 @@ to guess or overwrite another task.
   from document quotations and factual code observations; code cannot prescribe required product
   behavior. A human-struck quotation returns as a human question, never a settled requirement.
 - Carry human-accepted candidates whole; remove rejected rows only on the recorded human answer,
-  keeping the shown/accepted counts. Pending selection or a required unanswered challenge keeps
-  the task unfinished. Likewise, only the human places Human actions and confirms completion.
+  keeping the shown/accepted counts. A row that repeats a choice the human made between ways shown
+  is carried accepted and marked, and stays unless the human strikes it. Pending selection of a row
+  you derived or a required unanswered challenge keeps the task unfinished. Likewise, only the human places Human actions and confirms completion.
 - `Depends on` alone does not prevent refinement. Use `waits for task <n>` only for a named question
   that needs the result of task n held by the plan; keep that question/reason in both documents.
 - Finish by recording evidence and one exact result: `questions`, `waits for task <n>`,

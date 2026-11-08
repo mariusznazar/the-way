@@ -48,8 +48,10 @@ Carry out `build_table.md` beside this skill, which has you carry out the lines 
 
 ## 3. The human cuts
 
-The human accepts or rejects rows, all at once or a few at a time. Write each state into the
-working table as soon as it is given.
+The human accepts or rejects the rows you derived, all at once or a few at a time. A row built
+`accepted` as the human's choice (`build_table.md`) is not asked about: the human leaves it or
+strikes it, a rule that holds only until the task's cycle starts (WAY-315). Write each state into
+the working table as soon as it is given.
 
 ## 4. Row by row
 

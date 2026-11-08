@@ -151,8 +151,7 @@ the body; the project orchestrator changes only `Status:` after final acceptance
   | `— settled: <question>` | a run settled it; the question reads as under *Questions to settle*, where what it settled stands |
 
   Items nested under a choice hold the human's preference, the choice it waits for and, for a choice
-  the human opened though a decision holds it, the decision it changes; they are no choices of the
-  list.
+  opened though a decision holds it, the decision it changes; they are no choices of the list.
 - **Context:** concise provenance, constraints, links and code entry points that a reader is
   likely to ask about. Never repeat Description or prove the writer's own inference here.
 - **Questions carried to cycle:** name implementation questions taken from the task's sources.
@@ -177,11 +176,15 @@ the body; the project orchestrator changes only `Status:` after final acceptance
   projected wording and identify its heading there. A project plan determines which entries a
   member task is assigned to realize or write; a source-only task takes no assignment, and marks,
   among the projected wording it copies, each entry, or the part of one, that its code makes true,
-  so that its cycle writes it (WAY-124, WAY-126). `none` means the reading of the foundation found
-  no applicable decision; it is not a substitute for that reading.
+  so that its cycle writes it (WAY-124, WAY-126). A decision that an option the human chose
+  changes stands here with the change the task makes to it, as that option named it (WAY-30,
+  WAY-314). `none` means the reading of the foundation found no applicable decision; it is not a
+  substitute for that reading.
 - **Settlements to record:** what the human settled while the task was refined and what still binds
   after the task's merge, kept for its cycle to write into the foundation (WAY-134). The skill
   `find-foundation-entries` builds the candidates and the human cuts them; only accepted rows stay.
+  A row that repeats a choice the human made between ways shown enters accepted, and the human cuts
+  only the rows the agent derived (WAY-115, WAY-134).
   *Settlement* is one sentence in the human's words, in the document's language. *Kind* reads
   `decision`, `invariant`, `glossary term` or `environment fact`; an environment fact stands only
   where a kept decision or invariant rests on it, and a change of the part map is never a row.

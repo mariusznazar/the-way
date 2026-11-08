@@ -7,11 +7,22 @@ asking the next. If the answer is
 in the approved project definition or foundation, quote the exact wording with its location
 instead of asking the human; an inference is not an approved answer.
 
-If two answers conflict, show both and ask which holds. If the answer changes the approved project
-definition or a current foundation decision, route that change to its own process; do not silently
-settle it inside the task. The exception is a choice the human opened though a decision holds it,
-by a note or a change to the list of a run of `settle-technology`: that run is the process of the
-change, and its result is an edit of that decision in this document (WAY-30, WAY-267).
+If two answers conflict, show both and ask which holds. A current foundation decision describes what
+the product does today and is material for the refinement, not a limit on its options (WAY-313):
+where an option that changes such a decision serves the task, show it as you show any other, with
+the decision it changes named by its identifier, the costs of the ways and a recommendation, which
+may be that option, and ask no leave first. The option says in its line which decision it changes,
+and the human's choice of it is the one consent to the change (WAY-314); no step asks about it again
+before the acceptance of the complete document, which reads the document as for any task. The task
+document then carries the change as WAY-30 gives, in *Decisions in play*, and the cycle writes it
+with the code. All this
+holds only until the cycle starts, where no agent departs from a decision on its own (WAY-315). A
+change of a choice of technology that a decision holds goes through a run of `settle-technology`,
+which is the process of that change and whose result is an edit of that decision in this document
+(WAY-267).
+
+If the answer changes the approved project definition or a projected decision of it, route that
+change to the definition and its readiness gate (WAY-118); do not settle it inside the task.
 
 Settle known product choices needed to state the task's outcome before the cycle. A choice of
 implementation method stays with the cycle's plan, or with the choices of its cycle record where
@@ -62,10 +73,10 @@ deployments too, and how a human learns of a failure of the running product (WAY
   into the skill. A logs decision silent on how long the record lives answers nothing here.
 - Otherwise ask the human, once and for each item apart, whether to run `settle-technology` at this
   task with a note on what the skill leaves unsaid and no decision and no approved definition
-  answers. A yes is the third case above, and is also the human's word that the run asks for where a
-  logs decision stands; the *To do* gains the item that gives the skill the answer. A no gives the
-  *To do* the item that records in the skill that the human leaves the item unsettled, and the
-  question does not return.
+  answers. A yes is the third case above, and the run opens a logs decision silent on how long the
+  record lives like any decision it sees reason to change (WAY-165); the *To do* gains the item that
+  gives the skill the answer. A no gives the *To do* the item that records in the skill that the
+  human leaves the item unsettled, and the question does not return.
 - Where the product has no deployment skill at all, ask before offering the split: a task that only
   writes a skill has no deployment outcome and takes no check. The split task carries the answer or
   the refusal.

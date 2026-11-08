@@ -22,13 +22,19 @@ file.
   decision of this definition, `projected`; nothing, `open`. A decision that settles the choice in
   a sentence about something else still holds it; name that decision. A decision that leaves part
   of what one of the three matters of `running_product.md` asks unanswered does not hold it: the
-  item stands `— open`, with that decision nested under it as `running_product.md` gives; in a run
-  at a task, `task_run.md` gives when it opens. A decision of the foundation
-  the project changes no longer holds the choice: where the definition projects its edit, the item
-  is `projected` with that heading's question; otherwise it is `open`.
+  item stands `— open`, with that decision nested under it as `running_product.md` gives. A decision
+  of the foundation is material here, not a limit (WAY-313): where you see a reason to change the
+  decision that holds a choice, the item stands `— open` with that decision nested under it as
+  `Changes: <PREFIX>-<NN>`, and you ask no leave first. The decision's present answer enters the
+  comparison as one option, and the option that changes the decision says in its line which decision
+  it changes; the human's choice among the options is the one consent to the change (WAY-314). This
+  holds only until the task's cycle starts (WAY-315). A decision of the foundation the project
+  changes no longer holds the choice: where the definition projects its edit, the item is
+  `projected` with that heading's question; otherwise it is `open`.
 - Write the list into "Technology" in the form the template gives, and set the status line to
   `definition — open: Technology`, before asking.
-- Show the list, with one sentence for each item saying why the project needs it, and ask the
+- Show the list, with one sentence for each item saying why the project needs it, and for each item
+  you opened over a decision, one sentence saying the reason to change that decision, and ask the
   human to confirm it, add to it or strike from it. In the same message ask, as one question of
   assessment for the whole list, whether the human has a preference or a constraint for any open
   choice; "I do not know" is an answer. Write the answers, a preference as a nested item under its

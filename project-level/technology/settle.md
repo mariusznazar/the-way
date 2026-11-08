@@ -50,18 +50,22 @@ waits, so that a resumed step finds it.
    person who does not know the technology can follow; the options that decide it, each under its
    own name and by what it changes for the product; the other options, one line each, and the lines
    of the options left out; a recommendation, the weak point of the option recommended and beside
-   it the risks the tests gave, each marked as a hypothesis (WAY-123, WAY-138, WAY-113).
+   it the risks the tests gave, each marked as a hypothesis (WAY-123, WAY-138, WAY-113). Where a
+   decision of the foundation is nested under the choice, its present answer stands among the
+   options, and the option that changes it says in its line which decision it changes, naming it
+   by its identifier (WAY-314).
 6. **Choose.** The human chooses each; never choose alone (WAY-123). The human who chooses the
    option recommended takes the risks shown beside it (WAY-138). A human who answers "you
    choose" or "I do not know" takes the recommendation; write it as the human's choice. The
-   recommended option taken as offered passes without a further question; any other answer — an
-   option whose weak point the message did not name, an answer in the human's own words, one that
-   adds a reason or a condition — gets one question against it, anchored in those words or the
-   material, the question the section "How a skill asks" of `elements/common/way_of_working.md`
-   asks after a choice, asked here and not again
-   (WAY-113). A choice the human leaves unanswered goes into the next message with the risks
-   already shown beside its option recommended, and is not tested again unless that option
-   changes, when the new one is tested (WAY-138).
+   recommended option taken as offered passes without a further question; any other answer is
+   written as given, and gets one question against it only where it contradicts a sentence the human
+   said earlier, which the question quotes, as the section "How a skill asks" of
+   `elements/common/way_of_working.md` gives for refinement, asked here and not again (WAY-113). The
+   human's choice of an option that changes a decision is the one consent to the change, and no
+   later step asks about it again (WAY-314); these looser rules hold only until the task's cycle
+   starts (WAY-315). A choice the human leaves unanswered goes into the next
+   message with the risks already shown beside its option recommended, and is not tested again
+   unless that option changes, when the new one is tested (WAY-138).
 7. **Write.** In a run at a task, `task_run.md` beside this file holds this sub-step. Hand each
    choice to `record-decision` in projected mode, naming the definition, with
    the consequences that decided it, the other options with theirs, the source of each claimed

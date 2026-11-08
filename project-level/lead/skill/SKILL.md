@@ -130,7 +130,9 @@ project skill with the `the-way-` prefix, never a personal copy.
    turns in progress, `questions` and explicit waits otherwise keep `to refine`. Log updates with
    reasons. Candidate acceptance, action placement/completion and final document acceptance are
    separate human acts. After a choice enters an entry's binding meaning, ask the source-anchored
-   WAY-113 question against it or record the applicable exception and reason.
+   WAY-113 question against it or record the applicable exception and reason; at refinement the
+   question stands only where the choice contradicts a sentence the human said earlier, quoted, and
+   a choice that changes a decision, or follows a loose remark, is an exception (WAY-113, WAY-314).
 6. Record the human's exact answers, question/row IDs and acceptance/rejection in the conversations
    before fresh refiner turns. A struck quotation is marked struck and its question returns to
    the human, once for all affected tasks, with ways/costs/recommendation; it cannot be reused as

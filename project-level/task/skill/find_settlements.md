@@ -18,10 +18,15 @@ reopens, or whose source this refinement changed or removed, is a candidate agai
 accepted row enters the working table `accepted` and is not cut again. The counts of the
 `Candidates:` line cover this refinement's working table.
 
-A settled technology question of a run of `settle-technology` is always shown as a candidate: the
-run writes no row, and the cycle writes no decision of the choice otherwise.
+A row that repeats a choice the human made between ways shown, such as an answer under *Questions
+to settle* that keeps its *Not chosen* or a settled technology question of a run of
+`settle-technology`, enters the table already `accepted`, marked as the human's choice, and stays
+unless the human strikes it; the human accepts or rejects only the rows you derived from the
+material or from the human's loose words (WAY-115, WAY-134); this holds only until the task's cycle
+starts (WAY-315). The run writes no row, and the cycle writes no decision of a technology choice
+otherwise, so its settled question is always shown.
 
-A candidate that collides with a current decision or a projected entry goes back to step 4 as a
-conflict; one that changes the task's scope goes back to step 3. The candidate of a question that
-changes a decision the human opened (WAY-267) is no conflict with that decision, and its row names
-the decision it changes.
+A candidate that collides with a projected entry or with a current decision the human has not
+agreed to change goes back to step 4 as a conflict; one that changes the task's scope goes back to
+step 3. The candidate of a question whose chosen option changes a decision (WAY-314) is no conflict
+with that decision, and its row names the decision it changes.
