@@ -2902,16 +2902,16 @@ research in turn.
 
 The step that settles technology, at a project definition or at a task (WAY-267), shows each choice
 in plain text, in words a person who does not know the technology can follow: the options that
-decide it, each under its own name, by their consequences for the product — what it costs, where it
-runs, what keeping it running takes and what changing it later costs — the other options one line
-each, and the lines of the options left out; the human chooses between those consequences. A
+decide it, each under its own name, by their consequences for the product — what it costs, where
+it runs, what keeping it running takes and what changing it later costs — the other options one
+line each, and the lines of the options left out; the human chooses between those consequences. A
 difference with no consequence for the product decides nothing, and where no difference with a
 consequence remains, the step recommends the simplest and cheapest option. The choices whose
 research started together reach the human together, in one message, one choice after another, once
-every one of their comparisons has passed the critique and a fresh agent has checked, in the message as
-first shown, that no option stands there by figures or features instead of what it changes for the
-product and that no word stays that a person who does not know the technology cannot follow
-without an explanation, each choice with its recommendation and the weak point of the option
+every one of their comparisons has passed the critique and a fresh agent has checked, in the first
+message, before it is shown, that no option stands there by figures or features instead of what it
+changes for the product and that no word stays that a person who does not know the technology cannot
+follow without an explanation, each choice with its recommendation and the weak point of the option
 recommended; in the area of the choices this step settles, this decision prevails over WAY-114,
 under which a question goes to the human only where the agent has no recommendation.
 
@@ -2924,11 +2924,11 @@ under which a question goes to the human only where the agent has no recommendat
     own", and the human picks one;
   - violates: the options are shown as lists of technical features or as columns of figures; every
     option of a choice, those that do not decide it too, is described at full length; a consequence
-    is described with a word such as "bundler" that a person who does not know the technology
-    cannot follow without an explanation; the first message reaches the human before a fresh agent has
-    checked it; two options with no difference in consequences are offered as a
-    matter of taste instead of the simpler one being recommended; two choices whose research
-    started together reach the human in separate messages.
+    is described with a word such as "bundler" that a person who does not know the technology cannot
+    follow without an explanation; the first message reaches the human before a fresh agent has
+    checked it; two options with no difference in consequences are offered as a matter of taste
+    instead of the simpler one being recommended; two choices whose research started together reach
+    the human in separate messages.
 - **Origin:** none
 
 *Rationale:* a human who cannot assess the technology can still weigh what an option costs and
@@ -2939,23 +2939,22 @@ answer, and the weak point stated with the recommendation lets the choice stand 
 asked after it (WAY-113). Plain text, one choice after another, is what such a human reads: a table
 puts every datum of every option side by side, and a human who cannot weigh it takes the
 recommendation as offered. Only the options that decide a choice are described at length, which
-keeps the message short enough to read, and the one line for each of the others, and for those left
-out, keeps what was set aside in view. The check by a fresh agent catches what the author no longer
+keeps the message short enough to read. The check by a fresh agent catches what the author no longer
 sees in its own text — figures or features standing for a consequence, a word of the technology's
 trade — and it is a judgement, not a mechanical rule, so it sometimes flags a word the human
-knows, and the author adds an explanation nobody needed. The price of the form is a longer
-message, and the loss of the comparison of the options across one page; since the agent that checks
-sees only the first message, a word of a later follow-up goes unchecked.
+knows, and the author adds an explanation nobody needed. The price of the form is a longer message,
+and the loss of the comparison of the options across one page; the check covers the first message
+alone, so a word of a later follow-up goes unchecked.
 *Rejected:* technical differences shown as they stand — the human cannot weigh them; falling back
 on a default bundle when the human cannot judge — with no fixed list (WAY-122) there is no default;
 the agent choosing alone — the choice binds the product, and a human approves decisions (WAY-14);
 every choice shown on its own, followed by a question against it — the human waits between choices,
 and each choice costs two exchanges; each comparison shown as soon as its critique passes — the
-choices reach the human one at a time; the options in one table as before — nothing breaks at once,
-but a table invites taking the recommendation as offered, and a recommendation can pass that the
-human would not have chosen; the table with a paragraph in plain words beneath it — the fewest
-changes, but the longest message, and the table is still not read; a sentence that names a tool
-only where its name carries a consequence — a bare product name stands where two forms of one tool
+choices reach the human one at a time; the options in one table as before — nothing breaks at
+once, but a table invites taking the recommendation as offered, and a recommendation can pass that
+the human would not have chosen; the table with a paragraph in plain words beneath it — the fewest
+changes, but the longest message, and the table is still not read; a sentence that names a tool only
+where its name carries a consequence — a bare product name stands where two forms of one tool
 differ, and the human has to ask for the difference; the check for figures and features alone — it
 costs nothing, but a word of the technology's trade in a consequence still reaches the human and
 costs a further exchange.
@@ -3630,7 +3629,7 @@ hypothesis, through the task document where the step ran at a task.
 - **Relations:** derives from WAY-100 · derives from WAY-122 · derives from
   WAY-123
 - **Verification:** an agent compares the work with the decision:
-  - complies: a project settles its store of data and its place to run, the message shows beside each
+  - complies: a project settles its store of data and its place to run, the message puts beside each
     option recommended the risks the three tests gave, each marked as a hypothesis, and the human
     who takes the recommended host finds those risks in the *Rationale* of its decision beside its
     lacks; a framework the definition names as a constraint is tested; a language a decision of the
@@ -4691,12 +4690,12 @@ sentence saying what that decision leaves unsaid.
     nothing said of whether it outlives a redeployment, and the answer stands as settling the
     matter; a logs item of a definition's list stays `— held by` or `— projected` on a decision
     silent on the record's life; an agent opens, in a run at a task, a logs decision silent on the
-    record's life with no word of the human; in a run at a task, the list shown to the human keeps
-    the item over such a decision `— held by` with no word of what the decision leaves unsaid; an
-    approved definition is sent back to the step because its logs decision is silent on it; the
-    development data names where the data comes from but not how an agent reaches a save from the
-    middle of a game; the comparison of the development data leaves out a dedicated test
-    environment that persists because the data has to be set up from scratch.
+    record's life with no word of the human; an approved definition is sent back to the step because its logs decision is silent on
+    it; the development data names where the data comes from but not how an agent reaches a save
+    from the middle of a game; the comparison of the development data leaves out a dedicated test
+    environment that persists because the data has to be set up from scratch; in a run at a task,
+    the list shown to the human keeps the item over such a decision `— held by` with no word of
+    what the decision leaves unsaid.
 - **Origin:** none
 
 *Rationale:* each answer serves an agent that checks behaviour a user sees in the running product.
@@ -8052,9 +8051,9 @@ the agent's judgment, helped by the examples of `project-level/technology/reserv
 changing it means reworking what is written, while the choice decides what the product has to keep.
 The test that puts a choice on a project's list (WAY-121) also marks what one task does not settle
 alone: a choice one task can make and change alone costs little to turn back, and stopping for it
-would cost a cycle, research, a critique and a message for the human. The rule takes from lesson m2l4
-of the 10xDevs course one thing, for these choices: a technical decision that rests on a source that
-can be checked, not on a model's memory. A run of the step gives a choice that source, with a
+would cost a cycle, research, a critique and a message for the human. The rule takes from lesson
+m2l4 of the 10xDevs course one thing, for these choices: a technical decision that rests on a source
+that can be checked, not on a model's memory. A run of the step gives a choice that source, with a
 critique and tests of its risks. The request is the cycle's point of human review (WAY-227), so a
 choice met in the cycle leaves it through a blocked draft request and reaches the human in
 refinement, where the step can run. Without the precedence, a cycle meeting such a choice would face
@@ -8064,8 +8063,8 @@ doubtful choice judged not under the rule reaches the human in the request with 
 choice met late in a planned task costs the slices already made, and refinement can miss one; and
 that the tools of guidelines keep a route with no tests of risks (WAY-138).
 *Rejected:* every new element of the stack, the smallest dependency included — every small library
-is a stopped cycle with research, a critique, tests of risks and a message for the human, and WAY-121
-would have to narrow, since it leaves such choices to the task; the same rule with each new
+is a stopped cycle with research, a critique, tests of risks and a message for the human, and
+WAY-121 would have to narrow, since it leaves such choices to the task; the same rule with each new
 dependency also listed on a line of its own in the request — one more line in the request, an
 agent's mistake seen only there with the code standing, and one more rule for a problem nobody has
 recorded; the work going on in the same request, with the step's result as a remark on it — the

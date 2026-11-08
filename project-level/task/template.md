@@ -39,7 +39,8 @@ Project relation: independent | plan item: <the project plan's file name> — <t
 - <question a run of `settle-technology` settled>
   - Answer: <the option chosen, with the consequences that decided it>
   - Not chosen:
-    - <an option shown and not chosen, or left out with its line> — <its consequences as the message gave them>
+    - <an option shown and not chosen, or left out with its line> —
+      <its consequences as the message gave them>
   - Source: <human/date/words>
   - Based on:
     - <a difference claimed between the options> — <its address>, <the place in it>, "<the passage word for word>"; read <date>
