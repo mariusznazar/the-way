@@ -3,10 +3,10 @@
 Step 0 of the skill `define-project`, whose `SKILL.md` lies beside this file, for an existing
 definition.
 
-- Read the definition whole and go on from where its status line says; a working table under "Projected
-  foundation changes" means step 5 (`find_entries.md` beside this file) is under way, and an item
-  of "Technology" ending `— open` that step 6 (`technology.md` beside this file) is. A definition
-  whose status reads `approved` is checked first:
+- Read the definition whole and go on from where its status line says; a working table under
+  "Projected foundation changes" means step 5 (`find_entries.md` beside this file) is under way,
+  and an item of "Technology" ending `— open` that step 6 (`technology.md` beside this file) is. A
+  definition whose status reads `approved` is checked first:
   `python -B <the-way>/project-level/readiness_check.py <definition>`. A finding that its
   fingerprint no longer matches means the definition changed after the gate, and it goes through
   step 7 (`gate.md` beside this file) again.

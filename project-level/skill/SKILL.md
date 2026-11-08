@@ -11,13 +11,14 @@ readiness gate; the settling of the project's technology, between them, it hands
 broken into tasks — as projected entries of the foundation — so that the breakdown and the tasks
 guess as little as they can. The form of a definition and the rule of each section stand in
 `definition_template.md`; how a skill asks stands in `elements/common/way_of_working.md`; this
-skill holds the order of the work. The decisions that set its rules are cited below.
+skill holds the order of the work. The decisions that set its rules are cited below and in the
+files beside this skill.
 
 This skill lives in `project-level/skill/` of the-way. In the-way itself, the-way is the checkout
 or worktree the session works in, the directory `git rev-parse --show-toplevel` prints in
 the session's working directory; in a product, it is the product's pinned `.the-way`. The project
-level's directory, `project-level/`, is there, and each skill named below is the project skill of
-that name with the `the-way-` prefix.
+level's directory, `project-level/`, is there, and each skill named below or in the files beside
+this skill is the project skill of that name with the `the-way-` prefix.
 
 The project level reads the product's foundation and writes nothing in it
 (WAY-106).
@@ -69,9 +70,11 @@ Read `find_entries.md` beside this skill.
 
 ## 6. Settle the technology
 
-Read `technology.md` beside this skill.
+Read `technology.md` beside this skill. Where the readiness check reports a finding at this step,
+in the run `technology.md` gives or handed back by `settle-technology`, read `gate.md` beside this
+skill: the finding goes where its 7.1 sends it.
 
 ## 7. The readiness gate
 
-Read `gate.md` beside this skill; in a turn dispatched through a refinement conversation path it
-points to `delegated_mode.md` for what changes.
+Read `gate.md` beside this skill unless step 6 had you read it; in a turn dispatched through a
+refinement conversation path it points to `delegated_mode.md` for what changes.

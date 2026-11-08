@@ -1,5 +1,8 @@
 # Delegated definition change and gate
 
+The variant of the skill `define-project`, whose `SKILL.md` lies beside this file, for a turn that
+`lead-project` dispatches; "this same workflow" below is the steps that `SKILL.md` gives.
+
 When `lead-project` dispatches a definition edit or step 7 through a refinement conversation
 path, read that file and `project-level/lead/conversation_template.md` first, verify its sources
 and process pin, and use this same workflow with file-mediated routing (WAY-156). Edit only the
