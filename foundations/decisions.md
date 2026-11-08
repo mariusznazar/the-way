@@ -2801,9 +2801,9 @@ later could change how the work is cut into tasks, or when it adds something the
 run, pay for or back up; a choice one task can make and change alone stays with that task, while a
 choice under this rule that a definition missed, or that no definition holds, is settled through a
 run of the step at a task document (WAY-267, WAY-268). As an exception to that rule, where the
-project brings behaviour a user sees in the running product, the step looks at three matters of an
-agent's way to the running product — its logs, its interface and its development data — and lists
-as a choice of its own each matter that no decision of the foundation settles for that behaviour,
+project brings behaviour a user sees in the running product, the step looks at four matters of an
+agent's way to the running product — its logs, its interface, its development data and the place of
+its screenshots — and lists as a choice of its own each matter that no decision of the foundation settles for that behaviour,
 even where its answer adds nothing to run, pay for or back up, and even where the product has none
 of what the matter names, whose answer then says what an agent uses in its place; how a human
 learns of a failure of the running product is no such matter and has an exception of its own
@@ -2817,23 +2817,24 @@ learns of a failure of the running product is no such matter and has an exceptio
   agent compares the work with the decision:
   - complies: a project that adds an account server lists its store of data and its way of
     logging in, and the definition projects a decision on each; a project that changes only how a
-    screen looks, in a product whose foundation already says how an agent reaches its screens and,
-    where the product runs outside the machine it is made on, how a human learns of a failure,
-    records that the foundation holds every choice it needs; a project that moves a product to a
+    screen looks, in a product whose foundation already says how an agent reaches its screens, where
+    its screenshots lie and, where the product runs outside the machine it is made on, how a human
+    learns of a failure, records that the foundation holds every choice it needs; a project that moves a product to a
     server lists, besides its place to run, how a human learns of a failure, as WAY-270 gives; the
-    first project of a game played in a browser lists the game's logs, its interface and its
-    development data, each as a choice of its own, and projects a decision on each although reading
-    the server's output and opening the game on a local address add nothing to run; a later project
-    of that game, whose new screens an agent reaches as those decisions say, lists none of the
-    three; a command-line tool that keeps no data lists its development data, answered by sample
+    first project of a game played in a browser lists the game's logs, its interface, its
+    development data and the place of its screenshots, each as a choice of its own, and projects a
+    decision on each although reading the server's output and opening the game on a local address
+    add nothing to run; a later project of that game, whose new screens an agent reaches and whose
+    screenshots lie as those decisions say, lists none of the four; a command-line tool that keeps no data lists its development data, answered by sample
     input files kept with its code; a task of a plan needs a store of data its definition missed,
     and the human settles it in a run at that task's document, the approved definition untouched;
   - violates: the first task of the breakdown chooses the database; a definition reaches the gate
     with a store of data in its scope and no choice of it projected or found in the foundation; a
     project that brings a product's first screen leaves out how an agent operates it because a
-    browser on a local address adds nothing to run; the logs, the interface and the development
-    data stand on the list as one choice; a product that keeps no data leaves its development data
-    off the list for that reason.
+    browser on a local address adds nothing to run; the logs, the interface, the development data
+    and the place of the screenshots stand on the list as one choice; a project that brings a
+    product's first screen leaves out where the screenshots lie because nothing runs for them; a
+    product that keeps no data leaves its development data off the list for that reason.
 - **Origin:** none
 
 *Rationale:* whether a technology choice changes how the work is cut into tasks cannot be judged
@@ -2851,10 +2852,15 @@ nothing to run, pay for or back up and change no cut of the work, so the rule of
 would never list them; the exception lists each matter as a choice of its own, weighed apart, and
 only where no decision already answers it, so the first project of a product settles each in a
 short decision and later projects find it in the foundation. A product with no screen or no stored
-data still needs the answer that says what an agent uses instead. The step takes from the lesson
-"Towards Autonomous Product Development" the question of how an agent sees the running product —
-through its logs, its interface and its development data — and leaves out the lesson's hard limit
-that keeps an agent away from the production database and from root access.
+data still needs the answer that says what an agent uses instead. The place of the screenshots is
+a matter of its own because the screenshot an agent takes to show the human is the evidence of its
+check of the running product, and a file in the product's repository stays in its history for good
+(WAY-316); left to the cycle, one request commits the files and another shows none, and a product
+that settles the place with the step learns of the gap before its first request with a changed
+screen, not at it. The step takes from the lesson "Towards Autonomous Product Development" the
+question of how an agent sees the running product — through its logs, its interface and its
+development data — and leaves out the lesson's hard limit that keeps an agent away from the
+production database and from root access; the place of the screenshots is no part of the lesson.
 *Rejected:* a round inside the conversation about goal and scope — no place to compare
 technologies; the first tasks of the breakdown — the cut itself may depend on the choice; the step
 after the readiness gate — each settled choice would change approved sections and send the
@@ -2865,12 +2871,15 @@ a question about that way in the refinement of every task — every task records
 with no need of its own; the rule of belonging alone for those matters — their commonest answers
 would never be listed, and looking at them would settle nothing; a requirement of the step beside
 the list — a new place in the form of a definition, and its answer would not reach later projects
-as a decision of the foundation; the logs, the interface and the development data as one choice —
-it binds independent choices together, and a later change to one reopens them all; one heading the
+as a decision of the foundation; the logs, the interface, the development data and the place of the
+screenshots as one choice — it binds independent choices together, and a later change to one
+reopens them all; one heading the
 step splits into as many choices as the product needs — whether a matter is left out would rest on
 the agent's judgment alone; the matters on the list the deployment skill of a product covers
 (WAY-139) — only a task that deploys the product checks that list, so a product run on a local
-machine alone would leave an agent with no way to it.
+machine alone would leave an agent with no way to it; only the behaviour when no place for
+screenshots is settled (WAY-317), with the step unchanged — a product learns that it has no place
+only at its first request with a changed screen.
 
 ### WAY-122 — How are the options of a technology choice found and checked before a human sees them?
 
@@ -4715,12 +4724,14 @@ reads it, and the interface asks how an agent operates the product as its user d
 screen in a browser, a call to its API or a command in a terminal — and how it sees what the
 product answers. The development data asks where the data comes from on which an agent checks the
 product's behaviour outside production, and how an agent brings that data to the state a check
-needs. Data set up from scratch and a dedicated test environment that persists are both options
-of that choice, and an entry, a decision of the foundation or a projected decision of a definition,
-that leaves part of what a matter asks unanswered does not settle that matter at a project
-definition; in a run at a task (WAY-267) the step may open a decision of the foundation that leaves
-part of it unanswered as it may open any such decision (WAY-313), the list shown to the human saying
-in one sentence what that decision leaves unsaid.
+needs, and the place of the screenshots asks where the files of the screenshots that an agent takes
+to show the human lie, outside the product's repository, and how the description of a request shows
+each as an image. Data set up from scratch and a dedicated test environment that persists are both
+options of the development data, and an entry, a decision of the foundation or a projected decision
+of a definition, that leaves part of what a matter asks unanswered does not settle that matter at a
+project definition; in a run at a task (WAY-267) the step may open a decision of the foundation that
+leaves part of it unanswered as it may open any such decision (WAY-313), the list shown to the
+human saying in one sentence what that decision leaves unsaid.
 
 - **Scope:** project-level, decisions
 - **Based on:** none
@@ -4733,7 +4744,10 @@ in one sentence what that decision leaves unsaid.
     middle of a game and a password reset waiting; for a shop with a large store of data, the
     comparison of its development data weighs data a script generates, a copy of production without
     personal data that a human fetches, and a dedicated test environment that persists, each by its
-    consequences; a list written before the record's life was asked, whose logs item stands
+    consequences; the place of the screenshots is answered by a store outside the product's
+    repository to which an agent can write a file and which serves each file at an address that the
+    description of a request embeds as an image; a list written before the record's life was asked,
+    whose logs item stands
     `— held by` a decision silent on it, has the item end `— open` with that decision nested under
     it, and the list is shown again with one sentence on what the decision leaves unsaid; in a run
     at a task, the item over such a decision ends `— open` with that decision nested under it
@@ -4748,8 +4762,11 @@ in one sentence what that decision leaves unsaid.
     step because its logs decision is silent on it; the development data names where the data comes
     from but not how an agent reaches a save from the middle of a game; the comparison of the
     development data leaves out a dedicated test environment that persists because the data has to
-    be set up from scratch; in a run at a task, the list shown to the human has the item over such a
-    decision with no word of what the decision leaves unsaid.
+    be set up from scratch; the place of the screenshots is answered by a directory of the product's
+    repository, or names where the files lie and says nothing of how the description of a request
+    shows them as images, and the answer stands as settling the matter; in a run at a task, the list
+    shown to the human has the item over such a decision with no word of what the decision leaves
+    unsaid.
 - **Origin:** none
 
 *Rationale:* each answer serves an agent that checks behaviour a user sees in the running product.
@@ -4771,7 +4788,11 @@ cycle improvises it. A dedicated test environment that persists is in many cases
 set up from scratch for every change, though it brings costs of its own, so neither is ruled out
 and the step weighs them by their consequences (WAY-123). In a run at a task the list shown to the
 human says in one sentence what a silent decision leaves unsaid, since an item that reads as
-settled gives the human no sign that something is left for them to say.
+settled gives the human no sign that something is left for them to say. The screenshots an agent
+takes to show the human are the evidence of its check, and the human sees them in the description
+of the request, so the answer says both where the files lie, outside the product's repository where
+a file would stay in its history for good (WAY-316), and how the description shows them; a place
+without the second leaves each cycle to improvise how a screenshot reaches the human.
 *Rejected:* the interface without "as its user does" — access to the store of data past the
 application would count as an interface; the development data asked as data rebuilt from scratch —
 it rules out a dedicated test environment that persists, in many cases the better option; the
@@ -8098,7 +8119,7 @@ would leave the entry false; the choice written into the approved definition —
 readiness gate and the check of the plan again (WAY-118, WAY-156), and an independent task has no
 definition, so a second way would be needed anyway; the note and the matters of an agent's way to
 the running product together, where a task brings something a user sees — a task about something
-else can gain up to three further choices, each with research and a critique, close to the question
+else can gain up to four further choices, each with research and a critique, close to the question
 in the refinement of every task that WAY-121 rejects; a run limited to what nothing holds — a simpler
 rule, but a change of technology would go through ordinary refinement with no research or critique,
 and a choice of where a product's logs go could not pass through the step.
@@ -8247,7 +8268,7 @@ whether an agent can read an option is a consequence like any other, and a chang
 open the decision on the logs. A deliberate absence always enters the comparison of this choice,
 though it has no page of documentation, its consequences anchored in the document and in the pages
 of the other options; in the area of this choice this decision prevails over WAY-121, which lists a
-choice by its rule of belonging and the three matters of an agent's way alone, and over WAY-122,
+choice by its rule of belonging and the four matters of an agent's way alone, and over WAY-122,
 which leaves out an option with no documentation.
 
 - **Scope:** project-level, decisions
@@ -8300,7 +8321,7 @@ hook-up takes in code shows as the cost of changing the choice later.
 *Rejected:* the matter as part of the logs item — one item fewer, but a change to the tool that
 collects failures reopens the whole decision on the logs, which WAY-121 already rejects ("it binds
 independent choices together, and a later change to one reopens them all"), and an exception to
-WAY-166 is needed; a fourth matter in the family of an agent's way to the running product — the
+WAY-166 is needed; a further matter in the family of an agent's way to the running product — the
 existing mechanism and criterion of entry work, but WAY-166 would pass over a panel only a human
 reads, so an exception is needed anyway, and the family's definition stops fitting, since the matter
 does not speak of an agent checking behaviour; the criterion of the agent's way, that the project
@@ -10020,6 +10041,149 @@ the human.
 material and the consent given at the request — a change of a decision reaches the human at the
 request with code already built on it, and the cycle no longer goes from its start to its request
 without a human.
+
+### WAY-316 — Where do the screenshots that a change shows the human lie, and how do they reach the request?
+
+Where a change alters what a screen shows, the screenshots that its author or reviewer shows the
+human are embedded as images in the description of the request, from a place that the foundation of
+the product settles outside the product's repository; the-way names no place. No file of a
+screenshot is committed to the product's repository, the copy of the task cycle's record that a
+commit adds to it included. A screenshot is evidence for the time of acceptance: the product may
+clear its place after a long time, and the images of old requests then stop showing.
+
+- **Scope:** task-cycle, project-level
+- **Based on:** none
+- **Relations:** derives from WAY-219 · derives from WAY-286 · derives from WAY-308
+- **Verification:** invariants: record-copy-image-check. An agent compares a change, its record and
+  its request with the decision:
+  - complies: the author of a change to a screen, in a product whose foundation settles a place for
+    screenshots, puts the screenshot it shows there, and the request embeds it as an image under
+    what the human will see; the copy of the record that a commit adds holds no image file, and the
+    image check ran on it before that commit; the product clears its place a year later, the images
+    of old requests stop showing and nothing in the product's repository changes;
+  - violates: a request embeds an image by a link to a file of the record's copy in a commit of the
+    product's repository; a screenshot file stands in a commit of the change; a copy of the record
+    is committed with no run of the image check; the foundation of a product requires its place for
+    screenshots never to be cleared; a template of the-way names the place where the screenshots lie.
+- **Origin:** none
+
+*Rationale:* the human who accepts a request sees the screen in its description, without running
+the product, and a file committed to the product's repository stays in its history for good: the
+removal of the file by a later commit frees no space and does not change an image embedded by a
+link to the earlier commit. In the history of one product the files of 384 screenshots held about
+29 MB of about 51 MB of the whole history, measured on 2026-11-08 by listing every object of its
+repository and counting their size. The rule is the-way's and the place is the product's, because
+the places that serve a product differ in what they cost and in who can open them, and a place named
+in the process would bind products it does not suit. A screenshot is looked at when the request is
+accepted and rarely after, so a place that may be cleared costs a few old requests their images and
+spares the product a store that only grows. The price taken: an old request shows a broken image
+once its place is cleared; a product with no place settled shows no screenshot (WAY-317).
+*Rejected:* the screenshots kept in the record in the product's repository and embedded by a link
+to the commit — the files stay in the history for good, which is the problem the rule exists to
+end; nothing kept, the agent describing the screen in words — at acceptance the screen still cannot
+be seen, the problem the rule started from; the attachments of a release in the product's
+repository — in a private repository an image may not show (not checked), and the list of releases
+fills with files that are no release; an external file store — a new tool with keys and an action
+of the human, a technology choice to be settled on its own; the screenshots only on the human's
+disk, in the ignored directory of the cycle — the description cannot link to a local file; a place
+never cleared, the matter returning when it grows — the evidence is looked at once, when the request
+is accepted.
+
+### WAY-317 — What does a task cycle do when the foundation of a product settles no place for screenshots?
+
+Where a change alters what a screen shows and the foundation of the product settles no place for
+screenshots, the author inspects the screenshot as WAY-219 gives and the request shows none: the
+section of its description for the human's decisions says that no screenshot is shown and why, and
+the cycle does not stop. A screenshot left unchecked for want of a settled way to the running
+product is reported as WAY-219 gives and needs no second item.
+
+- **Scope:** task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-316 · derives from WAY-219 · derives from WAY-287
+- **Verification:** an agent compares the cycle and its request with the decision:
+  - complies: a product whose foundation settles a way to its running screens but no place for
+    screenshots: the author inspects the screenshot, commits none and embeds none, and the request
+    asks the human, in plain words, whether to merge without seeing the screen, saying that the
+    product has settled no place for screenshots; the cycle goes on to its review and its request;
+    a product whose foundation settles no way to the running product: the screenshot stays
+    unchecked for that reason in the report and the request, as WAY-219 gives, with no item about a
+    place;
+  - violates: the cycle stops or opens blocked for the missing place; the screenshot is committed to
+    the record so that the request has something to show; the request says nothing of the missing
+    screenshot, or only in its checks; the missing place is reported as the reason when the way to
+    the running product is what fails.
+- **Origin:** none
+
+*Rationale:* a request that shows no screenshot and says nothing leaves the human to guess whether
+the screen was looked at; naming the lack in the section for the human's decisions lets the human
+weigh it and make a task of settling the place. WAY-219 refused to stop the cycle for an unsettled
+way to the interface, and the same holds here: a stop comes after the change is made, when it can no
+longer be avoided. The case differs from that of WAY-219: there the author cannot look at the
+screen, here it looks and has nowhere to put the result. The price taken: a product that settled no
+place sends its first requests with a changed screen with no image, and the human accepts without
+seeing the screen or settles the place first.
+*Rejected:* the lack of a place stopping the cycle — the stop comes after the change is made, which
+WAY-219 refused for the way to the product.
+
+### WAY-318 — Which artifacts of a change's check reach the description of its request?
+
+Of the artifacts of a change's check, only screenshots reach the description of the request; the
+author describes motion in words, and the human judges its smoothness. Text traces of the check —
+logs, outputs of commands, observations — stay in the reports of the cycle's record.
+
+- **Scope:** task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-316 · derives from WAY-286
+- **Verification:** an agent compares the request and the record with the decision:
+  - complies: a change to how a piece moves gets a sentence in the report saying what the author
+    saw, no file of motion in the description and its logs in the report; a change to a screen gets
+    its screenshot in the description;
+  - violates: the description embeds a short film made of frames; the description copies the log of
+    a check.
+- **Origin:** none
+
+*Rationale:* a screenshot is read at a glance in the description, while logs and outputs are read
+by the agents and the humans who check closely, in the reports, where they already stand. A film
+made of frames adds a file of megabytes and a tool for composing the frames, and what it shows is
+the smoothness of a few frames a second, which the product at play may not have; the human judges
+smoothness by playing it. The price taken: a change to motion reaches the request as words the human
+cannot check without running the product.
+*Rejected:* a short film made of frames in the description for a change to motion — a file of
+several MB, a tool for composing the frames still to be settled, and a film of a few frames a second
+can show a smoothness the product does not have.
+
+### WAY-319 — What must an agent's way to the running product allow when two task cycles run at once?
+
+The way to the running product that the foundation of a product settles for its interface lets two
+task cycles working in separate worktrees of the product check at the same time without a browser
+they share, and an agent closes the browser it opened when its check ends. In the step that settles
+technology an option that cannot meet this stays in the comparison with that lack said, as WAY-166
+gives for an option an agent cannot use.
+
+- **Scope:** task-cycle, project-level
+- **Based on:** none
+- **Relations:** derives from WAY-121 · derives from WAY-166 · derives from WAY-219
+- **Verification:** an agent compares the foundation of a product, the step that settles technology
+  and a cycle with the decision:
+  - complies: a product settles a way in which each worktree drives a browser of its own, two
+    cycles check at once, and each author closes its browser at the end of its check; the step
+    compares two options for the interface and says, for the one that gives two sessions one
+    browser, that two cycles cannot check at once with it;
+  - violates: a way in which the second session started in another worktree takes over the page of
+    the first; an author leaves its browser open at the end of its check; an option for the interface
+    is compared with no word on whether two cycles can check at once.
+- **Origin:** none
+
+*Rationale:* two cycles in separate worktrees of one product both look at the running product, and a
+way that gives them one browser makes the second check fail or take over the first one's page; an
+author that leaves its browser open blocks the next check the same way. Between 20 and 31 October
+2026, before one of two products changed its way, 13 errors of a busy browser profile stood in 9
+conversation files of the sessions on those two products. Stated once for every way, the condition
+reaches a product before it meets the conflict, and a way that fails it is seen as a lack in the
+comparison, where the human can weigh it.
+*Rejected:* the-way saying nothing, the matter staying with the product — each product finds the
+conflict itself, by its errors, and a product whose main way keeps one browser profile for a
+directory returns to the busy profile.
 
 ## Withdrawn identifiers
 

@@ -314,3 +314,13 @@ No Python file git tracks imports a Python file git tracks of another part that 
 - **Derives from:** WAY-299 · WAY-44
 - **Part:** every
 - **Violated:** no
+
+## record-copy-image-check
+
+The script of `task-cycle` that checks the copy of a cycle record for image files lists each file below the directory it is given whose name ends, in either case of its letters, in `.png`, `.jpg`, `.jpeg`, `.gif`, `.webp`, `.bmp`, `.tif`, `.tiff`, `.ico`, `.svg`, `.avif` or `.heic`, and exits 1 when it lists any file and 0 when it lists none.
+
+- **Method:** test
+- **Rests on:** none
+- **Derives from:** WAY-316
+- **Part:** task-cycle
+- **Violated:** no
