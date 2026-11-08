@@ -81,6 +81,11 @@ sections and required rules to it at the places it names (WAY-171).
   compares the change with it (WAY-168).
 - **A rule carries no rationale and no rejected options**: those stand in the decision it names
   (WAY-168).
+- **A rule lists no state and repeats no decision or value.** It does not list the state of the
+  product's code or of the product, such as the endpoints the code has today, and it repeats neither
+  a decision of the product's log nor a value taken from a configuration file, such as the version of
+  a tool; it says what the author of the code is to do. The list of `### Logging scope`, which WAY-274
+  gives as the product's promise and no inventory of its code, is no such state (WAY-312, WAY-274).
 - **What names no decision is an example**, not a rule: it stands under `## Examples`, under a
   `### ` heading of its own, and carries no *Decision* field (WAY-168).
 - **`## Where in code`** lists, as paths in backticks relative to the root of the repository, the

@@ -9770,6 +9770,64 @@ departing from the format, and a reviewer reports each departure again; a script
 shape of a judgement — it would catch the order of sections as well, but it is a new script with
 tests for a report that lives one cycle.
 
+### WAY-312 — Which sentences does a rule of a product's guidelines not hold?
+
+The shared template of a product's guidelines holds that a rule lists no state of the product's code
+or of the product and repeats neither a decision of the product's log nor a value taken from a
+configuration file, so that what remains is what the author of the code is to do. Nothing that edits
+a product's guidelines, whether the template, a skill of guidelines or a product's own task, replaces
+a sentence that names a practice a model knows with the name of the practice, or takes out a case
+that follows from a rule's purpose. A product's own task cleans its existing guidelines of the
+sentences the first sentence rules out, and the skills of guidelines carry no step that searches for
+them.
+
+- **Scope:** product-guidelines
+- **Based on:** shorter-guidelines-trial
+- **Relations:** derives from WAY-168 · derives from WAY-225 · derives from WAY-173
+- **Verification:** an agent compares the change with the decision:
+  - complies: a rule on the dependency audit says that the audit runs in the product's standing
+    checks and names the decision adopting its tool, and gives neither the version of the tool nor
+    the number of rules its configuration enables; the list under `### Logging scope` stands in its
+    rule as the product's promise; a sentence that spells out why a failure is never turned into an
+    empty list stays in the rule as written; a product's task removes from the existing guidelines a
+    sentence that restates a decision's *Decision* field and leaves a sentence that names a known
+    practice, and a case that follows from a rule's purpose, as they were;
+  - violates: a rule gives the endpoints the code has today, or the version of a linter copied from
+    its configuration file; a rule repeats the sentence of the decision it names; the template, a
+    skill or a product's task that cleans its guidelines replaces the sentence on an empty list with
+    the words "fail loudly", or takes out a case that follows from a rule's purpose; the audit mode of
+    a skill of guidelines gains a step that searches existing guidelines for such sentences.
+- **Origin:** none
+
+*Rationale:* a sentence that lists what the code or the product is today goes stale when the code
+changes (WAY-225), and a sentence that repeats a decision or a value of a configuration file is a
+second copy that drifts from the first (WAY-168, WAY-171); every agent of a cycle reads the guidelines
+it is named whole (WAY-213), so each such sentence is read again at every cycle and checked against
+nothing. What the author of the code is to do stays, which is what a rule of guidelines is for
+(WAY-168). A trial on the guidelines of one product gave no ground for going further: on three tasks
+with hidden tests, five runs each of the model Sonnet 5.5, the tests passed 45 of 45 times with the
+old guidelines file, with a shorter one and with no guidelines file at all, so the measurement told
+none of the three arms from another. Two inferences from that result are the author's own, not the
+source's: where the arm with no file passes too, the tests cannot tell whether the file is followed;
+and, by arithmetic, a pass rate near 55% gives five of five in about one set of five runs in twenty,
+so five of five shows no equivalence. The trial thus settles nothing about a name of a practice or a
+case that follows from the purpose, and WAY-100 lets a practice bind only through a decision that
+adopts it. The template guards new text; the existing text is cleaned by the product's task, since
+only that task can judge sentence by sentence whether a meaning changes (WAY-172); and the skills stay
+as they are. Its weak points: the part that keeps known practices and derivable cases stands on
+reasoning, not on a measurement; only the rules for which a task was written were tried, and only
+today's model; the existing guidelines of a product stay as they are until its task is ordered.
+*Rejected:* waiting for a stronger trial, with rules the agent breaks without the guidelines and more
+than five runs — the earlier trial was a heavy one, hours of agent time and tens of millions of
+tokens, and in a product such a rule may not exist, since code guards the behaviour; no decision, the shortening staying a one-off
+in one product — it also turns down the part nobody disputed, and the guidelines of other products
+keep only growing; the full yes, all five groups of sentences — a conclusion drawn from the lack of
+a signal; besides the way chosen, a step in the audit modes of the skills of guidelines that
+searches existing guidelines for such sentences — a change to several skills at once, and the
+refresh mode of coding guidelines has heavy prerequisites; a separate task for the template, this
+change writing only the decision — until that task, agents writing guidelines by the template keep
+adding sentences the decision says to remove.
+
 ## Withdrawn identifiers
 
 | Identifier | Why | Successors |

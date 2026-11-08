@@ -201,6 +201,12 @@ On GitHub, the deleted head branch of a closed pull request can be restored.
 
 - **Source:** https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-branches-in-your-repository/deleting-and-restoring-branches-in-a-pull-request (archived: https://web.archive.org/web/20261016024619/https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-branches-in-your-repository/deleting-and-restoring-branches-in-a-pull-request, 2026-10-16) § Restoring a deleted branch — "You can restore the head branch of a closed pull request."; read 2026-10-31
 
+## shorter-guidelines-trial
+
+In the report of a trial of a shorter guidelines file in one product, all 45 runs of three trial tasks with hidden tests passed their test on the model Sonnet 5.5, five runs of each task for each of three arms (the old guidelines file, a shorter one, and no guidelines file).
+
+- **Source:** https://github.com/mariusznazar/loop2/blob/9c0dfc8faa7b3024dfa1e488b18b955f087b57a0/docs/task-cycles/proba-krotszych-wytycznych/request.md § What you will see — "Three small trial tasks with hidden tests were made, each done five times by a fresh agent with the old file, five times with the shorter one and, added at the end on a request relayed from another session as your decision, five times with no guidelines file at all. All 45 runs passed their test: 5 of 5 with the old file, 5 of 5 with the shorter one and 5 of 5 without the file, on each of the three tasks." · § Cost — "The stage table counts 92 stages and 52 subagents, with 2 h 44 min of agent time added up, and 95.2 million tokens in all (90.6 million of them input read from the cache; 0.63 million written), every one of them on one model, Sonnet 5.5."; read 2026-11-08
+
 ## Withdrawn identifiers
 
 | Identifier | Why | Successors |
