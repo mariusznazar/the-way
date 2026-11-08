@@ -206,9 +206,14 @@ that settles it (WAY-121). The skill `settle-technology` writes it before the re
   | `— open` | the step is still settling it; the readiness gate stops it |
 
 - An item may hold nested items under it, such as the human's preference for the choice, or the
-  entry that a choice standing open over a silent entry changes, as `Changes: <PREFIX>-<NN>` or
+  entry that a choice standing open over a silent entry, or over a decision the step opened for a
+  reason to change it, changes, as `Changes: <PREFIX>-<NN>` or
   `Changes: <the question of a projected decision>`; they are no choices of the list
   (WAY-112).
+- A decision of the foundation that holds a choice is material for the step, not a limit: where the
+  step sees a reason to change it, the item stands `— open` over it instead of `— held by`, the
+  decision's present answer is one option of the comparison, and the human's choice among the
+  options is the consent to the change (WAY-313, WAY-314).
 - The section never reads `none`: it records the decision that holds each choice, and a project
   whose choices the foundation already holds lists each of them `held by`
   (WAY-121).

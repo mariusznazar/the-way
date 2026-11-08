@@ -11,8 +11,11 @@ foundation entries, or a task document, with a note saying what the run is for (
 document", here and in the files beside this skill, is the definition or, in a run at a task, the
 task document with its note. The step lists the choices the document needs, finds the entry that
 already settles each, and settles every other one with the human: at a definition as a projected
-decision, at a task as a settled question of the task document. The human weighs consequences for
-the product, not technologies
+decision, at a task as a settled question of the task document. A decision of the foundation that
+holds a choice is material for the step, not a limit, until the task's cycle starts: where the step
+sees a reason to change the decision it opens the choice and shows the option that changes it among
+the others, and the human's choice is the consent to the change (WAY-313, WAY-314, WAY-315). The
+human weighs consequences for the product, not technologies
 (WAY-123). The form and rules of the Technology section — which choices it lists, its markers, the
 weighing and the tests of options — stand in `definition_template.md`, and the section's form in a
 task document in `project-level/task/template.md`; how a skill asks stands in

@@ -27,9 +27,10 @@ and no entry is written.
 - Its settlement is in the human's words, and the last column names what the task's cycle would do
   or choose without it.
 - Write the table under "Settlements to record" with a column *State* after the template's
-  columns: proposed rows start `waiting`, and rows with no concrete next-reader consequence start
-  `rejected`. Show the whole table, including the source and next-reader column, with a reason for
-  each rejected row.
+  columns: proposed rows start `waiting`, a row that repeats a choice the human made between ways
+  shown starts `accepted` and is marked as the human's choice (`build_table.md`), and rows with no
+  concrete next-reader consequence start `rejected`. Show the whole table, including the source and
+  next-reader column, with a reason for each rejected row.
 - The task's cycle makes the one search of the whole foundation when it writes each kept row
   (WAY-33, WAY-134).
 
@@ -38,7 +39,9 @@ and no entry is written.
 An accepted row stays a row, and the task's cycle writes its entry (WAY-134). In place of step 4, a row
 that carries a choice the human made in the task's refinement, which the cycle will bring into a
 binding part without asking, gets the question against the answer that "How a skill asks" in
-`way_of_working.md` gives, unless an exception there covers it, at most three questions at a time;
+`way_of_working.md` gives for refinement, only where the choice contradicts a sentence the human
+said earlier, quoted, and unless an exception there covers it, at most three questions at a time (the
+looser rule of refinement holds only until the task's cycle starts, WAY-315);
 write each answer into the row, with the ways that question showed and the human did not take in
 the row's *Source* as `project-level/task/template.md` gives, before the next question (WAY-113,
 WAY-134).

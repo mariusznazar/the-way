@@ -47,15 +47,18 @@ the list only where the note touches it.
 - The items come from the note and the task document. Each note stands in the section as it was
   given, with its date.
 - The rule of belonging selects nothing for a choice the human names.
-- A choice a decision of the foundation holds opens only on the human's word, in the note or in a
-  change to the list: it then stands `— open`, with the decision it changes nested under it. An
-  agent never opens one. Here a decision silent on part of what a matter of the logs, the
-  interface or the development data asks (`running_product.md`) holds the choice too, though at a
-  definition `list.md` leaves such an item `— open`: the item opens only on the human's word and
-  then stands `— open`, with that decision nested under it as `Changes:`. A note that refinement
-  derived from a reserved choice is not that word; the list shown to the human keeps the item
-  `— held by`, with one sentence saying what that decision leaves unsaid, as `start.md` gives, and
-  the human's change to the list is the word.
+- A choice a decision of the foundation holds is material here, not a limit (WAY-313). It stands
+  `— open`, with the decision it changes nested under it as `Changes:`, when the note or a change
+  of the human to the list names it, and also when you see a reason to change the decision; you ask
+  no leave first, and the list shown to the human says the reason in one sentence, as `list.md`
+  gives. A decision silent on part of what a matter of the logs, the interface or the development
+  data asks (`running_product.md`) is such a reason: you may open its item `— open` here as at a
+  definition, with that decision nested under it as `Changes:`; the list, with the item open or
+  still `— held by`, says in one sentence what the decision leaves unsaid, and the human may open
+  it by a change to the list. The decision's present answer enters the comparison as one
+  option; the option that changes the decision says in its line which decision it changes, and the
+  human's choice among the options is the one consent to the change (WAY-314). This holds only
+  until the task's cycle starts, where no agent departs from a decision on its own (WAY-315).
 - A choice a projected decision of the approved definition the task carries settles stands
   `— projected: <question>`, and no run reopens it. A human who wants it changed goes the way
   `project-level/task/skill/resolve_gaps.md` gives for a change of an approved definition (WAY-118).
@@ -69,7 +72,7 @@ Sub-steps 1 to 6 of `settle.md` stand, and:
 - WAY-165 and WAY-166 apply where the note touches the logs, the interface or the development data,
   and WAY-270 where it touches how a human learns of a failure; WAY-166 binds the three matters
   only.
-- A choice the human opened is no longer held, so it is tested.
+- A choice opened over a decision is no longer held, so it is tested.
 - A constraint the task document states counts as a definition's constraint does.
 - Where one run serves several tasks, each research agent also gets the path of each affected task's
   document.
@@ -79,14 +82,15 @@ Sub-steps 1 to 6 of `settle.md` stand, and:
 In place of sub-step 7 of `settle.md`, with no `record-decision`:
 
 - Write the choice under *Questions to settle* as a settled question, in the form the template
-  gives: in the question that already asks that choice, or in a new one. A choice the human opened
-  says in its *Answer* which decision it changes.
+  gives: in the question that already asks that choice, or in a new one. A choice opened over a
+  decision says in its *Answer* which decision it changes.
 - End the item with `— settled: <question>`, the question reading as under *Questions to settle*,
   and write both before the next message.
 - Start the next wave: every choice whose every dependency is now settled.
 
 The step writes no row of *Settlements to record*: step 5 of `refine-task` takes the settled
-question as a candidate, as it takes every answer, and the human cuts it.
+question as a candidate that repeats the human's choice among the options shown, so the row enters
+the table accepted and marked, and the human strikes it or leaves it (`find_settlements.md`).
 
 ## Close
 

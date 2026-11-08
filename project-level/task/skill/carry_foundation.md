@@ -10,8 +10,10 @@ For a plan member, follow `project_plan_task.md` to compare numbered work, depen
 projected entries with its plan item. A mismatch returns to the plan, not an unrecorded change in
 this document.
 
-If the task would contradict a current decision or a projected entry, show the conflict and its
-consequences. The human chooses whether to change the task or reopen the upstream settlement. Do
-not replace approved wording with the agent's paraphrase. The exception is the decision a run of
-`settle-technology` changes at the human's word (WAY-267): *Decisions in play* quotes it, and the
-human is not asked again.
+If the task would contradict a current decision of the foundation, that is an option, not a limit
+(WAY-313): show it as `resolve_gaps.md` gives. The human's choice between changing the task and
+changing the decision is the consent to the change; *Decisions in play* quotes the decision and
+names the change the task makes to it, and the human is not asked again (WAY-314). This holds only
+until the cycle starts (WAY-315). If the task would contradict a projected entry of an approved
+definition, show the conflict and its consequences: the human chooses whether to change the task or
+reopen the definition (WAY-118). Do not replace approved wording with the agent's paraphrase.

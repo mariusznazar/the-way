@@ -33,6 +33,13 @@ Every skill of the-way that asks the human asks this way
   work passes without one, and so does a way the human took as offered when the question of
   decision named its weak point, anchored in the material; an answer in the human's own words, or
   one that adds a condition to the way, still gets the question.
+- While a project definition or a task document is refined, the technology step included, the
+  question against the answer is asked only where the answer contradicts a sentence the human said
+  earlier, quoted in the question; an answer that changes a decision, or follows a loose remark, is
+  written as given. That holds as well for the entries written during that refinement, such as the
+  projected entries of a definition. In a task's cycle and where an entry is written outside such a
+  refinement, the question stands as the bullet above gives it; the looser rule holds only before
+  the cycle starts (WAY-113, WAY-315).
 - A question of assessment — what something is worth, what may go wrong, what is done today — is
   open, with no ways offered.
 

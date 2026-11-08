@@ -24,8 +24,10 @@ values the caller gives and the lines for steps 1, 2, 4 and 5, which you carry o
   carries: a rule that still binds once the project is done, what a word means, a sentence a commit
   can make false, a fact a settlement rests on.
 - Write the table into the definition as the template's working table: proposed rows start
-  `waiting`, and rows with no concrete next-reader consequence start `rejected`. Show the whole
-  table, including the source and next-reader column, with a reason for each rejected row.
+  `waiting`, a row that repeats a choice the human made between ways shown starts `accepted` and is
+  marked as the human's choice (`build_table.md`), and rows with no concrete next-reader consequence
+  start `rejected`. Show the whole table, including the source and next-reader column, with a
+  reason for each rejected row.
 - `define-project` makes the one search of the whole foundation at the readiness gate, once every
   entry is written (WAY-118).
 
@@ -39,7 +41,8 @@ For each accepted row, in the table's order:
    entry — the binding sentence, the rationale, a rejected option, the verification. Three moves
    give such questions:
    - implication — "you wrote X; from X follows Y — does Y hold?";
-   - collision — two sentences of the human, or the material against the conversation, both quoted;
+   - collision — two sentences of the human, both quoted; the material against the conversation is
+     no such move (WAY-113), a looser rule that holds only until a task's cycle starts (WAY-315);
    - the reason — where neither the human's words nor the material give the reason of a decision
      that is costly to reverse; a reason the material gives is written without asking.
 

@@ -9,6 +9,11 @@
   shown as rejected, with its reason, and is not proposed.
 - A candidate from the material is a proposal: it enters only on the human's word, and the
   conversation may change it.
+- A candidate that repeats a choice the human made between ways shown — the answer to a question
+  of decision that gave the ways open, their costs and a recommendation — is built `accepted`, not
+  `waiting`, and marked in its state as the human's choice, so that the shown table lets the human
+  strike it. The human accepts or rejects only the rows you derived from the material or from the
+  human's loose words (WAY-115, WAY-134); this holds only until the task's cycle starts (WAY-315).
 - Write the table where, and with the row states, those lines give.
 - No search of the whole foundation runs here; those lines say who makes it. A settlement that an
   entry read in step 1 already states is no candidate; a candidate that collides with such an
