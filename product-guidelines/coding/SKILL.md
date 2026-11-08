@@ -30,7 +30,8 @@ It runs inside the refinement of one task whose outcome is coding guidelines —
 or extended — or the exemplar of a kind of code, a task the product's backlog holds or one opened
 for it (WAY-107). `refine-task` opens or resumes the task through its steps 1 and 2; this skill
 takes over at its step 3 for the matters of the coding guidelines and hands back to its step 4, or,
-where its audit stops for the testing skill's, to its step 3, as `hand_back.md` gives.
+in a task that carries the testing guidelines too, to its step 3 while the testing skill has not
+led its matters, as `hand_back.md` gives.
 Refinement and the task cycle find applicable and missing guidelines through
 `product-guidelines/reading.md`; this skill owns settling their coding-guideline meanings. The
 task writing the missing general file does not wait for its own output (WAY-215). One task may carry
