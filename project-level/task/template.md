@@ -39,7 +39,7 @@ Project relation: independent | plan item: <the project plan's file name> — <t
 - <question a run of `settle-technology` settled>
   - Answer: <the option chosen, with the consequences that decided it>
   - Not chosen:
-    - <an option shown and not chosen, or left out with its line> — <its consequences as the table gave them>
+    - <an option shown and not chosen, or left out with its line> — <its consequences as the message gave them>
   - Source: <human/date/words>
   - Based on:
     - <a difference claimed between the options> — <its address>, <the place in it>, "<the passage word for word>"; read <date>
@@ -131,7 +131,7 @@ the body; the project orchestrator changes only `Status:` after final acceptance
   template of decisions gives; *Lacks*, each lack of the option chosen, as what it means for the
   product; and *Risks taken*, each risk the human took with it, marked as a hypothesis (WAY-138).
   Its *Not chosen* holds every option shown and not chosen, the options left out of the comparison
-  with their line included, each with its consequences as the table gave them. A canonical answer
+  with their line included, each with its consequences as the message gave them. A canonical answer
   shared by tasks is copied with its source, its ways not chosen and these three fields into each
   affected task; a link to an ignored conversation or another question alone is insufficient. A
   struck quotation remains unresolved until answered again. This section also keeps a

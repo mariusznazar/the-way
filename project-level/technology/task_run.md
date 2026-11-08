@@ -50,11 +50,12 @@ the list only where the note touches it.
 - A choice a decision of the foundation holds opens only on the human's word, in the note or in a
   change to the list: it then stands `— open`, with the decision it changes nested under it. An
   agent never opens one. Here a decision silent on part of what a matter of the logs, the
-  interface or the development data asks (`running_product.md`) holds the choice too, whatever
-  `list.md` says of the matter it settles: the item opens only on the human's word and then stands
-  `— open`, with that decision nested under it as `Changes:`. A note that refinement derived from a
-  reserved choice is not that word; the list shown to the human keeps the item `— held by`, and the
-  human's change to the list is the word.
+  interface or the development data asks (`running_product.md`) holds the choice too, though at a
+  definition `list.md` leaves such an item `— open`: the item opens only on the human's word and
+  then stands `— open`, with that decision nested under it as `Changes:`. A note that refinement
+  derived from a reserved choice is not that word; the list shown to the human keeps the item
+  `— held by`, with one sentence saying what that decision leaves unsaid, as `start.md` gives, and
+  the human's change to the list is the word.
 - A choice a projected decision of the approved definition the task carries settles stands
   `— projected: <question>`, and no run reopens it. A human who wants it changed goes the way
   `project-level/task/skill/resolve_gaps.md` gives for a change of an approved definition (WAY-118).
@@ -81,7 +82,7 @@ In place of sub-step 7 of `settle.md`, with no `record-decision`:
   gives: in the question that already asks that choice, or in a new one. A choice the human opened
   says in its *Answer* which decision it changes.
 - End the item with `— settled: <question>`, the question reading as under *Questions to settle*,
-  and write both before the next table.
+  and write both before the next message.
 - Start the next wave: every choice whose every dependency is now settled.
 
 The step writes no row of *Settlements to record*: step 5 of `refine-task` takes the settled

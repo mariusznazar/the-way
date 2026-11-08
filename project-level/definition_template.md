@@ -234,8 +234,9 @@ that settles it (WAY-121). The skill `settle-technology` writes it before the re
   it runs, what keeping it running takes and what changing it later costs — and chooses between
   them; where no difference with a consequence remains, the step recommends the simplest and
   cheapest option. The choices whose research started together reach the human together, in one
-  table, once every one of their comparisons has passed the critique, each with its recommendation
-  and the weak point of the option recommended (WAY-123).
+  message, one choice after another and in plain text, once every one of their comparisons has
+  passed the critique and a fresh agent has checked that message, each choice with its
+  recommendation and the weak point of the option recommended (WAY-123).
 - In a choice of an agent's way to the running product, whether an agent can use an option is a
   consequence for the product: an option an agent cannot use stays in the comparison with that lack
   said as "an agent does not check the running product this way", and the recommendation passes
@@ -252,7 +253,7 @@ that settles it (WAY-121). The skill `settle-technology` writes it before the re
   unknowns; no choice a decision of the foundation holds is tested, and no decision already
   written is tested afterwards. The risks these tests give are hypotheses with no source, not
   differences claimed between options, so the critique of the comparison does not strike them,
-  and they stand in the table beside the option recommended before the human chooses. The human
+  and they stand in the message beside the option recommended before the human chooses. The human
   who chooses that option takes its risks, and each risk taken reaches the decision of that choice
   in its *Rationale*, beside the lacks of the option chosen, marked as a hypothesis
   (WAY-138). `settle-technology` leads that.

@@ -55,7 +55,7 @@ the product on the machine on which it is made.
 Where the list holds an open choice, read `settle.md` beside this skill. The research agent's work
 stands in `research.md` beside this skill: you give its path to each research agent, as `settle.md`
 says, and need not read it. Read `elements/common/critique/SKILL.md` when the first critique of a
-comparison or of a table comes.
+comparison or of a message comes.
 
 ## 3. Close
 
