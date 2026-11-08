@@ -51,8 +51,8 @@ the list only where the note touches it.
   `— open`, with the decision it changes nested under it as `Changes:`, when the note or a change
   of the human to the list names it, and also when you see a reason to change the decision; you ask
   no leave first, and the list shown to the human says the reason in one sentence, as `list.md`
-  gives. A decision silent on part of what a matter of the logs, the interface or the development
-  data asks (`running_product.md`) is such a reason: you may open its item `— open` here as at a
+  gives. A decision silent on part of what a matter of the logs, the interface, the development
+  data or the place of the screenshots asks (`running_product.md`) is such a reason: you may open its item `— open` here as at a
   definition, with that decision nested under it as `Changes:`; the list, with the item open or
   still `— held by`, says in one sentence what the decision leaves unsaid, and the human may open
   it by a change to the list. The decision's present answer enters the comparison as one
@@ -69,9 +69,9 @@ the list only where the note touches it.
 
 Sub-steps 1 to 6 of `settle.md` stand, and:
 
-- WAY-165 and WAY-166 apply where the note touches the logs, the interface or the development data,
-  and WAY-270 where it touches how a human learns of a failure; WAY-166 binds the three matters
-  only.
+- WAY-165 and WAY-166 apply where the note touches the logs, the interface, the development data or
+  the place of the screenshots, and WAY-270 where it touches how a human learns of a failure; WAY-166
+  binds the four matters only.
 - A choice opened over a decision is no longer held, so it is tested.
 - A constraint the task document states counts as a definition's constraint does.
 - Where one run serves several tasks, each research agent also gets the path of each affected task's

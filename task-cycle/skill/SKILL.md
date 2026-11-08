@@ -72,7 +72,7 @@ For each stage report, copy every item under **Searches not found or unclear** t
 those remarks, with the stage name and full report path; keep repeated items separate (WAY-260).
 The remarks stand in the one form `task-cycle/record_template.md` gives (WAY-296), and before every
 commit that adds the record, "The record before it is committed" below compares them with the
-reports (WAY-294) and cleans and checks the copy it commits (WAY-308, WAY-309).
+reports (WAY-294) and cleans and checks the copy it commits (WAY-308, WAY-309, WAY-316).
 The one exception is the cycle's own account of its request: in the task's entry in the backlog the
 product names (WAY-107), the cycle may add the request link and set the task's state.
 
@@ -432,7 +432,7 @@ included — read `task-cycle/skill/blocked_finding.md` and follow it.
     and push, so that the request's changed files show only the change and the target branch never
     holds the record. Never force-push: a rejected push is investigated. Put the link to the
     record, by the SHA of the commit that adds it, never by branch name, into the description, and
-    in the same edit fill in under *Checks* the runs of the two checks on the copy; check it again
+    in the same edit fill in under *Checks* the runs of the three checks on the copy; check it again
     by the template's checks, which include the check of private paths, and edit the request with
     it. Mark the
     request ready for review unless the description's first line reads `blocked` or `draft`; a
@@ -504,7 +504,7 @@ Before every commit that adds the record to `docs/task-cycles/<task-slug>/` — 
 repetition in a correction (`correction.md`), the stop of a slice failed twice at step 9
 sub-step 4 and the blocked requests of `blocked_finding.md` and `reserved_return.md` — the copy is
 cleaned of what only its author may see and checked, in every repository, public or private
-(WAY-308, WAY-309). The original in `.runs/` is never cleaned; each commit adds a fresh copy of it,
+(WAY-308, WAY-309), and checked for image files, which no copy holds (WAY-316). The original in `.runs/` is never cleaned; each commit adds a fresh copy of it,
 cleaned again. The steps stand in this order, run from the worktree's root (in a product, the path
 starts with `.the-way/`):
 
@@ -552,13 +552,28 @@ starts with `.the-way/`):
    `task-cycle/skill/request_template.md` gives. Exit 2 is no listing: fix the call, or the file
    that could not be read. The last line counts the files not read: a text file among them, such
    as one a shell saved in an encoding other than UTF-8 or UTF-16, is read by hand or saved as
-   UTF-8 and checked again; an image or another file that is no text needs no reading.
-5. Run the process remarks check on the cleaned copy. It lists nothing when step 3 was one
+   UTF-8 and checked again; a file that is no text needs no reading by this check, and an image
+   file is the business of step 5.
+5. Run the-way's check of image files on the copy (WAY-316):
+
+   ```
+   python -B task-cycle/image_files_check.py docs/task-cycles/<task-slug>
+   ```
+
+   It lists, as `<file>: image file`, each file below the directory whose name ends in an image
+   extension, and judges nothing else; it never opens a file, so it does not see an image saved
+   under another name or written into a text, and a screenshot is not kept in the record in any
+   form (`change/ui_check.md`). Exit 1: delete each listed file from the copy only, since the
+   original in `.runs/` is never changed, rewrite every mention of it in the copy, by step 3's one
+   rewriting, as words that say what the screenshot showed and where it lies, and run the check
+   again until it exits 0. Exit 2 is no listing: fix the call.
+6. Run the process remarks check on the cleaned copy. It lists nothing when step 3 was one
    rewriting. An item it lists has different words in a report and in the remarks of the copy:
    make the two read the same in the copy, and append no second entry for it, since step 1 has
    the remarks hold it already (WAY-309 gives this run its place beside WAY-294). After any
-   correction of the copy, run the check of step 4 and this check again until both exit 0.
-6. Record the last run of each of the two checks on the copy, its command and exit code, with the
+   correction of the copy, run the checks of steps 4 and 5 and this check again until all three
+   exit 0.
+7. Record the last run of each of the three checks on the copy, its command and exit code, with the
    number of runs, under *Verification* of the original record; the description names them under
    *Checks*.
 

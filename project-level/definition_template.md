@@ -165,8 +165,8 @@ that settles it (WAY-121). The skill `settle-technology` writes it before the re
   can make and change alone stays with that task
   (WAY-121).
 - As an exception to that rule, where the project brings behaviour a user sees in the running
-  product, three matters of an agent's way to the running product — its logs, its interface and its
-  development data — are looked at, and each matter that no decision of the foundation settles for
+  product, four matters of an agent's way to the running product — its logs, its interface, its
+  development data and the place of its screenshots — are looked at, and each matter that no decision of the foundation settles for
   that behaviour stands on the list as a choice of its own, even where its answer adds nothing to
   run, pay for or back up, and even where the product has none of what the matter names, whose
   answer then says what an agent uses in its place; a matter a decision of the foundation already
@@ -181,9 +181,11 @@ that settles it (WAY-121). The skill `settle-technology` writes it before the re
   the development data asks where the data comes from on which an agent checks the product's
   behaviour outside production, and how an agent brings that data to the state a check needs. Data
   set up from scratch and a dedicated test environment that persists are both options of that
-  choice
-  (WAY-165).
-- A further choice stands apart from those three matters: how a human learns of a failure of the
+  choice; the place of the screenshots asks where the files of the screenshots that an agent takes
+  to show the human lie, outside the product's repository, and how the description of a request
+  shows each as an image
+  (WAY-165, WAY-316).
+- A further choice stands apart from those four matters: how a human learns of a failure of the
   running product. It stands on the list as a choice of its own where the project runs the product
   outside the machine on which it is made, which holds unless the definition, or a decision of the
   foundation, keeps the product on that machine, and no decision of the foundation settles it, even

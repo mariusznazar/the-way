@@ -34,9 +34,13 @@ the rule beside it; you need not open it.
 3. **Consequences.** For each option kept, say what it costs, where it runs, what keeping it
    running takes and what changing it later costs; every difference claimed between the options
    cites its source (WAY-123). In a choice of an agent's way to the running product — the logs, the
-   interface or the development data, the three matters the template's Technology section names —
-   also say for each option whether an agent can use it, and an option an agent cannot use stays in
-   the comparison with the lack "an agent does not check the running product this way" (WAY-166).
+   interface, the development data or the place of the screenshots, the four matters the template's
+   Technology section names — also say for each option whether an agent can use it, and an option an
+   agent cannot use stays in the comparison with the lack "an agent does not check the running
+   product this way" (WAY-166). In the choice of the interface also say whether two task cycles in
+   separate worktrees of the product can check at once with the option, without a browser they
+   share; an option that cannot stays with the lack "two cycles cannot check at once this way"
+   (WAY-319).
    Write the comparison to
    `.runs/technology/<choice>.md`, the choice's name in lower case with hyphens for spaces, which
    the product's Git ignores, and end. In a run at a task the report opens with the line
