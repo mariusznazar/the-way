@@ -19,8 +19,10 @@
     first task that writes the product's tests (WAY-244);
   - tests and no testing guidelines: step 2, and the audit of step 3;
   - a task whose required outcome is the first test of a level whose recipe already stands in
-    `guidelines/testing.md` with an empty *Exemplar*: the new-level case of step 3, and no step 2;
-    a level with no recipe yet is an extension (WAY-251), which takes step 2 as well;
+    `guidelines/testing.md` with an empty *Exemplar*: the new-level case of step 3, and no step 2
+    for that level; where the same task also extends the testing guidelines, the extension goes
+    through step 2 as well; a level with no recipe yet is an extension (WAY-251), which takes
+    step 2 as well;
   - existing testing guidelines, refreshed or extended: step 2, and step 3, which audits each level
     again.
 

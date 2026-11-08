@@ -17,8 +17,4 @@ Where the product has tests (WAY-250):
   boundary's name (WAY-281). A boundary that is only the configuration of someone else's service has
   no test due and stays with the review of each change that touches it (WAY-48): say that beside it,
   and it is no cause.
-- A choice found in the product's tests — a configuration of the test tool, a habit its tests share
-  — is a proposal, never a rule, until the human settles it. An existing choice the human keeps
-  becomes a decision whose rationale is the human's words or `unknown`, never one the agent infers
-  (WAY-29).
 - The audit ends as `product-guidelines/audit_end.md` gives.

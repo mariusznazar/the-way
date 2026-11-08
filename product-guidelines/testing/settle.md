@@ -6,16 +6,18 @@
   - the product's decision adopting the testing template, and each departure from it by a decision
     with its reason (WAY-173);
   - the levels of the product's tests, each with the decision that sets it; for a level whose name
-    means in the product something other than in the field, the entry of the product's glossary
-    that defines it by the resources its test may touch; and, for each part the guidelines apply to,
-    whether its complexity lies in computation or in its connections (WAY-240, WAY-226);
+    means in the product something other than in the field, a narrower meaning included whether or
+    not a sentence would be read wrongly, the entry of the product's glossary that defines it by the
+    resources its test may touch; and, for each part the guidelines apply to, whether its complexity
+    lies in computation or in its connections (WAY-240, WAY-226);
   - the product's documents that are sources of expected values (WAY-232);
   - for each level, the fields of its recipe that bind, each with the decision that carries it, the
     template's defaults adopted or departed from (WAY-241);
-  - for each level with tests, its exemplar test, and for a new level of step 3 (`new_level.md`),
-    that the task's first test of it becomes the exemplar (WAY-242). Where the level of a task's tests
-    is its cycle's choice, the refinement designates no exemplar test: the cycle's author who writes
-    a level's first test proposes its designation at a blocked draft request (WAY-242, WAY-172);
+  - for each level with tests, its exemplar test, and for a new level, whether of step 3
+    (`new_level.md`) or one the task's extension adds with its recipe, that the task's first test of
+    it becomes the exemplar (WAY-242, WAY-251). Where the level of a task's tests is its cycle's
+    choice, the refinement designates no exemplar test: the cycle's author who writes a level's
+    first test proposes its designation at a blocked draft request (WAY-242, WAY-172);
   - each category the product deliberately does not test, with the decision that gives its reason
     and the condition under which it is tested again; a trust boundary is never one (WAY-237);
   - the product's decisions on permissions from which the rows of the authorization table come

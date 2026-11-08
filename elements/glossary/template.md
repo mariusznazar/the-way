@@ -51,7 +51,9 @@ template holds what is particular to a glossary entry (WAY-35).
   the field's meaning would read a sentence of the product's English files wrongly — "secondary
   action", drawn as underlined text with no border where the field reads a second, less prominent
   button, in "the form holds no secondary action". Where no sentence reads differently for the
-  field's meaning, the word takes none (WAY-95).
+  field's meaning, the word takes none (WAY-95). The name of a level of a product's tests is the
+  exception: a level named in the product otherwise than in the field, a narrower meaning included,
+  takes an entry whether or not a sentence would be read wrongly (WAY-240).
 - The agent that meets such a word in its work — writing an entry, searching the foundation, in a
   task's return step — writes its entry; no search of every binding sentence looks for candidates
   (WAY-95, WAY-11). The human accepts the meaning of each entry at the merge of the change, of a

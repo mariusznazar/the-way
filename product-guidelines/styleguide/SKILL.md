@@ -35,12 +35,15 @@ writing a missing styleguide does not wait for its own output (WAY-215).
 | | This skill, in the refinement | The cycle's author, in `implement-task` |
 |---|---|---|
 | Writes | the task document, through `refine-task`'s steps, and the research reports under `.runs/styleguide/<part>/`, which the product's git ignores | the product's entries, through the skill of each element, in the foundation step; the styleguide's file; the values of design tokens with their sources; the page of every state; the test of each invariant (WAY-69); the changes to the instruction files and to the part map |
-| Never writes | the foundation, the styleguide's file, the product's code (WAY-01, WAY-28) | a meaning the task did not settle (WAY-172) |
+| Never writes | the foundation, the styleguide's file, the product's code (WAY-01, WAY-28) | a meaning the task did not settle, except as a decision proposed at a blocked draft request (WAY-172) |
 
-A meaning reaches the code only through the task document: the human's acceptance of the whole
-document before the cycle approves every new or changed meaning it carries, and a meaning the human
-has not settled stays a question of the task, never a line the cycle could build on (WAY-172,
-WAY-124). Using a meaning that a decision of the product's log already carries takes no approval.
+A meaning reaches the code by one of two ways. The first is the task document: the human's
+acceptance of the whole document before the cycle approves every new or changed meaning it carries,
+and a meaning the human has not settled stays a question of the task, never a line the cycle could
+build on (WAY-172, WAY-124). The second is for a meaning the document does not settle: the cycle
+proposes the decision on the branch of a blocked draft request and builds on it only once the human
+has approved it there (WAY-172). Using a meaning that a decision of the product's log already
+carries takes no approval.
 
 ## Rules that hold at every step
 
@@ -77,7 +80,8 @@ At step 1, read `recognize.md` beside this skill. A product with no user interfa
 ## 2. Starting rules
 
 At step 2, read `product-guidelines/styleguide/template.md` in full and `starting_rules.md`
-beside this skill.
+beside this skill. Where the human has no preference at the first styleguide, and at every
+extension, read `research.md` beside this skill too (WAY-265).
 
 ## 3. Audit
 
@@ -90,7 +94,9 @@ step 3.
 
 At step 4, read `product-guidelines/template.md` in full, `settle.md` and `task_document.md` beside
 this skill, and, where step 3's audit ran, `product-guidelines/audit_end.md` unless an earlier step
-did.
+did. For each new tool or library left as a technology question of the task, read `new_tools.md`
+beside this skill too; where the human chooses to clean the screens as tasks touch their styles
+rather than in one clean-up, read `staged_cleaning.md` beside this skill too (WAY-265).
 
 ## 5. Hand back
 

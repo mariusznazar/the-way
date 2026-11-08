@@ -80,6 +80,10 @@ into being:
   level and no path (WAY-242). Where the level of a test is the cycle's choice, refinement
   designates nothing: the cycle's author who writes a level's first test proposes its designation
   at a blocked draft request (WAY-242, WAY-172).
+- Where the work's required outcome is itself the first test of a level that `guidelines/testing.md`
+  does not yet name, with no recipe for it, adding the level is an extension of the testing
+  guidelines (WAY-251): it belongs to this task, through `maintain-testing-guidelines` in
+  refinement, and is not left for the task cycle (WAY-172, WAY-199).
 - Where files of an unindexed kind already exist, name that discrepancy and route their
   comparison and exemplar selection through `maintain-coding-guidelines` under WAY-200. Do not
   call the next file the first or use the finding to authorize an unrelated audit.
