@@ -18,9 +18,10 @@ skill holds the order of the work and restates none of them.
 This skill lives in `product-guidelines/testing/` of the-way. In the-way itself, the-way is the
 checkout or worktree the session works in, the directory `git rev-parse --show-toplevel` prints in
 the session's working directory; in a product, it is the product's pinned `.the-way`. The files
-named below lie there, and each skill named below is the project skill of that name with the
-`the-way-` prefix. The files beside this `SKILL.md` hold what one step or one variant of the work
-needs; each is read when the step or variant that names it comes, not at the start.
+named below lie there, and each skill named below or in the files beside this skill is the project
+skill of that name with the `the-way-` prefix. The files beside this `SKILL.md` hold what one step
+or one variant of the work needs; each is read when the step or variant that names it comes, not at
+the start.
 
 ## Where the skill works
 

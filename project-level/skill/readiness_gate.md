@@ -20,11 +20,11 @@ status only after the human's approval is recorded through the project orchestra
    projected entry settles; and what the definition collides with that no written link joins — a
    decision whose binding sentences the project would break, an invariant, a glossary term the
    definition uses in another meaning, a fact the project contradicts. This is the one search of
-   the whole foundation on the way to the gate: neither `find-foundation-entries` nor the skill of
-   an element in projected mode makes one. Settle each finding before the gate: a projected change
-   to the entry through the skill of its element in projected mode, a projected entry struck or
-   turned into a change of the entry that already states it, shown to the human at 7.3, or the
-   definition brought into line with it.
+   the whole foundation on the way to the readiness gate: neither `find-foundation-entries` nor the
+   skill of an element in projected mode makes one. Settle each finding before the readiness gate: a
+   projected change to the entry through the skill of its element in projected mode, a projected
+   entry struck or turned into a change of the entry that already states it, shown to the human at
+   7.3, or the definition brought into line with it.
 3. Run `critique` once on all finished projected entries, the definition and its sources
    (WAY-120). Verify its observations, correct proposals through the skills of their elements and
    bring any conflict with a human settlement back to the human. If an independent critic cannot

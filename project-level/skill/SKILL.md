@@ -10,9 +10,9 @@ readiness gate; the settling of the project's technology, between them, it hands
 `settle-technology`. A definition records what is settled about the product before the project is
 broken into tasks — as projected entries of the foundation — so that the breakdown and the tasks
 guess as little as they can. The form of a definition and the rule of each section stand in
-`definition_template.md`; how a skill asks stands in `elements/common/way_of_working.md`; this
-skill holds the order of the work. The decisions that set its rules are cited below and in the
-files beside this skill.
+`project-level/definition_template.md`; how a skill asks stands in
+`elements/common/way_of_working.md`; this skill holds the order of the work. The decisions that set
+its rules are cited below and in the files beside this skill.
 
 This skill lives in `project-level/skill/` of the-way. In the-way itself, the-way is the checkout
 or worktree the session works in, the directory `git rev-parse --show-toplevel` prints in
@@ -37,12 +37,12 @@ in the workflow below, and the file of step 7 points back to it.
 - Once the definition is written (step 3), write each answer into it, with its status line, before
   the next question, so that a fresh agent reading only the file knows where the work stands
   (WAY-112).
-- A change of the definition after the gate goes through the gate again
+- A change of the definition after the readiness gate goes through the readiness gate again
   (WAY-118).
 
 ## 0. Start or resume
 
-- Read `definition_template.md` in full, and the section "How a skill asks" of
+- Read `project-level/definition_template.md` in full, and the section "How a skill asks" of
   `elements/common/way_of_working.md`.
 - When the human names an existing definition — in a dispatched turn, the definition its
   conversation file names — read `existing_definition.md` beside this skill.
