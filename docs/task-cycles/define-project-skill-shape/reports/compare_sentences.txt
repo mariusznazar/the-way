@@ -1,0 +1,10 @@
+Units of the base not found word for word in the rebuilt files:
+  expected: The project level's directory, `project-level/`, is there, and each skill named below is the project skill of that name with the `the-way-` prefix
+  expected: When the human names an existing definition, read it whole and go on from where its status line says
+  expected: a working table under "Projected foundation changes" means step 5 is under way, and an item of "Technology" ending `— open` that step 6 is
+  expected: A finding that its fingerprint no longer matches means the definition changed after the gate, and it goes through step 7 again
+  expected: On reopening, add `## Technology` reading `TODO` before "Projected foundation changes", set the status line to `definition — open: Technology`, and go on at step 6 (WAY-121)
+  expected: Write each answer into the definition, with its status line, before the next question, so that a fresh agent reading only the file knows where the work stands (WAY-112)
+  expected: Three moves run through the rounds (WAY-112)
+  expected: what the files can answer, read yourself instead of asking
+Entries of EXPECTED found word for word after all:
