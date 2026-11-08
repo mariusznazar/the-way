@@ -7648,17 +7648,18 @@ in a typical session than keeping its steps in `SKILL.md`. A step therefore stay
 until records of sessions a person can open show that part of the uses pass it by, while a variant,
 which the text of the skill shows, goes to a file beside it as before. With no record the step
 stays, since a skill given a file for each step before any record exists may be rebuilt back after
-its first use, one session deciding the shape. The weak point: a step often passed by and not yet measured is carried until someone
-counts the records, and skills already rebuilt with a file for a step every use reaches stop
-matching the rule, though they do not breach it, since fragments standing unchanged are not bound.
+its first use, one session deciding the shape. The weak point: a step often passed by and not yet
+measured is carried until someone counts the records, and skills already rebuilt with a file for a
+step every use reaches stop matching the rule, though they do not breach it, since fragments
+standing unchanged are not bound.
 The finding on density measured single prompts dense with instructions to include keywords, not an
 agent's work through a skill, and a file read at an earlier step stays in context, so only the
 instructions of steps not yet reached leave; no one has measured it on a skill. The shape — a main
 part holding the picture of the whole, the rules of working, the pointers and the steps every use
 comes to, with the guidance of each variant and of each step some uses pass by in a file beside it —
-is borrowed from a course on steering models through context, and only that shape is adopted (WAY-100); the course's
-claim that a model follows all of a long skill's instructions with a chance close to zero is not,
-since no measurement stands behind it. The rules of an element's entries stay where WAY-35 places
+is borrowed from a course on steering models through context, and only that shape is adopted
+(WAY-100); the course's claim that a model follows all of a long skill's instructions with a chance
+close to zero is not, since no measurement stands behind it. The rules of an element's entries stay where WAY-35 places
 them, since every writer and check reaches them there, and this decision orders what else a skill
 holds. A change to a skill of the-way is bound because a fragment it adds would otherwise go
 anywhere until the skill is judged; fragments standing unchanged are left until each skill is
@@ -7686,9 +7687,9 @@ use of the skill comes to included — in such a skill it adds a pointer and an 
 each use and spares none, an estimated five to fifteen percent more words read in a typical session;
 an exception named for one skill alone — the smallest change, but the next skill of the same profile
 raises the question again, and an exception named after a skill, not after its files, leaves the
-question to each skill; no change to the decision, the exception kept only in the document of the work
-that rebuilds the skill — a change that breaks a binding decision is reported by a reviewer, and the next session
-takes the skill as breaching it; for a skill with no records, the rule as it stood, with the
+question to each skill; no change to the decision, the exception kept only in the document of the
+work that rebuilds the skill — a change that breaks a binding decision is reported by a reviewer, and
+the next session takes the skill as breaching it; for a skill with no records, the rule as it stood, with the
 measurement deciding from the first recorded use — the smallest change, but a new skill is given a
 file for each step and may be rebuilt back after its first use, one session deciding its shape; the
 same with a threshold of recorded uses — one session decides nothing, but the number is arbitrary
