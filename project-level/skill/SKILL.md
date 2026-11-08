@@ -71,10 +71,10 @@ Read `find_entries.md` beside this skill.
 ## 6. Settle the technology
 
 Read `technology.md` beside this skill. Where the readiness check reports a finding at this step,
-in the run `technology.md` gives or handed back by `settle-technology`, read `gate.md` beside this
-skill: the finding goes where its 7.1 sends it.
+in the run `technology.md` gives or handed back by `settle-technology`, read `readiness_gate.md`
+beside this skill: the finding goes where its 7.1 sends it.
 
 ## 7. The readiness gate
 
-Read `gate.md` beside this skill unless step 6 had you read it; in a turn dispatched through a
-refinement conversation path it points to `delegated_mode.md` for what changes.
+Read `readiness_gate.md` beside this skill unless step 6 had you read it; in a turn dispatched
+through a refinement conversation path it points to `delegated_mode.md` for what changes.
