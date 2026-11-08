@@ -18,7 +18,8 @@ It recognizes an image by the end of its name alone and never opens a file, so i
 an image saved under another name or none, or one written into a text, such as a `data:` URL, an
 archive that holds an image or a file named like an image that holds text. It writes no file and
 runs nothing. It is a separate script from `private_paths_check.py`, which reads the text of the
-files for paths and links and counts an image there as a binary file it does not read.
+files for paths and links, skipping as binary a file with a NUL byte near its start, which most
+images have.
 
 Standard library only.
 """
