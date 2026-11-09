@@ -496,7 +496,7 @@ class Foundation:
                     self.cited.add(named.group(1))
 
     def check_test_citations(self):
-        """Report each invariant that reads `test` and is cited by no line `check_citations` read."""
+        """Report each invariant that reads `test` and no line `check_citations` read cites."""
         for name, (_, found) in self.entries[INVARIANTS].items():
             if found.get("Method", ("",))[0] == "test" and name not in self.cited:
                 self.report.error(INVARIANTS, found["Method"][1][0],

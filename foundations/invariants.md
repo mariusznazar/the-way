@@ -159,7 +159,7 @@ Every invariant whose method is `test` is cited by a comment line `invariant: <i
 
 - **Method:** test
 - **Rests on:** none
-- **Derives from:** WAY-321
+- **Derives from:** WAY-61 · WAY-321
 - **Part:** every
 - **Violated:** no
 

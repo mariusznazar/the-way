@@ -1479,7 +1479,8 @@ about the data that check reads.
 - **Relations:** derives from WAY-08 · derives from WAY-16 ·
   derives from WAY-54 · derives from WAY-07 · derives from WAY-38 ·
   derives from WAY-60
-- **Verification:** an agent compares the change with the decision:
+- **Verification:** invariants: test-method-citation. For the rest, an agent compares the change
+  with the decision:
   - complies: a sentence about the instruction files of the repository is kept by a test running
     its check on those files; a sentence about the loader is kept by a test handing it a save of
     another version; a sentence on whether an image's text alternative describes it reads `review`;
@@ -1495,12 +1496,12 @@ about the data that check reads.
 *Rationale:* the command that runs the product's tests already runs on every change, so an
 invariant's test runs with them, in the product's language; one run serves many invariants, each
 needing an outcome of its own; a check that sees nothing passes quietly (WAY-38). A change is
-judged finished, so an invariant written before its test within one change reads `test` from its
-writing, and a later slice that writes the test leaves the entry as it is. An invariant that no test
-of the finished change cites has the review to keep it, and its method says so. The price taken:
-between the writing of the entry and the slice that writes its test, the task's branch, a blocked
-draft request included, says `test` while no test cites it; the branch reaches the main branch only
-with the test, which the check in WAY-321 enforces.
+judged as a whole, once finished, so an invariant written before its test within one change may read
+`test` from its writing, and a later slice that writes the test leaves the entry as it is. An
+invariant that no test of the finished change cites has the review to keep it, and its method says
+so. The price taken: between the writing of the entry and the slice that writes its test, the task's
+branch, a blocked draft request included, says `test` while no test cites it; the branch reaches the
+main branch only with the test, which the check in WAY-321 enforces.
 *Rejected:* a command per invariant that a gate of its own runs, recording a verdict for each entry
 — a second runner beside the product's tests; `TODO` as the method until the test exists — it
 names nothing that keeps the rule meanwhile; a sentence in the text of the planning skill saying
