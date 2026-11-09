@@ -10367,6 +10367,39 @@ a cycle stays unchecked, the cycle gets one more step, and the rule lives in the
 which agents can knowingly pass over; no check, only the change of WAY-61 — it costs nothing today,
 but a forgotten test leaves a false `test` in the foundation with no signal.
 
+### WAY-322 — May a human strike from the list of the technology step a matter of an agent's way to the running product or of how a human learns of a failure?
+
+A matter of an agent's way to the running product that the step that settles technology lists
+(WAY-121), and the matter of how a human learns of a failure of the running product (WAY-270), stay
+on the list the step shows until the human's answer settles them, and the human cannot strike them
+from it. A human to whom such a matter does not apply answers it like any choice, and that answer
+settles the matter, so a run that resumes the step does not find it open again.
+
+- **Scope:** project-level, decisions
+- **Based on:** none
+- **Relations:** derives from WAY-121 · derives from WAY-165 · derives from WAY-270
+- **Verification:** an agent compares the work with the decision:
+  - complies: for a command-line tool that keeps no log file, the human, shown the list with the
+    logs matter on it, answers "the tool prints to the console, the record lives as long as the
+    run, an agent reads it from the terminal" instead of striking the matter; the answer settles it,
+    and a run that resumes the step lists no logs item as open; for a product run on a server, the
+    human who has no tool to learn of a failure answers the matter with a deliberate absence;
+  - violates: the step strikes the logs matter at the human's word, so that nothing says how an
+    agent reads the logs; a matter the human struck stands open on the list of the next run, and the
+    human strikes it again.
+- **Origin:** none
+
+*Rationale:* a matter struck from the list is settled with no answer, and the agent of the cycle
+then guesses where it reads the logs or how it operates the product, which is what an answer to
+each matter exists to prevent (WAY-165). A sentence such as "the tool has no logs, an agent reads
+the console output" is the answer the agent needs, and it settles the matter like any other choice.
+The price is that a human of a product to which a matter does not apply writes one sentence of an
+answer instead of a strike.
+*Rejected:* a struck matter staying on the list with a new mark, `— struck` — a new mark in the
+templates and in the readiness check, and the matter stands settled with no answer, against
+WAY-165, so the agent of the cycle guesses where it reads the logs; the case left as it is — at each
+resumption the human strikes the same matter again and looks at the list twice.
+
 ## Withdrawn identifiers
 
 | Identifier | Why | Successors |
