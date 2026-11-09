@@ -2,6 +2,7 @@
 
 from pathlib import Path
 import re
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -29,8 +30,18 @@ class CodingGuidelinesInstallationTest(unittest.TestCase):
         self.git("init", "-q")
         self.git("config", "user.email", "test@example.invalid")
         self.git("config", "user.name", "Coding Guidelines Installation Test")
-        self.commit = self.git("rev-parse", "HEAD", cwd=SOURCE).stdout.strip()
-        available = command("git", "cat-file", "-e", f"{self.commit}:{SKILL_SOURCE}", cwd=SOURCE)
+        # The tests install from this clone, not from the live repository: a commit made to the-way
+        # while the run goes on cannot change the commit the installer pins or the one expected.
+        self.source = Path(temporary.name) / "source"
+        cloned = command("git", "clone", "-q", str(SOURCE), str(self.source), cwd=SOURCE)
+        self.assertEqual(cloned.returncode, 0, cloned.stderr)
+        self.commit = self.git("rev-parse", "HEAD", cwd=self.source).stdout.strip()
+        self.installer = self.source / "installation" / "install.py"
+        # The installer under test is the one in the working tree, committed or not; the clone
+        # supplies the source that is installed, whose commit the installer pins.
+        shutil.copyfile(INSTALL, self.installer)
+        available = command("git", "cat-file", "-e", f"{self.commit}:{SKILL_SOURCE}",
+                            cwd=self.source)
         self.assertEqual(available.returncode, 0, f"{SKILL_SOURCE} is not committed")
 
     def git(self, *args: str, cwd: Path | None = None):
@@ -39,8 +50,8 @@ class CodingGuidelinesInstallationTest(unittest.TestCase):
         return result
 
     def install(self, *args: str, answer: str = "y\n"):
-        return command(sys.executable, "-B", str(INSTALL), str(self.product),
-                       "--url", str(SOURCE), *args, cwd=self.product, input_text=answer)
+        return command(sys.executable, "-B", str(self.installer), str(self.product),
+                       "--url", str(self.source), *args, cwd=self.product, input_text=answer)
 
     def product_files(self):
         return {path.relative_to(self.product).as_posix(): path.read_bytes()
@@ -84,7 +95,7 @@ class CodingGuidelinesInstallationTest(unittest.TestCase):
         claude, codex = (self.product / name for name in WRAPPERS)
         self.assertEqual(claude.read_bytes(), codex.read_bytes())
         wrapper = claude.read_text(encoding="utf-8")
-        source = command("git", "show", f"{self.commit}:{SKILL_SOURCE}", cwd=SOURCE).stdout
+        source = command("git", "show", f"{self.commit}:{SKILL_SOURCE}", cwd=self.source).stdout
         description = re.search(r"^description: (.+)$", source, re.M).group(1)
         self.assertTrue(wrapper.startswith(
             f"---\nname: {NAME}\ndescription: {description} "
