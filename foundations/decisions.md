@@ -9286,8 +9286,9 @@ several choices, the cycle writes a decision for every one of them and the log g
 
 Before every commit that adds the cycle record to the product's repository, the orchestrator runs
 the-way's script that lists each item other than `none` under **Searches not found or unclear** in
-the record's stage reports that the record's process remarks do not hold word for word, appends each
-listed item word for word with its stage name and full report path, and runs the script again until
+the record's stage reports — the `.md` files of the cycle's `reports/` directory whose name holds
+neither `handoff` nor `findings` — that the record's process remarks do not hold word for word,
+appends each listed item word for word with its stage name and full report path, and runs the script again until
 it lists nothing. The commits that add the record are its copy for a request, the repetition of that
 copy in a correction after review, and the copy of a request blocked for any cause. The script only
 lists, and an item that two reports give is listed again until the remarks hold it twice.
@@ -9299,10 +9300,14 @@ lists, and an item that two reports give is listed again until the remarks hold 
   - complies: a stage report that works after the request opened gives one item beside three lines
     reading `none found`; the script lists that item with its report path, the orchestrator appends
     it and runs the script again, which lists nothing, and only then the record is committed; a
-    correction runs the script over the reports of the correction too;
+    correction runs the script over the reports of the correction too; a report named
+    `review_whole.md` and one named `report-planner.md` are read, while `01-author-handoff.md`,
+    `slice-1-findings.md`, `notes.txt` and `gate.log` are not;
   - violates: a record is committed without the script having been run on it; the orchestrator
     stops after a run that listed items; it appends an item in other words, or leaves it out
-    because it looks small; an item that two reports give stands once in the remarks.
+    because it looks small; an item that two reports give stands once in the remarks; a `.md` file
+    of `reports/` whose name holds neither word is left unread, or a handoff or a file of findings
+    is read as a report.
 - **Origin:** none
 
 *Rationale:* the orchestrator copies an item when it has a report in front of it, and in the cycles
@@ -9314,9 +9319,16 @@ dozens of reports is where a reader's care already failed. The nightly review of
 cases from the record alone, so an item that is not in the record never reaches the human who
 improves the process. The price is a script with tests, a longer end of every cycle, a section the
 script must recognise in the two forms reports give it, and a literal reading of "other than
-`none`": a line that reads `none found` enters the remarks, so the review gets more noise.
-*Rejected:* the orchestrator appends items to the remarks right after each report, a correction
-included — a few sentences in the skill, but it does not close the gaps for items standing beside
+`none`": a line that reads `none found` enters the remarks, so the review gets more noise. A report
+is told by its name lacking the two words that mark the files the cycle names otherwise, a handoff
+and a file of findings, so a report under any other name is read and none is passed over unseen; the
+price is that a handoff or findings file written under a name without those words is read as a
+report.
+*Rejected:* an exit code of 2 where no report is read — it does not catch the case where some of
+the reports are read and others are not, and it goes against the rule of the cycle that exit 2
+means no listing was made; a line in the listing that marks a file not read — it looks like an item
+to append to the remarks; the orchestrator appends items to the remarks right after each report, a
+correction included — a few sentences in the skill, but it does not close the gaps for items standing beside
 `none` lines, which arose while the orchestrator had the report in front of it; a pass of the
 orchestrator through all reports before every archive, skipping only a section that reads `none`
 throughout — a few sentences that close both causes, but it still rests on a model reading with
