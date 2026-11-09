@@ -10207,8 +10207,10 @@ A user's places on their own disk that lie outside every repository, such as the
 product's tasks and the place of its projects, are kept in one file, `~/.the-way/locations.json`,
 found at that place for every user and through no environment variable: a JSON object whose keys are
 repository names, each holding entries by name, such as `tasks` and `projects`, whose values are
-paths on the user's disk. No file the repository tracks holds an absolute path or a note link; a
-file that points to such a place names its entry in the locations file.
+paths on the user's disk. No file the repository tracks holds an absolute path or a note link,
+other than the files that the invariant `tracked-file-private-paths` names, which write example
+paths in order to find or to test them; a file that points to such a place names its entry in the
+locations file.
 
 - **Scope:** agent-instructions, project-level, foundation-review, product-guidelines, task-cycle
 - **Based on:** none
@@ -10218,9 +10220,10 @@ file that points to such a place names its entry in the locations file.
   - complies: a skill that needs the place of a product's tasks reads the entry `tasks` under the
     product's name in `~/.the-way/locations.json`; a file the repository tracks says "the entry
     `tasks` under `the-way`" where it means a place on the user's disk;
-  - violates: a skill reads the location from an environment variable; a tracked file holds the
-    path of a directory on the user's disk, or a link to a private note; the locations file is put
-    in a repository, or holds an entry of one repository under the name of another.
+  - violates: a skill reads the location from an environment variable; a tracked file the
+    invariant does not name holds the path of a directory on the user's disk, or a link to a
+    private note; the locations file is put in a repository, or holds an entry of one repository
+    under the name of another.
 - **Origin:** none
 
 *Rationale:* the repository of the-way is public, so an absolute path written in one of its files
@@ -10230,18 +10233,26 @@ about any of them, so one file in a fixed place lets any file say which place it
 and each user lays the disk out as they like. With no environment variable, every tool started in
 the user's home finds the file whether or not a variable was set for it. The price taken: each user
 creates the file once on each machine, and an agent that finds no file asks the human; a session
-that runs in the cloud has no such file and asks too.
+that runs in the cloud has no such file and asks too. The check for paths reads every tracked file
+but those that must write example paths, and the list of those files stands in the invariant, so
+adding a file to it shows in the change; a real path pasted into a file on the list passes.
 *Rejected:* the check for paths alone, with an exception for the `## Backlog` section and the path
 of the tasks file left in the root `AGENTS.md` — a path in the repository is the problem ("there
-should be no such paths in the repository, and that they are there is the problem"); the place described in words in `## Backlog`, with the path in the user's global
-instructions — "global instructions are probably not the place for such things"; the file found
+should be no such paths in the repository, and that they are there is the problem"); the place
+described in words in `## Backlog`, with the path in the user's global instructions — "global
+instructions are probably not the place for such things"; the file found
 through an environment variable, as the private layer of another project does — the file in a fixed
 place plus a variable to set on every machine and in every tool, and an agent in a tool that does
 not see the variable does not find the backlog; a local file in the repository that git ignores,
 such as `CLAUDE.local.md` — the worktree in which a cycle runs has no such file, and Codex does not
 read `AGENTS.local.md`; introducing nothing and correcting only the line that names the rulebook —
 the path of the tasks file stays in the repository, and the next path written is stopped only by a
-careful review.
+careful review; for the files that write example paths by their nature, a check that skips only the
+lines marked as examples — every example line to mark and the code of the marks, and a real path in
+a marked line passes too; no exceptions, with the examples rewritten so that the pattern does not
+find them — every example to rewrite, the tests and the description of the script harder to read,
+and every later author of a test has to remember it; a check that skips all test files and both
+scripts — a path in any test of the-way passes.
 
 ## Withdrawn identifiers
 
