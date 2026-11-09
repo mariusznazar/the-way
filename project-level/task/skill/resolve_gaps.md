@@ -63,19 +63,25 @@ has a deployment skill covering every item of the list WAY-139 holds, in
 do* for that work and offer the human to split it into a task of its own, which step 1 then
 handles (WAY-139). A task with no such outcome takes no check.
 
-The list holds two items the check handles apart, how long the record of the logs lives, between
-deployments too, and how a human learns of a failure of the running product (WAY-139):
+The list holds three items the check handles apart: how to read the logs, how long the record of the
+logs lives, between deployments too, and how a human learns of a failure of the running product
+(WAY-139):
 
 - A skill that records the human's refusal to settle an item covers it.
 - Where a decision of the foundation or an approved definition the task carries answers the item,
   quote it with its location and ask nothing; the *To do* gains the item that writes the answer
-  into the skill. A logs decision silent on how long the record lives answers nothing here.
-- Otherwise ask the human, once and for each item apart, whether to run `settle-technology` at this
-  task with a note on what the skill leaves unsaid and no decision and no approved definition
-  answers. A yes is the third case above, and the run opens a logs decision silent on how long the
-  record lives like any decision it sees reason to change (WAY-165); the *To do* gains the item that
-  gives the skill the answer. A no gives the *To do* the item that records in the skill that the
-  human leaves the item unsettled, and the question does not return.
+  into the skill. A logs decision silent on how an agent reads the logs answers nothing for the item
+  on reading them, and one silent on how long the record lives answers nothing for the item on the
+  record's life.
+- Where nothing answers the item on how to read the logs, the item goes as the other items of the
+  list do: the *To do* gains an item for that work, or the human splits it off.
+- Otherwise, for the item on the record's life or on a failure, ask the human, once and for each
+  item apart, whether to run `settle-technology` at this task with a note on what the skill leaves
+  unsaid and no decision and no approved definition answers. A yes is the third case above, and the
+  run opens a logs decision silent on how long the record lives like any decision it sees reason to
+  change (WAY-165); the *To do* gains the item that gives the skill the answer. A no gives the *To do*
+  the item that records in the skill that the human leaves the item unsettled, and the question does
+  not return.
 - Where the product has no deployment skill at all, ask before offering the split: a task that only
   writes a skill has no deployment outcome and takes no check. The split task carries the answer or
   the refusal.
