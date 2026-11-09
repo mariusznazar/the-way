@@ -74,7 +74,8 @@ The remarks stand in the one form `task-cycle/record_template.md` gives (WAY-296
 commit that adds the record, "The record before it is committed" below compares them with the
 reports (WAY-294) and cleans and checks the copy it commits (WAY-308, WAY-309, WAY-316).
 The one exception is the cycle's own account of its request: in the task's entry in the backlog the
-product names (WAY-107), the cycle may add the request link and set the task's state.
+product names (WAY-107), found as `project-level/backlog_place.md` gives, the cycle may add the
+request link and set the task's state.
 
 ## Start and record
 

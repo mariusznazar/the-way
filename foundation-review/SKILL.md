@@ -37,11 +37,11 @@ review tag (WAY-300); the human may start it at any time.
   names a request up to which another repository's review has already read the requests of this
   one, begin after it (WAY-304). A product that squashes or rebases its merges has no merge commit
   to list: read the requests from the host's list of merged requests instead.
-- Find where the product keeps its tasks: the `## Backlog` section of the root `AGENTS.md`; where
-  it names no place, ask once and offer to record the answer there. The data file of this review
-  (step 4) stands in the task area, beside the task documents; a file in a repository that may be
-  public holds no title of a private note. Where a data file of this review already stands there
-  for the same range, resume from it and from the first step it has not finished.
+- Find where the product keeps its tasks: the `## Backlog` section of the root `AGENTS.md`, read as
+  `project-level/backlog_place.md` gives, which also says what to do where the place is missing.
+  The data file of this review (step 4) stands in the task area, beside the task documents; a file
+  in a repository that may be public holds no title of a private note. Where a data file of this
+  review already stands there for the same range, resume from it and from the first step it has not finished.
 
 ## 2. Read the foundation
 

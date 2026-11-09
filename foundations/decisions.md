@@ -717,7 +717,8 @@ precedence can be recorded between them.
 Nothing in this repository points to a source outside it that its readers cannot reach: every
 entry carries its whole reasoning, and what is seen only in such a source is described in the
 entry instead of being pointed to. The one exception is the place of its tasks, named in the
-`## Backlog` section of its root `AGENTS.md` and nowhere else.
+`## Backlog` section of its root `AGENTS.md` and nowhere else, by an entry of the locations file of
+WAY-320 and never by a path.
 
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, relation-model,
   installation, agent-instructions, instruction-files, product-guidelines, task-cycle
@@ -727,18 +728,23 @@ entry instead of being pointed to. The one exception is the place of its tasks, 
   compares the change with the decision:
   - complies: a decision quotes a public study with its address; a pattern seen in a product
     outside the repository is described in the rationale, without a pointer to it; the-way's root
-    `AGENTS.md` names, in `## Backlog`, the private note where its tasks are kept;
+    `AGENTS.md` names, in `## Backlog`, the entry of the locations file where the place of its tasks
+    is kept;
   - violates: *Origin* points to a private note; a rationale rests on "as in our other product"
-    without saying what was seen.
+    without saying what was seen; the `## Backlog` section holds the path of the place of the
+    tasks.
 - **Origin:** none
 
 *Rationale:* a pointer to a source the reader cannot open is a dead end, leaving a claim nobody
 can check; what was seen there, written down, can at least be judged, and WAY-17 still has a fact
 to name. A backlog place is where work is kept, not reasoning an entry rests on, and WAY-107 sends
 an agent there; named in that one section, it stays a place to find work and never becomes a
-source an entry points to.
+source an entry points to. Named by an entry of the locations file, it adds no path to a public
+repository, which would tell every reader how one user's disk is laid out.
 *Rejected:* *Origin* pointing to the notes where the reasoning was worked out — no reader can open
-them.
+them; the path of the place of the tasks left in `## Backlog`, with the check for paths excepting
+that section — the repository would go on saying how the user's disk is laid out, the very thing the
+check is there to stop.
 
 ### WAY-28 — How does the process enter a product that already exists?
 
@@ -2388,25 +2394,40 @@ the plan and change as the plan changes.
 ### WAY-107 — Where does a product tell the project level where its backlog stands?
 
 A product names where it keeps projects and tasks in a `## Backlog` section of its root `AGENTS.md`,
-outside the block the-way's installer owns. A project definition stands in the named project
-place; when the place is unnamed, the agent asks the human and offers to record the answer there.
+outside the block the-way's installer owns. A place on the user's disk outside every repository
+stands there as an entry of the locations file of WAY-320, never as a path; a directory of the
+repository or the address of a public tracker stands there as it is. A project definition stands in
+the named project place; when the place is unnamed, or the file or the entry it names is missing,
+the agent asks the human and offers to record the answer where it fits: the entry in the file for a
+place on the user's disk, the section otherwise.
 
-- **Scope:** project-level, installation
+- **Scope:** project-level, installation, foundation-review, product-guidelines
 - **Based on:** none
-- **Relations:** derives from WAY-101
+- **Relations:** derives from WAY-101 · derives from WAY-320
 - **Verification:** an agent compares the change with the decision:
-  - complies: a product names a directory for projects and a tracker for tasks in its own backlog
-    section, and the project definition is written in that directory;
+  - complies: a product names a directory of its repository for projects and a public tracker for
+    tasks in its own backlog section, and the project definition is written in that directory; a
+    product whose tasks lie in its user's private notes names, in the section, the entry of the
+    locations file that holds their place, and an agent that finds no such entry asks the human and
+    offers to add it to the file;
   - violates: the project skill assumes one backlog service for every product, or puts the
-    product's paths inside the installer's marked block.
+    product's paths inside the installer's marked block; the section holds the path of a place on
+    the user's disk; an agent that finds the entry missing writes the path into the section.
 - **Origin:** none
 
 *Rationale:* the product chooses its own backlog place, and a root instruction gives an agent one
 place to find it. Keeping the place outside the generated block lets the product change it without
-editing the process's installed guidance.
+editing the process's installed guidance. A place on the user's disk is the user's own, so it stands
+in the user's file and the section names the entry, which reads alike for every user; a place every
+member of the team can reach stands in the section, where a new member finds it. The price taken: a
+backlog can be named in two ways, and the agent that records a missing place judges which fits.
 *Rejected:* a fixed backlog location for all products — it would require moving an existing
 backlog; asking for the location in every project conversation — the answer would be lost between
-sessions.
+sessions; the file for every place, the section only naming the entry — every user of every
+product creates the file, also where the backlog is public or lies in the repository, and a new
+member of a team finds no tasks until writing the path everyone else knows; the place described in
+words in the section, with its path in the user's global instructions — those instructions are not a
+place for such things.
 
 ### WAY-108 — What form does a project definition take?
 
@@ -10179,6 +10200,48 @@ reaches a product before it meets the conflict.
 *Rejected:* the-way saying nothing, the matter staying with the product — each product finds the
 conflict itself, by its errors, and a product whose main way keeps one browser profile for a
 directory returns to the busy profile.
+
+### WAY-320 — Where does a user keep the places outside every repository that the files of the-way name?
+
+A user's places on their own disk that lie outside every repository, such as the place of a
+product's tasks and the place of its projects, are kept in one file, `~/.the-way/locations.json`,
+found at that place for every user and through no environment variable: a JSON object whose keys are
+repository names, each holding entries by name, such as `tasks` and `projects`, whose values are
+paths on the user's disk. No file the repository tracks holds an absolute path or a note link; a
+file that points to such a place names its entry in the locations file.
+
+- **Scope:** agent-instructions, project-level, foundation-review, product-guidelines, task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-27
+- **Verification:** invariants: tracked-file-private-paths. For the place and the form of the file,
+  an agent compares the change with the decision:
+  - complies: a skill that needs the place of a product's tasks reads the entry `tasks` under the
+    product's name in `~/.the-way/locations.json`; a file the repository tracks says "the entry
+    `tasks` under `the-way`" where it means a place on the user's disk;
+  - violates: a skill reads the location from an environment variable; a tracked file holds the
+    path of a directory on the user's disk, or a link to a private note; the locations file is put
+    in a repository, or holds an entry of one repository under the name of another.
+- **Origin:** none
+
+*Rationale:* the repository of the-way is public, so an absolute path written in one of its files
+publishes how one user's disk is laid out and what that user's private notes are called, and the
+history keeps it after the file is corrected. `~` reads the same for every user and says nothing
+about any of them, so one file in a fixed place lets any file say which place it means by a name,
+and each user lays the disk out as they like. With no environment variable, every tool started in
+the user's home finds the file whether or not a variable was set for it. The price taken: each user
+creates the file once on each machine, and an agent that finds no file asks the human; a session
+that runs in the cloud has no such file and asks too.
+*Rejected:* the check for paths alone, with an exception for the `## Backlog` section and the path
+of the tasks file left in the root `AGENTS.md` — a path in the repository is the problem ("there
+should be no such paths in the repository, and that they are there is the problem"); the place described in words in `## Backlog`, with the path in the user's global
+instructions — "global instructions are probably not the place for such things"; the file found
+through an environment variable, as the private layer of another project does — the file in a fixed
+place plus a variable to set on every machine and in every tool, and an agent in a tool that does
+not see the variable does not find the backlog; a local file in the repository that git ignores,
+such as `CLAUDE.local.md` — the worktree in which a cycle runs has no such file, and Codex does not
+read `AGENTS.local.md`; introducing nothing and correcting only the line that names the rulebook —
+the path of the tasks file stays in the repository, and the next path written is stopped only by a
+careful review.
 
 ## Withdrawn identifiers
 

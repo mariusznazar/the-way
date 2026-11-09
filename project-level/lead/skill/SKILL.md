@@ -18,7 +18,8 @@ project skill with the `the-way-` prefix, never a personal copy.
 
 ## 0. Read and recover
 
-- Resolve the product repository, its root `AGENTS.md` and `## Backlog` locations, the original
+- Resolve the product repository, its root `AGENTS.md` and `## Backlog` locations (a place in the
+  locations file as `project-level/backlog_place.md` gives), the original
   plan, its definition and linked task documents. Do not infer the product from the plan's parent
   directory or the process checkout. Read `project-level/plan/template.md`,
   `project-level/task/template.md`, `project-level/lead/conversation_template.md`,
