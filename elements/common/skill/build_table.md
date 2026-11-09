@@ -1,6 +1,8 @@
 # Step 2 — build the table
 
 - Take the candidates as the lines for step 2 of the file of your variant give.
+- Drop first each candidate whose settlement an entry read in step 1 already states: it is no
+  candidate, and no row of the table.
 - Each candidate is a row: its number; the settlement in one sentence, in the language of the
   conversation; its kind; its source — the human's words, the material and its place, or a section
   of the definition; what the next reader would have to guess without it.
@@ -15,6 +17,5 @@
   strike it. The human accepts or rejects only the rows you derived from the material or from the
   human's loose words (WAY-115, WAY-134); this holds only until the task's cycle starts (WAY-315).
 - Write the table where, and with the row states, those lines give.
-- No search of the whole foundation runs here; those lines say who makes it. A settlement that an
-  entry read in step 1 already states is no candidate; a candidate that collides with such an
-  entry is shown beside it.
+- No search of the whole foundation runs here; those lines say who makes it. A candidate that
+  collides with an entry read in step 1 is shown beside it.
