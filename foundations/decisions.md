@@ -4852,7 +4852,9 @@ project settles its technology.
 In a choice of an agent's way to the running product, whether an agent can use an option is a
 consequence for the product: an option an agent cannot use stays in the comparison with that lack
 said as "an agent does not check the running product this way", and the recommendation passes over
-it.
+it. Where no option can be used by an agent, the recommendation goes by the other consequences and
+says in one sentence that no option lets an agent check the running product this way, so the check
+stays with the human.
 
 - **Scope:** project-level, decisions
 - **Based on:** none
@@ -4861,22 +4863,38 @@ it.
   - complies: a log service cheaper than the others, whose logs only a human can read, in a panel
     behind the human's login, stays in the comparison of the logs with the lack "an agent does not
     check the running product this way", and the step recommends reading the output of the
-    server's container;
+    server's container, kept in a store that outlives a redeployment; a host whose every option for
+    the logs is a panel behind the human's login has the options compared by their cost and upkeep,
+    the one that wins recommended, and the message says in one sentence that no option lets an agent
+    check the running product this way, so the check stays with the human;
   - violates: the step recommends the cheaper service because how well an agent works with an
     option decides only a tie; the service is left out of the comparison because an agent cannot
-    read its logs; the message shows the service with no word on whether an agent can use it.
+    read its logs; the message shows the service with no word on whether an agent can use it; on a
+    host where no option can be used by an agent, the step recommends nothing, or recommends by
+    cost and upkeep with no word that the check stays with the human.
 - **Origin:** none
 
 *Rationale:* a choice of an agent's way to the running product exists so that an agent can check
 what a user sees in the running product; an option the agent cannot use leaves that check undone,
 and the product's behaviour reaches the human unchecked, which is a consequence the product bears
 rather than the agent's convenience. Kept in the comparison with its lack, the option stays open to
-the human, who chooses between consequences (WAY-123). For a place to run, how well an agent works
+the human, who chooses between consequences (WAY-123). Where every option is one an agent cannot
+use, passing over them all would leave the step with nothing to recommend, though the human is owed
+a recommendation (WAY-113); the step recommends by the other consequences and says in one sentence
+that the check stays with the human, so that the lack reaches the human at the choice. The price is
+that the step does not look again for an option an agent can use: the lack comes out before the
+choice, and the human answers it. For a place to run, how well an agent works
 with an option still decides only a tie (WAY-137): there the agent's convenience is not what the
 product needs from the choice, while here the agent's use of an option is what the choice is for.
 *Rejected:* nothing added to the usual weighing of consequences — the step could recommend a
 cheaper service an agent cannot use, since how well an agent works with an option decides only a
-tie, and the choice would pass with an answer that gives the agent nothing.
+tie, and the choice would pass with an answer that gives the agent nothing; the step looking
+further first for an option an agent can use, such as sending the logs to a place an agent reads,
+and going the way chosen only when that yields nothing — a longer research on every such matter,
+often one more service to pay for, while the options already come from research (WAY-122); the step
+recommending nothing where no option can be used by an agent — an exception to WAY-113, and the
+human answers with no hint; the case left unsaid — it shows at the first product with such hosting,
+and each agent resolves it in its own way.
 
 ### WAY-167 — Where do a product's guidelines stand, and what are their files named?
 
