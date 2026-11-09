@@ -53,7 +53,9 @@ changed files, and the branch still ends with only the pair of step 12.
 1. Set the record's status to `blocked` and run `task-cycle/cycle_stages.py` as step 12 gives.
 2. Prepare the copy of the record directory as "The record before it is committed" of
    `implement-task` gives, commit it as step 12 gives and push that commit. The request does not
-   exist yet, so *Request URL and status* in the copy reads `blocked draft, opened on this commit`.
+   exist yet, so *Request URL and status* in the copy reads, word for word and alone on its line,
+   `blocked draft, opened on this commit`, the wording `project-level/plan_state.py` recognises to
+   report the task as blocked.
 3. Write the description as step 13 gives, in its variant for a reserved choice, linking the record
    by the SHA of that commit, and check it.
 4. Open the request from it as a draft on that commit, marked `blocked`, while the record is its

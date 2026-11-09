@@ -26,6 +26,9 @@ import readiness_check  # noqa: E402
 GIT_TIMEOUT = 30
 PR_LINK = re.compile(r"https?://[^\s<>\[\]()`\"']+/(?:pull|merge_requests)/[0-9]+"
                      r"(?:[?#][^\s<>\[\]()`\"']*)?")
+# The wording of the field `Request URL and status` in a record committed before its request exists
+# (task-cycle/skill/reserved_return.md, blocked_finding.md): the whole line, nothing else.
+BLOCKED_DRAFT = "- Request URL and status: blocked draft, opened on this commit"
 
 
 def display(value):
@@ -143,19 +146,27 @@ def archived_files(git, commit, archive):
     return paths
 
 
-def record_pointers(git, commit, paths):
-    """Read pointer text as data, without executing or printing the archive's instructions."""
+def record_requests(git, commit, paths):
+    """Read request evidence of records as data, in one Git read, without printing their text.
+
+    Returns the sorted pull-request pointers as (source, link) and the sorted record paths whose
+    field `Request URL and status` reads exactly BLOCKED_DRAFT; nothing else of a record is kept.
+    """
     result = git.run("grep", "-I", "-z", "-n", "-E",
-                     r"https?://[^ ]+/(pull|merge_requests)/[0-9]+", commit, "--",
+                     "-e", r"https?://[^ ]+/(pull|merge_requests)/[0-9]+",
+                     "-e", re.escape(BLOCKED_DRAFT), commit, "--",
                      *(":(literal)" + path for path in paths), allowed=(0, 1))
-    pointers = []
+    pointers, blocked = [], []
     for row in result.stdout.splitlines():
         parts = row.split(b"\0", 2)
         if len(parts) == 3:
             source = parts[0].decode("utf-8")
-            for link in PR_LINK.findall(parts[2].decode("utf-8", errors="replace")):
+            text = parts[2].decode("utf-8", errors="replace")
+            for link in PR_LINK.findall(text):
                 pointers.append((source, link))
-    return sorted(set(pointers))
+            if text.rstrip(" \t\r") == BLOCKED_DRAFT and source.startswith(commit + ":"):
+                blocked.append(source[len(commit) + 1:])
+    return sorted(set(pointers)), sorted(set(blocked))
 
 
 def path_value(value):
@@ -382,9 +393,13 @@ def task_report(git, observation, task, plan_path):
                             "refs/heads/", "refs/remotes/")
             lines.append("evidence %s: archived cycle %s commit %s on %s" %
                          (prefix, archive, commit, display(", ".join(refs.splitlines()))))
-            for source, link in record_pointers(git, commit, records):
+            pointers, blocked = record_requests(git, commit, records)
+            for source, link in pointers:
                 lines.append("evidence %s: PR pointer from %s: %s" %
                              (prefix, display(source), display(link)))
+            for record in blocked:
+                lines.append("evidence %s: blocked draft request in record %s commit %s" %
+                             (prefix, display(record), commit))
         # A deletion is a cycle trace, but cannot stand for actual archived content.
         if observation.commit and observation.complete:
             for commit in commits_touching(git, [observation.commit], archive):
